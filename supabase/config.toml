@@ -1,0 +1,4 @@
+project_id = "gpwrpmoniglarqwfyryp"
+
+[functions.colloquium]
+verify_jwt = false

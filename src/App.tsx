@@ -2,6 +2,9 @@ import React, { useState, useEffect, useCallback, useMemo, createContext } from 
 import CathedralSidebar from './components/cathedra/Sidebar';
 import CathedralFooter from './components/cathedra/Footer';
 import Dashboard from './components/cathedra/Dashboard';
+import Bible from './components/cathedra/Bible';
+import Catechism from './components/cathedra/Catechism';
+import StudyMode from './components/cathedra/StudyMode';
 import { AppRoute, User, Language } from './types';
 import { Icons, Logo } from './constants';
 import { UI_TRANSLATIONS } from './services/translations';
@@ -74,15 +77,15 @@ const App: React.FC = () => {
       case AppRoute.DASHBOARD:
         return <Dashboard onSearch={handleSearch} user={user} onNavigate={navigateTo} />;
       case AppRoute.BIBLE:
-        return <PlaceholderPage title="Scriptuarium" description="Bíblia Sagrada com comentários patrísticos e análise linguística." />;
+        return <Bible />;
       case AppRoute.CATECHISM:
-        return <PlaceholderPage title="Codex Fidei" description="O Catecismo da Igreja Católica organizado por nexos teológicos." />;
+        return <Catechism />;
       case AppRoute.SAINTS:
         return <PlaceholderPage title="Sanctorum" description="Vidas dos Santos e suas obras para a Igreja." />;
       case AppRoute.MAGISTERIUM:
         return <PlaceholderPage title="Magisterium" description="Acesso total a Encíclicas, Concílios e Documentos da Santa Sé." />;
       case AppRoute.STUDY_MODE:
-        return <PlaceholderPage title="Colloquium IA" description="Inteligência Artificial Exegética para conexão teológica profunda." />;
+        return <StudyMode />;
       case AppRoute.DAILY_LITURGY:
         return <PlaceholderPage title="Liturgia Diária" description="Acompanhe as leituras do dia e o calendário litúrgico." />;
       case AppRoute.AQUINAS_OPERA:
