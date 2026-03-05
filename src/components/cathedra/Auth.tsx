@@ -1,0 +1,120 @@
+import React, { useState } from 'react';
+import { Icons, Logo } from '../../constants';
+import { supabase } from '@/integrations/supabase/client';
+
+interface AuthProps {
+  onSuccess: () => void;
+}
+
+const Auth: React.FC<AuthProps> = ({ onSuccess }) => {
+  const [mode, setMode] = useState<'login' | 'signup'>('login');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    setSuccess('');
+
+    if (mode === 'signup') {
+      const { error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { name },
+          emailRedirectTo: window.location.origin,
+        },
+      });
+      if (signUpError) {
+        setError(signUpError.message);
+      } else {
+        setSuccess('Conta criada com sucesso! Você já pode fazer login.');
+        setMode('login');
+      }
+    } else {
+      const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+      if (signInError) {
+        setError(signInError.message === 'Invalid login credentials' ? 'Email ou senha incorretos.' : signInError.message);
+      } else {
+        onSuccess();
+      }
+    }
+    setLoading(false);
+  };
+
+  return (
+    <div className="max-w-md mx-auto space-y-8">
+      <div className="text-center space-y-4">
+        <div className="flex justify-center">
+          <Logo className="w-16 h-16" />
+        </div>
+        <h1 className="text-3xl font-serif font-bold text-foreground">
+          {mode === 'login' ? 'Acessar Cathedra' : 'Criar Conta'}
+        </h1>
+        <p className="text-muted-foreground font-serif italic">
+          {mode === 'login' ? 'Entre para acessar recursos exclusivos.' : 'Junte-se à comunidade de fé e estudo.'}
+        </p>
+      </div>
+
+      <div className="bg-card border border-border rounded-3xl p-8 space-y-6">
+        {error && (
+          <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-2xl text-sm text-destructive font-medium">{error}</div>
+        )}
+        {success && (
+          <div className="p-4 bg-primary/10 border border-primary/20 rounded-2xl text-sm text-primary font-medium">{success}</div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {mode === 'signup' && (
+            <div>
+              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 block">Nome</label>
+              <input
+                type="text" value={name} onChange={e => setName(e.target.value)} required
+                placeholder="Seu nome completo"
+                className="w-full px-4 py-3 rounded-2xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+              />
+            </div>
+          )}
+          <div>
+            <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 block">Email</label>
+            <input
+              type="email" value={email} onChange={e => setEmail(e.target.value)} required
+              placeholder="seu@email.com"
+              className="w-full px-4 py-3 rounded-2xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+            />
+          </div>
+          <div>
+            <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 block">Senha</label>
+            <input
+              type="password" value={password} onChange={e => setPassword(e.target.value)} required minLength={6}
+              placeholder="Mínimo 6 caracteres"
+              className="w-full px-4 py-3 rounded-2xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+            />
+          </div>
+          <button type="submit" disabled={loading}
+            className="w-full py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all disabled:opacity-50">
+            {loading ? 'Aguarde...' : mode === 'login' ? 'Entrar' : 'Criar Conta'}
+          </button>
+        </form>
+
+        <div className="text-center">
+          <button onClick={() => { setMode(mode === 'login' ? 'signup' : 'login'); setError(''); setSuccess(''); }}
+            className="text-sm text-primary hover:underline font-medium">
+            {mode === 'login' ? 'Não tem conta? Criar agora' : 'Já tem conta? Fazer login'}
+          </button>
+        </div>
+      </div>
+
+      <p className="text-center text-xs text-muted-foreground">
+        O acesso básico é <span className="font-bold text-foreground">100% gratuito</span>. Recursos de IA requerem plano PRO.
+      </p>
+    </div>
+  );
+};
+
+export default Auth;
