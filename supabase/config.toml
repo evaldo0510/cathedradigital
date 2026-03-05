@@ -2,3 +2,6 @@ project_id = "gpwrpmoniglarqwfyryp"
 
 [functions.colloquium]
 verify_jwt = false
+
+[functions.bible-text]
+verify_jwt = false
