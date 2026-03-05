@@ -6,6 +6,7 @@ import Bible from './components/cathedra/Bible';
 import Catechism from './components/cathedra/Catechism';
 import StudyMode from './components/cathedra/StudyMode';
 import Saints from './components/cathedra/Saints';
+import Magisterium from './components/cathedra/Magisterium';
 import { AppRoute, User, Language } from './types';
 import { Icons, Logo } from './constants';
 import { UI_TRANSLATIONS } from './services/translations';
@@ -84,7 +85,7 @@ const App: React.FC = () => {
       case AppRoute.SAINTS:
         return <Saints />;
       case AppRoute.MAGISTERIUM:
-        return <PlaceholderPage title="Magisterium" description="Acesso total a Encíclicas, Concílios e Documentos da Santa Sé." />;
+        return <Magisterium />;
       case AppRoute.STUDY_MODE:
         return <StudyMode />;
       case AppRoute.DAILY_LITURGY:

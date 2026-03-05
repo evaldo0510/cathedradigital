@@ -1,5 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Icons } from '../../constants';
+import { supabase } from '@/integrations/supabase/client';
 
 const BIBLE_BOOKS = {
   'Antigo Testamento': [
@@ -89,6 +90,9 @@ const Bible: React.FC = () => {
   const [selectedChapter, setSelectedChapter] = useState<number>(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [testament, setTestament] = useState<'Antigo Testamento' | 'Novo Testamento'>('Antigo Testamento');
+  const [verses, setVerses] = useState<{ number: number; text: string }[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [bibleError, setBibleError] = useState('');
 
   const filteredBooks = useMemo(() => {
     const books = BIBLE_BOOKS[testament];
@@ -110,6 +114,26 @@ const Bible: React.FC = () => {
     if (viewMode === 'reading') setViewMode('chapters');
     else if (viewMode === 'chapters') { setViewMode('books'); setSelectedBook(null); }
   };
+
+  useEffect(() => {
+    if (viewMode === 'reading' && selectedBook && selectedChapter > 0) {
+      setIsLoading(true);
+      setBibleError('');
+      setVerses([]);
+      supabase.functions.invoke('bible-text', {
+        body: { abbrev: selectedBook.abbr, chapter: selectedChapter }
+      }).then(({ data, error }) => {
+        if (error) {
+          setBibleError('Erro ao carregar o texto. Tente novamente.');
+        } else if (data?.verses?.length > 0) {
+          setVerses(data.verses);
+        } else {
+          setBibleError('Texto não disponível para este capítulo.');
+        }
+        setIsLoading(false);
+      });
+    }
+  }, [viewMode, selectedBook, selectedChapter]);
 
   // Reading view placeholder
   if (viewMode === 'reading' && selectedBook) {
@@ -140,11 +164,25 @@ const Bible: React.FC = () => {
             <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">{selectedBook.abbr} {selectedChapter}</span>
             <h2 className="text-xl font-serif font-bold text-foreground">{selectedBook.name} — Capítulo {selectedChapter}</h2>
           </div>
-          <div className="reader-text text-foreground/90 leading-[2] text-base space-y-4">
-            <p className="text-muted-foreground italic text-center py-12">
-              O conteúdo bíblico será integrado com uma API de textos sagrados.<br />
-              Em breve, você poderá ler cada capítulo completo com comentários patrísticos.
-            </p>
+          <div className="reader-text text-foreground/90 leading-[2] text-base space-y-3">
+            {isLoading ? (
+              <div className="space-y-3 py-8">
+                {Array.from({ length: 10 }).map((_, i) => (
+                  <div key={i} className="h-4 bg-muted rounded animate-pulse" style={{ width: `${65 + Math.random() * 35}%` }} />
+                ))}
+              </div>
+            ) : bibleError ? (
+              <p className="text-muted-foreground italic text-center py-12">{bibleError}</p>
+            ) : verses.length > 0 ? (
+              verses.map(v => (
+                <p key={v.number}>
+                  <sup className="text-primary font-bold mr-1 text-xs">{v.number}</sup>
+                  {v.text}
+                </p>
+              ))
+            ) : (
+              <p className="text-muted-foreground italic text-center py-12">Carregando...</p>
+            )}
           </div>
         </div>
       </div>
