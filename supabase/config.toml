@@ -8,3 +8,6 @@ verify_jwt = false
 
 [functions.liturgical-calendar]
 verify_jwt = false
+
+[functions.catechism-text]
+verify_jwt = false

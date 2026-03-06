@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Icons } from '../../constants';
+import { supabase } from '@/integrations/supabase/client';
 
 const CIC_SECTIONS = [
   {
@@ -37,6 +38,42 @@ const CIC_SECTIONS = [
     ],
   },
 ];
+
+const CatechismContent: React.FC<{ paragraph: number }> = ({ paragraph }) => {
+  const [content, setContent] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    setContent('');
+    supabase.functions.invoke('catechism-text', {
+      body: { paragraph }
+    }).then(({ data, error }) => {
+      if (error) {
+        setContent(`Erro ao carregar o parágrafo §${paragraph}. Tente novamente.`);
+      } else {
+        setContent(data?.content || `Parágrafo §${paragraph} — conteúdo em breve.`);
+      }
+      setLoading(false);
+    });
+  }, [paragraph]);
+
+  if (loading) {
+    return (
+      <div className="reader-text text-foreground/90 leading-[2] text-base space-y-3 py-8">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="h-4 bg-muted rounded animate-pulse" style={{ width: `${60 + Math.random() * 40}%` }} />
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div className="reader-text text-foreground/90 leading-[2] text-base">
+      <p className="font-serif">{content}</p>
+    </div>
+  );
+};
 
 type ViewMode = 'parts' | 'sections' | 'reading';
 
@@ -113,12 +150,7 @@ const Catechism: React.FC = () => {
           <div className="text-center space-y-2 pb-6 border-b border-border">
             <span className="text-3xl font-serif font-bold text-primary">§{currentParagraph}</span>
           </div>
-          <div className="reader-text text-foreground/90 leading-[2] text-base">
-            <p className="text-muted-foreground italic text-center py-8">
-              O conteúdo do parágrafo §{currentParagraph} do Catecismo da Igreja Católica será integrado em breve.<br />
-              Cada parágrafo incluirá referências cruzadas com a Bíblia e documentos do Magistério.
-            </p>
-          </div>
+          <CatechismContent paragraph={currentParagraph} />
         </div>
 
         {/* Quick nav */}
