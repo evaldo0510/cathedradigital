@@ -8,6 +8,8 @@ import StudyMode from './components/cathedra/StudyMode';
 import Saints from './components/cathedra/Saints';
 import Magisterium from './components/cathedra/Magisterium';
 import DailyLiturgy from './components/cathedra/DailyLiturgy';
+import ViaCrucis from './components/cathedra/ViaCrucis';
+import Rosary from './components/cathedra/Rosary';
 import Auth from './components/cathedra/Auth';
 import { AppRoute, Language } from './types';
 import { Icons, Logo } from './constants';
@@ -149,9 +151,9 @@ const App: React.FC = () => {
       case AppRoute.TRILHAS:
         return <PlaceholderPage title="Trilhas de Estudo" description="Percursos formativos organizados por tema." />;
       case AppRoute.ROSARY:
-        return <PlaceholderPage title="Santo Rosário" description="Reze o Rosário com meditações dos mistérios." />;
+        return <Rosary />;
       case AppRoute.VIA_CRUCIS:
-        return <PlaceholderPage title="Via Crucis" description="As 14 Estações da Via Sacra." />;
+        return <ViaCrucis />;
       case AppRoute.ABOUT:
         return <PlaceholderPage title="Sobre" description="Manifesto e missão da Cathedra Digital." />;
       default:

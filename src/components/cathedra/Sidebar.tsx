@@ -15,6 +15,8 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPath, onNavigate, onClose, use
       label: 'Vida Interior',
       items: [
         { label: 'Liturgia & Orações', path: AppRoute.DAILY_LITURGY, icon: <Icons.Star className="w-5 h-5" /> },
+        { label: 'Santo Rosário', path: AppRoute.ROSARY, icon: <Icons.Heart className="w-5 h-5" /> },
+        { label: 'Via Crucis', path: AppRoute.VIA_CRUCIS, icon: <Icons.Cross className="w-5 h-5" /> },
         { label: 'Favoritos', path: AppRoute.FAVORITES, icon: <Icons.Heart className="w-5 h-5" /> },
       ]
     },
