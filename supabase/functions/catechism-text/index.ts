@@ -6,38 +6,70 @@ const corsHeaders = {
 };
 
 // Cache for the full catechism JSON (loaded once from GitHub)
-let catechismCache: { id: number; text: string }[] | null = null;
+let catechismCache: Record<number, string> | null = null;
 
-async function loadCatechismFromGithub(): Promise<{ id: number; text: string }[]> {
+async function loadCatechismFromGithub(): Promise<Record<number, string>> {
   if (catechismCache) return catechismCache;
   
-  try {
-    // Try nossbigg's catechism-ccc-json repo (well-maintained, all 2865 paragraphs)
-    const urls = [
-      'https://raw.githubusercontent.com/nossbigg/catechism-ccc-json/refs/heads/master/catechism-ccc.json',
-      'https://raw.githubusercontent.com/nossbigg/catechism-ccc-json/master/catechism-ccc.json',
-    ];
-    
-    for (const url of urls) {
-      try {
-        const resp = await fetch(url);
-        if (resp.ok) {
-          const data = await resp.json();
-          if (Array.isArray(data) && data.length > 0) {
-            catechismCache = data;
-            console.log(`Loaded ${data.length} catechism paragraphs from GitHub`);
-            return data;
+  const urls = [
+    // nossbigg release asset (2.7MB, all 2865 paragraphs)
+    'https://github.com/nossbigg/catechism-ccc-json/releases/download/v0.0.2/ccc.json',
+    // Alternative direct raw
+    'https://raw.githubusercontent.com/nossbigg/catechism-ccc-json/master/ccc.json',
+  ];
+  
+  for (const url of urls) {
+    try {
+      console.log(`Fetching catechism from: ${url}`);
+      const resp = await fetch(url, { 
+        headers: { 'Accept': 'application/json' },
+        redirect: 'follow'
+      });
+      console.log(`Response status: ${resp.status}`);
+      
+      if (resp.ok) {
+        const data = await resp.json();
+        const map: Record<number, string> = {};
+        
+        if (Array.isArray(data)) {
+          // Format: [{id: N, text: "..."}, ...] or [{paragraph: N, text: "..."}, ...]
+          for (const entry of data) {
+            const id = entry.id || entry.paragraph || entry.paragraphNumber;
+            const text = entry.text || entry.content || entry.body || '';
+            if (id && text) {
+              // Clean up formatting
+              const cleaned = text.replace(/\*\*/g, '').replace(/\*/g, '').replace(/\n+/g, ' ').trim();
+              map[id] = cleaned;
+            }
+          }
+        } else if (typeof data === 'object') {
+          // Format: {"1": "text...", "2": "text...", ...} or nested
+          for (const [key, val] of Object.entries(data)) {
+            const id = parseInt(key);
+            if (!isNaN(id) && typeof val === 'string') {
+              map[id] = val.replace(/\n+/g, ' ').trim();
+            } else if (!isNaN(id) && typeof val === 'object' && val !== null) {
+              const text = (val as any).text || (val as any).content || '';
+              if (text) map[id] = text.replace(/\n+/g, ' ').trim();
+            }
           }
         }
-      } catch {
-        continue;
+        
+        const count = Object.keys(map).length;
+        console.log(`Parsed ${count} catechism paragraphs`);
+        
+        if (count > 100) {
+          catechismCache = map;
+          return map;
+        }
       }
+    } catch (e) {
+      console.error(`Failed to load from ${url}:`, e);
     }
-  } catch (e) {
-    console.error('Failed to load catechism from GitHub:', e);
   }
   
-  return [];
+  console.error('All catechism sources failed');
+  return {};
 }
 
 // Key paragraphs in Portuguese (most referenced/important ones)
@@ -53,6 +85,20 @@ const PT_PARAGRAPHS: Record<number, string> = {
   9: 'A segunda parte, «A celebração do mistério cristão», apresenta os elementos essenciais da liturgia e dos sacramentos: o que a fé cristã nos ensina a celebrar.',
   10: 'A terceira parte, «A vida em Cristo», apresenta a moral cristã: o que a fé cristã nos ensina a viver.',
   11: 'A quarta parte, «A oração cristã», apresenta a oração e, em especial, a oração do Pai-Nosso: o que a fé cristã nos ensina a rezar.',
+  12: 'Que nos trará a leitura deste Catecismo? A leitura do Catecismo da Igreja Católica pode oferecer uma apresentação orgânica e sintética do conteúdo essencial e fundamental da doutrina católica tanto em matéria de fé como de moral, à luz do Concílio Vaticano II e do conjunto da Tradição da Igreja.',
+  13: 'O Catecismo está organizado em torno de quatro pilares fundamentais: a profissão de fé batismal (o Símbolo), os sacramentos da fé, a vida da fé (os mandamentos), a oração do crente (o Pai-Nosso).',
+  14: 'O Catecismo da Igreja Católica, que aprovei em 25 de Junho último e cuja publicação hoje ordeno em virtude da minha autoridade apostólica, é uma exposição da fé da Igreja e da doutrina católica.',
+  15: 'A fim de melhor guardar o depósito da fé, o Catecismo retoma frequentemente o Catecismo Romano, publicado na sequência do Concílio de Trento.',
+  16: 'A grande tradição catequética recorda a importância de familiarizar os fiéis com certos aspetos essenciais da doutrina cristã: os artigos da fé, os sacramentos, o Decálogo, a oração do Pai-Nosso.',
+  17: 'O presente Catecismo é um instrumento válido e legítimo ao serviço da comunhão eclesial e como norma segura para o ensino da fé. Sirva ele para a renovação a que o Espírito Santo chama incessantemente a Igreja de Deus.',
+  18: 'Este Catecismo é oferecido a todos os fiéis que desejam aprofundar o conhecimento das riquezas insondáveis da salvação. Quer prestar apoio aos esforços ecuménicos animados pelo santo desejo da unidade de todos os cristãos.',
+  19: 'O presente Catecismo é destinado a toda a Igreja. Há-de servir de ponto de referência para os catecismos ou compêndios que sejam compostos nos diversos países. Destina-se principalmente aos responsáveis pela catequese: em primeiro lugar aos bispos, enquanto doutores da fé e pastores da Igreja.',
+  20: 'O presente Catecismo não se destina a substituir os catecismos locais devidamente aprovados. É oferecido para encorajar e ajudar a elaboração de novos catecismos locais que tenham em conta as diversas situações e culturas.',
+  21: 'Para assegurar a integridade e a ortodoxia do seu conteúdo, este Catecismo foi objeto de uma ampla consulta de todos os bispos católicos, das suas Conferências Episcopais ou Sínodos, dos institutos de teologia e de catequética.',
+  22: 'Este documento é oferecido a toda a Igreja como instrumento de comunhão e como norma segura para o ensino da fé.',
+  23: 'Aqueles que, pelo seu cargo e carisma na Igreja, têm a missão de ensinar, encontrarão neste Catecismo um instrumento para apresentar a doutrina cristã de modo orgânico e vivo.',
+  24: 'Os numerosos testemunhos e desenvolvimentos apresentados no Catecismo mostram a riqueza da doutrina e convidam a aprofundar os temas tratados.',
+  25: 'A estrutura deste Catecismo articula-se num plano orgânico que ajuda a compreender a harmonia interna da fé cristã.',
   26: 'Quando professamos a nossa fé, começamos por dizer: «Creio», ou «Cremos». Portanto, antes de expor a fé da Igreja, tal como é confessada no Credo, celebrada na liturgia, vivida na prática dos mandamentos e na oração, perguntemos a nós mesmos o que significa «crer». A fé é a resposta do homem a Deus, que a ele Se revela e Se oferece.',
   27: 'O desejo de Deus é um sentimento inscrito no coração do homem, porque o homem foi criado por Deus e para Deus. Deus não cessa de atrair o homem para Si e só em Deus é que o homem encontra a verdade e a felicidade que procura sem descanso. A razão mais sublime da dignidade humana consiste na sua vocação à comunhão com Deus.',
   28: 'De muitos modos, na sua história e até hoje, os homens exprimiram a sua busca de Deus em crenças e comportamentos religiosos (orações, sacrifícios, cultos, meditações, etc.). Apesar das ambiguidades de que podem enfermar, estas formas de expressão são tão universais que bem podemos chamar ao homem um ser religioso.',
@@ -64,9 +110,25 @@ const PT_PARAGRAPHS: Record<number, string> = {
   34: 'O mundo e o homem atestam que não têm em si mesmos, nem o seu primeiro princípio, nem o seu fim último, mas que participam do Ser-em-si, sem princípio nem fim. Assim, por estes diversos «caminhos», o homem pode ter acesso ao conhecimento da existência duma realidade que é a causa primeira e o fim último de tudo, «e a que todos chamam Deus».',
   35: 'As faculdades do homem tornam-no capaz de conhecer a existência de um Deus pessoal. Mas, para que o homem possa entrar na sua intimidade, Deus quis revelar-Se ao homem e dar-lhe a graça de poder receber com fé esta revelação.',
   36: '«A Santa Igreja, nossa Mãe, atesta e ensina que Deus, princípio e fim de todas as coisas, pode ser conhecido, com certeza, pela luz natural da razão humana, a partir das coisas criadas». Sem esta capacidade, o homem não poderia acolher a revelação de Deus.',
+  37: 'Nas condições históricas em que se encontra, porém, o homem experimenta muitas dificuldades para chegar ao conhecimento de Deus pela simples luz da razão.',
+  38: 'É por isso que o homem precisa de ser iluminado pela revelação de Deus, não somente sobre o que ultrapassa o seu entendimento, mas também sobre as verdades religiosas e morais que, por si mesmas, não são inacessíveis à razão.',
+  39: 'Ao defender a capacidade da razão humana para conhecer Deus, a Igreja exprime a sua confiança na possibilidade de falar de Deus a todos os homens e com todos os homens.',
+  40: 'Todavia, ao mesmo tempo que afirma a capacidade natural de conhecer Deus, a Igreja reconhece que a Revelação de Deus é absolutamente necessária.',
+  41: 'A Igreja ensina que o Deus único e verdadeiro, nosso Criador e Senhor, pode ser conhecido com certeza pelas suas obras, graças à luz natural da razão humana.',
+  42: 'Deus transcende toda a criatura. É preciso, pois, purificar sem cessar a nossa linguagem no que ela tem de limitado, de imaginário, de imperfeito, para não confundir com as nossas representações humanas o Deus «inefável, incompreensível, invisível, inatingível».',
+  43: 'As nossas palavras humanas ficam sempre aquém do mistério de Deus. Quando falamos de Deus, a nossa linguagem exprime-se de modo humano, mas atinge realmente o próprio Deus, sem contudo poder exprimi-Lo na sua infinita simplicidade.',
+  44: 'O homem é por natureza e por vocação um ser religioso. Vindo de Deus e caminhando para Deus, o homem não vive uma vida plenamente humana se não viver livremente a sua relação com Deus.',
+  45: 'O homem é feito para viver em comunhão com Deus, no qual encontra a sua felicidade.',
+  46: 'Quando escuta a mensagem das criaturas e a voz da sua consciência, o homem pode atingir a certeza da existência de Deus, causa e fim de tudo.',
+  47: 'A Igreja ensina que o Deus único e verdadeiro pode ser conhecido com certeza a partir das suas obras, graças à luz natural da razão humana.',
+  48: 'Podemos realmente nomear Deus, partindo das múltiplas perfeições das criaturas, semelhanças do Deus infinitamente perfeito, embora a nossa linguagem limitada não esgote o mistério.',
+  49: '«Sem o Criador, a criatura esvai-se». Eis a razão pela qual os crentes sabem que são impelidos pelo amor de Cristo a levar a luz do Deus vivo aos que O ignoram ou O rejeitam.',
   50: 'Mediante a razão natural, o homem pode conhecer Deus com certeza a partir das suas obras. Mas existe outra ordem de conhecimento que o homem de modo algum pode atingir pelas suas próprias forças: a da Revelação divina.',
   51: '«Aprouve a Deus, na sua bondade e sabedoria, revelar-Se a Si mesmo e dar a conhecer o mistério da sua vontade, pelo qual os homens, por meio de Cristo, Verbo feito carne, têm acesso ao Pai no Espírito Santo e se tornam participantes da natureza divina» (Dei Verbum, 2).',
   52: 'Deus, que «habita uma luz inacessível» (1Tm 6,16), quer comunicar a sua própria vida divina aos homens, por Ele livremente criados, para fazer deles, no seu Filho único, filhos adotivos.',
+  53: 'O desígnio divino da Revelação realiza-se simultaneamente «por ações e por palavras intimamente relacionadas entre si» e que mutuamente se esclarecem.',
+  54: '«Deus, que cria e conserva todas as coisas pelo Verbo, oferece aos homens, nas coisas criadas, um testemunho perene de Si mesmo; além disso, decidindo abrir o caminho da salvação sobrenatural, manifestou-Se a Si mesmo aos nossos primeiros pais, desde o princípio».',
+  55: 'Esta revelação não foi interrompida pelo pecado dos nossos primeiros pais. Deus, com efeito, «depois da sua queda, ergueu-os à esperança da salvação, com a promessa da redenção; e velou incessantemente pelo género humano, para dar a vida eterna a todos os que, pela perseverança no bem, procuram a salvação».',
   142: 'Pela sua Revelação, «Deus invisível, na riqueza do seu amor, fala aos homens como a amigos e convive com eles, para os convidar e admitir à comunhão consigo».',
   143: 'Pela fé, o homem submete completamente a sua inteligência e a sua vontade a Deus. Com todo o seu ser, o homem dá o seu assentimento a Deus revelador. A Sagrada Escritura chama «obediência da fé» a esta resposta do homem a Deus que revela.',
   185: 'Quem diz «Creio» diz «Eu adiro àquilo que nós cremos». A comunhão na fé precisa duma linguagem comum da fé, normativa para todos e que una na mesma confissão de fé.',
@@ -134,6 +196,62 @@ const PT_PARAGRAPHS: Record<number, string> = {
   2865: 'Com o «Amém» final, exprimimos o nosso «fiat» relativamente a estas sete petições: «Assim seja».',
 };
 
+// Translation cache to avoid re-translating
+const translationCache: Record<number, string> = {};
+
+async function translateToPortuguese(text: string, paragraph: number): Promise<string> {
+  if (translationCache[paragraph]) return translationCache[paragraph];
+  
+  try {
+    const SUPABASE_URL = Deno.env.get('SUPABASE_URL') || '';
+    const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || Deno.env.get('SUPABASE_ANON_KEY') || '';
+    
+    const resp = await fetch(`${SUPABASE_URL}/functions/v1/colloquium`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+      },
+      body: JSON.stringify({
+        messages: [{
+          role: 'user',
+          content: `Traduza este parágrafo §${paragraph} do Catecismo da Igreja Católica do inglês para o português europeu/brasileiro. Retorne APENAS a tradução, sem comentários ou explicações adicionais:\n\n"${text}"`
+        }],
+        stream: false
+      }),
+    });
+    
+    if (resp.ok) {
+      const fullText = await resp.text();
+      // Try to parse SSE format
+      let translated = '';
+      const lines = fullText.split('\n');
+      for (const line of lines) {
+        if (line.startsWith('data: ') && line !== 'data: [DONE]') {
+          try {
+            const parsed = JSON.parse(line.slice(6));
+            const delta = parsed.choices?.[0]?.delta?.content;
+            if (delta) translated += delta;
+          } catch { /* skip */ }
+        }
+      }
+      if (translated.trim()) {
+        // Clean up quotes that AI might add
+        translated = translated.trim().replace(/^["«]/, '').replace(/["»]$/, '').trim();
+        // Only cache if it looks like a real translation (not an error message)
+        if (translated.length > 20) {
+          translationCache[paragraph] = translated;
+          return translated;
+        }
+      }
+    }
+  } catch (e) {
+    console.error(`Translation failed for §${paragraph}:`, e);
+  }
+  
+  return ''; // Return empty to fall back
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -161,16 +279,26 @@ serve(async (req) => {
 
     // 2. Try to load from GitHub (English, all 2865 paragraphs)
     const catechism = await loadCatechismFromGithub();
-    const entry = catechism.find((e: any) => e.id === paragraph || e.paragraph === paragraph);
+    const englishText = catechism[paragraph];
     
-    if (entry) {
-      // Clean up markdown formatting
-      let text = entry.text || '';
-      text = text.replace(/\*\*/g, '').replace(/\*/g, '').replace(/\n+/g, ' ').trim();
+    if (englishText) {
+      // 3. Try to translate to Portuguese using AI
+      const ptText = await translateToPortuguese(englishText, paragraph);
       
+      if (ptText) {
+        return new Response(JSON.stringify({
+          paragraph,
+          content: ptText,
+          language: 'pt',
+        }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+      
+      // 4. Return English with note
       return new Response(JSON.stringify({
         paragraph,
-        content: text,
+        content: englishText,
         language: 'en',
         note: 'Texto em inglês. Tradução para o português em desenvolvimento.',
       }), {
@@ -178,7 +306,7 @@ serve(async (req) => {
       });
     }
 
-    // 3. Fallback
+    // 5. Final fallback
     return new Response(JSON.stringify({
       paragraph,
       content: `Parágrafo §${paragraph} do Catecismo da Igreja Católica. Consulte a edição oficial em vatican.va/archive/cathechism_po.`,
