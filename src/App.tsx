@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo, createContext, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
+import ScrollToTop from './components/ScrollToTop';
 import CathedralSidebar from './components/cathedra/Sidebar';
 import CathedralFooter from './components/cathedra/Footer';
 import AppHeader from './components/cathedra/AppHeader';
@@ -71,6 +72,7 @@ const AppLayout: React.FC = () => {
 
   return (
     <LangContext.Provider value={{ lang, setLang: setLangState, t }}>
+      <ScrollToTop />
       <div className="flex h-screen overflow-hidden bg-background">
         {/* Sidebar */}
         <div className={`fixed inset-0 z-[150] lg:relative lg:block transition-all ${isSidebarOpen ? 'opacity-100' : 'pointer-events-none lg:pointer-events-auto opacity-0 lg:opacity-100'}`}>
