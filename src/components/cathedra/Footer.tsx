@@ -1,12 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Icons, Logo } from '../../constants';
 import { AppRoute } from '../../types';
 
-interface FooterProps {
-  onNavigate: (r: AppRoute) => void;
-}
+const Footer: React.FC = React.memo(() => {
+  const navigate = useNavigate();
 
-const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   const vaticanLinks = [
     { title: 'Santa Sé (Vaticano)', url: 'https://www.vatican.va' },
     { title: 'Catecismo da Igreja', url: 'https://www.vatican.va/archive/ccc/index_po.htm' },
@@ -89,20 +88,20 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           <div className="space-y-6">
             <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-white border-l-2 border-[#8b0000] pl-4">Formação</h4>
             <nav className="flex flex-col gap-3">
-              <button onClick={() => onNavigate(AppRoute.BIBLE)} className="text-left text-xs hover:text-[#d4af37] transition-colors font-bold opacity-60 hover:opacity-100 uppercase">Bíblia Sagrada</button>
-              <button onClick={() => onNavigate(AppRoute.CATECHISM)} className="text-left text-xs hover:text-[#d4af37] transition-colors font-bold opacity-60 hover:opacity-100 uppercase">Catecismo (CIC)</button>
-              <button onClick={() => onNavigate(AppRoute.TRILHAS)} className="text-left text-xs hover:text-[#d4af37] transition-colors font-bold opacity-60 hover:opacity-100 uppercase">Trilhas de Estudo</button>
-              <button onClick={() => onNavigate(AppRoute.MAGISTERIUM)} className="text-left text-xs hover:text-[#d4af37] transition-colors font-bold opacity-60 hover:opacity-100 uppercase">Magistério</button>
+              <button onClick={() => navigate(AppRoute.BIBLE)} className="text-left text-xs hover:text-[#d4af37] transition-colors font-bold opacity-60 hover:opacity-100 uppercase">Bíblia Sagrada</button>
+              <button onClick={() => navigate(AppRoute.CATECHISM)} className="text-left text-xs hover:text-[#d4af37] transition-colors font-bold opacity-60 hover:opacity-100 uppercase">Catecismo (CIC)</button>
+              <button onClick={() => navigate(AppRoute.TRILHAS)} className="text-left text-xs hover:text-[#d4af37] transition-colors font-bold opacity-60 hover:opacity-100 uppercase">Trilhas de Estudo</button>
+              <button onClick={() => navigate(AppRoute.MAGISTERIUM)} className="text-left text-xs hover:text-[#d4af37] transition-colors font-bold opacity-60 hover:opacity-100 uppercase">Magistério</button>
             </nav>
           </div>
 
           <div className="space-y-6">
             <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-white border-l-2 border-[#d4af37] pl-4">Liturgia</h4>
             <nav className="flex flex-col gap-3">
-              <button onClick={() => onNavigate(AppRoute.DAILY_LITURGY)} className="text-left text-xs hover:text-[#d4af37] transition-colors font-bold opacity-60 hover:opacity-100 uppercase">Liturgia Diária</button>
-              <button onClick={() => onNavigate(AppRoute.MISSAL)} className="text-left text-xs hover:text-[#d4af37] transition-colors font-bold opacity-60 hover:opacity-100 uppercase">Missal Romano</button>
-              <button onClick={() => onNavigate(AppRoute.ROSARY)} className="text-left text-xs hover:text-[#d4af37] transition-colors font-bold opacity-60 hover:opacity-100 uppercase">Santo Rosário</button>
-              <button onClick={() => onNavigate(AppRoute.VIA_CRUCIS)} className="text-left text-xs hover:text-[#d4af37] transition-colors font-bold opacity-60 hover:opacity-100 uppercase">Via Crucis</button>
+              <button onClick={() => navigate(AppRoute.DAILY_LITURGY)} className="text-left text-xs hover:text-[#d4af37] transition-colors font-bold opacity-60 hover:opacity-100 uppercase">Liturgia Diária</button>
+              <button onClick={() => navigate(AppRoute.MISSAL)} className="text-left text-xs hover:text-[#d4af37] transition-colors font-bold opacity-60 hover:opacity-100 uppercase">Missal Romano</button>
+              <button onClick={() => navigate(AppRoute.ROSARY)} className="text-left text-xs hover:text-[#d4af37] transition-colors font-bold opacity-60 hover:opacity-100 uppercase">Santo Rosário</button>
+              <button onClick={() => navigate(AppRoute.VIA_CRUCIS)} className="text-left text-xs hover:text-[#d4af37] transition-colors font-bold opacity-60 hover:opacity-100 uppercase">Via Crucis</button>
             </nav>
           </div>
 
@@ -149,7 +148,7 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               © {new Date().getFullYear()} CATHEDRA DIGITAL • AD MAIOREM DEI GLORIAM
             </p>
             <div className="flex items-center gap-4 justify-center md:justify-start">
-              <button onClick={() => onNavigate(AppRoute.ABOUT)} className="text-[8px] text-stone-800 font-black uppercase hover:text-[#d4af37] transition-colors">Manifesto</button>
+              <button onClick={() => navigate(AppRoute.ABOUT)} className="text-[8px] text-stone-800 font-black uppercase hover:text-[#d4af37] transition-colors">Manifesto</button>
               <div className="w-1 h-1 rounded-full bg-stone-900" />
               <button className="text-[8px] text-stone-800 font-black uppercase hover:text-[#d4af37] transition-colors">Termos de Uso</button>
               <div className="w-1 h-1 rounded-full bg-stone-900" />
@@ -169,6 +168,8 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
       </div>
     </footer>
   );
-};
+});
+
+Footer.displayName = 'Footer';
 
 export default Footer;

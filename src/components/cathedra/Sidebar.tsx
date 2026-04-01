@@ -1,15 +1,18 @@
 import React from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Icons, Logo } from '../../constants';
 import { AppRoute, User } from '../../types';
 
 interface SidebarProps {
-  currentPath: AppRoute;
-  onNavigate: (p: AppRoute) => void;
   onClose?: () => void;
   user: User | null;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ currentPath, onNavigate, onClose, user }) => {
+const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const currentPath = location.pathname;
+
   const sections = [
     {
       label: 'Vida Interior',
@@ -40,16 +43,14 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPath, onNavigate, onClose, use
     }
   ];
 
-  const handleNav = (item: any) => {
-    if (item.path) {
-      onNavigate(item.path);
-      if (onClose) onClose();
-    }
+  const handleNav = (path: string) => {
+    navigate(path);
+    onClose?.();
   };
 
   return (
     <aside className="h-full w-80 bg-card border-r border-border flex flex-col p-6 overflow-hidden">
-      <div className="mb-10 px-2 flex items-center gap-3 cursor-pointer group" onClick={() => onNavigate(AppRoute.DASHBOARD)}>
+      <div className="mb-10 px-2 flex items-center gap-3 cursor-pointer group" onClick={() => handleNav(AppRoute.DASHBOARD)}>
         <Logo className="w-9 h-9" />
         <div>
           <h1 className="text-lg font-black tracking-tight text-foreground leading-none uppercase">CATHEDRA</h1>
@@ -65,16 +66,16 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPath, onNavigate, onClose, use
               {section.items.map((item, idx) => (
                 <li key={idx}>
                   <button
-                    onClick={() => handleNav(item)}
+                    onClick={() => handleNav(item.path)}
                     className={`w-full flex items-center gap-4 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all
-                      ${item.path && currentPath === item.path
+                      ${currentPath === item.path
                         ? 'bg-foreground text-background shadow-lg'
                         : 'text-muted-foreground hover:bg-muted hover:text-foreground'}`}
                   >
                     <span className="opacity-70">{item.icon}</span>
                     <span className="tracking-tight">{item.label}</span>
                     {(item as any).pro && <span className="ml-auto text-[8px] font-black uppercase tracking-widest text-primary bg-primary/10 px-1.5 py-0.5 rounded">PRO</span>}
-                    {item.path && currentPath === item.path && <div className="ml-auto w-1 h-1 rounded-full bg-primary" />}
+                    {currentPath === item.path && <div className="ml-auto w-1 h-1 rounded-full bg-primary" />}
                   </button>
                 </li>
               ))}
@@ -85,7 +86,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPath, onNavigate, onClose, use
 
       <div className="pt-6 border-t border-border">
         {user ? (
-          <button onClick={() => onNavigate(AppRoute.PROFILE)} className="w-full flex items-center gap-3 p-3 bg-muted rounded-2xl hover:border-primary border border-transparent transition-all">
+          <button onClick={() => handleNav(AppRoute.PROFILE)} className="w-full flex items-center gap-3 p-3 bg-muted rounded-2xl hover:border-primary border border-transparent transition-all">
             <div className="w-10 h-10 rounded-xl bg-foreground flex items-center justify-center text-background font-black shadow-sm">{user.name.charAt(0).toUpperCase()}</div>
             <div className="flex-1 min-w-0 text-left">
               <p className="text-xs font-bold truncate text-foreground">{user.name}</p>
@@ -93,13 +94,15 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPath, onNavigate, onClose, use
             </div>
           </button>
         ) : (
-          <button onClick={() => onNavigate(AppRoute.LOGIN)} className="w-full py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all">
+          <button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all">
             Acessar Conta
           </button>
         )}
       </div>
     </aside>
   );
-};
+});
+
+Sidebar.displayName = 'Sidebar';
 
 export default Sidebar;
