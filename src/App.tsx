@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo, createContext, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
+import ScrollToTop from './components/ScrollToTop';
 import CathedralSidebar from './components/cathedra/Sidebar';
 import CathedralFooter from './components/cathedra/Footer';
 import AppHeader from './components/cathedra/AppHeader';
