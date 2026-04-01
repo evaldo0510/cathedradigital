@@ -1,16 +1,17 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AppRoute, User } from '../../types';
 import { Icons } from '../../constants';
 import SacredImage from './SacredImage';
 import ContentCard from './ContentCard';
 
 interface DashboardProps {
-  onSearch: (t: string) => void;
   user: User | null;
-  onNavigate: (r: AppRoute) => void;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
+const Dashboard: React.FC<DashboardProps> = ({ user }) => {
+  const navigate = useNavigate();
+
   return (
     <div className="space-y-16 md:space-y-32 animate-in fade-in duration-1000 pb-24 md:pb-48">
       {/* HERO SECTION */}
@@ -36,10 +37,10 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4 md:pt-8 w-full max-w-xs sm:max-w-none mx-auto">
-            <button onClick={() => onNavigate(AppRoute.BIBLE)} className="px-8 md:px-10 py-4 md:py-5 bg-[#d4af37] text-[#1f2937] rounded-2xl font-black uppercase text-[10px] md:text-xs tracking-widest shadow-2xl hover:bg-white transition-all transform hover:-translate-y-1">
+            <button onClick={() => navigate(AppRoute.BIBLE)} className="px-8 md:px-10 py-4 md:py-5 bg-[#d4af37] text-[#1f2937] rounded-2xl font-black uppercase text-[10px] md:text-xs tracking-widest shadow-2xl hover:bg-white transition-all transform hover:-translate-y-1">
               Começar Agora
             </button>
-            <button onClick={() => onNavigate(AppRoute.STUDY_MODE)} className="px-8 md:px-10 py-4 md:py-5 bg-white/5 backdrop-blur-md text-white border border-white/10 rounded-2xl font-black uppercase text-[10px] md:text-xs tracking-widest hover:bg-white/10 transition-all">
+            <button onClick={() => navigate(AppRoute.STUDY_MODE)} className="px-8 md:px-10 py-4 md:py-5 bg-white/5 backdrop-blur-md text-white border border-white/10 rounded-2xl font-black uppercase text-[10px] md:text-xs tracking-widest hover:bg-white/10 transition-all">
               Testar IA
             </button>
           </div>
@@ -54,9 +55,9 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          <ContentCard icon={<Icons.Book className="w-8 md:w-10 h-8 md:h-10" />} title="Scriptuarium" description="Bíblia Sagrada com comentários patrísticos e análise linguística." action="Abrir" onClick={() => onNavigate(AppRoute.BIBLE)} />
-          <ContentCard icon={<Icons.Cross className="w-8 md:w-10 h-8 md:h-10" />} title="Codex Fidei" description="O Catecismo da Igreja Católica organizado por nexos teológicos." action="Estudar" onClick={() => onNavigate(AppRoute.CATECHISM)} />
-          <ContentCard icon={<Icons.History className="w-8 md:w-10 h-8 md:h-10" />} title="Magisterium" description="Acesso total a Encíclicas, Concílios e Documentos da Santa Sé." action="Explorar" onClick={() => onNavigate(AppRoute.MAGISTERIUM)} />
+          <ContentCard icon={<Icons.Book className="w-8 md:w-10 h-8 md:h-10" />} title="Scriptuarium" description="Bíblia Sagrada com comentários patrísticos e análise linguística." action="Abrir" onClick={() => navigate(AppRoute.BIBLE)} />
+          <ContentCard icon={<Icons.Cross className="w-8 md:w-10 h-8 md:h-10" />} title="Codex Fidei" description="O Catecismo da Igreja Católica organizado por nexos teológicos." action="Estudar" onClick={() => navigate(AppRoute.CATECHISM)} />
+          <ContentCard icon={<Icons.History className="w-8 md:w-10 h-8 md:h-10" />} title="Magisterium" description="Acesso total a Encíclicas, Concílios e Documentos da Santa Sé." action="Explorar" onClick={() => navigate(AppRoute.MAGISTERIUM)} />
         </div>
       </section>
 
@@ -78,7 +79,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
               ))}
             </ul>
             <div className="pt-4">
-              <button onClick={() => onNavigate(AppRoute.STUDY_MODE)} className="px-8 py-4 bg-[#1f2937] text-white rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-[#d4af37] hover:text-[#1f2937] transition-all shadow-xl w-full sm:w-auto">
+              <button onClick={() => navigate(AppRoute.STUDY_MODE)} className="px-8 py-4 bg-[#1f2937] text-white rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-[#d4af37] hover:text-[#1f2937] transition-all shadow-xl w-full sm:w-auto">
                 Abrir Scriptorium IA
               </button>
             </div>
