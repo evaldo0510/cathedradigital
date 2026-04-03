@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Icons } from '../../constants';
 
 type MysteryKey = 'gozosos' | 'dolorosos' | 'gloriosos' | 'luminosos';
 
 const YOUTUBE_IDS: Record<MysteryKey, string> = {
   gozosos: 'y0nohEWE7PI',
-  dolorosos: '5jBHMsyvXMo',
+  dolorosos: 'etp-5E9f0lk',
   gloriosos: 'kcsu2e-0j2I',
   luminosos: 'kmHzPZihdvY',
 };
@@ -242,7 +243,10 @@ const PrayerPage: React.FC = () => {
   const [prayingMystery, setPrayingMystery] = useState<MysteryKey | null>(null);
 
   if (prayingMystery) {
-    return <PrayerMode mysteryKey={prayingMystery} intention={intention} onClose={() => setPrayingMystery(null)} />;
+    return createPortal(
+      <PrayerMode mysteryKey={prayingMystery} intention={intention} onClose={() => setPrayingMystery(null)} />,
+      document.body
+    );
   }
 
   return (
