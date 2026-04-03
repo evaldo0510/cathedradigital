@@ -22,6 +22,7 @@ const Magisterium = lazy(() => import('./components/cathedra/Magisterium'));
 const DailyLiturgy = lazy(() => import('./components/cathedra/DailyLiturgy'));
 const ViaCrucis = lazy(() => import('./components/cathedra/ViaCrucis'));
 const Rosary = lazy(() => import('./components/cathedra/Rosary'));
+const PrayerPage = lazy(() => import('./components/cathedra/PrayerPage'));
 const Auth = lazy(() => import('./components/cathedra/Auth'));
 
 interface LanguageContextType {
