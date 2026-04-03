@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
+import CrossReferencePanel from './CrossReferencePanel';
+import { getCatechismCrossRefs } from '@/data/cross-references';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 const CIC_SECTIONS = [
   {
@@ -78,31 +81,52 @@ const CatechismContent: React.FC<{ paragraph: number }> = ({ paragraph }) => {
 type ViewMode = 'parts' | 'sections' | 'reading';
 
 const Catechism: React.FC = () => {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState<ViewMode>('parts');
   const [selectedPart, setSelectedPart] = useState<typeof CIC_SECTIONS[0] | null>(null);
   const [selectedSection, setSelectedSection] = useState<typeof CIC_SECTIONS[0]['sections'][0] | null>(null);
   const [currentParagraph, setCurrentParagraph] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResult, setSearchResult] = useState<number | null>(null);
+  const [showCrossRefs, setShowCrossRefs] = useState(true);
+
+  const crossRefs = getCatechismCrossRefs(currentParagraph);
+
+  // Handle deep-link from Bible cross-references (?p=1324)
+  useEffect(() => {
+    const p = searchParams.get('p');
+    if (p) {
+      const num = parseInt(p);
+      if (!isNaN(num) && num >= 1 && num <= 2865) {
+        navigateToParagraph(num);
+      }
+    }
+  }, [searchParams]);
+
+  const navigateToParagraph = useCallback((num: number) => {
+    for (const part of CIC_SECTIONS) {
+      for (const sec of part.sections) {
+        if (num >= sec.paragraphs[0] && num <= sec.paragraphs[1]) {
+          setSelectedPart(part);
+          setSelectedSection(sec);
+          setCurrentParagraph(num);
+          setViewMode('reading');
+          return;
+        }
+      }
+    }
+  }, []);
 
   const handleSearch = () => {
     const num = parseInt(searchQuery);
     if (!isNaN(num) && num >= 1 && num <= 2865) {
-      setSearchResult(num);
-      setCurrentParagraph(num);
-      // Find the section
-      for (const part of CIC_SECTIONS) {
-        for (const sec of part.sections) {
-          if (num >= sec.paragraphs[0] && num <= sec.paragraphs[1]) {
-            setSelectedPart(part);
-            setSelectedSection(sec);
-            setViewMode('reading');
-            return;
-          }
-        }
-      }
+      navigateToParagraph(num);
     }
   };
+
+  const handleNavigateToBible = useCallback((abbr: string, chapter: number) => {
+    navigate(`/bible?book=${abbr}&ch=${chapter}`);
+  }, [navigate]);
 
   const goBack = () => {
     if (viewMode === 'reading') { setViewMode('sections'); setSelectedSection(null); }
@@ -113,16 +137,23 @@ const Catechism: React.FC = () => {
   if (viewMode === 'reading' && selectedSection && selectedPart) {
     const [start, end] = selectedSection.paragraphs;
     return (
-      <div className="max-w-3xl mx-auto space-y-8">
+      <div className="max-w-3xl mx-auto space-y-6">
         <div className="flex items-center gap-4">
           <button onClick={goBack} className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all">
             <Icons.ArrowDown className="w-5 h-5 rotate-90 text-foreground" />
           </button>
-          <div>
+          <div className="flex-1 min-w-0">
             <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">{selectedPart.part}</span>
-            <h1 className="text-xl font-serif font-bold text-foreground">{selectedSection.title}</h1>
+            <h1 className="text-xl font-serif font-bold text-foreground truncate">{selectedSection.title}</h1>
             <p className="text-sm text-muted-foreground">§{start} — §{end}</p>
           </div>
+          {crossRefs.length > 0 && (
+            <button onClick={() => setShowCrossRefs(!showCrossRefs)}
+              className={`p-2 rounded-xl border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}
+              title="Nexus Theologicus">
+              <Icons.Cross className="w-4 h-4" />
+            </button>
+          )}
         </div>
 
         {/* Paragraph navigator */}
@@ -144,6 +175,15 @@ const Catechism: React.FC = () => {
             Próximo →
           </button>
         </div>
+
+        {/* Cross references */}
+        {showCrossRefs && crossRefs.length > 0 && (
+          <CrossReferencePanel
+            type="catechism"
+            bibleRefs={crossRefs}
+            onNavigateToBible={handleNavigateToBible}
+          />
+        )}
 
         {/* Content */}
         <div className="bg-card border border-border rounded-3xl p-8 md:p-12 space-y-6">
