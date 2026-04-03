@@ -166,11 +166,18 @@ const Footer: React.FC = React.memo(() => {
                 { label: 'Missal Romano', route: AppRoute.MISSAL },
                 { label: 'Santo Rosário', route: AppRoute.ROSARY },
                 { label: 'Via Crucis', route: AppRoute.VIA_CRUCIS },
+                { label: 'Frei Gilson', url: 'https://www.youtube.com/@freigilson_somdomonte' },
                 { label: 'Favoritos', route: AppRoute.FAVORITES },
               ].map(item => (
-                <button key={item.label} onClick={() => navigate(item.route)} className="text-left text-xs hover:text-primary transition-colors font-bold opacity-50 hover:opacity-100 uppercase tracking-wide">
-                  {item.label}
-                </button>
+                'route' in item ? (
+                  <button key={item.label} onClick={() => navigate(item.route)} className="text-left text-xs hover:text-primary transition-colors font-bold opacity-50 hover:opacity-100 uppercase tracking-wide">
+                    {item.label}
+                  </button>
+                ) : (
+                  <a key={item.label} href={item.url} target="_blank" rel="noreferrer" className="text-left text-xs hover:text-primary transition-colors font-bold opacity-50 hover:opacity-100 uppercase tracking-wide">
+                    {item.label}
+                  </a>
+                )
               ))}
             </nav>
           </div>
