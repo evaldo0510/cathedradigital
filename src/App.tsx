@@ -36,6 +36,7 @@ const BreviaryPage = lazy(() => import('./components/cathedra/BreviaryPage'));
 const LitaniesPage = lazy(() => import('./components/cathedra/LitaniesPage'));
 const LiturgicalCalendarPage = lazy(() => import('./components/cathedra/LiturgicalCalendarPage'));
 const CommunityPage = lazy(() => import('./components/cathedra/CommunityPage'));
+const ProfilePage = lazy(() => import('./components/cathedra/ProfilePage'));
 import CommandCenter from './components/cathedra/CommandCenter';
 import OfflineIndicator from './components/cathedra/OfflineIndicator';
 
