@@ -130,6 +130,8 @@ const Magisterium: React.FC = () => {
     setSelectedDoc(doc);
     setFullText(null);
     setTextError(null);
+    setTextSearch('');
+    setMatchCount(0);
   }, []);
 
   if (selectedDoc) {
