@@ -192,18 +192,27 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       </Section>
 
       {/* ═══════ 7. ORAÇÃO ═══════ */}
-      <Section className="max-w-3xl mx-auto px-6 text-center space-y-6">
-        <Icons.Heart className="w-10 h-10 text-primary mx-auto" />
-        <h2 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Não apenas estudar. Rezar.</h2>
-        <p className="text-muted-foreground font-serif italic text-base md:text-lg leading-relaxed max-w-xl mx-auto">
-          A fé não cresce apenas no entendimento,
-          mas na intimidade com Deus.<br /><br />
-          Reze o terço, medite e transforme o estudo em vida interior.
-        </p>
-        <button onClick={() => navigate(AppRoute.ORACAO)}
-          className="px-8 py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all">
-          Ir para Oração
-        </button>
+      <Section className="overflow-hidden rounded-3xl md:rounded-[4rem] border border-border mx-4 md:mx-6">
+        <div className="grid lg:grid-cols-2">
+          <div className="bg-card p-10 md:p-16 flex flex-col justify-center space-y-6 order-2 lg:order-1">
+            <Icons.Heart className="w-10 h-10 text-primary" />
+            <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground">Não apenas estudar. Rezar.</h2>
+            <p className="text-muted-foreground font-serif italic text-base md:text-lg leading-relaxed">
+              A fé não cresce apenas no entendimento,
+              mas na intimidade com Deus.<br /><br />
+              Reze o terço, medite e transforme o estudo em vida interior.
+            </p>
+            <div>
+              <button onClick={() => navigate(AppRoute.ORACAO)}
+                className="px-8 py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all">
+                Ir para Oração
+              </button>
+            </div>
+          </div>
+          <div className="relative h-64 lg:h-auto order-1 lg:order-2">
+            <img src={sectionPrayer} alt="Pessoa rezando em capela com vitrais" loading="lazy" width={1280} height={720} className="absolute inset-0 w-full h-full object-cover" />
+          </div>
+        </div>
       </Section>
 
       {/* ═══════ 8. DIFERENCIAL ═══════ */}
