@@ -121,12 +121,12 @@ const AppLayout: React.FC = () => {
                       </ProGate>
                     } />
                     <Route path={AppRoute.LOGIN} element={<Auth onSuccess={() => navigate(AppRoute.DASHBOARD)} />} />
-                    <Route path={AppRoute.AQUINAS_OPERA} element={<PlaceholderPage title="Suma Teológica" description="As obras completas de São Tomás de Aquino." />} />
-                    <Route path={AppRoute.CERTAMEN} element={<PlaceholderPage title="Certamen" description="Teste seus conhecimentos teológicos com quizzes interativos." />} />
-                    <Route path={AppRoute.MISSAL} element={<PlaceholderPage title="Missal Romano" description="O Ordinário da Missa e orações litúrgicas." />} />
-                    <Route path={AppRoute.FAVORITES} element={<PlaceholderPage title="Favoritos" description="Seus versículos, orações e estudos salvos." />} />
-                    <Route path={AppRoute.TRILHAS} element={<PlaceholderPage title="Trilhas de Estudo" description="Percursos formativos organizados por tema." />} />
-                    <Route path={AppRoute.ABOUT} element={<PlaceholderPage title="Sobre" description="Manifesto e missão da Cathedra Digital." />} />
+                    <Route path={AppRoute.AQUINAS_OPERA} element={<AquinasOpera />} />
+                    <Route path={AppRoute.CERTAMEN} element={<Certamen />} />
+                    <Route path={AppRoute.MISSAL} element={<MissalPage />} />
+                    <Route path={AppRoute.FAVORITES} element={<FavoritesPage />} />
+                    <Route path={AppRoute.TRILHAS} element={<TrilhasPage />} />
+                    <Route path={AppRoute.ABOUT} element={<AboutPage />} />
                     <Route path="*" element={<Dashboard user={appUser} />} />
                   </Routes>
                 </PageTransition>
