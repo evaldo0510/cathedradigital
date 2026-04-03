@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
+import NotesPanel from './NotesPanel';
 
 type DocCategory = 'all' | 'council' | 'encyclical' | 'exhortation' | 'letter' | 'constitution';
 
