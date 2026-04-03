@@ -1,6 +1,6 @@
 // Update this page (the content is just a fallback if you fail to update the page)
 
-import { Youtube, Heart, Music, Clock } from "lucide-react";
+import { Youtube, Heart, Music, Clock, Handshake } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -52,6 +52,26 @@ const Index = () => {
             <p className="text-center italic text-muted-foreground">
               "A oração é a chave que abre o coração de Deus."
             </p>
+          </Card>
+        </div>
+        
+        <div className="mt-12 w-full max-w-2xl">
+          <Card className="bg-primary/5 border-primary/20">
+            <CardHeader className="text-center">
+              <div className="flex justify-center mb-2">
+                <Handshake className="h-10 w-10 text-primary animate-pulse" />
+              </div>
+              <CardTitle className="text-2xl">Nosso Parceiro</CardTitle>
+              <CardDescription>Conheça mais sobre o trabalho deste parceiro</CardDescription>
+            </CardHeader>
+            <CardContent className="text-center">
+              <p className="text-muted-foreground mb-6">
+                Estamos felizes em anunciar nossa parceria! Em breve traremos conteúdos exclusivos e novidades.
+              </p>
+              <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-white transition-colors">
+                Saiba Mais
+              </Button>
+            </CardContent>
           </Card>
         </div>
       </div>

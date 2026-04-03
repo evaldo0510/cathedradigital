@@ -247,6 +247,47 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             />
           ))}
         </ContentRow>
+        
+        {/* Row: Parceria em Destaque */}
+        <section className="relative overflow-hidden rounded-2xl bg-primary/5 border border-primary/10 p-6 md:p-10">
+          <div className="flex flex-col md:flex-row items-center gap-6 md:gap-10">
+            <div className="relative w-24 h-24 md:w-32 md:h-32 shrink-0">
+              <div className="absolute inset-0 bg-primary/20 rounded-full animate-pulse" />
+              <img 
+                src="https://images.unsplash.com/photo-1544717297-fa154da09f9b?auto=format&fit=crop&q=80&w=400" 
+                alt="Parceria Frei Gilson"
+                className="relative z-10 w-full h-full object-cover rounded-full border-2 border-primary shadow-xl"
+              />
+              <div className="absolute -bottom-2 -right-2 bg-primary text-primary-foreground p-2 rounded-full shadow-lg">
+                <Icons.Handshake className="w-4 h-4 md:w-5 md:h-5" />
+              </div>
+            </div>
+            <div className="flex-1 text-center md:text-left space-y-3">
+              <div className="inline-flex items-center gap-2 px-2 py-0.5 bg-primary/10 rounded-full text-[10px] font-bold uppercase tracking-wider text-primary">
+                Parceria Oficial
+              </div>
+              <h2 className="text-xl md:text-3xl font-serif font-bold text-foreground">Frei Gilson / Som do Monte</h2>
+              <p className="text-sm md:text-base text-muted-foreground max-w-xl">
+                Promovendo a vida de oração e evangelização através da música e do Santo Rosário. Conheça o trabalho oficial do Som do Monte.
+              </p>
+              <div className="flex flex-wrap justify-center md:justify-start gap-3 pt-2">
+                <button 
+                  onClick={() => window.open('https://www.youtube.com/@FreiGilsonSomdoMonte', '_blank')}
+                  className="px-5 py-2 bg-primary text-primary-foreground rounded-lg text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-all flex items-center gap-2"
+                >
+                  <Icons.ExternalLink className="w-3.5 h-3.5" />
+                  YouTube Oficial
+                </button>
+                <button 
+                  onClick={() => navigate(AppRoute.ABOUT)}
+                  className="px-5 py-2 bg-foreground/5 text-foreground border border-foreground/10 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-foreground/10 transition-all"
+                >
+                  Saiba Mais
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* Row: Estudo */}
         <ContentRow title="Estudo e Formação">
