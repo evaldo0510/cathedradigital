@@ -90,6 +90,7 @@ const AppLayout: React.FC = () => {
     <LangContext.Provider value={{ lang, setLang: setLangState, t }}>
       <ScrollToTop />
       <CommandCenter />
+      <OfflineIndicator />
       <div className="flex h-screen overflow-hidden bg-background">
         {/* Sidebar */}
         <div className={`fixed inset-0 z-[150] lg:relative lg:block transition-all ${isSidebarOpen ? 'opacity-100' : 'pointer-events-none lg:pointer-events-auto opacity-0 lg:opacity-100'}`}>
