@@ -382,6 +382,7 @@ const CommunityPage: React.FC = () => {
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-bold text-foreground truncate">{entry.name}</p>
                       <div className="flex gap-3 text-[10px] text-muted-foreground">
+                        <span className="text-primary font-bold">Nv.{entry.levelIdx + 1} {entry.levelName}</span>
                         <span>{entry.posts} discussões</span>
                         <span>{entry.likes} curtidas</span>
                       </div>
