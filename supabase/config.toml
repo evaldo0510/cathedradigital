@@ -11,3 +11,6 @@ verify_jwt = false
 
 [functions.catechism-text]
 verify_jwt = false
+
+[functions.vatican-document]
+verify_jwt = false
