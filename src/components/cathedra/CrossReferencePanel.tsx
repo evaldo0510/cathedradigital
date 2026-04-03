@@ -1,5 +1,6 @@
 import React from 'react';
 import { Icons } from '../../constants';
+import BibleVersePopover from './BibleVersePopover';
 
 interface BibleRef {
   abbr: string;
@@ -59,13 +60,14 @@ const CrossReferencePanel: React.FC<CrossReferencePanelProps> = ({
           <p className="text-xs text-muted-foreground">Referências bíblicas:</p>
           <div className="flex flex-wrap gap-1.5">
             {bibleRefs.map((ref, i) => (
-              <button
+              <BibleVersePopover
                 key={i}
-                onClick={() => onNavigateToBible?.(ref.abbr, ref.chapter)}
-                className="px-2.5 py-1 rounded-lg bg-card border border-border text-xs font-bold text-primary hover:bg-primary hover:text-primary-foreground transition-all"
-              >
-                {ref.label}
-              </button>
+                abbr={ref.abbr}
+                chapter={ref.chapter}
+                verse={ref.verse}
+                label={ref.label}
+                onNavigate={onNavigateToBible}
+              />
             ))}
           </div>
         </div>
