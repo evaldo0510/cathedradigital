@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import StaggeredList from './StaggeredList';
 import CrossReferencePanel from './CrossReferencePanel';
 import { getBibleCrossRefs } from '@/data/cross-references';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 const BIBLE_BOOKS = {
   'Antigo Testamento': [
@@ -96,6 +96,7 @@ const FONT_SIZES = [
 
 const Bible: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState<ViewMode>('books');
   const [selectedBook, setSelectedBook] = useState<{ name: string; abbr: string; chapters: number } | null>(null);
   const [selectedChapter, setSelectedChapter] = useState<number>(0);
@@ -107,6 +108,32 @@ const Bible: React.FC = () => {
   const [highlightedVerse, setHighlightedVerse] = useState<number | null>(null);
   const [fontSizeIdx, setFontSizeIdx] = useState(1);
   const [showCrossRefs, setShowCrossRefs] = useState(true);
+
+  // Handle deep-link from Catechism cross-references (?book=Gn&ch=1)
+  useEffect(() => {
+    const bookParam = searchParams.get('book');
+    const chParam = searchParams.get('ch');
+    if (bookParam) {
+      const allBooks = [...BIBLE_BOOKS['Antigo Testamento'], ...BIBLE_BOOKS['Novo Testamento']];
+      const found = allBooks.find(b => b.abbr === bookParam);
+      if (found) {
+        const isNT = BIBLE_BOOKS['Novo Testamento'].some(b => b.abbr === bookParam);
+        setTestament(isNT ? 'Novo Testamento' : 'Antigo Testamento');
+        setSelectedBook(found);
+        if (chParam) {
+          const ch = parseInt(chParam);
+          if (!isNaN(ch) && ch >= 1 && ch <= found.chapters) {
+            setSelectedChapter(ch);
+            setViewMode('reading');
+          } else {
+            setViewMode('chapters');
+          }
+        } else {
+          setViewMode('chapters');
+        }
+      }
+    }
+  }, [searchParams]);
 
   const filteredBooks = useMemo(() => {
     const books = BIBLE_BOOKS[testament];
