@@ -6,6 +6,7 @@ import CrossReferencePanel from './CrossReferencePanel';
 import { getBibleCrossRefs } from '@/data/cross-references';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useFavorites } from '@/hooks/useFavorites';
+import BibleSearch from './BibleSearch';
 
 const BIBLE_BOOKS = {
   'Antigo Testamento': [
@@ -103,6 +104,7 @@ const Bible: React.FC = () => {
   const [selectedChapter, setSelectedChapter] = useState<number>(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [testament, setTestament] = useState<'Antigo Testamento' | 'Novo Testamento'>('Antigo Testamento');
+  const [showFullTextSearch, setShowFullTextSearch] = useState(false);
   const [verses, setVerses] = useState<{ number: number; text: string }[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [bibleError, setBibleError] = useState('');
@@ -368,17 +370,30 @@ const Bible: React.FC = () => {
         <p className="text-muted-foreground font-serif italic">Cânon completo com 73 livros da tradição católica.</p>
       </div>
 
-      {/* Search */}
-      <div className="max-w-md mx-auto">
-        <div className="relative">
-          <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <input
-            value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-            placeholder="Buscar livro..."
-            className="w-full pl-11 pr-4 py-3 rounded-2xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
-          />
+      {/* Full-text search */}
+      {showFullTextSearch ? (
+        <div className="max-w-2xl mx-auto bg-card border border-border rounded-2xl p-5">
+          <BibleSearch onClose={() => setShowFullTextSearch(false)} />
         </div>
-      </div>
+      ) : (
+        <>
+          {/* Search */}
+          <div className="max-w-md mx-auto flex gap-2">
+            <div className="relative flex-1">
+              <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <input
+                value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
+                placeholder="Buscar livro..."
+                className="w-full pl-11 pr-4 py-3 rounded-2xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+              />
+            </div>
+            <button onClick={() => setShowFullTextSearch(true)}
+              className="px-4 py-3 rounded-2xl bg-foreground text-background text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-primary-foreground transition-all whitespace-nowrap">
+              Buscar Versículos
+            </button>
+          </div>
+        </>
+      )}
 
       {/* Testament tabs */}
       <div className="flex gap-2 justify-center">

@@ -33,6 +33,7 @@ const COMMANDS: CommandItem[] = [
   { label: 'Sobre', description: 'Sobre o Cathedra', path: AppRoute.ABOUT, icon: <Icons.Globe className="w-4 h-4" />, keywords: ['sobre', 'manifesto', 'about'] },
   { label: 'Login', description: 'Acessar conta', path: AppRoute.LOGIN, icon: <Icons.Users className="w-4 h-4" />, keywords: ['login', 'conta', 'entrar', 'cadastro'] },
   { label: 'Litanias', description: 'Orações de invocação', path: AppRoute.LITANIES, icon: <Icons.Heart className="w-4 h-4" />, keywords: ['litania', 'invocação', 'sagrado coração', 'nossa senhora'] },
+  { label: 'Calendário Litúrgico', description: 'Festas e cores litúrgicas', path: AppRoute.LITURGICAL_CALENDAR, icon: <Icons.History className="w-4 h-4" />, keywords: ['calendário', 'litúrgico', 'festas', 'solenidade', 'cores'] },
 ];
 
 const CommandCenter: React.FC = () => {

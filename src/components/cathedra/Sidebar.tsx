@@ -21,6 +21,7 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user }) => {
       items: [
         { label: 'Oração e Devoção', path: AppRoute.ORACAO, icon: <Icons.Heart className="w-5 h-5" /> },
         { label: 'Liturgia & Orações', path: AppRoute.DAILY_LITURGY, icon: <Icons.Star className="w-5 h-5" /> },
+        { label: 'Calendário Litúrgico', path: AppRoute.LITURGICAL_CALENDAR, icon: <Icons.History className="w-5 h-5" /> },
         { label: 'Santo Rosário', path: AppRoute.ROSARY, icon: <Icons.Heart className="w-5 h-5" /> },
         { label: 'Via Crucis', path: AppRoute.VIA_CRUCIS, icon: <Icons.Cross className="w-5 h-5" /> },
         { label: 'Breviário', path: AppRoute.BREVIARY, icon: <Icons.History className="w-5 h-5" /> },

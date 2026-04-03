@@ -34,6 +34,7 @@ const DogmasPage = lazy(() => import('./components/cathedra/DogmasPage'));
 const LectioDivina = lazy(() => import('./components/cathedra/LectioDivina'));
 const BreviaryPage = lazy(() => import('./components/cathedra/BreviaryPage'));
 const LitaniesPage = lazy(() => import('./components/cathedra/LitaniesPage'));
+const LiturgicalCalendarPage = lazy(() => import('./components/cathedra/LiturgicalCalendarPage'));
 import CommandCenter from './components/cathedra/CommandCenter';
 import OfflineIndicator from './components/cathedra/OfflineIndicator';
 
@@ -139,6 +140,7 @@ const AppLayout: React.FC = () => {
                     <Route path={AppRoute.LECTIO_DIVINA} element={<LectioDivina />} />
                     <Route path={AppRoute.BREVIARY} element={<BreviaryPage />} />
                     <Route path={AppRoute.LITANIES} element={<LitaniesPage />} />
+                    <Route path={AppRoute.LITURGICAL_CALENDAR} element={<LiturgicalCalendarPage />} />
                     <Route path="*" element={<Dashboard user={appUser} />} />
                   </Routes>
                 </PageTransition>
