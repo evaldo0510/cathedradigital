@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Icons } from '../../constants';
 
 type MysteryKey = 'gozosos' | 'dolorosos' | 'gloriosos' | 'luminosos';
