@@ -5,6 +5,7 @@ import StaggeredList from './StaggeredList';
 import CrossReferencePanel from './CrossReferencePanel';
 import { getBibleCrossRefs } from '@/data/cross-references';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useFavorites } from '@/hooks/useFavorites';
 
 const BIBLE_BOOKS = {
   'Antigo Testamento': [
