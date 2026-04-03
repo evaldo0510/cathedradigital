@@ -29,6 +29,15 @@ interface Post {
   user_liked?: boolean;
 }
 
+interface LeaderboardEntry {
+  id: string;
+  name: string;
+  avatar_url: string | null;
+  posts: number;
+  likes: number;
+  score: number;
+}
+
 const CommunityPage: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -43,6 +52,54 @@ const CommunityPage: React.FC = () => {
   const [replies, setReplies] = useState<Post[]>([]);
   const [replyContent, setReplyContent] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [tab, setTab] = useState<'forum' | 'ranking'>('forum');
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
+  const [lbLoading, setLbLoading] = useState(false);
+
+  const fetchLeaderboard = useCallback(async () => {
+    setLbLoading(true);
+    // Get all posts grouped by user
+    const { data: allPosts } = await supabase
+      .from('community_posts')
+      .select('user_id, likes_count');
+
+    if (!allPosts) { setLbLoading(false); return; }
+
+    const userMap = new Map<string, { posts: number; likes: number }>();
+    for (const p of allPosts) {
+      const entry = userMap.get(p.user_id) || { posts: 0, likes: 0 };
+      entry.posts += 1;
+      entry.likes += p.likes_count;
+      userMap.set(p.user_id, entry);
+    }
+
+    const userIds = [...userMap.keys()];
+    if (userIds.length === 0) { setLeaderboard([]); setLbLoading(false); return; }
+
+    const { data: profiles } = await supabase
+      .from('profiles')
+      .select('id, name, avatar_url')
+      .in('id', userIds);
+
+    const entries: LeaderboardEntry[] = (profiles || []).map(p => {
+      const stats = userMap.get(p.id) || { posts: 0, likes: 0 };
+      return {
+        id: p.id,
+        name: p.name || 'Anônimo',
+        avatar_url: p.avatar_url,
+        posts: stats.posts,
+        likes: stats.likes,
+        score: stats.posts * 10 + stats.likes * 5,
+      };
+    }).sort((a, b) => b.score - a.score).slice(0, 20);
+
+    setLeaderboard(entries);
+    setLbLoading(false);
+  }, []);
+
+  useEffect(() => {
+    if (tab === 'ranking') fetchLeaderboard();
+  }, [tab, fetchLeaderboard]);
 
   const fetchPosts = useCallback(async () => {
     setLoading(true);
