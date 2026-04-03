@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
+import StaggeredList from './StaggeredList';
 
 const BIBLE_BOOKS = {
   'Antigo Testamento': [
