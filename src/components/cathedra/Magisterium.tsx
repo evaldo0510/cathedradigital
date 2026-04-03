@@ -349,6 +349,7 @@ const Magisterium: React.FC = () => {
                         Limpar cache
                       </button>
                     )}
+                    <NotesPanel contentType="magisterium" contentId={selectedDoc.id} contentLabel={selectedDoc.title} />
                   </div>
                 </div>
 
