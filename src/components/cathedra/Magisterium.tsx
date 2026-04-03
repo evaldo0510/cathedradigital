@@ -296,8 +296,25 @@ const Magisterium: React.FC = () => {
             {fullText && (
               <div className="space-y-4">
                 <div className="flex items-center justify-between flex-wrap gap-2">
-                  <h3 className="text-sm font-black uppercase tracking-widest text-primary">Texto Integral</h3>
-                  <span className="text-[10px] text-muted-foreground italic">Fonte: Vatican.va</span>
+                  <div className="flex items-center gap-3">
+                    <h3 className="text-sm font-black uppercase tracking-widest text-primary">Texto Integral</h3>
+                    {cachedIds.includes(selectedDoc.id) && (
+                      <span className="px-2 py-0.5 rounded-full text-[8px] font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 uppercase tracking-wider">
+                        Salvo offline
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-[10px] text-muted-foreground italic">Fonte: Vatican.va</span>
+                    {cachedIds.includes(selectedDoc.id) && (
+                      <button
+                        onClick={() => clearDocCache(selectedDoc.id)}
+                        className="text-[10px] text-destructive hover:underline"
+                      >
+                        Limpar cache
+                      </button>
+                    )}
+                  </div>
                 </div>
 
                 {/* Search within document */}
