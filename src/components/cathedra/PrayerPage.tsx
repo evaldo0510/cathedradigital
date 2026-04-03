@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Icons } from '../../constants';
+import PrayerAudioPlayer from './PrayerAudioPlayer';
 
 type MysteryKey = 'gozosos' | 'dolorosos' | 'gloriosos' | 'luminosos';
 
@@ -141,7 +142,17 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
       {/* Content */}
       <div className="flex-1 flex items-start justify-center p-6">
         <div className="w-full max-w-xl bg-white/[0.03] border border-white/[0.06] rounded-3xl p-8 md:p-10 space-y-6 backdrop-blur-sm">
-          {/* YouTube Player - always visible */}
+          {/* Audio Player — works in background */}
+          <PrayerAudioPlayer
+            variant="dark"
+            prayers={[
+              { label: 'Pai Nosso', text: PRAYERS.paiNosso },
+              ...Array.from({ length: 10 }, (_, i) => ({ label: `Ave Maria ${i + 1}`, text: PRAYERS.aveMaria })),
+              { label: 'Glória ao Pai', text: PRAYERS.gloria },
+            ]}
+          />
+
+          {/* YouTube Player — optional visual */}
           <YouTubePlayer videoId={YOUTUBE_IDS[mysteryKey]} title={data.title} />
 
           {phase === 'intro' && (
@@ -289,7 +300,19 @@ const PrayerPage: React.FC = () => {
         <p className="text-lg font-serif text-muted-foreground">{todayData.emoji} {todayData.title}</p>
         <p className="text-xs text-muted-foreground">{todayData.days}</p>
 
-        {/* YouTube Player */}
+        {/* Audio Player — works in background */}
+        <div className="max-w-lg mx-auto pt-2">
+          <PrayerAudioPlayer
+            prayers={[
+              { label: 'Pai Nosso', text: PRAYERS.paiNosso },
+              ...Array.from({ length: 10 }, (_, i) => ({ label: `Ave Maria ${i + 1}`, text: PRAYERS.aveMaria })),
+              { label: 'Glória ao Pai', text: PRAYERS.gloria },
+              { label: 'Salve Rainha', text: PRAYERS.salveRainha },
+            ]}
+          />
+        </div>
+
+        {/* YouTube Player — optional video */}
         <div className="max-w-lg mx-auto pt-2">
           <YouTubePlayer videoId={YOUTUBE_IDS[todayKey]} title={todayData.title} />
         </div>
