@@ -138,6 +138,7 @@ const AppLayout: React.FC = () => {
                     <Route path={AppRoute.DOGMAS} element={<DogmasPage />} />
                     <Route path={AppRoute.LECTIO_DIVINA} element={<LectioDivina />} />
                     <Route path={AppRoute.BREVIARY} element={<BreviaryPage />} />
+                    <Route path={AppRoute.LITANIES} element={<LitaniesPage />} />
                     <Route path="*" element={<Dashboard user={appUser} />} />
                   </Routes>
                 </PageTransition>
