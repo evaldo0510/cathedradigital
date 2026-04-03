@@ -81,6 +81,19 @@ const ProfilePage: React.FC = () => {
 
   const unlockedCount = badges.filter(b => b.unlocked).length;
 
+  // XP System
+  const totalXp = stats.posts * 30 + stats.likes * 10 + stats.notes * 20 + stats.daysActive * 15 + unlockedCount * 50;
+  const { levelIdx: currentLevelIdx, levelName, nextLevel, progress: xpProgress } = getLevelInfo(totalXp);
+
+  // Detect level-up
+  useEffect(() => {
+    if (prevLevelRef.current !== null && currentLevelIdx > prevLevelRef.current) {
+      setShowLevelUp(true);
+      setTimeout(() => setShowLevelUp(false), 4000);
+    }
+    prevLevelRef.current = currentLevelIdx;
+  }, [currentLevelIdx]);
+
   const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !user) return;
@@ -130,19 +143,6 @@ const ProfilePage: React.FC = () => {
 
   const initials = (profile.name || user.email || '?').slice(0, 2).toUpperCase();
   const memberSince = new Date(user.created_at).toLocaleDateString('pt-BR', { year: 'numeric', month: 'long' });
-
-  // XP System
-  const totalXp = stats.posts * 30 + stats.likes * 10 + stats.notes * 20 + stats.daysActive * 15 + unlockedCount * 50;
-  const { levelIdx: currentLevelIdx, levelName, nextLevel, progress: xpProgress } = getLevelInfo(totalXp);
-
-  // Detect level-up
-  useEffect(() => {
-    if (prevLevelRef.current !== null && currentLevelIdx > prevLevelRef.current) {
-      setShowLevelUp(true);
-      setTimeout(() => setShowLevelUp(false), 4000);
-    }
-    prevLevelRef.current = currentLevelIdx;
-  }, [currentLevelIdx]);
 
   const statCards = [
     { label: 'Discussões', value: stats.posts, icon: <Icons.Message className="w-5 h-5" /> },
