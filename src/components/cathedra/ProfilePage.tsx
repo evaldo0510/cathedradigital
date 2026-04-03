@@ -200,7 +200,7 @@ const ProfilePage: React.FC = () => {
           />
         </div>
         <div className="flex justify-between text-[9px] text-muted-foreground">
-          <span>{currentLevel.name}</span>
+          <span>{levelName}</span>
           <span>{nextLevel ? `${nextLevel.minXp - totalXp} XP para ${nextLevel.name}` : 'Nível máximo!'}</span>
         </div>
         <div className="flex flex-wrap gap-2 pt-2 border-t border-border">
