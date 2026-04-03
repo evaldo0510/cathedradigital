@@ -129,8 +129,22 @@ const Magisterium: React.FC = () => {
     return docs.sort((a, b) => b.year - a.year);
   }, [category, searchQuery]);
 
+  useEffect(() => {
+    setCachedIds(getCachedDocIds());
+  }, [fullText]);
+
   const fetchFullText = useCallback(async (doc: MagisteriumDoc) => {
     if (!doc.vaticanUrl) return;
+
+    // Try cache first
+    const cached = getCachedDoc(doc.id);
+    if (cached) {
+      setFullText(cached.text);
+      setLoadingText(false);
+      setTextError(null);
+      return;
+    }
+
     setLoadingText(true);
     setTextError(null);
     setFullText(null);
@@ -143,16 +157,30 @@ const Magisterium: React.FC = () => {
       if (error) throw new Error(error.message);
       if (data?.text) {
         setFullText(data.text);
+        setCachedDoc(doc.id, data.text, data.title || doc.title);
       } else {
         setTextError('Não foi possível extrair o texto do documento.');
       }
     } catch (err) {
       console.error('Error fetching Vatican document:', err);
-      setTextError('Erro ao carregar o documento. Tente novamente.');
+      // Try cache as fallback even on error
+      const fallback = getCachedDoc(doc.id);
+      if (fallback) {
+        setFullText(fallback.text);
+        setTextError(null);
+      } else {
+        setTextError('Erro ao carregar o documento. Tente novamente.');
+      }
     } finally {
       setLoadingText(false);
     }
   }, []);
+
+  const clearDocCache = useCallback((docId: string) => {
+    localStorage.removeItem(CACHE_PREFIX + docId);
+    setCachedIds(getCachedDocIds());
+    if (selectedDoc?.id === docId) setFullText(null);
+  }, [selectedDoc]);
 
   const handleSelectDoc = useCallback((doc: MagisteriumDoc) => {
     setSelectedDoc(doc);
