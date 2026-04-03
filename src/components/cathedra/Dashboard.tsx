@@ -120,24 +120,31 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       </Section>
 
       {/* ═══════ 4. BÍBLIA ═══════ */}
-      <Section className="bg-secondary py-16 md:py-24 rounded-3xl md:rounded-[4rem] border border-border mx-4 md:mx-6">
-        <div className="max-w-3xl mx-auto px-6 md:px-8 text-center space-y-6">
-          <Icons.Book className="w-10 h-10 text-primary mx-auto" />
-          <h2 className="text-3xl md:text-5xl font-serif font-bold text-foreground">A Palavra que ilumina</h2>
-          <p className="text-muted-foreground font-serif italic text-base md:text-lg leading-relaxed max-w-xl mx-auto">
-            A Sagrada Escritura não é apenas para leitura — é para encontro.<br /><br />
-            Aqui, você acessa a Bíblia com apoio do Catecismo e da Tradição,
-            para compreender não apenas o que está escrito, mas o que é ensinado.
-          </p>
-          <button onClick={() => navigate(AppRoute.BIBLE)}
-            className="px-8 py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all">
-            Ler a Bíblia
-          </button>
+      <Section className="overflow-hidden rounded-3xl md:rounded-[4rem] border border-border mx-4 md:mx-6">
+        <div className="grid lg:grid-cols-2">
+          <div className="relative h-64 lg:h-auto">
+            <img src={sectionBible} alt="Bíblia Sagrada aberta à luz de velas" loading="lazy" width={1280} height={720} className="absolute inset-0 w-full h-full object-cover" />
+          </div>
+          <div className="bg-secondary p-10 md:p-16 flex flex-col justify-center space-y-6">
+            <Icons.Book className="w-10 h-10 text-primary" />
+            <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground">A Palavra que ilumina</h2>
+            <p className="text-muted-foreground font-serif italic text-base md:text-lg leading-relaxed">
+              A Sagrada Escritura não é apenas para leitura — é para encontro.<br /><br />
+              Aqui, você acessa a Bíblia com apoio do Catecismo e da Tradição,
+              para compreender não apenas o que está escrito, mas o que é ensinado.
+            </p>
+            <div>
+              <button onClick={() => navigate(AppRoute.BIBLE)}
+                className="px-8 py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all">
+                Ler a Bíblia
+              </button>
+            </div>
+          </div>
         </div>
       </Section>
 
       {/* ═══════ 5. CATECISMO ═══════ */}
-      <Section className="max-w-3xl mx-auto px-6 text-center space-y-6">
+      <Section className="overflow-hidden rounded-3xl md:rounded-[4rem] border border-border mx-4 md:mx-6">
         <Icons.Cross className="w-10 h-10 text-primary mx-auto" />
         <h2 className="text-3xl md:text-5xl font-serif font-bold text-foreground">A fé explicada com clareza</h2>
         <p className="text-muted-foreground font-serif italic text-base md:text-lg leading-relaxed max-w-xl mx-auto">
