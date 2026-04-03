@@ -64,7 +64,8 @@ const SacredImage: React.FC<SacredImageProps> = ({ src, alt, className, priority
         src={error ? "https://images.unsplash.com/photo-1548610762-656391d1ad4d?auto=format&fit=crop&w=800&q=80" : mainSrc}
         alt={alt}
         loading={priority ? "eager" : "lazy"}
-        className={`relative z-[2] w-full h-full object-cover transition-all duration-[2000ms] ${isLoaded && !error ? 'opacity-100 scale-100 blur-0' : 'opacity-0 scale-105 blur-md'}`}
+        className={`relative z-[2] w-full h-full object-cover transition-all ${isLoaded && !error ? 'opacity-100 scale-100 blur-0' : 'opacity-0 scale-105 blur-md'}`}
+        style={{ transitionDuration: '2000ms' }}
       />
       {!isLoaded && (
         <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
