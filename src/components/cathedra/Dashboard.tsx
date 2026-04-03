@@ -145,17 +145,26 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
 
       {/* ═══════ 5. CATECISMO ═══════ */}
       <Section className="overflow-hidden rounded-3xl md:rounded-[4rem] border border-border mx-4 md:mx-6">
-        <Icons.Cross className="w-10 h-10 text-primary mx-auto" />
-        <h2 className="text-3xl md:text-5xl font-serif font-bold text-foreground">A fé explicada com clareza</h2>
-        <p className="text-muted-foreground font-serif italic text-base md:text-lg leading-relaxed max-w-xl mx-auto">
-          O Catecismo da Igreja Católica reúne, de forma ordenada,
-          tudo o que a Igreja crê, celebra e vive.<br /><br />
-          Aqui, você não lê parágrafos isolados — você entende a estrutura da fé.
-        </p>
-        <button onClick={() => navigate(AppRoute.CATECHISM)}
-          className="px-8 py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all">
-          Estudar o Catecismo
-        </button>
+        <div className="grid lg:grid-cols-2">
+          <div className="bg-card p-10 md:p-16 flex flex-col justify-center space-y-6 order-2 lg:order-1">
+            <Icons.Cross className="w-10 h-10 text-primary" />
+            <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground">A fé explicada com clareza</h2>
+            <p className="text-muted-foreground font-serif italic text-base md:text-lg leading-relaxed">
+              O Catecismo da Igreja Católica reúne, de forma ordenada,
+              tudo o que a Igreja crê, celebra e vive.<br /><br />
+              Aqui, você não lê parágrafos isolados — você entende a estrutura da fé.
+            </p>
+            <div>
+              <button onClick={() => navigate(AppRoute.CATECHISM)}
+                className="px-8 py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all">
+                Estudar o Catecismo
+              </button>
+            </div>
+          </div>
+          <div className="relative h-64 lg:h-auto order-1 lg:order-2">
+            <img src={sectionCatechism} alt="Catecismo aberto com crucifixo e rosário" loading="lazy" width={1280} height={720} className="absolute inset-0 w-full h-full object-cover" />
+          </div>
+        </div>
       </Section>
 
       {/* ═══════ 6. DOCUMENTOS ═══════ */}
