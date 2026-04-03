@@ -186,7 +186,7 @@ const ProfilePage: React.FC = () => {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Nível {currentLevelIdx + 1}</p>
-            <p className="text-lg font-black text-foreground">{currentLevel.name}</p>
+            <p className="text-lg font-black text-foreground">{levelName}</p>
           </div>
           <div className="text-right">
             <p className="text-2xl font-black text-primary">{totalXp}</p>
