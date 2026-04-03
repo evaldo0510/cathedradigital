@@ -96,9 +96,9 @@ const AppLayout: React.FC = () => {
           />
           <div className="flex-1 p-4 md:p-12 w-full max-w-7xl mx-auto page-enter">
             <Suspense fallback={<LoadingFallback />}>
-              <AnimatePresence mode="wait">
-                <PageTransition>
-                  <Routes location={location} key={location.pathname}>
+              <AnimatePresence mode="wait" initial={false}>
+                <PageTransition key={location.pathname}>
+                  <Routes location={location}>
                     <Route path={AppRoute.DASHBOARD} element={<Dashboard user={appUser} />} />
                     <Route path={AppRoute.BIBLE} element={<Bible />} />
                     <Route path={AppRoute.CATECHISM} element={<Catechism />} />

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { Icons, Logo } from '@/constants';
 
@@ -15,7 +15,8 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
   user, isDark, onToggleDark, onSignOut, onOpenSidebar
 }) => {
   const navigate = useNavigate();
-  const isDashboard = location.pathname === AppRoute.DASHBOARD;
+  const { pathname } = useLocation();
+  const isDashboard = pathname === AppRoute.DASHBOARD;
 
   return (
     <header className="p-3 md:p-4 border-b border-border bg-card/90 backdrop-blur-2xl flex items-center justify-between sticky top-0 z-[140]">
