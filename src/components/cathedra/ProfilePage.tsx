@@ -127,6 +127,29 @@ const ProfilePage: React.FC = () => {
   const initials = (profile.name || user.email || '?').slice(0, 2).toUpperCase();
   const memberSince = new Date(user.created_at).toLocaleDateString('pt-BR', { year: 'numeric', month: 'long' });
 
+  // XP System: posts=30xp, likes=10xp, notes=20xp, days=15xp, badges=50xp each
+  const totalXp = stats.posts * 30 + stats.likes * 10 + stats.notes * 20 + stats.daysActive * 15 + unlockedCount * 50;
+
+  const LEVELS = [
+    { name: 'Catecúmeno', minXp: 0 },
+    { name: 'Peregrino', minXp: 100 },
+    { name: 'Acólito', minXp: 300 },
+    { name: 'Leitor', minXp: 600 },
+    { name: 'Discípulo', minXp: 1000 },
+    { name: 'Apologista', minXp: 1800 },
+    { name: 'Teólogo', minXp: 3000 },
+    { name: 'Doutor da Fé', minXp: 5000 },
+    { name: 'Mestre Erudito', minXp: 8000 },
+    { name: 'Patriarca', minXp: 12000 },
+  ];
+
+  const currentLevelIdx = LEVELS.reduce((acc, lvl, idx) => totalXp >= lvl.minXp ? idx : acc, 0);
+  const currentLevel = LEVELS[currentLevelIdx];
+  const nextLevel = LEVELS[currentLevelIdx + 1];
+  const xpProgress = nextLevel
+    ? ((totalXp - currentLevel.minXp) / (nextLevel.minXp - currentLevel.minXp)) * 100
+    : 100;
+
   const statCards = [
     { label: 'Discussões', value: stats.posts, icon: <Icons.Message className="w-5 h-5" /> },
     { label: 'Curtidas', value: stats.likes, icon: <Icons.Heart className="w-5 h-5" /> },
@@ -161,6 +184,37 @@ const ProfilePage: React.FC = () => {
           <p className="text-xs text-muted-foreground uppercase tracking-widest font-bold">
             {profile.is_premium ? '⭐ Erudito PRO' : 'Peregrino'} · Membro desde {memberSince}
           </p>
+        </div>
+      </div>
+
+      {/* Level & XP */}
+      <div className="bg-card border border-border rounded-2xl p-6 space-y-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Nível {currentLevelIdx + 1}</p>
+            <p className="text-lg font-black text-foreground">{currentLevel.name}</p>
+          </div>
+          <div className="text-right">
+            <p className="text-2xl font-black text-primary">{totalXp}</p>
+            <p className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground">XP Total</p>
+          </div>
+        </div>
+        <div className="relative h-3 bg-muted rounded-full overflow-hidden">
+          <div
+            className="absolute inset-y-0 left-0 bg-gradient-to-r from-primary to-primary/70 rounded-full transition-all duration-700"
+            style={{ width: `${Math.min(xpProgress, 100)}%` }}
+          />
+        </div>
+        <div className="flex justify-between text-[9px] text-muted-foreground">
+          <span>{currentLevel.name}</span>
+          <span>{nextLevel ? `${nextLevel.minXp - totalXp} XP para ${nextLevel.name}` : 'Nível máximo!'}</span>
+        </div>
+        <div className="flex flex-wrap gap-2 pt-2 border-t border-border">
+          <span className="text-[8px] text-muted-foreground bg-muted px-2 py-1 rounded-lg">📝 Discussão = 30 XP</span>
+          <span className="text-[8px] text-muted-foreground bg-muted px-2 py-1 rounded-lg">❤️ Curtida = 10 XP</span>
+          <span className="text-[8px] text-muted-foreground bg-muted px-2 py-1 rounded-lg">✏️ Anotação = 20 XP</span>
+          <span className="text-[8px] text-muted-foreground bg-muted px-2 py-1 rounded-lg">📅 Dia ativo = 15 XP</span>
+          <span className="text-[8px] text-muted-foreground bg-muted px-2 py-1 rounded-lg">🏅 Badge = 50 XP</span>
         </div>
       </div>
 
