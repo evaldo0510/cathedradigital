@@ -127,6 +127,29 @@ const ProfilePage: React.FC = () => {
   const initials = (profile.name || user.email || '?').slice(0, 2).toUpperCase();
   const memberSince = new Date(user.created_at).toLocaleDateString('pt-BR', { year: 'numeric', month: 'long' });
 
+  // XP System: posts=30xp, likes=10xp, notes=20xp, days=15xp, badges=50xp each
+  const totalXp = stats.posts * 30 + stats.likes * 10 + stats.notes * 20 + stats.daysActive * 15 + unlockedCount * 50;
+
+  const LEVELS = [
+    { name: 'Catecúmeno', minXp: 0 },
+    { name: 'Peregrino', minXp: 100 },
+    { name: 'Acólito', minXp: 300 },
+    { name: 'Leitor', minXp: 600 },
+    { name: 'Discípulo', minXp: 1000 },
+    { name: 'Apologista', minXp: 1800 },
+    { name: 'Teólogo', minXp: 3000 },
+    { name: 'Doutor da Fé', minXp: 5000 },
+    { name: 'Mestre Erudito', minXp: 8000 },
+    { name: 'Patriarca', minXp: 12000 },
+  ];
+
+  const currentLevelIdx = LEVELS.reduce((acc, lvl, idx) => totalXp >= lvl.minXp ? idx : acc, 0);
+  const currentLevel = LEVELS[currentLevelIdx];
+  const nextLevel = LEVELS[currentLevelIdx + 1];
+  const xpProgress = nextLevel
+    ? ((totalXp - currentLevel.minXp) / (nextLevel.minXp - currentLevel.minXp)) * 100
+    : 100;
+
   const statCards = [
     { label: 'Discussões', value: stats.posts, icon: <Icons.Message className="w-5 h-5" /> },
     { label: 'Curtidas', value: stats.likes, icon: <Icons.Heart className="w-5 h-5" /> },
