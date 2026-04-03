@@ -263,26 +263,42 @@ const Magisterium: React.FC = () => {
             {!fullText && !loadingText && !textError && (
               <div className="flex flex-col items-center gap-4">
                 {selectedDoc.vaticanUrl ? (
-                  <>
-                    <button
-                      onClick={() => fetchFullText(selectedDoc)}
-                      className="px-8 py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all"
-                    >
-                      {cachedIds.includes(selectedDoc.id) ? '📥 Abrir do Cache' : 'Carregar Texto Completo'}
-                    </button>
-                    {cachedIds.includes(selectedDoc.id) && (
-                      <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-widest">✓ Disponível offline</span>
-                    )}
-                    <a
-                      href={selectedDoc.vaticanUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      <Icons.ExternalLink className="w-4 h-4" />
-                      Abrir no site da Santa Sé
-                    </a>
-                  </>
+                  <div className="w-full flex flex-col gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+                      <button
+                        onClick={() => fetchFullText(selectedDoc)}
+                        className="flex-1 px-8 py-5 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] shadow-xl hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-2 group"
+                      >
+                        <Icons.BookOpen className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                        {cachedIds.includes(selectedDoc.id) ? 'Abrir no App' : 'Ler no App'}
+                      </button>
+
+                      <a
+                        href={selectedDoc.pdfUrl || selectedDoc.vaticanUrl.replace('.html', '.pdf')}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 px-8 py-5 bg-primary/10 text-primary border border-primary/20 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-primary/20 transition-all flex items-center justify-center gap-2 group"
+                      >
+                        <Icons.Download className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                        Abrir PDF Completo
+                      </a>
+                    </div>
+                    
+                    <div className="flex flex-col items-center gap-2">
+                      {cachedIds.includes(selectedDoc.id) && (
+                        <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-[0.2em]">✓ Disponível para leitura offline</span>
+                      )}
+                      <a
+                        href={selectedDoc.vaticanUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        <Icons.ExternalLink className="w-3 h-3" />
+                        Ver no site da Santa Sé
+                      </a>
+                    </div>
+                  </div>
                 ) : (
                   <p className="text-muted-foreground italic text-center text-sm">
                     Texto completo ainda não disponível para este documento.
