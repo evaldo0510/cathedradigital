@@ -1,32 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Icons } from '../../constants';
-
-interface FavoriteItem {
-  id: string;
-  type: string;
-  title: string;
-  content: string;
-  timestamp: string;
-}
+import { useFavorites } from '@/hooks/useFavorites';
 
 const FavoritesPage: React.FC = () => {
-  const [favorites, setFavorites] = useState<FavoriteItem[]>([]);
+  const { favorites, removeFavorite } = useFavorites();
   const [filter, setFilter] = useState('all');
 
-  useEffect(() => {
-    const saved = localStorage.getItem('cathedra_favorites');
-    if (saved) {
-      try { setFavorites(JSON.parse(saved)); } catch {}
-    }
-  }, []);
-
   const filtered = filter === 'all' ? favorites : favorites.filter(f => f.type === filter);
-
-  const removeFavorite = (id: string) => {
-    const updated = favorites.filter(f => f.id !== id);
-    setFavorites(updated);
-    localStorage.setItem('cathedra_favorites', JSON.stringify(updated));
-  };
 
   const types = ['all', ...Array.from(new Set(favorites.map(f => f.type)))];
   const typeLabels: Record<string, string> = { all: 'Todos', verse: 'Versículos', catechism: 'Catecismo', prayer: 'Orações', study: 'Estudos', dogma: 'Dogmas' };
@@ -76,8 +56,8 @@ const FavoritesPage: React.FC = () => {
                   <h3 className="font-serif font-bold text-foreground">{item.title}</h3>
                   <p className="text-sm text-muted-foreground font-serif line-clamp-2">{item.content}</p>
                 </div>
-                <button onClick={() => removeFavorite(item.id)} className="p-2 rounded-lg opacity-0 group-hover:opacity-100 hover:bg-red-500/10 transition-all">
-                  <Icons.Cross className="w-4 h-4 text-red-500" />
+                <button onClick={() => removeFavorite(item.id)} className="p-2 rounded-lg opacity-0 group-hover:opacity-100 hover:bg-destructive/10 transition-all">
+                  <Icons.Cross className="w-4 h-4 text-destructive" />
                 </button>
               </div>
             </div>

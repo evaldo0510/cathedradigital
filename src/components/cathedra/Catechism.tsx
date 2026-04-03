@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import CrossReferencePanel from './CrossReferencePanel';
 import { getCatechismCrossRefs } from '@/data/cross-references';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useFavorites } from '@/hooks/useFavorites';
 
 const CIC_SECTIONS = [
   {
@@ -89,6 +90,7 @@ const Catechism: React.FC = () => {
   const [currentParagraph, setCurrentParagraph] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [showCrossRefs, setShowCrossRefs] = useState(true);
+  const { toggleFavorite, isFavorite } = useFavorites();
 
   const crossRefs = getCatechismCrossRefs(currentParagraph);
 
@@ -189,6 +191,13 @@ const Catechism: React.FC = () => {
         <div className="bg-card border border-border rounded-3xl p-8 md:p-12 space-y-6">
           <div className="text-center space-y-2 pb-6 border-b border-border">
             <span className="text-3xl font-serif font-bold text-primary">§{currentParagraph}</span>
+            <button
+              onClick={() => toggleFavorite({ type: 'catechism', title: `CIC §${currentParagraph}`, content: `Catecismo da Igreja Católica, parágrafo §${currentParagraph}` })}
+              className="ml-3 inline-flex align-middle"
+              title={isFavorite('catechism', `CIC §${currentParagraph}`) ? 'Remover dos favoritos' : 'Salvar nos favoritos'}
+            >
+              <Icons.Heart className={`w-5 h-5 transition-all ${isFavorite('catechism', `CIC §${currentParagraph}`) ? 'fill-primary text-primary' : 'text-muted-foreground hover:text-primary'}`} />
+            </button>
           </div>
           <CatechismContent paragraph={currentParagraph} />
         </div>
