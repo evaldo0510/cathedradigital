@@ -300,7 +300,19 @@ const PrayerPage: React.FC = () => {
         <p className="text-lg font-serif text-muted-foreground">{todayData.emoji} {todayData.title}</p>
         <p className="text-xs text-muted-foreground">{todayData.days}</p>
 
-        {/* YouTube Player */}
+        {/* Audio Player — works in background */}
+        <div className="max-w-lg mx-auto pt-2">
+          <PrayerAudioPlayer
+            prayers={[
+              { label: 'Pai Nosso', text: PRAYERS.paiNosso },
+              ...Array.from({ length: 10 }, (_, i) => ({ label: `Ave Maria ${i + 1}`, text: PRAYERS.aveMaria })),
+              { label: 'Glória ao Pai', text: PRAYERS.gloria },
+              { label: 'Salve Rainha', text: PRAYERS.salveRainha },
+            ]}
+          />
+        </div>
+
+        {/* YouTube Player — optional video */}
         <div className="max-w-lg mx-auto pt-2">
           <YouTubePlayer videoId={YOUTUBE_IDS[todayKey]} title={todayData.title} />
         </div>
