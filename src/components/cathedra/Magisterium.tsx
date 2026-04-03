@@ -15,6 +15,7 @@ interface MagisteriumDoc {
   summary: string;
   topics: string[];
   vaticanUrl?: string;
+  pdfUrl?: string;
 }
 
 const DOCUMENTS: MagisteriumDoc[] = [
