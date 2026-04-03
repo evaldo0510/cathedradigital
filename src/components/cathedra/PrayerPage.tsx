@@ -3,6 +3,25 @@ import { Icons } from '../../constants';
 
 type MysteryKey = 'gozosos' | 'dolorosos' | 'gloriosos' | 'luminosos';
 
+const YOUTUBE_IDS: Record<MysteryKey, string> = {
+  gozosos: 'y0nohEWE7PI',
+  dolorosos: '5jBHMsyvXMo',
+  gloriosos: 'kcsu2e-0j2I',
+  luminosos: 'kmHzPZihdvY',
+};
+
+const YouTubePlayer: React.FC<{ videoId: string; title: string }> = ({ videoId, title }) => (
+  <div className="w-full aspect-video rounded-2xl overflow-hidden border border-border bg-black">
+    <iframe
+      src={`https://www.youtube.com/embed/${videoId}?rel=0`}
+      title={title}
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowFullScreen
+      className="w-full h-full"
+    />
+  </div>
+);
+
 const MYSTERY_DATA: Record<MysteryKey, {
   title: string;
   emoji: string;
