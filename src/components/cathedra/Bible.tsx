@@ -1,7 +1,10 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
 import StaggeredList from './StaggeredList';
+import CrossReferencePanel from './CrossReferencePanel';
+import { getBibleCrossRefs } from '@/data/cross-references';
+import { useNavigate } from 'react-router-dom';
 
 const BIBLE_BOOKS = {
   'Antigo Testamento': [
@@ -85,7 +88,14 @@ const BIBLE_BOOKS = {
 
 type ViewMode = 'books' | 'chapters' | 'reading';
 
+const FONT_SIZES = [
+  { label: 'P', size: 'text-sm', leading: 'leading-relaxed' },
+  { label: 'M', size: 'text-base', leading: 'leading-[1.9]' },
+  { label: 'G', size: 'text-lg', leading: 'leading-[2]' },
+];
+
 const Bible: React.FC = () => {
+  const navigate = useNavigate();
   const [viewMode, setViewMode] = useState<ViewMode>('books');
   const [selectedBook, setSelectedBook] = useState<{ name: string; abbr: string; chapters: number } | null>(null);
   const [selectedChapter, setSelectedChapter] = useState<number>(0);
@@ -94,12 +104,20 @@ const Bible: React.FC = () => {
   const [verses, setVerses] = useState<{ number: number; text: string }[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [bibleError, setBibleError] = useState('');
+  const [highlightedVerse, setHighlightedVerse] = useState<number | null>(null);
+  const [fontSizeIdx, setFontSizeIdx] = useState(1);
+  const [showCrossRefs, setShowCrossRefs] = useState(true);
 
   const filteredBooks = useMemo(() => {
     const books = BIBLE_BOOKS[testament];
     if (!searchQuery) return books;
     return books.filter(b => b.name.toLowerCase().includes(searchQuery.toLowerCase()) || b.abbr.toLowerCase().includes(searchQuery.toLowerCase()));
   }, [testament, searchQuery]);
+
+  const crossRefs = useMemo(() => {
+    if (!selectedBook || !selectedChapter) return [];
+    return getBibleCrossRefs(selectedBook.abbr, selectedChapter);
+  }, [selectedBook, selectedChapter]);
 
   const selectBook = (book: typeof filteredBooks[0]) => {
     setSelectedBook(book);
@@ -116,11 +134,25 @@ const Bible: React.FC = () => {
     else if (viewMode === 'chapters') { setViewMode('books'); setSelectedBook(null); }
   };
 
+  const navigateChapter = useCallback((dir: 1 | -1) => {
+    if (!selectedBook) return;
+    const next = selectedChapter + dir;
+    if (next >= 1 && next <= selectedBook.chapters) {
+      setSelectedChapter(next);
+      setHighlightedVerse(null);
+    }
+  }, [selectedBook, selectedChapter]);
+
+  const handleNavigateToCIC = useCallback((paragraph: number) => {
+    navigate(`/catechism?p=${paragraph}`);
+  }, [navigate]);
+
   useEffect(() => {
     if (viewMode === 'reading' && selectedBook && selectedChapter > 0) {
       setIsLoading(true);
       setBibleError('');
       setVerses([]);
+      setHighlightedVerse(null);
       supabase.functions.invoke('bible-text', {
         body: { abbrev: selectedBook.abbr, chapter: selectedChapter }
       }).then(({ data, error }) => {
@@ -136,36 +168,71 @@ const Bible: React.FC = () => {
     }
   }, [viewMode, selectedBook, selectedChapter]);
 
-  // Reading view placeholder
+  // Reading view
   if (viewMode === 'reading' && selectedBook) {
+    const fs = FONT_SIZES[fontSizeIdx];
     return (
-      <div className="max-w-3xl mx-auto space-y-8">
+      <div className="max-w-3xl mx-auto space-y-6">
+        {/* Header */}
         <div className="flex items-center gap-4">
           <button onClick={goBack} className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all">
             <Icons.ArrowDown className="w-5 h-5 rotate-90 text-foreground" />
           </button>
-          <div>
-            <h1 className="text-2xl font-serif font-bold text-foreground">{selectedBook.name}</h1>
-            <p className="text-sm text-muted-foreground">Capítulo {selectedChapter}</p>
+          <div className="flex-1 min-w-0">
+            <h1 className="text-xl md:text-2xl font-serif font-bold text-foreground truncate">{selectedBook.name}</h1>
+            <p className="text-sm text-muted-foreground">Capítulo {selectedChapter} de {selectedBook.chapters}</p>
           </div>
-          <div className="ml-auto flex gap-2">
-            <button disabled={selectedChapter <= 1} onClick={() => setSelectedChapter(selectedChapter - 1)}
+        </div>
+
+        {/* Toolbar */}
+        <div className="flex items-center justify-between gap-3 flex-wrap">
+          <div className="flex items-center gap-2">
+            <button disabled={selectedChapter <= 1} onClick={() => navigateChapter(-1)}
               className="px-3 py-2 rounded-xl bg-card border border-border text-sm font-bold disabled:opacity-30 hover:bg-primary/10 transition-all">
               ← Anterior
             </button>
-            <button disabled={selectedChapter >= selectedBook.chapters} onClick={() => setSelectedChapter(selectedChapter + 1)}
+            <button disabled={selectedChapter >= selectedBook.chapters} onClick={() => navigateChapter(1)}
               className="px-3 py-2 rounded-xl bg-card border border-border text-sm font-bold disabled:opacity-30 hover:bg-primary/10 transition-all">
               Próximo →
             </button>
           </div>
+          <div className="flex items-center gap-2">
+            {/* Font size */}
+            <div className="flex items-center bg-card border border-border rounded-xl overflow-hidden">
+              {FONT_SIZES.map((f, i) => (
+                <button key={f.label} onClick={() => setFontSizeIdx(i)}
+                  className={`px-2.5 py-1.5 text-xs font-bold transition-all ${fontSizeIdx === i ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}>
+                  {f.label}
+                </button>
+              ))}
+            </div>
+            {/* Cross-ref toggle */}
+            {crossRefs.length > 0 && (
+              <button onClick={() => setShowCrossRefs(!showCrossRefs)}
+                className={`p-2 rounded-xl border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}
+                title="Nexus Theologicus">
+                <Icons.Cross className="w-4 h-4" />
+              </button>
+            )}
+          </div>
         </div>
 
-        <div className="bg-card border border-border rounded-3xl p-8 md:p-12 space-y-6">
-          <div className="text-center space-y-2 pb-6 border-b border-border">
+        {/* Cross references panel */}
+        {showCrossRefs && crossRefs.length > 0 && (
+          <CrossReferencePanel
+            type="bible"
+            cicParagraphs={crossRefs}
+            onNavigateToCIC={handleNavigateToCIC}
+          />
+        )}
+
+        {/* Content */}
+        <div className="bg-card border border-border rounded-3xl p-6 md:p-10 space-y-6">
+          <div className="text-center space-y-2 pb-4 border-b border-border">
             <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">{selectedBook.abbr} {selectedChapter}</span>
-            <h2 className="text-xl font-serif font-bold text-foreground">{selectedBook.name} — Capítulo {selectedChapter}</h2>
+            <h2 className="text-lg font-serif font-bold text-foreground">{selectedBook.name} — Capítulo {selectedChapter}</h2>
           </div>
-          <div className="reader-text text-foreground/90 leading-[2] text-base space-y-3">
+          <div className={`reader-text text-foreground/90 ${fs.size} ${fs.leading} space-y-2`}>
             {isLoading ? (
               <div className="space-y-3 py-8">
                 {Array.from({ length: 10 }).map((_, i) => (
@@ -176,15 +243,34 @@ const Bible: React.FC = () => {
               <p className="text-muted-foreground italic text-center py-12">{bibleError}</p>
             ) : verses.length > 0 ? (
               verses.map(v => (
-                <p key={v.number}>
-                  <sup className="text-primary font-bold mr-1 text-xs">{v.number}</sup>
-                  {v.text}
+                <p
+                  key={v.number}
+                  onClick={() => setHighlightedVerse(highlightedVerse === v.number ? null : v.number)}
+                  className={`cursor-pointer rounded-lg px-2 py-1 -mx-2 transition-all ${
+                    highlightedVerse === v.number ? 'bg-primary/10 border-l-2 border-primary' : 'hover:bg-muted/50'
+                  }`}
+                >
+                  <sup className="text-primary font-bold mr-1 text-xs select-none">{v.number}</sup>
+                  <span className="font-serif">{v.text}</span>
                 </p>
               ))
             ) : (
               <p className="text-muted-foreground italic text-center py-12">Carregando...</p>
             )}
           </div>
+        </div>
+
+        {/* Bottom navigation */}
+        <div className="flex justify-between items-center pt-2">
+          <button disabled={selectedChapter <= 1} onClick={() => navigateChapter(-1)}
+            className="px-4 py-2.5 rounded-xl bg-card border border-border text-sm font-bold disabled:opacity-30 hover:bg-primary/10 transition-all">
+            ← Capítulo {selectedChapter - 1}
+          </button>
+          <span className="text-xs text-muted-foreground font-bold">{selectedChapter} / {selectedBook.chapters}</span>
+          <button disabled={selectedChapter >= selectedBook.chapters} onClick={() => navigateChapter(1)}
+            className="px-4 py-2.5 rounded-xl bg-card border border-border text-sm font-bold disabled:opacity-30 hover:bg-primary/10 transition-all">
+            Capítulo {selectedChapter + 1} →
+          </button>
         </div>
       </div>
     );
@@ -205,13 +291,26 @@ const Bible: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 gap-2">
-          {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map(ch => (
-            <button key={ch} onClick={() => selectChapter(ch)}
-              className="aspect-square rounded-xl bg-card border border-border flex items-center justify-center text-sm font-bold text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all shadow-sm">
-              {ch}
-            </button>
-          ))}
+          {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map(ch => {
+            const hasRefs = getBibleCrossRefs(selectedBook.abbr, ch).length > 0;
+            return (
+              <button key={ch} onClick={() => selectChapter(ch)}
+                className={`aspect-square rounded-xl bg-card border flex items-center justify-center text-sm font-bold transition-all shadow-sm relative ${
+                  hasRefs ? 'border-primary/30 hover:bg-primary hover:text-primary-foreground hover:border-primary' : 'border-border text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary'
+                }`}>
+                {ch}
+                {hasRefs && (
+                  <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-primary" />
+                )}
+              </button>
+            );
+          })}
         </div>
+
+        <p className="text-center text-xs text-muted-foreground flex items-center justify-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-primary inline-block" />
+          Capítulos com referências ao Catecismo
+        </p>
       </div>
     );
   }
