@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { AppRoute, User } from '../../types';
 import { Icons } from '../../constants';
 import SacredImage from './SacredImage';
+import { useParallax } from '../../hooks/useParallax';
 import sectionBible from '../../assets/section-bible.jpg';
 import sectionCatechism from '../../assets/section-catechism.jpg';
 import sectionDocuments from '../../assets/section-documents.jpg';
@@ -32,6 +33,10 @@ const Section: React.FC<{ children: React.ReactNode; className?: string }> = ({ 
 
 const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   const navigate = useNavigate();
+  const pxBible = useParallax(0.12);
+  const pxCatechism = useParallax(0.12);
+  const pxDocuments = useParallax(0.12);
+  const pxPrayer = useParallax(0.12);
 
   return (
     <div className="space-y-20 md:space-y-36 pb-24 md:pb-48">
@@ -122,8 +127,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       {/* ═══════ 4. BÍBLIA ═══════ */}
       <Section className="overflow-hidden rounded-3xl md:rounded-[4rem] border border-border mx-4 md:mx-6">
         <div className="grid lg:grid-cols-2">
-          <div className="relative h-64 lg:h-auto">
-            <img src={sectionBible} alt="Bíblia Sagrada aberta à luz de velas" loading="lazy" width={1280} height={720} className="absolute inset-0 w-full h-full object-cover" />
+          <div className="relative h-64 lg:h-auto overflow-hidden" ref={pxBible.ref}>
+            <img src={sectionBible} alt="Bíblia Sagrada aberta à luz de velas" loading="lazy" width={1280} height={720} className="absolute inset-0 w-full h-full object-cover scale-110" style={pxBible.style} />
           </div>
           <div className="bg-secondary p-10 md:p-16 flex flex-col justify-center space-y-6">
             <Icons.Book className="w-10 h-10 text-primary" />
@@ -161,8 +166,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               </button>
             </div>
           </div>
-          <div className="relative h-64 lg:h-auto order-1 lg:order-2">
-            <img src={sectionCatechism} alt="Catecismo aberto com crucifixo e rosário" loading="lazy" width={1280} height={720} className="absolute inset-0 w-full h-full object-cover" />
+          <div className="relative h-64 lg:h-auto order-1 lg:order-2 overflow-hidden" ref={pxCatechism.ref}>
+            <img src={sectionCatechism} alt="Catecismo aberto com crucifixo e rosário" loading="lazy" width={1280} height={720} className="absolute inset-0 w-full h-full object-cover scale-110" style={pxCatechism.style} />
           </div>
         </div>
       </Section>
@@ -170,8 +175,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       {/* ═══════ 6. DOCUMENTOS ═══════ */}
       <Section className="overflow-hidden rounded-3xl md:rounded-[4rem] border border-border mx-4 md:mx-6">
         <div className="grid lg:grid-cols-2">
-          <div className="relative h-64 lg:h-auto">
-            <img src={sectionDocuments} alt="Documentos papais com selos sobre mesa de mármore" loading="lazy" width={1280} height={720} className="absolute inset-0 w-full h-full object-cover" />
+          <div className="relative h-64 lg:h-auto overflow-hidden" ref={pxDocuments.ref}>
+            <img src={sectionDocuments} alt="Documentos papais com selos sobre mesa de mármore" loading="lazy" width={1280} height={720} className="absolute inset-0 w-full h-full object-cover scale-110" style={pxDocuments.style} />
           </div>
           <div className="bg-secondary p-10 md:p-16 flex flex-col justify-center space-y-6">
             <Icons.History className="w-10 h-10 text-primary" />
@@ -209,8 +214,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               </button>
             </div>
           </div>
-          <div className="relative h-64 lg:h-auto order-1 lg:order-2">
-            <img src={sectionPrayer} alt="Pessoa rezando em capela com vitrais" loading="lazy" width={1280} height={720} className="absolute inset-0 w-full h-full object-cover" />
+          <div className="relative h-64 lg:h-auto order-1 lg:order-2 overflow-hidden" ref={pxPrayer.ref}>
+            <img src={sectionPrayer} alt="Pessoa rezando em capela com vitrais" loading="lazy" width={1280} height={720} className="absolute inset-0 w-full h-full object-cover scale-110" style={pxPrayer.style} />
           </div>
         </div>
       </Section>
