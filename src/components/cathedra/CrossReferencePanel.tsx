@@ -1,6 +1,7 @@
 import React from 'react';
 import { Icons } from '../../constants';
 import BibleVersePopover from './BibleVersePopover';
+import CatechismPopover from './CatechismPopover';
 
 interface BibleRef {
   abbr: string;
@@ -43,13 +44,11 @@ const CrossReferencePanel: React.FC<CrossReferencePanelProps> = ({
           <p className="text-xs text-muted-foreground">Parágrafos do Catecismo relacionados:</p>
           <div className="flex flex-wrap gap-1.5">
             {cicParagraphs.map(p => (
-              <button
+              <CatechismPopover
                 key={p}
-                onClick={() => onNavigateToCIC?.(p)}
-                className="px-2.5 py-1 rounded-lg bg-card border border-border text-xs font-bold text-primary hover:bg-primary hover:text-primary-foreground transition-all"
-              >
-                §{p}
-              </button>
+                paragraph={p}
+                onNavigate={onNavigateToCIC}
+              />
             ))}
           </div>
         </div>
