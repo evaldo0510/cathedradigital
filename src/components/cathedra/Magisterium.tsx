@@ -423,11 +423,15 @@ const Magisterium: React.FC = () => {
                   <span className={`inline-block px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest ${CATEGORY_COLORS[doc.category] || 'bg-muted text-muted-foreground'}`}>
                     {CATEGORY_LABELS[doc.category]}
                   </span>
-                  {doc.vaticanUrl && (
+                  {cachedIds.includes(doc.id) ? (
+                    <span className="px-2 py-0.5 rounded-full text-[8px] font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 uppercase tracking-wider">
+                      📥 Offline
+                    </span>
+                  ) : doc.vaticanUrl ? (
                     <span className="px-2 py-0.5 rounded-full text-[8px] font-bold bg-primary/10 text-primary uppercase tracking-wider">
                       Texto disponível
                     </span>
-                  )}
+                  ) : null}
                 </div>
                 <h3 className="text-base font-bold text-foreground group-hover:text-primary transition-colors">{doc.title}</h3>
                 {doc.latinTitle && doc.latinTitle !== doc.title && (
