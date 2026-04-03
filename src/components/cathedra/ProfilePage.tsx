@@ -187,6 +187,37 @@ const ProfilePage: React.FC = () => {
         </div>
       </div>
 
+      {/* Level & XP */}
+      <div className="bg-card border border-border rounded-2xl p-6 space-y-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Nível {currentLevelIdx + 1}</p>
+            <p className="text-lg font-black text-foreground">{currentLevel.name}</p>
+          </div>
+          <div className="text-right">
+            <p className="text-2xl font-black text-primary">{totalXp}</p>
+            <p className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground">XP Total</p>
+          </div>
+        </div>
+        <div className="relative h-3 bg-muted rounded-full overflow-hidden">
+          <div
+            className="absolute inset-y-0 left-0 bg-gradient-to-r from-primary to-primary/70 rounded-full transition-all duration-700"
+            style={{ width: `${Math.min(xpProgress, 100)}%` }}
+          />
+        </div>
+        <div className="flex justify-between text-[9px] text-muted-foreground">
+          <span>{currentLevel.name}</span>
+          <span>{nextLevel ? `${nextLevel.minXp - totalXp} XP para ${nextLevel.name}` : 'Nível máximo!'}</span>
+        </div>
+        <div className="flex flex-wrap gap-2 pt-2 border-t border-border">
+          <span className="text-[8px] text-muted-foreground bg-muted px-2 py-1 rounded-lg">📝 Discussão = 30 XP</span>
+          <span className="text-[8px] text-muted-foreground bg-muted px-2 py-1 rounded-lg">❤️ Curtida = 10 XP</span>
+          <span className="text-[8px] text-muted-foreground bg-muted px-2 py-1 rounded-lg">✏️ Anotação = 20 XP</span>
+          <span className="text-[8px] text-muted-foreground bg-muted px-2 py-1 rounded-lg">📅 Dia ativo = 15 XP</span>
+          <span className="text-[8px] text-muted-foreground bg-muted px-2 py-1 rounded-lg">🏅 Badge = 50 XP</span>
+        </div>
+      </div>
+
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {statCards.map(s => (
