@@ -21,6 +21,8 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user }) => {
         { label: 'Liturgia & Orações', path: AppRoute.DAILY_LITURGY, icon: <Icons.Star className="w-5 h-5" /> },
         { label: 'Santo Rosário', path: AppRoute.ROSARY, icon: <Icons.Heart className="w-5 h-5" /> },
         { label: 'Via Crucis', path: AppRoute.VIA_CRUCIS, icon: <Icons.Cross className="w-5 h-5" /> },
+        { label: 'Breviário', path: AppRoute.BREVIARY, icon: <Icons.History className="w-5 h-5" /> },
+        { label: 'Lectio Divina', path: AppRoute.LECTIO_DIVINA, icon: <Icons.Feather className="w-5 h-5" /> },
         { label: 'Favoritos', path: AppRoute.FAVORITES, icon: <Icons.Heart className="w-5 h-5" /> },
       ]
     },
@@ -31,6 +33,7 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user }) => {
         { label: 'Catecismo (CIC)', path: AppRoute.CATECHISM, icon: <Icons.Cross className="w-5 h-5" /> },
         { label: 'Santos', path: AppRoute.SAINTS, icon: <Icons.Users className="w-5 h-5" /> },
         { label: 'Magistério', path: AppRoute.MAGISTERIUM, icon: <Icons.Globe className="w-5 h-5" /> },
+        { label: 'Dogmas', path: AppRoute.DOGMAS, icon: <Icons.Star className="w-5 h-5" /> },
         { label: 'Trilhas de Estudo', path: AppRoute.TRILHAS, icon: <Icons.Layout className="w-5 h-5" /> },
       ]
     },
