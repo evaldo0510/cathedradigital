@@ -253,11 +253,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           <div className="flex flex-col md:flex-row items-center gap-6 md:gap-10">
             <div className="relative w-24 h-24 md:w-32 md:h-32 shrink-0">
               <div className="absolute inset-0 bg-primary/20 rounded-full animate-pulse" />
-              <img 
-                src="https://images.unsplash.com/photo-1544717297-fa154da09f9b?auto=format&fit=crop&q=80&w=400" 
-                alt="Parceria Frei Gilson"
-                className="relative z-10 w-full h-full object-cover rounded-full border-2 border-primary shadow-xl"
-              />
+              <div className="relative z-10 w-full h-full flex items-center justify-center bg-primary/10 rounded-full border-2 border-primary shadow-xl">
+                <Icons.Handshake className="w-12 h-12 text-primary opacity-50" />
+              </div>
               <div className="absolute -bottom-2 -right-2 bg-primary text-primary-foreground p-2 rounded-full shadow-lg">
                 <Icons.Handshake className="w-4 h-4 md:w-5 md:h-5" />
               </div>
