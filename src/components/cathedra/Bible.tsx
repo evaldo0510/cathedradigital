@@ -135,6 +135,7 @@ const Bible: React.FC = () => {
     }
   }, [searchParams]);
 
+  const filteredBooks = useMemo(() => {
     const books = BIBLE_BOOKS[testament];
     if (!searchQuery) return books;
     return books.filter(b => b.name.toLowerCase().includes(searchQuery.toLowerCase()) || b.abbr.toLowerCase().includes(searchQuery.toLowerCase()));
