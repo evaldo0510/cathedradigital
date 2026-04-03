@@ -152,7 +152,48 @@ const ProfilePage: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-2xl mx-auto space-y-8">
+    <div className="max-w-2xl mx-auto space-y-8 relative">
+      {/* Level-up celebration */}
+      <AnimatePresence>
+        {showLevelUp && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            className="fixed inset-0 z-[200] flex items-center justify-center pointer-events-none"
+          >
+            <motion.div
+              initial={{ y: 40 }}
+              animate={{ y: 0 }}
+              className="bg-card border-2 border-primary rounded-3xl p-8 shadow-2xl text-center pointer-events-auto max-w-sm mx-4"
+            >
+              <motion.div
+                animate={{ rotate: [0, -10, 10, -10, 10, 0], scale: [1, 1.3, 1] }}
+                transition={{ duration: 0.8 }}
+                className="text-6xl mb-3"
+              >
+                🎉
+              </motion.div>
+              <h2 className="text-xl font-black text-foreground mb-1">Nível Alcançado!</h2>
+              <p className="text-2xl font-black text-primary mb-2">{levelName}</p>
+              <p className="text-xs text-muted-foreground">Nível {currentLevelIdx + 1} · {totalXp} XP</p>
+              <div className="flex justify-center gap-1 mt-3">
+                {['✨', '⭐', '🌟', '⭐', '✨'].map((e, i) => (
+                  <motion.span
+                    key={i}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 + i * 0.1 }}
+                    className="text-xl"
+                  >
+                    {e}
+                  </motion.span>
+                ))}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       {/* Header with avatar upload */}
       <div className="text-center space-y-4">
         <div className="relative w-24 h-24 mx-auto group">
