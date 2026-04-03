@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -76,6 +76,33 @@ const CATEGORY_COLORS: Record<string, string> = {
   constitution: 'bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-300',
 };
 
+const CACHE_PREFIX = 'cathedra_doc_';
+
+const getCachedDoc = (docId: string): { text: string; title: string; cachedAt: string } | null => {
+  try {
+    const raw = localStorage.getItem(CACHE_PREFIX + docId);
+    return raw ? JSON.parse(raw) : null;
+  } catch { return null; }
+};
+
+const setCachedDoc = (docId: string, text: string, title: string) => {
+  try {
+    localStorage.setItem(CACHE_PREFIX + docId, JSON.stringify({ text, title, cachedAt: new Date().toISOString() }));
+  } catch (e) {
+    console.warn('Cache storage full, clearing old docs');
+    // Clear oldest cached docs if storage is full
+    const keys = Object.keys(localStorage).filter(k => k.startsWith(CACHE_PREFIX));
+    if (keys.length > 0) {
+      localStorage.removeItem(keys[0]);
+      try { localStorage.setItem(CACHE_PREFIX + docId, JSON.stringify({ text, title, cachedAt: new Date().toISOString() })); } catch {}
+    }
+  }
+};
+
+const getCachedDocIds = (): string[] => {
+  return Object.keys(localStorage).filter(k => k.startsWith(CACHE_PREFIX)).map(k => k.replace(CACHE_PREFIX, ''));
+};
+
 const Magisterium: React.FC = () => {
   const [category, setCategory] = useState<DocCategory>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -85,6 +112,7 @@ const Magisterium: React.FC = () => {
   const [textError, setTextError] = useState<string | null>(null);
   const [textSearch, setTextSearch] = useState('');
   const [matchCount, setMatchCount] = useState(0);
+  const [cachedIds, setCachedIds] = useState<string[]>([]);
 
   const filteredDocs = useMemo(() => {
     let docs = DOCUMENTS;
@@ -101,8 +129,22 @@ const Magisterium: React.FC = () => {
     return docs.sort((a, b) => b.year - a.year);
   }, [category, searchQuery]);
 
+  useEffect(() => {
+    setCachedIds(getCachedDocIds());
+  }, [fullText]);
+
   const fetchFullText = useCallback(async (doc: MagisteriumDoc) => {
     if (!doc.vaticanUrl) return;
+
+    // Try cache first
+    const cached = getCachedDoc(doc.id);
+    if (cached) {
+      setFullText(cached.text);
+      setLoadingText(false);
+      setTextError(null);
+      return;
+    }
+
     setLoadingText(true);
     setTextError(null);
     setFullText(null);
@@ -115,16 +157,30 @@ const Magisterium: React.FC = () => {
       if (error) throw new Error(error.message);
       if (data?.text) {
         setFullText(data.text);
+        setCachedDoc(doc.id, data.text, data.title || doc.title);
       } else {
         setTextError('Não foi possível extrair o texto do documento.');
       }
     } catch (err) {
       console.error('Error fetching Vatican document:', err);
-      setTextError('Erro ao carregar o documento. Tente novamente.');
+      // Try cache as fallback even on error
+      const fallback = getCachedDoc(doc.id);
+      if (fallback) {
+        setFullText(fallback.text);
+        setTextError(null);
+      } else {
+        setTextError('Erro ao carregar o documento. Tente novamente.');
+      }
     } finally {
       setLoadingText(false);
     }
   }, []);
+
+  const clearDocCache = useCallback((docId: string) => {
+    localStorage.removeItem(CACHE_PREFIX + docId);
+    setCachedIds(getCachedDocIds());
+    if (selectedDoc?.id === docId) setFullText(null);
+  }, [selectedDoc]);
 
   const handleSelectDoc = useCallback((doc: MagisteriumDoc) => {
     setSelectedDoc(doc);
@@ -182,8 +238,11 @@ const Magisterium: React.FC = () => {
                       onClick={() => fetchFullText(selectedDoc)}
                       className="px-8 py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all"
                     >
-                      Carregar Texto Completo
+                      {cachedIds.includes(selectedDoc.id) ? '📥 Abrir do Cache' : 'Carregar Texto Completo'}
                     </button>
+                    {cachedIds.includes(selectedDoc.id) && (
+                      <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-widest">✓ Disponível offline</span>
+                    )}
                     <a
                       href={selectedDoc.vaticanUrl}
                       target="_blank"
@@ -237,8 +296,25 @@ const Magisterium: React.FC = () => {
             {fullText && (
               <div className="space-y-4">
                 <div className="flex items-center justify-between flex-wrap gap-2">
-                  <h3 className="text-sm font-black uppercase tracking-widest text-primary">Texto Integral</h3>
-                  <span className="text-[10px] text-muted-foreground italic">Fonte: Vatican.va</span>
+                  <div className="flex items-center gap-3">
+                    <h3 className="text-sm font-black uppercase tracking-widest text-primary">Texto Integral</h3>
+                    {cachedIds.includes(selectedDoc.id) && (
+                      <span className="px-2 py-0.5 rounded-full text-[8px] font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 uppercase tracking-wider">
+                        Salvo offline
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-[10px] text-muted-foreground italic">Fonte: Vatican.va</span>
+                    {cachedIds.includes(selectedDoc.id) && (
+                      <button
+                        onClick={() => clearDocCache(selectedDoc.id)}
+                        className="text-[10px] text-destructive hover:underline"
+                      >
+                        Limpar cache
+                      </button>
+                    )}
+                  </div>
                 </div>
 
                 {/* Search within document */}
@@ -334,6 +410,10 @@ const Magisterium: React.FC = () => {
           <p className="text-2xl font-serif font-bold text-foreground">{filteredDocs.filter(d => d.vaticanUrl).length}</p>
           <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Com texto integral</p>
         </div>
+        <div>
+          <p className="text-2xl font-serif font-bold text-foreground">{cachedIds.length}</p>
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Salvos offline</p>
+        </div>
       </div>
 
       {/* Documents grid */}
@@ -347,11 +427,15 @@ const Magisterium: React.FC = () => {
                   <span className={`inline-block px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest ${CATEGORY_COLORS[doc.category] || 'bg-muted text-muted-foreground'}`}>
                     {CATEGORY_LABELS[doc.category]}
                   </span>
-                  {doc.vaticanUrl && (
+                  {cachedIds.includes(doc.id) ? (
+                    <span className="px-2 py-0.5 rounded-full text-[8px] font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 uppercase tracking-wider">
+                      📥 Offline
+                    </span>
+                  ) : doc.vaticanUrl ? (
                     <span className="px-2 py-0.5 rounded-full text-[8px] font-bold bg-primary/10 text-primary uppercase tracking-wider">
                       Texto disponível
                     </span>
-                  )}
+                  ) : null}
                 </div>
                 <h3 className="text-base font-bold text-foreground group-hover:text-primary transition-colors">{doc.title}</h3>
                 {doc.latinTitle && doc.latinTitle !== doc.title && (
