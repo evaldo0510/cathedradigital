@@ -83,6 +83,8 @@ const Magisterium: React.FC = () => {
   const [fullText, setFullText] = useState<string | null>(null);
   const [loadingText, setLoadingText] = useState(false);
   const [textError, setTextError] = useState<string | null>(null);
+  const [textSearch, setTextSearch] = useState('');
+  const [matchCount, setMatchCount] = useState(0);
 
   const filteredDocs = useMemo(() => {
     let docs = DOCUMENTS;
@@ -128,6 +130,8 @@ const Magisterium: React.FC = () => {
     setSelectedDoc(doc);
     setFullText(null);
     setTextError(null);
+    setTextSearch('');
+    setMatchCount(0);
   }, []);
 
   if (selectedDoc) {
@@ -232,13 +236,45 @@ const Magisterium: React.FC = () => {
 
             {fullText && (
               <div className="space-y-4">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between flex-wrap gap-2">
                   <h3 className="text-sm font-black uppercase tracking-widest text-primary">Texto Integral</h3>
                   <span className="text-[10px] text-muted-foreground italic">Fonte: Vatican.va</span>
                 </div>
+
+                {/* Search within document */}
+                <div className="relative">
+                  <Icons.Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <input
+                    value={textSearch}
+                    onChange={e => {
+                      setTextSearch(e.target.value);
+                      if (e.target.value && fullText) {
+                        const regex = new RegExp(e.target.value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+                        const matches = fullText.match(regex);
+                        setMatchCount(matches ? matches.length : 0);
+                      } else {
+                        setMatchCount(0);
+                      }
+                    }}
+                    placeholder="Buscar no texto do documento..."
+                    className="w-full pl-10 pr-20 py-2.5 rounded-xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  />
+                  {textSearch && (
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-muted-foreground">
+                      {matchCount} resultado{matchCount !== 1 ? 's' : ''}
+                    </span>
+                  )}
+                </div>
+
                 <div className="bg-secondary/50 rounded-2xl p-6 md:p-8 max-h-[70vh] overflow-y-auto custom-scrollbar">
                   <div className="text-foreground/90 leading-relaxed whitespace-pre-line font-serif text-[15px]">
-                    {fullText}
+                    {textSearch ? (
+                      fullText.split(new RegExp(`(${textSearch.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')).map((part, i) =>
+                        part.toLowerCase() === textSearch.toLowerCase()
+                          ? <mark key={i} className="bg-primary/30 text-foreground rounded px-0.5">{part}</mark>
+                          : part
+                      )
+                    ) : fullText}
                   </div>
                 </div>
               </div>
