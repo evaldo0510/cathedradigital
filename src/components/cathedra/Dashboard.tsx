@@ -214,8 +214,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               </button>
             </div>
           </div>
-          <div className="relative h-64 lg:h-auto order-1 lg:order-2">
-            <img src={sectionPrayer} alt="Pessoa rezando em capela com vitrais" loading="lazy" width={1280} height={720} className="absolute inset-0 w-full h-full object-cover" />
+          <div className="relative h-64 lg:h-auto order-1 lg:order-2 overflow-hidden" ref={pxPrayer.ref}>
+            <img src={sectionPrayer} alt="Pessoa rezando em capela com vitrais" loading="lazy" width={1280} height={720} className="absolute inset-0 w-full h-full object-cover scale-110" style={pxPrayer.style} />
           </div>
         </div>
       </Section>
