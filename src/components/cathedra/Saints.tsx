@@ -1,5 +1,7 @@
 import React, { useState, useMemo } from 'react';
+import { motion } from 'framer-motion';
 import { Icons } from '../../constants';
+import StaggeredList from './StaggeredList';
 
 interface Saint {
   id: string;
