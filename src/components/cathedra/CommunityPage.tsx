@@ -145,6 +145,19 @@ const CommunityPage: React.FC = () => {
       category: selectedPost.category,
     });
     if (!error) {
+      // Send notification to post author if it's not the same user
+      if (selectedPost.user_id !== user.id) {
+        const { data: myProfile } = await supabase.from('profiles').select('name').eq('id', user.id).single();
+        const authorName = myProfile?.name || 'Alguém';
+        await supabase.from('notifications').insert({
+          user_id: selectedPost.user_id,
+          source_user_id: user.id,
+          type: 'reply',
+          title: `${authorName} respondeu sua discussão`,
+          message: replyContent.trim().substring(0, 100),
+          link: AppRoute.COMMUNITY,
+        });
+      }
       setReplyContent('');
       openPost(selectedPost);
       toast.success('Resposta enviada!');
