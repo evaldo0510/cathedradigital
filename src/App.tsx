@@ -35,6 +35,7 @@ const LectioDivina = lazy(() => import('./components/cathedra/LectioDivina'));
 const BreviaryPage = lazy(() => import('./components/cathedra/BreviaryPage'));
 const LitaniesPage = lazy(() => import('./components/cathedra/LitaniesPage'));
 const LiturgicalCalendarPage = lazy(() => import('./components/cathedra/LiturgicalCalendarPage'));
+const CommunityPage = lazy(() => import('./components/cathedra/CommunityPage'));
 import CommandCenter from './components/cathedra/CommandCenter';
 import OfflineIndicator from './components/cathedra/OfflineIndicator';
 
