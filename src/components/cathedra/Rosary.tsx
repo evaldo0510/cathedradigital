@@ -88,6 +88,7 @@ const Rosary: React.FC = () => {
   const [currentMystery, setCurrentMystery] = useState(0);
   const [step, setStep] = useState<PrayerStep>('intro');
   const [showPrayer, setShowPrayer] = useState<string | null>(null);
+  const [aveCount, setAveCount] = useState(0);
 
   if (!selectedSet) {
     return (
@@ -206,6 +207,25 @@ const Rosary: React.FC = () => {
       return (
         <div className="space-y-6">
           <p className="text-center text-[10px] font-black uppercase tracking-widest text-amber-200/30">{currentMystery + 1}º Mistério — Dezena</p>
+          
+          {/* Bead Counter */}
+          <div className="flex flex-col items-center gap-3 py-2">
+            <div className="flex items-center gap-2.5">
+              {Array.from({ length: 10 }).map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setAveCount(i + 1)}
+                  className={`w-5 h-5 rounded-full border-2 transition-all duration-300 ${
+                    i < aveCount
+                      ? 'bg-amber-400 border-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.4)] scale-110'
+                      : 'bg-transparent border-amber-400/25 hover:border-amber-400/50'
+                  }`}
+                />
+              ))}
+            </div>
+            <p className="text-amber-200/40 text-xs font-bold">{aveCount}/10 Ave-Marias</p>
+          </div>
+
           {['ourFather', 'hailMary', 'glory', 'fatima'].map(k => (
             <div key={k} className="bg-white/[0.04] rounded-2xl p-5 cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setShowPrayer(showPrayer === k ? null : k)}>
               <p className="font-bold text-sm text-amber-100/90">
@@ -216,6 +236,7 @@ const Rosary: React.FC = () => {
             </div>
           ))}
           <button onClick={() => {
+            setAveCount(0);
             if (currentMystery < 4) {
               setCurrentMystery(currentMystery + 1);
               setStep('mystery');
