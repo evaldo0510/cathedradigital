@@ -264,11 +264,11 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             </div>
             <div className="flex-1 text-center md:text-left space-y-3">
               <div className="inline-flex items-center gap-2 px-2 py-0.5 bg-primary/10 rounded-full text-[10px] font-bold uppercase tracking-wider text-primary">
-                Parceria Oficial
+                Novidades em Breve
               </div>
-              <h2 className="text-xl md:text-3xl font-serif font-bold text-foreground">Frei Gilson / Som do Monte</h2>
+              <h2 className="text-xl md:text-3xl font-serif font-bold text-foreground">Nova Parceria</h2>
               <p className="text-sm md:text-base text-muted-foreground max-w-xl">
-                Promovendo a vida de oração e evangelização através da música e do Santo Rosário. Conheça o trabalho oficial do Som do Monte.
+                Estamos preparando algo especial. Em breve traremos novidades exclusivas sobre nossas parcerias oficiais.
               </p>
               <div className="flex flex-wrap justify-center md:justify-start gap-3 pt-2">
                 <button 
