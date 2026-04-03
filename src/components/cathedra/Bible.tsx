@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import StaggeredList from './StaggeredList';
 import CrossReferencePanel from './CrossReferencePanel';
 import { getBibleCrossRefs } from '@/data/cross-references';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 const BIBLE_BOOKS = {
   'Antigo Testamento': [
