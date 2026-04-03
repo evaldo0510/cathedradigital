@@ -33,7 +33,9 @@ const AboutPage = lazy(() => import('./components/cathedra/AboutPage'));
 const DogmasPage = lazy(() => import('./components/cathedra/DogmasPage'));
 const LectioDivina = lazy(() => import('./components/cathedra/LectioDivina'));
 const BreviaryPage = lazy(() => import('./components/cathedra/BreviaryPage'));
+const LitaniesPage = lazy(() => import('./components/cathedra/LitaniesPage'));
 import CommandCenter from './components/cathedra/CommandCenter';
+import OfflineIndicator from './components/cathedra/OfflineIndicator';
 
 interface LanguageContextType {
   lang: Language;
