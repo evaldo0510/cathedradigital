@@ -263,6 +263,11 @@ const PrayerPage: React.FC = () => {
         <p className="text-lg font-serif text-muted-foreground">{todayData.emoji} {todayData.title}</p>
         <p className="text-xs text-muted-foreground">{todayData.days}</p>
 
+        {/* YouTube Player */}
+        <div className="max-w-lg mx-auto pt-2">
+          <YouTubePlayer videoId={YOUTUBE_IDS[todayKey]} title={todayData.title} />
+        </div>
+
         {/* Intention */}
         <div className="max-w-md mx-auto pt-2">
           <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block mb-2">
