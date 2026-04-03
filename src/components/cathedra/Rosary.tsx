@@ -268,6 +268,9 @@ const Rosary: React.FC = () => {
         </div>
       )}
 
+      {/* YouTube Player in prayer mode */}
+      <YouTubePlayer videoId={YOUTUBE_IDS[selectedSet]} title={set.name} />
+
       <div className="bg-card border border-border rounded-3xl p-8 md:p-10">
         {renderStep()}
       </div>
