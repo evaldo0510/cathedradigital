@@ -1,9 +1,10 @@
-import React, { useRef } from 'react';
+import React, { useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { AppRoute, User } from '../../types';
 import { Icons } from '../../constants';
 import SacredImage from './SacredImage';
+import { useHistory } from '../../hooks/useHistory';
 import sectionBible from '../../assets/section-bible.webp';
 import sectionCatechism from '../../assets/section-catechism.webp';
 import sectionDocuments from '../../assets/section-documents.webp';
@@ -85,9 +86,34 @@ const RowCard: React.FC<RowCardProps> = ({ image, title, subtitle, onClick, wide
   </motion.button>
 );
 
+/* ── Route metadata for images ── */
+const ROUTE_IMAGES: Record<string, string> = {
+  [AppRoute.BIBLE]: sectionBible,
+  [AppRoute.CATECHISM]: sectionCatechism,
+  [AppRoute.MAGISTERIUM]: sectionDocuments,
+  [AppRoute.ORACAO]: sectionPrayer,
+  [AppRoute.ROSARY]: sectionPrayer,
+  [AppRoute.VIA_CRUCIS]: sectionDocuments,
+  [AppRoute.SAINTS]: sectionCatechism,
+  [AppRoute.AQUINAS_OPERA]: sectionBible,
+  [AppRoute.DAILY_LITURGY]: sectionDocuments,
+  [AppRoute.MISSAL]: sectionPrayer,
+  [AppRoute.STUDY_MODE]: sectionBible,
+  [AppRoute.CERTAMEN]: sectionCatechism,
+  [AppRoute.TRILHAS]: sectionDocuments,
+  [AppRoute.FAVORITES]: sectionPrayer,
+  [AppRoute.ABOUT]: sectionBible,
+};
+
 /* ── Main Dashboard ── */
 const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   const navigate = useNavigate();
+  const { history, trackVisit } = useHistory();
+
+  const goTo = useCallback((route: string, title: string, imageUrl?: string) => {
+    trackVisit(route, title, imageUrl || ROUTE_IMAGES[route]);
+    navigate(route);
+  }, [navigate, trackVisit]);
 
   const fundamentos = [
     { image: sectionBible, title: 'O que é a fé católica', route: AppRoute.CATECHISM, icon: <Icons.Cross className="w-5 h-5" /> },
@@ -175,13 +201,13 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             className="flex gap-3 pt-2"
           >
             <button
-              onClick={() => navigate(AppRoute.BIBLE)}
+              onClick={() => goTo(AppRoute.BIBLE, 'Sagrada Escritura', sectionBible)}
               className="px-6 md:px-8 py-3 md:py-4 bg-primary text-primary-foreground rounded-lg font-black uppercase text-[10px] md:text-xs tracking-widest shadow-xl hover:opacity-90 transition-all"
             >
               Começar Agora
             </button>
             <button
-              onClick={() => navigate(AppRoute.STUDY_MODE)}
+              onClick={() => goTo(AppRoute.STUDY_MODE, 'Colloquium IA')}
               className="px-6 md:px-8 py-3 md:py-4 bg-foreground/10 backdrop-blur-md text-foreground border border-foreground/20 rounded-lg font-black uppercase text-[10px] md:text-xs tracking-widest hover:bg-foreground/20 transition-all"
             >
               Testar IA
@@ -193,6 +219,22 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       {/* ═══ CONTENT ROWS ═══ */}
       <div className="space-y-8 md:space-y-10 px-4 md:px-12">
 
+        {/* Row: Continue assistindo (only if logged in and has history) */}
+        {user && history.length > 0 && (
+          <ContentRow title="Continue de onde parou">
+            {history.map(entry => (
+              <RowCard
+                key={entry.id}
+                image={entry.image_url || sectionBible}
+                title={entry.title}
+                subtitle={new Date(entry.visited_at).toLocaleDateString('pt-BR', { day: 'numeric', month: 'short' })}
+                onClick={() => navigate(entry.route)}
+                wide
+              />
+            ))}
+          </ContentRow>
+        )}
+
         {/* Row: Fundamentos */}
         <ContentRow title="Comece pelo essencial">
           {fundamentos.map(item => (
@@ -200,7 +242,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               key={item.title}
               image={item.image}
               title={item.title}
-              onClick={() => navigate(item.route)}
+              onClick={() => goTo(item.route, item.title, item.image)}
               icon={item.icon}
             />
           ))}
@@ -214,7 +256,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               image={item.image}
               title={item.title}
               subtitle={item.subtitle}
-              onClick={() => navigate(item.route)}
+              onClick={() => goTo(item.route, item.title, item.image)}
               wide
             />
           ))}
@@ -228,7 +270,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               image={item.image}
               title={item.title}
               subtitle={item.subtitle}
-              onClick={() => navigate(item.route)}
+              onClick={() => goTo(item.route, item.title, item.image)}
               wide
             />
           ))}
@@ -242,7 +284,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               image={item.image}
               title={item.title}
               subtitle={item.subtitle}
-              onClick={() => navigate(item.route)}
+              onClick={() => goTo(item.route, item.title, item.image)}
             />
           ))}
         </ContentRow>
