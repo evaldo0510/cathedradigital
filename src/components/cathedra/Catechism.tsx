@@ -199,6 +199,7 @@ const Catechism: React.FC = () => {
             >
               <Icons.Heart className={`w-5 h-5 transition-all ${isFavorite('catechism', `CIC §${currentParagraph}`) ? 'fill-primary text-primary' : 'text-muted-foreground hover:text-primary'}`} />
             </button>
+            <NotesPanel contentType="catechism" contentId={`${currentParagraph}`} contentLabel={`§${currentParagraph}`} />
           </div>
           <CatechismContent paragraph={currentParagraph} />
         </div>
