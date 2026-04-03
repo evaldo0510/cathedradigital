@@ -48,6 +48,7 @@ const AppLayout: React.FC = () => {
   const [isDark, setIsDark] = useState(() => localStorage.getItem('cathedra_dark') === 'true');
   const { user, profile, signOut, isPremium } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (isDark) document.documentElement.classList.add('dark');
