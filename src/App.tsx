@@ -30,6 +30,10 @@ const MissalPage = lazy(() => import('./components/cathedra/MissalPage'));
 const FavoritesPage = lazy(() => import('./components/cathedra/FavoritesPage'));
 const TrilhasPage = lazy(() => import('./components/cathedra/TrilhasPage'));
 const AboutPage = lazy(() => import('./components/cathedra/AboutPage'));
+const DogmasPage = lazy(() => import('./components/cathedra/DogmasPage'));
+const LectioDivina = lazy(() => import('./components/cathedra/LectioDivina'));
+const BreviaryPage = lazy(() => import('./components/cathedra/BreviaryPage'));
+import CommandCenter from './components/cathedra/CommandCenter';
 
 interface LanguageContextType {
   lang: Language;
