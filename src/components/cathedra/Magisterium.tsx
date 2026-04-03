@@ -395,12 +395,14 @@ const Magisterium: React.FC = () => {
                   )}
                 </div>
 
-                <div className="bg-secondary/50 rounded-2xl p-6 md:p-8 max-h-[70vh] overflow-y-auto custom-scrollbar">
-                  <div className="text-foreground/90 leading-relaxed whitespace-pre-line font-serif text-[15px]">
+                <div className={`rounded-2xl p-6 md:p-8 max-h-[70vh] overflow-y-auto custom-scrollbar transition-colors duration-300 ${
+                  nightMode ? 'bg-[#1a1a2e] text-[#e0d8c8]' : 'bg-secondary/50'
+                }`}>
+                  <div className={`leading-relaxed whitespace-pre-line font-serif ${nightMode ? '' : 'text-foreground/90'}`} style={{ fontSize: `${fontSize}px` }}>
                     {textSearch ? (
                       fullText.split(new RegExp(`(${textSearch.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')).map((part, i) =>
                         part.toLowerCase() === textSearch.toLowerCase()
-                          ? <mark key={i} className="bg-primary/30 text-foreground rounded px-0.5">{part}</mark>
+                          ? <mark key={i} className={`rounded px-0.5 ${nightMode ? 'bg-amber-700/50 text-amber-100' : 'bg-primary/30 text-foreground'}`}>{part}</mark>
                           : part
                       )
                     ) : fullText}
