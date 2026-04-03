@@ -113,6 +113,8 @@ const Magisterium: React.FC = () => {
   const [textSearch, setTextSearch] = useState('');
   const [matchCount, setMatchCount] = useState(0);
   const [cachedIds, setCachedIds] = useState<string[]>([]);
+  const [nightMode, setNightMode] = useState(false);
+  const [fontSize, setFontSize] = useState(15);
 
   const filteredDocs = useMemo(() => {
     let docs = DOCUMENTS;
