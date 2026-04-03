@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo, createContext, lazy, Suspense } from 'react';
-import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
+import PageTransition from './components/PageTransition';
 import ScrollToTop from './components/ScrollToTop';
 import CathedralSidebar from './components/cathedra/Sidebar';
 import CathedralFooter from './components/cathedra/Footer';
