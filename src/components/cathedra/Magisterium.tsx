@@ -76,6 +76,33 @@ const CATEGORY_COLORS: Record<string, string> = {
   constitution: 'bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-300',
 };
 
+const CACHE_PREFIX = 'cathedra_doc_';
+
+const getCachedDoc = (docId: string): { text: string; title: string; cachedAt: string } | null => {
+  try {
+    const raw = localStorage.getItem(CACHE_PREFIX + docId);
+    return raw ? JSON.parse(raw) : null;
+  } catch { return null; }
+};
+
+const setCachedDoc = (docId: string, text: string, title: string) => {
+  try {
+    localStorage.setItem(CACHE_PREFIX + docId, JSON.stringify({ text, title, cachedAt: new Date().toISOString() }));
+  } catch (e) {
+    console.warn('Cache storage full, clearing old docs');
+    // Clear oldest cached docs if storage is full
+    const keys = Object.keys(localStorage).filter(k => k.startsWith(CACHE_PREFIX));
+    if (keys.length > 0) {
+      localStorage.removeItem(keys[0]);
+      try { localStorage.setItem(CACHE_PREFIX + docId, JSON.stringify({ text, title, cachedAt: new Date().toISOString() })); } catch {}
+    }
+  }
+};
+
+const getCachedDocIds = (): string[] => {
+  return Object.keys(localStorage).filter(k => k.startsWith(CACHE_PREFIX)).map(k => k.replace(CACHE_PREFIX, ''));
+};
+
 const Magisterium: React.FC = () => {
   const [category, setCategory] = useState<DocCategory>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -85,6 +112,7 @@ const Magisterium: React.FC = () => {
   const [textError, setTextError] = useState<string | null>(null);
   const [textSearch, setTextSearch] = useState('');
   const [matchCount, setMatchCount] = useState(0);
+  const [cachedIds, setCachedIds] = useState<string[]>([]);
 
   const filteredDocs = useMemo(() => {
     let docs = DOCUMENTS;
