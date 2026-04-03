@@ -33,6 +33,10 @@ const Section: React.FC<{ children: React.ReactNode; className?: string }> = ({ 
 
 const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   const navigate = useNavigate();
+  const pxBible = useParallax(0.12);
+  const pxCatechism = useParallax(0.12);
+  const pxDocuments = useParallax(0.12);
+  const pxPrayer = useParallax(0.12);
 
   return (
     <div className="space-y-20 md:space-y-36 pb-24 md:pb-48">
