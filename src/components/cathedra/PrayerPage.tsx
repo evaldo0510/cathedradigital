@@ -105,6 +105,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
   const [currentMystery, setCurrentMystery] = useState(0);
   const [phase, setPhase] = useState<'intro' | 'mystery' | 'decade' | 'closing'>('intro');
   const [expandedPrayer, setExpandedPrayer] = useState<string | null>(null);
+  const [aveCount, setAveCount] = useState(0);
 
   const mystery = data.mysteries[currentMystery];
 
