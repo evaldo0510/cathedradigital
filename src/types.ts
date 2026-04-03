@@ -28,7 +28,8 @@ export enum AppRoute {
   FAVORITES = '/favorites',
   DIAGNOSTICS = '/diagnostics',
   ABOUT = '/about',
-  TRILHAS = '/trilhas'
+  TRILHAS = '/trilhas',
+  ORACAO = '/oracao'
 }
 
 export interface TrackStep {

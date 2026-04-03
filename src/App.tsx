@@ -22,6 +22,7 @@ const Magisterium = lazy(() => import('./components/cathedra/Magisterium'));
 const DailyLiturgy = lazy(() => import('./components/cathedra/DailyLiturgy'));
 const ViaCrucis = lazy(() => import('./components/cathedra/ViaCrucis'));
 const Rosary = lazy(() => import('./components/cathedra/Rosary'));
+const PrayerPage = lazy(() => import('./components/cathedra/PrayerPage'));
 const Auth = lazy(() => import('./components/cathedra/Auth'));
 
 interface LanguageContextType {
@@ -106,6 +107,7 @@ const AppLayout: React.FC = () => {
                     <Route path={AppRoute.MAGISTERIUM} element={<Magisterium />} />
                     <Route path={AppRoute.DAILY_LITURGY} element={<DailyLiturgy />} />
                     <Route path={AppRoute.ROSARY} element={<Rosary />} />
+                    <Route path={AppRoute.ORACAO} element={<PrayerPage />} />
                     <Route path={AppRoute.VIA_CRUCIS} element={<ViaCrucis />} />
                     <Route path={AppRoute.STUDY_MODE} element={
                       <ProGate isPremium={isPremium} isLoggedIn={!!user} onLogin={() => navigate(AppRoute.LOGIN)}>
