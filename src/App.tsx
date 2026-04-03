@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo, createContext, lazy, Suspense } from 'react';
-import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
+import PageTransition from './components/PageTransition';
 import ScrollToTop from './components/ScrollToTop';
 import CathedralSidebar from './components/cathedra/Sidebar';
 import CathedralFooter from './components/cathedra/Footer';
@@ -46,6 +48,7 @@ const AppLayout: React.FC = () => {
   const [isDark, setIsDark] = useState(() => localStorage.getItem('cathedra_dark') === 'true');
   const { user, profile, signOut, isPremium } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (isDark) document.documentElement.classList.add('dark');
@@ -93,29 +96,33 @@ const AppLayout: React.FC = () => {
           />
           <div className="flex-1 p-4 md:p-12 w-full max-w-7xl mx-auto page-enter">
             <Suspense fallback={<LoadingFallback />}>
-              <Routes>
-                <Route path={AppRoute.DASHBOARD} element={<Dashboard user={appUser} />} />
-                <Route path={AppRoute.BIBLE} element={<Bible />} />
-                <Route path={AppRoute.CATECHISM} element={<Catechism />} />
-                <Route path={AppRoute.SAINTS} element={<Saints />} />
-                <Route path={AppRoute.MAGISTERIUM} element={<Magisterium />} />
-                <Route path={AppRoute.DAILY_LITURGY} element={<DailyLiturgy />} />
-                <Route path={AppRoute.ROSARY} element={<Rosary />} />
-                <Route path={AppRoute.VIA_CRUCIS} element={<ViaCrucis />} />
-                <Route path={AppRoute.STUDY_MODE} element={
-                  <ProGate isPremium={isPremium} isLoggedIn={!!user} onLogin={() => navigate(AppRoute.LOGIN)}>
-                    <StudyMode />
-                  </ProGate>
-                } />
-                <Route path={AppRoute.LOGIN} element={<Auth onSuccess={() => navigate(AppRoute.DASHBOARD)} />} />
-                <Route path={AppRoute.AQUINAS_OPERA} element={<PlaceholderPage title="Suma Teológica" description="As obras completas de São Tomás de Aquino." />} />
-                <Route path={AppRoute.CERTAMEN} element={<PlaceholderPage title="Certamen" description="Teste seus conhecimentos teológicos com quizzes interativos." />} />
-                <Route path={AppRoute.MISSAL} element={<PlaceholderPage title="Missal Romano" description="O Ordinário da Missa e orações litúrgicas." />} />
-                <Route path={AppRoute.FAVORITES} element={<PlaceholderPage title="Favoritos" description="Seus versículos, orações e estudos salvos." />} />
-                <Route path={AppRoute.TRILHAS} element={<PlaceholderPage title="Trilhas de Estudo" description="Percursos formativos organizados por tema." />} />
-                <Route path={AppRoute.ABOUT} element={<PlaceholderPage title="Sobre" description="Manifesto e missão da Cathedra Digital." />} />
-                <Route path="*" element={<Dashboard user={appUser} />} />
-              </Routes>
+              <AnimatePresence mode="wait">
+                <PageTransition>
+                  <Routes location={location} key={location.pathname}>
+                    <Route path={AppRoute.DASHBOARD} element={<Dashboard user={appUser} />} />
+                    <Route path={AppRoute.BIBLE} element={<Bible />} />
+                    <Route path={AppRoute.CATECHISM} element={<Catechism />} />
+                    <Route path={AppRoute.SAINTS} element={<Saints />} />
+                    <Route path={AppRoute.MAGISTERIUM} element={<Magisterium />} />
+                    <Route path={AppRoute.DAILY_LITURGY} element={<DailyLiturgy />} />
+                    <Route path={AppRoute.ROSARY} element={<Rosary />} />
+                    <Route path={AppRoute.VIA_CRUCIS} element={<ViaCrucis />} />
+                    <Route path={AppRoute.STUDY_MODE} element={
+                      <ProGate isPremium={isPremium} isLoggedIn={!!user} onLogin={() => navigate(AppRoute.LOGIN)}>
+                        <StudyMode />
+                      </ProGate>
+                    } />
+                    <Route path={AppRoute.LOGIN} element={<Auth onSuccess={() => navigate(AppRoute.DASHBOARD)} />} />
+                    <Route path={AppRoute.AQUINAS_OPERA} element={<PlaceholderPage title="Suma Teológica" description="As obras completas de São Tomás de Aquino." />} />
+                    <Route path={AppRoute.CERTAMEN} element={<PlaceholderPage title="Certamen" description="Teste seus conhecimentos teológicos com quizzes interativos." />} />
+                    <Route path={AppRoute.MISSAL} element={<PlaceholderPage title="Missal Romano" description="O Ordinário da Missa e orações litúrgicas." />} />
+                    <Route path={AppRoute.FAVORITES} element={<PlaceholderPage title="Favoritos" description="Seus versículos, orações e estudos salvos." />} />
+                    <Route path={AppRoute.TRILHAS} element={<PlaceholderPage title="Trilhas de Estudo" description="Percursos formativos organizados por tema." />} />
+                    <Route path={AppRoute.ABOUT} element={<PlaceholderPage title="Sobre" description="Manifesto e missão da Cathedra Digital." />} />
+                    <Route path="*" element={<Dashboard user={appUser} />} />
+                  </Routes>
+                </PageTransition>
+              </AnimatePresence>
             </Suspense>
           </div>
           <CathedralFooter />
