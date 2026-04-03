@@ -243,7 +243,10 @@ const PrayerPage: React.FC = () => {
   const [prayingMystery, setPrayingMystery] = useState<MysteryKey | null>(null);
 
   if (prayingMystery) {
-    return <PrayerMode mysteryKey={prayingMystery} intention={intention} onClose={() => setPrayingMystery(null)} />;
+    return createPortal(
+      <PrayerMode mysteryKey={prayingMystery} intention={intention} onClose={() => setPrayingMystery(null)} />,
+      document.body
+    );
   }
 
   return (
