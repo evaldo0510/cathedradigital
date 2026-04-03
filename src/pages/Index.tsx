@@ -61,15 +61,15 @@ const Index = () => {
               <div className="flex justify-center mb-2">
                 <Handshake className="h-10 w-10 text-primary animate-pulse" />
               </div>
-              <CardTitle className="text-2xl">Nosso Parceiro</CardTitle>
-              <CardDescription>Conheça mais sobre o trabalho deste parceiro</CardDescription>
+              <CardTitle className="text-2xl">Novas Parcerias</CardTitle>
+              <CardDescription>Novidades estão por vir!</CardDescription>
             </CardHeader>
             <CardContent className="text-center">
               <p className="text-muted-foreground mb-6">
-                Estamos felizes em anunciar nossa parceria! Em breve traremos conteúdos exclusivos e novidades.
+                Ainda não podemos revelar todos os detalhes, mas estamos preparando algo muito especial para você.
               </p>
-              <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-white transition-colors">
-                Saiba Mais
+              <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-white transition-colors" disabled>
+                Em Breve
               </Button>
             </CardContent>
           </Card>
