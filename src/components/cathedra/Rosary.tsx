@@ -3,6 +3,25 @@ import { Icons } from '../../constants';
 
 type MysterySet = 'joyful' | 'sorrowful' | 'glorious' | 'luminous';
 
+const YOUTUBE_IDS: Record<MysterySet, string> = {
+  joyful: 'y0nohEWE7PI',
+  sorrowful: '5jBHMsyvXMo',
+  glorious: 'kcsu2e-0j2I',
+  luminous: 'kmHzPZihdvY',
+};
+
+const YouTubePlayer: React.FC<{ videoId: string; title: string }> = ({ videoId, title }) => (
+  <div className="w-full aspect-video rounded-2xl overflow-hidden border border-border bg-black">
+    <iframe
+      src={`https://www.youtube.com/embed/${videoId}?rel=0`}
+      title={title}
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowFullScreen
+      className="w-full h-full"
+    />
+  </div>
+);
+
 const MYSTERIES: Record<MysterySet, { name: string; day: string; mysteries: { title: string; scripture: string; meditation: string }[] }> = {
   joyful: {
     name: 'Mistérios Gozosos',
@@ -113,6 +132,9 @@ const Rosary: React.FC = () => {
             <h1 className="text-2xl font-serif font-bold text-foreground">{set.name}</h1>
           </div>
         </div>
+
+        {/* YouTube Player */}
+        <YouTubePlayer videoId={YOUTUBE_IDS[selectedSet]} title={set.name} />
 
         <div className="text-center">
           <button onClick={() => { setIsPraying(true); setCurrentMystery(0); setStep('intro'); }}
@@ -245,6 +267,9 @@ const Rosary: React.FC = () => {
           ))}
         </div>
       )}
+
+      {/* YouTube Player in prayer mode */}
+      <YouTubePlayer videoId={YOUTUBE_IDS[selectedSet]} title={set.name} />
 
       <div className="bg-card border border-border rounded-3xl p-8 md:p-10">
         {renderStep()}

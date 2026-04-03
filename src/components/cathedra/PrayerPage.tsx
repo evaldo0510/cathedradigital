@@ -3,6 +3,25 @@ import { Icons } from '../../constants';
 
 type MysteryKey = 'gozosos' | 'dolorosos' | 'gloriosos' | 'luminosos';
 
+const YOUTUBE_IDS: Record<MysteryKey, string> = {
+  gozosos: 'y0nohEWE7PI',
+  dolorosos: '5jBHMsyvXMo',
+  gloriosos: 'kcsu2e-0j2I',
+  luminosos: 'kmHzPZihdvY',
+};
+
+const YouTubePlayer: React.FC<{ videoId: string; title: string }> = ({ videoId, title }) => (
+  <div className="w-full aspect-video rounded-2xl overflow-hidden border border-border bg-black">
+    <iframe
+      src={`https://www.youtube.com/embed/${videoId}?rel=0`}
+      title={title}
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowFullScreen
+      className="w-full h-full"
+    />
+  </div>
+);
+
 const MYSTERY_DATA: Record<MysteryKey, {
   title: string;
   emoji: string;
@@ -119,6 +138,9 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
       {/* Content */}
       <div className="flex-1 flex items-start justify-center p-6">
         <div className="w-full max-w-xl bg-card border border-border rounded-3xl p-8 md:p-10 space-y-6">
+          {/* YouTube Player - always visible */}
+          <YouTubePlayer videoId={YOUTUBE_IDS[mysteryKey]} title={data.title} />
+
           {phase === 'intro' && (
             <>
               <h3 className="text-lg font-serif font-bold text-foreground text-center">Orações Iniciais</h3>
@@ -240,6 +262,11 @@ const PrayerPage: React.FC = () => {
         <h2 className="text-2xl md:text-3xl font-serif font-bold text-foreground">📿 Terço de Hoje</h2>
         <p className="text-lg font-serif text-muted-foreground">{todayData.emoji} {todayData.title}</p>
         <p className="text-xs text-muted-foreground">{todayData.days}</p>
+
+        {/* YouTube Player */}
+        <div className="max-w-lg mx-auto pt-2">
+          <YouTubePlayer videoId={YOUTUBE_IDS[todayKey]} title={todayData.title} />
+        </div>
 
         {/* Intention */}
         <div className="max-w-md mx-auto pt-2">
