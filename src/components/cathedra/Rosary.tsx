@@ -3,6 +3,25 @@ import { Icons } from '../../constants';
 
 type MysterySet = 'joyful' | 'sorrowful' | 'glorious' | 'luminous';
 
+const YOUTUBE_IDS: Record<MysterySet, string> = {
+  joyful: 'y0nohEWE7PI',
+  sorrowful: '5jBHMsyvXMo',
+  glorious: 'kcsu2e-0j2I',
+  luminous: 'kmHzPZihdvY',
+};
+
+const YouTubePlayer: React.FC<{ videoId: string; title: string }> = ({ videoId, title }) => (
+  <div className="w-full aspect-video rounded-2xl overflow-hidden border border-border bg-black">
+    <iframe
+      src={`https://www.youtube.com/embed/${videoId}?rel=0`}
+      title={title}
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowFullScreen
+      className="w-full h-full"
+    />
+  </div>
+);
+
 const MYSTERIES: Record<MysterySet, { name: string; day: string; mysteries: { title: string; scripture: string; meditation: string }[] }> = {
   joyful: {
     name: 'Mistérios Gozosos',
