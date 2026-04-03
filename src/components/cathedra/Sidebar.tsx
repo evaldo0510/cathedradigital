@@ -39,6 +39,7 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user }) => {
         { label: 'Magistério', path: AppRoute.MAGISTERIUM, icon: <Icons.Globe className="w-5 h-5" /> },
         { label: 'Dogmas', path: AppRoute.DOGMAS, icon: <Icons.Star className="w-5 h-5" /> },
         { label: 'Trilhas de Estudo', path: AppRoute.TRILHAS, icon: <Icons.Layout className="w-5 h-5" /> },
+        { label: 'Comunidade', path: AppRoute.COMMUNITY, icon: <Icons.Message className="w-5 h-5" /> },
       ]
     },
     {
