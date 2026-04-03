@@ -238,8 +238,11 @@ const Magisterium: React.FC = () => {
                       onClick={() => fetchFullText(selectedDoc)}
                       className="px-8 py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all"
                     >
-                      Carregar Texto Completo
+                      {cachedIds.includes(selectedDoc.id) ? '📥 Abrir do Cache' : 'Carregar Texto Completo'}
                     </button>
+                    {cachedIds.includes(selectedDoc.id) && (
+                      <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-widest">✓ Disponível offline</span>
+                    )}
                     <a
                       href={selectedDoc.vaticanUrl}
                       target="_blank"
