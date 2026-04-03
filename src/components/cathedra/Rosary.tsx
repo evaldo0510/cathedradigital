@@ -168,15 +168,15 @@ const Rosary: React.FC = () => {
     if (step === 'intro') {
       return (
         <div className="space-y-6">
-          <h3 className="text-lg font-serif font-bold text-foreground text-center">Orações Iniciais</h3>
+          <h3 className="text-xl font-serif font-bold text-amber-100 text-center">Orações Iniciais</h3>
           {['signOfCross', 'creed', 'ourFather'].map(k => (
-            <div key={k} className="bg-muted rounded-2xl p-5 cursor-pointer" onClick={() => setShowPrayer(showPrayer === k ? null : k)}>
-              <p className="font-bold text-sm text-foreground">{PRAYERS[k as keyof typeof PRAYERS].title}</p>
-              {showPrayer === k && <p className="text-sm text-foreground/80 mt-2 font-serif leading-relaxed">{PRAYERS[k as keyof typeof PRAYERS].text}</p>}
+            <div key={k} className="bg-white/[0.04] rounded-2xl p-5 cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setShowPrayer(showPrayer === k ? null : k)}>
+              <p className="font-bold text-sm text-amber-100/90">{PRAYERS[k as keyof typeof PRAYERS].title}</p>
+              {showPrayer === k && <p className="text-base text-amber-100/60 mt-3 font-serif leading-[1.9]">{PRAYERS[k as keyof typeof PRAYERS].text}</p>}
             </div>
           ))}
-          <p className="text-xs text-muted-foreground text-center font-serif italic">Reze 3 Ave-Marias pelas virtudes da Fé, Esperança e Caridade, seguidas do Glória.</p>
-          <button onClick={() => setStep('mystery')} className="w-full py-3 bg-foreground text-background rounded-xl font-bold text-sm">
+          <p className="text-xs text-amber-200/40 text-center font-serif italic">Reze 3 Ave-Marias pelas virtudes da Fé, Esperança e Caridade, seguidas do Glória.</p>
+          <button onClick={() => setStep('mystery')} className="w-full py-3.5 bg-amber-400/20 text-amber-200 border border-amber-400/20 rounded-xl font-bold text-sm hover:bg-amber-400/30 transition-all">
             Iniciar 1º Mistério →
           </button>
         </div>
@@ -186,15 +186,15 @@ const Rosary: React.FC = () => {
     if (step === 'mystery') {
       return (
         <div className="space-y-6">
-          <div className="text-center space-y-2">
-            <span className="text-[10px] font-black uppercase tracking-widest text-primary">{currentMystery + 1}º Mistério</span>
-            <h3 className="text-xl font-serif font-bold text-foreground">{mystery.title}</h3>
-            <p className="text-sm text-primary font-bold">{mystery.scripture}</p>
+          <div className="text-center space-y-3">
+            <span className="text-[10px] font-black uppercase tracking-widest text-amber-400/50">{currentMystery + 1}º Mistério</span>
+            <h3 className="text-2xl font-serif font-bold text-amber-100 leading-snug">{mystery.title}</h3>
+            <p className="text-sm text-amber-400/60 font-bold">{mystery.scripture}</p>
           </div>
-          <div className="bg-muted rounded-2xl p-6">
-            <p className="text-foreground/80 font-serif leading-relaxed">{mystery.meditation}</p>
+          <div className="bg-white/[0.04] rounded-2xl p-6 border border-white/[0.06]">
+            <p className="text-lg text-amber-100/60 font-serif leading-[1.9] text-center">{mystery.meditation}</p>
           </div>
-          <button onClick={() => setStep('decade')} className="w-full py-3 bg-foreground text-background rounded-xl font-bold text-sm">
+          <button onClick={() => setStep('decade')} className="w-full py-3.5 bg-amber-400/20 text-amber-200 border border-amber-400/20 rounded-xl font-bold text-sm hover:bg-amber-400/30 transition-all">
             Rezar a Dezena →
           </button>
         </div>
@@ -204,14 +204,14 @@ const Rosary: React.FC = () => {
     if (step === 'decade') {
       return (
         <div className="space-y-6">
-          <p className="text-center text-[10px] font-black uppercase tracking-widest text-muted-foreground">{currentMystery + 1}º Mistério — Dezena</p>
+          <p className="text-center text-[10px] font-black uppercase tracking-widest text-amber-200/30">{currentMystery + 1}º Mistério — Dezena</p>
           {['ourFather', 'hailMary', 'glory', 'fatima'].map(k => (
-            <div key={k} className="bg-muted rounded-2xl p-5 cursor-pointer" onClick={() => setShowPrayer(showPrayer === k ? null : k)}>
-              <p className="font-bold text-sm text-foreground">
+            <div key={k} className="bg-white/[0.04] rounded-2xl p-5 cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setShowPrayer(showPrayer === k ? null : k)}>
+              <p className="font-bold text-sm text-amber-100/90">
                 {PRAYERS[k as keyof typeof PRAYERS].title}
-                {k === 'hailMary' && <span className="text-muted-foreground font-normal"> (×10)</span>}
+                {k === 'hailMary' && <span className="text-amber-200/40 font-normal"> (×10)</span>}
               </p>
-              {showPrayer === k && <p className="text-sm text-foreground/80 mt-2 font-serif leading-relaxed">{PRAYERS[k as keyof typeof PRAYERS].text}</p>}
+              {showPrayer === k && <p className="text-base text-amber-100/60 mt-3 font-serif leading-[1.9]">{PRAYERS[k as keyof typeof PRAYERS].text}</p>}
             </div>
           ))}
           <button onClick={() => {
@@ -222,7 +222,7 @@ const Rosary: React.FC = () => {
             } else {
               setStep('closing');
             }
-          }} className="w-full py-3 bg-foreground text-background rounded-xl font-bold text-sm">
+          }} className="w-full py-3.5 bg-amber-400/20 text-amber-200 border border-amber-400/20 rounded-xl font-bold text-sm hover:bg-amber-400/30 transition-all">
             {currentMystery < 4 ? `Próximo Mistério →` : 'Concluir Rosário →'}
           </button>
         </div>
@@ -232,18 +232,18 @@ const Rosary: React.FC = () => {
     // closing
     return (
       <div className="space-y-6">
-        <h3 className="text-lg font-serif font-bold text-foreground text-center">Oração Final</h3>
-        <div className="bg-muted rounded-2xl p-5 cursor-pointer" onClick={() => setShowPrayer(showPrayer === 'salve' ? null : 'salve')}>
-          <p className="font-bold text-sm text-foreground">{PRAYERS.salveRainha.title}</p>
-          {showPrayer === 'salve' && <p className="text-sm text-foreground/80 mt-2 font-serif leading-relaxed">{PRAYERS.salveRainha.text}</p>}
+        <h3 className="text-xl font-serif font-bold text-amber-100 text-center">Oração Final</h3>
+        <div className="bg-white/[0.04] rounded-2xl p-5 cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setShowPrayer(showPrayer === 'salve' ? null : 'salve')}>
+          <p className="font-bold text-sm text-amber-100/90">{PRAYERS.salveRainha.title}</p>
+          {showPrayer === 'salve' && <p className="text-base text-amber-100/60 mt-3 font-serif leading-[1.9]">{PRAYERS.salveRainha.text}</p>}
         </div>
-        <div className="text-center space-y-2 py-4">
-          <Icons.Heart className="w-10 h-10 text-primary mx-auto" />
-          <p className="text-foreground font-serif font-bold">Rosário Completo!</p>
-          <p className="text-sm text-muted-foreground font-serif italic">Que Nossa Senhora interceda por vós e vossas intenções.</p>
+        <div className="text-center space-y-3 py-6">
+          <Icons.Heart className="w-12 h-12 text-amber-400/40 mx-auto" />
+          <p className="text-amber-100 font-serif font-bold text-xl">Rosário Completo!</p>
+          <p className="text-base text-amber-200/40 font-serif italic">Que Nossa Senhora interceda por vós e vossas intenções.</p>
         </div>
         <button onClick={() => { setIsPraying(false); setSelectedSet(null); }}
-          className="w-full py-3 bg-primary text-primary-foreground rounded-xl font-bold text-sm">
+          className="w-full py-3.5 bg-amber-400/20 text-amber-200 border border-amber-400/20 rounded-xl font-bold text-sm hover:bg-amber-400/30 transition-all">
           ✝ Amém — Finalizar
         </button>
       </div>
@@ -251,28 +251,33 @@ const Rosary: React.FC = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
-      <div className="flex items-center justify-between">
-        <button onClick={() => { setIsPraying(false); }} className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all">
-          <Icons.ArrowDown className="w-5 h-5 rotate-90 text-foreground" />
+    <div className="fixed inset-0 z-[200] flex flex-col overflow-y-auto"
+      style={{ background: 'linear-gradient(180deg, #1a1510 0%, #0d0b08 50%, #1a1510 100%)' }}>
+      <div className="flex items-center justify-between p-4">
+        <button onClick={() => { setIsPraying(false); }} className="p-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all">
+          <Icons.ArrowDown className="w-5 h-5 rotate-90 text-amber-200/70" />
         </button>
-        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{set.name}</span>
+        <span className="text-[10px] font-black uppercase tracking-widest text-amber-200/40">{set.name}</span>
         <div className="w-9" />
       </div>
 
       {step !== 'intro' && step !== 'closing' && (
-        <div className="flex gap-1">
+        <div className="flex gap-1 px-6 pt-2">
           {[0, 1, 2, 3, 4].map(i => (
-            <div key={i} className={`flex-1 h-1 rounded-full transition-all ${i <= currentMystery ? 'bg-primary' : 'bg-border'}`} />
+            <div key={i} className={`flex-1 h-1 rounded-full transition-all ${i <= currentMystery ? 'bg-amber-400/60' : 'bg-white/10'}`} />
           ))}
         </div>
       )}
 
-      {/* YouTube Player in prayer mode */}
-      <YouTubePlayer videoId={YOUTUBE_IDS[selectedSet]} title={set.name} />
+      <div className="flex-1 flex items-start justify-center p-6">
+        <div className="w-full max-w-xl space-y-6">
+          {/* YouTube Player */}
+          <YouTubePlayer videoId={YOUTUBE_IDS[selectedSet]} title={set.name} />
 
-      <div className="bg-card border border-border rounded-3xl p-8 md:p-10">
-        {renderStep()}
+          <div className="bg-white/[0.03] border border-white/[0.06] rounded-3xl p-8 md:p-10 backdrop-blur-sm">
+            {renderStep()}
+          </div>
+        </div>
       </div>
     </div>
   );
