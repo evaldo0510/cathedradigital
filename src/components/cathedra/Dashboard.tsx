@@ -5,10 +5,10 @@ import { AppRoute, User } from '../../types';
 import { Icons } from '../../constants';
 import SacredImage from './SacredImage';
 import { useParallax } from '../../hooks/useParallax';
-import sectionBible from '../../assets/section-bible.jpg';
-import sectionCatechism from '../../assets/section-catechism.jpg';
-import sectionDocuments from '../../assets/section-documents.jpg';
-import sectionPrayer from '../../assets/section-prayer.jpg';
+import sectionBible from '../../assets/section-bible.webp';
+import sectionCatechism from '../../assets/section-catechism.webp';
+import sectionDocuments from '../../assets/section-documents.webp';
+import sectionPrayer from '../../assets/section-prayer.webp';
 
 interface DashboardProps {
   user: User | null;
