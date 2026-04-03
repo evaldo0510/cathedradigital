@@ -109,7 +109,32 @@ const Bible: React.FC = () => {
   const [fontSizeIdx, setFontSizeIdx] = useState(1);
   const [showCrossRefs, setShowCrossRefs] = useState(true);
 
-  const filteredBooks = useMemo(() => {
+  // Handle deep-link from Catechism cross-references (?book=Gn&ch=1)
+  useEffect(() => {
+    const bookParam = searchParams.get('book');
+    const chParam = searchParams.get('ch');
+    if (bookParam) {
+      const allBooks = [...BIBLE_BOOKS['Antigo Testamento'], ...BIBLE_BOOKS['Novo Testamento']];
+      const found = allBooks.find(b => b.abbr === bookParam);
+      if (found) {
+        const isNT = BIBLE_BOOKS['Novo Testamento'].some(b => b.abbr === bookParam);
+        setTestament(isNT ? 'Novo Testamento' : 'Antigo Testamento');
+        setSelectedBook(found);
+        if (chParam) {
+          const ch = parseInt(chParam);
+          if (!isNaN(ch) && ch >= 1 && ch <= found.chapters) {
+            setSelectedChapter(ch);
+            setViewMode('reading');
+          } else {
+            setViewMode('chapters');
+          }
+        } else {
+          setViewMode('chapters');
+        }
+      }
+    }
+  }, [searchParams]);
+
     const books = BIBLE_BOOKS[testament];
     if (!searchQuery) return books;
     return books.filter(b => b.name.toLowerCase().includes(searchQuery.toLowerCase()) || b.abbr.toLowerCase().includes(searchQuery.toLowerCase()));
