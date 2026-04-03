@@ -166,8 +166,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               </button>
             </div>
           </div>
-          <div className="relative h-64 lg:h-auto order-1 lg:order-2">
-            <img src={sectionCatechism} alt="Catecismo aberto com crucifixo e rosário" loading="lazy" width={1280} height={720} className="absolute inset-0 w-full h-full object-cover" />
+          <div className="relative h-64 lg:h-auto order-1 lg:order-2 overflow-hidden" ref={pxCatechism.ref}>
+            <img src={sectionCatechism} alt="Catecismo aberto com crucifixo e rosário" loading="lazy" width={1280} height={720} className="absolute inset-0 w-full h-full object-cover scale-110" style={pxCatechism.style} />
           </div>
         </div>
       </Section>
