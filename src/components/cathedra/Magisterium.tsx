@@ -113,6 +113,8 @@ const Magisterium: React.FC = () => {
   const [textSearch, setTextSearch] = useState('');
   const [matchCount, setMatchCount] = useState(0);
   const [cachedIds, setCachedIds] = useState<string[]>([]);
+  const [nightMode, setNightMode] = useState(false);
+  const [fontSize, setFontSize] = useState(15);
 
   const filteredDocs = useMemo(() => {
     let docs = DOCUMENTS;
@@ -349,6 +351,25 @@ const Magisterium: React.FC = () => {
                   </div>
                 </div>
 
+                {/* Reading controls: night mode + font size */}
+                <div className="flex items-center gap-4 flex-wrap">
+                  <button
+                    onClick={() => setNightMode(!nightMode)}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all ${
+                      nightMode
+                        ? 'bg-foreground text-background'
+                        : 'bg-card border border-border text-muted-foreground hover:text-foreground'
+                    }`}
+                  >
+                    {nightMode ? '☀️' : '🌙'} {nightMode ? 'Modo Claro' : 'Modo Noturno'}
+                  </button>
+                  <div className="flex items-center gap-2">
+                    <button onClick={() => setFontSize(Math.max(12, fontSize - 1))} className="w-7 h-7 rounded-lg bg-card border border-border text-xs font-bold text-muted-foreground hover:text-foreground transition-all">A-</button>
+                    <span className="text-[10px] font-bold text-muted-foreground w-8 text-center">{fontSize}px</span>
+                    <button onClick={() => setFontSize(Math.min(24, fontSize + 1))} className="w-7 h-7 rounded-lg bg-card border border-border text-xs font-bold text-muted-foreground hover:text-foreground transition-all">A+</button>
+                  </div>
+                </div>
+
                 {/* Search within document */}
                 <div className="relative">
                   <Icons.Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -374,12 +395,14 @@ const Magisterium: React.FC = () => {
                   )}
                 </div>
 
-                <div className="bg-secondary/50 rounded-2xl p-6 md:p-8 max-h-[70vh] overflow-y-auto custom-scrollbar">
-                  <div className="text-foreground/90 leading-relaxed whitespace-pre-line font-serif text-[15px]">
+                <div className={`rounded-2xl p-6 md:p-8 max-h-[70vh] overflow-y-auto custom-scrollbar transition-colors duration-300 ${
+                  nightMode ? 'bg-[#1a1a2e] text-[#e0d8c8]' : 'bg-secondary/50'
+                }`}>
+                  <div className={`leading-relaxed whitespace-pre-line font-serif ${nightMode ? '' : 'text-foreground/90'}`} style={{ fontSize: `${fontSize}px` }}>
                     {textSearch ? (
                       fullText.split(new RegExp(`(${textSearch.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')).map((part, i) =>
                         part.toLowerCase() === textSearch.toLowerCase()
-                          ? <mark key={i} className="bg-primary/30 text-foreground rounded px-0.5">{part}</mark>
+                          ? <mark key={i} className={`rounded px-0.5 ${nightMode ? 'bg-amber-700/50 text-amber-100' : 'bg-primary/30 text-foreground'}`}>{part}</mark>
                           : part
                       )
                     ) : fullText}
