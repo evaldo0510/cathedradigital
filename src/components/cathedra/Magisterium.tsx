@@ -350,13 +350,25 @@ const Magisterium: React.FC = () => {
                       </span>
                     )}
                   </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-[10px] text-muted-foreground italic">Fonte: Vatican.va</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] text-muted-foreground italic mr-2">Fonte: Vatican.va</span>
+                    {selectedDoc.vaticanUrl && (
+                      <a
+                        href={selectedDoc.pdfUrl || selectedDoc.vaticanUrl.replace('.html', '.pdf')}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-3 py-1.5 rounded-lg text-[10px] font-bold bg-secondary/10 text-secondary-foreground hover:bg-secondary/20 transition-all uppercase tracking-wider flex items-center gap-1"
+                      >
+                        <Icons.Download className="w-3 h-3" />
+                        PDF Original
+                      </a>
+                    )}
                     <button
                       onClick={exportToPdf}
-                      className="px-3 py-1 rounded-lg text-[10px] font-bold bg-primary/10 text-primary hover:bg-primary/20 transition-all uppercase tracking-wider"
+                      className="px-3 py-1.5 rounded-lg text-[10px] font-bold bg-primary/10 text-primary hover:bg-primary/20 transition-all uppercase tracking-wider flex items-center gap-1"
                     >
-                      📄 Exportar PDF
+                      <Icons.Download className="w-3 h-3" />
+                      Exportar PDF
                     </button>
                     {cachedIds.includes(selectedDoc.id) && (
                       <button
