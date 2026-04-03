@@ -93,6 +93,8 @@ const LiturgicalCalendarPage: React.FC = () => {
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth());
   const [selectedDay, setSelectedDay] = useState<Date | null>(null);
+  const { toggleFavorite, isFavorite } = useFavorites();
+  const navigate = useNavigate();
 
   const days = useMemo(() => getDaysInMonth(year, month), [year, month]);
   const firstDayOfWeek = new Date(year, month, 1).getDay();
