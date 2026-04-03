@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { getLevelInfo } from '@/lib/levels';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { toast } from 'sonner';
@@ -36,6 +37,8 @@ interface LeaderboardEntry {
   posts: number;
   likes: number;
   score: number;
+  levelName: string;
+  levelIdx: number;
 }
 
 const CommunityPage: React.FC = () => {
@@ -82,14 +85,19 @@ const CommunityPage: React.FC = () => {
       .in('id', userIds);
 
     const entries: LeaderboardEntry[] = (profiles || []).map(p => {
-      const stats = userMap.get(p.id) || { posts: 0, likes: 0 };
+      const s = userMap.get(p.id) || { posts: 0, likes: 0 };
+      const score = s.posts * 10 + s.likes * 5;
+      const xp = s.posts * 30 + s.likes * 10;
+      const { levelIdx, levelName } = getLevelInfo(xp);
       return {
         id: p.id,
         name: p.name || 'Anônimo',
         avatar_url: p.avatar_url,
-        posts: stats.posts,
-        likes: stats.likes,
-        score: stats.posts * 10 + stats.likes * 5,
+        posts: s.posts,
+        likes: s.likes,
+        score,
+        levelName,
+        levelIdx,
       };
     }).sort((a, b) => b.score - a.score).slice(0, 20);
 
@@ -374,6 +382,7 @@ const CommunityPage: React.FC = () => {
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-bold text-foreground truncate">{entry.name}</p>
                       <div className="flex gap-3 text-[10px] text-muted-foreground">
+                        <span className="text-primary font-bold">Nv.{entry.levelIdx + 1} {entry.levelName}</span>
                         <span>{entry.posts} discussões</span>
                         <span>{entry.likes} curtidas</span>
                       </div>

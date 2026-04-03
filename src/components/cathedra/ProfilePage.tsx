@@ -6,6 +6,8 @@ import { AppRoute } from '@/types';
 import { Icons } from '@/constants';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { toast } from 'sonner';
+import { motion, AnimatePresence } from 'framer-motion';
+import { getLevelInfo } from '@/lib/levels';
 
 interface Badge {
   id: string;
@@ -25,6 +27,8 @@ const ProfilePage: React.FC = () => {
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [stats, setStats] = useState({ posts: 0, likes: 0, notes: 0, daysActive: 0 });
+  const [showLevelUp, setShowLevelUp] = useState(false);
+  const prevLevelRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (!loading && !user) navigate(AppRoute.LOGIN);
@@ -77,6 +81,19 @@ const ProfilePage: React.FC = () => {
 
   const unlockedCount = badges.filter(b => b.unlocked).length;
 
+  // XP System
+  const totalXp = stats.posts * 30 + stats.likes * 10 + stats.notes * 20 + stats.daysActive * 15 + unlockedCount * 50;
+  const { levelIdx: currentLevelIdx, levelName, nextLevel, progress: xpProgress } = getLevelInfo(totalXp);
+
+  // Detect level-up
+  useEffect(() => {
+    if (prevLevelRef.current !== null && currentLevelIdx > prevLevelRef.current) {
+      setShowLevelUp(true);
+      setTimeout(() => setShowLevelUp(false), 4000);
+    }
+    prevLevelRef.current = currentLevelIdx;
+  }, [currentLevelIdx]);
+
   const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !user) return;
@@ -127,29 +144,6 @@ const ProfilePage: React.FC = () => {
   const initials = (profile.name || user.email || '?').slice(0, 2).toUpperCase();
   const memberSince = new Date(user.created_at).toLocaleDateString('pt-BR', { year: 'numeric', month: 'long' });
 
-  // XP System: posts=30xp, likes=10xp, notes=20xp, days=15xp, badges=50xp each
-  const totalXp = stats.posts * 30 + stats.likes * 10 + stats.notes * 20 + stats.daysActive * 15 + unlockedCount * 50;
-
-  const LEVELS = [
-    { name: 'Catecúmeno', minXp: 0 },
-    { name: 'Peregrino', minXp: 100 },
-    { name: 'Acólito', minXp: 300 },
-    { name: 'Leitor', minXp: 600 },
-    { name: 'Discípulo', minXp: 1000 },
-    { name: 'Apologista', minXp: 1800 },
-    { name: 'Teólogo', minXp: 3000 },
-    { name: 'Doutor da Fé', minXp: 5000 },
-    { name: 'Mestre Erudito', minXp: 8000 },
-    { name: 'Patriarca', minXp: 12000 },
-  ];
-
-  const currentLevelIdx = LEVELS.reduce((acc, lvl, idx) => totalXp >= lvl.minXp ? idx : acc, 0);
-  const currentLevel = LEVELS[currentLevelIdx];
-  const nextLevel = LEVELS[currentLevelIdx + 1];
-  const xpProgress = nextLevel
-    ? ((totalXp - currentLevel.minXp) / (nextLevel.minXp - currentLevel.minXp)) * 100
-    : 100;
-
   const statCards = [
     { label: 'Discussões', value: stats.posts, icon: <Icons.Message className="w-5 h-5" /> },
     { label: 'Curtidas', value: stats.likes, icon: <Icons.Heart className="w-5 h-5" /> },
@@ -158,7 +152,48 @@ const ProfilePage: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-2xl mx-auto space-y-8">
+    <div className="max-w-2xl mx-auto space-y-8 relative">
+      {/* Level-up celebration */}
+      <AnimatePresence>
+        {showLevelUp && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            className="fixed inset-0 z-[200] flex items-center justify-center pointer-events-none"
+          >
+            <motion.div
+              initial={{ y: 40 }}
+              animate={{ y: 0 }}
+              className="bg-card border-2 border-primary rounded-3xl p-8 shadow-2xl text-center pointer-events-auto max-w-sm mx-4"
+            >
+              <motion.div
+                animate={{ rotate: [0, -10, 10, -10, 10, 0], scale: [1, 1.3, 1] }}
+                transition={{ duration: 0.8 }}
+                className="text-6xl mb-3"
+              >
+                🎉
+              </motion.div>
+              <h2 className="text-xl font-black text-foreground mb-1">Nível Alcançado!</h2>
+              <p className="text-2xl font-black text-primary mb-2">{levelName}</p>
+              <p className="text-xs text-muted-foreground">Nível {currentLevelIdx + 1} · {totalXp} XP</p>
+              <div className="flex justify-center gap-1 mt-3">
+                {['✨', '⭐', '🌟', '⭐', '✨'].map((e, i) => (
+                  <motion.span
+                    key={i}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 + i * 0.1 }}
+                    className="text-xl"
+                  >
+                    {e}
+                  </motion.span>
+                ))}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       {/* Header with avatar upload */}
       <div className="text-center space-y-4">
         <div className="relative w-24 h-24 mx-auto group">
@@ -192,7 +227,7 @@ const ProfilePage: React.FC = () => {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Nível {currentLevelIdx + 1}</p>
-            <p className="text-lg font-black text-foreground">{currentLevel.name}</p>
+            <p className="text-lg font-black text-foreground">{levelName}</p>
           </div>
           <div className="text-right">
             <p className="text-2xl font-black text-primary">{totalXp}</p>
@@ -206,7 +241,7 @@ const ProfilePage: React.FC = () => {
           />
         </div>
         <div className="flex justify-between text-[9px] text-muted-foreground">
-          <span>{currentLevel.name}</span>
+          <span>{levelName}</span>
           <span>{nextLevel ? `${nextLevel.minXp - totalXp} XP para ${nextLevel.name}` : 'Nível máximo!'}</span>
         </div>
         <div className="flex flex-wrap gap-2 pt-2 border-t border-border">
