@@ -37,6 +37,8 @@ interface LeaderboardEntry {
   posts: number;
   likes: number;
   score: number;
+  levelName: string;
+  levelIdx: number;
 }
 
 const CommunityPage: React.FC = () => {
