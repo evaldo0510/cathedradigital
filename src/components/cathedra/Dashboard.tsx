@@ -4,6 +4,10 @@ import { motion } from 'framer-motion';
 import { AppRoute, User } from '../../types';
 import { Icons } from '../../constants';
 import SacredImage from './SacredImage';
+import sectionBible from '../../assets/section-bible.jpg';
+import sectionCatechism from '../../assets/section-catechism.jpg';
+import sectionDocuments from '../../assets/section-documents.jpg';
+import sectionPrayer from '../../assets/section-prayer.jpg';
 
 interface DashboardProps {
   user: User | null;
@@ -116,67 +120,99 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       </Section>
 
       {/* ═══════ 4. BÍBLIA ═══════ */}
-      <Section className="bg-secondary py-16 md:py-24 rounded-3xl md:rounded-[4rem] border border-border mx-4 md:mx-6">
-        <div className="max-w-3xl mx-auto px-6 md:px-8 text-center space-y-6">
-          <Icons.Book className="w-10 h-10 text-primary mx-auto" />
-          <h2 className="text-3xl md:text-5xl font-serif font-bold text-foreground">A Palavra que ilumina</h2>
-          <p className="text-muted-foreground font-serif italic text-base md:text-lg leading-relaxed max-w-xl mx-auto">
-            A Sagrada Escritura não é apenas para leitura — é para encontro.<br /><br />
-            Aqui, você acessa a Bíblia com apoio do Catecismo e da Tradição,
-            para compreender não apenas o que está escrito, mas o que é ensinado.
-          </p>
-          <button onClick={() => navigate(AppRoute.BIBLE)}
-            className="px-8 py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all">
-            Ler a Bíblia
-          </button>
+      <Section className="overflow-hidden rounded-3xl md:rounded-[4rem] border border-border mx-4 md:mx-6">
+        <div className="grid lg:grid-cols-2">
+          <div className="relative h-64 lg:h-auto">
+            <img src={sectionBible} alt="Bíblia Sagrada aberta à luz de velas" loading="lazy" width={1280} height={720} className="absolute inset-0 w-full h-full object-cover" />
+          </div>
+          <div className="bg-secondary p-10 md:p-16 flex flex-col justify-center space-y-6">
+            <Icons.Book className="w-10 h-10 text-primary" />
+            <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground">A Palavra que ilumina</h2>
+            <p className="text-muted-foreground font-serif italic text-base md:text-lg leading-relaxed">
+              A Sagrada Escritura não é apenas para leitura — é para encontro.<br /><br />
+              Aqui, você acessa a Bíblia com apoio do Catecismo e da Tradição,
+              para compreender não apenas o que está escrito, mas o que é ensinado.
+            </p>
+            <div>
+              <button onClick={() => navigate(AppRoute.BIBLE)}
+                className="px-8 py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all">
+                Ler a Bíblia
+              </button>
+            </div>
+          </div>
         </div>
       </Section>
 
       {/* ═══════ 5. CATECISMO ═══════ */}
-      <Section className="max-w-3xl mx-auto px-6 text-center space-y-6">
-        <Icons.Cross className="w-10 h-10 text-primary mx-auto" />
-        <h2 className="text-3xl md:text-5xl font-serif font-bold text-foreground">A fé explicada com clareza</h2>
-        <p className="text-muted-foreground font-serif italic text-base md:text-lg leading-relaxed max-w-xl mx-auto">
-          O Catecismo da Igreja Católica reúne, de forma ordenada,
-          tudo o que a Igreja crê, celebra e vive.<br /><br />
-          Aqui, você não lê parágrafos isolados — você entende a estrutura da fé.
-        </p>
-        <button onClick={() => navigate(AppRoute.CATECHISM)}
-          className="px-8 py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all">
-          Estudar o Catecismo
-        </button>
+      <Section className="overflow-hidden rounded-3xl md:rounded-[4rem] border border-border mx-4 md:mx-6">
+        <div className="grid lg:grid-cols-2">
+          <div className="bg-card p-10 md:p-16 flex flex-col justify-center space-y-6 order-2 lg:order-1">
+            <Icons.Cross className="w-10 h-10 text-primary" />
+            <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground">A fé explicada com clareza</h2>
+            <p className="text-muted-foreground font-serif italic text-base md:text-lg leading-relaxed">
+              O Catecismo da Igreja Católica reúne, de forma ordenada,
+              tudo o que a Igreja crê, celebra e vive.<br /><br />
+              Aqui, você não lê parágrafos isolados — você entende a estrutura da fé.
+            </p>
+            <div>
+              <button onClick={() => navigate(AppRoute.CATECHISM)}
+                className="px-8 py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all">
+                Estudar o Catecismo
+              </button>
+            </div>
+          </div>
+          <div className="relative h-64 lg:h-auto order-1 lg:order-2">
+            <img src={sectionCatechism} alt="Catecismo aberto com crucifixo e rosário" loading="lazy" width={1280} height={720} className="absolute inset-0 w-full h-full object-cover" />
+          </div>
+        </div>
       </Section>
 
       {/* ═══════ 6. DOCUMENTOS ═══════ */}
-      <Section className="bg-secondary py-16 md:py-24 rounded-3xl md:rounded-[4rem] border border-border mx-4 md:mx-6">
-        <div className="max-w-3xl mx-auto px-6 md:px-8 text-center space-y-6">
-          <Icons.History className="w-10 h-10 text-primary mx-auto" />
-          <h2 className="text-3xl md:text-5xl font-serif font-bold text-foreground">A voz viva da Igreja</h2>
-          <p className="text-muted-foreground font-serif italic text-base md:text-lg leading-relaxed max-w-xl mx-auto">
-            Encíclicas, Concílios e ensinamentos do Magistério
-            revelam como a Igreja interpreta e aplica a fé ao longo do tempo.<br /><br />
-            Aqui, você acessa esses documentos de forma organizada, sem se perder.
-          </p>
-          <button onClick={() => navigate(AppRoute.MAGISTERIUM)}
-            className="px-8 py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all">
-            Acessar Documentos
-          </button>
+      <Section className="overflow-hidden rounded-3xl md:rounded-[4rem] border border-border mx-4 md:mx-6">
+        <div className="grid lg:grid-cols-2">
+          <div className="relative h-64 lg:h-auto">
+            <img src={sectionDocuments} alt="Documentos papais com selos sobre mesa de mármore" loading="lazy" width={1280} height={720} className="absolute inset-0 w-full h-full object-cover" />
+          </div>
+          <div className="bg-secondary p-10 md:p-16 flex flex-col justify-center space-y-6">
+            <Icons.History className="w-10 h-10 text-primary" />
+            <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground">A voz viva da Igreja</h2>
+            <p className="text-muted-foreground font-serif italic text-base md:text-lg leading-relaxed">
+              Encíclicas, Concílios e ensinamentos do Magistério
+              revelam como a Igreja interpreta e aplica a fé ao longo do tempo.<br /><br />
+              Aqui, você acessa esses documentos de forma organizada, sem se perder.
+            </p>
+            <div>
+              <button onClick={() => navigate(AppRoute.MAGISTERIUM)}
+                className="px-8 py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all">
+                Acessar Documentos
+              </button>
+            </div>
+          </div>
         </div>
       </Section>
 
       {/* ═══════ 7. ORAÇÃO ═══════ */}
-      <Section className="max-w-3xl mx-auto px-6 text-center space-y-6">
-        <Icons.Heart className="w-10 h-10 text-primary mx-auto" />
-        <h2 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Não apenas estudar. Rezar.</h2>
-        <p className="text-muted-foreground font-serif italic text-base md:text-lg leading-relaxed max-w-xl mx-auto">
-          A fé não cresce apenas no entendimento,
-          mas na intimidade com Deus.<br /><br />
-          Reze o terço, medite e transforme o estudo em vida interior.
-        </p>
-        <button onClick={() => navigate(AppRoute.ORACAO)}
-          className="px-8 py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all">
-          Ir para Oração
-        </button>
+      <Section className="overflow-hidden rounded-3xl md:rounded-[4rem] border border-border mx-4 md:mx-6">
+        <div className="grid lg:grid-cols-2">
+          <div className="bg-card p-10 md:p-16 flex flex-col justify-center space-y-6 order-2 lg:order-1">
+            <Icons.Heart className="w-10 h-10 text-primary" />
+            <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground">Não apenas estudar. Rezar.</h2>
+            <p className="text-muted-foreground font-serif italic text-base md:text-lg leading-relaxed">
+              A fé não cresce apenas no entendimento,
+              mas na intimidade com Deus.<br /><br />
+              Reze o terço, medite e transforme o estudo em vida interior.
+            </p>
+            <div>
+              <button onClick={() => navigate(AppRoute.ORACAO)}
+                className="px-8 py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all">
+                Ir para Oração
+              </button>
+            </div>
+          </div>
+          <div className="relative h-64 lg:h-auto order-1 lg:order-2">
+            <img src={sectionPrayer} alt="Pessoa rezando em capela com vitrais" loading="lazy" width={1280} height={720} className="absolute inset-0 w-full h-full object-cover" />
+          </div>
+        </div>
       </Section>
 
       {/* ═══════ 8. DIFERENCIAL ═══════ */}
