@@ -18,7 +18,7 @@ const PageTransition = ({ children }: { children: ReactNode }) => {
       initial="initial"
       animate="animate"
       exit="exit"
-      transition={{ duration: 0.25, ease: 'easeOut' }}
+      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}
     </motion.div>
