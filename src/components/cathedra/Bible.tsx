@@ -253,7 +253,7 @@ const Bible: React.FC = () => {
       </div>
 
       {/* Books grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+      <StaggeredList className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3" staggerDelay={0.04}>
         {filteredBooks.map(book => (
           <button key={book.abbr} onClick={() => selectBook(book)}
             className="text-left p-4 rounded-2xl bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group">
@@ -262,7 +262,7 @@ const Bible: React.FC = () => {
             <p className="text-[10px] text-muted-foreground mt-0.5">{book.chapters} cap.</p>
           </button>
         ))}
-      </div>
+      </StaggeredList>
     </div>
   );
 };
