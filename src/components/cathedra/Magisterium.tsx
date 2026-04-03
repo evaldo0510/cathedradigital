@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
+import NotesPanel from './NotesPanel';
 
 type DocCategory = 'all' | 'council' | 'encyclical' | 'exhortation' | 'letter' | 'constitution';
 
@@ -348,6 +349,7 @@ const Magisterium: React.FC = () => {
                         Limpar cache
                       </button>
                     )}
+                    <NotesPanel contentType="magisterium" contentId={selectedDoc.id} contentLabel={selectedDoc.title} />
                   </div>
                 </div>
 

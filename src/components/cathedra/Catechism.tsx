@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
 import CrossReferencePanel from './CrossReferencePanel';
+import NotesPanel from './NotesPanel';
 import { getCatechismCrossRefs } from '@/data/cross-references';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useFavorites } from '@/hooks/useFavorites';
@@ -198,6 +199,7 @@ const Catechism: React.FC = () => {
             >
               <Icons.Heart className={`w-5 h-5 transition-all ${isFavorite('catechism', `CIC §${currentParagraph}`) ? 'fill-primary text-primary' : 'text-muted-foreground hover:text-primary'}`} />
             </button>
+            <NotesPanel contentType="catechism" contentId={`${currentParagraph}`} contentLabel={`§${currentParagraph}`} />
           </div>
           <CatechismContent paragraph={currentParagraph} />
         </div>
