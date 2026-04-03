@@ -108,36 +108,37 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
   const mystery = data.mysteries[currentMystery];
 
   return (
-    <div className="fixed inset-0 z-[200] bg-background flex flex-col overflow-y-auto">
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-border">
-        <button onClick={onClose} className="p-2 rounded-xl bg-card border border-border hover:bg-muted transition-all">
-          <Icons.ArrowDown className="w-5 h-5 rotate-90 text-foreground" />
+    <div className="fixed inset-0 z-[200] flex flex-col overflow-y-auto"
+      style={{ background: 'linear-gradient(180deg, #1a1510 0%, #0d0b08 50%, #1a1510 100%)' }}>
+      {/* Header — minimal */}
+      <div className="flex items-center justify-between p-4">
+        <button onClick={onClose} className="p-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all">
+          <Icons.ArrowDown className="w-5 h-5 rotate-90 text-amber-200/70" />
         </button>
-        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{data.title}</span>
+        <span className="text-[10px] font-black uppercase tracking-widest text-amber-200/40">{data.title}</span>
         <div className="w-9" />
       </div>
 
       {/* Progress */}
       {(phase === 'mystery' || phase === 'decade') && (
-        <div className="flex gap-1 px-6 pt-4">
+        <div className="flex gap-1 px-6 pt-2">
           {[0, 1, 2, 3, 4].map(i => (
-            <div key={i} className={`flex-1 h-1.5 rounded-full transition-all ${i <= currentMystery ? 'bg-primary' : 'bg-border'}`} />
+            <div key={i} className={`flex-1 h-1 rounded-full transition-all ${i <= currentMystery ? 'bg-amber-400/60' : 'bg-white/10'}`} />
           ))}
         </div>
       )}
 
       {/* Intention */}
       {intention && phase === 'intro' && (
-        <div className="mx-6 mt-4 p-4 bg-primary/5 border border-primary/20 rounded-2xl text-center">
-          <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-1">Intenção</p>
-          <p className="text-sm font-serif text-foreground/80 italic">"{intention}"</p>
+        <div className="mx-6 mt-4 p-4 bg-amber-400/5 border border-amber-400/10 rounded-2xl text-center">
+          <p className="text-[10px] font-black uppercase tracking-widest text-amber-300/50 mb-1">Intenção</p>
+          <p className="text-base font-serif text-amber-100/70 italic">"{intention}"</p>
         </div>
       )}
 
       {/* Content */}
       <div className="flex-1 flex items-start justify-center p-6">
-        <div className="w-full max-w-xl bg-card border border-border rounded-3xl p-8 md:p-10 space-y-6">
+        <div className="w-full max-w-xl bg-white/[0.03] border border-white/[0.06] rounded-3xl p-8 md:p-10 space-y-6 backdrop-blur-sm">
           {/* YouTube Player - always visible */}
           <YouTubePlayer videoId={YOUTUBE_IDS[mysteryKey]} title={data.title} />
 
