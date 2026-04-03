@@ -27,6 +27,8 @@ const ProfilePage: React.FC = () => {
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [stats, setStats] = useState({ posts: 0, likes: 0, notes: 0, daysActive: 0 });
+  const [showLevelUp, setShowLevelUp] = useState(false);
+  const prevLevelRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (!loading && !user) navigate(AppRoute.LOGIN);
