@@ -144,6 +144,7 @@ const AppLayout: React.FC = () => {
                     <Route path={AppRoute.LITANIES} element={<LitaniesPage />} />
                     <Route path={AppRoute.LITURGICAL_CALENDAR} element={<LiturgicalCalendarPage />} />
                     <Route path={AppRoute.COMMUNITY} element={<CommunityPage />} />
+                    <Route path={AppRoute.PROFILE} element={<ProfilePage />} />
                     <Route path="*" element={<Dashboard user={appUser} />} />
                   </Routes>
                 </PageTransition>
