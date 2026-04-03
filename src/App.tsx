@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, createContext, lazy, Suspense } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import PageTransition from './components/PageTransition';
@@ -11,6 +11,7 @@ import ProGate from './components/cathedra/ProGate';
 import { AppRoute, Language } from './types';
 import { UI_TRANSLATIONS } from './services/translations';
 import { useAuth } from './hooks/useAuth';
+import { LangContext } from './contexts/LangContext';
 
 // Lazy-loaded route components
 const Dashboard = lazy(() => import('./components/cathedra/Dashboard'));
@@ -40,17 +41,6 @@ const ProfilePage = lazy(() => import('./components/cathedra/ProfilePage'));
 import CommandCenter from './components/cathedra/CommandCenter';
 import OfflineIndicator from './components/cathedra/OfflineIndicator';
 
-interface LanguageContextType {
-  lang: Language;
-  setLang: (l: Language) => void;
-  t: (key: string) => string;
-}
-
-export const LangContext = createContext<LanguageContextType>({
-  lang: 'pt',
-  setLang: () => {},
-  t: (k) => k
-});
 
 const LoadingFallback = () => (
   <div className="flex items-center justify-center min-h-[40vh]">
