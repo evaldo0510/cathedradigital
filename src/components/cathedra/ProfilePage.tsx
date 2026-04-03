@@ -6,6 +6,8 @@ import { AppRoute } from '@/types';
 import { Icons } from '@/constants';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { toast } from 'sonner';
+import { motion, AnimatePresence } from 'framer-motion';
+import { getLevelInfo } from '@/lib/levels';
 
 interface Badge {
   id: string;
