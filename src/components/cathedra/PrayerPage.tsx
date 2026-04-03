@@ -144,21 +144,21 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
 
           {phase === 'intro' && (
             <>
-              <h3 className="text-lg font-serif font-bold text-foreground text-center">Orações Iniciais</h3>
-              <p className="text-xs text-muted-foreground text-center font-serif italic">Sinal da Cruz + Credo + 3 Ave-Marias + Glória</p>
+              <h3 className="text-xl font-serif font-bold text-amber-100 text-center">Orações Iniciais</h3>
+              <p className="text-xs text-amber-200/40 text-center font-serif italic">Sinal da Cruz + Credo + 3 Ave-Marias + Glória</p>
               {[
                 { key: 'paiNosso', label: 'Pai Nosso' },
                 { key: 'aveMaria', label: 'Ave Maria' },
                 { key: 'gloria', label: 'Glória ao Pai' },
               ].map(p => (
-                <div key={p.key} className="bg-muted rounded-2xl p-5 cursor-pointer" onClick={() => setExpandedPrayer(expandedPrayer === p.key ? null : p.key)}>
-                  <p className="font-bold text-sm text-foreground">{p.label}</p>
+                <div key={p.key} className="bg-white/[0.04] rounded-2xl p-5 cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setExpandedPrayer(expandedPrayer === p.key ? null : p.key)}>
+                  <p className="font-bold text-sm text-amber-100/90">{p.label}</p>
                   {expandedPrayer === p.key && (
-                    <p className="text-sm text-foreground/80 mt-2 font-serif leading-relaxed">{PRAYERS[p.key as keyof typeof PRAYERS]}</p>
+                    <p className="text-base text-amber-100/60 mt-3 font-serif leading-[1.9]">{PRAYERS[p.key as keyof typeof PRAYERS]}</p>
                   )}
                 </div>
               ))}
-              <button onClick={() => setPhase('mystery')} className="w-full py-3 bg-foreground text-background rounded-xl font-bold text-sm">
+              <button onClick={() => setPhase('mystery')} className="w-full py-3.5 bg-amber-400/20 text-amber-200 border border-amber-400/20 rounded-xl font-bold text-sm hover:bg-amber-400/30 transition-all">
                 Iniciar 1º Mistério →
               </button>
             </>
@@ -166,15 +166,15 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
 
           {phase === 'mystery' && (
             <>
-              <div className="text-center space-y-2">
-                <span className="text-[10px] font-black uppercase tracking-widest text-primary">{currentMystery + 1}º Mistério</span>
-                <h3 className="text-xl font-serif font-bold text-foreground">{mystery.title}</h3>
-                <p className="text-sm text-primary font-bold">{mystery.scripture}</p>
+              <div className="text-center space-y-3">
+                <span className="text-[10px] font-black uppercase tracking-widest text-amber-400/50">{currentMystery + 1}º Mistério</span>
+                <h3 className="text-2xl font-serif font-bold text-amber-100 leading-snug">{mystery.title}</h3>
+                <p className="text-sm text-amber-400/60 font-bold">{mystery.scripture}</p>
               </div>
-              <div className="bg-muted rounded-2xl p-6">
-                <p className="text-foreground/80 font-serif leading-relaxed text-center">{mystery.meditation}</p>
+              <div className="bg-white/[0.04] rounded-2xl p-6 border border-white/[0.06]">
+                <p className="text-lg text-amber-100/60 font-serif leading-[1.9] text-center">{mystery.meditation}</p>
               </div>
-              <button onClick={() => setPhase('decade')} className="w-full py-3 bg-foreground text-background rounded-xl font-bold text-sm">
+              <button onClick={() => setPhase('decade')} className="w-full py-3.5 bg-amber-400/20 text-amber-200 border border-amber-400/20 rounded-xl font-bold text-sm hover:bg-amber-400/30 transition-all">
                 Rezar a Dezena →
               </button>
             </>
@@ -182,16 +182,16 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
 
           {phase === 'decade' && (
             <>
-              <p className="text-center text-[10px] font-black uppercase tracking-widest text-muted-foreground">{currentMystery + 1}º Mistério — Dezena</p>
+              <p className="text-center text-[10px] font-black uppercase tracking-widest text-amber-200/30">{currentMystery + 1}º Mistério — Dezena</p>
               {[
                 { key: 'paiNosso', label: 'Pai Nosso' },
                 { key: 'aveMaria', label: 'Ave Maria (×10)' },
                 { key: 'gloria', label: 'Glória ao Pai' },
               ].map(p => (
-                <div key={p.key} className="bg-muted rounded-2xl p-5 cursor-pointer" onClick={() => setExpandedPrayer(expandedPrayer === p.key ? null : p.key)}>
-                  <p className="font-bold text-sm text-foreground">{p.label}</p>
+                <div key={p.key} className="bg-white/[0.04] rounded-2xl p-5 cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setExpandedPrayer(expandedPrayer === p.key ? null : p.key)}>
+                  <p className="font-bold text-sm text-amber-100/90">{p.label}</p>
                   {expandedPrayer === p.key && (
-                    <p className="text-sm text-foreground/80 mt-2 font-serif leading-relaxed">{PRAYERS[p.key as keyof typeof PRAYERS]}</p>
+                    <p className="text-base text-amber-100/60 mt-3 font-serif leading-[1.9]">{PRAYERS[p.key as keyof typeof PRAYERS]}</p>
                   )}
                 </div>
               ))}
@@ -203,7 +203,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
                 } else {
                   setPhase('closing');
                 }
-              }} className="w-full py-3 bg-foreground text-background rounded-xl font-bold text-sm">
+              }} className="w-full py-3.5 bg-amber-400/20 text-amber-200 border border-amber-400/20 rounded-xl font-bold text-sm hover:bg-amber-400/30 transition-all">
                 {currentMystery < 4 ? 'Próximo Mistério →' : 'Concluir Rosário →'}
               </button>
             </>
@@ -211,19 +211,19 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
 
           {phase === 'closing' && (
             <>
-              <h3 className="text-lg font-serif font-bold text-foreground text-center">Oração Final</h3>
-              <div className="bg-muted rounded-2xl p-5 cursor-pointer" onClick={() => setExpandedPrayer(expandedPrayer === 'salve' ? null : 'salve')}>
-                <p className="font-bold text-sm text-foreground">Salve Rainha</p>
+              <h3 className="text-xl font-serif font-bold text-amber-100 text-center">Oração Final</h3>
+              <div className="bg-white/[0.04] rounded-2xl p-5 cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setExpandedPrayer(expandedPrayer === 'salve' ? null : 'salve')}>
+                <p className="font-bold text-sm text-amber-100/90">Salve Rainha</p>
                 {expandedPrayer === 'salve' && (
-                  <p className="text-sm text-foreground/80 mt-2 font-serif leading-relaxed">{PRAYERS.salveRainha}</p>
+                  <p className="text-base text-amber-100/60 mt-3 font-serif leading-[1.9]">{PRAYERS.salveRainha}</p>
                 )}
               </div>
-              <div className="text-center space-y-2 py-4">
-                <Icons.Heart className="w-10 h-10 text-primary mx-auto" />
-                <p className="text-foreground font-serif font-bold text-lg">Rosário Completo!</p>
-                <p className="text-sm text-muted-foreground font-serif italic">Que Nossa Senhora interceda por vós e vossas intenções.</p>
+              <div className="text-center space-y-3 py-6">
+                <Icons.Heart className="w-12 h-12 text-amber-400/40 mx-auto" />
+                <p className="text-amber-100 font-serif font-bold text-xl">Rosário Completo!</p>
+                <p className="text-base text-amber-200/40 font-serif italic">Que Nossa Senhora interceda por vós e vossas intenções.</p>
               </div>
-              <button onClick={onClose} className="w-full py-3 bg-primary text-primary-foreground rounded-xl font-bold text-sm">
+              <button onClick={onClose} className="w-full py-3.5 bg-amber-400/20 text-amber-200 border border-amber-400/20 rounded-xl font-bold text-sm hover:bg-amber-400/30 transition-all">
                 ✝ Amém — Finalizar
               </button>
             </>
