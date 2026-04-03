@@ -318,29 +318,29 @@ const Saints: React.FC = () => {
               <p className="font-serif italic">Nenhum santo encontrado.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <StaggeredList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filtered.map(saint => (
                 <button
                   key={saint.id}
                   onClick={() => setSelectedSaint(saint)}
-                  className="text-left bg-white dark:bg-stone-900 border border-stone-100 dark:border-stone-800 rounded-3xl p-8 hover:border-[#d4af37]/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group"
+                  className="text-left bg-card border border-border rounded-3xl p-8 hover:border-primary/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <span className={`px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${CATEGORY_COLORS[saint.category]}`}>
                       {CATEGORY_LABELS[saint.category]}
                     </span>
-                    <Icons.ArrowDown className="w-4 h-4 text-stone-300 -rotate-90 group-hover:text-[#d4af37] transition-colors" />
+                    <Icons.ArrowDown className="w-4 h-4 text-muted-foreground -rotate-90 group-hover:text-primary transition-colors" />
                   </div>
-                  <h3 className="text-xl font-serif font-bold text-stone-900 dark:text-stone-100 mb-1 group-hover:text-[#d4af37] transition-colors">{saint.name}</h3>
-                  <p className="text-sm text-[#d4af37] font-serif italic mb-4">{saint.title}</p>
-                  <p className="text-sm text-stone-500 dark:text-stone-400 line-clamp-3 mb-5 leading-relaxed">{saint.bio}</p>
-                  <div className="flex items-center gap-2 text-xs text-stone-400">
+                  <h3 className="text-xl font-serif font-bold text-foreground mb-1 group-hover:text-primary transition-colors">{saint.name}</h3>
+                  <p className="text-sm text-primary font-serif italic mb-4">{saint.title}</p>
+                  <p className="text-sm text-muted-foreground line-clamp-3 mb-5 leading-relaxed">{saint.bio}</p>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <Icons.Star className="w-3.5 h-3.5" />
                     <span>{saint.feastDay}</span>
                   </div>
                 </button>
               ))}
-            </div>
+            </StaggeredList>
           )}
         </>
       ) : (
