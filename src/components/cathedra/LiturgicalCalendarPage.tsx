@@ -250,6 +250,23 @@ const LiturgicalCalendarPage: React.FC = () => {
               <p className="text-sm text-muted-foreground font-serif">
                 {getLiturgicalSeason(selectedDay!).season}
               </p>
+              <div className="flex items-center gap-2 pt-2 border-t border-border/50">
+                {selectedInfo.celebration && selectedInfo.rank !== 'feria' && (() => {
+                  const favTitle = selectedInfo.celebration || '';
+                  const faved = isFavorite('liturgy', favTitle);
+                  return (
+                    <button onClick={() => toggleFavorite({ type: 'liturgy', title: favTitle, content: `${selectedDay!.toLocaleDateString('pt-BR')} — ${favTitle}` })}
+                      className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors">
+                      <Icons.Heart className={`w-4 h-4 ${faved ? 'fill-primary text-primary' : ''}`} />
+                      {faved ? 'Salvo' : 'Favoritar'}
+                    </button>
+                  );
+                })()}
+                <button onClick={() => navigate('/daily-liturgy')}
+                  className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors ml-auto">
+                  <Icons.Book className="w-4 h-4" /> Leituras
+                </button>
+              </div>
             </div>
           ) : (
             <div className="rounded-2xl border border-border bg-card p-5 text-center">
