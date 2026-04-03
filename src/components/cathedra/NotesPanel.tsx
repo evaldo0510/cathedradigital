@@ -52,7 +52,7 @@ const NotesPanel: React.FC<NotesPanelProps> = ({ contentType, contentId, content
         }`}
         title="Minhas Anotações"
       >
-        <Icons.BookOpen className="w-3.5 h-3.5" />
+        <Icons.Book className="w-3.5 h-3.5" />
         {notes.length > 0 && <span>{notes.length}</span>}
       </button>
 
