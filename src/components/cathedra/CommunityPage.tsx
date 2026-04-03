@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { getLevelInfo } from '@/lib/levels';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { toast } from 'sonner';
