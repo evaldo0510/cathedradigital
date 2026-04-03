@@ -85,14 +85,19 @@ const CommunityPage: React.FC = () => {
       .in('id', userIds);
 
     const entries: LeaderboardEntry[] = (profiles || []).map(p => {
-      const stats = userMap.get(p.id) || { posts: 0, likes: 0 };
+      const s = userMap.get(p.id) || { posts: 0, likes: 0 };
+      const score = s.posts * 10 + s.likes * 5;
+      const xp = s.posts * 30 + s.likes * 10;
+      const { levelIdx, levelName } = getLevelInfo(xp);
       return {
         id: p.id,
         name: p.name || 'Anônimo',
         avatar_url: p.avatar_url,
-        posts: stats.posts,
-        likes: stats.likes,
-        score: stats.posts * 10 + stats.likes * 5,
+        posts: s.posts,
+        likes: s.likes,
+        score,
+        levelName,
+        levelIdx,
       };
     }).sort((a, b) => b.score - a.score).slice(0, 20);
 
