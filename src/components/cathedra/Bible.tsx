@@ -104,6 +104,7 @@ const Bible: React.FC = () => {
   const [selectedChapter, setSelectedChapter] = useState<number>(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [testament, setTestament] = useState<'Antigo Testamento' | 'Novo Testamento'>('Antigo Testamento');
+  const [showFullTextSearch, setShowFullTextSearch] = useState(false);
   const [verses, setVerses] = useState<{ number: number; text: string }[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [bibleError, setBibleError] = useState('');
