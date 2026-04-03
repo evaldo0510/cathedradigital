@@ -351,6 +351,25 @@ const Magisterium: React.FC = () => {
                   </div>
                 </div>
 
+                {/* Reading controls: night mode + font size */}
+                <div className="flex items-center gap-4 flex-wrap">
+                  <button
+                    onClick={() => setNightMode(!nightMode)}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all ${
+                      nightMode
+                        ? 'bg-foreground text-background'
+                        : 'bg-card border border-border text-muted-foreground hover:text-foreground'
+                    }`}
+                  >
+                    {nightMode ? '☀️' : '🌙'} {nightMode ? 'Modo Claro' : 'Modo Noturno'}
+                  </button>
+                  <div className="flex items-center gap-2">
+                    <button onClick={() => setFontSize(Math.max(12, fontSize - 1))} className="w-7 h-7 rounded-lg bg-card border border-border text-xs font-bold text-muted-foreground hover:text-foreground transition-all">A-</button>
+                    <span className="text-[10px] font-bold text-muted-foreground w-8 text-center">{fontSize}px</span>
+                    <button onClick={() => setFontSize(Math.min(24, fontSize + 1))} className="w-7 h-7 rounded-lg bg-card border border-border text-xs font-bold text-muted-foreground hover:text-foreground transition-all">A+</button>
+                  </div>
+                </div>
+
                 {/* Search within document */}
                 <div className="relative">
                   <Icons.Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
