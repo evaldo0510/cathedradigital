@@ -332,6 +332,12 @@ const Magisterium: React.FC = () => {
                   </div>
                   <div className="flex items-center gap-3">
                     <span className="text-[10px] text-muted-foreground italic">Fonte: Vatican.va</span>
+                    <button
+                      onClick={exportToPdf}
+                      className="px-3 py-1 rounded-lg text-[10px] font-bold bg-primary/10 text-primary hover:bg-primary/20 transition-all uppercase tracking-wider"
+                    >
+                      📄 Exportar PDF
+                    </button>
                     {cachedIds.includes(selectedDoc.id) && (
                       <button
                         onClick={() => clearDocCache(selectedDoc.id)}
