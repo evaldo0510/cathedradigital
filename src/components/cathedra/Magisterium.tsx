@@ -410,6 +410,10 @@ const Magisterium: React.FC = () => {
           <p className="text-2xl font-serif font-bold text-foreground">{filteredDocs.filter(d => d.vaticanUrl).length}</p>
           <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Com texto integral</p>
         </div>
+        <div>
+          <p className="text-2xl font-serif font-bold text-foreground">{cachedIds.length}</p>
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Salvos offline</p>
+        </div>
       </div>
 
       {/* Documents grid */}
