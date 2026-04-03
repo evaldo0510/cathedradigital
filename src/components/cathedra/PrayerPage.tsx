@@ -5,7 +5,7 @@ type MysteryKey = 'gozosos' | 'dolorosos' | 'gloriosos' | 'luminosos';
 
 const YOUTUBE_IDS: Record<MysteryKey, string> = {
   gozosos: 'y0nohEWE7PI',
-  dolorosos: '5jBHMsyvXMo',
+  dolorosos: 'etp-5E9f0lk',
   gloriosos: 'kcsu2e-0j2I',
   luminosos: 'kmHzPZihdvY',
 };

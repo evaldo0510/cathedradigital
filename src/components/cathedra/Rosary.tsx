@@ -5,7 +5,7 @@ type MysterySet = 'joyful' | 'sorrowful' | 'glorious' | 'luminous';
 
 const YOUTUBE_IDS: Record<MysterySet, string> = {
   joyful: 'y0nohEWE7PI',
-  sorrowful: '5jBHMsyvXMo',
+  sorrowful: 'etp-5E9f0lk',
   glorious: 'kcsu2e-0j2I',
   luminous: 'kmHzPZihdvY',
 };
