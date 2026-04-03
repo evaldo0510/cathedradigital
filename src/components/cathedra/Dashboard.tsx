@@ -273,7 +273,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
                   disabled
                   className="px-5 py-2 bg-primary/50 text-primary-foreground/50 cursor-not-allowed rounded-lg text-xs font-bold uppercase tracking-widest flex items-center gap-2"
                 >
-                  <Icons.Lock className="w-3.5 h-3.5" />
+                  <Icons.History className="w-3.5 h-3.5" />
                   Em Breve
                 </button>
               </div>
