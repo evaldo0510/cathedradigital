@@ -270,17 +270,11 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               </p>
               <div className="flex flex-wrap justify-center md:justify-start gap-3 pt-2">
                 <button 
-                  onClick={() => window.open('https://www.youtube.com/@FreiGilsonSomdoMonte', '_blank')}
-                  className="px-5 py-2 bg-primary text-primary-foreground rounded-lg text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-all flex items-center gap-2"
+                  disabled
+                  className="px-5 py-2 bg-primary/50 text-primary-foreground/50 cursor-not-allowed rounded-lg text-xs font-bold uppercase tracking-widest flex items-center gap-2"
                 >
-                  <Icons.ExternalLink className="w-3.5 h-3.5" />
-                  YouTube Oficial
-                </button>
-                <button 
-                  onClick={() => navigate(AppRoute.ABOUT)}
-                  className="px-5 py-2 bg-foreground/5 text-foreground border border-foreground/10 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-foreground/10 transition-all"
-                >
-                  Saiba Mais
+                  <Icons.Lock className="w-3.5 h-3.5" />
+                  Em Breve
                 </button>
               </div>
             </div>
