@@ -96,6 +96,7 @@ const FONT_SIZES = [
 
 const Bible: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState<ViewMode>('books');
   const [selectedBook, setSelectedBook] = useState<{ name: string; abbr: string; chapters: number } | null>(null);
   const [selectedChapter, setSelectedChapter] = useState<number>(0);
