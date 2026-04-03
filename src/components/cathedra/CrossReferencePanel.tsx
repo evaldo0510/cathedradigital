@@ -1,5 +1,6 @@
 import React from 'react';
 import { Icons } from '../../constants';
+import BibleVersePopover from './BibleVersePopover';
 
 interface BibleRef {
   abbr: string;
