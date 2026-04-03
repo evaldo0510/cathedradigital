@@ -304,6 +304,8 @@ const CommunityPage: React.FC = () => {
     );
   }
 
+  const MEDAL_COLORS = ['text-yellow-500', 'text-gray-400', 'text-amber-700'];
+
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       {/* Header */}
@@ -315,6 +317,80 @@ const CommunityPage: React.FC = () => {
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Comunidade</h1>
         <p className="text-muted-foreground font-serif italic">Discussões e perguntas teológicas entre irmãos na fé.</p>
       </div>
+
+      {/* Tabs */}
+      <div className="flex gap-2 justify-center">
+        <button onClick={() => setTab('forum')}
+          className={`px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+            tab === 'forum' ? 'bg-foreground text-background' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
+          }`}>
+          <Icons.Message className="w-3.5 h-3.5 inline mr-1.5" />Fórum
+        </button>
+        <button onClick={() => setTab('ranking')}
+          className={`px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+            tab === 'ranking' ? 'bg-foreground text-background' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
+          }`}>
+          <Icons.Star className="w-3.5 h-3.5 inline mr-1.5" />Ranking
+        </button>
+      </div>
+
+      {tab === 'ranking' ? (
+        /* Leaderboard */
+        <div className="space-y-4">
+          <div className="bg-card border border-border rounded-2xl p-6">
+            <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-1">Ranking da Comunidade</h2>
+            <p className="text-[10px] text-muted-foreground mb-6">Pontuação: 10 pts por discussão + 5 pts por curtida recebida</p>
+
+            {lbLoading ? (
+              <div className="space-y-3">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <div key={i} className="h-14 bg-muted rounded-xl animate-pulse" />
+                ))}
+              </div>
+            ) : leaderboard.length === 0 ? (
+              <p className="text-center text-muted-foreground italic py-8">Nenhum participante ainda.</p>
+            ) : (
+              <div className="space-y-2">
+                {leaderboard.map((entry, idx) => (
+                  <div key={entry.id} className={`flex items-center gap-4 p-4 rounded-xl transition-all ${
+                    idx < 3 ? 'bg-primary/5 border border-primary/20' : 'bg-muted/50 border border-border'
+                  } ${entry.id === user?.id ? 'ring-2 ring-primary' : ''}`}>
+                    <div className="w-8 text-center">
+                      {idx < 3 ? (
+                        <span className={`text-xl font-black ${MEDAL_COLORS[idx]}`}>
+                          {idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉'}
+                        </span>
+                      ) : (
+                        <span className="text-sm font-black text-muted-foreground">#{idx + 1}</span>
+                      )}
+                    </div>
+                    <div className="w-10 h-10 rounded-xl overflow-hidden bg-foreground text-background flex items-center justify-center font-black text-sm shrink-0">
+                      {entry.avatar_url ? (
+                        <img src={entry.avatar_url} alt={entry.name} className="w-full h-full object-cover" />
+                      ) : (
+                        entry.name.charAt(0).toUpperCase()
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-bold text-foreground truncate">{entry.name}</p>
+                      <div className="flex gap-3 text-[10px] text-muted-foreground">
+                        <span>{entry.posts} discussões</span>
+                        <span>{entry.likes} curtidas</span>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-lg font-black text-primary">{entry.score}</p>
+                      <p className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground">pts</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      ) : (
+      <>
+
 
       {/* Actions */}
       <div className="flex flex-col sm:flex-row gap-3 items-center justify-between">
