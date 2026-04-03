@@ -4,6 +4,10 @@ import { motion } from 'framer-motion';
 import { AppRoute, User } from '../../types';
 import { Icons } from '../../constants';
 import SacredImage from './SacredImage';
+import sectionBible from '../../assets/section-bible.jpg';
+import sectionCatechism from '../../assets/section-catechism.jpg';
+import sectionDocuments from '../../assets/section-documents.jpg';
+import sectionPrayer from '../../assets/section-prayer.jpg';
 
 interface DashboardProps {
   user: User | null;
