@@ -133,6 +133,9 @@ const Rosary: React.FC = () => {
           </div>
         </div>
 
+        {/* YouTube Player */}
+        <YouTubePlayer videoId={YOUTUBE_IDS[selectedSet]} title={set.name} />
+
         <div className="text-center">
           <button onClick={() => { setIsPraying(true); setCurrentMystery(0); setStep('intro'); }}
             className="px-8 py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all">
