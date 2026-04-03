@@ -251,7 +251,7 @@ const Rosary: React.FC = () => {
     );
   };
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-[200] flex flex-col overflow-y-auto"
       style={{ background: 'linear-gradient(180deg, #1a1510 0%, #0d0b08 50%, #1a1510 100%)' }}>
       <div className="flex items-center justify-between p-4">
@@ -280,7 +280,8 @@ const Rosary: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
