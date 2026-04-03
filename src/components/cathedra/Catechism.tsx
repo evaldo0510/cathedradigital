@@ -90,6 +90,7 @@ const Catechism: React.FC = () => {
   const [currentParagraph, setCurrentParagraph] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [showCrossRefs, setShowCrossRefs] = useState(true);
+  const { toggleFavorite, isFavorite } = useFavorites();
 
   const crossRefs = getCatechismCrossRefs(currentParagraph);
 

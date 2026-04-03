@@ -270,18 +270,31 @@ const Bible: React.FC = () => {
             ) : bibleError ? (
               <p className="text-muted-foreground italic text-center py-12">{bibleError}</p>
             ) : verses.length > 0 ? (
-              verses.map(v => (
-                <p
-                  key={v.number}
-                  onClick={() => setHighlightedVerse(highlightedVerse === v.number ? null : v.number)}
-                  className={`cursor-pointer rounded-lg px-2 py-1 -mx-2 transition-all ${
-                    highlightedVerse === v.number ? 'bg-primary/10 border-l-2 border-primary' : 'hover:bg-muted/50'
-                  }`}
-                >
-                  <sup className="text-primary font-bold mr-1 text-xs select-none">{v.number}</sup>
-                  <span className="font-serif">{v.text}</span>
-                </p>
-              ))
+              verses.map(v => {
+                const verseTitle = `${selectedBook.abbr} ${selectedChapter},${v.number}`;
+                const faved = isFavorite('verse', verseTitle);
+                return (
+                  <p
+                    key={v.number}
+                    onClick={() => setHighlightedVerse(highlightedVerse === v.number ? null : v.number)}
+                    className={`cursor-pointer rounded-lg px-2 py-1 -mx-2 transition-all group/verse ${
+                      highlightedVerse === v.number ? 'bg-primary/10 border-l-2 border-primary' : 'hover:bg-muted/50'
+                    }`}
+                  >
+                    <sup className="text-primary font-bold mr-1 text-xs select-none">{v.number}</sup>
+                    <span className="font-serif">{v.text}</span>
+                    {highlightedVerse === v.number && (
+                      <button
+                        onClick={e => { e.stopPropagation(); toggleFavorite({ type: 'verse', title: verseTitle, content: v.text }); }}
+                        className="inline-flex ml-2 align-middle"
+                        title={faved ? 'Remover dos favoritos' : 'Salvar nos favoritos'}
+                      >
+                        <Icons.Heart className={`w-4 h-4 transition-all ${faved ? 'fill-primary text-primary' : 'text-muted-foreground hover:text-primary'}`} />
+                      </button>
+                    )}
+                  </p>
+                );
+              })
             ) : (
               <p className="text-muted-foreground italic text-center py-12">Carregando...</p>
             )}
