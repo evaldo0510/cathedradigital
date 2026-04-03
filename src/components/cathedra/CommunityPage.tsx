@@ -349,7 +349,16 @@ const CommunityPage: React.FC = () => {
             <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-1">Ranking da Comunidade</h2>
             <p className="text-[10px] text-muted-foreground mb-6">Pontuação: 10 pts por discussão + 5 pts por curtida recebida</p>
 
-            {lbLoading ? (
+            {!user ? (
+              <div className="text-center py-12 space-y-4">
+                <Icons.Star className="w-12 h-12 text-muted-foreground/30 mx-auto" />
+                <p className="text-muted-foreground font-serif italic">Faça login para ver o ranking da comunidade.</p>
+                <button onClick={() => navigate(AppRoute.LOGIN)}
+                  className="px-6 py-2.5 rounded-xl bg-foreground text-background text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-primary-foreground transition-all">
+                  Acessar o Santuário
+                </button>
+              </div>
+            ) : lbLoading ? (
               <div className="space-y-3">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <div key={i} className="h-14 bg-muted rounded-xl animate-pulse" />
