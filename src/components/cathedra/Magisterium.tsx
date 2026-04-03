@@ -15,18 +15,19 @@ interface MagisteriumDoc {
   summary: string;
   topics: string[];
   vaticanUrl?: string;
+  pdfUrl?: string;
 }
 
 const DOCUMENTS: MagisteriumDoc[] = [
   // Councils / Constitutions - Vatican II
-  { id: 'vat2-lg', title: 'Lumen Gentium', latinTitle: 'Lumen Gentium', author: 'Concílio Vaticano II', year: 1964, category: 'constitution', summary: 'Constituição dogmática sobre a Igreja. Define a natureza e missão universal da Igreja como sacramento de salvação.', topics: ['Eclesiologia', 'Povo de Deus', 'Colegialidade'], vaticanUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_const_19641121_lumen-gentium_pt.html' },
-  { id: 'vat2-dv', title: 'Dei Verbum', latinTitle: 'Dei Verbum', author: 'Concílio Vaticano II', year: 1965, category: 'constitution', summary: 'Constituição dogmática sobre a Revelação Divina. Trata das Escrituras, Tradição e Magistério.', topics: ['Revelação', 'Escritura', 'Tradição'], vaticanUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_const_19651118_dei-verbum_pt.html' },
-  { id: 'vat2-sc', title: 'Sacrosanctum Concilium', latinTitle: 'Sacrosanctum Concilium', author: 'Concílio Vaticano II', year: 1963, category: 'constitution', summary: 'Constituição sobre a Sagrada Liturgia. Promoveu a reforma litúrgica e a participação ativa dos fiéis.', topics: ['Liturgia', 'Sacramentos', 'Reforma'], vaticanUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_const_19631204_sacrosanctum-concilium_pt.html' },
-  { id: 'vat2-gs', title: 'Gaudium et Spes', latinTitle: 'Gaudium et Spes', author: 'Concílio Vaticano II', year: 1965, category: 'constitution', summary: 'Constituição pastoral sobre a Igreja no mundo atual. Aborda temas como dignidade humana, cultura e vida social.', topics: ['Doutrina Social', 'Dignidade', 'Cultura'], vaticanUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_const_19651207_gaudium-et-spes_pt.html' },
-  { id: 'vat2-na', title: 'Nostra Aetate', latinTitle: 'Nostra Aetate', author: 'Concílio Vaticano II', year: 1965, category: 'council', summary: 'Declaração sobre as relações da Igreja com as religiões não cristãs.', topics: ['Diálogo Inter-religioso', 'Judaísmo'], vaticanUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_decl_19651028_nostra-aetate_pt.html' },
-  { id: 'vat2-dh', title: 'Dignitatis Humanae', latinTitle: 'Dignitatis Humanae', author: 'Concílio Vaticano II', year: 1965, category: 'council', summary: 'Declaração sobre a liberdade religiosa. Defende o direito à liberdade de consciência e religião.', topics: ['Liberdade Religiosa', 'Dignidade'], vaticanUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_decl_19651207_dignitatis-humanae_pt.html' },
-  { id: 'vat2-ur', title: 'Unitatis Redintegratio', latinTitle: 'Unitatis Redintegratio', author: 'Concílio Vaticano II', year: 1964, category: 'council', summary: 'Decreto sobre o ecumenismo. Promove a unidade dos cristãos.', topics: ['Ecumenismo', 'Unidade'], vaticanUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_decree_19641121_unitatis-redintegratio_pt.html' },
-  { id: 'vat2-ag', title: 'Ad Gentes', latinTitle: 'Ad Gentes', author: 'Concílio Vaticano II', year: 1965, category: 'council', summary: 'Decreto sobre a atividade missionária da Igreja.', topics: ['Missão', 'Evangelização'], vaticanUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_decree_19651207_ad-gentes_pt.html' },
+  { id: 'vat2-lg', title: 'Lumen Gentium', latinTitle: 'Lumen Gentium', author: 'Concílio Vaticano II', year: 1964, category: 'constitution', summary: 'Constituição dogmática sobre a Igreja. Define a natureza e missão universal da Igreja como sacramento de salvação.', topics: ['Eclesiologia', 'Povo de Deus', 'Colegialidade'], vaticanUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_const_19641121_lumen-gentium_pt.html', pdfUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_const_19641121_lumen-gentium_pt.pdf' },
+  { id: 'vat2-dv', title: 'Dei Verbum', latinTitle: 'Dei Verbum', author: 'Concílio Vaticano II', year: 1965, category: 'constitution', summary: 'Constituição dogmática sobre a Revelação Divina. Trata das Escrituras, Tradição e Magistério.', topics: ['Revelação', 'Escritura', 'Tradição'], vaticanUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_const_19651118_dei-verbum_pt.html', pdfUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_const_19651118_dei-verbum_pt.pdf' },
+  { id: 'vat2-sc', title: 'Sacrosanctum Concilium', latinTitle: 'Sacrosanctum Concilium', author: 'Concílio Vaticano II', year: 1963, category: 'constitution', summary: 'Constituição sobre a Sagrada Liturgia. Promoveu a reforma litúrgica e a participação ativa dos fiéis.', topics: ['Liturgia', 'Sacramentos', 'Reforma'], vaticanUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_const_19631204_sacrosanctum-concilium_pt.html', pdfUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_const_19631204_sacrosanctum-concilium_pt.pdf' },
+  { id: 'vat2-gs', title: 'Gaudium et Spes', latinTitle: 'Gaudium et Spes', author: 'Concílio Vaticano II', year: 1965, category: 'constitution', summary: 'Constituição pastoral sobre a Igreja no mundo atual. Aborda temas como dignidade humana, cultura e vida social.', topics: ['Doutrina Social', 'Dignidade', 'Cultura'], vaticanUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_const_19651207_gaudium-et-spes_pt.html', pdfUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_const_19651207_gaudium-et-spes_pt.pdf' },
+  { id: 'vat2-na', title: 'Nostra Aetate', latinTitle: 'Nostra Aetate', author: 'Concílio Vaticano II', year: 1965, category: 'council', summary: 'Declaração sobre as relações da Igreja com as religiões não cristãs.', topics: ['Diálogo Inter-religioso', 'Judaísmo'], vaticanUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_decl_19651028_nostra-aetate_pt.html', pdfUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_decl_19651028_nostra-aetate_pt.pdf' },
+  { id: 'vat2-dh', title: 'Dignitatis Humanae', latinTitle: 'Dignitatis Humanae', author: 'Concílio Vaticano II', year: 1965, category: 'council', summary: 'Declaração sobre a liberdade religiosa. Defende o direito à liberdade de consciência e religião.', topics: ['Liberdade Religiosa', 'Dignidade'], vaticanUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_decl_19651207_dignitatis-humanae_pt.html', pdfUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_decl_19651207_dignitatis-humanae_pt.pdf' },
+  { id: 'vat2-ur', title: 'Unitatis Redintegratio', latinTitle: 'Unitatis Redintegratio', author: 'Concílio Vaticano II', year: 1964, category: 'council', summary: 'Decreto sobre o ecumenismo. Promove a unidade dos cristãos.', topics: ['Ecumenismo', 'Unidade'], vaticanUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_decree_19641121_unitatis-redintegratio_pt.html', pdfUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_decree_19641121_unitatis-redintegratio_pt.pdf' },
+  { id: 'vat2-ag', title: 'Ad Gentes', latinTitle: 'Ad Gentes', author: 'Concílio Vaticano II', year: 1965, category: 'council', summary: 'Decreto sobre a atividade missionária da Igreja.', topics: ['Missão', 'Evangelização'], vaticanUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_decree_19651207_ad-gentes_pt.html', pdfUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_decree_19651207_ad-gentes_pt.pdf' },
   { id: 'trent', title: 'Concílio de Trento', author: 'Concílio Ecumênico', year: 1563, category: 'council', summary: 'Reforma da Igreja e resposta à Reforma Protestante. Definiu a doutrina sobre os sacramentos, a justificação e o cânon bíblico.', topics: ['Sacramentos', 'Justificação', 'Cânon Bíblico'] },
   { id: 'vat1', title: 'Concílio Vaticano I', author: 'Concílio Ecumênico', year: 1870, category: 'council', summary: 'Definiu o dogma da infalibilidade papal e a constituição dogmática Dei Filius sobre a fé católica.', topics: ['Infalibilidade', 'Fé e Razão'] },
   // Encyclicals
@@ -262,26 +263,42 @@ const Magisterium: React.FC = () => {
             {!fullText && !loadingText && !textError && (
               <div className="flex flex-col items-center gap-4">
                 {selectedDoc.vaticanUrl ? (
-                  <>
-                    <button
-                      onClick={() => fetchFullText(selectedDoc)}
-                      className="px-8 py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all"
-                    >
-                      {cachedIds.includes(selectedDoc.id) ? '📥 Abrir do Cache' : 'Carregar Texto Completo'}
-                    </button>
-                    {cachedIds.includes(selectedDoc.id) && (
-                      <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-widest">✓ Disponível offline</span>
-                    )}
-                    <a
-                      href={selectedDoc.vaticanUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      <Icons.ExternalLink className="w-4 h-4" />
-                      Abrir no site da Santa Sé
-                    </a>
-                  </>
+                  <div className="w-full flex flex-col gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+                      <button
+                        onClick={() => fetchFullText(selectedDoc)}
+                        className="flex-1 px-8 py-5 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] shadow-xl hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-2 group"
+                      >
+                        <Icons.BookOpen className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                        {cachedIds.includes(selectedDoc.id) ? 'Abrir no App' : 'Ler no App'}
+                      </button>
+
+                      <a
+                        href={selectedDoc.pdfUrl || selectedDoc.vaticanUrl.replace('.html', '.pdf')}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 px-8 py-5 bg-primary/10 text-primary border border-primary/20 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-primary/20 transition-all flex items-center justify-center gap-2 group"
+                      >
+                        <Icons.Download className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                        Abrir PDF Completo
+                      </a>
+                    </div>
+                    
+                    <div className="flex flex-col items-center gap-2">
+                      {cachedIds.includes(selectedDoc.id) && (
+                        <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-[0.2em]">✓ Disponível para leitura offline</span>
+                      )}
+                      <a
+                        href={selectedDoc.vaticanUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        <Icons.ExternalLink className="w-3 h-3" />
+                        Ver no site da Santa Sé
+                      </a>
+                    </div>
+                  </div>
                 ) : (
                   <p className="text-muted-foreground italic text-center text-sm">
                     Texto completo ainda não disponível para este documento.
@@ -333,13 +350,25 @@ const Magisterium: React.FC = () => {
                       </span>
                     )}
                   </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-[10px] text-muted-foreground italic">Fonte: Vatican.va</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] text-muted-foreground italic mr-2">Fonte: Vatican.va</span>
+                    {selectedDoc.vaticanUrl && (
+                      <a
+                        href={selectedDoc.pdfUrl || selectedDoc.vaticanUrl.replace('.html', '.pdf')}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-3 py-1.5 rounded-lg text-[10px] font-bold bg-secondary/10 text-secondary-foreground hover:bg-secondary/20 transition-all uppercase tracking-wider flex items-center gap-1"
+                      >
+                        <Icons.Download className="w-3 h-3" />
+                        PDF Original
+                      </a>
+                    )}
                     <button
                       onClick={exportToPdf}
-                      className="px-3 py-1 rounded-lg text-[10px] font-bold bg-primary/10 text-primary hover:bg-primary/20 transition-all uppercase tracking-wider"
+                      className="px-3 py-1.5 rounded-lg text-[10px] font-bold bg-primary/10 text-primary hover:bg-primary/20 transition-all uppercase tracking-wider flex items-center gap-1"
                     >
-                      📄 Exportar PDF
+                      <Icons.Download className="w-3 h-3" />
+                      Exportar PDF
                     </button>
                     {cachedIds.includes(selectedDoc.id) && (
                       <button
