@@ -138,6 +138,9 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
       {/* Content */}
       <div className="flex-1 flex items-start justify-center p-6">
         <div className="w-full max-w-xl bg-card border border-border rounded-3xl p-8 md:p-10 space-y-6">
+          {/* YouTube Player - always visible */}
+          <YouTubePlayer videoId={YOUTUBE_IDS[mysteryKey]} title={data.title} />
+
           {phase === 'intro' && (
             <>
               <h3 className="text-lg font-serif font-bold text-foreground text-center">Orações Iniciais</h3>
