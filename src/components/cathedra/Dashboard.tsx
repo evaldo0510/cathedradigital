@@ -86,9 +86,34 @@ const RowCard: React.FC<RowCardProps> = ({ image, title, subtitle, onClick, wide
   </motion.button>
 );
 
+/* ── Route metadata for images ── */
+const ROUTE_IMAGES: Record<string, string> = {
+  [AppRoute.BIBLE]: sectionBible,
+  [AppRoute.CATECHISM]: sectionCatechism,
+  [AppRoute.MAGISTERIUM]: sectionDocuments,
+  [AppRoute.ORACAO]: sectionPrayer,
+  [AppRoute.ROSARY]: sectionPrayer,
+  [AppRoute.VIA_CRUCIS]: sectionDocuments,
+  [AppRoute.SAINTS]: sectionCatechism,
+  [AppRoute.AQUINAS_OPERA]: sectionBible,
+  [AppRoute.DAILY_LITURGY]: sectionDocuments,
+  [AppRoute.MISSAL]: sectionPrayer,
+  [AppRoute.STUDY_MODE]: sectionBible,
+  [AppRoute.CERTAMEN]: sectionCatechism,
+  [AppRoute.TRILHAS]: sectionDocuments,
+  [AppRoute.FAVORITES]: sectionPrayer,
+  [AppRoute.ABOUT]: sectionBible,
+};
+
 /* ── Main Dashboard ── */
 const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   const navigate = useNavigate();
+  const { history, trackVisit } = useHistory();
+
+  const goTo = useCallback((route: string, title: string, imageUrl?: string) => {
+    trackVisit(route, title, imageUrl || ROUTE_IMAGES[route]);
+    navigate(route);
+  }, [navigate, trackVisit]);
 
   const fundamentos = [
     { image: sectionBible, title: 'O que é a fé católica', route: AppRoute.CATECHISM, icon: <Icons.Cross className="w-5 h-5" /> },
