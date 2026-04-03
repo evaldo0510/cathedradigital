@@ -83,6 +83,8 @@ const Magisterium: React.FC = () => {
   const [fullText, setFullText] = useState<string | null>(null);
   const [loadingText, setLoadingText] = useState(false);
   const [textError, setTextError] = useState<string | null>(null);
+  const [textSearch, setTextSearch] = useState('');
+  const [matchCount, setMatchCount] = useState(0);
 
   const filteredDocs = useMemo(() => {
     let docs = DOCUMENTS;
