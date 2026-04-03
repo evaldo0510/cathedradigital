@@ -33,7 +33,9 @@ const AboutPage = lazy(() => import('./components/cathedra/AboutPage'));
 const DogmasPage = lazy(() => import('./components/cathedra/DogmasPage'));
 const LectioDivina = lazy(() => import('./components/cathedra/LectioDivina'));
 const BreviaryPage = lazy(() => import('./components/cathedra/BreviaryPage'));
+const LitaniesPage = lazy(() => import('./components/cathedra/LitaniesPage'));
 import CommandCenter from './components/cathedra/CommandCenter';
+import OfflineIndicator from './components/cathedra/OfflineIndicator';
 
 interface LanguageContextType {
   lang: Language;
@@ -88,6 +90,7 @@ const AppLayout: React.FC = () => {
     <LangContext.Provider value={{ lang, setLang: setLangState, t }}>
       <ScrollToTop />
       <CommandCenter />
+      <OfflineIndicator />
       <div className="flex h-screen overflow-hidden bg-background">
         {/* Sidebar */}
         <div className={`fixed inset-0 z-[150] lg:relative lg:block transition-all ${isSidebarOpen ? 'opacity-100' : 'pointer-events-none lg:pointer-events-auto opacity-0 lg:opacity-100'}`}>
@@ -135,6 +138,7 @@ const AppLayout: React.FC = () => {
                     <Route path={AppRoute.DOGMAS} element={<DogmasPage />} />
                     <Route path={AppRoute.LECTIO_DIVINA} element={<LectioDivina />} />
                     <Route path={AppRoute.BREVIARY} element={<BreviaryPage />} />
+                    <Route path={AppRoute.LITANIES} element={<LitaniesPage />} />
                     <Route path="*" element={<Dashboard user={appUser} />} />
                   </Routes>
                 </PageTransition>

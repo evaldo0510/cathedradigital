@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Icons, Logo } from '../../constants';
 import { AppRoute, User } from '../../types';
+import { BibleModal, CatechismModal, DocumentsModal } from './QuickModals';
 
 interface SidebarProps {
   onClose?: () => void;
@@ -12,6 +13,7 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
+  const [modal, setModal] = useState<'bible' | 'catechism' | 'docs' | null>(null);
 
   const sections = [
     {
@@ -23,6 +25,7 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user }) => {
         { label: 'Via Crucis', path: AppRoute.VIA_CRUCIS, icon: <Icons.Cross className="w-5 h-5" /> },
         { label: 'Breviário', path: AppRoute.BREVIARY, icon: <Icons.History className="w-5 h-5" /> },
         { label: 'Lectio Divina', path: AppRoute.LECTIO_DIVINA, icon: <Icons.Feather className="w-5 h-5" /> },
+        { label: 'Litanias', path: AppRoute.LITANIES, icon: <Icons.Heart className="w-5 h-5" /> },
         { label: 'Favoritos', path: AppRoute.FAVORITES, icon: <Icons.Heart className="w-5 h-5" /> },
       ]
     },
@@ -53,57 +56,90 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user }) => {
   };
 
   return (
-    <aside className="h-full w-80 bg-card border-r border-border flex flex-col p-6 overflow-hidden">
-      <div className="mb-10 px-2 flex items-center gap-3 cursor-pointer group" onClick={() => handleNav(AppRoute.DASHBOARD)}>
-        <Logo className="w-9 h-9" />
-        <div>
-          <h1 className="text-lg font-black tracking-tight text-foreground leading-none uppercase">CATHEDRA</h1>
-          <p className="text-[8px] font-black uppercase text-primary tracking-widest mt-1">Digital Sanctuarium</p>
-        </div>
-      </div>
-
-      <nav className="flex-1 space-y-8 overflow-y-auto pb-10">
-        {sections.map((section) => (
-          <div key={section.label}>
-            <h3 className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-4 px-4">{section.label}</h3>
-            <ul className="space-y-1">
-              {section.items.map((item, idx) => (
-                <li key={idx}>
-                  <button
-                    onClick={() => handleNav(item.path)}
-                    className={`w-full flex items-center gap-4 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all
-                      ${currentPath === item.path
-                        ? 'bg-foreground text-background shadow-lg'
-                        : 'text-muted-foreground hover:bg-muted hover:text-foreground'}`}
-                  >
-                    <span className="opacity-70">{item.icon}</span>
-                    <span className="tracking-tight">{item.label}</span>
-                    {(item as any).pro && <span className="ml-auto text-[8px] font-black uppercase tracking-widest text-primary bg-primary/10 px-1.5 py-0.5 rounded">PRO</span>}
-                    {currentPath === item.path && <div className="ml-auto w-1 h-1 rounded-full bg-primary" />}
-                  </button>
-                </li>
-              ))}
-            </ul>
+    <>
+      <aside className="h-full w-80 bg-card border-r border-border flex flex-col p-6 overflow-hidden">
+        <div className="mb-6 px-2 flex items-center gap-3 cursor-pointer group" onClick={() => handleNav(AppRoute.DASHBOARD)}>
+          <Logo className="w-9 h-9" />
+          <div>
+            <h1 className="text-lg font-black tracking-tight text-foreground leading-none uppercase">CATHEDRA</h1>
+            <p className="text-[8px] font-black uppercase text-primary tracking-widest mt-1">Digital Sanctuarium</p>
           </div>
-        ))}
-      </nav>
+        </div>
 
-      <div className="pt-6 border-t border-border">
-        {user ? (
-          <button onClick={() => handleNav(AppRoute.PROFILE)} className="w-full flex items-center gap-3 p-3 bg-muted rounded-2xl hover:border-primary border border-transparent transition-all">
-            <div className="w-10 h-10 rounded-xl bg-foreground flex items-center justify-center text-background font-black shadow-sm">{user.name.charAt(0).toUpperCase()}</div>
-            <div className="flex-1 min-w-0 text-left">
-              <p className="text-xs font-bold truncate text-foreground">{user.name}</p>
-              <p className="text-[8px] uppercase text-primary font-black tracking-widest">{user.isPremium ? 'PRO' : 'Gratuito'}</p>
+        {/* Quick access modals */}
+        <div className="flex gap-1.5 mb-6 px-2">
+          <button onClick={() => setModal('bible')} className="flex-1 px-2 py-2 rounded-xl bg-muted text-muted-foreground hover:text-foreground hover:bg-primary/10 transition-all text-center" title="Consulta rápida: Bíblia">
+            <Icons.Book className="w-4 h-4 mx-auto mb-0.5" />
+            <span className="text-[8px] font-bold uppercase tracking-wider">Bíblia</span>
+          </button>
+          <button onClick={() => setModal('catechism')} className="flex-1 px-2 py-2 rounded-xl bg-muted text-muted-foreground hover:text-foreground hover:bg-primary/10 transition-all text-center" title="Consulta rápida: CIC">
+            <Icons.Cross className="w-4 h-4 mx-auto mb-0.5" />
+            <span className="text-[8px] font-bold uppercase tracking-wider">CIC</span>
+          </button>
+          <button onClick={() => setModal('docs')} className="flex-1 px-2 py-2 rounded-xl bg-muted text-muted-foreground hover:text-foreground hover:bg-primary/10 transition-all text-center" title="Consulta rápida: Documentos">
+            <Icons.Globe className="w-4 h-4 mx-auto mb-0.5" />
+            <span className="text-[8px] font-bold uppercase tracking-wider">Docs</span>
+          </button>
+        </div>
+
+        <nav className="flex-1 space-y-8 overflow-y-auto pb-10">
+          {sections.map((section) => (
+            <div key={section.label}>
+              <h3 className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-4 px-4">{section.label}</h3>
+              <ul className="space-y-1">
+                {section.items.map((item, idx) => (
+                  <li key={idx}>
+                    <button
+                      onClick={() => handleNav(item.path)}
+                      className={`w-full flex items-center gap-4 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all
+                        ${currentPath === item.path
+                          ? 'bg-foreground text-background shadow-lg'
+                          : 'text-muted-foreground hover:bg-muted hover:text-foreground'}`}
+                    >
+                      <span className="opacity-70">{item.icon}</span>
+                      <span className="tracking-tight">{item.label}</span>
+                      {(item as any).pro && <span className="ml-auto text-[8px] font-black uppercase tracking-widest text-primary bg-primary/10 px-1.5 py-0.5 rounded">PRO</span>}
+                      {currentPath === item.path && <div className="ml-auto w-1 h-1 rounded-full bg-primary" />}
+                    </button>
+                  </li>
+                ))}
+              </ul>
             </div>
-          </button>
-        ) : (
-          <button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all">
-            Acessar Conta
-          </button>
-        )}
-      </div>
-    </aside>
+          ))}
+        </nav>
+
+        {/* Ctrl+K hint */}
+        <div className="px-4 pb-3">
+          <div className="flex items-center gap-2 text-muted-foreground/60">
+            <Icons.Search className="w-3 h-3" />
+            <span className="text-[9px]">Pressione</span>
+            <kbd className="px-1.5 py-0.5 rounded bg-muted text-[9px] font-mono font-bold">⌘K</kbd>
+            <span className="text-[9px]">para buscar</span>
+          </div>
+        </div>
+
+        <div className="pt-4 border-t border-border">
+          {user ? (
+            <button onClick={() => handleNav(AppRoute.PROFILE)} className="w-full flex items-center gap-3 p-3 bg-muted rounded-2xl hover:border-primary border border-transparent transition-all">
+              <div className="w-10 h-10 rounded-xl bg-foreground flex items-center justify-center text-background font-black shadow-sm">{user.name.charAt(0).toUpperCase()}</div>
+              <div className="flex-1 min-w-0 text-left">
+                <p className="text-xs font-bold truncate text-foreground">{user.name}</p>
+                <p className="text-[8px] uppercase text-primary font-black tracking-widest">{user.isPremium ? 'PRO' : 'Gratuito'}</p>
+              </div>
+            </button>
+          ) : (
+            <button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all">
+              Acessar Conta
+            </button>
+          )}
+        </div>
+      </aside>
+
+      {/* Quick modals */}
+      <BibleModal isOpen={modal === 'bible'} onClose={() => setModal(null)} />
+      <CatechismModal isOpen={modal === 'catechism'} onClose={() => setModal(null)} />
+      <DocumentsModal isOpen={modal === 'docs'} onClose={() => setModal(null)} />
+    </>
   );
 });
 
