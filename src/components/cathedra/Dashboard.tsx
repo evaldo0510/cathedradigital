@@ -127,8 +127,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       {/* ═══════ 4. BÍBLIA ═══════ */}
       <Section className="overflow-hidden rounded-3xl md:rounded-[4rem] border border-border mx-4 md:mx-6">
         <div className="grid lg:grid-cols-2">
-          <div className="relative h-64 lg:h-auto">
-            <img src={sectionBible} alt="Bíblia Sagrada aberta à luz de velas" loading="lazy" width={1280} height={720} className="absolute inset-0 w-full h-full object-cover" />
+          <div className="relative h-64 lg:h-auto overflow-hidden" ref={pxBible.ref}>
+            <img src={sectionBible} alt="Bíblia Sagrada aberta à luz de velas" loading="lazy" width={1280} height={720} className="absolute inset-0 w-full h-full object-cover scale-110" style={pxBible.style} />
           </div>
           <div className="bg-secondary p-10 md:p-16 flex flex-col justify-center space-y-6">
             <Icons.Book className="w-10 h-10 text-primary" />
