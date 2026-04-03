@@ -24,6 +24,12 @@ const ViaCrucis = lazy(() => import('./components/cathedra/ViaCrucis'));
 const Rosary = lazy(() => import('./components/cathedra/Rosary'));
 const PrayerPage = lazy(() => import('./components/cathedra/PrayerPage'));
 const Auth = lazy(() => import('./components/cathedra/Auth'));
+const AquinasOpera = lazy(() => import('./components/cathedra/AquinasOpera'));
+const Certamen = lazy(() => import('./components/cathedra/Certamen'));
+const MissalPage = lazy(() => import('./components/cathedra/MissalPage'));
+const FavoritesPage = lazy(() => import('./components/cathedra/FavoritesPage'));
+const TrilhasPage = lazy(() => import('./components/cathedra/TrilhasPage'));
+const AboutPage = lazy(() => import('./components/cathedra/AboutPage'));
 
 interface LanguageContextType {
   lang: Language;
