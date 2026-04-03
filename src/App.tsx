@@ -41,17 +41,6 @@ const ProfilePage = lazy(() => import('./components/cathedra/ProfilePage'));
 import CommandCenter from './components/cathedra/CommandCenter';
 import OfflineIndicator from './components/cathedra/OfflineIndicator';
 
-interface LanguageContextType {
-  lang: Language;
-  setLang: (l: Language) => void;
-  t: (key: string) => string;
-}
-
-export const LangContext = createContext<LanguageContextType>({
-  lang: 'pt',
-  setLang: () => {},
-  t: (k) => k
-});
 
 const LoadingFallback = () => (
   <div className="flex items-center justify-center min-h-[40vh]">
