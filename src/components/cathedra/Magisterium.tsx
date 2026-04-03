@@ -448,6 +448,17 @@ const Magisterium: React.FC = () => {
         </div>
       </div>
 
+      {cachedIds.length > 0 && (
+        <div className="flex justify-center">
+          <button
+            onClick={clearAllCache}
+            className="px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest text-destructive border border-destructive/30 hover:bg-destructive/10 transition-all"
+          >
+            🗑️ Limpar todo o cache ({cachedIds.length} documento{cachedIds.length !== 1 ? 's' : ''})
+          </button>
+        </div>
+      )}
+
       {/* Documents grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {filteredDocs.map(doc => (
