@@ -182,6 +182,32 @@ const Magisterium: React.FC = () => {
     if (selectedDoc?.id === docId) setFullText(null);
   }, [selectedDoc]);
 
+  const clearAllCache = useCallback(() => {
+    const keys = Object.keys(localStorage).filter(k => k.startsWith(CACHE_PREFIX));
+    keys.forEach(k => localStorage.removeItem(k));
+    setCachedIds([]);
+    setFullText(null);
+  }, []);
+
+  const exportToPdf = useCallback(() => {
+    if (!fullText || !selectedDoc) return;
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return;
+    printWindow.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>${selectedDoc.title}</title><style>
+      body { font-family: Georgia, 'Times New Roman', serif; max-width: 700px; margin: 40px auto; padding: 20px; color: #1a1a1a; line-height: 1.8; font-size: 14px; }
+      h1 { text-align: center; font-size: 24px; margin-bottom: 4px; }
+      .meta { text-align: center; color: #666; font-size: 12px; margin-bottom: 32px; border-bottom: 1px solid #ddd; padding-bottom: 16px; }
+      .content { white-space: pre-line; }
+      @media print { body { margin: 0; } }
+    </style></head><body>
+      <h1>${selectedDoc.title}</h1>
+      <p class="meta">${selectedDoc.author} • ${selectedDoc.year}<br/>Fonte: Vatican.va — Cathedra Digital</p>
+      <div class="content">${fullText.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
+    </body></html>`);
+    printWindow.document.close();
+    setTimeout(() => printWindow.print(), 500);
+  }, [fullText, selectedDoc]);
+
   const handleSelectDoc = useCallback((doc: MagisteriumDoc) => {
     setSelectedDoc(doc);
     setFullText(null);
