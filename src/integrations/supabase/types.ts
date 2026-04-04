@@ -35,6 +35,30 @@ export type Database = {
         }
         Relationships: []
       }
+      bible_chapters_read: {
+        Row: {
+          book_abbr: string
+          chapter: number
+          id: string
+          read_at: string
+          user_id: string
+        }
+        Insert: {
+          book_abbr: string
+          chapter: number
+          id?: string
+          read_at?: string
+          user_id: string
+        }
+        Update: {
+          book_abbr?: string
+          chapter?: number
+          id?: string
+          read_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       catechism_cache: {
         Row: {
           content: string
