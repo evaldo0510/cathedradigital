@@ -125,18 +125,38 @@ const AppLayout: React.FC = () => {
       <CommandCenter />
       <OfflineIndicator />
       <div className="flex h-[100dvh] w-full overflow-hidden bg-background selection:bg-primary/20">
-        <AnimatePresence mode="wait">
-          {location.pathname !== AppRoute.HOME && (
+        {/* Desktop sidebar - always visible on lg+ */}
+        {location.pathname !== AppRoute.HOME && (
+          <div className="hidden lg:block relative h-full w-72 flex-shrink-0">
+            <CathedralSidebar 
+              onClose={() => setIsSidebarOpen(false)} 
+              user={appUser} 
+              isDark={isDark}
+              onToggleDark={() => setIsDark(!isDark)}
+              onSignOut={signOut}
+            />
+          </div>
+        )}
+
+        {/* Mobile sidebar overlay - only when open */}
+        <AnimatePresence>
+          {location.pathname !== AppRoute.HOME && isSidebarOpen && (
             <motion.div 
-              key="sidebar-wrapper"
-              initial={{ opacity: 0, x: -300 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -300 }}
-              transition={{ duration: 0.3 }}
-              className={`fixed inset-0 z-[150] lg:relative lg:block transition-all ${isSidebarOpen ? 'opacity-100' : 'pointer-events-none lg:pointer-events-auto opacity-0 lg:opacity-100'}`}
+              key="mobile-sidebar"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 z-[150] lg:hidden"
             >
-              <div className="absolute inset-0 bg-black/60 backdrop-blur-sm lg:hidden" onClick={() => setIsSidebarOpen(false)} />
-              <div className={`relative h-full w-72 transition-transform duration-500 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
+              <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsSidebarOpen(false)} />
+              <motion.div
+                initial={{ x: -288 }}
+                animate={{ x: 0 }}
+                exit={{ x: -288 }}
+                transition={{ duration: 0.3, ease: 'easeOut' }}
+                className="relative h-full w-72"
+              >
                 <CathedralSidebar 
                   onClose={() => setIsSidebarOpen(false)} 
                   user={appUser} 
@@ -144,7 +164,7 @@ const AppLayout: React.FC = () => {
                   onToggleDark={() => setIsDark(!isDark)}
                   onSignOut={signOut}
                 />
-              </div>
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
