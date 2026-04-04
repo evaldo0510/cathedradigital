@@ -69,7 +69,7 @@ const Index = () => {
       </section>
 
       {/* Highlights */}
-      <section className="w-full max-w-7xl px-6 py-24 space-y-16">
+      <section className="w-full max-w-7xl px-6 py-16 md:py-20 space-y-12 md:space-y-16">
         <div className="text-center space-y-4">
           <h2 className="text-3xl md:text-5xl font-serif font-bold">Destaques Devocionais</h2>
           <div className="w-20 h-1 bg-primary mx-auto rounded-full" />
