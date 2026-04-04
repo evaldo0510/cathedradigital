@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { createContext, createElement, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 
@@ -136,7 +136,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isPremium: profile?.is_premium ?? false,
   }), [user, profile, loading, signOut]);
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return createElement(AuthContext.Provider, { value }, children);
 }
 
 export function useAuth() {

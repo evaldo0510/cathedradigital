@@ -15,7 +15,7 @@ import ProGate from './components/cathedra/ProGate';
 import Index from './pages/Index';
 import { AppRoute, Language } from './types';
 import { UI_TRANSLATIONS } from './services/translations';
-import { useAuth } from './hooks/useAuth';
+import { AuthProvider, useAuth } from './hooks/useAuth';
 import { LangContext } from './contexts/LangContext';
 import { supabase } from '@/integrations/supabase/client';
 import CommandCenter from './components/cathedra/CommandCenter';
@@ -68,10 +68,25 @@ const LoadingFallback = () => (
   </div>
 );
 
+const readStoredValue = (key: string) => {
+  try {
+    return window.localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+};
+
+const getInitialLanguage = (): Language => {
+  const storedLang = readStoredValue('cathedra_lang');
+  return storedLang ? (storedLang as Language) : 'pt';
+};
+
+const getInitialTheme = () => readStoredValue('cathedra_dark') === 'true';
+
 const AppLayout: React.FC = () => {
-  const [lang, setLangState] = useState<Language>(() => (localStorage.getItem('cathedra_lang') as Language) || 'pt');
+  const [lang, setLangState] = useState<Language>(getInitialLanguage);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isDark, setIsDark] = useState(() => localStorage.getItem('cathedra_dark') === 'true');
+  const [isDark, setIsDark] = useState(getInitialTheme);
   const { user, profile, signOut, isPremium, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -246,9 +261,11 @@ const AppLayout: React.FC = () => {
 const App: React.FC = () => (
   <AppErrorBoundary>
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <AppLayout />
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <AppLayout />
+        </BrowserRouter>
+      </AuthProvider>
     </QueryClientProvider>
   </AppErrorBoundary>
 );
