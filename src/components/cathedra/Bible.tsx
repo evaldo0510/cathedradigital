@@ -11,6 +11,8 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { ChevronDown, ScrollText, Swords, Feather, Flame, Cross, Globe, Mail, BookOpen, Sparkles, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { Progress } from '@/components/ui/progress';
+import { checkNewBadges, getBadgeById } from '@/lib/badges';
+import { toast } from 'sonner';
 
 type BibleBook = { name: string; abbr: string; chapters: number };
 type BibleCategory = { label: string; icon: React.ElementType; color: string; bgColor: string; books: BibleBook[] };
@@ -131,12 +133,10 @@ const Bible: React.FC = () => {
 
   const markChapterRead = useCallback(async (bookAbbr: string, chapter: number, totalChapters: number) => {
     if (!user) return;
-    // Insert chapter read
     await supabase
       .from('bible_chapters_read' as any)
       .upsert({ user_id: user.id, book_abbr: bookAbbr, chapter } as any, { onConflict: 'user_id,book_abbr,chapter' });
     
-    // Update local state
     setChaptersRead(prev => {
       const next = { ...prev };
       if (!next[bookAbbr]) next[bookAbbr] = new Set();
@@ -145,7 +145,30 @@ const Bible: React.FC = () => {
       // Auto-mark book as completed if all chapters read
       if (next[bookAbbr].size >= totalChapters && !completedBooks.has(bookAbbr)) {
         const newCompleted = [...(profile?.completed_books || []), bookAbbr];
-        supabase.from('profiles').update({ completed_books: newCompleted }).eq('id', user.id).then(() => {});
+        const newCompletedSet = new Set(newCompleted);
+        
+        // Check for new badges
+        const currentBadges = profile?.badges || [];
+        const newBadgeIds = checkNewBadges(currentBadges, {
+          completedBooks: newCompletedSet,
+          chaptersRead: next,
+          totalMinutesRead: profile?.total_minutes_read || 0,
+        });
+        
+        const updatedBadges = [...currentBadges, ...newBadgeIds];
+        
+        supabase.from('profiles')
+          .update({ completed_books: newCompleted, badges: updatedBadges })
+          .eq('id', user.id)
+          .then(() => {
+            // Show toast for new badges
+            newBadgeIds.forEach(id => {
+              const badge = getBadgeById(id);
+              if (badge) {
+                toast.success(`🏅 Nova conquista: ${badge.icon} ${badge.name}`, { description: badge.description, duration: 5000 });
+              }
+            });
+          });
       }
       return next;
     });

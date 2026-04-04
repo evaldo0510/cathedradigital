@@ -1,10 +1,15 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useMemo, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { AppRoute, User } from '../../types';
 import { Icons } from '../../constants';
 import SacredImage from './SacredImage';
 import { useHistory } from '../../hooks/useHistory';
+import { useAuth } from '../../hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
+import { Progress } from '@/components/ui/progress';
+import { BADGE_DEFINITIONS, getBadgeById } from '@/lib/badges';
+import { BookOpen, Trophy, Clock, Flame } from 'lucide-react';
 import sectionBible from '../../assets/section-bible.webp';
 import sectionCatechism from '../../assets/section-catechism.webp';
 import sectionDocuments from '../../assets/section-documents.webp';
@@ -117,6 +122,20 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   const navigate = useNavigate();
   const { history, trackVisit } = useHistory();
 
+  const { profile } = useAuth();
+  const completedBooks = useMemo(() => profile?.completed_books || [], [profile?.completed_books]);
+  const badges = useMemo(() => profile?.badges || [], [profile?.badges]);
+  const totalBooksRead = completedBooks.length;
+  const overallProgress = Math.round((totalBooksRead / 73) * 100);
+
+  // Load chapters read count
+  const [totalChaptersRead, setTotalChaptersRead] = useState(0);
+  useEffect(() => {
+    if (!user) return;
+    supabase.from('bible_chapters_read' as any).select('id', { count: 'exact', head: true }).eq('user_id', user.id)
+      .then(({ count }) => { if (count) setTotalChaptersRead(count); });
+  }, [user]);
+
   const goTo = useCallback((route: string, title: string, imageUrl?: string) => {
     trackVisit(route, title, imageUrl || ROUTE_IMAGES[route]);
     navigate(route);
@@ -182,7 +201,73 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         </div>
       )}
 
-      {/* ═══ HERO BANNER ═══ */}
+      {/* ═══ READING PROGRESS SUMMARY ═══ */}
+      {user && (
+        <div className="px-4 md:px-12">
+          <div className="bg-card border border-border rounded-3xl p-5 md:p-6 space-y-4 shadow-sm">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-black uppercase tracking-widest text-foreground">Progresso de Leitura</h3>
+              <button onClick={() => navigate(AppRoute.BIBLE)} className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline">
+                Continuar
+              </button>
+            </div>
+            
+            {/* Stats row */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div className="bg-primary/5 rounded-2xl p-3 text-center space-y-1">
+                <BookOpen className="w-5 h-5 text-primary mx-auto" />
+                <p className="text-xl font-black text-foreground">{totalBooksRead}</p>
+                <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Livros</p>
+              </div>
+              <div className="bg-primary/5 rounded-2xl p-3 text-center space-y-1">
+                <Trophy className="w-5 h-5 text-primary mx-auto" />
+                <p className="text-xl font-black text-foreground">{totalChaptersRead}</p>
+                <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Capítulos</p>
+              </div>
+              <div className="bg-primary/5 rounded-2xl p-3 text-center space-y-1">
+                <Clock className="w-5 h-5 text-primary mx-auto" />
+                <p className="text-xl font-black text-foreground">{profile?.total_minutes_read || 0}</p>
+                <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Minutos</p>
+              </div>
+              <div className="bg-primary/5 rounded-2xl p-3 text-center space-y-1">
+                <Flame className="w-5 h-5 text-primary mx-auto" />
+                <p className="text-xl font-black text-foreground">{profile?.streak || 0}</p>
+                <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Dias seguidos</p>
+              </div>
+            </div>
+
+            {/* Progress bar */}
+            <div className="space-y-1.5">
+              <div className="flex justify-between text-xs">
+                <span className="font-bold text-muted-foreground">{totalBooksRead} de 73 livros</span>
+                <span className="font-bold text-primary">{overallProgress}%</span>
+              </div>
+              <Progress value={overallProgress} className="h-2.5" />
+            </div>
+
+            {/* Badges */}
+            {badges.length > 0 && (
+              <div className="space-y-2 pt-1">
+                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Conquistas</p>
+                <div className="flex flex-wrap gap-2">
+                  {badges.map(id => {
+                    const badge = getBadgeById(id);
+                    if (!badge) return null;
+                    return (
+                      <div key={id} className="flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 border border-primary/20 rounded-full" title={badge.description}>
+                        <span className="text-sm">{badge.icon}</span>
+                        <span className="text-[10px] font-bold text-foreground">{badge.name}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+
       <motion.section
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
