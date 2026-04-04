@@ -12,6 +12,7 @@ import PlaceholderPage from './components/cathedra/PlaceholderPage';
 import CheckoutPage from './components/cathedra/CheckoutPage';
 import DiagnosticsPage from './components/cathedra/DiagnosticsPage';
 import ProGate from './components/cathedra/ProGate';
+import Index from './pages/Index';
 import { AppRoute, Language } from './types';
 import { UI_TRANSLATIONS } from './services/translations';
 import { useAuth } from './hooks/useAuth';
