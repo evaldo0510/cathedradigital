@@ -15,7 +15,7 @@ interface DashboardProps {
 }
 
 /* ── Netflix-style horizontal scroll row ── */
-const ContentRow: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => {
+const ContentRow: React.FC<{ title: string; children: React.ReactNode; onSeeAll?: () => void }> = ({ title, children, onSeeAll }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const scroll = (dir: 'left' | 'right') => {
@@ -24,7 +24,14 @@ const ContentRow: React.FC<{ title: string; children: React.ReactNode }> = ({ ti
 
   return (
     <div className="space-y-3">
-      <h2 className="text-lg md:text-xl font-serif font-bold text-foreground px-2">{title}</h2>
+      <div className="flex items-center justify-between px-2">
+        <h2 className="text-lg md:text-xl font-serif font-bold text-foreground">{title}</h2>
+        {onSeeAll && (
+          <button onClick={onSeeAll} className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline">
+            Ver Tudo
+          </button>
+        )}
+      </div>
       <div className="relative group">
         {/* Left arrow */}
         <button
