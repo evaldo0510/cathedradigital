@@ -119,7 +119,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                     onClick={() => markAsRead(n.id)}
                   >
                     <p className="text-xs font-semibold text-foreground mb-1">{n.title}</p>
-                    <p className="text-[10px] text-muted-foreground leading-relaxed">{n.message}</p>
+                    <p className="text-xs text-muted-foreground leading-relaxed">{n.message}</p>
                   </div>
                 ))
               ) : (
