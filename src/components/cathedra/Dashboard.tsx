@@ -268,6 +268,26 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           ))}
         </ContentRow>
         
+        {/* Row: Destaques e Parcerias */}
+        <ContentRow title="Destaques">
+          <RowCard
+            image="https://images.unsplash.com/photo-1519750783826-e2420f4d687f?auto=format&fit=crop&q=80&w=800"
+            title="Rosário da Madrugada"
+            subtitle="Frei Gilson - Todos os dias às 4:00 AM"
+            onClick={() => window.open('https://www.youtube.com/@FreiGilsonSomdoMonte', '_blank')}
+            wide
+            icon={<Icons.Youtube className="w-5 h-5" />}
+          />
+          <RowCard
+            image="https://images.unsplash.com/photo-1445445290350-18a3b86e0b5a?auto=format&fit=crop&q=80&w=800"
+            title="Som do Monte"
+            subtitle="Vida de Oração e Música"
+            onClick={() => window.open('https://www.youtube.com/@FreiGilsonSomdoMonte', '_blank')}
+            wide
+            icon={<Icons.Heart className="w-5 h-5" />}
+          />
+        </ContentRow>
+
         {/* Row: Estudo */}
 
         <ContentRow title="Estudo e Formação" onSeeAll={() => navigate(AppRoute.MAGISTERIUM)}>

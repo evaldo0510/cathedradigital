@@ -173,7 +173,7 @@ const Footer: React.FC = React.memo(() => {
           </div>
 
           {/* Navigation links columns */}
-          <div className="lg:col-span-6 grid grid-cols-2 sm:grid-cols-3 gap-10">
+          <div className="lg:col-span-9 grid grid-cols-2 sm:grid-cols-3 gap-8">
             <div className="space-y-6">
               <h4 className="text-[11px] font-black uppercase tracking-[0.3em] text-white/90">Formação</h4>
               <nav className="flex flex-col gap-3">
