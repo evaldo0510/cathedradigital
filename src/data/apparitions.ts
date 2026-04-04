@@ -171,4 +171,4 @@ export const APPARITIONS: Apparition[] = [
     imageSrc: akitaImg,
     color: 'from-rose-500/20 to-rose-600/5 border-rose-500/30',
   },
-];
+].sort((a, b) => a.year - b.year);
