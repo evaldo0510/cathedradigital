@@ -407,13 +407,16 @@ const Bible: React.FC = () => {
         <div className="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 gap-2">
           {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map(ch => {
             const hasRefs = getBibleCrossRefs(selectedBook.abbr, ch).length > 0;
+            const isChRead = chaptersRead[selectedBook.abbr]?.has(ch);
             return (
               <button key={ch} onClick={() => selectChapter(ch)}
-                className={`aspect-square rounded-xl bg-card border flex items-center justify-center text-sm font-bold transition-all shadow-sm relative ${
-                  hasRefs ? 'border-primary/30 hover:bg-primary hover:text-primary-foreground hover:border-primary' : 'border-border text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary'
+                className={`aspect-square rounded-xl border flex items-center justify-center text-sm font-bold transition-all shadow-sm relative ${
+                  isChRead ? 'bg-primary/15 border-primary/40 text-primary' :
+                  hasRefs ? 'bg-card border-primary/30 hover:bg-primary hover:text-primary-foreground hover:border-primary' : 'bg-card border-border text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary'
                 }`}>
                 {ch}
-                {hasRefs && (
+                {isChRead && <CheckCircle2 className="absolute -top-1 -right-1 w-3 h-3 text-primary" />}
+                {!isChRead && hasRefs && (
                   <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-primary" />
                 )}
               </button>
