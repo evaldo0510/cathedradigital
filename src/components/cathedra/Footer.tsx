@@ -130,7 +130,9 @@ const Footer: React.FC = React.memo(() => {
 
           {/* Links Column - Vatican */}
           <div>
-            <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-6">Santa Sé</h4>
+            <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-6 flex items-center gap-2">
+              <span className="text-lg">🏛️</span> Santa Sé
+            </h4>
             <ul className="flex flex-col gap-4">
               {vaticanLinks.map(link => (
                 <li key={link.title}>
