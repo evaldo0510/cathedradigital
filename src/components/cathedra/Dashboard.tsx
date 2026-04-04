@@ -239,7 +239,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             transition={{ delay: 0.8, duration: 1 }}
             className="w-full max-w-sm hidden lg:block"
           >
-            <div className="bg-background/40 backdrop-blur-2xl border border-white/20 rounded-[2.5rem] p-8 shadow-2xl space-y-6 relative overflow-hidden group">
+            <div className="bg-background/40 backdrop-blur-2xl border border-white/20 rounded-3xl p-6 shadow-2xl space-y-5 relative overflow-hidden group">
               <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/20 rounded-full blur-3xl group-hover:bg-primary/30 transition-colors duration-700" />
               
               <div className="flex items-center justify-between">
