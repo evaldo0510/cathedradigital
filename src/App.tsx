@@ -170,9 +170,11 @@ const AppLayout: React.FC = () => {
 };
 
 const App: React.FC = () => (
-  <BrowserRouter>
-    <AppLayout />
-  </BrowserRouter>
+  <AppErrorBoundary>
+    <BrowserRouter>
+      <AppLayout />
+    </BrowserRouter>
+  </AppErrorBoundary>
 );
 
 export default App;
