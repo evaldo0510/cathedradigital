@@ -77,6 +77,7 @@ const APPARITIONS: Apparition[] = [
     liturgicalFeast: '13 de maio',
     approved: true,
     image: '☀️',
+    imageSrc: fatimaImg,
     color: 'from-amber-500/20 to-amber-600/5 border-amber-500/30',
   },
   {
