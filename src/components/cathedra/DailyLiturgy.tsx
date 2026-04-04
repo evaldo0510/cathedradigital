@@ -126,6 +126,64 @@ const DailyLiturgy: React.FC = () => {
     fetchData();
   }, []);
 
+  const fetchMeditation = async () => {
+    if (!readings?.evangelho?.texto) return;
+    setIsMeditationLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('colloquium', {
+        body: { 
+          messages: [
+            { 
+              role: 'user', 
+              content: `Gere uma Meditação Diária espiritual, curta e profunda, baseada no Evangelho do dia: ${readings.evangelho.referencia} - ${readings.evangelho.texto}. 
+              A meditação deve ser escrita num tom orante e teológico (como um Santo Padre da Igreja), dividida em:
+              1. Reflexão (um parágrafo curto)
+              2. Propósito Prático para o dia
+              3. Uma oração final curta.
+              Use Markdown para formatação.`
+            }
+          ] 
+        }
+      });
+
+      if (error) throw error;
+
+      // The colloquium function returns a stream, but we can read it if it's not handled as stream
+      // Actually, looking at the function, it returns response.body (stream)
+      // We need to handle the stream or change the function to not stream
+      // Since I can't easily change the function to not stream without modifying it, 
+      // I'll check if I can just get the text from the response
+      
+      const reader = data.getReader();
+      const decoder = new TextDecoder();
+      let fullText = '';
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value);
+        // The AI gateway returns SSE format data: data: {"choices":[{"delta":{"content":"..."}}]}
+        const lines = chunk.split('\n');
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            try {
+              const json = JSON.parse(line.substring(6));
+              const content = json.choices[0]?.delta?.content || '';
+              fullText += content;
+              setMeditation(fullText);
+            } catch (e) {
+              // Ignore parse errors for partial chunks
+            }
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Error fetching meditation:', err);
+      setError('Erro ao gerar meditação.');
+    } finally {
+      setIsMeditationLoading(false);
+    }
+  };
+
   const categories = ['Todas', ...Array.from(new Set(PRAYERS.map(p => p.category)))];
   const filteredPrayers = prayerFilter === 'Todas' ? PRAYERS : PRAYERS.filter(p => p.category === prayerFilter);
 
