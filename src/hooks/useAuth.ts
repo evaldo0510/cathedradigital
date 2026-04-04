@@ -35,7 +35,7 @@ export function useAuth() {
             setProfile(data as Profile | null);
           }
         } catch (e) {
-          console.error('Error fetching profile:', e);
+          console.error('Error fetching profile in onAuthStateChange:', e);
         }
       } else {
         setProfile(null);
@@ -43,28 +43,33 @@ export function useAuth() {
       setLoading(false);
     });
 
-    supabase.auth.getSession().then(({ data: { session }, error }) => {
-      if (!mounted) return;
-      
-      if (error) console.error('Error getting session:', error);
-      
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        supabase.from('profiles').select('*').eq('id', session.user.id).single()
-          .then(({ data, error }) => {
-            if (!error && mounted) setProfile(data as Profile | null);
-          })
-          .catch(e => console.error('Error fetching profile:', e))
-          .finally(() => {
-            if (mounted) setLoading(false);
-          });
-      } else {
-        setLoading(false);
+    const initSession = async () => {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (!mounted) return;
+        
+        if (error) console.error('Error getting session:', error);
+        
+        setUser(session?.user ?? null);
+        if (session?.user) {
+          const { data: profileData, error: profileError } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', session.user.id)
+            .single();
+            
+          if (!profileError && mounted) {
+            setProfile(profileData as Profile | null);
+          }
+        }
+      } catch (e) {
+        console.error('Session init error:', e);
+      } finally {
+        if (mounted) setLoading(false);
       }
-    }).catch(e => {
-      console.error('Session error:', e);
-      if (mounted) setLoading(false);
-    });
+    };
+
+    initSession();
 
     return () => {
       mounted = false;
