@@ -68,6 +68,7 @@ export const BibleModal: React.FC<QuickModalProps> = ({ isOpen, onClose }) => {
 
 // ─── Catechism Modal ───
 export const CatechismModal: React.FC<QuickModalProps> = ({ isOpen, onClose }) => {
+  const navigate = useNavigate();
   const [paragraph, setParagraph] = useState(1);
   const [text, setText] = useState('');
   const [loading, setLoading] = useState(false);
