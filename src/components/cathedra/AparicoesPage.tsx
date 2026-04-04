@@ -213,7 +213,7 @@ const AparicoesPage: React.FC = () => {
         {APPARITIONS.map((a, i) => (
           <React.Fragment key={a.id}>
             <div className="flex flex-col items-center gap-1">
-              <span className="text-2xl">{a.image}</span>
+              <img src={a.imageSrc} alt={a.title} className="w-12 h-12 rounded-full object-cover shadow-sm" loading="lazy" />
               <span className="text-[10px] font-black text-primary">{a.year}</span>
             </div>
             {i < APPARITIONS.length - 1 && (
