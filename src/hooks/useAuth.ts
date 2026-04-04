@@ -9,6 +9,13 @@ export interface Profile {
   is_premium: boolean;
   role: 'user' | 'admin' | string | null;
   avatar_url: string | null;
+  xp?: number;
+  streak?: number;
+  level?: number;
+  last_visit?: string;
+  completed_books?: string[];
+  badges?: string[];
+  total_minutes_read?: number;
 }
 
 export function useAuth() {

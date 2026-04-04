@@ -103,8 +103,15 @@ const AppLayout: React.FC = () => {
       role: (profile.role || (profile.is_premium ? 'scholar' : 'pilgrim')) as 'pilgrim' | 'scholar' | 'admin',
       isPremium: !!profile.is_premium,
       joinedAt: user.created_at,
-      progress: { streak: 0, totalMinutesRead: 0, completedBooks: [], xp: 0, level: 1, badges: [] },
-      stats: { versesSaved: 0, studiesPerformed: 0, daysActive: 0 },
+      progress: { 
+        streak: profile.streak || 0, 
+        totalMinutesRead: profile.total_minutes_read || 0, 
+        completedBooks: profile.completed_books || [], 
+        xp: profile.xp || 0, 
+        level: profile.level || 1, 
+        badges: profile.badges || [] 
+      },
+      stats: { versesSaved: profile.stats?.versesSaved || 0, studiesPerformed: profile.stats?.studiesPerformed || 0, daysActive: profile.stats?.daysActive || 0 },
     };
   }, [user, profile]);
 
