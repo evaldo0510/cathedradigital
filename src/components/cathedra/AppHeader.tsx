@@ -22,29 +22,31 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
   const [showNotifs, setShowNotifs] = useState(false);
 
   return (
-    <header className="px-3 py-2 md:p-4 border-b border-border/10 bg-background/60 backdrop-blur-3xl flex items-center justify-between sticky top-0 z-[140] shadow-sm safe-area-top">
-      <div className="flex items-center gap-2">
+    <header className="px-4 py-3 md:px-12 md:py-6 border-b border-border/5 bg-background/40 backdrop-blur-2xl flex items-center justify-between sticky top-0 z-[140] safe-area-top transition-all hover:bg-background/60">
+      <div className="flex items-center gap-4">
         {!isDashboard ? (
           <button 
             onClick={() => navigate(-1)} 
-            className="p-2 sm:p-3 bg-foreground text-primary rounded-2xl flex items-center gap-2 pr-4 sm:pr-5 shadow-xl active:scale-95 transition-transform"
+            className="p-3 bg-foreground text-background rounded-full flex items-center gap-3 px-6 shadow-2xl active:scale-95 transition-all hover:bg-primary hover:text-primary-foreground group"
           >
-            <Icons.ArrowDown className="w-4 h-4 sm:w-5 sm:h-5 rotate-90" />
-            <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest">Voltar</span>
+            <Icons.ArrowDown className="w-4 h-4 rotate-90 group-hover:-translate-x-1 transition-transform" />
+            <span className="text-[10px] font-black uppercase tracking-widest">Retornar</span>
           </button>
         ) : (
           <button 
             onClick={onOpenSidebar} 
-            className="lg:hidden p-2 text-foreground active:bg-muted rounded-full transition-colors"
+            className="lg:hidden p-3 bg-muted text-foreground active:bg-primary rounded-full transition-all hover:scale-110"
           >
             <Icons.Menu className="w-6 h-6" />
           </button>
         )}
         {isDashboard && (
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-10">
             <div className="flex items-center gap-3 ml-2 cursor-pointer group" onClick={() => navigate(AppRoute.DASHBOARD)}>
-              <Logo className="w-9 h-9" />
-              <span className="text-sm font-serif font-black uppercase tracking-[0.2em] text-foreground group-hover:text-primary transition-colors">Cathedra</span>
+              <div className="p-1.5 bg-primary/10 rounded-xl group-hover:bg-primary/20 transition-all group-hover:scale-110">
+                <Logo className="w-8 h-8" />
+              </div>
+              <span className="text-xl md:text-2xl font-serif font-black uppercase tracking-[0.25em] text-foreground group-hover:text-primary transition-all">Cathedra</span>
             </div>
             
             <nav className="hidden xl:flex items-center gap-6 border-l border-border pl-6">

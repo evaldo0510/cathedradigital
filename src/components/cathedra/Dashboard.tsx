@@ -77,18 +77,18 @@ interface RowCardProps {
 const RowCard: React.FC<RowCardProps> = ({ image, title, subtitle, onClick, wide, icon }) => (
   <motion.button
     onClick={onClick}
-    whileHover={{ scale: 1.05, zIndex: 20 }}
+    whileHover={{ scale: 1.05, y: -8 }}
     whileTap={{ scale: 0.97 }}
-    className={`relative shrink-0 snap-start rounded-xl overflow-hidden group cursor-pointer shadow-lg hover:shadow-2xl transition-shadow ${
-      wide ? 'w-72 md:w-80 h-44 md:h-48' : 'w-40 md:w-48 h-56 md:h-64'
+    className={`relative shrink-0 snap-start rounded-[2rem] overflow-hidden group cursor-pointer shadow-2xl hover:shadow-primary/20 transition-all duration-500 ring-1 ring-border/5 hover:ring-primary/40 ${
+      wide ? 'w-[320px] md:w-[400px] h-48 md:h-56' : 'w-44 md:w-56 h-64 md:h-80'
     }`}
   >
-    <img src={image} alt={title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" />
-    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-    <div className="absolute bottom-0 left-0 right-0 p-3 md:p-4 space-y-1">
-      {icon && <div className="text-primary mb-1">{icon}</div>}
-      <h3 className="text-sm md:text-base font-bold text-white leading-tight line-clamp-2">{title}</h3>
-      {subtitle && <p className="text-[10px] md:text-xs text-white/60 line-clamp-1">{subtitle}</p>}
+    <img src={image} alt={title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
+    <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent group-hover:from-primary/80 transition-colors duration-500" />
+    <div className="absolute bottom-0 left-0 right-0 p-5 md:p-8 space-y-2 translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+      {icon && <div className="text-primary-foreground/90 mb-1 scale-110">{icon}</div>}
+      <h3 className="text-base md:text-xl font-serif font-black text-white leading-tight line-clamp-2">{title}</h3>
+      {subtitle && <p className="text-[10px] md:text-xs font-black uppercase tracking-widest text-primary/80 group-hover:text-white/80 transition-colors">{subtitle}</p>}
     </div>
   </motion.button>
 );
@@ -191,20 +191,20 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.8 }}
-              className="text-4xl sm:text-5xl md:text-8xl font-serif font-bold text-foreground leading-[1.05] tracking-tight"
+              className="text-5xl sm:text-6xl md:text-9xl font-serif font-bold text-foreground leading-[0.95] tracking-tight"
             >
-              A fé não foi feita <br />
-              <span className="text-primary italic font-light drop-shadow-sm">para confundir.</span>
+              A beleza da fé <br />
+              <span className="text-primary italic font-light drop-shadow-2xl">em cada detalhe.</span>
             </motion.h1>
 
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
-              className="text-base md:text-2xl text-muted-foreground font-serif italic max-w-xl leading-relaxed opacity-90 mx-auto md:mx-0"
+              className="text-lg md:text-3xl text-muted-foreground font-serif italic max-w-xl leading-relaxed opacity-90 mx-auto md:mx-0 border-l-2 border-primary/30 pl-6"
             >
-              "Fides Quaerens Intellectum." <br className="hidden md:block" />
-              Um santuário digital para compreender, viver e transmitir o depósito da fé.
+              "Onde está o teu tesouro, aí estará também o teu coração." <br className="hidden md:block" />
+              Um santuário digital para elevar sua alma.
             </motion.p>
 
             <motion.div
@@ -285,27 +285,48 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         </div>
       </motion.section>
 
-      {/* ═══ CONTENT ROWS ═══ */}
-      <div className="space-y-8 md:space-y-10 px-4 md:px-8 lg:px-10">
+      {/* ═══ DAILY INSPIRATION ═══ */}
+      <motion.section 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        className="px-4 md:px-12"
+      >
+        <div className="relative group bg-[#1a1a1a] dark:bg-primary/10 rounded-[3rem] p-8 md:p-12 overflow-hidden shadow-2xl">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full blur-[100px] -mr-32 -mt-32" />
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/10 rounded-full blur-[100px] -ml-32 -mb-32" />
+          
+          <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 md:gap-16">
+            <div className="flex-1 space-y-4 text-center md:text-left">
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Versículo do Dia</span>
+              <p className="text-2xl md:text-4xl font-serif font-bold text-white leading-tight italic">
+                "O Senhor é o meu pastor, nada me faltará. Em verdes pastagens me faz repousar."
+              </p>
+              <div className="flex items-center justify-center md:justify-start gap-4 pt-2">
+                <span className="text-xs font-black uppercase tracking-widest text-primary/80">Salmo 23, 1</span>
+                <button className="p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors">
+                  <Icons.Heart className="w-4 h-4 text-white" />
+                </button>
+              </div>
+            </div>
+            
+            <div className="flex-shrink-0 flex items-center gap-4">
+              <button 
+                onClick={() => navigate(AppRoute.BIBLE)}
+                className="px-8 py-4 bg-primary text-primary-foreground rounded-2xl font-black uppercase text-xs tracking-widest hover:scale-105 transition-all shadow-xl shadow-primary/20"
+              >
+                Ler na Bíblia
+              </button>
+            </div>
+          </div>
+        </div>
+      </motion.section>
 
-        {/* Row: Continue assistindo (only if logged in and has history) */}
-        {user && history.length > 0 && (
-          <ContentRow title="Continue de onde parou">
-            {history.map(entry => (
-              <RowCard
-                key={entry.id}
-                image={entry.image_url || sectionBible}
-                title={entry.title}
-                subtitle={new Date(entry.visited_at).toLocaleDateString('pt-BR', { day: 'numeric', month: 'short' })}
-                onClick={() => navigate(entry.route)}
-                wide
-              />
-            ))}
-          </ContentRow>
-        )}
+      {/* ═══ CONTENT ROWS ═══ */}
+      <div className="space-y-12 md:space-y-20 px-4 md:px-8 lg:px-10">
+
 
         {/* Row: Fundamentos */}
-        <ContentRow title="Comece pelo essencial" onSeeAll={() => navigate(AppRoute.TRILHAS)}>
+        <ContentRow title="Os Pilares da Fé" onSeeAll={() => navigate(AppRoute.TRILHAS)}>
           {fundamentos.map(item => (
             <RowCard
               key={item.title}
@@ -316,29 +337,40 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             />
           ))}
         </ContentRow>
-        
-        {/* Row: Destaques e Parcerias */}
-        <ContentRow title="Destaques">
-          <RowCard
-            image="https://images.unsplash.com/photo-1519750783826-e2420f4d687f?auto=format&fit=crop&q=80&w=800"
-            title="Rosário da Madrugada"
-            subtitle="Frei Gilson - Todos os dias às 4:00 AM"
-            onClick={() => window.open('https://www.youtube.com/@FreiGilsonSomdoMonte', '_blank')}
-            wide
-            icon={<Icons.Youtube className="w-4 h-4" />}
-          />
-          <RowCard
-            image="https://images.unsplash.com/photo-1445445290350-18a3b86e0b5a?auto=format&fit=crop&q=80&w=800"
-            title="Som do Monte"
-            subtitle="Vida de Oração e Música"
-            onClick={() => window.open('https://www.youtube.com/@FreiGilsonSomdoMonte', '_blank')}
-            wide
-            icon={<Icons.Heart className="w-4 h-4" />}
-          />
-        </ContentRow>
+
+        {/* ═══ GRID: THEOLOGICAL SPOTLIGHT ═══ */}
+        <section className="space-y-8">
+          <div className="flex items-center justify-between px-2">
+            <div className="space-y-1">
+              <h2 className="text-3xl md:text-5xl font-serif font-black text-foreground tracking-tight">O Magistério Sagrado</h2>
+              <p className="text-xs font-black uppercase tracking-[0.3em] text-primary/60">Conhecimento que Transforma</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              { title: 'Suma Teológica', subtitle: 'A obra de São Tomás de Aquino', image: 'https://images.unsplash.com/photo-1548610762-656391d1ad4d?auto=format&fit=crop&q=80&w=800', route: AppRoute.AQUINAS_OPERA },
+              { title: 'Dogmas de Fé', subtitle: 'Verdades imutáveis reveladas', image: 'https://images.unsplash.com/photo-1519750783826-e2420f4d687f?auto=format&fit=crop&q=80&w=800', route: AppRoute.DOGMAS },
+              { title: 'Vidas dos Santos', subtitle: 'Modelos de perfeição cristã', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=800', route: AppRoute.SAINTS },
+            ].map(item => (
+              <motion.button
+                key={item.title}
+                onClick={() => navigate(item.route)}
+                whileHover={{ scale: 1.05, y: -12 }}
+                whileTap={{ scale: 0.98 }}
+                className="relative h-80 rounded-[3rem] overflow-hidden group shadow-2xl transition-all duration-500 ring-1 ring-border/5 hover:ring-primary/40"
+              >
+                <img src={item.image} alt={item.title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent group-hover:from-primary/80 transition-colors duration-500" />
+                <div className="absolute bottom-0 left-0 p-8 space-y-3 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                  <h3 className="text-3xl font-serif font-black text-white leading-tight">{item.title}</h3>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-primary/80 group-hover:text-white transition-colors">{item.subtitle}</p>
+                </div>
+              </motion.button>
+            ))}
+          </div>
+        </section>
 
         {/* Row: Estudo */}
-
         <ContentRow title="Estudo e Formação" onSeeAll={() => navigate(AppRoute.MAGISTERIUM)}>
           {estudo.map(item => (
             <RowCard
