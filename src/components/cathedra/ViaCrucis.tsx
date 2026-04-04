@@ -1,5 +1,16 @@
 import React, { useState } from 'react';
-import { Icons } from '../../constants';
+import { 
+  Cross, 
+  ArrowLeft, 
+  ChevronRight, 
+  Play, 
+  MessageSquare, 
+  BookOpen, 
+  Flame, 
+  Sparkles, 
+  Activity,
+  ChevronLeft
+} from 'lucide-react';
 
 const STATIONS = [
   { num: 1, title: 'Jesus é condenado à morte', scripture: 'Mt 27,22-26', meditation: 'Pilatos lava as mãos. O Inocente é entregue à morte por nossos pecados. Quantas vezes condenamos o próximo com nossos julgamentos?', prayer: 'Senhor Jesus, ajudai-me a nunca condenar injustamente o meu próximo, mas a aceitar com humildade as provações da vida.' },
@@ -24,31 +35,35 @@ const ViaCrucis: React.FC = () => {
 
   if (!isJourney) {
     return (
-      <div className="max-w-5xl mx-auto space-y-8">
-        <div className="text-center space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
-            <Icons.Cross className="w-4 h-4 text-primary" />
-            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Via Dolorosa</span>
+      <div className="max-w-5xl mx-auto space-y-12 pb-12">
+        <div className="text-center space-y-4 pt-4">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/5 border border-primary/10 rounded-full">
+            <Cross className="w-4 h-4 text-primary" />
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Via Dolorosa</span>
           </div>
-          <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Via Crucis</h1>
-          <p className="text-muted-foreground font-serif italic">As 14 Estações da Via Sacra — meditação e oração.</p>
+          <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground tracking-tight">Via Crucis</h1>
+          <p className="text-lg text-muted-foreground font-serif italic max-w-2xl mx-auto">"Se alguém quer vir após mim, negue-se a si mesmo, tome sua cruz e siga-me."</p>
         </div>
 
-        <div className="text-center">
-          <button onClick={() => setIsJourney(true)} className="px-8 py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all">
-            Iniciar Via Sacra
+        <div className="flex justify-center">
+          <button onClick={() => setIsJourney(true)} 
+            className="group px-10 py-5 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] shadow-xl hover:bg-primary hover:text-primary-foreground transition-all active:scale-95 flex items-center gap-3">
+            <Play className="w-4 h-4 fill-current" /> Iniciar Via Sacra
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {STATIONS.map((s, i) => (
             <button key={i} onClick={() => { setCurrentStation(i); setIsJourney(true); }}
-              className="text-left p-5 rounded-2xl bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group">
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-xl bg-foreground text-background flex items-center justify-center font-black text-sm shrink-0">{s.num}</div>
+              className="text-left p-6 rounded-3xl bg-card border border-border hover:border-primary/40 hover:shadow-xl hover:-translate-y-1 transition-all group relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-6 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity">
+                <Cross className="w-32 h-32 -mr-8 -mt-8 rotate-12" />
+              </div>
+              <div className="relative z-10 flex items-center gap-5">
+                <div className="w-12 h-12 rounded-2xl bg-primary/5 text-primary flex items-center justify-center font-black text-lg shrink-0 border border-primary/10 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">{s.num}</div>
                 <div>
-                  <p className="font-serif font-bold text-foreground group-hover:text-primary transition-colors">{s.title}</p>
-                  <p className="text-[10px] text-muted-foreground mt-0.5">{s.scripture}</p>
+                  <p className="font-serif font-bold text-lg text-foreground group-hover:text-primary transition-colors leading-tight">{s.title}</p>
+                  <p className="text-[10px] text-muted-foreground mt-1 uppercase tracking-widest font-black opacity-60">{s.scripture}</p>
                 </div>
               </div>
             </button>
@@ -61,64 +76,87 @@ const ViaCrucis: React.FC = () => {
   const station = STATIONS[currentStation];
 
   return (
-    <div className="max-w-3xl mx-auto space-y-8">
+    <div className="max-w-4xl mx-auto space-y-10 pb-12 animate-in fade-in duration-700">
       {/* Navigation */}
-      <div className="flex items-center justify-between">
-        <button onClick={() => setIsJourney(false)} className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all">
-          <Icons.ArrowDown className="w-5 h-5 rotate-90 text-foreground" />
+      <div className="flex items-center justify-between px-2">
+        <button onClick={() => setIsJourney(false)} className="p-3 rounded-2xl bg-card border border-border hover:bg-primary/5 transition-all active:scale-95 shadow-sm flex items-center gap-2">
+          <ArrowLeft className="w-5 h-5 text-foreground" />
+          <span className="text-[10px] font-black uppercase tracking-widest hidden md:block">Voltar</span>
         </button>
-        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-          Estação {currentStation + 1} de 14
-        </span>
-        <div className="w-9" />
+        <div className="text-center">
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60 mb-1">Via Sacra</p>
+          <span className="text-sm font-serif font-bold text-foreground">
+            Estação {currentStation + 1} de 14
+          </span>
+        </div>
+        <div className="w-14" />
       </div>
 
       {/* Progress */}
-      <div className="flex gap-1">
+      <div className="flex gap-1.5 px-2">
         {STATIONS.map((_, i) => (
-          <div key={i} className={`flex-1 h-1 rounded-full transition-all ${i <= currentStation ? 'bg-primary' : 'bg-border'}`} />
+          <div key={i} className={`flex-1 h-1.5 rounded-full transition-all duration-500 ${i <= currentStation ? 'bg-primary shadow-[0_0_8px_rgba(var(--primary),0.3)]' : 'bg-border'}`} />
         ))}
       </div>
 
       {/* Station content */}
-      <div className="bg-card border border-border rounded-3xl p-8 md:p-12 space-y-8">
-        <div className="text-center space-y-3 pb-6 border-b border-border">
-          <div className="w-16 h-16 rounded-2xl bg-foreground text-background flex items-center justify-center font-black text-2xl mx-auto">{station.num}</div>
-          <h2 className="text-2xl md:text-3xl font-serif font-bold text-foreground">{station.title}</h2>
-          <p className="text-sm text-primary font-bold">{station.scripture}</p>
+      <div className="bg-card border border-border rounded-[3rem] p-8 md:p-16 space-y-12 shadow-2xl shadow-black/[0.02] relative overflow-hidden">
+        <div className="absolute top-0 right-0 p-12 opacity-[0.02]">
+          <Cross className="w-64 h-64 -mr-16 -mt-16 rotate-12" />
+        </div>
+        
+        <div className="relative text-center space-y-6">
+          <div className="w-20 h-20 rounded-[2rem] bg-foreground text-background flex items-center justify-center font-black text-3xl mx-auto shadow-xl border-4 border-background">{station.num}</div>
+          <div className="space-y-2">
+            <h2 className="text-3xl md:text-5xl font-serif font-bold text-foreground tracking-tight">{station.title}</h2>
+            <p className="text-sm text-primary font-bold uppercase tracking-widest flex items-center justify-center gap-2">
+              <BookOpen className="w-4 h-4" /> {station.scripture}
+            </p>
+          </div>
         </div>
 
-        <div className="space-y-6">
-          <div>
-            <h3 className="text-[10px] font-black uppercase tracking-widest text-primary mb-3">Meditação</h3>
-            <p className="text-foreground/90 leading-relaxed font-serif">{station.meditation}</p>
+        <div className="relative space-y-12 max-w-2xl mx-auto">
+          <div className="space-y-4">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/40 text-center">Meditação</h3>
+            <p className="text-xl md:text-2xl text-foreground/90 leading-relaxed font-serif text-center italic">"{station.meditation}"</p>
           </div>
-          <div className="bg-muted rounded-2xl p-6">
-            <h3 className="text-[10px] font-black uppercase tracking-widest text-primary mb-3">Oração</h3>
-            <p className="text-foreground/80 leading-relaxed font-serif italic">{station.prayer}</p>
+          
+          <div className="bg-primary/5 rounded-[2.5rem] p-8 md:p-12 border border-primary/10 relative">
+            <Flame className="absolute -top-3 -right-3 w-8 h-8 text-primary/20 rotate-12" />
+            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/40 text-center mb-6">Oração</h3>
+            <p className="text-lg text-foreground/80 leading-relaxed font-serif text-center">{station.prayer}</p>
           </div>
-          <div className="text-center text-sm text-muted-foreground font-serif">
-            <p className="font-bold">V. Adoramus te, Christe, et benedicimus tibi.</p>
-            <p className="italic">R. Quia per sanctam Crucem tuam redemisti mundum.</p>
+          
+          <div className="text-center space-y-2 pt-4 opacity-60">
+            <p className="text-sm font-serif font-bold text-foreground">V. Adoramus te, Christe, et benedicimus tibi.</p>
+            <p className="text-sm font-serif italic text-muted-foreground">R. Quia per sanctam Crucem tuam redemisti mundum.</p>
           </div>
         </div>
       </div>
 
       {/* Nav buttons */}
-      <div className="flex gap-3 justify-center">
-        <button disabled={currentStation <= 0} onClick={() => setCurrentStation(currentStation - 1)}
-          className="px-6 py-3 rounded-xl bg-card border border-border text-sm font-bold disabled:opacity-30 hover:bg-primary/10 transition-all">
-          ← Anterior
+      <div className="flex gap-4 justify-center px-4">
+        <button 
+          disabled={currentStation <= 0} 
+          onClick={() => setCurrentStation(currentStation - 1)}
+          className="flex-1 max-w-[200px] h-14 rounded-2xl bg-card border border-border text-[10px] font-black uppercase tracking-widest disabled:opacity-20 hover:bg-primary/5 transition-all flex items-center justify-center gap-2 group shadow-sm"
+        >
+          <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Anterior
         </button>
+        
         {currentStation < STATIONS.length - 1 ? (
-          <button onClick={() => setCurrentStation(currentStation + 1)}
-            className="px-6 py-3 rounded-xl bg-foreground text-background text-sm font-bold hover:bg-primary hover:text-primary-foreground transition-all">
-            Próxima Estação →
+          <button 
+            onClick={() => setCurrentStation(currentStation + 1)}
+            className="flex-1 max-w-[200px] h-14 rounded-2xl bg-foreground text-background text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-2 group shadow-xl"
+          >
+            Próxima <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </button>
         ) : (
-          <button onClick={() => setIsJourney(false)}
-            className="px-6 py-3 rounded-xl bg-primary text-primary-foreground text-sm font-bold hover:opacity-90 transition-all">
-            ✝ Concluir Via Sacra
+          <button 
+            onClick={() => setIsJourney(false)}
+            className="flex-1 max-w-[200px] h-14 rounded-2xl bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-2 group shadow-xl shadow-primary/20"
+          >
+            ✝ Concluir
           </button>
         )}
       </div>
