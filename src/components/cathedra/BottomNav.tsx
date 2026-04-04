@@ -14,20 +14,22 @@ interface BottomNavItemProps {
 const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon, isActive, onClick }) => (
   <button 
     onClick={onClick}
-    className={`flex flex-col items-center justify-center gap-1.5 flex-1 py-2.5 transition-all relative ${
-      isActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+    className={`flex flex-col items-center justify-center gap-1 sm:gap-1.5 flex-1 py-3 transition-all relative tap-highlight-transparent touch-manipulation ${
+      isActive ? 'text-primary' : 'text-muted-foreground active:text-foreground'
     }`}
   >
-    <div className={`transition-transform duration-300 ${isActive ? 'scale-110 -translate-y-0.5' : ''}`}>
-      {icon}
+    <div className={`transition-all duration-300 ${isActive ? 'scale-110 -translate-y-0.5' : 'active:scale-90'}`}>
+      {React.cloneElement(icon as React.ReactElement, { 
+        className: `w-5 h-5 sm:w-6 sm:h-6 ${isActive ? 'drop-shadow-[0_0_8px_rgba(255,215,0,0.4)]' : ''}` 
+      })}
     </div>
-    <span className={`text-[9px] font-black uppercase tracking-widest transition-opacity ${
+    <span className={`text-[8px] sm:text-[9px] font-black uppercase tracking-[0.15em] transition-opacity leading-none ${
       isActive ? 'opacity-100' : 'opacity-60'
     }`}>
       {label}
     </span>
     {isActive && (
-      <div className="absolute -top-px left-1/2 -translate-x-1/2 w-8 h-0.5 bg-primary rounded-full shadow-[0_0_10px_rgba(255,215,0,0.5)]" />
+      <div className="absolute top-1 left-1/2 -translate-x-1/2 w-6 h-0.5 bg-primary rounded-full shadow-[0_0_10px_rgba(255,215,0,0.5)]" />
     )}
   </button>
 );
