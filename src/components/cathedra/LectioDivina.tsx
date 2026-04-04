@@ -197,7 +197,7 @@ const LectioDivina: React.FC = () => {
     <div className="max-w-3xl mx-auto space-y-6">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <button onClick={() => setCurrentStep('intro')} className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all">
+        <button onClick={() => { setCurrentStep('intro'); setBibleText([]); }} className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all">
           <Icons.ArrowDown className="w-5 h-5 rotate-90 text-foreground" />
         </button>
         <div className="flex-1">
