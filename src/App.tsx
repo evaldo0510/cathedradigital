@@ -175,6 +175,7 @@ const AppLayout: React.FC = () => {
                 <Route path={AppRoute.COMMUNITY} element={<CommunityPage />} />
                 <Route path={AppRoute.PROFILE} element={<ProfilePage />} />
                 <Route path={AppRoute.POENITENTIA} element={<PoenitentiaPage />} />
+                <Route path={AppRoute.GLOSSARY} element={<GlossaryPage />} />
                 <Route path={AppRoute.ORDO_MISSAE} element={<MissalPage />} />
                 <Route path={AppRoute.PRAYERS} element={<PrayerPage />} />
                 <Route path={AppRoute.DIAGNOSTICS} element={<DiagnosticsPage />} />
