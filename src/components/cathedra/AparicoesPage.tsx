@@ -236,23 +236,20 @@ const AparicoesPage: React.FC = () => {
           >
             <img src={apparition.imageSrc} alt={apparition.title} className="w-full h-40 object-cover" loading="lazy" />
             <div className="p-5">
-          >
-            <div className="flex items-start justify-between mb-4">
-              <div>
+              <div className="mb-3">
                 <span className="text-[10px] font-black text-primary uppercase tracking-widest">{apparition.country} • {apparition.year}</span>
                 <h2 className="text-lg md:text-xl font-serif font-bold text-foreground mt-1 group-hover:text-primary transition-colors">
                   {apparition.title}
                 </h2>
               </div>
-              <span className="text-3xl">{apparition.image}</span>
-            </div>
-            <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{apparition.summary}</p>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <Icons.Users className="w-3.5 h-3.5" />
-                <span className="text-[10px] font-bold">{apparition.seer.split(',')[0]}</span>
+              <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{apparition.summary}</p>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Icons.Users className="w-3.5 h-3.5" />
+                  <span className="text-[10px] font-bold">{apparition.seer.split(',')[0]}</span>
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-widest text-primary">Ler com profundidade →</span>
               </div>
-              <span className="text-[10px] font-black uppercase tracking-widest text-primary">Ler com profundidade →</span>
             </div>
           </motion.button>
         ))}
