@@ -1,7 +1,8 @@
 export type Language = 'pt' | 'en' | 'es' | 'la' | 'it' | 'fr' | 'de';
 
 export enum AppRoute {
-  DASHBOARD = '/',
+  HOME = '/',
+  DASHBOARD = '/dashboard',
   STUDY_MODE = '/study',
   BIBLE = '/bible',
   CATECHISM = '/catechism',
