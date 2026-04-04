@@ -107,7 +107,7 @@ const Footer: React.FC = React.memo(() => {
 
       <div className="max-w-7xl mx-auto relative z-10 space-y-12">
         {/* TOP SECTION: BRAND & NEWSLETTER */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 pb-20 border-b border-white/5">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pb-12 border-b border-white/5">
           <div className="lg:col-span-5 space-y-8">
             <div className="flex items-center gap-5">
               <Logo className="w-16 h-16 border border-white/10 p-2.5 rounded-2xl bg-white/5 shadow-2xl backdrop-blur-sm" />
