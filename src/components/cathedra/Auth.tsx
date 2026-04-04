@@ -45,8 +45,6 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
           else onSuccess();
         }
       }
-        setMode('login');
-      }
     } else {
       const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
       if (signInError) {
