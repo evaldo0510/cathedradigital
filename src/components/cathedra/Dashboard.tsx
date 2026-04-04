@@ -276,7 +276,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
 
               <button 
                 onClick={() => navigate(AppRoute.DAILY_LITURGY)}
-                className="w-full py-3 bg-foreground text-background rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-primary hover:text-primary-foreground transition-all shadow-lg"
+                className="w-full py-4 bg-foreground text-background rounded-2xl text-xs font-black uppercase tracking-[0.2em] hover:bg-primary hover:text-primary-foreground transition-all shadow-lg"
               >
                 Acessar Liturgia
               </button>
