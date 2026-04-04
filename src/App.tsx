@@ -126,7 +126,7 @@ const AppLayout: React.FC = () => {
             onOpenSidebar={() => setIsSidebarOpen(true)}
             onSignOut={signOut}
           />
-          <div className="flex-1 p-3 sm:p-4 md:p-8 lg:p-10 pb-32 w-full max-w-6xl mx-auto">
+          <div className="flex-1 p-3 sm:p-4 md:p-8 lg:p-10 pb-32 w-full max-w-5xl mx-auto">
             <Suspense fallback={<LoadingFallback />}>
               <Routes location={location}>
                 <Route path={AppRoute.DASHBOARD} element={<Dashboard user={appUser} />} />

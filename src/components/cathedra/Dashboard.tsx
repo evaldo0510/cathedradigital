@@ -80,7 +80,7 @@ const RowCard: React.FC<RowCardProps> = ({ image, title, subtitle, onClick, wide
     whileHover={{ scale: 1.05, y: -8 }}
     whileTap={{ scale: 0.97 }}
     className={`relative shrink-0 snap-start rounded-[2rem] overflow-hidden group cursor-pointer shadow-2xl hover:shadow-primary/20 transition-all duration-500 ring-1 ring-border/5 hover:ring-primary/40 ${
-      wide ? 'w-[320px] md:w-[400px] h-48 md:h-56' : 'w-44 md:w-56 h-64 md:h-80'
+      wide ? 'w-[280px] md:w-[340px] h-40 md:h-48' : 'w-40 md:w-48 h-56 md:h-72'
     }`}
   >
     <img src={image} alt={title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
@@ -162,7 +162,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.2 }}
-        className="relative min-h-[70vh] md:h-[85vh] flex items-center overflow-hidden touch-none"
+        className="relative min-h-[60vh] md:h-[70vh] flex items-center overflow-hidden touch-none"
       >
         <SacredImage
           src="https://images.unsplash.com/photo-1548610762-656391d1ad4d?auto=format&fit=crop&q=80&w=1920"
@@ -191,7 +191,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.8 }}
-              className="text-4xl sm:text-6xl md:text-8xl font-serif font-bold text-foreground leading-[0.95] tracking-tight"
+              className="text-4xl sm:text-5xl md:text-6xl font-serif font-bold text-foreground leading-[0.95] tracking-tight"
             >
               A beleza da fé <br />
               <span className="text-primary italic font-light drop-shadow-2xl">em cada detalhe.</span>
@@ -201,7 +201,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
-              className="text-xl md:text-3xl text-muted-foreground font-serif italic max-w-xl leading-relaxed opacity-90 mx-auto md:mx-0 border-l-2 border-primary/30 pl-6"
+              className="text-lg md:text-xl text-muted-foreground font-serif italic max-w-xl leading-relaxed opacity-90 mx-auto md:mx-0 border-l-2 border-primary/30 pl-6"
             >
               "Onde está o teu tesouro, aí estará também o teu coração." <br className="hidden md:block" />
               Um santuário digital para elevar sua alma.
