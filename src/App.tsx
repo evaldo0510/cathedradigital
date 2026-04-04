@@ -123,27 +123,38 @@ const AppLayout: React.FC = () => {
       <CommandCenter />
       <OfflineIndicator />
       <div className="flex h-[100dvh] w-full overflow-hidden bg-background selection:bg-primary/20">
-        <div className={`fixed inset-0 z-[150] lg:relative lg:block transition-all ${isSidebarOpen ? 'opacity-100' : 'pointer-events-none lg:pointer-events-auto opacity-0 lg:opacity-100'}`}>
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm lg:hidden" onClick={() => setIsSidebarOpen(false)} />
-          <div className={`relative h-full w-72 transition-transform duration-500 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
-            <CathedralSidebar 
-              onClose={() => setIsSidebarOpen(false)} 
-              user={appUser} 
-              isDark={isDark}
-              onToggleDark={() => setIsDark(!isDark)}
-              onSignOut={signOut}
-            />
-          </div>
-        </div>
+        <AnimatePresence>
+          {(!pathname === AppRoute.HOME || user) && (
+            <motion.div 
+              initial={{ opacity: 0, x: -300 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -300 }}
+              className={`fixed inset-0 z-[150] lg:relative lg:block transition-all ${isSidebarOpen ? 'opacity-100' : 'pointer-events-none lg:pointer-events-auto opacity-0 lg:opacity-100'}`}
+            >
+              <div className="absolute inset-0 bg-black/60 backdrop-blur-sm lg:hidden" onClick={() => setIsSidebarOpen(false)} />
+              <div className={`relative h-full w-72 transition-transform duration-500 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
+                <CathedralSidebar 
+                  onClose={() => setIsSidebarOpen(false)} 
+                  user={appUser} 
+                  isDark={isDark}
+                  onToggleDark={() => setIsDark(!isDark)}
+                  onSignOut={signOut}
+                />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <main id="main-content" className="flex-1 overflow-y-auto flex flex-col relative custom-scrollbar overscroll-auto touch-pan-y scroll-smooth">
-          <AppHeader
-            user={user}
-            isDark={isDark}
-            onToggleDark={() => setIsDark(!isDark)}
-            onOpenSidebar={() => setIsSidebarOpen(true)}
-            onSignOut={signOut}
-          />
+          {(!pathname === AppRoute.HOME || user) && (
+            <AppHeader
+              user={user}
+              isDark={isDark}
+              onToggleDark={() => setIsDark(!isDark)}
+              onOpenSidebar={() => setIsSidebarOpen(true)}
+              onSignOut={signOut}
+            />
+          )}
           <div className="flex-1 p-3 sm:p-4 md:p-5 lg:p-6 pb-32 lg:pb-12 w-full max-w-6xl mx-auto">
             <Suspense fallback={<LoadingFallback />}>
               <Routes location={location}>
