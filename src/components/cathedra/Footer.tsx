@@ -161,36 +161,15 @@ const Footer: React.FC = React.memo(() => {
           </div>
 
         {/* MIDDLE SECTION: MISSION & SITEMAP */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 mb-12">
-          {/* Mission/Vision/Values Group */}
-          <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-10">
-            <div className="space-y-6">
-              <div className="flex items-center gap-3 text-primary">
-                <div className="p-2 rounded-lg bg-primary/10">
-                  <Icons.Star className="w-4 h-4 fill-current" />
-                </div>
-                <h4 className="text-[11px] font-black uppercase tracking-[0.3em]">Nossa Missão</h4>
-              </div>
-              <p className="text-sm font-serif italic text-zinc-500 leading-relaxed border-l-2 border-primary/20 pl-4">
-                "Propagar o Depósito da Fé através da síntese entre a Tradição e a tecnologia, iluminando a inteligência dos fiéis."
-              </p>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
+          <div className="lg:col-span-3 space-y-4">
+            <div className="flex items-center gap-2 text-primary">
+              <Icons.Star className="w-3 h-3 fill-current" />
+              <h4 className="text-[10px] font-black uppercase tracking-[0.2em]">Missão</h4>
             </div>
-            <div className="space-y-6">
-              <div className="flex items-center gap-3 text-accent">
-                <div className="p-2 rounded-lg bg-accent/10">
-                  <Icons.Cross className="w-4 h-4" />
-                </div>
-                <h4 className="text-[11px] font-black uppercase tracking-[0.3em]">Nossos Valores</h4>
-              </div>
-              <ul className="space-y-3">
-                {['Fidelidade ao Magistério', 'Rigor Intelectual', 'Caridade na Verdade'].map(v => (
-                  <li key={v} className="flex items-center gap-3 text-xs font-medium text-zinc-500">
-                    <div className="w-1.5 h-1.5 rounded-full bg-accent/40" />
-                    {v}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <p className="text-xs font-serif italic text-zinc-500 leading-relaxed border-l border-primary/20 pl-3">
+              "Propagar o Depósito da Fé através da síntese entre a Tradição e a tecnologia."
+            </p>
           </div>
 
           {/* Navigation links columns */}
