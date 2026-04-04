@@ -135,8 +135,15 @@ const CommandCenter: React.FC = () => {
       }
       if (e.key === 'Escape') setIsOpen(false);
     };
+
+    const openHandler = () => setIsOpen(true);
+
     window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
+    window.addEventListener('open-command-center', openHandler);
+    return () => {
+      window.removeEventListener('keydown', handler);
+      window.removeEventListener('open-command-center', openHandler);
+    };
   }, []);
 
   useEffect(() => {
