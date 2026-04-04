@@ -113,7 +113,7 @@ const AppLayout: React.FC = () => {
         </div>
 
         {/* Main content */}
-        <main id="main-content" className="flex-1 overflow-y-auto flex flex-col relative custom-scrollbar">
+        <main id="main-content" className="flex-1 overflow-y-auto flex flex-col relative custom-scrollbar overscroll-contain touch-pan-y scroll-smooth">
           <AppHeader
             user={user}
             isDark={isDark}
@@ -121,7 +121,7 @@ const AppLayout: React.FC = () => {
             onOpenSidebar={() => setIsSidebarOpen(true)}
             onSignOut={signOut}
           />
-          <div className="flex-1 p-4 md:p-8 lg:p-10 pb-20 w-full max-w-6xl mx-auto page-enter">
+          <div className="flex-1 p-3 sm:p-4 md:p-8 lg:p-10 pb-32 w-full max-w-6xl mx-auto page-enter">
             <Suspense fallback={<LoadingFallback />}>
               <AnimatePresence mode="wait" initial={false}>
                 <PageTransition key={location.pathname}>
