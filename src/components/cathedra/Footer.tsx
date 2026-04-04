@@ -322,9 +322,18 @@ const Footer: React.FC = React.memo(() => {
               © {new Date().getFullYear()} CATHEDRA DIGITAL • AD MAIOREM DEI GLORIAM
             </p>
             <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
-              {['Termos', 'Privacidade', 'Manifesto', 'Suporte'].map((item) => (
-                <button key={item} className="text-[10px] text-zinc-500 font-bold uppercase hover:text-white transition-colors tracking-wide">
-                  {item}
+              {[
+                { label: 'Termos', route: AppRoute.ABOUT },
+                { label: 'Privacidade', route: AppRoute.ABOUT },
+                { label: 'Manifesto', route: AppRoute.ABOUT },
+                { label: 'Suporte', route: AppRoute.ABOUT }
+              ].map((item) => (
+                <button 
+                  key={item.label} 
+                  onClick={() => navigate(item.route)}
+                  className="text-[10px] text-zinc-500 font-bold uppercase hover:text-white transition-colors tracking-wide"
+                >
+                  {item.label}
                 </button>
               ))}
             </div>
