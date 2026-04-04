@@ -117,6 +117,7 @@ export const CatechismModal: React.FC<QuickModalProps> = ({ isOpen, onClose }) =
 
 // ─── Documents Modal ───
 export const DocumentsModal: React.FC<QuickModalProps> = ({ isOpen, onClose }) => {
+  const navigate = useNavigate();
   const [query, setQuery] = useState('');
 
   const DOCS = [
