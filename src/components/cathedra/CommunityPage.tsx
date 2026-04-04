@@ -129,7 +129,7 @@ const CommunityPage: React.FC = () => {
       const { data: profiles } = await supabase
         .from('public_profiles' as any)
         .select('id, name')
-        .in('id', userIds);
+        .in('id', userIds) as { data: { id: string; name: string }[] | null };
 
       const profileMap = new Map(profiles?.map(p => [p.id, p.name]) || []);
 
