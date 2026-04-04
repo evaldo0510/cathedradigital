@@ -322,6 +322,27 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           ))}
         </ContentRow>
 
+        {/* ═══ SPEED HIGHLIGHT ═══ */}
+        <section className="relative overflow-hidden rounded-2xl bg-yellow-500/5 border border-yellow-500/10 p-6 md:p-10">
+          <div className="flex flex-col md:flex-row items-center gap-6 md:gap-10">
+            <div className="relative w-24 h-24 md:w-32 md:h-32 shrink-0">
+              <div className="absolute inset-0 bg-yellow-500/20 rounded-full animate-pulse" />
+              <div className="relative z-10 w-full h-full flex items-center justify-center bg-yellow-500/10 rounded-full border-2 border-yellow-500 shadow-xl">
+                <Icons.Zap className="w-12 h-12 text-yellow-600 opacity-50" />
+              </div>
+            </div>
+            <div className="flex-1 text-center md:text-left space-y-3">
+              <div className="inline-flex items-center gap-2 px-2 py-0.5 bg-yellow-500/10 rounded-full text-[10px] font-bold uppercase tracking-wider text-yellow-700">
+                Performance
+              </div>
+              <h2 className="text-xl md:text-3xl font-serif font-bold text-foreground">CARREGAMENTO RÁPIDO</h2>
+              <p className="text-sm md:text-base text-muted-foreground max-w-xl">
+                O acesso aos conteúdos foi otimizado para ser instantâneo, permitindo que sua oração e estudo não sofram interrupções.
+              </p>
+            </div>
+          </div>
+        </section>
+
         {/* ═══ QUOTE ═══ */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
