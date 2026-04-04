@@ -164,8 +164,6 @@ const AppLayout: React.FC = () => {
                     } />
                     <Route path="*" element={<Dashboard user={appUser} />} />
                   </Routes>
-                </PageTransition>
-              </AnimatePresence>
             </Suspense>
           </div>
           <CathedralFooter />
