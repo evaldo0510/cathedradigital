@@ -1,0 +1,1 @@
+ALTER FUNCTION public.handle_user_visit() SET search_path = public;
