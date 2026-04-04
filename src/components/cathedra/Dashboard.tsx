@@ -268,40 +268,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           ))}
         </ContentRow>
         
-        {/* Row: Parceria em Destaque */}
-        <section className="relative overflow-hidden rounded-2xl bg-primary/5 border border-primary/10 p-6 md:p-10">
-          <div className="flex flex-col md:flex-row items-center gap-6 md:gap-10">
-            <div className="relative w-24 h-24 md:w-32 md:h-32 shrink-0">
-              <div className="absolute inset-0 bg-primary/20 rounded-full animate-pulse" />
-              <div className="relative z-10 w-full h-full flex items-center justify-center bg-primary/10 rounded-full border-2 border-primary shadow-xl">
-                <Icons.Handshake className="w-12 h-12 text-primary opacity-50" />
-              </div>
-              <div className="absolute -bottom-2 -right-2 bg-primary text-primary-foreground p-2 rounded-full shadow-lg">
-                <Icons.Handshake className="w-4 h-4 md:w-5 md:h-5" />
-              </div>
-            </div>
-            <div className="flex-1 text-center md:text-left space-y-3">
-              <div className="inline-flex items-center gap-2 px-2 py-0.5 bg-primary/10 rounded-full text-[10px] font-bold uppercase tracking-wider text-primary">
-                Novidades em Breve
-              </div>
-              <h2 className="text-xl md:text-3xl font-serif font-bold text-foreground">Nova Parceria</h2>
-              <p className="text-sm md:text-base text-muted-foreground max-w-xl">
-                Estamos preparando algo especial. Em breve traremos novidades exclusivas sobre nossas parcerias oficiais.
-              </p>
-              <div className="flex flex-wrap justify-center md:justify-start gap-3 pt-2">
-                <button 
-                  disabled
-                  className="px-5 py-2 bg-primary/50 text-primary-foreground/50 cursor-not-allowed rounded-lg text-xs font-bold uppercase tracking-widest flex items-center gap-2"
-                >
-                  <Icons.History className="w-3.5 h-3.5" />
-                  Em Breve
-                </button>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* Row: Estudo */}
+
         <ContentRow title="Estudo e Formação" onSeeAll={() => navigate(AppRoute.MAGISTERIUM)}>
           {estudo.map(item => (
             <RowCard
