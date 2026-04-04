@@ -147,42 +147,16 @@ const Footer: React.FC = React.memo(() => {
 
           {/* Links Column - CNBB */}
           <div>
-            <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-6">Igreja no Brasil</h4>
+            <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-6 flex items-center gap-2">
+              <span className="text-lg">🇧🇷</span> CNBB
+            </h4>
             <ul className="flex flex-col gap-4">
-              {cnbbLinks.map(link => (
-                <li key={link.title}>
-                  <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2 group">
-                    <span className="w-1 h-1 rounded-full bg-primary/30 group-hover:bg-primary transition-colors" />
-                    {link.title}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Newsletter / Diocese Column */}
-          <div className="flex flex-col gap-8">
+...
             <div>
-              <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-4">Sua Diocese</h4>
-              <select 
-                value={selectedDiocese}
-                onChange={(e) => handleDioceseChange(e.target.value)}
-                className="w-full bg-foreground/5 border border-foreground/10 rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors cursor-pointer appearance-none"
-              >
-                <option value="">Selecione sua Diocese</option>
-                {DIOCESES_BR.map(d => (
-                  <option key={d} value={d}>{d}</option>
-                ))}
-              </select>
-              {dioceseUrl && (
-                <a href={dioceseUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 mt-3 text-xs text-primary hover:underline">
-                  Acessar portal <Icons.ExternalLink className="w-3 h-3" />
-                </a>
-              )}
-            </div>
-
-            <div>
-              <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-4">Newsletter</h4>
+              <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-4">Boletim Informativo</h4>
+              <p className="text-xs text-muted-foreground mb-4">
+                Receba reflexões teológicas e atualizações da plataforma em seu e-mail.
+              </p>
               <form onSubmit={handleSubscribe} className="relative">
                 <input 
                   type="email" 
