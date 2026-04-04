@@ -21,7 +21,6 @@ import {
   Book,
   PenTool,
   Brain,
-  Heart,
   Sun
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
