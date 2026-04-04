@@ -329,6 +329,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               title={item.title}
               subtitle={item.subtitle}
               onClick={() => goTo(item.route, item.title, item.image)}
+              icon={(item as any).icon}
             />
           ))}
         </ContentRow>
