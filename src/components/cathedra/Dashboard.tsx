@@ -241,10 +241,10 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Hodie • Hoje</span>
+                  <div className="w-3.5 h-3.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">Hodie • Hoje</span>
                 </div>
-                <span className="text-[10px] font-black uppercase tracking-widest text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20">Tempo Comum</span>
+                <span className="text-[11px] font-black uppercase tracking-widest text-primary bg-primary/10 px-4 py-1.5 rounded-full border border-primary/20">Tempo Comum</span>
               </div>
 
               <div className="space-y-4">
