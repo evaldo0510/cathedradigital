@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../constants';
 import { AppRoute } from '../../types';
 import { supabase } from '@/integrations/supabase/client';
+import { useCatechismParagraph } from '@/hooks/useCatechismParagraph';
+
 
 interface QuickModalProps {
   isOpen: boolean;
@@ -70,21 +72,10 @@ export const BibleModal: React.FC<QuickModalProps> = ({ isOpen, onClose }) => {
 export const CatechismModal: React.FC<QuickModalProps> = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const [paragraph, setParagraph] = useState(1);
-  const [text, setText] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (!isOpen) return;
-    setLoading(true);
-    setText('');
-    supabase.functions.invoke('catechism-text', { body: { paragraph } })
-      .then(({ data, error }) => {
-        setText(error ? 'Erro ao carregar.' : data?.content || `§${paragraph} — conteúdo não disponível.`);
-        setLoading(false);
-      });
-  }, [isOpen, paragraph]);
+  const { data, isLoading, isError } = useCatechismParagraph(paragraph);
 
   if (!isOpen) return null;
+
 
   return (
     <ModalShell title="Catecismo — Consulta Rápida" onClose={onClose}>
@@ -97,9 +88,11 @@ export const CatechismModal: React.FC<QuickModalProps> = ({ isOpen, onClose }) =
           <button onClick={() => setParagraph(Math.min(2865, paragraph + 1))} className="px-2 py-1 rounded-lg border border-border text-xs">→</button>
         </div>
       </div>
-      {loading ? <LoadingSkeleton /> : (
+      {isLoading ? <LoadingSkeleton /> : (
         <div className="max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
-          <p className="font-serif text-foreground/90 leading-relaxed text-sm">{text}</p>
+          <p className="font-serif text-foreground/90 leading-relaxed text-sm">
+            {isError ? 'Erro ao carregar o parágrafo.' : data?.content}
+          </p>
         </div>
       )}
       <div className="mt-6 pt-4 border-t border-border">

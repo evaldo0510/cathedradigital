@@ -57,6 +57,13 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                 <button 
                   key={item.label} 
                   onClick={() => navigate(item.route)}
+                  onMouseEnter={() => {
+                    if (item.route === AppRoute.CATECHISM) {
+                      import('@/components/cathedra/Catechism');
+                    } else if (item.route === AppRoute.BIBLE) {
+                      import('@/components/cathedra/Bible');
+                    }
+                  }}
                   className="text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-all"
                 >
                   {item.label}
