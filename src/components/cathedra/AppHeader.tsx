@@ -66,7 +66,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                       import('@/components/cathedra/Bible');
                     }
                   }}
-                  className="text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-all"
+                  className="text-xs font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-all"
                 >
                   {item.label}
                 </button>
