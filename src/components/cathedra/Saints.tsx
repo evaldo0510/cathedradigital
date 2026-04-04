@@ -3,6 +3,11 @@ import { motion } from 'framer-motion';
 import { Icons } from '../../constants';
 import StaggeredList from './StaggeredList';
 
+interface SaintWork {
+  title: string;
+  url?: string; // URL to read online
+}
+
 interface Saint {
   id: string;
   name: string;
@@ -14,7 +19,7 @@ interface Saint {
   died: string;
   patronOf: string[];
   bio: string;
-  works: string[];
+  works: SaintWork[];
   quotes: string[];
   category: 'apostle' | 'martyr' | 'doctor' | 'virgin' | 'confessor' | 'pope' | 'founder' | 'mystic';
   image?: string;
