@@ -17,6 +17,23 @@ interface LiturgicalDay {
   weekday?: string;
 }
 
+interface Reading {
+  referencia: string;
+  titulo: string;
+  texto: string;
+}
+
+interface LiturgyReadings {
+  data: string;
+  liturgia: string;
+  cor: string;
+  dia: string;
+  primeiraLeitura: Reading;
+  salmo: { referencia: string; refrao: string; texto: string };
+  segundaLeitura?: Reading | string;
+  evangelho: Reading;
+}
+
 const SEASON_NAMES: Record<string, string> = {
   advent: 'Advento',
   christmas: 'Natal',
@@ -46,6 +63,7 @@ const PRAYERS = [
 
 const DailyLiturgy: React.FC = () => {
   const [liturgy, setLiturgy] = useState<LiturgicalDay | null>(null);
+  const [readings, setReadings] = useState<LiturgyReadings | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [tab, setTab] = useState<'liturgia' | 'oracoes'>('liturgia');
@@ -53,17 +71,33 @@ const DailyLiturgy: React.FC = () => {
   const [prayerFilter, setPrayerFilter] = useState('Todas');
 
   useEffect(() => {
-    setIsLoading(true);
-    supabase.functions.invoke('liturgical-calendar', {
-      body: { action: 'today', lang: 'la', calendar: 'general-la' }
-    }).then(({ data, error: err }) => {
-      if (err || !data) {
-        setError('Não foi possível carregar a liturgia do dia.');
-      } else {
-        setLiturgy(data);
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const [calRes, readRes] = await Promise.all([
+          supabase.functions.invoke('liturgical-calendar', {
+            body: { action: 'today', lang: 'la', calendar: 'general-la' }
+          }),
+          supabase.functions.invoke('liturgical-calendar', {
+            body: { action: 'readings' }
+          })
+        ]);
+
+        if (calRes.data) setLiturgy(calRes.data);
+        if (readRes.data) setReadings(readRes.data);
+
+        if (!calRes.data && !readRes.data) {
+          setError('Não foi possível carregar a liturgia do dia.');
+        }
+      } catch (err) {
+        console.error('Error fetching liturgy:', err);
+        setError('Erro ao carregar dados da liturgia.');
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
-    });
+    };
+
+    fetchData();
   }, []);
 
   const categories = ['Todas', ...Array.from(new Set(PRAYERS.map(p => p.category)))];
@@ -93,39 +127,118 @@ const DailyLiturgy: React.FC = () => {
       </div>
 
       {tab === 'liturgia' ? (
-        <div className="bg-card border border-border rounded-3xl p-8 md:p-12 space-y-6">
-          {isLoading ? (
-            <div className="space-y-4 py-8">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="h-6 bg-muted rounded animate-pulse" style={{ width: `${50 + Math.random() * 50}%` }} />
-              ))}
-            </div>
-          ) : error ? (
-            <p className="text-muted-foreground italic text-center py-12">{error}</p>
-          ) : liturgy ? (
-            <>
-              <div className="text-center space-y-2 pb-6 border-b border-border">
-                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">
-                  {SEASON_NAMES[liturgy.season] || liturgy.season} — Semana {liturgy.season_week}
-                </p>
-                <h2 className="text-xl font-serif font-bold text-foreground">{liturgy.date}</h2>
-              </div>
-
-              <div className="space-y-4">
-                <h3 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Celebrações</h3>
-                {liturgy.celebrations?.map((c, i) => (
-                  <div key={i} className="flex items-start gap-4 p-4 bg-muted/50 rounded-2xl border border-border">
-                    <div className={`w-4 h-4 rounded-full mt-1 shrink-0 ${COLOUR_MAP[c.colour] || 'bg-muted'}`} />
-                    <div className="flex-1">
-                      <p className="font-bold text-foreground">{c.title}</p>
-                      <p className="text-sm text-muted-foreground">{c.rank}</p>
-                    </div>
-                    <span className="text-[10px] font-black uppercase tracking-widest text-primary bg-primary/10 px-2 py-1 rounded-lg">{c.colour}</span>
-                  </div>
+        <div className="space-y-6">
+          <div className="bg-card border border-border rounded-3xl p-8 md:p-12 space-y-8">
+            {isLoading ? (
+              <div className="space-y-4 py-8">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="h-6 bg-muted rounded animate-pulse" style={{ width: `${50 + Math.random() * 50}%` }} />
                 ))}
               </div>
-            </>
-          ) : null}
+            ) : error ? (
+              <p className="text-muted-foreground italic text-center py-12">{error}</p>
+            ) : (
+              <>
+                <div className="text-center space-y-4 pb-8 border-b border-border">
+                  {liturgy && (
+                    <p className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">
+                      {SEASON_NAMES[liturgy.season] || liturgy.season} — Semana {liturgy.season_week}
+                    </p>
+                  )}
+                  <h2 className="text-2xl md:text-3xl font-serif font-bold text-foreground">
+                    {readings?.liturgia || liturgy?.celebrations?.[0]?.title || 'Liturgia do Dia'}
+                  </h2>
+                  <p className="text-sm text-muted-foreground italic">{readings?.data || liturgy?.date}</p>
+                  {readings?.cor && (
+                    <div className="flex justify-center gap-2">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-primary bg-primary/10 px-3 py-1 rounded-full">
+                        Cor: {readings.cor}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Readings Section */}
+                {readings ? (
+                  <div className="space-y-12">
+                    {/* Primeira Leitura */}
+                    <section className="space-y-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">I</div>
+                        <h3 className="text-sm font-black uppercase tracking-widest text-muted-foreground">Primeira Leitura ({readings.primeiraLeitura.referencia})</h3>
+                      </div>
+                      <div className="pl-11 space-y-2">
+                        <p className="font-serif italic text-muted-foreground">{readings.primeiraLeitura.titulo}</p>
+                        <p className="reader-text text-foreground/90 leading-relaxed text-lg whitespace-pre-wrap">{readings.primeiraLeitura.texto}</p>
+                      </div>
+                    </section>
+
+                    {/* Salmo */}
+                    <section className="space-y-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">Ps</div>
+                        <h3 className="text-sm font-black uppercase tracking-widest text-muted-foreground">Salmo Responsorial ({readings.salmo.referencia})</h3>
+                      </div>
+                      <div className="pl-11 space-y-4">
+                        <p className="font-serif font-bold text-primary italic">R. {readings.salmo.refrao}</p>
+                        <p className="reader-text text-foreground/90 leading-relaxed text-lg whitespace-pre-wrap italic">{readings.salmo.texto}</p>
+                      </div>
+                    </section>
+
+                    {/* Segunda Leitura (if exists) */}
+                    {readings.segundaLeitura && typeof readings.segundaLeitura === 'object' && (
+                      <section className="space-y-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">II</div>
+                          <h3 className="text-sm font-black uppercase tracking-widest text-muted-foreground">Segunda Leitura ({readings.segundaLeitura.referencia})</h3>
+                        </div>
+                        <div className="pl-11 space-y-2">
+                          <p className="font-serif italic text-muted-foreground">{readings.segundaLeitura.titulo}</p>
+                          <p className="reader-text text-foreground/90 leading-relaxed text-lg whitespace-pre-wrap">{readings.segundaLeitura.texto}</p>
+                        </div>
+                      </section>
+                    )}
+
+                    {/* Evangelho */}
+                    <section className="space-y-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">Ev</div>
+                        <h3 className="text-sm font-black uppercase tracking-widest text-muted-foreground">Evangelho ({readings.evangelho.referencia})</h3>
+                      </div>
+                      <div className="pl-11 space-y-2">
+                        <p className="font-serif italic text-muted-foreground">{readings.evangelho.titulo}</p>
+                        <p className="reader-text text-foreground/90 leading-relaxed text-lg whitespace-pre-wrap font-bold">{readings.evangelho.texto}</p>
+                      </div>
+                    </section>
+
+                    {/* Oração do Dia */}
+                    {readings.dia && (
+                      <section className="pt-8 border-t border-border space-y-4">
+                        <h3 className="text-sm font-black uppercase tracking-widest text-muted-foreground">Oração do Dia (Coleta)</h3>
+                        <div className="p-6 bg-muted/30 rounded-2xl border border-border">
+                          <p className="reader-text text-foreground/80 italic leading-relaxed">{readings.dia}</p>
+                        </div>
+                      </section>
+                    )}
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    <h3 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Celebrações</h3>
+                    {liturgy?.celebrations?.map((c, i) => (
+                      <div key={i} className="flex items-start gap-4 p-4 bg-muted/50 rounded-2xl border border-border">
+                        <div className={`w-4 h-4 rounded-full mt-1 shrink-0 ${COLOUR_MAP[c.colour] || 'bg-muted'}`} />
+                        <div className="flex-1">
+                          <p className="font-bold text-foreground">{c.title}</p>
+                          <p className="text-sm text-muted-foreground">{c.rank}</p>
+                        </div>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-primary bg-primary/10 px-2 py-1 rounded-lg">{c.colour}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
+          </div>
         </div>
       ) : (
         <div className="space-y-6">
