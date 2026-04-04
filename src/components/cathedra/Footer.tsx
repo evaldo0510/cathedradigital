@@ -266,7 +266,7 @@ const Footer: React.FC = React.memo(() => {
         </div>
 
         {/* BOTTOM SECTION: INSTITUTIONAL & DIOCESE */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16 pt-16 border-t border-white/5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 pt-12 border-t border-white/5">
           {/* Institutional Cards */}
           <div className="bg-white/[0.02] border border-white/5 rounded-2xl p-6 space-y-6">
             <div className="flex items-center gap-4">
