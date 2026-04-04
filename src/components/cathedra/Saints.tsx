@@ -91,6 +91,8 @@ interface Saint {
   quotes: string[];
   category: 'apostle' | 'martyr' | 'doctor' | 'virgin' | 'confessor' | 'pope' | 'founder' | 'mystic';
   image?: string;
+  prayer?: string;
+  virtues?: string[];
 }
 
 const SAINTS_DATA: Saint[] = [
