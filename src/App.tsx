@@ -20,7 +20,7 @@ import { LangContext } from './contexts/LangContext';
 import { supabase } from '@/integrations/supabase/client';
 import CommandCenter from './components/cathedra/CommandCenter';
 import OfflineIndicator from './components/cathedra/OfflineIndicator';
-import AppErrorBoundary from './components/cathedra/AppErrorBoundary';
+import AuthGuard from './components/cathedra/AuthGuard';
 
 const queryClient = new QueryClient({
   defaultOptions: {
