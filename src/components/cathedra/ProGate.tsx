@@ -19,15 +19,22 @@ const ProGate: React.FC<ProGateProps> = ({ isPremium, isLoggedIn, onLogin, child
       <p className="text-muted-foreground font-serif italic text-lg max-w-lg">
         Este recurso requer uma assinatura PRO. {!isLoggedIn && 'Faça login primeiro.'}
       </p>
-      {!isLoggedIn ? (
-        <button onClick={onLogin} className="px-8 py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all">
-          Fazer Login
-        </button>
-      ) : (
-        <div className="px-6 py-3 border border-primary rounded-2xl text-xs font-bold text-primary">
-          Em breve — Assinatura PRO
-        </div>
-      )}
+      
+      <div className="bg-card border border-border p-6 rounded-3xl max-w-sm w-full space-y-4 shadow-sm">
+        <p className="text-xs text-muted-foreground leading-relaxed">
+          Se você está procurando pela <span className="font-bold text-foreground">chave de acesso</span> ou credenciais da Supabase, você as encontra no seu painel da Lovable em <span className="font-mono text-[10px] bg-muted px-1.5 py-0.5 rounded italic">Cloud → Supabase</span>.
+        </p>
+        
+        {!isLoggedIn ? (
+          <button onClick={onLogin} className="w-full py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all">
+            Fazer Login
+          </button>
+        ) : (
+          <div className="w-full py-3 border border-primary/30 bg-primary/5 rounded-2xl text-[10px] font-black uppercase tracking-widest text-primary italic">
+            Assinatura em breve
+          </div>
+        )}
+      </div>
     </div>
   );
 };
