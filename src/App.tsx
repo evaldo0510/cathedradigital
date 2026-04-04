@@ -9,6 +9,8 @@ import CathedralFooter from './components/cathedra/Footer';
 import BottomNav from './components/cathedra/BottomNav';
 import AppHeader from './components/cathedra/AppHeader';
 import PlaceholderPage from './components/cathedra/PlaceholderPage';
+import CheckoutPage from './components/cathedra/CheckoutPage';
+import DiagnosticsPage from './components/cathedra/DiagnosticsPage';
 import ProGate from './components/cathedra/ProGate';
 import { AppRoute, Language } from './types';
 import { UI_TRANSLATIONS } from './services/translations';
@@ -101,8 +103,15 @@ const AppLayout: React.FC = () => {
       role: (profile.role || (profile.is_premium ? 'scholar' : 'pilgrim')) as 'pilgrim' | 'scholar' | 'admin',
       isPremium: !!profile.is_premium,
       joinedAt: user.created_at,
-      progress: { streak: 0, totalMinutesRead: 0, completedBooks: [], xp: 0, level: 1, badges: [] },
-      stats: { versesSaved: 0, studiesPerformed: 0, daysActive: 0 },
+      progress: { 
+        streak: (profile as any).streak || 0, 
+        totalMinutesRead: (profile as any).total_minutes_read || 0, 
+        completedBooks: (profile as any).completed_books || [], 
+        xp: (profile as any).xp || 0, 
+        level: (profile as any).level || 1, 
+        badges: (profile as any).badges || [] 
+      },
+      stats: { versesSaved: 0, studiesPerformed: 0, daysActive: (profile as any).streak || 0 },
     };
   }, [user, profile]);
 
@@ -167,8 +176,8 @@ const AppLayout: React.FC = () => {
                 <Route path={AppRoute.POENITENTIA} element={<PoenitentiaPage />} />
                 <Route path={AppRoute.ORDO_MISSAE} element={<MissalPage />} />
                 <Route path={AppRoute.PRAYERS} element={<PrayerPage />} />
-                <Route path={AppRoute.DIAGNOSTICS} element={<PlaceholderPage title="Diagnóstico" description="Painel de diagnósticos da plataforma." />} />
-                <Route path={AppRoute.CHECKOUT} element={<PlaceholderPage title="Assinatura PRO" description="Área de checkout para assinatura do plano Cathedra PRO." />} />
+                <Route path={AppRoute.DIAGNOSTICS} element={<DiagnosticsPage />} />
+                <Route path={AppRoute.CHECKOUT} element={<CheckoutPage />} />
                 <Route path={AppRoute.ADMIN} element={
                   <ProGate isPremium={true} isLoggedIn={!!user} onLogin={() => navigate(AppRoute.LOGIN)}>
                     <AdminDashboard />

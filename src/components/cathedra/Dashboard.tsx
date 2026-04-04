@@ -159,6 +159,28 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
 
   return (
     <div className="space-y-6 md:space-y-10 pb-16 -mx-4 md:-mx-8 lg:-mx-10">
+      
+      {/* ═══ Scholar Progress Card (Mobile/Tablet Only) ═══ */}
+      {user && (
+        <div className="px-4 md:px-12 lg:hidden">
+          <div className="bg-card border border-border rounded-3xl p-6 flex items-center justify-between shadow-sm">
+            <div className="space-y-1">
+              <p className="text-[10px] font-black uppercase tracking-widest text-primary">Nível {user.progress?.level || 1}</p>
+              <h3 className="text-xl font-serif font-bold text-foreground capitalize">{user.role}</h3>
+            </div>
+            <div className="flex gap-4">
+              <div className="text-center">
+                <p className="text-lg font-black text-foreground">{user.progress?.streak || 0}</p>
+                <p className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Streak</p>
+              </div>
+              <div className="text-center">
+                <p className="text-lg font-black text-primary">{user.progress?.xp || 0}</p>
+                <p className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">XP</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ═══ HERO BANNER ═══ */}
       <motion.section
