@@ -24,28 +24,46 @@ interface ConfessionStep {
 const CONFESSION_STEPS: ConfessionStep[] = [
   {
     title: 'Exame de Consciência',
-    description: 'Reflexão sobre os pecados cometidos desde a última confissão à luz dos mandamentos.',
+    description: 'Reflexão sincera sobre os pecados cometidos à luz dos Mandamentos de Deus.',
     items: [
-      'Ame a Deus sobre todas as coisas? Usei o nome de Deus em vão?',
-      'Faltei à Missa aos domingos e dias de preceito por culpa própria?',
-      'Fui impaciente, invejoso ou guardei rancor?',
-      'Respeitei meus pais e superiores?',
-      'Fui honesto no trabalho e nos negócios?',
-      'Falei mal dos outros ou caluniei alguém?',
-      'Tive pensamentos ou atos impuros?'
+      '1º: Amei a Deus sobre todas as coisas ou dei prioridade a ídolos (dinheiro, prazer, poder)?',
+      '2º: Usei o nome de Deus em vão, jurei falso ou blasfemei?',
+      '3º: Guardei os domingos e festas? Faltei à Missa por culpa própria?',
+      '4º: Honrei meus pais e superiores? Fui negligente com minhas obrigações familiares?',
+      '5º: Matei, feri ou desejei o mal a alguém? Fui impaciente, guardei rancor ou escandalizei o próximo?',
+      '6º e 9º: Guardei a castidade em pensamentos, palavras e atos? Vi pornografia ou cometi atos impuros?',
+      '7º e 10º: Roubei ou desejei o que pertence aos outros? Fui honesto nos negócios e no trabalho?',
+      '8º: Levantei falso testemunho? Menti, caluniei ou murmurei contra os outros?',
+      'Igreja: Cumpri os preceitos da Igreja (jejum, abstinência, confissão e comunhão anual)?'
     ]
   },
   {
     title: 'Arrependimento e Propósito',
-    description: 'Ter dor sincera pelos pecados e firme propósito de não voltar a pecar.'
+    description: 'Sentir dor sincera pelo pecado e ter firme propósito de não voltar a pecar.',
+    items: [
+      'Reconheço que meus pecados ofenderam a Deus, que é infinitamente bom?',
+      'Desejo sinceramente mudar de vida e evitar as ocasiões de pecado?',
+      'Estou disposto a fazer a reparação devida por meus erros?'
+    ]
   },
   {
     title: 'Confissão com o Sacerdote',
-    description: 'Dizer os pecados de forma clara e completa ao padre, sem omitir pecados graves.'
+    description: 'Dizer os pecados de forma clara, íntegra e humilde ao padre.',
+    items: [
+      'Inicie com o sinal da cruz: "Abençoai-me, Padre, porque pequei."',
+      'Diga há quanto tempo foi sua última confissão.',
+      'Confesse todos os pecados graves por espécie e número.',
+      'Escute os conselhos e a penitência dada pelo sacerdote.'
+    ]
   },
   {
     title: 'Penitência e Absolvição',
-    description: 'Cumprir a penitência recebida e agradecer a misericórdia infinita de Deus.'
+    description: 'Cumprir a penitência e agradecer a misericórdia infinita de Deus.',
+    items: [
+      'Receba a absolvição com fé e diga: "Amém."',
+      'Cumpra a penitência o mais breve possível.',
+      'Agradeça a Deus pelo perdão recebido e renove seu amor por Ele.'
+    ]
   }
 ];
 
