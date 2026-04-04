@@ -85,6 +85,66 @@ const SAINTS_DATA: Saint[] = [
     category: 'mystic', image: 'https://images.unsplash.com/photo-1504198453319-5ce911bafcde',
     virtues: ['Silêncio', 'Oração', 'Penitência'],
     prayer: 'Senhor, pela intercessão de São Charbel, dai-me a cura da alma e do corpo.'
+  },
+  {
+    id: 'teresa-lisieux', name: 'Santa Teresa de Lisieux', title: 'A Pequena Flor',
+    feastDay: '1 de Outubro', feastMonth: 10, feastDayNum: 1,
+    born: '1873, Alençon', died: '1897, Lisieux',
+    patronOf: ['Missionários', 'Floristas', 'Aviadores'],
+    bio: 'Carmelita descalça francesa, doutora da Igreja. Desenvolveu a "pequena via" da infância espiritual, ensinando que a santidade consiste em fazer as coisas pequenas com grande amor.',
+    works: [{ title: 'História de uma Alma', url: 'https://www.vatican.va/therese/therrese_index_po.htm' }],
+    quotes: ['"Minha vocação é o amor! No coração da Igreja, minha Mãe, eu serei o amor."', '"Quero passar meu céu fazendo o bem na terra."'],
+    category: 'doctor', image: 'https://images.unsplash.com/photo-1490750967868-88aa4f44baee',
+    virtues: ['Simplicidade', 'Confiança', 'Amor'],
+    prayer: 'Santa Teresinha do Menino Jesus, fazei cair do céu uma chuva de rosas sobre aqueles que vos invocam.'
+  },
+  {
+    id: 'padre-pio', name: 'São Padre Pio de Pietrelcina', title: 'O Frade Estigmatizado',
+    feastDay: '23 de Setembro', feastMonth: 9, feastDayNum: 23,
+    born: '1887, Pietrelcina', died: '1968, San Giovanni Rotondo',
+    patronOf: ['Adolescentes', 'Confessores', 'Voluntários da defesa civil'],
+    bio: 'Frade capuchinho italiano que recebeu os estigmas de Cristo. Célebre confessor, dedicou sua vida à oração e ao sacramento da reconciliação, atraindo milhões de fiéis.',
+    works: [{ title: 'Epistolário' }],
+    quotes: ['"Reze, espere e não se preocupe."', '"A oração é a melhor arma que temos; é a chave do coração de Deus."'],
+    category: 'mystic', image: 'https://images.unsplash.com/photo-1499002238440-d264edd596ec',
+    virtues: ['Oração', 'Sofrimento redentor', 'Obediência'],
+    prayer: 'São Padre Pio, rogai a Deus por nós e intercedei por nossas necessidades.'
+  },
+  {
+    id: 'joana-arc', name: 'Santa Joana d\'Arc', title: 'A Donzela de Orléans',
+    feastDay: '30 de Maio', feastMonth: 5, feastDayNum: 30,
+    born: '1412, Domrémy', died: '1431, Ruão',
+    patronOf: ['França', 'Soldados', 'Prisioneiros'],
+    bio: 'Heroína francesa e santa padroeira da França. Guiada por visões divinas, liderou o exército francês em vitórias decisivas durante a Guerra dos Cem Anos antes de ser martirizada na fogueira.',
+    works: [],
+    quotes: ['"Não tenho medo; para isto nasci."', '"Aja, e Deus agirá."'],
+    category: 'martyr', image: 'https://images.unsplash.com/photo-1531366936337-7c912a4589a7',
+    virtues: ['Coragem', 'Fé', 'Obediência a Deus'],
+    prayer: 'Santa Joana d\'Arc, dai-nos a coragem de seguir a vontade de Deus sem hesitar.'
+  },
+  {
+    id: 'antonio-padua', name: 'Santo Antônio de Pádua', title: 'Doutor Evangélico',
+    feastDay: '13 de Junho', feastMonth: 6, feastDayNum: 13,
+    born: '1195, Lisboa', died: '1231, Pádua',
+    patronOf: ['Objetos perdidos', 'Pobres', 'Viajantes'],
+    bio: 'Frade franciscano português, famoso por sua pregação eloquente e profundo conhecimento das Escrituras. Um dos santos mais populares do mundo, invocado para encontrar objetos perdidos.',
+    works: [{ title: 'Sermões Dominicais' }],
+    quotes: ['"As ações falam mais alto que as palavras; que as vossas palavras ensinem e as vossas ações falem."'],
+    category: 'doctor', image: 'https://images.unsplash.com/photo-1507692049790-de58290a4334',
+    virtues: ['Eloquência', 'Caridade', 'Humildade'],
+    prayer: 'Santo Antônio, protetor dos pobres, intercedei por nós junto ao Senhor.'
+  },
+  {
+    id: 'faustina', name: 'Santa Faustina Kowalska', title: 'Apóstola da Divina Misericórdia',
+    feastDay: '5 de Outubro', feastMonth: 10, feastDayNum: 5,
+    born: '1905, Głogowiec', died: '1938, Cracóvia',
+    patronOf: ['Divina Misericórdia'],
+    bio: 'Religiosa polonesa que recebeu revelações de Jesus sobre a Divina Misericórdia. Seu diário espiritual difundiu a devoção à Misericórdia Divina por todo o mundo.',
+    works: [{ title: 'Diário: A Misericórdia Divina na Minha Alma' }],
+    quotes: ['"Jesus, eu confio em Vós."', '"A humanidade não encontrará paz enquanto não se voltar com confiança para a Minha Misericórdia."'],
+    category: 'mystic', image: 'https://images.unsplash.com/photo-1508672019048-805c876b67e2',
+    virtues: ['Confiança', 'Misericórdia', 'Oração'],
+    prayer: 'Jesus, eu confio em Vós! Santa Faustina, rogai por nós.'
   }
 ];
 
