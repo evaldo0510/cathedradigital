@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../constants';
 import { AppRoute } from '../../types';
 import { supabase } from '@/integrations/supabase/client';
+import { useCatechismParagraph } from '@/hooks/useCatechismParagraph';
+
 
 interface QuickModalProps {
   isOpen: boolean;
