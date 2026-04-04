@@ -12,15 +12,16 @@ import { ChevronDown, ScrollText, Swords, Feather, Flame, Cross, Globe, Mail, Bo
 import { useAuth } from '@/hooks/useAuth';
 
 type BibleBook = { name: string; abbr: string; chapters: number };
+type BibleCategory = { label: string; icon: React.ElementType; color: string; bgColor: string; books: BibleBook[] };
 
-const BIBLE_CATEGORIES: Record<string, { label: string; icon: string; books: BibleBook[] }[]> = {
+const BIBLE_CATEGORIES: Record<string, BibleCategory[]> = {
   'Antigo Testamento': [
-    { label: 'Pentateuco', icon: '📜', books: [
+    { label: 'Pentateuco', icon: ScrollText, color: 'text-amber-600', bgColor: 'bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800', books: [
       { name: 'Gênesis', abbr: 'Gn', chapters: 50 }, { name: 'Êxodo', abbr: 'Ex', chapters: 40 },
       { name: 'Levítico', abbr: 'Lv', chapters: 27 }, { name: 'Números', abbr: 'Nm', chapters: 36 },
       { name: 'Deuteronômio', abbr: 'Dt', chapters: 34 },
     ]},
-    { label: 'Históricos', icon: '⚔️', books: [
+    { label: 'Históricos', icon: Swords, color: 'text-red-600', bgColor: 'bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-800', books: [
       { name: 'Josué', abbr: 'Js', chapters: 24 }, { name: 'Juízes', abbr: 'Jz', chapters: 21 },
       { name: 'Rute', abbr: 'Rt', chapters: 4 }, { name: '1 Samuel', abbr: '1Sm', chapters: 31 },
       { name: '2 Samuel', abbr: '2Sm', chapters: 24 }, { name: '1 Reis', abbr: '1Rs', chapters: 22 },
@@ -30,13 +31,13 @@ const BIBLE_CATEGORIES: Record<string, { label: string; icon: string; books: Bib
       { name: 'Judite', abbr: 'Jt', chapters: 16 }, { name: 'Ester', abbr: 'Est', chapters: 10 },
       { name: '1 Macabeus', abbr: '1Mc', chapters: 16 }, { name: '2 Macabeus', abbr: '2Mc', chapters: 15 },
     ]},
-    { label: 'Sapienciais', icon: '🕊️', books: [
+    { label: 'Sapienciais', icon: Feather, color: 'text-sky-600', bgColor: 'bg-sky-50 dark:bg-sky-950/30 border-sky-200 dark:border-sky-800', books: [
       { name: 'Jó', abbr: 'Jó', chapters: 42 }, { name: 'Salmos', abbr: 'Sl', chapters: 150 },
       { name: 'Provérbios', abbr: 'Pr', chapters: 31 }, { name: 'Eclesiastes', abbr: 'Ecl', chapters: 12 },
       { name: 'Cântico dos Cânticos', abbr: 'Ct', chapters: 8 }, { name: 'Sabedoria', abbr: 'Sb', chapters: 19 },
       { name: 'Eclesiástico', abbr: 'Eclo', chapters: 51 },
     ]},
-    { label: 'Profetas', icon: '🔥', books: [
+    { label: 'Profetas', icon: Flame, color: 'text-orange-600', bgColor: 'bg-orange-50 dark:bg-orange-950/30 border-orange-200 dark:border-orange-800', books: [
       { name: 'Isaías', abbr: 'Is', chapters: 66 }, { name: 'Jeremias', abbr: 'Jr', chapters: 52 },
       { name: 'Lamentações', abbr: 'Lm', chapters: 5 }, { name: 'Baruc', abbr: 'Br', chapters: 6 },
       { name: 'Ezequiel', abbr: 'Ez', chapters: 48 }, { name: 'Daniel', abbr: 'Dn', chapters: 14 },
@@ -49,14 +50,14 @@ const BIBLE_CATEGORIES: Record<string, { label: string; icon: string; books: Bib
     ]},
   ],
   'Novo Testamento': [
-    { label: 'Evangelhos', icon: '✝️', books: [
+    { label: 'Evangelhos', icon: Cross, color: 'text-purple-600', bgColor: 'bg-purple-50 dark:bg-purple-950/30 border-purple-200 dark:border-purple-800', books: [
       { name: 'Mateus', abbr: 'Mt', chapters: 28 }, { name: 'Marcos', abbr: 'Mc', chapters: 16 },
       { name: 'Lucas', abbr: 'Lc', chapters: 24 }, { name: 'João', abbr: 'Jo', chapters: 21 },
     ]},
-    { label: 'Atos', icon: '🌍', books: [
+    { label: 'Atos', icon: Globe, color: 'text-emerald-600', bgColor: 'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-800', books: [
       { name: 'Atos dos Apóstolos', abbr: 'At', chapters: 28 },
     ]},
-    { label: 'Cartas Paulinas', icon: '✉️', books: [
+    { label: 'Cartas Paulinas', icon: Mail, color: 'text-indigo-600', bgColor: 'bg-indigo-50 dark:bg-indigo-950/30 border-indigo-200 dark:border-indigo-800', books: [
       { name: 'Romanos', abbr: 'Rm', chapters: 16 }, { name: '1 Coríntios', abbr: '1Cor', chapters: 16 },
       { name: '2 Coríntios', abbr: '2Cor', chapters: 13 }, { name: 'Gálatas', abbr: 'Gl', chapters: 6 },
       { name: 'Efésios', abbr: 'Ef', chapters: 6 }, { name: 'Filipenses', abbr: 'Fl', chapters: 4 },
@@ -65,13 +66,13 @@ const BIBLE_CATEGORIES: Record<string, { label: string; icon: string; books: Bib
       { name: '2 Timóteo', abbr: '2Tm', chapters: 4 }, { name: 'Tito', abbr: 'Tt', chapters: 3 },
       { name: 'Filemon', abbr: 'Fm', chapters: 1 }, { name: 'Hebreus', abbr: 'Hb', chapters: 13 },
     ]},
-    { label: 'Cartas Católicas', icon: '📖', books: [
+    { label: 'Cartas Católicas', icon: BookOpen, color: 'text-teal-600', bgColor: 'bg-teal-50 dark:bg-teal-950/30 border-teal-200 dark:border-teal-800', books: [
       { name: 'Tiago', abbr: 'Tg', chapters: 5 }, { name: '1 Pedro', abbr: '1Pd', chapters: 5 },
       { name: '2 Pedro', abbr: '2Pd', chapters: 3 }, { name: '1 João', abbr: '1Jo', chapters: 5 },
       { name: '2 João', abbr: '2Jo', chapters: 1 }, { name: '3 João', abbr: '3Jo', chapters: 1 },
       { name: 'Judas', abbr: 'Jd', chapters: 1 },
     ]},
-    { label: 'Apocalipse', icon: '🔮', books: [
+    { label: 'Apocalipse', icon: Sparkles, color: 'text-rose-600', bgColor: 'bg-rose-50 dark:bg-rose-950/30 border-rose-200 dark:border-rose-800', books: [
       { name: 'Apocalipse', abbr: 'Ap', chapters: 22 },
     ]},
   ],
