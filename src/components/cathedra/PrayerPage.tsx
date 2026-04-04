@@ -294,7 +294,7 @@ const PrayerPage: React.FC = () => {
       </div>
 
       {/* BLOCK 1 — Terço do Dia */}
-      <div className="bg-card border border-border rounded-3xl p-8 md:p-10 text-center space-y-4">
+      <div className="bg-card border border-border rounded-2xl p-6 md:p-8 text-center space-y-4">
         <span className="text-[10px] font-black uppercase tracking-widest text-primary">{getDayName()}</span>
         <h2 className="text-2xl md:text-3xl font-serif font-bold text-foreground">📿 Terço de Hoje</h2>
         <p className="text-lg font-serif text-muted-foreground">{todayData.emoji} {todayData.title}</p>
