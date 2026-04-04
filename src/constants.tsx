@@ -100,4 +100,7 @@ export const Icons = {
   Twitter: (props: React.SVGProps<SVGSVGElement>) => (
     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" {...props}><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z" /></svg>
   ),
+  Whatsapp: (props: React.SVGProps<SVGSVGElement>) => (
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" {...props}><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12c0 1.657.412 3.218 1.134 4.586L3 21l4.557-1.134C8.92 20.588 10.407 21 12 21c4.97 0 9-4.03 9-9s-4.03-9-9-9-9 4.03-9 9z" /></svg>
+  ),
 };

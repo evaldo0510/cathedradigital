@@ -328,11 +328,11 @@ const Footer: React.FC = React.memo(() => {
                 { label: 'Termos', route: AppRoute.ABOUT },
                 { label: 'Privacidade', route: AppRoute.ABOUT },
                 { label: 'Manifesto', route: AppRoute.ABOUT },
-                { label: 'Suporte', route: AppRoute.ABOUT }
+                { label: 'Suporte', onClick: () => window.location.href = 'mailto:suporte@cathedra.digital' }
               ].map((item) => (
                 <button 
                   key={item.label} 
-                  onClick={() => navigate(item.route)}
+                  onClick={item.onClick || (() => navigate(item.route!))}
                   className="text-[10px] text-zinc-500 font-bold uppercase hover:text-white transition-colors tracking-wide"
                 >
                   {item.label}
