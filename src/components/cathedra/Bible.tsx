@@ -128,11 +128,19 @@ const Bible: React.FC = () => {
     }
   }, [searchParams]);
 
-  const filteredBooks = useMemo(() => {
-    const books = BIBLE_BOOKS[testament];
-    if (!searchQuery) return books;
-    return books.filter(b => b.name.toLowerCase().includes(searchQuery.toLowerCase()) || b.abbr.toLowerCase().includes(searchQuery.toLowerCase()));
+  const filteredCategories = useMemo(() => {
+    const categories = BIBLE_CATEGORIES[testament];
+    if (!searchQuery) return categories;
+    const q = searchQuery.toLowerCase();
+    return categories
+      .map(cat => ({
+        ...cat,
+        books: cat.books.filter(b => b.name.toLowerCase().includes(q) || b.abbr.toLowerCase().includes(q)),
+      }))
+      .filter(cat => cat.books.length > 0);
   }, [testament, searchQuery]);
+
+  const filteredBooks = useMemo(() => getAllBooks(testament), [testament]);
 
   const crossRefs = useMemo(() => {
     if (!selectedBook || !selectedChapter) return [];
