@@ -87,7 +87,7 @@ const AppLayout: React.FC = () => {
       id: user.id,
       name: profile.name || user.email?.split('@')[0] || '',
       email: user.email || '',
-      role: (profile.is_premium ? 'scholar' : 'pilgrim') as 'pilgrim' | 'scholar' | 'admin',
+      role: (profile.role || (profile.is_premium ? 'scholar' : 'pilgrim')) as 'pilgrim' | 'scholar' | 'admin',
       isPremium: profile.is_premium,
       joinedAt: user.created_at,
       progress: { streak: 0, totalMinutesRead: 0, completedBooks: [], xp: 0, level: 1, badges: [] },
