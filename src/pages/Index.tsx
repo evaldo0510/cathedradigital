@@ -93,9 +93,11 @@ const Index = () => {
       <section className="relative w-full h-[85vh] md:h-[90vh] flex items-center justify-center px-6 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
-            src="https://images.unsplash.com/photo-1548610762-656391d1ad4d?auto=format&fit=crop&q=80&w=1920" 
+            src="https://images.unsplash.com/photo-1548610762-656391d1ad4d?auto=format&fit=crop&q=40&w=800" 
             alt="Cathedral" 
             className="w-full h-full object-cover opacity-15 scale-110 blur-[1px]"
+            loading="eager"
+            decoding="async"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-[#fdfcf8]/10 via-[#fdfcf8]/70 to-[#fdfcf8]" />
         </div>
