@@ -4,39 +4,6 @@ import { Icons } from '../../constants';
 import StaggeredList from './StaggeredList';
 import SacredImage from './SacredImage';
 
-const InternalReader: React.FC<{ url: string; title: string; onClose: () => void }> = ({ url, title, onClose }) => {
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    const handleEsc = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
-    window.addEventListener('keydown', handleEsc);
-    return () => window.removeEventListener('keydown', handleEsc);
-  }, [onClose]);
-
-  return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[60] bg-black/90 flex flex-col backdrop-blur-sm">
-      <div className="flex items-center justify-between p-4 border-b border-white/10 bg-stone-900 text-white">
-        <div className="flex items-center gap-3">
-          <Icons.Book className="w-5 h-5 text-[#d4af37]" />
-          <h2 className="font-serif font-bold text-lg truncate max-w-[250px] md:max-w-md">{title}</h2>
-        </div>
-        <div className="flex items-center gap-2">
-          <a href={url} target="_blank" rel="noopener noreferrer" className="p-2 hover:bg-white/10 rounded-full transition-colors"><Icons.ExternalLink className="w-5 h-5" /></a>
-          <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors"><Icons.ArrowDown className="w-6 h-6 rotate-180" /></button>
-        </div>
-      </div>
-      <div className="flex-1 relative bg-white">
-        {loading && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-stone-50 gap-4">
-            <Icons.Cross className="w-12 h-12 text-[#d4af37] animate-pulse" />
-            <p className="font-serif italic text-stone-500">Abrindo obra sagrada...</p>
-          </div>
-        )}
-        <iframe src={url} className="w-full h-full border-none" onLoad={() => setLoading(false)} title={title} />
-      </div>
-    </motion.div>
-  );
-};
-
 interface SaintWork { title: string; url?: string; }
 
 interface Saint {
@@ -103,7 +70,7 @@ const SAINTS_DATA: Saint[] = [
     bio: 'Um dos doze apóstolos, irmão de São Tiago Menor. Pregou o Evangelho na Mesopotâmia e Pérsia onde foi martirizado.',
     works: [{ title: 'Epístola de São Judas' }],
     quotes: ['"Mantenham-se no amor de Deus."'],
-    category: 'apostle',
+    category: 'apostle', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d',
     virtues: ['Esperança', 'Perseverança'],
     prayer: 'São Judas Tadeu, apóstolo glorioso, intercedei por mim nas minhas necessidades.'
   },
@@ -115,65 +82,93 @@ const SAINTS_DATA: Saint[] = [
     bio: 'Monge maronita libanês, viveu como eremita por 23 anos. Famoso por inúmeros milagres.',
     works: [],
     quotes: ['"O silêncio fala a Deus."'],
-    category: 'mystic',
+    category: 'mystic', image: 'https://images.unsplash.com/photo-1504198453319-5ce911bafcde',
     virtues: ['Silêncio', 'Oração', 'Penitência'],
     prayer: 'Senhor, pela intercessão de São Charbel, dai-me a cura da alma e do corpo.'
   }
 ];
 
-const CATEGORY_LABELS: Record<string, string> = { apostle: 'Apóstolo', martyr: 'Mártir', doctor: 'Doutor(a)', founder: 'Fundador(a)', mystic: 'Místico(a)' };
-const CATEGORY_COLORS: Record<string, string> = { apostle: 'bg-blue-100 text-blue-800', martyr: 'bg-red-100 text-red-800', doctor: 'bg-amber-100 text-amber-800', founder: 'bg-orange-100 text-orange-800', mystic: 'bg-violet-100 text-violet-800' };
-
 const Saints: React.FC = () => {
   const [selectedSaint, setSelectedSaint] = useState<Saint | null>(null);
   const saintOfTheDay = useMemo(() => {
     const today = new Date();
-    return SAINTS_DATA.find(s => s.feastMonth === today.getMonth() + 1 && s.feastDayNum === today.getDate());
+    const day = today.getDate();
+    const month = today.getMonth() + 1;
+    return SAINTS_DATA.find(s => s.feastMonth === month && s.feastDayNum === day) || SAINTS_DATA[0];
   }, []);
 
   return (
-    <div className="max-w-6xl mx-auto p-6 space-y-12">
+    <div className="space-y-12 page-enter">
+      <div className="text-center space-y-4">
+        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#d4af37]">Sanctorum</p>
+        <h1 className="text-4xl md:text-6xl font-serif font-bold text-stone-900 dark:text-stone-100">Vidas dos Santos</h1>
+        <p className="text-stone-500 font-serif italic max-w-xl mx-auto">Heróis da fé que iluminam o caminho da santidade através dos séculos.</p>
+      </div>
+
       {saintOfTheDay && (
-        <section className="bg-amber-50 dark:bg-stone-900 border border-amber-200 dark:border-stone-800 rounded-3xl p-8 flex items-center gap-8">
-          <div className="w-32 h-32 rounded-full overflow-hidden flex-shrink-0 border-4 border-white shadow-lg">
-             <img src={saintOfTheDay.image || 'https://images.unsplash.com/photo-1548610762-656391d1ad4d'} className="w-full h-full object-cover" alt="Saint" />
+        <motion.section 
+          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+          className="bg-amber-50/50 dark:bg-stone-900/50 border border-amber-200/50 dark:border-stone-800 rounded-3xl p-8 flex flex-col md:flex-row items-center gap-8 shadow-sm backdrop-blur-sm"
+        >
+          <div className="w-40 h-40 rounded-3xl overflow-hidden flex-shrink-0 border-4 border-white dark:border-stone-800 shadow-xl rotate-3 hover:rotate-0 transition-transform duration-500">
+             <SacredImage src={saintOfTheDay.image} className="w-full h-full object-cover" alt="Saint" />
           </div>
-          <div>
-            <span className="text-amber-700 font-black uppercase tracking-widest text-xs">Santo do Dia</span>
-            <h2 className="text-3xl font-serif font-bold text-stone-900">{saintOfTheDay.name}</h2>
-            <p className="text-amber-800 font-serif italic mb-4">{saintOfTheDay.title}</p>
-            <p className="text-stone-600 italic">"{saintOfTheDay.quotes[0]}"</p>
+          <div className="flex-1 text-center md:text-left">
+            <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
+              <Icons.Star className="w-4 h-4 text-[#d4af37] animate-pulse" />
+              <span className="text-[#d4af37] font-black uppercase tracking-widest text-[10px]">Santo do Dia — {saintOfTheDay.feastDay}</span>
+            </div>
+            <h2 className="text-4xl font-serif font-bold text-stone-900 dark:text-stone-100 mb-2">{saintOfTheDay.name}</h2>
+            <p className="text-amber-800 dark:text-[#d4af37] font-serif italic text-lg mb-4">{saintOfTheDay.title}</p>
+            <p className="text-stone-600 dark:text-stone-400 italic font-serif leading-relaxed line-clamp-2">"{saintOfTheDay.quotes[0]}"</p>
+            <button onClick={() => setSelectedSaint(saintOfTheDay)} className="mt-6 px-6 py-2.5 bg-stone-900 dark:bg-[#d4af37] text-white dark:text-stone-900 rounded-full text-xs font-black uppercase tracking-widest hover:scale-105 transition-transform">
+              Conhecer sua vida
+            </button>
           </div>
-        </section>
+        </motion.section>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <StaggeredList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {SAINTS_DATA.map(saint => (
-          <button key={saint.id} onClick={() => setSelectedSaint(saint)} className="p-6 bg-white dark:bg-stone-900 border rounded-2xl hover:shadow-lg transition-all text-left">
-            <h3 className="font-serif font-bold">{saint.name}</h3>
-            <p className="text-sm text-primary mb-2">{saint.title}</p>
-            <p className="text-xs text-stone-500 line-clamp-2">{saint.bio}</p>
+          <button 
+            key={saint.id} onClick={() => setSelectedSaint(saint)} 
+            className="group p-8 bg-white dark:bg-stone-900/40 border border-stone-100 dark:border-stone-800 rounded-3xl hover:border-[#d4af37]/50 hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 text-left flex flex-col h-full"
+          >
+            <div className="flex-1">
+              <span className="text-[10px] font-black uppercase tracking-widest text-[#d4af37] mb-2 block">{saint.feastDay}</span>
+              <h3 className="text-2xl font-serif font-bold text-stone-900 dark:text-stone-100 group-hover:text-[#d4af37] transition-colors mb-2">{saint.name}</h3>
+              <p className="text-sm text-stone-500 dark:text-stone-400 font-serif italic mb-4">{saint.title}</p>
+              <p className="text-sm text-stone-600 dark:text-stone-500 line-clamp-3 leading-relaxed mb-6">{saint.bio}</p>
+            </div>
+            <div className="flex flex-wrap gap-2 mt-auto">
+              {saint.virtues?.map(v => <span key={v} className="px-2 py-1 bg-stone-50 dark:bg-stone-800 text-[9px] font-black uppercase tracking-widest text-stone-400 rounded-lg">{v}</span>)}
+            </div>
           </button>
         ))}
-      </div>
-      
-      {selectedSaint && (
-        <motion.div initial={{ opacity: 0 }} className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl p-8 max-w-2xl w-full shadow-2xl">
-             <h2 className="text-4xl font-serif font-bold mb-2">{selectedSaint.name}</h2>
-             <p className="text-lg italic mb-6">{selectedSaint.title}</p>
-             <div className="prose max-w-none">
-                <p>{selectedSaint.bio}</p>
-                {selectedSaint.prayer && (
-                   <div className="bg-stone-100 p-4 rounded-xl mt-6">
-                      <p className="font-serif italic text-sm">"{selectedSaint.prayer}"</p>
-                   </div>
-                )}
-             </div>
-             <button onClick={() => setSelectedSaint(null)} className="mt-8 bg-stone-900 text-white px-6 py-2 rounded-full">Fechar</button>
-          </div>
-        </motion.div>
-      )}
+      </StaggeredList>
+
+      <AnimatePresence>
+        {selectedSaint && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-stone-900/95 z-[70] flex items-center justify-center p-4 md:p-8 backdrop-blur-md" onClick={() => setSelectedSaint(null)}>
+            <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 20 }} className="bg-white dark:bg-stone-900 rounded-[2.5rem] max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl flex flex-col md:flex-row" onClick={e => e.stopPropagation()}>
+              <div className="w-full md:w-2/5 h-64 md:h-auto relative overflow-hidden">
+                <SacredImage src={selectedSaint.image} className="w-full h-full object-cover" alt={selectedSaint.name} />
+                <button onClick={() => setSelectedSaint(null)} className="absolute top-6 left-6 p-2 bg-white/20 hover:bg-white/40 rounded-full backdrop-blur-md text-white transition-colors"><Icons.ArrowDown className="w-5 h-5 rotate-90" /></button>
+              </div>
+              <div className="flex-1 p-8 md:p-12 overflow-y-auto">
+                <h2 className="text-4xl font-serif font-bold text-stone-900 dark:text-stone-100 mb-2">{selectedSaint.name}</h2>
+                <p className="text-xl text-[#d4af37] font-serif italic mb-8">{selectedSaint.title}</p>
+                <div className="space-y-8">
+                  <section><p className="text-stone-700 dark:text-stone-300 font-serif leading-relaxed text-lg">{selectedSaint.bio}</p></section>
+                  {selectedSaint.prayer && (
+                    <section className="bg-stone-900 text-white p-8 rounded-[2rem]"><p className="font-serif italic text-xl leading-relaxed">"{selectedSaint.prayer}"</p></section>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
