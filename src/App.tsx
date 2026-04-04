@@ -151,6 +151,11 @@ const AppLayout: React.FC = () => {
                     <Route path={AppRoute.LITURGICAL_CALENDAR} element={<LiturgicalCalendarPage />} />
                     <Route path={AppRoute.COMMUNITY} element={<CommunityPage />} />
                     <Route path={AppRoute.PROFILE} element={<ProfilePage />} />
+                    <Route path={AppRoute.POENITENTIA} element={<PlaceholderPage title="Confissão" description="Exame de consciência e guia para o Sacramento da Penitência." />} />
+                    <Route path={AppRoute.ORDO_MISSAE} element={<PlaceholderPage title="Ordo Missae" description="Ordinário da Santa Missa em latim e português." />} />
+                    <Route path={AppRoute.PRAYERS} element={<PrayerPage />} />
+                    <Route path={AppRoute.DIAGNOSTICS} element={<PlaceholderPage title="Diagnóstico" description="Painel de diagnósticos da plataforma." />} />
+                    <Route path={AppRoute.CHECKOUT} element={<PlaceholderPage title="Assinatura PRO" description="Área de checkout para assinatura do plano Cathedra PRO." />} />
                     <Route path={AppRoute.ADMIN} element={
                       <ProGate isPremium={true} isLoggedIn={!!user} onLogin={() => navigate(AppRoute.LOGIN)}>
                         <AdminDashboard />

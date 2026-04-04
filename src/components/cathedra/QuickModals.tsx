@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../constants';
+import { AppRoute } from '../../types';
 import { supabase } from '@/integrations/supabase/client';
 
 interface QuickModalProps {
@@ -9,6 +11,7 @@ interface QuickModalProps {
 
 // ─── Bible Modal ───
 export const BibleModal: React.FC<QuickModalProps> = ({ isOpen, onClose }) => {
+  const navigate = useNavigate();
   const [book, setBook] = useState('Gn');
   const [chapter, setChapter] = useState(1);
   const [text, setText] = useState('');
@@ -50,12 +53,22 @@ export const BibleModal: React.FC<QuickModalProps> = ({ isOpen, onClose }) => {
           <p className="font-serif text-foreground/90 leading-relaxed whitespace-pre-line text-sm">{text}</p>
         </div>
       )}
+      <div className="mt-6 pt-4 border-t border-border">
+        <button 
+          onClick={() => { navigate(`${AppRoute.BIBLE}?book=${book}&ch=${chapter}`); onClose(); }}
+          className="w-full py-3 bg-primary text-primary-foreground rounded-xl text-[10px] font-black uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-2"
+        >
+          <Icons.Book className="w-3.5 h-3.5" />
+          Ir para a Bíblia Completa
+        </button>
+      </div>
     </ModalShell>
   );
 };
 
 // ─── Catechism Modal ───
 export const CatechismModal: React.FC<QuickModalProps> = ({ isOpen, onClose }) => {
+  const navigate = useNavigate();
   const [paragraph, setParagraph] = useState(1);
   const [text, setText] = useState('');
   const [loading, setLoading] = useState(false);
@@ -89,12 +102,22 @@ export const CatechismModal: React.FC<QuickModalProps> = ({ isOpen, onClose }) =
           <p className="font-serif text-foreground/90 leading-relaxed text-sm">{text}</p>
         </div>
       )}
+      <div className="mt-6 pt-4 border-t border-border">
+        <button 
+          onClick={() => { navigate(`${AppRoute.CATECHISM}?p=${paragraph}`); onClose(); }}
+          className="w-full py-3 bg-primary text-primary-foreground rounded-xl text-[10px] font-black uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-2"
+        >
+          <Icons.Cross className="w-3.5 h-3.5" />
+          Ir para o Catecismo Completo
+        </button>
+      </div>
     </ModalShell>
   );
 };
 
 // ─── Documents Modal ───
 export const DocumentsModal: React.FC<QuickModalProps> = ({ isOpen, onClose }) => {
+  const navigate = useNavigate();
   const [query, setQuery] = useState('');
 
   const DOCS = [
@@ -133,6 +156,15 @@ export const DocumentsModal: React.FC<QuickModalProps> = ({ isOpen, onClose }) =
             <span className="text-[10px] text-primary font-bold">→ Magistério</span>
           </div>
         ))}
+      </div>
+      <div className="mt-6 pt-4 border-t border-border">
+        <button 
+          onClick={() => { navigate(AppRoute.MAGISTERIUM); onClose(); }}
+          className="w-full py-3 bg-primary text-primary-foreground rounded-xl text-[10px] font-black uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-2"
+        >
+          <Icons.Globe className="w-3.5 h-3.5" />
+          Ver Todos os Documentos
+        </button>
       </div>
     </ModalShell>
   );

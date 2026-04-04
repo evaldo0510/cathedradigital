@@ -15,7 +15,7 @@ interface DashboardProps {
 }
 
 /* ── Netflix-style horizontal scroll row ── */
-const ContentRow: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => {
+const ContentRow: React.FC<{ title: string; children: React.ReactNode; onSeeAll?: () => void }> = ({ title, children, onSeeAll }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const scroll = (dir: 'left' | 'right') => {
@@ -24,7 +24,14 @@ const ContentRow: React.FC<{ title: string; children: React.ReactNode }> = ({ ti
 
   return (
     <div className="space-y-3">
-      <h2 className="text-lg md:text-xl font-serif font-bold text-foreground px-2">{title}</h2>
+      <div className="flex items-center justify-between px-2">
+        <h2 className="text-lg md:text-xl font-serif font-bold text-foreground">{title}</h2>
+        {onSeeAll && (
+          <button onClick={onSeeAll} className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline">
+            Ver Tudo
+          </button>
+        )}
+      </div>
       <div className="relative group">
         {/* Left arrow */}
         <button
@@ -134,7 +141,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
     { image: sectionPrayer, title: 'Oração', subtitle: 'Orações da tradição católica', route: AppRoute.ORACAO },
     { image: 'https://images.unsplash.com/photo-1445445290350-18a3b86e0b5a?auto=format&fit=crop&q=80&w=600', title: 'Santo Rosário', subtitle: 'Meditação dos mistérios', route: AppRoute.ROSARY },
     { image: 'https://images.unsplash.com/photo-1504052434569-70ad5836ab65?auto=format&fit=crop&q=80&w=600', title: 'Via Crucis', subtitle: 'As 14 estações da cruz', route: AppRoute.VIA_CRUCIS },
-    { image: 'https://images.unsplash.com/photo-1519750783826-e2420f4d687f?auto=format&fit=crop&q=80&w=600', title: 'Missal', subtitle: 'Ordo Missae e liturgia', route: AppRoute.MISSAL },
+    { image: 'https://images.unsplash.com/photo-1519750783826-e2420f4d687f?auto=format&fit=crop&q=80&w=600', title: 'Ordo Missae', subtitle: 'Acompanhe a Santa Missa', route: AppRoute.ORDO_MISSAE },
+    { image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=600', title: 'Confissão', subtitle: 'Exame de consciência e guia', route: AppRoute.POENITENTIA },
     { image: 'https://images.unsplash.com/photo-1574104174498-e05a3dbfea8f?auto=format&fit=crop&q=80&w=600', title: 'Liturgia do Dia', subtitle: 'Leituras e evangelho diário', route: AppRoute.DAILY_LITURGY },
   ];
 
@@ -247,7 +255,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         )}
 
         {/* Row: Fundamentos */}
-        <ContentRow title="Comece pelo essencial">
+        <ContentRow title="Comece pelo essencial" onSeeAll={() => navigate(AppRoute.TRILHAS)}>
           {fundamentos.map(item => (
             <RowCard
               key={item.title}
@@ -293,7 +301,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         </section>
 
         {/* Row: Estudo */}
-        <ContentRow title="Estudo e Formação">
+        <ContentRow title="Estudo e Formação" onSeeAll={() => navigate(AppRoute.MAGISTERIUM)}>
           {estudo.map(item => (
             <RowCard
               key={item.title}
@@ -307,7 +315,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         </ContentRow>
 
         {/* Row: Oração e Liturgia */}
-        <ContentRow title="Oração e Liturgia">
+        <ContentRow title="Oração e Liturgia" onSeeAll={() => navigate(AppRoute.ORACAO)}>
           {oracao.map(item => (
             <RowCard
               key={item.title}
@@ -321,7 +329,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         </ContentRow>
 
         {/* Row: Ferramentas */}
-        <ContentRow title="Ferramentas e Recursos">
+        <ContentRow title="Ferramentas e Recursos" onSeeAll={() => navigate(AppRoute.DASHBOARD)}>
           {ferramentas.map(item => (
             <RowCard
               key={item.title}

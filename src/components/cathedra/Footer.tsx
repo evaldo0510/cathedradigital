@@ -107,10 +107,22 @@ const Footer: React.FC = React.memo(() => {
               "Ex Umbris Et Imaginibus In Veritatem." <br />
               Unindo a sabedoria milenar à Inteligência Teológica para o crescimento espiritual e intelectual.
             </p>
+            <div className="flex gap-6">
+              {[
+                { icon: <Icons.Instagram className="w-5 h-5" />, url: 'https://instagram.com' },
+                { icon: <Icons.Facebook className="w-5 h-5" />, url: 'https://facebook.com' },
+                { icon: <Icons.Whatsapp className="w-5 h-5" />, url: 'https://wa.me' },
+              ].map((social, i) => (
+                <a key={i} href={social.url} className="text-zinc-500 hover:text-primary transition-colors p-2 rounded-lg bg-white/5 border border-white/10 hover:border-primary/50">
+                  {social.icon}
+                </a>
+              ))}
+            </div>
             <div className="flex gap-4">
               <div className="px-4 py-1.5 border border-white/10 rounded-full text-[10px] font-bold uppercase tracking-widest text-zinc-500 bg-white/5">
                 Version 4.5 PRO
               </div>
+... keep existing code
               <div className="px-4 py-1.5 border border-white/10 rounded-full text-[10px] font-bold uppercase tracking-widest text-zinc-500 bg-white/5">
                 Enterprise SSL
               </div>
@@ -201,6 +213,8 @@ const Footer: React.FC = React.memo(() => {
                   { label: 'Missal Romano', route: AppRoute.MISSAL },
                   { label: 'Santo Rosário', route: AppRoute.ROSARY },
                   { label: 'Via Crucis', route: AppRoute.VIA_CRUCIS },
+                  { label: 'Confissão', route: AppRoute.POENITENTIA },
+                  { label: 'Ordo Missae', route: AppRoute.ORDO_MISSAE },
                 ].map(item => (
                   <button key={item.label} onClick={() => navigate(item.route)} className="text-left text-xs hover:text-primary transition-colors font-medium text-zinc-500 hover:pl-2 duration-300">
                     {item.label}
@@ -310,9 +324,18 @@ const Footer: React.FC = React.memo(() => {
               © {new Date().getFullYear()} CATHEDRA DIGITAL • AD MAIOREM DEI GLORIAM
             </p>
             <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
-              {['Termos', 'Privacidade', 'Manifesto', 'Suporte'].map((item) => (
-                <button key={item} className="text-[10px] text-zinc-500 font-bold uppercase hover:text-white transition-colors tracking-wide">
-                  {item}
+              {[
+                { label: 'Termos', route: AppRoute.ABOUT },
+                { label: 'Privacidade', route: AppRoute.ABOUT },
+                { label: 'Manifesto', route: AppRoute.ABOUT },
+                { label: 'Suporte', onClick: () => window.location.href = 'mailto:suporte@cathedra.digital' }
+              ].map((item) => (
+                <button 
+                  key={item.label} 
+                  onClick={item.onClick || (() => navigate(item.route!))}
+                  className="text-[10px] text-zinc-500 font-bold uppercase hover:text-white transition-colors tracking-wide"
+                >
+                  {item.label}
                 </button>
               ))}
             </div>
