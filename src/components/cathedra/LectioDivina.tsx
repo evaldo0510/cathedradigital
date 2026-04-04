@@ -69,6 +69,47 @@ const LectioDivina: React.FC = () => {
   const [notes, setNotes] = useState<Record<string, string>>({});
   const [timerActive, setTimerActive] = useState(false);
   const [seconds, setSeconds] = useState(0);
+  const [bibleText, setBibleText] = useState<{ number: number; text: string }[]>([]);
+  const [isBibleLoading, setIsBibleLoading] = useState(false);
+  const [bibleError, setBibleError] = useState('');
+
+  // Fetch Bible text when selected passage changes
+  useEffect(() => {
+    if (selectedPassage && currentStep !== 'intro') {
+      const match = selectedPassage.match(/^([a-zA-ZáéíóúÁÉÍÓÚ123]+)\s+(\d+)(?:,(\d+)(?:-(\d+))?)?$/);
+      if (match) {
+        const abbrev = match[1];
+        const chapter = parseInt(match[2]);
+        const startVerse = match[3] ? parseInt(match[3]) : null;
+        const endVerse = match[4] ? parseInt(match[4]) : null;
+
+        setIsBibleLoading(true);
+        setBibleError('');
+        setBibleText([]);
+
+        supabase.functions.invoke('bible-text', {
+          body: { abbrev, chapter }
+        }).then(({ data, error }) => {
+          if (error) {
+            setBibleError('Erro ao carregar o texto bíblico.');
+          } else if (data?.verses?.length > 0) {
+            let verses = data.verses;
+            if (startVerse !== null) {
+              if (endVerse !== null) {
+                verses = verses.filter((v: any) => v.number >= startVerse && v.number <= endVerse);
+              } else {
+                verses = verses.filter((v: any) => v.number === startVerse);
+              }
+            }
+            setBibleText(verses);
+          } else {
+            setBibleError('Texto não disponível para esta referência.');
+          }
+          setIsBibleLoading(false);
+        });
+      }
+    }
+  }, [selectedPassage, currentStep]);
 
   const startTimer = useCallback(() => {
     setTimerActive(true);
