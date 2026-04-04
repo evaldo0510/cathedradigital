@@ -244,11 +244,44 @@ const LectioDivina: React.FC = () => {
             <p className="text-xs font-serif italic text-primary">{activeStep.latin}</p>
             <p className="text-[10px] text-muted-foreground">{activeStep.duration}</p>
           </div>
-
+          
+          {/* Bible Text */}
           <div className="bg-secondary/50 rounded-2xl p-6 space-y-3">
-            <p className="text-foreground/90 leading-relaxed font-serif">{activeStep.instruction}</p>
-            <p className="text-sm font-bold text-primary italic">"{activeStep.prompt}"</p>
+            {isBibleLoading ? (
+              <div className="space-y-3 py-4">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div key={i} className="h-4 bg-muted rounded animate-pulse" style={{ width: `${75 + Math.random() * 25}%` }} />
+                ))}
+              </div>
+            ) : bibleError ? (
+              <p className="text-muted-foreground italic text-center text-sm">{bibleError}</p>
+            ) : bibleText.length > 0 ? (
+              <div className="space-y-2">
+                <p className="text-[10px] font-black uppercase tracking-widest text-primary/70 mb-2">Sagrada Escritura — {selectedPassage}</p>
+                <div className="font-serif leading-relaxed text-foreground/90">
+                  {bibleText.map((v, i) => (
+                    <span key={i}>
+                      <sup className="text-primary font-bold mr-1 text-[10px] select-none">{v.number}</sup>
+                      {v.text}{' '}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <>
+                <p className="text-foreground/90 leading-relaxed font-serif">{activeStep.instruction}</p>
+                <p className="text-sm font-bold text-primary italic">"{activeStep.prompt}"</p>
+              </>
+            )}
           </div>
+          
+          {/* Instructions & Prompt (Only if bible text isn't the focus) */}
+          {(bibleText.length > 0 || isBibleLoading) && (
+            <div className="border-t border-border pt-4 mt-2 space-y-2">
+              <p className="text-xs text-muted-foreground italic font-serif">{activeStep.instruction}</p>
+              <p className="text-[11px] font-bold text-primary italic">"{activeStep.prompt}"</p>
+            </div>
+          )}
 
           {/* Notes */}
           <div className="space-y-2">
