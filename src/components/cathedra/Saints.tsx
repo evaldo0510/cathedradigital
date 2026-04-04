@@ -95,7 +95,39 @@ const SAINTS_DATA: Saint[] = [
       { title: 'Catena Aurea', url: 'https://www.ecatholic2000.com/catena/untitled-encyclopediaproject.shtml' },
     ],
     quotes: ['"O temor é o princípio da sabedoria."', '"A graça não destrói a natureza, mas a aperfeiçoa."'],
-    category: 'doctor'
+    category: 'doctor',
+    image: 'https://images.unsplash.com/photo-1548610762-656391d1ad4d'
+  },
+  {
+    id: 'agostinho', name: 'Santo Agostinho de Hipona', title: 'Doctor Gratiae',
+    feastDay: '28 de Agosto', feastMonth: 8, feastDayNum: 28,
+    born: '354, Tagaste', died: '430, Hipona',
+    patronOf: ['Teólogos', 'Cervejeiros', 'Impressores'],
+    bio: 'Bispo de Hipona e um dos mais importantes Padres da Igreja. Sua conversão, narrada nas Confissões, é um dos relatos mais célebres da literatura cristã. Combateu o maniqueísmo, donatismo e pelagianismo.',
+    works: [
+      { title: 'Confissões', url: 'https://www.augustinus.it/portoghese/confessioni/index.htm' },
+      { title: 'A Cidade de Deus', url: 'https://www.augustinus.it/portoghese/cdd/index.htm' },
+      { title: 'De Trinitate', url: 'https://www.augustinus.it/latino/trinita/index.htm' },
+      { title: 'Enchiridion', url: 'https://www.newadvent.org/fathers/1302.htm' },
+    ],
+    quotes: ['"Fizeste-nos para Ti, Senhor, e o nosso coração está inquieto enquanto não descansar em Ti."', '"Ama e faz o que quiseres."'],
+    category: 'doctor',
+    image: 'https://images.unsplash.com/photo-1510627255389-9e8a718b53e7'
+  },
+  {
+    id: 'francisco-assis', name: 'São Francisco de Assis', title: 'Il Poverello',
+    feastDay: '4 de Outubro', feastMonth: 10, feastDayNum: 4,
+    born: '1181, Assis', died: '1226, Porciúncula',
+    patronOf: ['Animais', 'Ecologia', 'Itália', 'Comerciantes'],
+    bio: 'Fundador da Ordem dos Frades Menores (Franciscanos). Renunciou à riqueza para viver em pobreza radical, pregando o Evangelho com simplicidade. Recebeu os estigmas de Cristo no Monte Alverna.',
+    works: [
+      { title: 'Cântico das Criaturas', url: 'https://www.franciscanos.org.br/?p=cantico-das-criaturas' },
+      { title: 'Regra dos Frades Menores', url: 'https://www.franciscanos.org.br/?p=regra-bulada' },
+      { title: 'Testamento', url: 'https://www.franciscanos.org.br/?p=testamento' },
+    ],
+    quotes: ['"Senhor, fazei-me instrumento da vossa paz."', '"Pregai o Evangelho em todo tempo; se necessário, usai palavras."'],
+    category: 'founder',
+    image: 'https://images.unsplash.com/photo-1543333309-8cdcd4fef673'
   },
   {
     id: 'agostinho', name: 'Santo Agostinho de Hipona', title: 'Doctor Gratiae',
