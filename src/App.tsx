@@ -97,9 +97,10 @@ const AppLayout: React.FC = () => {
     };
   }, [user, profile]);
 
-  if (loading) {
-    return <LoadingFallback />;
-  }
+  // Removed blocking loading check to prevent "TELA SUMIU" issue
+  // if (loading) {
+  //   return <LoadingFallback />;
+  // }
 
   return (
     <LangContext.Provider value={{ lang, setLang: setLangState, t }}>
