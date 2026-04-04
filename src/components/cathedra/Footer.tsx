@@ -59,16 +59,16 @@ const Footer: React.FC = React.memo(() => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const vaticanLinks = [
-    { title: 'Santa Sé', url: 'https://www.vatican.va' },
-    { title: 'Catecismo', url: 'https://www.vatican.va/archive/ccc/index_po.htm' },
+    { title: 'Santa Sé (Vatican)', url: 'https://www.vatican.va' },
+    { title: 'Catecismo Oficial', url: 'https://www.vatican.va/archive/ccc/index_po.htm' },
     { title: 'Vatican News', url: 'https://www.vaticannews.va/pt.html' },
     { title: 'Dicastérios', url: 'https://www.vatican.va/content/romancuria/pt.html' },
   ];
 
   const cnbbLinks = [
-    { title: 'CNBB', url: 'https://www.cnbb.org.br' },
-    { title: 'Liturgia Diária', url: 'https://www.cnbb.org.br/liturgia' },
-    { title: 'Documentos', url: 'https://www.cnbb.org.br/category/publicacoes' },
+    { title: 'CNBB Oficial', url: 'https://www.cnbb.org.br' },
+    { title: 'Liturgia Diária CNBB', url: 'https://www.cnbb.org.br/liturgia' },
+    { title: 'Documentos e Publicações', url: 'https://www.cnbb.org.br/category/publicacoes' },
   ];
 
   const scrollToTop = () => {
