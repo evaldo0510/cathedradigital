@@ -27,15 +27,15 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
         {!isDashboard ? (
           <button 
             onClick={() => navigate(-1)} 
-            className="p-3 bg-foreground text-background rounded-full flex items-center gap-3 px-6 shadow-2xl active:scale-95 transition-all hover:bg-primary hover:text-primary-foreground group"
+            className="p-2 sm:p-3 bg-foreground text-background rounded-full flex items-center gap-2 sm:gap-3 px-4 sm:px-6 shadow-2xl active:scale-95 transition-all hover:bg-primary hover:text-primary-foreground group"
           >
             <Icons.ArrowDown className="w-4 h-4 rotate-90 group-hover:-translate-x-1 transition-transform" />
-            <span className="text-xs font-black uppercase tracking-widest">Retornar</span>
+            <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest">Retornar</span>
           </button>
         ) : (
           <button 
             onClick={onOpenSidebar} 
-            className="lg:hidden p-3 bg-muted text-foreground active:bg-primary rounded-full transition-all hover:scale-110"
+            className="hidden lg:flex p-3 bg-muted text-foreground active:bg-primary rounded-full transition-all hover:scale-110"
           >
             <Icons.Menu className="w-6 h-6" />
           </button>
@@ -132,16 +132,15 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           </div>
         )}
         {user ? (
-          <button onClick={onSignOut} className="px-3 py-2 text-xs font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-all flex items-center gap-2">
-            <span className="hidden sm:inline">Sair</span>
-            <Icons.History className="w-4 h-4 sm:hidden" />
+          <button onClick={onSignOut} className="hidden sm:flex px-3 py-2 text-xs font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-all items-center gap-2">
+            <span>Sair</span>
           </button>
         ) : (
           <button onClick={() => navigate(AppRoute.LOGIN)} className="px-4 py-2 bg-primary text-primary-foreground rounded-xl text-xs font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-lg shadow-primary/20">
             Entrar
           </button>
         )}
-        <button onClick={onToggleDark} className="p-3 bg-muted text-muted-foreground hover:text-primary rounded-2xl border border-border">
+        <button onClick={onToggleDark} className="hidden sm:flex p-3 bg-muted text-muted-foreground hover:text-primary rounded-2xl border border-border">
           {isDark ? <Icons.Star className="w-5 h-5 text-primary fill-current" /> : <Icons.History className="w-5 h-5" />}
         </button>
       </div>
