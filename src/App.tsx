@@ -56,7 +56,6 @@ const ProfilePage = lazy(() => import('./components/cathedra/ProfilePage'));
 const AdminDashboard = lazy(() => import('./components/cathedra/AdminDashboard'));
 const PoenitentiaPage = lazy(() => import('./components/cathedra/PoenitentiaPage'));
 
-
 const LoadingFallback = () => (
   <div className="flex items-center justify-center min-h-[40vh]">
     <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
@@ -165,8 +164,8 @@ const AppLayout: React.FC = () => {
                 <Route path={AppRoute.LITURGICAL_CALENDAR} element={<LiturgicalCalendarPage />} />
                 <Route path={AppRoute.COMMUNITY} element={<CommunityPage />} />
                 <Route path={AppRoute.PROFILE} element={<ProfilePage />} />
-                <Route path={AppRoute.POENITENTIA} element={<PlaceholderPage title="Confissão" description="Exame de consciência e guia para o Sacramento da Penitência." />} />
-                <Route path={AppRoute.ORDO_MISSAE} element={<PlaceholderPage title="Ordo Missae" description="Ordinário da Santa Missa em latim e português." />} />
+                <Route path={AppRoute.POENITENTIA} element={<PoenitentiaPage />} />
+                <Route path={AppRoute.ORDO_MISSAE} element={<MissalPage />} />
                 <Route path={AppRoute.PRAYERS} element={<PrayerPage />} />
                 <Route path={AppRoute.DIAGNOSTICS} element={<PlaceholderPage title="Diagnóstico" description="Painel de diagnósticos da plataforma." />} />
                 <Route path={AppRoute.CHECKOUT} element={<PlaceholderPage title="Assinatura PRO" description="Área de checkout para assinatura do plano Cathedra PRO." />} />
