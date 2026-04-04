@@ -114,60 +114,9 @@ const AppLayout: React.FC = () => {
 
         {/* Main content */}
         <main id="main-content" className="flex-1 overflow-y-auto flex flex-col relative custom-scrollbar overscroll-contain touch-pan-y scroll-smooth">
-          <AppHeader
-            user={user}
-            isDark={isDark}
-            onToggleDark={() => setIsDark(!isDark)}
-            onOpenSidebar={() => setIsSidebarOpen(true)}
-            onSignOut={signOut}
-          />
-          <div className="flex-1 p-3 sm:p-4 md:p-8 lg:p-10 pb-32 w-full max-w-6xl mx-auto page-enter">
-            <Suspense fallback={<LoadingFallback />}>
-              <Routes location={location}>
-                <Route path={AppRoute.DASHBOARD} element={<Dashboard user={appUser} />} />
-                    <Route path={AppRoute.BIBLE} element={<Bible />} />
-                    <Route path={AppRoute.CATECHISM} element={<Catechism />} />
-                    <Route path={AppRoute.SAINTS} element={<Saints />} />
-                    <Route path={AppRoute.MAGISTERIUM} element={<Magisterium />} />
-                    <Route path={AppRoute.DAILY_LITURGY} element={<DailyLiturgy />} />
-                    <Route path={AppRoute.ROSARY} element={<Rosary />} />
-                    <Route path={AppRoute.ORACAO} element={<PrayerPage />} />
-                    <Route path={AppRoute.VIA_CRUCIS} element={<ViaCrucis />} />
-                    <Route path={AppRoute.STUDY_MODE} element={
-                      <ProGate isPremium={isPremium} isLoggedIn={!!user} onLogin={() => navigate(AppRoute.LOGIN)}>
-                        <StudyMode />
-                      </ProGate>
-                    } />
-                    <Route path={AppRoute.LOGIN} element={<Auth onSuccess={() => navigate(AppRoute.DASHBOARD)} />} />
-                    <Route path={AppRoute.AQUINAS_OPERA} element={<AquinasOpera />} />
-                    <Route path={AppRoute.CERTAMEN} element={<Certamen />} />
-                    <Route path={AppRoute.MISSAL} element={<MissalPage />} />
-                    <Route path={AppRoute.FAVORITES} element={<FavoritesPage />} />
-                    <Route path={AppRoute.TRILHAS} element={<TrilhasPage />} />
-                    <Route path={AppRoute.ABOUT} element={<AboutPage />} />
-                    <Route path={AppRoute.DOGMAS} element={<DogmasPage />} />
-                    <Route path={AppRoute.LECTIO_DIVINA} element={<LectioDivina />} />
-                    <Route path={AppRoute.BREVIARY} element={<BreviaryPage />} />
-                    <Route path={AppRoute.LITANIES} element={<LitaniesPage />} />
-                    <Route path={AppRoute.LITURGICAL_CALENDAR} element={<LiturgicalCalendarPage />} />
-                    <Route path={AppRoute.COMMUNITY} element={<CommunityPage />} />
-                    <Route path={AppRoute.PROFILE} element={<ProfilePage />} />
-                    <Route path={AppRoute.POENITENTIA} element={<PlaceholderPage title="Confissão" description="Exame de consciência e guia para o Sacramento da Penitência." />} />
-                    <Route path={AppRoute.ORDO_MISSAE} element={<PlaceholderPage title="Ordo Missae" description="Ordinário da Santa Missa em latim e português." />} />
-                    <Route path={AppRoute.PRAYERS} element={<PrayerPage />} />
-                    <Route path={AppRoute.DIAGNOSTICS} element={<PlaceholderPage title="Diagnóstico" description="Painel de diagnósticos da plataforma." />} />
-                    <Route path={AppRoute.CHECKOUT} element={<PlaceholderPage title="Assinatura PRO" description="Área de checkout para assinatura do plano Cathedra PRO." />} />
-                    <Route path={AppRoute.ADMIN} element={
-                      <ProGate isPremium={true} isLoggedIn={!!user} onLogin={() => navigate(AppRoute.LOGIN)}>
-                        <AdminDashboard />
-                      </ProGate>
-                    } />
-                    <Route path="*" element={<Dashboard user={appUser} />} />
-                  </Routes>
-            </Suspense>
+          <div className="p-20 text-4xl text-black">
+            TEST RENDERING - IF YOU SEE THIS, APP IS WORKING
           </div>
-          <CathedralFooter />
-          <BottomNav onOpenSidebar={() => setIsSidebarOpen(true)} />
         </main>
       </div>
     </LangContext.Provider>
