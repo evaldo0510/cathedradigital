@@ -27,7 +27,7 @@ const ContentRow: React.FC<{ title: string; children: React.ReactNode; onSeeAll?
       <div className="flex items-center justify-between px-2">
         <h2 className="text-lg md:text-xl font-serif font-bold text-foreground">{title}</h2>
         {onSeeAll && (
-          <button onClick={onSeeAll} className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline">
+          <button onClick={onSeeAll} className="text-xs font-black uppercase tracking-widest text-primary hover:underline">
             Ver Tudo
           </button>
         )}
@@ -87,8 +87,8 @@ const RowCard: React.FC<RowCardProps> = ({ image, title, subtitle, onClick, wide
     <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent group-hover:from-primary/80 transition-colors duration-500" />
     <div className="absolute bottom-0 left-0 right-0 p-5 md:p-8 space-y-2 translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
       {icon && <div className="text-primary-foreground/90 mb-1 scale-110">{icon}</div>}
-      <h3 className="text-base md:text-xl font-serif font-black text-white leading-tight line-clamp-2">{title}</h3>
-      {subtitle && <p className="text-[10px] md:text-xs font-black uppercase tracking-widest text-primary/80 group-hover:text-white/80 transition-colors">{subtitle}</p>}
+      <h3 className="text-lg md:text-2xl font-serif font-black text-white leading-tight line-clamp-2">{title}</h3>
+      {subtitle && <p className="text-xs md:text-sm font-black uppercase tracking-widest text-primary/80 group-hover:text-white/80 transition-colors">{subtitle}</p>}
     </div>
   </motion.button>
 );
@@ -181,10 +181,10 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/15 border border-primary/25 rounded-full backdrop-blur-md shadow-sm"
+              className="inline-flex items-center gap-2 px-5 py-2 bg-primary/15 border border-primary/25 rounded-full backdrop-blur-md shadow-sm"
             >
-              <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Cathedra Digital v2</span>
+              <div className="w-2.5 h-2.5 rounded-full bg-primary animate-pulse" />
+              <span className="text-[11px] sm:text-xs font-black uppercase tracking-[0.2em] text-primary">Cathedra Digital v2</span>
             </motion.div>
 
             <motion.h1
@@ -241,10 +241,10 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Hodie • Hoje</span>
+                  <div className="w-3.5 h-3.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">Hodie • Hoje</span>
                 </div>
-                <span className="text-[10px] font-black uppercase tracking-widest text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20">Tempo Comum</span>
+                <span className="text-[11px] font-black uppercase tracking-widest text-primary bg-primary/10 px-4 py-1.5 rounded-full border border-primary/20">Tempo Comum</span>
               </div>
 
               <div className="space-y-4">
@@ -276,7 +276,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
 
               <button 
                 onClick={() => navigate(AppRoute.DAILY_LITURGY)}
-                className="w-full py-3 bg-foreground text-background rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-primary hover:text-primary-foreground transition-all shadow-lg"
+                className="w-full py-4 bg-foreground text-background rounded-2xl text-xs font-black uppercase tracking-[0.2em] hover:bg-primary hover:text-primary-foreground transition-all shadow-lg"
               >
                 Acessar Liturgia
               </button>
@@ -297,12 +297,12 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           
           <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 md:gap-16">
             <div className="flex-1 space-y-4 text-center md:text-left">
-              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Versículo do Dia</span>
-              <p className="text-2xl md:text-4xl font-serif font-bold text-white leading-tight italic">
+              <span className="text-xs font-black uppercase tracking-[0.3em] text-primary">Versículo do Dia</span>
+              <p className="text-3xl md:text-5xl font-serif font-bold text-white leading-tight italic">
                 "O Senhor é o meu pastor, nada me faltará. Em verdes pastagens me faz repousar."
               </p>
               <div className="flex items-center justify-center md:justify-start gap-4 pt-2">
-                <span className="text-xs font-black uppercase tracking-widest text-primary/80">Salmo 23, 1</span>
+                <span className="text-sm font-black uppercase tracking-widest text-primary/80">Salmo 23, 1</span>
                 <button className="p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors">
                   <Icons.Heart className="w-4 h-4 text-white" />
                 </button>

@@ -29,7 +29,7 @@ const Index = () => {
             className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 border border-primary/20 rounded-full text-primary"
           >
             <Sparkles className="w-4 h-4" />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em]">O Santuário Digital da Fé</span>
+            <span className="text-xs font-black uppercase tracking-[0.2em]">O Santuário Digital da Fé</span>
           </motion.div>
 
           <motion.h1 
@@ -82,7 +82,7 @@ const Index = () => {
                 <Music className="h-7 w-7" />
               </div>
               <CardTitle className="text-2xl font-serif">Frei Gilson</CardTitle>
-              <CardDescription className="text-sm font-medium uppercase tracking-widest text-primary/60">Som do Monte</CardDescription>
+              <CardDescription className="text-xs font-medium uppercase tracking-widest text-primary/60">Frei Gilson • Som do Monte</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <p className="text-muted-foreground leading-relaxed">
@@ -110,7 +110,7 @@ const Index = () => {
                 <BookOpen className="h-7 w-7" />
               </div>
               <CardTitle className="text-2xl font-serif">Estudo da Fé</CardTitle>
-              <CardDescription className="text-sm font-medium uppercase tracking-widest text-primary/60">Magistério e Tradição</CardDescription>
+              <CardDescription className="text-xs font-medium uppercase tracking-widest text-primary/60">Magistério e Tradição</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <p className="text-muted-foreground leading-relaxed">
@@ -119,7 +119,7 @@ const Index = () => {
               <Button className="w-full gap-2 rounded-xl font-bold" onClick={() => navigate(AppRoute.BIBLE)}>
                 Explorar Biblioteca
               </Button>
-              <p className="text-center italic text-xs text-muted-foreground">
+              <p className="text-center italic text-sm text-muted-foreground">
                 "Fides quaerens intellectum"
               </p>
             </CardContent>
@@ -131,14 +131,14 @@ const Index = () => {
                 <Handshake className="h-7 w-7" />
               </div>
               <CardTitle className="text-2xl font-serif">Comunidade</CardTitle>
-              <CardDescription className="text-sm font-medium uppercase tracking-widest text-primary/60">Novas Parcerias</CardDescription>
+              <CardDescription className="text-xs font-medium uppercase tracking-widest text-primary/60">Novas Parcerias</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <p className="text-muted-foreground leading-relaxed">
                 Estamos preparando novidades e parcerias especiais para fortalecer sua caminhada cristã.
               </p>
               <div className="p-4 bg-muted/50 rounded-2xl border border-dashed border-primary/30 text-center">
-                <span className="text-xs font-black uppercase tracking-widest text-primary">Em Breve</span>
+                <span className="text-sm font-black uppercase tracking-widest text-primary">Em Breve</span>
               </div>
             </CardContent>
           </Card>
