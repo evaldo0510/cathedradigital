@@ -104,14 +104,14 @@ const AppLayout: React.FC = () => {
       isPremium: !!profile.is_premium,
       joinedAt: user.created_at,
       progress: { 
-        streak: profile.streak || 0, 
-        totalMinutesRead: profile.total_minutes_read || 0, 
-        completedBooks: profile.completed_books || [], 
-        xp: profile.xp || 0, 
-        level: profile.level || 1, 
-        badges: profile.badges || [] 
+        streak: (profile as any).streak || 0, 
+        totalMinutesRead: (profile as any).total_minutes_read || 0, 
+        completedBooks: (profile as any).completed_books || [], 
+        xp: (profile as any).xp || 0, 
+        level: (profile as any).level || 1, 
+        badges: (profile as any).badges || [] 
       },
-      stats: { versesSaved: profile.stats?.versesSaved || 0, studiesPerformed: profile.stats?.studiesPerformed || 0, daysActive: profile.stats?.daysActive || 0 },
+      stats: { versesSaved: 0, studiesPerformed: 0, daysActive: (profile as any).streak || 0 },
     };
   }, [user, profile]);
 
