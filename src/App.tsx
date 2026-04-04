@@ -54,6 +54,8 @@ const LiturgicalCalendarPage = lazy(() => import('./components/cathedra/Liturgic
 const CommunityPage = lazy(() => import('./components/cathedra/CommunityPage'));
 const ProfilePage = lazy(() => import('./components/cathedra/ProfilePage'));
 const AdminDashboard = lazy(() => import('./components/cathedra/AdminDashboard'));
+const PoenitentiaPage = lazy(() => import('./components/cathedra/PoenitentiaPage'));
+
 
 const LoadingFallback = () => (
   <div className="flex items-center justify-center min-h-[40vh]">
