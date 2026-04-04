@@ -1,6 +1,7 @@
 {
   "name": "Cathedra Digital",
   "short_name": "Cathedra",
+  "version": "1.0.1",
   "description": "Sanctum Teologicum — Bíblia, Catecismo, Magistério e oração",
   "start_url": "/",
   "display": "standalone",
