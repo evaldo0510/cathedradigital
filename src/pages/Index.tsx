@@ -48,10 +48,24 @@ const Index = () => {
             </CardContent>
           </Card>
 
-          <Card className="flex flex-col items-center justify-center border-dashed border-2 border-muted-foreground/20 bg-transparent p-6">
-            <p className="text-center italic text-muted-foreground">
-              "A oração é a chave que abre o coração de Deus."
-            </p>
+          <Card className="border-primary/20 bg-white/50 backdrop-blur-sm">
+            <CardHeader>
+              <div className="flex justify-center mb-4">
+                <div className="rounded-full bg-yellow-500/10 p-3 text-yellow-600">
+                  <Zap className="h-8 w-8" />
+                </div>
+              </div>
+              <CardTitle>Carregamento Rápido</CardTitle>
+              <CardDescription>Performance e Agilidade</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="mb-6 text-sm text-muted-foreground text-center">
+                A tecnologia utilizada permite que você acesse todos os conteúdos instantaneamente, sem esperas desnecessárias.
+              </p>
+              <div className="text-center italic text-muted-foreground text-xs">
+                "A oração é a chave que abre o coração de Deus."
+              </div>
+            </CardContent>
           </Card>
         </div>
         
