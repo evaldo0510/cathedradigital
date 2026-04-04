@@ -46,7 +46,7 @@ const BottomNav: React.FC<{ onOpenSidebar: () => void }> = ({ onOpenSidebar }) =
 
   return (
     <div className="lg:hidden fixed bottom-0 left-0 right-0 z-[160] px-4 pb-6 pointer-events-none">
-      <div className="max-w-md mx-auto bg-card/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl flex items-stretch pointer-events-auto overflow-hidden ring-1 ring-black/20">
+      <div className="max-w-md mx-auto bg-card/90 backdrop-blur-2xl border border-primary/20 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex items-stretch pointer-events-auto overflow-hidden ring-1 ring-primary/10">
         {items.map((item) => (
           <BottomNavItem 
             key={item.label}
