@@ -75,7 +75,7 @@ const CatechismContent: React.FC<{ paragraph: number }> = ({ paragraph }) => {
   }
 
   return (
-    <div className="reader-text text-foreground/90 leading-[2] text-base">
+    <div className="reader-text text-foreground/90 leading-[2] text-lg md:text-xl">
       <p className="font-serif">{data?.content}</p>
     </div>
   );

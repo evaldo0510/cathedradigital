@@ -201,7 +201,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
-              className="text-lg md:text-3xl text-muted-foreground font-serif italic max-w-xl leading-relaxed opacity-90 mx-auto md:mx-0 border-l-2 border-primary/30 pl-6"
+              className="text-xl md:text-3xl text-muted-foreground font-serif italic max-w-xl leading-relaxed opacity-90 mx-auto md:mx-0 border-l-2 border-primary/30 pl-6"
             >
               "Onde está o teu tesouro, aí estará também o teu coração." <br className="hidden md:block" />
               Um santuário digital para elevar sua alma.

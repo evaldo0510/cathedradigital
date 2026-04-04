@@ -223,7 +223,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
                 <div key={p.key} className="bg-white/[0.04] rounded-2xl p-5 cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setExpandedPrayer(expandedPrayer === p.key ? null : p.key)}>
                   <p className="font-bold text-sm text-amber-100/90">{p.label}</p>
                   {expandedPrayer === p.key && (
-                    <p className="text-base text-amber-100/60 mt-3 font-serif leading-[1.9]">{PRAYERS[p.key as keyof typeof PRAYERS]}</p>
+                    <p className="text-lg md:text-xl text-amber-100/60 mt-3 font-serif leading-[1.9]">{PRAYERS[p.key as keyof typeof PRAYERS]}</p>
                   )}
                 </div>
               ))}
