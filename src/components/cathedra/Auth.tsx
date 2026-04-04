@@ -8,7 +8,7 @@ interface AuthProps {
 }
 
 const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
-  const [mode, setMode] = useState<'login' | 'signup'>('login');
+  const [mode, setMode] = useState<'login' | 'signup' | 'forgot'>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
@@ -21,6 +21,19 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
     setLoading(true);
     setError('');
     setSuccess('');
+
+    if (mode === 'forgot') {
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      if (resetError) {
+        setError(resetError.message);
+      } else {
+        setSuccess('Se este email estiver cadastrado, você receberá um link para redefinir sua senha.');
+      }
+      setLoading(false);
+      return;
+    }
 
     if (mode === 'signup') {
       const { error: signUpError } = await supabase.auth.signUp({
@@ -35,7 +48,6 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
         setError(signUpError.message);
       } else {
         setSuccess('Conta criada! Fazendo login...');
-        // Auto-login after signup
         const { error: loginError } = await supabase.auth.signInWithPassword({ email, password });
         if (loginError) {
           setSuccess('Conta criada com sucesso! Você já pode fazer login.');
@@ -56,6 +68,12 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
     setLoading(false);
   };
 
+  const switchMode = (newMode: 'login' | 'signup' | 'forgot') => {
+    setMode(newMode);
+    setError('');
+    setSuccess('');
+  };
+
   return (
     <div className="max-w-md mx-auto space-y-8">
       <div className="text-center space-y-4">
@@ -63,10 +81,10 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
           <Logo className="w-16 h-16" />
         </div>
         <h1 className="text-3xl font-serif font-bold text-foreground">
-          {mode === 'login' ? 'Acessar Cathedra' : 'Criar Conta'}
+          {mode === 'login' ? 'Acessar Cathedra' : mode === 'signup' ? 'Criar Conta' : 'Redefinir Senha'}
         </h1>
         <p className="text-muted-foreground font-serif italic">
-          {mode === 'login' ? 'Entre para acessar recursos exclusivos.' : 'Junte-se à comunidade de fé e estudo.'}
+          {mode === 'login' ? 'Entre para acessar recursos exclusivos.' : mode === 'signup' ? 'Junte-se à comunidade de fé e estudo.' : 'Informe seu email para receber o link de redefinição.'}
         </p>
       </div>
 
@@ -97,24 +115,31 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
               className="w-full px-4 py-3 rounded-2xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
             />
           </div>
-          <div>
-            <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 block">Senha</label>
-            <input
-              type="password" value={password} onChange={e => setPassword(e.target.value)} required minLength={6}
-              placeholder="Mínimo 6 caracteres"
-              className="w-full px-4 py-3 rounded-2xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
-            />
-          </div>
+          {mode !== 'forgot' && (
+            <div>
+              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 block">Senha</label>
+              <input
+                type="password" value={password} onChange={e => setPassword(e.target.value)} required minLength={6}
+                placeholder="Mínimo 6 caracteres"
+                className="w-full px-4 py-3 rounded-2xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+              />
+            </div>
+          )}
           <button type="submit" disabled={loading}
             className="w-full py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all disabled:opacity-50">
-            {loading ? 'Aguarde...' : mode === 'login' ? 'Entrar' : 'Criar Conta'}
+            {loading ? 'Aguarde...' : mode === 'login' ? 'Entrar' : mode === 'signup' ? 'Criar Conta' : 'Enviar Link'}
           </button>
         </form>
 
-        <div className="text-center">
-          <button onClick={() => { setMode(mode === 'login' ? 'signup' : 'login'); setError(''); setSuccess(''); }}
+        <div className="text-center space-y-2">
+          {mode === 'login' && (
+            <button onClick={() => switchMode('forgot')} className="text-sm text-muted-foreground hover:text-primary hover:underline font-medium block w-full">
+              Esqueci minha senha
+            </button>
+          )}
+          <button onClick={() => switchMode(mode === 'login' ? 'signup' : 'login')}
             className="text-sm text-primary hover:underline font-medium">
-            {mode === 'login' ? 'Não tem conta? Criar agora' : 'Já tem conta? Fazer login'}
+            {mode === 'login' ? 'Não tem conta? Criar agora' : mode === 'signup' ? 'Já tem conta? Fazer login' : 'Voltar ao login'}
           </button>
         </div>
       </div>

@@ -4,35 +4,39 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpen, Heart, Users, Zap, ChevronRight, ChevronLeft } from 'lucide-react';
 import { AppRoute } from '@/types';
 import { Logo } from '@/constants';
+import onboardingBible from '@/assets/onboarding-bible.jpg';
+import onboardingPrayer from '@/assets/onboarding-prayer.jpg';
+import onboardingStudy from '@/assets/onboarding-study.jpg';
+import onboardingCommunity from '@/assets/onboarding-community.jpg';
 
 const SLIDES = [
   {
-    icon: <BookOpen className="w-12 h-12" />,
+    icon: <BookOpen className="w-10 h-10" />,
     title: 'Bem-vindo à Cathedra',
     subtitle: 'Sua biblioteca católica digital',
-    description: 'Acesse a Bíblia Sagrada, o Catecismo, documentos do Magistério, vidas dos Santos e muito mais — tudo num único lugar, organizado para seu crescimento na fé.',
-    color: 'from-primary/20 to-primary/5',
+    description: 'Acesse a Bíblia Sagrada, o Catecismo, documentos do Magistério, vidas dos Santos e muito mais — tudo num único lugar.',
+    image: onboardingBible,
   },
   {
-    icon: <Heart className="w-12 h-12" />,
+    icon: <Heart className="w-10 h-10" />,
     title: 'Vida de Oração',
-    subtitle: 'Rosário, Liturgia das Horas e muito mais',
-    description: 'Reze o Santo Rosário, a Via-Sacra, a Lectio Divina e acompanhe o Calendário Litúrgico. A Cathedra é sua companheira de oração diária.',
-    color: 'from-rose-500/20 to-rose-500/5',
+    subtitle: 'Rosário, Liturgia das Horas e mais',
+    description: 'Reze o Santo Rosário, a Via-Sacra, a Lectio Divina e acompanhe o Calendário Litúrgico. Sua companheira de oração diária.',
+    image: onboardingPrayer,
   },
   {
-    icon: <Zap className="w-12 h-12" />,
+    icon: <Zap className="w-10 h-10" />,
     title: 'Estudo Inteligente',
     subtitle: 'IA a serviço da Tradição',
-    description: 'Use o Colloquium, nossa IA treinada no Magistério, para aprofundar seus estudos teológicos. Faça perguntas e receba respostas fundamentadas na sã doutrina.',
-    color: 'from-amber-500/20 to-amber-500/5',
+    description: 'Use o Colloquium, nossa IA treinada no Magistério, para aprofundar seus estudos teológicos com respostas fundamentadas.',
+    image: onboardingStudy,
   },
   {
-    icon: <Users className="w-12 h-12" />,
+    icon: <Users className="w-10 h-10" />,
     title: 'Comunidade de Fé',
     subtitle: 'Cresça junto com outros fiéis',
-    description: 'Participe da comunidade, compartilhe reflexões, acompanhe seu progresso com streaks e conquistas, e caminhe na fé com irmãos do mundo inteiro.',
-    color: 'from-blue-500/20 to-blue-500/5',
+    description: 'Participe da comunidade, compartilhe reflexões, acompanhe seu progresso e caminhe na fé com irmãos do mundo inteiro.',
+    image: onboardingCommunity,
   },
 ];
 
@@ -47,29 +51,22 @@ const OnboardingPage: React.FC = () => {
   };
 
   const handleNext = () => {
-    if (isLast) {
-      handleFinish();
-    } else {
-      setCurrentSlide(prev => prev + 1);
-    }
+    if (isLast) handleFinish();
+    else setCurrentSlide(prev => prev + 1);
   };
 
   const handlePrev = () => {
     if (currentSlide > 0) setCurrentSlide(prev => prev - 1);
   };
 
-  const handleSkip = () => {
-    handleFinish();
-  };
-
   const slide = SLIDES[currentSlide];
 
   return (
     <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4">
-      <div className="w-full max-w-lg space-y-8">
+      <div className="w-full max-w-lg space-y-6">
         {/* Logo */}
         <div className="flex justify-center">
-          <Logo className="w-12 h-12 text-primary" />
+          <Logo className="w-10 h-10 text-primary" />
         </div>
 
         {/* Slide content */}
@@ -80,18 +77,26 @@ const OnboardingPage: React.FC = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -40 }}
             transition={{ duration: 0.25 }}
-            className={`bg-gradient-to-br ${slide.color} border border-border rounded-3xl p-8 md:p-10 text-center space-y-5`}
+            className="bg-card border border-border rounded-3xl overflow-hidden"
           >
-            <div className="flex justify-center text-primary">
-              {slide.icon}
-            </div>
-            <div className="space-y-2">
+            {/* Image */}
+            <img
+              src={slide.image}
+              alt={slide.title}
+              className="w-full h-48 md:h-56 object-cover"
+            />
+
+            {/* Text */}
+            <div className="p-6 md:p-8 text-center space-y-3">
+              <div className="flex justify-center text-primary">
+                {slide.icon}
+              </div>
               <h1 className="text-2xl md:text-3xl font-serif font-bold text-foreground">{slide.title}</h1>
-              <p className="text-sm font-black uppercase tracking-widest text-primary">{slide.subtitle}</p>
+              <p className="text-[10px] font-black uppercase tracking-widest text-primary">{slide.subtitle}</p>
+              <p className="text-muted-foreground leading-relaxed text-sm">
+                {slide.description}
+              </p>
             </div>
-            <p className="text-muted-foreground leading-relaxed text-sm md:text-base">
-              {slide.description}
-            </p>
           </motion.div>
         </AnimatePresence>
 
@@ -111,18 +116,11 @@ const OnboardingPage: React.FC = () => {
         {/* Navigation buttons */}
         <div className="flex items-center justify-between">
           {currentSlide > 0 ? (
-            <button
-              onClick={handlePrev}
-              className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <ChevronLeft className="w-4 h-4" />
-              Voltar
+            <button onClick={handlePrev} className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <ChevronLeft className="w-4 h-4" /> Voltar
             </button>
           ) : (
-            <button
-              onClick={handleSkip}
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
+            <button onClick={handleFinish} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               Pular
             </button>
           )}
