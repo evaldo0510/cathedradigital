@@ -126,7 +126,7 @@ const AppLayout: React.FC = () => {
       <OfflineIndicator />
       <div className="flex h-[100dvh] w-full overflow-hidden bg-background selection:bg-primary/20">
         <AnimatePresence mode="wait">
-          {(location.pathname !== AppRoute.HOME || user) && (
+          {location.pathname !== AppRoute.HOME && (
             <motion.div 
               key="sidebar-wrapper"
               initial={{ opacity: 0, x: -300 }}
@@ -150,7 +150,7 @@ const AppLayout: React.FC = () => {
         </AnimatePresence>
 
         <main id="main-content" className="flex-1 overflow-y-auto flex flex-col relative custom-scrollbar overscroll-auto touch-pan-y scroll-smooth">
-          {(location.pathname !== AppRoute.HOME || user) && (
+          {location.pathname !== AppRoute.HOME && (
             <AppHeader
               user={user}
               isDark={isDark}
@@ -159,7 +159,7 @@ const AppLayout: React.FC = () => {
               onSignOut={signOut}
             />
           )}
-          <div className={location.pathname === AppRoute.HOME && !user ? "flex-1" : "flex-1 p-3 sm:p-4 md:p-5 lg:p-6 pb-32 lg:pb-12 w-full max-w-6xl mx-auto"}>
+          <div className={location.pathname === AppRoute.HOME ? "flex-1" : "flex-1 p-3 sm:p-4 md:p-5 lg:p-6 pb-32 lg:pb-12 w-full max-w-6xl mx-auto"}>
 
             <Suspense fallback={<LoadingFallback />}>
               <Routes location={location}>
@@ -211,7 +211,7 @@ const AppLayout: React.FC = () => {
               </Routes>
             </Suspense>
           </div>
-          {(location.pathname !== AppRoute.HOME || user) && (
+          {location.pathname !== AppRoute.HOME && (
             <>
               <CathedralFooter />
               <BottomNav onOpenSidebar={() => setIsSidebarOpen(true)} />
