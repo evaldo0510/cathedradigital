@@ -6,6 +6,7 @@ const corsHeaders = {
 };
 
 const API_BASE = 'http://calapi.inadiutorium.cz/api/v0';
+const READINGS_API = 'https://liturgia.up.railway.app';
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -14,6 +15,19 @@ serve(async (req) => {
 
   try {
     const { action, lang = 'la', calendar = 'general-la', year, month, day } = await req.json();
+
+    if (action === 'readings') {
+      let url = READINGS_API;
+      if (day && month) {
+        url += `?dia=${day}&mes=${month}`;
+      }
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`Readings API error: ${response.status}`);
+      const data = await response.json();
+      return new Response(JSON.stringify(data), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
 
     let url: string;
 
