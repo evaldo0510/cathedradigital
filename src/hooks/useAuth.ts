@@ -7,6 +7,7 @@ export interface Profile {
   name: string;
   email: string;
   is_premium: boolean;
+  role: 'user' | 'admin' | string | null;
   avatar_url: string | null;
 }
 
