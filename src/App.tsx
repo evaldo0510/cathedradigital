@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import PageTransition from './components/PageTransition';
@@ -7,8 +7,6 @@ import CathedralSidebar from './components/cathedra/Sidebar';
 import CathedralFooter from './components/cathedra/Footer';
 import BottomNav from './components/cathedra/BottomNav';
 import AppHeader from './components/cathedra/AppHeader';
-import PlaceholderPage from './components/cathedra/PlaceholderPage';
-import ProGate from './components/cathedra/ProGate';
 import { AppRoute, Language } from './types';
 import { UI_TRANSLATIONS } from './services/translations';
 import { useAuth } from './hooks/useAuth';
@@ -16,33 +14,7 @@ import { LangContext } from './contexts/LangContext';
 import { supabase } from '@/integrations/supabase/client';
 import CommandCenter from './components/cathedra/CommandCenter';
 import OfflineIndicator from './components/cathedra/OfflineIndicator';
-
-// Lazy-loaded route components
-const Dashboard = lazy(() => import('./components/cathedra/Dashboard'));
-const Bible = lazy(() => import('./components/cathedra/Bible'));
-const Catechism = lazy(() => import('./components/cathedra/Catechism'));
-const StudyMode = lazy(() => import('./components/cathedra/StudyMode'));
-const Saints = lazy(() => import('./components/cathedra/Saints'));
-const Magisterium = lazy(() => import('./components/cathedra/Magisterium'));
-const DailyLiturgy = lazy(() => import('./components/cathedra/DailyLiturgy'));
-const ViaCrucis = lazy(() => import('./components/cathedra/ViaCrucis'));
-const Rosary = lazy(() => import('./components/cathedra/Rosary'));
-const PrayerPage = lazy(() => import('./components/cathedra/PrayerPage'));
-const Auth = lazy(() => import('./components/cathedra/Auth'));
-const AquinasOpera = lazy(() => import('./components/cathedra/AquinasOpera'));
-const Certamen = lazy(() => import('./components/cathedra/Certamen'));
-const MissalPage = lazy(() => import('./components/cathedra/MissalPage'));
-const FavoritesPage = lazy(() => import('./components/cathedra/FavoritesPage'));
-const TrilhasPage = lazy(() => import('./components/cathedra/TrilhasPage'));
-const AboutPage = lazy(() => import('./components/cathedra/AboutPage'));
-const DogmasPage = lazy(() => import('./components/cathedra/DogmasPage'));
-const LectioDivina = lazy(() => import('./components/cathedra/LectioDivina'));
-const BreviaryPage = lazy(() => import('./components/cathedra/BreviaryPage'));
-const LitaniesPage = lazy(() => import('./components/cathedra/LitaniesPage'));
-const LiturgicalCalendarPage = lazy(() => import('./components/cathedra/LiturgicalCalendarPage'));
-const CommunityPage = lazy(() => import('./components/cathedra/CommunityPage'));
-const ProfilePage = lazy(() => import('./components/cathedra/ProfilePage'));
-const AdminDashboard = lazy(() => import('./components/cathedra/AdminDashboard'));
+import Dashboard from './components/cathedra/Dashboard';
 
 const LoadingFallback = () => (
   <div className="flex items-center justify-center min-h-[40vh]">
@@ -94,9 +66,6 @@ const AppLayout: React.FC = () => {
     };
   }, [user, profile]);
 
-  // Non-blocking loading to prevent app from "disappearing"
-  const isInitializing = loading && !user && location.pathname !== AppRoute.LOGIN;
-
   return (
     <LangContext.Provider value={{ lang, setLang: setLangState, t }}>
       <ScrollToTop />
@@ -119,56 +88,11 @@ const AppLayout: React.FC = () => {
             onSignOut={signOut}
           />
           <div className="flex-1 p-3 sm:p-4 md:p-8 lg:p-10 pb-32 w-full max-w-6xl mx-auto page-enter">
-            {isInitializing ? (
-              <LoadingFallback />
-            ) : (
-              <Suspense fallback={<LoadingFallback />}>
-                <AnimatePresence mode="wait" initial={false}>
-                  <PageTransition key={location.pathname}>
-                    <Routes location={location}>
-                      <Route path={AppRoute.DASHBOARD} element={<Dashboard user={appUser} />} />
-                      <Route path={AppRoute.BIBLE} element={<Bible />} />
-                      <Route path={AppRoute.CATECHISM} element={<Catechism />} />
-                      <Route path={AppRoute.SAINTS} element={<Saints />} />
-                      <Route path={AppRoute.MAGISTERIUM} element={<Magisterium />} />
-                      <Route path={AppRoute.DAILY_LITURGY} element={<DailyLiturgy />} />
-                      <Route path={AppRoute.ROSARY} element={<Rosary />} />
-                      <Route path={AppRoute.ORACAO} element={<PrayerPage />} />
-                      <Route path={AppRoute.VIA_CRUCIS} element={<ViaCrucis />} />
-                      <Route path={AppRoute.STUDY_MODE} element={
-                        <ProGate isPremium={isPremium} isLoggedIn={!!user} onLogin={() => navigate(AppRoute.LOGIN)}>
-                          <StudyMode />
-                        </ProGate>
-                      } />
-                      <Route path={AppRoute.LOGIN} element={<Auth onSuccess={() => navigate(AppRoute.DASHBOARD)} />} />
-                      <Route path={AppRoute.AQUINAS_OPERA} element={<AquinasOpera />} />
-                      <Route path={AppRoute.CERTAMEN} element={<Certamen />} />
-                      <Route path={AppRoute.MISSAL} element={<MissalPage />} />
-                      <Route path={AppRoute.FAVORITES} element={<FavoritesPage />} />
-                      <Route path={AppRoute.TRILHAS} element={<TrilhasPage />} />
-                      <Route path={AppRoute.ABOUT} element={<AboutPage />} />
-                      <Route path={AppRoute.DOGMAS} element={<DogmasPage />} />
-                      <Route path={AppRoute.LECTIO_DIVINA} element={<LectioDivina />} />
-                      <Route path={AppRoute.BREVIARY} element={<BreviaryPage />} />
-                      <Route path={AppRoute.LITANIES} element={<LitaniesPage />} />
-                      <Route path={AppRoute.LITURGICAL_CALENDAR} element={<LiturgicalCalendarPage />} />
-                      <Route path={AppRoute.COMMUNITY} element={<CommunityPage />} />
-                      <Route path={AppRoute.PROFILE} element={<ProfilePage />} />
-                      <Route path={AppRoute.POENITENTIA} element={<PlaceholderPage title="Confissão" description="Exame de consciência e guia para o Sacramento da Penitência." />} />
-                      <Route path={AppRoute.ORDO_MISSAE} element={<PlaceholderPage title="Ordo Missae" description="Ordinário da Santa Missa em latim e português." />} />
-                      <Route path={AppRoute.PRAYERS} element={<PrayerPage />} />
-                      <Route path={AppRoute.DIAGNOSTICS} element={<PlaceholderPage title="Diagnóstico" description="Painel de diagnósticos da plataforma." />} />
-                      <Route path={AppRoute.CHECKOUT} element={<PlaceholderPage title="Assinatura PRO" description="Área de checkout para assinatura do plano Cathedra PRO." />} />
-                      <Route path={AppRoute.ADMIN} element={
-                        <ProGate isPremium={true} isLoggedIn={!!user} onLogin={() => navigate(AppRoute.LOGIN)}>
-                          <AdminDashboard />
-                        </ProGate>
-                      } />
-                      <Route path="*" element={<Dashboard user={appUser} />} />
-                    </Routes>
-                  </PageTransition>
-                </AnimatePresence>
-              </Suspense>
+            {loading && !user ? <LoadingFallback /> : (
+              <Routes location={location}>
+                <Route path={AppRoute.DASHBOARD} element={<Dashboard user={appUser} />} />
+                <Route path="*" element={<Dashboard user={appUser} />} />
+              </Routes>
             )}
           </div>
           <CathedralFooter />
