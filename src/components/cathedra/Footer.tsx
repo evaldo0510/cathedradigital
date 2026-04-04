@@ -317,8 +317,8 @@ const Footer: React.FC = React.memo(() => {
             <div className="space-y-4">
               <select
                 value={selectedDiocese}
-                onChange={e => setSelectedDiocese(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-zinc-400 text-xs focus:outline-none focus:border-primary/50 transition-all cursor-pointer appearance-none"
+                onChange={e => handleDioceseChange(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-zinc-400 text-xs focus:outline-none focus:border-primary/50 transition-all cursor-pointer appearance-none hover:bg-white/10"
               >
                 <option value="" className="bg-[#0a0a0a]">Selecione sua diocese...</option>
                 {DIOCESES_BR.map(d => (
