@@ -11,6 +11,7 @@ interface QuickModalProps {
 
 // ─── Bible Modal ───
 export const BibleModal: React.FC<QuickModalProps> = ({ isOpen, onClose }) => {
+  const navigate = useNavigate();
   const [book, setBook] = useState('Gn');
   const [chapter, setChapter] = useState(1);
   const [text, setText] = useState('');
