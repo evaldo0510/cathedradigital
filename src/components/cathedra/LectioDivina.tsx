@@ -315,7 +315,7 @@ const LectioDivina: React.FC = () => {
           </button>
         ) : (
           <button
-            onClick={() => { setCurrentStep('intro'); setNotes({}); setSeconds(0); }}
+            onClick={() => { setCurrentStep('intro'); setNotes({}); setSeconds(0); setBibleText([]); }}
             className="px-6 py-3 rounded-xl bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 transition-all"
           >
             ✓ Concluir
