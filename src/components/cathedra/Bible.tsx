@@ -162,13 +162,17 @@ const Bible: React.FC = () => {
           .update({ completed_books: newCompleted, badges: updatedBadges })
           .eq('id', user.id)
           .then(() => {
-            // Show toast for new badges
-            newBadgeIds.forEach(id => {
-              const badge = getBadgeById(id);
-              if (badge) {
-                toast.success(`🏅 Nova conquista: ${badge.icon} ${badge.name}`, { description: badge.description, duration: 5000 });
-              }
-            });
+            if (newBadgeIds.length > 0) {
+              // Fire confetti
+              confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 }, colors: ['#FFD700', '#FF6B35', '#4ECDC4', '#8B5CF6'] });
+              // Show toasts
+              newBadgeIds.forEach(id => {
+                const badge = getBadgeById(id);
+                if (badge) {
+                  toast.success(`🏅 Nova conquista: ${badge.icon} ${badge.name}`, { description: badge.description, duration: 5000 });
+                }
+              });
+            }
           });
       }
       return next;
