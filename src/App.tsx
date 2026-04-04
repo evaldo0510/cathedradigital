@@ -12,6 +12,7 @@ import PlaceholderPage from './components/cathedra/PlaceholderPage';
 import CheckoutPage from './components/cathedra/CheckoutPage';
 import DiagnosticsPage from './components/cathedra/DiagnosticsPage';
 import ProGate from './components/cathedra/ProGate';
+import Index from './pages/Index';
 import { AppRoute, Language } from './types';
 import { UI_TRANSLATIONS } from './services/translations';
 import { useAuth } from './hooks/useAuth';
@@ -146,6 +147,7 @@ const AppLayout: React.FC = () => {
           <div className="flex-1 p-3 sm:p-4 md:p-5 lg:p-6 pb-32 lg:pb-12 w-full max-w-6xl mx-auto">
             <Suspense fallback={<LoadingFallback />}>
               <Routes location={location}>
+                <Route path={AppRoute.HOME} element={<Index />} />
                 <Route path={AppRoute.DASHBOARD} element={<Dashboard user={appUser} />} />
                 <Route path={AppRoute.BIBLE} element={<Bible />} />
                 <Route path={AppRoute.CATECHISM} element={<Catechism />} />

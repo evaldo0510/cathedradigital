@@ -17,7 +17,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
 }) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const isDashboard = pathname === AppRoute.DASHBOARD;
+  const isDashboard = pathname === AppRoute.DASHBOARD || pathname === AppRoute.HOME;
   const { notifications, unreadCount, markAsRead, markAllRead } = useNotifications();
   const [showNotifs, setShowNotifs] = useState(false);
 
