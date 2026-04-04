@@ -718,22 +718,35 @@ const Saints: React.FC = () => {
                 <button
                   key={saint.id}
                   onClick={() => setSelectedSaint(saint)}
-                  className="text-left bg-card border border-border rounded-3xl p-8 hover:border-primary/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group"
+                  className="text-left bg-card border border-border rounded-3xl overflow-hidden hover:border-primary/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group flex flex-col"
                 >
-                  <div className="flex items-start justify-between mb-4">
-                    <span className={`px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${CATEGORY_COLORS[saint.category]}`}>
-                      {CATEGORY_LABELS[saint.category]}
-                    </span>
-                    <Icons.ArrowDown className="w-4 h-4 text-muted-foreground -rotate-90 group-hover:text-primary transition-colors" />
+                  <div className="relative h-48 w-full overflow-hidden">
+                    <SacredImage
+                      src={saint.image || 'https://images.unsplash.com/photo-1548610762-656391d1ad4d'}
+                      alt={saint.name}
+                      className="w-full h-full transform group-hover:scale-110 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-stone-900/80 to-transparent opacity-60" />
+                    <div className="absolute top-4 left-4">
+                      <span className={`px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${CATEGORY_COLORS[saint.category]}`}>
+                        {CATEGORY_LABELS[saint.category]}
+                      </span>
+                    </div>
                   </div>
-                  <h3 className="text-xl font-serif font-bold text-foreground mb-1 group-hover:text-primary transition-colors">{saint.name}</h3>
-                  <p className="text-sm text-primary font-serif italic mb-4">{saint.title}</p>
-                  <p className="text-sm text-muted-foreground line-clamp-3 mb-5 leading-relaxed">{saint.bio}</p>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <Icons.Star className="w-3.5 h-3.5" />
-                    <span>{saint.feastDay}</span>
+                  <div className="p-8 flex-1">
+                    <div className="flex items-start justify-between mb-2">
+                      <h3 className="text-xl font-serif font-bold text-foreground group-hover:text-primary transition-colors">{saint.name}</h3>
+                      <Icons.ArrowDown className="w-4 h-4 text-muted-foreground -rotate-90 group-hover:text-primary transition-colors mt-1" />
+                    </div>
+                    <p className="text-sm text-primary font-serif italic mb-4">{saint.title}</p>
+                    <p className="text-sm text-muted-foreground line-clamp-3 mb-5 leading-relaxed">{saint.bio}</p>
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground pt-4 border-t border-border/50">
+                      <Icons.Star className="w-3.5 h-3.5 text-[#d4af37]" />
+                      <span>{saint.feastDay}</span>
+                    </div>
                   </div>
                 </button>
+
               ))}
             </StaggeredList>
           )}
