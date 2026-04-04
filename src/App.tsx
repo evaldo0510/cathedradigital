@@ -9,6 +9,8 @@ import CathedralFooter from './components/cathedra/Footer';
 import BottomNav from './components/cathedra/BottomNav';
 import AppHeader from './components/cathedra/AppHeader';
 import PlaceholderPage from './components/cathedra/PlaceholderPage';
+import CheckoutPage from './components/cathedra/CheckoutPage';
+import DiagnosticsPage from './components/cathedra/DiagnosticsPage';
 import ProGate from './components/cathedra/ProGate';
 import { AppRoute, Language } from './types';
 import { UI_TRANSLATIONS } from './services/translations';
