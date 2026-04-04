@@ -135,7 +135,7 @@ const Footer: React.FC = React.memo(() => {
               <div className="px-4 py-1.5 border border-white/10 rounded-full text-[10px] font-bold uppercase tracking-widest text-zinc-500 bg-white/5">
                 Version 4.5 PRO
               </div>
-... keep existing code
+
               <div className="px-4 py-1.5 border border-white/10 rounded-full text-[10px] font-bold uppercase tracking-widest text-zinc-500 bg-white/5">
                 Enterprise SSL
               </div>
