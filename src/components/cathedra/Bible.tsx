@@ -107,10 +107,10 @@ const Bible: React.FC = () => {
     const bookParam = searchParams.get('book');
     const chParam = searchParams.get('ch');
     if (bookParam) {
-      const allBooks = [...BIBLE_BOOKS['Antigo Testamento'], ...BIBLE_BOOKS['Novo Testamento']];
+      const allBooks = [...getAllBooks('Antigo Testamento'), ...getAllBooks('Novo Testamento')];
       const found = allBooks.find(b => b.abbr === bookParam);
       if (found) {
-        const isNT = BIBLE_BOOKS['Novo Testamento'].some(b => b.abbr === bookParam);
+        const isNT = getAllBooks('Novo Testamento').some(b => b.abbr === bookParam);
         setTestament(isNT ? 'Novo Testamento' : 'Antigo Testamento');
         setSelectedBook(found);
         if (chParam) {
