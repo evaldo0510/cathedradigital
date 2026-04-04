@@ -138,7 +138,7 @@ const Index = () => {
                 Estamos preparando novidades e parcerias especiais para fortalecer sua caminhada cristã.
               </p>
               <div className="p-4 bg-muted/50 rounded-2xl border border-dashed border-primary/30 text-center">
-                <span className="text-xs font-black uppercase tracking-widest text-primary">Em Breve</span>
+                <span className="text-sm font-black uppercase tracking-widest text-primary">Em Breve</span>
               </div>
             </CardContent>
           </Card>
