@@ -192,6 +192,229 @@ const SAINTS_DATA: Saint[] = [
     quotes: ['"(As Escrituras não registram nenhuma palavra de São José — seu silêncio é sua maior eloquência.)"'],
     category: 'confessor'
   },
+  {
+    id: 'bento-nursia', name: 'São Bento de Núrsia', title: 'Patriarcha Monachorum',
+    feastDay: '11 de Julho', feastMonth: 7, feastDayNum: 11,
+    born: '480, Núrsia', died: '547, Monte Cassino',
+    patronOf: ['Europa', 'Monges', 'Agricultores', 'Engenheiros'],
+    bio: 'Pai do monaquismo ocidental e padroeiro da Europa. Fundou o Mosteiro de Monte Cassino e escreveu a Regra que moldou a civilização europeia. Seu lema "Ora et Labora" sintetiza a espiritualidade beneditina.',
+    works: [
+      { title: 'Regra de São Bento', url: 'https://www.documentacatholicaomnia.eu/03d/0480-0547,_Benedictus_Nursinus,_Regula,_LT.pdf' },
+    ],
+    quotes: ['"Ora et Labora — Reza e Trabalha."', '"Nada antepor ao amor de Cristo."'],
+    category: 'founder'
+  },
+  {
+    id: 'domingos-gusmao', name: 'São Domingos de Gusmão', title: 'Fundador dos Pregadores',
+    feastDay: '8 de Agosto', feastMonth: 8, feastDayNum: 8,
+    born: '1170, Caleruega', died: '1221, Bolonha',
+    patronOf: ['Astrônomos', 'Cientistas', 'Ordem dos Pregadores'],
+    bio: 'Fundador da Ordem dos Pregadores (Dominicanos). Combateu a heresia albigense com a pregação e a oração. A tradição lhe atribui a devoção do Santo Rosário, recebida da Virgem Maria.',
+    works: [
+      { title: 'Constituições da Ordem dos Pregadores' },
+    ],
+    quotes: ['"Tende caridade, guardai a humildade, possuí a pobreza voluntária."', '"Falava com Deus ou de Deus."'],
+    category: 'founder'
+  },
+  {
+    id: 'inacio-loyola', name: 'Santo Inácio de Loyola', title: 'Fundador da Companhia de Jesus',
+    feastDay: '31 de Julho', feastMonth: 7, feastDayNum: 31,
+    born: '1491, Azpeitia', died: '1556, Roma',
+    patronOf: ['Soldados', 'Educadores', 'Retiros Espirituais'],
+    bio: 'Militar basco convertido após ferimento em batalha. Fundou a Companhia de Jesus (Jesuítas), que se tornou a maior ordem religiosa da Igreja. Seus Exercícios Espirituais são método fundamental de discernimento.',
+    works: [
+      { title: 'Exercícios Espirituais', url: 'https://www.documentacatholicaomnia.eu/03d/1491-1556,_Ignatius_Loyolensis,_Exercitia_Spiritualia,_PT.pdf' },
+      { title: 'Autobiografia (Relato do Peregrino)', url: 'https://www.newadvent.org/cathen/07639c.htm' },
+      { title: 'Constituições da Companhia de Jesus' },
+    ],
+    quotes: ['"Ad Maiorem Dei Gloriam — Para a Maior Glória de Deus."', '"Em tudo amar e servir."'],
+    category: 'founder'
+  },
+  {
+    id: 'francisco-sales', name: 'São Francisco de Sales', title: 'Doctor Caritatis',
+    feastDay: '24 de Janeiro', feastMonth: 1, feastDayNum: 24,
+    born: '1567, Thorens-Glières', died: '1622, Lyon',
+    patronOf: ['Jornalistas', 'Escritores', 'Surdos'],
+    bio: 'Bispo de Genebra e Doutor da Igreja. Mestre da espiritualidade acessível aos leigos, ensinou que a santidade é possível em qualquer estado de vida. Fundou a Ordem da Visitação com Santa Joana de Chantal.',
+    works: [
+      { title: 'Introdução à Vida Devota (Filoteia)', url: 'https://www.documentacatholicaomnia.eu/03d/1567-1622,_Franciscus_Salesius,_Introducao_a_Vida_Devota,_PT.pdf' },
+      { title: 'Tratado do Amor de Deus (Teótimo)', url: 'https://www.documentacatholicaomnia.eu/03d/1567-1622,_Franciscus_Salesius,_Tratado_Do_Amor_De_Deus,_PT.pdf' },
+      { title: 'Cartas Espirituais' },
+    ],
+    quotes: ['"Sede o que sois e sede-o bem, para honrar o Mestre cuja obra sois."', '"Nada por força, tudo por amor."'],
+    category: 'doctor'
+  },
+  {
+    id: 'catarina-sena', name: 'Santa Catarina de Sena', title: 'Doctor Ecclesiae',
+    feastDay: '29 de Abril', feastMonth: 4, feastDayNum: 29,
+    born: '1347, Siena', died: '1380, Roma',
+    patronOf: ['Europa', 'Itália', 'Enfermeiras', 'Bombeiros'],
+    bio: 'Dominicana terciária, mística e Doutora da Igreja. Persuadiu o Papa Gregório XI a retornar de Avinhão a Roma. Suas cartas e seu Diálogo são obras-primas da espiritualidade e da literatura italiana.',
+    works: [
+      { title: 'O Diálogo (Livro da Divina Doutrina)', url: 'https://www.documentacatholicaomnia.eu/03d/1347-1380,_Catharina_Senensis,_Dialogo_della_Divina_Provvidenza,_IT.pdf' },
+      { title: 'Cartas', url: 'https://www.newadvent.org/cathen/03447a.htm' },
+    ],
+    quotes: ['"Sede quem Deus quis que fôsseis e incendiareis o mundo."', '"Tudo vem do amor, tudo é ordenado à salvação do homem."'],
+    category: 'mystic'
+  },
+  {
+    id: 'alfonso-liguori', name: 'Santo Afonso de Ligório', title: 'Doctor Zelantissimus',
+    feastDay: '1 de Agosto', feastMonth: 8, feastDayNum: 1,
+    born: '1696, Marianella', died: '1787, Pagani',
+    patronOf: ['Confessores', 'Moralistas', 'Teólogos moralistas'],
+    bio: 'Bispo, fundador dos Redentoristas e Doutor da Igreja. Maior moralista da história da Igreja. Suas obras sobre moral, oração e devoção mariana são referência obrigatória na formação sacerdotal.',
+    works: [
+      { title: 'As Glórias de Maria', url: 'https://www.documentacatholicaomnia.eu/03d/1696-1787,_Alphonsus_Maria_de_Ligorio,_Glorias_de_Maria,_PT.pdf' },
+      { title: 'Prática do Amor a Jesus Cristo', url: 'https://www.documentacatholicaomnia.eu/03d/1696-1787,_Alphonsus_Maria_de_Ligorio,_Pratica_do_Amor_a_Jesus_Cristo,_PT.pdf' },
+      { title: 'Preparação para a Morte' },
+      { title: 'Teologia Moral' },
+    ],
+    quotes: ['"Quem reza se salva; quem não reza se condena."', '"Maria é a porta do Céu."'],
+    category: 'doctor'
+  },
+  {
+    id: 'luis-montfort', name: 'São Luís Maria de Montfort', title: 'Apóstolo de Maria',
+    feastDay: '28 de Abril', feastMonth: 4, feastDayNum: 28,
+    born: '1673, Montfort-sur-Meu', died: '1716, Saint-Laurent-sur-Sèvre',
+    patronOf: ['Pregadores', 'Devotos de Maria'],
+    bio: 'Sacerdote francês e grande apóstolo da devoção mariana. Sua Consagração Total a Jesus por Maria influenciou profundamente a espiritualidade de São João Paulo II, que adotou o lema "Totus Tuus".',
+    works: [
+      { title: 'Tratado da Verdadeira Devoção à Santíssima Virgem', url: 'https://www.documentacatholicaomnia.eu/03d/1673-1716,_Ludovicus_Maria_Grignion_de_Montfort,_Tratado_da_Verdadeira_Devocao,_PT.pdf' },
+      { title: 'O Segredo de Maria' },
+      { title: 'O Segredo Admirável do Santíssimo Rosário' },
+    ],
+    quotes: ['"Totus Tuus — Todo Teu, Maria."', '"Por Maria a Jesus."'],
+    category: 'confessor'
+  },
+  {
+    id: 'atanasio', name: 'Santo Atanásio', title: 'Doctor Incarnationis',
+    feastDay: '2 de Maio', feastMonth: 5, feastDayNum: 2,
+    born: '296, Alexandria', died: '373, Alexandria',
+    patronOf: ['Ortodoxia', 'Teólogos'],
+    bio: 'Bispo de Alexandria e Doutor da Igreja. Defensor incansável da divindade de Cristo contra a heresia ariana. Exilado cinco vezes por imperadores arianos, jamais cedeu. "Athanasius contra mundum."',
+    works: [
+      { title: 'Sobre a Encarnação do Verbo', url: 'https://www.newadvent.org/fathers/2802.htm' },
+      { title: 'Contra os Arianos', url: 'https://www.newadvent.org/fathers/2816.htm' },
+      { title: 'Vida de Santo Antão', url: 'https://www.newadvent.org/fathers/2811.htm' },
+    ],
+    quotes: ['"O Verbo se fez homem para que nós nos tornássemos Deus."'],
+    category: 'doctor'
+  },
+  {
+    id: 'joao-crisostomo', name: 'São João Crisóstomo', title: 'Boca de Ouro',
+    feastDay: '13 de Setembro', feastMonth: 9, feastDayNum: 13,
+    born: '349, Antioquia', died: '407, Comana Pôntica',
+    patronOf: ['Pregadores', 'Oradores', 'Educadores'],
+    bio: 'Patriarca de Constantinopla e Doutor da Igreja. O maior pregador da Igreja Oriental, cujo sobrenome "Crisóstomo" significa "Boca de Ouro". Suas homilias são modelo de eloquência e profundidade.',
+    works: [
+      { title: 'Homilias sobre o Evangelho de São Mateus', url: 'https://www.newadvent.org/fathers/200101.htm' },
+      { title: 'Sobre o Sacerdócio', url: 'https://www.newadvent.org/fathers/1901.htm' },
+      { title: 'Homilias sobre Romanos', url: 'https://www.newadvent.org/fathers/210201.htm' },
+    ],
+    quotes: ['"A liturgia é o Céu na Terra."', '"Se fores a bigorna, suporta; se fores o martelo, golpeia."'],
+    category: 'doctor'
+  },
+  {
+    id: 'jeronimo', name: 'São Jerônimo', title: 'Doctor Maximus in Scripturis',
+    feastDay: '30 de Setembro', feastMonth: 9, feastDayNum: 30,
+    born: '347, Estridão', died: '420, Belém',
+    patronOf: ['Bibliotecários', 'Tradutores', 'Estudantes da Bíblia'],
+    bio: 'Padre da Igreja e Doutor. Traduziu a Bíblia para o latim (Vulgata), versão oficial da Igreja por mais de mil anos. Eremita em Belém, seus comentários bíblicos são de valor inestimável.',
+    works: [
+      { title: 'Vulgata (tradução da Bíblia)', url: 'https://www.sacred-texts.com/bib/vul/' },
+      { title: 'Cartas', url: 'https://www.newadvent.org/fathers/3001.htm' },
+      { title: 'Comentário sobre Isaías' },
+    ],
+    quotes: ['"Ignorar as Escrituras é ignorar a Cristo."', '"Bom, melhor, ótimo. Não descanse até que seu bom se torne melhor e seu melhor se torne ótimo."'],
+    category: 'doctor'
+  },
+  {
+    id: 'bernardo-claraval', name: 'São Bernardo de Claraval', title: 'Doctor Mellifluus',
+    feastDay: '20 de Agosto', feastMonth: 8, feastDayNum: 20,
+    born: '1090, Fontaine-lès-Dijon', died: '1153, Claraval',
+    patronOf: ['Apicultores', 'Gibraltar', 'Cistercienses'],
+    bio: 'Abade cisterciense e Doutor da Igreja. "O último dos Padres". Reformador, pregador da Segunda Cruzada, conselheiro de papas e reis. Seus sermões sobre o Cântico dos Cânticos são cume da mística medieval.',
+    works: [
+      { title: 'Sermões sobre o Cântico dos Cânticos', url: 'https://www.newadvent.org/fathers/3801.htm' },
+      { title: 'Sobre o Amor de Deus', url: 'https://www.newadvent.org/fathers/3804.htm' },
+      { title: 'Sobre a Consideração' },
+    ],
+    quotes: ['"Mede a tua vida não pelo seu comprimento, mas pela sua profundidade."', '"Maria é a estrela do mar."'],
+    category: 'doctor'
+  },
+  {
+    id: 'faustina', name: 'Santa Faustina Kowalska', title: 'Apóstola da Divina Misericórdia',
+    feastDay: '5 de Outubro', feastMonth: 10, feastDayNum: 5,
+    born: '1905, Głogowiec', died: '1938, Cracóvia',
+    patronOf: ['Divina Misericórdia'],
+    bio: 'Religiosa polonesa que recebeu revelações de Jesus sobre a Divina Misericórdia. Seu Diário é um dos mais lidos da mística moderna. A devoção à Divina Misericórdia se espalhou por todo o mundo.',
+    works: [
+      { title: 'Diário: A Misericórdia Divina na Minha Alma', url: 'https://www.saint-faustina.org/diary-full-text/' },
+    ],
+    quotes: ['"Jesus, eu confio em Vós!"', '"A humanidade não encontrará a paz enquanto não se voltar com confiança para a Minha Misericórdia."'],
+    category: 'mystic'
+  },
+  {
+    id: 'josemaria', name: 'São Josemaria Escrivá', title: 'Fundador do Opus Dei',
+    feastDay: '26 de Junho', feastMonth: 6, feastDayNum: 26,
+    born: '1902, Barbastro', died: '1975, Roma',
+    patronOf: ['Opus Dei', 'Santificação do trabalho'],
+    bio: 'Sacerdote espanhol fundador do Opus Dei. Pregou a chamada universal à santidade e a santificação do trabalho ordinário. Sua mensagem antecipou ensinamentos do Concílio Vaticano II.',
+    works: [
+      { title: 'Caminho', url: 'https://www.escrivaworks.org/book/the_way.htm' },
+      { title: 'Sulco', url: 'https://www.escrivaworks.org/book/furrow.htm' },
+      { title: 'Forja', url: 'https://www.escrivaworks.org/book/the_forge.htm' },
+      { title: 'É Cristo que Passa', url: 'https://www.escrivaworks.org/book/christ_is_passing_by.htm' },
+    ],
+    quotes: ['"Santificai o trabalho, santificai-vos no trabalho, santificai os outros com o trabalho."', '"Há algo de santo, de divino, escondido nas situações mais comuns."'],
+    category: 'founder'
+  },
+  {
+    id: 'rita-cascia', name: 'Santa Rita de Cássia', title: 'Santa dos Impossíveis',
+    feastDay: '22 de Maio', feastMonth: 5, feastDayNum: 22,
+    born: '1381, Roccaporena', died: '1457, Cássia',
+    patronOf: ['Causas impossíveis', 'Esposas maltratadas', 'Mães'],
+    bio: 'Religiosa agostiniana italiana. Após a morte violenta do marido e dos filhos, entrou para o convento. Recebeu um espinho da coroa de Cristo na testa. Invocada como a santa das causas impossíveis.',
+    works: [],
+    quotes: ['"Aceitar a cruz é encontrar a felicidade."'],
+    category: 'mystic'
+  },
+  {
+    id: 'antonio-padua', name: 'Santo Antônio de Pádua', title: 'Doctor Evangelicus',
+    feastDay: '13 de Junho', feastMonth: 6, feastDayNum: 13,
+    born: '1195, Lisboa', died: '1231, Pádua',
+    patronOf: ['Coisas perdidas', 'Pobres', 'Portugal', 'Brasil'],
+    bio: 'Frade franciscano português, Doutor da Igreja. Pregador extraordinário, seus sermões comoviam multidões. Conhecido como "Martelo dos Hereges" pela solidez doutrinária. Santo mais popular do mundo.',
+    works: [
+      { title: 'Sermões Dominicais', url: 'https://www.newadvent.org/cathen/01556a.htm' },
+    ],
+    quotes: ['"As ações falam mais alto que as palavras; que as vossas palavras ensinem e as vossas ações falem."', '"O Santo em quem tudo o que se pede se alcança."'],
+    category: 'doctor'
+  },
+  {
+    id: 'maximiliano-kolbe', name: 'São Maximiliano Kolbe', title: 'Mártir da Caridade',
+    feastDay: '14 de Agosto', feastMonth: 8, feastDayNum: 14,
+    born: '1894, Zduńska Wola', died: '1941, Auschwitz',
+    patronOf: ['Prisioneiros', 'Dependentes químicos', 'Jornalistas', 'Movimento pró-vida'],
+    bio: 'Frade franciscano polonês que ofereceu sua vida no lugar de outro prisioneiro em Auschwitz. Fundou a Milícia da Imaculada e utilizou os meios de comunicação modernos para evangelizar.',
+    works: [
+      { title: 'Escritos de São Maximiliano Kolbe' },
+    ],
+    quotes: ['"O ódio não é uma força criativa. Só o amor é criativo."', '"A Imaculada é a Esposa do Espírito Santo."'],
+    category: 'martyr'
+  },
+  {
+    id: 'madre-teresa', name: 'Santa Teresa de Calcutá', title: 'Mãe dos Pobres',
+    feastDay: '5 de Setembro', feastMonth: 9, feastDayNum: 5,
+    born: '1910, Escópia', died: '1997, Calcutá',
+    patronOf: ['Missionárias da Caridade', 'Voluntários'],
+    bio: 'Religiosa albanesa-indiana, fundadora das Missionárias da Caridade. Dedicou sua vida aos mais pobres entre os pobres nas ruas de Calcutá. Nobel da Paz em 1979. Viveu uma longa "noite escura" da fé.',
+    works: [
+      { title: 'Venha, Seja Minha Luz (Cartas)' },
+    ],
+    quotes: ['"Se julgas as pessoas, não tens tempo para amá-las."', '"Não é preciso fazer grandes coisas, mas coisas pequenas com grande amor."'],
+    category: 'founder'
+  },
 ];
 
 const CATEGORY_LABELS: Record<string, string> = {
