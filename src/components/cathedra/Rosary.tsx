@@ -1,6 +1,26 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Icons } from '../../constants';
+import { 
+  Heart, 
+  ArrowLeft, 
+  ChevronRight, 
+  Play, 
+  Pause, 
+  Video, 
+  Flame, 
+  Star, 
+  Zap, 
+  Sparkles,
+  Search,
+  BookOpen,
+  Calendar,
+  Activity,
+  Music,
+  Youtube,
+  Clock,
+  Cross
+} from 'lucide-react';
 
 type MysterySet = 'joyful' | 'sorrowful' | 'glorious' | 'luminous';
 
@@ -12,7 +32,7 @@ const YOUTUBE_IDS: Record<MysterySet, string> = {
 };
 
 const YouTubePlayer: React.FC<{ videoId: string; title: string }> = ({ videoId, title }) => (
-  <div className="w-full aspect-video rounded-2xl overflow-hidden border border-border bg-black">
+  <div className="w-full aspect-video rounded-3xl overflow-hidden border border-border bg-black shadow-2xl">
     <iframe
       src={`https://www.youtube.com/embed/${videoId}?rel=0`}
       title={title}
@@ -23,10 +43,18 @@ const YouTubePlayer: React.FC<{ videoId: string; title: string }> = ({ videoId, 
   </div>
 );
 
-const MYSTERIES: Record<MysterySet, { name: string; day: string; mysteries: { title: string; scripture: string; meditation: string }[] }> = {
+const MYSTERIES: Record<MysterySet, { 
+  name: string; 
+  day: string; 
+  icon: React.FC<{ className?: string }>;
+  color: string;
+  mysteries: { title: string; scripture: string; meditation: string }[] 
+}> = {
   joyful: {
     name: 'Mistérios Gozosos',
     day: 'Segunda e Sábado',
+    icon: Sparkles,
+    color: 'text-sky-500 bg-sky-500/10',
     mysteries: [
       { title: 'A Anunciação do Anjo a Maria', scripture: 'Lc 1,26-38', meditation: 'O Anjo Gabriel anuncia a Maria que ela será Mãe do Salvador. Maria diz "sim" com fé total: "Eis a serva do Senhor."' },
       { title: 'A Visitação de Maria a Isabel', scripture: 'Lc 1,39-56', meditation: 'Maria vai às pressas visitar Isabel. João Batista exulta no ventre. Maria entoa o Magnificat, cântico de louvor e humildade.' },
@@ -38,6 +66,8 @@ const MYSTERIES: Record<MysterySet, { name: string; day: string; mysteries: { ti
   sorrowful: {
     name: 'Mistérios Dolorosos',
     day: 'Terça e Sexta',
+    icon: Flame,
+    color: 'text-rose-500 bg-rose-500/10',
     mysteries: [
       { title: 'A Agonia de Jesus no Horto', scripture: 'Lc 22,39-46', meditation: 'Jesus sua sangue no Getsêmani. "Pai, se possível, afasta de mim este cálice; porém, não a minha vontade, mas a Tua."' },
       { title: 'A Flagelação de Jesus', scripture: 'Jo 19,1', meditation: 'Pilatos manda açoitar Jesus. Cada golpe é um pecado nosso que fere o Corpo de Cristo. "Por suas chagas fomos curados."' },
@@ -49,6 +79,8 @@ const MYSTERIES: Record<MysterySet, { name: string; day: string; mysteries: { ti
   glorious: {
     name: 'Mistérios Gloriosos',
     day: 'Quarta e Domingo',
+    icon: Star,
+    color: 'text-amber-500 bg-amber-500/10',
     mysteries: [
       { title: 'A Ressurreição de Jesus', scripture: 'Mc 16,1-7', meditation: '"Ele ressuscitou, não está aqui!" A pedra foi removida. A morte foi vencida. Cristo é a Vida que triunfa para sempre.' },
       { title: 'A Ascensão de Jesus ao Céu', scripture: 'At 1,9-11', meditation: 'Jesus sobe aos céus diante dos apóstolos. "Ide e fazei discípulos de todas as nações." Ele vai preparar um lugar para nós.' },
@@ -60,6 +92,8 @@ const MYSTERIES: Record<MysterySet, { name: string; day: string; mysteries: { ti
   luminous: {
     name: 'Mistérios Luminosos',
     day: 'Quinta',
+    icon: Zap,
+    color: 'text-yellow-500 bg-yellow-500/10',
     mysteries: [
       { title: 'O Batismo de Jesus no Jordão', scripture: 'Mt 3,13-17', meditation: '"Este é o meu Filho amado." Jesus desce às águas do Jordão, santificando o Batismo e revelando a Trindade.' },
       { title: 'As Bodas de Caná', scripture: 'Jo 2,1-11', meditation: '"Fazei tudo o que Ele vos disser." Maria intercede. Jesus transforma água em vinho — Seu primeiro sinal, revelando Sua glória.' },
@@ -92,26 +126,37 @@ const Rosary: React.FC = () => {
 
   if (!selectedSet) {
     return (
-      <div className="max-w-5xl mx-auto space-y-8">
-        <div className="text-center space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
-            <Icons.Heart className="w-4 h-4 text-primary" />
-            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Rosarium</span>
+      <div className="max-w-5xl mx-auto space-y-12 pb-12">
+        <div className="text-center space-y-4 pt-4">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/5 border border-primary/10 rounded-full">
+            <Heart className="w-4 h-4 text-primary" />
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Rosarium</span>
           </div>
-          <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Santo Rosário</h1>
-          <p className="text-muted-foreground font-serif italic">Reze os 20 mistérios com meditações e guia passo a passo.</p>
+          <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground tracking-tight">Santo Rosário</h1>
+          <p className="text-lg text-muted-foreground font-serif italic max-w-2xl mx-auto">Reze os 20 mistérios com meditações profundas e guia passo a passo para sua jornada de fé.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {(Object.entries(MYSTERIES) as [MysterySet, typeof MYSTERIES[MysterySet]][]).map(([key, val]) => (
             <button key={key} onClick={() => setSelectedSet(key)}
-              className="text-left p-6 md:p-8 rounded-3xl bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group">
-              <span className="text-[10px] font-black text-primary uppercase tracking-widest">{val.day}</span>
-              <h2 className="text-xl md:text-2xl font-serif font-bold text-foreground mt-2 group-hover:text-primary transition-colors">{val.name}</h2>
-              <div className="mt-4 space-y-1">
-                {val.mysteries.map((m, i) => (
-                  <p key={i} className="text-xs text-muted-foreground">{i + 1}. {m.title}</p>
-                ))}
+              className="text-left p-8 md:p-10 rounded-[2.5rem] bg-card border border-border hover:border-primary/40 hover:shadow-2xl hover:-translate-y-1 transition-all group relative overflow-hidden">
+              <div className={`absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity`}>
+                <val.icon className="w-48 h-48 -mr-12 -mt-12 rotate-12" />
+              </div>
+              <div className="relative z-10">
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 transition-transform group-hover:scale-110 ${val.color}`}>
+                  <val.icon className="w-7 h-7" />
+                </div>
+                <span className="text-[10px] font-black text-primary/60 uppercase tracking-[0.2em]">{val.day}</span>
+                <h2 className="text-2xl md:text-3xl font-serif font-bold text-foreground mt-2 group-hover:text-primary transition-colors">{val.name}</h2>
+                <div className="mt-6 space-y-2">
+                  {val.mysteries.map((m, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <div className="w-1 h-1 rounded-full bg-primary/20" />
+                      <p className="text-xs text-muted-foreground font-serif italic opacity-70">{m.title}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
             </button>
           ))}
@@ -124,36 +169,37 @@ const Rosary: React.FC = () => {
 
   if (!isPraying) {
     return (
-      <div className="max-w-4xl mx-auto space-y-8">
-        <div className="flex items-center gap-4">
-          <button onClick={() => setSelectedSet(null)} className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all">
-            <Icons.ArrowDown className="w-5 h-5 rotate-90 text-foreground" />
-          </button>
-          <div>
-            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">{set.day}</span>
-            <h1 className="text-2xl font-serif font-bold text-foreground">{set.name}</h1>
+      <div className="max-w-4xl mx-auto space-y-10 pb-12">
+        <div className="flex flex-col md:flex-row md:items-center gap-6 justify-between">
+          <div className="flex items-center gap-6">
+            <button onClick={() => setSelectedSet(null)} className="p-3 rounded-2xl bg-card border border-border hover:bg-primary/5 transition-all active:scale-95 shadow-sm">
+              <ArrowLeft className="w-6 h-6 text-foreground" />
+            </button>
+            <div className="space-y-1">
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">{set.day}</span>
+              <h1 className="text-3xl md:text-4xl font-serif font-bold text-foreground">{set.name}</h1>
+            </div>
           </div>
-        </div>
-
-        {/* YouTube Player */}
-        <YouTubePlayer videoId={YOUTUBE_IDS[selectedSet]} title={set.name} />
-
-        <div className="text-center">
           <button onClick={() => { setIsPraying(true); setCurrentMystery(0); setStep('intro'); }}
-            className="px-8 py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all">
+            className="px-10 py-5 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] shadow-xl hover:bg-primary hover:text-primary-foreground transition-all active:scale-95">
             Iniciar Oração
           </button>
         </div>
 
-        <div className="space-y-4">
+        <YouTubePlayer videoId={YOUTUBE_IDS[selectedSet]} title={set.name} />
+
+        <div className="grid gap-4">
+          <h3 className="text-xl font-serif font-bold px-2">Mistérios e Meditações</h3>
           {set.mysteries.map((m, i) => (
-            <div key={i} className="p-5 rounded-2xl bg-card border border-border">
-              <div className="flex items-start gap-4">
-                <div className="w-8 h-8 rounded-lg bg-foreground text-background flex items-center justify-center font-black text-sm shrink-0">{i + 1}</div>
-                <div>
-                  <p className="font-serif font-bold text-foreground">{m.title}</p>
-                  <p className="text-[10px] text-primary font-bold mt-0.5">{m.scripture}</p>
-                  <p className="text-sm text-muted-foreground mt-2 font-serif">{m.meditation}</p>
+            <div key={i} className="p-6 md:p-8 rounded-3xl bg-card border border-border shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-start gap-6">
+                <div className="w-12 h-12 rounded-2xl bg-primary/5 text-primary flex items-center justify-center font-black text-lg shrink-0 border border-primary/10">{i + 1}</div>
+                <div className="space-y-3">
+                  <div className="space-y-1">
+                    <p className="font-serif font-bold text-xl text-foreground">{m.title}</p>
+                    <p className="text-[10px] text-primary font-bold uppercase tracking-widest">{m.scripture}</p>
+                  </div>
+                  <p className="text-base text-muted-foreground leading-relaxed font-serif italic">"{m.meditation}"</p>
                 </div>
               </div>
             </div>
@@ -169,17 +215,25 @@ const Rosary: React.FC = () => {
   const renderStep = () => {
     if (step === 'intro') {
       return (
-        <div className="space-y-6">
-          <h3 className="text-xl font-serif font-bold text-amber-100 text-center">Orações Iniciais</h3>
-          {['signOfCross', 'creed', 'ourFather'].map(k => (
-            <div key={k} className="bg-white/[0.04] rounded-2xl p-5 cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setShowPrayer(showPrayer === k ? null : k)}>
-              <p className="font-bold text-sm text-amber-100/90">{PRAYERS[k as keyof typeof PRAYERS].title}</p>
-              {showPrayer === k && <p className="text-base text-amber-100/60 mt-3 font-serif leading-[1.9]">{PRAYERS[k as keyof typeof PRAYERS].text}</p>}
-            </div>
-          ))}
-          <p className="text-xs text-amber-200/40 text-center font-serif italic">Reze 3 Ave-Marias pelas virtudes da Fé, Esperança e Caridade, seguidas do Glória.</p>
-          <button onClick={() => setStep('mystery')} className="w-full py-3.5 bg-amber-400/20 text-amber-200 border border-amber-400/20 rounded-xl font-bold text-sm hover:bg-amber-400/30 transition-all">
-            Iniciar 1º Mistério →
+        <div className="space-y-8 animate-in fade-in duration-500">
+          <div className="text-center space-y-2">
+            <h3 className="text-2xl font-serif font-bold text-amber-100">Orações Iniciais</h3>
+            <p className="text-xs text-amber-200/40 font-serif italic">Sinal da Cruz + Credo + 3 Ave-Marias + Glória</p>
+          </div>
+          <div className="space-y-3">
+            {['signOfCross', 'creed', 'ourFather'].map(k => (
+              <div key={k} className="group bg-white/[0.04] rounded-2xl p-6 cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setShowPrayer(showPrayer === k ? null : k)}>
+                <div className="flex items-center justify-between">
+                  <p className="font-bold text-sm text-amber-100/90">{PRAYERS[k as keyof typeof PRAYERS].title}</p>
+                  <ChevronRight className={`w-4 h-4 text-amber-200/30 transition-transform ${showPrayer === k ? 'rotate-90' : ''}`} />
+                </div>
+                {showPrayer === k && <p className="text-lg md:text-xl text-amber-100/60 mt-4 font-serif leading-relaxed animate-in fade-in slide-in-from-top-2 duration-300">{PRAYERS[k as keyof typeof PRAYERS].text}</p>}
+              </div>
+            ))}
+          </div>
+          <p className="text-xs text-amber-200/40 text-center font-serif italic max-w-xs mx-auto leading-relaxed">Reze 3 Ave-Marias pelas virtudes da Fé, Esperança e Caridade, seguidas do Glória.</p>
+          <button onClick={() => setStep('mystery')} className="w-full py-4 bg-amber-400/20 text-amber-200 border border-amber-400/20 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-amber-400/30 transition-all shadow-lg shadow-amber-900/20">
+            Iniciar 1º Mistério
           </button>
         </div>
       );
@@ -187,17 +241,18 @@ const Rosary: React.FC = () => {
 
     if (step === 'mystery') {
       return (
-        <div className="space-y-6">
+        <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500">
           <div className="text-center space-y-3">
             <span className="text-[10px] font-black uppercase tracking-widest text-amber-400/50">{currentMystery + 1}º Mistério</span>
-            <h3 className="text-2xl font-serif font-bold text-amber-100 leading-snug">{mystery.title}</h3>
-            <p className="text-sm text-amber-400/60 font-bold">{mystery.scripture}</p>
+            <h3 className="text-3xl font-serif font-bold text-amber-100 leading-tight">{mystery.title}</h3>
+            <p className="text-sm text-amber-400/60 font-bold tracking-wide">{mystery.scripture}</p>
           </div>
-          <div className="bg-white/[0.04] rounded-2xl p-6 border border-white/[0.06]">
-            <p className="text-lg text-amber-100/60 font-serif leading-[1.9] text-center">{mystery.meditation}</p>
+          <div className="bg-white/[0.04] rounded-[2.5rem] p-10 border border-white/[0.06] relative shadow-2xl">
+            <Icons.Feather className="absolute -top-3 -right-3 w-8 h-8 text-amber-400/10 rotate-12" />
+            <p className="text-xl text-amber-100/70 font-serif leading-relaxed text-center italic">"{mystery.meditation}"</p>
           </div>
-          <button onClick={() => setStep('decade')} className="w-full py-3.5 bg-amber-400/20 text-amber-200 border border-amber-400/20 rounded-xl font-bold text-sm hover:bg-amber-400/30 transition-all">
-            Rezar a Dezena →
+          <button onClick={() => setStep('decade')} className="w-full py-4 bg-amber-400/20 text-amber-200 border border-amber-400/20 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-amber-400/30 transition-all shadow-lg shadow-amber-900/20">
+            Rezar a Dezena
           </button>
         </div>
       );
@@ -205,36 +260,43 @@ const Rosary: React.FC = () => {
 
     if (step === 'decade') {
       return (
-        <div className="space-y-6">
-          <p className="text-center text-[10px] font-black uppercase tracking-widest text-amber-200/30">{currentMystery + 1}º Mistério — Dezena</p>
-          
-          {/* Bead Counter */}
-          <div className="flex flex-col items-center gap-3 py-2">
-            <div className="flex items-center gap-2.5">
-              {Array.from({ length: 10 }).map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setAveCount(i + 1)}
-                  className={`w-5 h-5 rounded-full border-2 transition-all duration-300 ${
-                    i < aveCount
-                      ? 'bg-amber-400 border-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.4)] scale-110'
-                      : 'bg-transparent border-amber-400/25 hover:border-amber-400/50'
-                  }`}
-                />
-              ))}
+        <div className="space-y-10 animate-in fade-in duration-500">
+          <div className="text-center">
+            <p className="text-[10px] font-black uppercase tracking-widest text-amber-200/30 mb-6">{currentMystery + 1}º Mistério — Dezena</p>
+            
+            {/* Bead Counter */}
+            <div className="flex flex-col items-center gap-6 py-4">
+              <div className="grid grid-cols-5 gap-4 md:flex md:items-center md:gap-4">
+                {Array.from({ length: 10 }).map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setAveCount(i + 1)}
+                    className={`w-7 h-7 rounded-full border-2 transition-all duration-300 ${
+                      i < aveCount
+                        ? 'bg-amber-400 border-amber-400 shadow-[0_0_15px_rgba(251,191,36,0.6)] scale-110'
+                        : 'bg-transparent border-amber-400/25 hover:border-amber-400/50'
+                    }`}
+                  />
+                ))}
+              </div>
+              <p className="text-amber-200/40 text-[10px] font-black uppercase tracking-[0.2em]">{aveCount}/10 Ave-Marias</p>
             </div>
-            <p className="text-amber-200/40 text-xs font-bold">{aveCount}/10 Ave-Marias</p>
           </div>
 
-          {['ourFather', 'hailMary', 'glory', 'fatima'].map(k => (
-            <div key={k} className="bg-white/[0.04] rounded-2xl p-5 cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setShowPrayer(showPrayer === k ? null : k)}>
-              <p className="font-bold text-sm text-amber-100/90">
-                {PRAYERS[k as keyof typeof PRAYERS].title}
-                {k === 'hailMary' && <span className="text-amber-200/40 font-normal"> (×10)</span>}
-              </p>
-              {showPrayer === k && <p className="text-base text-amber-100/60 mt-3 font-serif leading-[1.9]">{PRAYERS[k as keyof typeof PRAYERS].text}</p>}
-            </div>
-          ))}
+          <div className="space-y-3">
+            {['ourFather', 'hailMary', 'glory', 'fatima'].map(k => (
+              <div key={k} className="group bg-white/[0.04] rounded-2xl p-6 cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setShowPrayer(showPrayer === k ? null : k)}>
+                <div className="flex items-center justify-between">
+                  <p className="font-bold text-sm text-amber-100/90">
+                    {PRAYERS[k as keyof typeof PRAYERS].title}
+                    {k === 'hailMary' && <span className="text-amber-200/40 font-normal ml-2 tracking-widest opacity-50"> (×10)</span>}
+                  </p>
+                  <ChevronRight className={`w-4 h-4 text-amber-200/30 transition-transform ${showPrayer === k ? 'rotate-90' : ''}`} />
+                </div>
+                {showPrayer === k && <p className="text-lg md:text-xl text-amber-100/60 mt-4 font-serif leading-relaxed animate-in fade-in slide-in-from-top-2 duration-300">{PRAYERS[k as keyof typeof PRAYERS].text}</p>}
+              </div>
+            ))}
+          </div>
           <button onClick={() => {
             setAveCount(0);
             if (currentMystery < 4) {
@@ -244,8 +306,8 @@ const Rosary: React.FC = () => {
             } else {
               setStep('closing');
             }
-          }} className="w-full py-3.5 bg-amber-400/20 text-amber-200 border border-amber-400/20 rounded-xl font-bold text-sm hover:bg-amber-400/30 transition-all">
-            {currentMystery < 4 ? `Próximo Mistério →` : 'Concluir Rosário →'}
+          }} className="w-full py-4 bg-amber-400/20 text-amber-200 border border-amber-400/20 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-amber-400/30 transition-all shadow-lg shadow-amber-900/20">
+            {currentMystery < 4 ? `Próximo Mistério` : 'Concluir Rosário'}
           </button>
         </div>
       );
@@ -253,19 +315,30 @@ const Rosary: React.FC = () => {
 
     // closing
     return (
-      <div className="space-y-6">
-        <h3 className="text-xl font-serif font-bold text-amber-100 text-center">Oração Final</h3>
-        <div className="bg-white/[0.04] rounded-2xl p-5 cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setShowPrayer(showPrayer === 'salve' ? null : 'salve')}>
-          <p className="font-bold text-sm text-amber-100/90">{PRAYERS.salveRainha.title}</p>
-          {showPrayer === 'salve' && <p className="text-base text-amber-100/60 mt-3 font-serif leading-[1.9]">{PRAYERS.salveRainha.text}</p>}
+      <div className="space-y-10 animate-in fade-in zoom-in-95 duration-700">
+        <div className="text-center space-y-2">
+          <h3 className="text-2xl font-serif font-bold text-amber-100">Oração Final</h3>
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-400/50">Salve Rainha</p>
         </div>
-        <div className="text-center space-y-3 py-6">
-          <Icons.Heart className="w-12 h-12 text-amber-400/40 mx-auto" />
-          <p className="text-amber-100 font-serif font-bold text-xl">Rosário Completo!</p>
-          <p className="text-base text-amber-200/40 font-serif italic">Que Nossa Senhora interceda por vós e vossas intenções.</p>
+        <div className="bg-white/[0.04] rounded-3xl p-8 cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setShowPrayer(showPrayer === 'salve' ? null : 'salve')}>
+          <div className="flex items-center justify-between mb-2">
+            <p className="font-bold text-sm text-amber-100/90">{PRAYERS.salveRainha.title}</p>
+            <ChevronRight className={`w-4 h-4 text-amber-200/30 transition-transform ${showPrayer === 'salve' ? 'rotate-90' : ''}`} />
+          </div>
+          {showPrayer === 'salve' && <p className="text-lg text-amber-100/60 mt-4 font-serif leading-relaxed italic animate-in fade-in slide-in-from-top-2 duration-300">{PRAYERS.salveRainha.text}</p>}
+        </div>
+        <div className="text-center space-y-4 py-8">
+          <div className="relative inline-block">
+            <Heart className="w-20 h-20 text-amber-400/20 mx-auto" />
+            <Sparkles className="absolute -top-1 -right-1 w-8 h-8 text-amber-400/40 animate-pulse" />
+          </div>
+          <div className="space-y-3">
+            <p className="text-amber-100 font-serif font-bold text-3xl tracking-tight">Rosário Completo!</p>
+            <p className="text-base text-amber-200/40 font-serif italic max-w-xs mx-auto leading-relaxed">Que Nossa Senhora interceda por vós e vossas intenções. Amém.</p>
+          </div>
         </div>
         <button onClick={() => { setIsPraying(false); setSelectedSet(null); }}
-          className="w-full py-3.5 bg-amber-400/20 text-amber-200 border border-amber-400/20 rounded-xl font-bold text-sm hover:bg-amber-400/30 transition-all">
+          className="w-full py-4 bg-amber-400 text-amber-950 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-amber-300 transition-all shadow-xl shadow-amber-400/20">
           ✝ Amém — Finalizar
         </button>
       </div>
@@ -275,28 +348,25 @@ const Rosary: React.FC = () => {
   return createPortal(
     <div className="fixed inset-0 z-[200] flex flex-col overflow-y-auto"
       style={{ background: 'linear-gradient(180deg, #1a1510 0%, #0d0b08 50%, #1a1510 100%)' }}>
-      <div className="flex items-center justify-between p-4">
-        <button onClick={() => { setIsPraying(false); }} className="p-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all">
-          <Icons.ArrowDown className="w-5 h-5 rotate-90 text-amber-200/70" />
+      <div className="flex items-center justify-between p-6 sticky top-0 z-10 bg-inherit/80 backdrop-blur-md">
+        <button onClick={() => { setIsPraying(false); }} className="p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all">
+          <ArrowLeft className="w-5 h-5 text-amber-200/70" />
         </button>
         <span className="text-[10px] font-black uppercase tracking-widest text-amber-200/40">{set.name}</span>
-        <div className="w-9" />
+        <div className="w-11" />
       </div>
 
-      {step !== 'intro' && step !== 'closing' && (
-        <div className="flex gap-1 px-6 pt-2">
-          {[0, 1, 2, 3, 4].map(i => (
-            <div key={i} className={`flex-1 h-1 rounded-full transition-all ${i <= currentMystery ? 'bg-amber-400/60' : 'bg-white/10'}`} />
-          ))}
-        </div>
-      )}
-
-      <div className="flex-1 flex items-start justify-center p-6">
-        <div className="w-full max-w-xl space-y-6">
-          {/* YouTube Player */}
-          <YouTubePlayer videoId={YOUTUBE_IDS[selectedSet]} title={set.name} />
-
-          <div className="bg-white/[0.03] border border-white/[0.06] rounded-3xl p-8 md:p-10 backdrop-blur-sm">
+      <div className="flex-1 flex items-start justify-center p-6 md:p-12">
+        <div className="w-full max-w-xl">
+          {step !== 'intro' && step !== 'closing' && (
+            <div className="flex gap-1.5 mb-8">
+              {[0, 1, 2, 3, 4].map(i => (
+                <div key={i} className={`flex-1 h-1.5 rounded-full transition-all duration-500 ${i <= currentMystery ? 'bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.5)]' : 'bg-white/10'}`} />
+              ))}
+            </div>
+          )}
+          
+          <div className="bg-white/[0.03] border border-white/[0.06] rounded-[3rem] p-8 md:p-12 backdrop-blur-sm shadow-2xl shadow-black/50">
             {renderStep()}
           </div>
         </div>

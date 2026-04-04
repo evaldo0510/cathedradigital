@@ -1,5 +1,20 @@
 import React, { useState, useMemo } from 'react';
-import { Icons } from '../../constants';
+import { 
+  Heart, 
+  Search, 
+  ArrowLeft, 
+  ChevronRight, 
+  BookOpen, 
+  Star, 
+  Flame, 
+  Zap, 
+  Sparkles,
+  Music,
+  Clock,
+  Calendar,
+  Activity,
+  Cross
+} from 'lucide-react';
 
 interface Litany {
   id: string;
@@ -202,9 +217,9 @@ const LITANIES: Litany[] = [
 ];
 
 const CATEGORY_COLORS: Record<string, string> = {
-  'Jesus Cristo': 'bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-300',
-  'Virgem Maria': 'bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-300',
-  'Santos': 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300',
+  'Jesus Cristo': 'bg-rose-50 text-rose-700 border-rose-100',
+  'Virgem Maria': 'bg-sky-50 text-sky-700 border-sky-100',
+  'Santos': 'bg-amber-50 text-amber-700 border-amber-100',
 };
 
 const LitaniesPage: React.FC = () => {
@@ -221,42 +236,42 @@ const LitaniesPage: React.FC = () => {
 
   if (litany) {
     return (
-      <div className="max-w-3xl mx-auto space-y-6">
-        <div className="flex items-center gap-4">
-          <button onClick={() => setSelectedId(null)} className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all">
-            <Icons.ArrowDown className="w-5 h-5 rotate-90 text-foreground" />
+      <div className="max-w-4xl mx-auto space-y-8 pb-12 animate-in fade-in duration-700">
+        <div className="flex flex-col md:flex-row md:items-center gap-6">
+          <button onClick={() => setSelectedId(null)} className="p-3 rounded-2xl bg-card border border-border hover:bg-primary/5 transition-all active:scale-95 shadow-sm self-start md:self-center">
+            <ArrowLeft className="w-6 h-6 text-foreground" />
           </button>
-          <div>
-            <span className={`inline-block px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest mb-1 ${CATEGORY_COLORS[litany.category] || 'bg-muted text-muted-foreground'}`}>
+          <div className="space-y-1">
+            <span className={`inline-flex px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${CATEGORY_COLORS[litany.category] || 'bg-muted text-muted-foreground border-border'}`}>
               {litany.category}
             </span>
-            <h1 className="text-xl font-serif font-bold text-foreground">{litany.title}</h1>
-            {litany.latin && <p className="text-xs font-serif italic text-muted-foreground">{litany.latin}</p>}
+            <h1 className="text-3xl md:text-4xl font-serif font-bold text-foreground leading-tight">{litany.title}</h1>
+            {litany.latin && <p className="text-base font-serif italic text-muted-foreground opacity-70">{litany.latin}</p>}
           </div>
         </div>
 
-        <div className="bg-card border border-border rounded-3xl p-8 md:p-12 space-y-6">
+        <div className="bg-card border border-border rounded-[2.5rem] p-8 md:p-16 space-y-10 shadow-2xl shadow-black/[0.02]">
           {/* Opening */}
           {litany.opening && (
-            <div className="text-center pb-6 border-b border-border">
-              <p className="font-serif text-foreground/90 leading-relaxed whitespace-pre-line">{litany.opening}</p>
+            <div className="text-center pb-8 border-b border-border/50">
+              <p className="font-serif text-lg text-foreground/80 leading-relaxed whitespace-pre-line italic">{litany.opening}</p>
             </div>
           )}
 
           {/* Invocations */}
-          <div className="space-y-2">
+          <div className="space-y-1 max-w-2xl mx-auto">
             {litany.invocations.map((inv, i) => (
-              <div key={i} className="flex items-baseline gap-2 py-1">
-                <p className="flex-1 font-serif text-foreground/90">{inv.call},</p>
-                <p className="font-serif italic text-primary text-sm shrink-0">{inv.response}</p>
+              <div key={i} className="flex flex-col md:flex-row md:items-baseline gap-1 md:gap-4 py-3 border-b border-border/30 last:border-0 group">
+                <p className="flex-1 font-serif text-lg text-foreground/90 group-hover:text-primary transition-colors">{inv.call},</p>
+                <p className="font-serif italic text-primary font-bold text-base shrink-0 opacity-80">{inv.response}</p>
               </div>
             ))}
           </div>
 
           {/* Closing */}
           {litany.closing && (
-            <div className="text-center pt-6 border-t border-border">
-              <p className="font-serif text-foreground/90 leading-relaxed whitespace-pre-line">{litany.closing}</p>
+            <div className="text-center pt-8 border-t border-border/50">
+              <p className="font-serif text-lg text-foreground/80 leading-relaxed whitespace-pre-line italic">{litany.closing}</p>
             </div>
           )}
         </div>
@@ -265,34 +280,47 @@ const LitaniesPage: React.FC = () => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8">
-      <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
-          <Icons.Heart className="w-4 h-4 text-primary" />
-          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Litaniae</span>
+    <div className="max-w-5xl mx-auto space-y-12 pb-12">
+      <div className="text-center space-y-4 pt-4">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/5 border border-primary/10 rounded-full">
+          <Heart className="w-4 h-4 text-primary" />
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Litaniae</span>
         </div>
-        <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Litanias</h1>
-        <p className="text-muted-foreground font-serif italic max-w-lg mx-auto">
-          Orações de invocação e súplica consagradas pela tradição da Igreja.
+        <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground tracking-tight">Litanias</h1>
+        <p className="text-lg text-muted-foreground font-serif italic max-w-2xl mx-auto">
+          Orações de invocação e súplica consagradas pela tradição secular da Igreja.
         </p>
       </div>
 
-      <div className="max-w-md mx-auto relative">
-        <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-        <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Buscar litania..."
-          className="w-full pl-11 pr-4 py-3 rounded-2xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50" />
+      <div className="max-w-md mx-auto relative group">
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground transition-colors group-focus-within:text-primary" />
+        <input 
+          value={searchQuery} 
+          onChange={e => setSearchQuery(e.target.value)} 
+          placeholder="Buscar por título ou categoria..."
+          className="w-full pl-12 pr-4 py-4 rounded-2xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-sm" 
+        />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {filtered.map(l => (
           <button key={l.id} onClick={() => setSelectedId(l.id)}
-            className="text-left p-4 md:p-5 rounded-xl bg-card border border-border hover:border-primary/30 hover:bg-primary/5 transition-all group space-y-2.5">
-            <span className={`inline-block px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest ${CATEGORY_COLORS[l.category] || 'bg-muted text-muted-foreground'}`}>
-              {l.category}
-            </span>
-            <h3 className="text-base font-bold text-foreground group-hover:text-primary transition-colors">{l.title}</h3>
-            {l.latin && <p className="text-xs font-serif italic text-muted-foreground">{l.latin}</p>}
-            <p className="text-sm text-muted-foreground">{l.invocations.length} invocações</p>
+            className="text-left p-8 rounded-3xl bg-card border border-border hover:border-primary/40 hover:shadow-xl hover:-translate-y-1 transition-all group relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-8 opacity-[0.02] group-hover:opacity-[0.05] transition-opacity">
+              <BookOpen className="w-32 h-32 -mr-8 -mt-8 rotate-12" />
+            </div>
+            <div className="relative z-10 space-y-4">
+              <span className={`inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${CATEGORY_COLORS[l.category] || 'bg-muted text-muted-foreground border-border'}`}>
+                {l.category}
+              </span>
+              <div className="space-y-1">
+                <h2 className="text-2xl font-serif font-bold text-foreground group-hover:text-primary transition-colors leading-tight">{l.title}</h2>
+                {l.latin && <p className="text-xs font-serif italic text-muted-foreground opacity-60">{l.latin}</p>}
+              </div>
+              <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary pt-2">
+                Começar Oração <ChevronRight className="w-3 h-3 transition-transform group-hover:translate-x-1" />
+              </div>
+            </div>
           </button>
         ))}
       </div>
