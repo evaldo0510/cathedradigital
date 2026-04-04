@@ -169,7 +169,7 @@ const DailyLiturgy: React.FC = () => {
                       </div>
                       <div className="pl-11 space-y-2">
                         <p className="font-serif italic text-muted-foreground">{readings.primeiraLeitura.titulo}</p>
-                        <p className="reader-text text-foreground/90 leading-relaxed text-lg whitespace-pre-wrap">{readings.primeiraLeitura.texto}</p>
+                        <p className="reader-text text-foreground/90 leading-relaxed text-xl md:text-2xl whitespace-pre-wrap">{readings.primeiraLeitura.texto}</p>
                       </div>
                     </section>
 
@@ -181,7 +181,7 @@ const DailyLiturgy: React.FC = () => {
                       </div>
                       <div className="pl-11 space-y-4">
                         <p className="font-serif font-bold text-primary italic">R. {readings.salmo.refrao}</p>
-                        <p className="reader-text text-foreground/90 leading-relaxed text-lg whitespace-pre-wrap italic">{readings.salmo.texto}</p>
+                        <p className="reader-text text-foreground/90 leading-relaxed text-xl md:text-2xl whitespace-pre-wrap italic">{readings.salmo.texto}</p>
                       </div>
                     </section>
 
@@ -194,7 +194,7 @@ const DailyLiturgy: React.FC = () => {
                         </div>
                         <div className="pl-11 space-y-2">
                           <p className="font-serif italic text-muted-foreground">{readings.segundaLeitura.titulo}</p>
-                          <p className="reader-text text-foreground/90 leading-relaxed text-lg whitespace-pre-wrap">{readings.segundaLeitura.texto}</p>
+                          <p className="reader-text text-foreground/90 leading-relaxed text-xl md:text-2xl whitespace-pre-wrap">{readings.segundaLeitura.texto}</p>
                         </div>
                       </section>
                     )}
@@ -207,7 +207,7 @@ const DailyLiturgy: React.FC = () => {
                       </div>
                       <div className="pl-11 space-y-2">
                         <p className="font-serif italic text-muted-foreground">{readings.evangelho.titulo}</p>
-                        <p className="reader-text text-foreground/90 leading-relaxed text-lg whitespace-pre-wrap font-bold">{readings.evangelho.texto}</p>
+                        <p className="reader-text text-foreground/90 leading-relaxed text-xl md:text-2xl whitespace-pre-wrap font-bold">{readings.evangelho.texto}</p>
                       </div>
                     </section>
 

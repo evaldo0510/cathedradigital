@@ -91,9 +91,9 @@ const BIBLE_BOOKS = {
 type ViewMode = 'books' | 'chapters' | 'reading';
 
 const FONT_SIZES = [
-  { label: 'P', size: 'text-sm', leading: 'leading-relaxed' },
-  { label: 'M', size: 'text-base', leading: 'leading-[1.9]' },
-  { label: 'G', size: 'text-lg', leading: 'leading-[2]' },
+  { label: 'P', size: 'text-base', leading: 'leading-relaxed' },
+  { label: 'M', size: 'text-lg md:text-xl', leading: 'leading-[1.8]' },
+  { label: 'G', size: 'text-xl md:text-2xl', leading: 'leading-[1.9]' },
 ];
 
 const Bible: React.FC = () => {

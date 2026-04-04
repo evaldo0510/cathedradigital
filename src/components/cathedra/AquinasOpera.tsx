@@ -160,7 +160,7 @@ const AquinasOpera: React.FC = () => {
                               </button>
                               {expandedArticle === artKey && (
                                 <div className="px-3 pb-4">
-                                  <p className="text-sm text-foreground/80 font-serif leading-relaxed whitespace-pre-line bg-muted rounded-xl p-5">{art.body}</p>
+                                  <p className="text-base md:text-lg text-foreground/80 font-serif leading-relaxed whitespace-pre-line bg-muted rounded-xl p-5">{art.body}</p>
                                 </div>
                               )}
                             </div>

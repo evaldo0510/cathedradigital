@@ -58,7 +58,7 @@ const CatechismContent: React.FC<{ paragraph: number }> = ({ paragraph }) => {
 
   if (isLoading) {
     return (
-      <div className="reader-text text-foreground/90 leading-[2] text-base space-y-3 py-8">
+      <div className="reader-text text-foreground/90 leading-[2] text-lg md:text-xl space-y-3 py-8">
         {Array.from({ length: 4 }).map((_, i) => (
           <div key={i} className="h-4 bg-muted rounded animate-pulse" style={{ width: `${60 + Math.random() * 40}%` }} />
         ))}
@@ -75,7 +75,7 @@ const CatechismContent: React.FC<{ paragraph: number }> = ({ paragraph }) => {
   }
 
   return (
-    <div className="reader-text text-foreground/90 leading-[2] text-base">
+    <div className="reader-text text-foreground/90 leading-[2] text-lg md:text-xl">
       <p className="font-serif">{data?.content}</p>
     </div>
   );
