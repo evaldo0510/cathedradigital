@@ -557,10 +557,16 @@ const Saints: React.FC = () => {
           <span className="text-xs font-black uppercase tracking-widest">Voltar ao Sanctorum</span>
         </button>
 
-        <div className="bg-white dark:bg-stone-900 rounded-3xl border border-stone-100 dark:border-stone-800 overflow-hidden">
-          <div className="bg-gradient-to-br from-stone-900 to-stone-800 p-10 md:p-14 text-white relative overflow-hidden">
-            <div className="absolute inset-0 opacity-5 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMSIgZmlsbD0id2hpdGUiLz48L3N2Zz4=')]" />
-            <div className="relative">
+        <div className="bg-white dark:bg-stone-900 rounded-3xl border border-stone-100 dark:border-stone-800 overflow-hidden shadow-sm">
+          <div className="relative h-64 md:h-96">
+            <SacredImage
+              src={selectedSaint.image || 'https://images.unsplash.com/photo-1548610762-656391d1ad4d'}
+              alt={selectedSaint.name}
+              className="w-full h-full"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-stone-900 via-stone-900/40 to-transparent" />
+            <div className="absolute bottom-0 left-0 p-8 md:p-12 text-white">
               <span className={`inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-4 ${CATEGORY_COLORS[selectedSaint.category]}`}>
                 {CATEGORY_LABELS[selectedSaint.category]}
               </span>
@@ -609,17 +615,15 @@ const Saints: React.FC = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {selectedSaint.works.map(w => (
                     w.url ? (
-                      <a
+                      <button
                         key={w.title}
-                        href={w.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-3 p-4 bg-primary/5 border border-primary/15 rounded-xl hover:bg-primary/10 hover:border-primary/30 transition-all group"
+                        onClick={() => setSelectedWork(w)}
+                        className="flex items-center gap-3 p-4 bg-primary/5 border border-primary/15 rounded-xl hover:bg-primary/10 hover:border-primary/30 transition-all group text-left w-full"
                       >
                         <Icons.Book className="w-4 h-4 text-primary flex-shrink-0" />
                         <span className="font-serif text-foreground group-hover:text-primary transition-colors flex-1">{w.title}</span>
-                        <Icons.ExternalLink className="w-3.5 h-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
-                      </a>
+                        <Icons.BookOpen className="w-3.5 h-3.5 text-primary opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                      </button>
                     ) : (
                       <div key={w.title} className="flex items-center gap-3 p-4 bg-muted/50 rounded-xl">
                         <Icons.Book className="w-4 h-4 text-muted-foreground flex-shrink-0" />
@@ -646,7 +650,20 @@ const Saints: React.FC = () => {
             )}
           </div>
         </div>
+
+        <AnimatePresence>
+          {selectedWork && (
+            <InternalReader
+              url={selectedWork.url!}
+              title={selectedWork.title}
+              onClose={() => setSelectedWork(null)}
+            />
+          )}
+        </AnimatePresence>
       </div>
+    );
+  }
+
     );
   }
 
