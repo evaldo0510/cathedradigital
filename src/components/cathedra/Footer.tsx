@@ -59,16 +59,16 @@ const Footer: React.FC = React.memo(() => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const vaticanLinks = [
-    { title: 'Santa Sé', url: 'https://www.vatican.va' },
-    { title: 'Catecismo', url: 'https://www.vatican.va/archive/ccc/index_po.htm' },
+    { title: 'Santa Sé (Vatican)', url: 'https://www.vatican.va' },
+    { title: 'Catecismo Oficial', url: 'https://www.vatican.va/archive/ccc/index_po.htm' },
     { title: 'Vatican News', url: 'https://www.vaticannews.va/pt.html' },
     { title: 'Dicastérios', url: 'https://www.vatican.va/content/romancuria/pt.html' },
   ];
 
   const cnbbLinks = [
-    { title: 'CNBB', url: 'https://www.cnbb.org.br' },
-    { title: 'Liturgia Diária', url: 'https://www.cnbb.org.br/liturgia' },
-    { title: 'Documentos', url: 'https://www.cnbb.org.br/category/publicacoes' },
+    { title: 'CNBB Oficial', url: 'https://www.cnbb.org.br' },
+    { title: 'Liturgia Diária CNBB', url: 'https://www.cnbb.org.br/liturgia' },
+    { title: 'Documentos e Publicações', url: 'https://www.cnbb.org.br/category/publicacoes' },
   ];
 
   const scrollToTop = () => {
@@ -96,7 +96,7 @@ const Footer: React.FC = React.memo(() => {
   const dioceseUrl = DIOCESE_URLS[selectedDiocese];
 
   return (
-    <footer className="mt-auto w-full border-t border-primary/10 pt-12 pb-8 px-6 md:px-12 bg-black/40 backdrop-blur-sm relative overflow-hidden hidden lg:block">
+    <footer className="mt-auto w-full border-t border-primary/10 pt-12 pb-24 lg:pb-8 px-6 md:px-12 bg-black/40 backdrop-blur-sm relative overflow-hidden">
       <div className="absolute inset-0 pointer-events-none opacity-[0.02] bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')]" />
       
       <div className="max-w-7xl mx-auto relative z-10">
@@ -130,7 +130,9 @@ const Footer: React.FC = React.memo(() => {
 
           {/* Links Column - Vatican */}
           <div>
-            <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-6">Santa Sé</h4>
+            <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-6 flex items-center gap-2">
+              <span className="text-lg">🏛️</span> Santa Sé
+            </h4>
             <ul className="flex flex-col gap-4">
               {vaticanLinks.map(link => (
                 <li key={link.title}>
@@ -145,7 +147,9 @@ const Footer: React.FC = React.memo(() => {
 
           {/* Links Column - CNBB */}
           <div>
-            <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-6">Igreja no Brasil</h4>
+            <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-6 flex items-center gap-2">
+              <span className="text-lg">🇧🇷</span> CNBB
+            </h4>
             <ul className="flex flex-col gap-4">
               {cnbbLinks.map(link => (
                 <li key={link.title}>
@@ -180,7 +184,10 @@ const Footer: React.FC = React.memo(() => {
             </div>
 
             <div>
-              <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-4">Newsletter</h4>
+              <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-4">Boletim Informativo</h4>
+              <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
+                Receba reflexões teológicas e atualizações da plataforma em seu e-mail.
+              </p>
               <form onSubmit={handleSubscribe} className="relative">
                 <input 
                   type="email" 
