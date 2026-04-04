@@ -162,7 +162,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.2 }}
-        className="relative min-h-[75vh] md:h-[85vh] flex items-center overflow-hidden"
+        className="relative min-h-[70vh] md:h-[85vh] flex items-center overflow-hidden touch-none"
       >
         <SacredImage
           src="https://images.unsplash.com/photo-1548610762-656391d1ad4d?auto=format&fit=crop&q=80&w=1920"
@@ -170,9 +170,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           className="absolute inset-0 w-full h-full"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/40 to-transparent hidden md:block" />
-        <div className="absolute inset-0 bg-background/60 md:hidden" />
+        <div className="absolute inset-0 bg-background/80 md:hidden" />
 
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 py-12 md:py-20 flex flex-col md:flex-row items-center justify-between gap-12">
           
