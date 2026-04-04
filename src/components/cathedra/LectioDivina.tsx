@@ -1,17 +1,42 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Icons } from '../../constants';
+import { 
+  Heart, 
+  Search, 
+  ArrowLeft, 
+  ChevronRight, 
+  BookOpen, 
+  Star, 
+  Flame, 
+  Zap, 
+  Sparkles,
+  Music,
+  Clock,
+  Calendar,
+  Activity,
+  Cross,
+  Feather,
+  CheckCircle2,
+  ChevronLeft,
+  Timer,
+  Book,
+  PenTool,
+  Brain,
+  PrayingHand,
+  Sun
+} from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
 type Step = 'intro' | 'lectio' | 'meditatio' | 'oratio' | 'contemplatio' | 'actio';
 
-const STEPS: { id: Step; title: string; latin: string; instruction: string; prompt: string; icon: string; duration: string }[] = [
+const STEPS: { id: Step; title: string; latin: string; instruction: string; prompt: string; icon: React.FC<{ className?: string }>; color: string; duration: string }[] = [
   {
     id: 'lectio',
     title: 'Leitura',
     latin: 'Lectio',
     instruction: 'Leia o texto sagrado com atenção, lentamente, como quem escuta a voz de Deus. Repita a leitura quantas vezes precisar.',
     prompt: 'O que diz o texto? Quais palavras ou frases chamam sua atenção?',
-    icon: '📖',
+    icon: Book,
+    color: 'text-sky-500 bg-sky-500/10',
     duration: '5-10 min',
   },
   {
@@ -20,7 +45,8 @@ const STEPS: { id: Step; title: string; latin: string; instruction: string; prom
     latin: 'Meditatio',
     instruction: 'Reflita sobre o que leu. Mastigue a Palavra como um alimento espiritual. Deixe-a penetrar no coração e na mente.',
     prompt: 'O que Deus está me dizendo através deste texto? Como isso se aplica à minha vida?',
-    icon: '🧠',
+    icon: Brain,
+    color: 'text-rose-500 bg-rose-500/10',
     duration: '10-15 min',
   },
   {
@@ -29,7 +55,8 @@ const STEPS: { id: Step; title: string; latin: string; instruction: string; prom
     latin: 'Oratio',
     instruction: 'Responda a Deus com a oração que brota do coração. Fale com Ele sobre o que a meditação suscitou em você.',
     prompt: 'O que desejo dizer a Deus? Que graça pedir? Que louvor ou agradecimento oferecer?',
-    icon: '🙏',
+    icon: Sparkles,
+    color: 'text-amber-500 bg-amber-500/10',
     duration: '5-10 min',
   },
   {
@@ -38,7 +65,8 @@ const STEPS: { id: Step; title: string; latin: string; instruction: string; prom
     latin: 'Contemplatio',
     instruction: 'Faça silêncio interior. Repouse na presença de Deus sem palavras, sem pensamentos, apenas acolhendo Seu amor.',
     prompt: 'Descanse em Deus. Não é preciso pensar nem falar — apenas estar.',
-    icon: '✨',
+    icon: Sun,
+    color: 'text-indigo-500 bg-indigo-500/10',
     duration: '5-15 min',
   },
   {
@@ -47,7 +75,8 @@ const STEPS: { id: Step; title: string; latin: string; instruction: string; prom
     latin: 'Actio',
     instruction: 'Leve a Palavra para a vida concreta. Que resolução prática você faz a partir deste encontro com Deus?',
     prompt: 'O que vou fazer hoje como resposta à Palavra de Deus?',
-    icon: '⚡',
+    icon: Zap,
+    color: 'text-emerald-500 bg-emerald-500/10',
     duration: '2-5 min',
   },
 ];
@@ -125,57 +154,65 @@ const LectioDivina: React.FC = () => {
 
   if (currentStep === 'intro') {
     return (
-      <div className="max-w-3xl mx-auto space-y-8">
-        <div className="text-center space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
-            <Icons.Feather className="w-4 h-4 text-primary" />
-            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Lectio Divina</span>
+      <div className="max-w-4xl mx-auto space-y-12 pb-12">
+        <div className="text-center space-y-4 pt-4">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/5 border border-primary/10 rounded-full">
+            <Feather className="w-4 h-4 text-primary" />
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Lectio Divina</span>
           </div>
-          <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Leitura Orante</h1>
-          <p className="text-muted-foreground font-serif italic max-w-lg mx-auto">
-            Método monástico milenar de encontro com Deus pela Sagrada Escritura, em cinco movimentos do coração.
+          <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground tracking-tight">Leitura Orante</h1>
+          <p className="text-lg text-muted-foreground font-serif italic max-w-2xl mx-auto">
+            "Não são as palavras em si, mas a Presença que elas contêm que alimenta a alma."
           </p>
         </div>
 
         {/* Steps overview */}
-        <div className="grid grid-cols-5 gap-2">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 px-2">
           {STEPS.map((step, i) => (
-            <div key={step.id} className="text-center p-3 rounded-xl bg-card border border-border">
-              <span className="text-2xl">{step.icon}</span>
-              <p className="text-[10px] font-black uppercase tracking-widest text-primary mt-1">{step.latin}</p>
-              <p className="text-[9px] text-muted-foreground mt-0.5">{step.title}</p>
+            <div key={step.id} className="group p-5 rounded-3xl bg-card border border-border text-center space-y-3 hover:border-primary/30 hover:shadow-xl hover:-translate-y-1 transition-all">
+              <div className={`w-12 h-12 rounded-2xl mx-auto flex items-center justify-center transition-transform group-hover:scale-110 ${step.color}`}>
+                <step.icon className="w-6 h-6" />
+              </div>
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-widest text-primary/60">{step.latin}</p>
+                <p className="font-serif font-bold text-sm text-foreground">{step.title}</p>
+              </div>
             </div>
           ))}
         </div>
 
         {/* Select passage */}
-        <div className="bg-card border border-border rounded-3xl p-8 space-y-6">
-          <h3 className="text-sm font-black uppercase tracking-widest text-primary text-center">Escolha uma passagem</h3>
-          <div className="relative max-w-sm mx-auto">
-            <input
-              value={selectedPassage}
-              onChange={e => setSelectedPassage(e.target.value)}
-              placeholder="Ex: Jo 1,1-18 ou Sl 23..."
-              className="w-full px-4 py-3 rounded-2xl border border-border bg-background text-foreground text-sm text-center focus:outline-none focus:ring-2 focus:ring-primary/50"
-            />
-          </div>
+        <div className="bg-card border border-border rounded-[2.5rem] p-8 md:p-12 space-y-10 shadow-2xl shadow-black/[0.02]">
+          <div className="space-y-6 max-w-md mx-auto">
+            <div className="text-center space-y-2">
+              <h3 className="text-sm font-black uppercase tracking-widest text-primary/60">Escolha uma passagem</h3>
+              <p className="text-xs text-muted-foreground font-serif italic">Digite uma referência bíblica ou escolha uma sugestão.</p>
+            </div>
+            <div className="relative">
+              <input
+                value={selectedPassage}
+                onChange={e => setSelectedPassage(e.target.value)}
+                placeholder="Ex: Jo 1,1-18 ou Sl 23..."
+                className="w-full px-6 py-4 rounded-2xl border border-border bg-muted/30 text-foreground text-base text-center font-serif focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-sm"
+              />
+            </div>
 
-          <div className="space-y-2">
-            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground text-center">Sugestões</p>
-            <div className="flex flex-wrap gap-2 justify-center">
-              {SUGGESTED_PASSAGES.map(p => (
-                <button
-                  key={p.ref}
-                  onClick={() => setSelectedPassage(p.ref)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-                    selectedPassage === p.ref
-                      ? 'bg-foreground text-background'
-                      : 'bg-muted text-muted-foreground hover:text-foreground'
-                  }`}
-                >
-                  {p.ref}
-                </button>
-              ))}
+            <div className="space-y-4">
+              <div className="flex flex-wrap gap-2 justify-center">
+                {SUGGESTED_PASSAGES.map(p => (
+                  <button
+                    key={p.ref}
+                    onClick={() => setSelectedPassage(p.ref)}
+                    className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all border ${
+                      selectedPassage === p.ref
+                        ? 'bg-primary border-primary text-white shadow-lg'
+                        : 'bg-card border-border text-muted-foreground hover:border-primary/30 hover:text-primary'
+                    }`}
+                  >
+                    {p.ref}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -183,7 +220,7 @@ const LectioDivina: React.FC = () => {
             <button
               disabled={!selectedPassage.trim()}
               onClick={() => setCurrentStep('lectio')}
-              className="px-10 py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all disabled:opacity-30"
+              className="px-10 py-5 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] shadow-xl hover:bg-primary hover:text-primary-foreground transition-all disabled:opacity-30 active:scale-95"
             >
               Iniciar Lectio Divina
             </button>
@@ -194,131 +231,155 @@ const LectioDivina: React.FC = () => {
   }
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-8 pb-12 animate-in fade-in duration-700">
       {/* Header */}
-      <div className="flex items-center gap-4">
-        <button onClick={() => { setCurrentStep('intro'); setBibleText([]); }} className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all">
-          <Icons.ArrowDown className="w-5 h-5 rotate-90 text-foreground" />
+      <div className="flex flex-col md:flex-row md:items-center gap-6 px-2">
+        <button onClick={() => { setCurrentStep('intro'); setBibleText([]); }} className="p-3 rounded-2xl bg-card border border-border hover:bg-primary/5 transition-all active:scale-95 shadow-sm self-start md:self-center">
+          <ArrowLeft className="w-6 h-6 text-foreground" />
         </button>
-        <div className="flex-1">
-          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Lectio Divina</span>
-          <h2 className="text-xl font-serif font-bold text-foreground">{selectedPassage}</h2>
+        <div className="flex-1 space-y-1">
+          <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">
+            <Feather className="w-3 h-3" />
+            Lectio Divina
+          </div>
+          <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground leading-tight">{selectedPassage}</h2>
         </div>
-        <span className="font-mono text-sm text-muted-foreground">{formatTime(seconds)}</span>
+        <div className="flex items-center gap-3 px-5 py-3 rounded-2xl bg-card border border-border shadow-sm">
+          <Timer className="w-4 h-4 text-primary/60" />
+          <span className="font-mono text-lg font-bold text-foreground tabular-nums">{formatTime(seconds)}</span>
+        </div>
       </div>
 
       {/* Step progress */}
-      <div className="flex gap-1">
-        {STEPS.map((step, i) => (
-          <button
-            key={step.id}
-            onClick={() => setCurrentStep(step.id)}
-            className={`flex-1 h-2 rounded-full transition-all ${
-              i <= stepIndex ? 'bg-primary' : 'bg-border'
-            }`}
-          />
-        ))}
-      </div>
+      <div className="px-2 space-y-6">
+        <div className="flex gap-2">
+          {STEPS.map((step, i) => (
+            <button
+              key={step.id}
+              onClick={() => setCurrentStep(step.id)}
+              className={`flex-1 h-2 rounded-full transition-all duration-500 ${
+                i <= stepIndex ? 'bg-primary shadow-[0_0_8px_rgba(var(--primary),0.3)]' : 'bg-border'
+              }`}
+            />
+          ))}
+        </div>
 
-      {/* Step labels */}
-      <div className="flex justify-between px-1">
-        {STEPS.map((step, i) => (
-          <button
-            key={step.id}
-            onClick={() => setCurrentStep(step.id)}
-            className={`text-[9px] font-black uppercase tracking-widest transition-all ${
-              step.id === currentStep ? 'text-primary' : i <= stepIndex ? 'text-foreground/50' : 'text-muted-foreground/40'
-            }`}
-          >
-            {step.icon} {step.latin}
-          </button>
-        ))}
+        {/* Step labels scrollable */}
+        <div className="flex overflow-x-auto pb-2 gap-4 scrollbar-hide md:justify-between no-scrollbar">
+          {STEPS.map((step, i) => (
+            <button
+              key={step.id}
+              onClick={() => setCurrentStep(step.id)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all whitespace-nowrap border ${
+                step.id === currentStep 
+                  ? 'bg-primary border-primary text-white shadow-lg' 
+                  : i <= stepIndex ? 'bg-card border-border text-foreground/80' : 'bg-transparent border-transparent text-muted-foreground/40'
+              }`}
+            >
+              <step.icon className={`w-4 h-4 ${step.id === currentStep ? 'text-white' : i <= stepIndex ? 'text-primary' : ''}`} />
+              <span className="text-[10px] font-black uppercase tracking-widest">{step.latin}</span>
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Active step content */}
       {activeStep && (
-        <div className="bg-card border border-border rounded-3xl p-8 md:p-12 space-y-6">
-          <div className="text-center space-y-2">
-            <span className="text-5xl">{activeStep.icon}</span>
-            <h2 className="text-2xl font-serif font-bold text-foreground">{activeStep.title}</h2>
-            <p className="text-xs font-serif italic text-primary">{activeStep.latin}</p>
-            <p className="text-[10px] text-muted-foreground">{activeStep.duration}</p>
+        <div className="bg-card border border-border rounded-[3rem] p-8 md:p-16 space-y-10 shadow-2xl shadow-black/[0.02] relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-12 opacity-[0.02] pointer-events-none">
+            <activeStep.icon className="w-64 h-64 -mr-16 -mt-16 rotate-12" />
+          </div>
+
+          <div className="relative text-center space-y-4">
+            <div className={`w-20 h-20 rounded-[2rem] flex items-center justify-center mx-auto shadow-xl border-4 border-background ${activeStep.color}`}>
+              <activeStep.icon className="w-10 h-10" />
+            </div>
+            <div className="space-y-1">
+              <h2 className="text-3xl md:text-5xl font-serif font-bold text-foreground tracking-tight">{activeStep.title}</h2>
+              <p className="text-base font-serif italic text-primary opacity-80">{activeStep.latin} — {activeStep.duration}</p>
+            </div>
           </div>
           
-          {/* Bible Text */}
-          <div className="bg-secondary/50 rounded-2xl p-6 space-y-3">
-            {isBibleLoading ? (
-              <div className="space-y-3 py-4">
-                {Array.from({ length: 4 }).map((_, i) => (
-                  <div key={i} className="h-4 bg-muted rounded animate-pulse" style={{ width: `${75 + Math.random() * 25}%` }} />
-                ))}
-              </div>
-            ) : bibleError ? (
-              <p className="text-muted-foreground italic text-center text-sm">{bibleError}</p>
-            ) : bibleText.length > 0 ? (
-              <div className="space-y-2">
-                <p className="text-[10px] font-black uppercase tracking-widest text-primary/70 mb-2">Sagrada Escritura — {selectedPassage}</p>
-                <div className="font-serif leading-relaxed text-foreground/90">
-                  {bibleText.map((v, i) => (
-                    <span key={i}>
-                      <sup className="text-primary font-bold mr-1 text-[10px] select-none">{v.number}</sup>
-                      {v.text}{' '}
-                    </span>
+          {/* Bible Text or Instructions */}
+          <div className="relative space-y-8 max-w-2xl mx-auto">
+            <div className="bg-muted/50 rounded-[2.5rem] p-8 md:p-12 border border-border/50 space-y-6">
+              {isBibleLoading ? (
+                <div className="space-y-4 py-4">
+                  {Array.from({ length: 4 }).map((_, i) => (
+                    <div key={i} className="h-4 bg-primary/10 rounded animate-pulse" style={{ width: `${75 + Math.random() * 25}%` }} />
                   ))}
                 </div>
-              </div>
-            ) : (
-              <>
-                <p className="text-foreground/90 leading-relaxed font-serif">{activeStep.instruction}</p>
-                <p className="text-sm font-bold text-primary italic">"{activeStep.prompt}"</p>
-              </>
-            )}
-          </div>
-          
-          {/* Instructions & Prompt (Only if bible text isn't the focus) */}
-          {(bibleText.length > 0 || isBibleLoading) && (
-            <div className="border-t border-border pt-4 mt-2 space-y-2">
-              <p className="text-xs text-muted-foreground italic font-serif">{activeStep.instruction}</p>
-              <p className="text-[11px] font-bold text-primary italic">"{activeStep.prompt}"</p>
+              ) : bibleError ? (
+                <p className="text-muted-foreground italic text-center text-lg font-serif">{bibleError}</p>
+              ) : bibleText.length > 0 ? (
+                <div className="space-y-6">
+                  <div className="flex items-center gap-2 justify-center opacity-40">
+                    <Book className="w-4 h-4" />
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em]">{selectedPassage}</p>
+                  </div>
+                  <div className="font-serif leading-relaxed text-xl text-foreground/90 text-center">
+                    {bibleText.map((v, i) => (
+                      <span key={i} className="inline-block mb-1">
+                        <sup className="text-primary font-bold mr-1.5 text-xs select-none">{v.number}</sup>
+                        {v.text}{' '}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center space-y-6">
+                  <p className="text-xl text-foreground/90 leading-relaxed font-serif italic">"{activeStep.instruction}"</p>
+                </div>
+              )}
             </div>
-          )}
+            
+            <div className="space-y-8">
+              <div className="text-center space-y-3">
+                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/40">Oração do Coração</h3>
+                <p className="text-lg md:text-xl font-serif font-bold text-primary italic leading-relaxed">"{activeStep.prompt}"</p>
+              </div>
 
-          {/* Notes */}
-          <div className="space-y-2">
-            <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Anotações pessoais</label>
-            <textarea
-              value={notes[activeStep.id] || ''}
-              onChange={e => setNotes({ ...notes, [activeStep.id]: e.target.value })}
-              rows={4}
-              placeholder="Escreva aqui suas reflexões, inspirações e resoluções..."
-              className="w-full px-4 py-3 rounded-2xl border border-border bg-background text-foreground text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary/50 font-serif"
-            />
+              {/* Notes */}
+              <div className="space-y-4 group">
+                <div className="flex items-center gap-2 justify-center text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 transition-colors group-focus-within:text-primary">
+                  <PenTool className="w-3 h-3" /> Sua Reflexão
+                </div>
+                <textarea
+                  value={notes[activeStep.id] || ''}
+                  onChange={e => setNotes({ ...notes, [activeStep.id]: e.target.value })}
+                  rows={6}
+                  placeholder="Deixe a alma falar... Escreva aqui suas reflexões, luzes e resoluções."
+                  className="w-full px-8 py-8 rounded-[2rem] border border-border bg-background text-lg md:text-xl font-serif text-foreground resize-none focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-sm leading-relaxed"
+                />
+              </div>
+            </div>
           </div>
         </div>
       )}
 
       {/* Navigation */}
-      <div className="flex justify-between">
+      <div className="flex gap-4 justify-center px-4">
         <button
           disabled={stepIndex <= 0}
           onClick={() => setCurrentStep(STEPS[stepIndex - 1].id)}
-          className="px-6 py-3 rounded-xl bg-card border border-border text-sm font-bold disabled:opacity-30 hover:bg-primary/10 transition-all"
+          className="flex-1 max-w-[200px] h-14 rounded-2xl bg-card border border-border text-[10px] font-black uppercase tracking-widest disabled:opacity-20 hover:bg-primary/5 transition-all flex items-center justify-center gap-2 group shadow-sm"
         >
-          ← Anterior
+          <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Anterior
         </button>
+        
         {stepIndex < STEPS.length - 1 ? (
           <button
             onClick={() => setCurrentStep(STEPS[stepIndex + 1].id)}
-            className="px-6 py-3 rounded-xl bg-foreground text-background text-sm font-bold hover:bg-primary transition-all"
+            className="flex-1 max-w-[200px] h-14 rounded-2xl bg-foreground text-background text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-2 group shadow-xl"
           >
-            Próximo →
+            Próximo <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </button>
         ) : (
           <button
             onClick={() => { setCurrentStep('intro'); setNotes({}); setSeconds(0); setBibleText([]); }}
-            className="px-6 py-3 rounded-xl bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 transition-all"
+            className="flex-1 max-w-[200px] h-14 rounded-2xl bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-2 group shadow-xl shadow-primary/20"
           >
-            ✓ Concluir
+            <CheckCircle2 className="w-4 h-4" /> Concluir
           </button>
         )}
       </div>
