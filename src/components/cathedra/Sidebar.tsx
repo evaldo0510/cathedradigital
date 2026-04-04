@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Icons, Logo } from '../../constants';
 import { AppRoute, User } from '../../types';
@@ -7,9 +7,12 @@ import { BibleModal, CatechismModal, DocumentsModal } from './QuickModals';
 interface SidebarProps {
   onClose?: () => void;
   user: User | null;
+  isDark?: boolean;
+  onToggleDark?: () => void;
+  onSignOut?: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user }) => {
+const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onToggleDark, onSignOut }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
