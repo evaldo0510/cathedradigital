@@ -96,7 +96,7 @@ const Footer: React.FC = React.memo(() => {
   const dioceseUrl = DIOCESE_URLS[selectedDiocese];
 
   return (
-    <footer className="fixed bottom-0 left-0 right-0 z-[100] bg-background/80 backdrop-blur-xl border-t border-primary/10 pt-10 pb-10 px-6 md:px-12 pointer-events-auto hidden lg:block">
+    <footer className="fixed bottom-0 left-0 right-0 z-[100] bg-black/80 backdrop-blur-xl border-t border-primary/10 pt-10 pb-10 px-6 md:px-12 pointer-events-auto hidden lg:block">
       <div className="absolute inset-0 pointer-events-none opacity-[0.02] bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')]" />
       
       <div className="max-w-7xl mx-auto relative z-10">
