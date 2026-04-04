@@ -267,6 +267,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "transactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "public_profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       user_history: {
@@ -331,7 +338,27 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      public_profiles: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          id: string | null
+          name: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          id?: string | null
+          name?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          id?: string | null
+          name?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never
