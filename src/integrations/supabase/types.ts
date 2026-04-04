@@ -35,6 +35,27 @@ export type Database = {
         }
         Relationships: []
       }
+      catechism_cache: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          paragraph: number
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          paragraph: number
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          paragraph?: number
+        }
+        Relationships: []
+      }
       community_likes: {
         Row: {
           created_at: string
