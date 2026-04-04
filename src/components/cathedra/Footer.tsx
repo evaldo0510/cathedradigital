@@ -150,16 +150,27 @@ const Footer: React.FC = React.memo(() => {
                   <p className="text-sm text-zinc-500">Receba reflexões teológicas e atualizações da plataforma semanalmente.</p>
                 </div>
                 <form onSubmit={handleSubscribe} className="w-full md:w-auto flex flex-col sm:flex-row gap-3">
-                  <input 
-                    type="email" 
-                    required
-                    placeholder="Seu melhor e-mail" 
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="px-6 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-primary/50 transition-all w-full sm:w-64"
-                  />
-                  <button className="px-8 py-3 rounded-xl bg-primary text-black font-bold text-sm hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 whitespace-nowrap">
-                    Inscrever-se
+                  <div className="relative flex-1 sm:w-64">
+                    <input 
+                      type="email" 
+                      required
+                      placeholder="Seu melhor e-mail" 
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      disabled={isSubmitting}
+                      className="w-full px-6 py-3.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-primary/50 transition-all placeholder:text-zinc-600 disabled:opacity-50"
+                    />
+                    {isSubmitting && (
+                      <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                        <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                      </div>
+                    )}
+                  </div>
+                  <button 
+                    disabled={isSubmitting}
+                    className="px-8 py-3.5 rounded-xl bg-primary text-black font-black uppercase text-[10px] tracking-widest hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 whitespace-nowrap disabled:opacity-50 active:scale-95"
+                  >
+                    {isSubmitting ? 'Enviando...' : 'Inscrever-se'}
                   </button>
                 </form>
               </div>
