@@ -105,8 +105,59 @@ const Bible: React.FC = () => {
   const [fontSizeIdx, setFontSizeIdx] = useState(1);
   const [showCrossRefs, setShowCrossRefs] = useState(true);
   const { toggleFavorite, isFavorite } = useFavorites();
-  const { profile } = useAuth();
+  const { user, profile } = useAuth();
   const completedBooks = useMemo(() => new Set(profile?.completed_books || []), [profile?.completed_books]);
+
+  // Track chapters read
+  const [chaptersRead, setChaptersRead] = useState<Record<string, Set<number>>>({});
+
+  const loadChaptersRead = useCallback(async () => {
+    if (!user) return;
+    const { data } = await supabase
+      .from('bible_chapters_read' as any)
+      .select('book_abbr, chapter')
+      .eq('user_id', user.id);
+    if (data) {
+      const map: Record<string, Set<number>> = {};
+      (data as any[]).forEach((r: any) => {
+        if (!map[r.book_abbr]) map[r.book_abbr] = new Set();
+        map[r.book_abbr].add(r.chapter);
+      });
+      setChaptersRead(map);
+    }
+  }, [user]);
+
+  useEffect(() => { loadChaptersRead(); }, [loadChaptersRead]);
+
+  const markChapterRead = useCallback(async (bookAbbr: string, chapter: number, totalChapters: number) => {
+    if (!user) return;
+    // Insert chapter read
+    await supabase
+      .from('bible_chapters_read' as any)
+      .upsert({ user_id: user.id, book_abbr: bookAbbr, chapter } as any, { onConflict: 'user_id,book_abbr,chapter' });
+    
+    // Update local state
+    setChaptersRead(prev => {
+      const next = { ...prev };
+      if (!next[bookAbbr]) next[bookAbbr] = new Set();
+      next[bookAbbr] = new Set(next[bookAbbr]).add(chapter);
+      
+      // Auto-mark book as completed if all chapters read
+      if (next[bookAbbr].size >= totalChapters && !completedBooks.has(bookAbbr)) {
+        const newCompleted = [...(profile?.completed_books || []), bookAbbr];
+        supabase.from('profiles').update({ completed_books: newCompleted }).eq('id', user.id).then(() => {});
+      }
+      return next;
+    });
+  }, [user, profile, completedBooks]);
+
+  // All books flat for counting
+  const allBooks = useMemo(() => [
+    ...BIBLE_CATEGORIES['Antigo Testamento'].flatMap(c => c.books),
+    ...BIBLE_CATEGORIES['Novo Testamento'].flatMap(c => c.books),
+  ], []);
+  const totalBooksRead = useMemo(() => allBooks.filter(b => completedBooks.has(b.abbr)).length, [allBooks, completedBooks]);
+  const overallProgress = Math.round((totalBooksRead / 73) * 100);
   // Handle deep-link from Catechism cross-references (?book=Gn&ch=1)
   useEffect(() => {
     const bookParam = searchParams.get('book');
