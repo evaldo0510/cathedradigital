@@ -785,10 +785,18 @@ const Saints: React.FC = () => {
                   onClick={() => setSelectedSaint(saint)}
                   className="w-full flex items-center gap-6 p-6 bg-white dark:bg-stone-900 border border-stone-100 dark:border-stone-800 rounded-2xl hover:border-[#d4af37]/50 hover:shadow-lg transition-all text-left group"
                 >
-                  <div className="flex-shrink-0 w-16 h-16 bg-stone-900 dark:bg-[#d4af37]/10 rounded-2xl flex flex-col items-center justify-center">
-                    <span className="text-2xl font-black text-[#d4af37]">{saint.feastDayNum}</span>
-                    <span className="text-[8px] font-black uppercase tracking-widest text-stone-400 dark:text-[#d4af37]/60">{MONTH_NAMES[calendarMonth].substring(0, 3)}</span>
+                  <div className="flex-shrink-0 w-20 h-20 relative overflow-hidden rounded-2xl">
+                    <SacredImage
+                      src={saint.image || 'https://images.unsplash.com/photo-1548610762-656391d1ad4d'}
+                      alt={saint.name}
+                      className="w-full h-full"
+                    />
+                    <div className="absolute inset-0 bg-stone-900/40 flex flex-col items-center justify-center">
+                      <span className="text-xl font-black text-white">{saint.feastDayNum}</span>
+                      <span className="text-[7px] font-black uppercase tracking-widest text-white/80">{MONTH_NAMES[calendarMonth].substring(0, 3)}</span>
+                    </div>
                   </div>
+
                   <div className="flex-1 min-w-0">
                     <h3 className="font-serif font-bold text-stone-900 dark:text-stone-100 group-hover:text-[#d4af37] transition-colors">{saint.name}</h3>
                     <p className="text-sm text-[#d4af37] font-serif italic">{saint.title}</p>
