@@ -294,20 +294,20 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         whileInView={{ opacity: 1, y: 0 }}
         className="px-4 md:px-12"
       >
-        <div className="relative group bg-[#1a1a1a] dark:bg-primary/10 rounded-[3rem] p-8 md:p-12 overflow-hidden shadow-2xl">
+        <div className="relative group bg-[#1a1a1a] dark:bg-primary/10 rounded-3xl p-6 md:p-8 overflow-hidden shadow-2xl">
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full blur-[100px] -mr-32 -mt-32" />
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/10 rounded-full blur-[100px] -ml-32 -mb-32" />
           
-          <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 md:gap-16">
-            <div className="flex-1 space-y-4 text-center md:text-left">
-              <span className="text-xs font-black uppercase tracking-[0.3em] text-primary">Versículo do Dia</span>
-              <p className="text-3xl md:text-5xl font-serif font-bold text-white leading-tight italic">
+          <div className="relative z-10 flex flex-col md:flex-row items-center gap-6 md:gap-12">
+            <div className="flex-1 space-y-3 text-center md:text-left">
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Versículo do Dia</span>
+              <p className="text-2xl md:text-3xl font-serif font-bold text-white leading-tight italic">
                 "O Senhor é o meu pastor, nada me faltará. Em verdes pastagens me faz repousar."
               </p>
-              <div className="flex items-center justify-center md:justify-start gap-4 pt-2">
-                <span className="text-sm font-black uppercase tracking-widest text-primary/80">Salmo 23, 1</span>
-                <button className="p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors">
-                  <Icons.Heart className="w-4 h-4 text-white" />
+              <div className="flex items-center justify-center md:justify-start gap-4 pt-1">
+                <span className="text-xs font-black uppercase tracking-widest text-primary/80">Salmo 23, 1</span>
+                <button className="p-1.5 bg-white/10 hover:bg-white/20 rounded-full transition-colors">
+                  <Icons.Heart className="w-3.5 h-3.5 text-white" />
                 </button>
               </div>
             </div>
