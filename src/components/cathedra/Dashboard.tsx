@@ -176,6 +176,16 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Cathedra Digital</span>
           </motion.div>
 
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.4 }}
+            className="inline-flex items-center gap-2 px-3 py-1 bg-yellow-500/10 border border-yellow-500/20 rounded-md"
+          >
+            <Icons.Zap className="w-3 h-3 text-yellow-600" />
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-yellow-700">CARREGAMENTO RÁPIDO</span>
+          </motion.div>
+
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
