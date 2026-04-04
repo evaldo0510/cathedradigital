@@ -157,7 +157,7 @@ const AppLayout: React.FC = () => {
 
         {/* Mobile sidebar overlay - only when open */}
         <AnimatePresence>
-          {location.pathname !== AppRoute.HOME && isSidebarOpen && (
+          {location.pathname !== AppRoute.HOME && location.pathname !== AppRoute.ONBOARDING && isSidebarOpen && (
             <motion.div 
               key="mobile-sidebar"
               initial={{ opacity: 0 }}
