@@ -405,17 +405,31 @@ const Bible: React.FC = () => {
         ))}
       </div>
 
-      {/* Books grid */}
-      <StaggeredList className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-1.5" staggerDelay={0.03}>
-        {filteredBooks.map(book => (
-          <button key={book.abbr} onClick={() => selectBook(book)}
-            className="text-left px-2.5 py-2 rounded-lg bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group">
-            <span className="text-[9px] font-black text-primary uppercase tracking-widest">{book.abbr}</span>
-            <p className="text-xs font-bold text-foreground mt-0.5 group-hover:text-primary transition-colors truncate">{book.name}</p>
-            <p className="text-[9px] text-muted-foreground">{book.chapters} cap.</p>
-          </button>
+      {/* Books by category */}
+      <div className="space-y-3">
+        {filteredCategories.map(cat => (
+          <Collapsible key={cat.label} defaultOpen>
+            <CollapsibleTrigger className="flex items-center gap-2 w-full px-3 py-2 rounded-xl bg-card border border-border hover:bg-primary/5 transition-all group">
+              <span className="text-base">{cat.icon}</span>
+              <span className="text-xs font-black uppercase tracking-widest text-foreground group-hover:text-primary transition-colors">{cat.label}</span>
+              <span className="text-[10px] text-muted-foreground ml-1">({cat.books.length})</span>
+              <ChevronDown className="w-4 h-4 ml-auto text-muted-foreground transition-transform duration-200 group-data-[state=open]:rotate-180" />
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-1.5 mt-2 ml-1">
+                {cat.books.map(book => (
+                  <button key={book.abbr} onClick={() => selectBook(book)}
+                    className="text-left px-2.5 py-2 rounded-lg bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group/book">
+                    <span className="text-[9px] font-black text-primary uppercase tracking-widest">{book.abbr}</span>
+                    <p className="text-xs font-bold text-foreground mt-0.5 group-hover/book:text-primary transition-colors truncate">{book.name}</p>
+                    <p className="text-[9px] text-muted-foreground">{book.chapters} cap.</p>
+                  </button>
+                ))}
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
         ))}
-      </StaggeredList>
+      </div>
     </div>
   );
 };
