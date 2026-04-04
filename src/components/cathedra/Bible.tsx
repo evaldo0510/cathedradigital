@@ -442,6 +442,16 @@ const Bible: React.FC = () => {
         </div>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Bíblia Sagrada</h1>
         <p className="text-muted-foreground font-serif italic">Cânon completo com 73 livros da tradição católica.</p>
+        {/* Overall progress */}
+        {user && totalBooksRead > 0 && (
+          <div className="max-w-xs mx-auto mt-2 space-y-1.5">
+            <div className="flex items-center justify-between text-xs">
+              <span className="font-bold text-foreground">{totalBooksRead} de 73 livros</span>
+              <span className="font-bold text-primary">{overallProgress}%</span>
+            </div>
+            <Progress value={overallProgress} className="h-2" />
+          </div>
+        )}
       </div>
 
       {/* Full-text search */}
