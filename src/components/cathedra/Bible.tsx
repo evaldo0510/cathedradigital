@@ -357,6 +357,23 @@ const Bible: React.FC = () => {
           </div>
         </div>
 
+        {/* Mark chapter as read */}
+        {!isLoading && verses.length > 0 && user && (
+          <div className="flex justify-center">
+            {chaptersRead[selectedBook.abbr]?.has(selectedChapter) ? (
+              <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-primary/10 text-primary text-sm font-bold">
+                <CheckCircle2 className="w-4 h-4" /> Capítulo lido
+              </div>
+            ) : (
+              <button
+                onClick={() => markChapterRead(selectedBook.abbr, selectedChapter, selectedBook.chapters)}
+                className="px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 transition-all">
+                ✓ Marcar como lido
+              </button>
+            )}
+          </div>
+        )}
+
         {/* Bottom navigation */}
         <div className="flex justify-between items-center pt-2">
           <button disabled={selectedChapter <= 1} onClick={() => navigateChapter(-1)}
