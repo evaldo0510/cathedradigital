@@ -137,7 +137,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             <Icons.History className="w-4 h-4 sm:hidden" />
           </button>
         ) : (
-          <button onClick={() => navigate(AppRoute.LOGIN)} className="px-4 py-2 bg-primary text-primary-foreground rounded-xl text-[10px] font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-lg shadow-primary/20">
+          <button onClick={() => navigate(AppRoute.LOGIN)} className="px-4 py-2 bg-primary text-primary-foreground rounded-xl text-xs font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-lg shadow-primary/20">
             Entrar
           </button>
         )}
