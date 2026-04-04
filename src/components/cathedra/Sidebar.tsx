@@ -59,6 +59,8 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
         { label: 'Colloquium IA', path: AppRoute.STUDY_MODE, icon: <Icons.Search className="w-5 h-5" />, pro: true },
         { label: 'Suma Teológica', path: AppRoute.AQUINAS_OPERA, icon: <Icons.History className="w-5 h-5" /> },
         { label: 'Certamen (Quiz)', path: AppRoute.CERTAMEN, icon: <Icons.Star className="w-5 h-5" /> },
+        { label: 'Assinatura PRO', path: AppRoute.CHECKOUT, icon: <Icons.Zap className="w-5 h-5" />, pro: true },
+        { label: 'Diagnóstico', path: AppRoute.DIAGNOSTICS, icon: <Icons.Zap className="w-5 h-5" /> },
       ]
     }
   ];
