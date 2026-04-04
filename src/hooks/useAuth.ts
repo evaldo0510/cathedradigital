@@ -17,32 +17,64 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let mounted = true;
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (!mounted) return;
+      
       setUser(session?.user ?? null);
       if (session?.user) {
-        // Fetch profile
-        const { data } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', session.user.id)
-          .single();
-        setProfile(data as Profile | null);
+        try {
+          const { data, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', session.user.id)
+            .single();
+          
+          if (!error && mounted) {
+            setProfile(data as Profile | null);
+          }
+        } catch (e) {
+          console.error('Error fetching profile in onAuthStateChange:', e);
+        }
       } else {
         setProfile(null);
       }
       setLoading(false);
     });
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        supabase.from('profiles').select('*').eq('id', session.user.id).single()
-          .then(({ data }) => setProfile(data as Profile | null));
+    const initSession = async () => {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (!mounted) return;
+        
+        if (error) console.error('Error getting session:', error);
+        
+        setUser(session?.user ?? null);
+        if (session?.user) {
+          const { data: profileData, error: profileError } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', session.user.id)
+            .single();
+            
+          if (!profileError && mounted) {
+            setProfile(profileData as Profile | null);
+          }
+        }
+      } catch (e) {
+        console.error('Session init error:', e);
+      } finally {
+        if (mounted) setLoading(false);
       }
-      setLoading(false);
-    });
+    };
 
-    return () => subscription.unsubscribe();
+    initSession();
+
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signOut = async () => {
