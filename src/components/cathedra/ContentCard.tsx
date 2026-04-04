@@ -24,7 +24,7 @@ const ContentCard: React.FC<ContentCardProps> = ({ icon, title, description, act
 
   return (
     <div
-      className={`rounded-3xl border p-6 md:p-8 transition-all duration-500 flex flex-col h-full group cursor-pointer
+    className={`rounded-2xl border p-5 md:p-6 transition-all duration-500 flex flex-col h-full group cursor-pointer
         ${variant === 'highlight'
           ? 'bg-stone-950 border-stone-800 text-white shadow-[0_35px_70px_-15px_rgba(0,0,0,0.1)] scale-[1.01]'
           : 'bg-white dark:bg-stone-900 border-stone-100 dark:border-stone-800 text-stone-900 dark:text-stone-100 hover:shadow-xl hover:border-[#d4af37]/30 hover:-translate-y-1'}`}
