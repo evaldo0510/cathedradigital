@@ -102,6 +102,15 @@ export const CatechismModal: React.FC<QuickModalProps> = ({ isOpen, onClose }) =
           <p className="font-serif text-foreground/90 leading-relaxed text-sm">{text}</p>
         </div>
       )}
+      <div className="mt-6 pt-4 border-t border-border">
+        <button 
+          onClick={() => { navigate(`${AppRoute.CATECHISM}?p=${paragraph}`); onClose(); }}
+          className="w-full py-3 bg-primary text-primary-foreground rounded-xl text-[10px] font-black uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-2"
+        >
+          <Icons.Cross className="w-3.5 h-3.5" />
+          Ir para o Catecismo Completo
+        </button>
+      </div>
     </ModalShell>
   );
 };
