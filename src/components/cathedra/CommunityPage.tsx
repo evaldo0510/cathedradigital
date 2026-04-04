@@ -82,7 +82,7 @@ const CommunityPage: React.FC = () => {
     const { data: profiles } = await supabase
       .from('public_profiles' as any)
       .select('id, name, avatar_url')
-      .in('id', userIds);
+      .in('id', userIds) as { data: { id: string; name: string; avatar_url: string | null }[] | null };
 
     const entries: LeaderboardEntry[] = (profiles || []).map(p => {
       const s = userMap.get(p.id) || { posts: 0, likes: 0 };
