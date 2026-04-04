@@ -181,7 +181,7 @@ const DailyLiturgy: React.FC = () => {
                       </div>
                       <div className="pl-11 space-y-4">
                         <p className="font-serif font-bold text-primary italic">R. {readings.salmo.refrao}</p>
-                        <p className="reader-text text-foreground/90 leading-relaxed text-lg whitespace-pre-wrap italic">{readings.salmo.texto}</p>
+                        <p className="reader-text text-foreground/90 leading-relaxed text-xl md:text-2xl whitespace-pre-wrap italic">{readings.salmo.texto}</p>
                       </div>
                     </section>
 
