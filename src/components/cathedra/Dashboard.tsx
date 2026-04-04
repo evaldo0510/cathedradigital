@@ -181,10 +181,10 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/15 border border-primary/25 rounded-full backdrop-blur-md shadow-sm"
+              className="inline-flex items-center gap-2 px-5 py-2 bg-primary/15 border border-primary/25 rounded-full backdrop-blur-md shadow-sm"
             >
-              <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Cathedra Digital v2</span>
+              <div className="w-2.5 h-2.5 rounded-full bg-primary animate-pulse" />
+              <span className="text-[11px] sm:text-xs font-black uppercase tracking-[0.2em] text-primary">Cathedra Digital v2</span>
             </motion.div>
 
             <motion.h1
