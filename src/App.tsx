@@ -12,6 +12,7 @@ import { AppRoute, Language } from './types';
 import { UI_TRANSLATIONS } from './services/translations';
 import { useAuth } from './hooks/useAuth';
 import { LangContext } from './contexts/LangContext';
+import { supabase } from '@/integrations/supabase/client';
 
 // Lazy-loaded route components
 const Dashboard = lazy(() => import('./components/cathedra/Dashboard'));
@@ -38,6 +39,7 @@ const LitaniesPage = lazy(() => import('./components/cathedra/LitaniesPage'));
 const LiturgicalCalendarPage = lazy(() => import('./components/cathedra/LiturgicalCalendarPage'));
 const CommunityPage = lazy(() => import('./components/cathedra/CommunityPage'));
 const ProfilePage = lazy(() => import('./components/cathedra/ProfilePage'));
+const AdminDashboard = lazy(() => import('./components/cathedra/AdminDashboard'));
 import CommandCenter from './components/cathedra/CommandCenter';
 import OfflineIndicator from './components/cathedra/OfflineIndicator';
 
@@ -60,6 +62,20 @@ const AppLayout: React.FC = () => {
     if (isDark) document.documentElement.classList.add('dark');
     else document.documentElement.classList.remove('dark');
   }, [isDark]);
+  
+  useEffect(() => {
+    const trackVisit = async () => {
+      try {
+        const { error } = await supabase
+          .from('app_metrics')
+          .insert([{ metric_type: 'visit', metadata: { path: location.pathname, user_agent: navigator.userAgent } }]);
+        if (error) console.error('Error tracking visit:', error);
+      } catch (err) {
+        console.error('Failed to track visit:', err);
+      }
+    };
+    trackVisit();
+  }, [location.pathname]);
 
   const t = useCallback((key: string) => {
     return UI_TRANSLATIONS[lang]?.[key] || UI_TRANSLATIONS['en']?.[key] || key;
@@ -71,7 +87,7 @@ const AppLayout: React.FC = () => {
       id: user.id,
       name: profile.name || user.email?.split('@')[0] || '',
       email: user.email || '',
-      role: (profile.is_premium ? 'scholar' : 'pilgrim') as 'pilgrim' | 'scholar' | 'admin',
+      role: (profile.role || (profile.is_premium ? 'scholar' : 'pilgrim')) as 'pilgrim' | 'scholar' | 'admin',
       isPremium: profile.is_premium,
       joinedAt: user.created_at,
       progress: { streak: 0, totalMinutesRead: 0, completedBooks: [], xp: 0, level: 1, badges: [] },
@@ -135,6 +151,11 @@ const AppLayout: React.FC = () => {
                     <Route path={AppRoute.LITURGICAL_CALENDAR} element={<LiturgicalCalendarPage />} />
                     <Route path={AppRoute.COMMUNITY} element={<CommunityPage />} />
                     <Route path={AppRoute.PROFILE} element={<ProfilePage />} />
+                    <Route path={AppRoute.ADMIN} element={
+                      <ProGate isPremium={true} isLoggedIn={!!user} onLogin={() => navigate(AppRoute.LOGIN)}>
+                        <AdminDashboard />
+                      </ProGate>
+                    } />
                     <Route path="*" element={<Dashboard user={appUser} />} />
                   </Routes>
                 </PageTransition>

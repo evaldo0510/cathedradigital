@@ -16,6 +16,12 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user }) => {
   const [modal, setModal] = useState<'bible' | 'catechism' | 'docs' | null>(null);
 
   const sections = [
+    ...(user?.role === 'admin' ? [{
+      label: 'Administração',
+      items: [
+        { label: 'Painel Admin', path: AppRoute.ADMIN, icon: <Icons.Search className="w-5 h-5" /> },
+      ]
+    }] : []),
     {
       label: 'Vida Interior',
       items: [
