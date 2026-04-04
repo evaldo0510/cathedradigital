@@ -55,13 +55,12 @@ const DIOCESE_URLS: Record<string, string> = {
 const Footer: React.FC = React.memo(() => {
   const navigate = useNavigate();
   const [selectedDiocese, setSelectedDiocese] = useState('');
+  const [email, setEmail] = useState('');
 
   const vaticanLinks = [
     { title: 'Santa Sé (Vatican.va)', url: 'https://www.vatican.va', desc: 'Site oficial do Vaticano' },
     { title: 'Catecismo Online', url: 'https://www.vatican.va/archive/ccc/index_po.htm', desc: 'CIC em português' },
-    { title: 'Nova Vulgata', url: 'https://www.vatican.va/archive/bible/nova_vulgata/documents/nova-vulgata_index_lt.html', desc: 'Bíblia em latim' },
     { title: 'Vatican News', url: 'https://www.vaticannews.va/pt.html', desc: 'Notícias do Papa e da Igreja' },
-    { title: 'Libreria Editrice', url: 'https://www.libreriaeditricevaticana.va', desc: 'Publicações oficiais' },
     { title: 'Dicastérios', url: 'https://www.vatican.va/content/romancuria/pt.html', desc: 'Cúria Romana' },
   ];
 
@@ -69,260 +68,267 @@ const Footer: React.FC = React.memo(() => {
     { title: 'CNBB', url: 'https://www.cnbb.org.br', desc: 'Conferência Nacional dos Bispos do Brasil' },
     { title: 'Liturgia Diária', url: 'https://www.cnbb.org.br/liturgia', desc: 'Leituras e evangelho do dia' },
     { title: 'Documentos CNBB', url: 'https://www.cnbb.org.br/category/publicacoes', desc: 'Publicações e orientações' },
-    { title: 'Campanhas', url: 'https://www.cnbb.org.br/category/campanhas', desc: 'Campanhas nacionais da Igreja' },
   ];
 
   const scrollToTop = () => {
     document.getElementById('main-content')?.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Simulate subscription
+    alert(`E-mail ${email} cadastrado com sucesso!`);
+    setEmail('');
+  };
+
   const dioceseUrl = DIOCESE_URLS[selectedDiocese];
 
   return (
-    <footer className="bg-foreground text-background/40 border-t border-background/5 pt-20 pb-10 px-6 relative overflow-hidden mt-auto">
-      <div className="absolute inset-0 pointer-events-none opacity-[0.02] bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')]" />
+    <footer className="bg-[#0a0a0a] text-zinc-400 border-t border-white/5 pt-24 pb-12 px-6 relative overflow-hidden mt-auto">
+      {/* Background Texture */}
+      <div className="absolute inset-0 pointer-events-none opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')]" />
+      
+      {/* Background Accent Gradients */}
+      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10">
-        {/* MISSÃO, VISÃO, VALORES */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-20 pb-14 border-b border-background/5">
-          <div className="space-y-5">
-            <div className="flex items-center gap-3 text-primary">
-              <Icons.Star className="w-4 h-4 fill-current" />
-              <h4 className="text-[9px] font-black uppercase tracking-[0.4em]">Missão</h4>
-            </div>
-            <p className="text-base font-serif italic text-background/50 leading-relaxed">
-              "Propagar o Depósito da Fé através da síntese entre a Tradição e a tecnologia, iluminando a inteligência dos fiéis."
-            </p>
-          </div>
-          <div className="space-y-5 md:border-x border-background/5 md:px-10">
-            <div className="flex items-center gap-3 text-primary">
-              <Icons.Globe className="w-4 h-4" />
-              <h4 className="text-[9px] font-black uppercase tracking-[0.4em]">Visão</h4>
-            </div>
-            <p className="text-base font-serif italic text-background/50 leading-relaxed">
-              "Tornar-se a referência global em curadoria teológica digital, unindo erudição escolástica e acessibilidade moderna."
-            </p>
-          </div>
-          <div className="space-y-5">
-            <div className="flex items-center gap-3 text-primary">
-              <Icons.Cross className="w-4 h-4" />
-              <h4 className="text-[9px] font-black uppercase tracking-[0.4em]">Valores</h4>
-            </div>
-            <ul className="space-y-2.5">
-              {['Fidelidade ao Magistério', 'Rigor Intelectual', 'Excelência Técnica', 'Caridade na Verdade'].map(v => (
-                <li key={v} className="flex items-center gap-3 text-sm font-serif text-background/30">
-                  <div className="w-1 h-1 rounded-full bg-accent shadow-[0_0_6px_hsl(var(--accent))]" />
-                  {v}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        {/* SITEMAP + INSTITUTIONAL LINKS */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-20">
-          {/* Brand column */}
-          <div className="lg:col-span-2 space-y-6">
-            <div className="flex items-center gap-4">
-              <Logo className="w-14 h-14 border border-background/10 p-2 rounded-2xl bg-background/5 shadow-2xl" />
+        {/* TOP SECTION: BRAND & NEWSLETTER */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20 pb-16 border-b border-white/5">
+          <div className="lg:col-span-5 space-y-8">
+            <div className="flex items-center gap-5">
+              <Logo className="w-16 h-16 border border-white/10 p-2.5 rounded-2xl bg-white/5 shadow-2xl backdrop-blur-sm" />
               <div>
-                <h3 className="text-xl font-serif font-bold text-background tracking-widest leading-none">CATHEDRA</h3>
-                <p className="text-[8px] font-black uppercase text-primary mt-1 tracking-[0.3em]">Digital Sanctuarium</p>
+                <h3 className="text-3xl font-serif font-bold text-white tracking-tight leading-none">CATHEDRA</h3>
+                <p className="text-[10px] font-black uppercase text-primary mt-2 tracking-[0.4em] opacity-80">Digital Sanctuarium</p>
               </div>
             </div>
-            <p className="text-sm font-serif italic text-background/25 leading-relaxed max-w-sm">
+            <p className="text-lg font-serif italic text-zinc-500 leading-relaxed max-w-md">
               "Ex Umbris Et Imaginibus In Veritatem." <br />
               Unindo a sabedoria milenar à Inteligência Teológica para o crescimento espiritual e intelectual.
             </p>
-            <div className="flex gap-3 opacity-30">
-              <div className="px-3 py-1 border border-background/20 rounded-full text-[7px] font-black uppercase tracking-widest">v4.5 PRO</div>
-              <div className="px-3 py-1 border border-background/20 rounded-full text-[7px] font-black uppercase tracking-widest">SSL Secure</div>
+            <div className="flex gap-4">
+              <div className="px-4 py-1.5 border border-white/10 rounded-full text-[10px] font-bold uppercase tracking-widest text-zinc-500 bg-white/5">
+                Version 4.5 PRO
+              </div>
+              <div className="px-4 py-1.5 border border-white/10 rounded-full text-[10px] font-bold uppercase tracking-widest text-zinc-500 bg-white/5">
+                Enterprise SSL
+              </div>
             </div>
           </div>
 
-          {/* Navigation links */}
-          <div className="space-y-5">
-            <h4 className="text-[9px] font-black uppercase tracking-[0.4em] text-background/80 border-l-2 border-accent pl-4">Formação</h4>
-            <nav className="flex flex-col gap-2.5">
-              {[
-                { label: 'Bíblia Sagrada', route: AppRoute.BIBLE },
-                { label: 'Catecismo (CIC)', route: AppRoute.CATECHISM },
-                { label: 'Santos', route: AppRoute.SAINTS },
-                { label: 'Magistério', route: AppRoute.MAGISTERIUM },
-                { label: 'Trilhas de Estudo', route: AppRoute.TRILHAS },
-              ].map(item => (
-                <button key={item.label} onClick={() => navigate(item.route)} className="text-left text-xs hover:text-primary transition-colors font-bold opacity-50 hover:opacity-100 uppercase tracking-wide">
-                  {item.label}
-                </button>
-              ))}
-            </nav>
-          </div>
-
-          <div className="space-y-5">
-            <h4 className="text-[9px] font-black uppercase tracking-[0.4em] text-background/80 border-l-2 border-primary pl-4">Vida Interior</h4>
-            <nav className="flex flex-col gap-2.5">
-              {[
-                { label: 'Liturgia Diária', route: AppRoute.DAILY_LITURGY },
-                { label: 'Missal Romano', route: AppRoute.MISSAL },
-                { label: 'Santo Rosário', route: AppRoute.ROSARY },
-                { label: 'Via Crucis', route: AppRoute.VIA_CRUCIS },
-                { label: 'Frei Gilson', url: 'https://www.youtube.com/@freigilson_somdomonte' },
-                { label: 'Favoritos', route: AppRoute.FAVORITES },
-              ].map(item => (
-                'route' in item ? (
-                  <button key={item.label} onClick={() => navigate(item.route)} className="text-left text-xs hover:text-primary transition-colors font-bold opacity-50 hover:opacity-100 uppercase tracking-wide">
-                    {item.label}
+          <div className="lg:col-span-7 flex flex-col justify-center">
+            <div className="bg-white/[0.02] border border-white/5 rounded-3xl p-8 backdrop-blur-md">
+              <div className="flex flex-col md:flex-row items-center gap-8">
+                <div className="flex-1 space-y-2 text-center md:text-left">
+                  <h4 className="text-xl font-serif text-white font-bold">Boletim Informativo</h4>
+                  <p className="text-sm text-zinc-500">Receba reflexões teológicas e atualizações da plataforma semanalmente.</p>
+                </div>
+                <form onSubmit={handleSubscribe} className="w-full md:w-auto flex flex-col sm:flex-row gap-3">
+                  <input 
+                    type="email" 
+                    required
+                    placeholder="Seu melhor e-mail" 
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="px-6 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-primary/50 transition-all w-full sm:w-64"
+                  />
+                  <button className="px-8 py-3 rounded-xl bg-primary text-black font-bold text-sm hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 whitespace-nowrap">
+                    Inscrever-se
                   </button>
-                ) : (
-                  <a key={item.label} href={item.url} target="_blank" rel="noreferrer" className="text-left text-xs hover:text-primary transition-colors font-bold opacity-50 hover:opacity-100 uppercase tracking-wide">
-                    {item.label}
-                  </a>
-                )
-              ))}
-            </nav>
-          </div>
-
-          <div className="space-y-5">
-            <h4 className="text-[9px] font-black uppercase tracking-[0.4em] text-background/80 border-l-2 border-primary/40 pl-4">Recursos</h4>
-            <nav className="flex flex-col gap-2.5">
-              {[
-                { label: 'Colloquium IA', route: AppRoute.STUDY_MODE },
-                { label: 'Suma Teológica', route: AppRoute.AQUINAS_OPERA },
-                { label: 'Certamen (Quiz)', route: AppRoute.CERTAMEN },
-                { label: 'Sobre / Manifesto', route: AppRoute.ABOUT },
-              ].map(item => (
-                <button key={item.label} onClick={() => navigate(item.route)} className="text-left text-xs hover:text-primary transition-colors font-bold opacity-50 hover:opacity-100 uppercase tracking-wide">
-                  {item.label}
-                </button>
-              ))}
-            </nav>
+                </form>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* INSTITUTIONAL LINKS: VATICAN, CNBB, DIOCESE */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-16 pt-14 border-t border-background/5">
-          {/* Vatican */}
-          <div className="space-y-5">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                <span className="text-sm">🏛️</span>
+        {/* MIDDLE SECTION: MISSION & SITEMAP */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-16 mb-20">
+          {/* Mission/Vision/Values Group */}
+          <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-10">
+            <div className="space-y-6">
+              <div className="flex items-center gap-3 text-primary">
+                <div className="p-2 rounded-lg bg-primary/10">
+                  <Icons.Star className="w-4 h-4 fill-current" />
+                </div>
+                <h4 className="text-[11px] font-black uppercase tracking-[0.3em]">Nossa Missão</h4>
               </div>
+              <p className="text-sm font-serif italic text-zinc-500 leading-relaxed border-l-2 border-primary/20 pl-4">
+                "Propagar o Depósito da Fé através da síntese entre a Tradição e a tecnologia, iluminando a inteligência dos fiéis."
+              </p>
+            </div>
+            <div className="space-y-6">
+              <div className="flex items-center gap-3 text-accent">
+                <div className="p-2 rounded-lg bg-accent/10">
+                  <Icons.Cross className="w-4 h-4" />
+                </div>
+                <h4 className="text-[11px] font-black uppercase tracking-[0.3em]">Nossos Valores</h4>
+              </div>
+              <ul className="space-y-3">
+                {['Fidelidade ao Magistério', 'Rigor Intelectual', 'Caridade na Verdade'].map(v => (
+                  <li key={v} className="flex items-center gap-3 text-xs font-medium text-zinc-500">
+                    <div className="w-1.5 h-1.5 rounded-full bg-accent/40" />
+                    {v}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* Navigation links columns */}
+          <div className="lg:col-span-6 grid grid-cols-2 sm:grid-cols-3 gap-10">
+            <div className="space-y-6">
+              <h4 className="text-[11px] font-black uppercase tracking-[0.3em] text-white/90">Formação</h4>
+              <nav className="flex flex-col gap-3">
+                {[
+                  { label: 'Bíblia Sagrada', route: AppRoute.BIBLE },
+                  { label: 'Catecismo (CIC)', route: AppRoute.CATECHISM },
+                  { label: 'Santos', route: AppRoute.SAINTS },
+                  { label: 'Magistério', route: AppRoute.MAGISTERIUM },
+                ].map(item => (
+                  <button key={item.label} onClick={() => navigate(item.route)} className="text-left text-xs hover:text-primary transition-colors font-medium text-zinc-500 hover:pl-2 duration-300">
+                    {item.label}
+                  </button>
+                ))}
+              </nav>
+            </div>
+
+            <div className="space-y-6">
+              <h4 className="text-[11px] font-black uppercase tracking-[0.3em] text-white/90">Vida Interior</h4>
+              <nav className="flex flex-col gap-3">
+                {[
+                  { label: 'Liturgia Diária', route: AppRoute.DAILY_LITURGY },
+                  { label: 'Missal Romano', route: AppRoute.MISSAL },
+                  { label: 'Santo Rosário', route: AppRoute.ROSARY },
+                  { label: 'Via Crucis', route: AppRoute.VIA_CRUCIS },
+                ].map(item => (
+                  <button key={item.label} onClick={() => navigate(item.route)} className="text-left text-xs hover:text-primary transition-colors font-medium text-zinc-500 hover:pl-2 duration-300">
+                    {item.label}
+                  </button>
+                ))}
+              </nav>
+            </div>
+
+            <div className="space-y-6">
+              <h4 className="text-[11px] font-black uppercase tracking-[0.3em] text-white/90">Recursos</h4>
+              <nav className="flex flex-col gap-3">
+                {[
+                  { label: 'Colloquium IA', route: AppRoute.STUDY_MODE },
+                  { label: 'Suma Teológica', route: AppRoute.AQUINAS_OPERA },
+                  { label: 'Certamen (Quiz)', route: AppRoute.CERTAMEN },
+                  { label: 'Sobre', route: AppRoute.ABOUT },
+                ].map(item => (
+                  <button key={item.label} onClick={() => navigate(item.route)} className="text-left text-xs hover:text-primary transition-colors font-medium text-zinc-500 hover:pl-2 duration-300">
+                    {item.label}
+                  </button>
+                ))}
+              </nav>
+            </div>
+          </div>
+        </div>
+
+        {/* BOTTOM SECTION: INSTITUTIONAL & DIOCESE */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16 pt-16 border-t border-white/5">
+          {/* Institutional Cards */}
+          <div className="bg-white/[0.02] border border-white/5 rounded-2xl p-6 space-y-6">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-xl">🏛️</div>
               <div>
-                <h4 className="text-[9px] font-black uppercase tracking-[0.3em] text-background/70">Santa Sé</h4>
-                <p className="text-[8px] text-background/30">Vaticano</p>
+                <h4 className="text-xs font-bold text-white uppercase tracking-wider">Santa Sé</h4>
+                <p className="text-[10px] text-zinc-500">Vaticano Official</p>
               </div>
             </div>
             <div className="space-y-2">
               {vaticanLinks.map((link, idx) => (
                 <a key={idx} href={link.url} target="_blank" rel="noreferrer"
-                  className="flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl hover:bg-background/5 transition-all group">
-                  <div className="min-w-0">
-                    <p className="text-[10px] font-bold text-background/60 group-hover:text-primary transition-colors uppercase tracking-wide truncate">{link.title}</p>
-                    <p className="text-[9px] text-background/25 truncate">{link.desc}</p>
-                  </div>
-                  <Icons.ExternalLink className="w-3 h-3 text-background/20 group-hover:text-primary shrink-0 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                  className="flex items-center justify-between group p-2 hover:bg-white/5 rounded-lg transition-all">
+                  <span className="text-[11px] font-medium text-zinc-400 group-hover:text-primary transition-colors">{link.title}</span>
+                  <Icons.ExternalLink className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity text-primary" />
                 </a>
               ))}
             </div>
           </div>
 
-          {/* CNBB */}
-          <div className="space-y-5">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                <span className="text-sm">🇧🇷</span>
-              </div>
+          <div className="bg-white/[0.02] border border-white/5 rounded-2xl p-6 space-y-6">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-xl">🇧🇷</div>
               <div>
-                <h4 className="text-[9px] font-black uppercase tracking-[0.3em] text-background/70">CNBB</h4>
-                <p className="text-[8px] text-background/30">Conferência dos Bispos do Brasil</p>
+                <h4 className="text-xs font-bold text-white uppercase tracking-wider">CNBB</h4>
+                <p className="text-[10px] text-zinc-500">Bispos do Brasil</p>
               </div>
             </div>
             <div className="space-y-2">
               {cnbbLinks.map((link, idx) => (
                 <a key={idx} href={link.url} target="_blank" rel="noreferrer"
-                  className="flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl hover:bg-background/5 transition-all group">
-                  <div className="min-w-0">
-                    <p className="text-[10px] font-bold text-background/60 group-hover:text-primary transition-colors uppercase tracking-wide truncate">{link.title}</p>
-                    <p className="text-[9px] text-background/25 truncate">{link.desc}</p>
-                  </div>
-                  <Icons.ExternalLink className="w-3 h-3 text-background/20 group-hover:text-primary shrink-0 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                  className="flex items-center justify-between group p-2 hover:bg-white/5 rounded-lg transition-all">
+                  <span className="text-[11px] font-medium text-zinc-400 group-hover:text-primary transition-colors">{link.title}</span>
+                  <Icons.ExternalLink className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity text-primary" />
                 </a>
               ))}
             </div>
           </div>
 
-          {/* Diocese */}
-          <div className="space-y-5">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                <span className="text-sm">⛪</span>
-              </div>
+          <div className="bg-white/[0.02] border border-white/5 rounded-2xl p-6 space-y-6">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-xl">⛪</div>
               <div>
-                <h4 className="text-[9px] font-black uppercase tracking-[0.3em] text-background/70">Minha Diocese</h4>
-                <p className="text-[8px] text-background/30">Escolha a sua diocese</p>
+                <h4 className="text-xs font-bold text-white uppercase tracking-wider">Minha Diocese</h4>
+                <p className="text-[10px] text-zinc-500">Informações Locais</p>
               </div>
             </div>
-            <div className="space-y-3">
+            <div className="space-y-4">
               <select
                 value={selectedDiocese}
                 onChange={e => setSelectedDiocese(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-background/5 border border-background/10 text-background/70 text-xs focus:outline-none focus:border-primary/50 transition-colors appearance-none cursor-pointer"
+                className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-zinc-400 text-xs focus:outline-none focus:border-primary/50 transition-all cursor-pointer appearance-none"
               >
-                <option value="" className="bg-foreground text-background/60">Selecione sua diocese...</option>
+                <option value="" className="bg-[#0a0a0a]">Selecione sua diocese...</option>
                 {DIOCESES_BR.map(d => (
-                  <option key={d} value={d} className="bg-foreground text-background/60">{d}</option>
+                  <option key={d} value={d} className="bg-[#0a0a0a]">{d}</option>
                 ))}
               </select>
               {selectedDiocese && (
-                <div className="p-4 rounded-xl bg-background/5 border border-background/10 space-y-3">
-                  <div className="flex items-center gap-2">
-                    <Icons.Globe className="w-4 h-4 text-primary" />
-                    <p className="text-xs font-bold text-background/70">{selectedDiocese}</p>
-                  </div>
-                  {dioceseUrl ? (
-                    <a href={dioceseUrl} target="_blank" rel="noreferrer"
-                      className="inline-flex items-center gap-2 text-[10px] font-bold text-primary hover:text-background transition-colors uppercase tracking-widest">
-                      Visitar site oficial
-                      <Icons.ExternalLink className="w-3 h-3" />
-                    </a>
-                  ) : (
-                    <p className="text-[10px] text-background/30 italic">Site não cadastrado. Pesquise no Google pela sua diocese.</p>
-                  )}
+                <div className="p-4 rounded-xl bg-primary/5 border border-primary/10 animate-in fade-in slide-in-from-top-2 duration-300">
+                   <div className="flex items-center justify-between">
+                     <p className="text-[11px] font-bold text-primary truncate max-w-[180px]">{selectedDiocese}</p>
+                     {dioceseUrl && (
+                        <a href={dioceseUrl} target="_blank" rel="noreferrer" className="text-[10px] font-black text-white hover:text-primary transition-colors uppercase tracking-widest bg-primary/20 px-2 py-1 rounded">
+                          Site
+                        </a>
+                     )}
+                   </div>
                 </div>
               )}
             </div>
           </div>
         </div>
 
-        {/* BOTTOM BAR */}
-        <div className="pt-8 border-t border-background/5 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="text-center md:text-left space-y-2">
-            <p className="text-[8px] text-background/15 font-bold uppercase tracking-[0.2em]">
+        {/* COPYRIGHT BAR */}
+        <div className="pt-10 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="flex flex-col items-center md:items-start gap-4">
+            <p className="text-[10px] font-bold text-zinc-600 uppercase tracking-[0.2em]">
               © {new Date().getFullYear()} CATHEDRA DIGITAL • AD MAIOREM DEI GLORIAM
             </p>
-            <div className="flex items-center gap-4 justify-center md:justify-start">
-              {[
-                { label: 'Manifesto', action: () => navigate(AppRoute.ABOUT) },
-                { label: 'Termos de Uso', action: () => {} },
-                { label: 'Privacidade', action: () => {} },
-                { label: 'Suporte', action: () => {} },
-              ].map((item, idx) => (
-                <React.Fragment key={item.label}>
-                  {idx > 0 && <div className="w-0.5 h-0.5 rounded-full bg-background/10" />}
-                  <button onClick={item.action} className="text-[8px] text-background/20 font-black uppercase hover:text-primary transition-colors tracking-wide">
-                    {item.label}
-                  </button>
-                </React.Fragment>
+            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+              {['Termos', 'Privacidade', 'Manifesto', 'Suporte'].map((item) => (
+                <button key={item} className="text-[10px] text-zinc-500 font-bold uppercase hover:text-white transition-colors tracking-wide">
+                  {item}
+                </button>
               ))}
             </div>
           </div>
-          <div className="flex items-center gap-6">
-            <div className="hidden md:flex flex-col items-end">
-              <p className="text-[7px] font-black uppercase text-background/15 tracking-widest">Desenvolvimento</p>
-              <p className="text-[9px] font-serif italic text-background/25">Ex Umbris In Veritatem</p>
+          
+          <div className="flex items-center gap-8">
+            <div className="hidden md:flex flex-col items-end gap-1">
+              <p className="text-[9px] font-black text-zinc-700 uppercase tracking-widest">Soli Deo Gloria</p>
+              <div className="h-0.5 w-12 bg-primary/30 rounded-full" />
             </div>
-            <button onClick={scrollToTop} className="p-3 rounded-full bg-background/5 border border-background/10 hover:border-primary/50 shadow-xl transition-all group hover:scale-110">
-              <Icons.ArrowDown className="w-4 h-4 rotate-180 text-primary group-hover:-translate-y-1 transition-transform" />
+            <button 
+              onClick={scrollToTop} 
+              className="p-4 rounded-full bg-white/5 border border-white/10 hover:border-primary/50 text-primary transition-all group hover:scale-110 shadow-2xl backdrop-blur-sm"
+              title="Voltar ao topo"
+            >
+              <Icons.ArrowDown className="w-5 h-5 rotate-180 group-hover:-translate-y-1 transition-transform" />
             </button>
           </div>
         </div>
