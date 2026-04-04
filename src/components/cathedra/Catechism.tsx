@@ -47,25 +47,16 @@ const CIC_SECTIONS = [
 ];
 
 const CatechismContent: React.FC<{ paragraph: number }> = ({ paragraph }) => {
-  const [content, setContent] = useState('');
-  const [loading, setLoading] = useState(false);
+  const { data, isLoading, isError } = useCatechismParagraph(paragraph);
+  const prefetch = usePrefetchCatechismParagraph();
 
   useEffect(() => {
-    setLoading(true);
-    setContent('');
-    supabase.functions.invoke('catechism-text', {
-      body: { paragraph }
-    }).then(({ data, error }) => {
-      if (error) {
-        setContent(`Erro ao carregar o parágrafo §${paragraph}. Tente novamente.`);
-      } else {
-        setContent(data?.content || `Parágrafo §${paragraph} — conteúdo em breve.`);
-      }
-      setLoading(false);
-    });
-  }, [paragraph]);
+    // Prefetch next and previous
+    if (paragraph < 2865) prefetch(paragraph + 1);
+    if (paragraph > 1) prefetch(paragraph - 1);
+  }, [paragraph, prefetch]);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="reader-text text-foreground/90 leading-[2] text-base space-y-3 py-8">
         {Array.from({ length: 4 }).map((_, i) => (
@@ -75,12 +66,21 @@ const CatechismContent: React.FC<{ paragraph: number }> = ({ paragraph }) => {
     );
   }
 
+  if (isError) {
+    return (
+      <div className="reader-text text-destructive font-serif text-base py-8">
+        Erro ao carregar o parágrafo §{paragraph}. Verifique sua conexão.
+      </div>
+    );
+  }
+
   return (
     <div className="reader-text text-foreground/90 leading-[2] text-base">
-      <p className="font-serif">{content}</p>
+      <p className="font-serif">{data?.content}</p>
     </div>
   );
 };
+
 
 type ViewMode = 'parts' | 'sections' | 'reading';
 
