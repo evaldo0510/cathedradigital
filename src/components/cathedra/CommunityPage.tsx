@@ -127,7 +127,7 @@ const CommunityPage: React.FC = () => {
       // Fetch author names
       const userIds = [...new Set(data.map(p => p.user_id))];
       const { data: profiles } = await supabase
-        .from('profiles')
+        .from('public_profiles' as any)
         .select('id, name')
         .in('id', userIds);
 
