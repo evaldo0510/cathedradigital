@@ -64,6 +64,7 @@ const GlossaryPage = lazy(() => import('./components/cathedra/GlossaryPage'));
 const AparicoesPage = lazy(() => import('./components/cathedra/AparicoesPage'));
 const OnboardingPage = lazy(() => import('./components/cathedra/OnboardingPage'));
 const ResetPasswordPage = lazy(() => import('./components/cathedra/ResetPasswordPage'));
+const AchievementsPage = lazy(() => import('./components/cathedra/AchievementsPage'));
 
 const LoadingFallback = () => (
   <div className="flex items-center justify-center min-h-[40vh]">
@@ -240,6 +241,7 @@ const AppLayout: React.FC = () => {
                 <Route path={AppRoute.DIAGNOSTICS} element={<DiagnosticsPage />} />
                 <Route path="/reset-password" element={<ResetPasswordPage />} />
                 <Route path={AppRoute.ONBOARDING} element={<AuthGuard><OnboardingPage /></AuthGuard>} />
+                <Route path={AppRoute.ACHIEVEMENTS} element={<AuthGuard><AchievementsPage /></AuthGuard>} />
                 <Route path={AppRoute.CHECKOUT} element={<AuthGuard><CheckoutPage /></AuthGuard>} />
                 <Route path={AppRoute.ADMIN} element={
                   <AuthGuard>
