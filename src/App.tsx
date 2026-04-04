@@ -187,7 +187,7 @@ const AppLayout: React.FC = () => {
         </AnimatePresence>
 
         <main id="main-content" className="flex-1 overflow-y-auto flex flex-col relative custom-scrollbar overscroll-auto touch-pan-y scroll-smooth">
-          {location.pathname !== AppRoute.HOME && (
+          {location.pathname !== AppRoute.HOME && location.pathname !== AppRoute.ONBOARDING && (
             <AppHeader
               user={user}
               isDark={isDark}
