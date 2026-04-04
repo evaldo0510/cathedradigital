@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { Icons } from '../../constants';
 import { motion, AnimatePresence } from 'framer-motion';
+import guadalupeImg from '@/assets/aparicao-guadalupe.jpg';
+import lourdesImg from '@/assets/aparicao-lourdes.jpg';
+import fatimaImg from '@/assets/aparicao-fatima.jpg';
+import aparecidaImg from '@/assets/aparicao-aparecida.jpg';
 
 interface Apparition {
   id: string;
