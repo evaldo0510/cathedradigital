@@ -161,8 +161,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       <motion.section
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-        className="relative h-[60vh] md:h-[70vh] flex items-end overflow-hidden"
+        transition={{ duration: 1.2 }}
+        className="relative min-h-[75vh] md:h-[85vh] flex items-center overflow-hidden"
       >
         <SacredImage
           src="https://images.unsplash.com/photo-1548610762-656391d1ad4d?auto=format&fit=crop&q=80&w=1920"
@@ -170,68 +170,117 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           className="absolute inset-0 w-full h-full"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/40 to-transparent hidden md:block" />
+        <div className="absolute inset-0 bg-background/60 md:hidden" />
 
-        <div className="relative z-10 max-w-2xl space-y-4 md:space-y-6 px-6 md:px-12 pb-12 md:pb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="inline-flex items-center gap-2 px-3 py-1 bg-primary/20 border border-primary/30 rounded-md"
-          >
-            <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Cathedra Digital</span>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.4 }}
-            className="inline-flex items-center gap-2 px-3 py-1 bg-yellow-500/10 border border-yellow-500/20 rounded-md"
-          >
-            <Icons.Zap className="w-3 h-3 text-yellow-600" />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-yellow-700">CARREGAMENTO RÁPIDO</span>
-          </motion.div>
-
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.6 }}
-            className="text-4xl sm:text-5xl md:text-7xl font-serif font-bold text-foreground leading-[1.05] tracking-tight"
-          >
-            A fé não foi feita <br />
-            <span className="text-primary italic font-light drop-shadow-sm">para confundir.</span>
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className="text-base md:text-xl text-muted-foreground font-serif italic max-w-xl leading-relaxed opacity-90"
-          >
-            "Fides Quaerens Intellectum." <br className="hidden md:block" />
-            Um santuário digital para compreender, viver e transmitir o depósito da fé.
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            className="flex gap-3 pt-2"
-          >
-            <button
-              onClick={() => goTo(AppRoute.BIBLE, 'Sagrada Escritura', sectionBible)}
-              className="px-6 md:px-8 py-3 md:py-4 bg-primary text-primary-foreground rounded-lg font-black uppercase text-[10px] md:text-xs tracking-widest shadow-xl hover:opacity-90 transition-all"
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 py-12 md:py-20 flex flex-col md:flex-row items-center justify-between gap-12">
+          
+          <div className="flex-1 space-y-6 md:space-y-8 max-w-2xl text-center md:text-left">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/15 border border-primary/25 rounded-full backdrop-blur-md shadow-sm"
             >
-              Começar Agora
-            </button>
-            <button
-              onClick={() => goTo(AppRoute.STUDY_MODE, 'Colloquium IA')}
-              className="px-6 md:px-8 py-3 md:py-4 bg-foreground/10 backdrop-blur-md text-foreground border border-foreground/20 rounded-lg font-black uppercase text-[10px] md:text-xs tracking-widest hover:bg-foreground/20 transition-all"
+              <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Cathedra Digital v2</span>
+            </motion.div>
+
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.8 }}
+              className="text-4xl sm:text-5xl md:text-8xl font-serif font-bold text-foreground leading-[1.05] tracking-tight"
             >
-              Testar IA
-            </button>
+              A fé não foi feita <br />
+              <span className="text-primary italic font-light drop-shadow-sm">para confundir.</span>
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className="text-base md:text-2xl text-muted-foreground font-serif italic max-w-xl leading-relaxed opacity-90 mx-auto md:mx-0"
+            >
+              "Fides Quaerens Intellectum." <br className="hidden md:block" />
+              Um santuário digital para compreender, viver e transmitir o depósito da fé.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7 }}
+              className="flex flex-wrap gap-4 pt-4 justify-center md:justify-start"
+            >
+              <button
+                onClick={() => goTo(AppRoute.BIBLE, 'Sagrada Escritura', sectionBible)}
+                className="group relative px-8 py-4 bg-primary text-primary-foreground rounded-xl font-black uppercase text-xs tracking-widest overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-xl shadow-primary/20"
+              >
+                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                <span className="relative">Começar Agora</span>
+              </button>
+              <button
+                onClick={() => goTo(AppRoute.STUDY_MODE, 'Colloquium IA')}
+                className="px-8 py-4 bg-foreground/5 backdrop-blur-xl text-foreground border border-foreground/10 rounded-xl font-black uppercase text-xs tracking-widest hover:bg-foreground/10 transition-all hover:border-primary/30"
+              >
+                Testar IA
+              </button>
+            </motion.div>
+          </div>
+
+          {/* Right side floating card: Hodie / Liturgy */}
+          <motion.div
+            initial={{ opacity: 0, x: 40, scale: 0.9 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            transition={{ delay: 0.8, duration: 1 }}
+            className="w-full max-w-sm hidden lg:block"
+          >
+            <div className="bg-background/40 backdrop-blur-2xl border border-white/20 rounded-[2.5rem] p-8 shadow-2xl space-y-6 relative overflow-hidden group">
+              <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/20 rounded-full blur-3xl group-hover:bg-primary/30 transition-colors duration-700" />
+              
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Hodie • Hoje</span>
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-widest text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20">Tempo Comum</span>
+              </div>
+
+              <div className="space-y-4">
+                <h3 className="text-sm font-black uppercase tracking-widest text-primary/60">Liturgia do Dia</h3>
+                <p className="text-2xl font-serif font-bold text-foreground leading-tight">Sexta-feira da III Semana do Tempo Comum</p>
+                <div className="flex items-center gap-3 py-2">
+                  <div className="p-2 bg-primary/10 rounded-lg text-primary">
+                    <Icons.Book className="w-5 h-5" />
+                  </div>
+                  <div className="space-y-0.5">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Evangelho</p>
+                    <p className="text-xs font-bold text-foreground">Marcos 4, 26-34</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-6 border-t border-white/10 space-y-4">
+                <h3 className="text-sm font-black uppercase tracking-widest text-primary/60">Santo do Dia</h3>
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-lg border-2 border-primary/30">
+                    <img src="https://images.unsplash.com/photo-1548610762-656391d1ad4d?auto=format&fit=crop&q=80&w=200" alt="Saint" className="w-full h-full object-cover" />
+                  </div>
+                  <div>
+                    <p className="text-lg font-serif font-bold text-foreground">São João Bosco</p>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Pai e Mestre da Juventude</p>
+                  </div>
+                </div>
+              </div>
+
+              <button 
+                onClick={() => navigate(AppRoute.DAILY_LITURGY)}
+                className="w-full py-3 bg-foreground text-background rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-primary hover:text-primary-foreground transition-all shadow-lg"
+              >
+                Acessar Liturgia
+              </button>
+            </div>
           </motion.div>
         </div>
       </motion.section>
