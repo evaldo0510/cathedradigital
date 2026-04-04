@@ -103,7 +103,9 @@ const Bible: React.FC = () => {
   const [highlightedVerse, setHighlightedVerse] = useState<number | null>(null);
   const [fontSizeIdx, setFontSizeIdx] = useState(1);
   const [showCrossRefs, setShowCrossRefs] = useState(true);
+  const { toggleFavorite, isFavorite } = useFavorites();
   const { profile } = useAuth();
+  const completedBooks = useMemo(() => new Set(profile?.completed_books || []), [profile?.completed_books]);
   // Handle deep-link from Catechism cross-references (?book=Gn&ch=1)
   useEffect(() => {
     const bookParam = searchParams.get('book');
