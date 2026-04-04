@@ -22,7 +22,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
   const [showNotifs, setShowNotifs] = useState(false);
 
   return (
-    <header className="px-4 py-2 md:px-8 md:py-4 border-b border-border/5 bg-background/40 backdrop-blur-2xl flex items-center justify-between sticky top-0 z-[140] safe-area-top transition-all hover:bg-background/60">
+    <header className="px-4 py-1.5 md:px-6 md:py-3 border-b border-border/5 bg-background/40 backdrop-blur-2xl flex items-center justify-between sticky top-0 z-[140] safe-area-top transition-all hover:bg-background/60">
       <div className="flex items-center gap-4">
         {!isDashboard ? (
           <button 
