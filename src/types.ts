@@ -33,7 +33,8 @@ export enum AppRoute {
   ORACAO = '/oracao',
   ADMIN = '/admin',
   GLOSSARY = '/glossary',
-  APARICOES = '/aparicoes'
+  APARICOES = '/aparicoes',
+  ONBOARDING = '/onboarding'
 }
 
 export interface TrackStep {

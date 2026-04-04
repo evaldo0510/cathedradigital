@@ -62,6 +62,7 @@ const AdminDashboard = lazy(() => import('./components/cathedra/AdminDashboard')
 const PoenitentiaPage = lazy(() => import('./components/cathedra/PoenitentiaPage'));
 const GlossaryPage = lazy(() => import('./components/cathedra/GlossaryPage'));
 const AparicoesPage = lazy(() => import('./components/cathedra/AparicoesPage'));
+const OnboardingPage = lazy(() => import('./components/cathedra/OnboardingPage'));
 
 const LoadingFallback = () => (
   <div className="flex items-center justify-center min-h-[40vh]">
@@ -142,7 +143,7 @@ const AppLayout: React.FC = () => {
       <OfflineIndicator />
       <div className="flex h-[100dvh] w-full overflow-hidden bg-background selection:bg-primary/20">
         {/* Desktop sidebar - always visible on lg+ */}
-        {location.pathname !== AppRoute.HOME && (
+        {location.pathname !== AppRoute.HOME && location.pathname !== AppRoute.ONBOARDING && (
           <div className="hidden lg:block relative h-full w-72 flex-shrink-0">
             <CathedralSidebar 
               onClose={() => setIsSidebarOpen(false)} 
@@ -156,7 +157,7 @@ const AppLayout: React.FC = () => {
 
         {/* Mobile sidebar overlay - only when open */}
         <AnimatePresence>
-          {location.pathname !== AppRoute.HOME && isSidebarOpen && (
+          {location.pathname !== AppRoute.HOME && location.pathname !== AppRoute.ONBOARDING && isSidebarOpen && (
             <motion.div 
               key="mobile-sidebar"
               initial={{ opacity: 0 }}
@@ -186,7 +187,7 @@ const AppLayout: React.FC = () => {
         </AnimatePresence>
 
         <main id="main-content" className="flex-1 overflow-y-auto flex flex-col relative custom-scrollbar overscroll-auto touch-pan-y scroll-smooth">
-          {location.pathname !== AppRoute.HOME && (
+          {location.pathname !== AppRoute.HOME && location.pathname !== AppRoute.ONBOARDING && (
             <AppHeader
               user={user}
               isDark={isDark}
@@ -195,7 +196,7 @@ const AppLayout: React.FC = () => {
               onSignOut={signOut}
             />
           )}
-          <div className={location.pathname === AppRoute.HOME ? "flex-1" : "flex-1 p-3 sm:p-4 md:p-5 lg:p-6 pb-32 lg:pb-12 w-full max-w-6xl mx-auto"}>
+          <div className={location.pathname === AppRoute.HOME || location.pathname === AppRoute.ONBOARDING ? "flex-1" : "flex-1 p-3 sm:p-4 md:p-5 lg:p-6 pb-32 lg:pb-12 w-full max-w-6xl mx-auto"}>
 
             <Suspense fallback={<LoadingFallback />}>
               <Routes location={location}>
@@ -216,7 +217,7 @@ const AppLayout: React.FC = () => {
                     </ProGate>
                   </AuthGuard>
                 } />
-                <Route path={AppRoute.LOGIN} element={<Auth onSuccess={() => navigate(AppRoute.DASHBOARD)} />} />
+                <Route path={AppRoute.LOGIN} element={<Auth onSuccess={() => navigate(AppRoute.DASHBOARD)} onSignupSuccess={() => navigate(AppRoute.ONBOARDING)} />} />
                 <Route path={AppRoute.AQUINAS_OPERA} element={<AuthGuard><AquinasOpera /></AuthGuard>} />
                 <Route path={AppRoute.CERTAMEN} element={<AuthGuard><Certamen /></AuthGuard>} />
                 <Route path={AppRoute.MISSAL} element={<AuthGuard><MissalPage /></AuthGuard>} />
@@ -236,6 +237,7 @@ const AppLayout: React.FC = () => {
                 <Route path={AppRoute.ORDO_MISSAE} element={<AuthGuard><MissalPage /></AuthGuard>} />
                 <Route path={AppRoute.PRAYERS} element={<AuthGuard><PrayerPage /></AuthGuard>} />
                 <Route path={AppRoute.DIAGNOSTICS} element={<DiagnosticsPage />} />
+                <Route path={AppRoute.ONBOARDING} element={<AuthGuard><OnboardingPage /></AuthGuard>} />
                 <Route path={AppRoute.CHECKOUT} element={<AuthGuard><CheckoutPage /></AuthGuard>} />
                 <Route path={AppRoute.ADMIN} element={
                   <AuthGuard>
@@ -248,7 +250,7 @@ const AppLayout: React.FC = () => {
               </Routes>
             </Suspense>
           </div>
-          {location.pathname !== AppRoute.HOME && (
+          {location.pathname !== AppRoute.HOME && location.pathname !== AppRoute.ONBOARDING && (
             <>
               <CathedralFooter />
               <BottomNav onOpenSidebar={() => setIsSidebarOpen(true)} />

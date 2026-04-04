@@ -4,9 +4,10 @@ import { supabase } from '@/integrations/supabase/client';
 
 interface AuthProps {
   onSuccess: () => void;
+  onSignupSuccess?: () => void;
 }
 
-const Auth: React.FC<AuthProps> = ({ onSuccess }) => {
+const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
   const [mode, setMode] = useState<'login' | 'signup'>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -33,8 +34,16 @@ const Auth: React.FC<AuthProps> = ({ onSuccess }) => {
       if (signUpError) {
         setError(signUpError.message);
       } else {
-        setSuccess('Conta criada com sucesso! Você já pode fazer login.');
-        setMode('login');
+        setSuccess('Conta criada! Fazendo login...');
+        // Auto-login after signup
+        const { error: loginError } = await supabase.auth.signInWithPassword({ email, password });
+        if (loginError) {
+          setSuccess('Conta criada com sucesso! Você já pode fazer login.');
+          setMode('login');
+        } else {
+          if (onSignupSuccess) onSignupSuccess();
+          else onSuccess();
+        }
       }
     } else {
       const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
