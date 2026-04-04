@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 
@@ -18,77 +18,133 @@ export interface Profile {
   total_minutes_read?: number;
 }
 
-export function useAuth() {
+interface AuthContextValue {
+  user: SupabaseUser | null;
+  profile: Profile | null;
+  loading: boolean;
+  signOut: () => Promise<void>;
+  isPremium: boolean;
+}
+
+const AuthContext = createContext<AuthContextValue | null>(null);
+
+export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const profileRequestId = useRef(0);
+
+  const loadProfile = useCallback(async (currentUser: SupabaseUser | null) => {
+    const requestId = ++profileRequestId.current;
+
+    if (!currentUser) {
+      setProfile(null);
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', currentUser.id)
+        .maybeSingle();
+
+      if (requestId !== profileRequestId.current) return;
+
+      if (error) {
+        console.error('Error fetching profile:', error);
+        setProfile(null);
+        return;
+      }
+
+      setProfile(data as Profile | null);
+    } catch (e) {
+      if (requestId !== profileRequestId.current) return;
+      console.error('Error fetching profile:', e);
+      setProfile(null);
+    }
+  }, []);
 
   useEffect(() => {
-    let mounted = true;
+    let active = true;
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      if (!mounted) return;
-      
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        try {
-          const { data, error } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', session.user.id)
-            .single();
-          
-          if (!error && mounted) {
-            setProfile(data as Profile | null);
-          }
-        } catch (e) {
-          console.error('Error fetching profile in onAuthStateChange:', e);
-        }
-      } else {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (!active || event === 'INITIAL_SESSION') return;
+
+      const currentUser = session?.user ?? null;
+      setUser(currentUser);
+
+      if (event === 'SIGNED_OUT' || !currentUser) {
+        profileRequestId.current += 1;
         setProfile(null);
+        setLoading(false);
+        return;
       }
-      setLoading(false);
+
+      if (event === 'TOKEN_REFRESHED') {
+        return;
+      }
+
+      setLoading(true);
+      window.setTimeout(() => {
+        if (!active) return;
+
+        void loadProfile(currentUser).finally(() => {
+          if (active) setLoading(false);
+        });
+      }, 0);
     });
 
     const initSession = async () => {
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
-        if (!mounted) return;
+        if (!active) return;
         
         if (error) console.error('Error getting session:', error);
-        
-        setUser(session?.user ?? null);
-        if (session?.user) {
-          const { data: profileData, error: profileError } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', session.user.id)
-            .single();
-            
-          if (!profileError && mounted) {
-            setProfile(profileData as Profile | null);
-          }
-        }
+
+        const currentUser = session?.user ?? null;
+        setUser(currentUser);
+        await loadProfile(currentUser);
       } catch (e) {
         console.error('Session init error:', e);
       } finally {
-        if (mounted) setLoading(false);
+        if (active) setLoading(false);
       }
     };
 
-    initSession();
+    void initSession();
 
     return () => {
-      mounted = false;
+      active = false;
       subscription.unsubscribe();
     };
-  }, []);
+  }, [loadProfile]);
 
-  const signOut = async () => {
+  const signOut = useCallback(async () => {
+    profileRequestId.current += 1;
     await supabase.auth.signOut();
     setUser(null);
     setProfile(null);
-  };
+    setLoading(false);
+  }, []);
 
-  return { user, profile, loading, signOut, isPremium: profile?.is_premium ?? false };
+  const value = useMemo<AuthContextValue>(() => ({
+    user,
+    profile,
+    loading,
+    signOut,
+    isPremium: profile?.is_premium ?? false,
+  }), [user, profile, loading, signOut]);
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
+
+export function useAuth() {
+  const context = useContext(AuthContext);
+
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+
+  return context;
 }
