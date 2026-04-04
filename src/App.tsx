@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import PageTransition from './components/PageTransition';
 import ScrollToTop from './components/ScrollToTop';
@@ -20,7 +20,9 @@ import { LangContext } from './contexts/LangContext';
 import { supabase } from '@/integrations/supabase/client';
 import CommandCenter from './components/cathedra/CommandCenter';
 import OfflineIndicator from './components/cathedra/OfflineIndicator';
+import AuthGuard from './components/cathedra/AuthGuard';
 import AppErrorBoundary from './components/cathedra/AppErrorBoundary';
+
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -123,76 +125,98 @@ const AppLayout: React.FC = () => {
       <CommandCenter />
       <OfflineIndicator />
       <div className="flex h-[100dvh] w-full overflow-hidden bg-background selection:bg-primary/20">
-        <div className={`fixed inset-0 z-[150] lg:relative lg:block transition-all ${isSidebarOpen ? 'opacity-100' : 'pointer-events-none lg:pointer-events-auto opacity-0 lg:opacity-100'}`}>
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm lg:hidden" onClick={() => setIsSidebarOpen(false)} />
-          <div className={`relative h-full w-72 transition-transform duration-500 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
-            <CathedralSidebar 
-              onClose={() => setIsSidebarOpen(false)} 
-              user={appUser} 
-              isDark={isDark}
-              onToggleDark={() => setIsDark(!isDark)}
-              onSignOut={signOut}
-            />
-          </div>
-        </div>
+        <AnimatePresence mode="wait">
+          {(location.pathname !== AppRoute.HOME || user) && (
+            <motion.div 
+              key="sidebar-wrapper"
+              initial={{ opacity: 0, x: -300 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -300 }}
+              transition={{ duration: 0.3 }}
+              className={`fixed inset-0 z-[150] lg:relative lg:block transition-all ${isSidebarOpen ? 'opacity-100' : 'pointer-events-none lg:pointer-events-auto opacity-0 lg:opacity-100'}`}
+            >
+              <div className="absolute inset-0 bg-black/60 backdrop-blur-sm lg:hidden" onClick={() => setIsSidebarOpen(false)} />
+              <div className={`relative h-full w-72 transition-transform duration-500 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
+                <CathedralSidebar 
+                  onClose={() => setIsSidebarOpen(false)} 
+                  user={appUser} 
+                  isDark={isDark}
+                  onToggleDark={() => setIsDark(!isDark)}
+                  onSignOut={signOut}
+                />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <main id="main-content" className="flex-1 overflow-y-auto flex flex-col relative custom-scrollbar overscroll-auto touch-pan-y scroll-smooth">
-          <AppHeader
-            user={user}
-            isDark={isDark}
-            onToggleDark={() => setIsDark(!isDark)}
-            onOpenSidebar={() => setIsSidebarOpen(true)}
-            onSignOut={signOut}
-          />
-          <div className="flex-1 p-3 sm:p-4 md:p-5 lg:p-6 pb-32 lg:pb-12 w-full max-w-6xl mx-auto">
+          {(location.pathname !== AppRoute.HOME || user) && (
+            <AppHeader
+              user={user}
+              isDark={isDark}
+              onToggleDark={() => setIsDark(!isDark)}
+              onOpenSidebar={() => setIsSidebarOpen(true)}
+              onSignOut={signOut}
+            />
+          )}
+          <div className={location.pathname === AppRoute.HOME && !user ? "flex-1" : "flex-1 p-3 sm:p-4 md:p-5 lg:p-6 pb-32 lg:pb-12 w-full max-w-6xl mx-auto"}>
+
             <Suspense fallback={<LoadingFallback />}>
               <Routes location={location}>
                 <Route path={AppRoute.HOME} element={<Index />} />
-                <Route path={AppRoute.DASHBOARD} element={<Dashboard user={appUser} />} />
-                <Route path={AppRoute.BIBLE} element={<Bible />} />
-                <Route path={AppRoute.CATECHISM} element={<Catechism />} />
-                <Route path={AppRoute.SAINTS} element={<Saints />} />
-                <Route path={AppRoute.MAGISTERIUM} element={<Magisterium />} />
-                <Route path={AppRoute.DAILY_LITURGY} element={<DailyLiturgy />} />
-                <Route path={AppRoute.ROSARY} element={<Rosary />} />
-                <Route path={AppRoute.ORACAO} element={<PrayerPage />} />
-                <Route path={AppRoute.VIA_CRUCIS} element={<ViaCrucis />} />
+                <Route path={AppRoute.DASHBOARD} element={<AuthGuard><Dashboard user={appUser} /></AuthGuard>} />
+                <Route path={AppRoute.BIBLE} element={<AuthGuard><Bible /></AuthGuard>} />
+                <Route path={AppRoute.CATECHISM} element={<AuthGuard><Catechism /></AuthGuard>} />
+                <Route path={AppRoute.SAINTS} element={<AuthGuard><Saints /></AuthGuard>} />
+                <Route path={AppRoute.MAGISTERIUM} element={<AuthGuard><Magisterium /></AuthGuard>} />
+                <Route path={AppRoute.DAILY_LITURGY} element={<AuthGuard><DailyLiturgy /></AuthGuard>} />
+                <Route path={AppRoute.ROSARY} element={<AuthGuard><Rosary /></AuthGuard>} />
+                <Route path={AppRoute.ORACAO} element={<AuthGuard><PrayerPage /></AuthGuard>} />
+                <Route path={AppRoute.VIA_CRUCIS} element={<AuthGuard><ViaCrucis /></AuthGuard>} />
                 <Route path={AppRoute.STUDY_MODE} element={
-                  <ProGate isPremium={isPremium} isLoggedIn={!!user} onLogin={() => navigate(AppRoute.LOGIN)}>
-                    <StudyMode />
-                  </ProGate>
+                  <AuthGuard>
+                    <ProGate isPremium={isPremium} isLoggedIn={!!user} onLogin={() => navigate(AppRoute.LOGIN)}>
+                      <StudyMode />
+                    </ProGate>
+                  </AuthGuard>
                 } />
                 <Route path={AppRoute.LOGIN} element={<Auth onSuccess={() => navigate(AppRoute.DASHBOARD)} />} />
-                <Route path={AppRoute.AQUINAS_OPERA} element={<AquinasOpera />} />
-                <Route path={AppRoute.CERTAMEN} element={<Certamen />} />
-                <Route path={AppRoute.MISSAL} element={<MissalPage />} />
-                <Route path={AppRoute.FAVORITES} element={<FavoritesPage />} />
-                <Route path={AppRoute.TRILHAS} element={<TrilhasPage />} />
+                <Route path={AppRoute.AQUINAS_OPERA} element={<AuthGuard><AquinasOpera /></AuthGuard>} />
+                <Route path={AppRoute.CERTAMEN} element={<AuthGuard><Certamen /></AuthGuard>} />
+                <Route path={AppRoute.MISSAL} element={<AuthGuard><MissalPage /></AuthGuard>} />
+                <Route path={AppRoute.FAVORITES} element={<AuthGuard><FavoritesPage /></AuthGuard>} />
+                <Route path={AppRoute.TRILHAS} element={<AuthGuard><TrilhasPage /></AuthGuard>} />
                 <Route path={AppRoute.ABOUT} element={<AboutPage />} />
-                <Route path={AppRoute.DOGMAS} element={<DogmasPage />} />
-                <Route path={AppRoute.LECTIO_DIVINA} element={<LectioDivina />} />
-                <Route path={AppRoute.BREVIARY} element={<BreviaryPage />} />
-                <Route path={AppRoute.LITANIES} element={<LitaniesPage />} />
-                <Route path={AppRoute.LITURGICAL_CALENDAR} element={<LiturgicalCalendarPage />} />
-                <Route path={AppRoute.COMMUNITY} element={<CommunityPage />} />
-                <Route path={AppRoute.PROFILE} element={<ProfilePage />} />
-                <Route path={AppRoute.POENITENTIA} element={<PoenitentiaPage />} />
-                <Route path={AppRoute.GLOSSARY} element={<GlossaryPage />} />
-                <Route path={AppRoute.ORDO_MISSAE} element={<MissalPage />} />
-                <Route path={AppRoute.PRAYERS} element={<PrayerPage />} />
+                <Route path={AppRoute.DOGMAS} element={<AuthGuard><DogmasPage /></AuthGuard>} />
+                <Route path={AppRoute.LECTIO_DIVINA} element={<AuthGuard><LectioDivina /></AuthGuard>} />
+                <Route path={AppRoute.BREVIARY} element={<AuthGuard><BreviaryPage /></AuthGuard>} />
+                <Route path={AppRoute.LITANIES} element={<AuthGuard><LitaniesPage /></AuthGuard>} />
+                <Route path={AppRoute.LITURGICAL_CALENDAR} element={<AuthGuard><LiturgicalCalendarPage /></AuthGuard>} />
+                <Route path={AppRoute.COMMUNITY} element={<AuthGuard><CommunityPage /></AuthGuard>} />
+                <Route path={AppRoute.PROFILE} element={<AuthGuard><ProfilePage /></AuthGuard>} />
+                <Route path={AppRoute.POENITENTIA} element={<AuthGuard><PoenitentiaPage /></AuthGuard>} />
+                <Route path={AppRoute.GLOSSARY} element={<AuthGuard><GlossaryPage /></AuthGuard>} />
+                <Route path={AppRoute.ORDO_MISSAE} element={<AuthGuard><MissalPage /></AuthGuard>} />
+                <Route path={AppRoute.PRAYERS} element={<AuthGuard><PrayerPage /></AuthGuard>} />
                 <Route path={AppRoute.DIAGNOSTICS} element={<DiagnosticsPage />} />
-                <Route path={AppRoute.CHECKOUT} element={<CheckoutPage />} />
+                <Route path={AppRoute.CHECKOUT} element={<AuthGuard><CheckoutPage /></AuthGuard>} />
                 <Route path={AppRoute.ADMIN} element={
-                  <ProGate isPremium={true} isLoggedIn={!!user} onLogin={() => navigate(AppRoute.LOGIN)}>
-                    <AdminDashboard />
-                  </ProGate>
+                  <AuthGuard>
+                    <ProGate isPremium={true} isLoggedIn={!!user} onLogin={() => navigate(AppRoute.LOGIN)}>
+                      <AdminDashboard />
+                    </ProGate>
+                  </AuthGuard>
                 } />
-                <Route path="*" element={<Dashboard user={appUser} />} />
+                <Route path="*" element={<AuthGuard><Dashboard user={appUser} /></AuthGuard>} />
               </Routes>
             </Suspense>
           </div>
-          <CathedralFooter />
-          <BottomNav onOpenSidebar={() => setIsSidebarOpen(true)} />
+          {(location.pathname !== AppRoute.HOME || user) && (
+            <>
+              <CathedralFooter />
+              <BottomNav onOpenSidebar={() => setIsSidebarOpen(true)} />
+            </>
+          )}
         </main>
       </div>
     </LangContext.Provider>
