@@ -61,6 +61,7 @@ const ProfilePage = lazy(() => import('./components/cathedra/ProfilePage'));
 const AdminDashboard = lazy(() => import('./components/cathedra/AdminDashboard'));
 const PoenitentiaPage = lazy(() => import('./components/cathedra/PoenitentiaPage'));
 const GlossaryPage = lazy(() => import('./components/cathedra/GlossaryPage'));
+const AparicoesPage = lazy(() => import('./components/cathedra/AparicoesPage'));
 
 const LoadingFallback = () => (
   <div className="flex items-center justify-center min-h-[40vh]">
@@ -231,6 +232,7 @@ const AppLayout: React.FC = () => {
                 <Route path={AppRoute.PROFILE} element={<AuthGuard><ProfilePage /></AuthGuard>} />
                 <Route path={AppRoute.POENITENTIA} element={<AuthGuard><PoenitentiaPage /></AuthGuard>} />
                 <Route path={AppRoute.GLOSSARY} element={<AuthGuard><GlossaryPage /></AuthGuard>} />
+                <Route path={AppRoute.APARICOES} element={<AuthGuard><AparicoesPage /></AuthGuard>} />
                 <Route path={AppRoute.ORDO_MISSAE} element={<AuthGuard><MissalPage /></AuthGuard>} />
                 <Route path={AppRoute.PRAYERS} element={<AuthGuard><PrayerPage /></AuthGuard>} />
                 <Route path={AppRoute.DIAGNOSTICS} element={<DiagnosticsPage />} />

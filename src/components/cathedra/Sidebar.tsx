@@ -39,6 +39,7 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
         { label: 'Lectio Divina', path: AppRoute.LECTIO_DIVINA, icon: <Icons.Feather className="w-5 h-5" /> },
         { label: 'Litanias', path: AppRoute.LITANIES, icon: <Icons.Heart className="w-5 h-5" /> },
         { label: 'Favoritos', path: AppRoute.FAVORITES, icon: <Icons.Heart className="w-5 h-5" /> },
+        { label: 'Aparições Marianas', path: AppRoute.APARICOES, icon: <Icons.Star className="w-5 h-5" /> },
       ]
     },
     {

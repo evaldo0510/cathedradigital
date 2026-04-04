@@ -32,7 +32,8 @@ export enum AppRoute {
   TRILHAS = '/trilhas',
   ORACAO = '/oracao',
   ADMIN = '/admin',
-  GLOSSARY = '/glossary'
+  GLOSSARY = '/glossary',
+  APARICOES = '/aparicoes'
 }
 
 export interface TrackStep {
