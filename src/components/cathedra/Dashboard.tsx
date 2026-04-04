@@ -191,7 +191,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.8 }}
-              className="text-4xl sm:text-6xl md:text-8xl font-serif font-bold text-foreground leading-[0.95] tracking-tight"
+              className="text-4xl sm:text-5xl md:text-6xl font-serif font-bold text-foreground leading-[0.95] tracking-tight"
             >
               A beleza da fé <br />
               <span className="text-primary italic font-light drop-shadow-2xl">em cada detalhe.</span>
@@ -201,7 +201,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
-              className="text-xl md:text-3xl text-muted-foreground font-serif italic max-w-xl leading-relaxed opacity-90 mx-auto md:mx-0 border-l-2 border-primary/30 pl-6"
+              className="text-lg md:text-xl text-muted-foreground font-serif italic max-w-xl leading-relaxed opacity-90 mx-auto md:mx-0 border-l-2 border-primary/30 pl-6"
             >
               "Onde está o teu tesouro, aí estará também o teu coração." <br className="hidden md:block" />
               Um santuário digital para elevar sua alma.
