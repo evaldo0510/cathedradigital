@@ -22,15 +22,21 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
   const [showNotifs, setShowNotifs] = useState(false);
 
   return (
-    <header className="p-3 md:p-4 border-b border-border/10 bg-background/60 backdrop-blur-3xl flex items-center justify-between sticky top-0 z-[140] shadow-sm">
+    <header className="px-3 py-2 md:p-4 border-b border-border/10 bg-background/60 backdrop-blur-3xl flex items-center justify-between sticky top-0 z-[140] shadow-sm safe-area-top">
       <div className="flex items-center gap-2">
         {!isDashboard ? (
-          <button onClick={() => navigate(-1)} className="p-3 bg-foreground text-primary rounded-2xl flex items-center gap-2 pr-5 shadow-xl">
-            <Icons.ArrowDown className="w-5 h-5 rotate-90" />
-            <span className="text-[10px] font-black uppercase tracking-widest">Voltar</span>
+          <button 
+            onClick={() => navigate(-1)} 
+            className="p-2 sm:p-3 bg-foreground text-primary rounded-2xl flex items-center gap-2 pr-4 sm:pr-5 shadow-xl active:scale-95 transition-transform"
+          >
+            <Icons.ArrowDown className="w-4 h-4 sm:w-5 sm:h-5 rotate-90" />
+            <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest">Voltar</span>
           </button>
         ) : (
-          <button onClick={onOpenSidebar} className="lg:hidden p-3 text-foreground">
+          <button 
+            onClick={onOpenSidebar} 
+            className="lg:hidden p-2 text-foreground active:bg-muted rounded-full transition-colors"
+          >
             <Icons.Menu className="w-6 h-6" />
           </button>
         )}
