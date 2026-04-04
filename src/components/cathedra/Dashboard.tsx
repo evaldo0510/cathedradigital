@@ -23,7 +23,7 @@ const ContentRow: React.FC<{ title: string; children: React.ReactNode; onSeeAll?
   };
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2 md:space-y-3">
       <div className="flex items-center justify-between px-2">
         <h2 className="text-lg md:text-xl font-serif font-bold text-foreground">{title}</h2>
         {onSeeAll && (
