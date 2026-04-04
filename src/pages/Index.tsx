@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Youtube, Heart, Music, Clock, Handshake, ChevronRight, Sparkles, BookOpen, ShieldCheck, Zap, Globe, Users, Trophy, Bookmark, Search, MessageSquare, Star, Library } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,7 +9,14 @@ import { useAuth } from "@/hooks/useAuth";
 
 const Index = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+
+  // If user is already logged in, redirect straight to dashboard
+  useEffect(() => {
+    if (!loading && user) {
+      navigate(AppRoute.DASHBOARD, { replace: true });
+    }
+  }, [user, loading, navigate]);
 
   const handleStart = () => {
     if (user) {
