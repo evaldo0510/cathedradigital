@@ -162,7 +162,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.2 }}
-        className="relative min-h-[70vh] md:h-[85vh] flex items-center overflow-hidden touch-none"
+        className="relative min-h-[60vh] md:h-[70vh] flex items-center overflow-hidden touch-none"
       >
         <SacredImage
           src="https://images.unsplash.com/photo-1548610762-656391d1ad4d?auto=format&fit=crop&q=80&w=1920"
