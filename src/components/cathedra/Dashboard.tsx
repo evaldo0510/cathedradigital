@@ -285,24 +285,45 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         </div>
       </motion.section>
 
-      {/* ═══ CONTENT ROWS ═══ */}
-      <div className="space-y-8 md:space-y-10 px-4 md:px-8 lg:px-10">
+      {/* ═══ DAILY INSPIRATION ═══ */}
+      <motion.section 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        className="px-4 md:px-12"
+      >
+        <div className="relative group bg-[#1a1a1a] dark:bg-primary/10 rounded-[3rem] p-8 md:p-12 overflow-hidden shadow-2xl">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full blur-[100px] -mr-32 -mt-32" />
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/10 rounded-full blur-[100px] -ml-32 -mb-32" />
+          
+          <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 md:gap-16">
+            <div className="flex-1 space-y-4 text-center md:text-left">
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Versículo do Dia</span>
+              <p className="text-2xl md:text-4xl font-serif font-bold text-white leading-tight italic">
+                "O Senhor é o meu pastor, nada me faltará. Em verdes pastagens me faz repousar."
+              </p>
+              <div className="flex items-center justify-center md:justify-start gap-4 pt-2">
+                <span className="text-xs font-black uppercase tracking-widest text-primary/80">Salmo 23, 1</span>
+                <button className="p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors">
+                  <Icons.Heart className="w-4 h-4 text-white" />
+                </button>
+              </div>
+            </div>
+            
+            <div className="flex-shrink-0 flex items-center gap-4">
+              <button 
+                onClick={() => navigate(AppRoute.BIBLE)}
+                className="px-8 py-4 bg-primary text-primary-foreground rounded-2xl font-black uppercase text-xs tracking-widest hover:scale-105 transition-all shadow-xl shadow-primary/20"
+              >
+                Ler na Bíblia
+              </button>
+            </div>
+          </div>
+        </div>
+      </motion.section>
 
-        {/* Row: Continue assistindo (only if logged in and has history) */}
-        {user && history.length > 0 && (
-          <ContentRow title="Continue de onde parou">
-            {history.map(entry => (
-              <RowCard
-                key={entry.id}
-                image={entry.image_url || sectionBible}
-                title={entry.title}
-                subtitle={new Date(entry.visited_at).toLocaleDateString('pt-BR', { day: 'numeric', month: 'short' })}
-                onClick={() => navigate(entry.route)}
-                wide
-              />
-            ))}
-          </ContentRow>
-        )}
+      {/* ═══ CONTENT ROWS ═══ */}
+      <div className="space-y-12 md:space-y-20 px-4 md:px-8 lg:px-10">
+
 
         {/* Row: Fundamentos */}
         <ContentRow title="Comece pelo essencial" onSeeAll={() => navigate(AppRoute.TRILHAS)}>
