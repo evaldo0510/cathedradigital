@@ -122,6 +122,20 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   const navigate = useNavigate();
   const { history, trackVisit } = useHistory();
 
+  const { profile } = useAuth();
+  const completedBooks = useMemo(() => profile?.completed_books || [], [profile?.completed_books]);
+  const badges = useMemo(() => profile?.badges || [], [profile?.badges]);
+  const totalBooksRead = completedBooks.length;
+  const overallProgress = Math.round((totalBooksRead / 73) * 100);
+
+  // Load chapters read count
+  const [totalChaptersRead, setTotalChaptersRead] = useState(0);
+  useEffect(() => {
+    if (!user) return;
+    supabase.from('bible_chapters_read' as any).select('id', { count: 'exact', head: true }).eq('user_id', user.id)
+      .then(({ count }) => { if (count) setTotalChaptersRead(count); });
+  }, [user]);
+
   const goTo = useCallback((route: string, title: string, imageUrl?: string) => {
     trackVisit(route, title, imageUrl || ROUTE_IMAGES[route]);
     navigate(route);
