@@ -326,7 +326,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
 
 
         {/* Row: Fundamentos */}
-        <ContentRow title="Comece pelo essencial" onSeeAll={() => navigate(AppRoute.TRILHAS)}>
+        <ContentRow title="Os Pilares da Fé" onSeeAll={() => navigate(AppRoute.TRILHAS)}>
           {fundamentos.map(item => (
             <RowCard
               key={item.title}
@@ -337,29 +337,40 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             />
           ))}
         </ContentRow>
-        
-        {/* Row: Destaques e Parcerias */}
-        <ContentRow title="Destaques">
-          <RowCard
-            image="https://images.unsplash.com/photo-1519750783826-e2420f4d687f?auto=format&fit=crop&q=80&w=800"
-            title="Rosário da Madrugada"
-            subtitle="Frei Gilson - Todos os dias às 4:00 AM"
-            onClick={() => window.open('https://www.youtube.com/@FreiGilsonSomdoMonte', '_blank')}
-            wide
-            icon={<Icons.Youtube className="w-4 h-4" />}
-          />
-          <RowCard
-            image="https://images.unsplash.com/photo-1445445290350-18a3b86e0b5a?auto=format&fit=crop&q=80&w=800"
-            title="Som do Monte"
-            subtitle="Vida de Oração e Música"
-            onClick={() => window.open('https://www.youtube.com/@FreiGilsonSomdoMonte', '_blank')}
-            wide
-            icon={<Icons.Heart className="w-4 h-4" />}
-          />
-        </ContentRow>
+
+        {/* ═══ GRID: THEOLOGICAL SPOTLIGHT ═══ */}
+        <section className="space-y-8">
+          <div className="flex items-center justify-between px-2">
+            <div className="space-y-1">
+              <h2 className="text-3xl md:text-5xl font-serif font-black text-foreground tracking-tight">O Magistério Sagrado</h2>
+              <p className="text-xs font-black uppercase tracking-[0.3em] text-primary/60">Conhecimento que Transforma</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              { title: 'Suma Teológica', subtitle: 'A obra de São Tomás de Aquino', image: 'https://images.unsplash.com/photo-1548610762-656391d1ad4d?auto=format&fit=crop&q=80&w=800', route: AppRoute.AQUINAS_OPERA },
+              { title: 'Dogmas de Fé', subtitle: 'Verdades imutáveis reveladas', image: 'https://images.unsplash.com/photo-1519750783826-e2420f4d687f?auto=format&fit=crop&q=80&w=800', route: AppRoute.DOGMAS },
+              { title: 'Vidas dos Santos', subtitle: 'Modelos de perfeição cristã', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=800', route: AppRoute.SAINTS },
+            ].map(item => (
+              <motion.button
+                key={item.title}
+                onClick={() => navigate(item.route)}
+                whileHover={{ scale: 1.05, y: -12 }}
+                whileTap={{ scale: 0.98 }}
+                className="relative h-80 rounded-[3rem] overflow-hidden group shadow-2xl transition-all duration-500 ring-1 ring-border/5 hover:ring-primary/40"
+              >
+                <img src={item.image} alt={item.title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent group-hover:from-primary/80 transition-colors duration-500" />
+                <div className="absolute bottom-0 left-0 p-8 space-y-3 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                  <h3 className="text-3xl font-serif font-black text-white leading-tight">{item.title}</h3>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-primary/80 group-hover:text-white transition-colors">{item.subtitle}</p>
+                </div>
+              </motion.button>
+            ))}
+          </div>
+        </section>
 
         {/* Row: Estudo */}
-
         <ContentRow title="Estudo e Formação" onSeeAll={() => navigate(AppRoute.MAGISTERIUM)}>
           {estudo.map(item => (
             <RowCard
