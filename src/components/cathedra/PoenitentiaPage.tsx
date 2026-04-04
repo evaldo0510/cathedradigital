@@ -1,5 +1,19 @@
 import React, { useState } from 'react';
-import { Icons } from '../../constants';
+import { 
+  Cross, 
+  ArrowLeft, 
+  ChevronRight, 
+  CheckCircle2, 
+  BookOpen, 
+  Flame, 
+  Sparkles, 
+  Activity,
+  User,
+  Heart,
+  Calendar,
+  Search,
+  ChevronLeft
+} from 'lucide-react';
 
 interface ConfessionStep {
   title: string;
@@ -10,7 +24,7 @@ interface ConfessionStep {
 const CONFESSION_STEPS: ConfessionStep[] = [
   {
     title: 'Exame de Consciência',
-    description: 'Reflexão sobre os pecados cometidos desde a última confissão.',
+    description: 'Reflexão sobre os pecados cometidos desde a última confissão à luz dos mandamentos.',
     items: [
       'Ame a Deus sobre todas as coisas? Usei o nome de Deus em vão?',
       'Faltei à Missa aos domingos e dias de preceito por culpa própria?',
@@ -27,11 +41,11 @@ const CONFESSION_STEPS: ConfessionStep[] = [
   },
   {
     title: 'Confissão com o Sacerdote',
-    description: 'Dizer os pecados de forma clara e completa ao padre.'
+    description: 'Dizer os pecados de forma clara e completa ao padre, sem omitir pecados graves.'
   },
   {
     title: 'Penitência e Absolvição',
-    description: 'Cumprir a penitência recebida e agradecer a misericórdia de Deus.'
+    description: 'Cumprir a penitência recebida e agradecer a misericórdia infinita de Deus.'
   }
 ];
 
@@ -39,64 +53,127 @@ const PoenitentiaPage: React.FC = () => {
   const [activeStep, setActiveStep] = useState(0);
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
-      <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
-          <Icons.Cross className="w-4 h-4 text-primary" />
-          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Sacramento da Penitência</span>
+    <div className="max-w-5xl mx-auto space-y-12 pb-12">
+      <div className="text-center space-y-4 pt-4">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/5 border border-primary/10 rounded-full">
+          <Cross className="w-4 h-4 text-primary" />
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Sacramentum Poenitentiae</span>
         </div>
-        <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Confissão</h1>
-        <p className="text-muted-foreground font-serif italic max-w-lg mx-auto">Guia para o exame de consciência e o Sacramento da Reconciliação.</p>
+        <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground tracking-tight">Confissão</h1>
+        <p className="text-lg text-muted-foreground font-serif italic max-w-2xl mx-auto">"Se confessarmos os nossos pecados, Ele é fiel e justo para nos perdoar."</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 px-2">
         {CONFESSION_STEPS.map((step, i) => (
           <button
             key={i}
             onClick={() => setActiveStep(i)}
-            className={`p-4 rounded-2xl border text-left transition-all ${
+            className={`p-6 rounded-[2rem] border text-left transition-all relative overflow-hidden group ${
               activeStep === i 
-                ? 'bg-primary border-primary text-white shadow-lg scale-[1.02]' 
-                : 'bg-card border-border text-foreground hover:border-primary/50'
+                ? 'bg-primary border-primary text-primary-foreground shadow-2xl scale-[1.05] z-10' 
+                : 'bg-card border-border text-foreground hover:border-primary/40 hover:bg-primary/5 hover:shadow-lg'
             }`}
           >
-            <div className="text-xs font-black opacity-60 mb-1">PASSO {i + 1}</div>
-            <div className="font-bold font-serif leading-tight">{step.title}</div>
+            <div className={`text-[10px] font-black opacity-40 uppercase tracking-widest mb-2 ${activeStep === i ? 'text-white' : 'text-primary'}`}>PASSO {i + 1}</div>
+            <div className="font-serif font-bold text-lg leading-tight group-hover:text-primary transition-colors group-data-[state=active]:text-white">{step.title}</div>
+            {activeStep === i && (
+              <div className="absolute top-0 right-0 p-4 opacity-10">
+                <CheckCircle2 className="w-12 h-12" />
+              </div>
+            )}
           </button>
         ))}
       </div>
 
-      <div className="bg-card border border-border rounded-3xl p-6 md:p-10 space-y-6 animate-in fade-in slide-in-from-bottom-4">
-        <div className="space-y-2">
-          <h2 className="text-2xl font-serif font-bold text-foreground">{CONFESSION_STEPS[activeStep].title}</h2>
-          <p className="text-muted-foreground italic font-serif">{CONFESSION_STEPS[activeStep].description}</p>
+      <div className="bg-card border border-border rounded-[3rem] p-8 md:p-16 space-y-10 shadow-2xl shadow-black/[0.02] animate-in fade-in slide-in-from-bottom-4 duration-700 relative overflow-hidden">
+        <div className="absolute top-0 right-0 p-12 opacity-[0.02]">
+          <Cross className="w-64 h-64 -mr-16 -mt-16 rotate-12" />
         </div>
 
-        {CONFESSION_STEPS[activeStep].items && (
-          <ul className="space-y-4">
-            {CONFESSION_STEPS[activeStep].items?.map((item, i) => (
-              <li key={i} className="flex gap-3 text-foreground/90 font-serif leading-relaxed">
-                <span className="text-primary mt-1.5">•</span>
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-        )}
+        <div className="relative space-y-8 max-w-3xl mx-auto">
+          <div className="space-y-4 text-center">
+            <h2 className="text-3xl md:text-5xl font-serif font-bold text-foreground tracking-tight">{CONFESSION_STEPS[activeStep].title}</h2>
+            <p className="text-xl text-muted-foreground italic font-serif leading-relaxed">"{CONFESSION_STEPS[activeStep].description}"</p>
+          </div>
 
-        {activeStep === 0 && (
-          <div className="mt-8 p-4 bg-muted rounded-2xl border border-border/50 italic text-sm text-muted-foreground font-serif">
-            "O exame de consciência é a confrontação da nossa vida com a lei moral de Deus."
+          {CONFESSION_STEPS[activeStep].items && (
+            <div className="space-y-6 pt-4">
+              <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/40 text-center mb-6">Exame de Consciência</h3>
+              <div className="grid gap-3">
+                {CONFESSION_STEPS[activeStep].items?.map((item, i) => (
+                  <div key={i} className="flex gap-5 p-5 rounded-2xl bg-muted/50 border border-border/50 group hover:bg-white hover:shadow-md transition-all">
+                    <div className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center font-black text-xs shrink-0 border border-primary/10 group-hover:bg-primary group-hover:text-white transition-colors">{i + 1}</div>
+                    <span className="text-lg text-foreground/90 font-serif leading-relaxed">{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {activeStep === 0 && (
+            <div className="mt-12 p-8 bg-primary/5 rounded-[2.5rem] border border-primary/10 text-center space-y-4 shadow-sm">
+              <BookOpen className="w-8 h-8 text-primary/30 mx-auto" />
+              <p className="text-lg text-foreground/80 font-serif italic max-w-xl mx-auto leading-relaxed">
+                "O exame de consciência é a confrontação sincera da nossa vida com a lei moral de Deus, o Evangelho e os Seus Mandamentos."
+              </p>
+            </div>
+          )}
+          
+          {activeStep === 2 && (
+            <div className="space-y-8 pt-8">
+              <div className="flex items-center gap-3 justify-center">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                  <Flame className="w-5 h-5" />
+                </div>
+                <h3 className="text-xl font-serif font-bold">Ato de Contrição</h3>
+              </div>
+              <div className="bg-primary text-primary-foreground p-10 md:p-14 rounded-[3rem] border border-primary/10 shadow-2xl shadow-primary/20 relative">
+                <Sparkles className="absolute -top-3 -right-3 w-10 h-10 text-white/20 rotate-12" />
+                <p className="text-xl md:text-2xl font-serif leading-relaxed text-center italic opacity-95">
+                  "Meu Deus, porque sois infinitamente bom e Vos amo de todo o meu coração, pesa-me de Vos ter ofendido, e com o auxílio da Vossa divina graça proponho firmemente não tornar a pecar e evitar as próximas ocasiões de pecado. Amém."
+                </p>
+              </div>
+              <div className="flex items-center justify-center gap-2 text-xs font-black uppercase tracking-widest text-primary/60">
+                <Activity className="w-3 h-3" /> Reze antes ou depois de confessar
+              </div>
+            </div>
+          )}
+
+          <div className="flex justify-center pt-8">
+            <button 
+              onClick={() => setActiveStep((prev) => (prev + 1) % CONFESSION_STEPS.length)}
+              className="px-10 py-5 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] shadow-xl hover:bg-primary hover:text-primary-foreground transition-all active:scale-95 flex items-center gap-3"
+            >
+              {activeStep === CONFESSION_STEPS.length - 1 ? 'Reiniciar Guia' : 'Próximo Passo'} <ChevronRight className="w-4 h-4" />
+            </button>
           </div>
-        )}
-        
-        {activeStep === 2 && (
-          <div className="space-y-4">
-            <h3 className="text-sm font-black uppercase tracking-widest text-primary">Ato de Contrição</h3>
-            <p className="text-foreground/90 font-serif leading-relaxed bg-primary/5 p-6 rounded-2xl border border-primary/10 italic">
-              "Meu Deus, porque sois infinitamente bom e Vos amo de todo o meu coração, pesa-me de Vos ter ofendido, e com o auxílio da Vossa divina graça proponho firmemente não tornar a pecar e evitar as próximas ocasiões de pecado. Amém."
-            </p>
+        </div>
+      </div>
+      
+      {/* Additional Info Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="bg-card border border-border rounded-[2.5rem] p-10 space-y-6 shadow-sm">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+              <User className="w-6 h-6" />
+            </div>
+            <h3 className="text-2xl font-serif font-bold">Como Começar?</h3>
           </div>
-        )}
+          <p className="text-muted-foreground font-serif leading-relaxed italic">
+            Ao entrar no confessionário, diga: "Abençoai-me, Padre, porque pequei. Minha última confissão foi há (tempo)."
+          </p>
+        </div>
+        <div className="bg-card border border-border rounded-[2.5rem] p-10 space-y-6 shadow-sm">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+              <Heart className="w-6 h-6" />
+            </div>
+            <h3 className="text-2xl font-serif font-bold">A Absolvição</h3>
+          </div>
+          <p className="text-muted-foreground font-serif leading-relaxed italic">
+            No final, o sacerdote dirá: "Eu te absolvo de teus pecados em nome do Pai, e do Filho, e do Espírito Santo." Responda: "Amém."
+          </p>
+        </div>
       </div>
     </div>
   );
