@@ -411,28 +411,55 @@ const Bible: React.FC = () => {
 
       {/* Books by category */}
       <div className="space-y-3">
-        {filteredCategories.map(cat => (
-          <Collapsible key={cat.label} defaultOpen>
-            <CollapsibleTrigger className="flex items-center gap-2 w-full px-3 py-2 rounded-xl bg-card border border-border hover:bg-primary/5 transition-all group">
-              <span className="text-base">{cat.icon}</span>
-              <span className="text-xs font-black uppercase tracking-widest text-foreground group-hover:text-primary transition-colors">{cat.label}</span>
-              <span className="text-[10px] text-muted-foreground ml-1">({cat.books.length})</span>
-              <ChevronDown className="w-4 h-4 ml-auto text-muted-foreground transition-transform duration-200 group-data-[state=open]:rotate-180" />
-            </CollapsibleTrigger>
-            <CollapsibleContent>
-              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-1.5 mt-2 ml-1">
-                {cat.books.map(book => (
-                  <button key={book.abbr} onClick={() => selectBook(book)}
-                    className="text-left px-2.5 py-2 rounded-lg bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group/book">
-                    <span className="text-[9px] font-black text-primary uppercase tracking-widest">{book.abbr}</span>
-                    <p className="text-xs font-bold text-foreground mt-0.5 group-hover/book:text-primary transition-colors truncate">{book.name}</p>
-                    <p className="text-[9px] text-muted-foreground">{book.chapters} cap.</p>
-                  </button>
-                ))}
-              </div>
-            </CollapsibleContent>
-          </Collapsible>
-        ))}
+        {filteredCategories.map(cat => {
+          const CatIcon = cat.icon;
+          const readCount = cat.books.filter(b => completedBooks.has(b.abbr)).length;
+          const progress = Math.round((readCount / cat.books.length) * 100);
+          return (
+            <Collapsible key={cat.label} defaultOpen>
+              <CollapsibleTrigger className={`flex items-center gap-2.5 w-full px-4 py-3 rounded-xl border transition-all group ${cat.bgColor}`}>
+                <div className={`p-1.5 rounded-lg bg-white/70 dark:bg-black/20`}>
+                  <CatIcon className={`w-4 h-4 ${cat.color}`} />
+                </div>
+                <div className="flex flex-col items-start flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className={`text-xs font-black uppercase tracking-widest ${cat.color}`}>{cat.label}</span>
+                    <span className="text-[10px] text-muted-foreground">({cat.books.length})</span>
+                  </div>
+                  {readCount > 0 && (
+                    <div className="flex items-center gap-2 mt-1 w-full">
+                      <div className="h-1 flex-1 max-w-[120px] bg-black/10 dark:bg-white/10 rounded-full overflow-hidden">
+                        <div className="h-full bg-current rounded-full transition-all" style={{ width: `${progress}%`, color: 'inherit' }} />
+                      </div>
+                      <span className="text-[9px] font-bold text-muted-foreground">{readCount}/{cat.books.length}</span>
+                    </div>
+                  )}
+                </div>
+                <ChevronDown className="w-4 h-4 text-muted-foreground transition-transform duration-200 group-data-[state=open]:rotate-180" />
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-1.5 mt-2 ml-1">
+                  {cat.books.map(book => {
+                    const isRead = completedBooks.has(book.abbr);
+                    return (
+                      <button key={book.abbr} onClick={() => selectBook(book)}
+                        className={`text-left px-2.5 py-2 rounded-lg border transition-all group/book ${
+                          isRead ? 'bg-primary/5 border-primary/30' : 'bg-card border-border hover:border-primary/50 hover:bg-primary/5'
+                        }`}>
+                        <div className="flex items-center justify-between">
+                          <span className={`text-[9px] font-black uppercase tracking-widest ${cat.color}`}>{book.abbr}</span>
+                          {isRead && <span className="text-[8px]">✓</span>}
+                        </div>
+                        <p className="text-xs font-bold text-foreground mt-0.5 group-hover/book:text-primary transition-colors truncate">{book.name}</p>
+                        <p className="text-[9px] text-muted-foreground">{book.chapters} cap.</p>
+                      </button>
+                    );
+                  })}
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
+          );
+        })}
       </div>
     </div>
   );
