@@ -181,9 +181,11 @@ const AppLayout: React.FC = () => {
 
 const App: React.FC = () => (
   <AppErrorBoundary>
-    <BrowserRouter>
-      <AppLayout />
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <AppLayout />
+      </BrowserRouter>
+    </QueryClientProvider>
   </AppErrorBoundary>
 );
 
