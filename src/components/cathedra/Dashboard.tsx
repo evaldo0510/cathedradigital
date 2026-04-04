@@ -87,8 +87,8 @@ const RowCard: React.FC<RowCardProps> = ({ image, title, subtitle, onClick, wide
     <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent group-hover:from-primary/80 transition-colors duration-500" />
     <div className="absolute bottom-0 left-0 right-0 p-5 md:p-8 space-y-2 translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
       {icon && <div className="text-primary-foreground/90 mb-1 scale-110">{icon}</div>}
-      <h3 className="text-base md:text-xl font-serif font-black text-white leading-tight line-clamp-2">{title}</h3>
-      {subtitle && <p className="text-[10px] md:text-xs font-black uppercase tracking-widest text-primary/80 group-hover:text-white/80 transition-colors">{subtitle}</p>}
+      <h3 className="text-lg md:text-2xl font-serif font-black text-white leading-tight line-clamp-2">{title}</h3>
+      {subtitle && <p className="text-xs md:text-sm font-black uppercase tracking-widest text-primary/80 group-hover:text-white/80 transition-colors">{subtitle}</p>}
     </div>
   </motion.button>
 );
