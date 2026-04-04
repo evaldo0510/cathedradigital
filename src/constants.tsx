@@ -9,14 +9,18 @@ export const COLORS = {
 
 export const Logo: React.FC<{ className?: string }> = ({ className = "w-12 h-12" }) => (
   <div className={`relative flex items-center justify-center group ${className}`}>
-    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-      <circle cx="50" cy="50" r="48" fill="#1a1a1a" />
-      <circle cx="50" cy="50" r="44" stroke="#d4af37" strokeWidth="0.5" strokeDasharray="2 2" opacity="0.5" />
-      <path d="M32 72V38C32 33.5817 35.5817 30 40 30H60C64.4183 30 68 33.5817 68 38V72" stroke="#d4af37" strokeWidth="5" strokeLinecap="round" />
-      <path d="M25 72H75L82 82H18L25 72Z" fill="#d4af37" />
-      <path d="M50 38V62" stroke="#d4af37" strokeWidth="5" strokeLinecap="round" />
-      <path d="M42 48H58" stroke="#d4af37" strokeWidth="5" strokeLinecap="round" />
-      <circle cx="50" cy="18" r="2.5" fill="#d4af37" />
+    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-sm">
+      <defs>
+        <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#d4af37" />
+          <stop offset="100%" stopColor="#b8860b" />
+        </linearGradient>
+      </defs>
+      <circle cx="50" cy="50" r="48" fill="#1a1a1a" stroke="url(#logo-grad)" strokeWidth="1" />
+      <path d="M50 20L30 45H70L50 20Z" fill="url(#logo-grad)" opacity="0.8" />
+      <rect x="35" y="45" width="30" height="35" rx="2" fill="url(#logo-grad)" />
+      <path d="M45 55V75M40 60H60" stroke="#1a1a1a" strokeWidth="3" strokeLinecap="round" />
+      <circle cx="50" cy="50" r="42" stroke="url(#logo-grad)" strokeWidth="0.5" strokeDasharray="4 4" opacity="0.3" />
     </svg>
   </div>
 );
