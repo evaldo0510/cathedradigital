@@ -158,7 +158,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
 
 
   return (
-    <div className="space-y-8 md:space-y-12 pb-16 -mx-4 md:-mx-8 lg:-mx-10">
+    <div className="space-y-6 md:space-y-10 pb-16 -mx-4 md:-mx-8 lg:-mx-10">
 
       {/* ═══ HERO BANNER ═══ */}
       <motion.section
