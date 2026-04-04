@@ -27,10 +27,10 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
         {!isDashboard ? (
           <button 
             onClick={() => navigate(-1)} 
-            className="p-3 bg-foreground text-background rounded-full flex items-center gap-3 px-6 shadow-2xl active:scale-95 transition-all hover:bg-primary hover:text-primary-foreground group"
+            className="p-2 sm:p-3 bg-foreground text-background rounded-full flex items-center gap-2 sm:gap-3 px-4 sm:px-6 shadow-2xl active:scale-95 transition-all hover:bg-primary hover:text-primary-foreground group"
           >
             <Icons.ArrowDown className="w-4 h-4 rotate-90 group-hover:-translate-x-1 transition-transform" />
-            <span className="text-xs font-black uppercase tracking-widest">Retornar</span>
+            <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest">Retornar</span>
           </button>
         ) : (
           <button 
