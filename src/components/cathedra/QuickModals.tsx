@@ -72,21 +72,10 @@ export const BibleModal: React.FC<QuickModalProps> = ({ isOpen, onClose }) => {
 export const CatechismModal: React.FC<QuickModalProps> = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const [paragraph, setParagraph] = useState(1);
-  const [text, setText] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (!isOpen) return;
-    setLoading(true);
-    setText('');
-    supabase.functions.invoke('catechism-text', { body: { paragraph } })
-      .then(({ data, error }) => {
-        setText(error ? 'Erro ao carregar.' : data?.content || `§${paragraph} — conteúdo não disponível.`);
-        setLoading(false);
-      });
-  }, [isOpen, paragraph]);
+  const { data, isLoading, isError } = useCatechismParagraph(paragraph);
 
   if (!isOpen) return null;
+
 
   return (
     <ModalShell title="Catecismo — Consulta Rápida" onClose={onClose}>
