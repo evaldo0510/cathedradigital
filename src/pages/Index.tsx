@@ -248,9 +248,11 @@ const Index = () => {
             <div className="absolute -inset-10 bg-primary/20 blur-[100px] rounded-full animate-pulse" />
             <div className="relative aspect-square rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl rotate-3">
               <img 
-                src="https://images.unsplash.com/photo-1544427928-201cd49e6657?auto=format&fit=crop&q=80&w=1000" 
+                src="https://images.unsplash.com/photo-1544427928-201cd49e6657?auto=format&fit=crop&q=40&w=600" 
                 alt="Devotion" 
                 className="w-full h-full object-cover grayscale opacity-60"
+                loading="lazy"
+                decoding="async"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a1a] via-transparent to-transparent" />
               <div className="absolute bottom-10 left-10 right-10 p-8 bg-white/10 backdrop-blur-md rounded-3xl border border-white/10">
