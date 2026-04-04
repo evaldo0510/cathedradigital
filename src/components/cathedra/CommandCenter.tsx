@@ -24,6 +24,7 @@ const PAGE_COMMANDS: CommandItem[] = [
   { label: 'Santo Rosário', description: 'Oração do terço', path: AppRoute.ROSARY, icon: <Icons.Heart className="w-4 h-4" />, keywords: ['rosário', 'terço', 'ave maria', 'mistérios'], type: 'page' },
   { label: 'Via Crucis', description: 'Caminho da Cruz', path: AppRoute.VIA_CRUCIS, icon: <Icons.Cross className="w-4 h-4" />, keywords: ['via crucis', 'cruz', 'estações', 'paixão'], type: 'page' },
   { label: 'Oração e Devoção', description: 'Orações tradicionais', path: AppRoute.ORACAO, icon: <Icons.Heart className="w-4 h-4" />, keywords: ['oração', 'rezar', 'devoção', 'pai nosso'], type: 'page' },
+  { label: 'Confissão', description: 'Guia e exame de consciência', path: AppRoute.POENITENTIA, icon: <Icons.Cross className="w-4 h-4" />, keywords: ['confissão', 'pecado', 'exame', 'consciência', 'penitência'], type: 'page' },
   { label: 'Suma Teológica', description: 'Opera Omnia de São Tomás', path: AppRoute.AQUINAS_OPERA, icon: <Icons.History className="w-4 h-4" />, keywords: ['aquinas', 'tomás', 'suma', 'teológica', 'escolástica'], type: 'page' },
   { label: 'Certamen (Quiz)', description: 'Teste seus conhecimentos', path: AppRoute.CERTAMEN, icon: <Icons.Star className="w-4 h-4" />, keywords: ['quiz', 'certamen', 'teste', 'perguntas'], type: 'page' },
   { label: 'Missal', description: 'Ordo Missae', path: AppRoute.MISSAL, icon: <Icons.Book className="w-4 h-4" />, keywords: ['missal', 'missa', 'ordo', 'eucaristia'], type: 'page' },
