@@ -56,7 +56,7 @@ const AppLayout: React.FC = () => {
   const [lang, setLangState] = useState<Language>(() => (localStorage.getItem('cathedra_lang') as Language) || 'pt');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDark, setIsDark] = useState(() => localStorage.getItem('cathedra_dark') === 'true');
-  const { user, profile, signOut, isPremium } = useAuth();
+  const { user, profile, signOut, isPremium, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -97,6 +97,10 @@ const AppLayout: React.FC = () => {
     };
   }, [user, profile]);
 
+  if (loading) {
+    return <LoadingFallback />;
+  }
+
   return (
     <LangContext.Provider value={{ lang, setLang: setLangState, t }}>
       <ScrollToTop />
@@ -126,6 +130,53 @@ const AppLayout: React.FC = () => {
               <AnimatePresence mode="wait" initial={false}>
                 <PageTransition key={location.pathname}>
                   <Routes location={location}>
+                    <Route path={AppRoute.DASHBOARD} element={<Dashboard user={appUser} />} />
+                    <Route path={AppRoute.BIBLE} element={<Bible />} />
+                    <Route path={AppRoute.CATECHISM} element={<Catechism />} />
+                    <Route path={AppRoute.SAINTS} element={<Saints />} />
+                    <Route path={AppRoute.MAGISTERIUM} element={<Magisterium />} />
+                    <Route path={AppRoute.DAILY_LITURGY} element={<DailyLiturgy />} />
+                    <Route path={AppRoute.ROSARY} element={<Rosary />} />
+                    <Route path={AppRoute.ORACAO} element={<PrayerPage />} />
+                    <Route path={AppRoute.VIA_CRUCIS} element={<ViaCrucis />} />
+                    <Route path={AppRoute.STUDY_MODE} element={
+                      <ProGate isPremium={isPremium} isLoggedIn={!!user} onLogin={() => navigate(AppRoute.LOGIN)}>
+                        <StudyMode />
+                      </ProGate>
+                    } />
+                    <Route path={AppRoute.LOGIN} element={<Auth onSuccess={() => navigate(AppRoute.DASHBOARD)} />} />
+                    <Route path={AppRoute.AQUINAS_OPERA} element={<AquinasOpera />} />
+                    <Route path={AppRoute.CERTAMEN} element={<Certamen />} />
+                    <Route path={AppRoute.MISSAL} element={<MissalPage />} />
+                    <Route path={AppRoute.FAVORITES} element={<FavoritesPage />} />
+                    <Route path={AppRoute.TRILHAS} element={<TrilhasPage />} />
+                    <Route path={AppRoute.ABOUT} element={<AboutPage />} />
+                    <Route path={AppRoute.DOGMAS} element={<DogmasPage />} />
+                    <Route path={AppRoute.LECTIO_DIVINA} element={<LectioDivina />} />
+                    <Route path={AppRoute.BREVIARY} element={<BreviaryPage />} />
+                    <Route path={AppRoute.LITANIES} element={<LitaniesPage />} />
+                    <Route path={AppRoute.LITURGICAL_CALENDAR} element={<LiturgicalCalendarPage />} />
+                    <Route path={AppRoute.COMMUNITY} element={<CommunityPage />} />
+                    <Route path={AppRoute.PROFILE} element={<ProfilePage />} />
+                    <Route path={AppRoute.POENITENTIA} element={<PlaceholderPage title="Confissão" description="Exame de consciência e guia para o Sacramento da Penitência." />} />
+                    <Route path={AppRoute.ORDO_MISSAE} element={<PlaceholderPage title="Ordo Missae" description="Ordinário da Santa Missa em latim e português." />} />
+                    <Route path={AppRoute.PRAYERS} element={<PrayerPage />} />
+                    <Route path={AppRoute.DIAGNOSTICS} element={<PlaceholderPage title="Diagnóstico" description="Painel de diagnósticos da plataforma." />} />
+                    <Route path={AppRoute.CHECKOUT} element={<PlaceholderPage title="Assinatura PRO" description="Área de checkout para assinatura do plano Cathedra PRO." />} />
+                    <Route path={AppRoute.ADMIN} element={
+                      <ProGate isPremium={true} isLoggedIn={!!user} onLogin={() => navigate(AppRoute.LOGIN)}>
+                        <AdminDashboard />
+                      </ProGate>
+                    } />
+                    <Route path="*" element={<Dashboard user={appUser} />} />
+                  </Routes>
+                </PageTransition>
+              </AnimatePresence>
+            </Suspense>
+          </div>
+          <CathedralFooter />
+          <BottomNav onOpenSidebar={() => setIsSidebarOpen(true)} />
+        </main>
       </div>
     </LangContext.Provider>
   );
