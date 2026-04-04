@@ -54,8 +54,9 @@ const DIOCESE_URLS: Record<string, string> = {
 
 const Footer: React.FC = React.memo(() => {
   const navigate = useNavigate();
-  const [selectedDiocese, setSelectedDiocese] = useState('');
+  const [selectedDiocese, setSelectedDiocese] = useState(() => localStorage.getItem('cathedra_diocese') || '');
   const [email, setEmail] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const vaticanLinks = [
     { title: 'Santa Sé (Vatican.va)', url: 'https://www.vatican.va', desc: 'Site oficial do Vaticano' },
@@ -71,14 +72,26 @@ const Footer: React.FC = React.memo(() => {
   ];
 
   const scrollToTop = () => {
-    document.getElementById('main-content')?.scrollTo({ top: 0, behavior: 'smooth' });
+    const mainContent = document.getElementById('main-content');
+    if (mainContent) {
+      mainContent.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate subscription
-    alert(`E-mail ${email} cadastrado com sucesso!`);
+    setIsSubmitting(true);
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    alert(`E-mail ${email} cadastrado com sucesso! Bem-vindo à nossa comunidade.`);
     setEmail('');
+    setIsSubmitting(false);
+  };
+
+  const handleDioceseChange = (val: string) => {
+    setSelectedDiocese(val);
+    if (val) localStorage.setItem('cathedra_diocese', val);
+    else localStorage.removeItem('cathedra_diocese');
   };
 
   const dioceseUrl = DIOCESE_URLS[selectedDiocese];
@@ -109,12 +122,12 @@ const Footer: React.FC = React.memo(() => {
             </p>
             <div className="flex gap-6">
               {[
-                { icon: <Icons.Instagram className="w-5 h-5" />, url: 'https://instagram.com' },
-                { icon: <Icons.Facebook className="w-5 h-5" />, url: 'https://facebook.com' },
-                { icon: <Icons.Whatsapp className="w-5 h-5" />, url: 'https://wa.me' },
+                { icon: <Icons.Instagram className="w-5 h-5" />, url: 'https://instagram.com/cathedra.digital' },
+                { icon: <Icons.Facebook className="w-5 h-5" />, url: 'https://facebook.com/cathedradigital' },
+                { icon: <Icons.Whatsapp className="w-5 h-5" />, url: 'https://wa.me/5511999999999' },
               ].map((social, i) => (
-                <a key={i} href={social.url} className="text-zinc-500 hover:text-primary transition-colors p-2 rounded-lg bg-white/5 border border-white/10 hover:border-primary/50">
-                  {social.icon}
+                <a key={i} href={social.url} target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-primary transition-all p-2.5 rounded-xl bg-white/5 border border-white/10 hover:border-primary/50 group">
+                  <div className="group-hover:scale-110 transition-transform">{social.icon}</div>
                 </a>
               ))}
             </div>
@@ -137,16 +150,27 @@ const Footer: React.FC = React.memo(() => {
                   <p className="text-sm text-zinc-500">Receba reflexões teológicas e atualizações da plataforma semanalmente.</p>
                 </div>
                 <form onSubmit={handleSubscribe} className="w-full md:w-auto flex flex-col sm:flex-row gap-3">
-                  <input 
-                    type="email" 
-                    required
-                    placeholder="Seu melhor e-mail" 
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="px-6 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-primary/50 transition-all w-full sm:w-64"
-                  />
-                  <button className="px-8 py-3 rounded-xl bg-primary text-black font-bold text-sm hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 whitespace-nowrap">
-                    Inscrever-se
+                  <div className="relative flex-1 sm:w-64">
+                    <input 
+                      type="email" 
+                      required
+                      placeholder="Seu melhor e-mail" 
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      disabled={isSubmitting}
+                      className="w-full px-6 py-3.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-primary/50 transition-all placeholder:text-zinc-600 disabled:opacity-50"
+                    />
+                    {isSubmitting && (
+                      <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                        <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                      </div>
+                    )}
+                  </div>
+                  <button 
+                    disabled={isSubmitting}
+                    className="px-8 py-3.5 rounded-xl bg-primary text-black font-black uppercase text-[10px] tracking-widest hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 whitespace-nowrap disabled:opacity-50 active:scale-95"
+                  >
+                    {isSubmitting ? 'Enviando...' : 'Inscrever-se'}
                   </button>
                 </form>
               </div>
@@ -293,8 +317,8 @@ const Footer: React.FC = React.memo(() => {
             <div className="space-y-4">
               <select
                 value={selectedDiocese}
-                onChange={e => setSelectedDiocese(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-zinc-400 text-xs focus:outline-none focus:border-primary/50 transition-all cursor-pointer appearance-none"
+                onChange={e => handleDioceseChange(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-zinc-400 text-xs focus:outline-none focus:border-primary/50 transition-all cursor-pointer appearance-none hover:bg-white/10"
               >
                 <option value="" className="bg-[#0a0a0a]">Selecione sua diocese...</option>
                 {DIOCESES_BR.map(d => (

@@ -198,19 +198,20 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
-            className="text-3xl sm:text-4xl md:text-6xl font-serif font-bold text-foreground leading-[1.1]"
+            className="text-4xl sm:text-5xl md:text-7xl font-serif font-bold text-foreground leading-[1.05] tracking-tight"
           >
             A fé não foi feita <br />
-            <span className="text-primary italic font-normal">para confundir.</span>
+            <span className="text-primary italic font-light drop-shadow-sm">para confundir.</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="text-sm md:text-lg text-muted-foreground font-serif italic max-w-lg"
+            className="text-base md:text-xl text-muted-foreground font-serif italic max-w-xl leading-relaxed opacity-90"
           >
-            Foi feita para ser compreendida, vivida e transmitida.
+            "Fides Quaerens Intellectum." <br className="hidden md:block" />
+            Um santuário digital para compreender, viver e transmitir o depósito da fé.
           </motion.p>
 
           <motion.div
