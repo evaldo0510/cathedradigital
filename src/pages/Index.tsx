@@ -82,7 +82,7 @@ const Index = () => {
                 <Music className="h-7 w-7" />
               </div>
               <CardTitle className="text-2xl font-serif">Frei Gilson</CardTitle>
-              <CardDescription className="text-sm font-medium uppercase tracking-widest text-primary/60">Som do Monte</CardDescription>
+              <CardDescription className="text-xs font-medium uppercase tracking-widest text-primary/60">Frei Gilson • Som do Monte</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <p className="text-muted-foreground leading-relaxed">
