@@ -57,6 +57,7 @@ const CommunityPage = lazy(() => import('./components/cathedra/CommunityPage'));
 const ProfilePage = lazy(() => import('./components/cathedra/ProfilePage'));
 const AdminDashboard = lazy(() => import('./components/cathedra/AdminDashboard'));
 const PoenitentiaPage = lazy(() => import('./components/cathedra/PoenitentiaPage'));
+const GlossaryPage = lazy(() => import('./components/cathedra/GlossaryPage'));
 
 const LoadingFallback = () => (
   <div className="flex items-center justify-center min-h-[40vh]">
@@ -174,6 +175,7 @@ const AppLayout: React.FC = () => {
                 <Route path={AppRoute.COMMUNITY} element={<CommunityPage />} />
                 <Route path={AppRoute.PROFILE} element={<ProfilePage />} />
                 <Route path={AppRoute.POENITENTIA} element={<PoenitentiaPage />} />
+                <Route path={AppRoute.GLOSSARY} element={<GlossaryPage />} />
                 <Route path={AppRoute.ORDO_MISSAE} element={<MissalPage />} />
                 <Route path={AppRoute.PRAYERS} element={<PrayerPage />} />
                 <Route path={AppRoute.DIAGNOSTICS} element={<DiagnosticsPage />} />

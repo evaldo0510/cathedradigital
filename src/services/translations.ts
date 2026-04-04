@@ -13,6 +13,7 @@ export const UI_TRANSLATIONS: Record<Language, any> = {
     study: "Estudo (Symphonia)",
     study_sub: "Conexão Teológica IA",
     liturgy: "Liturgia Diária",
+    glossary: "Glossário Teológico",
     calendar: "Calendário (Cronos)",
     calendar_sub: "O ritmo da eternidade",
     community: "Aula Magna",
@@ -54,6 +55,7 @@ export const UI_TRANSLATIONS: Record<Language, any> = {
     study: "Study (Symphonia)",
     study_sub: "AI Theological Connection",
     liturgy: "Daily Liturgy",
+    glossary: "Theological Glossary",
     calendar: "Calendar (Chronos)",
     calendar_sub: "The rhythm of eternity",
     community: "Great Hall",
@@ -83,9 +85,9 @@ export const UI_TRANSLATIONS: Record<Language, any> = {
     copy: "Copy",
     share: "Share"
   },
-  es: { home: "Inicio", bible: "Biblia", catechism: "Catecismo", saints: "Santos" },
-  la: { home: "Narthex", bible: "Scriptuarium", catechism: "Codex Fidei", saints: "Sanctorum" },
-  it: { home: "Inizio", bible: "Bibbia", catechism: "Catechismo", saints: "Santi" },
-  fr: { home: "Accueil", bible: "Bible", catechism: "Catéchisme", saints: "Saints" },
-  de: { home: "Start", bible: "Bibel", catechism: "Katechismus", saints: "Heilige" }
+  es: { home: "Inicio", bible: "Biblia", catechism: "Catecismo", saints: "Santos", glossary: "Glosario Teológico" },
+  la: { home: "Narthex", bible: "Scriptuarium", catechism: "Codex Fidei", saints: "Sanctorum", glossary: "Lexicon Theologicum" },
+  it: { home: "Inizio", bible: "Bibbia", catechism: "Catechismo", saints: "Santi", glossary: "Glossario Teologico" },
+  fr: { home: "Accueil", bible: "Bible", catechism: "Catéchisme", saints: "Saints", glossary: "Glossaire Théologique" },
+  de: { home: "Start", bible: "Bibel", catechism: "Katechismus", saints: "Heilige", glossary: "Theologisches Glossar" }
 };
