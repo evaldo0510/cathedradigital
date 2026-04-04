@@ -6,6 +6,8 @@ import NotesPanel from './NotesPanel';
 import { getCatechismCrossRefs } from '@/data/cross-references';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useFavorites } from '@/hooks/useFavorites';
+import { useCatechismParagraph, usePrefetchCatechismParagraph } from '@/hooks/useCatechismParagraph';
+
 
 const CIC_SECTIONS = [
   {
