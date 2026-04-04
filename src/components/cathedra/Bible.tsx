@@ -408,13 +408,13 @@ const Bible: React.FC = () => {
       </div>
 
       {/* Books grid */}
-      <StaggeredList className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2.5" staggerDelay={0.04}>
+      <StaggeredList className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-1.5" staggerDelay={0.03}>
         {filteredBooks.map(book => (
           <button key={book.abbr} onClick={() => selectBook(book)}
-            className="text-left p-3.5 rounded-xl bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group">
-            <span className="text-[10px] font-black text-primary uppercase tracking-widest">{book.abbr}</span>
-            <p className="text-sm font-bold text-foreground mt-1 group-hover:text-primary transition-colors">{book.name}</p>
-            <p className="text-[10px] text-muted-foreground mt-0.5">{book.chapters} cap.</p>
+            className="text-left px-2.5 py-2 rounded-lg bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group">
+            <span className="text-[9px] font-black text-primary uppercase tracking-widest">{book.abbr}</span>
+            <p className="text-xs font-bold text-foreground mt-0.5 group-hover:text-primary transition-colors truncate">{book.name}</p>
+            <p className="text-[9px] text-muted-foreground">{book.chapters} cap.</p>
           </button>
         ))}
       </StaggeredList>
