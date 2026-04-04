@@ -2,12 +2,24 @@ import React, { useState } from 'react';
 import { Icons } from '../../constants';
 import { motion, AnimatePresence } from 'framer-motion';
 import { APPARITIONS, Apparition } from '@/data/apparitions';
+import { useFavorites } from '@/hooks/useFavorites';
 
 const AparicoesPage: React.FC = () => {
   const [selectedApparition, setSelectedApparition] = useState<Apparition | null>(null);
   const [activeTab, setActiveTab] = useState<'historia' | 'vidente' | 'mensagem'>('historia');
+  const { isFavorite, toggleFavorite } = useFavorites();
+
+  const handleToggleFavorite = (apparition: Apparition, e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    toggleFavorite({
+      type: 'aparicao',
+      title: apparition.title,
+      content: apparition.summary,
+    });
+  };
 
   if (selectedApparition) {
+    const isFav = isFavorite('aparicao', selectedApparition.title);
     return (
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Back + Header */}
@@ -20,6 +32,13 @@ const AparicoesPage: React.FC = () => {
             <h1 className="text-xl md:text-2xl font-serif font-bold text-foreground">{selectedApparition.title}</h1>
             <p className="text-sm text-muted-foreground">{selectedApparition.location}</p>
           </div>
+          <button
+            onClick={() => handleToggleFavorite(selectedApparition)}
+            className={`p-2 rounded-xl border transition-all ${isFav ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground hover:text-primary hover:border-primary/30'}`}
+            title={isFav ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
+          >
+            <Icons.Heart className={`w-5 h-5 ${isFav ? 'fill-primary' : ''}`} />
+          </button>
           <img src={selectedApparition.imageSrc} alt={selectedApparition.title} className="w-16 h-16 rounded-xl object-cover shadow-md" loading="lazy" />
         </div>
 
@@ -128,34 +147,46 @@ const AparicoesPage: React.FC = () => {
 
       {/* Apparition cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        {APPARITIONS.map((apparition, index) => (
-          <motion.button
-            key={apparition.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.08 }}
-            onClick={() => { setSelectedApparition(apparition); setActiveTab('historia'); }}
-            className={`text-left rounded-2xl bg-gradient-to-br ${apparition.color} border hover:scale-[1.02] transition-all group overflow-hidden`}
-          >
-            <img src={apparition.imageSrc} alt={apparition.title} className="w-full h-40 object-cover" loading="lazy" />
-            <div className="p-5">
-              <div className="mb-3">
-                <span className="text-[10px] font-black text-primary uppercase tracking-widest">{apparition.country} • {apparition.year}</span>
-                <h2 className="text-lg md:text-xl font-serif font-bold text-foreground mt-1 group-hover:text-primary transition-colors">
-                  {apparition.title}
-                </h2>
+        {APPARITIONS.map((apparition, index) => {
+          const isFav = isFavorite('aparicao', apparition.title);
+          return (
+            <motion.button
+              key={apparition.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.08 }}
+              onClick={() => { setSelectedApparition(apparition); setActiveTab('historia'); }}
+              className={`text-left rounded-2xl bg-gradient-to-br ${apparition.color} border hover:scale-[1.02] transition-all group overflow-hidden relative`}
+            >
+              <div className="relative">
+                <img src={apparition.imageSrc} alt={apparition.title} className="w-full h-40 object-cover" loading="lazy" />
+                <button
+                  onClick={(e) => handleToggleFavorite(apparition, e)}
+                  className={`absolute top-3 right-3 p-2 rounded-full backdrop-blur-sm transition-all ${isFav ? 'bg-primary/20 text-primary' : 'bg-black/30 text-white/80 hover:text-white'}`}
+                  title={isFav ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
+                >
+                  <Icons.Heart className={`w-4 h-4 ${isFav ? 'fill-primary' : ''}`} />
+                </button>
               </div>
-              <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{apparition.summary}</p>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <Icons.Users className="w-3.5 h-3.5" />
-                  <span className="text-[10px] font-bold">{apparition.seer.split(',')[0]}</span>
+              <div className="p-5">
+                <div className="mb-3">
+                  <span className="text-[10px] font-black text-primary uppercase tracking-widest">{apparition.country} • {apparition.year}</span>
+                  <h2 className="text-lg md:text-xl font-serif font-bold text-foreground mt-1 group-hover:text-primary transition-colors">
+                    {apparition.title}
+                  </h2>
                 </div>
-                <span className="text-[10px] font-black uppercase tracking-widest text-primary">Ler com profundidade →</span>
+                <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{apparition.summary}</p>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Icons.Users className="w-3.5 h-3.5" />
+                    <span className="text-[10px] font-bold">{apparition.seer.split(',')[0]}</span>
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-primary">Ler com profundidade →</span>
+                </div>
               </div>
-            </div>
-          </motion.button>
-        ))}
+            </motion.button>
+          );
+        })}
       </div>
 
       {/* Catechism reference */}
