@@ -132,16 +132,15 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           </div>
         )}
         {user ? (
-          <button onClick={onSignOut} className="px-3 py-2 text-xs font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-all flex items-center gap-2">
-            <span className="hidden sm:inline">Sair</span>
-            <Icons.History className="w-4 h-4 sm:hidden" />
+          <button onClick={onSignOut} className="hidden sm:flex px-3 py-2 text-xs font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-all items-center gap-2">
+            <span>Sair</span>
           </button>
         ) : (
           <button onClick={() => navigate(AppRoute.LOGIN)} className="px-4 py-2 bg-primary text-primary-foreground rounded-xl text-xs font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-lg shadow-primary/20">
             Entrar
           </button>
         )}
-        <button onClick={onToggleDark} className="p-3 bg-muted text-muted-foreground hover:text-primary rounded-2xl border border-border">
+        <button onClick={onToggleDark} className="hidden sm:flex p-3 bg-muted text-muted-foreground hover:text-primary rounded-2xl border border-border">
           {isDark ? <Icons.Star className="w-5 h-5 text-primary fill-current" /> : <Icons.History className="w-5 h-5" />}
         </button>
       </div>
