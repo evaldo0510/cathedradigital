@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../constants';
+import { AppRoute } from '../../types';
 import { supabase } from '@/integrations/supabase/client';
 
 interface QuickModalProps {
