@@ -129,6 +129,36 @@ export type Database = {
           },
         ]
       }
+      glossary: {
+        Row: {
+          category: string | null
+          created_at: string
+          definition: string
+          id: string
+          language: string
+          term: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          definition: string
+          id?: string
+          language?: string
+          term: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          definition?: string
+          id?: string
+          language?: string
+          term?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           created_at: string
