@@ -295,10 +295,24 @@ const Saints: React.FC = () => {
                 <h3 className="text-[10px] font-black uppercase tracking-widest text-stone-400 mb-3">Obras Principais</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {selectedSaint.works.map(w => (
-                    <div key={w} className="flex items-center gap-3 p-4 bg-stone-50 dark:bg-stone-800/50 rounded-xl">
-                      <Icons.Book className="w-4 h-4 text-[#d4af37] flex-shrink-0" />
-                      <span className="font-serif text-stone-800 dark:text-stone-200">{w}</span>
-                    </div>
+                    w.url ? (
+                      <a
+                        key={w.title}
+                        href={w.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-3 p-4 bg-primary/5 border border-primary/15 rounded-xl hover:bg-primary/10 hover:border-primary/30 transition-all group"
+                      >
+                        <Icons.Book className="w-4 h-4 text-primary flex-shrink-0" />
+                        <span className="font-serif text-foreground group-hover:text-primary transition-colors flex-1">{w.title}</span>
+                        <Icons.ExternalLink className="w-3.5 h-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                      </a>
+                    ) : (
+                      <div key={w.title} className="flex items-center gap-3 p-4 bg-muted/50 rounded-xl">
+                        <Icons.Book className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                        <span className="font-serif text-muted-foreground">{w.title}</span>
+                      </div>
+                    )
                   ))}
                 </div>
               </div>
