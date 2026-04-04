@@ -525,10 +525,12 @@ const MONTH_NAMES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julh
 
 const Saints: React.FC = () => {
   const [selectedSaint, setSelectedSaint] = useState<Saint | null>(null);
+  const [selectedWork, setSelectedWork] = useState<SaintWork | null>(null);
   const [search, setSearch] = useState('');
   const [filterCategory, setFilterCategory] = useState<string>('all');
   const [viewMode, setViewMode] = useState<'grid' | 'calendar'>('grid');
   const [calendarMonth, setCalendarMonth] = useState(new Date().getMonth());
+
 
   const categories = useMemo(() => {
     const cats = new Set(SAINTS_DATA.map(s => s.category));
