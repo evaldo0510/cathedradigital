@@ -11,7 +11,7 @@ const Index = () => {
   return (
     <div className="flex min-h-screen flex-col items-center bg-[#fdfcf8] text-[#1a1a1a] overflow-hidden">
       {/* Hero Section */}
-      <section className="relative w-full h-[90vh] flex items-center justify-center px-6 overflow-hidden">
+      <section className="relative w-full h-[70vh] md:h-[80vh] flex items-center justify-center px-6 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
             src="https://images.unsplash.com/photo-1548610762-656391d1ad4d?auto=format&fit=crop&q=80&w=1920" 
