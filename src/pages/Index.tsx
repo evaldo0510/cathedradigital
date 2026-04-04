@@ -11,10 +11,15 @@ const Index = () => {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
 
-  // If user is already logged in, redirect straight to dashboard
+  // If user is already logged in, redirect appropriately
   useEffect(() => {
     if (!loading && user) {
-      navigate(AppRoute.DASHBOARD, { replace: true });
+      const onboardingDone = localStorage.getItem('cathedra_onboarding_done');
+      if (onboardingDone) {
+        navigate(AppRoute.DASHBOARD, { replace: true });
+      } else {
+        navigate(AppRoute.ONBOARDING, { replace: true });
+      }
     }
   }, [user, loading, navigate]);
 
