@@ -131,7 +131,7 @@ const Index = () => {
                 <Handshake className="h-7 w-7" />
               </div>
               <CardTitle className="text-2xl font-serif">Comunidade</CardTitle>
-              <CardDescription className="text-sm font-medium uppercase tracking-widest text-primary/60">Novas Parcerias</CardDescription>
+              <CardDescription className="text-xs font-medium uppercase tracking-widest text-primary/60">Novas Parcerias</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <p className="text-muted-foreground leading-relaxed">
