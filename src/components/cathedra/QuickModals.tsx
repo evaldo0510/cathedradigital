@@ -88,9 +88,11 @@ export const CatechismModal: React.FC<QuickModalProps> = ({ isOpen, onClose }) =
           <button onClick={() => setParagraph(Math.min(2865, paragraph + 1))} className="px-2 py-1 rounded-lg border border-border text-xs">→</button>
         </div>
       </div>
-      {loading ? <LoadingSkeleton /> : (
+      {isLoading ? <LoadingSkeleton /> : (
         <div className="max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
-          <p className="font-serif text-foreground/90 leading-relaxed text-sm">{text}</p>
+          <p className="font-serif text-foreground/90 leading-relaxed text-sm">
+            {isError ? 'Erro ao carregar o parágrafo.' : data?.content}
+          </p>
         </div>
       )}
       <div className="mt-6 pt-4 border-t border-border">
