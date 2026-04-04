@@ -88,7 +88,9 @@ const PRAYERS = [
 const DailyLiturgy: React.FC = () => {
   const [liturgy, setLiturgy] = useState<LiturgicalDay | null>(null);
   const [readings, setReadings] = useState<LiturgyReadings | null>(null);
+  const [meditation, setMeditation] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isMeditationLoading, setIsMeditationLoading] = useState(false);
   const [error, setError] = useState('');
   const [tab, setTab] = useState<'liturgia' | 'oracoes'>('liturgia');
   const [selectedPrayer, setSelectedPrayer] = useState<string | null>(null);
