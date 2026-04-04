@@ -1,5 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Icons } from '../../constants';
+import { supabase } from '@/integrations/supabase/client';
 
 type Step = 'intro' | 'lectio' | 'meditatio' | 'oratio' | 'contemplatio' | 'actio';
 
