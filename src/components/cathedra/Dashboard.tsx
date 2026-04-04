@@ -141,7 +141,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
     { image: sectionPrayer, title: 'Oração', subtitle: 'Orações da tradição católica', route: AppRoute.ORACAO },
     { image: 'https://images.unsplash.com/photo-1445445290350-18a3b86e0b5a?auto=format&fit=crop&q=80&w=600', title: 'Santo Rosário', subtitle: 'Meditação dos mistérios', route: AppRoute.ROSARY },
     { image: 'https://images.unsplash.com/photo-1504052434569-70ad5836ab65?auto=format&fit=crop&q=80&w=600', title: 'Via Crucis', subtitle: 'As 14 estações da cruz', route: AppRoute.VIA_CRUCIS },
-    { image: 'https://images.unsplash.com/photo-1519750783826-e2420f4d687f?auto=format&fit=crop&q=80&w=600', title: 'Missal', subtitle: 'Ordo Missae e liturgia', route: AppRoute.MISSAL },
+    { image: 'https://images.unsplash.com/photo-1519750783826-e2420f4d687f?auto=format&fit=crop&q=80&w=600', title: 'Ordo Missae', subtitle: 'Acompanhe a Santa Missa', route: AppRoute.ORDO_MISSAE },
+    { image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=600', title: 'Confissão', subtitle: 'Exame de consciência e guia', route: AppRoute.POENITENTIA },
     { image: 'https://images.unsplash.com/photo-1574104174498-e05a3dbfea8f?auto=format&fit=crop&q=80&w=600', title: 'Liturgia do Dia', subtitle: 'Leituras e evangelho diário', route: AppRoute.DAILY_LITURGY },
   ];
 

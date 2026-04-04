@@ -213,6 +213,8 @@ const Footer: React.FC = React.memo(() => {
                   { label: 'Missal Romano', route: AppRoute.MISSAL },
                   { label: 'Santo Rosário', route: AppRoute.ROSARY },
                   { label: 'Via Crucis', route: AppRoute.VIA_CRUCIS },
+                  { label: 'Confissão', route: AppRoute.POENITENTIA },
+                  { label: 'Ordo Missae', route: AppRoute.ORDO_MISSAE },
                 ].map(item => (
                   <button key={item.label} onClick={() => navigate(item.route)} className="text-left text-xs hover:text-primary transition-colors font-medium text-zinc-500 hover:pl-2 duration-300">
                     {item.label}
