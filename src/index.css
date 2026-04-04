@@ -71,12 +71,20 @@
   * {
     @apply border-border;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  html, body {
+    @apply h-full overflow-hidden;
+    overscroll-behavior-y: none;
   }
 
   body {
     @apply bg-background text-foreground;
     font-family: 'Inter', sans-serif;
+    text-rendering: optimizeLegibility;
   }
 
   .font-serif {
@@ -85,6 +93,7 @@
 
   .reader-text {
     font-family: 'Merriweather', serif;
+    @apply selection:bg-primary/30;
   }
 }
 
