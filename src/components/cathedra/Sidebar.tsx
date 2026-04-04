@@ -77,19 +77,21 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user }) => {
         </div>
 
         {/* Quick access modals */}
-        <div className="flex gap-1.5 mb-6 px-2">
-          <button onClick={() => setModal('bible')} className="flex-1 px-2 py-2 rounded-xl bg-muted text-muted-foreground hover:text-foreground hover:bg-primary/10 transition-all text-center" title="Consulta rápida: Bíblia">
-            <Icons.Book className="w-4 h-4 mx-auto mb-0.5" />
-            <span className="text-[8px] font-bold uppercase tracking-wider">Bíblia</span>
-          </button>
-          <button onClick={() => setModal('catechism')} className="flex-1 px-2 py-2 rounded-xl bg-muted text-muted-foreground hover:text-foreground hover:bg-primary/10 transition-all text-center" title="Consulta rápida: CIC">
-            <Icons.Cross className="w-4 h-4 mx-auto mb-0.5" />
-            <span className="text-[8px] font-bold uppercase tracking-wider">CIC</span>
-          </button>
-          <button onClick={() => setModal('docs')} className="flex-1 px-2 py-2 rounded-xl bg-muted text-muted-foreground hover:text-foreground hover:bg-primary/10 transition-all text-center" title="Consulta rápida: Documentos">
-            <Icons.Globe className="w-4 h-4 mx-auto mb-0.5" />
-            <span className="text-[8px] font-bold uppercase tracking-wider">Docs</span>
-          </button>
+        <div className="flex gap-2 mb-8 px-2">
+          {[
+            { id: 'bible', label: 'Bíblia', icon: <Icons.Book className="w-4 h-4" />, color: 'bg-amber-500/10 text-amber-600 border-amber-500/20' },
+            { id: 'catechism', label: 'CIC', icon: <Icons.Cross className="w-4 h-4" />, color: 'bg-red-500/10 text-red-600 border-red-500/20' },
+            { id: 'docs', label: 'Docs', icon: <Icons.Globe className="w-4 h-4" />, color: 'bg-blue-500/10 text-blue-600 border-blue-500/20' }
+          ].map(item => (
+            <button 
+              key={item.id}
+              onClick={() => setModal(item.id as any)} 
+              className={`flex-1 flex flex-col items-center gap-1.5 p-3 rounded-2xl border ${item.color} hover:scale-105 transition-all shadow-sm active:scale-95`}
+            >
+              <div className="opacity-80">{item.icon}</div>
+              <span className="text-[8px] font-black uppercase tracking-widest">{item.label}</span>
+            </button>
+          ))}
         </div>
 
         <nav className="flex-1 space-y-8 overflow-y-auto pb-10">
