@@ -24,16 +24,16 @@ const ContentCard: React.FC<ContentCardProps> = ({ icon, title, description, act
 
   return (
     <div
-      className={`rounded-[2.5rem] border p-10 transition-all duration-500 flex flex-col h-full group cursor-pointer
+      className={`rounded-3xl border p-6 md:p-8 transition-all duration-500 flex flex-col h-full group cursor-pointer
         ${variant === 'highlight'
-          ? 'bg-stone-950 border-stone-800 text-white shadow-[0_35px_70px_-15px_rgba(0,0,0,0.1)] scale-[1.02]'
-          : 'bg-white dark:bg-stone-900 border-stone-100 dark:border-stone-800 text-stone-900 dark:text-stone-100 hover:shadow-2xl hover:border-[#d4af37]/30 hover:-translate-y-1'}`}
+          ? 'bg-stone-950 border-stone-800 text-white shadow-[0_35px_70px_-15px_rgba(0,0,0,0.1)] scale-[1.01]'
+          : 'bg-white dark:bg-stone-900 border-stone-100 dark:border-stone-800 text-stone-900 dark:text-stone-100 hover:shadow-xl hover:border-[#d4af37]/30 hover:-translate-y-1'}`}
       onClick={onClick}
     >
-      <div className="text-5xl mb-6 transform group-hover:scale-110 transition-transform origin-left">{icon}</div>
-      <h2 className="text-2xl md:text-3xl font-serif font-bold mb-4 tracking-tight leading-tight">{title}</h2>
-      <p className={`text-base mb-8 flex-1 leading-relaxed ${variant === 'highlight' ? 'text-stone-400 italic' : 'text-stone-500 font-serif italic'}`}>{description}</p>
-      <button className={`w-fit px-8 py-3 rounded-xl font-black uppercase text-[10px] tracking-[0.2em] transition-all
+      <div className="text-4xl mb-4 transform group-hover:scale-110 transition-transform origin-left">{icon}</div>
+      <h2 className="text-xl md:text-2xl font-serif font-bold mb-3 tracking-tight leading-tight">{title}</h2>
+      <p className={`text-sm mb-6 flex-1 leading-relaxed ${variant === 'highlight' ? 'text-stone-400 italic' : 'text-stone-500 font-serif italic'}`}>{description}</p>
+      <button className={`w-fit px-6 py-2.5 rounded-lg font-black uppercase text-[9px] tracking-[0.2em] transition-all
         ${variant === 'highlight'
           ? 'bg-[#d4af37] text-stone-900 hover:bg-white shadow-xl shadow-[#d4af37]/10'
           : 'bg-stone-900 dark:bg-stone-800 text-[#d4af37] group-hover:bg-[#8b0000] group-hover:text-white shadow-lg'}`}>
