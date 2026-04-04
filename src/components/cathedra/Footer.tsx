@@ -97,7 +97,7 @@ const Footer: React.FC = React.memo(() => {
   const dioceseUrl = DIOCESE_URLS[selectedDiocese];
 
   return (
-    <footer className="bg-[#0a0a0a] text-zinc-400 border-t border-white/5 pt-12 md:pt-24 pb-12 px-4 md:px-12 relative mt-auto overflow-x-hidden">
+    <footer className="bg-[#050505] text-zinc-400 border-t border-white/5 pt-16 md:pt-32 pb-12 px-6 md:px-12 relative mt-auto overflow-x-hidden">
       {/* Background Texture */}
       <div className="absolute inset-0 pointer-events-none opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')]" />
       
@@ -105,9 +105,9 @@ const Footer: React.FC = React.memo(() => {
       <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[120px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto relative z-10">
+      <div className="max-w-7xl mx-auto relative z-10 space-y-24">
         {/* TOP SECTION: BRAND & NEWSLETTER */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20 pb-16 border-b border-white/5">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 pb-20 border-b border-white/5">
           <div className="lg:col-span-5 space-y-8">
             <div className="flex items-center gap-5">
               <Logo className="w-16 h-16 border border-white/10 p-2.5 rounded-2xl bg-white/5 shadow-2xl backdrop-blur-sm" />
@@ -341,38 +341,25 @@ const Footer: React.FC = React.memo(() => {
           </div>
         </div>
 
-        {/* COPYRIGHT BAR */}
-        <div className="pt-10 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-8">
-          <div className="flex flex-col items-center md:items-start gap-4">
-            <p className="text-[10px] font-bold text-zinc-600 uppercase tracking-[0.2em]">
-              © {new Date().getFullYear()} CATHEDRA DIGITAL • AD MAIOREM DEI GLORIAM
-            </p>
-            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
-              {[
-                { label: 'Termos', route: AppRoute.ABOUT },
-                { label: 'Privacidade', route: AppRoute.ABOUT },
-                { label: 'Manifesto', route: AppRoute.ABOUT },
-                { label: 'Suporte', onClick: () => window.location.href = 'mailto:suporte@cathedra.digital' }
-              ].map((item) => (
-                <button 
-                  key={item.label} 
-                  onClick={item.onClick || (() => navigate(item.route!))}
-                  className="text-[10px] text-zinc-500 font-bold uppercase hover:text-white transition-colors tracking-wide"
-                >
-                  {item.label}
-                </button>
-              ))}
-            </div>
+        {/* REFINED BOTTOM COPYRIGHT SECTION */}
+        <div className="pt-16 mt-16 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-10">
+          <div className="flex flex-col md:flex-row items-center gap-8 text-[11px] font-bold uppercase tracking-[0.2em]">
+            <span className="text-zinc-600">© {new Date().getFullYear()} CATHEDRA DIGITAL</span>
+            <div className="hidden md:block w-px h-4 bg-white/10" />
+            <button onClick={() => navigate(AppRoute.ABOUT)} className="hover:text-primary transition-colors">Privacidade</button>
+            <div className="hidden md:block w-px h-4 bg-white/10" />
+            <button onClick={() => navigate(AppRoute.ABOUT)} className="hover:text-primary transition-colors">Termos</button>
           </div>
           
           <div className="flex items-center gap-8">
-            <div className="hidden md:flex flex-col items-end gap-1">
-              <p className="text-[9px] font-black text-zinc-700 uppercase tracking-widest">Soli Deo Gloria</p>
-              <div className="h-0.5 w-12 bg-primary/30 rounded-full" />
+            <div className="flex flex-col items-end">
+              <span className="text-[9px] font-black uppercase tracking-widest text-zinc-600 mb-1">Tecnologia por</span>
+              <span className="text-[10px] font-bold text-white/80">Cathedra Systems</span>
             </div>
+            
             <button 
-              onClick={scrollToTop} 
-              className="p-4 rounded-full bg-white/5 border border-white/10 hover:border-primary/50 text-primary transition-all group hover:scale-110 shadow-2xl backdrop-blur-sm"
+              onClick={scrollToTop}
+              className="p-5 bg-white/5 border border-white/10 rounded-2xl hover:bg-primary hover:text-black hover:border-primary transition-all group active:scale-95 shadow-2xl backdrop-blur-md"
               title="Voltar ao topo"
             >
               <Icons.ArrowDown className="w-5 h-5 rotate-180 group-hover:-translate-y-1 transition-transform" />
@@ -380,6 +367,9 @@ const Footer: React.FC = React.memo(() => {
           </div>
         </div>
       </div>
+
+      {/* Aesthetic Border Glow */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
     </footer>
   );
 });
