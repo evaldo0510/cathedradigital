@@ -4,9 +4,10 @@ import { supabase } from '@/integrations/supabase/client';
 
 interface AuthProps {
   onSuccess: () => void;
+  onSignupSuccess?: () => void;
 }
 
-const Auth: React.FC<AuthProps> = ({ onSuccess }) => {
+const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
   const [mode, setMode] = useState<'login' | 'signup'>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
