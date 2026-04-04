@@ -123,10 +123,10 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   }, [navigate, trackVisit]);
 
   const fundamentos = [
-    { image: sectionBible, title: 'O que é a fé católica', route: AppRoute.CATECHISM, icon: <Icons.Cross className="w-5 h-5" /> },
-    { image: sectionCatechism, title: 'Como ler a Bíblia', route: AppRoute.BIBLE, icon: <Icons.Book className="w-5 h-5" /> },
-    { image: sectionDocuments, title: 'Entender o Catecismo', route: AppRoute.CATECHISM, icon: <Icons.Feather className="w-5 h-5" /> },
-    { image: sectionPrayer, title: 'A Igreja e sua missão', route: AppRoute.MAGISTERIUM, icon: <Icons.History className="w-5 h-5" /> },
+    { image: sectionBible, title: 'O que é a fé católica', route: AppRoute.CATECHISM, icon: <Icons.Cross className="w-3.5 h-3.5" /> },
+    { image: sectionCatechism, title: 'Como ler a Bíblia', route: AppRoute.BIBLE, icon: <Icons.Book className="w-3.5 h-3.5" /> },
+    { image: sectionDocuments, title: 'Entender o Catecismo', route: AppRoute.CATECHISM, icon: <Icons.Feather className="w-3.5 h-3.5" /> },
+    { image: sectionPrayer, title: 'A Igreja e sua missão', route: AppRoute.MAGISTERIUM, icon: <Icons.History className="w-3.5 h-3.5" /> },
   ];
 
   const estudo = [
@@ -149,7 +149,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   const ferramentas = [
     { image: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&q=80&w=600', title: 'Colloquium IA', subtitle: 'Assistente de estudo inteligente', route: AppRoute.STUDY_MODE },
     { image: 'https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?auto=format&fit=crop&q=80&w=600', title: 'Certamen', subtitle: 'Quiz de conhecimento católico', route: AppRoute.CERTAMEN },
-    { image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&q=80&w=600', title: 'Carregamento Rápido', subtitle: 'Experiência instantânea e fluida', route: AppRoute.DASHBOARD, icon: <Icons.Zap className="w-5 h-5" /> },
+    { image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&q=80&w=600', title: 'Carregamento Rápido', subtitle: 'Experiência instantânea e fluida', route: AppRoute.DASHBOARD, icon: <Icons.Zap className="w-3.5 h-3.5" /> },
     { image: 'https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?auto=format&fit=crop&q=80&w=600', title: 'Trilhas de Formação', subtitle: 'Percursos estruturados de estudo', route: AppRoute.TRILHAS },
     { image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&q=80&w=600', title: 'Favoritos', subtitle: 'Seus conteúdos salvos', route: AppRoute.FAVORITES },
   ];
@@ -276,7 +276,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             subtitle="Frei Gilson - Todos os dias às 4:00 AM"
             onClick={() => window.open('https://www.youtube.com/@FreiGilsonSomdoMonte', '_blank')}
             wide
-            icon={<Icons.Youtube className="w-5 h-5" />}
+            icon={<Icons.Youtube className="w-4 h-4" />}
           />
           <RowCard
             image="https://images.unsplash.com/photo-1445445290350-18a3b86e0b5a?auto=format&fit=crop&q=80&w=800"
@@ -284,7 +284,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             subtitle="Vida de Oração e Música"
             onClick={() => window.open('https://www.youtube.com/@FreiGilsonSomdoMonte', '_blank')}
             wide
-            icon={<Icons.Heart className="w-5 h-5" />}
+            icon={<Icons.Heart className="w-4 h-4" />}
           />
         </ContentRow>
 
@@ -331,15 +331,50 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           ))}
         </ContentRow>
 
+        {/* ═══ LINKS ÚTEIS (Moved from Footer) ═══ */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 py-12 border-t border-foreground/5">
+          <div className="bg-foreground/[0.02] border border-foreground/5 rounded-2xl p-6 space-y-4">
+            <div className="flex items-center gap-3">
+              <span className="text-2xl">🏛️</span>
+              <h4 className="text-xs font-black text-foreground uppercase tracking-widest">Santa Sé</h4>
+            </div>
+            <div className="grid grid-cols-1 gap-2">
+              <a href="https://www.vatican.va" target="_blank" rel="noreferrer" className="text-xs text-muted-foreground hover:text-primary transition-colors">Santa Sé (Vatican)</a>
+              <a href="https://www.vatican.va/archive/ccc/index_po.htm" target="_blank" rel="noreferrer" className="text-xs text-muted-foreground hover:text-primary transition-colors">Catecismo Oficial</a>
+              <a href="https://www.vaticannews.va/pt.html" target="_blank" rel="noreferrer" className="text-xs text-muted-foreground hover:text-primary transition-colors">Vatican News</a>
+            </div>
+          </div>
+
+          <div className="bg-foreground/[0.02] border border-foreground/5 rounded-2xl p-6 space-y-4">
+            <div className="flex items-center gap-3">
+              <span className="text-2xl">🇧🇷</span>
+              <h4 className="text-xs font-black text-foreground uppercase tracking-widest">CNBB</h4>
+            </div>
+            <div className="grid grid-cols-1 gap-2">
+              <a href="https://www.cnbb.org.br" target="_blank" rel="noreferrer" className="text-xs text-muted-foreground hover:text-primary transition-colors">CNBB Oficial</a>
+              <a href="https://www.cnbb.org.br/liturgia" target="_blank" rel="noreferrer" className="text-xs text-muted-foreground hover:text-primary transition-colors">Liturgia Diária CNBB</a>
+              <a href="https://www.cnbb.org.br/category/publicacoes" target="_blank" rel="noreferrer" className="text-xs text-muted-foreground hover:text-primary transition-colors">Documentos e Publicações</a>
+            </div>
+          </div>
+
+          <div className="bg-foreground/[0.03] border border-primary/20 rounded-2xl p-8 space-y-6 flex flex-col justify-center text-center">
+             <h4 className="text-sm font-serif font-bold text-foreground">Boletim Informativo</h4>
+             <p className="text-[11px] text-muted-foreground">Receba reflexões teológicas e atualizações da plataforma em seu e-mail.</p>
+             <div className="flex gap-2">
+                <input type="email" placeholder="Seu melhor e-mail" className="flex-1 px-4 py-2.5 rounded-xl bg-background border border-foreground/10 text-xs focus:outline-none focus:border-primary/50" />
+                <button className="px-4 py-2.5 bg-primary text-black font-black uppercase text-[9px] tracking-widest rounded-xl hover:opacity-90 transition-all">OK</button>
+             </div>
+          </div>
+        </div>
 
         {/* ═══ QUOTE ═══ */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="py-8 md:py-12 text-center max-w-3xl mx-auto"
+          className="py-12 md:py-20 text-center max-w-3xl mx-auto"
         >
-          <blockquote className="text-xl md:text-3xl font-serif font-bold text-foreground leading-snug italic">
+          <blockquote className="text-2xl md:text-4xl font-serif font-bold text-foreground leading-snug italic opacity-80">
             "A fé não foi feita para confundir.<br />
             Foi feita para ser compreendida, vivida e transmitida."
           </blockquote>
