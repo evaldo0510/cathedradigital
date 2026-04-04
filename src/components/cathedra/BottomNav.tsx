@@ -14,7 +14,7 @@ interface BottomNavItemProps {
 const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon, isActive, onClick }) => (
   <button 
     onClick={onClick}
-    className={`flex flex-col items-center justify-center gap-1.5 sm:gap-2 flex-1 py-4 transition-all relative tap-highlight-transparent touch-manipulation ${
+    className={`flex flex-col items-center justify-center gap-1 sm:gap-1.5 flex-1 py-2.5 transition-all relative tap-highlight-transparent touch-manipulation ${
       isActive ? 'text-primary' : 'text-muted-foreground active:text-foreground'
     }`}
   >
