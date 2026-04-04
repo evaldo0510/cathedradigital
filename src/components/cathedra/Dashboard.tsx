@@ -190,7 +190,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         className="relative min-h-[40vh] md:h-[50vh] flex items-center overflow-hidden touch-pan-y"
       >
         <SacredImage
-          src="https://images.unsplash.com/photo-1548610762-656391d1ad4d?auto=format&fit=crop&q=80&w=1920"
+          src="https://images.unsplash.com/photo-1548610762-656391d1ad4d?auto=format&fit=crop&q=40&w=800"
           alt="Interior de catedral"
           className="absolute inset-0 w-full h-full"
           priority

@@ -93,9 +93,11 @@ const Index = () => {
       <section className="relative w-full h-[85vh] md:h-[90vh] flex items-center justify-center px-6 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
-            src="https://images.unsplash.com/photo-1548610762-656391d1ad4d?auto=format&fit=crop&q=80&w=1920" 
+            src="https://images.unsplash.com/photo-1548610762-656391d1ad4d?auto=format&fit=crop&q=40&w=800" 
             alt="Cathedral" 
             className="w-full h-full object-cover opacity-15 scale-110 blur-[1px]"
+            loading="eager"
+            decoding="async"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-[#fdfcf8]/10 via-[#fdfcf8]/70 to-[#fdfcf8]" />
         </div>
@@ -246,9 +248,11 @@ const Index = () => {
             <div className="absolute -inset-10 bg-primary/20 blur-[100px] rounded-full animate-pulse" />
             <div className="relative aspect-square rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl rotate-3">
               <img 
-                src="https://images.unsplash.com/photo-1544427928-201cd49e6657?auto=format&fit=crop&q=80&w=1000" 
+                src="https://images.unsplash.com/photo-1544427928-201cd49e6657?auto=format&fit=crop&q=40&w=600" 
                 alt="Devotion" 
                 className="w-full h-full object-cover grayscale opacity-60"
+                loading="lazy"
+                decoding="async"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a1a] via-transparent to-transparent" />
               <div className="absolute bottom-10 left-10 right-10 p-8 bg-white/10 backdrop-blur-md rounded-3xl border border-white/10">

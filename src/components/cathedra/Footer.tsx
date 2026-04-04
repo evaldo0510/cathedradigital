@@ -97,7 +97,7 @@ const Footer: React.FC = React.memo(() => {
 
   return (
     <footer className="mt-auto w-full border-t border-primary/10 pt-12 pb-56 lg:pb-16 px-6 md:px-12 bg-black/40 backdrop-blur-sm relative overflow-hidden">
-      <div className="absolute inset-0 pointer-events-none opacity-[0.02] bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')]" />
+      <div className="absolute inset-0 pointer-events-none opacity-[0.02]" />
       
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
