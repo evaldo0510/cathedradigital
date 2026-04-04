@@ -191,7 +191,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.8 }}
-              className="text-5xl sm:text-6xl md:text-9xl font-serif font-bold text-foreground leading-[0.95] tracking-tight"
+              className="text-4xl sm:text-6xl md:text-8xl font-serif font-bold text-foreground leading-[0.95] tracking-tight"
             >
               A beleza da fé <br />
               <span className="text-primary italic font-light drop-shadow-2xl">em cada detalhe.</span>

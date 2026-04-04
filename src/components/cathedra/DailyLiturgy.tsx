@@ -169,7 +169,7 @@ const DailyLiturgy: React.FC = () => {
                       </div>
                       <div className="pl-11 space-y-2">
                         <p className="font-serif italic text-muted-foreground">{readings.primeiraLeitura.titulo}</p>
-                        <p className="reader-text text-foreground/90 leading-relaxed text-lg whitespace-pre-wrap">{readings.primeiraLeitura.texto}</p>
+                        <p className="reader-text text-foreground/90 leading-relaxed text-xl md:text-2xl whitespace-pre-wrap">{readings.primeiraLeitura.texto}</p>
                       </div>
                     </section>
 
