@@ -137,7 +137,27 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
           </div>
         </div>
 
-        <div className="pt-4 border-t border-border">
+        <div className="pt-4 border-t border-border space-y-3">
+          <div className="flex gap-2 mb-2 px-1">
+            <button 
+              onClick={onToggleDark} 
+              className="flex-1 p-3 bg-muted text-muted-foreground hover:text-primary rounded-xl border border-border flex items-center justify-center gap-2 transition-all active:scale-95"
+            >
+              {isDark ? <Icons.Star className="w-4 h-4 text-primary fill-current" /> : <Icons.History className="w-4 h-4" />}
+              <span className="text-[10px] font-black uppercase tracking-widest">{isDark ? 'Claro' : 'Escuro'}</span>
+            </button>
+            
+            {user && (
+              <button 
+                onClick={onSignOut} 
+                className="flex-1 p-3 bg-muted text-muted-foreground hover:text-destructive rounded-xl border border-border flex items-center justify-center gap-2 transition-all active:scale-95"
+              >
+                <Icons.History className="w-4 h-4" />
+                <span className="text-[10px] font-black uppercase tracking-widest">Sair</span>
+              </button>
+            )}
+          </div>
+
           {user ? (
             <button onClick={() => handleNav(AppRoute.PROFILE)} className="w-full flex items-center gap-3 p-3 bg-muted rounded-2xl hover:border-primary border border-transparent transition-all">
               <div className="w-10 h-10 rounded-xl bg-foreground flex items-center justify-center text-background font-black shadow-sm">{user.name.charAt(0).toUpperCase()}</div>
