@@ -56,7 +56,7 @@ const AppLayout: React.FC = () => {
   const [lang, setLangState] = useState<Language>(() => (localStorage.getItem('cathedra_lang') as Language) || 'pt');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDark, setIsDark] = useState(() => localStorage.getItem('cathedra_dark') === 'true');
-  const { user, profile, signOut, isPremium } = useAuth();
+  const { user, profile, signOut, isPremium, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -96,6 +96,10 @@ const AppLayout: React.FC = () => {
       stats: { versesSaved: 0, studiesPerformed: 0, daysActive: 0 },
     };
   }, [user, profile]);
+
+  if (loading) {
+    return <LoadingFallback />;
+  }
 
   return (
     <LangContext.Provider value={{ lang, setLang: setLangState, t }}>
