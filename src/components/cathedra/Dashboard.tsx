@@ -248,7 +248,10 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             {/* Badges */}
             {badges.length > 0 && (
               <div className="space-y-2 pt-1">
-                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Conquistas</p>
+                <div className="flex items-center justify-between">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Conquistas</p>
+                  <button onClick={() => navigate(AppRoute.ACHIEVEMENTS)} className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline">Ver Todas</button>
+                </div>
                 <div className="flex flex-wrap gap-2">
                   {badges.map(id => {
                     const badge = getBadgeById(id);
