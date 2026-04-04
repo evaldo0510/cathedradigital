@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import PageTransition from './components/PageTransition';
 import ScrollToTop from './components/ScrollToTop';
 import CathedralSidebar from './components/cathedra/Sidebar';
@@ -17,6 +18,15 @@ import { supabase } from '@/integrations/supabase/client';
 import CommandCenter from './components/cathedra/CommandCenter';
 import OfflineIndicator from './components/cathedra/OfflineIndicator';
 import AppErrorBoundary from './components/cathedra/AppErrorBoundary';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 // Lazy-loaded route components
 const Dashboard = lazy(() => import('./components/cathedra/Dashboard'));
