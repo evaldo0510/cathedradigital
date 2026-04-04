@@ -36,7 +36,7 @@ const Index = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-5xl md:text-8xl font-serif font-bold tracking-tight text-[#1a1a1a] leading-[1.1]"
+            className="text-4xl md:text-6xl lg:text-7xl font-serif font-bold tracking-tight text-[#1a1a1a] leading-[1.1]"
           >
             Aprofunde sua <br /> 
             <span className="text-primary italic font-light drop-shadow-sm">Vida Interior.</span>
