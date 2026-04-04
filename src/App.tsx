@@ -123,10 +123,8 @@ const AppLayout: React.FC = () => {
           />
           <div className="flex-1 p-3 sm:p-4 md:p-8 lg:p-10 pb-32 w-full max-w-6xl mx-auto page-enter">
             <Suspense fallback={<LoadingFallback />}>
-              <AnimatePresence mode="wait" initial={false}>
-                <PageTransition key={location.pathname}>
-                  <Routes location={location}>
-                    <Route path={AppRoute.DASHBOARD} element={<Dashboard user={appUser} />} />
+              <Routes location={location}>
+                <Route path={AppRoute.DASHBOARD} element={<Dashboard user={appUser} />} />
                     <Route path={AppRoute.BIBLE} element={<Bible />} />
                     <Route path={AppRoute.CATECHISM} element={<Catechism />} />
                     <Route path={AppRoute.SAINTS} element={<Saints />} />
