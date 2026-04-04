@@ -281,23 +281,120 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Footer-like Quote */}
-      <footer className="w-full py-24 bg-[#1a1a1a] text-[#fdfcf8] text-center px-6 border-t border-white/5">
-        <div className="max-w-4xl mx-auto space-y-8">
-          <Logo className="w-12 h-12 mx-auto text-primary opacity-80" />
-          <div className="space-y-6">
-            <p className="text-2xl md:text-4xl font-serif italic leading-relaxed opacity-90 max-w-2xl mx-auto">
+      {/* Footer */}
+      <footer className="w-full bg-[#0f0f0f] text-[#fdfcf8] pt-20 pb-10 px-6 border-t border-white/5">
+        <div className="max-w-7xl mx-auto space-y-16">
+          {/* Quote Banner */}
+          <div className="text-center space-y-4 pb-16 border-b border-white/5">
+            <Logo className="w-10 h-10 mx-auto text-primary opacity-70" />
+            <p className="text-2xl md:text-4xl font-serif italic leading-relaxed opacity-80 max-w-2xl mx-auto">
               "A medida do amor é amar sem medida."
             </p>
-            <p className="text-sm font-black uppercase tracking-[0.4em] text-primary">Santo Agostinho</p>
+            <p className="text-xs font-black uppercase tracking-[0.3em] text-primary">Santo Agostinho</p>
           </div>
-          <div className="pt-12 flex flex-col items-center gap-6">
-            <div className="flex gap-8">
-              <a href="#" className="text-white/40 hover:text-primary transition-colors"><Youtube className="w-5 h-5" /></a>
-              <a href="#" className="text-white/40 hover:text-primary transition-colors"><MessageSquare className="w-5 h-5" /></a>
-              <a href="#" className="text-white/40 hover:text-primary transition-colors"><Globe className="w-5 h-5" /></a>
+
+          {/* Footer Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
+            {/* Brand */}
+            <div className="col-span-2 md:col-span-1 space-y-5">
+              <div className="flex items-center gap-3">
+                <Logo className="w-8 h-8 text-primary" />
+                <div>
+                  <h3 className="text-lg font-serif font-bold tracking-tight">CATHEDRA</h3>
+                  <p className="text-[8px] font-black uppercase tracking-[0.3em] text-primary">Digital Sanctuarium</p>
+                </div>
+              </div>
+              <p className="text-sm text-white/40 leading-relaxed">
+                Plataforma dedicada ao estudo, oração e vivência da fé católica, unindo tradição e tecnologia.
+              </p>
+              <div className="flex gap-3">
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-white/40 hover:text-primary hover:border-primary/30 transition-all">
+                  <Heart className="w-4 h-4" />
+                </a>
+                <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-white/40 hover:text-primary hover:border-primary/30 transition-all">
+                  <Youtube className="w-4 h-4" />
+                </a>
+                <a href="https://wa.me" target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-white/40 hover:text-primary hover:border-primary/30 transition-all">
+                  <MessageSquare className="w-4 h-4" />
+                </a>
+              </div>
             </div>
-            <p className="text-[10px] text-white/20 uppercase tracking-widest font-black">© 2024 Cathedra Digital • Ad Majorem Dei Gloriam</p>
+
+            {/* Explorar */}
+            <div className="space-y-5">
+              <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Explorar</h4>
+              <ul className="space-y-3">
+                {[
+                  { label: 'Bíblia Sagrada', route: AppRoute.BIBLE },
+                  { label: 'Catecismo', route: AppRoute.CATECHISM },
+                  { label: 'Vidas dos Santos', route: AppRoute.SAINTS },
+                  { label: 'Liturgia Diária', route: AppRoute.DAILY_LITURGY },
+                  { label: 'Rosário', route: AppRoute.ROSARY },
+                ].map(item => (
+                  <li key={item.label}>
+                    <button onClick={() => navigate(item.route)} className="text-sm text-white/40 hover:text-white transition-colors flex items-center gap-2 group">
+                      <span className="w-1 h-1 rounded-full bg-primary/30 group-hover:bg-primary transition-colors" />
+                      {item.label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Santa Sé */}
+            <div className="space-y-5">
+              <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">🏛️ Santa Sé</h4>
+              <ul className="space-y-3">
+                {[
+                  { label: 'Vatican.va', url: 'https://www.vatican.va' },
+                  { label: 'Vatican News', url: 'https://www.vaticannews.va/pt.html' },
+                  { label: 'Catecismo Oficial', url: 'https://www.vatican.va/archive/ccc/index_po.htm' },
+                  { label: 'CNBB', url: 'https://www.cnbb.org.br' },
+                ].map(item => (
+                  <li key={item.label}>
+                    <a href={item.url} target="_blank" rel="noopener noreferrer" className="text-sm text-white/40 hover:text-white transition-colors flex items-center gap-2 group">
+                      <span className="w-1 h-1 rounded-full bg-primary/30 group-hover:bg-primary transition-colors" />
+                      {item.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Institucional */}
+            <div className="space-y-5">
+              <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Institucional</h4>
+              <ul className="space-y-3">
+                {[
+                  { label: 'Sobre o Projeto', route: AppRoute.ABOUT },
+                  { label: 'Criar Conta', route: AppRoute.LOGIN },
+                  { label: 'Termos de Uso', route: AppRoute.ABOUT },
+                  { label: 'Privacidade', route: AppRoute.ABOUT },
+                ].map(item => (
+                  <li key={item.label}>
+                    <button onClick={() => navigate(item.route)} className="text-sm text-white/40 hover:text-white transition-colors flex items-center gap-2 group">
+                      <span className="w-1 h-1 rounded-full bg-primary/30 group-hover:bg-primary transition-colors" />
+                      {item.label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* Bottom Bar */}
+          <div className="pt-10 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p className="text-[9px] font-black uppercase tracking-[0.3em] text-white/20">
+              © {new Date().getFullYear()} CATHEDRA • OMNIA AD MAIOREM DEI GLORIAM
+            </p>
+            <Button
+              size="sm"
+              variant="ghost"
+              className="text-[10px] font-black uppercase tracking-widest text-primary hover:bg-primary/10"
+              onClick={handleStart}
+            >
+              Entrar na Plataforma <ChevronRight className="w-3 h-3 ml-1" />
+            </Button>
           </div>
         </div>
       </footer>
