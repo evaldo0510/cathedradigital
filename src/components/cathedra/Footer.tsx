@@ -195,7 +195,11 @@ const Footer: React.FC = React.memo(() => {
                   disabled={isSubmitting}
                   className="absolute right-1 top-1 bottom-1 px-3 bg-primary text-black rounded-lg hover:scale-105 transition-all disabled:opacity-50"
                 >
-                  {isSubmitting ? <Icons.Loader className="w-4 h-4 animate-spin" /> : <Icons.ArrowRight className="w-4 h-4" />}
+                  {isSubmitting ? (
+                    <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <Icons.ArrowDown className="w-4 h-4 -rotate-90" />
+                  )}
                 </button>
               </form>
             </div>
@@ -225,7 +229,7 @@ const Footer: React.FC = React.memo(() => {
               onClick={scrollToTop}
               className="p-2.5 bg-foreground/5 hover:bg-primary hover:text-black rounded-lg transition-all border border-foreground/10 group"
             >
-              <Icons.ArrowUp className="w-4 h-4" />
+              <Icons.ArrowDown className="w-4 h-4 rotate-180" />
             </button>
           </div>
         </div>

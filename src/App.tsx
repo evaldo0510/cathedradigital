@@ -119,7 +119,7 @@ const AppLayout: React.FC = () => {
             onOpenSidebar={() => setIsSidebarOpen(true)}
             onSignOut={signOut}
           />
-          <div className="flex-1 p-4 md:p-12 pb-32 lg:pb-48 w-full max-w-7xl mx-auto page-enter">
+          <div className="flex-1 p-4 md:p-12 pb-20 w-full max-w-7xl mx-auto page-enter">
             <Suspense fallback={<LoadingFallback />}>
               <AnimatePresence mode="wait" initial={false}>
                 <PageTransition key={location.pathname}>
