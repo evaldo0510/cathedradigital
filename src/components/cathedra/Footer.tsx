@@ -122,12 +122,12 @@ const Footer: React.FC = React.memo(() => {
             </p>
             <div className="flex gap-6">
               {[
-                { icon: <Icons.Instagram className="w-5 h-5" />, url: 'https://instagram.com' },
-                { icon: <Icons.Facebook className="w-5 h-5" />, url: 'https://facebook.com' },
-                { icon: <Icons.Whatsapp className="w-5 h-5" />, url: 'https://wa.me' },
+                { icon: <Icons.Instagram className="w-5 h-5" />, url: 'https://instagram.com/cathedra.digital' },
+                { icon: <Icons.Facebook className="w-5 h-5" />, url: 'https://facebook.com/cathedradigital' },
+                { icon: <Icons.Whatsapp className="w-5 h-5" />, url: 'https://wa.me/5511999999999' },
               ].map((social, i) => (
-                <a key={i} href={social.url} className="text-zinc-500 hover:text-primary transition-colors p-2 rounded-lg bg-white/5 border border-white/10 hover:border-primary/50">
-                  {social.icon}
+                <a key={i} href={social.url} target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-primary transition-all p-2.5 rounded-xl bg-white/5 border border-white/10 hover:border-primary/50 group">
+                  <div className="group-hover:scale-110 transition-transform">{social.icon}</div>
                 </a>
               ))}
             </div>
