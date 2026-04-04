@@ -95,9 +95,8 @@ const AppLayout: React.FC = () => {
     };
   }, [user, profile]);
 
-  if (loading) {
-    return <LoadingFallback />;
-  }
+  // Non-blocking loading to prevent blank screens
+  const isInitializing = loading && !user;
 
   return (
     <LangContext.Provider value={{ lang, setLang: setLangState, t }}>
