@@ -1,7 +1,63 @@
-import React, { useState, useMemo } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useMemo, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '../../constants';
 import StaggeredList from './StaggeredList';
+import SacredImage from './SacredImage';
+
+// --- Internal Reader Component ---
+const InternalReader: React.FC<{ url: string; title: string; onClose: () => void }> = ({ url, title, onClose }) => {
+  const [loading, setLoading] = useState(true);
+
+  // Close reader on Escape key
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [onClose]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[60] bg-black/90 flex flex-col backdrop-blur-sm"
+    >
+      <div className="flex items-center justify-between p-4 border-b border-white/10 bg-stone-900 text-white">
+        <div className="flex items-center gap-3">
+          <Icons.Book className="w-5 h-5 text-[#d4af37]" />
+          <h2 className="font-serif font-bold text-lg truncate max-w-[250px] md:max-w-md">{title}</h2>
+        </div>
+        <button
+          onClick={onClose}
+          className="p-2 hover:bg-white/10 rounded-full transition-colors"
+          aria-label="Fechar leitor"
+        >
+          <Icons.ArrowDown className="w-6 h-6 rotate-180" />
+        </button>
+      </div>
+      <div className="flex-1 relative bg-white">
+        {loading && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-stone-50 gap-4">
+            <Icons.Cross className="w-12 h-12 text-[#d4af37] animate-pulse" />
+            <p className="font-serif italic text-stone-500">Abrindo obra sagrada...</p>
+          </div>
+        )}
+        <iframe
+          src={url}
+          className="w-full h-full border-none"
+          onLoad={() => setLoading(false)}
+          title={title}
+        />
+      </div>
+      <div className="p-3 bg-stone-900 text-[10px] text-white/40 text-center uppercase tracking-widest font-black">
+        Modo de Leitura Cathedra — {title}
+      </div>
+    </motion.div>
+  );
+};
+
 
 interface SaintWork {
   title: string;
