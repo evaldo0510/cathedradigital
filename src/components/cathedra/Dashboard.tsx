@@ -177,7 +177,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/40 to-transparent hidden md:block" />
         <div className="absolute inset-0 bg-background/80 md:hidden" />
 
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 py-12 md:py-20 flex flex-col md:flex-row items-center justify-between gap-12">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 py-10 md:py-16 flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12">
           
           <div className="flex-1 space-y-6 md:space-y-8 max-w-2xl text-center md:text-left">
             <motion.div
