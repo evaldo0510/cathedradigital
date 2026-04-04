@@ -16,6 +16,7 @@ import { LangContext } from './contexts/LangContext';
 import { supabase } from '@/integrations/supabase/client';
 import CommandCenter from './components/cathedra/CommandCenter';
 import OfflineIndicator from './components/cathedra/OfflineIndicator';
+import AppErrorBoundary from './components/cathedra/AppErrorBoundary';
 
 // Lazy-loaded route components
 const Dashboard = lazy(() => import('./components/cathedra/Dashboard'));
