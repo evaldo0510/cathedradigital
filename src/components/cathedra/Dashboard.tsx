@@ -144,15 +144,18 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
     { image: 'https://images.unsplash.com/photo-1519750783826-e2420f4d687f?auto=format&fit=crop&q=80&w=600', title: 'Ordo Missae', subtitle: 'Acompanhe a Santa Missa', route: AppRoute.ORDO_MISSAE },
     { image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=600', title: 'Confissão', subtitle: 'Exame de consciência e guia', route: AppRoute.POENITENTIA },
     { image: 'https://images.unsplash.com/photo-1574104174498-e05a3dbfea8f?auto=format&fit=crop&q=80&w=600', title: 'Liturgia do Dia', subtitle: 'Leituras e evangelho diário', route: AppRoute.DAILY_LITURGY },
+    { image: 'https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?auto=format&fit=crop&q=80&w=600', title: 'Litanias', subtitle: 'Orações e súplicas litânicas', route: AppRoute.LITANIES },
+    { image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&q=80&w=600', title: 'Breviário', subtitle: 'Liturgia das Horas', route: AppRoute.BREVIARY },
   ];
 
   const ferramentas = [
     { image: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&q=80&w=600', title: 'Colloquium IA', subtitle: 'Assistente de estudo inteligente', route: AppRoute.STUDY_MODE },
     { image: 'https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?auto=format&fit=crop&q=80&w=600', title: 'Certamen', subtitle: 'Quiz de conhecimento católico', route: AppRoute.CERTAMEN },
-    { image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&q=80&w=600', title: 'Carregamento Rápido', subtitle: 'Experiência instantânea e fluida', route: AppRoute.DASHBOARD, icon: <Icons.Zap className="w-3.5 h-3.5" /> },
+    { image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&q=80&w=600', title: 'Sobre a Plataforma', subtitle: 'Conheça nossa missão e visão', route: AppRoute.ABOUT, icon: <Icons.Zap className="w-3.5 h-3.5" /> },
     { image: 'https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?auto=format&fit=crop&q=80&w=600', title: 'Trilhas de Formação', subtitle: 'Percursos estruturados de estudo', route: AppRoute.TRILHAS },
     { image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&q=80&w=600', title: 'Favoritos', subtitle: 'Seus conteúdos salvos', route: AppRoute.FAVORITES },
   ];
+
 
   return (
     <div className="space-y-8 md:space-y-12 pb-16 -mx-4 md:-mx-8 lg:-mx-10">
