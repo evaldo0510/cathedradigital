@@ -125,7 +125,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
               ) : (
                 <div className="p-10 text-center">
                   <Icons.Message className="w-8 h-8 text-muted-foreground/20 mx-auto mb-3" />
-                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">Nenhuma notificação</p>
+                  <p className="text-xs font-black uppercase tracking-widest text-muted-foreground/40">Nenhuma notificação</p>
                 </div>
               )}
             </div>
