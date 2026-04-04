@@ -107,10 +107,22 @@ const Footer: React.FC = React.memo(() => {
               "Ex Umbris Et Imaginibus In Veritatem." <br />
               Unindo a sabedoria milenar à Inteligência Teológica para o crescimento espiritual e intelectual.
             </p>
+            <div className="flex gap-6">
+              {[
+                { icon: <Icons.Instagram className="w-5 h-5" />, url: '#' },
+                { icon: <Icons.Facebook className="w-5 h-5" />, url: '#' },
+                { icon: <Icons.Twitter className="w-5 h-5" />, url: '#' },
+              ].map((social, i) => (
+                <a key={i} href={social.url} className="text-zinc-500 hover:text-primary transition-colors p-2 rounded-lg bg-white/5 border border-white/10 hover:border-primary/50">
+                  {social.icon}
+                </a>
+              ))}
+            </div>
             <div className="flex gap-4">
               <div className="px-4 py-1.5 border border-white/10 rounded-full text-[10px] font-bold uppercase tracking-widest text-zinc-500 bg-white/5">
                 Version 4.5 PRO
               </div>
+... keep existing code
               <div className="px-4 py-1.5 border border-white/10 rounded-full text-[10px] font-bold uppercase tracking-widest text-zinc-500 bg-white/5">
                 Enterprise SSL
               </div>
