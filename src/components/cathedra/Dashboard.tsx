@@ -155,7 +155,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   ];
 
   return (
-    <div className="space-y-8 md:space-y-12 pb-16 -mx-4 md:-mx-12">
+    <div className="space-y-8 md:space-y-12 pb-16 -mx-4 md:-mx-8 lg:-mx-10">
 
       {/* ═══ HERO BANNER ═══ */}
       <motion.section
@@ -286,7 +286,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       </motion.section>
 
       {/* ═══ CONTENT ROWS ═══ */}
-      <div className="space-y-8 md:space-y-10 px-4 md:px-12">
+      <div className="space-y-8 md:space-y-10 px-4 md:px-8 lg:px-10">
 
         {/* Row: Continue assistindo (only if logged in and has history) */}
         {user && history.length > 0 && (
