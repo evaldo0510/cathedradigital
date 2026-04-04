@@ -59,6 +59,7 @@ const APPARITIONS: Apparition[] = [
     liturgicalFeast: '11 de fevereiro',
     approved: true,
     image: '💧',
+    imageSrc: lourdesImg,
     color: 'from-blue-500/20 to-blue-600/5 border-blue-500/30',
   },
   {
