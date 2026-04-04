@@ -34,7 +34,17 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
       if (signUpError) {
         setError(signUpError.message);
       } else {
-        setSuccess('Conta criada com sucesso! Você já pode fazer login.');
+        setSuccess('Conta criada! Fazendo login...');
+        // Auto-login after signup
+        const { error: loginError } = await supabase.auth.signInWithPassword({ email, password });
+        if (loginError) {
+          setSuccess('Conta criada com sucesso! Você já pode fazer login.');
+          setMode('login');
+        } else {
+          if (onSignupSuccess) onSignupSuccess();
+          else onSuccess();
+        }
+      }
         setMode('login');
       }
     } else {
