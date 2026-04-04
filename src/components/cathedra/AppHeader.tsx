@@ -35,9 +35,28 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           </button>
         )}
         {isDashboard && (
-          <div className="flex items-center gap-3 ml-2 cursor-pointer" onClick={() => navigate(AppRoute.DASHBOARD)}>
-            <Logo className="w-9 h-9" />
-            <span className="text-sm font-serif font-black uppercase tracking-[0.2em] text-foreground">Cathedra</span>
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-3 ml-2 cursor-pointer group" onClick={() => navigate(AppRoute.DASHBOARD)}>
+              <Logo className="w-9 h-9" />
+              <span className="text-sm font-serif font-black uppercase tracking-[0.2em] text-foreground group-hover:text-primary transition-colors">Cathedra</span>
+            </div>
+            
+            <nav className="hidden xl:flex items-center gap-6 border-l border-border pl-6">
+              {[
+                { label: 'Bíblia', route: AppRoute.BIBLE },
+                { label: 'Catecismo', route: AppRoute.CATECHISM },
+                { label: 'Liturgia', route: AppRoute.DAILY_LITURGY },
+                { label: 'Colloquium IA', route: AppRoute.STUDY_MODE },
+              ].map(item => (
+                <button 
+                  key={item.label} 
+                  onClick={() => navigate(item.route)}
+                  className="text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-all"
+                >
+                  {item.label}
+                </button>
+              ))}
+            </nav>
           </div>
         )}
       </div>
