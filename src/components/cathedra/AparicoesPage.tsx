@@ -117,7 +117,7 @@ const AparicoesPage: React.FC = () => {
             <h1 className="text-xl md:text-2xl font-serif font-bold text-foreground">{selectedApparition.title}</h1>
             <p className="text-sm text-muted-foreground">{selectedApparition.location}</p>
           </div>
-          <span className="text-4xl">{selectedApparition.image}</span>
+          <img src={selectedApparition.imageSrc} alt={selectedApparition.title} className="w-16 h-16 rounded-xl object-cover shadow-md" loading="lazy" />
         </div>
 
         {/* Quick facts */}
