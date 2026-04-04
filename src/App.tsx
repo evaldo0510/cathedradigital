@@ -123,12 +123,14 @@ const AppLayout: React.FC = () => {
       <CommandCenter />
       <OfflineIndicator />
       <div className="flex h-[100dvh] w-full overflow-hidden bg-background selection:bg-primary/20">
-        <AnimatePresence>
-          {(!pathname === AppRoute.HOME || user) && (
+        <AnimatePresence mode="wait">
+          {(location.pathname !== AppRoute.HOME || user) && (
             <motion.div 
+              key="sidebar-wrapper"
               initial={{ opacity: 0, x: -300 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -300 }}
+              transition={{ duration: 0.3 }}
               className={`fixed inset-0 z-[150] lg:relative lg:block transition-all ${isSidebarOpen ? 'opacity-100' : 'pointer-events-none lg:pointer-events-auto opacity-0 lg:opacity-100'}`}
             >
               <div className="absolute inset-0 bg-black/60 backdrop-blur-sm lg:hidden" onClick={() => setIsSidebarOpen(false)} />
@@ -146,7 +148,7 @@ const AppLayout: React.FC = () => {
         </AnimatePresence>
 
         <main id="main-content" className="flex-1 overflow-y-auto flex flex-col relative custom-scrollbar overscroll-auto touch-pan-y scroll-smooth">
-          {(!pathname === AppRoute.HOME || user) && (
+          {(location.pathname !== AppRoute.HOME || user) && (
             <AppHeader
               user={user}
               isDark={isDark}
@@ -155,7 +157,8 @@ const AppLayout: React.FC = () => {
               onSignOut={signOut}
             />
           )}
-          <div className="flex-1 p-3 sm:p-4 md:p-5 lg:p-6 pb-32 lg:pb-12 w-full max-w-6xl mx-auto">
+          <div className={location.pathname === AppRoute.HOME && !user ? "flex-1" : "flex-1 p-3 sm:p-4 md:p-5 lg:p-6 pb-32 lg:pb-12 w-full max-w-6xl mx-auto"}>
+
             <Suspense fallback={<LoadingFallback />}>
               <Routes location={location}>
                 <Route path={AppRoute.HOME} element={<Index />} />
