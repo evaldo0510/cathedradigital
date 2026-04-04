@@ -141,6 +141,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   const ferramentas = [
     { image: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&q=80&w=600', title: 'Colloquium IA', subtitle: 'Assistente de estudo inteligente', route: AppRoute.STUDY_MODE },
     { image: 'https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?auto=format&fit=crop&q=80&w=600', title: 'Certamen', subtitle: 'Quiz de conhecimento católico', route: AppRoute.CERTAMEN },
+    { image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&q=80&w=600', title: 'Carregamento Rápido', subtitle: 'Experiência instantânea e fluida', route: AppRoute.DASHBOARD, icon: <Icons.Zap className="w-5 h-5" /> },
     { image: 'https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?auto=format&fit=crop&q=80&w=600', title: 'Trilhas de Formação', subtitle: 'Percursos estruturados de estudo', route: AppRoute.TRILHAS },
     { image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&q=80&w=600', title: 'Favoritos', subtitle: 'Seus conteúdos salvos', route: AppRoute.FAVORITES },
   ];
@@ -173,6 +174,16 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           >
             <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Cathedra Digital</span>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.4 }}
+            className="inline-flex items-center gap-2 px-3 py-1 bg-yellow-500/10 border border-yellow-500/20 rounded-md"
+          >
+            <Icons.Zap className="w-3 h-3 text-yellow-600" />
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-yellow-700">CARREGAMENTO RÁPIDO</span>
           </motion.div>
 
           <motion.h1
@@ -318,9 +329,31 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               title={item.title}
               subtitle={item.subtitle}
               onClick={() => goTo(item.route, item.title, item.image)}
+              icon={(item as any).icon}
             />
           ))}
         </ContentRow>
+
+        {/* ═══ SPEED HIGHLIGHT ═══ */}
+        <section className="relative overflow-hidden rounded-2xl bg-yellow-500/5 border border-yellow-500/10 p-6 md:p-10">
+          <div className="flex flex-col md:flex-row items-center gap-6 md:gap-10">
+            <div className="relative w-24 h-24 md:w-32 md:h-32 shrink-0">
+              <div className="absolute inset-0 bg-yellow-500/20 rounded-full animate-pulse" />
+              <div className="relative z-10 w-full h-full flex items-center justify-center bg-yellow-500/10 rounded-full border-2 border-yellow-500 shadow-xl">
+                <Icons.Zap className="w-12 h-12 text-yellow-600 opacity-50" />
+              </div>
+            </div>
+            <div className="flex-1 text-center md:text-left space-y-3">
+              <div className="inline-flex items-center gap-2 px-2 py-0.5 bg-yellow-500/10 rounded-full text-[10px] font-bold uppercase tracking-wider text-yellow-700">
+                Performance
+              </div>
+              <h2 className="text-xl md:text-3xl font-serif font-bold text-foreground">CARREGAMENTO RÁPIDO</h2>
+              <p className="text-sm md:text-base text-muted-foreground max-w-xl">
+                O acesso aos conteúdos foi otimizado para ser instantâneo, permitindo que sua oração e estudo não sofram interrupções.
+              </p>
+            </div>
+          </div>
+        </section>
 
         {/* ═══ QUOTE ═══ */}
         <motion.div
