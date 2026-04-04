@@ -44,13 +44,13 @@ const YouTubePlayer: React.FC<{ videoId: string; title: string }> = ({ videoId, 
 
 const MYSTERY_DATA: Record<MysteryKey, {
   title: string;
-  emoji: string;
+  icon: React.FC<{ className?: string }>;
   days: string;
   mysteries: { title: string; scripture: string; meditation: string }[];
 }> = {
   gozosos: {
     title: 'Mistérios Gozosos',
-    emoji: '😊',
+    icon: Sparkles,
     days: 'Segunda e Sábado',
     mysteries: [
       { title: 'A Anunciação do Anjo a Maria', scripture: 'Lc 1,26-38', meditation: 'O Anjo Gabriel anuncia a Maria que ela será Mãe do Salvador.' },
