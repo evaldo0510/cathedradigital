@@ -27,7 +27,7 @@ const ContentRow: React.FC<{ title: string; children: React.ReactNode; onSeeAll?
       <div className="flex items-center justify-between px-2">
         <h2 className="text-lg md:text-xl font-serif font-bold text-foreground">{title}</h2>
         {onSeeAll && (
-          <button onClick={onSeeAll} className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline">
+          <button onClick={onSeeAll} className="text-xs font-black uppercase tracking-widest text-primary hover:underline">
             Ver Tudo
           </button>
         )}
