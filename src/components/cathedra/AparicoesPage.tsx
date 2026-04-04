@@ -232,7 +232,10 @@ const AparicoesPage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
             onClick={() => { setSelectedApparition(apparition); setActiveTab('historia'); }}
-            className={`text-left p-6 rounded-2xl bg-gradient-to-br ${apparition.color} border hover:scale-[1.02] transition-all group`}
+            className={`text-left rounded-2xl bg-gradient-to-br ${apparition.color} border hover:scale-[1.02] transition-all group overflow-hidden`}
+          >
+            <img src={apparition.imageSrc} alt={apparition.title} className="w-full h-40 object-cover" loading="lazy" />
+            <div className="p-5">
           >
             <div className="flex items-start justify-between mb-4">
               <div>
