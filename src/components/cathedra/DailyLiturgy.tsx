@@ -163,12 +163,13 @@ const DailyLiturgy: React.FC = () => {
         const { done, value } = await reader.read();
         if (done) break;
         const chunk = decoder.decode(value);
-        // The AI gateway returns SSE format data: data: {"choices":[{"delta":{"content":"..."}}]}
         const lines = chunk.split('\n');
         for (const line of lines) {
           if (line.startsWith('data: ')) {
+            const dataStr = line.substring(6).trim();
+            if (dataStr === '[DONE]') continue;
             try {
-              const json = JSON.parse(line.substring(6));
+              const json = JSON.parse(dataStr);
               const content = json.choices[0]?.delta?.content || '';
               fullText += content;
               setMeditation(fullText);
