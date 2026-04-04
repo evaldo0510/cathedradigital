@@ -211,7 +211,7 @@ const AppLayout: React.FC = () => {
               </Routes>
             </Suspense>
           </div>
-          {(location.pathname !== AppRoute.HOME || user) && (
+          {location.pathname !== AppRoute.HOME && (
             <>
               <CathedralFooter />
               <BottomNav onOpenSidebar={() => setIsSidebarOpen(true)} />
