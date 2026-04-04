@@ -97,7 +97,7 @@ const Footer: React.FC = React.memo(() => {
   const dioceseUrl = DIOCESE_URLS[selectedDiocese];
 
   return (
-    <footer className="bg-[#0a0a0a] text-zinc-400 border-t border-white/5 pt-24 pb-12 px-6 relative overflow-hidden mt-auto">
+    <footer className="bg-[#0a0a0a] text-zinc-400 border-t border-white/5 pt-12 md:pt-24 pb-12 px-4 md:px-12 relative mt-auto overflow-x-hidden">
       {/* Background Texture */}
       <div className="absolute inset-0 pointer-events-none opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')]" />
       
@@ -135,7 +135,7 @@ const Footer: React.FC = React.memo(() => {
               <div className="px-4 py-1.5 border border-white/10 rounded-full text-[10px] font-bold uppercase tracking-widest text-zinc-500 bg-white/5">
                 Version 4.5 PRO
               </div>
-... keep existing code
+
               <div className="px-4 py-1.5 border border-white/10 rounded-full text-[10px] font-bold uppercase tracking-widest text-zinc-500 bg-white/5">
                 Enterprise SSL
               </div>
