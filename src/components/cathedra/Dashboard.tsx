@@ -79,8 +79,8 @@ const RowCard: React.FC<RowCardProps> = ({ image, title, subtitle, onClick, wide
     onClick={onClick}
     whileHover={{ scale: 1.05, y: -8 }}
     whileTap={{ scale: 0.97 }}
-    className={`relative shrink-0 snap-start rounded-[2rem] overflow-hidden group cursor-pointer shadow-2xl hover:shadow-primary/20 transition-all duration-500 ring-1 ring-border/5 hover:ring-primary/40 ${
-      wide ? 'w-[280px] md:w-[340px] h-40 md:h-48' : 'w-40 md:w-48 h-56 md:h-72'
+    className={`relative shrink-0 snap-start rounded-3xl overflow-hidden group cursor-pointer shadow-2xl hover:shadow-primary/20 transition-all duration-500 ring-1 ring-border/5 hover:ring-primary/40 ${
+      wide ? 'w-[240px] md:w-[300px] h-36 md:h-40' : 'w-36 md:w-44 h-52 md:h-64'
     }`}
   >
     <img src={image} alt={title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
@@ -165,7 +165,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.2 }}
-        className="relative min-h-[60vh] md:h-[70vh] flex items-center overflow-hidden touch-pan-y"
+        className="relative min-h-[50vh] md:h-[60vh] flex items-center overflow-hidden touch-pan-y"
       >
         <SacredImage
           src="https://images.unsplash.com/photo-1548610762-656391d1ad4d?auto=format&fit=crop&q=80&w=1920"
@@ -194,7 +194,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.8 }}
-              className="text-4xl sm:text-5xl md:text-6xl font-serif font-bold text-foreground leading-[0.95] tracking-tight"
+              className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-foreground leading-[0.95] tracking-tight"
             >
               A beleza da fé <br />
               <span className="text-primary italic font-light drop-shadow-2xl">em cada detalhe.</span>
@@ -239,7 +239,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             transition={{ delay: 0.8, duration: 1 }}
             className="w-full max-w-sm hidden lg:block"
           >
-            <div className="bg-background/40 backdrop-blur-2xl border border-white/20 rounded-[2.5rem] p-8 shadow-2xl space-y-6 relative overflow-hidden group">
+            <div className="bg-background/40 backdrop-blur-2xl border border-white/20 rounded-3xl p-6 shadow-2xl space-y-5 relative overflow-hidden group">
               <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/20 rounded-full blur-3xl group-hover:bg-primary/30 transition-colors duration-700" />
               
               <div className="flex items-center justify-between">
@@ -294,20 +294,20 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         whileInView={{ opacity: 1, y: 0 }}
         className="px-4 md:px-12"
       >
-        <div className="relative group bg-[#1a1a1a] dark:bg-primary/10 rounded-[3rem] p-8 md:p-12 overflow-hidden shadow-2xl">
+        <div className="relative group bg-[#1a1a1a] dark:bg-primary/10 rounded-3xl p-6 md:p-8 overflow-hidden shadow-2xl">
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full blur-[100px] -mr-32 -mt-32" />
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/10 rounded-full blur-[100px] -ml-32 -mb-32" />
           
-          <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 md:gap-16">
-            <div className="flex-1 space-y-4 text-center md:text-left">
-              <span className="text-xs font-black uppercase tracking-[0.3em] text-primary">Versículo do Dia</span>
-              <p className="text-3xl md:text-5xl font-serif font-bold text-white leading-tight italic">
+          <div className="relative z-10 flex flex-col md:flex-row items-center gap-6 md:gap-12">
+            <div className="flex-1 space-y-3 text-center md:text-left">
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Versículo do Dia</span>
+              <p className="text-2xl md:text-3xl font-serif font-bold text-white leading-tight italic">
                 "O Senhor é o meu pastor, nada me faltará. Em verdes pastagens me faz repousar."
               </p>
-              <div className="flex items-center justify-center md:justify-start gap-4 pt-2">
-                <span className="text-sm font-black uppercase tracking-widest text-primary/80">Salmo 23, 1</span>
-                <button className="p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors">
-                  <Icons.Heart className="w-4 h-4 text-white" />
+              <div className="flex items-center justify-center md:justify-start gap-4 pt-1">
+                <span className="text-xs font-black uppercase tracking-widest text-primary/80">Salmo 23, 1</span>
+                <button className="p-1.5 bg-white/10 hover:bg-white/20 rounded-full transition-colors">
+                  <Icons.Heart className="w-3.5 h-3.5 text-white" />
                 </button>
               </div>
             </div>
