@@ -80,9 +80,9 @@ const CommunityPage: React.FC = () => {
     if (userIds.length === 0) { setLeaderboard([]); setLbLoading(false); return; }
 
     const { data: profiles } = await supabase
-      .from('profiles')
+      .from('public_profiles' as any)
       .select('id, name, avatar_url')
-      .in('id', userIds);
+      .in('id', userIds) as { data: { id: string; name: string; avatar_url: string | null }[] | null };
 
     const entries: LeaderboardEntry[] = (profiles || []).map(p => {
       const s = userMap.get(p.id) || { posts: 0, likes: 0 };
@@ -127,9 +127,9 @@ const CommunityPage: React.FC = () => {
       // Fetch author names
       const userIds = [...new Set(data.map(p => p.user_id))];
       const { data: profiles } = await supabase
-        .from('profiles')
+        .from('public_profiles' as any)
         .select('id, name')
-        .in('id', userIds);
+        .in('id', userIds) as { data: { id: string; name: string }[] | null };
 
       const profileMap = new Map(profiles?.map(p => [p.id, p.name]) || []);
 
@@ -194,7 +194,7 @@ const CommunityPage: React.FC = () => {
 
     if (data) {
       const userIds = [...new Set(data.map(r => r.user_id))];
-      const { data: profiles } = await supabase.from('profiles').select('id, name').in('id', userIds.length ? userIds : ['']);
+      const { data: profiles } = await supabase.from('public_profiles' as any).select('id, name').in('id', userIds.length ? userIds : ['']) as { data: { id: string; name: string }[] | null };
       const profileMap = new Map(profiles?.map(p => [p.id, p.name]) || []);
       setReplies(data.map(r => ({ ...r, author_name: profileMap.get(r.user_id) || 'Anônimo' })));
     }
