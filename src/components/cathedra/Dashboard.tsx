@@ -314,7 +314,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         </ContentRow>
 
         {/* Row: Oração e Liturgia */}
-        <ContentRow title="Oração e Liturgia">
+        <ContentRow title="Oração e Liturgia" onSeeAll={() => navigate(AppRoute.ORACAO)}>
           {oracao.map(item => (
             <RowCard
               key={item.title}
