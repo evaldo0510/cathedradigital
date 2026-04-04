@@ -250,7 +250,7 @@ const AppLayout: React.FC = () => {
               </Routes>
             </Suspense>
           </div>
-          {location.pathname !== AppRoute.HOME && (
+          {location.pathname !== AppRoute.HOME && location.pathname !== AppRoute.ONBOARDING && (
             <>
               <CathedralFooter />
               <BottomNav onOpenSidebar={() => setIsSidebarOpen(true)} />
