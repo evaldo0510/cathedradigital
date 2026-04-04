@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { 
   Heart, 
   Search, 
@@ -19,7 +20,8 @@ import {
   Book,
   Moon,
   Cloud,
-  ChevronDown
+  ChevronDown,
+  Brain
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -88,7 +90,9 @@ const PRAYERS = [
 const DailyLiturgy: React.FC = () => {
   const [liturgy, setLiturgy] = useState<LiturgicalDay | null>(null);
   const [readings, setReadings] = useState<LiturgyReadings | null>(null);
+  const [meditation, setMeditation] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isMeditationLoading, setIsMeditationLoading] = useState(false);
   const [error, setError] = useState('');
   const [tab, setTab] = useState<'liturgia' | 'oracoes'>('liturgia');
   const [selectedPrayer, setSelectedPrayer] = useState<string | null>(null);
@@ -123,6 +127,65 @@ const DailyLiturgy: React.FC = () => {
 
     fetchData();
   }, []);
+
+  const fetchMeditation = async () => {
+    if (!readings?.evangelho?.texto) return;
+    setIsMeditationLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('colloquium', {
+        body: { 
+          messages: [
+            { 
+              role: 'user', 
+              content: `Gere uma Meditação Diária espiritual, curta e profunda, baseada no Evangelho do dia: ${readings.evangelho.referencia} - ${readings.evangelho.texto}. 
+              A meditação deve ser escrita num tom orante e teológico (como um Santo Padre da Igreja), dividida em:
+              1. Reflexão (um parágrafo curto)
+              2. Propósito Prático para o dia
+              3. Uma oração final curta.
+              Use Markdown para formatação.`
+            }
+          ] 
+        }
+      });
+
+      if (error) throw error;
+
+      // The colloquium function returns a stream, but we can read it if it's not handled as stream
+      // Actually, looking at the function, it returns response.body (stream)
+      // We need to handle the stream or change the function to not stream
+      // Since I can't easily change the function to not stream without modifying it, 
+      // I'll check if I can just get the text from the response
+      
+      const reader = data.getReader();
+      const decoder = new TextDecoder();
+      let fullText = '';
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value);
+        const lines = chunk.split('\n');
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            const dataStr = line.substring(6).trim();
+            if (dataStr === '[DONE]') continue;
+            try {
+              const json = JSON.parse(dataStr);
+              const content = json.choices[0]?.delta?.content || '';
+              fullText += content;
+              setMeditation(fullText);
+            } catch (e) {
+              // Ignore parse errors for partial chunks
+            }
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Error fetching meditation:', err);
+      setError('Erro ao gerar meditação.');
+    } finally {
+      setIsMeditationLoading(false);
+    }
+  };
 
   const categories = ['Todas', ...Array.from(new Set(PRAYERS.map(p => p.category)))];
   const filteredPrayers = prayerFilter === 'Todas' ? PRAYERS : PRAYERS.filter(p => p.category === prayerFilter);
@@ -277,7 +340,67 @@ const DailyLiturgy: React.FC = () => {
                       </div>
                     </section>
 
-                    {/* Oração do Dia */}
+                    {/* Meditação Diária */}
+                    <section className="pt-12 border-t border-border/50 space-y-8">
+                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 rounded-2xl bg-indigo-500 text-white flex items-center justify-center font-serif font-bold text-xl shadow-lg shadow-indigo-500/20 shrink-0">
+                            <Brain className="w-6 h-6" />
+                          </div>
+                          <div className="space-y-1">
+                            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-500/60">Meditação Diária</h3>
+                            <p className="text-sm font-bold text-foreground opacity-60 tracking-tight">Nexus Theologicus</p>
+                          </div>
+                        </div>
+                        
+                        {!meditation && !isMeditationLoading && (
+                          <button 
+                            onClick={fetchMeditation}
+                            className="px-6 py-2.5 bg-indigo-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-indigo-600 transition-all shadow-lg shadow-indigo-500/20 flex items-center gap-2 self-start md:self-center"
+                          >
+                            <Sparkles className="w-3.5 h-3.5" />
+                            Gerar Meditação com IA
+                          </button>
+                        )}
+                      </div>
+
+                      {isMeditationLoading ? (
+                        <div className="bg-indigo-500/5 p-10 md:p-14 rounded-[3rem] border border-indigo-500/10 space-y-4">
+                          <div className="flex items-center gap-3 mb-6">
+                            <div className="w-2 h-2 bg-indigo-500 rounded-full animate-bounce" />
+                            <div className="w-2 h-2 bg-indigo-500 rounded-full animate-bounce [animation-delay:0.2s]" />
+                            <div className="w-2 h-2 bg-indigo-500 rounded-full animate-bounce [animation-delay:0.4s]" />
+                            <span className="text-[10px] font-black uppercase tracking-widest text-indigo-500/60 ml-2">Colloquium está meditando...</span>
+                          </div>
+                          <div className="space-y-3">
+                            <div className="h-4 bg-indigo-500/10 rounded animate-pulse w-full" />
+                            <div className="h-4 bg-indigo-500/10 rounded animate-pulse w-[90%]" />
+                            <div className="h-4 bg-indigo-500/10 rounded animate-pulse w-[95%]" />
+                          </div>
+                        </div>
+                      ) : meditation ? (
+                        <div className="bg-indigo-500/5 p-10 md:p-14 rounded-[3rem] border border-indigo-500/10 shadow-xl shadow-indigo-500/5 relative overflow-hidden group">
+                          <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none group-hover:scale-110 transition-transform duration-700">
+                            <Brain className="w-32 h-32 rotate-12" />
+                          </div>
+                          <div className="prose prose-indigo dark:prose-invert max-w-none font-serif prose-p:text-xl prose-p:leading-relaxed prose-headings:font-serif prose-headings:font-bold prose-p:text-foreground/90 prose-strong:text-indigo-600 dark:prose-strong:text-indigo-400">
+                            <ReactMarkdown>{meditation}</ReactMarkdown>
+                          </div>
+                          <div className="mt-8 pt-8 border-t border-indigo-500/10 flex items-center justify-between">
+                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-500/40 italic">
+                              Gerado por Colloquium AI • Nexus Theologicus
+                            </p>
+                            <button 
+                              onClick={() => { setMeditation(null); fetchMeditation(); }}
+                              className="text-[10px] font-black uppercase tracking-widest text-indigo-500 hover:text-indigo-600 transition-colors"
+                            >
+                              Regerar
+                            </button>
+                          </div>
+                        </div>
+                      ) : null}
+                    </section>
+
                     {readings.dia && (
                       <section className="pt-12 border-t border-border/50 space-y-6">
                         <div className="flex items-center gap-3 justify-center md:justify-start">
