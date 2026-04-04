@@ -119,7 +119,7 @@ const Index = () => {
               <Button className="w-full gap-2 rounded-xl font-bold" onClick={() => navigate(AppRoute.BIBLE)}>
                 Explorar Biblioteca
               </Button>
-              <p className="text-center italic text-xs text-muted-foreground">
+              <p className="text-center italic text-sm text-muted-foreground">
                 "Fides quaerens intellectum"
               </p>
             </CardContent>
