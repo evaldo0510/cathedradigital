@@ -110,7 +110,7 @@ const Index = () => {
                 <BookOpen className="h-7 w-7" />
               </div>
               <CardTitle className="text-2xl font-serif">Estudo da Fé</CardTitle>
-              <CardDescription className="text-sm font-medium uppercase tracking-widest text-primary/60">Magistério e Tradição</CardDescription>
+              <CardDescription className="text-xs font-medium uppercase tracking-widest text-primary/60">Magistério e Tradição</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <p className="text-muted-foreground leading-relaxed">
