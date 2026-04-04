@@ -108,7 +108,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           <div className="absolute top-full right-4 mt-2 w-80 bg-card border border-border rounded-3xl shadow-2xl z-[150] overflow-hidden animate-in fade-in zoom-in duration-200">
             <div className="p-4 border-b border-border flex items-center justify-between">
               <h3 className="text-xs font-black uppercase tracking-widest text-foreground">Notificações</h3>
-              <button onClick={markAllRead} className="text-[9px] font-black uppercase tracking-widest text-primary hover:opacity-70">Marcar tudo como lido</button>
+              <button onClick={markAllRead} className="text-xs font-black uppercase tracking-widest text-primary hover:opacity-70">Marcar tudo como lido</button>
             </div>
             <div className="max-h-[60vh] overflow-y-auto custom-scrollbar">
               {notifications.length > 0 ? (
