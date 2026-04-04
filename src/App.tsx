@@ -217,7 +217,7 @@ const AppLayout: React.FC = () => {
                     </ProGate>
                   </AuthGuard>
                 } />
-                <Route path={AppRoute.LOGIN} element={<Auth onSuccess={() => navigate(AppRoute.DASHBOARD)} />} />
+                <Route path={AppRoute.LOGIN} element={<Auth onSuccess={() => navigate(AppRoute.DASHBOARD)} onSignupSuccess={() => navigate(AppRoute.ONBOARDING)} />} />
                 <Route path={AppRoute.AQUINAS_OPERA} element={<AuthGuard><AquinasOpera /></AuthGuard>} />
                 <Route path={AppRoute.CERTAMEN} element={<AuthGuard><Certamen /></AuthGuard>} />
                 <Route path={AppRoute.MISSAL} element={<AuthGuard><MissalPage /></AuthGuard>} />
