@@ -61,6 +61,20 @@ const AppLayout: React.FC = () => {
     if (isDark) document.documentElement.classList.add('dark');
     else document.documentElement.classList.remove('dark');
   }, [isDark]);
+  
+  useEffect(() => {
+    const trackVisit = async () => {
+      try {
+        const { error } = await supabase
+          .from('app_metrics')
+          .insert([{ metric_type: 'visit', metadata: { path: location.pathname, user_agent: navigator.userAgent } }]);
+        if (error) console.error('Error tracking visit:', error);
+      } catch (err) {
+        console.error('Failed to track visit:', err);
+      }
+    };
+    trackVisit();
+  }, [location.pathname]);
 
   const t = useCallback((key: string) => {
     return UI_TRANSLATIONS[lang]?.[key] || UI_TRANSLATIONS['en']?.[key] || key;
