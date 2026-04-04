@@ -109,9 +109,9 @@ const Footer: React.FC = React.memo(() => {
             </p>
             <div className="flex gap-6">
               {[
-                { icon: <Icons.Instagram className="w-5 h-5" />, url: '#' },
-                { icon: <Icons.Facebook className="w-5 h-5" />, url: '#' },
-                { icon: <Icons.Twitter className="w-5 h-5" />, url: '#' },
+                { icon: <Icons.Instagram className="w-5 h-5" />, url: 'https://instagram.com' },
+                { icon: <Icons.Facebook className="w-5 h-5" />, url: 'https://facebook.com' },
+                { icon: <Icons.Whatsapp className="w-5 h-5" />, url: 'https://wa.me' },
               ].map((social, i) => (
                 <a key={i} href={social.url} className="text-zinc-500 hover:text-primary transition-colors p-2 rounded-lg bg-white/5 border border-white/10 hover:border-primary/50">
                   {social.icon}
