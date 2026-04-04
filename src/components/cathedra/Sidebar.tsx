@@ -103,6 +103,10 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user }) => {
                   <li key={idx}>
                     <button
                       onClick={() => handleNav(item.path)}
+                      onMouseEnter={() => {
+                        if (item.path === AppRoute.CATECHISM) import('@/components/cathedra/Catechism');
+                        else if (item.path === AppRoute.BIBLE) import('@/components/cathedra/Bible');
+                      }}
                       className={`w-full flex items-center gap-4 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all
                         ${currentPath === item.path
                           ? 'bg-foreground text-background shadow-lg'
