@@ -1,10 +1,15 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useMemo, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { AppRoute, User } from '../../types';
 import { Icons } from '../../constants';
 import SacredImage from './SacredImage';
 import { useHistory } from '../../hooks/useHistory';
+import { useAuth } from '../../hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
+import { Progress } from '@/components/ui/progress';
+import { BADGE_DEFINITIONS, getBadgeById } from '@/lib/badges';
+import { BookOpen, Trophy, Clock, Flame } from 'lucide-react';
 import sectionBible from '../../assets/section-bible.webp';
 import sectionCatechism from '../../assets/section-catechism.webp';
 import sectionDocuments from '../../assets/section-documents.webp';
