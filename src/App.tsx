@@ -12,6 +12,7 @@ import { AppRoute, Language } from './types';
 import { UI_TRANSLATIONS } from './services/translations';
 import { useAuth } from './hooks/useAuth';
 import { LangContext } from './contexts/LangContext';
+import { supabase } from '@/integrations/supabase/client';
 
 // Lazy-loaded route components
 const Dashboard = lazy(() => import('./components/cathedra/Dashboard'));
