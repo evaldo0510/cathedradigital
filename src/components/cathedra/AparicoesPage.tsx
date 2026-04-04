@@ -95,6 +95,7 @@ const APPARITIONS: Apparition[] = [
     liturgicalFeast: '12 de outubro',
     approved: true,
     image: '🐟',
+    imageSrc: aparecidaImg,
     color: 'from-sky-500/20 to-sky-600/5 border-sky-500/30',
   },
 ];
