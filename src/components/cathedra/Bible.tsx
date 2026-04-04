@@ -8,8 +8,9 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useFavorites } from '@/hooks/useFavorites';
 import BibleSearch from './BibleSearch';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { ChevronDown, ScrollText, Swords, Feather, Flame, Cross, Globe, Mail, BookOpen, Sparkles } from 'lucide-react';
+import { ChevronDown, ScrollText, Swords, Feather, Flame, Cross, Globe, Mail, BookOpen, Sparkles, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { Progress } from '@/components/ui/progress';
 
 type BibleBook = { name: string; abbr: string; chapters: number };
 type BibleCategory = { label: string; icon: React.ElementType; color: string; bgColor: string; books: BibleBook[] };
@@ -104,8 +105,59 @@ const Bible: React.FC = () => {
   const [fontSizeIdx, setFontSizeIdx] = useState(1);
   const [showCrossRefs, setShowCrossRefs] = useState(true);
   const { toggleFavorite, isFavorite } = useFavorites();
-  const { profile } = useAuth();
+  const { user, profile } = useAuth();
   const completedBooks = useMemo(() => new Set(profile?.completed_books || []), [profile?.completed_books]);
+
+  // Track chapters read
+  const [chaptersRead, setChaptersRead] = useState<Record<string, Set<number>>>({});
+
+  const loadChaptersRead = useCallback(async () => {
+    if (!user) return;
+    const { data } = await supabase
+      .from('bible_chapters_read' as any)
+      .select('book_abbr, chapter')
+      .eq('user_id', user.id);
+    if (data) {
+      const map: Record<string, Set<number>> = {};
+      (data as any[]).forEach((r: any) => {
+        if (!map[r.book_abbr]) map[r.book_abbr] = new Set();
+        map[r.book_abbr].add(r.chapter);
+      });
+      setChaptersRead(map);
+    }
+  }, [user]);
+
+  useEffect(() => { loadChaptersRead(); }, [loadChaptersRead]);
+
+  const markChapterRead = useCallback(async (bookAbbr: string, chapter: number, totalChapters: number) => {
+    if (!user) return;
+    // Insert chapter read
+    await supabase
+      .from('bible_chapters_read' as any)
+      .upsert({ user_id: user.id, book_abbr: bookAbbr, chapter } as any, { onConflict: 'user_id,book_abbr,chapter' });
+    
+    // Update local state
+    setChaptersRead(prev => {
+      const next = { ...prev };
+      if (!next[bookAbbr]) next[bookAbbr] = new Set();
+      next[bookAbbr] = new Set(next[bookAbbr]).add(chapter);
+      
+      // Auto-mark book as completed if all chapters read
+      if (next[bookAbbr].size >= totalChapters && !completedBooks.has(bookAbbr)) {
+        const newCompleted = [...(profile?.completed_books || []), bookAbbr];
+        supabase.from('profiles').update({ completed_books: newCompleted }).eq('id', user.id).then(() => {});
+      }
+      return next;
+    });
+  }, [user, profile, completedBooks]);
+
+  // All books flat for counting
+  const allBooks = useMemo(() => [
+    ...BIBLE_CATEGORIES['Antigo Testamento'].flatMap(c => c.books),
+    ...BIBLE_CATEGORIES['Novo Testamento'].flatMap(c => c.books),
+  ], []);
+  const totalBooksRead = useMemo(() => allBooks.filter(b => completedBooks.has(b.abbr)).length, [allBooks, completedBooks]);
+  const overallProgress = Math.round((totalBooksRead / 73) * 100);
   // Handle deep-link from Catechism cross-references (?book=Gn&ch=1)
   useEffect(() => {
     const bookParam = searchParams.get('book');
@@ -305,6 +357,23 @@ const Bible: React.FC = () => {
           </div>
         </div>
 
+        {/* Mark chapter as read */}
+        {!isLoading && verses.length > 0 && user && (
+          <div className="flex justify-center">
+            {chaptersRead[selectedBook.abbr]?.has(selectedChapter) ? (
+              <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-primary/10 text-primary text-sm font-bold">
+                <CheckCircle2 className="w-4 h-4" /> Capítulo lido
+              </div>
+            ) : (
+              <button
+                onClick={() => markChapterRead(selectedBook.abbr, selectedChapter, selectedBook.chapters)}
+                className="px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 transition-all">
+                ✓ Marcar como lido
+              </button>
+            )}
+          </div>
+        )}
+
         {/* Bottom navigation */}
         <div className="flex justify-between items-center pt-2">
           <button disabled={selectedChapter <= 1} onClick={() => navigateChapter(-1)}
@@ -338,13 +407,16 @@ const Bible: React.FC = () => {
         <div className="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 gap-2">
           {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map(ch => {
             const hasRefs = getBibleCrossRefs(selectedBook.abbr, ch).length > 0;
+            const isChRead = chaptersRead[selectedBook.abbr]?.has(ch);
             return (
               <button key={ch} onClick={() => selectChapter(ch)}
-                className={`aspect-square rounded-xl bg-card border flex items-center justify-center text-sm font-bold transition-all shadow-sm relative ${
-                  hasRefs ? 'border-primary/30 hover:bg-primary hover:text-primary-foreground hover:border-primary' : 'border-border text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary'
+                className={`aspect-square rounded-xl border flex items-center justify-center text-sm font-bold transition-all shadow-sm relative ${
+                  isChRead ? 'bg-primary/15 border-primary/40 text-primary' :
+                  hasRefs ? 'bg-card border-primary/30 hover:bg-primary hover:text-primary-foreground hover:border-primary' : 'bg-card border-border text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary'
                 }`}>
                 {ch}
-                {hasRefs && (
+                {isChRead && <CheckCircle2 className="absolute -top-1 -right-1 w-3 h-3 text-primary" />}
+                {!isChRead && hasRefs && (
                   <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-primary" />
                 )}
               </button>
@@ -370,6 +442,16 @@ const Bible: React.FC = () => {
         </div>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Bíblia Sagrada</h1>
         <p className="text-muted-foreground font-serif italic">Cânon completo com 73 livros da tradição católica.</p>
+        {/* Overall progress */}
+        {user && totalBooksRead > 0 && (
+          <div className="max-w-xs mx-auto mt-2 space-y-1.5">
+            <div className="flex items-center justify-between text-xs">
+              <span className="font-bold text-foreground">{totalBooksRead} de 73 livros</span>
+              <span className="font-bold text-primary">{overallProgress}%</span>
+            </div>
+            <Progress value={overallProgress} className="h-2" />
+          </div>
+        )}
       </div>
 
       {/* Full-text search */}
