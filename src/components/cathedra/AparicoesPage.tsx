@@ -21,6 +21,7 @@ interface Apparition {
   liturgicalFeast: string;
   approved: boolean;
   image: string;
+  imageSrc: string;
   color: string;
 }
 
