@@ -7,6 +7,8 @@ import { getBibleCrossRefs } from '@/data/cross-references';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useFavorites } from '@/hooks/useFavorites';
 import BibleSearch from './BibleSearch';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { ChevronDown } from 'lucide-react';
 
 const BIBLE_BOOKS = {
   'Antigo Testamento': [
