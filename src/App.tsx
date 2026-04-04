@@ -238,6 +238,7 @@ const AppLayout: React.FC = () => {
                 <Route path={AppRoute.ORDO_MISSAE} element={<AuthGuard><MissalPage /></AuthGuard>} />
                 <Route path={AppRoute.PRAYERS} element={<AuthGuard><PrayerPage /></AuthGuard>} />
                 <Route path={AppRoute.DIAGNOSTICS} element={<DiagnosticsPage />} />
+                <Route path="/reset-password" element={<ResetPasswordPage />} />
                 <Route path={AppRoute.ONBOARDING} element={<AuthGuard><OnboardingPage /></AuthGuard>} />
                 <Route path={AppRoute.CHECKOUT} element={<AuthGuard><CheckoutPage /></AuthGuard>} />
                 <Route path={AppRoute.ADMIN} element={
