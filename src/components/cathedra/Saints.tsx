@@ -664,9 +664,6 @@ const Saints: React.FC = () => {
     );
   }
 
-    );
-  }
-
   return (
     <div className="space-y-10 page-enter">
       {/* Header */}
