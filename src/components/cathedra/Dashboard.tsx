@@ -33,31 +33,31 @@ const ContentRow: React.FC<{ title: string; children: React.ReactNode; onSeeAll?
         )}
       </div>
       <div className="relative group">
-        {/* Left arrow */}
+        {/* Left arrow - Hidden on touch devices */}
         <button
           onClick={() => scroll('left')}
-          className="absolute left-0 top-0 bottom-0 w-10 z-10 bg-gradient-to-r from-background to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+          className="absolute left-0 top-0 bottom-0 w-12 z-10 bg-gradient-to-r from-background via-background/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity hidden sm:flex items-center justify-center"
           aria-label="Scroll left"
         >
-          <svg className="w-6 h-6 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+          <svg className="w-8 h-8 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" /></svg>
         </button>
 
         {/* Scrollable container */}
         <div
           ref={scrollRef}
-          className="flex gap-3 md:gap-4 overflow-x-auto scrollbar-hide pb-2 px-1 snap-x snap-mandatory"
+          className="flex gap-4 md:gap-5 overflow-x-auto scrollbar-hide pb-4 px-2 snap-x snap-mandatory scroll-smooth touch-pan-x"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {children}
         </div>
 
-        {/* Right arrow */}
+        {/* Right arrow - Hidden on touch devices */}
         <button
           onClick={() => scroll('right')}
-          className="absolute right-0 top-0 bottom-0 w-10 z-10 bg-gradient-to-l from-background to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+          className="absolute right-0 top-0 bottom-0 w-12 z-10 bg-gradient-to-l from-background via-background/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity hidden sm:flex items-center justify-center"
           aria-label="Scroll right"
         >
-          <svg className="w-6 h-6 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+          <svg className="w-8 h-8 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" /></svg>
         </button>
       </div>
     </div>
