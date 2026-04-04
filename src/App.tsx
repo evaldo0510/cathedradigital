@@ -114,10 +114,18 @@ const AppLayout: React.FC = () => {
 
         {/* Main content */}
         <main id="main-content" className="flex-1 overflow-y-auto flex flex-col relative custom-scrollbar overscroll-contain touch-pan-y scroll-smooth">
-          <div className="p-20 text-4xl text-black">
-            TEST RENDERING - IF YOU SEE THIS, APP IS WORKING
-          </div>
-        </main>
+          <AppHeader
+            user={user}
+            isDark={isDark}
+            onToggleDark={() => setIsDark(!isDark)}
+            onOpenSidebar={() => setIsSidebarOpen(true)}
+            onSignOut={signOut}
+          />
+          <div className="flex-1 p-3 sm:p-4 md:p-8 lg:p-10 pb-32 w-full max-w-6xl mx-auto page-enter">
+            <Suspense fallback={<LoadingFallback />}>
+              <AnimatePresence mode="wait" initial={false}>
+                <PageTransition key={location.pathname}>
+                  <Routes location={location}>
       </div>
     </LangContext.Provider>
   );
