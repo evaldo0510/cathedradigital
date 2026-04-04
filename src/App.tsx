@@ -143,7 +143,7 @@ const AppLayout: React.FC = () => {
       <OfflineIndicator />
       <div className="flex h-[100dvh] w-full overflow-hidden bg-background selection:bg-primary/20">
         {/* Desktop sidebar - always visible on lg+ */}
-        {location.pathname !== AppRoute.HOME && (
+        {location.pathname !== AppRoute.HOME && location.pathname !== AppRoute.ONBOARDING && (
           <div className="hidden lg:block relative h-full w-72 flex-shrink-0">
             <CathedralSidebar 
               onClose={() => setIsSidebarOpen(false)} 
