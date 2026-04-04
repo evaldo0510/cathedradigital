@@ -108,75 +108,57 @@ const Footer: React.FC = React.memo(() => {
       <div className="max-w-7xl mx-auto relative z-10 space-y-12">
         {/* TOP SECTION: BRAND & NEWSLETTER */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pb-12 border-b border-white/5">
-          <div className="lg:col-span-5 space-y-8">
-            <div className="flex items-center gap-5">
-              <Logo className="w-16 h-16 border border-white/10 p-2.5 rounded-2xl bg-white/5 shadow-2xl backdrop-blur-sm" />
+          <div className="lg:col-span-4 space-y-6">
+            <div className="flex items-center gap-4">
+              <Logo className="w-12 h-12 border border-white/10 p-2 rounded-xl bg-white/5" />
               <div>
-                <h3 className="text-3xl font-serif font-bold text-white tracking-tight leading-none">CATHEDRA</h3>
-                <p className="text-[10px] font-black uppercase text-primary mt-2 tracking-[0.4em] opacity-80">Digital Sanctuarium</p>
+                <h3 className="text-2xl font-serif font-bold text-white tracking-tight">CATHEDRA</h3>
+                <p className="text-[9px] font-black uppercase text-primary tracking-[0.3em] opacity-80">Digital Sanctuarium</p>
               </div>
             </div>
-            <p className="text-lg font-serif italic text-zinc-500 leading-relaxed max-w-md">
-              "Ex Umbris Et Imaginibus In Veritatem." <br />
-              Unindo a sabedoria milenar à Inteligência Teológica para o crescimento espiritual e intelectual.
+            <p className="text-sm font-serif italic text-zinc-500 leading-relaxed">
+              "Ex Umbris Et Imaginibus In Veritatem." Unindo sabedoria milenar à Inteligência Teológica.
             </p>
-            <div className="flex gap-6">
+            <div className="flex gap-4">
               {[
-                { icon: <Icons.Instagram className="w-5 h-5" />, url: 'https://instagram.com/cathedra.digital' },
-                { icon: <Icons.Facebook className="w-5 h-5" />, url: 'https://facebook.com/cathedradigital' },
-                { icon: <Icons.Whatsapp className="w-5 h-5" />, url: 'https://wa.me/5511999999999' },
+                { icon: <Icons.Instagram className="w-4 h-4" />, url: 'https://instagram.com/cathedra.digital' },
+                { icon: <Icons.Facebook className="w-4 h-4" />, url: 'https://facebook.com/cathedradigital' },
+                { icon: <Icons.Whatsapp className="w-4 h-4" />, url: 'https://wa.me/5511999999999' },
               ].map((social, i) => (
-                <a key={i} href={social.url} target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-primary transition-all p-2.5 rounded-xl bg-white/5 border border-white/10 hover:border-primary/50 group">
-                  <div className="group-hover:scale-110 transition-transform">{social.icon}</div>
+                <a key={i} href={social.url} target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-primary transition-all p-2 rounded-lg bg-white/5 border border-white/10">
+                  {social.icon}
                 </a>
               ))}
             </div>
-            <div className="flex gap-4">
-              <div className="px-4 py-1.5 border border-white/10 rounded-full text-[10px] font-bold uppercase tracking-widest text-zinc-500 bg-white/5">
-                Version 4.5 PRO
-              </div>
-
-              <div className="px-4 py-1.5 border border-white/10 rounded-full text-[10px] font-bold uppercase tracking-widest text-zinc-500 bg-white/5">
-                Enterprise SSL
-              </div>
-            </div>
           </div>
 
-          <div className="lg:col-span-7 flex flex-col justify-center">
-            <div className="bg-white/[0.02] border border-white/5 rounded-3xl p-8 backdrop-blur-md">
-              <div className="flex flex-col md:flex-row items-center gap-8">
-                <div className="flex-1 space-y-2 text-center md:text-left">
-                  <h4 className="text-xl font-serif text-white font-bold">Boletim Informativo</h4>
-                  <p className="text-sm text-zinc-500">Receba reflexões teológicas e atualizações da plataforma semanalmente.</p>
+          <div className="lg:col-span-8 flex flex-col justify-center">
+            <div className="bg-white/[0.02] border border-white/5 rounded-2xl p-6 backdrop-blur-md">
+              <div className="flex flex-col md:flex-row items-center gap-6">
+                <div className="flex-1 space-y-1 text-center md:text-left">
+                  <h4 className="text-lg font-serif text-white font-bold">Boletim</h4>
+                  <p className="text-xs text-zinc-500">Reflexões teológicas semanais.</p>
                 </div>
-                <form onSubmit={handleSubscribe} className="w-full md:w-auto flex flex-col sm:flex-row gap-3">
-                  <div className="relative flex-1 sm:w-64">
-                    <input 
-                      type="email" 
-                      required
-                      placeholder="Seu melhor e-mail" 
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      disabled={isSubmitting}
-                      className="w-full px-6 py-3.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-primary/50 transition-all placeholder:text-zinc-600 disabled:opacity-50"
-                    />
-                    {isSubmitting && (
-                      <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                        <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                      </div>
-                    )}
-                  </div>
+                <form onSubmit={handleSubscribe} className="w-full md:w-auto flex flex-col sm:flex-row gap-2">
+                  <input 
+                    type="email" 
+                    required
+                    placeholder="Seu melhor e-mail" 
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    disabled={isSubmitting}
+                    className="flex-1 sm:w-56 px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-primary/50 transition-all"
+                  />
                   <button 
                     disabled={isSubmitting}
-                    className="px-8 py-3.5 rounded-xl bg-primary text-black font-black uppercase text-[10px] tracking-widest hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 whitespace-nowrap disabled:opacity-50 active:scale-95"
+                    className="px-6 py-2.5 rounded-lg bg-primary text-black font-black uppercase text-[9px] tracking-widest hover:bg-primary/90 transition-all disabled:opacity-50"
                   >
-                    {isSubmitting ? 'Enviando...' : 'Inscrever-se'}
+                    {isSubmitting ? '...' : 'Inscrever'}
                   </button>
                 </form>
               </div>
             </div>
           </div>
-        </div>
 
         {/* MIDDLE SECTION: MISSION & SITEMAP */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 mb-12">
