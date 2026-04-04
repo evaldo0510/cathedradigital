@@ -8,18 +8,20 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useFavorites } from '@/hooks/useFavorites';
 import BibleSearch from './BibleSearch';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, ScrollText, Swords, Feather, Flame, Cross, Globe, Mail, BookOpen, Sparkles } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
 
 type BibleBook = { name: string; abbr: string; chapters: number };
+type BibleCategory = { label: string; icon: React.ElementType; color: string; bgColor: string; books: BibleBook[] };
 
-const BIBLE_CATEGORIES: Record<string, { label: string; icon: string; books: BibleBook[] }[]> = {
+const BIBLE_CATEGORIES: Record<string, BibleCategory[]> = {
   'Antigo Testamento': [
-    { label: 'Pentateuco', icon: '📜', books: [
+    { label: 'Pentateuco', icon: ScrollText, color: 'text-amber-600', bgColor: 'bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800', books: [
       { name: 'Gênesis', abbr: 'Gn', chapters: 50 }, { name: 'Êxodo', abbr: 'Ex', chapters: 40 },
       { name: 'Levítico', abbr: 'Lv', chapters: 27 }, { name: 'Números', abbr: 'Nm', chapters: 36 },
       { name: 'Deuteronômio', abbr: 'Dt', chapters: 34 },
     ]},
-    { label: 'Históricos', icon: '⚔️', books: [
+    { label: 'Históricos', icon: Swords, color: 'text-red-600', bgColor: 'bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-800', books: [
       { name: 'Josué', abbr: 'Js', chapters: 24 }, { name: 'Juízes', abbr: 'Jz', chapters: 21 },
       { name: 'Rute', abbr: 'Rt', chapters: 4 }, { name: '1 Samuel', abbr: '1Sm', chapters: 31 },
       { name: '2 Samuel', abbr: '2Sm', chapters: 24 }, { name: '1 Reis', abbr: '1Rs', chapters: 22 },
@@ -29,13 +31,13 @@ const BIBLE_CATEGORIES: Record<string, { label: string; icon: string; books: Bib
       { name: 'Judite', abbr: 'Jt', chapters: 16 }, { name: 'Ester', abbr: 'Est', chapters: 10 },
       { name: '1 Macabeus', abbr: '1Mc', chapters: 16 }, { name: '2 Macabeus', abbr: '2Mc', chapters: 15 },
     ]},
-    { label: 'Sapienciais', icon: '🕊️', books: [
+    { label: 'Sapienciais', icon: Feather, color: 'text-sky-600', bgColor: 'bg-sky-50 dark:bg-sky-950/30 border-sky-200 dark:border-sky-800', books: [
       { name: 'Jó', abbr: 'Jó', chapters: 42 }, { name: 'Salmos', abbr: 'Sl', chapters: 150 },
       { name: 'Provérbios', abbr: 'Pr', chapters: 31 }, { name: 'Eclesiastes', abbr: 'Ecl', chapters: 12 },
       { name: 'Cântico dos Cânticos', abbr: 'Ct', chapters: 8 }, { name: 'Sabedoria', abbr: 'Sb', chapters: 19 },
       { name: 'Eclesiástico', abbr: 'Eclo', chapters: 51 },
     ]},
-    { label: 'Profetas', icon: '🔥', books: [
+    { label: 'Profetas', icon: Flame, color: 'text-orange-600', bgColor: 'bg-orange-50 dark:bg-orange-950/30 border-orange-200 dark:border-orange-800', books: [
       { name: 'Isaías', abbr: 'Is', chapters: 66 }, { name: 'Jeremias', abbr: 'Jr', chapters: 52 },
       { name: 'Lamentações', abbr: 'Lm', chapters: 5 }, { name: 'Baruc', abbr: 'Br', chapters: 6 },
       { name: 'Ezequiel', abbr: 'Ez', chapters: 48 }, { name: 'Daniel', abbr: 'Dn', chapters: 14 },
@@ -48,14 +50,14 @@ const BIBLE_CATEGORIES: Record<string, { label: string; icon: string; books: Bib
     ]},
   ],
   'Novo Testamento': [
-    { label: 'Evangelhos', icon: '✝️', books: [
+    { label: 'Evangelhos', icon: Cross, color: 'text-purple-600', bgColor: 'bg-purple-50 dark:bg-purple-950/30 border-purple-200 dark:border-purple-800', books: [
       { name: 'Mateus', abbr: 'Mt', chapters: 28 }, { name: 'Marcos', abbr: 'Mc', chapters: 16 },
       { name: 'Lucas', abbr: 'Lc', chapters: 24 }, { name: 'João', abbr: 'Jo', chapters: 21 },
     ]},
-    { label: 'Atos', icon: '🌍', books: [
+    { label: 'Atos', icon: Globe, color: 'text-emerald-600', bgColor: 'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-800', books: [
       { name: 'Atos dos Apóstolos', abbr: 'At', chapters: 28 },
     ]},
-    { label: 'Cartas Paulinas', icon: '✉️', books: [
+    { label: 'Cartas Paulinas', icon: Mail, color: 'text-indigo-600', bgColor: 'bg-indigo-50 dark:bg-indigo-950/30 border-indigo-200 dark:border-indigo-800', books: [
       { name: 'Romanos', abbr: 'Rm', chapters: 16 }, { name: '1 Coríntios', abbr: '1Cor', chapters: 16 },
       { name: '2 Coríntios', abbr: '2Cor', chapters: 13 }, { name: 'Gálatas', abbr: 'Gl', chapters: 6 },
       { name: 'Efésios', abbr: 'Ef', chapters: 6 }, { name: 'Filipenses', abbr: 'Fl', chapters: 4 },
@@ -64,13 +66,13 @@ const BIBLE_CATEGORIES: Record<string, { label: string; icon: string; books: Bib
       { name: '2 Timóteo', abbr: '2Tm', chapters: 4 }, { name: 'Tito', abbr: 'Tt', chapters: 3 },
       { name: 'Filemon', abbr: 'Fm', chapters: 1 }, { name: 'Hebreus', abbr: 'Hb', chapters: 13 },
     ]},
-    { label: 'Cartas Católicas', icon: '📖', books: [
+    { label: 'Cartas Católicas', icon: BookOpen, color: 'text-teal-600', bgColor: 'bg-teal-50 dark:bg-teal-950/30 border-teal-200 dark:border-teal-800', books: [
       { name: 'Tiago', abbr: 'Tg', chapters: 5 }, { name: '1 Pedro', abbr: '1Pd', chapters: 5 },
       { name: '2 Pedro', abbr: '2Pd', chapters: 3 }, { name: '1 João', abbr: '1Jo', chapters: 5 },
       { name: '2 João', abbr: '2Jo', chapters: 1 }, { name: '3 João', abbr: '3Jo', chapters: 1 },
       { name: 'Judas', abbr: 'Jd', chapters: 1 },
     ]},
-    { label: 'Apocalipse', icon: '🔮', books: [
+    { label: 'Apocalipse', icon: Sparkles, color: 'text-rose-600', bgColor: 'bg-rose-50 dark:bg-rose-950/30 border-rose-200 dark:border-rose-800', books: [
       { name: 'Apocalipse', abbr: 'Ap', chapters: 22 },
     ]},
   ],
@@ -102,6 +104,8 @@ const Bible: React.FC = () => {
   const [fontSizeIdx, setFontSizeIdx] = useState(1);
   const [showCrossRefs, setShowCrossRefs] = useState(true);
   const { toggleFavorite, isFavorite } = useFavorites();
+  const { profile } = useAuth();
+  const completedBooks = useMemo(() => new Set(profile?.completed_books || []), [profile?.completed_books]);
   // Handle deep-link from Catechism cross-references (?book=Gn&ch=1)
   useEffect(() => {
     const bookParam = searchParams.get('book');
@@ -407,28 +411,55 @@ const Bible: React.FC = () => {
 
       {/* Books by category */}
       <div className="space-y-3">
-        {filteredCategories.map(cat => (
-          <Collapsible key={cat.label} defaultOpen>
-            <CollapsibleTrigger className="flex items-center gap-2 w-full px-3 py-2 rounded-xl bg-card border border-border hover:bg-primary/5 transition-all group">
-              <span className="text-base">{cat.icon}</span>
-              <span className="text-xs font-black uppercase tracking-widest text-foreground group-hover:text-primary transition-colors">{cat.label}</span>
-              <span className="text-[10px] text-muted-foreground ml-1">({cat.books.length})</span>
-              <ChevronDown className="w-4 h-4 ml-auto text-muted-foreground transition-transform duration-200 group-data-[state=open]:rotate-180" />
-            </CollapsibleTrigger>
-            <CollapsibleContent>
-              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-1.5 mt-2 ml-1">
-                {cat.books.map(book => (
-                  <button key={book.abbr} onClick={() => selectBook(book)}
-                    className="text-left px-2.5 py-2 rounded-lg bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group/book">
-                    <span className="text-[9px] font-black text-primary uppercase tracking-widest">{book.abbr}</span>
-                    <p className="text-xs font-bold text-foreground mt-0.5 group-hover/book:text-primary transition-colors truncate">{book.name}</p>
-                    <p className="text-[9px] text-muted-foreground">{book.chapters} cap.</p>
-                  </button>
-                ))}
-              </div>
-            </CollapsibleContent>
-          </Collapsible>
-        ))}
+        {filteredCategories.map(cat => {
+          const CatIcon = cat.icon;
+          const readCount = cat.books.filter(b => completedBooks.has(b.abbr)).length;
+          const progress = Math.round((readCount / cat.books.length) * 100);
+          return (
+            <Collapsible key={cat.label} defaultOpen>
+              <CollapsibleTrigger className={`flex items-center gap-2.5 w-full px-4 py-3 rounded-xl border transition-all group ${cat.bgColor}`}>
+                <div className={`p-1.5 rounded-lg bg-white/70 dark:bg-black/20`}>
+                  <CatIcon className={`w-4 h-4 ${cat.color}`} />
+                </div>
+                <div className="flex flex-col items-start flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className={`text-xs font-black uppercase tracking-widest ${cat.color}`}>{cat.label}</span>
+                    <span className="text-[10px] text-muted-foreground">({cat.books.length})</span>
+                  </div>
+                  {readCount > 0 && (
+                    <div className="flex items-center gap-2 mt-1 w-full">
+                      <div className="h-1 flex-1 max-w-[120px] bg-black/10 dark:bg-white/10 rounded-full overflow-hidden">
+                        <div className="h-full bg-current rounded-full transition-all" style={{ width: `${progress}%`, color: 'inherit' }} />
+                      </div>
+                      <span className="text-[9px] font-bold text-muted-foreground">{readCount}/{cat.books.length}</span>
+                    </div>
+                  )}
+                </div>
+                <ChevronDown className="w-4 h-4 text-muted-foreground transition-transform duration-200 group-data-[state=open]:rotate-180" />
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-1.5 mt-2 ml-1">
+                  {cat.books.map(book => {
+                    const isRead = completedBooks.has(book.abbr);
+                    return (
+                      <button key={book.abbr} onClick={() => selectBook(book)}
+                        className={`text-left px-2.5 py-2 rounded-lg border transition-all group/book ${
+                          isRead ? 'bg-primary/5 border-primary/30' : 'bg-card border-border hover:border-primary/50 hover:bg-primary/5'
+                        }`}>
+                        <div className="flex items-center justify-between">
+                          <span className={`text-[9px] font-black uppercase tracking-widest ${cat.color}`}>{book.abbr}</span>
+                          {isRead && <span className="text-[8px]">✓</span>}
+                        </div>
+                        <p className="text-xs font-bold text-foreground mt-0.5 group-hover/book:text-primary transition-colors truncate">{book.name}</p>
+                        <p className="text-[9px] text-muted-foreground">{book.chapters} cap.</p>
+                      </button>
+                    );
+                  })}
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
+          );
+        })}
       </div>
     </div>
   );
