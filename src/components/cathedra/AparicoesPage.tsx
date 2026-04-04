@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { Icons } from '../../constants';
 import { motion, AnimatePresence } from 'framer-motion';
+import guadalupeImg from '@/assets/aparicao-guadalupe.jpg';
+import lourdesImg from '@/assets/aparicao-lourdes.jpg';
+import fatimaImg from '@/assets/aparicao-fatima.jpg';
+import aparecidaImg from '@/assets/aparicao-aparecida.jpg';
 
 interface Apparition {
   id: string;
@@ -17,6 +21,7 @@ interface Apparition {
   liturgicalFeast: string;
   approved: boolean;
   image: string;
+  imageSrc: string;
   color: string;
 }
 
@@ -36,6 +41,7 @@ const APPARITIONS: Apparition[] = [
     liturgicalFeast: '12 de dezembro',
     approved: true,
     image: '🌹',
+    imageSrc: guadalupeImg,
     color: 'from-emerald-500/20 to-emerald-600/5 border-emerald-500/30',
   },
   {
@@ -53,6 +59,7 @@ const APPARITIONS: Apparition[] = [
     liturgicalFeast: '11 de fevereiro',
     approved: true,
     image: '💧',
+    imageSrc: lourdesImg,
     color: 'from-blue-500/20 to-blue-600/5 border-blue-500/30',
   },
   {
@@ -70,6 +77,7 @@ const APPARITIONS: Apparition[] = [
     liturgicalFeast: '13 de maio',
     approved: true,
     image: '☀️',
+    imageSrc: fatimaImg,
     color: 'from-amber-500/20 to-amber-600/5 border-amber-500/30',
   },
   {
@@ -87,6 +95,7 @@ const APPARITIONS: Apparition[] = [
     liturgicalFeast: '12 de outubro',
     approved: true,
     image: '🐟',
+    imageSrc: aparecidaImg,
     color: 'from-sky-500/20 to-sky-600/5 border-sky-500/30',
   },
 ];
@@ -108,7 +117,7 @@ const AparicoesPage: React.FC = () => {
             <h1 className="text-xl md:text-2xl font-serif font-bold text-foreground">{selectedApparition.title}</h1>
             <p className="text-sm text-muted-foreground">{selectedApparition.location}</p>
           </div>
-          <span className="text-4xl">{selectedApparition.image}</span>
+          <img src={selectedApparition.imageSrc} alt={selectedApparition.title} className="w-16 h-16 rounded-xl object-cover shadow-md" loading="lazy" />
         </div>
 
         {/* Quick facts */}
@@ -204,7 +213,7 @@ const AparicoesPage: React.FC = () => {
         {APPARITIONS.map((a, i) => (
           <React.Fragment key={a.id}>
             <div className="flex flex-col items-center gap-1">
-              <span className="text-2xl">{a.image}</span>
+              <img src={a.imageSrc} alt={a.title} className="w-12 h-12 rounded-full object-cover shadow-sm" loading="lazy" />
               <span className="text-[10px] font-black text-primary">{a.year}</span>
             </div>
             {i < APPARITIONS.length - 1 && (
@@ -223,24 +232,24 @@ const AparicoesPage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
             onClick={() => { setSelectedApparition(apparition); setActiveTab('historia'); }}
-            className={`text-left p-6 rounded-2xl bg-gradient-to-br ${apparition.color} border hover:scale-[1.02] transition-all group`}
+            className={`text-left rounded-2xl bg-gradient-to-br ${apparition.color} border hover:scale-[1.02] transition-all group overflow-hidden`}
           >
-            <div className="flex items-start justify-between mb-4">
-              <div>
+            <img src={apparition.imageSrc} alt={apparition.title} className="w-full h-40 object-cover" loading="lazy" />
+            <div className="p-5">
+              <div className="mb-3">
                 <span className="text-[10px] font-black text-primary uppercase tracking-widest">{apparition.country} • {apparition.year}</span>
                 <h2 className="text-lg md:text-xl font-serif font-bold text-foreground mt-1 group-hover:text-primary transition-colors">
                   {apparition.title}
                 </h2>
               </div>
-              <span className="text-3xl">{apparition.image}</span>
-            </div>
-            <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{apparition.summary}</p>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <Icons.Users className="w-3.5 h-3.5" />
-                <span className="text-[10px] font-bold">{apparition.seer.split(',')[0]}</span>
+              <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{apparition.summary}</p>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Icons.Users className="w-3.5 h-3.5" />
+                  <span className="text-[10px] font-bold">{apparition.seer.split(',')[0]}</span>
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-widest text-primary">Ler com profundidade →</span>
               </div>
-              <span className="text-[10px] font-black uppercase tracking-widest text-primary">Ler com profundidade →</span>
             </div>
           </motion.button>
         ))}
