@@ -63,6 +63,7 @@ const PoenitentiaPage = lazy(() => import('./components/cathedra/PoenitentiaPage
 const GlossaryPage = lazy(() => import('./components/cathedra/GlossaryPage'));
 const AparicoesPage = lazy(() => import('./components/cathedra/AparicoesPage'));
 const OnboardingPage = lazy(() => import('./components/cathedra/OnboardingPage'));
+const ResetPasswordPage = lazy(() => import('./components/cathedra/ResetPasswordPage'));
 
 const LoadingFallback = () => (
   <div className="flex items-center justify-center min-h-[40vh]">
