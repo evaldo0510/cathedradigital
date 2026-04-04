@@ -157,6 +157,15 @@ export const DocumentsModal: React.FC<QuickModalProps> = ({ isOpen, onClose }) =
           </div>
         ))}
       </div>
+      <div className="mt-6 pt-4 border-t border-border">
+        <button 
+          onClick={() => { navigate(AppRoute.MAGISTERIUM); onClose(); }}
+          className="w-full py-3 bg-primary text-primary-foreground rounded-xl text-[10px] font-black uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-2"
+        >
+          <Icons.Globe className="w-3.5 h-3.5" />
+          Ver Todos os Documentos
+        </button>
+      </div>
     </ModalShell>
   );
 };
