@@ -124,7 +124,7 @@ const AppLayout: React.FC = () => {
           </div>
         </div>
 
-        <main id="main-content" className="flex-1 overflow-y-auto flex flex-col relative custom-scrollbar overscroll-none touch-pan-y scroll-smooth">
+        <main id="main-content" className="flex-1 overflow-y-auto flex flex-col relative custom-scrollbar overscroll-auto touch-pan-y scroll-smooth">
           <AppHeader
             user={user}
             isDark={isDark}
