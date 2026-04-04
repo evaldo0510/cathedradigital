@@ -41,6 +41,7 @@ const APPARITIONS: Apparition[] = [
     liturgicalFeast: '12 de dezembro',
     approved: true,
     image: '🌹',
+    imageSrc: guadalupeImg,
     color: 'from-emerald-500/20 to-emerald-600/5 border-emerald-500/30',
   },
   {
