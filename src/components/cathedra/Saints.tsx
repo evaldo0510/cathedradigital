@@ -1,7 +1,75 @@
-import React, { useState, useMemo } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useMemo, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '../../constants';
 import StaggeredList from './StaggeredList';
+import SacredImage from './SacredImage';
+
+// --- Internal Reader Component ---
+const InternalReader: React.FC<{ url: string; title: string; onClose: () => void }> = ({ url, title, onClose }) => {
+  const [loading, setLoading] = useState(true);
+
+  // Close reader on Escape key
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [onClose]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[60] bg-black/90 flex flex-col backdrop-blur-sm"
+    >
+      <div className="flex items-center justify-between p-4 border-b border-white/10 bg-stone-900 text-white">
+        <div className="flex items-center gap-3">
+          <Icons.Book className="w-5 h-5 text-[#d4af37]" />
+          <h2 className="font-serif font-bold text-lg truncate max-w-[250px] md:max-w-md">{title}</h2>
+        </div>
+        <div className="flex items-center gap-2">
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-2 hover:bg-white/10 rounded-full transition-colors"
+            title="Abrir em nova aba"
+          >
+            <Icons.ExternalLink className="w-5 h-5" />
+          </a>
+          <button
+            onClick={onClose}
+            className="p-2 hover:bg-white/10 rounded-full transition-colors"
+            aria-label="Fechar leitor"
+          >
+            <Icons.ArrowDown className="w-6 h-6 rotate-180" />
+          </button>
+        </div>
+
+      </div>
+      <div className="flex-1 relative bg-white">
+        {loading && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-stone-50 gap-4">
+            <Icons.Cross className="w-12 h-12 text-[#d4af37] animate-pulse" />
+            <p className="font-serif italic text-stone-500">Abrindo obra sagrada...</p>
+          </div>
+        )}
+        <iframe
+          src={url}
+          className="w-full h-full border-none"
+          onLoad={() => setLoading(false)}
+          title={title}
+        />
+      </div>
+      <div className="p-3 bg-stone-900 text-[10px] text-white/40 text-center uppercase tracking-widest font-black">
+        Modo de Leitura Cathedra — {title}
+      </div>
+    </motion.div>
+  );
+};
+
 
 interface SaintWork {
   title: string;
@@ -39,7 +107,39 @@ const SAINTS_DATA: Saint[] = [
       { title: 'Catena Aurea', url: 'https://www.ecatholic2000.com/catena/untitled-encyclopediaproject.shtml' },
     ],
     quotes: ['"O temor é o princípio da sabedoria."', '"A graça não destrói a natureza, mas a aperfeiçoa."'],
-    category: 'doctor'
+    category: 'doctor',
+    image: 'https://images.unsplash.com/photo-1548610762-656391d1ad4d'
+  },
+  {
+    id: 'agostinho', name: 'Santo Agostinho de Hipona', title: 'Doctor Gratiae',
+    feastDay: '28 de Agosto', feastMonth: 8, feastDayNum: 28,
+    born: '354, Tagaste', died: '430, Hipona',
+    patronOf: ['Teólogos', 'Cervejeiros', 'Impressores'],
+    bio: 'Bispo de Hipona e um dos mais importantes Padres da Igreja. Sua conversão, narrada nas Confissões, é um dos relatos mais célebres da literatura cristã. Combateu o maniqueísmo, donatismo e pelagianismo.',
+    works: [
+      { title: 'Confissões', url: 'https://www.augustinus.it/portoghese/confessioni/index.htm' },
+      { title: 'A Cidade de Deus', url: 'https://www.augustinus.it/portoghese/cdd/index.htm' },
+      { title: 'De Trinitate', url: 'https://www.augustinus.it/latino/trinita/index.htm' },
+      { title: 'Enchiridion', url: 'https://www.newadvent.org/fathers/1302.htm' },
+    ],
+    quotes: ['"Fizeste-nos para Ti, Senhor, e o nosso coração está inquieto enquanto não descansar em Ti."', '"Ama e faz o que quiseres."'],
+    category: 'doctor',
+    image: 'https://images.unsplash.com/photo-1510627255389-9e8a718b53e7'
+  },
+  {
+    id: 'francisco-assis', name: 'São Francisco de Assis', title: 'Il Poverello',
+    feastDay: '4 de Outubro', feastMonth: 10, feastDayNum: 4,
+    born: '1181, Assis', died: '1226, Porciúncula',
+    patronOf: ['Animais', 'Ecologia', 'Itália', 'Comerciantes'],
+    bio: 'Fundador da Ordem dos Frades Menores (Franciscanos). Renunciou à riqueza para viver em pobreza radical, pregando o Evangelho com simplicidade. Recebeu os estigmas de Cristo no Monte Alverna.',
+    works: [
+      { title: 'Cântico das Criaturas', url: 'https://www.franciscanos.org.br/?p=cantico-das-criaturas' },
+      { title: 'Regra dos Frades Menores', url: 'https://www.franciscanos.org.br/?p=regra-bulada' },
+      { title: 'Testamento', url: 'https://www.franciscanos.org.br/?p=testamento' },
+    ],
+    quotes: ['"Senhor, fazei-me instrumento da vossa paz."', '"Pregai o Evangelho em todo tempo; se necessário, usai palavras."'],
+    category: 'founder',
+    image: 'https://images.unsplash.com/photo-1543333309-8cdcd4fef673'
   },
   {
     id: 'agostinho', name: 'Santo Agostinho de Hipona', title: 'Doctor Gratiae',
@@ -437,10 +537,12 @@ const MONTH_NAMES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julh
 
 const Saints: React.FC = () => {
   const [selectedSaint, setSelectedSaint] = useState<Saint | null>(null);
+  const [selectedWork, setSelectedWork] = useState<SaintWork | null>(null);
   const [search, setSearch] = useState('');
   const [filterCategory, setFilterCategory] = useState<string>('all');
   const [viewMode, setViewMode] = useState<'grid' | 'calendar'>('grid');
   const [calendarMonth, setCalendarMonth] = useState(new Date().getMonth());
+
 
   const categories = useMemo(() => {
     const cats = new Set(SAINTS_DATA.map(s => s.category));
@@ -467,10 +569,16 @@ const Saints: React.FC = () => {
           <span className="text-xs font-black uppercase tracking-widest">Voltar ao Sanctorum</span>
         </button>
 
-        <div className="bg-white dark:bg-stone-900 rounded-3xl border border-stone-100 dark:border-stone-800 overflow-hidden">
-          <div className="bg-gradient-to-br from-stone-900 to-stone-800 p-10 md:p-14 text-white relative overflow-hidden">
-            <div className="absolute inset-0 opacity-5 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMSIgZmlsbD0id2hpdGUiLz48L3N2Zz4=')]" />
-            <div className="relative">
+        <div className="bg-white dark:bg-stone-900 rounded-3xl border border-stone-100 dark:border-stone-800 overflow-hidden shadow-sm">
+          <div className="relative h-64 md:h-96">
+            <SacredImage
+              src={selectedSaint.image || 'https://images.unsplash.com/photo-1548610762-656391d1ad4d'}
+              alt={selectedSaint.name}
+              className="w-full h-full"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-stone-900 via-stone-900/40 to-transparent" />
+            <div className="absolute bottom-0 left-0 p-8 md:p-12 text-white">
               <span className={`inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-4 ${CATEGORY_COLORS[selectedSaint.category]}`}>
                 {CATEGORY_LABELS[selectedSaint.category]}
               </span>
@@ -519,17 +627,15 @@ const Saints: React.FC = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {selectedSaint.works.map(w => (
                     w.url ? (
-                      <a
+                      <button
                         key={w.title}
-                        href={w.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-3 p-4 bg-primary/5 border border-primary/15 rounded-xl hover:bg-primary/10 hover:border-primary/30 transition-all group"
+                        onClick={() => setSelectedWork(w)}
+                        className="flex items-center gap-3 p-4 bg-primary/5 border border-primary/15 rounded-xl hover:bg-primary/10 hover:border-primary/30 transition-all group text-left w-full"
                       >
                         <Icons.Book className="w-4 h-4 text-primary flex-shrink-0" />
                         <span className="font-serif text-foreground group-hover:text-primary transition-colors flex-1">{w.title}</span>
-                        <Icons.ExternalLink className="w-3.5 h-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
-                      </a>
+                        <Icons.BookOpen className="w-3.5 h-3.5 text-primary opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                      </button>
                     ) : (
                       <div key={w.title} className="flex items-center gap-3 p-4 bg-muted/50 rounded-xl">
                         <Icons.Book className="w-4 h-4 text-muted-foreground flex-shrink-0" />
@@ -556,6 +662,16 @@ const Saints: React.FC = () => {
             )}
           </div>
         </div>
+
+        <AnimatePresence>
+          {selectedWork && (
+            <InternalReader
+              url={selectedWork.url!}
+              title={selectedWork.title}
+              onClose={() => setSelectedWork(null)}
+            />
+          )}
+        </AnimatePresence>
       </div>
     );
   }
@@ -611,22 +727,35 @@ const Saints: React.FC = () => {
                 <button
                   key={saint.id}
                   onClick={() => setSelectedSaint(saint)}
-                  className="text-left bg-card border border-border rounded-3xl p-8 hover:border-primary/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group"
+                  className="text-left bg-card border border-border rounded-3xl overflow-hidden hover:border-primary/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group flex flex-col"
                 >
-                  <div className="flex items-start justify-between mb-4">
-                    <span className={`px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${CATEGORY_COLORS[saint.category]}`}>
-                      {CATEGORY_LABELS[saint.category]}
-                    </span>
-                    <Icons.ArrowDown className="w-4 h-4 text-muted-foreground -rotate-90 group-hover:text-primary transition-colors" />
+                  <div className="relative h-48 w-full overflow-hidden">
+                    <SacredImage
+                      src={saint.image || 'https://images.unsplash.com/photo-1548610762-656391d1ad4d'}
+                      alt={saint.name}
+                      className="w-full h-full transform group-hover:scale-110 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-stone-900/80 to-transparent opacity-60" />
+                    <div className="absolute top-4 left-4">
+                      <span className={`px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${CATEGORY_COLORS[saint.category]}`}>
+                        {CATEGORY_LABELS[saint.category]}
+                      </span>
+                    </div>
                   </div>
-                  <h3 className="text-xl font-serif font-bold text-foreground mb-1 group-hover:text-primary transition-colors">{saint.name}</h3>
-                  <p className="text-sm text-primary font-serif italic mb-4">{saint.title}</p>
-                  <p className="text-sm text-muted-foreground line-clamp-3 mb-5 leading-relaxed">{saint.bio}</p>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <Icons.Star className="w-3.5 h-3.5" />
-                    <span>{saint.feastDay}</span>
+                  <div className="p-8 flex-1">
+                    <div className="flex items-start justify-between mb-2">
+                      <h3 className="text-xl font-serif font-bold text-foreground group-hover:text-primary transition-colors">{saint.name}</h3>
+                      <Icons.ArrowDown className="w-4 h-4 text-muted-foreground -rotate-90 group-hover:text-primary transition-colors mt-1" />
+                    </div>
+                    <p className="text-sm text-primary font-serif italic mb-4">{saint.title}</p>
+                    <p className="text-sm text-muted-foreground line-clamp-3 mb-5 leading-relaxed">{saint.bio}</p>
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground pt-4 border-t border-border/50">
+                      <Icons.Star className="w-3.5 h-3.5 text-[#d4af37]" />
+                      <span>{saint.feastDay}</span>
+                    </div>
                   </div>
                 </button>
+
               ))}
             </StaggeredList>
           )}
@@ -656,10 +785,18 @@ const Saints: React.FC = () => {
                   onClick={() => setSelectedSaint(saint)}
                   className="w-full flex items-center gap-6 p-6 bg-white dark:bg-stone-900 border border-stone-100 dark:border-stone-800 rounded-2xl hover:border-[#d4af37]/50 hover:shadow-lg transition-all text-left group"
                 >
-                  <div className="flex-shrink-0 w-16 h-16 bg-stone-900 dark:bg-[#d4af37]/10 rounded-2xl flex flex-col items-center justify-center">
-                    <span className="text-2xl font-black text-[#d4af37]">{saint.feastDayNum}</span>
-                    <span className="text-[8px] font-black uppercase tracking-widest text-stone-400 dark:text-[#d4af37]/60">{MONTH_NAMES[calendarMonth].substring(0, 3)}</span>
+                  <div className="flex-shrink-0 w-20 h-20 relative overflow-hidden rounded-2xl">
+                    <SacredImage
+                      src={saint.image || 'https://images.unsplash.com/photo-1548610762-656391d1ad4d'}
+                      alt={saint.name}
+                      className="w-full h-full"
+                    />
+                    <div className="absolute inset-0 bg-stone-900/40 flex flex-col items-center justify-center">
+                      <span className="text-xl font-black text-white">{saint.feastDayNum}</span>
+                      <span className="text-[7px] font-black uppercase tracking-widest text-white/80">{MONTH_NAMES[calendarMonth].substring(0, 3)}</span>
+                    </div>
                   </div>
+
                   <div className="flex-1 min-w-0">
                     <h3 className="font-serif font-bold text-stone-900 dark:text-stone-100 group-hover:text-[#d4af37] transition-colors">{saint.name}</h3>
                     <p className="text-sm text-[#d4af37] font-serif italic">{saint.title}</p>
