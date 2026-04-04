@@ -276,7 +276,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             subtitle="Frei Gilson - Todos os dias às 4:00 AM"
             onClick={() => window.open('https://www.youtube.com/@FreiGilsonSomdoMonte', '_blank')}
             wide
-            icon={<Icons.Youtube className="w-5 h-5" />}
+            icon={<Icons.Youtube className="w-4 h-4" />}
           />
           <RowCard
             image="https://images.unsplash.com/photo-1445445290350-18a3b86e0b5a?auto=format&fit=crop&q=80&w=800"
@@ -284,7 +284,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             subtitle="Vida de Oração e Música"
             onClick={() => window.open('https://www.youtube.com/@FreiGilsonSomdoMonte', '_blank')}
             wide
-            icon={<Icons.Heart className="w-5 h-5" />}
+            icon={<Icons.Heart className="w-4 h-4" />}
           />
         </ContentRow>
 
