@@ -80,7 +80,7 @@ const CommunityPage: React.FC = () => {
     if (userIds.length === 0) { setLeaderboard([]); setLbLoading(false); return; }
 
     const { data: profiles } = await supabase
-      .from('profiles')
+      .from('public_profiles' as any)
       .select('id, name, avatar_url')
       .in('id', userIds);
 
