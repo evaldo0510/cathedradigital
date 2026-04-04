@@ -29,13 +29,25 @@ const InternalReader: React.FC<{ url: string; title: string; onClose: () => void
           <Icons.Book className="w-5 h-5 text-[#d4af37]" />
           <h2 className="font-serif font-bold text-lg truncate max-w-[250px] md:max-w-md">{title}</h2>
         </div>
-        <button
-          onClick={onClose}
-          className="p-2 hover:bg-white/10 rounded-full transition-colors"
-          aria-label="Fechar leitor"
-        >
-          <Icons.ArrowDown className="w-6 h-6 rotate-180" />
-        </button>
+        <div className="flex items-center gap-2">
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-2 hover:bg-white/10 rounded-full transition-colors"
+            title="Abrir em nova aba"
+          >
+            <Icons.ExternalLink className="w-5 h-5" />
+          </a>
+          <button
+            onClick={onClose}
+            className="p-2 hover:bg-white/10 rounded-full transition-colors"
+            aria-label="Fechar leitor"
+          >
+            <Icons.ArrowDown className="w-6 h-6 rotate-180" />
+          </button>
+        </div>
+
       </div>
       <div className="flex-1 relative bg-white">
         {loading && (
