@@ -169,6 +169,7 @@ const AppLayout: React.FC = () => {
             </Suspense>
           </div>
           <CathedralFooter />
+          <BottomNav onOpenSidebar={() => setIsSidebarOpen(true)} />
         </main>
       </div>
     </LangContext.Provider>
