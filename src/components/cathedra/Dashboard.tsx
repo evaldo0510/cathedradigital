@@ -80,7 +80,7 @@ const RowCard: React.FC<RowCardProps> = ({ image, title, subtitle, onClick, wide
     whileHover={{ scale: 1.05, y: -8 }}
     whileTap={{ scale: 0.97 }}
     className={`relative shrink-0 snap-start rounded-[2rem] overflow-hidden group cursor-pointer shadow-2xl hover:shadow-primary/20 transition-all duration-500 ring-1 ring-border/5 hover:ring-primary/40 ${
-      wide ? 'w-[320px] md:w-[400px] h-48 md:h-56' : 'w-44 md:w-56 h-64 md:h-80'
+      wide ? 'w-[280px] md:w-[340px] h-40 md:h-48' : 'w-40 md:w-48 h-56 md:h-72'
     }`}
   >
     <img src={image} alt={title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
