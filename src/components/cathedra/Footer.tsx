@@ -54,8 +54,9 @@ const DIOCESE_URLS: Record<string, string> = {
 
 const Footer: React.FC = React.memo(() => {
   const navigate = useNavigate();
-  const [selectedDiocese, setSelectedDiocese] = useState('');
+  const [selectedDiocese, setSelectedDiocese] = useState(() => localStorage.getItem('cathedra_diocese') || '');
   const [email, setEmail] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const vaticanLinks = [
     { title: 'Santa Sé (Vatican.va)', url: 'https://www.vatican.va', desc: 'Site oficial do Vaticano' },
@@ -71,14 +72,26 @@ const Footer: React.FC = React.memo(() => {
   ];
 
   const scrollToTop = () => {
-    document.getElementById('main-content')?.scrollTo({ top: 0, behavior: 'smooth' });
+    const mainContent = document.getElementById('main-content');
+    if (mainContent) {
+      mainContent.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate subscription
-    alert(`E-mail ${email} cadastrado com sucesso!`);
+    setIsSubmitting(true);
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    alert(`E-mail ${email} cadastrado com sucesso! Bem-vindo à nossa comunidade.`);
     setEmail('');
+    setIsSubmitting(false);
+  };
+
+  const handleDioceseChange = (val: string) => {
+    setSelectedDiocese(val);
+    if (val) localStorage.setItem('cathedra_diocese', val);
+    else localStorage.removeItem('cathedra_diocese');
   };
 
   const dioceseUrl = DIOCESE_URLS[selectedDiocese];
