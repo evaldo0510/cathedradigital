@@ -29,7 +29,7 @@ const Index = () => {
             className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 border border-primary/20 rounded-full text-primary"
           >
             <Sparkles className="w-4 h-4" />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em]">O Santuário Digital da Fé</span>
+            <span className="text-xs font-black uppercase tracking-[0.2em]">O Santuário Digital da Fé</span>
           </motion.div>
 
           <motion.h1 
