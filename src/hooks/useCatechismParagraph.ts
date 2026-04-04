@@ -16,10 +16,13 @@ export const fetchCatechismParagraph = async (paragraph: number): Promise<Catech
     throw new Error(error.message || `Erro ao carregar o parágrafo §${paragraph}`);
   }
 
+  // Handle case where data comes as string (text/plain response)
+  const parsed = typeof data === 'string' ? JSON.parse(data) : data;
+
   return {
-    paragraph: data.paragraph || paragraph,
-    content: data.content || `Parágrafo §${paragraph} — conteúdo não disponível.`,
-    language: data.language || 'pt'
+    paragraph: parsed.paragraph || paragraph,
+    content: parsed.content || `Parágrafo §${paragraph} — conteúdo não disponível.`,
+    language: parsed.language || 'pt'
   };
 };
 
