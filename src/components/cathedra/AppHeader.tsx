@@ -132,7 +132,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           </div>
         )}
         {user ? (
-          <button onClick={onSignOut} className="px-3 py-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-all flex items-center gap-2">
+          <button onClick={onSignOut} className="px-3 py-2 text-xs font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-all flex items-center gap-2">
             <span className="hidden sm:inline">Sair</span>
             <Icons.History className="w-4 h-4 sm:hidden" />
           </button>
