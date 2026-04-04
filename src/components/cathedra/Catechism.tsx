@@ -282,7 +282,7 @@ const Catechism: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {CIC_SECTIONS.map(part => (
           <button key={part.part} onClick={() => { setSelectedPart(part); setViewMode('sections'); }}
-            className="text-left p-6 md:p-8 rounded-3xl bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group">
+            className="text-left p-5 md:p-6 rounded-2xl bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group">
             <span className="text-[10px] font-black text-primary uppercase tracking-widest">{part.part}</span>
             <h2 className="text-xl md:text-2xl font-serif font-bold text-foreground mt-3 group-hover:text-primary transition-colors">{part.title}</h2>
             <p className="text-sm text-muted-foreground mt-2">{part.sections.length} seções</p>

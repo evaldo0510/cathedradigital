@@ -286,7 +286,7 @@ const LitaniesPage: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {filtered.map(l => (
           <button key={l.id} onClick={() => setSelectedId(l.id)}
-            className="text-left p-6 rounded-2xl bg-card border border-border hover:border-primary/30 hover:bg-primary/5 transition-all group space-y-3">
+            className="text-left p-4 md:p-5 rounded-xl bg-card border border-border hover:border-primary/30 hover:bg-primary/5 transition-all group space-y-2.5">
             <span className={`inline-block px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest ${CATEGORY_COLORS[l.category] || 'bg-muted text-muted-foreground'}`}>
               {l.category}
             </span>

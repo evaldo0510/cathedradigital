@@ -79,15 +79,15 @@ const RowCard: React.FC<RowCardProps> = ({ image, title, subtitle, onClick, wide
     onClick={onClick}
     whileHover={{ scale: 1.05, y: -8 }}
     whileTap={{ scale: 0.97 }}
-    className={`relative shrink-0 snap-start rounded-3xl overflow-hidden group cursor-pointer shadow-2xl hover:shadow-primary/20 transition-all duration-500 ring-1 ring-border/5 hover:ring-primary/40 ${
-      wide ? 'w-[240px] md:w-[300px] h-36 md:h-40' : 'w-36 md:w-44 h-52 md:h-64'
+    className={`relative shrink-0 snap-start rounded-2xl overflow-hidden group cursor-pointer shadow-2xl hover:shadow-primary/20 transition-all duration-500 ring-1 ring-border/5 hover:ring-primary/40 ${
+      wide ? 'w-[220px] md:w-[280px] h-32 md:h-36' : 'w-32 md:w-40 h-48 md:h-56'
     }`}
   >
     <img src={image} alt={title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
     <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent group-hover:from-primary/80 transition-colors duration-500" />
-    <div className="absolute bottom-0 left-0 right-0 p-5 md:p-8 space-y-2 translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
-      {icon && <div className="text-primary-foreground/90 mb-1 scale-110">{icon}</div>}
-      <h3 className="text-lg md:text-2xl font-serif font-black text-white leading-tight line-clamp-2">{title}</h3>
+    <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 space-y-1.5 translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+      {icon && <div className="text-primary-foreground/90 mb-1 scale-100">{icon}</div>}
+      <h3 className="text-md md:text-xl font-serif font-black text-white leading-tight line-clamp-2">{title}</h3>
       {subtitle && <p className="text-xs md:text-sm font-black uppercase tracking-widest text-primary/80 group-hover:text-white/80 transition-colors">{subtitle}</p>}
     </div>
   </motion.button>
