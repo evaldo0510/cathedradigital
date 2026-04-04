@@ -300,7 +300,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         </section>
 
         {/* Row: Estudo */}
-        <ContentRow title="Estudo e Formação">
+        <ContentRow title="Estudo e Formação" onSeeAll={() => navigate(AppRoute.MAGISTERIUM)}>
           {estudo.map(item => (
             <RowCard
               key={item.title}
