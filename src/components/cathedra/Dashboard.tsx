@@ -297,12 +297,12 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           
           <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 md:gap-16">
             <div className="flex-1 space-y-4 text-center md:text-left">
-              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Versículo do Dia</span>
-              <p className="text-2xl md:text-4xl font-serif font-bold text-white leading-tight italic">
+              <span className="text-xs font-black uppercase tracking-[0.3em] text-primary">Versículo do Dia</span>
+              <p className="text-3xl md:text-5xl font-serif font-bold text-white leading-tight italic">
                 "O Senhor é o meu pastor, nada me faltará. Em verdes pastagens me faz repousar."
               </p>
               <div className="flex items-center justify-center md:justify-start gap-4 pt-2">
-                <span className="text-xs font-black uppercase tracking-widest text-primary/80">Salmo 23, 1</span>
+                <span className="text-sm font-black uppercase tracking-widest text-primary/80">Salmo 23, 1</span>
                 <button className="p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors">
                   <Icons.Heart className="w-4 h-4 text-white" />
                 </button>

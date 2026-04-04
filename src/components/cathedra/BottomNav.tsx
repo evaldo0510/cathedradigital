@@ -61,10 +61,10 @@ const BottomNav: React.FC<{ onOpenSidebar: () => void }> = ({ onOpenSidebar }) =
         ))}
         <button 
           onClick={onOpenSidebar}
-          className="flex flex-col items-center justify-center gap-1 sm:gap-1.5 flex-1 py-3 text-muted-foreground active:text-foreground transition-all tap-highlight-transparent"
+          className="flex flex-col items-center justify-center gap-1.5 sm:gap-2 flex-1 py-4 text-muted-foreground active:text-foreground transition-all tap-highlight-transparent"
         >
-          <Icons.Menu className="w-5 h-5 sm:w-6 sm:h-6" />
-          <span className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.15em] opacity-60 leading-none">Menu</span>
+          <Icons.Menu className="w-6 h-6 sm:w-7 sm:h-7" />
+          <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.15em] opacity-60 leading-none">Menu</span>
         </button>
       </div>
     </div>
