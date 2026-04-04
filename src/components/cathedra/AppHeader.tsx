@@ -79,8 +79,8 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
         {/* Search Bar - Hidden on mobile, shown as icon on tablet, full on desktop */}
         <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-muted border border-border rounded-xl text-muted-foreground hover:border-primary/50 transition-all cursor-pointer group" onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}>
           <Icons.Search className="w-4 h-4 group-hover:text-primary transition-colors" />
-          <span className="text-[10px] font-bold uppercase tracking-widest hidden lg:inline">Buscar Conteúdo...</span>
-          <kbd className="hidden lg:inline-flex px-1.5 py-0.5 rounded bg-background border border-border text-[9px] font-mono font-bold">⌘K</kbd>
+          <span className="text-xs font-bold uppercase tracking-widest hidden lg:inline">Buscar Conteúdo...</span>
+          <kbd className="hidden lg:inline-flex px-1.5 py-0.5 rounded bg-background border border-border text-[10px] font-mono font-bold">⌘K</kbd>
         </div>
         
         {/* Mobile Search Icon */}
