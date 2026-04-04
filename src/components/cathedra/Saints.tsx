@@ -32,7 +32,12 @@ const SAINTS_DATA: Saint[] = [
     born: '1225, Roccasecca', died: '1274, Fossanova',
     patronOf: ['Estudantes', 'Universidades', 'Filósofos'],
     bio: 'Frade dominicano, teólogo e filósofo italiano. Considerado o maior teólogo da Igreja Católica, autor da Suma Teológica, obra monumental que sintetiza a filosofia aristotélica com a teologia cristã.',
-    works: ['Suma Teológica', 'Suma contra os Gentios', 'De Ente et Essentia', 'Catena Aurea'],
+    works: [
+      { title: 'Suma Teológica', url: 'https://sumateologica.files.wordpress.com/2017/04/suma-teolc3b3gica.pdf' },
+      { title: 'Suma contra os Gentios', url: 'https://www.ecatholic2000.com/cts/untitled-111.shtml' },
+      { title: 'De Ente et Essentia', url: 'https://www.corpusthomisticum.org/ode.html' },
+      { title: 'Catena Aurea', url: 'https://www.ecatholic2000.com/catena/untitled-encyclopediaproject.shtml' },
+    ],
     quotes: ['"O temor é o princípio da sabedoria."', '"A graça não destrói a natureza, mas a aperfeiçoa."'],
     category: 'doctor'
   },
@@ -42,7 +47,12 @@ const SAINTS_DATA: Saint[] = [
     born: '354, Tagaste', died: '430, Hipona',
     patronOf: ['Teólogos', 'Cervejeiros', 'Impressores'],
     bio: 'Bispo de Hipona e um dos mais importantes Padres da Igreja. Sua conversão, narrada nas Confissões, é um dos relatos mais célebres da literatura cristã. Combateu o maniqueísmo, donatismo e pelagianismo.',
-    works: ['Confissões', 'A Cidade de Deus', 'De Trinitate', 'Enchiridion'],
+    works: [
+      { title: 'Confissões', url: 'https://www.augustinus.it/portoghese/confessioni/index.htm' },
+      { title: 'A Cidade de Deus', url: 'https://www.augustinus.it/portoghese/cdd/index.htm' },
+      { title: 'De Trinitate', url: 'https://www.augustinus.it/latino/trinita/index.htm' },
+      { title: 'Enchiridion', url: 'https://www.newadvent.org/fathers/1302.htm' },
+    ],
     quotes: ['"Fizeste-nos para Ti, Senhor, e o nosso coração está inquieto enquanto não descansar em Ti."', '"Ama e faz o que quiseres."'],
     category: 'doctor'
   },
@@ -52,7 +62,11 @@ const SAINTS_DATA: Saint[] = [
     born: '1181, Assis', died: '1226, Porciúncula',
     patronOf: ['Animais', 'Ecologia', 'Itália', 'Comerciantes'],
     bio: 'Fundador da Ordem dos Frades Menores (Franciscanos). Renunciou à riqueza para viver em pobreza radical, pregando o Evangelho com simplicidade. Recebeu os estigmas de Cristo no Monte Alverna.',
-    works: ['Cântico das Criaturas', 'Regra dos Frades Menores', 'Testamento'],
+    works: [
+      { title: 'Cântico das Criaturas', url: 'https://www.franciscanos.org.br/?p=cantico-das-criaturas' },
+      { title: 'Regra dos Frades Menores', url: 'https://www.franciscanos.org.br/?p=regra-bulada' },
+      { title: 'Testamento', url: 'https://www.franciscanos.org.br/?p=testamento' },
+    ],
     quotes: ['"Senhor, fazei-me instrumento da vossa paz."', '"Pregai o Evangelho em todo tempo; se necessário, usai palavras."'],
     category: 'founder'
   },
@@ -62,7 +76,12 @@ const SAINTS_DATA: Saint[] = [
     born: '1515, Ávila', died: '1582, Alba de Tormes',
     patronOf: ['Escritores', 'Espanha', 'Pessoas doentes do coração'],
     bio: 'Carmelita descalça, mística e reformadora. Primeira mulher declarada Doutora da Igreja. Suas obras sobre a vida interior e a oração mística são referência na espiritualidade cristã.',
-    works: ['O Castelo Interior', 'Caminho de Perfeição', 'Livro da Vida', 'Fundações'],
+    works: [
+      { title: 'O Castelo Interior', url: 'https://www.documentacatholicaomnia.eu/03d/1515-1582,_Teresa_de_Jesus,_Castelo_Interior,_PT.pdf' },
+      { title: 'Caminho de Perfeição', url: 'https://www.documentacatholicaomnia.eu/03d/1515-1582,_Teresa_de_Jesus,_Caminho_de_Perfeicao,_PT.pdf' },
+      { title: 'Livro da Vida', url: 'https://www.documentacatholicaomnia.eu/03d/1515-1582,_Teresa_de_Jesus,_Livro_da_Vida,_PT.pdf' },
+      { title: 'Fundações' },
+    ],
     quotes: ['"Nada te perturbe, nada te espante. Tudo passa. Deus não muda."', '"Entre as panelas também anda o Senhor."'],
     category: 'mystic'
   },
@@ -72,7 +91,12 @@ const SAINTS_DATA: Saint[] = [
     born: '1542, Fontiveros', died: '1591, Úbeda',
     patronOf: ['Poetas', 'Místicos', 'Contemplativos'],
     bio: 'Carmelita descalço, poeta e místico espanhol. Junto com Santa Teresa, reformou a Ordem do Carmo. Seus poemas e tratados sobre a "noite escura da alma" são obras-primas da mística cristã.',
-    works: ['Noite Escura', 'Subida do Monte Carmelo', 'Cântico Espiritual', 'Chama Viva de Amor'],
+    works: [
+      { title: 'Noite Escura', url: 'https://www.documentacatholicaomnia.eu/03d/1542-1591,_Ioannes_a_Cruce,_Noite_Escura,_PT.pdf' },
+      { title: 'Subida do Monte Carmelo', url: 'https://www.documentacatholicaomnia.eu/03d/1542-1591,_Ioannes_a_Cruce,_Subida_do_Monte_Carmelo,_PT.pdf' },
+      { title: 'Cântico Espiritual', url: 'https://www.documentacatholicaomnia.eu/03d/1542-1591,_Ioannes_a_Cruce,_Cantico_Espiritual,_PT.pdf' },
+      { title: 'Chama Viva de Amor' },
+    ],
     quotes: ['"No entardecer da vida, seremos julgados pelo amor."', '"Para chegar ao que não sabes, deves ir por onde não sabes."'],
     category: 'mystic'
   },
@@ -82,7 +106,9 @@ const SAINTS_DATA: Saint[] = [
     born: '1887, Pietrelcina', died: '1968, San Giovanni Rotondo',
     patronOf: ['Voluntários', 'Adolescentes', 'Estressados'],
     bio: 'Frade capuchinho italiano que portou os estigmas de Cristo por 50 anos. Celebrava a Missa com profunda devoção, confessava até 16 horas por dia e possuía dons místicos extraordinários.',
-    works: ['Epistolário (Cartas)'],
+    works: [
+      { title: 'Epistolário (Cartas)', url: 'https://www.padrepio.catholicwebservices.com/ENGLISH/Letters.htm' },
+    ],
     quotes: ['"Rezai, esperai e não vos preocupeis."', '"A oração é a melhor arma que possuímos."'],
     category: 'mystic'
   },
@@ -92,7 +118,12 @@ const SAINTS_DATA: Saint[] = [
     born: '1873, Alençon', died: '1897, Lisieux',
     patronOf: ['Missões', 'França', 'Floristas', 'Aviadores'],
     bio: 'Carmelita descalça francesa, conhecida como "A Pequena Flor". Apesar de ter morrido aos 24 anos, sua "Pequena Via" de amor e confiança revolucionou a espiritualidade moderna. Doutora da Igreja.',
-    works: ['História de uma Alma', 'Poesias', 'Cartas', 'Peças de Teatro'],
+    works: [
+      { title: 'História de uma Alma', url: 'https://www.documentacatholicaomnia.eu/03d/1873-1897,_Theresia_a_Iesu_Infante,_Historia_de_uma_Alma,_PT.pdf' },
+      { title: 'Poesias' },
+      { title: 'Cartas' },
+      { title: 'Peças de Teatro' },
+    ],
     quotes: ['"Minha vocação é o Amor!"', '"Quero passar meu Céu fazendo o bem na Terra."'],
     category: 'doctor'
   },
@@ -102,7 +133,12 @@ const SAINTS_DATA: Saint[] = [
     born: '1920, Wadowice', died: '2005, Vaticano',
     patronOf: ['Jornada Mundial da Juventude', 'Famílias'],
     bio: 'Papa polonês, o segundo pontificado mais longo da história. Viajou por 129 países, canonizou mais santos que todos os papas anteriores juntos. Sua Teologia do Corpo é marco na doutrina da Igreja.',
-    works: ['Teologia do Corpo', 'Fides et Ratio', 'Evangelium Vitae', 'Redemptor Hominis'],
+    works: [
+      { title: 'Teologia do Corpo', url: 'https://www.vatican.va/content/john-paul-ii/pt/audiences/1979.index.html' },
+      { title: 'Fides et Ratio', url: 'https://www.vatican.va/content/john-paul-ii/pt/encyclicals/documents/hf_jp-ii_enc_14091998_fides-et-ratio.html' },
+      { title: 'Evangelium Vitae', url: 'https://www.vatican.va/content/john-paul-ii/pt/encyclicals/documents/hf_jp-ii_enc_25031995_evangelium-vitae.html' },
+      { title: 'Redemptor Hominis', url: 'https://www.vatican.va/content/john-paul-ii/pt/encyclicals/documents/hf_jp-ii_enc_04031979_redemptor-hominis.html' },
+    ],
     quotes: ['"Não tenhais medo!"', '"A liberdade não consiste em fazer o que se quer, mas em ter o direito de fazer o que se deve."'],
     category: 'pope'
   },
@@ -112,7 +148,10 @@ const SAINTS_DATA: Saint[] = [
     born: 'Betsaida, Galileia', died: '64 d.C., Roma',
     patronOf: ['Papas', 'Pescadores', 'Relojoeiros'],
     bio: 'Primeiro entre os Apóstolos, recebeu de Cristo as chaves do Reino dos Céus. Primeiro Bispo de Roma e primeiro Papa. Martirizado crucificado de cabeça para baixo por não se considerar digno de morrer como seu Mestre.',
-    works: ['1ª Epístola de São Pedro', '2ª Epístola de São Pedro'],
+    works: [
+      { title: '1ª Epístola de São Pedro', url: 'https://www.bibliaonline.com.br/acf/1pe/1' },
+      { title: '2ª Epístola de São Pedro', url: 'https://www.bibliaonline.com.br/acf/2pe/1' },
+    ],
     quotes: ['"Senhor, Tu sabes tudo; Tu sabes que eu Te amo."'],
     category: 'apostle'
   },
@@ -122,7 +161,12 @@ const SAINTS_DATA: Saint[] = [
     born: 'Tarso, Cilícia', died: '67 d.C., Roma',
     patronOf: ['Missionários', 'Teólogos', 'Escritores'],
     bio: 'O Apóstolo dos Gentios. Antes perseguidor dos cristãos como Saulo, foi convertido no caminho de Damasco. Realizou três grandes viagens missionárias e escreveu 13 epístolas do Novo Testamento.',
-    works: ['Epístola aos Romanos', 'Epístolas aos Coríntios', 'Epístola aos Gálatas', 'Epístola aos Efésios'],
+    works: [
+      { title: 'Epístola aos Romanos', url: 'https://www.bibliaonline.com.br/acf/rm/1' },
+      { title: 'Epístolas aos Coríntios', url: 'https://www.bibliaonline.com.br/acf/1co/1' },
+      { title: 'Epístola aos Gálatas', url: 'https://www.bibliaonline.com.br/acf/gl/1' },
+      { title: 'Epístola aos Efésios', url: 'https://www.bibliaonline.com.br/acf/ef/1' },
+    ],
     quotes: ['"Já não sou eu que vivo, mas é Cristo que vive em mim."', '"Se Deus é por nós, quem será contra nós?"'],
     category: 'apostle'
   },
@@ -132,7 +176,9 @@ const SAINTS_DATA: Saint[] = [
     born: 'Nazaré / Jerusalém (tradição)', died: 'Assunção ao Céu',
     patronOf: ['Humanidade', 'Igreja Católica', 'Todas as nações'],
     bio: 'Mãe de Jesus Cristo e Mãe da Igreja. Concebida sem pecado original (Imaculada Conceição), deu seu "Fiat" ao anjo Gabriel e cooperou de modo singular na obra da Redenção. Assumpta ao Céu em corpo e alma.',
-    works: ['Magnificat'],
+    works: [
+      { title: 'Magnificat' },
+    ],
     quotes: ['"Eis aqui a serva do Senhor; faça-se em mim segundo a tua palavra."', '"Fazei tudo o que Ele vos disser."'],
     category: 'virgin'
   },
