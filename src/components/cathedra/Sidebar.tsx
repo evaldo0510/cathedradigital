@@ -70,7 +70,7 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
 
   return (
     <>
-      <aside className="h-full w-80 bg-card border-r border-border flex flex-col p-6 overflow-hidden">
+      <aside className="h-full w-72 bg-card border-r border-border flex flex-col p-5 overflow-hidden">
         <div className="mb-6 px-2 flex items-center gap-3 cursor-pointer group" onClick={() => handleNav(AppRoute.DASHBOARD)}>
           <Logo className="w-9 h-9" />
           <div>

@@ -114,7 +114,7 @@ const AppLayout: React.FC = () => {
       <div className="flex h-[100dvh] w-full overflow-hidden bg-background selection:bg-primary/20">
         <div className={`fixed inset-0 z-[150] lg:relative lg:block transition-all ${isSidebarOpen ? 'opacity-100' : 'pointer-events-none lg:pointer-events-auto opacity-0 lg:opacity-100'}`}>
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm lg:hidden" onClick={() => setIsSidebarOpen(false)} />
-          <div className={`relative h-full w-80 transition-transform duration-500 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
+          <div className={`relative h-full w-72 transition-transform duration-500 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
             <CathedralSidebar 
               onClose={() => setIsSidebarOpen(false)} 
               user={appUser} 
@@ -133,7 +133,7 @@ const AppLayout: React.FC = () => {
             onOpenSidebar={() => setIsSidebarOpen(true)}
             onSignOut={signOut}
           />
-          <div className="flex-1 p-3 sm:p-4 md:p-6 lg:p-8 pb-32 w-full max-w-6xl mx-auto">
+          <div className="flex-1 p-3 sm:p-4 md:p-5 lg:p-6 pb-20 w-full max-w-6xl mx-auto">
             <Suspense fallback={<LoadingFallback />}>
               <Routes location={location}>
                 <Route path={AppRoute.DASHBOARD} element={<Dashboard user={appUser} />} />

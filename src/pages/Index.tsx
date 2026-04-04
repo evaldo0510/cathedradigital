@@ -11,7 +11,7 @@ const Index = () => {
   return (
     <div className="flex min-h-screen flex-col items-center bg-[#fdfcf8] text-[#1a1a1a] overflow-hidden">
       {/* Hero Section */}
-      <section className="relative w-full h-[90vh] flex items-center justify-center px-6 overflow-hidden">
+      <section className="relative w-full h-[70vh] md:h-[80vh] flex items-center justify-center px-6 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
             src="https://images.unsplash.com/photo-1548610762-656391d1ad4d?auto=format&fit=crop&q=80&w=1920" 
@@ -36,7 +36,7 @@ const Index = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-5xl md:text-8xl font-serif font-bold tracking-tight text-[#1a1a1a] leading-[1.1]"
+            className="text-4xl md:text-6xl lg:text-7xl font-serif font-bold tracking-tight text-[#1a1a1a] leading-[1.1]"
           >
             Aprofunde sua <br /> 
             <span className="text-primary italic font-light drop-shadow-sm">Vida Interior.</span>
@@ -69,7 +69,7 @@ const Index = () => {
       </section>
 
       {/* Highlights */}
-      <section className="w-full max-w-7xl px-6 py-24 space-y-16">
+      <section className="w-full max-w-7xl px-6 py-16 md:py-20 space-y-12 md:space-y-16">
         <div className="text-center space-y-4">
           <h2 className="text-3xl md:text-5xl font-serif font-bold">Destaques Devocionais</h2>
           <div className="w-20 h-1 bg-primary mx-auto rounded-full" />

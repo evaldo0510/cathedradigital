@@ -23,7 +23,7 @@ const ContentRow: React.FC<{ title: string; children: React.ReactNode; onSeeAll?
   };
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2 md:space-y-3">
       <div className="flex items-center justify-between px-2">
         <h2 className="text-lg md:text-xl font-serif font-bold text-foreground">{title}</h2>
         {onSeeAll && (
@@ -45,7 +45,7 @@ const ContentRow: React.FC<{ title: string; children: React.ReactNode; onSeeAll?
         {/* Scrollable container */}
         <div
           ref={scrollRef}
-          className="flex gap-4 md:gap-5 overflow-x-auto scrollbar-hide pb-4 px-2 snap-x snap-mandatory scroll-smooth touch-pan-x"
+          className="flex gap-3 md:gap-4 overflow-x-auto scrollbar-hide pb-4 px-2 snap-x snap-mandatory scroll-smooth touch-pan-x"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {children}
@@ -80,12 +80,12 @@ const RowCard: React.FC<RowCardProps> = ({ image, title, subtitle, onClick, wide
     whileHover={{ scale: 1.05, y: -8 }}
     whileTap={{ scale: 0.97 }}
     className={`relative shrink-0 snap-start rounded-2xl overflow-hidden group cursor-pointer shadow-2xl hover:shadow-primary/20 transition-all duration-500 ring-1 ring-border/5 hover:ring-primary/40 ${
-      wide ? 'w-[220px] md:w-[280px] h-32 md:h-36' : 'w-32 md:w-40 h-48 md:h-56'
+      wide ? 'w-[180px] md:w-[220px] h-24 md:h-28' : 'w-24 md:w-32 h-36 md:h-44'
     }`}
   >
     <img src={image} alt={title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
     <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent group-hover:from-primary/80 transition-colors duration-500" />
-    <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 space-y-1.5 translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+    <div className="absolute bottom-0 left-0 right-0 p-3 md:p-4 space-y-1 translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
       {icon && <div className="text-primary-foreground/90 mb-1 scale-100">{icon}</div>}
       <h3 className="text-md md:text-xl font-serif font-black text-white leading-tight line-clamp-2">{title}</h3>
       {subtitle && <p className="text-xs md:text-sm font-black uppercase tracking-widest text-primary/80 group-hover:text-white/80 transition-colors">{subtitle}</p>}
@@ -158,14 +158,14 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
 
 
   return (
-    <div className="space-y-8 md:space-y-12 pb-16 -mx-4 md:-mx-8 lg:-mx-10">
+    <div className="space-y-6 md:space-y-10 pb-16 -mx-4 md:-mx-8 lg:-mx-10">
 
       {/* ═══ HERO BANNER ═══ */}
       <motion.section
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.2 }}
-        className="relative min-h-[50vh] md:h-[60vh] flex items-center overflow-hidden touch-pan-y"
+        className="relative min-h-[40vh] md:h-[50vh] flex items-center overflow-hidden touch-pan-y"
       >
         <SacredImage
           src="https://images.unsplash.com/photo-1548610762-656391d1ad4d?auto=format&fit=crop&q=80&w=1920"
@@ -177,7 +177,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/40 to-transparent hidden md:block" />
         <div className="absolute inset-0 bg-background/80 md:hidden" />
 
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 py-12 md:py-20 flex flex-col md:flex-row items-center justify-between gap-12">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 py-8 md:py-12 flex flex-col md:flex-row items-center justify-between gap-6 md:gap-10">
           
           <div className="flex-1 space-y-6 md:space-y-8 max-w-2xl text-center md:text-left">
             <motion.div
@@ -194,7 +194,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.8 }}
-              className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-foreground leading-[0.95] tracking-tight"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-serif font-bold text-foreground leading-[0.95] tracking-tight"
             >
               A beleza da fé <br />
               <span className="text-primary italic font-light drop-shadow-2xl">em cada detalhe.</span>
