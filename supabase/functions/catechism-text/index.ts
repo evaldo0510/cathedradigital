@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.38.4";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -10,7 +11,7 @@ const aiCache: Record<number, string> = {};
 
 // Key paragraphs in Portuguese (embedded for instant access)
 const PT_PARAGRAPHS: Record<number, string> = {
-  1: 'Deus, infinitamente perfeito e bem-aventurado em si mesmo, num desígnio de pura bondade, criou livremente o homem para o tornar participante da sua vida bem-aventurada. É por isso que, em todo o tempo e em todo o lugar, Ele está perto do homem. Chama-o e ajuda-o a procurá-Lo, a conhecê-Lo e a amá-Lo com todas as suas forças. Convoca todos os homens, dispersos pelo pecado, para a unidade da sua família, a Igreja. Para isso, enviou o seu Filho como Redentor e Salvador, quando chegou a plenitude dos tempos. N\'Ele e por Ele, chama os homens a tornarem-se, no Espírito Santo, seus filhos adotivos e, portanto, herdeiros da sua vida bem-aventurada.',
+  1: 'Deus, infinitamente perfeito e bem-aventurado em si mesmo, num desígnio de pura bondade, criou livremente o homem para o tornar participante da sua vida bem-aventurada. É por isso que, em todo o tempo e em todo o lugar, Ele está perto do homem. Chama-o e ajuda-o a procurá Lo, a conhecê Lo e a amá Lo com todas as suas forças. Convoca todos os homens, dispersos pelo pecado, para a unidade da sua família, a Igreja. Para isso, enviou o seu Filho como Redentor e Salvador, quando chegou a plenitude dos tempos. N\'Ele e por Ele, chama os homens a tornarem-se, no Espírito Santo, seus filhos adotivos e, portanto, herdeiros da sua vida bem-aventurada.',
   2: 'Para que este apelo ressoasse por toda a terra, Cristo enviou os Apóstolos que tinha escolhido, dando-lhes o mandato de anunciar o Evangelho: «Ide, pois, fazei discípulos de todos os povos, batizando-os em nome do Pai, do Filho e do Espírito Santo, ensinando-os a cumprir tudo quanto vos tenho mandado. E sabei que Eu estarei sempre convosco até ao fim dos tempos» (Mt 28,19-20).',
   3: 'Os que, com a ajuda de Deus, acolheram o chamamento de Cristo e lhe responderam livremente foram, por sua vez, levados pelo amor de Cristo a anunciar por toda a parte a Boa-Nova. Este tesouro, recebido dos Apóstolos, foi fielmente guardado pelos seus sucessores. Todos os fiéis de Cristo são chamados a transmiti-lo de geração em geração, anunciando a fé, vivendo-a na comunhão fraterna e celebrando-a na liturgia e na oração.',
   4: 'O Catecismo, que aqui vos apresentamos, é uma exposição da fé da Igreja e da doutrina católica, atestadas e esclarecidas pela Sagrada Escritura, pela Tradição apostólica e pelo Magistério da Igreja. Apresento-o como um instrumento válido e legítimo ao serviço da comunhão eclesial e como norma segura para o ensino da fé.',
@@ -134,7 +135,7 @@ const PT_PARAGRAPHS: Record<number, string> = {
   147: 'O Novo Testamento apresenta Maria como o modelo mais perfeito de fé tanto no Antigo como no Novo Testamento.',
   148: 'A fé é um ato humano. O assentimento dado por fé não é um movimento cego da razão. É um assentimento inteligente e livre ao qual todo o crente é chamado.',
   149: 'A fé é um dom gratuito de Deus. Para dar a resposta da fé, o homem precisa do auxílio e da graça interior do Espírito Santo.',
-  150: 'A fé é, antes de mais, uma adesão pessoal do homem a Deus; ao mesmo tempo e inseparávelmente, é o assentimento livre a toda a verdade que Deus revelou.',
+  150: 'A fé é, antes de mais, uma adesão pessoal do homem a Deus; ao mesmo tempo e inseparavelmente, é o assentimento livre a toda a verdade que Deus revelou.',
   185: 'Quem diz «Creio» diz «Eu adiro àquilo que nós cremos». A comunhão na fé precisa duma linguagem comum da fé, normativa para todos e que una na mesma confissão de fé.',
   198: 'A nossa profissão de fé começa por Deus, porque Deus é o «Primeiro e o Último» (Is 44,6), o Princípio e o Fim de tudo.',
   199: 'O Símbolo dos Apóstolos começa por Deus-Pai, porque o Pai é a primeira Pessoa divina da Santíssima Trindade.',
@@ -200,29 +201,21 @@ const PT_PARAGRAPHS: Record<number, string> = {
   2865: 'Com o «Amém» final, exprimimos o nosso «fiat» relativamente a estas sete petições: «Assim seja».',
 };
 
-// Use AI to generate authentic catechism text for missing paragraphs
-async function generateWithAI(paragraph: number): Promise<string> {
-  if (aiCache[paragraph]) return aiCache[paragraph];
-  
-  const SUPABASE_URL = Deno.env.get('SUPABASE_URL') || '';
-  const SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
-  
-  if (!SUPABASE_URL || !SERVICE_KEY) return '';
-  
+async function generateWithAI(paragraph: number, supabaseUrl: string, serviceKey: string): Promise<string> {
   try {
-    const resp = await fetch(`${SUPABASE_URL}/functions/v1/colloquium`, {
+    const resp = await fetch(`${supabaseUrl}/functions/v1/colloquium`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${SERVICE_KEY}`,
+        'Authorization': `Bearer ${serviceKey}`,
       },
       body: JSON.stringify({
         messages: [{
           role: 'user',
           content: `Reproduza fielmente e APENAS o texto do parágrafo §${paragraph} do Catecismo da Igreja Católica em português. Não acrescente comentários, explicações ou introduções. Apenas o texto oficial do parágrafo.`
         }],
-        stream: false,
-        model: 'google/gemini-2.5-flash'
+        stream: true, // Colloquium is set to stream: true
+        model: 'google/gemini-1.5-flash' // Faster model
       }),
     });
     
@@ -243,66 +236,56 @@ async function generateWithAI(paragraph: number): Promise<string> {
     }
     
     const cleaned = generated.trim().replace(/^§\d+\s*[-–]\s*/, '').trim();
-    if (cleaned.length > 20) {
-      aiCache[paragraph] = cleaned;
-      return cleaned;
-    }
+    return cleaned;
   } catch (e) {
     console.error(`AI generation failed for §${paragraph}:`, e);
+    return '';
   }
-  
-  return '';
 }
 
 serve(async (req) => {
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
-  }
+  if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
 
   try {
     const { paragraph } = await req.json();
-    
     if (!paragraph || paragraph < 1 || paragraph > 2865) {
-      return new Response(JSON.stringify({ error: 'Parágrafo inválido', content: '' }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      return new Response(JSON.stringify({ error: 'Parágrafo inválido' }), { status: 400, headers: corsHeaders });
     }
 
-    // 1. Check Portuguese embedded paragraphs first (instant)
+    // 1. Static check (instant)
     if (PT_PARAGRAPHS[paragraph]) {
-      return new Response(JSON.stringify({
-        paragraph,
-        content: PT_PARAGRAPHS[paragraph],
-        language: 'pt',
-      }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      return new Response(JSON.stringify({ paragraph, content: PT_PARAGRAPHS[paragraph] }), { headers: corsHeaders });
     }
 
-    // 2. Use AI to generate authentic content in Portuguese
-    const aiText = await generateWithAI(paragraph);
-    if (aiText) {
-      return new Response(JSON.stringify({
-        paragraph,
-        content: aiText,
-        language: 'pt',
-      }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+    // 2. Database check (fast)
+    const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
+    const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
+    const supabase = createClient(supabaseUrl, serviceKey);
+
+    const { data: cached } = await supabase
+      .from('catechism_cache')
+      .select('content')
+      .eq('paragraph', paragraph)
+      .single();
+
+    if (cached) {
+      return new Response(JSON.stringify({ paragraph, content: cached.content }), { headers: corsHeaders });
     }
 
-    // 3. Final fallback
-    return new Response(JSON.stringify({
-      paragraph,
-      content: `Parágrafo §${paragraph} — Catecismo da Igreja Católica. Para o texto integral, consulte a edição oficial em vatican.va.`,
-      language: 'pt',
-    }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    // 3. AI Generation (slowest, but only once)
+    const aiText = await generateWithAI(paragraph, supabaseUrl, serviceKey);
+    if (aiText && aiText.length > 20) {
+      // Save to cache
+      await supabase.from('catechism_cache').insert({ paragraph, content: aiText });
+      return new Response(JSON.stringify({ paragraph, content: aiText }), { headers: corsHeaders });
+    }
+
+    return new Response(JSON.stringify({ 
+      paragraph, 
+      content: `Parágrafo §${paragraph} — Catecismo da Igreja Católica. Conteúdo em processamento.` 
+    }), { headers: corsHeaders });
+
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message, content: '' }), {
-      status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    return new Response(JSON.stringify({ error: error.message }), { status: 500, headers: corsHeaders });
   }
 });
