@@ -5,6 +5,7 @@ import PageTransition from './components/PageTransition';
 import ScrollToTop from './components/ScrollToTop';
 import CathedralSidebar from './components/cathedra/Sidebar';
 import CathedralFooter from './components/cathedra/Footer';
+import BottomNav from './components/cathedra/BottomNav';
 import AppHeader from './components/cathedra/AppHeader';
 import PlaceholderPage from './components/cathedra/PlaceholderPage';
 import ProGate from './components/cathedra/ProGate';
