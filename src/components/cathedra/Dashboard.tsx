@@ -165,7 +165,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.2 }}
-        className="relative min-h-[60vh] md:h-[70vh] flex items-center overflow-hidden touch-pan-y"
+        className="relative min-h-[50vh] md:h-[60vh] flex items-center overflow-hidden touch-pan-y"
       >
         <SacredImage
           src="https://images.unsplash.com/photo-1548610762-656391d1ad4d?auto=format&fit=crop&q=80&w=1920"
