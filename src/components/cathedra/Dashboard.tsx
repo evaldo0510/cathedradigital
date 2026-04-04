@@ -77,18 +77,18 @@ interface RowCardProps {
 const RowCard: React.FC<RowCardProps> = ({ image, title, subtitle, onClick, wide, icon }) => (
   <motion.button
     onClick={onClick}
-    whileHover={{ scale: 1.05, zIndex: 20 }}
+    whileHover={{ scale: 1.05, y: -8 }}
     whileTap={{ scale: 0.97 }}
-    className={`relative shrink-0 snap-start rounded-xl overflow-hidden group cursor-pointer shadow-lg hover:shadow-2xl transition-shadow ${
-      wide ? 'w-72 md:w-80 h-44 md:h-48' : 'w-40 md:w-48 h-56 md:h-64'
+    className={`relative shrink-0 snap-start rounded-[2rem] overflow-hidden group cursor-pointer shadow-2xl hover:shadow-primary/20 transition-all duration-500 ring-1 ring-border/5 hover:ring-primary/40 ${
+      wide ? 'w-[320px] md:w-[400px] h-48 md:h-56' : 'w-44 md:w-56 h-64 md:h-80'
     }`}
   >
-    <img src={image} alt={title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" />
-    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-    <div className="absolute bottom-0 left-0 right-0 p-3 md:p-4 space-y-1">
-      {icon && <div className="text-primary mb-1">{icon}</div>}
-      <h3 className="text-sm md:text-base font-bold text-white leading-tight line-clamp-2">{title}</h3>
-      {subtitle && <p className="text-[10px] md:text-xs text-white/60 line-clamp-1">{subtitle}</p>}
+    <img src={image} alt={title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
+    <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent group-hover:from-primary/80 transition-colors duration-500" />
+    <div className="absolute bottom-0 left-0 right-0 p-5 md:p-8 space-y-2 translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+      {icon && <div className="text-primary-foreground/90 mb-1 scale-110">{icon}</div>}
+      <h3 className="text-base md:text-xl font-serif font-black text-white leading-tight line-clamp-2">{title}</h3>
+      {subtitle && <p className="text-[10px] md:text-xs font-black uppercase tracking-widest text-primary/80 group-hover:text-white/80 transition-colors">{subtitle}</p>}
     </div>
   </motion.button>
 );
