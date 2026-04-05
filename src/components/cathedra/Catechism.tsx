@@ -373,7 +373,7 @@ const Catechism: React.FC = () => {
             />
             <NotesPanel contentType="catechism" contentId={`${currentParagraph}`} contentLabel={`§${currentParagraph}`} />
           </div>
-          <CatechismContent paragraph={currentParagraph} />
+          <CatechismContent paragraph={currentParagraph} onNavigateToBible={handleNavigateToBible} />
         </div>
 
         {/* Quick nav */}
