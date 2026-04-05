@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import ShareButton from './ShareButton';
 import ReactMarkdown from 'react-markdown';
 import { 
@@ -295,9 +296,9 @@ const DailyLiturgy: React.FC = () => {
   const filteredPrayers = prayerFilter === 'Todas' ? PRAYERS : PRAYERS.filter(p => p.category === prayerFilter);
 
   return (
-    <div className="max-w-4xl mx-auto space-y-10 pb-12">
+    <motion.div className="max-w-4xl mx-auto space-y-10 pb-12" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
       {/* Header */}
-      <div className="text-center space-y-3 pt-4">
+      <motion.div className="text-center space-y-3 pt-4" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}>
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
           <Star className="w-3.5 h-3.5 text-primary" />
           <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Hodie</span>
@@ -306,7 +307,7 @@ const DailyLiturgy: React.FC = () => {
         <p className="text-base text-muted-foreground font-serif italic max-w-xl mx-auto leading-relaxed">
           "Toda a Escritura é inspirada por Deus e útil para ensinar, para repreender, para corrigir e para instruir na justiça."
         </p>
-      </div>
+      </motion.div>
 
       {/* Tabs */}
       <div className="flex p-1 bg-secondary rounded-xl max-w-xs mx-auto">
@@ -610,7 +611,7 @@ const DailyLiturgy: React.FC = () => {
           </div>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 };
 
