@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../constants';
 import { AppRoute } from '@/types';
 import { Badge } from '@/components/ui/badge';
+import BibleVersePopover from './BibleVersePopover';
+import CatechismPopover from './CatechismPopover';
 
 interface DogmaRef {
   type: 'bible' | 'catechism' | 'magisterium';
