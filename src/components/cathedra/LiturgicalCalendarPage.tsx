@@ -3,6 +3,8 @@ import { Icons } from '../../constants';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { SAINTS_DATA, type Saint } from '@/data/saints';
+import SacredImage from './SacredImage';
 
 interface LiturgicalDay {
   date: Date;
@@ -299,6 +301,14 @@ const LiturgicalCalendarPage: React.FC = () => {
     return upcoming;
   }, []);
 
+  // Find saint for selected day
+  const selectedSaint = useMemo((): Saint | null => {
+    if (!selectedDay) return null;
+    const m = selectedDay.getMonth() + 1;
+    const d = selectedDay.getDate();
+    return SAINTS_DATA.find(s => s.feastMonth === m && s.feastDayNum === d) || null;
+  }, [selectedDay]);
+
   const selectedInfo = selectedDay ? getLiturgicalInfo(selectedDay) : null;
 
   return (
@@ -439,6 +449,50 @@ const LiturgicalCalendarPage: React.FC = () => {
           ) : (
             <div className="rounded-2xl border border-border bg-card p-5 text-center">
               <p className="text-sm text-muted-foreground italic">Selecione um dia no calendário</p>
+            </div>
+          )}
+
+          {/* Saint of the selected day */}
+          {selectedSaint && (
+            <div className="bg-card border border-border rounded-2xl overflow-hidden">
+              {selectedSaint.image && (
+                <div className="h-32 overflow-hidden">
+                  <SacredImage src={selectedSaint.image} className="w-full h-full object-cover" alt={selectedSaint.name} />
+                </div>
+              )}
+              <div className="p-5 space-y-3">
+                <div>
+                  <span className="text-[9px] font-black uppercase tracking-widest text-primary block">{selectedSaint.feastDay}</span>
+                  <h3 className="text-lg font-serif font-bold text-foreground">{selectedSaint.name}</h3>
+                  <p className="text-xs text-muted-foreground font-serif italic">{selectedSaint.title}</p>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed line-clamp-4">{selectedSaint.bio}</p>
+                {selectedSaint.quotes[0] && (
+                  <blockquote className="border-l-2 border-primary/30 pl-3 py-1">
+                    <p className="text-[11px] text-foreground/70 font-serif italic">{selectedSaint.quotes[0]}</p>
+                  </blockquote>
+                )}
+                {selectedSaint.works.length > 0 && (
+                  <div className="space-y-1">
+                    <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Obras</span>
+                    {selectedSaint.works.slice(0, 3).map((w, i) => (
+                      <div key={i} className="text-[11px]">
+                        {w.url ? (
+                          <a href={w.url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-bold">{w.title}</a>
+                        ) : (
+                          <span className="text-foreground/80 font-bold">{w.title}</span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <button
+                  onClick={() => navigate('/saints')}
+                  className="text-[10px] font-bold text-primary hover:underline flex items-center gap-1 pt-1"
+                >
+                  Ver biografia completa <Icons.ArrowDown className="w-3 h-3 -rotate-90" />
+                </button>
+              </div>
             </div>
           )}
 
