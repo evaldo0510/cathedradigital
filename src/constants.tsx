@@ -34,7 +34,110 @@ const createIcon = (d: string, viewBox = "0 0 24 24", fill = "none", stroke = "c
     </svg>
   ));
 
+/* ── Navigation Icons (custom sacred-themed SVGs) ── */
+const NavIcons = {
+  /** Cathedral / Home — stylised facade with rose window */
+  Cathedral: forwardRef<SVGSVGElement, React.SVGProps<SVGSVGElement>>((props, ref) => (
+    <svg ref={ref} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M12 2L3 10v11a1 1 0 001 1h16a1 1 0 001-1V10L12 2z" />
+      <path d="M12 6v4M10 8h4" />
+      <circle cx="12" cy="14" r="2.5" />
+      <path d="M9 22v-5h6v5" />
+    </svg>
+  )),
+  /** Holy Bible — book with cross bookmark */
+  HolyBible: forwardRef<SVGSVGElement, React.SVGProps<SVGSVGElement>>((props, ref) => (
+    <svg ref={ref} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M4 19.5A2.5 2.5 0 016.5 17H20" />
+      <path d="M4 4.5A2.5 2.5 0 016.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15z" />
+      <path d="M12 6v6M10 8h4" />
+      <path d="M16 2v4l-1.5-1L13 6V2" />
+    </svg>
+  )),
+  /** Praying Hands — folded hands for prayer section */
+  PrayingHands: forwardRef<SVGSVGElement, React.SVGProps<SVGSVGElement>>((props, ref) => (
+    <svg ref={ref} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M12 3c0 0-3 4-3 8v4l-2 3" />
+      <path d="M12 3c0 0 3 4 3 8v4l2 3" />
+      <path d="M9 11c0 0 1.5 1 3 1s3-1 3-1" />
+      <path d="M7 18l2 3h6l2-3" />
+      <path d="M10 14v2M14 14v2" />
+    </svg>
+  )),
+  /** Catechism Shield — shield with cross for doctrine */
+  CatechismShield: forwardRef<SVGSVGElement, React.SVGProps<SVGSVGElement>>((props, ref) => (
+    <svg ref={ref} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M12 2L4 6v5c0 5.55 3.84 10.74 8 12 4.16-1.26 8-6.45 8-12V6L12 2z" />
+      <path d="M12 7v6M9 10h6" />
+    </svg>
+  )),
+  /** Rosary — circle with beads and cross */
+  Rosary: forwardRef<SVGSVGElement, React.SVGProps<SVGSVGElement>>((props, ref) => (
+    <svg ref={ref} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <circle cx="12" cy="10" r="7" />
+      <circle cx="12" cy="3" r="0.8" fill="currentColor" />
+      <circle cx="5.5" cy="7" r="0.8" fill="currentColor" />
+      <circle cx="5.5" cy="13" r="0.8" fill="currentColor" />
+      <circle cx="18.5" cy="7" r="0.8" fill="currentColor" />
+      <circle cx="18.5" cy="13" r="0.8" fill="currentColor" />
+      <path d="M12 17v2M11 19h2M12 21v1" />
+    </svg>
+  )),
+  /** Chalice — liturgy/mass symbol */
+  Chalice: forwardRef<SVGSVGElement, React.SVGProps<SVGSVGElement>>((props, ref) => (
+    <svg ref={ref} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M8 2h8l-1 8a3 3 0 01-6 0L8 2z" />
+      <path d="M12 12v5" />
+      <path d="M8 21h8" />
+      <path d="M10 17h4" />
+      <path d="M6 2h12" />
+    </svg>
+  )),
+  /** Calendar Cross — liturgical calendar */
+  LiturgicalCalendar: forwardRef<SVGSVGElement, React.SVGProps<SVGSVGElement>>((props, ref) => (
+    <svg ref={ref} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <rect x="3" y="4" width="18" height="18" rx="2" />
+      <path d="M16 2v4M8 2v4M3 10h18" />
+      <path d="M12 14v4M10 16h4" />
+    </svg>
+  )),
+  /** Via Crucis — cross with path */
+  ViaCrucis: forwardRef<SVGSVGElement, React.SVGProps<SVGSVGElement>>((props, ref) => (
+    <svg ref={ref} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M12 2v20M8 6h8" />
+      <path d="M4 22l4-6M20 22l-4-6" />
+    </svg>
+  )),
+  /** Scroll — for magisterium/documents */
+  Scroll: forwardRef<SVGSVGElement, React.SVGProps<SVGSVGElement>>((props, ref) => (
+    <svg ref={ref} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M8 21h12a2 2 0 002-2V5a2 2 0 00-2-2H8" />
+      <path d="M8 3a2 2 0 00-2 2v14a2 2 0 002 2" />
+      <path d="M4 5a2 2 0 012-2h0a2 2 0 012 2v0" />
+      <path d="M4 19a2 2 0 012 2h0a2 2 0 012-2v0" />
+      <path d="M11 8h6M11 12h6M11 16h4" />
+    </svg>
+  )),
+  /** Saint Halo — for saints section */
+  SaintHalo: forwardRef<SVGSVGElement, React.SVGProps<SVGSVGElement>>((props, ref) => (
+    <svg ref={ref} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <ellipse cx="12" cy="5" rx="5" ry="2" />
+      <circle cx="12" cy="12" r="4" />
+      <path d="M8 19c0-2.2 1.8-4 4-4s4 1.8 4 4v2H8v-2z" />
+    </svg>
+  )),
+  /** Dove — Holy Spirit / Colloquium */
+  Dove: forwardRef<SVGSVGElement, React.SVGProps<SVGSVGElement>>((props, ref) => (
+    <svg ref={ref} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M12 8c-2-3-6-3-8-1 2 0 3 2 3 4l5 5 5-5c0-2 1-4 3-4-2-2-6-2-8 1z" />
+      <path d="M12 13v5" />
+      <path d="M9 20h6" />
+    </svg>
+  )),
+};
+
 export const Icons = {
+  ...NavIcons,
   Home: createIcon("M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"),
   Book: createIcon("M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"),
   Search: createIcon("M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"),
