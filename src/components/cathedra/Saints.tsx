@@ -117,8 +117,7 @@ const Saints: React.FC = () => {
           />
           {search && (
             <button onClick={() => setSearch('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
-              ✕
-            </button>
+              <X className="w-4 h-4" />
             </button>
           )}
         </div>
