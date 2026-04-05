@@ -9,18 +9,28 @@ export const COLORS = {
 
 export const Logo = forwardRef<HTMLDivElement, { className?: string }>(({ className = "w-12 h-12" }, ref) => (
   <div ref={ref} className={`relative flex items-center justify-center group ${className}`}>
-    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-sm">
+    <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-sm">
       <defs>
         <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#d4af37" />
+          <stop offset="0%" stopColor="#e8c547" />
+          <stop offset="50%" stopColor="#d4af37" />
           <stop offset="100%" stopColor="#b8860b" />
         </linearGradient>
+        <linearGradient id="logo-grad-light" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#f0d56c" />
+          <stop offset="100%" stopColor="#c9a227" />
+        </linearGradient>
       </defs>
-      <circle cx="50" cy="50" r="48" fill="#1a1a1a" stroke="url(#logo-grad)" strokeWidth="1" />
-      <path d="M50 20L30 45H70L50 20Z" fill="url(#logo-grad)" opacity="0.8" />
-      <rect x="35" y="45" width="30" height="35" rx="2" fill="url(#logo-grad)" />
-      <path d="M45 55V75M40 60H60" stroke="#1a1a1a" strokeWidth="3" strokeLinecap="round" />
-      <circle cx="50" cy="50" r="42" stroke="url(#logo-grad)" strokeWidth="0.5" strokeDasharray="4 4" opacity="0.3" />
+      <circle cx="60" cy="60" r="57" stroke="url(#logo-grad)" strokeWidth="1.5" fill="none" />
+      <circle cx="60" cy="60" r="50" fill="#1a1a1a" />
+      <line x1="60" y1="22" x2="60" y2="98" stroke="url(#logo-grad)" strokeWidth="3.5" strokeLinecap="round" />
+      <path d="M60 22 C60 22, 82 24, 82 40 C82 54, 60 56, 60 56" stroke="url(#logo-grad)" strokeWidth="3.5" strokeLinecap="round" fill="none" />
+      <line x1="38" y1="34" x2="82" y2="78" stroke="url(#logo-grad-light)" strokeWidth="2.5" strokeLinecap="round" opacity="0.8" />
+      <line x1="82" y1="34" x2="38" y2="78" stroke="url(#logo-grad-light)" strokeWidth="2.5" strokeLinecap="round" opacity="0.8" />
+      <circle cx="60" cy="8" r="1.5" fill="#d4af37" opacity="0.5" />
+      <circle cx="60" cy="112" r="1.5" fill="#d4af37" opacity="0.5" />
+      <circle cx="8" cy="60" r="1.5" fill="#d4af37" opacity="0.5" />
+      <circle cx="112" cy="60" r="1.5" fill="#d4af37" opacity="0.5" />
     </svg>
   </div>
 ));
