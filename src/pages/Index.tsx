@@ -174,7 +174,7 @@ const Index = () => {
       {/* Features Grid */}
       <section className="w-full max-w-7xl px-6 py-24 space-y-20">
         <div className="text-center space-y-6 max-w-3xl mx-auto">
-          <h2 className="text-4xl md:text-6xl font-serif font-bold">Ferramentas para sua Edificação</h2>
+          <h2 className="text-4xl md:text-6xl font-display font-bold">Ferramentas para sua Edificação</h2>
           <p className="text-lg text-muted-foreground italic">"Conhecereis a verdade, e a verdade vos libertará" (Jo 8,32)</p>
           <div className="w-24 h-1.5 bg-primary mx-auto rounded-full" />
         </div>
