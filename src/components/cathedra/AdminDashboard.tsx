@@ -46,6 +46,8 @@ const AdminDashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [manualEmail, setManualEmail] = useState('');
+  const [manualLoading, setManualLoading] = useState(false);
   const [sortField, setSortField] = useState<'name' | 'created_at' | 'xp'>('created_at');
   const [sortAsc, setSortAsc] = useState(false);
 
