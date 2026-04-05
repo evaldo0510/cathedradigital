@@ -53,7 +53,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
               {[
                 { label: 'Bíblia', route: AppRoute.BIBLE },
                 { label: 'Catecismo', route: AppRoute.CATECHISM },
-                { label: 'Liturgia', route: AppRoute.DAILY_LITURGY },
+                { label: 'Liturgia', route: AppRoute.LITURGIA },
                 { label: 'Colloquium', route: AppRoute.STUDY_MODE },
               ].map(item => (
                 <button 
