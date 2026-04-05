@@ -92,9 +92,9 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
         {/* Quick access modals */}
         <div className="flex gap-2 mb-8 px-2">
           {[
-            { id: 'bible', label: 'Bíblia', icon: <BookText className="w-4 h-4" />, color: 'bg-amber-500/10 text-amber-600 border-amber-500/20' },
-            { id: 'catechism', label: 'CIC', icon: <BookMarked className="w-4 h-4" />, color: 'bg-red-500/10 text-red-600 border-red-500/20' },
-            { id: 'docs', label: 'Docs', icon: <Globe className="w-4 h-4" />, color: 'bg-blue-500/10 text-blue-600 border-blue-500/20' }
+            { id: 'bible', label: 'Bíblia', icon: <Icons.HolyBible className="w-4 h-4" />, color: 'bg-amber-500/10 text-amber-600 border-amber-500/20' },
+            { id: 'catechism', label: 'CIC', icon: <Icons.CatechismShield className="w-4 h-4" />, color: 'bg-red-500/10 text-red-600 border-red-500/20' },
+            { id: 'docs', label: 'Docs', icon: <Icons.Scroll className="w-4 h-4" />, color: 'bg-blue-500/10 text-blue-600 border-blue-500/20' }
           ].map(item => (
             <button 
               key={item.id}
