@@ -202,7 +202,7 @@ const Footer: React.FC = React.memo(() => {
                   { icon: <Icons.Youtube className="w-4 h-4" />, url: 'https://youtube.com' },
                   { icon: <Icons.Whatsapp className="w-4 h-4" />, url: 'https://wa.me' },
                 ].map((social, i) => (
-                  <a key={i} href={social.url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-all p-2 rounded-lg bg-foreground/5 border border-foreground/10 hover:border-primary/30">
+                  <a key={i} href={social.url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground dark:text-foreground/70 hover:text-primary transition-all p-2 rounded-lg bg-foreground/5 dark:bg-foreground/10 border border-foreground/10 dark:border-foreground/20 hover:border-primary/30">
                     {social.icon}
                   </a>
                 ))}
@@ -217,7 +217,7 @@ const Footer: React.FC = React.memo(() => {
               <ul className="flex flex-col gap-4">
                 {vaticanLinks.map(link => (
                   <li key={link.title}>
-                    <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2 group">
+                    <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors flex items-center gap-2 group">
                       <span className="w-1 h-1 rounded-full bg-primary/30 group-hover:bg-primary transition-colors" />
                       {link.title}
                     </a>
@@ -234,7 +234,7 @@ const Footer: React.FC = React.memo(() => {
               <ul className="flex flex-col gap-4">
                 {cnbbLinks.map(link => (
                   <li key={link.title}>
-                    <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2 group">
+                    <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors flex items-center gap-2 group">
                       <span className="w-1 h-1 rounded-full bg-primary/30 group-hover:bg-primary transition-colors" />
                       {link.title}
                     </a>
@@ -294,8 +294,8 @@ const Footer: React.FC = React.memo(() => {
           </div>
 
           {/* Bottom Bar */}
-          <div className="pt-8 border-t border-foreground/5 flex flex-row items-center justify-between gap-6">
-            <p className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-60">
+          <div className="pt-8 border-t border-foreground/10 dark:border-foreground/15 flex flex-row items-center justify-between gap-6">
+            <p className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 dark:text-muted-foreground/70">
               © {new Date().getFullYear()} CATHEDRA • OMNIA AD MAIOREM DEI GLORIAM
             </p>
             <div className="flex items-center gap-8">
@@ -304,13 +304,13 @@ const Footer: React.FC = React.memo(() => {
                   <button 
                     key={item.label} 
                     onClick={() => navigate(item.route)} 
-                    className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors"
+                    className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors"
                   >
                     {item.label}
                   </button>
                 ))}
               </nav>
-              <button onClick={scrollToTop} className="p-2.5 bg-foreground/5 hover:bg-primary hover:text-primary-foreground rounded-lg transition-all border border-foreground/10 group">
+              <button onClick={scrollToTop} className="p-2.5 bg-foreground/5 dark:bg-foreground/10 hover:bg-primary hover:text-primary-foreground rounded-lg transition-all border border-foreground/10 dark:border-foreground/20 group">
                 <Icons.ArrowDown className="w-4 h-4 rotate-180" />
               </button>
             </div>
