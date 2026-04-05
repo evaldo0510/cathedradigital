@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 import { CheckCircle2, Clock, XCircle } from 'lucide-react';
+import confetti from 'canvas-confetti';
 
 type ResultState = 'loading' | 'success' | 'pending' | 'failure';
 

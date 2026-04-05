@@ -25,9 +25,6 @@ const ProGate: React.FC<ProGateProps> = ({ isPremium, isLoggedIn, onLogin, child
       </p>
       
       <div className="bg-card border border-border p-6 rounded-3xl max-w-sm w-full space-y-4 shadow-sm">
-        <p className="text-xs text-muted-foreground leading-relaxed">
-          Se você está procurando pela <span className="font-bold text-foreground">chave de acesso</span> ou credenciais da Supabase, você as encontra no seu painel da Lovable em <span className="font-mono text-[10px] bg-muted px-1.5 py-0.5 rounded italic">Cloud → Supabase</span>.
-        </p>
         
         {!isLoggedIn ? (
           <button onClick={onLogin} className="w-full py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all">
