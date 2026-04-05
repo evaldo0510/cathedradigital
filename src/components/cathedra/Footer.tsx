@@ -96,26 +96,26 @@ const Footer: React.FC = React.memo(() => {
   const dioceseUrl = DIOCESE_URLS[selectedDiocese];
 
   return (
-    <footer className="mt-auto w-full border-t border-primary/10 pt-10 pb-28 lg:pb-12 px-4 sm:px-6 md:px-12 bg-foreground/[0.03] backdrop-blur-sm relative overflow-hidden">
+    <footer className="mt-auto w-full border-t border-primary/10 pt-8 lg:pt-12 pb-40 lg:pb-12 px-4 sm:px-6 md:px-12 bg-foreground/[0.03] backdrop-blur-sm relative overflow-hidden">
       <div className="absolute inset-0 pointer-events-none opacity-[0.02]" />
       
       <div className="max-w-7xl mx-auto relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+        {/* Mobile: compact 2-column layout */}
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 lg:gap-12 mb-8 lg:mb-16">
           
-          {/* Brand Column */}
-          <div className="flex flex-col gap-6">
-            <div className="flex items-center gap-4">
-              <Logo className="w-12 h-12 border border-primary/20 p-2 rounded-xl bg-primary/5" />
+          {/* Brand Column - full width on mobile */}
+          <div className="col-span-2 lg:col-span-1 flex flex-col gap-4">
+            <div className="flex items-center gap-3">
+              <Logo className="w-10 h-10 lg:w-12 lg:h-12 border border-primary/20 p-1.5 lg:p-2 rounded-xl bg-primary/5" />
               <div>
-                <h3 className="text-xl font-serif font-bold text-foreground tracking-tight">CATHEDRA</h3>
-                <p className="text-[9px] font-black uppercase text-primary tracking-[0.3em]">Digital Sanctuarium</p>
+                <h3 className="text-lg lg:text-xl font-serif font-bold text-foreground tracking-tight">CATHEDRA</h3>
+                <p className="text-[8px] lg:text-[9px] font-black uppercase text-primary tracking-[0.3em]">Digital Sanctuarium</p>
               </div>
             </div>
-            <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
-              Uma plataforma dedicada ao estudo, oração e vivência da fé católica, 
-              unindo a tradição milenar à tecnologia moderna.
+            <p className="text-xs lg:text-sm text-muted-foreground leading-relaxed max-w-xs">
+              Estudo, oração e vivência da fé católica unindo tradição e tecnologia.
             </p>
-            <div className="flex gap-3">
+            <div className="flex gap-2">
               {[
                 { icon: <Icons.Instagram className="w-4 h-4" />, url: 'https://instagram.com' },
                 { icon: <Icons.Youtube className="w-4 h-4" />, url: 'https://youtube.com' },
@@ -130,15 +130,15 @@ const Footer: React.FC = React.memo(() => {
 
           {/* Links Column - Vatican */}
           <div>
-            <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-6 flex items-center gap-2">
-              <span className="text-lg">🏛️</span> Santa Sé
+            <h4 className="text-[10px] lg:text-[11px] font-black uppercase tracking-[0.15em] lg:tracking-[0.2em] text-primary mb-3 lg:mb-6 flex items-center gap-1.5">
+              <span className="text-base lg:text-lg">🏛️</span> Santa Sé
             </h4>
-            <ul className="flex flex-col gap-4">
+            <ul className="flex flex-col gap-2.5 lg:gap-4">
               {vaticanLinks.map(link => (
                 <li key={link.title}>
-                  <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2 group">
-                    <span className="w-1 h-1 rounded-full bg-primary/30 group-hover:bg-primary transition-colors" />
-                    {link.title}
+                  <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-xs lg:text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1.5 group">
+                    <span className="w-1 h-1 rounded-full bg-primary/30 group-hover:bg-primary transition-colors flex-shrink-0" />
+                    <span className="line-clamp-1">{link.title}</span>
                   </a>
                 </li>
               ))}
@@ -147,29 +147,29 @@ const Footer: React.FC = React.memo(() => {
 
           {/* Links Column - CNBB */}
           <div>
-            <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-6 flex items-center gap-2">
-              <span className="text-lg">🇧🇷</span> CNBB
+            <h4 className="text-[10px] lg:text-[11px] font-black uppercase tracking-[0.15em] lg:tracking-[0.2em] text-primary mb-3 lg:mb-6 flex items-center gap-1.5">
+              <span className="text-base lg:text-lg">🇧🇷</span> CNBB
             </h4>
-            <ul className="flex flex-col gap-4">
+            <ul className="flex flex-col gap-2.5 lg:gap-4">
               {cnbbLinks.map(link => (
                 <li key={link.title}>
-                  <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2 group">
-                    <span className="w-1 h-1 rounded-full bg-primary/30 group-hover:bg-primary transition-colors" />
-                    {link.title}
+                  <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-xs lg:text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1.5 group">
+                    <span className="w-1 h-1 rounded-full bg-primary/30 group-hover:bg-primary transition-colors flex-shrink-0" />
+                    <span className="line-clamp-1">{link.title}</span>
                   </a>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Newsletter / Diocese Column */}
-          <div className="flex flex-col gap-8">
+          {/* Newsletter / Diocese Column - full width on mobile */}
+          <div className="col-span-2 lg:col-span-1 flex flex-col gap-5">
             <div>
-              <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-4">Sua Diocese</h4>
+              <h4 className="text-[10px] lg:text-[11px] font-black uppercase tracking-[0.15em] lg:tracking-[0.2em] text-primary mb-3">Sua Diocese</h4>
               <select 
                 value={selectedDiocese}
                 onChange={(e) => handleDioceseChange(e.target.value)}
-                className="w-full bg-foreground/5 border border-foreground/10 rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors cursor-pointer appearance-none"
+                className="w-full bg-foreground/5 border border-foreground/10 rounded-xl px-3 py-2 text-xs lg:text-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors cursor-pointer appearance-none"
               >
                 <option value="">Selecione sua Diocese</option>
                 {DIOCESES_BR.map(d => (
@@ -177,17 +177,14 @@ const Footer: React.FC = React.memo(() => {
                 ))}
               </select>
               {dioceseUrl && (
-                <a href={dioceseUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 mt-3 text-xs text-primary hover:underline">
+                <a href={dioceseUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 mt-2 text-xs text-primary hover:underline">
                   Acessar portal <Icons.ExternalLink className="w-3 h-3" />
                 </a>
               )}
             </div>
 
             <div>
-              <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-4">Boletim Informativo</h4>
-              <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
-                Receba reflexões teológicas e atualizações da plataforma em seu e-mail.
-              </p>
+              <h4 className="text-[10px] lg:text-[11px] font-black uppercase tracking-[0.15em] lg:tracking-[0.2em] text-primary mb-2">Boletim Informativo</h4>
               <form onSubmit={handleSubscribe} className="relative">
                 <input 
                   type="email" 
@@ -195,15 +192,15 @@ const Footer: React.FC = React.memo(() => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full bg-foreground/5 border border-foreground/10 rounded-xl pl-4 pr-12 py-2.5 text-sm focus:outline-none focus:border-primary/50 transition-colors"
+                  className="w-full bg-foreground/5 border border-foreground/10 rounded-xl pl-3 pr-12 py-2 text-xs lg:text-sm focus:outline-none focus:border-primary/50 transition-colors"
                 />
                 <button 
                   type="submit" 
                   disabled={isSubmitting}
-                  className="absolute right-1 top-1 bottom-1 px-3 bg-primary text-black rounded-lg hover:scale-105 transition-all disabled:opacity-50"
+                  className="absolute right-1 top-1 bottom-1 px-3 bg-primary text-primary-foreground rounded-lg hover:scale-105 transition-all disabled:opacity-50"
                 >
                   {isSubmitting ? (
-                    <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                    <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
                   ) : (
                     <Icons.ArrowDown className="w-4 h-4 -rotate-90" />
                   )}
@@ -215,18 +212,18 @@ const Footer: React.FC = React.memo(() => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-foreground/5 flex flex-col md:flex-row items-center justify-between gap-6">
-          <p className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-60">
+        <div className="pt-6 lg:pt-8 border-t border-foreground/5 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-[8px] lg:text-[9px] font-black uppercase tracking-[0.2em] lg:tracking-[0.3em] text-muted-foreground opacity-60 text-center sm:text-left">
             © {new Date().getFullYear()} CATHEDRA • OMNIA AD MAIOREM DEI GLORIAM
           </p>
           
-          <div className="flex items-center gap-8">
-            <nav className="flex items-center gap-6">
+          <div className="flex items-center gap-4 lg:gap-8">
+            <nav className="flex items-center gap-4 lg:gap-6">
               {[{ label: 'Sobre', route: AppRoute.ABOUT }, { label: 'Privacidade', route: AppRoute.DASHBOARD }, { label: 'Termos', route: AppRoute.DASHBOARD }].map(item => (
                 <button 
                   key={item.label} 
                   onClick={() => navigate(item.route)} 
-                  className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors"
+                  className="text-[8px] lg:text-[9px] font-black uppercase tracking-[0.15em] lg:tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors"
                 >
                   {item.label}
                 </button>
@@ -234,9 +231,9 @@ const Footer: React.FC = React.memo(() => {
             </nav>
             <button 
               onClick={scrollToTop}
-              className="p-2.5 bg-foreground/5 hover:bg-primary hover:text-black rounded-lg transition-all border border-foreground/10 group"
+              className="p-2 bg-foreground/5 hover:bg-primary hover:text-primary-foreground rounded-lg transition-all border border-foreground/10 group"
             >
-              <Icons.ArrowDown className="w-4 h-4 rotate-180" />
+              <Icons.ArrowDown className="w-3.5 h-3.5 lg:w-4 lg:h-4 rotate-180" />
             </button>
           </div>
         </div>
