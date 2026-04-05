@@ -381,12 +381,16 @@ const DailyLiturgy: React.FC = () => {
                       reference={readings.primeiraLeitura.referencia}
                       title={readings.primeiraLeitura.titulo}
                       text={readings.primeiraLeitura.texto}
+                      fontBody={fc.body}
+                      fontTitle={fc.title}
                     />
 
                     <PsalmBlock
                       reference={readings.salmo.referencia}
                       refrain={readings.salmo.refrao}
                       text={readings.salmo.texto}
+                      fontPsalm={fc.psalm}
+                      fontBody={fc.body}
                     />
 
                     {readings.segundaLeitura && typeof readings.segundaLeitura === 'object' && (
@@ -396,6 +400,8 @@ const DailyLiturgy: React.FC = () => {
                         reference={readings.segundaLeitura.referencia}
                         title={readings.segundaLeitura.titulo}
                         text={readings.segundaLeitura.texto}
+                        fontBody={fc.body}
+                        fontTitle={fc.title}
                       />
                     )}
 
@@ -403,6 +409,8 @@ const DailyLiturgy: React.FC = () => {
                       reference={readings.evangelho.referencia}
                       title={readings.evangelho.titulo}
                       text={readings.evangelho.texto}
+                      fontGospel={fc.gospel}
+                      fontTitle={fc.title}
                     />
 
                     {/* AI Meditation */}
