@@ -21,6 +21,7 @@ import {
   Clock,
   Cross
 } from 'lucide-react';
+import ShareButton from './ShareButton';
 
 type MysterySet = 'joyful' | 'sorrowful' | 'glorious' | 'luminous';
 
