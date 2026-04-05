@@ -21,7 +21,7 @@ interface Dogma {
   refs: DogmaRef[];
 }
 
-const CATEGORIES = ['Todos', 'Deus', 'Cristologia', 'Mariologia', 'Eclesiologia', 'Sacramentos', 'Escatologia', 'Antropologia'];
+const CATEGORIES = ['Todos', 'Deus', 'Cristologia', 'Mariologia', 'Eclesiologia', 'Sacramentos', 'Escatologia', 'Antropologia', 'Graça', 'Anjos', 'Escritura'];
 
 const DOGMAS: Dogma[] = [
   { id: 1, title: 'Existência de Deus', definition: 'A existência de Deus pode ser conhecida com certeza pela luz natural da razão humana, a partir das coisas criadas.', source: 'Concílio Vaticano I, Dei Filius', year: 1870, category: 'Deus', refs: [
