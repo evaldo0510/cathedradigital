@@ -238,7 +238,10 @@ const Footer: React.FC = React.memo(() => {
             </div>
             <div className="flex items-center justify-between">
               <p className="text-[7px] font-black uppercase tracking-widest text-muted-foreground/50 dark:text-muted-foreground/70">
-                © {new Date().getFullYear()} CATHEDRA
+                © {new Date().getFullYear()} CATHEDRA •{' '}
+                <span onClick={() => navigate(AppRoute.ADMIN)} className="cursor-default hover:text-primary/60 transition-colors select-none">
+                  evaldo.os
+                </span>
               </p>
               <div className="flex items-center gap-2">
                 {[
