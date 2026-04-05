@@ -453,7 +453,7 @@ const PrayerPage: React.FC = () => {
 
         {/* Sidebar — Essential Prayers */}
         <div className="space-y-8">
-          <div className="bg-card border border-border rounded-[2rem] p-8 shadow-sm space-y-6 sticky top-8">
+          <div className="bg-card border border-border rounded-[2rem] p-8 shadow-sm space-y-6">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
                 <BookOpen className="w-5 h-5" />
