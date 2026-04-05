@@ -209,6 +209,12 @@ const Catechism: React.FC = () => {
             >
               <Icons.Heart className={`w-5 h-5 transition-all ${isFavorite('catechism', `CIC §${currentParagraph}`) ? 'fill-primary text-primary' : 'text-muted-foreground hover:text-primary'}`} />
             </button>
+            <ShareButton
+              title={`Catecismo §${currentParagraph}`}
+              text={`Leia o Catecismo da Igreja Católica, §${currentParagraph} — Cathedra Digital`}
+              url={`${window.location.origin}/catechism?p=${currentParagraph}`}
+              className="border-0 p-0 hover:bg-transparent"
+            />
             <NotesPanel contentType="catechism" contentId={`${currentParagraph}`} contentLabel={`§${currentParagraph}`} />
           </div>
           <CatechismContent paragraph={currentParagraph} />
