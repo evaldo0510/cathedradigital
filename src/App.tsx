@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense, useRef } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import SplashScreen from './components/cathedra/SplashScreen';
 import ReadingModeToggle from './components/cathedra/ReadingModeToggle';
 import { AnimatePresence, motion } from 'framer-motion';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -95,9 +96,15 @@ const AppLayout: React.FC = () => {
   const [lang, setLangState] = useState<Language>(getInitialLanguage);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDark, setIsDark] = useState(getInitialTheme);
+  const [showSplash, setShowSplash] = useState(true);
   const { user, profile, signOut, isPremium, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowSplash(false), 1800);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     if (isDark) document.documentElement.classList.add('dark');
@@ -144,6 +151,7 @@ const AppLayout: React.FC = () => {
 
   return (
     <LangContext.Provider value={{ lang, setLang: setLangState, t }}>
+      <SplashScreen visible={showSplash} />
       <ScrollToTop />
       <CommandCenter />
       <OfflineIndicator />
