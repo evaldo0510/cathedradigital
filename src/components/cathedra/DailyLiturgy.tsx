@@ -266,6 +266,11 @@ const DailyLiturgy: React.FC = () => {
                         </span>
                       </div>
                     )}
+                    <ShareButton
+                      title={readings?.liturgia || 'Liturgia do Dia'}
+                      text={`${readings?.liturgia || 'Liturgia do Dia'} — ${readings?.data || ''} — Cathedra Digital`}
+                      variant="button"
+                    />
                   </div>
                 </div>
 
