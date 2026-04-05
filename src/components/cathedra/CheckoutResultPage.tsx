@@ -41,8 +41,14 @@ const CheckoutResultPage: React.FC = () => {
   useEffect(() => {
     if (checkoutState === 'failure' || checkoutState === 'pending') return;
 
-    if (checkoutState !== 'success' || (!paymentId && !externalReference)) {
+    if (checkoutState !== 'success') {
       navigate(AppRoute.CHECKOUT, { replace: true });
+      return;
+    }
+
+    // If no payment identifiers, assume webhook already processed it
+    if (!paymentId && !externalReference) {
+      setState('success');
       return;
     }
 
