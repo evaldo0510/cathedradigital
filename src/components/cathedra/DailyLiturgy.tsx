@@ -188,7 +188,7 @@ const DailyLiturgy: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isMeditationLoading, setIsMeditationLoading] = useState(false);
   const [error, setError] = useState('');
-  const [tab, setTab] = useState<'liturgia' | 'oracoes'>('liturgia');
+  const [tab] = useState<'liturgia' | 'oracoes'>('liturgia');
   const [selectedPrayer, setSelectedPrayer] = useState<string | null>(null);
   const [prayerFilter, setPrayerFilter] = useState('Todas');
   const [fontSize, setFontSize] = useState<FontSize>(() => {
@@ -297,29 +297,6 @@ const DailyLiturgy: React.FC = () => {
 
   return (
     <motion.div className="max-w-4xl mx-auto space-y-10 pb-12" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
-      {/* Header */}
-      <motion.div className="text-center space-y-3 pt-4" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}>
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
-          <Star className="w-3.5 h-3.5 text-primary" />
-          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Hodie</span>
-        </div>
-        <h1 className="text-3xl md:text-5xl font-display font-bold text-foreground tracking-tight">Liturgia & Orações</h1>
-        <p className="text-base text-muted-foreground font-serif italic max-w-xl mx-auto leading-relaxed">
-          "Toda a Escritura é inspirada por Deus e útil para ensinar, para repreender, para corrigir e para instruir na justiça."
-        </p>
-      </motion.div>
-
-      {/* Tabs */}
-      <div className="flex p-1 bg-secondary rounded-xl max-w-xs mx-auto">
-        {(['liturgia', 'oracoes'] as const).map(t => (
-          <button key={t} onClick={() => setTab(t)}
-            className={`flex-1 px-5 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${
-              tab === t ? 'bg-card text-primary shadow-md' : 'text-muted-foreground hover:text-primary'
-            }`}>
-            {t === 'liturgia' ? 'Liturgia' : 'Orações'}
-          </button>
-        ))}
-      </div>
 
       {/* Font Size & Line Spacing Toggle */}
       <div className="flex items-center justify-center gap-4 flex-wrap">
@@ -365,7 +342,7 @@ const DailyLiturgy: React.FC = () => {
         )}
       </div>
 
-      {tab === 'liturgia' ? (
+      {(
         <div className="space-y-6 animate-in fade-in duration-500">
           <div className="bg-card border border-border rounded-2xl p-6 md:p-12 space-y-10 shadow-sm relative overflow-hidden">
             <div className="absolute top-0 right-0 p-8 opacity-[0.02] pointer-events-none">
@@ -559,55 +536,6 @@ const DailyLiturgy: React.FC = () => {
                 )}
               </div>
             )}
-          </div>
-        </div>
-      ) : (
-        /* ─── Prayers Tab ─── */
-        <div className="space-y-6 animate-in fade-in duration-500">
-          <div className="flex gap-2 flex-wrap justify-center px-4">
-            {categories.map(c => (
-              <button key={c} onClick={() => setPrayerFilter(c)}
-                className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all border ${
-                  prayerFilter === c 
-                    ? 'bg-primary border-primary text-primary-foreground shadow-md' 
-                    : 'bg-card border-border text-muted-foreground hover:border-primary/40 hover:text-primary'
-                }`}>
-                {c}
-              </button>
-            ))}
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 px-4">
-            {filteredPrayers.map(prayer => (
-              <div key={prayer.id} className={`group bg-card border rounded-xl overflow-hidden transition-all hover:shadow-lg ${
-                selectedPrayer === prayer.id ? 'border-primary/40 shadow-md' : 'border-border hover:border-primary/20'
-              }`}>
-                <button
-                  onClick={() => setSelectedPrayer(selectedPrayer === prayer.id ? null : prayer.id)}
-                  className="w-full flex items-center justify-between p-5 text-left transition-all"
-                >
-                  <div>
-                    <p className="font-display text-base font-bold text-foreground group-hover:text-primary transition-colors leading-tight">{prayer.title}</p>
-                    <p className="text-xs text-muted-foreground font-serif italic mt-0.5">{prayer.latin}</p>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="hidden sm:inline-block text-[8px] font-black uppercase tracking-widest text-primary bg-primary/5 px-2 py-0.5 rounded border border-primary/10">{prayer.category}</span>
-                    <div className={`p-1.5 rounded-lg transition-all ${
-                      selectedPrayer === prayer.id ? 'bg-primary text-primary-foreground rotate-180' : 'bg-secondary text-muted-foreground group-hover:text-primary'
-                    }`}>
-                      <ChevronDown className="w-4 h-4" />
-                    </div>
-                  </div>
-                </button>
-                {selectedPrayer === prayer.id && (
-                  <div className="px-5 pb-5 pt-0 animate-in slide-in-from-top-4 duration-300">
-                    <div className="p-5 bg-secondary/50 rounded-xl border border-border">
-                      <p className={`reader-text ${lc} ${fc.body} text-foreground/90 whitespace-pre-wrap`}>{prayer.text}</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
           </div>
         </div>
       )}

@@ -262,7 +262,7 @@ const LiturgicalCalendarPage: React.FC = () => {
                     </button>
                   );
                 })()}
-                <button onClick={() => navigate('/daily-liturgy')}
+                <button onClick={() => navigate('/liturgia?tab=liturgia')}
                   className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors ml-auto">
                   <Icons.Book className="w-4 h-4" /> Leituras
                 </button>
