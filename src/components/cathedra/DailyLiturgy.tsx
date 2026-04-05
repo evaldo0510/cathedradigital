@@ -85,7 +85,8 @@ const ReadingBlock: React.FC<{
   accent?: 'primary' | 'gold';
   fontBody?: string;
   fontTitle?: string;
-}> = ({ label, numeral, reference, title, text, accent = 'primary', fontBody = 'text-[15px] md:text-lg', fontTitle = 'text-base md:text-lg' }) => {
+  lineSpacing?: string;
+}> = ({ label, numeral, reference, title, text, accent = 'primary', fontBody = 'text-[15px] md:text-lg', fontTitle = 'text-base md:text-lg', lineSpacing = 'leading-[2] md:leading-[2.1]' }) => {
   const isGold = accent === 'gold';
   return (
     <section className="space-y-5">
@@ -102,7 +103,7 @@ const ReadingBlock: React.FC<{
       </div>
       <div className="ml-0 md:ml-[3.75rem] space-y-4">
         <p className={`reader-text italic ${fontTitle} text-muted-foreground border-l-2 border-primary/20 pl-5 py-1.5`}>{title}</p>
-        <p className={`reader-text ${fontBody} leading-[2] md:leading-[2.1] text-foreground/90 whitespace-pre-wrap tracking-[0.005em]`}>{text}</p>
+        <p className={`reader-text ${fontBody} ${lineSpacing} text-foreground/90 whitespace-pre-wrap tracking-[0.005em]`}>{text}</p>
       </div>
     </section>
   );
@@ -115,7 +116,8 @@ const PsalmBlock: React.FC<{
   text: string;
   fontPsalm?: string;
   fontBody?: string;
-}> = ({ reference, refrain, text, fontPsalm = 'text-lg md:text-xl', fontBody = 'text-[15px] md:text-lg' }) => (
+  lineSpacing?: string;
+}> = ({ reference, refrain, text, fontPsalm = 'text-lg md:text-xl', fontBody = 'text-[15px] md:text-lg', lineSpacing = 'leading-[2] md:leading-[2.1]' }) => (
   <section className="space-y-5">
     <div className="flex items-center gap-4">
       <div className="w-11 h-11 rounded-xl bg-secondary text-primary flex items-center justify-center font-display text-sm tracking-wider border border-border shrink-0">
@@ -129,7 +131,7 @@ const PsalmBlock: React.FC<{
     <div className="ml-0 md:ml-[3.75rem] bg-secondary/50 rounded-2xl p-5 md:p-8 border border-border relative overflow-hidden">
       <Music className="absolute -top-2 -right-2 w-8 h-8 text-primary/5 rotate-12" />
       <p className={`font-display ${fontPsalm} text-primary leading-snug mb-5`}>℟ {refrain}</p>
-      <p className={`reader-text ${fontBody} text-foreground/80 leading-[2] md:leading-[2.1] whitespace-pre-wrap italic tracking-[0.005em]`}>{text}</p>
+      <p className={`reader-text ${fontBody} ${lineSpacing} text-foreground/80 whitespace-pre-wrap italic tracking-[0.005em]`}>{text}</p>
     </div>
   </section>
 );
@@ -141,7 +143,8 @@ const GospelBlock: React.FC<{
   text: string;
   fontGospel?: string;
   fontTitle?: string;
-}> = ({ reference, title, text, fontGospel = 'text-[16px] md:text-xl', fontTitle = 'text-base md:text-lg' }) => (
+  lineSpacing?: string;
+}> = ({ reference, title, text, fontGospel = 'text-[16px] md:text-xl', fontTitle = 'text-base md:text-lg', lineSpacing = 'leading-[2] md:leading-[2.1]' }) => (
   <section className="space-y-5">
     <div className="flex items-center gap-4">
       <div className="w-11 h-11 rounded-xl bg-primary text-primary-foreground flex items-center justify-center font-display text-sm tracking-wider shadow-md shadow-primary/20 shrink-0">
@@ -155,18 +158,25 @@ const GospelBlock: React.FC<{
     <div className="ml-0 md:ml-[3.75rem] space-y-4">
       <p className={`reader-text italic ${fontTitle} text-muted-foreground border-l-2 border-primary/30 pl-5 py-1.5`}>{title}</p>
       <div className="bg-primary/5 p-5 md:p-10 rounded-2xl border border-primary/10">
-        <p className={`reader-text ${fontGospel} leading-[2] md:leading-[2.1] text-foreground/95 whitespace-pre-wrap text-center tracking-[0.005em]`}>{text}</p>
+        <p className={`reader-text ${fontGospel} ${lineSpacing} text-foreground/95 whitespace-pre-wrap text-center tracking-[0.005em]`}>{text}</p>
       </div>
     </div>
   </section>
 );
 
 type FontSize = 'P' | 'M' | 'G';
+type LineSpacing = 'compact' | 'normal' | 'relaxed';
 const FONT_SIZE_KEY = 'cathedra_font_size';
+const LINE_SPACING_KEY = 'cathedra_line_spacing';
 const FONT_CLASSES: Record<FontSize, { body: string; title: string; psalm: string; gospel: string }> = {
   P: { body: 'text-[14px] md:text-base', title: 'text-sm md:text-base', psalm: 'text-base md:text-lg', gospel: 'text-[14px] md:text-lg' },
   M: { body: 'text-[16px] md:text-lg', title: 'text-base md:text-lg', psalm: 'text-lg md:text-xl', gospel: 'text-[16px] md:text-xl' },
   G: { body: 'text-[18px] md:text-xl', title: 'text-lg md:text-xl', psalm: 'text-xl md:text-2xl', gospel: 'text-[18px] md:text-2xl' },
+};
+const LINE_SPACING_CLASSES: Record<LineSpacing, string> = {
+  compact: 'leading-[1.6] md:leading-[1.7]',
+  normal: 'leading-[2] md:leading-[2.1]',
+  relaxed: 'leading-[2.4] md:leading-[2.6]',
 };
 
 const DailyLiturgy: React.FC = () => {
@@ -182,12 +192,20 @@ const DailyLiturgy: React.FC = () => {
   const [fontSize, setFontSize] = useState<FontSize>(() => {
     try { return (localStorage.getItem(FONT_SIZE_KEY) as FontSize) || 'M'; } catch { return 'M'; }
   });
+  const [lineSpacing, setLineSpacing] = useState<LineSpacing>(() => {
+    try { return (localStorage.getItem(LINE_SPACING_KEY) as LineSpacing) || 'normal'; } catch { return 'normal'; }
+  });
 
   useEffect(() => {
     try { localStorage.setItem(FONT_SIZE_KEY, fontSize); } catch {}
   }, [fontSize]);
 
+  useEffect(() => {
+    try { localStorage.setItem(LINE_SPACING_KEY, lineSpacing); } catch {}
+  }, [lineSpacing]);
+
   const fc = FONT_CLASSES[fontSize];
+  const lc = LINE_SPACING_CLASSES[lineSpacing];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -301,10 +319,10 @@ const DailyLiturgy: React.FC = () => {
         ))}
       </div>
 
-      {/* Font Size Toggle */}
-      {tab === 'liturgia' && (
-        <div className="flex items-center justify-center gap-2">
-          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground mr-1">Fonte</span>
+      {/* Font Size & Line Spacing Toggle */}
+      <div className="flex items-center justify-center gap-4 flex-wrap">
+        <div className="flex items-center gap-2">
+          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">Fonte</span>
           {(['P', 'M', 'G'] as FontSize[]).map(s => (
             <button key={s} onClick={() => setFontSize(s)}
               className={`w-8 h-8 rounded-lg text-xs font-bold transition-all ${
@@ -314,7 +332,23 @@ const DailyLiturgy: React.FC = () => {
             </button>
           ))}
         </div>
-      )}
+        <div className="w-px h-5 bg-border" />
+        <div className="flex items-center gap-2">
+          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">Espaço</span>
+          {([
+            { key: 'compact' as LineSpacing, icon: '≡' },
+            { key: 'normal' as LineSpacing, icon: '☰' },
+            { key: 'relaxed' as LineSpacing, icon: '⋮' },
+          ]).map(({ key, icon }) => (
+            <button key={key} onClick={() => setLineSpacing(key)}
+              className={`w-8 h-8 rounded-lg text-sm font-bold transition-all ${
+                lineSpacing === key ? 'bg-primary text-primary-foreground shadow-md' : 'bg-secondary text-muted-foreground hover:text-primary border border-border'
+              }`}>
+              {icon}
+            </button>
+          ))}
+        </div>
+      </div>
 
       {tab === 'liturgia' ? (
         <div className="space-y-6 animate-in fade-in duration-500">
@@ -383,6 +417,7 @@ const DailyLiturgy: React.FC = () => {
                       text={readings.primeiraLeitura.texto}
                       fontBody={fc.body}
                       fontTitle={fc.title}
+                      lineSpacing={lc}
                     />
 
                     <PsalmBlock
@@ -391,6 +426,7 @@ const DailyLiturgy: React.FC = () => {
                       text={readings.salmo.texto}
                       fontPsalm={fc.psalm}
                       fontBody={fc.body}
+                      lineSpacing={lc}
                     />
 
                     {readings.segundaLeitura && typeof readings.segundaLeitura === 'object' && (
@@ -402,6 +438,7 @@ const DailyLiturgy: React.FC = () => {
                         text={readings.segundaLeitura.texto}
                         fontBody={fc.body}
                         fontTitle={fc.title}
+                        lineSpacing={lc}
                       />
                     )}
 
@@ -411,6 +448,7 @@ const DailyLiturgy: React.FC = () => {
                       text={readings.evangelho.texto}
                       fontGospel={fc.gospel}
                       fontTitle={fc.title}
+                      lineSpacing={lc}
                     />
 
                     {/* AI Meditation */}
@@ -549,7 +587,7 @@ const DailyLiturgy: React.FC = () => {
                 {selectedPrayer === prayer.id && (
                   <div className="px-5 pb-5 pt-0 animate-in slide-in-from-top-4 duration-300">
                     <div className="p-5 bg-secondary/50 rounded-xl border border-border">
-                      <p className="reader-text leading-[1.9] text-base text-foreground/90 whitespace-pre-wrap">{prayer.text}</p>
+                      <p className={`reader-text ${lc} ${fc.body} text-foreground/90 whitespace-pre-wrap`}>{prayer.text}</p>
                     </div>
                   </div>
                 )}
