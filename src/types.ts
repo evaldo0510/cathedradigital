@@ -25,6 +25,7 @@ export enum AppRoute {
   LECTIO_DIVINA = '/lectio',
   COMMUNITY = '/community',
   MISSAL = '/missal',
+  LITURGIA = '/liturgia',
   BREVIARY = '/breviary',
   FAVORITES = '/favorites',
   DIAGNOSTICS = '/diagnostics',

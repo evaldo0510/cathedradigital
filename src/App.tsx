@@ -51,6 +51,7 @@ const Auth = lazy(() => import('./components/cathedra/Auth'));
 const AquinasOpera = lazy(() => import('./components/cathedra/AquinasOpera'));
 const Certamen = lazy(() => import('./components/cathedra/Certamen'));
 const MissalPage = lazy(() => import('./components/cathedra/MissalPage'));
+const LiturgiaPage = lazy(() => import('./components/cathedra/LiturgiaPage'));
 const FavoritesPage = lazy(() => import('./components/cathedra/FavoritesPage'));
 const TrilhasPage = lazy(() => import('./components/cathedra/TrilhasPage'));
 const AboutPage = lazy(() => import('./components/cathedra/AboutPage'));
@@ -222,7 +223,8 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.CATECHISM} element={<PageTransition><AuthGuard><Catechism /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.SAINTS} element={<PageTransition><AuthGuard><Saints /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.MAGISTERIUM} element={<PageTransition><AuthGuard><Magisterium /></AuthGuard></PageTransition>} />
-                  <Route path={AppRoute.DAILY_LITURGY} element={<PageTransition><AuthGuard><DailyLiturgy /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.LITURGIA} element={<PageTransition><AuthGuard><LiturgiaPage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.DAILY_LITURGY} element={<PageTransition><AuthGuard><LiturgiaPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.ROSARY} element={<PageTransition><AuthGuard><Rosary /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.ORACAO} element={<PageTransition><AuthGuard><PrayerPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.VIA_CRUCIS} element={<PageTransition><AuthGuard><ViaCrucis /></AuthGuard></PageTransition>} />
@@ -238,7 +240,7 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.LOGIN} element={<PageTransition><Auth onSuccess={() => navigate(AppRoute.DASHBOARD)} onSignupSuccess={() => navigate(AppRoute.ONBOARDING)} /></PageTransition>} />
                   <Route path={AppRoute.AQUINAS_OPERA} element={<PageTransition><AuthGuard><AquinasOpera /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.CERTAMEN} element={<PageTransition><AuthGuard><Certamen /></AuthGuard></PageTransition>} />
-                  <Route path={AppRoute.MISSAL} element={<PageTransition><AuthGuard><MissalPage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.MISSAL} element={<PageTransition><AuthGuard><LiturgiaPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.FAVORITES} element={<PageTransition><AuthGuard><FavoritesPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.TRILHAS} element={<PageTransition><AuthGuard><TrilhasPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.ABOUT} element={<PageTransition><AboutPage /></PageTransition>} />
@@ -246,13 +248,13 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.LECTIO_DIVINA} element={<PageTransition><AuthGuard><LectioDivina /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.BREVIARY} element={<PageTransition><AuthGuard><BreviaryPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.LITANIES} element={<PageTransition><AuthGuard><LitaniesPage /></AuthGuard></PageTransition>} />
-                  <Route path={AppRoute.LITURGICAL_CALENDAR} element={<PageTransition><AuthGuard><LiturgicalCalendarPage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.LITURGICAL_CALENDAR} element={<PageTransition><AuthGuard><LiturgiaPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.COMMUNITY} element={<PageTransition><AuthGuard><CommunityPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.PROFILE} element={<PageTransition><AuthGuard><ProfilePage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.POENITENTIA} element={<PageTransition><AuthGuard><PoenitentiaPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.GLOSSARY} element={<PageTransition><AuthGuard><GlossaryPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.APARICOES} element={<PageTransition><AuthGuard><AparicoesPage /></AuthGuard></PageTransition>} />
-                  <Route path={AppRoute.ORDO_MISSAE} element={<PageTransition><AuthGuard><MissalPage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.ORDO_MISSAE} element={<PageTransition><AuthGuard><LiturgiaPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.PRAYERS} element={<PageTransition><AuthGuard><PrayerPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.DIAGNOSTICS} element={<PageTransition><DiagnosticsPage /></PageTransition>} />
                   <Route path="/reset-password" element={<PageTransition><ResetPasswordPage /></PageTransition>} />
@@ -278,7 +280,7 @@ const AppLayout: React.FC = () => {
             <>
               <CathedralFooter />
               <BottomNav onOpenSidebar={() => setIsSidebarOpen(true)} user={user} />
-              {[AppRoute.BIBLE, AppRoute.DAILY_LITURGY, AppRoute.BREVIARY, AppRoute.LECTIO_DIVINA, AppRoute.CATECHISM, AppRoute.MAGISTERIUM].includes(location.pathname as AppRoute) && (
+              {[AppRoute.BIBLE, AppRoute.DAILY_LITURGY, AppRoute.LITURGIA, AppRoute.BREVIARY, AppRoute.LECTIO_DIVINA, AppRoute.CATECHISM, AppRoute.MAGISTERIUM].includes(location.pathname as AppRoute) && (
                 <ReadingModeToggle />
               )}
             </>
