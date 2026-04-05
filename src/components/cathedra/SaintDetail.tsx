@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Icons } from '../../constants';
 import SacredImage from './SacredImage';
 import ShareButton from './ShareButton';
+import DocumentViewer from './DocumentViewer';
 import { type Saint } from '@/data/saints';
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -16,8 +17,12 @@ const CATEGORY_LABELS: Record<string, string> = {
   mystic: 'Místico(a)',
 };
 
-const SaintDetail: React.FC<{ saint: Saint; onClose: () => void }> = ({ saint, onClose }) => (
-  <motion.div
+const SaintDetail: React.FC<{ saint: Saint; onClose: () => void }> = ({ saint, onClose }) => {
+  const [viewingDoc, setViewingDoc] = useState<{ url: string; title: string } | null>(null);
+
+  return (
+    <>
+    <motion.div
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     exit={{ opacity: 0 }}
@@ -109,16 +114,16 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void }> = ({ saint, o
                   <Icons.Book className="w-4 h-4 text-primary flex-shrink-0" />
                   <div className="flex-1 min-w-0">
                     {w.url ? (
-                      <a href={w.url} target="_blank" rel="noopener noreferrer" className="text-sm font-bold text-foreground hover:text-primary transition-colors underline-offset-2 hover:underline">{w.title}</a>
+                      <button onClick={() => setViewingDoc({ url: w.url!, title: w.title })} className="text-sm font-bold text-foreground hover:text-primary transition-colors underline-offset-2 hover:underline text-left">{w.title}</button>
                     ) : (
                       <span className="text-sm font-bold text-foreground">{w.title}</span>
                     )}
                     {w.year && <span className="text-[10px] text-muted-foreground ml-2">({w.year})</span>}
                   </div>
                   {w.url && (
-                    <a href={w.url} target="_blank" rel="noopener noreferrer" className="text-[10px] font-bold text-primary hover:underline flex-shrink-0 flex items-center gap-1">
+                    <button onClick={() => setViewingDoc({ url: w.url!, title: w.title })} className="text-[10px] font-bold text-primary hover:underline flex-shrink-0 flex items-center gap-1">
                       Ler <Icons.ArrowDown className="w-3 h-3 -rotate-90" />
-                    </a>
+                    </button>
                   )}
                 </div>
               ))}
@@ -162,7 +167,10 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void }> = ({ saint, o
       </div>
     </motion.div>
   </motion.div>
-);
+  {viewingDoc && <DocumentViewer url={viewingDoc.url} title={viewingDoc.title} onClose={() => setViewingDoc(null)} />}
+  </>
+  );
+};
 
 export default SaintDetail;
 export { CATEGORY_LABELS };

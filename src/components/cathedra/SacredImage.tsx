@@ -40,6 +40,7 @@ const SacredImage: React.FC<SacredImageProps> = ({ src, alt, className, priority
       const base = src.split('?')[0];
       return `${base}?auto=format&fit=crop&q=${priority ? '85' : '75'}&w=${priority ? '1400' : '800'}`;
     }
+    // Wikimedia / other URLs: use as-is
     return src;
   }, [src, priority]);
 
