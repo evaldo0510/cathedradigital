@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Icons } from '../../constants';
 import { AppRoute } from '../../types';
+import { LayoutDashboard, BookOpen, Heart, Cross, Menu } from 'lucide-react';
 
 interface BottomNavItemProps {
   label: string;
@@ -40,10 +40,10 @@ const BottomNav: React.FC<{ onOpenSidebar: () => void }> = ({ onOpenSidebar }) =
   const currentPath = location.pathname;
 
   const items = [
-    { label: 'Início', icon: <Icons.Layout className="w-5 h-5" />, route: AppRoute.DASHBOARD },
-    { label: 'Bíblia', icon: <Icons.Book className="w-5 h-5" />, route: AppRoute.BIBLE },
-    { label: 'Orações', icon: <Icons.Heart className="w-5 h-5" />, route: AppRoute.ORACAO },
-    { label: 'Catecismo', icon: <Icons.Cross className="w-5 h-5" />, route: AppRoute.CATECHISM },
+    { label: 'Início', icon: <LayoutDashboard className="w-5 h-5" />, route: AppRoute.DASHBOARD },
+    { label: 'Bíblia', icon: <BookOpen className="w-5 h-5" />, route: AppRoute.BIBLE },
+    { label: 'Orações', icon: <Heart className="w-5 h-5" />, route: AppRoute.ORACAO },
+    { label: 'Catecismo', icon: <Cross className="w-5 h-5" />, route: AppRoute.CATECHISM },
   ];
 
   return (
@@ -63,7 +63,7 @@ const BottomNav: React.FC<{ onOpenSidebar: () => void }> = ({ onOpenSidebar }) =
           onClick={onOpenSidebar}
           className="flex flex-col items-center justify-center gap-0.5 sm:gap-1 flex-1 py-1.5 text-muted-foreground active:text-foreground transition-all tap-highlight-transparent"
         >
-          <Icons.Menu className="w-5 h-5 sm:w-6 sm:h-6" />
+          <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
           <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest opacity-60 leading-none">Menu</span>
         </button>
       </div>
