@@ -260,14 +260,43 @@ const Bible: React.FC = () => {
     navigate(`/catechism?p=${paragraph}`);
   }, [navigate]);
 
-  // Local cache for Bible texts to avoid repeated API calls
-  const bibleCache = useMemo(() => new Map<string, { number: number; text: string }[]>(), []);
+  // Persistent cache for Bible texts using localStorage + in-memory Map
+  const bibleCache = useMemo(() => {
+    const STORAGE_KEY = 'cathedra_bible_cache';
+    const MAX_ENTRIES = 50;
+    
+    // Load from localStorage
+    const map = new Map<string, { number: number; text: string }[]>();
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        const entries = JSON.parse(stored);
+        entries.forEach(([k, v]: [string, any]) => map.set(k, v));
+      }
+    } catch {}
+
+    // Wrap set to persist
+    const originalSet = map.set.bind(map);
+    map.set = (key, value) => {
+      originalSet(key, value);
+      // Evict oldest if over limit
+      if (map.size > MAX_ENTRIES) {
+        const firstKey = map.keys().next().value;
+        if (firstKey) map.delete(firstKey);
+      }
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify([...map.entries()]));
+      } catch {}
+      return map;
+    };
+
+    return map;
+  }, []);
 
   useEffect(() => {
     if (viewMode === 'reading' && selectedBook && selectedChapter > 0) {
       const cacheKey = `${selectedBook.abbr}_${selectedChapter}`;
       
-      // Check local cache first
       const cached = bibleCache.get(cacheKey);
       if (cached) {
         setVerses(cached);
