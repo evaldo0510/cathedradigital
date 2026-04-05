@@ -8,7 +8,7 @@ import { supabase } from '@/integrations/supabase/client';
 import {
   BookOpen, Church, Cross, Heart, Flame, Star,
   CheckCircle2, Circle, ChevronRight, Pen, Send,
-  BookMarked, FileText, Sparkles, Hand, X
+  BookMarked, FileText, Sparkles, Hand, X, Zap
 } from 'lucide-react';
 
 interface DashboardProps {
@@ -219,6 +219,30 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           </button>
         </div>
       </FadeUp>
+
+      {/* ═══ PRO BANNER ═══ */}
+      {!profile?.is_premium && (
+        <FadeUp delay={0.07}>
+          <button
+            onClick={() => goTo(AppRoute.CHECKOUT)}
+            className="w-full group relative overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent p-5 md:p-6 text-left transition-all hover:border-primary/40 hover:shadow-lg hover:shadow-primary/10"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-primary/15 flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                <Zap className="w-5 h-5 text-primary group-hover:text-primary-foreground" />
+              </div>
+              <div className="flex-1 min-w-0 space-y-1">
+                <h3 className="font-bold text-foreground text-sm">Desbloqueie o Cathedra PRO</h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  IA Teológica ilimitada, trilhas de formação e modo offline.{' '}
+                  <span className="text-primary font-semibold">A partir de R$ 15,92/mês.</span>
+                </p>
+              </div>
+              <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
+            </div>
+          </button>
+        </FadeUp>
+      )}
 
       {/* ═══ DAILY QUOTE ═══ */}
       <FadeUp delay={0.05}>
