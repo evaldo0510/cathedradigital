@@ -1,5 +1,15 @@
 import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../constants';
+import { AppRoute } from '@/types';
+import { Badge } from '@/components/ui/badge';
+
+interface DogmaRef {
+  type: 'bible' | 'catechism' | 'magisterium';
+  label: string;
+  /** For bible: "book chapter" (e.g. "Mt 16"), for catechism: paragraph number, for magisterium: search query */
+  target: string;
+}
 
 interface Dogma {
   id: number;
@@ -8,38 +18,150 @@ interface Dogma {
   source: string;
   year: number;
   category: string;
+  refs: DogmaRef[];
 }
 
 const CATEGORIES = ['Todos', 'Deus', 'Cristologia', 'Mariologia', 'Eclesiologia', 'Sacramentos', 'Escatologia', 'Antropologia'];
 
 const DOGMAS: Dogma[] = [
-  { id: 1, title: 'Existência de Deus', definition: 'A existência de Deus pode ser conhecida com certeza pela luz natural da razão humana, a partir das coisas criadas.', source: 'Concílio Vaticano I, Dei Filius', year: 1870, category: 'Deus' },
-  { id: 2, title: 'Santíssima Trindade', definition: 'Há em Deus três Pessoas divinas: Pai, Filho e Espírito Santo. Cada uma das três Pessoas possui a essência divina inteira.', source: 'Concílio de Nicéia / Constantinopla', year: 325, category: 'Deus' },
-  { id: 3, title: 'Criação ex nihilo', definition: 'Deus criou todas as coisas do nada (ex nihilo), livremente e por bondade.', source: 'Concílio Lateranense IV', year: 1215, category: 'Deus' },
-  { id: 4, title: 'Divindade de Cristo', definition: 'Jesus Cristo é verdadeiro Deus e verdadeiro homem, com duas naturezas — divina e humana — unidas na única Pessoa do Verbo.', source: 'Concílio de Calcedônia', year: 451, category: 'Cristologia' },
-  { id: 5, title: 'Encarnação do Verbo', definition: 'O Verbo se fez carne e habitou entre nós. O Filho de Deus assumiu a natureza humana no seio da Virgem Maria.', source: 'Concílio de Éfeso / Nicéia', year: 431, category: 'Cristologia' },
-  { id: 6, title: 'Redenção pela Cruz', definition: 'Cristo morreu na cruz para a redenção de todos os homens, oferecendo-se como sacrifício ao Pai para a remissão dos pecados.', source: 'Concílio de Trento', year: 1545, category: 'Cristologia' },
-  { id: 7, title: 'Ressurreição de Cristo', definition: 'Ao terceiro dia, Cristo ressuscitou dentre os mortos com seu próprio corpo glorificado.', source: 'Símbolo dos Apóstolos / Nicéia', year: 325, category: 'Cristologia' },
-  { id: 8, title: 'Ascensão ao Céu', definition: 'Quarenta dias após a Ressurreição, Cristo subiu aos Céus em corpo e alma e está sentado à direita do Pai.', source: 'Símbolo Niceno-Constantinopolitano', year: 381, category: 'Cristologia' },
-  { id: 9, title: 'Imaculada Conceição', definition: 'A Virgem Maria, no primeiro instante de sua conceição, foi preservada imune de toda mancha do pecado original.', source: 'Pio IX, Ineffabilis Deus', year: 1854, category: 'Mariologia' },
-  { id: 10, title: 'Virgindade Perpétua de Maria', definition: 'Maria foi virgem antes, durante e depois do parto de Jesus Cristo.', source: 'Concílio de Latrão (649)', year: 649, category: 'Mariologia' },
-  { id: 11, title: 'Maternidade Divina', definition: 'Maria é verdadeiramente Mãe de Deus (Theotókos), pois gerou segundo a carne o Verbo de Deus feito carne.', source: 'Concílio de Éfeso', year: 431, category: 'Mariologia' },
-  { id: 12, title: 'Assunção de Maria', definition: 'A Virgem Maria, terminado o curso da vida terrena, foi assunta em corpo e alma à glória celestial.', source: 'Pio XII, Munificentissimus Deus', year: 1950, category: 'Mariologia' },
-  { id: 13, title: 'Presença Real na Eucaristia', definition: 'Na Eucaristia, o pão e o vinho são convertidos no Corpo e Sangue de Cristo (transubstanciação). Cristo está verdadeira, real e substancialmente presente.', source: 'Concílio de Trento', year: 1551, category: 'Sacramentos' },
-  { id: 14, title: 'Sete Sacramentos', definition: 'Os sacramentos da Nova Lei foram todos instituídos por Jesus Cristo e são sete: Batismo, Confirmação, Eucaristia, Penitência, Unção dos Enfermos, Ordem e Matrimônio.', source: 'Concílio de Trento', year: 1547, category: 'Sacramentos' },
-  { id: 15, title: 'Necessidade do Batismo', definition: 'O Batismo é necessário para a salvação, ao menos em desejo (in voto), pois é a porta de entrada na Igreja e confere a graça santificante.', source: 'Concílio de Trento', year: 1547, category: 'Sacramentos' },
-  { id: 16, title: 'Pecado Original', definition: 'Pelo pecado de Adão, todos os homens nascem em estado de pecado original, privados da graça santificante.', source: 'Concílio de Trento', year: 1546, category: 'Antropologia' },
-  { id: 17, title: 'Imortalidade da Alma', definition: 'A alma humana é imortal e subsiste após a morte do corpo, aguardando a ressurreição final.', source: 'Concílio Lateranense V', year: 1513, category: 'Antropologia' },
-  { id: 18, title: 'Livre-arbítrio', definition: 'O homem possui livre-arbítrio, pelo qual pode cooperar ou resistir à graça divina.', source: 'Concílio de Trento', year: 1547, category: 'Antropologia' },
-  { id: 19, title: 'Infalibilidade Papal', definition: 'O Romano Pontífice, quando fala ex cathedra em matéria de fé e moral, goza de infalibilidade, assistido pelo Espírito Santo.', source: 'Concílio Vaticano I, Pastor Aeternus', year: 1870, category: 'Eclesiologia' },
-  { id: 20, title: 'Primado de Pedro', definition: 'Cristo constituiu São Pedro como chefe visível de toda a Igreja, conferindo-lhe o primado de jurisdição. Este primado é transmitido aos seus sucessores, os Bispos de Roma.', source: 'Concílio Vaticano I', year: 1870, category: 'Eclesiologia' },
-  { id: 21, title: 'A Igreja como Corpo de Cristo', definition: 'A Igreja é o Corpo Místico de Cristo, do qual Ele é a Cabeça e os fiéis são os membros.', source: 'Pio XII, Mystici Corporis', year: 1943, category: 'Eclesiologia' },
-  { id: 22, title: 'Comunhão dos Santos', definition: 'Existe uma comunhão espiritual entre os fiéis na terra, as almas no purgatório e os bem-aventurados no céu.', source: 'Símbolo dos Apóstolos', year: 390, category: 'Eclesiologia' },
-  { id: 23, title: 'Existência do Purgatório', definition: 'Existe o purgatório, onde as almas dos justos que morreram com pecados veniais ou penas temporais são purificadas antes de entrar no céu.', source: 'Concílio de Florença / Trento', year: 1439, category: 'Escatologia' },
-  { id: 24, title: 'Ressurreição dos Mortos', definition: 'No último dia, todos os mortos ressuscitarão com seus próprios corpos para o juízo final.', source: 'Símbolo Niceno-Constantinopolitano', year: 381, category: 'Escatologia' },
-  { id: 25, title: 'Juízo Final', definition: 'No fim dos tempos, Cristo virá em glória para julgar os vivos e os mortos, dando a cada um segundo as suas obras.', source: 'Símbolo Niceno / Atanasiano', year: 325, category: 'Escatologia' },
-  { id: 26, title: 'Existência do Inferno', definition: 'O inferno existe e as almas dos que morrem em pecado mortal são condenadas às penas eternas.', source: 'Concílio de Florença / Trento', year: 1439, category: 'Escatologia' },
-  { id: 27, title: 'Existência do Céu', definition: 'Os bem-aventurados gozam no céu da visão beatífica de Deus, face a face, numa felicidade eterna e perfeita.', source: 'Bento XII, Benedictus Deus', year: 1336, category: 'Escatologia' },
+  { id: 1, title: 'Existência de Deus', definition: 'A existência de Deus pode ser conhecida com certeza pela luz natural da razão humana, a partir das coisas criadas.', source: 'Concílio Vaticano I, Dei Filius', year: 1870, category: 'Deus', refs: [
+    { type: 'bible', label: 'Rm 1,20', target: 'Rom 1' },
+    { type: 'bible', label: 'Sb 13,1-9', target: 'Wis 13' },
+    { type: 'catechism', label: 'CIC §36', target: '36' },
+    { type: 'catechism', label: 'CIC §286', target: '286' },
+    { type: 'magisterium', label: 'Dei Filius', target: 'Dei Filius' },
+  ]},
+  { id: 2, title: 'Santíssima Trindade', definition: 'Há em Deus três Pessoas divinas: Pai, Filho e Espírito Santo. Cada uma das três Pessoas possui a essência divina inteira.', source: 'Concílio de Nicéia / Constantinopla', year: 325, category: 'Deus', refs: [
+    { type: 'bible', label: 'Mt 28,19', target: 'Mat 28' },
+    { type: 'bible', label: '2Cor 13,13', target: '2Co 13' },
+    { type: 'catechism', label: 'CIC §253-256', target: '253' },
+    { type: 'magisterium', label: 'Credo Niceno', target: 'Credo Niceno' },
+  ]},
+  { id: 3, title: 'Criação ex nihilo', definition: 'Deus criou todas as coisas do nada (ex nihilo), livremente e por bondade.', source: 'Concílio Lateranense IV', year: 1215, category: 'Deus', refs: [
+    { type: 'bible', label: 'Gn 1,1', target: 'Gen 1' },
+    { type: 'bible', label: '2Mac 7,28', target: '2Ma 7' },
+    { type: 'catechism', label: 'CIC §296-298', target: '296' },
+  ]},
+  { id: 4, title: 'Divindade de Cristo', definition: 'Jesus Cristo é verdadeiro Deus e verdadeiro homem, com duas naturezas — divina e humana — unidas na única Pessoa do Verbo.', source: 'Concílio de Calcedônia', year: 451, category: 'Cristologia', refs: [
+    { type: 'bible', label: 'Jo 1,1-14', target: 'Joh 1' },
+    { type: 'bible', label: 'Cl 2,9', target: 'Col 2' },
+    { type: 'catechism', label: 'CIC §464-469', target: '464' },
+  ]},
+  { id: 5, title: 'Encarnação do Verbo', definition: 'O Verbo se fez carne e habitou entre nós. O Filho de Deus assumiu a natureza humana no seio da Virgem Maria.', source: 'Concílio de Éfeso / Nicéia', year: 431, category: 'Cristologia', refs: [
+    { type: 'bible', label: 'Jo 1,14', target: 'Joh 1' },
+    { type: 'bible', label: 'Lc 1,35', target: 'Luk 1' },
+    { type: 'catechism', label: 'CIC §461-463', target: '461' },
+  ]},
+  { id: 6, title: 'Redenção pela Cruz', definition: 'Cristo morreu na cruz para a redenção de todos os homens, oferecendo-se como sacrifício ao Pai para a remissão dos pecados.', source: 'Concílio de Trento', year: 1545, category: 'Cristologia', refs: [
+    { type: 'bible', label: 'Rm 5,8-10', target: 'Rom 5' },
+    { type: 'bible', label: 'Hb 9,12', target: 'Heb 9' },
+    { type: 'catechism', label: 'CIC §613-617', target: '613' },
+  ]},
+  { id: 7, title: 'Ressurreição de Cristo', definition: 'Ao terceiro dia, Cristo ressuscitou dentre os mortos com seu próprio corpo glorificado.', source: 'Símbolo dos Apóstolos / Nicéia', year: 325, category: 'Cristologia', refs: [
+    { type: 'bible', label: '1Cor 15,3-8', target: '1Co 15' },
+    { type: 'bible', label: 'Mc 16,6', target: 'Mar 16' },
+    { type: 'catechism', label: 'CIC §638-658', target: '638' },
+  ]},
+  { id: 8, title: 'Ascensão ao Céu', definition: 'Quarenta dias após a Ressurreição, Cristo subiu aos Céus em corpo e alma e está sentado à direita do Pai.', source: 'Símbolo Niceno-Constantinopolitano', year: 381, category: 'Cristologia', refs: [
+    { type: 'bible', label: 'At 1,9-11', target: 'Act 1' },
+    { type: 'bible', label: 'Mc 16,19', target: 'Mar 16' },
+    { type: 'catechism', label: 'CIC §659-667', target: '659' },
+  ]},
+  { id: 9, title: 'Imaculada Conceição', definition: 'A Virgem Maria, no primeiro instante de sua conceição, foi preservada imune de toda mancha do pecado original.', source: 'Pio IX, Ineffabilis Deus', year: 1854, category: 'Mariologia', refs: [
+    { type: 'bible', label: 'Lc 1,28', target: 'Luk 1' },
+    { type: 'bible', label: 'Gn 3,15', target: 'Gen 3' },
+    { type: 'catechism', label: 'CIC §490-493', target: '490' },
+    { type: 'magisterium', label: 'Ineffabilis Deus', target: 'Ineffabilis Deus' },
+  ]},
+  { id: 10, title: 'Virgindade Perpétua de Maria', definition: 'Maria foi virgem antes, durante e depois do parto de Jesus Cristo.', source: 'Concílio de Latrão (649)', year: 649, category: 'Mariologia', refs: [
+    { type: 'bible', label: 'Is 7,14', target: 'Isa 7' },
+    { type: 'bible', label: 'Lc 1,34', target: 'Luk 1' },
+    { type: 'catechism', label: 'CIC §496-507', target: '496' },
+  ]},
+  { id: 11, title: 'Maternidade Divina', definition: 'Maria é verdadeiramente Mãe de Deus (Theotókos), pois gerou segundo a carne o Verbo de Deus feito carne.', source: 'Concílio de Éfeso', year: 431, category: 'Mariologia', refs: [
+    { type: 'bible', label: 'Lc 1,43', target: 'Luk 1' },
+    { type: 'bible', label: 'Gl 4,4', target: 'Gal 4' },
+    { type: 'catechism', label: 'CIC §495', target: '495' },
+  ]},
+  { id: 12, title: 'Assunção de Maria', definition: 'A Virgem Maria, terminado o curso da vida terrena, foi assunta em corpo e alma à glória celestial.', source: 'Pio XII, Munificentissimus Deus', year: 1950, category: 'Mariologia', refs: [
+    { type: 'bible', label: 'Ap 12,1', target: 'Rev 12' },
+    { type: 'catechism', label: 'CIC §966', target: '966' },
+    { type: 'magisterium', label: 'Munificentissimus Deus', target: 'Munificentissimus Deus' },
+  ]},
+  { id: 13, title: 'Presença Real na Eucaristia', definition: 'Na Eucaristia, o pão e o vinho são convertidos no Corpo e Sangue de Cristo (transubstanciação). Cristo está verdadeira, real e substancialmente presente.', source: 'Concílio de Trento', year: 1551, category: 'Sacramentos', refs: [
+    { type: 'bible', label: 'Mt 26,26-28', target: 'Mat 26' },
+    { type: 'bible', label: '1Cor 11,24-25', target: '1Co 11' },
+    { type: 'catechism', label: 'CIC §1373-1381', target: '1373' },
+  ]},
+  { id: 14, title: 'Sete Sacramentos', definition: 'Os sacramentos da Nova Lei foram todos instituídos por Jesus Cristo e são sete: Batismo, Confirmação, Eucaristia, Penitência, Unção dos Enfermos, Ordem e Matrimônio.', source: 'Concílio de Trento', year: 1547, category: 'Sacramentos', refs: [
+    { type: 'catechism', label: 'CIC §1210-1211', target: '1210' },
+  ]},
+  { id: 15, title: 'Necessidade do Batismo', definition: 'O Batismo é necessário para a salvação, ao menos em desejo (in voto), pois é a porta de entrada na Igreja e confere a graça santificante.', source: 'Concílio de Trento', year: 1547, category: 'Sacramentos', refs: [
+    { type: 'bible', label: 'Jo 3,5', target: 'Joh 3' },
+    { type: 'bible', label: 'Mc 16,16', target: 'Mar 16' },
+    { type: 'catechism', label: 'CIC §1257-1261', target: '1257' },
+  ]},
+  { id: 16, title: 'Pecado Original', definition: 'Pelo pecado de Adão, todos os homens nascem em estado de pecado original, privados da graça santificante.', source: 'Concílio de Trento', year: 1546, category: 'Antropologia', refs: [
+    { type: 'bible', label: 'Rm 5,12', target: 'Rom 5' },
+    { type: 'bible', label: 'Gn 3,1-24', target: 'Gen 3' },
+    { type: 'catechism', label: 'CIC §388-390', target: '388' },
+  ]},
+  { id: 17, title: 'Imortalidade da Alma', definition: 'A alma humana é imortal e subsiste após a morte do corpo, aguardando a ressurreição final.', source: 'Concílio Lateranense V', year: 1513, category: 'Antropologia', refs: [
+    { type: 'bible', label: 'Sb 3,1-4', target: 'Wis 3' },
+    { type: 'bible', label: 'Mt 10,28', target: 'Mat 10' },
+    { type: 'catechism', label: 'CIC §366', target: '366' },
+  ]},
+  { id: 18, title: 'Livre-arbítrio', definition: 'O homem possui livre-arbítrio, pelo qual pode cooperar ou resistir à graça divina.', source: 'Concílio de Trento', year: 1547, category: 'Antropologia', refs: [
+    { type: 'bible', label: 'Eclo 15,14-17', target: 'Sir 15' },
+    { type: 'catechism', label: 'CIC §1730-1738', target: '1730' },
+  ]},
+  { id: 19, title: 'Infalibilidade Papal', definition: 'O Romano Pontífice, quando fala ex cathedra em matéria de fé e moral, goza de infalibilidade, assistido pelo Espírito Santo.', source: 'Concílio Vaticano I, Pastor Aeternus', year: 1870, category: 'Eclesiologia', refs: [
+    { type: 'bible', label: 'Mt 16,18-19', target: 'Mat 16' },
+    { type: 'bible', label: 'Lc 22,32', target: 'Luk 22' },
+    { type: 'catechism', label: 'CIC §891', target: '891' },
+    { type: 'magisterium', label: 'Pastor Aeternus', target: 'Pastor Aeternus' },
+  ]},
+  { id: 20, title: 'Primado de Pedro', definition: 'Cristo constituiu São Pedro como chefe visível de toda a Igreja, conferindo-lhe o primado de jurisdição. Este primado é transmitido aos seus sucessores, os Bispos de Roma.', source: 'Concílio Vaticano I', year: 1870, category: 'Eclesiologia', refs: [
+    { type: 'bible', label: 'Mt 16,18-19', target: 'Mat 16' },
+    { type: 'bible', label: 'Jo 21,15-17', target: 'Joh 21' },
+    { type: 'catechism', label: 'CIC §880-882', target: '880' },
+  ]},
+  { id: 21, title: 'A Igreja como Corpo de Cristo', definition: 'A Igreja é o Corpo Místico de Cristo, do qual Ele é a Cabeça e os fiéis são os membros.', source: 'Pio XII, Mystici Corporis', year: 1943, category: 'Eclesiologia', refs: [
+    { type: 'bible', label: '1Cor 12,12-27', target: '1Co 12' },
+    { type: 'bible', label: 'Ef 1,22-23', target: 'Eph 1' },
+    { type: 'catechism', label: 'CIC §787-795', target: '787' },
+    { type: 'magisterium', label: 'Mystici Corporis', target: 'Mystici Corporis' },
+  ]},
+  { id: 22, title: 'Comunhão dos Santos', definition: 'Existe uma comunhão espiritual entre os fiéis na terra, as almas no purgatório e os bem-aventurados no céu.', source: 'Símbolo dos Apóstolos', year: 390, category: 'Eclesiologia', refs: [
+    { type: 'bible', label: '1Cor 12,26', target: '1Co 12' },
+    { type: 'catechism', label: 'CIC §946-962', target: '946' },
+  ]},
+  { id: 23, title: 'Existência do Purgatório', definition: 'Existe o purgatório, onde as almas dos justos que morreram com pecados veniais ou penas temporais são purificadas antes de entrar no céu.', source: 'Concílio de Florença / Trento', year: 1439, category: 'Escatologia', refs: [
+    { type: 'bible', label: '2Mac 12,46', target: '2Ma 12' },
+    { type: 'bible', label: '1Cor 3,15', target: '1Co 3' },
+    { type: 'catechism', label: 'CIC §1030-1032', target: '1030' },
+  ]},
+  { id: 24, title: 'Ressurreição dos Mortos', definition: 'No último dia, todos os mortos ressuscitarão com seus próprios corpos para o juízo final.', source: 'Símbolo Niceno-Constantinopolitano', year: 381, category: 'Escatologia', refs: [
+    { type: 'bible', label: 'Jo 5,28-29', target: 'Joh 5' },
+    { type: 'bible', label: '1Cor 15,42-44', target: '1Co 15' },
+    { type: 'catechism', label: 'CIC §988-1004', target: '988' },
+  ]},
+  { id: 25, title: 'Juízo Final', definition: 'No fim dos tempos, Cristo virá em glória para julgar os vivos e os mortos, dando a cada um segundo as suas obras.', source: 'Símbolo Niceno / Atanasiano', year: 325, category: 'Escatologia', refs: [
+    { type: 'bible', label: 'Mt 25,31-46', target: 'Mat 25' },
+    { type: 'bible', label: 'Ap 20,12', target: 'Rev 20' },
+    { type: 'catechism', label: 'CIC §1038-1041', target: '1038' },
+  ]},
+  { id: 26, title: 'Existência do Inferno', definition: 'O inferno existe e as almas dos que morrem em pecado mortal são condenadas às penas eternas.', source: 'Concílio de Florença / Trento', year: 1439, category: 'Escatologia', refs: [
+    { type: 'bible', label: 'Mt 25,41', target: 'Mat 25' },
+    { type: 'bible', label: 'Mc 9,43-48', target: 'Mar 9' },
+    { type: 'catechism', label: 'CIC §1033-1037', target: '1033' },
+  ]},
+  { id: 27, title: 'Existência do Céu', definition: 'Os bem-aventurados gozam no céu da visão beatífica de Deus, face a face, numa felicidade eterna e perfeita.', source: 'Bento XII, Benedictus Deus', year: 1336, category: 'Escatologia', refs: [
+    { type: 'bible', label: '1Cor 13,12', target: '1Co 13' },
+    { type: 'bible', label: '1Jo 3,2', target: '1Jn 3' },
+    { type: 'catechism', label: 'CIC §1023-1029', target: '1023' },
+    { type: 'magisterium', label: 'Benedictus Deus', target: 'Benedictus Deus' },
+  ]},
 ];
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -52,10 +174,17 @@ const CATEGORY_COLORS: Record<string, string> = {
   'Antropologia': 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300',
 };
 
+const REF_STYLES: Record<string, { icon: React.ReactNode; color: string }> = {
+  bible: { icon: <Icons.Book className="w-3 h-3" />, color: 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800 dark:hover:bg-amber-900/50' },
+  catechism: { icon: <Icons.Heart className="w-3 h-3" />, color: 'bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-100 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800 dark:hover:bg-rose-900/50' },
+  magisterium: { icon: <Icons.Globe className="w-3 h-3" />, color: 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800 dark:hover:bg-emerald-900/50' },
+};
+
 const DogmasPage: React.FC = () => {
   const [category, setCategory] = useState('Todos');
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedId, setExpandedId] = useState<number | null>(null);
+  const navigate = useNavigate();
 
   const filtered = useMemo(() => {
     let list = DOGMAS;
@@ -70,6 +199,20 @@ const DogmasPage: React.FC = () => {
     }
     return list;
   }, [category, searchQuery]);
+
+  const handleRefClick = (ref: DogmaRef) => {
+    switch (ref.type) {
+      case 'bible':
+        navigate(`${AppRoute.BIBLE}?search=${encodeURIComponent(ref.target)}`);
+        break;
+      case 'catechism':
+        navigate(`${AppRoute.CATECHISM}?paragraph=${ref.target}`);
+        break;
+      case 'magisterium':
+        navigate(`${AppRoute.MAGISTERIUM}?search=${encodeURIComponent(ref.target)}`);
+        break;
+    }
+  };
 
   return (
     <div className="max-w-5xl mx-auto space-y-8">
@@ -134,6 +277,11 @@ const DogmasPage: React.FC = () => {
                     {dogma.category}
                   </span>
                   <span className="text-[10px] text-muted-foreground">{dogma.year}</span>
+                  {dogma.refs.length > 0 && (
+                    <Badge variant="outline" className="text-[9px] gap-1 px-1.5 py-0">
+                      <Icons.ArrowRight className="w-2.5 h-2.5" /> {dogma.refs.length} fontes
+                    </Badge>
+                  )}
                 </div>
                 <h3 className="text-base font-bold text-foreground">{dogma.title}</h3>
                 {expandedId !== dogma.id && (
@@ -143,12 +291,34 @@ const DogmasPage: React.FC = () => {
               <Icons.ArrowDown className={`w-4 h-4 text-muted-foreground shrink-0 transition-transform ${expandedId === dogma.id ? 'rotate-180' : ''}`} />
             </button>
             {expandedId === dogma.id && (
-              <div className="px-6 pb-6 pl-[4.5rem] space-y-3 border-t border-border pt-4">
+              <div className="px-6 pb-6 pl-[4.5rem] space-y-4 border-t border-border pt-4">
                 <p className="text-foreground/90 leading-relaxed font-serif">{dogma.definition}</p>
                 <div className="flex items-center gap-2">
                   <span className="text-[10px] font-black uppercase tracking-widest text-primary">Fonte:</span>
                   <span className="text-sm text-muted-foreground">{dogma.source} ({dogma.year})</span>
                 </div>
+
+                {/* Cross-references */}
+                {dogma.refs.length > 0 && (
+                  <div className="space-y-2">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Aprofundar nas fontes:</span>
+                    <div className="flex flex-wrap gap-2">
+                      {dogma.refs.map((ref, i) => {
+                        const style = REF_STYLES[ref.type];
+                        return (
+                          <button
+                            key={i}
+                            onClick={(e) => { e.stopPropagation(); handleRefClick(ref); }}
+                            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${style.color}`}
+                          >
+                            {style.icon}
+                            {ref.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
