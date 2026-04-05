@@ -22,7 +22,7 @@ export const Logo = forwardRef<HTMLDivElement, { className?: string }>(({ classN
         </linearGradient>
       </defs>
       <circle cx="60" cy="60" r="57" stroke="url(#logo-grad)" strokeWidth="1.5" fill="none" />
-      <circle cx="60" cy="60" r="50" fill="#1a1a1a" />
+      <circle cx="60" cy="60" r="50" className="fill-foreground dark:fill-[#1a1a1a]" />
       <line x1="60" y1="22" x2="60" y2="98" stroke="url(#logo-grad)" strokeWidth="3.5" strokeLinecap="round" />
       <path d="M60 22 C60 22, 82 24, 82 40 C82 54, 60 56, 60 56" stroke="url(#logo-grad)" strokeWidth="3.5" strokeLinecap="round" fill="none" />
       <line x1="38" y1="34" x2="82" y2="78" stroke="url(#logo-grad-light)" strokeWidth="2.5" strokeLinecap="round" opacity="0.8" />

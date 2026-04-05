@@ -147,7 +147,7 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
           </div>
         </div>
 
-        <div className="pt-4 border-t border-border space-y-3">
+        <div className="pt-4 pb-20 lg:pb-0 border-t border-border space-y-3">
           <div className="flex gap-2 mb-2 px-1">
             <button 
               onClick={onToggleDark} 
