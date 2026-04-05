@@ -11,7 +11,8 @@ import { getCatechismCrossRefs } from '@/data/cross-references';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useCatechismParagraph, usePrefetchCatechismParagraph } from '@/hooks/useCatechismParagraph';
-import { parseBibleReferences } from '@/lib/bibleRefParser';
+import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
+import CatechismPopover from './CatechismPopover';
 
 
 const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr: string, chapter: number) => void }> = ({ paragraph, onNavigateToBible }) => {
