@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ShareButton from './ShareButton';
 import { createPortal } from 'react-dom';
 import { Icons } from '../../constants';
@@ -323,6 +324,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
 
 // ---------- Main Page ----------
 const PrayerPage: React.FC = () => {
+  const navigate = useNavigate();
   const todayKey = getMysteryOfDay();
   const todayData = MYSTERY_DATA[todayKey];
   const [intention, setIntention] = useState('');
@@ -491,7 +493,7 @@ const PrayerPage: React.FC = () => {
             <p className="text-sm opacity-80 leading-relaxed font-serif">
               Medite sobre a Paixão de Cristo em 14 estações de profunda oração.
             </p>
-            <button className="w-full py-3 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl font-bold text-xs uppercase tracking-widest transition-all">
+            <button onClick={() => navigate('/via-crucis')} className="w-full py-3 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl font-bold text-xs uppercase tracking-widest transition-all">
               Explorar Via-Sacra
             </button>
           </div>
