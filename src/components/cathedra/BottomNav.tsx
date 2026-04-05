@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AppRoute } from '../../types';
 import { Icons } from '../../constants';
-import { Menu } from 'lucide-react';
+import { Menu, ShieldCheck } from 'lucide-react';
 
 interface BottomNavItemProps {
   label: string;
@@ -35,10 +35,16 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon, isActive, on
   </button>
 );
 
-const BottomNav: React.FC<{ onOpenSidebar: () => void }> = ({ onOpenSidebar }) => {
+interface BottomNavProps {
+  onOpenSidebar: () => void;
+  user?: { role?: string } | null;
+}
+
+const BottomNav: React.FC<BottomNavProps> = ({ onOpenSidebar, user }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
+  const isAdmin = user?.role === 'admin';
 
   const items = [
     { label: 'Início', icon: <Icons.Cathedral className="w-5 h-5" />, route: AppRoute.DASHBOARD },
@@ -60,6 +66,15 @@ const BottomNav: React.FC<{ onOpenSidebar: () => void }> = ({ onOpenSidebar }) =
             onClick={() => navigate(item.route)}
           />
         ))}
+        {isAdmin && (
+          <BottomNavItem
+            label="Admin"
+            icon={<ShieldCheck className="w-5 h-5" />}
+            route={AppRoute.ADMIN}
+            isActive={currentPath === AppRoute.ADMIN}
+            onClick={() => navigate(AppRoute.ADMIN)}
+          />
+        )}
         <button 
           onClick={onOpenSidebar}
           className="flex flex-col items-center justify-center gap-0.5 sm:gap-1 flex-1 py-1.5 text-muted-foreground active:text-foreground transition-all tap-highlight-transparent"
