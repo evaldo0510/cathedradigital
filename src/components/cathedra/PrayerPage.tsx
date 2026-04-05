@@ -518,7 +518,7 @@ const PrayerPage: React.FC = () => {
               Explorar Via-Sacra
             </button>
           </div>
-        </div>
+        </motion.div>
       </motion.div>
     </motion.div>
   );
