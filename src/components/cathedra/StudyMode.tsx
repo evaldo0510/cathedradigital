@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react'
 import ReactMarkdown from 'react-markdown';
 import { Icons } from '../../constants';
 import BibleVersePopover from './BibleVersePopover';
-import { parseBibleReferences } from '@/lib/bibleRefParser';
+import CatechismPopover from './CatechismPopover';
+import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -19,8 +20,8 @@ const SUGGESTIONS = [
 ];
 
 // Custom renderer that parses Bible references in text nodes
-const BibleAwareText: React.FC<{ text: string; onNavigate: (abbr: string, chapter: number) => void }> = ({ text, onNavigate }) => {
-  const segments = useMemo(() => parseBibleReferences(text), [text]);
+const TheologicalAwareText: React.FC<{ text: string; onNavigateBible: (abbr: string, chapter: number) => void; onNavigateCatechism: (paragraph: number) => void }> = ({ text, onNavigateBible, onNavigateCatechism }) => {
+  const segments = useMemo(() => parseTheologicalReferences(text), [text]);
   
   if (segments.length === 1 && segments[0].type === 'text') {
     return <>{text}</>;
@@ -28,20 +29,30 @@ const BibleAwareText: React.FC<{ text: string; onNavigate: (abbr: string, chapte
 
   return (
     <>
-      {segments.map((seg, i) =>
-        seg.type === 'bibleRef' && seg.abbr ? (
-          <BibleVersePopover
-            key={i}
-            abbr={seg.abbr}
-            chapter={seg.chapter!}
-            verse={seg.verse}
-            label={seg.value}
-            onNavigate={onNavigate}
-          />
-        ) : (
-          <React.Fragment key={i}>{seg.value}</React.Fragment>
-        )
-      )}
+      {segments.map((seg, i) => {
+        if (seg.type === 'bibleRef' && seg.abbr) {
+          return (
+            <BibleVersePopover
+              key={i}
+              abbr={seg.abbr}
+              chapter={seg.chapter!}
+              verse={seg.verse}
+              label={seg.value}
+              onNavigate={onNavigateBible}
+            />
+          );
+        }
+        if (seg.type === 'catechismRef' && seg.paragraph) {
+          return (
+            <CatechismPopover
+              key={i}
+              paragraph={seg.paragraph}
+              onNavigate={onNavigateCatechism}
+            />
+          );
+        }
+        return <React.Fragment key={i}>{seg.value}</React.Fragment>;
+      })}
     </>
   );
 };
@@ -62,45 +73,26 @@ const StudyMode: React.FC = () => {
     navigate(`/bible?book=${abbr}&ch=${chapter}`);
   }, [navigate]);
 
-  // Custom markdown components that parse Bible references in text
-  const markdownComponents = useMemo(() => ({
-    p: ({ children, ...props }: any) => (
-      <p {...props}>
-        {React.Children.map(children, (child) =>
-          typeof child === 'string' ? (
-            <BibleAwareText text={child} onNavigate={handleNavigateToBible} />
-          ) : child
-        )}
-      </p>
-    ),
-    li: ({ children, ...props }: any) => (
-      <li {...props}>
-        {React.Children.map(children, (child) =>
-          typeof child === 'string' ? (
-            <BibleAwareText text={child} onNavigate={handleNavigateToBible} />
-          ) : child
-        )}
-      </li>
-    ),
-    strong: ({ children, ...props }: any) => (
-      <strong {...props}>
-        {React.Children.map(children, (child) =>
-          typeof child === 'string' ? (
-            <BibleAwareText text={child} onNavigate={handleNavigateToBible} />
-          ) : child
-        )}
-      </strong>
-    ),
-    em: ({ children, ...props }: any) => (
-      <em {...props}>
-        {React.Children.map(children, (child) =>
-          typeof child === 'string' ? (
-            <BibleAwareText text={child} onNavigate={handleNavigateToBible} />
-          ) : child
-        )}
-      </em>
-    ),
-  }), [handleNavigateToBible]);
+  const handleNavigateToCatechism = useCallback((paragraph: number) => {
+    navigate(`/catechism?p=${paragraph}`);
+  }, [navigate]);
+
+  // Custom markdown components that parse Bible and Catechism references in text
+  const markdownComponents = useMemo(() => {
+    const renderChildren = (children: React.ReactNode) =>
+      React.Children.map(children, (child) =>
+        typeof child === 'string' ? (
+          <TheologicalAwareText text={child} onNavigateBible={handleNavigateToBible} onNavigateCatechism={handleNavigateToCatechism} />
+        ) : child
+      );
+
+    return {
+      p: ({ children, ...props }: any) => <p {...props}>{renderChildren(children)}</p>,
+      li: ({ children, ...props }: any) => <li {...props}>{renderChildren(children)}</li>,
+      strong: ({ children, ...props }: any) => <strong {...props}>{renderChildren(children)}</strong>,
+      em: ({ children, ...props }: any) => <em {...props}>{renderChildren(children)}</em>,
+    };
+  }, [handleNavigateToBible, handleNavigateToCatechism]);
 
   const sendMessage = async (text: string) => {
     if (!text.trim() || isLoading) return;
