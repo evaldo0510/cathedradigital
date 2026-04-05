@@ -117,9 +117,9 @@ const Index = () => {
 
         <div className="relative z-10 max-w-5xl text-center space-y-10">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0.5, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.4 }}
             className="inline-flex items-center gap-2 px-5 py-2 bg-primary/10 border border-primary/20 rounded-full text-primary"
           >
             <Sparkles className="w-4 h-4" />
