@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ShareButton from './ShareButton';
 import ReactMarkdown from 'react-markdown';
 import { 
   Heart, 
@@ -265,6 +266,11 @@ const DailyLiturgy: React.FC = () => {
                         </span>
                       </div>
                     )}
+                    <ShareButton
+                      title={readings?.liturgia || 'Liturgia do Dia'}
+                      text={`${readings?.liturgia || 'Liturgia do Dia'} — ${readings?.data || ''} — Cathedra Digital`}
+                      variant="button"
+                    />
                   </div>
                 </div>
 

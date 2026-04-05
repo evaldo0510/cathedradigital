@@ -9,6 +9,7 @@ import { useFavorites } from '@/hooks/useFavorites';
 import BibleSearch from './BibleSearch';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { ChevronDown, ScrollText, Swords, Feather, Flame, Cross, Globe, Mail, BookOpen, Sparkles, CheckCircle2, ArrowLeft } from 'lucide-react';
+import ShareButton from './ShareButton';
 import { useAuth } from '@/hooks/useAuth';
 import { Progress } from '@/components/ui/progress';
 import { checkNewBadges, getBadgeById } from '@/lib/badges';
@@ -259,14 +260,43 @@ const Bible: React.FC = () => {
     navigate(`/catechism?p=${paragraph}`);
   }, [navigate]);
 
-  // Local cache for Bible texts to avoid repeated API calls
-  const bibleCache = useMemo(() => new Map<string, { number: number; text: string }[]>(), []);
+  // Persistent cache for Bible texts using localStorage + in-memory Map
+  const bibleCache = useMemo(() => {
+    const STORAGE_KEY = 'cathedra_bible_cache';
+    const MAX_ENTRIES = 50;
+    
+    // Load from localStorage
+    const map = new Map<string, { number: number; text: string }[]>();
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        const entries = JSON.parse(stored);
+        entries.forEach(([k, v]: [string, any]) => map.set(k, v));
+      }
+    } catch {}
+
+    // Wrap set to persist
+    const originalSet = map.set.bind(map);
+    map.set = (key, value) => {
+      originalSet(key, value);
+      // Evict oldest if over limit
+      if (map.size > MAX_ENTRIES) {
+        const firstKey = map.keys().next().value;
+        if (firstKey) map.delete(firstKey);
+      }
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify([...map.entries()]));
+      } catch {}
+      return map;
+    };
+
+    return map;
+  }, []);
 
   useEffect(() => {
     if (viewMode === 'reading' && selectedBook && selectedChapter > 0) {
       const cacheKey = `${selectedBook.abbr}_${selectedChapter}`;
       
-      // Check local cache first
       const cached = bibleCache.get(cacheKey);
       if (cached) {
         setVerses(cached);
@@ -348,6 +378,12 @@ const Bible: React.FC = () => {
                 <Icons.Cross className="w-4 h-4" />
               </button>
             )}
+            {/* Share chapter */}
+            <ShareButton
+              title={`${selectedBook.name} ${selectedChapter}`}
+              text={`Leia ${selectedBook.name}, Capítulo ${selectedChapter} — Cathedra Digital`}
+              url={`${window.location.origin}/bible?book=${selectedBook.abbr}&ch=${selectedChapter}`}
+            />
           </div>
         </div>
 
@@ -390,13 +426,21 @@ const Bible: React.FC = () => {
                     <sup className="text-primary font-bold mr-1 text-xs select-none">{v.number}</sup>
                     <span className="font-serif">{v.text}</span>
                     {highlightedVerse === v.number && (
-                      <button
-                        onClick={e => { e.stopPropagation(); toggleFavorite({ type: 'verse', title: verseTitle, content: v.text }); }}
-                        className="inline-flex ml-2 align-middle"
-                        title={faved ? 'Remover dos favoritos' : 'Salvar nos favoritos'}
-                      >
-                        <Icons.Heart className={`w-4 h-4 transition-all ${faved ? 'fill-primary text-primary' : 'text-muted-foreground hover:text-primary'}`} />
-                      </button>
+                      <span className="inline-flex gap-1 ml-2 align-middle">
+                        <button
+                          onClick={e => { e.stopPropagation(); toggleFavorite({ type: 'verse', title: verseTitle, content: v.text }); }}
+                          title={faved ? 'Remover dos favoritos' : 'Salvar nos favoritos'}
+                        >
+                          <Icons.Heart className={`w-4 h-4 transition-all ${faved ? 'fill-primary text-primary' : 'text-muted-foreground hover:text-primary'}`} />
+                        </button>
+                        <ShareButton
+                          title={verseTitle}
+                          text={`"${v.text}" — ${verseTitle}`}
+                          url={`${window.location.origin}/bible?book=${selectedBook.abbr}&ch=${selectedChapter}`}
+                          className="border-0 p-0 hover:bg-transparent"
+                          size="sm"
+                        />
+                      </span>
                     )}
                   </p>
                 );
