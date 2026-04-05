@@ -218,7 +218,13 @@ const Saints: React.FC = () => {
               </div>
               <div className="flex-1 p-8 md:p-12 overflow-y-auto">
                 <h2 className="text-4xl font-serif font-bold text-stone-900 dark:text-stone-100 mb-2">{selectedSaint.name}</h2>
-                <p className="text-xl text-[#d4af37] font-serif italic mb-8">{selectedSaint.title}</p>
+                <p className="text-xl text-[#d4af37] font-serif italic mb-4">{selectedSaint.title}</p>
+                <ShareButton
+                  title={selectedSaint.name}
+                  text={`${selectedSaint.name} — ${selectedSaint.title}. ${selectedSaint.quotes[0] || ''}`}
+                  variant="button"
+                  className="mb-4"
+                />
                 <div className="space-y-8">
                   <section><p className="text-stone-700 dark:text-stone-300 font-serif leading-relaxed text-lg">{selectedSaint.bio}</p></section>
                   {selectedSaint.prayer && (
