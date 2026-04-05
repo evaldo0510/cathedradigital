@@ -5,7 +5,7 @@ import { AppRoute, User } from '../../types';
 import { BibleModal, CatechismModal, DocumentsModal } from './QuickModals';
 import {
   ShieldCheck, ListChecks, Feather, Bookmark,
-  BookText, Crown, Route, Library, MessageCircle,
+  Crown, Route, Library, MessageCircle,
   Sparkles, Trophy, Zap, Stethoscope, Search,
   Sun, Moon, LogOut, Menu, Command
 } from 'lucide-react';
