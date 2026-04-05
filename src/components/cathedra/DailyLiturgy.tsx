@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ShareButton from './ShareButton';
 import ReactMarkdown from 'react-markdown';
 import { 
   Heart, 
