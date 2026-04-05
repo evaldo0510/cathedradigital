@@ -11,7 +11,8 @@ import { getCatechismCrossRefs } from '@/data/cross-references';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useCatechismParagraph, usePrefetchCatechismParagraph } from '@/hooks/useCatechismParagraph';
-import { parseBibleReferences } from '@/lib/bibleRefParser';
+import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
+import CatechismPopover from './CatechismPopover';
 
 
 const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr: string, chapter: number) => void }> = ({ paragraph, onNavigateToBible }) => {
@@ -25,7 +26,7 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
 
   const segments = useMemo(() => {
     if (!data?.content) return [];
-    return parseBibleReferences(data.content);
+    return parseTheologicalReferences(data.content);
   }, [data?.content]);
 
   if (isLoading) {
@@ -58,6 +59,11 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
               verse={seg.verse}
               label={seg.value}
               onNavigate={onNavigateToBible}
+            />
+          ) : seg.type === 'catechismRef' && seg.paragraph ? (
+            <CatechismPopover
+              key={i}
+              paragraph={seg.paragraph}
             />
           ) : (
             <React.Fragment key={i}>{seg.value}</React.Fragment>

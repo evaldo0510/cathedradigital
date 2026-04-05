@@ -100,7 +100,7 @@ function getPattern(): RegExp {
       .sort((a, b) => b.length - a.length)
       .map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
     _pattern = new RegExp(
-      `(?:cf\\.?\\s*)?\\b(${bookNames.join('|')})\\s+(\\d{1,3})(?:[,.:](\\d{1,3})(?:\\s*[-–]\\s*\\d{1,3})?)?`,
+      `(?:cf\\.?\\s*)?\\b(${bookNames.join('|')})\\s+(\\d{1,3})(?:[,.:]\\s*(\\d{1,3})(?:\\s*[-–]\\s*\\d{1,3})?)?`,
       'g'
     );
   }
