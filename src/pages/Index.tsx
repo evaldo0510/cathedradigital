@@ -28,18 +28,18 @@ import { useAuth } from "@/hooks/useAuth";
 
 const Index = () => {
   const navigate = useNavigate();
-  const { user, loading } = useAuth();
+  const { user, profile, loading } = useAuth();
   // If user is already logged in, redirect appropriately
   useEffect(() => {
     if (!loading && user) {
-      const onboardingDone = localStorage.getItem("cathedra_onboarding_done");
-      if (onboardingDone) {
-        navigate(AppRoute.DASHBOARD, { replace: true });
+      if (profile?.role === 'admin') {
+        navigate(AppRoute.ADMIN, { replace: true });
       } else {
-        navigate(AppRoute.ONBOARDING, { replace: true });
+        const onboardingDone = localStorage.getItem("cathedra_onboarding_done");
+        navigate(onboardingDone ? AppRoute.DASHBOARD : AppRoute.ONBOARDING, { replace: true });
       }
     }
-  }, [user, loading, navigate]);
+  }, [user, profile, loading, navigate]);
 
   const handleStart = () => {
     if (user) {
