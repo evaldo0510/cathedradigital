@@ -5,6 +5,7 @@ import { AppRoute } from '@/types';
 import { Badge } from '@/components/ui/badge';
 import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
+import MagisteriumPopover from './MagisteriumPopover';
 
 interface DogmaRef {
   type: 'bible' | 'catechism' | 'magisterium';
