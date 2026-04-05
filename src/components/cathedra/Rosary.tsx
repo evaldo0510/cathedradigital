@@ -21,6 +21,7 @@ import {
   Clock,
   Cross
 } from 'lucide-react';
+import ShareButton from './ShareButton';
 
 type MysterySet = 'joyful' | 'sorrowful' | 'glorious' | 'luminous';
 
@@ -250,6 +251,14 @@ const Rosary: React.FC = () => {
           <div className="bg-white/[0.04] rounded-[2.5rem] p-10 border border-white/[0.06] relative shadow-2xl">
             <Icons.Feather className="absolute -top-3 -right-3 w-8 h-8 text-amber-400/10 rotate-12" />
             <p className="text-xl text-amber-100/70 font-serif leading-relaxed text-center italic">"{mystery.meditation}"</p>
+          </div>
+          <div className="flex justify-center">
+            <ShareButton
+              title={`Rosário — ${currentMystery + 1}º Mistério`}
+              text={`${mystery.title}\n\n"${mystery.meditation}"\n\n${mystery.scripture}`}
+              className="border-amber-400/20 text-amber-200/60 hover:text-amber-200 hover:border-amber-400/40"
+              variant="button"
+            />
           </div>
           <button onClick={() => setStep('decade')} className="w-full py-4 bg-amber-400/20 text-amber-200 border border-amber-400/20 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-amber-400/30 transition-all shadow-lg shadow-amber-900/20">
             Rezar a Dezena

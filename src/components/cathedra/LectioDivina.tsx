@@ -24,6 +24,7 @@ import {
   Sun
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import ShareButton from './ShareButton';
 
 type Step = 'intro' | 'lectio' | 'meditatio' | 'oratio' | 'contemplatio' | 'actio';
 
@@ -243,9 +244,15 @@ const LectioDivina: React.FC = () => {
           </div>
           <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground leading-tight">{selectedPassage}</h2>
         </div>
-        <div className="flex items-center gap-3 px-5 py-3 rounded-2xl bg-card border border-border shadow-sm">
-          <Timer className="w-4 h-4 text-primary/60" />
-          <span className="font-mono text-lg font-bold text-foreground tabular-nums">{formatTime(seconds)}</span>
+        <div className="flex items-center gap-3">
+          <ShareButton
+            title={`Lectio Divina — ${selectedPassage}`}
+            text={`Meditando sobre ${selectedPassage} na Lectio Divina.`}
+          />
+          <div className="flex items-center gap-3 px-5 py-3 rounded-2xl bg-card border border-border shadow-sm">
+            <Timer className="w-4 h-4 text-primary/60" />
+            <span className="font-mono text-lg font-bold text-foreground tabular-nums">{formatTime(seconds)}</span>
+          </div>
         </div>
       </div>
 

@@ -11,6 +11,7 @@ import {
   Activity,
   ChevronLeft
 } from 'lucide-react';
+import ShareButton from './ShareButton';
 
 const STATIONS = [
   { num: 1, title: 'Jesus é condenado à morte', scripture: 'Mt 27,22-26', meditation: 'Pilatos lava as mãos. O Inocente é entregue à morte por nossos pecados. Quantas vezes condenamos o próximo com nossos julgamentos?', prayer: 'Senhor Jesus, ajudai-me a nunca condenar injustamente o meu próximo, mas a aceitar com humildade as provações da vida.' },
@@ -130,6 +131,14 @@ const ViaCrucis: React.FC = () => {
           <div className="text-center space-y-2 pt-4 opacity-60">
             <p className="text-sm font-serif font-bold text-foreground">V. Adoramus te, Christe, et benedicimus tibi.</p>
             <p className="text-sm font-serif italic text-muted-foreground">R. Quia per sanctam Crucem tuam redemisti mundum.</p>
+          </div>
+
+          <div className="flex justify-center pt-2">
+            <ShareButton
+              title={`Via Crucis — ${station.num}ª Estação`}
+              text={`${station.title}\n\n${station.meditation}\n\nOração: ${station.prayer}`}
+              variant="button"
+            />
           </div>
         </div>
       </div>
