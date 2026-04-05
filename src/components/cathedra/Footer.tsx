@@ -96,150 +96,227 @@ const Footer: React.FC = React.memo(() => {
   const dioceseUrl = DIOCESE_URLS[selectedDiocese];
 
   return (
-    <footer className="mt-auto w-full border-t border-primary/10 pt-10 pb-28 lg:pb-12 px-4 sm:px-6 md:px-12 bg-foreground/[0.03] backdrop-blur-sm relative overflow-hidden">
+    <footer className="mt-auto w-full border-t border-primary/10 pt-6 lg:pt-12 pb-80 lg:pb-12 px-4 sm:px-6 md:px-12 bg-foreground/[0.03] backdrop-blur-sm relative overflow-hidden">
       <div className="absolute inset-0 pointer-events-none opacity-[0.02]" />
       
       <div className="max-w-7xl mx-auto relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-          
-          {/* Brand Column */}
-          <div className="flex flex-col gap-6">
-            <div className="flex items-center gap-4">
-              <Logo className="w-12 h-12 border border-primary/20 p-2 rounded-xl bg-primary/5" />
-              <div>
-                <h3 className="text-xl font-serif font-bold text-foreground tracking-tight">CATHEDRA</h3>
-                <p className="text-[9px] font-black uppercase text-primary tracking-[0.3em]">Digital Sanctuarium</p>
-              </div>
+
+        {/* ─── Mobile Footer (compact) ─── */}
+        <div className="lg:hidden">
+          <div className="flex items-center gap-3 mb-4">
+            <Logo className="w-8 h-8 border border-primary/20 p-1 rounded-lg bg-primary/5" />
+            <div>
+              <h3 className="text-base font-serif font-bold text-foreground tracking-tight">CATHEDRA</h3>
+              <p className="text-[7px] font-black uppercase text-primary tracking-[0.3em]">Digital Sanctuarium</p>
             </div>
-            <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
-              Uma plataforma dedicada ao estudo, oração e vivência da fé católica, 
-              unindo a tradição milenar à tecnologia moderna.
+          </div>
+
+          {/* Compact links row */}
+          <div className="grid grid-cols-2 gap-x-4 gap-y-2 mb-4">
+            <div>
+              <h4 className="text-[9px] font-black uppercase tracking-wider text-primary mb-1.5">🏛️ Santa Sé</h4>
+              {vaticanLinks.slice(0, 2).map(link => (
+                <a key={link.title} href={link.url} target="_blank" rel="noopener noreferrer" className="block text-[10px] text-muted-foreground hover:text-foreground py-0.5 truncate">
+                  {link.title}
+                </a>
+              ))}
+            </div>
+            <div>
+              <h4 className="text-[9px] font-black uppercase tracking-wider text-primary mb-1.5">🇧🇷 CNBB</h4>
+              {cnbbLinks.slice(0, 2).map(link => (
+                <a key={link.title} href={link.url} target="_blank" rel="noopener noreferrer" className="block text-[10px] text-muted-foreground hover:text-foreground py-0.5 truncate">
+                  {link.title}
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Diocese + Newsletter compact */}
+          <div className="grid grid-cols-2 gap-3 mb-4">
+            <select 
+              value={selectedDiocese}
+              onChange={(e) => handleDioceseChange(e.target.value)}
+              className="w-full bg-foreground/5 border border-foreground/10 rounded-lg px-2 py-1.5 text-[10px] text-foreground focus:outline-none focus:border-primary/50 cursor-pointer appearance-none"
+            >
+              <option value="">Sua Diocese</option>
+              {DIOCESES_BR.map(d => (
+                <option key={d} value={d}>{d}</option>
+              ))}
+            </select>
+            <form onSubmit={handleSubscribe} className="relative">
+              <input 
+                type="email" 
+                placeholder="Seu e-mail" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full bg-foreground/5 border border-foreground/10 rounded-lg pl-2 pr-8 py-1.5 text-[10px] focus:outline-none focus:border-primary/50"
+              />
+              <button type="submit" disabled={isSubmitting} className="absolute right-1 top-1 bottom-1 px-1.5 bg-primary text-primary-foreground rounded text-xs">
+                →
+              </button>
+            </form>
+          </div>
+
+          {/* Social + bottom bar */}
+          <div className="flex items-center justify-between pt-3 border-t border-foreground/5">
+            <p className="text-[7px] font-black uppercase tracking-widest text-muted-foreground/50">
+              © {new Date().getFullYear()} CATHEDRA
             </p>
-            <div className="flex gap-3">
+            <div className="flex items-center gap-2">
               {[
-                { icon: <Icons.Instagram className="w-4 h-4" />, url: 'https://instagram.com' },
-                { icon: <Icons.Youtube className="w-4 h-4" />, url: 'https://youtube.com' },
-                { icon: <Icons.Whatsapp className="w-4 h-4" />, url: 'https://wa.me' },
+                { icon: <Icons.Instagram className="w-3 h-3" />, url: 'https://instagram.com' },
+                { icon: <Icons.Youtube className="w-3 h-3" />, url: 'https://youtube.com' },
+                { icon: <Icons.Whatsapp className="w-3 h-3" />, url: 'https://wa.me' },
               ].map((social, i) => (
-                <a key={i} href={social.url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-all p-2 rounded-lg bg-foreground/5 border border-foreground/10 hover:border-primary/30">
+                <a key={i} href={social.url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary p-1.5 rounded bg-foreground/5 border border-foreground/10">
                   {social.icon}
                 </a>
               ))}
+              <button onClick={scrollToTop} className="p-1.5 bg-foreground/5 hover:bg-primary hover:text-primary-foreground rounded border border-foreground/10 ml-1">
+                <Icons.ArrowDown className="w-3 h-3 rotate-180" />
+              </button>
             </div>
           </div>
+        </div>
 
-          {/* Links Column - Vatican */}
-          <div>
-            <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-6 flex items-center gap-2">
-              <span className="text-lg">🏛️</span> Santa Sé
-            </h4>
-            <ul className="flex flex-col gap-4">
-              {vaticanLinks.map(link => (
-                <li key={link.title}>
-                  <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2 group">
-                    <span className="w-1 h-1 rounded-full bg-primary/30 group-hover:bg-primary transition-colors" />
-                    {link.title}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Links Column - CNBB */}
-          <div>
-            <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-6 flex items-center gap-2">
-              <span className="text-lg">🇧🇷</span> CNBB
-            </h4>
-            <ul className="flex flex-col gap-4">
-              {cnbbLinks.map(link => (
-                <li key={link.title}>
-                  <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2 group">
-                    <span className="w-1 h-1 rounded-full bg-primary/30 group-hover:bg-primary transition-colors" />
-                    {link.title}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Newsletter / Diocese Column */}
-          <div className="flex flex-col gap-8">
-            <div>
-              <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-4">Sua Diocese</h4>
-              <select 
-                value={selectedDiocese}
-                onChange={(e) => handleDioceseChange(e.target.value)}
-                className="w-full bg-foreground/5 border border-foreground/10 rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors cursor-pointer appearance-none"
-              >
-                <option value="">Selecione sua Diocese</option>
-                {DIOCESES_BR.map(d => (
-                  <option key={d} value={d}>{d}</option>
-                ))}
-              </select>
-              {dioceseUrl && (
-                <a href={dioceseUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 mt-3 text-xs text-primary hover:underline">
-                  Acessar portal <Icons.ExternalLink className="w-3 h-3" />
-                </a>
-              )}
-            </div>
-
-            <div>
-              <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-4">Boletim Informativo</h4>
-              <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
-                Receba reflexões teológicas e atualizações da plataforma em seu e-mail.
+        {/* ─── Desktop Footer (full) ─── */}
+        <div className="hidden lg:block">
+          <div className="grid grid-cols-4 gap-12 mb-16">
+            {/* Brand Column */}
+            <div className="flex flex-col gap-6">
+              <div className="flex items-center gap-4">
+                <Logo className="w-12 h-12 border border-primary/20 p-2 rounded-xl bg-primary/5" />
+                <div>
+                  <h3 className="text-xl font-serif font-bold text-foreground tracking-tight">CATHEDRA</h3>
+                  <p className="text-[9px] font-black uppercase text-primary tracking-[0.3em]">Digital Sanctuarium</p>
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
+                Uma plataforma dedicada ao estudo, oração e vivência da fé católica, 
+                unindo a tradição milenar à tecnologia moderna.
               </p>
-              <form onSubmit={handleSubscribe} className="relative">
-                <input 
-                  type="email" 
-                  placeholder="Seu melhor e-mail" 
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="w-full bg-foreground/5 border border-foreground/10 rounded-xl pl-4 pr-12 py-2.5 text-sm focus:outline-none focus:border-primary/50 transition-colors"
-                />
-                <button 
-                  type="submit" 
-                  disabled={isSubmitting}
-                  className="absolute right-1 top-1 bottom-1 px-3 bg-primary text-black rounded-lg hover:scale-105 transition-all disabled:opacity-50"
+              <div className="flex gap-3">
+                {[
+                  { icon: <Icons.Instagram className="w-4 h-4" />, url: 'https://instagram.com' },
+                  { icon: <Icons.Youtube className="w-4 h-4" />, url: 'https://youtube.com' },
+                  { icon: <Icons.Whatsapp className="w-4 h-4" />, url: 'https://wa.me' },
+                ].map((social, i) => (
+                  <a key={i} href={social.url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-all p-2 rounded-lg bg-foreground/5 border border-foreground/10 hover:border-primary/30">
+                    {social.icon}
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* Links Column - Vatican */}
+            <div>
+              <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-6 flex items-center gap-2">
+                <span className="text-lg">🏛️</span> Santa Sé
+              </h4>
+              <ul className="flex flex-col gap-4">
+                {vaticanLinks.map(link => (
+                  <li key={link.title}>
+                    <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2 group">
+                      <span className="w-1 h-1 rounded-full bg-primary/30 group-hover:bg-primary transition-colors" />
+                      {link.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Links Column - CNBB */}
+            <div>
+              <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-6 flex items-center gap-2">
+                <span className="text-lg">🇧🇷</span> CNBB
+              </h4>
+              <ul className="flex flex-col gap-4">
+                {cnbbLinks.map(link => (
+                  <li key={link.title}>
+                    <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2 group">
+                      <span className="w-1 h-1 rounded-full bg-primary/30 group-hover:bg-primary transition-colors" />
+                      {link.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Newsletter / Diocese Column */}
+            <div className="flex flex-col gap-8">
+              <div>
+                <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-4">Sua Diocese</h4>
+                <select 
+                  value={selectedDiocese}
+                  onChange={(e) => handleDioceseChange(e.target.value)}
+                  className="w-full bg-foreground/5 border border-foreground/10 rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors cursor-pointer appearance-none"
                 >
-                  {isSubmitting ? (
-                    <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
-                  ) : (
-                    <Icons.ArrowDown className="w-4 h-4 -rotate-90" />
-                  )}
-                </button>
-              </form>
+                  <option value="">Selecione sua Diocese</option>
+                  {DIOCESES_BR.map(d => (
+                    <option key={d} value={d}>{d}</option>
+                  ))}
+                </select>
+                {dioceseUrl && (
+                  <a href={dioceseUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 mt-3 text-xs text-primary hover:underline">
+                    Acessar portal <Icons.ExternalLink className="w-3 h-3" />
+                  </a>
+                )}
+              </div>
+              <div>
+                <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-4">Boletim Informativo</h4>
+                <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
+                  Receba reflexões teológicas e atualizações da plataforma em seu e-mail.
+                </p>
+                <form onSubmit={handleSubscribe} className="relative">
+                  <input 
+                    type="email" 
+                    placeholder="Seu melhor e-mail" 
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="w-full bg-foreground/5 border border-foreground/10 rounded-xl pl-4 pr-12 py-2.5 text-sm focus:outline-none focus:border-primary/50 transition-colors"
+                  />
+                  <button 
+                    type="submit" 
+                    disabled={isSubmitting}
+                    className="absolute right-1 top-1 bottom-1 px-3 bg-primary text-primary-foreground rounded-lg hover:scale-105 transition-all disabled:opacity-50"
+                  >
+                    {isSubmitting ? (
+                      <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <Icons.ArrowDown className="w-4 h-4 -rotate-90" />
+                    )}
+                  </button>
+                </form>
+              </div>
             </div>
           </div>
 
-        </div>
-
-        {/* Bottom Bar */}
-        <div className="pt-8 border-t border-foreground/5 flex flex-col md:flex-row items-center justify-between gap-6">
-          <p className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-60">
-            © {new Date().getFullYear()} CATHEDRA • OMNIA AD MAIOREM DEI GLORIAM
-          </p>
-          
-          <div className="flex items-center gap-8">
-            <nav className="flex items-center gap-6">
-              {[{ label: 'Sobre', route: AppRoute.ABOUT }, { label: 'Privacidade', route: AppRoute.DASHBOARD }, { label: 'Termos', route: AppRoute.DASHBOARD }].map(item => (
-                <button 
-                  key={item.label} 
-                  onClick={() => navigate(item.route)} 
-                  className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors"
-                >
-                  {item.label}
-                </button>
-              ))}
-            </nav>
-            <button 
-              onClick={scrollToTop}
-              className="p-2.5 bg-foreground/5 hover:bg-primary hover:text-black rounded-lg transition-all border border-foreground/10 group"
-            >
-              <Icons.ArrowDown className="w-4 h-4 rotate-180" />
-            </button>
+          {/* Bottom Bar */}
+          <div className="pt-8 border-t border-foreground/5 flex flex-row items-center justify-between gap-6">
+            <p className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-60">
+              © {new Date().getFullYear()} CATHEDRA • OMNIA AD MAIOREM DEI GLORIAM
+            </p>
+            <div className="flex items-center gap-8">
+              <nav className="flex items-center gap-6">
+                {[{ label: 'Sobre', route: AppRoute.ABOUT }, { label: 'Privacidade', route: AppRoute.DASHBOARD }, { label: 'Termos', route: AppRoute.DASHBOARD }].map(item => (
+                  <button 
+                    key={item.label} 
+                    onClick={() => navigate(item.route)} 
+                    className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </nav>
+              <button onClick={scrollToTop} className="p-2.5 bg-foreground/5 hover:bg-primary hover:text-primary-foreground rounded-lg transition-all border border-foreground/10 group">
+                <Icons.ArrowDown className="w-4 h-4 rotate-180" />
+              </button>
+            </div>
           </div>
         </div>
+
       </div>
     </footer>
   );
