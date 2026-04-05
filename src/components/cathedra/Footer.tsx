@@ -116,7 +116,7 @@ const Footer: React.FC = React.memo(() => {
             <div>
               <h4 className="text-[9px] font-black uppercase tracking-wider text-primary mb-1.5">🏛️ Santa Sé</h4>
               {vaticanLinks.slice(0, 2).map(link => (
-                <a key={link.title} href={link.url} target="_blank" rel="noopener noreferrer" className="block text-[10px] text-muted-foreground hover:text-foreground py-0.5 truncate">
+                <a key={link.title} href={link.url} target="_blank" rel="noopener noreferrer" className="block text-[10px] text-muted-foreground dark:text-muted-foreground/80 hover:text-foreground hover:text-primary py-0.5 truncate">
                   {link.title}
                 </a>
               ))}
@@ -124,7 +124,7 @@ const Footer: React.FC = React.memo(() => {
             <div>
               <h4 className="text-[9px] font-black uppercase tracking-wider text-primary mb-1.5">🇧🇷 CNBB</h4>
               {cnbbLinks.slice(0, 2).map(link => (
-                <a key={link.title} href={link.url} target="_blank" rel="noopener noreferrer" className="block text-[10px] text-muted-foreground hover:text-foreground py-0.5 truncate">
+                <a key={link.title} href={link.url} target="_blank" rel="noopener noreferrer" className="block text-[10px] text-muted-foreground dark:text-muted-foreground/80 hover:text-primary py-0.5 truncate">
                   {link.title}
                 </a>
               ))}
@@ -159,8 +159,8 @@ const Footer: React.FC = React.memo(() => {
           </div>
 
           {/* Social + bottom bar */}
-          <div className="flex items-center justify-between pt-3 border-t border-foreground/5">
-            <p className="text-[7px] font-black uppercase tracking-widest text-muted-foreground/50">
+          <div className="flex items-center justify-between pt-3 border-t border-foreground/10 dark:border-foreground/15">
+            <p className="text-[7px] font-black uppercase tracking-widest text-muted-foreground/50 dark:text-muted-foreground/70">
               © {new Date().getFullYear()} CATHEDRA
             </p>
             <div className="flex items-center gap-2">
@@ -169,11 +169,11 @@ const Footer: React.FC = React.memo(() => {
                 { icon: <Icons.Youtube className="w-3 h-3" />, url: 'https://youtube.com' },
                 { icon: <Icons.Whatsapp className="w-3 h-3" />, url: 'https://wa.me' },
               ].map((social, i) => (
-                <a key={i} href={social.url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary p-1.5 rounded bg-foreground/5 border border-foreground/10">
+                <a key={i} href={social.url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground dark:text-foreground/70 hover:text-primary p-1.5 rounded bg-foreground/5 dark:bg-foreground/10 border border-foreground/10 dark:border-foreground/20 transition-colors">
                   {social.icon}
                 </a>
               ))}
-              <button onClick={scrollToTop} className="p-1.5 bg-foreground/5 hover:bg-primary hover:text-primary-foreground rounded border border-foreground/10 ml-1">
+              <button onClick={scrollToTop} className="p-1.5 bg-foreground/5 dark:bg-foreground/10 hover:bg-primary hover:text-primary-foreground rounded border border-foreground/10 dark:border-foreground/20 ml-1 transition-colors">
                 <Icons.ArrowDown className="w-3 h-3 rotate-180" />
               </button>
             </div>
