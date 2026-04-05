@@ -349,6 +349,12 @@ const Bible: React.FC = () => {
                 <Icons.Cross className="w-4 h-4" />
               </button>
             )}
+            {/* Share chapter */}
+            <ShareButton
+              title={`${selectedBook.name} ${selectedChapter}`}
+              text={`Leia ${selectedBook.name}, Capítulo ${selectedChapter} — Cathedra Digital`}
+              url={`${window.location.origin}/bible?book=${selectedBook.abbr}&ch=${selectedChapter}`}
+            />
           </div>
         </div>
 
