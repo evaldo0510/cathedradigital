@@ -36,7 +36,9 @@ export enum AppRoute {
   APARICOES = '/aparicoes',
   ONBOARDING = '/onboarding',
   ACHIEVEMENTS = '/achievements',
-  CHECKOUT_RESULT = '/checkout/result'
+  CHECKOUT_RESULT = '/checkout/result',
+  TERMS = '/terms',
+  PRIVACY = '/privacy'
 }
 
 export interface TrackStep {
