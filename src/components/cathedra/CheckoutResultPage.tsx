@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 import { CheckCircle2, Clock, XCircle } from 'lucide-react';
+import confetti from 'canvas-confetti';
 
 type ResultState = 'loading' | 'success' | 'pending' | 'failure';
 
@@ -21,11 +22,33 @@ const CheckoutResultPage: React.FC = () => {
     return 'loading';
   });
 
+  const firedConfetti = useRef(false);
+
+  useEffect(() => {
+    if (state === 'success' && !firedConfetti.current) {
+      firedConfetti.current = true;
+      const duration = 2000;
+      const end = Date.now() + duration;
+      const frame = () => {
+        confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0 } });
+        confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 } });
+        if (Date.now() < end) requestAnimationFrame(frame);
+      };
+      frame();
+    }
+  }, [state]);
+
   useEffect(() => {
     if (checkoutState === 'failure' || checkoutState === 'pending') return;
 
-    if (checkoutState !== 'success' || (!paymentId && !externalReference)) {
+    if (checkoutState !== 'success') {
       navigate(AppRoute.CHECKOUT, { replace: true });
+      return;
+    }
+
+    // If no payment identifiers, assume webhook already processed it
+    if (!paymentId && !externalReference) {
+      setState('success');
       return;
     }
 
