@@ -24,6 +24,7 @@ import {
   Sun
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import ShareButton from './ShareButton';
 
 type Step = 'intro' | 'lectio' | 'meditatio' | 'oratio' | 'contemplatio' | 'actio';
 
