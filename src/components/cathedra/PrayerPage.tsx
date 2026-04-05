@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import ShareButton from './ShareButton';
 import { createPortal } from 'react-dom';
 import { Icons } from '../../constants';
 import { 
