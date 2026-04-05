@@ -264,11 +264,9 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.PRIVACY} element={<PageTransition><PrivacyPage /></PageTransition>} />
                   <Route path={AppRoute.ADMIN} element={
                     <PageTransition>
-                      <AuthGuard>
-                        <ProGate isPremium={true} isLoggedIn={!!user} onLogin={() => navigate(AppRoute.LOGIN)}>
-                          <AdminDashboard />
-                        </ProGate>
-                      </AuthGuard>
+                      <AdminGuard>
+                        <AdminDashboard />
+                      </AdminGuard>
                     </PageTransition>
                   } />
                   <Route path="*" element={<PageTransition><AuthGuard><Dashboard user={appUser} /></AuthGuard></PageTransition>} />
