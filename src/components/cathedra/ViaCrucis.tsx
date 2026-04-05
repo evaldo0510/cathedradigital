@@ -37,15 +37,15 @@ const ViaCrucis: React.FC = () => {
 
   if (!isJourney) {
     return (
-      <div className="max-w-5xl mx-auto space-y-12 pb-12">
-        <div className="text-center space-y-4 pt-4">
+      <motion.div className="max-w-5xl mx-auto space-y-12 pb-12" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
+        <motion.div className="text-center space-y-4 pt-4" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}>
           <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/5 border border-primary/10 rounded-full">
             <Cross className="w-4 h-4 text-primary" />
             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Via Dolorosa</span>
           </div>
           <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground tracking-tight">Via Crucis</h1>
           <p className="text-lg text-muted-foreground font-serif italic max-w-2xl mx-auto">"Se alguém quer vir após mim, negue-se a si mesmo, tome sua cruz e siga-me."</p>
-        </div>
+        </motion.div>
 
         <div className="flex justify-center">
           <button onClick={() => setIsJourney(true)} 
@@ -71,7 +71,7 @@ const ViaCrucis: React.FC = () => {
             </button>
           ))}
         </div>
-      </div>
+      </motion.div>
     );
   }
 
