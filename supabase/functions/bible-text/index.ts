@@ -5,25 +5,48 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-// Map abbreviations to ABiblia API format
-const ABBREV_MAP: Record<string, string> = {
-  'Gn': 'gn', 'Ex': 'ex', 'Lv': 'lv', 'Nm': 'nm', 'Dt': 'dt',
-  'Js': 'js', 'Jz': 'jz', 'Rt': 'rt', '1Sm': '1sm', '2Sm': '2sm',
-  '1Rs': '1rs', '2Rs': '2rs', '1Cr': '1cr', '2Cr': '2cr',
-  'Esd': 'esd', 'Ne': 'ne', 'Tb': 'tb', 'Jt': 'jt', 'Est': 'est',
-  '1Mc': '1mc', '2Mc': '2mc', 'Jó': 'jo', 'Sl': 'sl', 'Pr': 'pr',
-  'Ecl': 'ecl', 'Ct': 'ct', 'Sb': 'sb', 'Eclo': 'eclo',
-  'Is': 'is', 'Jr': 'jr', 'Lm': 'lm', 'Br': 'br', 'Ez': 'ez',
-  'Dn': 'dn', 'Os': 'os', 'Jl': 'jl', 'Am': 'am', 'Ab': 'ab',
-  'Jn': 'jn', 'Mq': 'mq', 'Na': 'na', 'Hab': 'hab', 'Sf': 'sf',
-  'Ag': 'ag', 'Zc': 'zc', 'Ml': 'ml',
-  'Mt': 'mt', 'Mc': 'mc', 'Lc': 'lc', 'Jo': 'jo',
-  'At': 'at', 'Rm': 'rm', '1Cor': '1co', '2Cor': '2co',
-  'Gl': 'gl', 'Ef': 'ef', 'Fl': 'fl', 'Cl': 'cl',
-  '1Ts': '1ts', '2Ts': '2ts', '1Tm': '1tm', '2Tm': '2tm',
-  'Tt': 'tt', 'Fm': 'fm', 'Hb': 'hb', 'Tg': 'tg',
-  '1Pd': '1pe', '2Pd': '2pe', '1Jo': '1jo', '2Jo': '2jo', '3Jo': '3jo',
-  'Jd': 'jd', 'Ap': 'ap',
+// Map Portuguese abbreviations to English book names for bible-api.com
+const BOOK_NAME_MAP: Record<string, string> = {
+  'Gn': 'genesis', 'Ex': 'exodus', 'Lv': 'leviticus', 'Nm': 'numbers', 'Dt': 'deuteronomy',
+  'Js': 'joshua', 'Jz': 'judges', 'Rt': 'ruth', '1Sm': '1samuel', '2Sm': '2samuel',
+  '1Rs': '1kings', '2Rs': '2kings', '1Cr': '1chronicles', '2Cr': '2chronicles',
+  'Esd': 'ezra', 'Ne': 'nehemiah', 'Tb': 'tobit', 'Jt': 'judith', 'Est': 'esther',
+  '1Mc': '1maccabees', '2Mc': '2maccabees',
+  'Jó': 'job', 'Sl': 'psalms', 'Pr': 'proverbs', 'Ecl': 'ecclesiastes',
+  'Ct': 'song of solomon', 'Sb': 'wisdom', 'Eclo': 'sirach',
+  'Is': 'isaiah', 'Jr': 'jeremiah', 'Lm': 'lamentations', 'Br': 'baruch',
+  'Ez': 'ezekiel', 'Dn': 'daniel', 'Os': 'hosea', 'Jl': 'joel', 'Am': 'amos',
+  'Ab': 'obadiah', 'Jn': 'jonah', 'Mq': 'micah', 'Na': 'nahum', 'Hab': 'habakkuk',
+  'Sf': 'zephaniah', 'Ag': 'haggai', 'Zc': 'zechariah', 'Ml': 'malachi',
+  'Mt': 'matthew', 'Mc': 'mark', 'Lc': 'luke', 'Jo': 'john',
+  'At': 'acts', 'Rm': 'romans', '1Cor': '1corinthians', '2Cor': '2corinthians',
+  'Gl': 'galatians', 'Ef': 'ephesians', 'Fl': 'philippians', 'Cl': 'colossians',
+  '1Ts': '1thessalonians', '2Ts': '2thessalonians', '1Tm': '1timothy', '2Tm': '2timothy',
+  'Tt': 'titus', 'Fm': 'philemon', 'Hb': 'hebrews', 'Tg': 'james',
+  '1Pd': '1peter', '2Pd': '2peter', '1Jo': '1john', '2Jo': '2john', '3Jo': '3john',
+  'Jd': 'jude', 'Ap': 'revelation',
+};
+
+// Portuguese book names for display
+const BOOK_PT_MAP: Record<string, string> = {
+  'Gn': 'Gênesis', 'Ex': 'Êxodo', 'Lv': 'Levítico', 'Nm': 'Números', 'Dt': 'Deuteronômio',
+  'Js': 'Josué', 'Jz': 'Juízes', 'Rt': 'Rute', '1Sm': '1 Samuel', '2Sm': '2 Samuel',
+  '1Rs': '1 Reis', '2Rs': '2 Reis', '1Cr': '1 Crônicas', '2Cr': '2 Crônicas',
+  'Esd': 'Esdras', 'Ne': 'Neemias', 'Tb': 'Tobias', 'Jt': 'Judite', 'Est': 'Ester',
+  '1Mc': '1 Macabeus', '2Mc': '2 Macabeus',
+  'Jó': 'Jó', 'Sl': 'Salmos', 'Pr': 'Provérbios', 'Ecl': 'Eclesiastes',
+  'Ct': 'Cântico dos Cânticos', 'Sb': 'Sabedoria', 'Eclo': 'Eclesiástico',
+  'Is': 'Isaías', 'Jr': 'Jeremias', 'Lm': 'Lamentações', 'Br': 'Baruc',
+  'Ez': 'Ezequiel', 'Dn': 'Daniel', 'Os': 'Oseias', 'Jl': 'Joel', 'Am': 'Amós',
+  'Ab': 'Abdias', 'Jn': 'Jonas', 'Mq': 'Miqueias', 'Na': 'Naum', 'Hab': 'Habacuc',
+  'Sf': 'Sofonias', 'Ag': 'Ageu', 'Zc': 'Zacarias', 'Ml': 'Malaquias',
+  'Mt': 'Mateus', 'Mc': 'Marcos', 'Lc': 'Lucas', 'Jo': 'João',
+  'At': 'Atos', 'Rm': 'Romanos', '1Cor': '1 Coríntios', '2Cor': '2 Coríntios',
+  'Gl': 'Gálatas', 'Ef': 'Efésios', 'Fl': 'Filipenses', 'Cl': 'Colossenses',
+  '1Ts': '1 Tessalonicenses', '2Ts': '2 Tessalonicenses', '1Tm': '1 Timóteo', '2Tm': '2 Timóteo',
+  'Tt': 'Tito', 'Fm': 'Filemon', 'Hb': 'Hebreus', 'Tg': 'Tiago',
+  '1Pd': '1 Pedro', '2Pd': '2 Pedro', '1Jo': '1 João', '2Jo': '2 João', '3Jo': '3 João',
+  'Jd': 'Judas', 'Ap': 'Apocalipse',
 };
 
 serve(async (req) => {
@@ -38,61 +61,32 @@ serve(async (req) => {
 
     if (!abbrev || !chapter) {
       return new Response(
-        JSON.stringify({ error: 'Parâmetros "abbrev" e "chapter" são obrigatórios.' }),
+        JSON.stringify({ error: 'Parâmetros "abbrev"/"book" e "chapter" são obrigatórios.' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    const apiAbbrev = ABBREV_MAP[abbrev] || abbrev.toLowerCase();
+    const englishName = BOOK_NAME_MAP[abbrev] || abbrev.toLowerCase();
+    const ptName = BOOK_PT_MAP[abbrev] || abbrev;
 
-    // Try ABiblia API first
-    const url = `https://www.abibliadigital.com.br/api/verses/nvi/${apiAbbrev}/${chapter}`;
+    // Use bible-api.com with Almeida translation (Portuguese)
+    const url = `https://bible-api.com/${encodeURIComponent(englishName)}+${chapter}?translation=almeida`;
     console.log('Fetching:', url);
 
-    const response = await fetch(url, {
-      headers: { 'Accept': 'application/json' },
-    });
+    const response = await fetch(url);
 
     if (response.ok) {
       const data = await response.json();
-      
-      if (data.verses && Array.isArray(data.verses)) {
+
+      if (data.verses && Array.isArray(data.verses) && data.verses.length > 0) {
         const verses = data.verses.map((v: any) => ({
-          number: v.number,
-          text: v.text,
-        }));
-
-        const bookName = data.book?.name || abbrev;
-
-        return new Response(
-          JSON.stringify({
-            book: bookName,
-            chapter,
-            verses,
-            text: verses.map((v: any) => `${v.number}. ${v.text}`).join('\n'),
-          }),
-          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-    }
-
-    // Fallback: try bible-api.com
-    const fallbackUrl = `https://bible-api.com/${apiAbbrev}+${chapter}?translation=almeida`;
-    console.log('Fallback:', fallbackUrl);
-
-    const fallbackRes = await fetch(fallbackUrl);
-    if (fallbackRes.ok) {
-      const fallbackData = await fallbackRes.json();
-
-      if (fallbackData.verses && Array.isArray(fallbackData.verses)) {
-        const verses = fallbackData.verses.map((v: any) => ({
           number: v.verse,
-          text: v.text,
+          text: v.text?.trim() || '',
         }));
 
         return new Response(
           JSON.stringify({
-            book: abbrev,
+            book: ptName,
             chapter,
             verses,
             text: verses.map((v: any) => `${v.number}. ${v.text}`).join('\n'),
@@ -102,13 +96,15 @@ serve(async (req) => {
       }
     }
 
-    // If both fail, return a meaningful message
+    const errText = await response.text();
+    console.error('API error:', response.status, errText);
+
     return new Response(
       JSON.stringify({
-        book: abbrev,
+        book: ptName,
         chapter,
         verses: [],
-        text: `Texto de ${abbrev} ${chapter} não disponível no momento. Tente novamente mais tarde.`,
+        text: `Texto de ${ptName} ${chapter} não disponível no momento.`,
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
