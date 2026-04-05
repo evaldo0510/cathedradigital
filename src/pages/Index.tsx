@@ -230,7 +230,7 @@ const Index = () => {
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
           <div className="space-y-10">
             <div className="space-y-6">
-              <h2 className="text-4xl md:text-5xl font-serif font-bold leading-tight">Por que criar sua conta no <span className="text-primary italic">Cathedra?</span></h2>
+              <h2 className="text-4xl md:text-5xl font-display font-bold leading-tight">Por que criar sua conta no <span className="text-primary italic font-serif">Cathedra?</span></h2>
               <p className="text-lg text-white/70 leading-relaxed max-w-xl">
                 O acesso completo permite uma experiência personalizada e contínua, guardando sua história com a Palavra de Deus e a Tradição.
               </p>
