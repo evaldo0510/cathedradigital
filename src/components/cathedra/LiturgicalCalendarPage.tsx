@@ -542,10 +542,18 @@ const LiturgicalCalendarPage: React.FC = () => {
               <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full bg-amber-500" /><span className="text-foreground">Solenidade</span></div>
               <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full bg-primary" /><span className="text-foreground">Festa</span></div>
               <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full bg-muted-foreground" /><span className="text-foreground">Memória</span></div>
+              <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full bg-amber-500 ring-1 ring-amber-300" /><span className="text-foreground">Santo com biografia</span></div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Saint Detail Modal */}
+      <AnimatePresence>
+        {showSaintModal && selectedSaint && (
+          <SaintDetail saint={selectedSaint} onClose={() => setShowSaintModal(false)} />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
