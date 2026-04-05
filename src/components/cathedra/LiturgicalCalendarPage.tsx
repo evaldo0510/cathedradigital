@@ -504,7 +504,7 @@ const LiturgicalCalendarPage: React.FC = () => {
                   </div>
                 )}
                 <button
-                  onClick={() => navigate('/saints')}
+                  onClick={() => setShowSaintModal(true)}
                   className="text-[10px] font-bold text-primary hover:underline flex items-center gap-1 pt-1"
                 >
                   Ver biografia completa <Icons.ArrowDown className="w-3 h-3 -rotate-90" />
