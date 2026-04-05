@@ -11,6 +11,7 @@ import {
   Activity,
   ChevronLeft
 } from 'lucide-react';
+import ShareButton from './ShareButton';
 
 const STATIONS = [
   { num: 1, title: 'Jesus é condenado à morte', scripture: 'Mt 27,22-26', meditation: 'Pilatos lava as mãos. O Inocente é entregue à morte por nossos pecados. Quantas vezes condenamos o próximo com nossos julgamentos?', prayer: 'Senhor Jesus, ajudai-me a nunca condenar injustamente o meu próximo, mas a aceitar com humildade as provações da vida.' },
