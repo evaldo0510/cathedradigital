@@ -1,6 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Icons } from '../../constants';
+import BibleVersePopover from './BibleVersePopover';
+import { parseBibleReferences } from '@/lib/bibleRefParser';
+import { useNavigate } from 'react-router-dom';
 
 
 interface Message {
@@ -15,16 +18,89 @@ const SUGGESTIONS = [
   "Qual a relação entre fé e razão segundo São Tomás de Aquino?",
 ];
 
+// Custom renderer that parses Bible references in text nodes
+const BibleAwareText: React.FC<{ text: string; onNavigate: (abbr: string, chapter: number) => void }> = ({ text, onNavigate }) => {
+  const segments = useMemo(() => parseBibleReferences(text), [text]);
+  
+  if (segments.length === 1 && segments[0].type === 'text') {
+    return <>{text}</>;
+  }
+
+  return (
+    <>
+      {segments.map((seg, i) =>
+        seg.type === 'bibleRef' && seg.abbr ? (
+          <BibleVersePopover
+            key={i}
+            abbr={seg.abbr}
+            chapter={seg.chapter!}
+            verse={seg.verse}
+            label={seg.value}
+            onNavigate={onNavigate}
+          />
+        ) : (
+          <React.Fragment key={i}>{seg.value}</React.Fragment>
+        )
+      )}
+    </>
+  );
+};
+
 const StudyMode: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  const handleNavigateToBible = useCallback((abbr: string, chapter: number) => {
+    navigate(`/bible?book=${abbr}&ch=${chapter}`);
+  }, [navigate]);
+
+  // Custom markdown components that parse Bible references in text
+  const markdownComponents = useMemo(() => ({
+    p: ({ children, ...props }: any) => (
+      <p {...props}>
+        {React.Children.map(children, (child) =>
+          typeof child === 'string' ? (
+            <BibleAwareText text={child} onNavigate={handleNavigateToBible} />
+          ) : child
+        )}
+      </p>
+    ),
+    li: ({ children, ...props }: any) => (
+      <li {...props}>
+        {React.Children.map(children, (child) =>
+          typeof child === 'string' ? (
+            <BibleAwareText text={child} onNavigate={handleNavigateToBible} />
+          ) : child
+        )}
+      </li>
+    ),
+    strong: ({ children, ...props }: any) => (
+      <strong {...props}>
+        {React.Children.map(children, (child) =>
+          typeof child === 'string' ? (
+            <BibleAwareText text={child} onNavigate={handleNavigateToBible} />
+          ) : child
+        )}
+      </strong>
+    ),
+    em: ({ children, ...props }: any) => (
+      <em {...props}>
+        {React.Children.map(children, (child) =>
+          typeof child === 'string' ? (
+            <BibleAwareText text={child} onNavigate={handleNavigateToBible} />
+          ) : child
+        )}
+      </em>
+    ),
+  }), [handleNavigateToBible]);
 
   const sendMessage = async (text: string) => {
     if (!text.trim() || isLoading) return;
@@ -143,7 +219,7 @@ const StudyMode: React.FC = () => {
             }`}>
               {msg.role === 'assistant' ? (
                 <div className="prose prose-sm dark:prose-invert max-w-none font-serif">
-                  <ReactMarkdown>{msg.content}</ReactMarkdown>
+                  <ReactMarkdown components={markdownComponents}>{msg.content}</ReactMarkdown>
                 </div>
               ) : (
                 <p className="text-sm">{msg.content}</p>
