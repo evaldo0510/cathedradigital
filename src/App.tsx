@@ -23,6 +23,7 @@ import { supabase } from '@/integrations/supabase/client';
 import CommandCenter from './components/cathedra/CommandCenter';
 import OfflineIndicator from './components/cathedra/OfflineIndicator';
 import AuthGuard from './components/cathedra/AuthGuard';
+import AdminGuard from './components/cathedra/AdminGuard';
 import AppErrorBoundary from './components/cathedra/AppErrorBoundary';
 
 
