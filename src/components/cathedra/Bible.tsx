@@ -557,7 +557,7 @@ const Bible: React.FC = () => {
             <Progress value={overallProgress} className="h-2" />
           </div>
         )}
-      </div>
+      </motion.div>
 
       {/* Full-text search */}
       {showFullTextSearch ? (
@@ -648,7 +648,7 @@ const Bible: React.FC = () => {
           );
         })}
       </div>
-    </div>
+    </motion.div>
   );
 };
 
