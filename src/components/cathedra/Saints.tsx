@@ -1,153 +1,176 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import ShareButton from './ShareButton';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '../../constants';
 import StaggeredList from './StaggeredList';
 import SacredImage from './SacredImage';
+import { SAINTS_DATA, type Saint } from '@/data/saints';
 
-interface SaintWork { title: string; url?: string; }
+const CATEGORY_LABELS: Record<string, string> = {
+  apostle: 'Apóstolo',
+  martyr: 'Mártir',
+  doctor: 'Doutor(a) da Igreja',
+  virgin: 'Virgem',
+  confessor: 'Confessor',
+  pope: 'Papa',
+  founder: 'Fundador(a)',
+  mystic: 'Místico(a)',
+};
 
-interface Saint {
-  id: string;
-  name: string;
-  title: string;
-  feastDay: string;
-  feastMonth: number;
-  feastDayNum: number;
-  born: string;
-  died: string;
-  patronOf: string[];
-  bio: string;
-  works: SaintWork[];
-  quotes: string[];
-  category: 'apostle' | 'martyr' | 'doctor' | 'virgin' | 'confessor' | 'pope' | 'founder' | 'mystic';
-  image?: string;
-  prayer?: string;
-  virtues?: string[];
-}
+const SaintDetail: React.FC<{ saint: Saint; onClose: () => void }> = ({ saint, onClose }) => (
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    className="fixed inset-0 bg-background/95 z-[70] flex items-center justify-center p-4 md:p-8 backdrop-blur-md"
+    onClick={onClose}
+  >
+    <motion.div
+      initial={{ scale: 0.9, y: 20 }}
+      animate={{ scale: 1, y: 0 }}
+      exit={{ scale: 0.9, y: 20 }}
+      className="bg-card rounded-[2.5rem] max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl border border-border flex flex-col md:flex-row"
+      onClick={e => e.stopPropagation()}
+    >
+      {/* Image */}
+      <div className="w-full md:w-2/5 h-64 md:h-auto relative overflow-hidden flex-shrink-0">
+        <SacredImage src={saint.image} className="w-full h-full object-cover" alt={saint.name} />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+        <button onClick={onClose} className="absolute top-6 left-6 p-2 bg-white/20 hover:bg-white/40 rounded-full backdrop-blur-md text-white transition-colors">
+          <Icons.ArrowDown className="w-5 h-5 rotate-90" />
+        </button>
+        <div className="absolute bottom-6 left-6 right-6 md:hidden">
+          <h2 className="text-2xl font-serif font-bold text-white">{saint.name}</h2>
+          <p className="text-primary font-serif italic">{saint.title}</p>
+        </div>
+      </div>
 
-const SAINTS_DATA: Saint[] = [
-  {
-    id: 'thomas-aquinas', name: 'São Tomás de Aquino', title: 'Doctor Angelicus',
-    feastDay: '28 de Janeiro', feastMonth: 1, feastDayNum: 28,
-    born: '1225, Roccasecca', died: '1274, Fossanova',
-    patronOf: ['Estudantes', 'Universidades', 'Filósofos'],
-    bio: 'Frade dominicano, teólogo e filósofo italiano. Considerado o maior teólogo da Igreja Católica, autor da Suma Teológica, obra monumental que sintetiza a filosofia aristotélica com a teologia cristã.',
-    works: [{ title: 'Suma Teológica', url: 'https://sumateologica.files.wordpress.com/2017/04/suma-teolc3b3gica.pdf' }],
-    quotes: ['"O temor é o princípio da sabedoria."', '"A graça não destrói a natureza, mas a aperfeiçoa."'],
-    category: 'doctor', image: 'https://images.unsplash.com/photo-1548610762-656391d1ad4d',
-    virtues: ['Sabedoria', 'Humildade', 'Pureza'],
-    prayer: 'Concedei-me, Senhor, uma vontade que vos queira, uma mente que vos conheça, e um coração que vos ame.'
-  },
-  {
-    id: 'agostinho', name: 'Santo Agostinho de Hipona', title: 'Doctor Gratiae',
-    feastDay: '28 de Agosto', feastMonth: 8, feastDayNum: 28,
-    born: '354, Tagaste', died: '430, Hipona',
-    patronOf: ['Teólogos', 'Cervejeiros', 'Impressores'],
-    bio: 'Bispo de Hipona e um dos mais importantes Padres da Igreja. Sua conversão é um dos relatos mais célebres da literatura cristã.',
-    works: [{ title: 'Confissões', url: 'https://www.augustinus.it/portoghese/confessioni/index.htm' }],
-    quotes: ['"Fizeste-nos para Ti, Senhor, e o nosso coração está inquieto enquanto não descansar em Ti."'],
-    category: 'doctor', image: 'https://images.unsplash.com/photo-1510627255389-9e8a718b53e7',
-    virtues: ['Contrição', 'Busca pela Verdade'],
-    prayer: 'Tarde te amei, ó Beleza tão antiga e tão nova!'
-  },
-  {
-    id: 'francisco-assis', name: 'São Francisco de Assis', title: 'Il Poverello',
-    feastDay: '4 de Outubro', feastMonth: 10, feastDayNum: 4,
-    born: '1181, Assis', died: '1226, Porciúncula',
-    patronOf: ['Animais', 'Ecologia'],
-    bio: 'Fundador da Ordem dos Frades Menores. Renunciou à riqueza para viver em pobreza radical.',
-    works: [{ title: 'Cântico das Criaturas', url: 'https://www.franciscanos.org.br/?p=cantico-das-criaturas' }],
-    quotes: ['"Senhor, fazei-me instrumento da vossa paz."'],
-    category: 'founder', image: 'https://images.unsplash.com/photo-1543333309-8cdcd4fef673',
-    virtues: ['Pobreza', 'Fraternidade'],
-    prayer: 'Senhor, fazei-me instrumento de vossa paz.'
-  },
-  {
-    id: 'judas-tadeu', name: 'São Judas Tadeu', title: 'Padroeiro das Causas Impossíveis',
-    feastDay: '28 de Outubro', feastMonth: 10, feastDayNum: 28,
-    born: 'Galileia', died: 'Pérsia',
-    patronOf: ['Causas impossíveis', 'Negócios difíceis'],
-    bio: 'Um dos doze apóstolos, irmão de São Tiago Menor. Pregou o Evangelho na Mesopotâmia e Pérsia onde foi martirizado.',
-    works: [{ title: 'Epístola de São Judas' }],
-    quotes: ['"Mantenham-se no amor de Deus."'],
-    category: 'apostle', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d',
-    virtues: ['Esperança', 'Perseverança'],
-    prayer: 'São Judas Tadeu, apóstolo glorioso, intercedei por mim nas minhas necessidades.'
-  },
-  {
-    id: 'charbel', name: 'São Charbel Makhlouf', title: 'O Eremita de Annaya',
-    feastDay: '24 de Julho', feastMonth: 7, feastDayNum: 24,
-    born: '1828, Líbano', died: '1898, Líbano',
-    patronOf: ['Pessoas doentes', 'Paz'],
-    bio: 'Monge maronita libanês, viveu como eremita por 23 anos. Famoso por inúmeros milagres.',
-    works: [],
-    quotes: ['"O silêncio fala a Deus."'],
-    category: 'mystic', image: 'https://images.unsplash.com/photo-1504198453319-5ce911bafcde',
-    virtues: ['Silêncio', 'Oração', 'Penitência'],
-    prayer: 'Senhor, pela intercessão de São Charbel, dai-me a cura da alma e do corpo.'
-  },
-  {
-    id: 'teresa-lisieux', name: 'Santa Teresa de Lisieux', title: 'A Pequena Flor',
-    feastDay: '1 de Outubro', feastMonth: 10, feastDayNum: 1,
-    born: '1873, Alençon', died: '1897, Lisieux',
-    patronOf: ['Missionários', 'Floristas', 'Aviadores'],
-    bio: 'Carmelita descalça francesa, doutora da Igreja. Desenvolveu a "pequena via" da infância espiritual, ensinando que a santidade consiste em fazer as coisas pequenas com grande amor.',
-    works: [{ title: 'História de uma Alma', url: 'https://www.vatican.va/therese/therrese_index_po.htm' }],
-    quotes: ['"Minha vocação é o amor! No coração da Igreja, minha Mãe, eu serei o amor."', '"Quero passar meu céu fazendo o bem na terra."'],
-    category: 'doctor', image: 'https://images.unsplash.com/photo-1490750967868-88aa4f44baee',
-    virtues: ['Simplicidade', 'Confiança', 'Amor'],
-    prayer: 'Santa Teresinha do Menino Jesus, fazei cair do céu uma chuva de rosas sobre aqueles que vos invocam.'
-  },
-  {
-    id: 'padre-pio', name: 'São Padre Pio de Pietrelcina', title: 'O Frade Estigmatizado',
-    feastDay: '23 de Setembro', feastMonth: 9, feastDayNum: 23,
-    born: '1887, Pietrelcina', died: '1968, San Giovanni Rotondo',
-    patronOf: ['Adolescentes', 'Confessores', 'Voluntários da defesa civil'],
-    bio: 'Frade capuchinho italiano que recebeu os estigmas de Cristo. Célebre confessor, dedicou sua vida à oração e ao sacramento da reconciliação, atraindo milhões de fiéis.',
-    works: [{ title: 'Epistolário' }],
-    quotes: ['"Reze, espere e não se preocupe."', '"A oração é a melhor arma que temos; é a chave do coração de Deus."'],
-    category: 'mystic', image: 'https://images.unsplash.com/photo-1499002238440-d264edd596ec',
-    virtues: ['Oração', 'Sofrimento redentor', 'Obediência'],
-    prayer: 'São Padre Pio, rogai a Deus por nós e intercedei por nossas necessidades.'
-  },
-  {
-    id: 'joana-arc', name: 'Santa Joana d\'Arc', title: 'A Donzela de Orléans',
-    feastDay: '30 de Maio', feastMonth: 5, feastDayNum: 30,
-    born: '1412, Domrémy', died: '1431, Ruão',
-    patronOf: ['França', 'Soldados', 'Prisioneiros'],
-    bio: 'Heroína francesa e santa padroeira da França. Guiada por visões divinas, liderou o exército francês em vitórias decisivas durante a Guerra dos Cem Anos antes de ser martirizada na fogueira.',
-    works: [],
-    quotes: ['"Não tenho medo; para isto nasci."', '"Aja, e Deus agirá."'],
-    category: 'martyr', image: 'https://images.unsplash.com/photo-1531366936337-7c912a4589a7',
-    virtues: ['Coragem', 'Fé', 'Obediência a Deus'],
-    prayer: 'Santa Joana d\'Arc, dai-nos a coragem de seguir a vontade de Deus sem hesitar.'
-  },
-  {
-    id: 'antonio-padua', name: 'Santo Antônio de Pádua', title: 'Doutor Evangélico',
-    feastDay: '13 de Junho', feastMonth: 6, feastDayNum: 13,
-    born: '1195, Lisboa', died: '1231, Pádua',
-    patronOf: ['Objetos perdidos', 'Pobres', 'Viajantes'],
-    bio: 'Frade franciscano português, famoso por sua pregação eloquente e profundo conhecimento das Escrituras. Um dos santos mais populares do mundo, invocado para encontrar objetos perdidos.',
-    works: [{ title: 'Sermões Dominicais' }],
-    quotes: ['"As ações falam mais alto que as palavras; que as vossas palavras ensinem e as vossas ações falem."'],
-    category: 'doctor', image: 'https://images.unsplash.com/photo-1507692049790-de58290a4334',
-    virtues: ['Eloquência', 'Caridade', 'Humildade'],
-    prayer: 'Santo Antônio, protetor dos pobres, intercedei por nós junto ao Senhor.'
-  },
-  {
-    id: 'faustina', name: 'Santa Faustina Kowalska', title: 'Apóstola da Divina Misericórdia',
-    feastDay: '5 de Outubro', feastMonth: 10, feastDayNum: 5,
-    born: '1905, Głogowiec', died: '1938, Cracóvia',
-    patronOf: ['Divina Misericórdia'],
-    bio: 'Religiosa polonesa que recebeu revelações de Jesus sobre a Divina Misericórdia. Seu diário espiritual difundiu a devoção à Misericórdia Divina por todo o mundo.',
-    works: [{ title: 'Diário: A Misericórdia Divina na Minha Alma' }],
-    quotes: ['"Jesus, eu confio em Vós."', '"A humanidade não encontrará paz enquanto não se voltar com confiança para a Minha Misericórdia."'],
-    category: 'mystic', image: 'https://images.unsplash.com/photo-1508672019048-805c876b67e2',
-    virtues: ['Confiança', 'Misericórdia', 'Oração'],
-    prayer: 'Jesus, eu confio em Vós! Santa Faustina, rogai por nós.'
-  }
-];
+      {/* Content */}
+      <div className="flex-1 p-6 md:p-10 overflow-y-auto space-y-6">
+        <div className="hidden md:block">
+          <h2 className="text-3xl font-serif font-bold text-foreground">{saint.name}</h2>
+          <p className="text-lg text-primary font-serif italic">{saint.title}</p>
+        </div>
+
+        {/* Meta */}
+        <div className="flex flex-wrap gap-3 text-xs">
+          <span className="px-3 py-1.5 bg-primary/10 text-primary rounded-full font-bold">{saint.feastDay}</span>
+          <span className="px-3 py-1.5 bg-secondary text-secondary-foreground rounded-full font-bold">{CATEGORY_LABELS[saint.category] || saint.category}</span>
+          <ShareButton
+            title={saint.name}
+            text={`${saint.name} — ${saint.title}. ${saint.quotes[0] || ''}`}
+            variant="button"
+            className="!px-3 !py-1.5 !text-xs !rounded-full"
+          />
+        </div>
+
+        {/* Dates */}
+        <div className="grid grid-cols-2 gap-3 text-sm">
+          <div className="p-3 bg-secondary/50 rounded-xl">
+            <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground block mb-1">Nascimento</span>
+            <span className="text-foreground font-serif">{saint.born}</span>
+          </div>
+          <div className="p-3 bg-secondary/50 rounded-xl">
+            <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground block mb-1">Falecimento</span>
+            <span className="text-foreground font-serif">{saint.died}</span>
+          </div>
+        </div>
+
+        {/* Patronage */}
+        {saint.patronOf.length > 0 && (
+          <div>
+            <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground block mb-2">Padroeiro(a) de</span>
+            <div className="flex flex-wrap gap-1.5">
+              {saint.patronOf.map(p => (
+                <span key={p} className="px-2 py-1 bg-secondary text-secondary-foreground text-[10px] font-bold rounded-lg">{p}</span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Biography */}
+        <section>
+          <span className="text-[9px] font-black uppercase tracking-widest text-primary block mb-3">Biografia</span>
+          <div className="text-foreground/90 font-serif leading-relaxed text-[15px] space-y-4">
+            {(saint.fullBio || saint.bio).split('\n\n').map((p, i) => (
+              <p key={i}>{p}</p>
+            ))}
+          </div>
+        </section>
+
+        {/* Works */}
+        {saint.works.length > 0 && (
+          <section>
+            <span className="text-[9px] font-black uppercase tracking-widest text-primary block mb-3">
+              Obras {saint.works.length > 0 && `(${saint.works.length})`}
+            </span>
+            <div className="space-y-2">
+              {saint.works.map((w, i) => (
+                <div key={i} className="flex items-center gap-3 p-3 bg-secondary/50 rounded-xl group hover:bg-primary/5 transition-colors">
+                  <Icons.Book className="w-4 h-4 text-primary flex-shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    {w.url ? (
+                      <a
+                        href={w.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm font-bold text-foreground hover:text-primary transition-colors underline-offset-2 hover:underline"
+                      >
+                        {w.title}
+                      </a>
+                    ) : (
+                      <span className="text-sm font-bold text-foreground">{w.title}</span>
+                    )}
+                    {w.year && <span className="text-[10px] text-muted-foreground ml-2">({w.year})</span>}
+                  </div>
+                  {w.url && (
+                    <a href={w.url} target="_blank" rel="noopener noreferrer" className="text-[10px] font-bold text-primary hover:underline flex-shrink-0 flex items-center gap-1">
+                      Ler <Icons.ArrowDown className="w-3 h-3 -rotate-90" />
+                    </a>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Quotes */}
+        {saint.quotes.length > 0 && (
+          <section>
+            <span className="text-[9px] font-black uppercase tracking-widest text-primary block mb-3">Citações</span>
+            <div className="space-y-3">
+              {saint.quotes.map((q, i) => (
+                <blockquote key={i} className="border-l-2 border-primary/30 pl-4 py-1">
+                  <p className="text-foreground/80 font-serif italic text-sm leading-relaxed">{q}</p>
+                </blockquote>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Virtues */}
+        {saint.virtues && saint.virtues.length > 0 && (
+          <div>
+            <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground block mb-2">Virtudes</span>
+            <div className="flex flex-wrap gap-1.5">
+              {saint.virtues.map(v => (
+                <span key={v} className="px-2.5 py-1 bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest rounded-lg">{v}</span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Prayer */}
+        {saint.prayer && (
+          <section className="bg-foreground text-background p-6 rounded-2xl">
+            <span className="text-[9px] font-black uppercase tracking-widest text-background/60 block mb-3">Oração</span>
+            <p className="font-serif italic text-lg leading-relaxed">"{saint.prayer}"</p>
+          </section>
+        )}
+      </div>
+    </motion.div>
+  </motion.div>
+);
 
 const Saints: React.FC = () => {
   const [selectedSaint, setSelectedSaint] = useState<Saint | null>(null);
@@ -159,94 +182,90 @@ const Saints: React.FC = () => {
   }, []);
 
   return (
-    <motion.div 
+    <motion.div
       className="space-y-12"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
     >
-      <motion.div 
+      <motion.div
         className="text-center space-y-4"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
       >
-        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#d4af37]">Sanctorum</p>
-        <h1 className="text-4xl md:text-6xl font-serif font-bold text-stone-900 dark:text-stone-100">Vidas dos Santos</h1>
-        <p className="text-stone-500 font-serif italic max-w-xl mx-auto">Heróis da fé que iluminam o caminho da santidade através dos séculos.</p>
+        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Sanctorum</p>
+        <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground">Vidas dos Santos</h1>
+        <p className="text-muted-foreground font-serif italic max-w-xl mx-auto">
+          Heróis da fé que iluminam o caminho da santidade através dos séculos.
+        </p>
       </motion.div>
 
+      {/* Saint of the Day */}
       {saintOfTheDay && (
-        <motion.section 
-          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-          className="bg-amber-50/50 dark:bg-stone-900/50 border border-amber-200/50 dark:border-stone-800 rounded-3xl p-8 flex flex-col md:flex-row items-center gap-8 shadow-sm backdrop-blur-sm"
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-primary/5 border border-primary/20 rounded-3xl p-8 flex flex-col md:flex-row items-center gap-8 shadow-sm backdrop-blur-sm"
         >
-          <div className="w-40 h-40 rounded-3xl overflow-hidden flex-shrink-0 border-4 border-white dark:border-stone-800 shadow-xl rotate-3 hover:rotate-0 transition-transform duration-500">
-             <SacredImage src={saintOfTheDay.image} className="w-full h-full object-cover" alt="Saint" />
+          <div className="w-40 h-40 rounded-3xl overflow-hidden flex-shrink-0 border-4 border-card shadow-xl rotate-3 hover:rotate-0 transition-transform duration-500">
+            <SacredImage src={saintOfTheDay.image} className="w-full h-full object-cover" alt={saintOfTheDay.name} />
           </div>
           <div className="flex-1 text-center md:text-left">
             <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
-              <Icons.Star className="w-4 h-4 text-[#d4af37] animate-pulse" />
-              <span className="text-[#d4af37] font-black uppercase tracking-widest text-[10px]">Santo do Dia — {saintOfTheDay.feastDay}</span>
+              <Icons.Star className="w-4 h-4 text-primary animate-pulse" />
+              <span className="text-primary font-black uppercase tracking-widest text-[10px]">Santo do Dia — {saintOfTheDay.feastDay}</span>
             </div>
-            <h2 className="text-4xl font-serif font-bold text-stone-900 dark:text-stone-100 mb-2">{saintOfTheDay.name}</h2>
-            <p className="text-amber-800 dark:text-[#d4af37] font-serif italic text-lg mb-4">{saintOfTheDay.title}</p>
-            <p className="text-stone-600 dark:text-stone-400 italic font-serif leading-relaxed line-clamp-2">"{saintOfTheDay.quotes[0]}"</p>
-            <button onClick={() => setSelectedSaint(saintOfTheDay)} className="mt-6 px-6 py-2.5 bg-stone-900 dark:bg-[#d4af37] text-white dark:text-stone-900 rounded-full text-xs font-black uppercase tracking-widest hover:scale-105 transition-transform">
+            <h2 className="text-4xl font-serif font-bold text-foreground mb-2">{saintOfTheDay.name}</h2>
+            <p className="text-primary font-serif italic text-lg mb-4">{saintOfTheDay.title}</p>
+            <p className="text-muted-foreground italic font-serif leading-relaxed line-clamp-2">{saintOfTheDay.quotes[0]}</p>
+            <button
+              onClick={() => setSelectedSaint(saintOfTheDay)}
+              className="mt-6 px-6 py-2.5 bg-foreground text-background rounded-full text-xs font-black uppercase tracking-widest hover:scale-105 transition-transform"
+            >
               Conhecer sua vida
             </button>
           </div>
         </motion.section>
       )}
 
+      {/* Saints Grid */}
       <StaggeredList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {SAINTS_DATA.map(saint => (
-          <button 
-            key={saint.id} onClick={() => setSelectedSaint(saint)} 
-            className="group p-8 bg-white dark:bg-stone-900/40 border border-stone-100 dark:border-stone-800 rounded-3xl hover:border-[#d4af37]/50 hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 text-left flex flex-col h-full"
+          <button
+            key={saint.id}
+            onClick={() => setSelectedSaint(saint)}
+            className="group p-8 bg-card border border-border rounded-3xl hover:border-primary/50 hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 text-left flex flex-col h-full"
           >
             <div className="flex-1">
-              <span className="text-[10px] font-black uppercase tracking-widest text-[#d4af37] mb-2 block">{saint.feastDay}</span>
-              <h3 className="text-2xl font-serif font-bold text-stone-900 dark:text-stone-100 group-hover:text-[#d4af37] transition-colors mb-2">{saint.name}</h3>
-              <p className="text-sm text-stone-500 dark:text-stone-400 font-serif italic mb-4">{saint.title}</p>
-              <p className="text-sm text-stone-600 dark:text-stone-500 line-clamp-3 leading-relaxed mb-6">{saint.bio}</p>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-[10px] font-black uppercase tracking-widest text-primary">{saint.feastDay}</span>
+                <span className="text-[9px] px-1.5 py-0.5 bg-secondary text-secondary-foreground rounded font-bold">{CATEGORY_LABELS[saint.category]}</span>
+              </div>
+              <h3 className="text-2xl font-serif font-bold text-foreground group-hover:text-primary transition-colors mb-2">{saint.name}</h3>
+              <p className="text-sm text-muted-foreground font-serif italic mb-4">{saint.title}</p>
+              <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed mb-4">{saint.bio}</p>
+              {saint.works.length > 0 && (
+                <p className="text-[10px] font-bold text-primary">
+                  {saint.works.length} obra{saint.works.length > 1 ? 's' : ''} disponíve{saint.works.length > 1 ? 'is' : 'l'}
+                </p>
+              )}
             </div>
-            <div className="flex flex-wrap gap-2 mt-auto">
-              {saint.virtues?.map(v => <span key={v} className="px-2 py-1 bg-stone-50 dark:bg-stone-800 text-[9px] font-black uppercase tracking-widest text-stone-400 rounded-lg">{v}</span>)}
+            <div className="flex flex-wrap gap-2 mt-4">
+              {saint.virtues?.slice(0, 3).map(v => (
+                <span key={v} className="px-2 py-1 bg-secondary text-[9px] font-black uppercase tracking-widest text-muted-foreground rounded-lg">{v}</span>
+              ))}
             </div>
           </button>
         ))}
       </StaggeredList>
 
+      {/* Detail Modal */}
       <AnimatePresence>
-        {selectedSaint && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-stone-900/95 z-[70] flex items-center justify-center p-4 md:p-8 backdrop-blur-md" onClick={() => setSelectedSaint(null)}>
-            <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 20 }} className="bg-white dark:bg-stone-900 rounded-[2.5rem] max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl flex flex-col md:flex-row" onClick={e => e.stopPropagation()}>
-              <div className="w-full md:w-2/5 h-64 md:h-auto relative overflow-hidden">
-                <SacredImage src={selectedSaint.image} className="w-full h-full object-cover" alt={selectedSaint.name} />
-                <button onClick={() => setSelectedSaint(null)} className="absolute top-6 left-6 p-2 bg-white/20 hover:bg-white/40 rounded-full backdrop-blur-md text-white transition-colors"><Icons.ArrowDown className="w-5 h-5 rotate-90" /></button>
-              </div>
-              <div className="flex-1 p-8 md:p-12 overflow-y-auto">
-                <h2 className="text-4xl font-serif font-bold text-stone-900 dark:text-stone-100 mb-2">{selectedSaint.name}</h2>
-                <p className="text-xl text-[#d4af37] font-serif italic mb-4">{selectedSaint.title}</p>
-                <ShareButton
-                  title={selectedSaint.name}
-                  text={`${selectedSaint.name} — ${selectedSaint.title}. ${selectedSaint.quotes[0] || ''}`}
-                  variant="button"
-                  className="mb-4"
-                />
-                <div className="space-y-8">
-                  <section><p className="text-stone-700 dark:text-stone-300 font-serif leading-relaxed text-lg">{selectedSaint.bio}</p></section>
-                  {selectedSaint.prayer && (
-                    <section className="bg-stone-900 text-white p-8 rounded-[2rem]"><p className="font-serif italic text-xl leading-relaxed">"{selectedSaint.prayer}"</p></section>
-                  )}
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
+        {selectedSaint && <SaintDetail saint={selectedSaint} onClose={() => setSelectedSaint(null)} />}
       </AnimatePresence>
     </motion.div>
   );
 };
+
 export default Saints;
