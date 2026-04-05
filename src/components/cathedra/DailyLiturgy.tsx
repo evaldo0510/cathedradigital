@@ -417,6 +417,7 @@ const DailyLiturgy: React.FC = () => {
                       text={readings.primeiraLeitura.texto}
                       fontBody={fc.body}
                       fontTitle={fc.title}
+                      lineSpacing={lc}
                     />
 
                     <PsalmBlock
@@ -425,6 +426,7 @@ const DailyLiturgy: React.FC = () => {
                       text={readings.salmo.texto}
                       fontPsalm={fc.psalm}
                       fontBody={fc.body}
+                      lineSpacing={lc}
                     />
 
                     {readings.segundaLeitura && typeof readings.segundaLeitura === 'object' && (
@@ -436,6 +438,7 @@ const DailyLiturgy: React.FC = () => {
                         text={readings.segundaLeitura.texto}
                         fontBody={fc.body}
                         fontTitle={fc.title}
+                        lineSpacing={lc}
                       />
                     )}
 
@@ -445,6 +448,7 @@ const DailyLiturgy: React.FC = () => {
                       text={readings.evangelho.texto}
                       fontGospel={fc.gospel}
                       fontTitle={fc.title}
+                      lineSpacing={lc}
                     />
 
                     {/* AI Meditation */}
