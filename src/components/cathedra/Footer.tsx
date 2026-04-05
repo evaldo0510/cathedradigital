@@ -30,6 +30,10 @@ const DIOCESES_BR = [
   'Diocese de Maringá',
   'Diocese de Londrina',
   'Diocese de Osasco',
+  'Diocese de Santo Amaro',
+  'Diocese de São Miguel Paulista',
+  'Diocese de Campo Limpo',
+  'Diocese de Guarulhos',
 ];
 
 const DIOCESE_URLS: Record<string, string> = {
@@ -52,6 +56,10 @@ const DIOCESE_URLS: Record<string, string> = {
   'Arquidiocese de São Luís do Maranhão': 'https://www.arquidiocesesaoluis.org.br',
   'Arquidiocese de Aparecida': 'https://www.arquidiocesedeaparecida.org.br',
   'Diocese de Osasco': 'https://www.diocesedeosasco.com.br',
+  'Diocese de Santo Amaro': 'https://www.diocesesantoamaro.org.br',
+  'Diocese de São Miguel Paulista': 'https://www.diocesedesaomiguel.org.br',
+  'Diocese de Campo Limpo': 'https://www.diocesedecampolimpo.org.br',
+  'Diocese de Guarulhos': 'https://www.diocesedeguarulhos.org.br',
 };
 
 const Footer: React.FC = React.memo(() => {
