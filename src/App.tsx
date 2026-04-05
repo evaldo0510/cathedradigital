@@ -151,6 +151,7 @@ const AppLayout: React.FC = () => {
 
   return (
     <LangContext.Provider value={{ lang, setLang: setLangState, t }}>
+      <SplashScreen visible={showSplash} />
       <ScrollToTop />
       <CommandCenter />
       <OfflineIndicator />
