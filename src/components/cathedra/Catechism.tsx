@@ -60,6 +60,11 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
               label={seg.value}
               onNavigate={onNavigateToBible}
             />
+          ) : seg.type === 'catechismRef' && seg.paragraph ? (
+            <CatechismPopover
+              key={i}
+              paragraph={seg.paragraph}
+            />
           ) : (
             <React.Fragment key={i}>{seg.value}</React.Fragment>
           )
