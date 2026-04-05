@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react'
 import ReactMarkdown from 'react-markdown';
 import { Icons } from '../../constants';
 import BibleVersePopover from './BibleVersePopover';
-import { parseBibleReferences } from '@/lib/bibleRefParser';
+import CatechismPopover from './CatechismPopover';
+import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import { useNavigate } from 'react-router-dom';
 
 
