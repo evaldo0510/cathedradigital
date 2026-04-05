@@ -292,7 +292,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
                 <p className="text-sm font-serif font-semibold text-foreground">{dailySuggestion.bible.ref}</p>
               </div>
               <button
-                onClick={() => goTo(AppRoute.BIBLE)}
+                onClick={() => goTo(`${AppRoute.BIBLE}?book=${dailySuggestion.bible.book}&ch=${dailySuggestion.bible.chapter}`)}
                 className="text-xs text-primary hover:underline flex items-center gap-1 mt-0.5"
               >
                 Ler <ChevronRight className="w-3 h-3" />
