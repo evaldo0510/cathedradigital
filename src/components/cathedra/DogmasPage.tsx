@@ -279,7 +279,7 @@ const DogmasPage: React.FC = () => {
                   <span className="text-[10px] text-muted-foreground">{dogma.year}</span>
                   {dogma.refs.length > 0 && (
                     <Badge variant="outline" className="text-[9px] gap-1 px-1.5 py-0">
-                      <Icons.ArrowRight className="w-2.5 h-2.5" /> {dogma.refs.length} fontes
+                      <Icons.ExternalLink className="w-2.5 h-2.5" /> {dogma.refs.length} fontes
                     </Badge>
                   )}
                 </div>
