@@ -24,13 +24,13 @@ const PLANS = [
   {
     id: 'cathedra_pro_annual',
     label: 'Anual',
-    price: 14.9,
+    price: 15.92,
     period: '/mês',
-    totalLabel: 'R$ 178,80/ano',
+    totalLabel: 'R$ 191,04/ano',
     title: 'Cathedra PRO – Anual',
     highlight: true,
-    badge: 'Economize 25%',
-    chargePrice: 178.8,
+    badge: 'Economize 20%',
+    chargePrice: 191.04,
   },
 ];
 
