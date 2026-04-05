@@ -51,6 +51,7 @@ const DIOCESE_URLS: Record<string, string> = {
   'Arquidiocese de Natal': 'https://www.arquidiocesedenatal.org.br',
   'Arquidiocese de São Luís do Maranhão': 'https://www.arquidiocesesaoluis.org.br',
   'Arquidiocese de Aparecida': 'https://www.arquidiocesedeaparecida.org.br',
+  'Diocese de Osasco': 'https://www.diocesedeosasco.com.br',
 };
 
 const Footer: React.FC = React.memo(() => {
