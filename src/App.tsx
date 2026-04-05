@@ -212,62 +212,68 @@ const AppLayout: React.FC = () => {
           )}
           <div className={location.pathname === AppRoute.HOME || location.pathname === AppRoute.ONBOARDING ? "flex-1" : "flex-1 p-3 sm:p-4 md:p-5 lg:p-6 pb-4 lg:pb-8 w-full max-w-6xl mx-auto"}>
 
-            <Suspense fallback={<LoadingFallback />}>
-              <Routes location={location}>
-                <Route path={AppRoute.HOME} element={<Index />} />
-                <Route path={AppRoute.DASHBOARD} element={<AuthGuard><Dashboard user={appUser} /></AuthGuard>} />
-                <Route path={AppRoute.BIBLE} element={<AuthGuard><Bible /></AuthGuard>} />
-                <Route path={AppRoute.CATECHISM} element={<AuthGuard><Catechism /></AuthGuard>} />
-                <Route path={AppRoute.SAINTS} element={<AuthGuard><Saints /></AuthGuard>} />
-                <Route path={AppRoute.MAGISTERIUM} element={<AuthGuard><Magisterium /></AuthGuard>} />
-                <Route path={AppRoute.DAILY_LITURGY} element={<AuthGuard><DailyLiturgy /></AuthGuard>} />
-                <Route path={AppRoute.ROSARY} element={<AuthGuard><Rosary /></AuthGuard>} />
-                <Route path={AppRoute.ORACAO} element={<AuthGuard><PrayerPage /></AuthGuard>} />
-                <Route path={AppRoute.VIA_CRUCIS} element={<AuthGuard><ViaCrucis /></AuthGuard>} />
-                <Route path={AppRoute.STUDY_MODE} element={
-                  <AuthGuard>
-                    <ProGate isPremium={isPremium} isLoggedIn={!!user} onLogin={() => navigate(AppRoute.LOGIN)}>
-                      <StudyMode />
-                    </ProGate>
-                  </AuthGuard>
-                } />
-                <Route path={AppRoute.LOGIN} element={<Auth onSuccess={() => navigate(AppRoute.DASHBOARD)} onSignupSuccess={() => navigate(AppRoute.ONBOARDING)} />} />
-                <Route path={AppRoute.AQUINAS_OPERA} element={<AuthGuard><AquinasOpera /></AuthGuard>} />
-                <Route path={AppRoute.CERTAMEN} element={<AuthGuard><Certamen /></AuthGuard>} />
-                <Route path={AppRoute.MISSAL} element={<AuthGuard><MissalPage /></AuthGuard>} />
-                <Route path={AppRoute.FAVORITES} element={<AuthGuard><FavoritesPage /></AuthGuard>} />
-                <Route path={AppRoute.TRILHAS} element={<AuthGuard><TrilhasPage /></AuthGuard>} />
-                <Route path={AppRoute.ABOUT} element={<AboutPage />} />
-                <Route path={AppRoute.DOGMAS} element={<AuthGuard><DogmasPage /></AuthGuard>} />
-                <Route path={AppRoute.LECTIO_DIVINA} element={<AuthGuard><LectioDivina /></AuthGuard>} />
-                <Route path={AppRoute.BREVIARY} element={<AuthGuard><BreviaryPage /></AuthGuard>} />
-                <Route path={AppRoute.LITANIES} element={<AuthGuard><LitaniesPage /></AuthGuard>} />
-                <Route path={AppRoute.LITURGICAL_CALENDAR} element={<AuthGuard><LiturgicalCalendarPage /></AuthGuard>} />
-                <Route path={AppRoute.COMMUNITY} element={<AuthGuard><CommunityPage /></AuthGuard>} />
-                <Route path={AppRoute.PROFILE} element={<AuthGuard><ProfilePage /></AuthGuard>} />
-                <Route path={AppRoute.POENITENTIA} element={<AuthGuard><PoenitentiaPage /></AuthGuard>} />
-                <Route path={AppRoute.GLOSSARY} element={<AuthGuard><GlossaryPage /></AuthGuard>} />
-                <Route path={AppRoute.APARICOES} element={<AuthGuard><AparicoesPage /></AuthGuard>} />
-                <Route path={AppRoute.ORDO_MISSAE} element={<AuthGuard><MissalPage /></AuthGuard>} />
-                <Route path={AppRoute.PRAYERS} element={<AuthGuard><PrayerPage /></AuthGuard>} />
-                <Route path={AppRoute.DIAGNOSTICS} element={<DiagnosticsPage />} />
-                <Route path="/reset-password" element={<ResetPasswordPage />} />
-                <Route path={AppRoute.ONBOARDING} element={<AuthGuard><OnboardingPage /></AuthGuard>} />
-                <Route path={AppRoute.ACHIEVEMENTS} element={<AuthGuard><AchievementsPage /></AuthGuard>} />
-                <Route path={AppRoute.CHECKOUT} element={<AuthGuard><CheckoutPage /></AuthGuard>} />
-                <Route path={AppRoute.CHECKOUT_RESULT} element={<AuthGuard><CheckoutResultPage /></AuthGuard>} />
-                <Route path={AppRoute.TERMS} element={<TermsPage />} />
-                <Route path={AppRoute.PRIVACY} element={<PrivacyPage />} />
-                <Route path={AppRoute.ADMIN} element={
-                  <AuthGuard>
-                    <ProGate isPremium={true} isLoggedIn={!!user} onLogin={() => navigate(AppRoute.LOGIN)}>
-                      <AdminDashboard />
-                    </ProGate>
-                  </AuthGuard>
-                } />
-                <Route path="*" element={<AuthGuard><Dashboard user={appUser} /></AuthGuard>} />
-              </Routes>
-            </Suspense>
+            <AnimatePresence mode="wait">
+              <Suspense fallback={<LoadingFallback />}>
+                <Routes location={location} key={location.pathname}>
+                  <Route path={AppRoute.HOME} element={<PageTransition><Index /></PageTransition>} />
+                  <Route path={AppRoute.DASHBOARD} element={<PageTransition><AuthGuard><Dashboard user={appUser} /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.BIBLE} element={<PageTransition><AuthGuard><Bible /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.CATECHISM} element={<PageTransition><AuthGuard><Catechism /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.SAINTS} element={<PageTransition><AuthGuard><Saints /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.MAGISTERIUM} element={<PageTransition><AuthGuard><Magisterium /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.DAILY_LITURGY} element={<PageTransition><AuthGuard><DailyLiturgy /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.ROSARY} element={<PageTransition><AuthGuard><Rosary /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.ORACAO} element={<PageTransition><AuthGuard><PrayerPage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.VIA_CRUCIS} element={<PageTransition><AuthGuard><ViaCrucis /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.STUDY_MODE} element={
+                    <PageTransition>
+                      <AuthGuard>
+                        <ProGate isPremium={isPremium} isLoggedIn={!!user} onLogin={() => navigate(AppRoute.LOGIN)}>
+                          <StudyMode />
+                        </ProGate>
+                      </AuthGuard>
+                    </PageTransition>
+                  } />
+                  <Route path={AppRoute.LOGIN} element={<PageTransition><Auth onSuccess={() => navigate(AppRoute.DASHBOARD)} onSignupSuccess={() => navigate(AppRoute.ONBOARDING)} /></PageTransition>} />
+                  <Route path={AppRoute.AQUINAS_OPERA} element={<PageTransition><AuthGuard><AquinasOpera /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.CERTAMEN} element={<PageTransition><AuthGuard><Certamen /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.MISSAL} element={<PageTransition><AuthGuard><MissalPage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.FAVORITES} element={<PageTransition><AuthGuard><FavoritesPage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.TRILHAS} element={<PageTransition><AuthGuard><TrilhasPage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.ABOUT} element={<PageTransition><AboutPage /></PageTransition>} />
+                  <Route path={AppRoute.DOGMAS} element={<PageTransition><AuthGuard><DogmasPage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.LECTIO_DIVINA} element={<PageTransition><AuthGuard><LectioDivina /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.BREVIARY} element={<PageTransition><AuthGuard><BreviaryPage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.LITANIES} element={<PageTransition><AuthGuard><LitaniesPage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.LITURGICAL_CALENDAR} element={<PageTransition><AuthGuard><LiturgicalCalendarPage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.COMMUNITY} element={<PageTransition><AuthGuard><CommunityPage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.PROFILE} element={<PageTransition><AuthGuard><ProfilePage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.POENITENTIA} element={<PageTransition><AuthGuard><PoenitentiaPage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.GLOSSARY} element={<PageTransition><AuthGuard><GlossaryPage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.APARICOES} element={<PageTransition><AuthGuard><AparicoesPage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.ORDO_MISSAE} element={<PageTransition><AuthGuard><MissalPage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.PRAYERS} element={<PageTransition><AuthGuard><PrayerPage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.DIAGNOSTICS} element={<PageTransition><DiagnosticsPage /></PageTransition>} />
+                  <Route path="/reset-password" element={<PageTransition><ResetPasswordPage /></PageTransition>} />
+                  <Route path={AppRoute.ONBOARDING} element={<PageTransition><AuthGuard><OnboardingPage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.ACHIEVEMENTS} element={<PageTransition><AuthGuard><AchievementsPage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.CHECKOUT} element={<PageTransition><AuthGuard><CheckoutPage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.CHECKOUT_RESULT} element={<PageTransition><AuthGuard><CheckoutResultPage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.TERMS} element={<PageTransition><TermsPage /></PageTransition>} />
+                  <Route path={AppRoute.PRIVACY} element={<PageTransition><PrivacyPage /></PageTransition>} />
+                  <Route path={AppRoute.ADMIN} element={
+                    <PageTransition>
+                      <AuthGuard>
+                        <ProGate isPremium={true} isLoggedIn={!!user} onLogin={() => navigate(AppRoute.LOGIN)}>
+                          <AdminDashboard />
+                        </ProGate>
+                      </AuthGuard>
+                    </PageTransition>
+                  } />
+                  <Route path="*" element={<PageTransition><AuthGuard><Dashboard user={appUser} /></AuthGuard></PageTransition>} />
+                </Routes>
+              </Suspense>
+            </AnimatePresence>
           </div>
           {location.pathname !== AppRoute.HOME && location.pathname !== AppRoute.ONBOARDING && (
             <>
