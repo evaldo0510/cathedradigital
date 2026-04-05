@@ -246,7 +246,7 @@ const Saints: React.FC = () => {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 };
 export default Saints;
