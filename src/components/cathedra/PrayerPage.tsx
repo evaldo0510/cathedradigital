@@ -470,6 +470,12 @@ const PrayerPage: React.FC = () => {
                 <div key={p.key} className="p-5 rounded-2xl bg-muted/30 border border-border/50 space-y-3 hover:bg-muted/50 transition-colors group">
                   <div className="flex items-center gap-3">
                     <p className="font-serif font-bold text-sm flex-1">{p.title}</p>
+                    <ShareButton
+                      title={p.title}
+                      text={`${p.title}\n\n${PRAYERS[p.key as keyof typeof PRAYERS]}`}
+                      size="sm"
+                      className="border-0 p-0 hover:bg-transparent"
+                    />
                   </div>
                   <p className="text-xs text-muted-foreground font-serif leading-relaxed line-clamp-3 group-hover:line-clamp-none transition-all cursor-default">
                     {PRAYERS[p.key as keyof typeof PRAYERS]}
