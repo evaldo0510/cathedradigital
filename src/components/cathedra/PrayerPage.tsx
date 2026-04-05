@@ -470,7 +470,12 @@ const PrayerPage: React.FC = () => {
         </div>
 
         {/* Sidebar — Essential Prayers */}
-        <div className="space-y-8">
+        <motion.div 
+          className="space-y-8"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+        >
           <div className="bg-card border border-border rounded-[2rem] p-8 shadow-sm space-y-6">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
