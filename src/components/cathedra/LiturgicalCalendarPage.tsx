@@ -207,8 +207,16 @@ const LiturgicalCalendarPage: React.FC = () => {
   const [selectedDay, setSelectedDay] = useState<Date | null>(null);
   const [apiData, setApiData] = useState<Record<string, ApiDayData>>({});
   const [isLoadingApi, setIsLoadingApi] = useState(false);
-  const { toggleFavorite, isFavorite } = useFavorites();
-  const navigate = useNavigate();
+  const [showSaintModal, setShowSaintModal] = useState(false);
+
+  // Build a set of "MM-DD" keys for days that have a saint
+  const saintDaysSet = useMemo(() => {
+    const set = new Set<string>();
+    SAINTS_DATA.forEach(s => {
+      set.add(`${String(s.feastMonth).padStart(2, '0')}-${String(s.feastDayNum).padStart(2, '0')}`);
+    });
+    return set;
+  }, []);
 
   // Merge fixed + movable celebrations
   const allCelebrations = useMemo(() => {
