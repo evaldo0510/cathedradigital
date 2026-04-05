@@ -1,62 +1,166 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import ShareButton from './ShareButton';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
 import CrossReferencePanel from './CrossReferencePanel';
 import NotesPanel from './NotesPanel';
+import BibleVersePopover from './BibleVersePopover';
 import { getCatechismCrossRefs } from '@/data/cross-references';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useCatechismParagraph, usePrefetchCatechismParagraph } from '@/hooks/useCatechismParagraph';
 
+// Map of common Bible book names/abbreviations in Portuguese to API abbreviations
+const BIBLE_BOOK_MAP: Record<string, string> = {
+  'Gn': 'gn', 'Gên': 'gn', 'Gênesis': 'gn',
+  'Ex': 'ex', 'Êx': 'ex', 'Êxodo': 'ex',
+  'Lv': 'lv', 'Levítico': 'lv',
+  'Nm': 'nm', 'Números': 'nm',
+  'Dt': 'dt', 'Deuteronômio': 'dt',
+  'Js': 'js', 'Josué': 'js',
+  'Jz': 'jz', 'Juízes': 'jz',
+  'Rt': 'rt', 'Rute': 'rt',
+  '1Sm': '1sm', '1 Sm': '1sm', '1Samuel': '1sm',
+  '2Sm': '2sm', '2 Sm': '2sm', '2Samuel': '2sm',
+  '1Rs': '1rs', '1 Rs': '1rs', '1Reis': '1rs',
+  '2Rs': '2rs', '2 Rs': '2rs', '2Reis': '2rs',
+  '1Cr': '1cr', '1 Cr': '1cr', '1Crônicas': '1cr',
+  '2Cr': '2cr', '2 Cr': '2cr', '2Crônicas': '2cr',
+  'Esd': 'esd', 'Esdras': 'esd',
+  'Ne': 'ne', 'Neemias': 'ne',
+  'Tb': 'tb', 'Tobias': 'tb',
+  'Jt': 'jt', 'Judite': 'jt',
+  'Est': 'est', 'Ester': 'est',
+  '1Mc': '1mc', '1 Mc': '1mc', '1Macabeus': '1mc',
+  '2Mc': '2mc', '2 Mc': '2mc', '2Macabeus': '2mc',
+  'Jó': 'job', 'Job': 'job',
+  'Sl': 'sl', 'Salmos': 'sl', 'Salmo': 'sl',
+  'Pr': 'pr', 'Provérbios': 'pr',
+  'Ecl': 'ecl', 'Eclesiastes': 'ecl', 'Qo': 'ecl',
+  'Ct': 'ct', 'Cânticos': 'ct', 'Cântico': 'ct',
+  'Sb': 'sb', 'Sabedoria': 'sb',
+  'Eclo': 'eclo', 'Eclesiástico': 'eclo', 'Sir': 'eclo',
+  'Is': 'is', 'Isaías': 'is',
+  'Jr': 'jr', 'Jeremias': 'jr',
+  'Lm': 'lm', 'Lamentações': 'lm',
+  'Br': 'br', 'Baruc': 'br',
+  'Ez': 'ez', 'Ezequiel': 'ez',
+  'Dn': 'dn', 'Daniel': 'dn',
+  'Os': 'os', 'Oseias': 'os',
+  'Jl': 'jl', 'Joel': 'jl',
+  'Am': 'am', 'Amós': 'am',
+  'Ab': 'ab', 'Abdias': 'ab',
+  'Jn': 'jn', 'Jonas': 'jn',
+  'Mq': 'mq', 'Miqueias': 'mq',
+  'Na': 'na', 'Naum': 'na',
+  'Hab': 'hab', 'Habacuc': 'hab',
+  'Sf': 'sf', 'Sofonias': 'sf',
+  'Ag': 'ag', 'Ageu': 'ag',
+  'Zc': 'zc', 'Zacarias': 'zc',
+  'Ml': 'ml', 'Malaquias': 'ml',
+  'Mt': 'mt', 'Mateus': 'mt',
+  'Mc': 'mc', 'Marcos': 'mc',
+  'Lc': 'lc', 'Lucas': 'lc',
+  'Jo': 'jo', 'João': 'jo',
+  'At': 'at', 'Atos': 'at',
+  'Rm': 'rm', 'Romanos': 'rm',
+  '1Cor': '1co', '1 Cor': '1co', '1Co': '1co', '1 Co': '1co', '1Coríntios': '1co',
+  '2Cor': '2co', '2 Cor': '2co', '2Co': '2co', '2 Co': '2co', '2Coríntios': '2co',
+  'Gl': 'gl', 'Gálatas': 'gl',
+  'Ef': 'ef', 'Efésios': 'ef',
+  'Fl': 'fl', 'Filipenses': 'fl',
+  'Cl': 'cl', 'Colossenses': 'cl',
+  '1Ts': '1ts', '1 Ts': '1ts', '1Tessalonicenses': '1ts',
+  '2Ts': '2ts', '2 Ts': '2ts', '2Tessalonicenses': '2ts',
+  '1Tm': '1tm', '1 Tm': '1tm', '1Timóteo': '1tm',
+  '2Tm': '2tm', '2 Tm': '2tm', '2Timóteo': '2tm',
+  'Tt': 'tt', 'Tito': 'tt',
+  'Fm': 'fm', 'Filemon': 'fm', 'Filêmon': 'fm',
+  'Hb': 'hb', 'Hebreus': 'hb',
+  'Tg': 'tg', 'Tiago': 'tg',
+  '1Pd': '1pe', '1 Pd': '1pe', '1Pe': '1pe', '1 Pe': '1pe', '1Pedro': '1pe',
+  '2Pd': '2pe', '2 Pd': '2pe', '2Pe': '2pe', '2 Pe': '2pe', '2Pedro': '2pe',
+  '1Jo': '1jo', '1 Jo': '1jo', '1João': '1jo',
+  '2Jo': '2jo', '2 Jo': '2jo', '2João': '2jo',
+  '3Jo': '3jo', '3 Jo': '3jo', '3João': '3jo',
+  'Jd': 'jd', 'Judas': 'jd',
+  'Ap': 'ap', 'Apocalipse': 'ap',
+};
 
-const CIC_SECTIONS = [
-  {
-    part: 'Parte I',
-    title: 'A Profissão de Fé',
-    sections: [
-      { id: 1, title: 'Eu Creio — Nós Cremos', paragraphs: [1, 184] },
-      { id: 2, title: 'Creio em Deus Pai', paragraphs: [185, 421] },
-      { id: 3, title: 'Creio em Jesus Cristo', paragraphs: [422, 682] },
-      { id: 4, title: 'Creio no Espírito Santo', paragraphs: [683, 1065] },
-    ],
-  },
-  {
-    part: 'Parte II',
-    title: 'A Celebração do Mistério Cristão',
-    sections: [
-      { id: 5, title: 'A Economia Sacramental', paragraphs: [1066, 1209] },
-      { id: 6, title: 'Os Sete Sacramentos', paragraphs: [1210, 1690] },
-    ],
-  },
-  {
-    part: 'Parte III',
-    title: 'A Vida em Cristo',
-    sections: [
-      { id: 7, title: 'A Vocação do Homem', paragraphs: [1691, 2051] },
-      { id: 8, title: 'Os Dez Mandamentos', paragraphs: [2052, 2557] },
-    ],
-  },
-  {
-    part: 'Parte IV',
-    title: 'A Oração Cristã',
-    sections: [
-      { id: 9, title: 'A Oração na Vida Cristã', paragraphs: [2558, 2758] },
-      { id: 10, title: 'O Pai Nosso', paragraphs: [2759, 2865] },
-    ],
-  },
-];
+function lookupAbbr(raw: string): string | null {
+  const trimmed = raw.trim();
+  if (BIBLE_BOOK_MAP[trimmed]) return BIBLE_BOOK_MAP[trimmed];
+  // Try normalized
+  for (const [key, val] of Object.entries(BIBLE_BOOK_MAP)) {
+    if (key.toLowerCase() === trimmed.toLowerCase()) return val;
+  }
+  return null;
+}
 
-const CatechismContent: React.FC<{ paragraph: number }> = ({ paragraph }) => {
+interface ParsedSegment {
+  type: 'text' | 'bibleRef';
+  value: string;
+  abbr?: string;
+  chapter?: number;
+  verse?: number;
+}
+
+function parseBibleReferences(text: string): ParsedSegment[] {
+  // Match patterns like: "Jo 3,16", "1 Cor 13,1-13", "Rm 8,28", "cf. Gn 1,1", "Sl 23"
+  const bookNames = Object.keys(BIBLE_BOOK_MAP).sort((a, b) => b.length - a.length).map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+  const pattern = new RegExp(
+    `(?:cf\\.?\\s*)?\\b(${bookNames.join('|')})\\s+(\\d{1,3})(?:[,.:](\\d{1,3})(?:\\s*[-–]\\s*\\d{1,3})?)?`,
+    'g'
+  );
+
+  const segments: ParsedSegment[] = [];
+  let lastIndex = 0;
+
+  let match: RegExpExecArray | null;
+  while ((match = pattern.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      segments.push({ type: 'text', value: text.slice(lastIndex, match.index) });
+    }
+    const bookRaw = match[1];
+    const chapter = parseInt(match[2]);
+    const verse = match[3] ? parseInt(match[3]) : undefined;
+    const abbr = lookupAbbr(bookRaw);
+
+    if (abbr) {
+      segments.push({
+        type: 'bibleRef',
+        value: match[0],
+        abbr,
+        chapter,
+        verse,
+      });
+    } else {
+      segments.push({ type: 'text', value: match[0] });
+    }
+    lastIndex = match.index + match[0].length;
+  }
+
+  if (lastIndex < text.length) {
+    segments.push({ type: 'text', value: text.slice(lastIndex) });
+  }
+
+  return segments.length > 0 ? segments : [{ type: 'text', value: text }];
+}
+
+const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr: string, chapter: number) => void }> = ({ paragraph, onNavigateToBible }) => {
   const { data, isLoading, isError } = useCatechismParagraph(paragraph);
   const prefetch = usePrefetchCatechismParagraph();
 
   useEffect(() => {
-    // Prefetch next and previous
     if (paragraph < 2865) prefetch(paragraph + 1);
     if (paragraph > 1) prefetch(paragraph - 1);
   }, [paragraph, prefetch]);
+
+  const segments = useMemo(() => {
+    if (!data?.content) return [];
+    return parseBibleReferences(data.content);
+  }, [data?.content]);
 
   if (isLoading) {
     return (
@@ -78,7 +182,22 @@ const CatechismContent: React.FC<{ paragraph: number }> = ({ paragraph }) => {
 
   return (
     <div className="reader-text text-foreground/90 leading-[2] text-lg md:text-xl">
-      <p className="font-serif">{data?.content}</p>
+      <p className="font-serif">
+        {segments.map((seg, i) =>
+          seg.type === 'bibleRef' && seg.abbr ? (
+            <BibleVersePopover
+              key={i}
+              abbr={seg.abbr}
+              chapter={seg.chapter!}
+              verse={seg.verse}
+              label={seg.value}
+              onNavigate={onNavigateToBible}
+            />
+          ) : (
+            <React.Fragment key={i}>{seg.value}</React.Fragment>
+          )
+        )}
+      </p>
     </div>
   );
 };
