@@ -237,6 +237,9 @@ const CATEGORY_COLORS: Record<string, string> = {
   'Eclesiologia': 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300',
   'Escatologia': 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300',
   'Antropologia': 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300',
+  'Graça': 'bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-300',
+  'Anjos': 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900/30 dark:text-cyan-300',
+  'Escritura': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
 };
 
 const REF_STYLES: Record<string, { icon: React.ReactNode; color: string }> = {
