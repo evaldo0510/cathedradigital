@@ -101,18 +101,18 @@ const Index = () => {
   ];
 
   return (
-    <div className="flex min-h-screen flex-col items-center bg-[#fdfcf8] text-[#1a1a1a] overflow-x-hidden">
+    <div className="flex min-h-screen flex-col items-center bg-background text-foreground overflow-x-hidden">
       {/* Hero Section */}
       <section className="relative w-full h-[85vh] md:h-[90vh] flex items-center justify-center px-6 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
             src="https://images.unsplash.com/photo-1548610762-656391d1ad4d?auto=format&fit=crop&q=40&w=800" 
             alt="Cathedral" 
-            className="w-full h-full object-cover opacity-15 scale-110 blur-[1px]"
+            className="w-full h-full object-cover opacity-10 scale-110 blur-[1px]"
             loading="eager"
             decoding="async"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#fdfcf8]/10 via-[#fdfcf8]/70 to-[#fdfcf8]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/10 via-background/80 to-background" />
         </div>
 
         <div className="relative z-10 max-w-5xl text-center space-y-10">
@@ -130,7 +130,7 @@ const Index = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-5xl md:text-7xl lg:text-8xl font-serif font-bold tracking-tight text-[#1a1a1a] leading-[1.05]"
+            className="text-5xl md:text-7xl lg:text-8xl font-serif font-bold tracking-tight text-foreground leading-[1.05]"
           >
             Aprofunde sua <br /> 
             <span className="text-primary italic font-light drop-shadow-sm">Vida Interior.</span>
