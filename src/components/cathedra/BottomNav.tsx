@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Icons } from '../../constants';
 import { AppRoute } from '../../types';
+import { LayoutDashboard, BookOpen, Heart, Cross, Menu } from 'lucide-react';
 
 interface BottomNavItemProps {
   label: string;

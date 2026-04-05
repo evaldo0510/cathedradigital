@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Icons, Logo } from '../../constants';
+import { Logo } from '../../constants';
 import { AppRoute, User } from '../../types';
 import { BibleModal, CatechismModal, DocumentsModal } from './QuickModals';
+import {
+  ShieldCheck, Heart, Church, CalendarDays, Flower2, Cross,
+  BookOpen, BookMarked, Feather, ListChecks, Bookmark, Star,
+  BookText, Users, Globe, Crown, Route, Library, MessageCircle,
+  Sparkles, ScrollText, Trophy, Zap, Stethoscope, Search,
+  Sun, Moon, LogOut, Menu, Command
+} from 'lucide-react';
 
 interface SidebarProps {
   onClose?: () => void;
