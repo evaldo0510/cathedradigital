@@ -393,6 +393,8 @@ const LiturgicalCalendarPage: React.FC = () => {
               const isToday = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}` === todayKey;
               const isSelected = selectedDay && date.getTime() === selectedDay.getTime();
               const hasCelebration = !!info.celebration && info.rank !== 'feria';
+              const dayKey = `${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+              const hasSaint = saintDaysSet.has(dayKey);
 
               return (
                 <button
@@ -410,6 +412,9 @@ const LiturgicalCalendarPage: React.FC = () => {
                     <div className={`absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full ${
                       info.rank === 'solenidade' ? 'bg-amber-500' : info.rank === 'festa' ? 'bg-primary' : 'bg-muted-foreground'
                     }`} />
+                  )}
+                  {hasSaint && (
+                    <div className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-amber-500 ring-1 ring-amber-300" />
                   )}
                 </button>
               );
