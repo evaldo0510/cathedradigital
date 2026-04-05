@@ -1,7 +1,8 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AppRoute } from '../../types';
-import { LayoutDashboard, BookOpen, Heart, Cross, Menu } from 'lucide-react';
+import { Icons } from '../../constants';
+import { Menu } from 'lucide-react';
 
 interface BottomNavItemProps {
   label: string;
@@ -40,10 +41,10 @@ const BottomNav: React.FC<{ onOpenSidebar: () => void }> = ({ onOpenSidebar }) =
   const currentPath = location.pathname;
 
   const items = [
-    { label: 'Início', icon: <LayoutDashboard className="w-5 h-5" />, route: AppRoute.DASHBOARD },
-    { label: 'Bíblia', icon: <BookOpen className="w-5 h-5" />, route: AppRoute.BIBLE },
-    { label: 'Orações', icon: <Heart className="w-5 h-5" />, route: AppRoute.ORACAO },
-    { label: 'Catecismo', icon: <Cross className="w-5 h-5" />, route: AppRoute.CATECHISM },
+    { label: 'Início', icon: <Icons.Cathedral className="w-5 h-5" />, route: AppRoute.DASHBOARD },
+    { label: 'Bíblia', icon: <Icons.HolyBible className="w-5 h-5" />, route: AppRoute.BIBLE },
+    { label: 'Orações', icon: <Icons.PrayingHands className="w-5 h-5" />, route: AppRoute.ORACAO },
+    { label: 'Catecismo', icon: <Icons.CatechismShield className="w-5 h-5" />, route: AppRoute.CATECHISM },
   ];
 
   return (

@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Logo } from '../../constants';
+import { Logo, Icons } from '../../constants';
 import { AppRoute, User } from '../../types';
 import { BibleModal, CatechismModal, DocumentsModal } from './QuickModals';
 import {
-  ShieldCheck, Heart, Church, CalendarDays, Flower2, Cross,
-  BookOpen, BookMarked, Feather, ListChecks, Bookmark, Star,
-  BookText, Users, Globe, Crown, Route, Library, MessageCircle,
-  Sparkles, ScrollText, Trophy, Zap, Stethoscope, Search,
+  ShieldCheck, ListChecks, Feather, Bookmark,
+  Crown, Route, Library, MessageCircle,
+  Sparkles, Trophy, Zap, Stethoscope, Search,
   Sun, Moon, LogOut, Menu, Command
 } from 'lucide-react';
 
@@ -35,27 +34,27 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
     {
       label: 'Vida Interior',
       items: [
-        { label: 'Oração e Devoção', path: AppRoute.ORACAO, icon: <Heart className="w-5 h-5" /> },
-        { label: 'Liturgia & Orações', path: AppRoute.DAILY_LITURGY, icon: <Church className="w-5 h-5" /> },
-        { label: 'Calendário Litúrgico', path: AppRoute.LITURGICAL_CALENDAR, icon: <CalendarDays className="w-5 h-5" /> },
-        { label: 'Santo Rosário', path: AppRoute.ROSARY, icon: <Flower2 className="w-5 h-5" /> },
-        { label: 'Via Crucis', path: AppRoute.VIA_CRUCIS, icon: <Cross className="w-5 h-5" /> },
-        { label: 'Breviário', path: AppRoute.BREVIARY, icon: <BookOpen className="w-5 h-5" /> },
-        { label: 'Ordo Missae', path: AppRoute.ORDO_MISSAE, icon: <Church className="w-5 h-5" /> },
+        { label: 'Oração e Devoção', path: AppRoute.ORACAO, icon: <Icons.PrayingHands className="w-5 h-5" /> },
+        { label: 'Liturgia & Orações', path: AppRoute.DAILY_LITURGY, icon: <Icons.Chalice className="w-5 h-5" /> },
+        { label: 'Calendário Litúrgico', path: AppRoute.LITURGICAL_CALENDAR, icon: <Icons.LiturgicalCalendar className="w-5 h-5" /> },
+        { label: 'Santo Rosário', path: AppRoute.ROSARY, icon: <Icons.Rosary className="w-5 h-5" /> },
+        { label: 'Via Crucis', path: AppRoute.VIA_CRUCIS, icon: <Icons.ViaCrucis className="w-5 h-5" /> },
+        { label: 'Breviário', path: AppRoute.BREVIARY, icon: <Icons.HolyBible className="w-5 h-5" /> },
+        { label: 'Ordo Missae', path: AppRoute.ORDO_MISSAE, icon: <Icons.Chalice className="w-5 h-5" /> },
         { label: 'Confissão (Exame)', path: AppRoute.POENITENTIA, icon: <ListChecks className="w-5 h-5" /> },
         { label: 'Lectio Divina', path: AppRoute.LECTIO_DIVINA, icon: <Feather className="w-5 h-5" /> },
-        { label: 'Litanias', path: AppRoute.LITANIES, icon: <ScrollText className="w-5 h-5" /> },
+        { label: 'Litanias', path: AppRoute.LITANIES, icon: <Icons.Scroll className="w-5 h-5" /> },
         { label: 'Favoritos', path: AppRoute.FAVORITES, icon: <Bookmark className="w-5 h-5" /> },
-        { label: 'Aparições Marianas', path: AppRoute.APARICOES, icon: <Star className="w-5 h-5" /> },
+        { label: 'Aparições Marianas', path: AppRoute.APARICOES, icon: <Icons.SaintHalo className="w-5 h-5" /> },
       ]
     },
     {
       label: 'Formação',
       items: [
-        { label: 'Bíblia Sagrada', path: AppRoute.BIBLE, icon: <BookText className="w-5 h-5" /> },
-        { label: 'Catecismo (CIC)', path: AppRoute.CATECHISM, icon: <BookMarked className="w-5 h-5" /> },
-        { label: 'Santos', path: AppRoute.SAINTS, icon: <Users className="w-5 h-5" /> },
-        { label: 'Magistério', path: AppRoute.MAGISTERIUM, icon: <Globe className="w-5 h-5" /> },
+        { label: 'Bíblia Sagrada', path: AppRoute.BIBLE, icon: <Icons.HolyBible className="w-5 h-5" /> },
+        { label: 'Catecismo (CIC)', path: AppRoute.CATECHISM, icon: <Icons.CatechismShield className="w-5 h-5" /> },
+        { label: 'Santos', path: AppRoute.SAINTS, icon: <Icons.SaintHalo className="w-5 h-5" /> },
+        { label: 'Magistério', path: AppRoute.MAGISTERIUM, icon: <Icons.Scroll className="w-5 h-5" /> },
         { label: 'Dogmas', path: AppRoute.DOGMAS, icon: <Crown className="w-5 h-5" /> },
         { label: 'Trilhas de Estudo', path: AppRoute.TRILHAS, icon: <Route className="w-5 h-5" /> },
         { label: 'Glossário Teológico', path: AppRoute.GLOSSARY, icon: <Library className="w-5 h-5" /> },
@@ -65,8 +64,8 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
     {
       label: 'Recursos Pro',
       items: [
-        { label: 'Colloquium IA', path: AppRoute.STUDY_MODE, icon: <Sparkles className="w-5 h-5" />, pro: true },
-        { label: 'Suma Teológica', path: AppRoute.AQUINAS_OPERA, icon: <ScrollText className="w-5 h-5" /> },
+        { label: 'Colloquium IA', path: AppRoute.STUDY_MODE, icon: <Icons.Dove className="w-5 h-5" />, pro: true },
+        { label: 'Suma Teológica', path: AppRoute.AQUINAS_OPERA, icon: <Icons.Scroll className="w-5 h-5" /> },
         { label: 'Certamen (Quiz)', path: AppRoute.CERTAMEN, icon: <Trophy className="w-5 h-5" /> },
         { label: 'Assinatura PRO', path: AppRoute.CHECKOUT, icon: <Zap className="w-5 h-5" />, pro: true },
         { label: 'Diagnóstico', path: AppRoute.DIAGNOSTICS, icon: <Stethoscope className="w-5 h-5" /> },
@@ -93,9 +92,9 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
         {/* Quick access modals */}
         <div className="flex gap-2 mb-8 px-2">
           {[
-            { id: 'bible', label: 'Bíblia', icon: <BookText className="w-4 h-4" />, color: 'bg-amber-500/10 text-amber-600 border-amber-500/20' },
-            { id: 'catechism', label: 'CIC', icon: <BookMarked className="w-4 h-4" />, color: 'bg-red-500/10 text-red-600 border-red-500/20' },
-            { id: 'docs', label: 'Docs', icon: <Globe className="w-4 h-4" />, color: 'bg-blue-500/10 text-blue-600 border-blue-500/20' }
+            { id: 'bible', label: 'Bíblia', icon: <Icons.HolyBible className="w-4 h-4" />, color: 'bg-amber-500/10 text-amber-600 border-amber-500/20' },
+            { id: 'catechism', label: 'CIC', icon: <Icons.CatechismShield className="w-4 h-4" />, color: 'bg-red-500/10 text-red-600 border-red-500/20' },
+            { id: 'docs', label: 'Docs', icon: <Icons.Scroll className="w-4 h-4" />, color: 'bg-blue-500/10 text-blue-600 border-blue-500/20' }
           ].map(item => (
             <button 
               key={item.id}
