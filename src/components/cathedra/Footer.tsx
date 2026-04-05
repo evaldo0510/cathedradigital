@@ -29,6 +29,7 @@ const DIOCESES_BR = [
   'Diocese de Uberlândia',
   'Diocese de Maringá',
   'Diocese de Londrina',
+  'Diocese de Osasco',
 ];
 
 const DIOCESE_URLS: Record<string, string> = {
