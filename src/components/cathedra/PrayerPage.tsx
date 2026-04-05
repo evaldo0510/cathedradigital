@@ -324,6 +324,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
 
 // ---------- Main Page ----------
 const PrayerPage: React.FC = () => {
+  const navigate = useNavigate();
   const todayKey = getMysteryOfDay();
   const todayData = MYSTERY_DATA[todayKey];
   const [intention, setIntention] = useState('');
