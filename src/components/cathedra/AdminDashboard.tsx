@@ -1,32 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { 
-  Users, 
-  TrendingUp, 
-  Download, 
-  DollarSign, 
-  ArrowUpRight, 
-  ArrowDownRight,
-  BarChart3,
-  Calendar,
-  AlertCircle
+  Users, TrendingUp, Download, DollarSign, ArrowUpRight,
+  BarChart3, Calendar, AlertCircle, Crown, Shield, Search,
+  ChevronDown, ChevronUp, UserCog
 } from 'lucide-react';
 import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ResponsiveContainer, 
-  AreaChart, 
-  Area 
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, 
+  ResponsiveContainer, AreaChart, Area 
 } from 'recharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { toast } from 'sonner';
 
 interface Stats {
   totalUsers: number;
+  premiumUsers: number;
   totalVisits: number;
   totalDownloads: number;
   totalRevenue: number;
@@ -35,67 +27,78 @@ interface Stats {
   revenueData: any[];
 }
 
+interface UserProfile {
+  id: string;
+  name: string;
+  email: string;
+  role: string | null;
+  is_premium: boolean;
+  created_at: string;
+  xp: number | null;
+  level: number | null;
+  streak: number | null;
+  last_visit: string | null;
+}
+
 const AdminDashboard: React.FC = () => {
   const [stats, setStats] = useState<Stats | null>(null);
+  const [users, setUsers] = useState<UserProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortField, setSortField] = useState<'name' | 'created_at' | 'xp'>('created_at');
+  const [sortAsc, setSortAsc] = useState(false);
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
         setLoading(true);
-        
-        // 1. Total Users (Registrations)
-        const { count: usersCount, error: usersError } = await supabase
-          .from('profiles')
-          .select('*', { count: 'exact', head: true });
-        
-        if (usersError) throw usersError;
 
-        // 2. Visits & Downloads
-        const { data: metrics, error: metricsError } = await supabase
-          .from('app_metrics')
-          .select('*');
-        
-        if (metricsError) throw metricsError;
+        const [profilesRes, metricsRes, transactionsRes] = await Promise.all([
+          supabase.from('profiles').select('*'),
+          supabase.from('app_metrics').select('*'),
+          supabase.from('transactions').select('*').order('created_at', { ascending: false }),
+        ]);
 
-        const visitsCount = metrics?.filter(m => m.metric_type === 'visit').length || 0;
-        const downloadsCount = metrics?.filter(m => m.metric_type === 'download').length || 0;
+        if (profilesRes.error) throw profilesRes.error;
+        if (metricsRes.error) throw metricsRes.error;
+        if (transactionsRes.error) throw transactionsRes.error;
 
-        // 3. Transactions (Finance)
-        const { data: transactions, error: transError } = await supabase
-          .from('transactions')
-          .select('*')
-          .order('created_at', { ascending: false });
-        
-        if (transError) throw transError;
+        const allProfiles = profilesRes.data || [];
+        const metrics = metricsRes.data || [];
+        const transactions = transactionsRes.data || [];
 
-        const totalRevenue = transactions?.reduce((acc, curr) => acc + Number(curr.amount), 0) || 0;
+        const premiumCount = allProfiles.filter(p => p.is_premium).length;
+        const visitsCount = metrics.filter(m => m.metric_type === 'visit').length;
+        const downloadsCount = metrics.filter(m => m.metric_type === 'download').length;
+        const totalRevenue = transactions.reduce((acc, curr) => acc + Number(curr.amount), 0);
 
-        // 4. Mock chart data (since we don't have historical aggregation yet)
         const userGrowth = [
           { name: 'Jan', total: 400 },
-          { name: 'Feb', total: 700 },
+          { name: 'Fev', total: 700 },
           { name: 'Mar', total: 1200 },
-          { name: 'Apr', total: usersCount || 0 },
+          { name: 'Abr', total: allProfiles.length },
         ];
 
         const revenueData = [
-          { name: 'Week 1', amount: 200 },
-          { name: 'Week 2', amount: 450 },
-          { name: 'Week 3', amount: 800 },
-          { name: 'Week 4', amount: totalRevenue },
+          { name: 'Sem 1', amount: 200 },
+          { name: 'Sem 2', amount: 450 },
+          { name: 'Sem 3', amount: 800 },
+          { name: 'Sem 4', amount: totalRevenue },
         ];
 
         setStats({
-          totalUsers: usersCount || 0,
+          totalUsers: allProfiles.length,
+          premiumUsers: premiumCount,
           totalVisits: visitsCount,
           totalDownloads: downloadsCount,
           totalRevenue,
-          recentTransactions: transactions?.slice(0, 5) || [],
+          recentTransactions: transactions.slice(0, 5),
           userGrowth,
-          revenueData
+          revenueData,
         });
+
+        setUsers(allProfiles as UserProfile[]);
       } catch (err: any) {
         console.error('Error fetching admin stats:', err);
         setError(err.message);
@@ -107,18 +110,66 @@ const AdminDashboard: React.FC = () => {
     fetchStats();
   }, []);
 
+  const handleTogglePremium = async (userId: string, currentStatus: boolean) => {
+    const { error } = await supabase
+      .from('profiles')
+      .update({ is_premium: !currentStatus })
+      .eq('id', userId);
+
+    if (error) {
+      toast.error('Erro ao atualizar status PRO');
+      return;
+    }
+
+    setUsers(prev => prev.map(u => u.id === userId ? { ...u, is_premium: !currentStatus } : u));
+    toast.success(!currentStatus ? 'Usuário promovido a PRO' : 'Acesso PRO removido');
+  };
+
+  const handleToggleRole = async (userId: string, currentRole: string | null) => {
+    const newRole = currentRole === 'admin' ? 'user' : 'admin';
+    const { error } = await supabase
+      .from('profiles')
+      .update({ role: newRole })
+      .eq('id', userId);
+
+    if (error) {
+      toast.error('Erro ao atualizar cargo');
+      return;
+    }
+
+    setUsers(prev => prev.map(u => u.id === userId ? { ...u, role: newRole } : u));
+    toast.success(newRole === 'admin' ? 'Usuário promovido a Admin' : 'Cargo de Admin removido');
+  };
+
+  const filteredUsers = users
+    .filter(u => 
+      u.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      u.email.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .sort((a, b) => {
+      const valA = a[sortField] ?? '';
+      const valB = b[sortField] ?? '';
+      const cmp = String(valA).localeCompare(String(valB), 'pt', { numeric: true });
+      return sortAsc ? cmp : -cmp;
+    });
+
+  const toggleSort = (field: typeof sortField) => {
+    if (sortField === field) setSortAsc(!sortAsc);
+    else { setSortField(field); setSortAsc(true); }
+  };
+
+  const SortIcon = ({ field }: { field: typeof sortField }) => {
+    if (sortField !== field) return null;
+    return sortAsc ? <ChevronUp className="w-3 h-3 inline ml-1" /> : <ChevronDown className="w-3 h-3 inline ml-1" />;
+  };
+
   if (loading) {
     return (
       <div className="space-y-6 animate-pulse">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[1, 2, 3, 4].map(i => (
-            <Skeleton key={i} className="h-32 w-full rounded-xl" />
-          ))}
+          {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-32 w-full rounded-xl" />)}
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Skeleton className="h-[400px] rounded-xl" />
-          <Skeleton className="h-[400px] rounded-xl" />
-        </div>
+        <Skeleton className="h-[400px] rounded-xl" />
       </div>
     );
   }
@@ -137,154 +188,253 @@ const AdminDashboard: React.FC = () => {
     <div className="space-y-8 pb-10">
       <div className="flex flex-col gap-2">
         <h1 className="text-3xl font-bold tracking-tight">Painel Administrativo</h1>
-        <p className="text-muted-foreground">Visão geral do desempenho e métricas do aplicativo.</p>
+        <p className="text-muted-foreground">Visão geral do desempenho e gestão de usuários.</p>
       </div>
 
       {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-sm font-medium">Total de Usuários</CardTitle>
+            <CardTitle className="text-sm font-medium">Usuários</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats?.totalUsers}</div>
-            <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
-              <TrendingUp className="h-3 w-3 text-emerald-500" />
-              <span className="text-emerald-500 font-medium">+12%</span> desde o mês passado
+            <p className="text-xs text-muted-foreground mt-1">Total cadastrados</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+            <CardTitle className="text-sm font-medium">Assinantes PRO</CardTitle>
+            <Crown className="h-4 w-4 text-primary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-primary">{stats?.premiumUsers}</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              {stats && stats.totalUsers > 0 ? `${((stats.premiumUsers / stats.totalUsers) * 100).toFixed(1)}%` : '0%'} do total
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-sm font-medium">Acessos ao App</CardTitle>
+            <CardTitle className="text-sm font-medium">Acessos</CardTitle>
             <BarChart3 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats?.totalVisits}</div>
-            <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
-              <TrendingUp className="h-3 w-3 text-emerald-500" />
-              <span className="text-emerald-500 font-medium">+5%</span> hoje
-            </p>
+            <p className="text-xs text-muted-foreground mt-1">Visitas registradas</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-sm font-medium">Downloads</CardTitle>
-            <Download className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats?.totalDownloads}</div>
-            <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
-              <TrendingUp className="h-3 w-3 text-emerald-500" />
-              <span className="text-emerald-500 font-medium">+8%</span> esta semana
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-sm font-medium">Receita Total</CardTitle>
+            <CardTitle className="text-sm font-medium">Receita</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
               {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(stats?.totalRevenue || 0)}
             </div>
-            <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
-              <ArrowUpRight className="h-3 w-3 text-emerald-500" />
-              <span className="text-emerald-500 font-medium">+18%</span> vs período anterior
-            </p>
+            <p className="text-xs text-muted-foreground mt-1">Receita acumulada</p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="col-span-1">
-          <CardHeader>
-            <CardTitle>Crescimento de Usuários</CardTitle>
-            <CardDescription>Novos registros por mês</CardDescription>
-          </CardHeader>
-          <CardContent className="h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={stats?.userGrowth}>
-                <defs>
-                  <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--muted-foreground) / 0.2)" />
-                <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
-                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: 'hsl(var(--background))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }}
-                />
-                <Area type="monotone" dataKey="total" stroke="hsl(var(--primary))" fillOpacity={1} fill="url(#colorTotal)" />
-              </AreaChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
+      <Tabs defaultValue="users" className="space-y-4">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="users">Usuários</TabsTrigger>
+          <TabsTrigger value="charts">Gráficos</TabsTrigger>
+          <TabsTrigger value="transactions">Transações</TabsTrigger>
+        </TabsList>
 
-        <Card className="col-span-1">
-          <CardHeader>
-            <CardTitle>Fluxo Financeiro</CardTitle>
-            <CardDescription>Receita semanal acumulada</CardDescription>
-          </CardHeader>
-          <CardContent className="h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={stats?.revenueData}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--muted-foreground) / 0.2)" />
-                <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
-                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
-                <Tooltip 
-                  cursor={{fill: 'transparent'}}
-                  contentStyle={{ backgroundColor: 'hsl(var(--background))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }}
-                />
-                <Bar dataKey="amount" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} barSize={40} />
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Recent Transactions */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Transações Recentes</CardTitle>
-          <CardDescription>Últimas movimentações financeiras do app</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {stats?.recentTransactions && stats.recentTransactions.length > 0 ? (
-              stats.recentTransactions.map((tx: any) => (
-                <div key={tx.id} className="flex items-center justify-between border-b pb-4 last:border-0 last:pb-0">
-                  <div className="flex flex-col">
-                    <span className="font-medium">{tx.description || 'Assinatura Premium'}</span>
-                    <span className="text-xs text-muted-foreground flex items-center gap-1">
-                      <Calendar className="h-3 w-3" />
-                      {new Date(tx.created_at).toLocaleDateString()}
-                    </span>
-                  </div>
-                  <div className="flex flex-col items-end">
-                    <span className="font-bold text-emerald-600">
-                      +{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(tx.amount)}
-                    </span>
-                    <span className="text-[10px] uppercase tracking-wider bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-semibold">
-                      {tx.status}
-                    </span>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="text-center py-8 text-muted-foreground">Nenhuma transação registrada.</div>
-            )}
+        {/* Users Tab */}
+        <TabsContent value="users" className="space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input 
+                placeholder="Buscar por nome ou email..." 
+                value={searchQuery} 
+                onChange={e => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            <Badge variant="secondary" className="whitespace-nowrap">
+              {filteredUsers.length} usuário{filteredUsers.length !== 1 ? 's' : ''}
+            </Badge>
           </div>
-        </CardContent>
-      </Card>
+
+          <Card>
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-border">
+                      <th className="text-left p-4 font-semibold cursor-pointer hover:text-primary" onClick={() => toggleSort('name')}>
+                        Nome <SortIcon field="name" />
+                      </th>
+                      <th className="text-left p-4 font-semibold hidden md:table-cell">Email</th>
+                      <th className="text-center p-4 font-semibold">Status</th>
+                      <th className="text-center p-4 font-semibold">Cargo</th>
+                      <th className="text-center p-4 font-semibold cursor-pointer hover:text-primary hidden lg:table-cell" onClick={() => toggleSort('xp')}>
+                        XP <SortIcon field="xp" />
+                      </th>
+                      <th className="text-center p-4 font-semibold cursor-pointer hover:text-primary hidden lg:table-cell" onClick={() => toggleSort('created_at')}>
+                        Cadastro <SortIcon field="created_at" />
+                      </th>
+                      <th className="text-center p-4 font-semibold">Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredUsers.map(u => (
+                      <tr key={u.id} className="border-b border-border/50 hover:bg-muted/50 transition-colors">
+                        <td className="p-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-lg bg-foreground text-background flex items-center justify-center font-black text-xs shrink-0">
+                              {u.name?.charAt(0)?.toUpperCase() || '?'}
+                            </div>
+                            <span className="font-medium truncate max-w-[150px]">{u.name || '—'}</span>
+                          </div>
+                        </td>
+                        <td className="p-4 text-muted-foreground hidden md:table-cell truncate max-w-[200px]">{u.email}</td>
+                        <td className="p-4 text-center">
+                          {u.is_premium ? (
+                            <Badge className="bg-primary/15 text-primary border-primary/30 gap-1">
+                              <Crown className="w-3 h-3" /> PRO
+                            </Badge>
+                          ) : (
+                            <Badge variant="secondary" className="gap-1">Gratuito</Badge>
+                          )}
+                        </td>
+                        <td className="p-4 text-center">
+                          {u.role === 'admin' ? (
+                            <Badge className="bg-destructive/15 text-destructive border-destructive/30 gap-1">
+                              <Shield className="w-3 h-3" /> Admin
+                            </Badge>
+                          ) : (
+                            <Badge variant="outline" className="gap-1">Usuário</Badge>
+                          )}
+                        </td>
+                        <td className="p-4 text-center hidden lg:table-cell font-mono text-xs">{u.xp ?? 0}</td>
+                        <td className="p-4 text-center hidden lg:table-cell text-xs text-muted-foreground">
+                          {new Date(u.created_at).toLocaleDateString('pt-BR')}
+                        </td>
+                        <td className="p-4 text-center">
+                          <div className="flex items-center justify-center gap-1">
+                            <button
+                              onClick={() => handleTogglePremium(u.id, u.is_premium)}
+                              title={u.is_premium ? 'Remover PRO' : 'Ativar PRO'}
+                              className={`p-1.5 rounded-lg transition-all ${u.is_premium ? 'bg-primary/10 text-primary hover:bg-primary/20' : 'bg-muted text-muted-foreground hover:text-primary'}`}
+                            >
+                              <Crown className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => handleToggleRole(u.id, u.role)}
+                              title={u.role === 'admin' ? 'Remover Admin' : 'Tornar Admin'}
+                              className={`p-1.5 rounded-lg transition-all ${u.role === 'admin' ? 'bg-destructive/10 text-destructive hover:bg-destructive/20' : 'bg-muted text-muted-foreground hover:text-destructive'}`}
+                            >
+                              <UserCog className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                    {filteredUsers.length === 0 && (
+                      <tr><td colSpan={7} className="p-8 text-center text-muted-foreground">Nenhum usuário encontrado.</td></tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Charts Tab */}
+        <TabsContent value="charts">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Crescimento de Usuários</CardTitle>
+                <CardDescription>Novos registros por mês</CardDescription>
+              </CardHeader>
+              <CardContent className="h-[300px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={stats?.userGrowth}>
+                    <defs>
+                      <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
+                        <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--muted-foreground) / 0.2)" />
+                    <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
+                    <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
+                    <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--background))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }} />
+                    <Area type="monotone" dataKey="total" stroke="hsl(var(--primary))" fillOpacity={1} fill="url(#colorTotal)" />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Fluxo Financeiro</CardTitle>
+                <CardDescription>Receita semanal acumulada</CardDescription>
+              </CardHeader>
+              <CardContent className="h-[300px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={stats?.revenueData}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--muted-foreground) / 0.2)" />
+                    <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
+                    <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
+                    <Tooltip cursor={{fill: 'transparent'}} contentStyle={{ backgroundColor: 'hsl(var(--background))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }} />
+                    <Bar dataKey="amount" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} barSize={40} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        {/* Transactions Tab */}
+        <TabsContent value="transactions">
+          <Card>
+            <CardHeader>
+              <CardTitle>Transações Recentes</CardTitle>
+              <CardDescription>Últimas movimentações financeiras</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {stats?.recentTransactions && stats.recentTransactions.length > 0 ? (
+                  stats.recentTransactions.map((tx: any) => (
+                    <div key={tx.id} className="flex items-center justify-between border-b border-border/50 pb-4 last:border-0 last:pb-0">
+                      <div className="flex flex-col">
+                        <span className="font-medium">{tx.description || 'Assinatura Premium'}</span>
+                        <span className="text-xs text-muted-foreground flex items-center gap-1">
+                          <Calendar className="h-3 w-3" />
+                          {new Date(tx.created_at).toLocaleDateString('pt-BR')}
+                        </span>
+                      </div>
+                      <div className="flex flex-col items-end">
+                        <span className="font-bold text-emerald-600">
+                          +{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(tx.amount)}
+                        </span>
+                        <Badge variant={tx.status === 'approved' ? 'default' : 'secondary'} className="text-[10px] uppercase">
+                          {tx.status}
+                        </Badge>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-8 text-muted-foreground">Nenhuma transação registrada.</div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
