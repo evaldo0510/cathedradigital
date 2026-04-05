@@ -131,6 +131,15 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             </div>
           </div>
         )}
+        {user && user.role === 'admin' && (
+          <button 
+            onClick={() => navigate(AppRoute.ADMIN)} 
+            className="hidden sm:flex px-3 py-2 text-xs font-black uppercase tracking-widest text-primary hover:text-primary/80 transition-all items-center gap-2 bg-primary/10 rounded-xl border border-primary/20"
+          >
+            <Icons.Star className="w-4 h-4" />
+            <span>Admin</span>
+          </button>
+        )}
         {user ? (
           <button onClick={onSignOut} className="hidden sm:flex px-3 py-2 text-xs font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-all items-center gap-2">
             <span>Sair</span>
