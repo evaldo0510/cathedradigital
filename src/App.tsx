@@ -244,6 +244,7 @@ const AppLayout: React.FC = () => {
                 <Route path={AppRoute.ONBOARDING} element={<AuthGuard><OnboardingPage /></AuthGuard>} />
                 <Route path={AppRoute.ACHIEVEMENTS} element={<AuthGuard><AchievementsPage /></AuthGuard>} />
                 <Route path={AppRoute.CHECKOUT} element={<AuthGuard><CheckoutPage /></AuthGuard>} />
+                <Route path={AppRoute.CHECKOUT_RESULT} element={<AuthGuard><CheckoutResultPage /></AuthGuard>} />
                 <Route path={AppRoute.ADMIN} element={
                   <AuthGuard>
                     <ProGate isPremium={true} isLoggedIn={!!user} onLogin={() => navigate(AppRoute.LOGIN)}>
