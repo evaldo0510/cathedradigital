@@ -96,9 +96,15 @@ const AppLayout: React.FC = () => {
   const [lang, setLangState] = useState<Language>(getInitialLanguage);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDark, setIsDark] = useState(getInitialTheme);
+  const [showSplash, setShowSplash] = useState(true);
   const { user, profile, signOut, isPremium, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowSplash(false), 1800);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     if (isDark) document.documentElement.classList.add('dark');
