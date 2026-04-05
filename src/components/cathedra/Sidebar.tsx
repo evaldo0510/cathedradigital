@@ -35,12 +35,10 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
       label: 'Vida Interior',
       items: [
         { label: 'Oração e Devoção', path: AppRoute.ORACAO, icon: <Icons.PrayingHands className="w-5 h-5" /> },
-        { label: 'Liturgia & Orações', path: AppRoute.DAILY_LITURGY, icon: <Icons.Chalice className="w-5 h-5" /> },
-        { label: 'Calendário Litúrgico', path: AppRoute.LITURGICAL_CALENDAR, icon: <Icons.LiturgicalCalendar className="w-5 h-5" /> },
+        { label: 'Liturgia', path: AppRoute.LITURGIA, icon: <Icons.Chalice className="w-5 h-5" /> },
         { label: 'Santo Rosário', path: AppRoute.ROSARY, icon: <Icons.Rosary className="w-5 h-5" /> },
         { label: 'Via Crucis', path: AppRoute.VIA_CRUCIS, icon: <Icons.ViaCrucis className="w-5 h-5" /> },
         { label: 'Breviário', path: AppRoute.BREVIARY, icon: <Icons.HolyBible className="w-5 h-5" /> },
-        { label: 'Ordo Missae', path: AppRoute.ORDO_MISSAE, icon: <Icons.Chalice className="w-5 h-5" /> },
         { label: 'Confissão (Exame)', path: AppRoute.POENITENTIA, icon: <ListChecks className="w-5 h-5" /> },
         { label: 'Lectio Divina', path: AppRoute.LECTIO_DIVINA, icon: <Feather className="w-5 h-5" /> },
         { label: 'Litanias', path: AppRoute.LITANIES, icon: <Icons.Scroll className="w-5 h-5" /> },
