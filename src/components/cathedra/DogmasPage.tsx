@@ -374,6 +374,31 @@ const DogmasPage: React.FC = () => {
                     <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Aprofundar nas fontes:</span>
                     <div className="flex flex-wrap gap-2">
                       {dogma.refs.map((ref, i) => {
+                        if (ref.type === 'bible') {
+                          const parts = ref.target.split(' ');
+                          const abbr = parts[0];
+                          const chapter = parseInt(parts[1] || '1', 10);
+                          return (
+                            <BibleVersePopover
+                              key={i}
+                              abbr={abbr}
+                              chapter={chapter}
+                              label={ref.label}
+                              onNavigate={(a, c) => navigate(`${AppRoute.BIBLE}?search=${encodeURIComponent(a + ' ' + c)}`)}
+                            />
+                          );
+                        }
+                        if (ref.type === 'catechism') {
+                          const paragraph = parseInt(ref.target, 10);
+                          return (
+                            <CatechismPopover
+                              key={i}
+                              paragraph={paragraph}
+                              onNavigate={(p) => navigate(`${AppRoute.CATECHISM}?paragraph=${p}`)}
+                            />
+                          );
+                        }
+                        // magisterium — navigate
                         const style = REF_STYLES[ref.type];
                         return (
                           <button
