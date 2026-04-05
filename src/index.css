@@ -95,6 +95,10 @@
     font-family: 'Playfair Display', serif;
   }
 
+  .font-display {
+    font-family: 'Cinzel', serif;
+  }
+
   .reader-text {
     font-family: 'Merriweather', serif;
     @apply selection:bg-primary/30;
