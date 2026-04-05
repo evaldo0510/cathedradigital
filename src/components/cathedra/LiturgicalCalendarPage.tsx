@@ -207,6 +207,8 @@ const LiturgicalCalendarPage: React.FC = () => {
   const [selectedDay, setSelectedDay] = useState<Date | null>(null);
   const [apiData, setApiData] = useState<Record<string, ApiDayData>>({});
   const [isLoadingApi, setIsLoadingApi] = useState(false);
+  const { toggleFavorite, isFavorite } = useFavorites();
+  const navigate = useNavigate();
   const [showSaintModal, setShowSaintModal] = useState(false);
 
   // Build a set of "MM-DD" keys for days that have a saint
