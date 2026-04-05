@@ -259,8 +259,22 @@ const Bible: React.FC = () => {
     navigate(`/catechism?p=${paragraph}`);
   }, [navigate]);
 
+  // Local cache for Bible texts to avoid repeated API calls
+  const bibleCache = useMemo(() => new Map<string, { number: number; text: string }[]>(), []);
+
   useEffect(() => {
     if (viewMode === 'reading' && selectedBook && selectedChapter > 0) {
+      const cacheKey = `${selectedBook.abbr}_${selectedChapter}`;
+      
+      // Check local cache first
+      const cached = bibleCache.get(cacheKey);
+      if (cached) {
+        setVerses(cached);
+        setBibleError('');
+        setHighlightedVerse(null);
+        return;
+      }
+
       setIsLoading(true);
       setBibleError('');
       setVerses([]);
@@ -272,13 +286,14 @@ const Bible: React.FC = () => {
           setBibleError('Erro ao carregar o texto. Tente novamente.');
         } else if (data?.verses?.length > 0) {
           setVerses(data.verses);
+          bibleCache.set(cacheKey, data.verses);
         } else {
           setBibleError('Texto não disponível para este capítulo.');
         }
         setIsLoading(false);
       });
     }
-  }, [viewMode, selectedBook, selectedChapter]);
+  }, [viewMode, selectedBook, selectedChapter, bibleCache]);
 
   // Reading view
   if (viewMode === 'reading' && selectedBook) {
