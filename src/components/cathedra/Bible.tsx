@@ -397,13 +397,21 @@ const Bible: React.FC = () => {
                     <sup className="text-primary font-bold mr-1 text-xs select-none">{v.number}</sup>
                     <span className="font-serif">{v.text}</span>
                     {highlightedVerse === v.number && (
-                      <button
-                        onClick={e => { e.stopPropagation(); toggleFavorite({ type: 'verse', title: verseTitle, content: v.text }); }}
-                        className="inline-flex ml-2 align-middle"
-                        title={faved ? 'Remover dos favoritos' : 'Salvar nos favoritos'}
-                      >
-                        <Icons.Heart className={`w-4 h-4 transition-all ${faved ? 'fill-primary text-primary' : 'text-muted-foreground hover:text-primary'}`} />
-                      </button>
+                      <span className="inline-flex gap-1 ml-2 align-middle">
+                        <button
+                          onClick={e => { e.stopPropagation(); toggleFavorite({ type: 'verse', title: verseTitle, content: v.text }); }}
+                          title={faved ? 'Remover dos favoritos' : 'Salvar nos favoritos'}
+                        >
+                          <Icons.Heart className={`w-4 h-4 transition-all ${faved ? 'fill-primary text-primary' : 'text-muted-foreground hover:text-primary'}`} />
+                        </button>
+                        <ShareButton
+                          title={verseTitle}
+                          text={`"${v.text}" — ${verseTitle}`}
+                          url={`${window.location.origin}/bible?book=${selectedBook.abbr}&ch=${selectedChapter}`}
+                          className="border-0 p-0 hover:bg-transparent"
+                          size="sm"
+                        />
+                      </span>
                     )}
                   </p>
                 );
