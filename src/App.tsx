@@ -103,6 +103,11 @@ const AppLayout: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const getPostAuthRoute = useCallback(() => {
+    if (profile?.role === 'admin') return AppRoute.ADMIN;
+    return readStoredValue('cathedra_onboarding_done') ? AppRoute.DASHBOARD : AppRoute.ONBOARDING;
+  }, [profile?.role]);
+
   useEffect(() => {
     const timer = setTimeout(() => setShowSplash(false), 2200);
     return () => clearTimeout(timer);
@@ -113,6 +118,11 @@ const AppLayout: React.FC = () => {
     else document.documentElement.classList.remove('dark');
   }, [isDark]);
   
+  useEffect(() => {
+    if (location.pathname !== AppRoute.LOGIN || loading || !user) return;
+    navigate(getPostAuthRoute(), { replace: true });
+  }, [getPostAuthRoute, loading, location.pathname, navigate, user]);
+
   useEffect(() => {
     const trackVisit = async () => {
       try {
@@ -237,7 +247,7 @@ const AppLayout: React.FC = () => {
                       </AuthGuard>
                     </PageTransition>
                   } />
-                  <Route path={AppRoute.LOGIN} element={<PageTransition><Auth onSuccess={() => navigate(AppRoute.DASHBOARD)} onSignupSuccess={() => navigate(AppRoute.ONBOARDING)} /></PageTransition>} />
+                  <Route path={AppRoute.LOGIN} element={<PageTransition><Auth onSuccess={() => undefined} onSignupSuccess={() => navigate(AppRoute.ONBOARDING)} /></PageTransition>} />
                   <Route path={AppRoute.AQUINAS_OPERA} element={<PageTransition><AuthGuard><AquinasOpera /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.CERTAMEN} element={<PageTransition><AuthGuard><Certamen /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.MISSAL} element={<Navigate to={`${AppRoute.LITURGIA}?tab=missal`} replace />} />
