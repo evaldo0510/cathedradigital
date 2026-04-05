@@ -22,12 +22,17 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ visible }) => (
 
         {/* Logo */}
         <motion.div
-          initial={{ scale: 0.7, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.5, ease: 'easeOut' }}
+          initial={{ scale: 0.6, opacity: 0, rotate: -10 }}
+          animate={{ scale: 1, opacity: 1, rotate: 0 }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           className="relative z-10"
         >
-          <SplashLogo className="w-24 h-24 sm:w-28 sm:h-28" />
+          <motion.div
+            animate={{ scale: [1, 1.04, 1] }}
+            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            <SplashLogo className="w-24 h-24 sm:w-28 sm:h-28" />
+          </motion.div>
         </motion.div>
 
         {/* App name */}
