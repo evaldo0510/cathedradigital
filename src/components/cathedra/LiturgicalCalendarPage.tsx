@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { SAINTS_DATA, type Saint } from '@/data/saints';
 import SacredImage from './SacredImage';
+import SaintDetail from './SaintDetail';
+import { AnimatePresence } from 'framer-motion';
 
 interface LiturgicalDay {
   date: Date;
@@ -207,6 +209,16 @@ const LiturgicalCalendarPage: React.FC = () => {
   const [isLoadingApi, setIsLoadingApi] = useState(false);
   const { toggleFavorite, isFavorite } = useFavorites();
   const navigate = useNavigate();
+  const [showSaintModal, setShowSaintModal] = useState(false);
+
+  // Build a set of "MM-DD" keys for days that have a saint
+  const saintDaysSet = useMemo(() => {
+    const set = new Set<string>();
+    SAINTS_DATA.forEach(s => {
+      set.add(`${String(s.feastMonth).padStart(2, '0')}-${String(s.feastDayNum).padStart(2, '0')}`);
+    });
+    return set;
+  }, []);
 
   // Merge fixed + movable celebrations
   const allCelebrations = useMemo(() => {
@@ -381,6 +393,8 @@ const LiturgicalCalendarPage: React.FC = () => {
               const isToday = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}` === todayKey;
               const isSelected = selectedDay && date.getTime() === selectedDay.getTime();
               const hasCelebration = !!info.celebration && info.rank !== 'feria';
+              const dayKey = `${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+              const hasSaint = saintDaysSet.has(dayKey);
 
               return (
                 <button
@@ -398,6 +412,9 @@ const LiturgicalCalendarPage: React.FC = () => {
                     <div className={`absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full ${
                       info.rank === 'solenidade' ? 'bg-amber-500' : info.rank === 'festa' ? 'bg-primary' : 'bg-muted-foreground'
                     }`} />
+                  )}
+                  {hasSaint && (
+                    <div className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-amber-500 ring-1 ring-amber-300" />
                   )}
                 </button>
               );
@@ -487,7 +504,7 @@ const LiturgicalCalendarPage: React.FC = () => {
                   </div>
                 )}
                 <button
-                  onClick={() => navigate('/saints')}
+                  onClick={() => setShowSaintModal(true)}
                   className="text-[10px] font-bold text-primary hover:underline flex items-center gap-1 pt-1"
                 >
                   Ver biografia completa <Icons.ArrowDown className="w-3 h-3 -rotate-90" />
@@ -525,10 +542,18 @@ const LiturgicalCalendarPage: React.FC = () => {
               <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full bg-amber-500" /><span className="text-foreground">Solenidade</span></div>
               <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full bg-primary" /><span className="text-foreground">Festa</span></div>
               <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full bg-muted-foreground" /><span className="text-foreground">Memória</span></div>
+              <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full bg-amber-500 ring-1 ring-amber-300" /><span className="text-foreground">Santo com biografia</span></div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Saint Detail Modal */}
+      <AnimatePresence>
+        {showSaintModal && selectedSaint && (
+          <SaintDetail saint={selectedSaint} onClose={() => setShowSaintModal(false)} />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
