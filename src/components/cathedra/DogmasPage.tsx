@@ -21,7 +21,7 @@ interface Dogma {
   refs: DogmaRef[];
 }
 
-const CATEGORIES = ['Todos', 'Deus', 'Cristologia', 'Mariologia', 'Eclesiologia', 'Sacramentos', 'Escatologia', 'Antropologia'];
+const CATEGORIES = ['Todos', 'Deus', 'Cristologia', 'Mariologia', 'Eclesiologia', 'Sacramentos', 'Escatologia', 'Antropologia', 'Graça', 'Anjos', 'Escritura'];
 
 const DOGMAS: Dogma[] = [
   { id: 1, title: 'Existência de Deus', definition: 'A existência de Deus pode ser conhecida com certeza pela luz natural da razão humana, a partir das coisas criadas.', source: 'Concílio Vaticano I, Dei Filius', year: 1870, category: 'Deus', refs: [
@@ -162,6 +162,71 @@ const DOGMAS: Dogma[] = [
     { type: 'catechism', label: 'CIC §1023-1029', target: '1023' },
     { type: 'magisterium', label: 'Benedictus Deus', target: 'Benedictus Deus' },
   ]},
+  // --- Graça Divina ---
+  { id: 28, title: 'Necessidade da Graça', definition: 'Sem a graça de Deus, o homem não pode realizar nenhum ato salutar nem merecer a vida eterna. A graça é absolutamente necessária para o início da fé e da justificação.', source: 'Concílio de Trento / II de Orange', year: 1547, category: 'Graça', refs: [
+    { type: 'bible', label: 'Jo 15,5', target: 'Joh 15' },
+    { type: 'bible', label: 'Fl 2,13', target: 'Phi 2' },
+    { type: 'catechism', label: 'CIC §1996-2000', target: '1996' },
+  ]},
+  { id: 29, title: 'Graça Santificante', definition: 'A graça santificante é um dom habitual, uma disposição estável e sobrenatural que aperfeiçoa a alma para torná-la capaz de viver com Deus e agir por seu amor.', source: 'Concílio de Trento', year: 1547, category: 'Graça', refs: [
+    { type: 'bible', label: '2Pd 1,4', target: '2Pe 1' },
+    { type: 'bible', label: '2Cor 5,17', target: '2Co 5' },
+    { type: 'catechism', label: 'CIC §1999-2000', target: '1999' },
+  ]},
+  { id: 30, title: 'Gratuidade da Graça', definition: 'A graça de Deus é inteiramente gratuita; não é devida por nenhum mérito natural do homem, mas concedida livremente por Deus.', source: 'Concílio de Trento / II de Orange', year: 529, category: 'Graça', refs: [
+    { type: 'bible', label: 'Ef 2,8-9', target: 'Eph 2' },
+    { type: 'bible', label: 'Rm 3,24', target: 'Rom 3' },
+    { type: 'catechism', label: 'CIC §2007-2011', target: '2007' },
+  ]},
+  { id: 31, title: 'Justificação pela Graça', definition: 'A justificação é a passagem do estado de pecado ao estado de graça e de filiação divina, operada pela graça de Deus através da fé e dos sacramentos.', source: 'Concílio de Trento', year: 1547, category: 'Graça', refs: [
+    { type: 'bible', label: 'Rm 3,28', target: 'Rom 3' },
+    { type: 'bible', label: 'Tt 3,5-7', target: 'Tit 3' },
+    { type: 'catechism', label: 'CIC §1987-1995', target: '1987' },
+  ]},
+  { id: 32, title: 'Mérito das Boas Obras', definition: 'O justo pode verdadeiramente merecer o aumento da graça e a vida eterna pelas suas boas obras, realizadas em estado de graça e sob a moção do Espírito Santo.', source: 'Concílio de Trento', year: 1547, category: 'Graça', refs: [
+    { type: 'bible', label: 'Mt 25,34-40', target: 'Mat 25' },
+    { type: 'bible', label: '2Tm 4,7-8', target: '2Ti 4' },
+    { type: 'catechism', label: 'CIC §2006-2011', target: '2006' },
+  ]},
+  // --- Anjos ---
+  { id: 33, title: 'Existência dos Anjos', definition: 'Os anjos são seres espirituais, pessoais, dotados de inteligência e vontade, criados por Deus como seus servidores e mensageiros.', source: 'Concílio Lateranense IV / Vaticano I', year: 1215, category: 'Anjos', refs: [
+    { type: 'bible', label: 'Sl 148,2-5', target: 'Psa 148' },
+    { type: 'bible', label: 'Cl 1,16', target: 'Col 1' },
+    { type: 'catechism', label: 'CIC §328-336', target: '328' },
+  ]},
+  { id: 34, title: 'Anjos da Guarda', definition: 'Deus designa a cada fiel um anjo da guarda para protegê-lo, iluminá-lo e guiá-lo durante a vida terrena.', source: 'Tradição constante da Igreja', year: 0, category: 'Anjos', refs: [
+    { type: 'bible', label: 'Mt 18,10', target: 'Mat 18' },
+    { type: 'bible', label: 'Sl 91,11-12', target: 'Psa 91' },
+    { type: 'catechism', label: 'CIC §336', target: '336' },
+  ]},
+  { id: 35, title: 'Queda dos Anjos', definition: 'Alguns anjos, criados bons por Deus, tornaram-se maus por sua própria escolha livre ao rebelarem-se contra Deus. São chamados demônios ou anjos caídos.', source: 'Concílio Lateranense IV', year: 1215, category: 'Anjos', refs: [
+    { type: 'bible', label: '2Pd 2,4', target: '2Pe 2' },
+    { type: 'bible', label: 'Jd 1,6', target: 'Jud 1' },
+    { type: 'bible', label: 'Ap 12,7-9', target: 'Rev 12' },
+    { type: 'catechism', label: 'CIC §391-395', target: '391' },
+  ]},
+  // --- Sagrada Escritura ---
+  { id: 36, title: 'Inspiração Divina da Escritura', definition: 'Os livros da Sagrada Escritura foram escritos sob a inspiração do Espírito Santo e têm Deus como autor principal, que se serviu de autores humanos como instrumentos.', source: 'Concílio Vaticano I, Dei Filius / Vaticano II, Dei Verbum', year: 1870, category: 'Escritura', refs: [
+    { type: 'bible', label: '2Tm 3,16', target: '2Ti 3' },
+    { type: 'bible', label: '2Pd 1,20-21', target: '2Pe 1' },
+    { type: 'catechism', label: 'CIC §105-108', target: '105' },
+    { type: 'magisterium', label: 'Dei Verbum', target: 'Dei Verbum' },
+  ]},
+  { id: 37, title: 'Inerrância da Escritura', definition: 'A Sagrada Escritura ensina, sem erro, as verdades que Deus quis consignar para nossa salvação.', source: 'Concílio Vaticano II, Dei Verbum 11', year: 1965, category: 'Escritura', refs: [
+    { type: 'bible', label: 'Jo 17,17', target: 'Joh 17' },
+    { type: 'catechism', label: 'CIC §107', target: '107' },
+    { type: 'magisterium', label: 'Dei Verbum', target: 'Dei Verbum' },
+  ]},
+  { id: 38, title: 'Cânon das Escrituras', definition: 'O cânon da Bíblia compreende 46 livros do Antigo Testamento e 27 do Novo Testamento, definidos solenemente pela Igreja.', source: 'Concílio de Trento', year: 1546, category: 'Escritura', refs: [
+    { type: 'catechism', label: 'CIC §120', target: '120' },
+    { type: 'magisterium', label: 'Decreto Sacrosanctis', target: 'Decreto Sacrosanctis Trento' },
+  ]},
+  { id: 39, title: 'Escritura e Tradição', definition: 'A Sagrada Escritura e a Tradição Apostólica constituem juntas o depósito sagrado da Palavra de Deus, confiado à Igreja.', source: 'Concílio Vaticano II, Dei Verbum 9-10', year: 1965, category: 'Escritura', refs: [
+    { type: 'bible', label: '2Ts 2,15', target: '2Th 2' },
+    { type: 'bible', label: '1Tm 6,20', target: '1Ti 6' },
+    { type: 'catechism', label: 'CIC §80-83', target: '80' },
+    { type: 'magisterium', label: 'Dei Verbum', target: 'Dei Verbum' },
+  ]},
 ];
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -172,6 +237,9 @@ const CATEGORY_COLORS: Record<string, string> = {
   'Eclesiologia': 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300',
   'Escatologia': 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300',
   'Antropologia': 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300',
+  'Graça': 'bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-300',
+  'Anjos': 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900/30 dark:text-cyan-300',
+  'Escritura': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
 };
 
 const REF_STYLES: Record<string, { icon: React.ReactNode; color: string }> = {
