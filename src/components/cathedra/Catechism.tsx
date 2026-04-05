@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import ShareButton from './ShareButton';
 import { Icons } from '../../constants';

@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import { motion } from 'framer-motion';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
 import StaggeredList from './StaggeredList';
