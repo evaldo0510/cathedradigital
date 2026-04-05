@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import ReadingModeToggle from './components/cathedra/ReadingModeToggle';
 import { AnimatePresence, motion } from 'framer-motion';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import PageTransition from './components/PageTransition';
@@ -260,6 +261,9 @@ const AppLayout: React.FC = () => {
             <>
               <CathedralFooter />
               <BottomNav onOpenSidebar={() => setIsSidebarOpen(true)} />
+              {[AppRoute.BIBLE, AppRoute.DAILY_LITURGY, AppRoute.BREVIARY, AppRoute.LECTIO_DIVINA, AppRoute.CATECHISM, AppRoute.MAGISTERIUM].includes(location.pathname as AppRoute) && (
+                <ReadingModeToggle />
+              )}
             </>
           )}
         </main>
