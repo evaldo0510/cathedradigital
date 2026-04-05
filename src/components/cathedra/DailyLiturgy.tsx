@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import ShareButton from './ShareButton';
 import ReactMarkdown from 'react-markdown';
 import { 
-  Star, 
   Sparkles,
   Music,
   Cross,
   Sun,
   Cloud,
-  ChevronDown,
   Brain,
-  RotateCcw
+  RotateCcw,
+  ChevronLeft,
+  ChevronRight,
+  CalendarDays
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -19,7 +20,6 @@ interface Celebration {
   title: string;
   colour: string;
   rank: string;
-  rank_num?: number;
 }
 
 interface LiturgicalDay {
@@ -27,7 +27,6 @@ interface LiturgicalDay {
   season: string;
   season_week: number;
   celebrations: Celebration[];
-  weekday?: string;
 }
 
 interface Reading {
@@ -62,20 +61,6 @@ const COLOUR_MAP: Record<string, string> = {
   red: 'bg-red-600 ring-red-600/20',
   rose: 'bg-pink-400 ring-pink-400/20',
 };
-
-const PRAYERS = [
-  { id: '1', title: 'Pai Nosso', latin: 'Pater Noster', text: 'Pai nosso que estais no céu, santificado seja o vosso nome. Venha a nós o vosso reino. Seja feita a vossa vontade, assim na terra como no céu. O pão nosso de cada dia nos dai hoje. Perdoai-nos as nossas ofensas, assim como nós perdoamos a quem nos tem ofendido. E não nos deixeis cair em tentação, mas livrai-nos do mal. Amém.', category: 'Essencial' },
-  { id: '2', title: 'Ave Maria', latin: 'Ave Maria', text: 'Ave Maria, cheia de graça, o Senhor é convosco. Bendita sois vós entre as mulheres, e bendito é o fruto do vosso ventre, Jesus. Santa Maria, Mãe de Deus, rogai por nós pecadores, agora e na hora da nossa morte. Amém.', category: 'Essencial' },
-  { id: '3', title: 'Glória ao Pai', latin: 'Gloria Patri', text: 'Glória ao Pai, ao Filho e ao Espírito Santo. Como era no princípio, agora e sempre. Amém.', category: 'Essencial' },
-  { id: '4', title: 'Credo Apostólico', latin: 'Symbolum Apostolorum', text: 'Creio em Deus Pai todo-poderoso, criador do céu e da terra. E em Jesus Cristo, seu único Filho, nosso Senhor, que foi concebido pelo poder do Espírito Santo, nasceu da Virgem Maria, padeceu sob Pôncio Pilatos, foi crucificado, morto e sepultado. Desceu à mansão dos mortos; ressuscitou ao terceiro dia; subiu aos céus; está sentado à direita de Deus Pai todo-poderoso, de onde há de vir a julgar os vivos e os mortos. Creio no Espírito Santo, na santa Igreja Católica, na comunhão dos santos, na remissão dos pecados, na ressurreição da carne, na vida eterna. Amém.', category: 'Essencial' },
-  { id: '5', title: 'Salve Rainha', latin: 'Salve Regina', text: 'Salve, Rainha, Mãe de misericórdia, vida, doçura, esperança nossa, salve! A vós bradamos, os degredados filhos de Eva. A vós suspiramos, gemendo e chorando neste vale de lágrimas. Eia, pois, advogada nossa, esses vossos olhos misericordiosos a nós volvei. E depois deste desterro, mostrai-nos Jesus, bendito fruto do vosso ventre. Ó clemente, ó piedosa, ó doce sempre Virgem Maria. Rogai por nós, santa Mãe de Deus, para que sejamos dignos das promessas de Cristo. Amém.', category: 'Mariana' },
-  { id: '6', title: 'Ato de Contrição', latin: 'Actus Contritionis', text: 'Meu Deus, eu me arrependo de todo o coração de vos ter ofendido, porque sois infinitamente bom e amável e o pecado vos desagrada. Proponho firmemente, com o auxílio da vossa graça, não mais vos ofender e fugir das ocasiões de pecado. Amém.', category: 'Penitencial' },
-  { id: '7', title: 'Oração de São Miguel', latin: 'Sancte Michael', text: 'São Miguel Arcanjo, defendei-nos no combate, sede o nosso refúgio contra as maldades e ciladas do demônio. Ordene-lhe Deus, instantemente o pedimos, e vós, príncipe da milícia celeste, pelo divino poder, precipitai no inferno a satanás e aos outros espíritos malignos que vagueiam pelo mundo para perdição das almas. Amém.', category: 'Proteção' },
-  { id: '8', title: 'Angelus', latin: 'Angelus Domini', text: 'O Anjo do Senhor anunciou a Maria. E ela concebeu do Espírito Santo. Ave Maria... Eis aqui a serva do Senhor. Faça-se em mim segundo a vossa palavra. Ave Maria... E o Verbo se fez carne. E habitou entre nós. Ave Maria... Rogai por nós, Santa Mãe de Deus. Para que sejamos dignos das promessas de Cristo. Derramai, Senhor, a vossa graça em nossas almas, para que nós, que pelo anúncio do Anjo conhecemos a Encarnação de Cristo, vosso Filho, pela sua Paixão e Cruz sejamos levados à glória da Ressurreição. Por Cristo, nosso Senhor. Amém.', category: 'Devocional' },
-  { id: '9', title: 'Vinde Espírito Santo', latin: 'Veni Sancte Spiritus', text: 'Vinde, Espírito Santo, enchei os corações dos vossos fiéis e acendei neles o fogo do vosso amor. Enviai o vosso Espírito e tudo será criado e renovareis a face da terra. Oremos: Ó Deus, que instruístes os corações dos vossos fiéis com a luz do Espírito Santo, fazei que apreciemos retamente todas as coisas segundo o mesmo Espírito e gozemos sempre da sua consolação. Por Cristo, Senhor nosso. Amém.', category: 'Espírito Santo' },
-  { id: '10', title: 'Oração de São Bento', latin: 'Oratio Sancti Benedicti', text: 'A Cruz sagrada seja a minha luz, não seja o dragão o meu guia. Retira-te, satanás, nunca me aconselhes coisas vãs. É mau o que tu me ofereces, bebe tu mesmo o teu veneno. Amém.', category: 'Proteção' },
-  { id: '11', title: 'Alma de Cristo', latin: 'Anima Christi', text: 'Alma de Cristo, santificai-me. Corpo de Cristo, salvai-me. Sangue de Cristo, inebriai-me. Água do lado de Cristo, lavai-me. Paixão de Cristo, confortai-me. Ó bom Jesus, ouvi-me. Dentro das vossas chagas, escondei-me. Não permitais que me separe de Vós. Do espírito maligno, defendei-me. Na hora da minha morte, chamai-me e mandai-me ir para Vós, para que com os vossos Santos Vos louve, por todos os séculos dos séculos. Amém.', category: 'Eucarística' },
-];
 
 /* ─── Reading Block ─── */
 const ReadingBlock: React.FC<{
@@ -167,7 +152,7 @@ const GospelBlock: React.FC<{
 );
 
 type FontSize = 'P' | 'M' | 'G';
-type LineSpacing = 'compact' | 'normal' | 'relaxed';
+type LineSpacingType = 'compact' | 'normal' | 'relaxed';
 const FONT_SIZE_KEY = 'cathedra_font_size';
 const LINE_SPACING_KEY = 'cathedra_line_spacing';
 const FONT_CLASSES: Record<FontSize, { body: string; title: string; psalm: string; gospel: string }> = {
@@ -175,11 +160,14 @@ const FONT_CLASSES: Record<FontSize, { body: string; title: string; psalm: strin
   M: { body: 'text-[16px] md:text-lg', title: 'text-base md:text-lg', psalm: 'text-lg md:text-xl', gospel: 'text-[16px] md:text-xl' },
   G: { body: 'text-[18px] md:text-xl', title: 'text-lg md:text-xl', psalm: 'text-xl md:text-2xl', gospel: 'text-[18px] md:text-2xl' },
 };
-const LINE_SPACING_CLASSES: Record<LineSpacing, string> = {
+const LINE_SPACING_CLASSES: Record<LineSpacingType, string> = {
   compact: 'leading-[1.6] md:leading-[1.7]',
   normal: 'leading-[2] md:leading-[2.1]',
   relaxed: 'leading-[2.4] md:leading-[2.6]',
 };
+
+// Cache for readings
+const readingsCache = new Map<string, LiturgyReadings>();
 
 const DailyLiturgy: React.FC = () => {
   const [liturgy, setLiturgy] = useState<LiturgicalDay | null>(null);
@@ -188,14 +176,12 @@ const DailyLiturgy: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isMeditationLoading, setIsMeditationLoading] = useState(false);
   const [error, setError] = useState('');
-  const [tab] = useState<'liturgia' | 'oracoes'>('liturgia');
-  const [selectedPrayer, setSelectedPrayer] = useState<string | null>(null);
-  const [prayerFilter, setPrayerFilter] = useState('Todas');
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [fontSize, setFontSize] = useState<FontSize>(() => {
     try { return (localStorage.getItem(FONT_SIZE_KEY) as FontSize) || 'M'; } catch { return 'M'; }
   });
-  const [lineSpacing, setLineSpacing] = useState<LineSpacing>(() => {
-    try { return (localStorage.getItem(LINE_SPACING_KEY) as LineSpacing) || 'normal'; } catch { return 'normal'; }
+  const [lineSpacing, setLineSpacing] = useState<LineSpacingType>(() => {
+    try { return (localStorage.getItem(LINE_SPACING_KEY) as LineSpacingType) || 'normal'; } catch { return 'normal'; }
   });
 
   useEffect(() => {
@@ -209,35 +195,57 @@ const DailyLiturgy: React.FC = () => {
   const fc = FONT_CLASSES[fontSize];
   const lc = LINE_SPACING_CLASSES[lineSpacing];
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        const [calRes, readRes] = await Promise.all([
-          supabase.functions.invoke('liturgical-calendar', {
-            body: { action: 'today', lang: 'la', calendar: 'general-la' }
-          }),
-          supabase.functions.invoke('liturgical-calendar', {
-            body: { action: 'readings' }
-          })
-        ]);
+  const isToday = selectedDate.toDateString() === new Date().toDateString();
 
-        if (calRes.data) setLiturgy(calRes.data);
-        if (readRes.data) setReadings(readRes.data);
+  const fetchData = useCallback(async (date: Date) => {
+    setIsLoading(true);
+    setError('');
+    setMeditation(null);
 
-        if (!calRes.data && !readRes.data) {
-          setError('Não foi possível carregar a liturgia do dia.');
-        }
-      } catch (err) {
-        console.error('Error fetching liturgy:', err);
-        setError('Erro ao carregar dados da liturgia.');
-      } finally {
-        setIsLoading(false);
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    const cacheKey = `${year}-${month}-${day}`;
+
+    try {
+      const cached = readingsCache.get(cacheKey);
+      const calAction = isToday ? 'today' : 'date';
+
+      const [calRes, readRes] = await Promise.all([
+        supabase.functions.invoke('liturgical-calendar', {
+          body: { action: calAction, lang: 'la', calendar: 'general-la', year, month, day }
+        }),
+        cached ? Promise.resolve({ data: cached }) : supabase.functions.invoke('liturgical-calendar', {
+          body: { action: 'readings', day, month }
+        })
+      ]);
+
+      if (calRes.data) setLiturgy(calRes.data);
+      if (readRes.data) {
+        setReadings(readRes.data);
+        if (!cached) readingsCache.set(cacheKey, readRes.data);
       }
-    };
 
-    fetchData();
-  }, []);
+      if (!calRes.data && !readRes.data) {
+        setError('Não foi possível carregar a liturgia do dia.');
+      }
+    } catch (err) {
+      console.error('Error fetching liturgy:', err);
+      setError('Erro ao carregar dados da liturgia.');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [isToday]);
+
+  useEffect(() => {
+    fetchData(selectedDate);
+  }, [selectedDate, fetchData]);
+
+  const navigateDay = (offset: number) => {
+    const d = new Date(selectedDate);
+    d.setDate(d.getDate() + offset);
+    setSelectedDate(d);
+  };
 
   const fetchMeditation = async () => {
     if (!readings?.evangelho?.texto) return;
@@ -278,7 +286,7 @@ const DailyLiturgy: React.FC = () => {
               const content = json.choices[0]?.delta?.content || '';
               fullText += content;
               setMeditation(fullText);
-            } catch (e) {
+            } catch {
               // Ignore parse errors for partial chunks
             }
           }
@@ -292,11 +300,28 @@ const DailyLiturgy: React.FC = () => {
     }
   };
 
-  const categories = ['Todas', ...Array.from(new Set(PRAYERS.map(p => p.category)))];
-  const filteredPrayers = prayerFilter === 'Todas' ? PRAYERS : PRAYERS.filter(p => p.category === prayerFilter);
+  const dateLabel = selectedDate.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
   return (
-    <motion.div className="max-w-4xl mx-auto space-y-10 pb-12" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
+    <motion.div className="max-w-4xl mx-auto space-y-6 pb-12" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
+
+      {/* Date Navigator */}
+      <div className="flex items-center justify-center gap-3">
+        <button onClick={() => navigateDay(-1)} className="p-2 rounded-xl bg-secondary border border-border hover:bg-primary/10 transition-all" aria-label="Dia anterior">
+          <ChevronLeft className="w-5 h-5 text-foreground" />
+        </button>
+        <div className="text-center min-w-[200px]">
+          <p className="text-sm font-serif capitalize text-foreground">{dateLabel}</p>
+          {!isToday && (
+            <button onClick={() => setSelectedDate(new Date())} className="text-[9px] font-black uppercase tracking-widest text-primary hover:underline flex items-center gap-1 mx-auto mt-1">
+              <CalendarDays className="w-3 h-3" /> Hoje
+            </button>
+          )}
+        </div>
+        <button onClick={() => navigateDay(1)} className="p-2 rounded-xl bg-secondary border border-border hover:bg-primary/10 transition-all" aria-label="Próximo dia">
+          <ChevronRight className="w-5 h-5 text-foreground" />
+        </button>
+      </div>
 
       {/* Font Size & Line Spacing Toggle */}
       <div className="flex items-center justify-center gap-4 flex-wrap">
@@ -315,9 +340,9 @@ const DailyLiturgy: React.FC = () => {
         <div className="flex items-center gap-2">
           <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">Espaço</span>
           {([
-            { key: 'compact' as LineSpacing, icon: '≡' },
-            { key: 'normal' as LineSpacing, icon: '☰' },
-            { key: 'relaxed' as LineSpacing, icon: '⋮' },
+            { key: 'compact' as LineSpacingType, icon: '≡' },
+            { key: 'normal' as LineSpacingType, icon: '☰' },
+            { key: 'relaxed' as LineSpacingType, icon: '⋮' },
           ]).map(({ key, icon }) => (
             <button key={key} onClick={() => setLineSpacing(key)}
               className={`w-8 h-8 rounded-lg text-sm font-bold transition-all ${
@@ -333,7 +358,6 @@ const DailyLiturgy: React.FC = () => {
             <button
               onClick={() => { setFontSize('M'); setLineSpacing('normal'); }}
               className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[9px] font-bold uppercase tracking-widest text-muted-foreground hover:text-primary bg-secondary border border-border hover:border-primary/40 transition-all"
-              title="Restaurar padrão"
             >
               <RotateCcw className="w-3 h-3" />
               Reset
@@ -342,203 +366,203 @@ const DailyLiturgy: React.FC = () => {
         )}
       </div>
 
-      {(
-        <div className="space-y-6 animate-in fade-in duration-500">
-          <div className="bg-card border border-border rounded-2xl p-6 md:p-12 space-y-10 shadow-sm relative overflow-hidden">
-            <div className="absolute top-0 right-0 p-8 opacity-[0.02] pointer-events-none">
-              <Sun className="w-48 h-48 -mr-12 -mt-12 rotate-12" />
+      {/* Main Content */}
+      <div className="bg-card border border-border rounded-2xl p-6 md:p-12 space-y-10 shadow-sm relative overflow-hidden">
+        <div className="absolute top-0 right-0 p-8 opacity-[0.02] pointer-events-none">
+          <Sun className="w-48 h-48 -mr-12 -mt-12 rotate-12" />
+        </div>
+
+        {isLoading ? (
+          <div className="space-y-6 py-8">
+            <div className="flex flex-col items-center gap-3">
+              <div className="h-3 w-28 bg-muted rounded animate-pulse" />
+              <div className="h-8 w-56 bg-muted rounded animate-pulse" />
+              <div className="h-3 w-36 bg-muted rounded animate-pulse" />
             </div>
-
-            {isLoading ? (
-              <div className="space-y-6 py-8">
-                <div className="flex flex-col items-center gap-3">
-                  <div className="h-3 w-28 bg-muted rounded animate-pulse" />
-                  <div className="h-8 w-56 bg-muted rounded animate-pulse" />
-                  <div className="h-3 w-36 bg-muted rounded animate-pulse" />
-                </div>
-                {Array.from({ length: 3 }).map((_, i) => (
-                  <div key={i} className="space-y-3">
-                    <div className="h-5 w-40 bg-muted rounded animate-pulse" />
-                    <div className="h-20 w-full bg-muted rounded animate-pulse" />
-                  </div>
-                ))}
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="space-y-3">
+                <div className="h-5 w-40 bg-muted rounded animate-pulse" />
+                <div className="h-20 w-full bg-muted rounded animate-pulse" />
               </div>
-            ) : error ? (
-              <div className="text-center py-16 space-y-3">
-                <Cloud className="w-12 h-12 text-muted-foreground mx-auto opacity-20" />
-                <p className="text-muted-foreground italic font-serif">{error}</p>
-              </div>
-            ) : (
-              <div className="relative">
-                {/* Liturgy Header */}
-                <div className="text-center space-y-4 pb-8 border-b border-border">
-                  {liturgy && (
-                    <span className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground">
-                      {SEASON_NAMES[liturgy.season] || liturgy.season} · Semana {liturgy.season_week}
+            ))}
+          </div>
+        ) : error && !readings ? (
+          <div className="text-center py-16 space-y-3">
+            <Cloud className="w-12 h-12 text-muted-foreground mx-auto opacity-20" />
+            <p className="text-muted-foreground italic font-serif">{error}</p>
+            <button onClick={() => fetchData(selectedDate)} className="text-xs font-bold text-primary hover:underline">
+              Tentar novamente
+            </button>
+          </div>
+        ) : (
+          <div className="relative">
+            {/* Liturgy Header */}
+            <div className="text-center space-y-4 pb-8 border-b border-border">
+              {liturgy && (
+                <span className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground">
+                  {SEASON_NAMES[liturgy.season] || liturgy.season} · Semana {liturgy.season_week}
+                </span>
+              )}
+              <h2 className="text-2xl md:text-4xl font-display font-bold text-foreground tracking-tight leading-tight">
+                {readings?.liturgia || liturgy?.celebrations?.[0]?.title || 'Liturgia do Dia'}
+              </h2>
+              <div className="flex flex-col items-center gap-3">
+                <p className="text-sm text-muted-foreground font-serif italic">{readings?.data || liturgy?.date}</p>
+                {readings?.cor && (
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary border border-border">
+                    <div className={`w-2.5 h-2.5 rounded-full ring-2 ${COLOUR_MAP[readings.cor.toLowerCase()] || 'bg-muted ring-muted/20'}`} />
+                    <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
+                      {readings.cor}
                     </span>
-                  )}
-                  <h2 className="text-2xl md:text-4xl font-display font-bold text-foreground tracking-tight leading-tight">
-                    {readings?.liturgia || liturgy?.celebrations?.[0]?.title || 'Liturgia do Dia'}
-                  </h2>
-                  <div className="flex flex-col items-center gap-3">
-                    <p className="text-sm text-muted-foreground font-serif italic">{readings?.data || liturgy?.date}</p>
-                    {readings?.cor && (
-                      <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary border border-border">
-                        <div className={`w-2.5 h-2.5 rounded-full ring-2 ${COLOUR_MAP[readings.cor.toLowerCase()] || 'bg-muted ring-muted/20'}`} />
-                        <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
-                          {readings.cor}
-                        </span>
-                      </div>
-                    )}
-                    <ShareButton
-                      title={readings?.liturgia || 'Liturgia do Dia'}
-                      text={`${readings?.liturgia || 'Liturgia do Dia'} — ${readings?.data || ''} — Cathedra Digital`}
-                      variant="button"
-                    />
-                  </div>
-                </div>
-
-                {/* Readings */}
-                {readings ? (
-                  <div className="space-y-12 pt-10">
-                    <ReadingBlock
-                      label="Primeira Leitura"
-                      numeral="I"
-                      reference={readings.primeiraLeitura.referencia}
-                      title={readings.primeiraLeitura.titulo}
-                      text={readings.primeiraLeitura.texto}
-                      fontBody={fc.body}
-                      fontTitle={fc.title}
-                      lineSpacing={lc}
-                    />
-
-                    <PsalmBlock
-                      reference={readings.salmo.referencia}
-                      refrain={readings.salmo.refrao}
-                      text={readings.salmo.texto}
-                      fontPsalm={fc.psalm}
-                      fontBody={fc.body}
-                      lineSpacing={lc}
-                    />
-
-                    {readings.segundaLeitura && typeof readings.segundaLeitura === 'object' && (
-                      <ReadingBlock
-                        label="Segunda Leitura"
-                        numeral="II"
-                        reference={readings.segundaLeitura.referencia}
-                        title={readings.segundaLeitura.titulo}
-                        text={readings.segundaLeitura.texto}
-                        fontBody={fc.body}
-                        fontTitle={fc.title}
-                        lineSpacing={lc}
-                      />
-                    )}
-
-                    <GospelBlock
-                      reference={readings.evangelho.referencia}
-                      title={readings.evangelho.titulo}
-                      text={readings.evangelho.texto}
-                      fontGospel={fc.gospel}
-                      fontTitle={fc.title}
-                      lineSpacing={lc}
-                    />
-
-                    {/* AI Meditation */}
-                    <section className="pt-10 border-t border-border space-y-6">
-                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-11 h-11 rounded-xl bg-accent text-accent-foreground flex items-center justify-center shadow-md shadow-accent/20 shrink-0">
-                            <Brain className="w-5 h-5" />
-                          </div>
-                          <div>
-                            <h3 className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground">Meditação Diária</h3>
-                            <p className="text-xs text-foreground/50">Nexus Theologicus</p>
-                          </div>
-                        </div>
-                        
-                        {!meditation && !isMeditationLoading && (
-                          <button 
-                            onClick={fetchMeditation}
-                            className="px-5 py-2 bg-accent text-accent-foreground rounded-lg text-[10px] font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-sm flex items-center gap-2 self-start md:self-center"
-                          >
-                            <Sparkles className="w-3.5 h-3.5" />
-                            Gerar Meditação
-                          </button>
-                        )}
-                      </div>
-
-                      {isMeditationLoading ? (
-                        <div className="bg-secondary/50 p-6 md:p-10 rounded-2xl border border-border space-y-3">
-                          <div className="flex items-center gap-2 mb-4">
-                            <div className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" />
-                            <div className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce [animation-delay:0.2s]" />
-                            <div className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce [animation-delay:0.4s]" />
-                            <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-2">Meditando...</span>
-                          </div>
-                          <div className="h-4 bg-muted rounded animate-pulse w-full" />
-                          <div className="h-4 bg-muted rounded animate-pulse w-[90%]" />
-                          <div className="h-4 bg-muted rounded animate-pulse w-[95%]" />
-                        </div>
-                      ) : meditation ? (
-                        <div className="bg-secondary/30 p-6 md:p-10 rounded-2xl border border-border relative overflow-hidden">
-                          <div className="absolute top-0 right-0 p-6 opacity-[0.03] pointer-events-none">
-                            <Brain className="w-24 h-24 rotate-12" />
-                          </div>
-                          <div className="prose dark:prose-invert max-w-none reader-text prose-p:text-base prose-p:leading-[1.9] prose-headings:font-display prose-headings:font-bold prose-p:text-foreground/90 prose-strong:text-primary">
-                            <ReactMarkdown>{meditation}</ReactMarkdown>
-                          </div>
-                          <div className="mt-6 pt-6 border-t border-border flex items-center justify-between">
-                            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 italic">
-                              Gerado por Colloquium AI
-                            </p>
-                            <button 
-                              onClick={() => { setMeditation(null); fetchMeditation(); }}
-                              className="text-[9px] font-black uppercase tracking-widest text-primary hover:text-primary/80 transition-colors"
-                            >
-                              Regerar
-                            </button>
-                          </div>
-                        </div>
-                      ) : null}
-                    </section>
-
-                    {/* Collect Prayer */}
-                    {readings.dia && (
-                      <section className="pt-10 border-t border-border space-y-4">
-                        <div className="flex items-center gap-2 justify-center md:justify-start">
-                          <Sparkles className="w-4 h-4 text-primary/40" />
-                          <h3 className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground">Oração do Dia</h3>
-                        </div>
-                        <div className="p-6 md:p-8 bg-secondary/50 rounded-2xl border border-border">
-                          <p className="reader-text text-base md:text-lg text-foreground/80 italic leading-[1.9] text-center">"{readings.dia}"</p>
-                        </div>
-                      </section>
-                    )}
-                  </div>
-                ) : (
-                  <div className="space-y-6 pt-10">
-                    <h3 className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground text-center">Celebrações de Hoje</h3>
-                    <div className="grid gap-3 max-w-2xl mx-auto">
-                      {liturgy?.celebrations?.map((c, i) => (
-                        <div key={i} className="flex items-center gap-4 p-5 bg-secondary/30 rounded-xl border border-border group hover:bg-card hover:shadow-md transition-all">
-                          <div className={`w-10 h-10 rounded-lg ring-4 shrink-0 flex items-center justify-center shadow ${COLOUR_MAP[c.colour.toLowerCase()] || 'bg-muted ring-muted/10'}`}>
-                            <Cross className={`w-5 h-5 ${c.colour.toLowerCase() === 'white' ? 'text-primary' : 'text-white'}`} />
-                          </div>
-                          <div className="flex-1">
-                            <p className="font-serif font-bold text-foreground group-hover:text-primary transition-colors leading-tight">{c.title}</p>
-                            <p className="text-[9px] text-muted-foreground uppercase tracking-widest font-black mt-0.5">{c.rank}</p>
-                          </div>
-                          <span className="text-[8px] font-black uppercase tracking-widest text-primary bg-primary/10 px-2 py-0.5 rounded-full">{c.colour}</span>
-                        </div>
-                      ))}
-                    </div>
                   </div>
                 )}
+                <ShareButton
+                  title={readings?.liturgia || 'Liturgia do Dia'}
+                  text={`${readings?.liturgia || 'Liturgia do Dia'} — ${readings?.data || ''} — Cathedra Digital`}
+                  variant="button"
+                />
+              </div>
+            </div>
+
+            {/* Readings */}
+            {readings ? (
+              <div className="space-y-12 pt-10">
+                <ReadingBlock
+                  label="Primeira Leitura"
+                  numeral="I"
+                  reference={readings.primeiraLeitura.referencia}
+                  title={readings.primeiraLeitura.titulo}
+                  text={readings.primeiraLeitura.texto}
+                  fontBody={fc.body}
+                  fontTitle={fc.title}
+                  lineSpacing={lc}
+                />
+
+                <PsalmBlock
+                  reference={readings.salmo.referencia}
+                  refrain={readings.salmo.refrao}
+                  text={readings.salmo.texto}
+                  fontPsalm={fc.psalm}
+                  fontBody={fc.body}
+                  lineSpacing={lc}
+                />
+
+                {readings.segundaLeitura && typeof readings.segundaLeitura === 'object' && (
+                  <ReadingBlock
+                    label="Segunda Leitura"
+                    numeral="II"
+                    reference={readings.segundaLeitura.referencia}
+                    title={readings.segundaLeitura.titulo}
+                    text={readings.segundaLeitura.texto}
+                    fontBody={fc.body}
+                    fontTitle={fc.title}
+                    lineSpacing={lc}
+                  />
+                )}
+
+                <GospelBlock
+                  reference={readings.evangelho.referencia}
+                  title={readings.evangelho.titulo}
+                  text={readings.evangelho.texto}
+                  fontGospel={fc.gospel}
+                  fontTitle={fc.title}
+                  lineSpacing={lc}
+                />
+
+                {/* AI Meditation */}
+                <section className="pt-10 border-t border-border space-y-6">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-11 h-11 rounded-xl bg-accent text-accent-foreground flex items-center justify-center shadow-md shadow-accent/20 shrink-0">
+                        <Brain className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h3 className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground">Meditação Diária</h3>
+                        <p className="text-xs text-foreground/50">Nexus Theologicus</p>
+                      </div>
+                    </div>
+                    
+                    {!meditation && !isMeditationLoading && (
+                      <button 
+                        onClick={fetchMeditation}
+                        className="px-5 py-2 bg-accent text-accent-foreground rounded-lg text-[10px] font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-sm flex items-center gap-2 self-start md:self-center"
+                      >
+                        <Sparkles className="w-3.5 h-3.5" />
+                        Gerar Meditação
+                      </button>
+                    )}
+                  </div>
+
+                  {isMeditationLoading ? (
+                    <div className="bg-secondary/50 p-6 md:p-10 rounded-2xl border border-border space-y-3">
+                      <div className="flex items-center gap-2 mb-4">
+                        <div className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" />
+                        <div className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce [animation-delay:0.2s]" />
+                        <div className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce [animation-delay:0.4s]" />
+                        <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-2">Meditando...</span>
+                      </div>
+                      <div className="h-4 bg-muted rounded animate-pulse w-full" />
+                      <div className="h-4 bg-muted rounded animate-pulse w-[90%]" />
+                      <div className="h-4 bg-muted rounded animate-pulse w-[95%]" />
+                    </div>
+                  ) : meditation ? (
+                    <div className="bg-secondary/30 p-6 md:p-10 rounded-2xl border border-border relative overflow-hidden">
+                      <div className="absolute top-0 right-0 p-6 opacity-[0.03] pointer-events-none">
+                        <Brain className="w-24 h-24 rotate-12" />
+                      </div>
+                      <div className="prose dark:prose-invert max-w-none reader-text prose-p:text-base prose-p:leading-[1.9] prose-headings:font-display prose-headings:font-bold prose-p:text-foreground/90 prose-strong:text-primary">
+                        <ReactMarkdown>{meditation}</ReactMarkdown>
+                      </div>
+                      <div className="mt-6 pt-6 border-t border-border flex items-center justify-between">
+                        <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 italic">
+                          Gerado por Colloquium AI
+                        </p>
+                        <button 
+                          onClick={() => { setMeditation(null); fetchMeditation(); }}
+                          className="text-[9px] font-black uppercase tracking-widest text-primary hover:text-primary/80 transition-colors"
+                        >
+                          Regerar
+                        </button>
+                      </div>
+                    </div>
+                  ) : null}
+                </section>
+
+                {/* Collect Prayer */}
+                {readings.dia && (
+                  <section className="pt-10 border-t border-border space-y-4">
+                    <div className="flex items-center gap-2 justify-center md:justify-start">
+                      <Sparkles className="w-4 h-4 text-primary/40" />
+                      <h3 className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground">Oração do Dia</h3>
+                    </div>
+                    <div className="p-6 md:p-8 bg-secondary/50 rounded-2xl border border-border">
+                      <p className="reader-text text-base md:text-lg text-foreground/80 italic leading-[1.9] text-center">"{readings.dia}"</p>
+                    </div>
+                  </section>
+                )}
+              </div>
+            ) : (
+              <div className="space-y-6 pt-10">
+                <h3 className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground text-center">Celebrações de Hoje</h3>
+                <div className="grid gap-3 max-w-2xl mx-auto">
+                  {liturgy?.celebrations?.map((c, i) => (
+                    <div key={i} className="flex items-center gap-4 p-5 bg-secondary/30 rounded-xl border border-border group hover:bg-card hover:shadow-md transition-all">
+                      <div className={`w-10 h-10 rounded-lg ring-4 shrink-0 flex items-center justify-center shadow ${COLOUR_MAP[c.colour.toLowerCase()] || 'bg-muted ring-muted/10'}`}>
+                        <Cross className={`w-5 h-5 ${c.colour.toLowerCase() === 'white' ? 'text-primary' : 'text-white'}`} />
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-serif font-bold text-foreground group-hover:text-primary transition-colors leading-tight">{c.title}</p>
+                        <p className="text-[9px] text-muted-foreground uppercase tracking-widest font-black mt-0.5">{c.rank}</p>
+                      </div>
+                      <span className="text-[8px] font-black uppercase tracking-widest text-primary bg-primary/10 px-2 py-0.5 rounded-full">{c.colour}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </motion.div>
   );
 };
