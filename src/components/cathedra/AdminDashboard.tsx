@@ -143,6 +143,34 @@ const AdminDashboard: React.FC = () => {
     toast.success(newRole === 'admin' ? 'Usuário promovido a Admin' : 'Cargo de Admin removido');
   };
 
+  const handleManualPremium = async (grant: boolean) => {
+    if (!manualEmail.trim()) {
+      toast.error('Informe um email válido');
+      return;
+    }
+    setManualLoading(true);
+    const { data, error } = await supabase
+      .from('profiles')
+      .update({ is_premium: grant })
+      .eq('email', manualEmail.trim())
+      .select('id, email, is_premium');
+
+    setManualLoading(false);
+
+    if (error) {
+      toast.error('Erro ao atualizar: ' + error.message);
+      return;
+    }
+    if (!data || data.length === 0) {
+      toast.error('Nenhum usuário encontrado com esse email');
+      return;
+    }
+
+    setUsers(prev => prev.map(u => u.email === manualEmail.trim() ? { ...u, is_premium: grant } : u));
+    toast.success(grant ? `Premium ativado para ${manualEmail}` : `Premium removido de ${manualEmail}`);
+    setManualEmail('');
+  };
+
   const filteredUsers = users
     .filter(u => 
       u.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
