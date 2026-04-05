@@ -493,7 +493,7 @@ const PrayerPage: React.FC = () => {
             <p className="text-sm opacity-80 leading-relaxed font-serif">
               Medite sobre a Paixão de Cristo em 14 estações de profunda oração.
             </p>
-            <button className="w-full py-3 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl font-bold text-xs uppercase tracking-widest transition-all">
+            <button onClick={() => navigate('/via-crucis')} className="w-full py-3 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl font-bold text-xs uppercase tracking-widest transition-all">
               Explorar Via-Sacra
             </button>
           </div>
