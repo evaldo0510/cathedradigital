@@ -429,39 +429,43 @@ const AdminDashboard: React.FC = () => {
           </div>
         </TabsContent>
 
-        {/* Transactions Tab */}
-        <TabsContent value="transactions">
+        {/* Manual Control Tab */}
+        <TabsContent value="manual">
           <Card>
             <CardHeader>
-              <CardTitle>Transações Recentes</CardTitle>
-              <CardDescription>Últimas movimentações financeiras</CardDescription>
+              <CardTitle className="flex items-center gap-2"><Crown className="w-5 h-5 text-primary" /> Controle Manual de Acesso</CardTitle>
+              <CardDescription>Libere ou remova o acesso PRO de um usuário pelo email.</CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {stats?.recentTransactions && stats.recentTransactions.length > 0 ? (
-                  stats.recentTransactions.map((tx: any) => (
-                    <div key={tx.id} className="flex items-center justify-between border-b border-border/50 pb-4 last:border-0 last:pb-0">
-                      <div className="flex flex-col">
-                        <span className="font-medium">{tx.description || 'Assinatura Premium'}</span>
-                        <span className="text-xs text-muted-foreground flex items-center gap-1">
-                          <Calendar className="h-3 w-3" />
-                          {new Date(tx.created_at).toLocaleDateString('pt-BR')}
-                        </span>
-                      </div>
-                      <div className="flex flex-col items-end">
-                        <span className="font-bold text-emerald-600">
-                          +{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(tx.amount)}
-                        </span>
-                        <Badge variant={tx.status === 'approved' ? 'default' : 'secondary'} className="text-[10px] uppercase">
-                          {tx.status}
-                        </Badge>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-center py-8 text-muted-foreground">Nenhuma transação registrada.</div>
-                )}
+            <CardContent className="space-y-4">
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Input
+                  type="email"
+                  placeholder="email@exemplo.com"
+                  value={manualEmail}
+                  onChange={e => setManualEmail(e.target.value)}
+                  className="flex-1"
+                />
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => handleManualPremium(true)}
+                    disabled={manualLoading || !manualEmail.trim()}
+                    className="gap-2"
+                  >
+                    <Crown className="w-4 h-4" /> Liberar PRO
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => handleManualPremium(false)}
+                    disabled={manualLoading || !manualEmail.trim()}
+                    className="gap-2"
+                  >
+                    Remover PRO
+                  </Button>
+                </div>
               </div>
+              <p className="text-xs text-muted-foreground">
+                O usuário precisa estar cadastrado na plataforma. A alteração tem efeito imediato.
+              </p>
             </CardContent>
           </Card>
         </TabsContent>
