@@ -5,6 +5,7 @@ import { AppRoute } from '@/types';
 import { Badge } from '@/components/ui/badge';
 import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
+import MagisteriumPopover from './MagisteriumPopover';
 
 interface DogmaRef {
   type: 'bible' | 'catechism' | 'magisterium';
@@ -398,17 +399,14 @@ const DogmasPage: React.FC = () => {
                             />
                           );
                         }
-                        // magisterium — navigate
-                        const style = REF_STYLES[ref.type];
+                        // magisterium — popover
                         return (
-                          <button
+                          <MagisteriumPopover
                             key={i}
-                            onClick={(e) => { e.stopPropagation(); handleRefClick(ref); }}
-                            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${style.color}`}
-                          >
-                            {style.icon}
-                            {ref.label}
-                          </button>
+                            documentName={ref.target}
+                            label={ref.label}
+                            onNavigate={(search) => navigate(`${AppRoute.MAGISTERIUM}?search=${encodeURIComponent(search)}`)}
+                          />
                         );
                       })}
                     </div>
