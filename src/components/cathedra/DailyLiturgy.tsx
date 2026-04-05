@@ -9,7 +9,8 @@ import {
   Sun,
   Cloud,
   ChevronDown,
-  Brain
+  Brain,
+  RotateCcw
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
