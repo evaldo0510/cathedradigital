@@ -26,7 +26,7 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
 
   const segments = useMemo(() => {
     if (!data?.content) return [];
-    return parseBibleReferences(data.content);
+    return parseTheologicalReferences(data.content);
   }, [data?.content]);
 
   if (isLoading) {
