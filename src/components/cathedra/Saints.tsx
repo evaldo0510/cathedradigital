@@ -5,7 +5,7 @@ import StaggeredList from './StaggeredList';
 import SacredImage from './SacredImage';
 import SaintDetail, { CATEGORY_LABELS } from './SaintDetail';
 import { SAINTS_DATA, type Saint } from '@/data/saints';
-import { Search } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 
 const ALL_CATEGORIES = Object.keys(CATEGORY_LABELS) as Saint['category'][];
 
