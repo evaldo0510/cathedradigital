@@ -23,6 +23,44 @@ const json = (body: unknown, status = 200) =>
     headers: { ...corsHeaders, "Content-Type": "application/json" },
   });
 
+function normalizeMercadoPagoAccessToken(rawToken: string) {
+  const trimmedToken = rawToken.trim().replace(/^Bearer\s+/i, "");
+  const tokenMatch = trimmedToken.match(/(APP_USR-[A-Za-z0-9_-]+(?:-[A-Za-z0-9_-]+)*)|(TEST-[A-Za-z0-9_-]+(?:-[A-Za-z0-9_-]+)*)/);
+  return tokenMatch?.[0] ?? trimmedToken;
+}
+
+function resolveMercadoPagoAccessToken() {
+  const secretCandidates = [
+    { name: "MERCADO_PAGO_ACCESS_TOKEN", value: Deno.env.get("MERCADO_PAGO_ACCESS_TOKEN") },
+    { name: "MERCADOPAGO_ACCESS_TOKEN", value: Deno.env.get("MERCADOPAGO_ACCESS_TOKEN") },
+  ];
+
+  console.log(
+    "[mercadopago-sync-payment] secret availability",
+    secretCandidates.map(({ name, value }) => ({ name, present: Boolean(value?.trim()) })),
+  );
+
+  const selectedSecret = secretCandidates.find(({ value }) => Boolean(value?.trim()));
+  if (!selectedSecret) {
+    return { source: null, token: "" };
+  }
+
+  return {
+    source: selectedSecret.name,
+    token: normalizeMercadoPagoAccessToken(selectedSecret.value!),
+  };
+}
+
+async function parseResponse(response: Response) {
+  const rawText = await response.text();
+
+  try {
+    return rawText ? JSON.parse(rawText) : {};
+  } catch {
+    return { raw: rawText };
+  }
+}
+
 async function fetchPaymentById(accessToken: string, paymentId: string | number) {
   const response = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
     headers: {
@@ -31,13 +69,18 @@ async function fetchPaymentById(accessToken: string, paymentId: string | number)
     },
   });
 
+  const data = await parseResponse(response);
+
   if (!response.ok) {
-    const errorText = await response.text();
-    console.error("Mercado Pago payment lookup error:", errorText);
-    throw new Error("Não foi possível consultar o pagamento no Mercado Pago.");
+    console.error("Mercado Pago payment lookup error:", { data, paymentId, status: response.status });
+    throw new Error(
+      typeof data?.message === "string"
+        ? data.message
+        : "Não foi possível consultar o pagamento no Mercado Pago.",
+    );
   }
 
-  return response.json();
+  return data;
 }
 
 async function fetchPaymentByTransaction(accessToken: string, transactionId: string) {
@@ -51,13 +94,17 @@ async function fetchPaymentByTransaction(accessToken: string, transactionId: str
     },
   );
 
+  const result = await parseResponse(response);
+
   if (!response.ok) {
-    const errorText = await response.text();
-    console.error("Mercado Pago payment search error:", errorText);
-    throw new Error("Não foi possível localizar a transação no Mercado Pago.");
+    console.error("Mercado Pago payment search error:", { result, status: response.status, transactionId });
+    throw new Error(
+      typeof result?.message === "string"
+        ? result.message
+        : "Não foi possível localizar a transação no Mercado Pago.",
+    );
   }
 
-  const result = await response.json();
   return result.results?.[0] ?? null;
 }
 
@@ -74,7 +121,14 @@ serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL") || "";
     const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY") || Deno.env.get("SUPABASE_PUBLISHABLE_KEY") || "";
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
-    const mercadoPagoAccessToken = Deno.env.get("MERCADOPAGO_ACCESS_TOKEN") || "";
+    const { source: tokenSource, token: mercadoPagoAccessToken } = resolveMercadoPagoAccessToken();
+
+    console.log("[mercadopago-sync-payment] runtime env", {
+      hasServiceRoleKey: Boolean(serviceRoleKey),
+      hasSupabaseAnonKey: Boolean(supabaseAnonKey),
+      hasSupabaseUrl: Boolean(supabaseUrl),
+      tokenSource,
+    });
 
     if (!supabaseUrl || !supabaseAnonKey || !serviceRoleKey) {
       return json({ error: "Configuração do backend incompleta." }, 500);
