@@ -192,7 +192,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           <p className="text-[11px] font-medium uppercase tracking-[0.3em] text-muted-foreground/70">
             Cathedra Digital
           </p>
-          <h1 className="text-3xl md:text-4xl font-serif font-bold text-foreground leading-snug">
+          <h1 className="text-3xl md:text-4xl font-display font-bold text-foreground leading-snug">
             Bem-vindo de volta
           </h1>
           <p className="text-lg text-muted-foreground font-serif italic leading-relaxed max-w-md mx-auto">
