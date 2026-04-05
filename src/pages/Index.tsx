@@ -137,9 +137,9 @@ const Index = () => {
           </motion.h1>
 
           <motion.p 
-            initial={{ opacity: 0 }}
+            initial={{ opacity: 0.4 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
             className="max-w-2xl mx-auto text-xl md:text-2xl text-muted-foreground font-serif italic"
           >
             "A oração é a elevação da alma a Deus." <br />
@@ -147,9 +147,9 @@ const Index = () => {
           </motion.p>
 
           <motion.div 
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0.4, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-5 pt-6"
           >
             <Button 
