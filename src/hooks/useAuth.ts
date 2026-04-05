@@ -57,7 +57,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      setProfile(data as Profile | null);
+      const { count: approvedTransactionsCount, error: premiumError } = await supabase
+        .from('transactions')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', currentUser.id)
+        .eq('status', 'approved');
+
+      if (requestId !== profileRequestId.current) return;
+
+      if (premiumError) {
+        console.error('Error checking premium access:', premiumError);
+      }
+
+      const resolvedProfile = data
+        ? {
+            ...data,
+            is_premium: Boolean(data.is_premium || (approvedTransactionsCount ?? 0) > 0),
+          }
+        : null;
+
+      setProfile(resolvedProfile as Profile | null);
     } catch (e) {
       if (requestId !== profileRequestId.current) return;
       console.error('Error fetching profile:', e);

@@ -1,5 +1,7 @@
 import React from 'react';
 import { Icons } from '@/constants';
+import { useNavigate } from 'react-router-dom';
+import { AppRoute } from '@/types';
 
 interface ProGateProps {
   isPremium: boolean;
@@ -9,6 +11,8 @@ interface ProGateProps {
 }
 
 const ProGate: React.FC<ProGateProps> = ({ isPremium, isLoggedIn, onLogin, children }) => {
+  const navigate = useNavigate();
+
   if (isPremium) return <>{children}</>;
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-6 page-enter">
@@ -30,9 +34,12 @@ const ProGate: React.FC<ProGateProps> = ({ isPremium, isLoggedIn, onLogin, child
             Fazer Login
           </button>
         ) : (
-          <div className="w-full py-3 border border-primary/30 bg-primary/5 rounded-2xl text-[10px] font-black uppercase tracking-widest text-primary italic">
-            Assinatura em breve
-          </div>
+          <button
+            onClick={() => navigate(AppRoute.CHECKOUT)}
+            className="w-full py-4 bg-primary text-primary-foreground rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:opacity-90 transition-all"
+          >
+            Assinar PRO
+          </button>
         )}
       </div>
     </div>
