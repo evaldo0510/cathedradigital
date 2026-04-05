@@ -5,6 +5,8 @@ import { AppRoute, User } from '../../types';
 import { useAuth } from '../../hooks/useAuth';
 import { useNotes } from '../../hooks/useNotes';
 import { supabase } from '@/integrations/supabase/client';
+import { SAINTS_DATA } from '@/data/saints';
+import SacredImage from './SacredImage';
 import {
   BookOpen, Church, Cross, Heart, Flame, Star,
   CheckCircle2, Circle, ChevronRight, Pen, Send,
@@ -376,6 +378,37 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             </button>
           </div>
         </div>
+      </FadeUp>
+
+      {/* ═══ SANTO DO DIA ═══ */}
+      <FadeUp delay={0.28}>
+        {(() => {
+          const today = new Date();
+          const saintOfDay = SAINTS_DATA.find(s => s.feastMonth === today.getMonth() + 1 && s.feastDayNum === today.getDate()) || SAINTS_DATA[0];
+          return (
+            <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
+              <div className="flex items-stretch">
+                <div className="w-24 md:w-32 flex-shrink-0">
+                  <SacredImage src={saintOfDay.image || ''} alt={saintOfDay.name} className="w-full h-full min-h-[120px]" />
+                </div>
+                <div className="flex-1 p-4 md:p-5 space-y-1.5">
+                  <p className="text-[9px] font-black uppercase tracking-widest text-primary flex items-center gap-1.5">
+                    <Star className="w-3 h-3" /> Santo do Dia — {saintOfDay.feastDay}
+                  </p>
+                  <h3 className="text-base md:text-lg font-serif font-bold text-foreground">{saintOfDay.name}</h3>
+                  <p className="text-xs text-primary/70 font-serif italic">{saintOfDay.title}</p>
+                  <p className="text-xs text-muted-foreground font-serif italic line-clamp-2 leading-relaxed">{saintOfDay.quotes[0]}</p>
+                  <button
+                    onClick={() => goTo(AppRoute.SAINTS)}
+                    className="flex items-center gap-1 text-xs font-medium text-primary hover:underline pt-1"
+                  >
+                    Conhecer sua vida <ChevronRight className="w-3 h-3" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
       </FadeUp>
 
       {/* ═══ 6. QUICK ACCESS ═══ */}
