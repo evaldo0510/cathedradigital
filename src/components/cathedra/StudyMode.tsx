@@ -20,8 +20,8 @@ const SUGGESTIONS = [
 ];
 
 // Custom renderer that parses Bible references in text nodes
-const BibleAwareText: React.FC<{ text: string; onNavigate: (abbr: string, chapter: number) => void }> = ({ text, onNavigate }) => {
-  const segments = useMemo(() => parseBibleReferences(text), [text]);
+const TheologicalAwareText: React.FC<{ text: string; onNavigateBible: (abbr: string, chapter: number) => void; onNavigateCatechism: (paragraph: number) => void }> = ({ text, onNavigateBible, onNavigateCatechism }) => {
+  const segments = useMemo(() => parseTheologicalReferences(text), [text]);
   
   if (segments.length === 1 && segments[0].type === 'text') {
     return <>{text}</>;
@@ -29,20 +29,30 @@ const BibleAwareText: React.FC<{ text: string; onNavigate: (abbr: string, chapte
 
   return (
     <>
-      {segments.map((seg, i) =>
-        seg.type === 'bibleRef' && seg.abbr ? (
-          <BibleVersePopover
-            key={i}
-            abbr={seg.abbr}
-            chapter={seg.chapter!}
-            verse={seg.verse}
-            label={seg.value}
-            onNavigate={onNavigate}
-          />
-        ) : (
-          <React.Fragment key={i}>{seg.value}</React.Fragment>
-        )
-      )}
+      {segments.map((seg, i) => {
+        if (seg.type === 'bibleRef' && seg.abbr) {
+          return (
+            <BibleVersePopover
+              key={i}
+              abbr={seg.abbr}
+              chapter={seg.chapter!}
+              verse={seg.verse}
+              label={seg.value}
+              onNavigate={onNavigateBible}
+            />
+          );
+        }
+        if (seg.type === 'catechismRef' && seg.paragraph) {
+          return (
+            <CatechismPopover
+              key={i}
+              paragraph={seg.paragraph}
+              onNavigate={onNavigateCatechism}
+            />
+          );
+        }
+        return <React.Fragment key={i}>{seg.value}</React.Fragment>;
+      })}
     </>
   );
 };
