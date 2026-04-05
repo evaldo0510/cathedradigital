@@ -32,102 +32,91 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
-  const profileRequestId = useRef(0);
+  const authRequestId = useRef(0);
 
-  const loadProfile = useCallback(async (currentUser: SupabaseUser | null) => {
-    const requestId = ++profileRequestId.current;
+  const fetchProfile = useCallback(async (currentUser: SupabaseUser) => {
+    const [profileResult, premiumResult] = await Promise.all([
+      supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', currentUser.id)
+        .maybeSingle(),
+      supabase
+        .from('transactions')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', currentUser.id)
+        .eq('status', 'approved'),
+    ]);
+
+    if (profileResult.error) {
+      console.error('Error fetching profile:', profileResult.error);
+      return null;
+    }
+
+    if (premiumResult.error) {
+      console.error('Error checking premium access:', premiumResult.error);
+    }
+
+    if (!profileResult.data) {
+      return null;
+    }
+
+    return {
+      ...profileResult.data,
+      is_premium: Boolean(profileResult.data.is_premium || (premiumResult.count ?? 0) > 0),
+    } as Profile;
+  }, []);
+
+  const syncAuthState = useCallback(async (currentUser: SupabaseUser | null) => {
+    const requestId = ++authRequestId.current;
+    setUser(currentUser);
+    setLoading(true);
 
     if (!currentUser) {
       setProfile(null);
+      setLoading(false);
       return;
     }
 
     try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', currentUser.id)
-        .maybeSingle();
-
-      if (requestId !== profileRequestId.current) return;
-
-      if (error) {
-        console.error('Error fetching profile:', error);
-        setProfile(null);
-        return;
-      }
-
-      const { count: approvedTransactionsCount, error: premiumError } = await supabase
-        .from('transactions')
-        .select('id', { count: 'exact', head: true })
-        .eq('user_id', currentUser.id)
-        .eq('status', 'approved');
-
-      if (requestId !== profileRequestId.current) return;
-
-      if (premiumError) {
-        console.error('Error checking premium access:', premiumError);
-      }
-
-      const resolvedProfile = data
-        ? {
-            ...data,
-            is_premium: Boolean(data.is_premium || (approvedTransactionsCount ?? 0) > 0),
-          }
-        : null;
-
-      setProfile(resolvedProfile as Profile | null);
-    } catch (e) {
-      if (requestId !== profileRequestId.current) return;
-      console.error('Error fetching profile:', e);
+      const resolvedProfile = await fetchProfile(currentUser);
+      if (requestId !== authRequestId.current) return;
+      setProfile(resolvedProfile);
+    } catch (error) {
+      if (requestId !== authRequestId.current) return;
+      console.error('Session sync error:', error);
       setProfile(null);
+    } finally {
+      if (requestId === authRequestId.current) {
+        setLoading(false);
+      }
     }
-  }, []);
+  }, [fetchProfile]);
 
   useEffect(() => {
     let active = true;
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (!active || event === 'INITIAL_SESSION') return;
-
-      const currentUser = session?.user ?? null;
-      setUser(currentUser);
-
-      if (event === 'SIGNED_OUT' || !currentUser) {
-        profileRequestId.current += 1;
-        setProfile(null);
-        setLoading(false);
-        return;
-      }
-
-      if (event === 'TOKEN_REFRESHED') {
-        return;
-      }
-
-      setLoading(true);
-      window.setTimeout(() => {
-        if (!active) return;
-
-        void loadProfile(currentUser).finally(() => {
-          if (active) setLoading(false);
-        });
-      }, 0);
+      if (!active || event === 'INITIAL_SESSION' || event === 'TOKEN_REFRESHED') return;
+      void syncAuthState(session?.user ?? null);
     });
 
     const initSession = async () => {
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
         if (!active) return;
-        
-        if (error) console.error('Error getting session:', error);
 
-        const currentUser = session?.user ?? null;
-        setUser(currentUser);
-        await loadProfile(currentUser);
-      } catch (e) {
-        console.error('Session init error:', e);
-      } finally {
-        if (active) setLoading(false);
+        if (error) {
+          console.error('Error getting session:', error);
+        }
+
+        await syncAuthState(session?.user ?? null);
+      } catch (error) {
+        if (!active) return;
+        console.error('Session init error:', error);
+        setUser(null);
+        setProfile(null);
+        setLoading(false);
       }
     };
 
@@ -135,12 +124,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     return () => {
       active = false;
+      authRequestId.current += 1;
       subscription.unsubscribe();
     };
-  }, [loadProfile]);
+  }, [syncAuthState]);
 
   const signOut = useCallback(async () => {
-    profileRequestId.current += 1;
+    authRequestId.current += 1;
     await supabase.auth.signOut();
     setUser(null);
     setProfile(null);
