@@ -301,6 +301,14 @@ const LiturgicalCalendarPage: React.FC = () => {
     return upcoming;
   }, []);
 
+  // Find saint for selected day
+  const selectedSaint = useMemo((): Saint | null => {
+    if (!selectedDay) return null;
+    const m = selectedDay.getMonth() + 1;
+    const d = selectedDay.getDate();
+    return SAINTS_DATA.find(s => s.feastMonth === m && s.feastDayNum === d) || null;
+  }, [selectedDay]);
+
   const selectedInfo = selectedDay ? getLiturgicalInfo(selectedDay) : null;
 
   return (
