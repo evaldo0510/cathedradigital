@@ -12,19 +12,6 @@ import { useFavorites } from '@/hooks/useFavorites';
 import { useCatechismParagraph, usePrefetchCatechismParagraph } from '@/hooks/useCatechismParagraph';
 import { parseBibleReferences } from '@/lib/bibleRefParser';
 
-const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr: string, chapter: number) => void }> = ({ paragraph, onNavigateToBible }) => {
-  const { data, isLoading, isError } = useCatechismParagraph(paragraph);
-  const prefetch = usePrefetchCatechismParagraph();
-
-  useEffect(() => {
-    if (paragraph < 2865) prefetch(paragraph + 1);
-    if (paragraph > 1) prefetch(paragraph - 1);
-  }, [paragraph, prefetch]);
-
-  const segments = useMemo(() => {
-    if (!data?.content) return [];
-    return parseBibleReferences(data.content);
-  }, [data?.content]);
 
 const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr: string, chapter: number) => void }> = ({ paragraph, onNavigateToBible }) => {
   const { data, isLoading, isError } = useCatechismParagraph(paragraph);
