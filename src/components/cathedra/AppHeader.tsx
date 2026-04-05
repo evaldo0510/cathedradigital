@@ -49,12 +49,12 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
               <span className="text-xl md:text-2xl font-serif font-black uppercase tracking-[0.25em] text-foreground group-hover:text-primary transition-all">Cathedra</span>
             </div>
             
-            <nav className="hidden xl:flex items-center gap-6 border-l border-border pl-6">
+            <nav className="hidden xl:flex items-center gap-4 2xl:gap-6 border-l border-border pl-4 2xl:pl-6">
               {[
                 { label: 'Bíblia', route: AppRoute.BIBLE },
                 { label: 'Catecismo', route: AppRoute.CATECHISM },
                 { label: 'Liturgia', route: AppRoute.DAILY_LITURGY },
-                { label: 'Colloquium IA', route: AppRoute.STUDY_MODE },
+                { label: 'Colloquium', route: AppRoute.STUDY_MODE },
               ].map(item => (
                 <button 
                   key={item.label} 
@@ -66,7 +66,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                       import('@/components/cathedra/Bible');
                     }
                   }}
-                  className="text-xs font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-all"
+                  className="text-[11px] font-black uppercase tracking-wider text-muted-foreground hover:text-primary transition-all whitespace-nowrap"
                 >
                   {item.label}
                 </button>
@@ -77,9 +77,9 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
       </div>
       <div className="flex items-center gap-3">
         {/* Search Bar - Hidden on mobile, shown as icon on tablet, full on desktop */}
-        <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-muted border border-border rounded-xl text-muted-foreground hover:border-primary/50 transition-all cursor-pointer group" onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}>
+        <div className="hidden sm:flex items-center gap-2 px-3 py-2 bg-muted border border-border rounded-xl text-muted-foreground hover:border-primary/50 transition-all cursor-pointer group" onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}>
           <Icons.Search className="w-4 h-4 group-hover:text-primary transition-colors" />
-          <span className="text-xs font-bold uppercase tracking-widest hidden lg:inline">Buscar Conteúdo...</span>
+          <span className="text-xs font-bold uppercase tracking-wider hidden lg:inline whitespace-nowrap">Buscar...</span>
           <kbd className="hidden lg:inline-flex px-1.5 py-0.5 rounded bg-background border border-border text-[10px] font-mono font-bold">⌘K</kbd>
         </div>
         
