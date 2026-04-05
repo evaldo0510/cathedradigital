@@ -1,13 +1,26 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Icons } from '../../constants';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
 
 interface LiturgicalDay {
   date: Date;
   celebration?: string;
   color: 'verde' | 'roxo' | 'branco' | 'vermelho' | 'rosa';
   rank?: 'solenidade' | 'festa' | 'memória' | 'feria';
+}
+
+interface ApiCelebration {
+  title: string;
+  colour: string;
+  rank: string;
+}
+
+interface ApiDayData {
+  date: string;
+  season: string;
+  celebrations: ApiCelebration[];
 }
 
 const LITURGICAL_COLORS: Record<string, { bg: string; text: string; border: string; label: string }> = {
@@ -18,16 +31,80 @@ const LITURGICAL_COLORS: Record<string, { bg: string; text: string; border: stri
   rosa: { bg: 'bg-pink-500/15', text: 'text-pink-700 dark:text-pink-400', border: 'border-pink-500/30', label: 'Rosa' },
 };
 
-// Major fixed celebrations
+const COLOUR_TO_PT: Record<string, string> = {
+  green: 'verde',
+  violet: 'roxo',
+  white: 'branco',
+  red: 'vermelho',
+  rose: 'rosa',
+};
+
+const RANK_TO_PT: Record<string, 'solenidade' | 'festa' | 'memória' | 'feria'> = {
+  solemnity: 'solenidade',
+  feast: 'festa',
+  memorial: 'memória',
+  'optional memorial': 'memória',
+  ferial: 'feria',
+};
+
+// Computus — Easter calculation (Anonymous Gregorian algorithm)
+function computeEaster(year: number): Date {
+  const a = year % 19;
+  const b = Math.floor(year / 100);
+  const c = year % 100;
+  const d = Math.floor(b / 4);
+  const e = b % 4;
+  const f = Math.floor((b + 8) / 25);
+  const g = Math.floor((b - f + 1) / 3);
+  const h = (19 * a + b - d - g + 15) % 30;
+  const i = Math.floor(c / 4);
+  const k = c % 4;
+  const l = (32 + 2 * e + 2 * i - h - k) % 7;
+  const m = Math.floor((a + 11 * h + 22 * l) / 451);
+  const month = Math.floor((h + l - 7 * m + 114) / 31) - 1;
+  const day = ((h + l - 7 * m + 114) % 31) + 1;
+  return new Date(year, month, day);
+}
+
+function getMovableCelebrations(year: number): Record<string, { name: string; color: 'verde' | 'roxo' | 'branco' | 'vermelho' | 'rosa'; rank: 'solenidade' | 'festa' | 'memória' | 'feria' }> {
+  const easter = computeEaster(year);
+  const fmt = (d: Date) => `${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  const offset = (days: number) => {
+    const d = new Date(easter);
+    d.setDate(d.getDate() + days);
+    return d;
+  };
+
+  return {
+    [fmt(offset(-46))]: { name: 'Quarta-feira de Cinzas', color: 'roxo', rank: 'solenidade' },
+    [fmt(offset(-7))]: { name: 'Domingo de Ramos', color: 'vermelho', rank: 'solenidade' },
+    [fmt(offset(-3))]: { name: 'Quinta-feira Santa', color: 'branco', rank: 'solenidade' },
+    [fmt(offset(-2))]: { name: 'Sexta-feira Santa', color: 'vermelho', rank: 'solenidade' },
+    [fmt(offset(-1))]: { name: 'Sábado Santo', color: 'branco', rank: 'solenidade' },
+    [fmt(easter)]: { name: 'Páscoa da Ressurreição', color: 'branco', rank: 'solenidade' },
+    [fmt(offset(1))]: { name: 'Segunda-feira da Oitava da Páscoa', color: 'branco', rank: 'solenidade' },
+    [fmt(offset(39))]: { name: 'Ascensão do Senhor', color: 'branco', rank: 'solenidade' },
+    [fmt(offset(49))]: { name: 'Pentecostes', color: 'vermelho', rank: 'solenidade' },
+    [fmt(offset(56))]: { name: 'Santíssima Trindade', color: 'branco', rank: 'solenidade' },
+    [fmt(offset(60))]: { name: 'Corpus Christi', color: 'branco', rank: 'solenidade' },
+  };
+}
+
+// Fixed celebrations
 const FIXED_CELEBRATIONS: Record<string, { name: string; color: 'verde' | 'roxo' | 'branco' | 'vermelho' | 'rosa'; rank: 'solenidade' | 'festa' | 'memória' | 'feria' }> = {
   '01-01': { name: 'Santa Maria, Mãe de Deus', color: 'branco', rank: 'solenidade' },
   '01-06': { name: 'Epifania do Senhor', color: 'branco', rank: 'solenidade' },
+  '01-25': { name: 'Conversão de São Paulo', color: 'branco', rank: 'festa' },
   '02-02': { name: 'Apresentação do Senhor', color: 'branco', rank: 'festa' },
   '02-11': { name: 'N. Sra. de Lourdes', color: 'branco', rank: 'memória' },
+  '02-22': { name: 'Cátedra de São Pedro', color: 'branco', rank: 'festa' },
   '03-19': { name: 'São José', color: 'branco', rank: 'solenidade' },
   '03-25': { name: 'Anunciação do Senhor', color: 'branco', rank: 'solenidade' },
+  '04-25': { name: 'São Marcos Evangelista', color: 'vermelho', rank: 'festa' },
   '05-01': { name: 'São José Operário', color: 'branco', rank: 'memória' },
+  '05-03': { name: 'Santos Filipe e Tiago', color: 'vermelho', rank: 'festa' },
   '05-13': { name: 'N. Sra. de Fátima', color: 'branco', rank: 'memória' },
+  '05-14': { name: 'São Matias Apóstolo', color: 'vermelho', rank: 'festa' },
   '05-31': { name: 'Visitação de Maria', color: 'branco', rank: 'festa' },
   '06-11': { name: 'Sagrado Coração de Jesus', color: 'branco', rank: 'solenidade' },
   '06-13': { name: 'Santo Antônio de Pádua', color: 'branco', rank: 'memória' },
@@ -38,41 +115,72 @@ const FIXED_CELEBRATIONS: Record<string, { name: string; color: 'verde' | 'roxo'
   '07-16': { name: 'N. Sra. do Carmo', color: 'branco', rank: 'memória' },
   '07-22': { name: 'Santa Maria Madalena', color: 'branco', rank: 'festa' },
   '07-25': { name: 'São Tiago Apóstolo', color: 'vermelho', rank: 'festa' },
+  '07-26': { name: 'Santos Joaquim e Ana', color: 'branco', rank: 'memória' },
   '08-06': { name: 'Transfiguração do Senhor', color: 'branco', rank: 'festa' },
   '08-10': { name: 'São Lourenço', color: 'vermelho', rank: 'festa' },
   '08-15': { name: 'Assunção de Maria', color: 'branco', rank: 'solenidade' },
   '08-22': { name: 'Maria Rainha', color: 'branco', rank: 'memória' },
+  '08-24': { name: 'São Bartolomeu Apóstolo', color: 'vermelho', rank: 'festa' },
   '08-28': { name: 'Santo Agostinho', color: 'branco', rank: 'memória' },
   '09-08': { name: 'Natividade de Maria', color: 'branco', rank: 'festa' },
   '09-14': { name: 'Exaltação da Santa Cruz', color: 'vermelho', rank: 'festa' },
+  '09-15': { name: 'N. Sra. das Dores', color: 'branco', rank: 'memória' },
+  '09-21': { name: 'São Mateus Apóstolo', color: 'vermelho', rank: 'festa' },
   '09-29': { name: 'Santos Arcanjos', color: 'branco', rank: 'festa' },
   '10-01': { name: 'Santa Teresinha', color: 'branco', rank: 'memória' },
+  '10-02': { name: 'Santos Anjos da Guarda', color: 'branco', rank: 'memória' },
   '10-04': { name: 'São Francisco de Assis', color: 'branco', rank: 'memória' },
   '10-07': { name: 'N. Sra. do Rosário', color: 'branco', rank: 'memória' },
+  '10-12': { name: 'N. Sra. Aparecida', color: 'branco', rank: 'solenidade' },
   '10-15': { name: 'Santa Teresa de Ávila', color: 'branco', rank: 'memória' },
   '10-18': { name: 'São Lucas Evangelista', color: 'vermelho', rank: 'festa' },
+  '10-28': { name: 'Santos Simão e Judas', color: 'vermelho', rank: 'festa' },
   '11-01': { name: 'Todos os Santos', color: 'branco', rank: 'solenidade' },
   '11-02': { name: 'Fiéis Defuntos', color: 'roxo', rank: 'solenidade' },
   '11-21': { name: 'Apresentação de Maria', color: 'branco', rank: 'memória' },
+  '11-30': { name: 'Santo André Apóstolo', color: 'vermelho', rank: 'festa' },
+  '12-03': { name: 'São Francisco Xavier', color: 'branco', rank: 'memória' },
   '12-08': { name: 'Imaculada Conceição', color: 'branco', rank: 'solenidade' },
   '12-12': { name: 'N. Sra. de Guadalupe', color: 'branco', rank: 'festa' },
   '12-25': { name: 'Natal do Senhor', color: 'branco', rank: 'solenidade' },
   '12-26': { name: 'Santo Estêvão', color: 'vermelho', rank: 'festa' },
   '12-27': { name: 'São João Evangelista', color: 'branco', rank: 'festa' },
+  '12-28': { name: 'Santos Inocentes', color: 'vermelho', rank: 'festa' },
 };
 
-function getLiturgicalSeason(date: Date): { season: string; color: 'verde' | 'roxo' | 'branco' | 'vermelho' | 'rosa' } {
-  const m = date.getMonth(); // 0-indexed
-  const d = date.getDate();
+function getLiturgicalSeason(date: Date, year: number): { season: string; color: 'verde' | 'roxo' | 'branco' | 'vermelho' | 'rosa' } {
+  const easter = computeEaster(year);
+  const dayMs = 24 * 60 * 60 * 1000;
+  const diff = Math.round((date.getTime() - easter.getTime()) / dayMs);
 
-  // Approximate seasons (simplified - no Easter calculation)
-  if (m === 11 && d >= 1 && d <= 24) return { season: 'Advento', color: 'roxo' };
+  // Lent: Ash Wednesday (-46) to Holy Thursday (-3)
+  if (diff >= -46 && diff < -3) {
+    // Laetare Sunday (4th Sunday of Lent)
+    if (date.getDay() === 0 && diff >= -25 && diff <= -22) return { season: 'Quaresma', color: 'rosa' };
+    return { season: 'Quaresma', color: 'roxo' };
+  }
+  // Holy Week
+  if (diff >= -3 && diff < 0) return { season: 'Semana Santa', color: 'vermelho' };
+  // Easter season
+  if (diff >= 0 && diff <= 49) return { season: 'Tempo Pascal', color: 'branco' };
+
+  const m = date.getMonth();
+  const d = date.getDate();
+  // Advent
+  // First Sunday of Advent: closest Sunday to Nov 30
+  const nov30 = new Date(year, 10, 30);
+  const adventStart = new Date(nov30);
+  adventStart.setDate(30 - nov30.getDay());
+  if (date >= adventStart && (m < 11 || (m === 11 && d <= 24))) {
+    // Gaudete Sunday (3rd Sunday of Advent)
+    const thirdSunday = new Date(adventStart);
+    thirdSunday.setDate(thirdSunday.getDate() + 14);
+    if (date.getTime() === thirdSunday.getTime()) return { season: 'Advento', color: 'rosa' };
+    return { season: 'Advento', color: 'roxo' };
+  }
+  // Christmas
   if ((m === 11 && d >= 25) || (m === 0 && d <= 6)) return { season: 'Natal', color: 'branco' };
-  if (m === 1 && d >= 14 && d <= 16) return { season: 'Quaresma', color: 'roxo' }; // approximate
-  if (m >= 1 && m <= 2) return { season: 'Tempo Comum', color: 'verde' };
-  if (m === 3 && d >= 1 && d <= 20) return { season: 'Quaresma', color: 'roxo' };
-  if (m === 3 && d >= 21 && d <= 30) return { season: 'Tempo Pascal', color: 'branco' };
-  if (m === 4) return { season: 'Tempo Pascal', color: 'branco' };
+
   return { season: 'Tempo Comum', color: 'verde' };
 }
 
@@ -93,8 +201,38 @@ const LiturgicalCalendarPage: React.FC = () => {
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth());
   const [selectedDay, setSelectedDay] = useState<Date | null>(null);
+  const [apiData, setApiData] = useState<Record<string, ApiDayData>>({});
+  const [isLoadingApi, setIsLoadingApi] = useState(false);
   const { toggleFavorite, isFavorite } = useFavorites();
   const navigate = useNavigate();
+
+  // Merge fixed + movable celebrations
+  const allCelebrations = useMemo(() => {
+    const movable = getMovableCelebrations(year);
+    return { ...FIXED_CELEBRATIONS, ...movable };
+  }, [year]);
+
+  // Fetch month data from API
+  useEffect(() => {
+    const fetchMonth = async () => {
+      setIsLoadingApi(true);
+      try {
+        const { data } = await supabase.functions.invoke('liturgical-calendar', {
+          body: { action: 'month', year, month: month + 1, lang: 'la', calendar: 'general-la' }
+        });
+        if (Array.isArray(data)) {
+          const map: Record<string, ApiDayData> = {};
+          data.forEach((d: ApiDayData) => { map[d.date] = d; });
+          setApiData(map);
+        }
+      } catch (err) {
+        console.error('Error fetching calendar month:', err);
+      } finally {
+        setIsLoadingApi(false);
+      }
+    };
+    fetchMonth();
+  }, [year, month]);
 
   const days = useMemo(() => getDaysInMonth(year, month), [year, month]);
   const firstDayOfWeek = new Date(year, month, 1).getDay();
@@ -102,13 +240,21 @@ const LiturgicalCalendarPage: React.FC = () => {
 
   const getLiturgicalInfo = (date: Date): LiturgicalDay => {
     const key = `${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-    const fixed = FIXED_CELEBRATIONS[key];
-    const season = getLiturgicalSeason(date);
-
+    const apiKey = `${date.getFullYear()}-${key.replace('-', '-')}`;
+    // Try API data first
+    const apiDay = apiData[apiKey];
+    if (apiDay?.celebrations?.length) {
+      const c = apiDay.celebrations[0];
+      const color = (COLOUR_TO_PT[c.colour?.toLowerCase()] || 'verde') as LiturgicalDay['color'];
+      const rank = (RANK_TO_PT[c.rank?.toLowerCase()] || 'feria') as LiturgicalDay['rank'];
+      return { date, celebration: c.title, color, rank };
+    }
+    // Fallback to local data
+    const fixed = allCelebrations[key];
+    const season = getLiturgicalSeason(date, year);
     if (fixed) {
       return { date, celebration: fixed.name, color: fixed.color, rank: fixed.rank };
     }
-    // Sundays
     if (date.getDay() === 0) {
       return { date, celebration: `Domingo do ${season.season}`, color: season.color, rank: 'feria' };
     }
@@ -127,21 +273,30 @@ const LiturgicalCalendarPage: React.FC = () => {
     setSelectedDay(null);
   };
 
-  const currentSeason = getLiturgicalSeason(today);
+  const goToToday = () => {
+    setYear(today.getFullYear());
+    setMonth(today.getMonth());
+    setSelectedDay(today);
+  };
+
+  const currentSeason = getLiturgicalSeason(today, today.getFullYear());
 
   // Upcoming celebrations
   const upcomingCelebrations = useMemo(() => {
     const upcoming: { date: Date; name: string; color: string; rank: string }[] = [];
-    for (let i = 0; i < 60; i++) {
+    const movable = getMovableCelebrations(today.getFullYear());
+    const all = { ...FIXED_CELEBRATIONS, ...movable };
+    for (let i = 1; i <= 90; i++) {
       const d = new Date(today);
       d.setDate(d.getDate() + i);
       const key = `${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-      const fixed = FIXED_CELEBRATIONS[key];
-      if (fixed) {
-        upcoming.push({ date: new Date(d), name: fixed.name, color: fixed.color, rank: fixed.rank });
+      const cel = all[key];
+      if (cel && (cel.rank === 'solenidade' || cel.rank === 'festa')) {
+        upcoming.push({ date: new Date(d), name: cel.name, color: cel.color, rank: cel.rank });
       }
+      if (upcoming.length >= 8) break;
     }
-    return upcoming.slice(0, 6);
+    return upcoming;
   }, []);
 
   const selectedInfo = selectedDay ? getLiturgicalInfo(selectedDay) : null;
@@ -156,7 +311,7 @@ const LiturgicalCalendarPage: React.FC = () => {
         </div>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Calendário Litúrgico</h1>
         <p className="text-muted-foreground font-serif italic">
-          Tempo atual: <span className={LITURGICAL_COLORS[currentSeason.color].text}>{currentSeason.season}</span>
+          Tempo atual: <span className={LITURGICAL_COLORS[currentSeason.color]?.text}>{currentSeason.season}</span>
         </p>
       </div>
 
@@ -178,11 +333,25 @@ const LiturgicalCalendarPage: React.FC = () => {
             <button onClick={() => navigateMonth(-1)} className="p-2 rounded-xl bg-muted hover:bg-primary/10 transition-all">
               <Icons.ArrowDown className="w-5 h-5 rotate-90 text-foreground" />
             </button>
-            <h2 className="text-xl font-serif font-bold text-foreground">{MONTH_NAMES[month]} {year}</h2>
+            <div className="text-center">
+              <h2 className="text-xl font-serif font-bold text-foreground">{MONTH_NAMES[month]} {year}</h2>
+              {(year !== today.getFullYear() || month !== today.getMonth()) && (
+                <button onClick={goToToday} className="text-[9px] font-black uppercase tracking-widest text-primary hover:underline mt-1">
+                  Ir para Hoje
+                </button>
+              )}
+            </div>
             <button onClick={() => navigateMonth(1)} className="p-2 rounded-xl bg-muted hover:bg-primary/10 transition-all">
               <Icons.ArrowDown className="w-5 h-5 -rotate-90 text-foreground" />
             </button>
           </div>
+
+          {/* Loading indicator */}
+          {isLoadingApi && (
+            <div className="flex justify-center mb-3">
+              <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+            </div>
+          )}
 
           {/* Day headers */}
           <div className="grid grid-cols-7 gap-1 mb-2">
@@ -210,11 +379,11 @@ const LiturgicalCalendarPage: React.FC = () => {
                   className={`relative aspect-square rounded-xl flex flex-col items-center justify-center transition-all text-sm
                     ${isSelected ? 'ring-2 ring-primary shadow-lg scale-105' : ''}
                     ${isToday ? 'ring-2 ring-foreground' : ''}
-                    ${colorStyle.bg} ${colorStyle.border} border
+                    ${colorStyle?.bg} ${colorStyle?.border} border
                     hover:scale-105 hover:shadow-md
                   `}
                 >
-                  <span className={`font-bold ${colorStyle.text} ${isToday ? 'text-foreground' : ''}`}>{date.getDate()}</span>
+                  <span className={`font-bold ${colorStyle?.text} ${isToday ? 'text-foreground' : ''}`}>{date.getDate()}</span>
                   {hasCelebration && (
                     <div className={`absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full ${
                       info.rank === 'solenidade' ? 'bg-amber-500' : info.rank === 'festa' ? 'bg-primary' : 'bg-muted-foreground'
@@ -228,18 +397,17 @@ const LiturgicalCalendarPage: React.FC = () => {
 
         {/* Side panel */}
         <div className="space-y-4">
-          {/* Selected day info */}
           {selectedInfo ? (
-            <div className={`rounded-2xl border p-5 space-y-3 ${LITURGICAL_COLORS[selectedInfo.color].bg} ${LITURGICAL_COLORS[selectedInfo.color].border}`}>
+            <div className={`rounded-2xl border p-5 space-y-3 ${LITURGICAL_COLORS[selectedInfo.color]?.bg} ${LITURGICAL_COLORS[selectedInfo.color]?.border}`}>
               <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
-                {selectedDay!.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}
+                {selectedDay!.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
               </p>
-              <h3 className={`text-lg font-serif font-bold ${LITURGICAL_COLORS[selectedInfo.color].text}`}>
+              <h3 className={`text-lg font-serif font-bold ${LITURGICAL_COLORS[selectedInfo.color]?.text}`}>
                 {selectedInfo.celebration || 'Féria'}
               </h3>
-              <div className="flex items-center gap-2">
-                <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-full ${LITURGICAL_COLORS[selectedInfo.color].bg} ${LITURGICAL_COLORS[selectedInfo.color].text}`}>
-                  {LITURGICAL_COLORS[selectedInfo.color].label}
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-full ${LITURGICAL_COLORS[selectedInfo.color]?.bg} ${LITURGICAL_COLORS[selectedInfo.color]?.text}`}>
+                  {LITURGICAL_COLORS[selectedInfo.color]?.label}
                 </span>
                 {selectedInfo.rank && (
                   <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">
@@ -248,7 +416,7 @@ const LiturgicalCalendarPage: React.FC = () => {
                 )}
               </div>
               <p className="text-sm text-muted-foreground font-serif">
-                {getLiturgicalSeason(selectedDay!).season}
+                {getLiturgicalSeason(selectedDay!, year).season}
               </p>
               <div className="flex items-center gap-2 pt-2 border-t border-border/50">
                 {selectedInfo.celebration && selectedInfo.rank !== 'feria' && (() => {
@@ -283,13 +451,16 @@ const LiturgicalCalendarPage: React.FC = () => {
                 return (
                   <div key={i} className={`p-3 rounded-xl ${cStyle.bg} border ${cStyle.border}`}>
                     <p className="text-[9px] font-bold text-muted-foreground">
-                      {c.date.toLocaleDateString('pt-BR', { day: 'numeric', month: 'short' })}
+                      {c.date.toLocaleDateString('pt-BR', { day: 'numeric', month: 'short', weekday: 'short' })}
                     </p>
                     <p className={`text-sm font-semibold ${cStyle.text}`}>{c.name}</p>
                     <span className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground">{c.rank}</span>
                   </div>
                 );
               })}
+              {upcomingCelebrations.length === 0 && (
+                <p className="text-xs text-muted-foreground italic text-center py-2">Carregando...</p>
+              )}
             </div>
           </div>
 
