@@ -155,6 +155,14 @@ const GospelBlock: React.FC<{
   </section>
 );
 
+type FontSize = 'P' | 'M' | 'G';
+const FONT_SIZE_KEY = 'cathedra_font_size';
+const FONT_CLASSES: Record<FontSize, { body: string; title: string; psalm: string; gospel: string }> = {
+  P: { body: 'text-[14px] md:text-base', title: 'text-sm md:text-base', psalm: 'text-base md:text-lg', gospel: 'text-[14px] md:text-lg' },
+  M: { body: 'text-[16px] md:text-lg', title: 'text-base md:text-lg', psalm: 'text-lg md:text-xl', gospel: 'text-[16px] md:text-xl' },
+  G: { body: 'text-[18px] md:text-xl', title: 'text-lg md:text-xl', psalm: 'text-xl md:text-2xl', gospel: 'text-[18px] md:text-2xl' },
+};
+
 const DailyLiturgy: React.FC = () => {
   const [liturgy, setLiturgy] = useState<LiturgicalDay | null>(null);
   const [readings, setReadings] = useState<LiturgyReadings | null>(null);
@@ -165,6 +173,15 @@ const DailyLiturgy: React.FC = () => {
   const [tab, setTab] = useState<'liturgia' | 'oracoes'>('liturgia');
   const [selectedPrayer, setSelectedPrayer] = useState<string | null>(null);
   const [prayerFilter, setPrayerFilter] = useState('Todas');
+  const [fontSize, setFontSize] = useState<FontSize>(() => {
+    try { return (localStorage.getItem(FONT_SIZE_KEY) as FontSize) || 'M'; } catch { return 'M'; }
+  });
+
+  useEffect(() => {
+    try { localStorage.setItem(FONT_SIZE_KEY, fontSize); } catch {}
+  }, [fontSize]);
+
+  const fc = FONT_CLASSES[fontSize];
 
   useEffect(() => {
     const fetchData = async () => {
