@@ -278,7 +278,7 @@ const AppLayout: React.FC = () => {
           {location.pathname !== AppRoute.HOME && location.pathname !== AppRoute.ONBOARDING && (
             <>
               <CathedralFooter />
-              <BottomNav onOpenSidebar={() => setIsSidebarOpen(true)} />
+              <BottomNav onOpenSidebar={() => setIsSidebarOpen(true)} user={user} />
               {[AppRoute.BIBLE, AppRoute.DAILY_LITURGY, AppRoute.BREVIARY, AppRoute.LECTIO_DIVINA, AppRoute.CATECHISM, AppRoute.MAGISTERIUM].includes(location.pathname as AppRoute) && (
                 <ReadingModeToggle />
               )}
