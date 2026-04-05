@@ -158,6 +158,18 @@ serve(async (req) => {
       return json({ error: "Não foi possível atualizar a transação." }, 500);
     }
 
+    // Activate PRO access when payment is approved
+    if (normalizedStatus === "approved") {
+      const { error: profileError } = await adminClient
+        .from("profiles")
+        .update({ is_premium: true })
+        .eq("id", user.id);
+
+      if (profileError) {
+        console.error("Profile premium update error:", profileError);
+      }
+    }
+
     return json({
       status: normalizedStatus,
       transactionId,

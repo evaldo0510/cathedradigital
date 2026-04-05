@@ -87,21 +87,39 @@ serve(async (req) => {
         ? payment.description
         : "Cathedra PRO";
 
-    const { error: updateError } = await adminClient
+    // Update the transaction record
+    const { data: transaction, error: updateError } = await adminClient
       .from("transactions")
       .update({
         status: normalizedStatus,
         amount: normalizedAmount,
         description: normalizedDescription,
       })
-      .eq("id", transactionId);
+      .eq("id", transactionId)
+      .select("user_id")
+      .maybeSingle();
 
     if (updateError) {
       console.error("Mercado Pago webhook transaction update error:", updateError);
       return json({ error: "Falha ao atualizar a transação." }, 500);
     }
 
-    return json({ ok: true, transactionId, status: normalizedStatus });
+    // Activate PRO access when payment is approved
+    if (normalizedStatus === "approved" && transaction?.user_id) {
+      const { error: profileError } = await adminClient
+        .from("profiles")
+        .update({ is_premium: true })
+        .eq("id", transaction.user_id);
+
+      if (profileError) {
+        console.error("Mercado Pago webhook profile update error:", profileError);
+        // Don't fail the webhook — transaction is already updated
+      } else {
+        console.log(`PRO activated for user ${transaction.user_id}`);
+      }
+    }
+
+    return json({ ok: true, transactionId, status: normalizedStatus, premium: normalizedStatus === "approved" });
   } catch (error) {
     console.error("mercadopago-webhook error:", error);
     return json(
