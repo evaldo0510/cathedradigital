@@ -611,7 +611,7 @@ const DailyLiturgy: React.FC = () => {
           </div>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 };
 

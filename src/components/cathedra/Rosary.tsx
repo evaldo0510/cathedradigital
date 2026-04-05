@@ -162,8 +162,8 @@ const Rosary: React.FC = () => {
               </div>
             </button>
           ))}
+        </div>
       </motion.div>
-      </div>
     );
   }
 
