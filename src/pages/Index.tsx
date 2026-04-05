@@ -127,10 +127,10 @@ const Index = () => {
           </motion.div>
 
           <motion.h1 
-            initial={{ opacity: 0.6, y: 12 }}
+            initial={{ opacity: 0.7, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-5xl md:text-7xl lg:text-8xl font-serif font-bold tracking-tight text-foreground leading-[1.05]"
+            className="text-5xl md:text-7xl lg:text-8xl font-display font-bold tracking-tight text-foreground leading-[1.05]"
           >
             Aprofunde sua <br /> 
             <span className="text-primary italic font-light drop-shadow-sm">Vida Interior.</span>
@@ -174,7 +174,7 @@ const Index = () => {
       {/* Features Grid */}
       <section className="w-full max-w-7xl px-6 py-24 space-y-20">
         <div className="text-center space-y-6 max-w-3xl mx-auto">
-          <h2 className="text-4xl md:text-6xl font-serif font-bold">Ferramentas para sua Edificação</h2>
+          <h2 className="text-4xl md:text-6xl font-display font-bold">Ferramentas para sua Edificação</h2>
           <p className="text-lg text-muted-foreground italic">"Conhecereis a verdade, e a verdade vos libertará" (Jo 8,32)</p>
           <div className="w-24 h-1.5 bg-primary mx-auto rounded-full" />
         </div>
@@ -230,7 +230,7 @@ const Index = () => {
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
           <div className="space-y-10">
             <div className="space-y-6">
-              <h2 className="text-4xl md:text-5xl font-serif font-bold leading-tight">Por que criar sua conta no <span className="text-primary italic">Cathedra?</span></h2>
+              <h2 className="text-4xl md:text-5xl font-display font-bold leading-tight">Por que criar sua conta no <span className="text-primary italic font-serif">Cathedra?</span></h2>
               <p className="text-lg text-white/70 leading-relaxed max-w-xl">
                 O acesso completo permite uma experiência personalizada e contínua, guardando sua história com a Palavra de Deus e a Tradição.
               </p>
@@ -317,7 +317,7 @@ const Index = () => {
               <div className="flex items-center gap-3">
                 <Logo className="w-8 h-8 text-primary" />
                 <div>
-                  <h3 className="text-lg font-serif font-bold tracking-tight">CATHEDRA</h3>
+                  <h3 className="text-lg font-display font-bold tracking-tight">CATHEDRA</h3>
                   <p className="text-[8px] font-black uppercase tracking-[0.3em] text-primary">Digital Sanctuarium</p>
                 </div>
               </div>
