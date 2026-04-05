@@ -162,11 +162,18 @@ const GospelBlock: React.FC<{
 );
 
 type FontSize = 'P' | 'M' | 'G';
+type LineSpacing = 'compact' | 'normal' | 'relaxed';
 const FONT_SIZE_KEY = 'cathedra_font_size';
+const LINE_SPACING_KEY = 'cathedra_line_spacing';
 const FONT_CLASSES: Record<FontSize, { body: string; title: string; psalm: string; gospel: string }> = {
   P: { body: 'text-[14px] md:text-base', title: 'text-sm md:text-base', psalm: 'text-base md:text-lg', gospel: 'text-[14px] md:text-lg' },
   M: { body: 'text-[16px] md:text-lg', title: 'text-base md:text-lg', psalm: 'text-lg md:text-xl', gospel: 'text-[16px] md:text-xl' },
   G: { body: 'text-[18px] md:text-xl', title: 'text-lg md:text-xl', psalm: 'text-xl md:text-2xl', gospel: 'text-[18px] md:text-2xl' },
+};
+const LINE_SPACING_CLASSES: Record<LineSpacing, string> = {
+  compact: 'leading-[1.6] md:leading-[1.7]',
+  normal: 'leading-[2] md:leading-[2.1]',
+  relaxed: 'leading-[2.4] md:leading-[2.6]',
 };
 
 const DailyLiturgy: React.FC = () => {
@@ -182,12 +189,20 @@ const DailyLiturgy: React.FC = () => {
   const [fontSize, setFontSize] = useState<FontSize>(() => {
     try { return (localStorage.getItem(FONT_SIZE_KEY) as FontSize) || 'M'; } catch { return 'M'; }
   });
+  const [lineSpacing, setLineSpacing] = useState<LineSpacing>(() => {
+    try { return (localStorage.getItem(LINE_SPACING_KEY) as LineSpacing) || 'normal'; } catch { return 'normal'; }
+  });
 
   useEffect(() => {
     try { localStorage.setItem(FONT_SIZE_KEY, fontSize); } catch {}
   }, [fontSize]);
 
+  useEffect(() => {
+    try { localStorage.setItem(LINE_SPACING_KEY, lineSpacing); } catch {}
+  }, [lineSpacing]);
+
   const fc = FONT_CLASSES[fontSize];
+  const lc = LINE_SPACING_CLASSES[lineSpacing];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -301,10 +316,10 @@ const DailyLiturgy: React.FC = () => {
         ))}
       </div>
 
-      {/* Font Size Toggle */}
-      {tab === 'liturgia' && (
-        <div className="flex items-center justify-center gap-2">
-          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground mr-1">Fonte</span>
+      {/* Font Size & Line Spacing Toggle */}
+      <div className="flex items-center justify-center gap-4 flex-wrap">
+        <div className="flex items-center gap-2">
+          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">Fonte</span>
           {(['P', 'M', 'G'] as FontSize[]).map(s => (
             <button key={s} onClick={() => setFontSize(s)}
               className={`w-8 h-8 rounded-lg text-xs font-bold transition-all ${
@@ -314,7 +329,23 @@ const DailyLiturgy: React.FC = () => {
             </button>
           ))}
         </div>
-      )}
+        <div className="w-px h-5 bg-border" />
+        <div className="flex items-center gap-2">
+          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">Espaço</span>
+          {([
+            { key: 'compact' as LineSpacing, icon: '≡' },
+            { key: 'normal' as LineSpacing, icon: '☰' },
+            { key: 'relaxed' as LineSpacing, icon: '⋮' },
+          ]).map(({ key, icon }) => (
+            <button key={key} onClick={() => setLineSpacing(key)}
+              className={`w-8 h-8 rounded-lg text-sm font-bold transition-all ${
+                lineSpacing === key ? 'bg-primary text-primary-foreground shadow-md' : 'bg-secondary text-muted-foreground hover:text-primary border border-border'
+              }`}>
+              {icon}
+            </button>
+          ))}
+        </div>
+      </div>
 
       {tab === 'liturgia' ? (
         <div className="space-y-6 animate-in fade-in duration-500">
@@ -549,7 +580,7 @@ const DailyLiturgy: React.FC = () => {
                 {selectedPrayer === prayer.id && (
                   <div className="px-5 pb-5 pt-0 animate-in slide-in-from-top-4 duration-300">
                     <div className="p-5 bg-secondary/50 rounded-xl border border-border">
-                      <p className="reader-text leading-[1.9] text-base text-foreground/90 whitespace-pre-wrap">{prayer.text}</p>
+                      <p className={`reader-text ${lc} ${fc.body} text-foreground/90 whitespace-pre-wrap`}>{prayer.text}</p>
                     </div>
                   </div>
                 )}
