@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { ArrowLeft } from 'lucide-react';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
 import CrossReferencePanel from './CrossReferencePanel';
@@ -141,8 +142,14 @@ const Catechism: React.FC = () => {
   // Reading view
   if (viewMode === 'reading' && selectedSection && selectedPart) {
     const [start, end] = selectedSection.paragraphs;
+    const fromDashboard = searchParams.get('from') === 'dashboard';
     return (
       <div className="max-w-3xl mx-auto space-y-6">
+        {fromDashboard && (
+          <button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-xs text-primary hover:underline">
+            <ArrowLeft className="w-3.5 h-3.5" /> Voltar ao Dashboard
+          </button>
+        )}
         <div className="flex items-center gap-4">
           <button onClick={goBack} className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all">
             <Icons.ArrowDown className="w-5 h-5 rotate-90 text-foreground" />
