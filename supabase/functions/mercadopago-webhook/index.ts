@@ -12,6 +12,34 @@ const json = (body: unknown, status = 200) =>
     headers: { ...corsHeaders, "Content-Type": "application/json" },
   });
 
+function normalizeMercadoPagoAccessToken(rawToken: string) {
+  const trimmedToken = rawToken.trim().replace(/^Bearer\s+/i, "");
+  const tokenMatch = trimmedToken.match(/(APP_USR-[A-Za-z0-9_-]+(?:-[A-Za-z0-9_-]+)*)|(TEST-[A-Za-z0-9_-]+(?:-[A-Za-z0-9_-]+)*)/);
+  return tokenMatch?.[0] ?? trimmedToken;
+}
+
+function resolveMercadoPagoAccessToken() {
+  const secretCandidates = [
+    { name: "MERCADO_PAGO_ACCESS_TOKEN", value: Deno.env.get("MERCADO_PAGO_ACCESS_TOKEN") },
+    { name: "MERCADOPAGO_ACCESS_TOKEN", value: Deno.env.get("MERCADOPAGO_ACCESS_TOKEN") },
+  ];
+
+  console.log(
+    "[mercadopago-webhook] secret availability",
+    secretCandidates.map(({ name, value }) => ({ name, present: Boolean(value?.trim()) })),
+  );
+
+  const selectedSecret = secretCandidates.find(({ value }) => Boolean(value?.trim()));
+  if (!selectedSecret) {
+    return { source: null, token: "" };
+  }
+
+  return {
+    source: selectedSecret.name,
+    token: normalizeMercadoPagoAccessToken(selectedSecret.value!),
+  };
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -24,7 +52,13 @@ serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL") || "";
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
-    const mercadoPagoAccessToken = Deno.env.get("MERCADOPAGO_ACCESS_TOKEN") || "";
+    const { source: tokenSource, token: mercadoPagoAccessToken } = resolveMercadoPagoAccessToken();
+
+    console.log("[mercadopago-webhook] runtime env", {
+      hasServiceRoleKey: Boolean(serviceRoleKey),
+      hasSupabaseUrl: Boolean(supabaseUrl),
+      tokenSource,
+    });
 
     if (!supabaseUrl || !serviceRoleKey) {
       return json({ error: "Configuração do backend incompleta." }, 500);
