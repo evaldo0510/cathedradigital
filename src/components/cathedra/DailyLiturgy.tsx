@@ -301,6 +301,21 @@ const DailyLiturgy: React.FC = () => {
         ))}
       </div>
 
+      {/* Font Size Toggle */}
+      {tab === 'liturgia' && (
+        <div className="flex items-center justify-center gap-2">
+          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground mr-1">Fonte</span>
+          {(['P', 'M', 'G'] as FontSize[]).map(s => (
+            <button key={s} onClick={() => setFontSize(s)}
+              className={`w-8 h-8 rounded-lg text-xs font-bold transition-all ${
+                fontSize === s ? 'bg-primary text-primary-foreground shadow-md' : 'bg-secondary text-muted-foreground hover:text-primary border border-border'
+              }`}>
+              {s}
+            </button>
+          ))}
+        </div>
+      )}
+
       {tab === 'liturgia' ? (
         <div className="space-y-6 animate-in fade-in duration-500">
           <div className="bg-card border border-border rounded-2xl p-6 md:p-12 space-y-10 shadow-sm relative overflow-hidden">
