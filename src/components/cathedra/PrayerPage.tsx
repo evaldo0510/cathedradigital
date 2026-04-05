@@ -514,8 +514,8 @@ const PrayerPage: React.FC = () => {
             </button>
           </div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 
