@@ -160,24 +160,37 @@ const Footer: React.FC = React.memo(() => {
             </form>
           </div>
 
-          {/* Social + bottom bar */}
-          <div className="flex items-center justify-between pt-3 border-t border-foreground/10 dark:border-foreground/15">
-            <p className="text-[7px] font-black uppercase tracking-widest text-muted-foreground/50 dark:text-muted-foreground/70">
-              © {new Date().getFullYear()} CATHEDRA
-            </p>
-            <div className="flex items-center gap-2">
-              {[
-                { icon: <Icons.Instagram className="w-3 h-3" />, url: 'https://instagram.com' },
-                { icon: <Icons.Youtube className="w-3 h-3" />, url: 'https://youtube.com' },
-                { icon: <Icons.Whatsapp className="w-3 h-3" />, url: 'https://wa.me' },
-              ].map((social, i) => (
-                <a key={i} href={social.url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground dark:text-foreground/70 hover:text-primary p-1.5 rounded bg-foreground/5 dark:bg-foreground/10 border border-foreground/10 dark:border-foreground/20 transition-colors">
-                  {social.icon}
-                </a>
+          {/* Links + Social + bottom bar */}
+          <div className="flex flex-col gap-3 pt-3 border-t border-foreground/10 dark:border-foreground/15">
+            <div className="flex items-center gap-4">
+              {[{ label: 'Sobre', route: AppRoute.ABOUT }, { label: 'Termos', route: AppRoute.TERMS }, { label: 'Privacidade', route: AppRoute.PRIVACY }].map(item => (
+                <button 
+                  key={item.label} 
+                  onClick={() => navigate(item.route)} 
+                  className="text-[8px] font-black uppercase tracking-widest text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors"
+                >
+                  {item.label}
+                </button>
               ))}
-              <button onClick={scrollToTop} className="p-1.5 bg-foreground/5 dark:bg-foreground/10 hover:bg-primary hover:text-primary-foreground rounded border border-foreground/10 dark:border-foreground/20 ml-1 transition-colors">
-                <Icons.ArrowDown className="w-3 h-3 rotate-180" />
-              </button>
+            </div>
+            <div className="flex items-center justify-between">
+              <p className="text-[7px] font-black uppercase tracking-widest text-muted-foreground/50 dark:text-muted-foreground/70">
+                © {new Date().getFullYear()} CATHEDRA
+              </p>
+              <div className="flex items-center gap-2">
+                {[
+                  { icon: <Icons.Instagram className="w-3 h-3" />, url: 'https://instagram.com' },
+                  { icon: <Icons.Youtube className="w-3 h-3" />, url: 'https://youtube.com' },
+                  { icon: <Icons.Whatsapp className="w-3 h-3" />, url: 'https://wa.me' },
+                ].map((social, i) => (
+                  <a key={i} href={social.url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground dark:text-foreground/70 hover:text-primary p-1.5 rounded bg-foreground/5 dark:bg-foreground/10 border border-foreground/10 dark:border-foreground/20 transition-colors">
+                    {social.icon}
+                  </a>
+                ))}
+                <button onClick={scrollToTop} className="p-1.5 bg-foreground/5 dark:bg-foreground/10 hover:bg-primary hover:text-primary-foreground rounded border border-foreground/10 dark:border-foreground/20 ml-1 transition-colors">
+                  <Icons.ArrowDown className="w-3 h-3 rotate-180" />
+                </button>
+              </div>
             </div>
           </div>
         </div>
