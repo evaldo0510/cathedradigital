@@ -9,7 +9,8 @@ import {
   Sun,
   Cloud,
   ChevronDown,
-  Brain
+  Brain,
+  RotateCcw
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -348,6 +349,19 @@ const DailyLiturgy: React.FC = () => {
             </button>
           ))}
         </div>
+        {(fontSize !== 'M' || lineSpacing !== 'normal') && (
+          <>
+            <div className="w-px h-5 bg-border" />
+            <button
+              onClick={() => { setFontSize('M'); setLineSpacing('normal'); }}
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[9px] font-bold uppercase tracking-widest text-muted-foreground hover:text-primary bg-secondary border border-border hover:border-primary/40 transition-all"
+              title="Restaurar padrão"
+            >
+              <RotateCcw className="w-3 h-3" />
+              Reset
+            </button>
+          </>
+        )}
       </div>
 
       {tab === 'liturgia' ? (
