@@ -317,7 +317,7 @@ const Index = () => {
               <div className="flex items-center gap-3">
                 <Logo className="w-8 h-8 text-primary" />
                 <div>
-                  <h3 className="text-lg font-serif font-bold tracking-tight">CATHEDRA</h3>
+                  <h3 className="text-lg font-display font-bold tracking-tight">CATHEDRA</h3>
                   <p className="text-[8px] font-black uppercase tracking-[0.3em] text-primary">Digital Sanctuarium</p>
                 </div>
               </div>
