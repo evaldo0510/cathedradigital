@@ -19,6 +19,7 @@ const PLANS = [
     title: 'Cathedra PRO – Mensal',
     highlight: false,
     badge: null,
+    chargePrice: 19.9,
   },
   {
     id: 'cathedra_pro_annual',
@@ -29,10 +30,25 @@ const PLANS = [
     title: 'Cathedra PRO – Anual',
     highlight: true,
     badge: 'Economize 25%',
+    chargePrice: 178.8,
   },
 ];
 
 const DONATION_PRESETS = [5, 10, 20, 50];
+
+const FREE_VS_PRO = [
+  { feature: 'Bíblia completa', free: true, pro: true },
+  { feature: 'Catecismo da Igreja', free: true, pro: true },
+  { feature: 'Liturgia diária', free: true, pro: true },
+  { feature: 'Santos do dia', free: true, pro: true },
+  { feature: 'Colloquium IA', free: false, pro: true },
+  { feature: 'Modo de estudo avançado', free: false, pro: true },
+  { feature: 'Download offline', free: false, pro: true },
+  { feature: 'Trilhas de formação', free: false, pro: true },
+  { feature: 'Badges exclusivos', free: false, pro: true },
+  { feature: 'Sem anúncios', free: false, pro: true },
+  { feature: 'Suporte prioritário', free: false, pro: true },
+];
 
 const CheckoutPage: React.FC = () => {
   const navigate = useNavigate();
@@ -41,13 +57,14 @@ const CheckoutPage: React.FC = () => {
   const [selectedPlan, setSelectedPlan] = useState(PLANS[1].id);
   const [donationAmount, setDonationAmount] = useState<number | ''>('');
   const [donationLoading, setDonationLoading] = useState(false);
+  const [couponCode, setCouponCode] = useState('');
+  const [couponLoading, setCouponLoading] = useState(false);
+  const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discount_percent: number } | null>(null);
 
-  // Redirect legacy callback params to the dedicated result page
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const checkoutState = params.get('checkout');
     if (!checkoutState) return;
-
     const statusMap: Record<string, string> = { success: 'success', pending: 'pending', failure: 'failure' };
     const mapped = statusMap[checkoutState] || 'failure';
     const resultParams = new URLSearchParams({ status: mapped });
@@ -55,30 +72,54 @@ const CheckoutPage: React.FC = () => {
     const externalRef = params.get('external_reference');
     if (paymentId) resultParams.set('payment_id', paymentId);
     if (externalRef) resultParams.set('external_reference', externalRef);
-
     navigate(`${AppRoute.CHECKOUT_RESULT}?${resultParams.toString()}`, { replace: true });
   }, [navigate]);
 
-  const handleCheckout = async (planId: string, price: number, title: string) => {
-    if (!user) {
-      navigate(AppRoute.LOGIN);
-      return;
+  const validateCoupon = async () => {
+    if (!couponCode.trim()) return;
+    setCouponLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('validate-coupon', {
+        body: { code: couponCode.trim() },
+      });
+      if (error) throw error;
+      if (data?.valid) {
+        setAppliedCoupon({ code: data.code, discount_percent: data.discount_percent });
+        toast.success(`Cupom "${data.code}" aplicado! ${data.discount_percent}% de desconto.`);
+      } else {
+        setAppliedCoupon(null);
+        toast.error(data?.error || 'Cupom inválido.');
+      }
+    } catch {
+      toast.error('Erro ao validar cupom.');
+    } finally {
+      setCouponLoading(false);
     }
-    if (isPremium) {
-      toast.info('Você já é PRO! 🎉');
-      return;
-    }
+  };
 
+  const getDiscountedPrice = (price: number) => {
+    if (!appliedCoupon) return price;
+    return Math.round(price * (1 - appliedCoupon.discount_percent / 100) * 100) / 100;
+  };
+
+  const handleCheckout = async (planId: string, price: number, title: string) => {
+    if (!user) { navigate(AppRoute.LOGIN); return; }
+    if (isPremium) { toast.info('Você já é PRO! 🎉'); return; }
+
+    const finalPrice = getDiscountedPrice(price);
     setLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('mercadopago-create-preference', {
-        body: { planId, price, title, origin: window.location.origin },
+        body: {
+          planId,
+          price: finalPrice,
+          title: appliedCoupon ? `${title} (cupom ${appliedCoupon.code})` : title,
+          origin: window.location.origin,
+        },
       });
-
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
       if (!data?.checkoutUrl) throw new Error('Não foi possível gerar o link de pagamento.');
-
       window.location.assign(data.checkoutUrl);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Falha ao iniciar o pagamento.');
@@ -87,30 +128,16 @@ const CheckoutPage: React.FC = () => {
   };
 
   const handleDonation = async () => {
-    if (!donationAmount || donationAmount < 1) {
-      toast.error('Informe um valor mínimo de R$ 1,00');
-      return;
-    }
-    if (!user) {
-      navigate(AppRoute.LOGIN);
-      return;
-    }
-
+    if (!donationAmount || donationAmount < 1) { toast.error('Informe um valor mínimo de R$ 1,00'); return; }
+    if (!user) { navigate(AppRoute.LOGIN); return; }
     setDonationLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('mercadopago-create-preference', {
-        body: {
-          planId: 'donation',
-          price: donationAmount,
-          title: 'Doação voluntária – Cathedra Digital',
-          origin: window.location.origin,
-        },
+        body: { planId: 'donation', price: donationAmount, title: 'Doação voluntária – Cathedra Digital', origin: window.location.origin },
       });
-
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
       if (!data?.checkoutUrl) throw new Error('Não foi possível gerar o link de pagamento.');
-
       window.location.assign(data.checkoutUrl);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Falha ao processar doação.');
@@ -119,6 +146,7 @@ const CheckoutPage: React.FC = () => {
   };
 
   const plan = PLANS.find(p => p.id === selectedPlan)!;
+  const finalChargePrice = getDiscountedPrice(plan.chargePrice);
 
   return (
     <div className="max-w-5xl mx-auto space-y-14 py-8">
@@ -142,16 +170,14 @@ const CheckoutPage: React.FC = () => {
         <BenefitsSection />
 
         <div className="space-y-4">
-          {/* Plan selector tabs */}
+          {/* Plan selector */}
           <div className="flex gap-2 p-1 bg-muted rounded-2xl">
             {PLANS.map(p => (
               <button
                 key={p.id}
                 onClick={() => setSelectedPlan(p.id)}
                 className={`flex-1 py-3 px-4 rounded-xl text-sm font-bold transition-all ${
-                  selectedPlan === p.id
-                    ? 'bg-background text-foreground shadow-md'
-                    : 'text-muted-foreground hover:text-foreground'
+                  selectedPlan === p.id ? 'bg-background text-foreground shadow-md' : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
                 {p.label}
@@ -162,15 +188,22 @@ const CheckoutPage: React.FC = () => {
             ))}
           </div>
 
-          {/* Selected plan card */}
+          {/* Plan card */}
           <Card className="border-2 border-primary shadow-2xl rounded-[2.5rem] overflow-hidden">
             <CardHeader className="text-center bg-primary/5 pb-10 pt-12 space-y-4">
               <CardTitle className="text-xl font-black uppercase tracking-[0.3em] text-primary">
                 {plan.label === 'Anual' ? 'Plano Anual' : 'Plano Mensal'}
               </CardTitle>
               <div className="flex flex-col items-center justify-center">
+                {appliedCoupon && (
+                  <span className="text-xl text-muted-foreground line-through mb-1">
+                    {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(plan.price)}
+                  </span>
+                )}
                 <span className="text-6xl font-serif font-bold text-foreground">
-                  {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(plan.price)}
+                  {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(
+                    getDiscountedPrice(plan.price)
+                  )}
                 </span>
                 <span className="text-sm font-bold text-muted-foreground uppercase tracking-widest mt-2">
                   {plan.period}
@@ -178,20 +211,45 @@ const CheckoutPage: React.FC = () => {
               </div>
               {plan.totalLabel && (
                 <CardDescription className="text-xs font-medium bg-primary/10 text-primary px-4 py-1.5 rounded-full inline-block">
-                  {plan.totalLabel} · {plan.badge}
+                  {appliedCoupon
+                    ? `${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(finalChargePrice)}/ano · ${appliedCoupon.discount_percent}% off`
+                    : `${plan.totalLabel} · ${plan.badge}`}
                 </CardDescription>
+              )}
+              {appliedCoupon && (
+                <div className="flex items-center justify-center gap-2">
+                  <Badge className="bg-emerald-500/15 text-emerald-600 border-emerald-500/30 text-xs">
+                    Cupom {appliedCoupon.code} · -{appliedCoupon.discount_percent}%
+                  </Badge>
+                  <button onClick={() => { setAppliedCoupon(null); setCouponCode(''); }} className="text-xs text-muted-foreground hover:text-destructive">
+                    Remover
+                  </button>
+                </div>
               )}
             </CardHeader>
             <CardContent className="p-8 md:p-10 space-y-6">
+              {/* Coupon input */}
+              {!appliedCoupon && (
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="Código do cupom"
+                    value={couponCode}
+                    onChange={e => setCouponCode(e.target.value.toUpperCase())}
+                    className="rounded-xl uppercase"
+                  />
+                  <Button
+                    variant="outline"
+                    onClick={validateCoupon}
+                    disabled={couponLoading || !couponCode.trim()}
+                    className="rounded-xl shrink-0"
+                  >
+                    {couponLoading ? '...' : 'Aplicar'}
+                  </Button>
+                </div>
+              )}
+
               <ul className="space-y-4">
-                {[
-                  'Acesso a todas as trilhas de estudo',
-                  'IA Teológica sem limites',
-                  'Download para uso offline',
-                  'Suporte prioritário',
-                  'Sem anúncios',
-                  'Badges exclusivos no perfil',
-                ].map((item, i) => (
+                {['Acesso a todas as trilhas de estudo', 'IA Teológica sem limites', 'Download para uso offline', 'Suporte prioritário', 'Sem anúncios', 'Badges exclusivos no perfil'].map((item, i) => (
                   <li key={i} className="flex items-center gap-3 text-sm font-serif">
                     <Icons.Star className="w-4 h-4 text-primary shrink-0" />
                     <span className="text-foreground/80">{item}</span>
@@ -201,22 +259,53 @@ const CheckoutPage: React.FC = () => {
             </CardContent>
             <CardFooter className="p-8 md:p-10 pt-0">
               <Button
-                onClick={() => handleCheckout(plan.id, plan.id.includes('annual') ? 178.8 : plan.price, plan.title)}
+                onClick={() => handleCheckout(plan.id, plan.chargePrice, plan.title)}
                 disabled={loading || isPremium}
                 className="w-full h-14 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:scale-[1.02] shadow-xl shadow-primary/20"
               >
-                {loading
-                  ? 'Redirecionando...'
-                  : isPremium
-                    ? '✓ Plano já ativo'
-                    : `Assinar ${plan.label}`}
+                {loading ? 'Redirecionando...' : isPremium ? '✓ Plano já ativo' : `Assinar ${plan.label}`}
               </Button>
             </CardFooter>
           </Card>
         </div>
       </div>
 
-      {/* Donation section */}
+      {/* Plan Comparison */}
+      <div className="max-w-3xl mx-auto">
+        <h2 className="text-2xl font-serif font-bold text-center mb-8">Gratuito vs PRO</h2>
+        <Card className="rounded-3xl overflow-hidden border border-border/50">
+          <CardContent className="p-0">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border bg-muted/50">
+                  <th className="text-left p-4 font-bold">Recurso</th>
+                  <th className="text-center p-4 font-bold w-24">Gratuito</th>
+                  <th className="text-center p-4 font-bold w-24 text-primary">PRO</th>
+                </tr>
+              </thead>
+              <tbody>
+                {FREE_VS_PRO.map((row, i) => (
+                  <tr key={i} className="border-b border-border/30 last:border-0">
+                    <td className="p-4 font-medium">{row.feature}</td>
+                    <td className="p-4 text-center">
+                      {row.free ? (
+                        <span className="text-emerald-500 text-lg">✓</span>
+                      ) : (
+                        <span className="text-muted-foreground text-lg">—</span>
+                      )}
+                    </td>
+                    <td className="p-4 text-center">
+                      <span className="text-primary text-lg font-bold">✓</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Donation */}
       <div className="max-w-2xl mx-auto">
         <Card className="border border-border/50 rounded-3xl overflow-hidden bg-muted/30">
           <CardHeader className="text-center space-y-3 pb-4">
@@ -225,7 +314,7 @@ const CheckoutPage: React.FC = () => {
             </div>
             <CardTitle className="text-xl font-serif font-bold">Doação Voluntária</CardTitle>
             <CardDescription className="text-sm max-w-md mx-auto">
-              Não quer assinar o PRO? Você pode apoiar o Cathedra com uma contribuição livre.
+              Não quer assinar o PRO? Apoie o Cathedra com uma contribuição livre.
               Cada doação ajuda a manter o app gratuito para todos.
             </CardDescription>
           </CardHeader>
