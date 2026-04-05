@@ -24,13 +24,13 @@ const PLANS = [
   {
     id: 'cathedra_pro_annual',
     label: 'Anual',
-    price: 14.9,
+    price: 15.92,
     period: '/mês',
-    totalLabel: 'R$ 178,80/ano',
+    totalLabel: 'R$ 191,04/ano',
     title: 'Cathedra PRO – Anual',
     highlight: true,
-    badge: 'Economize 25%',
-    chargePrice: 178.8,
+    badge: 'Economize 20%',
+    chargePrice: 191.04,
   },
 ];
 
@@ -257,7 +257,7 @@ const CheckoutPage: React.FC = () => {
                 ))}
               </ul>
             </CardContent>
-            <CardFooter className="p-8 md:p-10 pt-0">
+            <CardFooter className="p-8 md:p-10 pt-0 flex flex-col gap-4">
               <Button
                 onClick={() => handleCheckout(plan.id, plan.chargePrice, plan.title)}
                 disabled={loading || isPremium}
@@ -265,6 +265,10 @@ const CheckoutPage: React.FC = () => {
               >
                 {loading ? 'Redirecionando...' : isPremium ? '✓ Plano já ativo' : `Assinar ${plan.label}`}
               </Button>
+              <p className="text-xs text-center text-muted-foreground italic flex items-center justify-center gap-1.5">
+                <Icons.Heart className="w-3.5 h-3.5 text-primary shrink-0" />
+                Parte do valor da sua assinatura é destinada a projetos de evangelização.
+              </p>
             </CardFooter>
           </Card>
         </div>
