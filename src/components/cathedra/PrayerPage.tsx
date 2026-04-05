@@ -339,18 +339,33 @@ const PrayerPage: React.FC = () => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto space-y-12 pb-12">
+    <motion.div 
+      className="max-w-5xl mx-auto space-y-12 pb-12"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.4 }}
+    >
       {/* Header */}
-      <div className="text-center space-y-4 pt-4">
+      <motion.div 
+        className="text-center space-y-4 pt-4"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+      >
         <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/5 border border-primary/10 rounded-full">
           <Heart className="w-4 h-4 text-primary" />
           <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Oratio et Devotio</span>
         </div>
         <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground tracking-tight">Oração e Devoção</h1>
         <p className="text-lg text-muted-foreground font-serif italic max-w-2xl mx-auto">"A oração é a respiração da alma. Sem ela, a vida interior desfalece."</p>
-      </div>
+      </motion.div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <motion.div 
+        className="grid grid-cols-1 lg:grid-cols-3 gap-8"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.25 }}
+      >
         {/* Main Content — Today's Rosary */}
         <div className="lg:col-span-2 space-y-8">
           <div className="group relative overflow-hidden bg-card border border-border rounded-[2.5rem] p-8 md:p-12 shadow-2xl shadow-black/[0.02]">
