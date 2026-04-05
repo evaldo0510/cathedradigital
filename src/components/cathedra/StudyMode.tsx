@@ -73,45 +73,26 @@ const StudyMode: React.FC = () => {
     navigate(`/bible?book=${abbr}&ch=${chapter}`);
   }, [navigate]);
 
-  // Custom markdown components that parse Bible references in text
-  const markdownComponents = useMemo(() => ({
-    p: ({ children, ...props }: any) => (
-      <p {...props}>
-        {React.Children.map(children, (child) =>
-          typeof child === 'string' ? (
-            <BibleAwareText text={child} onNavigate={handleNavigateToBible} />
-          ) : child
-        )}
-      </p>
-    ),
-    li: ({ children, ...props }: any) => (
-      <li {...props}>
-        {React.Children.map(children, (child) =>
-          typeof child === 'string' ? (
-            <BibleAwareText text={child} onNavigate={handleNavigateToBible} />
-          ) : child
-        )}
-      </li>
-    ),
-    strong: ({ children, ...props }: any) => (
-      <strong {...props}>
-        {React.Children.map(children, (child) =>
-          typeof child === 'string' ? (
-            <BibleAwareText text={child} onNavigate={handleNavigateToBible} />
-          ) : child
-        )}
-      </strong>
-    ),
-    em: ({ children, ...props }: any) => (
-      <em {...props}>
-        {React.Children.map(children, (child) =>
-          typeof child === 'string' ? (
-            <BibleAwareText text={child} onNavigate={handleNavigateToBible} />
-          ) : child
-        )}
-      </em>
-    ),
-  }), [handleNavigateToBible]);
+  const handleNavigateToCatechism = useCallback((paragraph: number) => {
+    navigate(`/catechism?p=${paragraph}`);
+  }, [navigate]);
+
+  // Custom markdown components that parse Bible and Catechism references in text
+  const markdownComponents = useMemo(() => {
+    const renderChildren = (children: React.ReactNode) =>
+      React.Children.map(children, (child) =>
+        typeof child === 'string' ? (
+          <TheologicalAwareText text={child} onNavigateBible={handleNavigateToBible} onNavigateCatechism={handleNavigateToCatechism} />
+        ) : child
+      );
+
+    return {
+      p: ({ children, ...props }: any) => <p {...props}>{renderChildren(children)}</p>,
+      li: ({ children, ...props }: any) => <li {...props}>{renderChildren(children)}</li>,
+      strong: ({ children, ...props }: any) => <strong {...props}>{renderChildren(children)}</strong>,
+      em: ({ children, ...props }: any) => <em {...props}>{renderChildren(children)}</em>,
+    };
+  }, [handleNavigateToBible, handleNavigateToCatechism]);
 
   const sendMessage = async (text: string) => {
     if (!text.trim() || isLoading) return;
