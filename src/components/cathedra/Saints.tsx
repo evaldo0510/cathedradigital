@@ -6,13 +6,28 @@ import SacredImage from './SacredImage';
 import SaintDetail, { CATEGORY_LABELS } from './SaintDetail';
 import { SAINTS_DATA, type Saint } from '@/data/saints';
 
+const ALL_CATEGORIES = Object.keys(CATEGORY_LABELS) as Saint['category'][];
+
 const Saints: React.FC = () => {
   const [selectedSaint, setSelectedSaint] = useState<Saint | null>(null);
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+
   const saintOfTheDay = useMemo(() => {
     const today = new Date();
     const day = today.getDate();
     const month = today.getMonth() + 1;
     return SAINTS_DATA.find(s => s.feastMonth === month && s.feastDayNum === day) || SAINTS_DATA[0];
+  }, []);
+
+  const filteredSaints = useMemo(() => {
+    if (!activeCategory) return SAINTS_DATA;
+    return SAINTS_DATA.filter(s => s.category === activeCategory);
+  }, [activeCategory]);
+
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    SAINTS_DATA.forEach(s => { counts[s.category] = (counts[s.category] || 0) + 1; });
+    return counts;
   }, []);
 
   return (
@@ -63,9 +78,32 @@ const Saints: React.FC = () => {
         </motion.section>
       )}
 
+      {/* Category Filters */}
+      <div className="flex flex-wrap justify-center gap-2">
+        <button
+          onClick={() => setActiveCategory(null)}
+          className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all ${
+            !activeCategory ? 'bg-foreground text-background' : 'bg-secondary text-muted-foreground hover:bg-primary/10 hover:text-primary'
+          }`}
+        >
+          Todos ({SAINTS_DATA.length})
+        </button>
+        {ALL_CATEGORIES.filter(c => categoryCounts[c]).map(cat => (
+          <button
+            key={cat}
+            onClick={() => setActiveCategory(activeCategory === cat ? null : cat)}
+            className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all ${
+              activeCategory === cat ? 'bg-foreground text-background' : 'bg-secondary text-muted-foreground hover:bg-primary/10 hover:text-primary'
+            }`}
+          >
+            {CATEGORY_LABELS[cat]} ({categoryCounts[cat]})
+          </button>
+        ))}
+      </div>
+
       {/* Saints Grid */}
       <StaggeredList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {SAINTS_DATA.map(saint => (
+        {filteredSaints.map(saint => (
           <button
             key={saint.id}
             onClick={() => setSelectedSaint(saint)}
