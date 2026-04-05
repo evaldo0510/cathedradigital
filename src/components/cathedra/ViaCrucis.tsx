@@ -132,6 +132,14 @@ const ViaCrucis: React.FC = () => {
             <p className="text-sm font-serif font-bold text-foreground">V. Adoramus te, Christe, et benedicimus tibi.</p>
             <p className="text-sm font-serif italic text-muted-foreground">R. Quia per sanctam Crucem tuam redemisti mundum.</p>
           </div>
+
+          <div className="flex justify-center pt-2">
+            <ShareButton
+              title={`Via Crucis — ${station.num}ª Estação`}
+              text={`${station.title}\n\n${station.meditation}\n\nOração: ${station.prayer}`}
+              variant="button"
+            />
+          </div>
         </div>
       </div>
 
