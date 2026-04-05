@@ -6,13 +6,28 @@ import SacredImage from './SacredImage';
 import SaintDetail, { CATEGORY_LABELS } from './SaintDetail';
 import { SAINTS_DATA, type Saint } from '@/data/saints';
 
+const ALL_CATEGORIES = Object.keys(CATEGORY_LABELS) as Saint['category'][];
+
 const Saints: React.FC = () => {
   const [selectedSaint, setSelectedSaint] = useState<Saint | null>(null);
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+
   const saintOfTheDay = useMemo(() => {
     const today = new Date();
     const day = today.getDate();
     const month = today.getMonth() + 1;
     return SAINTS_DATA.find(s => s.feastMonth === month && s.feastDayNum === day) || SAINTS_DATA[0];
+  }, []);
+
+  const filteredSaints = useMemo(() => {
+    if (!activeCategory) return SAINTS_DATA;
+    return SAINTS_DATA.filter(s => s.category === activeCategory);
+  }, [activeCategory]);
+
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    SAINTS_DATA.forEach(s => { counts[s.category] = (counts[s.category] || 0) + 1; });
+    return counts;
   }, []);
 
   return (
