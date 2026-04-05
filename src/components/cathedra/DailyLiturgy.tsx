@@ -188,7 +188,7 @@ const DailyLiturgy: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isMeditationLoading, setIsMeditationLoading] = useState(false);
   const [error, setError] = useState('');
-  const [tab, setTab] = useState<'liturgia' | 'oracoes'>('liturgia');
+  const [tab] = useState<'liturgia' | 'oracoes'>('liturgia');
   const [selectedPrayer, setSelectedPrayer] = useState<string | null>(null);
   const [prayerFilter, setPrayerFilter] = useState('Todas');
   const [fontSize, setFontSize] = useState<FontSize>(() => {
@@ -297,29 +297,6 @@ const DailyLiturgy: React.FC = () => {
 
   return (
     <motion.div className="max-w-4xl mx-auto space-y-10 pb-12" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
-      {/* Header */}
-      <motion.div className="text-center space-y-3 pt-4" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}>
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
-          <Star className="w-3.5 h-3.5 text-primary" />
-          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Hodie</span>
-        </div>
-        <h1 className="text-3xl md:text-5xl font-display font-bold text-foreground tracking-tight">Liturgia & Orações</h1>
-        <p className="text-base text-muted-foreground font-serif italic max-w-xl mx-auto leading-relaxed">
-          "Toda a Escritura é inspirada por Deus e útil para ensinar, para repreender, para corrigir e para instruir na justiça."
-        </p>
-      </motion.div>
-
-      {/* Tabs */}
-      <div className="flex p-1 bg-secondary rounded-xl max-w-xs mx-auto">
-        {(['liturgia', 'oracoes'] as const).map(t => (
-          <button key={t} onClick={() => setTab(t)}
-            className={`flex-1 px-5 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${
-              tab === t ? 'bg-card text-primary shadow-md' : 'text-muted-foreground hover:text-primary'
-            }`}>
-            {t === 'liturgia' ? 'Liturgia' : 'Orações'}
-          </button>
-        ))}
-      </div>
 
       {/* Font Size & Line Spacing Toggle */}
       <div className="flex items-center justify-center gap-4 flex-wrap">
