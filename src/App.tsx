@@ -102,7 +102,7 @@ const AppLayout: React.FC = () => {
   const location = useLocation();
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowSplash(false), 1800);
+    const timer = setTimeout(() => setShowSplash(false), 2200);
     return () => clearTimeout(timer);
   }, []);
 
