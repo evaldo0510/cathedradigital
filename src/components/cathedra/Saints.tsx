@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import ShareButton from './ShareButton';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '../../constants';
 import StaggeredList from './StaggeredList';
