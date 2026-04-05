@@ -149,6 +149,7 @@ const Catechism: React.FC = () => {
           <button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-xs text-primary hover:underline">
             <ArrowLeft className="w-3.5 h-3.5" /> Voltar ao Dashboard
           </button>
+        )}
         <div className="flex items-center gap-4">
           <button onClick={goBack} className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all">
             <Icons.ArrowDown className="w-5 h-5 rotate-90 text-foreground" />
