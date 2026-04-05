@@ -215,7 +215,7 @@ const AppLayout: React.FC = () => {
         <main id="main-content" className="flex-1 overflow-y-auto flex flex-col relative custom-scrollbar overscroll-auto touch-pan-y scroll-smooth">
           {location.pathname !== AppRoute.HOME && location.pathname !== AppRoute.ONBOARDING && (
             <AppHeader
-              user={user}
+              user={appUser}
               isDark={isDark}
               onToggleDark={() => setIsDark(!isDark)}
               onOpenSidebar={() => setIsSidebarOpen(true)}
@@ -289,7 +289,7 @@ const AppLayout: React.FC = () => {
           {location.pathname !== AppRoute.HOME && location.pathname !== AppRoute.ONBOARDING && (
             <>
               <CathedralFooter />
-              <BottomNav onOpenSidebar={() => setIsSidebarOpen(true)} user={user} />
+              <BottomNav onOpenSidebar={() => setIsSidebarOpen(true)} user={appUser} />
               {[AppRoute.BIBLE, AppRoute.DAILY_LITURGY, AppRoute.LITURGIA, AppRoute.BREVIARY, AppRoute.LECTIO_DIVINA, AppRoute.CATECHISM, AppRoute.MAGISTERIUM].includes(location.pathname as AppRoute) && (
                 <ReadingModeToggle />
               )}
