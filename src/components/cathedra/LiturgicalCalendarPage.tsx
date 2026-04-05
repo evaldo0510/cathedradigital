@@ -3,6 +3,8 @@ import { Icons } from '../../constants';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { SAINTS_DATA, type Saint } from '@/data/saints';
+import SacredImage from './SacredImage';
 
 interface LiturgicalDay {
   date: Date;
