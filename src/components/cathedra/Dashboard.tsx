@@ -5,6 +5,8 @@ import { AppRoute, User } from '../../types';
 import { useAuth } from '../../hooks/useAuth';
 import { useNotes } from '../../hooks/useNotes';
 import { supabase } from '@/integrations/supabase/client';
+import { SAINTS_DATA } from '@/data/saints';
+import SacredImage from './SacredImage';
 import {
   BookOpen, Church, Cross, Heart, Flame, Star,
   CheckCircle2, Circle, ChevronRight, Pen, Send,
