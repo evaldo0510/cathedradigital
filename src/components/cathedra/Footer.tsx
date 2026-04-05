@@ -96,7 +96,7 @@ const Footer: React.FC = React.memo(() => {
   const dioceseUrl = DIOCESE_URLS[selectedDiocese];
 
   return (
-    <footer className="mt-auto w-full border-t border-primary/10 pt-12 pb-56 lg:pb-16 px-6 md:px-12 bg-black/40 backdrop-blur-sm relative overflow-hidden">
+    <footer className="mt-auto w-full border-t border-primary/10 pt-10 pb-28 lg:pb-12 px-4 sm:px-6 md:px-12 bg-foreground/[0.03] backdrop-blur-sm relative overflow-hidden">
       <div className="absolute inset-0 pointer-events-none opacity-[0.02]" />
       
       <div className="max-w-7xl mx-auto relative z-10">
