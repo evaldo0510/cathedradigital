@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
+import { CheckCircle2, Clock, XCircle } from 'lucide-react';
 
 type ResultState = 'loading' | 'success' | 'pending' | 'failure';
 
 const CheckoutResultPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const checkoutState = searchParams.get('status') as string | null;
+  const checkoutState = searchParams.get('status');
   const paymentId = searchParams.get('payment_id');
   const externalReference = searchParams.get('external_reference');
 
@@ -64,23 +64,23 @@ const CheckoutResultPage: React.FC = () => {
     secondaryAction?: { label: string; route: string };
   }> = {
     success: {
-      icon: <Icons.Check className="w-10 h-10 text-emerald-600" />,
-      iconBg: 'bg-emerald-100 dark:bg-emerald-900/30',
+      icon: <CheckCircle2 className="w-10 h-10 text-primary" />,
+      iconBg: 'bg-primary/10',
       title: 'Pagamento aprovado!',
       description: 'Seu acesso PRO foi liberado. Aproveite todos os recursos exclusivos do Cathedra.',
       primaryAction: { label: 'Ir para o Dashboard', route: AppRoute.DASHBOARD },
       secondaryAction: { label: 'Explorar Trilhas', route: AppRoute.TRILHAS },
     },
     pending: {
-      icon: <Icons.Clock className="w-10 h-10 text-amber-600" />,
-      iconBg: 'bg-amber-100 dark:bg-amber-900/30',
+      icon: <Clock className="w-10 h-10 text-accent-foreground" />,
+      iconBg: 'bg-accent',
       title: 'Pagamento em análise',
       description: 'Seu pagamento foi recebido e está sendo processado. Assim que for aprovado, seu acesso PRO será liberado automaticamente.',
       primaryAction: { label: 'Voltar ao Dashboard', route: AppRoute.DASHBOARD },
     },
     failure: {
-      icon: <Icons.X className="w-10 h-10 text-destructive" />,
-      iconBg: 'bg-red-100 dark:bg-red-900/30',
+      icon: <XCircle className="w-10 h-10 text-destructive" />,
+      iconBg: 'bg-destructive/10',
       title: 'Pagamento não concluído',
       description: 'O pagamento foi cancelado ou recusado. Nenhuma cobrança foi realizada. Você pode tentar novamente quando quiser.',
       primaryAction: { label: 'Tentar novamente', route: AppRoute.CHECKOUT },
