@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { ArrowLeft } from 'lucide-react';
+import ShareButton from './ShareButton';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
 import CrossReferencePanel from './CrossReferencePanel';
