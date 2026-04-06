@@ -22,6 +22,9 @@ const JornadaCompletePage: React.FC = () => {
   const [nextJourney, setNextJourney] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [sharing, setSharing] = useState(false);
+  const [xpAwarded, setXpAwarded] = useState(0);
+  const [newBadges, setNewBadges] = useState<string[]>([]);
+  const [rewardsProcessed, setRewardsProcessed] = useState(false);
   const certificateRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
