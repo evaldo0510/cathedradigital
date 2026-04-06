@@ -773,6 +773,15 @@ export type Database = {
       }
     }
     Functions: {
+      can_update_own_profile: {
+        Args: {
+          _email: string
+          _is_premium: boolean
+          _profile_id: string
+          _role: string
+        }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
