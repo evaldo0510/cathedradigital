@@ -251,7 +251,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             {streak > 0 && (
               <div className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-orange-500/10 border border-orange-500/20">
                 <Flame className="w-4 h-4 text-orange-500" />
-                <span className="text-sm font-bold text-orange-600 dark:text-orange-400">{streak} dias</span>
+                <span className="text-sm font-bold text-orange-600 dark:text-orange-400">{streak} {streak === 1 ? 'dia' : 'dias'}</span>
               </div>
             )}
             <div className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary/10 border border-primary/20">
