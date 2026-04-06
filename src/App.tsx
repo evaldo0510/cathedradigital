@@ -222,7 +222,7 @@ const AppLayout: React.FC = () => {
               onSignOut={signOut}
             />
           )}
-          <div className={location.pathname === AppRoute.HOME || location.pathname === AppRoute.ONBOARDING ? "flex-1" : "flex-1 p-3 sm:p-4 md:p-5 lg:p-6 pb-4 lg:pb-8 w-full max-w-4xl mx-auto"}>
+          <div className={location.pathname === AppRoute.HOME || location.pathname === AppRoute.ONBOARDING ? "flex-1" : "flex-1 p-3 sm:p-4 md:p-5 lg:p-6 pb-4 lg:pb-8 w-full <div className={location.pathname === AppRoute.HOME || location.pathname === AppRoute.ONBOARDING ? "flex-1" : "flex-1 p-3 sm:p-4 md:p-5 lg:p-6 pb-4 lg:pb-8 w-full max-w-5xl mx-auto"}> mx-auto"}>
 
             <AnimatePresence mode="wait">
               <Suspense fallback={<LoadingFallback />}>
