@@ -90,6 +90,88 @@ const JornadaCompletePage: React.FC = () => {
     }
   };
 
+  // Award XP and badges on first visit to completion page
+  useEffect(() => {
+    if (!loading && journey && user && !rewardsProcessed) {
+      processRewards();
+    }
+  }, [loading, journey, user, rewardsProcessed]);
+
+  const processRewards = async () => {
+    if (!user) return;
+    setRewardsProcessed(true);
+    try {
+      // Get profile
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('xp, badges, streak, completed_books, total_minutes_read')
+        .eq('id', user.id)
+        .single();
+      if (!profile) return;
+
+      // Count completed journeys (distinct journey_ids where all steps done)
+      const { data: allJourneys } = await supabase
+        .from('journeys')
+        .select('id')
+        .eq('is_active', true);
+
+      let completedJourneyCount = 0;
+      if (allJourneys) {
+        for (const j of allJourneys) {
+          const { count: totalSteps } = await supabase
+            .from('journey_steps')
+            .select('*', { count: 'exact', head: true })
+            .eq('journey_id', j.id);
+          const { count: doneSteps } = await supabase
+            .from('journey_progress')
+            .select('*', { count: 'exact', head: true })
+            .eq('user_id', user.id)
+            .eq('journey_id', j.id);
+          if (totalSteps && doneSteps && doneSteps >= totalSteps) {
+            completedJourneyCount++;
+          }
+        }
+      }
+
+      // Award XP: 100 per journey completion
+      const xpGain = 100;
+      const newXp = (profile.xp || 0) + xpGain;
+      setXpAwarded(xpGain);
+
+      // Check badges
+      const ctx: BadgeContext = {
+        completedBooks: new Set(profile.completed_books || []),
+        chaptersRead: {},
+        totalMinutesRead: profile.total_minutes_read || 0,
+        streak: profile.streak || 0,
+        completedJourneys: completedJourneyCount,
+      };
+
+      const earned = checkNewBadges(profile.badges || [], ctx);
+      setNewBadges(earned);
+
+      // Update profile
+      const updatedBadges = [...(profile.badges || []), ...earned];
+      await supabase
+        .from('profiles')
+        .update({ xp: newXp, badges: updatedBadges })
+        .eq('id', user.id);
+
+      // Show toast for badges
+      earned.forEach(badgeId => {
+        const badge = getBadgeById(badgeId);
+        if (badge) {
+          toast.success(`${badge.icon} Nova conquista: ${badge.name}!`, {
+            description: badge.description,
+            duration: 5000,
+          });
+        }
+      });
+    } catch (err) {
+      console.error('Rewards error:', err);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[40vh]">
