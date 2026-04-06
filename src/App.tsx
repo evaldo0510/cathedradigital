@@ -133,10 +133,6 @@ const AppLayout: React.FC = () => {
     return AppRoute.HOJE;
   }, [profile?.role, profile?.diagnosis_result]);
 
-  useEffect(() => {
-    const timer = setTimeout(() => setShowSplash(false), 1000);
-    return () => clearTimeout(timer);
-  }, []);
 
   useEffect(() => {
     if (isDark) document.documentElement.classList.add('dark');
