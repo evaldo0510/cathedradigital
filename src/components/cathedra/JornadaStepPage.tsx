@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Check, BookOpen, Hand, PenLine, HelpCircle, Clock } from 'lucide-react';
+import { ArrowLeft, Check, BookOpen, Hand, PenLine, HelpCircle, Clock, Loader2 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -17,6 +17,15 @@ const STEP_TYPE_LABELS: Record<string, { label: string; icon: React.ReactNode }>
   quiz: { label: 'Quiz', icon: <HelpCircle className="w-5 h-5" /> },
 };
 
+/** Parse a Portuguese bible reference like "Jo 3,16-18" or "Gn 1" into { abbrev, chapter } */
+function parseBibleRef(ref: string): { abbrev: string; chapter: number } | null {
+  const m = ref.match(/^(\d?\s*[A-Za-zÀ-ú]+)\s+(\d+)/);
+  if (!m) return null;
+  const abbrev = m[1].trim();
+  const chapter = parseInt(m[2], 10);
+  return { abbrev, chapter };
+}
+
 const JornadaStepPage: React.FC = () => {
   const { id: journeyId } = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
@@ -30,6 +39,10 @@ const JornadaStepPage: React.FC = () => {
   const [completed, setCompleted] = useState(false);
   const [saving, setSaving] = useState(false);
 
+  // Bible text state
+  const [bibleText, setBibleText] = useState<{ book: string; chapter: number; verses: { number: number; text: string }[] } | null>(null);
+  const [bibleLoading, setBibleLoading] = useState(false);
+
   useEffect(() => {
     if (stepId) loadStep();
   }, [stepId]);
@@ -42,7 +55,14 @@ const JornadaStepPage: React.FC = () => {
         .select('*')
         .eq('id', stepId!)
         .single();
-      if (data) setStep(data);
+      if (data) {
+        setStep(data);
+        // Fetch bible text if there's a reference
+        const content = data.content as Record<string, any>;
+        if (content?.bible_ref) {
+          fetchBibleText(content.bible_ref);
+        }
+      }
 
       if (user) {
         const { data: progress } = await supabase
@@ -63,6 +83,24 @@ const JornadaStepPage: React.FC = () => {
     }
   };
 
+  const fetchBibleText = async (ref: string) => {
+    const parsed = parseBibleRef(ref);
+    if (!parsed) return;
+    setBibleLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('bible-text', {
+        body: { abbrev: parsed.abbrev, chapter: parsed.chapter },
+      });
+      if (!error && data?.verses?.length) {
+        setBibleText(data);
+      }
+    } catch (err) {
+      console.error('Bible fetch error:', err);
+    } finally {
+      setBibleLoading(false);
+    }
+  };
+
   const completeStep = async () => {
     if (!user || !journeyId || !stepId) return;
     setSaving(true);
@@ -74,7 +112,6 @@ const JornadaStepPage: React.FC = () => {
         reflection: reflection.trim() || null,
       }, { onConflict: 'user_id,step_id' });
       setCompleted(true);
-      // Fire confetti celebration
       confetti({
         particleCount: 120,
         spread: 80,
@@ -146,11 +183,27 @@ const JornadaStepPage: React.FC = () => {
       {/* Content */}
       <Card>
         <CardContent className="p-6 space-y-5">
-          {/* Bible reference */}
+          {/* Bible reference + real text */}
           {content.bible_ref && (
-            <div className="space-y-2">
+            <div className="space-y-3">
               <h3 className="text-sm font-semibold text-primary uppercase tracking-wide">Leitura Bíblica</h3>
               <p className="text-lg font-serif text-foreground">{content.bible_ref}</p>
+              {bibleLoading && (
+                <div className="flex items-center gap-2 text-muted-foreground text-sm py-2">
+                  <Loader2 className="w-4 h-4 animate-spin" /> Carregando texto bíblico…
+                </div>
+              )}
+              {bibleText && bibleText.verses.length > 0 && (
+                <div className="bg-muted/50 rounded-xl p-4 space-y-2 border border-border max-h-[400px] overflow-y-auto custom-scrollbar">
+                  <p className="text-xs font-semibold text-muted-foreground mb-2">{bibleText.book} {bibleText.chapter}</p>
+                  {bibleText.verses.map((v) => (
+                    <p key={v.number} className="text-sm font-serif text-foreground leading-relaxed">
+                      <sup className="text-xs text-primary/60 mr-1">{v.number}</sup>
+                      {v.text}
+                    </p>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
