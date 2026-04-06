@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Check, Lock, Clock, BookOpen, Hand, PenLine, HelpCircle, ChevronRight, Sparkles } from 'lucide-react';
+import { ArrowLeft, Check, Lock, Clock, BookOpen, Hand, PenLine, HelpCircle, ChevronRight, Sparkles, Award, PartyPopper } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -93,6 +93,7 @@ const JornadaDetailPage: React.FC = () => {
   const totalSteps = steps.length;
   const progressPercent = totalSteps > 0 ? (completedCount / totalSteps) * 100 : 0;
   const isLocked = journey.is_premium && !isPremium;
+  const isJourneyComplete = totalSteps > 0 && completedCount === totalSteps;
 
   return (
     <div className="space-y-6 max-w-2xl mx-auto">
@@ -130,6 +131,26 @@ const JornadaDetailPage: React.FC = () => {
       {/* Description */}
       {journey.description && (
         <p className="text-sm text-muted-foreground leading-relaxed">{journey.description}</p>
+      )}
+
+      {/* Completion Banner */}
+      {isJourneyComplete && (
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+          <Card className="border-primary/30 bg-gradient-to-r from-primary/10 to-primary/5">
+            <CardContent className="p-5 flex items-center gap-4">
+              <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+                <Award className="w-6 h-6 text-primary" />
+              </div>
+              <div className="flex-1">
+                <p className="font-bold text-sm text-foreground">🎉 Jornada Concluída!</p>
+                <p className="text-xs text-muted-foreground">Parabéns! Veja seu certificado e reflexões.</p>
+              </div>
+              <Button size="sm" onClick={() => navigate(`/jornadas/${id}/complete`)}>
+                Ver <ChevronRight className="w-4 h-4 ml-1" />
+              </Button>
+            </CardContent>
+          </Card>
+        </motion.div>
       )}
 
       {/* Steps */}
