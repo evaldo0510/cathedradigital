@@ -73,6 +73,7 @@ const AchievementsPage = lazy(() => import('./components/cathedra/AchievementsPa
 const CheckoutResultPage = lazy(() => import('./components/cathedra/CheckoutResultPage'));
 const TermsPage = lazy(() => import('./components/cathedra/TermsPage'));
 const PrivacyPage = lazy(() => import('./components/cathedra/PrivacyPage'));
+const PricingPage = lazy(() => import('./components/cathedra/PricingPage'));
 
 const LoadingFallback = () => (
   <div className="flex items-center justify-center min-h-[40vh]">
