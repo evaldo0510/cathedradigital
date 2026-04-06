@@ -461,8 +461,6 @@ export type Database = {
           bio: string | null
           completed_books: string[] | null
           created_at: string
-          diagnosis_result: Json | null
-          email: string
           id: string
           is_premium: boolean
           last_visit: string | null
@@ -480,8 +478,6 @@ export type Database = {
           bio?: string | null
           completed_books?: string[] | null
           created_at?: string
-          diagnosis_result?: Json | null
-          email?: string
           id: string
           is_premium?: boolean
           last_visit?: string | null
@@ -499,8 +495,6 @@ export type Database = {
           bio?: string | null
           completed_books?: string[] | null
           created_at?: string
-          diagnosis_result?: Json | null
-          email?: string
           id?: string
           is_premium?: boolean
           last_visit?: string | null

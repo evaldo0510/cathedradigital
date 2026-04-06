@@ -5,10 +5,14 @@ import confetti from 'canvas-confetti';
 import { toast } from 'sonner';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 
+export interface SensitiveData {
+  email: string;
+  diagnosis_result: Record<string, string> | null;
+}
+
 export interface Profile {
   id: string;
   name: string;
-  email: string;
   is_premium: boolean;
   role: 'user' | 'admin' | string | null;
   avatar_url: string | null;
@@ -19,7 +23,7 @@ export interface Profile {
   completed_books?: string[];
   badges?: string[];
   total_minutes_read?: number;
-  diagnosis_result?: Record<string, string> | null;
+  _sensitive?: SensitiveData;
 }
 
 interface AuthContextValue {
@@ -39,11 +43,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const authRequestId = useRef(0);
 
   const fetchProfile = useCallback(async (currentUser: SupabaseUser) => {
-    const [profileResult, premiumResult] = await Promise.all([
+    const [profileResult, sensitiveResult, premiumResult] = await Promise.all([
       supabase
         .from('profiles')
         .select('*')
         .eq('id', currentUser.id)
+        .maybeSingle(),
+      (supabase as any)
+        .from('user_sensitive_data')
+        .select('email, diagnosis_result')
+        .eq('user_id', currentUser.id)
         .maybeSingle(),
       supabase
         .from('transactions')
@@ -68,7 +77,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return {
       ...profileResult.data,
       is_premium: Boolean(profileResult.data.is_premium || (premiumResult.count ?? 0) > 0),
-    } as Profile;
+      _sensitive: sensitiveResult.data as SensitiveData | undefined,
+    } as Profile & { _sensitive?: { email: string; diagnosis_result: any } };
   }, []);
 
   const updateStreak = useCallback(async (currentUser: SupabaseUser, currentProfile: Profile) => {

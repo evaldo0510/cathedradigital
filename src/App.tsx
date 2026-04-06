@@ -133,9 +133,9 @@ const AppLayout: React.FC = () => {
     if (profile?.role === 'admin') return AppRoute.ADMIN;
     // If no onboarding done or no diagnosis, go to onboarding (which includes diagnosis)
     const onboardingDone = readStoredValue('cathedra_onboarding_done');
-    if (!onboardingDone || !profile?.diagnosis_result) return AppRoute.ONBOARDING;
+    if (!onboardingDone || !profile?._sensitive?.diagnosis_result) return AppRoute.ONBOARDING;
     return AppRoute.HOJE;
-  }, [profile?.role, profile?.diagnosis_result]);
+  }, [profile?.role, profile?._sensitive?.diagnosis_result]);
 
 
   useEffect(() => {
