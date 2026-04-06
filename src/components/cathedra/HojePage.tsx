@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Sun, Moon, BookOpen, Hand, PenLine, ChevronRight, Flame, Calendar } from 'lucide-react';
+import { Sun, Moon, BookOpen, Hand, PenLine, ChevronRight, Flame, Calendar, Compass } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
 import { Textarea } from '@/components/ui/textarea';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -35,10 +36,13 @@ const HojePage: React.FC = () => {
   const [todayQuote] = useState(() => LITURGICAL_QUOTES[new Date().getDate() % LITURGICAL_QUOTES.length]);
   const [activeJourney, setActiveJourney] = useState<any>(null);
   const [journeyStep, setJourneyStep] = useState<any>(null);
+  const [journeyProgress, setJourneyProgress] = useState({ completed: 0, total: 0 });
+  const [recommendedJourney, setRecommendedJourney] = useState<any>(null);
 
   useEffect(() => {
     if (!user) return;
     loadActiveJourney();
+    loadRecommendedJourney();
   }, [user]);
 
   const loadActiveJourney = async () => {
@@ -61,7 +65,6 @@ const HojePage: React.FC = () => {
 
         if (journey) {
           setActiveJourney(journey);
-          // Get next uncompleted step
           const { data: completedSteps } = await supabase
             .from('journey_progress')
             .select('step_id')
@@ -70,20 +73,50 @@ const HojePage: React.FC = () => {
 
           const completedIds = (completedSteps || []).map(s => s.step_id);
 
-          const { data: nextStep } = await supabase
+          const { data: allSteps } = await supabase
             .from('journey_steps')
             .select('*')
             .eq('journey_id', lastJourneyId)
             .order('step_order', { ascending: true });
 
-          if (nextStep) {
-            const next = nextStep.find(s => !completedIds.includes(s.id));
+          if (allSteps) {
+            setJourneyProgress({ completed: completedIds.length, total: allSteps.length });
+            const next = allSteps.find(s => !completedIds.includes(s.id));
             setJourneyStep(next || null);
           }
         }
+      } else {
+        // No progress yet — load recommended journey from diagnosis
+        loadRecommendedJourney();
       }
     } catch (err) {
       console.error('Failed to load active journey:', err);
+    }
+  };
+
+  const loadRecommendedJourney = async () => {
+    if (!user || !profile?.diagnosis_result) return;
+    try {
+      const result = profile.diagnosis_result as Record<string, string>;
+      const { moment, prayer, knowledge, goal } = result;
+      let category = 'fundamentos';
+      if (moment === 'beginning' || knowledge === 'basic') category = 'fundamentos';
+      else if (moment === 'struggling' || goal === 'peace') category = 'mistico';
+      else if (prayer === 'contemplative' || goal === 'transformation') category = 'mistico';
+      else if (goal === 'routine' || prayer === 'rarely' || prayer === 'sometimes') category = 'rotina';
+
+      const { data } = await supabase
+        .from('journeys')
+        .select('*')
+        .eq('category', category)
+        .eq('is_active', true)
+        .order('sort_order', { ascending: true })
+        .limit(1)
+        .maybeSingle();
+
+      if (data) setRecommendedJourney(data);
+    } catch (err) {
+      console.error('Failed to load recommended journey:', err);
     }
   };
 
@@ -165,14 +198,14 @@ const HojePage: React.FC = () => {
         </Card>
       </motion.div>
 
-      {/* Active Journey */}
-      {activeJourney && journeyStep && (
+      {/* Active Journey with Progress */}
+      {activeJourney && (
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}
         >
-          <Card className="border-primary/30 overflow-hidden">
+          <Card className="border-primary/30 overflow-hidden bg-gradient-to-br from-primary/5 to-transparent">
             <CardHeader className="pb-2">
               <CardTitle className="text-base flex items-center gap-2">
                 <Flame className="w-4 h-4 text-primary" />
@@ -180,13 +213,53 @@ const HojePage: React.FC = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              <p className="text-sm text-muted-foreground">Próxima etapa: <strong>{journeyStep.title}</strong></p>
+              {journeyProgress.total > 0 && (
+                <div className="space-y-1.5">
+                  <Progress value={journeyProgress.total > 0 ? (journeyProgress.completed / journeyProgress.total) * 100 : 0} className="h-2" />
+                  <p className="text-[10px] text-muted-foreground">
+                    {journeyProgress.completed}/{journeyProgress.total} etapas concluídas
+                    {journeyProgress.completed >= journeyProgress.total && ' ✓ Concluída!'}
+                  </p>
+                </div>
+              )}
+              {journeyStep ? (
+                <p className="text-sm text-muted-foreground">Próxima etapa: <strong className="text-foreground">{journeyStep.title}</strong></p>
+              ) : (
+                <p className="text-sm text-primary font-semibold">🎉 Parabéns! Jornada concluída!</p>
+              )}
               <Button
                 size="sm"
                 onClick={() => navigate(`/jornadas/${activeJourney.id}`)}
                 className="w-full"
               >
-                Continuar Jornada <ChevronRight className="w-4 h-4 ml-1" />
+                {journeyStep ? 'Continuar Jornada' : 'Ver Resumo'} <ChevronRight className="w-4 h-4 ml-1" />
+              </Button>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
+
+      {/* Recommended Journey (no progress yet) */}
+      {!activeJourney && recommendedJourney && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
+        >
+          <Card className="border-primary/20 bg-primary/5">
+            <CardContent className="p-4 space-y-3">
+              <div className="flex items-center gap-2">
+                <Compass className="w-5 h-5 text-primary" />
+                <h3 className="font-semibold text-sm text-foreground">Jornada Recomendada</h3>
+              </div>
+              <p className="text-sm text-foreground font-bold">{recommendedJourney.title}</p>
+              <p className="text-xs text-muted-foreground">{recommendedJourney.description}</p>
+              <Button
+                size="sm"
+                onClick={() => navigate(`/jornadas/${recommendedJourney.id}`)}
+                className="w-full"
+              >
+                Começar Jornada <ChevronRight className="w-4 h-4 ml-1" />
               </Button>
             </CardContent>
           </Card>
