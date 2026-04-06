@@ -180,29 +180,18 @@ const AppLayout: React.FC = () => {
       <CommandCenter />
       <OfflineIndicator />
       <div className="flex h-[100dvh] w-full overflow-hidden bg-background selection:bg-primary/20">
-        {/* Desktop sidebar - always visible on lg+ */}
-        {location.pathname !== AppRoute.HOME && location.pathname !== AppRoute.ONBOARDING && (
-          <div className="hidden lg:block relative h-full w-72 flex-shrink-0">
-            <CathedralSidebar 
-              onClose={() => setIsSidebarOpen(false)} 
-              user={appUser} 
-              isDark={isDark}
-              onToggleDark={() => setIsDark(!isDark)}
-              onSignOut={signOut}
-            />
-          </div>
-        )}
+        {/* Sidebar is only accessible via overlay/drawer on all screens */}
 
         {/* Mobile sidebar overlay - only when open */}
         <AnimatePresence>
-          {location.pathname !== AppRoute.HOME && location.pathname !== AppRoute.ONBOARDING && isSidebarOpen && (
+        {location.pathname !== AppRoute.HOME && location.pathname !== AppRoute.ONBOARDING && isSidebarOpen && (
             <motion.div 
               key="mobile-sidebar"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="fixed inset-0 z-[150] lg:hidden"
+              className="fixed inset-0 z-[150]"
             >
               <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsSidebarOpen(false)} />
               <motion.div

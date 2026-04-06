@@ -35,7 +35,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
         ) : (
           <button 
             onClick={onOpenSidebar} 
-            className="hidden lg:flex p-3 bg-muted text-foreground active:bg-primary rounded-full transition-all hover:scale-110"
+            className="p-3 bg-muted text-foreground active:bg-primary rounded-full transition-all hover:scale-110"
           >
             <Icons.Menu className="w-6 h-6" />
           </button>
