@@ -83,8 +83,21 @@ const BibliotecaPage = lazy(() => import('./components/cathedra/BibliotecaPage')
 const JornadasPage = lazy(() => import('./components/cathedra/JornadasPage'));
 
 const LoadingFallback = () => (
-  <div className="flex items-center justify-center min-h-[40vh]">
-    <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+  <div className="animate-in fade-in duration-150 space-y-4 p-4">
+    <div className="h-8 w-48 rounded-md bg-muted animate-pulse" />
+    <div className="space-y-3">
+      <div className="h-4 w-full rounded bg-muted animate-pulse" />
+      <div className="h-4 w-3/4 rounded bg-muted animate-pulse" />
+      <div className="h-4 w-5/6 rounded bg-muted animate-pulse" />
+    </div>
+    <div className="grid grid-cols-2 gap-3 pt-2">
+      <div className="h-24 rounded-lg bg-muted animate-pulse" />
+      <div className="h-24 rounded-lg bg-muted animate-pulse" />
+    </div>
+    <div className="space-y-3 pt-2">
+      <div className="h-4 w-2/3 rounded bg-muted animate-pulse" />
+      <div className="h-4 w-full rounded bg-muted animate-pulse" />
+    </div>
   </div>
 );
 
@@ -107,7 +120,7 @@ const AppLayout: React.FC = () => {
   const [lang, setLangState] = useState<Language>(getInitialLanguage);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDark, setIsDark] = useState(getInitialTheme);
-  const [showSplash, setShowSplash] = useState(true);
+  const [showSplash, setShowSplash] = useState(false);
   const { user, profile, signOut, isPremium, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
