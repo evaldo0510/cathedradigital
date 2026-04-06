@@ -1,0 +1,234 @@
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { Award, ArrowRight, BookOpen, Quote, ChevronRight, Sparkles, ArrowLeft } from 'lucide-react';
+import confetti from 'canvas-confetti';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
+import { AppRoute } from '@/types';
+
+const JornadaCompletePage: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const [journey, setJourney] = useState<any>(null);
+  const [reflections, setReflections] = useState<{ title: string; reflection: string; completed_at: string }[]>([]);
+  const [nextJourney, setNextJourney] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (id && user) loadData();
+  }, [id, user]);
+
+  useEffect(() => {
+    if (!loading && journey) {
+      confetti({ particleCount: 200, spread: 120, origin: { y: 0.5 }, colors: ['#d4af37', '#e8c547', '#b8860b', '#8B5CF6', '#4ECDC4'] });
+    }
+  }, [loading, journey]);
+
+  const loadData = async () => {
+    setLoading(true);
+    try {
+      const [journeyRes, progressRes, nextRes] = await Promise.all([
+        supabase.from('journeys').select('*').eq('id', id!).single(),
+        supabase
+          .from('journey_progress')
+          .select('reflection, completed_at, step_id')
+          .eq('user_id', user!.id)
+          .eq('journey_id', id!)
+          .order('completed_at', { ascending: true }),
+        supabase
+          .from('journeys')
+          .select('*')
+          .eq('is_active', true)
+          .neq('id', id!)
+          .order('sort_order', { ascending: true })
+          .limit(3),
+      ]);
+
+      if (journeyRes.data) setJourney(journeyRes.data);
+
+      if (progressRes.data) {
+        // Get step titles
+        const stepIds = progressRes.data.map(p => p.step_id);
+        const { data: steps } = await supabase
+          .from('journey_steps')
+          .select('id, title, step_order')
+          .in('id', stepIds)
+          .order('step_order', { ascending: true });
+
+        const stepMap = new Map(steps?.map(s => [s.id, s.title]) || []);
+        setReflections(
+          progressRes.data
+            .filter(p => p.reflection)
+            .map(p => ({
+              title: stepMap.get(p.step_id) || 'Etapa',
+              reflection: p.reflection!,
+              completed_at: p.completed_at,
+            }))
+        );
+      }
+
+      if (nextRes.data && nextRes.data.length > 0) {
+        setNextJourney(nextRes.data[0]);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[40vh]">
+        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (!journey) return null;
+
+  const completionDate = new Date().toLocaleDateString('pt-BR', {
+    day: 'numeric', month: 'long', year: 'numeric',
+  });
+
+  return (
+    <div className="space-y-8 max-w-2xl mx-auto pb-12">
+      {/* Back */}
+      <Button variant="ghost" size="sm" onClick={() => navigate(AppRoute.JORNADAS)}>
+        <ArrowLeft className="w-4 h-4 mr-2" /> Jornadas
+      </Button>
+
+      {/* Certificate */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6 }}
+      >
+        <Card className="border-primary/30 bg-gradient-to-b from-primary/5 to-background overflow-hidden">
+          <CardContent className="p-8 text-center space-y-6">
+            <motion.div
+              initial={{ rotate: -20, scale: 0 }}
+              animate={{ rotate: 0, scale: 1 }}
+              transition={{ delay: 0.3, type: 'spring', stiffness: 200 }}
+            >
+              <div className="w-20 h-20 mx-auto rounded-full bg-primary/10 border-2 border-primary/30 flex items-center justify-center">
+                <Award className="w-10 h-10 text-primary" />
+              </div>
+            </motion.div>
+
+            <div className="space-y-2">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Certificado de Conclusão</p>
+              <h1 className="text-2xl md:text-3xl font-bold font-serif text-foreground">{journey.title}</h1>
+              <p className="text-sm text-muted-foreground italic">{journey.subtitle}</p>
+            </div>
+
+            <div className="border-t border-b border-border/50 py-4 space-y-1">
+              <p className="text-xs text-muted-foreground">Jornada concluída em</p>
+              <p className="text-sm font-semibold text-foreground">{completionDate}</p>
+            </div>
+
+            <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
+              <Sparkles className="w-3 h-3 text-primary" />
+              <span>CATHEDRA — Digital Sanctuarium</span>
+              <Sparkles className="w-3 h-3 text-primary" />
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+
+      {/* Reflections Summary */}
+      {reflections.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="space-y-4"
+        >
+          <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
+            <BookOpen className="w-5 h-5 text-primary" /> Suas Reflexões
+          </h2>
+
+          <div className="space-y-3">
+            {reflections.map((r, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.5 + i * 0.1 }}
+              >
+                <Card className="border-border/50">
+                  <CardContent className="p-4 space-y-2">
+                    <p className="text-xs font-bold uppercase tracking-wider text-primary">{r.title}</p>
+                    <div className="flex gap-2">
+                      <Quote className="w-4 h-4 text-muted-foreground flex-shrink-0 mt-0.5" />
+                      <p className="text-sm text-foreground/80 italic font-serif leading-relaxed">{r.reflection}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      )}
+
+      {/* Next Journey Suggestion */}
+      {nextJourney && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7 }}
+          className="space-y-3"
+        >
+          <h2 className="text-lg font-bold text-foreground">Continue sua caminhada</h2>
+
+          <Card
+            className="border-primary/20 hover:border-primary/40 transition-all cursor-pointer"
+            onClick={() => navigate(`/jornadas/${nextJourney.id}`)}
+          >
+            <CardContent className="p-5 flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <ArrowRight className="w-6 h-6 text-primary" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-bold text-sm text-foreground">{nextJourney.title}</h3>
+                {nextJourney.subtitle && (
+                  <p className="text-xs text-muted-foreground truncate">{nextJourney.subtitle}</p>
+                )}
+              </div>
+              <ChevronRight className="w-5 h-5 text-muted-foreground" />
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
+
+      {/* Actions */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.9 }}
+        className="flex flex-col sm:flex-row gap-3"
+      >
+        <Button
+          className="flex-1"
+          onClick={() => navigate(AppRoute.JORNADAS)}
+        >
+          Ver Todas as Jornadas
+        </Button>
+        <Button
+          variant="outline"
+          className="flex-1"
+          onClick={() => navigate(`/jornadas/${id}`)}
+        >
+          Rever Etapas
+        </Button>
+      </motion.div>
+    </div>
+  );
+};
+
+export default JornadaCompletePage;
