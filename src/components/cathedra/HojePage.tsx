@@ -229,10 +229,16 @@ const HojePage: React.FC = () => {
               )}
               <Button
                 size="sm"
-                onClick={() => navigate(`/jornadas/${activeJourney.id}`)}
+                onClick={() => {
+                  if (journeyStep) {
+                    navigate(`/jornadas/${activeJourney.id}/step?step=${journeyStep.id}`);
+                  } else {
+                    navigate(`/jornadas/${activeJourney.id}/complete`);
+                  }
+                }}
                 className="w-full"
               >
-                {journeyStep ? 'Continuar Jornada' : 'Ver Resumo'} <ChevronRight className="w-4 h-4 ml-1" />
+                {journeyStep ? 'Continuar Jornada' : 'Ver Certificado'} <ChevronRight className="w-4 h-4 ml-1" />
               </Button>
             </CardContent>
           </Card>

@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Award, ArrowRight, BookOpen, Quote, ChevronRight, Sparkles, ArrowLeft } from 'lucide-react';
+import { Award, ArrowRight, BookOpen, Quote, ChevronRight, Sparkles, ArrowLeft, Share2, Download } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import html2canvas from 'html2canvas';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
+import { toast } from 'sonner';
 
 const JornadaCompletePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -18,6 +20,8 @@ const JornadaCompletePage: React.FC = () => {
   const [reflections, setReflections] = useState<{ title: string; reflection: string; completed_at: string }[]>([]);
   const [nextJourney, setNextJourney] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [sharing, setSharing] = useState(false);
+  const certificateRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (id && user) loadData();
@@ -96,6 +100,45 @@ const JornadaCompletePage: React.FC = () => {
     day: 'numeric', month: 'long', year: 'numeric',
   });
 
+  const shareCertificate = async () => {
+    if (!certificateRef.current) return;
+    setSharing(true);
+    try {
+      const canvas = await html2canvas(certificateRef.current, {
+        backgroundColor: null,
+        scale: 2,
+        useCORS: true,
+      });
+      const blob = await new Promise<Blob | null>(resolve => canvas.toBlob(resolve, 'image/png'));
+      if (!blob) throw new Error('Failed to generate image');
+
+      const file = new File([blob], `cathedra-certificado-${journey.title.replace(/\s+/g, '-').toLowerCase()}.png`, { type: 'image/png' });
+
+      if (navigator.share && navigator.canShare?.({ files: [file] })) {
+        await navigator.share({
+          title: `Certificado: ${journey.title}`,
+          text: `Concluí a jornada "${journey.title}" no Cathedra! 🏅`,
+          files: [file],
+        });
+      } else {
+        // Fallback: download
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = file.name;
+        a.click();
+        URL.revokeObjectURL(url);
+        toast.success('Certificado salvo como imagem!');
+      }
+    } catch (err: any) {
+      if (err?.name !== 'AbortError') {
+        toast.error('Erro ao compartilhar certificado');
+      }
+    } finally {
+      setSharing(false);
+    }
+  };
+
   return (
     <div className="space-y-8 max-w-2xl mx-auto pb-12">
       {/* Back */}
@@ -109,36 +152,46 @@ const JornadaCompletePage: React.FC = () => {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6 }}
       >
-        <Card className="border-primary/30 bg-gradient-to-b from-primary/5 to-background overflow-hidden">
-          <CardContent className="p-8 text-center space-y-6">
-            <motion.div
-              initial={{ rotate: -20, scale: 0 }}
-              animate={{ rotate: 0, scale: 1 }}
-              transition={{ delay: 0.3, type: 'spring', stiffness: 200 }}
-            >
+        <div ref={certificateRef}>
+          <Card className="border-primary/30 bg-gradient-to-b from-primary/5 to-background overflow-hidden">
+            <CardContent className="p-8 text-center space-y-6">
               <div className="w-20 h-20 mx-auto rounded-full bg-primary/10 border-2 border-primary/30 flex items-center justify-center">
                 <Award className="w-10 h-10 text-primary" />
               </div>
-            </motion.div>
 
-            <div className="space-y-2">
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Certificado de Conclusão</p>
-              <h1 className="text-2xl md:text-3xl font-bold font-serif text-foreground">{journey.title}</h1>
-              <p className="text-sm text-muted-foreground italic">{journey.subtitle}</p>
-            </div>
+              <div className="space-y-2">
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Certificado de Conclusão</p>
+                <h1 className="text-2xl md:text-3xl font-bold font-serif text-foreground">{journey.title}</h1>
+                <p className="text-sm text-muted-foreground italic">{journey.subtitle}</p>
+              </div>
 
-            <div className="border-t border-b border-border/50 py-4 space-y-1">
-              <p className="text-xs text-muted-foreground">Jornada concluída em</p>
-              <p className="text-sm font-semibold text-foreground">{completionDate}</p>
-            </div>
+              <div className="border-t border-b border-border/50 py-4 space-y-1">
+                <p className="text-xs text-muted-foreground">Jornada concluída em</p>
+                <p className="text-sm font-semibold text-foreground">{completionDate}</p>
+              </div>
 
-            <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
-              <Sparkles className="w-3 h-3 text-primary" />
-              <span>CATHEDRA — Digital Sanctuarium</span>
-              <Sparkles className="w-3 h-3 text-primary" />
-            </div>
-          </CardContent>
-        </Card>
+              <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
+                <Sparkles className="w-3 h-3 text-primary" />
+                <span>CATHEDRA — Digital Sanctuarium</span>
+                <Sparkles className="w-3 h-3 text-primary" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Share Button */}
+        <div className="flex justify-center mt-3">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={shareCertificate}
+            disabled={sharing}
+            className="flex items-center gap-2"
+          >
+            <Share2 className="w-4 h-4" />
+            {sharing ? 'Gerando imagem...' : 'Compartilhar Certificado'}
+          </Button>
+        </div>
       </motion.div>
 
       {/* Reflections Summary */}
