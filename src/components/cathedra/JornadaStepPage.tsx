@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Check, BookOpen, Hand, PenLine, Sparkles, Clock, ChevronDown, X } from 'lucide-react';
@@ -109,28 +110,30 @@ const JornadaStepPage: React.FC = () => {
   };
 
   if (loading) {
-    return (
+    return createPortal(
       <div className="fixed inset-0 bg-background flex items-center justify-center z-[200]">
         <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-      </div>
+      </div>,
+      document.body
     );
   }
 
   if (!step) {
-    return (
+    return createPortal(
       <div className="fixed inset-0 bg-background flex items-center justify-center z-[200]">
         <div className="text-center space-y-4">
           <p className="text-muted-foreground">Etapa não encontrada.</p>
           <button onClick={() => navigate(-1)} className="text-primary underline text-sm">Voltar</button>
         </div>
-      </div>
+      </div>,
+      document.body
     );
   }
 
   const content = step.content as Record<string, any>;
   const stepProgress = totalSteps > 0 ? (step.step_order / totalSteps) * 100 : 0;
 
-  return (
+  return createPortal(
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -287,7 +290,8 @@ const JornadaStepPage: React.FC = () => {
           )}
         </div>
       </div>
-    </motion.div>
+    </motion.div>,
+    document.body
   );
 };
 
