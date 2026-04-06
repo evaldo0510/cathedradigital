@@ -156,6 +156,8 @@ const Bible: React.FC = () => {
           completedBooks: newCompletedSet,
           chaptersRead: next,
           totalMinutesRead: profile?.total_minutes_read || 0,
+          streak: profile?.streak || 0,
+          completedJourneys: 0,
         });
         
         const updatedBadges = [...currentBadges, ...newBadgeIds];

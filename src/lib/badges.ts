@@ -99,6 +99,50 @@ export const BADGE_DEFINITIONS: BadgeDef[] = [
     icon: '🏛️',
     condition: ctx => ctx.completedBooks.size >= 20,
   },
+  // Streak badges
+  {
+    id: 'streak_7',
+    name: 'Chama Constante',
+    description: 'Manteve um streak de 7 dias consecutivos',
+    icon: '🔥',
+    condition: ctx => ctx.streak >= 7,
+  },
+  {
+    id: 'streak_30',
+    name: 'Perseverança',
+    description: 'Manteve um streak de 30 dias consecutivos',
+    icon: '💪',
+    condition: ctx => ctx.streak >= 30,
+  },
+  {
+    id: 'streak_100',
+    name: 'Centurião da Fé',
+    description: 'Manteve um streak de 100 dias consecutivos',
+    icon: '🏆',
+    condition: ctx => ctx.streak >= 100,
+  },
+  // Journey badges
+  {
+    id: 'first_journey',
+    name: 'Peregrino',
+    description: 'Completou sua primeira jornada espiritual',
+    icon: '🧭',
+    condition: ctx => ctx.completedJourneys >= 1,
+  },
+  {
+    id: 'five_journeys',
+    name: 'Caminhante Fiel',
+    description: 'Completou 5 jornadas espirituais',
+    icon: '⛪',
+    condition: ctx => ctx.completedJourneys >= 5,
+  },
+  {
+    id: 'ten_journeys',
+    name: 'Mestre das Jornadas',
+    description: 'Completou 10 jornadas espirituais',
+    icon: '🌟',
+    condition: ctx => ctx.completedJourneys >= 10,
+  },
 ];
 
 /**
