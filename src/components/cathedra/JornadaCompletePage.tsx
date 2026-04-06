@@ -20,6 +20,8 @@ const JornadaCompletePage: React.FC = () => {
   const [reflections, setReflections] = useState<{ title: string; reflection: string; completed_at: string }[]>([]);
   const [nextJourney, setNextJourney] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [sharing, setSharing] = useState(false);
+  const certificateRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (id && user) loadData();
