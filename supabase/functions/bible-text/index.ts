@@ -49,6 +49,51 @@ const BOOK_PT_MAP: Record<string, string> = {
   'Jd': 'Judas', 'Ap': 'Apocalipse',
 };
 
+// bolls.life uses standard Protestant book IDs (1-66) 
+const BOLLS_BOOK_ID: Record<string, number> = {
+  'Gn': 1, 'Ex': 2, 'Lv': 3, 'Nm': 4, 'Dt': 5,
+  'Js': 6, 'Jz': 7, 'Rt': 8, '1Sm': 9, '2Sm': 10,
+  '1Rs': 11, '2Rs': 12, '1Cr': 13, '2Cr': 14,
+  'Esd': 15, 'Ne': 16, 'Est': 17,
+  'Jó': 18, 'Sl': 19, 'Pr': 20, 'Ecl': 21, 'Ct': 22,
+  'Is': 23, 'Jr': 24, 'Lm': 25,
+  'Ez': 26, 'Dn': 27, 'Os': 28, 'Jl': 29, 'Am': 30,
+  'Ab': 31, 'Jn': 32, 'Mq': 33, 'Na': 34, 'Hab': 35,
+  'Sf': 36, 'Ag': 37, 'Zc': 38, 'Ml': 39,
+  'Mt': 40, 'Mc': 41, 'Lc': 42, 'Jo': 43,
+  'At': 44, 'Rm': 45, '1Cor': 46, '2Cor': 47,
+  'Gl': 48, 'Ef': 49, 'Fl': 50, 'Cl': 51,
+  '1Ts': 52, '2Ts': 53, '1Tm': 54, '2Tm': 55,
+  'Tt': 56, 'Fm': 57, 'Hb': 58, 'Tg': 59,
+  '1Pd': 60, '2Pd': 61, '1Jo': 62, '2Jo': 63, '3Jo': 64,
+  'Jd': 65, 'Ap': 66,
+};
+
+/** Try bible-api.com first (Almeida translation) */
+async function fetchFromBibleApi(englishName: string, chapter: number) {
+  const url = `https://bible-api.com/${encodeURIComponent(englishName)}+${chapter}?translation=almeida`;
+  console.log('Trying bible-api.com:', url);
+  const res = await fetch(url);
+  if (!res.ok) return null;
+  const data = await res.json();
+  if (!data.verses || !Array.isArray(data.verses) || data.verses.length === 0) return null;
+  return data.verses.map((v: any) => ({ number: v.verse, text: v.text?.trim() || '' }));
+}
+
+/** Fallback to bolls.life (NAA — Nova Almeida Atualizada) */
+async function fetchFromBollsLife(bookId: number, chapter: number) {
+  const url = `https://bolls.life/get-chapter/NAA/${bookId}/${chapter}/`;
+  console.log('Fallback bolls.life:', url);
+  const res = await fetch(url);
+  if (!res.ok) return null;
+  const data = await res.json();
+  if (!Array.isArray(data) || data.length === 0) return null;
+  return data.map((v: any) => ({
+    number: v.verse,
+    text: (v.text || '').replace(/<br\s*\/?>/g, ' ').trim(),
+  }));
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -69,35 +114,28 @@ serve(async (req) => {
     const englishName = BOOK_NAME_MAP[abbrev] || abbrev.toLowerCase();
     const ptName = BOOK_PT_MAP[abbrev] || abbrev;
 
-    // Use bible-api.com with Almeida translation (Portuguese)
-    const url = `https://bible-api.com/${encodeURIComponent(englishName)}+${chapter}?translation=almeida`;
-    console.log('Fetching:', url);
+    // 1) Try bible-api.com
+    let verses = await fetchFromBibleApi(englishName, chapter);
 
-    const response = await fetch(url);
-
-    if (response.ok) {
-      const data = await response.json();
-
-      if (data.verses && Array.isArray(data.verses) && data.verses.length > 0) {
-        const verses = data.verses.map((v: any) => ({
-          number: v.verse,
-          text: v.text?.trim() || '',
-        }));
-
-        return new Response(
-          JSON.stringify({
-            book: ptName,
-            chapter,
-            verses,
-            text: verses.map((v: any) => `${v.number}. ${v.text}`).join('\n'),
-          }),
-          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
+    // 2) Fallback to bolls.life
+    if (!verses) {
+      const bookId = BOLLS_BOOK_ID[abbrev];
+      if (bookId) {
+        verses = await fetchFromBollsLife(bookId, chapter);
       }
     }
 
-    const errText = await response.text();
-    console.error('API error:', response.status, errText);
+    if (verses && verses.length > 0) {
+      return new Response(
+        JSON.stringify({
+          book: ptName,
+          chapter,
+          verses,
+          text: verses.map((v: any) => `${v.number}. ${v.text}`).join('\n'),
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
     return new Response(
       JSON.stringify({
@@ -112,7 +150,7 @@ serve(async (req) => {
   } catch (error) {
     console.error('Bible text error:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: (error as Error).message }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
