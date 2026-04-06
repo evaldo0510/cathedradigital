@@ -133,7 +133,7 @@ const JornadaStepPage: React.FC = () => {
   const content = step.content as Record<string, any>;
   const stepProgress = totalSteps > 0 ? (step.step_order / totalSteps) * 100 : 0;
 
-  return (
+  return createPortal(
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
