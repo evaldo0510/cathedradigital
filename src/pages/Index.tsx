@@ -255,10 +255,8 @@ const Index = () => {
               whileInView="visible"
               viewport={{ once: true, margin: "-50px" }}
               custom={i}
-              className="text-center space-y-2"
             >
-              <p className="text-4xl md:text-5xl font-display font-bold text-primary">{stat.value}</p>
-              <p className="text-sm text-muted-foreground font-medium">{stat.label}</p>
+              <AnimatedStat value={stat.value} label={stat.label} />
             </motion.div>
           ))}
         </div>
