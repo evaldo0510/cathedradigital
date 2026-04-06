@@ -1,8 +1,7 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AppRoute } from '../../types';
-import { Icons } from '../../constants';
-import { Menu, ShieldCheck } from 'lucide-react';
+import { Sun, Compass, BookOpen, TrendingUp, User } from 'lucide-react';
 
 interface BottomNavItemProps {
   label: string;
@@ -21,7 +20,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon, isActive, on
   >
     <div className={`transition-all duration-300 ${isActive ? 'scale-105 -translate-y-0.5' : 'active:scale-90'}`}>
       {React.cloneElement(icon as React.ReactElement, { 
-        className: `w-5 h-5 sm:w-6 sm:h-6 ${isActive ? 'drop-shadow-[0_0_8px_rgba(255,215,0,0.4)]' : ''}` 
+        className: `w-5 h-5 sm:w-6 sm:h-6 ${isActive ? 'drop-shadow-[0_0_8px_hsl(var(--primary)/0.4)]' : ''}` 
       })}
     </div>
     <span className={`text-[9px] sm:text-[10px] font-black uppercase tracking-widest transition-opacity leading-none ${
@@ -30,7 +29,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon, isActive, on
       {label}
     </span>
     {isActive && (
-      <div className="absolute top-0.5 left-1/2 -translate-x-1/2 w-6 h-0.5 bg-primary rounded-full shadow-[0_0_10px_rgba(255,215,0,0.5)]" />
+      <div className="absolute top-0.5 left-1/2 -translate-x-1/2 w-6 h-0.5 bg-primary rounded-full shadow-sm" />
     )}
   </button>
 );
@@ -40,17 +39,17 @@ interface BottomNavProps {
   user?: { role?: string } | null;
 }
 
-const BottomNav: React.FC<BottomNavProps> = ({ onOpenSidebar, user }) => {
+const BottomNav: React.FC<BottomNavProps> = ({ user }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
-  const isAdmin = user?.role === 'admin';
 
   const items = [
-    { label: 'Início', icon: <Icons.Cathedral className="w-5 h-5" />, route: AppRoute.DASHBOARD },
-    { label: 'Bíblia', icon: <Icons.HolyBible className="w-5 h-5" />, route: AppRoute.BIBLE },
-    { label: 'Orações', icon: <Icons.PrayingHands className="w-5 h-5" />, route: AppRoute.ORACAO },
-    { label: 'Catecismo', icon: <Icons.CatechismShield className="w-5 h-5" />, route: AppRoute.CATECHISM },
+    { label: 'Hoje', icon: <Sun className="w-5 h-5" />, route: AppRoute.HOJE },
+    { label: 'Jornadas', icon: <Compass className="w-5 h-5" />, route: AppRoute.JORNADAS },
+    { label: 'Biblioteca', icon: <BookOpen className="w-5 h-5" />, route: AppRoute.BIBLE },
+    { label: 'Progresso', icon: <TrendingUp className="w-5 h-5" />, route: AppRoute.DASHBOARD },
+    { label: 'Perfil', icon: <User className="w-5 h-5" />, route: AppRoute.PROFILE },
   ];
 
   return (
@@ -62,26 +61,10 @@ const BottomNav: React.FC<BottomNavProps> = ({ onOpenSidebar, user }) => {
             label={item.label}
             icon={item.icon}
             route={item.route}
-            isActive={currentPath === item.route}
+            isActive={currentPath === item.route || (item.route === AppRoute.BIBLE && [AppRoute.BIBLE, AppRoute.CATECHISM, AppRoute.MAGISTERIUM, AppRoute.SAINTS].includes(currentPath as AppRoute))}
             onClick={() => navigate(item.route)}
           />
         ))}
-        {isAdmin && (
-          <BottomNavItem
-            label="Admin"
-            icon={<ShieldCheck className="w-5 h-5" />}
-            route={AppRoute.ADMIN}
-            isActive={currentPath === AppRoute.ADMIN}
-            onClick={() => navigate(AppRoute.ADMIN)}
-          />
-        )}
-        <button 
-          onClick={onOpenSidebar}
-          className="flex flex-col items-center justify-center gap-0.5 sm:gap-1 flex-1 py-1.5 text-muted-foreground active:text-foreground transition-all tap-highlight-transparent"
-        >
-          <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
-          <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest opacity-60 leading-none">Menu</span>
-        </button>
       </div>
     </div>
   );
