@@ -245,26 +245,72 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             Sua jornada continua.<br />
             <span className="text-sm">Etapa atual: <span className="text-foreground font-semibold">{currentStep.label}</span></span>
           </p>
+
+          {/* Streak & XP badges */}
+          <div className="flex items-center justify-center gap-4 flex-wrap">
+            {streak > 0 && (
+              <div className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-orange-500/10 border border-orange-500/20">
+                <Flame className="w-4 h-4 text-orange-500" />
+                <span className="text-sm font-bold text-orange-600 dark:text-orange-400">{streak} dias</span>
+              </div>
+            )}
+            <div className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary/10 border border-primary/20">
+              <Zap className="w-4 h-4 text-primary" />
+              <span className="text-sm font-bold text-primary">{profile?.xp || 0} XP</span>
+            </div>
+          </div>
+
           <p className="text-xs text-muted-foreground/60">
             {completedSteps.size} de {JOURNEY_STEPS.length} etapas percorridas
           </p>
 
-          <button
-            onClick={() => {
-              const routes: Record<string, string> = {
-                faith: AppRoute.CATECHISM, bible: AppRoute.BIBLE,
-                christ: AppRoute.CATECHISM, church: AppRoute.MAGISTERIUM,
-                sacraments: AppRoute.CATECHISM, life: AppRoute.CATECHISM,
-                prayer: AppRoute.ORACAO,
-              };
-              goTo(routes[currentStep.id] || AppRoute.BIBLE);
-            }}
-            className="mt-3 inline-flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground rounded-2xl font-semibold text-sm hover:opacity-90 transition-opacity shadow-lg shadow-primary/10"
-          >
-            Continuar sua jornada <ChevronRight className="w-4 h-4" />
-          </button>
+          <div className="flex items-center justify-center gap-3">
+            <button
+              onClick={() => goTo(AppRoute.HOJE)}
+              className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground rounded-2xl font-semibold text-sm hover:opacity-90 transition-opacity shadow-lg shadow-primary/10"
+            >
+              Experiência do Dia <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </FadeUp>
+
+      {/* ═══ ACTIVE JOURNEYS PROGRESS ═══ */}
+      {activeJourneys.length > 0 && (
+        <FadeUp delay={0.06}>
+          <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-serif font-bold text-foreground">Suas Jornadas</h2>
+              <button onClick={() => goTo(AppRoute.JORNADAS)} className="text-xs text-primary hover:underline flex items-center gap-1">
+                Ver todas <ChevronRight className="w-3 h-3" />
+              </button>
+            </div>
+            <div className="space-y-3">
+              {activeJourneys.map((j) => {
+                const pct = j.totalSteps > 0 ? Math.round((j.completedSteps / j.totalSteps) * 100) : 0;
+                return (
+                  <button
+                    key={j.id}
+                    onClick={() => goTo(`/jornadas/${j.id}`)}
+                    className="w-full flex items-center gap-3 p-3 rounded-xl bg-primary/[0.03] border border-primary/10 hover:border-primary/30 transition-colors text-left"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-lg shrink-0">
+                      {j.icon === 'compass' ? '🧭' : j.icon === 'cross' ? '✝' : j.icon === 'book-open' ? '📖' : '🙏'}
+                    </div>
+                    <div className="flex-1 min-w-0 space-y-1.5">
+                      <p className="text-sm font-semibold text-foreground truncate">{j.title}</p>
+                      <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden">
+                        <div className="h-full bg-primary rounded-full transition-all" style={{ width: `${pct}%` }} />
+                      </div>
+                    </div>
+                    <span className="text-xs font-bold text-primary shrink-0">{pct}%</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </FadeUp>
+      )}
 
       {/* ═══ PRO BANNER ═══ */}
       {!profile?.is_premium && (
