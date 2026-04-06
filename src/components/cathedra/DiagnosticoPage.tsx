@@ -95,10 +95,10 @@ const DiagnosticoPage: React.FC = () => {
   const saveDiagnosis = async (result: Record<string, string>) => {
     if (!user) return;
     try {
-      await supabase
-        .from('profiles')
-        .update({ diagnosis_result: result as any })
-        .eq('id', user.id);
+      await (supabase as any)
+        .from('user_sensitive_data')
+        .update({ diagnosis_result: result })
+        .eq('user_id', user.id);
     } catch (err) {
       console.error('Failed to save diagnosis:', err);
     }

@@ -345,21 +345,21 @@ const ProfilePage: React.FC = () => {
       <div className="bg-card border border-border rounded-2xl p-6 space-y-3">
         <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Diagnóstico Espiritual</h2>
         <p className="text-sm text-muted-foreground">
-          {profile.diagnosis_result
+          {profile._sensitive?.diagnosis_result
             ? 'Você já completou o diagnóstico. Refaça para atualizar sua jornada recomendada.'
             : 'Complete o diagnóstico para receber uma jornada personalizada.'}
         </p>
         <button
           onClick={async () => {
             if (user) {
-              await supabase.from('profiles').update({ diagnosis_result: null } as any).eq('id', user.id);
+              await (supabase as any).from('user_sensitive_data').update({ diagnosis_result: null }).eq('user_id', user.id);
               localStorage.removeItem('cathedra_onboarding_done');
             }
             navigate(AppRoute.ONBOARDING, { replace: true });
           }}
           className="w-full py-3 bg-muted text-foreground rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-primary hover:text-primary-foreground transition-all"
         >
-          {profile.diagnosis_result ? 'Refazer Diagnóstico' : 'Fazer Diagnóstico'}
+          {profile._sensitive?.diagnosis_result ? 'Refazer Diagnóstico' : 'Fazer Diagnóstico'}
         </button>
       </div>
     </div>

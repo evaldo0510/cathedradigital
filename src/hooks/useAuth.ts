@@ -49,7 +49,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .select('*')
         .eq('id', currentUser.id)
         .maybeSingle(),
-      supabase
+      (supabase as any)
         .from('user_sensitive_data')
         .select('email, diagnosis_result')
         .eq('user_id', currentUser.id)
@@ -77,7 +77,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return {
       ...profileResult.data,
       is_premium: Boolean(profileResult.data.is_premium || (premiumResult.count ?? 0) > 0),
-      _sensitive: sensitiveResult.data ?? undefined,
+      _sensitive: sensitiveResult.data as SensitiveData | undefined,
     } as Profile & { _sensitive?: { email: string; diagnosis_result: any } };
   }, []);
 

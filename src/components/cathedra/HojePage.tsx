@@ -95,9 +95,9 @@ const HojePage: React.FC = () => {
   };
 
   const loadRecommendedJourney = async () => {
-    if (!user || !profile?.diagnosis_result) return;
+    if (!user || !profile?._sensitive?.diagnosis_result) return;
     try {
-      const result = profile.diagnosis_result as Record<string, string>;
+      const result = profile._sensitive.diagnosis_result as Record<string, string>;
       const { moment, prayer, knowledge, goal } = result;
       let category = 'fundamentos';
       if (moment === 'beginning' || knowledge === 'basic') category = 'fundamentos';
