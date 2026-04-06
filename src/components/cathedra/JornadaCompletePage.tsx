@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Award, ArrowRight, BookOpen, Quote, ChevronRight, Sparkles, ArrowLeft, Share2, Star } from 'lucide-react';
-import confetti from 'canvas-confetti';
-import html2canvas from 'html2canvas';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
@@ -33,7 +31,9 @@ const JornadaCompletePage: React.FC = () => {
 
   useEffect(() => {
     if (!loading && journey) {
-      confetti({ particleCount: 200, spread: 120, origin: { y: 0.5 }, colors: ['#d4af37', '#e8c547', '#b8860b', '#8B5CF6', '#4ECDC4'] });
+      import('canvas-confetti').then(mod => {
+        mod.default({ particleCount: 200, spread: 120, origin: { y: 0.5 }, colors: ['#d4af37', '#e8c547', '#b8860b', '#8B5CF6', '#4ECDC4'] });
+      });
     }
   }, [loading, journey]);
 
@@ -190,6 +190,7 @@ const JornadaCompletePage: React.FC = () => {
     if (!certificateRef.current) return;
     setSharing(true);
     try {
+      const { default: html2canvas } = await import('html2canvas');
       const canvas = await html2canvas(certificateRef.current, {
         backgroundColor: null,
         scale: 2,
