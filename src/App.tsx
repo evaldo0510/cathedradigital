@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense, useRef } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
-import SplashScreen from './components/cathedra/SplashScreen';
+
 import ReadingModeToggle from './components/cathedra/ReadingModeToggle';
 import { AnimatePresence, motion } from 'framer-motion';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -120,10 +120,14 @@ const AppLayout: React.FC = () => {
   const [lang, setLangState] = useState<Language>(getInitialLanguage);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDark, setIsDark] = useState(getInitialTheme);
-  const [showSplash, setShowSplash] = useState(false);
+  
   const { user, profile, signOut, isPremium, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Pages that should NOT show header, footer, sidebar, or bottom nav
+  const chromelessPages: string[] = [AppRoute.HOME, AppRoute.ONBOARDING, AppRoute.LOGIN, '/reset-password'];
+  const isChromeless = chromelessPages.includes(location.pathname);
 
   const getPostAuthRoute = useCallback(() => {
     if (profile?.role === 'admin') return AppRoute.ADMIN;
@@ -184,7 +188,7 @@ const AppLayout: React.FC = () => {
 
   return (
     <LangContext.Provider value={{ lang, setLang: setLangState, t }}>
-      <SplashScreen visible={showSplash} />
+      
       <ScrollToTop />
       <CommandCenter />
       <OfflineIndicator />
@@ -193,7 +197,7 @@ const AppLayout: React.FC = () => {
 
         {/* Mobile sidebar overlay - only when open */}
         <AnimatePresence>
-         {location.pathname !== AppRoute.HOME && location.pathname !== AppRoute.ONBOARDING && isSidebarOpen && (
+         {!isChromeless && isSidebarOpen && (
             <motion.div 
               key="mobile-sidebar"
               initial={{ opacity: 0 }}
@@ -223,7 +227,7 @@ const AppLayout: React.FC = () => {
         </AnimatePresence>
 
         <main id="main-content" className="flex-1 overflow-y-auto flex flex-col relative custom-scrollbar overscroll-auto touch-pan-y scroll-smooth">
-          {location.pathname !== AppRoute.HOME && location.pathname !== AppRoute.ONBOARDING && (
+          {!isChromeless && (
             <AppHeader
               user={appUser}
               isDark={isDark}
@@ -232,7 +236,7 @@ const AppLayout: React.FC = () => {
               onSignOut={signOut}
             />
           )}
-          <div className={location.pathname === AppRoute.HOME || location.pathname === AppRoute.ONBOARDING ? "flex-1" : "flex-1 p-3 sm:p-4 md:p-5 lg:p-6 pb-24 w-full max-w-5xl mx-auto"}>
+          <div className={isChromeless ? "flex-1" : "flex-1 p-3 sm:p-4 md:p-5 lg:p-6 pb-28 w-full max-w-5xl mx-auto"}>
 
             <Suspense fallback={<LoadingFallback />}>
               <AnimatePresence mode="wait">
@@ -304,7 +308,7 @@ const AppLayout: React.FC = () => {
               </AnimatePresence>
             </Suspense>
           </div>
-          {location.pathname !== AppRoute.HOME && location.pathname !== AppRoute.ONBOARDING && (
+          {!isChromeless && (
             <>
               <CathedralFooter />
               <BottomNav onOpenSidebar={() => setIsSidebarOpen(true)} user={appUser} />
