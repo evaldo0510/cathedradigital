@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Sun, Moon, BookOpen, Hand, PenLine, ChevronRight, Flame, Calendar } from 'lucide-react';
+import { Sun, Moon, BookOpen, Hand, PenLine, ChevronRight, Flame, Calendar, Compass } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { supabase } from '@/integrations/supabase/client';
@@ -35,10 +37,13 @@ const HojePage: React.FC = () => {
   const [todayQuote] = useState(() => LITURGICAL_QUOTES[new Date().getDate() % LITURGICAL_QUOTES.length]);
   const [activeJourney, setActiveJourney] = useState<any>(null);
   const [journeyStep, setJourneyStep] = useState<any>(null);
+  const [journeyProgress, setJourneyProgress] = useState({ completed: 0, total: 0 });
+  const [recommendedJourney, setRecommendedJourney] = useState<any>(null);
 
   useEffect(() => {
     if (!user) return;
     loadActiveJourney();
+    loadRecommendedJourney();
   }, [user]);
 
   const loadActiveJourney = async () => {
