@@ -104,6 +104,48 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   const [saving, setSaving] = useState(false);
   const [justSaved, setJustSaved] = useState(false);
 
+  // Active journeys progress
+  const [activeJourneys, setActiveJourneys] = useState<{ id: string; title: string; icon: string; totalSteps: number; completedSteps: number }[]>([]);
+  useEffect(() => {
+    if (!user) return;
+    const loadJourneyProgress = async () => {
+      // Get journeys user has progress in
+      const { data: progress } = await supabase
+        .from('journey_progress')
+        .select('journey_id, step_id')
+        .eq('user_id', user.id);
+      if (!progress?.length) return;
+
+      const journeyIds = [...new Set(progress.map(p => p.journey_id))];
+      const { data: journeys } = await supabase
+        .from('journeys')
+        .select('id, title, icon')
+        .in('id', journeyIds);
+      if (!journeys) return;
+
+      // Get total steps per journey
+      const { data: steps } = await supabase
+        .from('journey_steps')
+        .select('id, journey_id')
+        .in('journey_id', journeyIds);
+
+      const stepsByJourney: Record<string, number> = {};
+      steps?.forEach(s => { stepsByJourney[s.journey_id] = (stepsByJourney[s.journey_id] || 0) + 1; });
+
+      const completedByJourney: Record<string, number> = {};
+      progress.forEach(p => { completedByJourney[p.journey_id] = (completedByJourney[p.journey_id] || 0) + 1; });
+
+      setActiveJourneys(journeys.map(j => ({
+        id: j.id,
+        title: j.title,
+        icon: j.icon,
+        totalSteps: stepsByJourney[j.id] || 0,
+        completedSteps: completedByJourney[j.id] || 0,
+      })));
+    };
+    loadJourneyProgress();
+  }, [user]);
+
   // Completed books & chapters
   const completedBooks = useMemo(() => profile?.completed_books || [], [profile?.completed_books]);
 
@@ -128,6 +170,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
 
   const currentStepIndex = completedSteps.size;
   const currentStep = JOURNEY_STEPS[Math.min(currentStepIndex, JOURNEY_STEPS.length - 1)];
+
+  const streak = profile?.streak || 0;
 
   // Dynamic daily suggestion based on progress
   const dailySuggestion = useMemo(() => {
