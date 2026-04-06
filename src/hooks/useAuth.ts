@@ -1,6 +1,8 @@
 import { createContext, createElement, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { checkNewBadges, type BadgeContext } from '@/lib/badges';
+import { checkNewBadges, getBadgeById, type BadgeContext } from '@/lib/badges';
+import confetti from 'canvas-confetti';
+import { toast } from 'sonner';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 
 export interface Profile {
