@@ -53,7 +53,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user }) => {
   ];
 
   return (
-    <div className="lg:hidden fixed bottom-0 left-0 right-0 z-[160] px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pointer-events-none">
+    <div className="fixed bottom-0 left-0 right-0 z-[160] px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pointer-events-none">
       <div className="max-w-md mx-auto bg-black/95 backdrop-blur-3xl border border-white/10 rounded-2xl shadow-[0_20px_50px_-12px_rgba(0,0,0,0.8)] flex items-stretch pointer-events-auto overflow-hidden ring-1 ring-primary/20">
         {items.map((item) => (
           <BottomNavItem 
