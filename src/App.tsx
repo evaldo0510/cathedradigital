@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense, useRef } from 'react';
+import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import SplashScreen from './components/cathedra/SplashScreen';
 import ReadingModeToggle from './components/cathedra/ReadingModeToggle';
@@ -302,15 +303,17 @@ const AppLayout: React.FC = () => {
 };
 
 const App: React.FC = () => (
-  <AppErrorBoundary>
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <BrowserRouter>
-          <AppLayout />
-        </BrowserRouter>
-      </AuthProvider>
-    </QueryClientProvider>
-  </AppErrorBoundary>
+  <HelmetProvider>
+    <AppErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <BrowserRouter>
+            <AppLayout />
+          </BrowserRouter>
+        </AuthProvider>
+      </QueryClientProvider>
+    </AppErrorBoundary>
+  </HelmetProvider>
 );
 
 export default App;
