@@ -14,6 +14,8 @@ export interface BadgeContext {
   completedBooks: Set<string>;
   chaptersRead: Record<string, Set<number>>;
   totalMinutesRead: number;
+  streak: number;
+  completedJourneys: number;
 }
 
 // Book abbreviation groups
