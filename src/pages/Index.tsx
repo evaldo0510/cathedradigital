@@ -1,4 +1,4 @@
-import { useEffect, useRef, lazy, Suspense, memo } from "react";
+import { useEffect, useRef } from "react";
 import {
   Youtube,
   Heart,
