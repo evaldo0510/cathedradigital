@@ -100,6 +100,45 @@ const JornadaCompletePage: React.FC = () => {
     day: 'numeric', month: 'long', year: 'numeric',
   });
 
+  const shareCertificate = async () => {
+    if (!certificateRef.current) return;
+    setSharing(true);
+    try {
+      const canvas = await html2canvas(certificateRef.current, {
+        backgroundColor: null,
+        scale: 2,
+        useCORS: true,
+      });
+      const blob = await new Promise<Blob | null>(resolve => canvas.toBlob(resolve, 'image/png'));
+      if (!blob) throw new Error('Failed to generate image');
+
+      const file = new File([blob], `cathedra-certificado-${journey.title.replace(/\s+/g, '-').toLowerCase()}.png`, { type: 'image/png' });
+
+      if (navigator.share && navigator.canShare?.({ files: [file] })) {
+        await navigator.share({
+          title: `Certificado: ${journey.title}`,
+          text: `Concluí a jornada "${journey.title}" no Cathedra! 🏅`,
+          files: [file],
+        });
+      } else {
+        // Fallback: download
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = file.name;
+        a.click();
+        URL.revokeObjectURL(url);
+        toast.success('Certificado salvo como imagem!');
+      }
+    } catch (err: any) {
+      if (err?.name !== 'AbortError') {
+        toast.error('Erro ao compartilhar certificado');
+      }
+    } finally {
+      setSharing(false);
+    }
+  };
+
   return (
     <div className="space-y-8 max-w-2xl mx-auto pb-12">
       {/* Back */}
