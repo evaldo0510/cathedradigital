@@ -120,7 +120,7 @@ const AppLayout: React.FC = () => {
   const [lang, setLangState] = useState<Language>(getInitialLanguage);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDark, setIsDark] = useState(getInitialTheme);
-  const [showSplash, setShowSplash] = useState(false);
+  
   const { user, profile, signOut, isPremium, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -188,7 +188,7 @@ const AppLayout: React.FC = () => {
 
   return (
     <LangContext.Provider value={{ lang, setLang: setLangState, t }}>
-      <SplashScreen visible={showSplash} />
+      
       <ScrollToTop />
       <CommandCenter />
       <OfflineIndicator />
