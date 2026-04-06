@@ -13,9 +13,42 @@ const json = (body: unknown, status = 200) =>
     headers: { ...corsHeaders, "Content-Type": "application/json" },
   });
 
+// Rate limiter: 5 attempts per minute per IP to prevent coupon enumeration
+const rateLimitMap = new Map<string, number[]>();
+const RATE_LIMIT = 5;
+const RATE_WINDOW_MS = 60_000;
+
+function isRateLimited(key: string): boolean {
+  const now = Date.now();
+  const timestamps = (rateLimitMap.get(key) ?? []).filter(t => now - t < RATE_WINDOW_MS);
+  if (timestamps.length >= RATE_LIMIT) {
+    rateLimitMap.set(key, timestamps);
+    return true;
+  }
+  timestamps.push(now);
+  rateLimitMap.set(key, timestamps);
+  if (rateLimitMap.size > 10000) {
+    for (const [k, v] of rateLimitMap) {
+      if (v.every(t => now - t >= RATE_WINDOW_MS)) rateLimitMap.delete(k);
+    }
+  }
+  return false;
+}
+
+function getClientIP(req: Request): string {
+  return req.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+    ?? req.headers.get("x-real-ip")
+    ?? "unknown";
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
+  }
+
+  const clientIP = getClientIP(req);
+  if (isRateLimited(clientIP)) {
+    return json({ error: "Muitas tentativas. Aguarde um momento antes de tentar novamente." }, 429);
   }
 
   try {
@@ -43,12 +76,10 @@ serve(async (req) => {
       return json({ valid: false, error: "Cupom inválido ou expirado." }, 200);
     }
 
-    // Check expiration
     if (coupon.expires_at && new Date(coupon.expires_at) < new Date()) {
       return json({ valid: false, error: "Cupom expirado." }, 200);
     }
 
-    // Check max uses
     if (coupon.current_uses >= coupon.max_uses) {
       return json({ valid: false, error: "Cupom esgotado." }, 200);
     }

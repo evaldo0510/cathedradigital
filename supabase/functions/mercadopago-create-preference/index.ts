@@ -27,6 +27,34 @@ const json = (body: unknown, status = 200) =>
     headers: { ...corsHeaders, "Content-Type": "application/json" },
   });
 
+// Rate limiter: 5 payment attempts per minute per IP
+const rateLimitMap = new Map<string, number[]>();
+const RATE_LIMIT = 5;
+const RATE_WINDOW_MS = 60_000;
+
+function isRateLimited(key: string): boolean {
+  const now = Date.now();
+  const timestamps = (rateLimitMap.get(key) ?? []).filter(t => now - t < RATE_WINDOW_MS);
+  if (timestamps.length >= RATE_LIMIT) {
+    rateLimitMap.set(key, timestamps);
+    return true;
+  }
+  timestamps.push(now);
+  rateLimitMap.set(key, timestamps);
+  if (rateLimitMap.size > 10000) {
+    for (const [k, v] of rateLimitMap) {
+      if (v.every(t => now - t >= RATE_WINDOW_MS)) rateLimitMap.delete(k);
+    }
+  }
+  return false;
+}
+
+function getClientIP(req: Request): string {
+  return req.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+    ?? req.headers.get("x-real-ip")
+    ?? "unknown";
+}
+
 function normalizeMercadoPagoAccessToken(rawToken: string) {
   const trimmedToken = rawToken.trim().replace(/^Bearer\s+/i, "");
   const tokenMatch = trimmedToken.match(/(APP_USR-[A-Za-z0-9_-]+(?:-[A-Za-z0-9_-]+)*)|(TEST-[A-Za-z0-9_-]+(?:-[A-Za-z0-9_-]+)*)/);
@@ -81,6 +109,11 @@ async function parseMercadoPagoResponse(response: Response) {
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
+  }
+
+  const clientIP = getClientIP(req);
+  if (isRateLimited(clientIP)) {
+    return json({ error: "Muitas tentativas de pagamento. Aguarde um momento." }, 429);
   }
 
   try {

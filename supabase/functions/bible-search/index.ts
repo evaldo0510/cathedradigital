@@ -5,9 +5,45 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
+// Rate limiter: 20 searches per minute per IP
+const rateLimitMap = new Map<string, number[]>();
+const RATE_LIMIT = 20;
+const RATE_WINDOW_MS = 60_000;
+
+function isRateLimited(key: string): boolean {
+  const now = Date.now();
+  const timestamps = (rateLimitMap.get(key) ?? []).filter(t => now - t < RATE_WINDOW_MS);
+  if (timestamps.length >= RATE_LIMIT) {
+    rateLimitMap.set(key, timestamps);
+    return true;
+  }
+  timestamps.push(now);
+  rateLimitMap.set(key, timestamps);
+  if (rateLimitMap.size > 10000) {
+    for (const [k, v] of rateLimitMap) {
+      if (v.every(t => now - t >= RATE_WINDOW_MS)) rateLimitMap.delete(k);
+    }
+  }
+  return false;
+}
+
+function getClientIP(req: Request): string {
+  return req.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+    ?? req.headers.get("x-real-ip")
+    ?? "unknown";
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
+  }
+
+  const clientIP = getClientIP(req);
+  if (isRateLimited(clientIP)) {
+    return new Response(JSON.stringify({ error: "Muitas buscas. Aguarde um momento.", results: [] }), {
+      status: 429,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Retry-After': '60' },
+    });
   }
 
   try {
@@ -33,7 +69,6 @@ serve(async (req) => {
 
     const data = await response.json();
 
-    // Map book IDs back to abbreviations
     const BOOK_NAMES: Record<number, { abbrev: string; name: string }> = {
       1: { abbrev: 'Gn', name: 'Gênesis' }, 2: { abbrev: 'Ex', name: 'Êxodo' }, 3: { abbrev: 'Lv', name: 'Levítico' },
       4: { abbrev: 'Nm', name: 'Números' }, 5: { abbrev: 'Dt', name: 'Deuteronômio' }, 6: { abbrev: 'Js', name: 'Josué' },
