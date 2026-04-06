@@ -422,6 +422,31 @@ const Index = () => {
         </div>
       </section>
 
+      {/* ═══ FAQ ═══ */}
+      <section className="w-full py-24 px-6 bg-muted/20 border-y border-border/20">
+        <div className="max-w-3xl mx-auto space-y-12">
+          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center space-y-4">
+            <h2 className="text-4xl md:text-5xl font-display font-bold">Perguntas Frequentes</h2>
+            <p className="text-lg text-muted-foreground italic">Tire suas dúvidas sobre o Cathedra</p>
+          </motion.div>
+
+          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+            <Accordion type="single" collapsible className="space-y-3">
+              {faqs.map((faq, i) => (
+                <AccordionItem key={i} value={`faq-${i}`} className="bg-card border border-border/30 rounded-2xl px-6 overflow-hidden">
+                  <AccordionTrigger className="text-left font-serif font-bold text-base py-5 hover:no-underline hover:text-primary transition-colors">
+                    {faq.q}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground leading-relaxed pb-5">
+                    {faq.a}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </motion.div>
+        </div>
+      </section>
+
       {/* ═══ CTA BANNER ═══ */}
       <section className="w-full py-20 px-6">
         <motion.div
