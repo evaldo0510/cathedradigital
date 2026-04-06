@@ -31,7 +31,9 @@ const JornadaCompletePage: React.FC = () => {
 
   useEffect(() => {
     if (!loading && journey) {
-      confetti({ particleCount: 200, spread: 120, origin: { y: 0.5 }, colors: ['#d4af37', '#e8c547', '#b8860b', '#8B5CF6', '#4ECDC4'] });
+      import('canvas-confetti').then(mod => {
+        mod.default({ particleCount: 200, spread: 120, origin: { y: 0.5 }, colors: ['#d4af37', '#e8c547', '#b8860b', '#8B5CF6', '#4ECDC4'] });
+      });
     }
   }, [loading, journey]);
 
