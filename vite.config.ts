@@ -25,6 +25,7 @@ export default defineConfig(({ mode }) => ({
           'vendor-react': ['react', 'react-dom', 'react-router-dom'],
           'vendor-supabase': ['@supabase/supabase-js'],
           'vendor-motion': ['framer-motion'],
+          'vendor-recharts': ['recharts'],
           'vendor-ui': [
             '@radix-ui/react-dialog',
             '@radix-ui/react-popover',
