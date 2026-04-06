@@ -184,13 +184,13 @@ const AppLayout: React.FC = () => {
 
         {/* Mobile sidebar overlay - only when open */}
         <AnimatePresence>
-        {location.pathname !== AppRoute.HOME && location.pathname !== AppRoute.ONBOARDING && isSidebarOpen && (
+         {location.pathname !== AppRoute.HOME && location.pathname !== AppRoute.ONBOARDING && isSidebarOpen && (
             <motion.div 
               key="mobile-sidebar"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.15 }}
               className="fixed inset-0 z-[150]"
             >
               <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsSidebarOpen(false)} />
@@ -198,7 +198,7 @@ const AppLayout: React.FC = () => {
                 initial={{ x: -288 }}
                 animate={{ x: 0 }}
                 exit={{ x: -288 }}
-                transition={{ duration: 0.3, ease: 'easeOut' }}
+                transition={{ duration: 0.2, ease: [0.32, 0.72, 0, 1] }}
                 className="relative h-full w-72"
               >
                 <CathedralSidebar 
