@@ -15,7 +15,8 @@ interface Trail {
   title: string;
   description: string;
   level: string;
-  icon: string;
+  icon: React.ReactNode;
+  color: string;
   steps: TrailStep[];
 }
 
