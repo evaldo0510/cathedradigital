@@ -32,6 +32,16 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
       ]
     }] : []),
     {
+      label: 'Principal',
+      items: [
+        { label: 'Hoje', path: AppRoute.HOJE, icon: <Sun className="w-5 h-5" /> },
+        { label: 'Jornadas', path: AppRoute.JORNADAS, icon: <Route className="w-5 h-5" /> },
+        { label: 'Diagnóstico', path: AppRoute.DIAGNOSTICO, icon: <Stethoscope className="w-5 h-5" /> },
+        { label: 'Biblioteca', path: AppRoute.BIBLIOTECA, icon: <Library className="w-5 h-5" /> },
+        { label: 'Favoritos', path: AppRoute.FAVORITES, icon: <Bookmark className="w-5 h-5" /> },
+      ]
+    },
+    {
       label: 'Vida Interior',
       items: [
         { label: 'Oração e Devoção', path: AppRoute.ORACAO, icon: <Icons.PrayingHands className="w-5 h-5" /> },
@@ -42,21 +52,7 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
         { label: 'Confissão (Exame)', path: AppRoute.POENITENTIA, icon: <ListChecks className="w-5 h-5" /> },
         { label: 'Lectio Divina', path: AppRoute.LECTIO_DIVINA, icon: <Feather className="w-5 h-5" /> },
         { label: 'Litanias', path: AppRoute.LITANIES, icon: <Icons.Scroll className="w-5 h-5" /> },
-        { label: 'Favoritos', path: AppRoute.FAVORITES, icon: <Bookmark className="w-5 h-5" /> },
         { label: 'Aparições Marianas', path: AppRoute.APARICOES, icon: <Icons.SaintHalo className="w-5 h-5" /> },
-      ]
-    },
-    {
-      label: 'Formação',
-      items: [
-        { label: 'Bíblia Sagrada', path: AppRoute.BIBLE, icon: <Icons.HolyBible className="w-5 h-5" /> },
-        { label: 'Catecismo (CIC)', path: AppRoute.CATECHISM, icon: <Icons.CatechismShield className="w-5 h-5" /> },
-        { label: 'Santos', path: AppRoute.SAINTS, icon: <Icons.SaintHalo className="w-5 h-5" /> },
-        { label: 'Magistério', path: AppRoute.MAGISTERIUM, icon: <Icons.Scroll className="w-5 h-5" /> },
-        { label: 'Dogmas', path: AppRoute.DOGMAS, icon: <Crown className="w-5 h-5" /> },
-        { label: 'Trilhas de Estudo', path: AppRoute.TRILHAS, icon: <Route className="w-5 h-5" /> },
-        { label: 'Glossário Teológico', path: AppRoute.GLOSSARY, icon: <Library className="w-5 h-5" /> },
-        { label: 'Comunidade', path: AppRoute.COMMUNITY, icon: <MessageCircle className="w-5 h-5" /> },
       ]
     },
     {
@@ -66,7 +62,7 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
         { label: 'Suma Teológica', path: AppRoute.AQUINAS_OPERA, icon: <Icons.Scroll className="w-5 h-5" /> },
         { label: 'Certamen (Quiz)', path: AppRoute.CERTAMEN, icon: <Trophy className="w-5 h-5" /> },
         { label: 'Assinatura PRO', path: AppRoute.CHECKOUT, icon: <Zap className="w-5 h-5" />, pro: true },
-        { label: 'Diagnóstico', path: AppRoute.DIAGNOSTICS, icon: <Stethoscope className="w-5 h-5" /> },
+        { label: 'Comunidade', path: AppRoute.COMMUNITY, icon: <MessageCircle className="w-5 h-5" /> },
       ]
     }
   ];
