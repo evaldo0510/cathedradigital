@@ -40,7 +40,11 @@ export enum AppRoute {
   CHECKOUT_RESULT = '/checkout/result',
   TERMS = '/terms',
   PRIVACY = '/privacy',
-  PRICING = '/pricing'
+  PRICING = '/pricing',
+  DIAGNOSTICO = '/diagnostico',
+  HOJE = '/hoje',
+  JORNADAS = '/jornadas',
+  JORNADA_DETAIL = '/jornadas/:id'
 }
 
 export interface TrackStep {

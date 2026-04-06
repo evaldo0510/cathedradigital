@@ -74,6 +74,8 @@ const CheckoutResultPage = lazy(() => import('./components/cathedra/CheckoutResu
 const TermsPage = lazy(() => import('./components/cathedra/TermsPage'));
 const PrivacyPage = lazy(() => import('./components/cathedra/PrivacyPage'));
 const PricingPage = lazy(() => import('./components/cathedra/PricingPage'));
+const DiagnosticoPage = lazy(() => import('./components/cathedra/DiagnosticoPage'));
+const HojePage = lazy(() => import('./components/cathedra/HojePage'));
 
 const LoadingFallback = () => (
   <div className="flex items-center justify-center min-h-[40vh]">
@@ -277,6 +279,9 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.TERMS} element={<PageTransition><TermsPage /></PageTransition>} />
                   <Route path={AppRoute.PRIVACY} element={<PageTransition><PrivacyPage /></PageTransition>} />
                   <Route path={AppRoute.PRICING} element={<PageTransition><PricingPage /></PageTransition>} />
+                  <Route path={AppRoute.DIAGNOSTICO} element={<PageTransition><AuthGuard><DiagnosticoPage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.HOJE} element={<PageTransition><AuthGuard><HojePage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.JORNADAS} element={<PageTransition><AuthGuard><TrilhasPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.ADMIN} element={
                     <PageTransition>
                       <AdminGuard>
