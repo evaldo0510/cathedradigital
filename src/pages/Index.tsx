@@ -134,7 +134,11 @@ const Index = () => {
 
   return (
     <div className="flex min-h-screen flex-col items-center bg-background text-foreground overflow-x-hidden">
-      {/* ═══ HERO ═══ */}
+      <Helmet>
+        <title>Cathedra Digital — Bíblia, Catecismo e Tradição Católica</title>
+        <meta name="description" content="Aprofunde sua fé católica com Bíblia Sagrada, Catecismo da Igreja, vidas dos santos, liturgia diária e IA teológica." />
+        <link rel="canonical" href="https://cathedradigital.lovable.app/" />
+      </Helmet>
       <section ref={heroRef} className="relative w-full h-[90vh] md:h-[95vh] flex items-center justify-center px-6 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img
