@@ -5,6 +5,11 @@ import confetti from 'canvas-confetti';
 import { toast } from 'sonner';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 
+export interface SensitiveData {
+  email: string;
+  diagnosis_result: Record<string, string> | null;
+}
+
 export interface Profile {
   id: string;
   name: string;
@@ -18,6 +23,7 @@ export interface Profile {
   completed_books?: string[];
   badges?: string[];
   total_minutes_read?: number;
+  _sensitive?: SensitiveData;
 }
 
 interface AuthContextValue {
