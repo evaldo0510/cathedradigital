@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../constants';
 import { AppRoute } from '../../types';
+import { Sprout, Scale, HandHeart, Cross, ScrollText, ChevronDown, ChevronRight } from 'lucide-react';
 
 interface TrailStep {
   label: string;
@@ -14,14 +15,15 @@ interface Trail {
   title: string;
   description: string;
   level: string;
-  icon: string;
+  icon: React.ReactNode;
+  color: string;
   steps: TrailStep[];
 }
 
 const TRAILS: Trail[] = [
   {
     id: 'basics', title: 'Fundamentos da Fé', description: 'O caminho essencial para quem está começando a compreender a fé católica.',
-    level: 'Iniciante', icon: '🌱',
+    level: 'Iniciante', icon: <Sprout className="w-6 h-6" />, color: 'text-green-600 dark:text-green-400',
     steps: [
       { label: 'O que é a fé?', route: AppRoute.CATECHISM, description: 'Catecismo §§ 1-25: O desejo de Deus e a revelação.' },
       { label: 'A Sagrada Escritura', route: AppRoute.BIBLE, description: 'Introdução à Bíblia: como ler e entender.' },
@@ -32,7 +34,7 @@ const TRAILS: Trail[] = [
   },
   {
     id: 'moral', title: 'Vida Moral Cristã', description: 'Entenda os princípios morais que orientam a vida do cristão.',
-    level: 'Intermediário', icon: '⚖️',
+    level: 'Intermediário', icon: <Scale className="w-6 h-6" />, color: 'text-amber-600 dark:text-amber-400',
     steps: [
       { label: 'A dignidade da pessoa', route: AppRoute.CATECHISM, description: 'Catecismo §§ 1700-1761: O homem à imagem de Deus.' },
       { label: 'As virtudes', route: AppRoute.CATECHISM, description: 'As 4 virtudes cardeais e as 3 teologais.' },
@@ -43,7 +45,7 @@ const TRAILS: Trail[] = [
   },
   {
     id: 'prayer-life', title: 'Vida de Oração', description: 'Aprofunde sua intimidade com Deus através das diversas formas de oração.',
-    level: 'Iniciante', icon: '🙏',
+    level: 'Iniciante', icon: <HandHeart className="w-6 h-6" />, color: 'text-rose-600 dark:text-rose-400',
     steps: [
       { label: 'O que é oração?', route: AppRoute.CATECHISM, description: 'Catecismo §§ 2558-2565: A oração na vida cristã.' },
       { label: 'O Santo Rosário', route: AppRoute.ROSARY, description: 'Aprenda e reze os quatro mistérios do Rosário.' },
@@ -54,7 +56,7 @@ const TRAILS: Trail[] = [
   },
   {
     id: 'christology', title: 'Quem é Jesus Cristo?', description: 'Estudo aprofundado sobre a pessoa de Cristo na Escritura e na Tradição.',
-    level: 'Intermediário', icon: '✝️',
+    level: 'Intermediário', icon: <Cross className="w-6 h-6" />, color: 'text-purple-600 dark:text-purple-400',
     steps: [
       { label: 'O Verbo se fez carne', route: AppRoute.BIBLE, description: 'João 1,1-18: O Prólogo do Evangelho.' },
       { label: 'A Encarnação', route: AppRoute.CATECHISM, description: 'Catecismo §§ 456-483: Por que o Verbo se fez carne.' },
@@ -65,7 +67,7 @@ const TRAILS: Trail[] = [
   },
   {
     id: 'magisterium-intro', title: 'Introdução ao Magistério', description: 'Conheça os principais documentos e ensinamentos da Igreja.',
-    level: 'Avançado', icon: '📜',
+    level: 'Avançado', icon: <ScrollText className="w-6 h-6" />, color: 'text-red-600 dark:text-red-400',
     steps: [
       { label: 'O que é o Magistério?', route: AppRoute.CATECHISM, description: 'Catecismo §§ 85-100: O papel do Magistério.' },
       { label: 'Os Concílios', route: AppRoute.MAGISTERIUM, description: 'De Niceia ao Vaticano II: os grandes Concílios.' },
@@ -104,7 +106,9 @@ const TrilhasPage: React.FC = () => {
               onClick={() => setExpandedTrail(expandedTrail === trail.id ? null : trail.id)}
               className="w-full p-6 flex items-start gap-4 text-left hover:bg-primary/5 transition-all"
             >
-              <span className="text-3xl">{trail.icon}</span>
+              <div className={`w-12 h-12 rounded-xl bg-muted flex items-center justify-center shrink-0 ${trail.color}`}>
+                {trail.icon}
+              </div>
               <div className="flex-1 space-y-1">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h3 className="text-lg font-serif font-bold text-foreground">{trail.title}</h3>
@@ -113,7 +117,7 @@ const TrilhasPage: React.FC = () => {
                 <p className="text-sm text-muted-foreground font-serif">{trail.description}</p>
                 <p className="text-[10px] text-muted-foreground font-bold">{trail.steps.length} etapas</p>
               </div>
-              <Icons.ArrowDown className={`w-5 h-5 text-muted-foreground transition-transform mt-1 ${expandedTrail === trail.id ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`w-5 h-5 text-muted-foreground transition-transform mt-1 ${expandedTrail === trail.id ? 'rotate-180' : ''}`} />
             </button>
 
             {expandedTrail === trail.id && (
@@ -130,7 +134,7 @@ const TrilhasPage: React.FC = () => {
                         <p className="font-bold text-sm text-foreground group-hover:text-primary transition-colors">{step.label}</p>
                         <p className="text-xs text-muted-foreground">{step.description}</p>
                       </div>
-                      <Icons.ArrowDown className="w-4 h-4 -rotate-90 text-muted-foreground group-hover:text-primary transition-colors" />
+                      <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
                     </button>
                   ))}
                 </div>
