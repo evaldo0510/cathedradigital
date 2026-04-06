@@ -1,30 +1,20 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { ArrowLeft, Check, BookOpen, Hand, PenLine, HelpCircle, Clock, Loader2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowLeft, Check, BookOpen, Hand, PenLine, Sparkles, Clock, ChevronDown, X } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 
-const STEP_TYPE_LABELS: Record<string, { label: string; icon: React.ReactNode }> = {
-  reading: { label: 'Leitura', icon: <BookOpen className="w-5 h-5" /> },
-  prayer: { label: 'Oração', icon: <Hand className="w-5 h-5" /> },
-  reflection: { label: 'Reflexão', icon: <PenLine className="w-5 h-5" /> },
-  quiz: { label: 'Quiz', icon: <HelpCircle className="w-5 h-5" /> },
-};
-
-/** Parse a Portuguese bible reference like "Jo 3,16-18" or "Gn 1" into { abbrev, chapter } */
-function parseBibleRef(ref: string): { abbrev: string; chapter: number } | null {
-  const m = ref.match(/^(\d?\s*[A-Za-zÀ-ú]+)\s+(\d+)/);
-  if (!m) return null;
-  const abbrev = m[1].trim();
-  const chapter = parseInt(m[2], 10);
-  return { abbrev, chapter };
-}
+const SECTION_CONFIG = [
+  { key: 'intro', label: 'Leitura Guiada', icon: <BookOpen className="w-4 h-4" /> },
+  { key: 'scripture', label: 'Palavra de Deus', icon: <Sparkles className="w-4 h-4" /> },
+  { key: 'reflection', label: 'Reflexão', icon: <PenLine className="w-4 h-4" /> },
+  { key: 'practice', label: 'Prática', icon: <Hand className="w-4 h-4" /> },
+  { key: 'prayer', label: 'Oração', icon: <Hand className="w-4 h-4" /> },
+];
 
 const JornadaStepPage: React.FC = () => {
   const { id: journeyId } = useParams<{ id: string }>();
@@ -34,37 +24,32 @@ const JornadaStepPage: React.FC = () => {
   const { user } = useAuth();
 
   const [step, setStep] = useState<any>(null);
+  const [journeyTitle, setJourneyTitle] = useState('');
+  const [totalSteps, setTotalSteps] = useState(0);
   const [loading, setLoading] = useState(true);
   const [reflection, setReflection] = useState('');
   const [completed, setCompleted] = useState(false);
   const [saving, setSaving] = useState(false);
-
-  // Bible text state
-  const [bibleText, setBibleText] = useState<{ book: string; chapter: number; verses: { number: number; text: string }[] } | null>(null);
-  const [bibleLoading, setBibleLoading] = useState(false);
+  const [expandedSection, setExpandedSection] = useState<string | null>('intro');
 
   useEffect(() => {
-    if (stepId) loadStep();
-  }, [stepId]);
+    if (stepId && journeyId) loadData();
+  }, [stepId, journeyId]);
 
-  const loadStep = async () => {
+  const loadData = async () => {
     setLoading(true);
     try {
-      const { data } = await supabase
-        .from('journey_steps')
-        .select('*')
-        .eq('id', stepId!)
-        .single();
-      if (data) {
-        setStep(data);
-        // Fetch bible text if there's a reference
-        const content = data.content as Record<string, any>;
-        if (content?.bible_ref) {
-          fetchBibleText(content.bible_ref);
-        }
-      }
+      const [stepRes, journeyRes, countRes] = await Promise.all([
+        supabase.from('journey_steps').select('*').eq('id', stepId!).single(),
+        supabase.from('journeys').select('title').eq('id', journeyId!).single(),
+        supabase.from('journey_steps').select('*', { count: 'exact', head: true }).eq('journey_id', journeyId!),
+      ]);
 
-      if (user) {
+      if (stepRes.data) setStep(stepRes.data);
+      if (journeyRes.data) setJourneyTitle(journeyRes.data.title);
+      setTotalSteps(countRes.count || 0);
+
+      if (user && stepRes.data) {
         const { data: progress } = await supabase
           .from('journey_progress')
           .select('id, reflection')
@@ -83,24 +68,6 @@ const JornadaStepPage: React.FC = () => {
     }
   };
 
-  const fetchBibleText = async (ref: string) => {
-    const parsed = parseBibleRef(ref);
-    if (!parsed) return;
-    setBibleLoading(true);
-    try {
-      const { data, error } = await supabase.functions.invoke('bible-text', {
-        body: { abbrev: parsed.abbrev, chapter: parsed.chapter },
-      });
-      if (!error && data?.verses?.length) {
-        setBibleText(data);
-      }
-    } catch (err) {
-      console.error('Bible fetch error:', err);
-    } finally {
-      setBibleLoading(false);
-    }
-  };
-
   const completeStep = async () => {
     if (!user || !journeyId || !stepId) return;
     setSaving(true);
@@ -111,12 +78,24 @@ const JornadaStepPage: React.FC = () => {
         step_id: stepId,
         reflection: reflection.trim() || null,
       }, { onConflict: 'user_id,step_id' });
+
+      // Also save to spiritual journal if there's a journal prompt response
+      if (reflection.trim()) {
+        await supabase.from('spiritual_journal').insert([{
+          user_id: user.id,
+          content: reflection.trim(),
+          journey_id: journeyId,
+          step_id: stepId,
+          entry_date: new Date().toISOString().split('T')[0],
+        }]);
+      }
+
       setCompleted(true);
       confetti({
-        particleCount: 120,
-        spread: 80,
+        particleCount: 150,
+        spread: 90,
         origin: { y: 0.7 },
-        colors: ['#d4af37', '#e8c547', '#b8860b', '#f0d56c'],
+        colors: ['#d4af37', '#e8c547', '#b8860b', '#8B5CF6', '#4ECDC4'],
       });
     } catch (err) {
       console.error(err);
@@ -125,9 +104,13 @@ const JornadaStepPage: React.FC = () => {
     }
   };
 
+  const toggleSection = (key: string) => {
+    setExpandedSection(prev => prev === key ? null : key);
+  };
+
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[40vh]">
+      <div className="fixed inset-0 bg-background flex items-center justify-center z-[200]">
         <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
       </div>
     );
@@ -135,173 +118,175 @@ const JornadaStepPage: React.FC = () => {
 
   if (!step) {
     return (
-      <div className="text-center py-12 space-y-4">
-        <p className="text-muted-foreground">Etapa não encontrada.</p>
-        <Button variant="outline" onClick={() => navigate(-1)}>
-          <ArrowLeft className="w-4 h-4 mr-2" /> Voltar
-        </Button>
+      <div className="fixed inset-0 bg-background flex items-center justify-center z-[200]">
+        <div className="text-center space-y-4">
+          <p className="text-muted-foreground">Etapa não encontrada.</p>
+          <button onClick={() => navigate(-1)} className="text-primary underline text-sm">Voltar</button>
+        </div>
       </div>
     );
   }
 
   const content = step.content as Record<string, any>;
-  const typeInfo = STEP_TYPE_LABELS[step.step_type] || STEP_TYPE_LABELS.reading;
+  const stepProgress = totalSteps > 0 ? (step.step_order / totalSteps) * 100 : 0;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="space-y-6 max-w-2xl mx-auto"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="fixed inset-0 bg-background z-[200] flex flex-col overflow-hidden"
     >
-      {/* Header */}
-      <div className="flex items-center gap-3">
-        <Button variant="ghost" size="icon" onClick={() => navigate(`/jornadas/${journeyId}`)}>
-          <ArrowLeft className="w-5 h-5" />
-        </Button>
-        <div className="flex-1">
-          <h1 className="text-xl font-bold font-serif text-foreground">{step.title}</h1>
-          {step.subtitle && <p className="text-sm text-muted-foreground">{step.subtitle}</p>}
+      {/* Immersive Header */}
+      <div className="flex-shrink-0 px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3 border-b border-border/50">
+        <div className="flex items-center gap-3 max-w-2xl mx-auto">
+          <button
+            onClick={() => navigate(`/jornadas/${journeyId}`)}
+            className="w-8 h-8 rounded-full bg-muted flex items-center justify-center hover:bg-muted-foreground/20 transition-colors"
+          >
+            <X className="w-4 h-4 text-foreground" />
+          </button>
+          <div className="flex-1 min-w-0">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground truncate">{journeyTitle}</p>
+            <p className="text-xs text-muted-foreground">Etapa {step.step_order} de {totalSteps}</p>
+          </div>
+          <span className="text-[10px] font-bold text-muted-foreground flex items-center gap-1">
+            <Clock className="w-3 h-3" /> {step.duration_minutes}min
+          </span>
+        </div>
+        <div className="max-w-2xl mx-auto mt-2">
+          <Progress value={stepProgress} className="h-1" />
         </div>
       </div>
 
-      {/* Meta */}
-      <div className="flex items-center gap-3">
-        <Badge variant="secondary" className="gap-1">
-          {typeInfo.icon}
-          {typeInfo.label}
-        </Badge>
-        <Badge variant="outline" className="gap-1">
-          <Clock className="w-3 h-3" /> {step.duration_minutes}min
-        </Badge>
-        {completed && (
-          <Badge className="bg-primary/10 text-primary border-primary/20 gap-1">
-            <Check className="w-3 h-3" /> Concluída
-          </Badge>
-        )}
+      {/* Scrollable Content */}
+      <div className="flex-1 overflow-y-auto custom-scrollbar overscroll-auto">
+        <div className="max-w-2xl mx-auto px-4 py-6 space-y-6 pb-32">
+          {/* Step Title */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center space-y-2"
+          >
+            <h1 className="text-2xl md:text-3xl font-bold font-serif text-foreground">{step.title}</h1>
+            {step.subtitle && (
+              <p className="text-sm text-muted-foreground italic">{step.subtitle}</p>
+            )}
+          </motion.div>
+
+          {/* Content Sections */}
+          {SECTION_CONFIG.map(({ key, label, icon }, i) => {
+            const sectionContent = content[key];
+            if (!sectionContent) return null;
+            const isExpanded = expandedSection === key;
+
+            return (
+              <motion.div
+                key={key}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 + i * 0.05 }}
+              >
+                <button
+                  onClick={() => toggleSection(key)}
+                  className={`w-full flex items-center gap-3 p-4 rounded-t-2xl transition-all text-left ${
+                    isExpanded
+                      ? 'bg-card border border-b-0 border-border'
+                      : 'bg-card border border-border rounded-b-2xl hover:border-primary/30'
+                  }`}
+                >
+                  <span className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                    isExpanded ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
+                  }`}>
+                    {icon}
+                  </span>
+                  <span className={`flex-1 text-sm font-bold ${isExpanded ? 'text-foreground' : 'text-muted-foreground'}`}>
+                    {label}
+                  </span>
+                  <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                </button>
+
+                <AnimatePresence>
+                  {isExpanded && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="bg-card border border-t-0 border-border rounded-b-2xl p-5">
+                        <p className="text-sm text-foreground/90 leading-relaxed whitespace-pre-line font-serif">
+                          {sectionContent}
+                        </p>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            );
+          })}
+
+          {/* Journal / Reflection */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="space-y-3"
+          >
+            <div className="flex items-center gap-2">
+              <PenLine className="w-4 h-4 text-primary" />
+              <h3 className="text-sm font-bold text-foreground">Diário Espiritual</h3>
+            </div>
+
+            {content.journal_prompt && (
+              <div className="bg-primary/5 border border-primary/10 rounded-xl p-4">
+                <p className="text-sm text-foreground/80 italic font-serif">{content.journal_prompt}</p>
+              </div>
+            )}
+
+            <Textarea
+              placeholder="Escreva sua reflexão aqui... Suas palavras são privadas e só você pode ver."
+              value={reflection}
+              onChange={(e) => setReflection(e.target.value)}
+              className="min-h-[120px] resize-none text-sm bg-card border-border"
+              disabled={completed}
+            />
+          </motion.div>
+        </div>
       </div>
 
-      {/* Content */}
-      <Card>
-        <CardContent className="p-6 space-y-5">
-          {/* Bible reference + real text */}
-          {content.bible_ref && (
-            <div className="space-y-3">
-              <h3 className="text-sm font-semibold text-primary uppercase tracking-wide">Leitura Bíblica</h3>
-              <p className="text-lg font-serif text-foreground">{content.bible_ref}</p>
-              {bibleLoading && (
-                <div className="flex items-center gap-2 text-muted-foreground text-sm py-2">
-                  <Loader2 className="w-4 h-4 animate-spin" /> Carregando texto bíblico…
-                </div>
+      {/* Fixed Bottom Action */}
+      <div className="flex-shrink-0 border-t border-border/50 bg-background/95 backdrop-blur-sm px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+        <div className="max-w-2xl mx-auto">
+          {!completed ? (
+            <button
+              onClick={completeStep}
+              disabled={saving}
+              className="w-full py-4 bg-foreground text-background rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-primary hover:text-primary-foreground transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+            >
+              {saving ? (
+                <>Salvando...</>
+              ) : (
+                <>
+                  Concluir Etapa <Check className="w-4 h-4" />
+                </>
               )}
-              {bibleText && bibleText.verses.length > 0 && (
-                <div className="bg-muted/50 rounded-xl p-4 space-y-2 border border-border max-h-[400px] overflow-y-auto custom-scrollbar">
-                  <p className="text-xs font-semibold text-muted-foreground mb-2">{bibleText.book} {bibleText.chapter}</p>
-                  {bibleText.verses.map((v) => (
-                    <p key={v.number} className="text-sm font-serif text-foreground leading-relaxed">
-                      <sup className="text-xs text-primary/60 mr-1">{v.number}</sup>
-                      {v.text}
-                    </p>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Catechism reference */}
-          {content.catechism_ref && (
+            </button>
+          ) : (
             <div className="space-y-2">
-              <h3 className="text-sm font-semibold text-primary uppercase tracking-wide">Catecismo</h3>
-              <p className="text-lg font-serif text-foreground">{content.catechism_ref}</p>
+              <div className="text-center">
+                <p className="text-sm font-bold text-primary">✓ Etapa concluída!</p>
+              </div>
+              <button
+                onClick={() => navigate(`/jornadas/${journeyId}`)}
+                className="w-full py-4 bg-muted text-foreground rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-2"
+              >
+                <ArrowLeft className="w-4 h-4" /> Voltar à Jornada
+              </button>
             </div>
           )}
-
-          {/* Text content */}
-          {content.text && (
-            <blockquote className="border-l-4 border-primary/30 pl-4 py-2 italic text-foreground/80 font-serif text-lg leading-relaxed">
-              {content.text}
-              {content.source && (
-                <footer className="text-sm text-muted-foreground mt-2 not-italic">— {content.source}</footer>
-              )}
-            </blockquote>
-          )}
-
-          {/* Prayer */}
-          {content.prayer && (
-            <div className="space-y-2">
-              <h3 className="text-sm font-semibold text-primary uppercase tracking-wide">Oração</h3>
-              <p className="text-foreground font-serif">{content.prayer}</p>
-            </div>
-          )}
-
-          {/* Instruction */}
-          {content.instruction && (
-            <div className="bg-muted rounded-xl p-4 space-y-1">
-              <h3 className="text-sm font-semibold text-foreground">Como fazer</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">{content.instruction}</p>
-            </div>
-          )}
-
-          {/* Reflection prompt */}
-          {(content.reflection || content.prompt) && (
-            <div className="bg-primary/5 rounded-xl p-4 space-y-1 border border-primary/10">
-              <h3 className="text-sm font-semibold text-primary">Para Refletir</h3>
-              <p className="text-sm text-foreground leading-relaxed">{content.reflection || content.prompt}</p>
-            </div>
-          )}
-
-          {/* Guidance */}
-          {content.guidance && (
-            <p className="text-sm text-muted-foreground italic">{content.guidance}</p>
-          )}
-
-          {/* Method */}
-          {content.method && (
-            <div className="bg-muted rounded-xl p-4">
-              <h3 className="text-sm font-semibold text-foreground mb-1">Método</h3>
-              <p className="text-sm text-muted-foreground">{content.method}</p>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Reflection textarea */}
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-base flex items-center gap-2">
-            <PenLine className="w-4 h-4 text-primary" />
-            Sua Reflexão
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <Textarea
-            placeholder="O que esta etapa tocou no seu coração? Escreva livremente..."
-            value={reflection}
-            onChange={(e) => setReflection(e.target.value)}
-            className="min-h-[100px] resize-none text-sm"
-            disabled={completed}
-          />
-        </CardContent>
-      </Card>
-
-      {/* Complete button */}
-      {!completed ? (
-        <Button
-          onClick={completeStep}
-          disabled={saving}
-          className="w-full py-6 text-base font-bold"
-        >
-          {saving ? 'Salvando...' : 'Concluir Etapa'}
-          <Check className="w-5 h-5 ml-2" />
-        </Button>
-      ) : (
-        <Button
-          variant="outline"
-          onClick={() => navigate(`/jornadas/${journeyId}`)}
-          className="w-full"
-        >
-          Voltar à Jornada
-        </Button>
-      )}
+        </div>
+      </div>
     </motion.div>
   );
 };
