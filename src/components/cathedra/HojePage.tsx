@@ -65,7 +65,6 @@ const HojePage: React.FC = () => {
 
         if (journey) {
           setActiveJourney(journey);
-          // Get next uncompleted step
           const { data: completedSteps } = await supabase
             .from('journey_progress')
             .select('step_id')
@@ -74,20 +73,50 @@ const HojePage: React.FC = () => {
 
           const completedIds = (completedSteps || []).map(s => s.step_id);
 
-          const { data: nextStep } = await supabase
+          const { data: allSteps } = await supabase
             .from('journey_steps')
             .select('*')
             .eq('journey_id', lastJourneyId)
             .order('step_order', { ascending: true });
 
-          if (nextStep) {
-            const next = nextStep.find(s => !completedIds.includes(s.id));
+          if (allSteps) {
+            setJourneyProgress({ completed: completedIds.length, total: allSteps.length });
+            const next = allSteps.find(s => !completedIds.includes(s.id));
             setJourneyStep(next || null);
           }
         }
+      } else {
+        // No progress yet — load recommended journey from diagnosis
+        loadRecommendedJourney();
       }
     } catch (err) {
       console.error('Failed to load active journey:', err);
+    }
+  };
+
+  const loadRecommendedJourney = async () => {
+    if (!user || !profile?.diagnosis_result) return;
+    try {
+      const result = profile.diagnosis_result as Record<string, string>;
+      const { moment, prayer, knowledge, goal } = result;
+      let category = 'fundamentos';
+      if (moment === 'beginning' || knowledge === 'basic') category = 'fundamentos';
+      else if (moment === 'struggling' || goal === 'peace') category = 'mistico';
+      else if (prayer === 'contemplative' || goal === 'transformation') category = 'mistico';
+      else if (goal === 'routine' || prayer === 'rarely' || prayer === 'sometimes') category = 'rotina';
+
+      const { data } = await supabase
+        .from('journeys')
+        .select('*')
+        .eq('category', category)
+        .eq('is_active', true)
+        .order('sort_order', { ascending: true })
+        .limit(1)
+        .maybeSingle();
+
+      if (data) setRecommendedJourney(data);
+    } catch (err) {
+      console.error('Failed to load recommended journey:', err);
     }
   };
 
