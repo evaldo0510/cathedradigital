@@ -77,6 +77,10 @@ const JornadaStepPage = lazy(() => import('./components/cathedra/JornadaStepPage
 const JornadaCompletePage = lazy(() => import('./components/cathedra/JornadaCompletePage'));
 const BibliotecaPage = lazy(() => import('./components/cathedra/BibliotecaPage'));
 const JornadasPage = lazy(() => import('./components/cathedra/JornadasPage'));
+const Index = lazy(() => import('./pages/Index'));
+const PlaceholderPage = lazy(() => import('./components/cathedra/PlaceholderPage'));
+const CheckoutPage = lazy(() => import('./components/cathedra/CheckoutPage'));
+const DiagnosticsPage = lazy(() => import('./components/cathedra/DiagnosticsPage'));
 
 const LoadingFallback = () => (
   <div className="animate-in fade-in duration-150 space-y-4 p-4">
