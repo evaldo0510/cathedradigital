@@ -427,6 +427,13 @@ const AdminDashboard: React.FC = () => {
           </Suspense>
         </TabsContent>
 
+        {/* Transactions Tab */}
+        <TabsContent value="transactions">
+          <Suspense fallback={<Skeleton className="h-[300px] rounded-xl" />}>
+            <AdminTransactionsTab transactions={stats?.recentTransactions || []} />
+          </Suspense>
+        </TabsContent>
+
         {/* Manual Control Tab */}
         <TabsContent value="manual">
           <Card>
