@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../constants';
 import { AppRoute } from '../../types';
+import { Sprout, Scale, HandHeart, Cross, ScrollText, ChevronDown, ChevronRight } from 'lucide-react';
 
 interface TrailStep {
   label: string;
