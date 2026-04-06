@@ -93,12 +93,25 @@ const DiagnosticoPage: React.FC = () => {
   };
 
   const saveDiagnosis = async (result: Record<string, string>) => {
-    if (!user) return;
+    if (!user) {
+      console.error('saveDiagnosis: no user');
+      return;
+    }
     try {
-      await (supabase as any)
+      const { data, error } = await (supabase as any)
         .from('user_sensitive_data')
         .update({ diagnosis_result: result })
-        .eq('user_id', user.id);
+        .eq('user_id', user.id)
+        .select();
+      if (error) {
+        console.error('Failed to save diagnosis (DB error):', error);
+      } else if (!data || data.length === 0) {
+        console.warn('saveDiagnosis: no row matched, attempting upsert');
+        const { error: upsertErr } = await (supabase as any)
+          .from('user_sensitive_data')
+          .upsert({ user_id: user.id, diagnosis_result: result, email: '' }, { onConflict: 'user_id' });
+        if (upsertErr) console.error('Upsert failed:', upsertErr);
+      }
     } catch (err) {
       console.error('Failed to save diagnosis:', err);
     }
