@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Check, BookOpen, Hand, PenLine, HelpCircle, Clock } from 'lucide-react';
+import confetti from 'canvas-confetti';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
@@ -73,6 +74,13 @@ const JornadaStepPage: React.FC = () => {
         reflection: reflection.trim() || null,
       }, { onConflict: 'user_id,step_id' });
       setCompleted(true);
+      // Fire confetti celebration
+      confetti({
+        particleCount: 120,
+        spread: 80,
+        origin: { y: 0.7 },
+        colors: ['#d4af37', '#e8c547', '#b8860b', '#f0d56c'],
+      });
     } catch (err) {
       console.error(err);
     } finally {
