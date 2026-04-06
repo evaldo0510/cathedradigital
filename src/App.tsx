@@ -125,6 +125,10 @@ const AppLayout: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Pages that should NOT show header, footer, sidebar, or bottom nav
+  const chromelessPages: string[] = [AppRoute.HOME, AppRoute.ONBOARDING, AppRoute.LOGIN, '/reset-password'];
+  const isChromeless = chromelessPages.includes(location.pathname);
+
   const getPostAuthRoute = useCallback(() => {
     if (profile?.role === 'admin') return AppRoute.ADMIN;
     // If no onboarding done or no diagnosis, go to onboarding (which includes diagnosis)
