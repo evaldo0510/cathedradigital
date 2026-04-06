@@ -44,7 +44,9 @@ export enum AppRoute {
   DIAGNOSTICO = '/diagnostico',
   HOJE = '/hoje',
   JORNADAS = '/jornadas',
-  JORNADA_DETAIL = '/jornadas/:id'
+  JORNADA_DETAIL = '/jornadas/:id',
+  JORNADA_STEP = '/jornadas/:id/step',
+  BIBLIOTECA = '/biblioteca'
 }
 
 export interface TrackStep {
