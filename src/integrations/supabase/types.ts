@@ -275,6 +275,149 @@ export type Database = {
         }
         Relationships: []
       }
+      journey_progress: {
+        Row: {
+          completed_at: string
+          id: string
+          journey_id: string
+          reflection: string | null
+          step_id: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string
+          id?: string
+          journey_id: string
+          reflection?: string | null
+          step_id: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string
+          id?: string
+          journey_id?: string
+          reflection?: string | null
+          step_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "journey_progress_journey_id_fkey"
+            columns: ["journey_id"]
+            isOneToOne: false
+            referencedRelation: "journeys"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "journey_progress_step_id_fkey"
+            columns: ["step_id"]
+            isOneToOne: false
+            referencedRelation: "journey_steps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      journey_steps: {
+        Row: {
+          content: Json
+          created_at: string
+          duration_minutes: number
+          id: string
+          is_free: boolean
+          journey_id: string
+          step_order: number
+          step_type: string
+          subtitle: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content?: Json
+          created_at?: string
+          duration_minutes?: number
+          id?: string
+          is_free?: boolean
+          journey_id: string
+          step_order?: number
+          step_type?: string
+          subtitle?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: Json
+          created_at?: string
+          duration_minutes?: number
+          id?: string
+          is_free?: boolean
+          journey_id?: string
+          step_order?: number
+          step_type?: string
+          subtitle?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "journey_steps_journey_id_fkey"
+            columns: ["journey_id"]
+            isOneToOne: false
+            referencedRelation: "journeys"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      journeys: {
+        Row: {
+          category: string
+          cover_url: string | null
+          created_at: string
+          description: string
+          difficulty: string
+          estimated_days: number
+          icon: string
+          id: string
+          is_active: boolean
+          is_premium: boolean
+          sort_order: number
+          subtitle: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          cover_url?: string | null
+          created_at?: string
+          description?: string
+          difficulty?: string
+          estimated_days?: number
+          icon?: string
+          id?: string
+          is_active?: boolean
+          is_premium?: boolean
+          sort_order?: number
+          subtitle?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          cover_url?: string | null
+          created_at?: string
+          description?: string
+          difficulty?: string
+          estimated_days?: number
+          icon?: string
+          id?: string
+          is_active?: boolean
+          is_premium?: boolean
+          sort_order?: number
+          subtitle?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           created_at: string
@@ -318,6 +461,7 @@ export type Database = {
           bio: string | null
           completed_books: string[] | null
           created_at: string
+          diagnosis_result: Json | null
           email: string
           id: string
           is_premium: boolean
@@ -336,6 +480,7 @@ export type Database = {
           bio?: string | null
           completed_books?: string[] | null
           created_at?: string
+          diagnosis_result?: Json | null
           email?: string
           id: string
           is_premium?: boolean
@@ -354,6 +499,7 @@ export type Database = {
           bio?: string | null
           completed_books?: string[] | null
           created_at?: string
+          diagnosis_result?: Json | null
           email?: string
           id?: string
           is_premium?: boolean
@@ -397,6 +543,57 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      spiritual_journal: {
+        Row: {
+          content: string
+          created_at: string
+          entry_date: string
+          id: string
+          journey_id: string | null
+          mood: string | null
+          step_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content?: string
+          created_at?: string
+          entry_date?: string
+          id?: string
+          journey_id?: string | null
+          mood?: string | null
+          step_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          entry_date?: string
+          id?: string
+          journey_id?: string | null
+          mood?: string | null
+          step_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "spiritual_journal_journey_id_fkey"
+            columns: ["journey_id"]
+            isOneToOne: false
+            referencedRelation: "journeys"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "spiritual_journal_step_id_fkey"
+            columns: ["step_id"]
+            isOneToOne: false
+            referencedRelation: "journey_steps"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       trail_progress: {
         Row: {
