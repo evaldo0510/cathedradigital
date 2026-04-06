@@ -73,6 +73,7 @@ const AchievementsPage = lazy(() => import('./components/cathedra/AchievementsPa
 const CheckoutResultPage = lazy(() => import('./components/cathedra/CheckoutResultPage'));
 const TermsPage = lazy(() => import('./components/cathedra/TermsPage'));
 const PrivacyPage = lazy(() => import('./components/cathedra/PrivacyPage'));
+const PricingPage = lazy(() => import('./components/cathedra/PricingPage'));
 
 const LoadingFallback = () => (
   <div className="flex items-center justify-center min-h-[40vh]">
@@ -275,6 +276,7 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.CHECKOUT_RESULT} element={<PageTransition><AuthGuard><CheckoutResultPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.TERMS} element={<PageTransition><TermsPage /></PageTransition>} />
                   <Route path={AppRoute.PRIVACY} element={<PageTransition><PrivacyPage /></PageTransition>} />
+                  <Route path={AppRoute.PRICING} element={<PageTransition><PricingPage /></PageTransition>} />
                   <Route path={AppRoute.ADMIN} element={
                     <PageTransition>
                       <AdminGuard>
