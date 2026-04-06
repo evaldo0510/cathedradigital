@@ -152,36 +152,46 @@ const JornadaCompletePage: React.FC = () => {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6 }}
       >
-        <Card className="border-primary/30 bg-gradient-to-b from-primary/5 to-background overflow-hidden">
-          <CardContent className="p-8 text-center space-y-6">
-            <motion.div
-              initial={{ rotate: -20, scale: 0 }}
-              animate={{ rotate: 0, scale: 1 }}
-              transition={{ delay: 0.3, type: 'spring', stiffness: 200 }}
-            >
+        <div ref={certificateRef}>
+          <Card className="border-primary/30 bg-gradient-to-b from-primary/5 to-background overflow-hidden">
+            <CardContent className="p-8 text-center space-y-6">
               <div className="w-20 h-20 mx-auto rounded-full bg-primary/10 border-2 border-primary/30 flex items-center justify-center">
                 <Award className="w-10 h-10 text-primary" />
               </div>
-            </motion.div>
 
-            <div className="space-y-2">
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Certificado de Conclusão</p>
-              <h1 className="text-2xl md:text-3xl font-bold font-serif text-foreground">{journey.title}</h1>
-              <p className="text-sm text-muted-foreground italic">{journey.subtitle}</p>
-            </div>
+              <div className="space-y-2">
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Certificado de Conclusão</p>
+                <h1 className="text-2xl md:text-3xl font-bold font-serif text-foreground">{journey.title}</h1>
+                <p className="text-sm text-muted-foreground italic">{journey.subtitle}</p>
+              </div>
 
-            <div className="border-t border-b border-border/50 py-4 space-y-1">
-              <p className="text-xs text-muted-foreground">Jornada concluída em</p>
-              <p className="text-sm font-semibold text-foreground">{completionDate}</p>
-            </div>
+              <div className="border-t border-b border-border/50 py-4 space-y-1">
+                <p className="text-xs text-muted-foreground">Jornada concluída em</p>
+                <p className="text-sm font-semibold text-foreground">{completionDate}</p>
+              </div>
 
-            <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
-              <Sparkles className="w-3 h-3 text-primary" />
-              <span>CATHEDRA — Digital Sanctuarium</span>
-              <Sparkles className="w-3 h-3 text-primary" />
-            </div>
-          </CardContent>
-        </Card>
+              <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
+                <Sparkles className="w-3 h-3 text-primary" />
+                <span>CATHEDRA — Digital Sanctuarium</span>
+                <Sparkles className="w-3 h-3 text-primary" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Share Button */}
+        <div className="flex justify-center mt-3">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={shareCertificate}
+            disabled={sharing}
+            className="flex items-center gap-2"
+          >
+            <Share2 className="w-4 h-4" />
+            {sharing ? 'Gerando imagem...' : 'Compartilhar Certificado'}
+          </Button>
+        </div>
       </motion.div>
 
       {/* Reflections Summary */}
