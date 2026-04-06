@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Heart, Users, Zap, ChevronRight, ChevronLeft } from 'lucide-react';
+import { BookOpen, Heart, Users, Zap, ChevronRight, ChevronLeft, Compass, Sun, Hand, Sparkles, Church } from 'lucide-react';
 import { AppRoute } from '@/types';
 import { Logo } from '@/constants';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
 import onboardingBible from '@/assets/onboarding-bible.jpg';
 import onboardingPrayer from '@/assets/onboarding-prayer.jpg';
 import onboardingStudy from '@/assets/onboarding-study.jpg';
 import onboardingCommunity from '@/assets/onboarding-community.jpg';
 
+/* ── Intro slides ── */
 const SLIDES = [
   {
     icon: <BookOpen className="w-10 h-10" />,
@@ -40,36 +43,307 @@ const SLIDES = [
   },
 ];
 
+/* ── Diagnosis questions ── */
+interface DiagnosisQuestion {
+  id: string;
+  question: string;
+  options: { label: string; value: string; icon: React.ReactNode }[];
+}
+
+const QUESTIONS: DiagnosisQuestion[] = [
+  {
+    id: 'moment',
+    question: 'Como você descreveria seu momento espiritual atual?',
+    options: [
+      { label: 'Estou começando a buscar Deus', value: 'beginning', icon: <Sun className="w-5 h-5" /> },
+      { label: 'Tenho fé, mas quero aprofundar', value: 'deepening', icon: <BookOpen className="w-5 h-5" /> },
+      { label: 'Passo por um momento difícil', value: 'struggling', icon: <Heart className="w-5 h-5" /> },
+      { label: 'Quero servir melhor a Igreja', value: 'serving', icon: <Church className="w-5 h-5" /> },
+    ],
+  },
+  {
+    id: 'prayer',
+    question: 'Qual é sua relação com a oração?',
+    options: [
+      { label: 'Quase não rezo', value: 'rarely', icon: <Hand className="w-5 h-5" /> },
+      { label: 'Rezo às vezes, mas sem constância', value: 'sometimes', icon: <Sun className="w-5 h-5" /> },
+      { label: 'Tenho vida de oração regular', value: 'regular', icon: <Sparkles className="w-5 h-5" /> },
+      { label: 'Busco oração contemplativa', value: 'contemplative', icon: <Heart className="w-5 h-5" /> },
+    ],
+  },
+  {
+    id: 'knowledge',
+    question: 'Quanto você conhece da doutrina católica?',
+    options: [
+      { label: 'Muito pouco, o básico', value: 'basic', icon: <BookOpen className="w-5 h-5" /> },
+      { label: 'Conheço razoavelmente', value: 'moderate', icon: <BookOpen className="w-5 h-5" /> },
+      { label: 'Estudo com frequência', value: 'advanced', icon: <Sparkles className="w-5 h-5" /> },
+      { label: 'Tenho formação teológica', value: 'theological', icon: <Church className="w-5 h-5" /> },
+    ],
+  },
+  {
+    id: 'sacraments',
+    question: 'Como é sua vivência sacramental?',
+    options: [
+      { label: 'Não frequento os sacramentos', value: 'none', icon: <Church className="w-5 h-5" /> },
+      { label: 'Vou à Missa aos domingos', value: 'sunday', icon: <Church className="w-5 h-5" /> },
+      { label: 'Missa frequente e confissão regular', value: 'frequent', icon: <Sparkles className="w-5 h-5" /> },
+      { label: 'Vida sacramental intensa', value: 'intense', icon: <Heart className="w-5 h-5" /> },
+    ],
+  },
+  {
+    id: 'goal',
+    question: 'O que você mais deseja nesta jornada?',
+    options: [
+      { label: 'Encontrar paz interior', value: 'peace', icon: <Heart className="w-5 h-5" /> },
+      { label: 'Conhecer melhor a fé', value: 'knowledge', icon: <BookOpen className="w-5 h-5" /> },
+      { label: 'Criar uma rotina espiritual', value: 'routine', icon: <Sun className="w-5 h-5" /> },
+      { label: 'Transformação profunda de vida', value: 'transformation', icon: <Sparkles className="w-5 h-5" /> },
+    ],
+  },
+];
+
+const CATEGORY_MAP: Record<string, string> = {
+  beginning: 'fundamentos',
+  basic: 'fundamentos',
+  struggling: 'mistico',
+  peace: 'mistico',
+  contemplative: 'mistico',
+  transformation: 'mistico',
+  rarely: 'rotina',
+  sometimes: 'rotina',
+  routine: 'rotina',
+};
+
+function getRecommendedCategory(answers: Record<string, string>): string {
+  const { moment, prayer, knowledge, goal } = answers;
+  if (moment === 'beginning' || knowledge === 'basic') return 'fundamentos';
+  if (moment === 'struggling' || goal === 'peace') return 'mistico';
+  if (prayer === 'contemplative' || goal === 'transformation') return 'mistico';
+  if (goal === 'routine' || prayer === 'rarely' || prayer === 'sometimes') return 'rotina';
+  return 'fundamentos';
+}
+
+/* ── Component ── */
+type Phase = 'slides' | 'diagnosis' | 'result';
+
 const OnboardingPage: React.FC = () => {
+  const [phase, setPhase] = useState<Phase>('slides');
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [diagStep, setDiagStep] = useState(0);
+  const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [recommendedCategory, setRecommendedCategory] = useState('');
+  const [saving, setSaving] = useState(false);
   const navigate = useNavigate();
-  const isLast = currentSlide === SLIDES.length - 1;
+  const { user } = useAuth();
 
-  const handleFinish = () => {
-    localStorage.setItem('cathedra_onboarding_done', 'true');
-    navigate(AppRoute.DASHBOARD, { replace: true });
+  const isLastSlide = currentSlide === SLIDES.length - 1;
+
+  /* ── Slide navigation ── */
+  const handleSlideNext = () => {
+    if (isLastSlide) {
+      setPhase('diagnosis');
+    } else {
+      setCurrentSlide(prev => prev + 1);
+    }
   };
 
-  const handleNext = () => {
-    if (isLast) handleFinish();
-    else setCurrentSlide(prev => prev + 1);
-  };
-
-  const handlePrev = () => {
+  const handleSlidePrev = () => {
     if (currentSlide > 0) setCurrentSlide(prev => prev - 1);
   };
 
+  const handleSkipSlides = () => {
+    setPhase('diagnosis');
+  };
+
+  /* ── Diagnosis ── */
+  const handleDiagAnswer = (value: string) => {
+    const question = QUESTIONS[diagStep];
+    const newAnswers = { ...answers, [question.id]: value };
+    setAnswers(newAnswers);
+
+    if (diagStep < QUESTIONS.length - 1) {
+      setTimeout(() => setDiagStep(diagStep + 1), 300);
+    } else {
+      finishDiagnosis(newAnswers);
+    }
+  };
+
+  const finishDiagnosis = async (result: Record<string, string>) => {
+    setSaving(true);
+    const category = getRecommendedCategory(result);
+    setRecommendedCategory(category);
+
+    try {
+      if (user) {
+        await supabase
+          .from('profiles')
+          .update({ diagnosis_result: result as any })
+          .eq('id', user.id);
+      }
+    } catch (err) {
+      console.error('Failed to save diagnosis:', err);
+    }
+
+    localStorage.setItem('cathedra_onboarding_done', 'true');
+    setSaving(false);
+    setPhase('result');
+  };
+
+  const handleGoToJourney = async () => {
+    try {
+      const { data } = await supabase
+        .from('journeys')
+        .select('id')
+        .eq('category', recommendedCategory)
+        .eq('is_active', true)
+        .order('sort_order', { ascending: true })
+        .limit(1)
+        .maybeSingle();
+
+      if (data) {
+        navigate(`/jornadas/${data.id}`, { replace: true });
+      } else {
+        navigate(AppRoute.JORNADAS, { replace: true });
+      }
+    } catch {
+      navigate(AppRoute.JORNADAS, { replace: true });
+    }
+  };
+
+  /* ── Render: Result ── */
+  if (phase === 'result') {
+    const categoryNames: Record<string, string> = {
+      fundamentos: 'Primeiros Passos na Fé',
+      rotina: 'Rotina Espiritual',
+      mistico: 'Aprofundamento Místico',
+    };
+    const title = categoryNames[recommendedCategory] || 'Formação Integral';
+
+    return (
+      <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="w-full max-w-lg space-y-6"
+        >
+          <div className="text-center space-y-3">
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: 'spring', delay: 0.2 }}
+              className="w-20 h-20 mx-auto rounded-full bg-primary/10 flex items-center justify-center"
+            >
+              <Compass className="w-10 h-10 text-primary" />
+            </motion.div>
+            <h1 className="text-2xl font-bold font-serif text-foreground">Sua Jornada Recomendada</h1>
+            <p className="text-muted-foreground text-sm">Com base nas suas respostas, preparamos o caminho ideal para você.</p>
+          </div>
+
+          <div className="bg-card border border-primary/20 rounded-2xl p-6 space-y-3 text-center">
+            <h2 className="text-xl font-bold text-foreground">{title}</h2>
+            <p className="text-muted-foreground text-sm">Uma jornada guiada pensada especialmente para o seu momento espiritual.</p>
+          </div>
+
+          <button
+            onClick={handleGoToJourney}
+            className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-foreground text-background rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-primary hover:text-primary-foreground transition-all"
+          >
+            Começar Minha Jornada <ChevronRight className="w-4 h-4" />
+          </button>
+        </motion.div>
+      </div>
+    );
+  }
+
+  /* ── Render: Diagnosis phase ── */
+  if (phase === 'diagnosis') {
+    const question = QUESTIONS[diagStep];
+    const diagProgress = ((diagStep) / QUESTIONS.length) * 100;
+
+    return (
+      <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4">
+        <div className="w-full max-w-lg space-y-6">
+          <div className="flex justify-center">
+            <Logo className="w-10 h-10 text-primary" />
+          </div>
+
+          <div className="text-center space-y-2">
+            <Compass className="w-8 h-8 mx-auto text-primary" />
+            <h1 className="text-xl font-bold font-serif text-foreground">Diagnóstico Espiritual</h1>
+            <p className="text-xs text-muted-foreground">Responda com sinceridade para encontrarmos a jornada ideal.</p>
+          </div>
+
+          <div className="space-y-1">
+            <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+              <motion.div
+                className="h-full bg-primary rounded-full"
+                initial={{ width: 0 }}
+                animate={{ width: `${diagProgress}%` }}
+                transition={{ duration: 0.3 }}
+              />
+            </div>
+            <p className="text-[10px] text-muted-foreground text-center">
+              Pergunta {diagStep + 1} de {QUESTIONS.length}
+            </p>
+          </div>
+
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={question.id}
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -40 }}
+              transition={{ duration: 0.25 }}
+              className="space-y-4"
+            >
+              <h2 className="text-base font-semibold text-foreground text-center">{question.question}</h2>
+
+              <div className="space-y-2.5">
+                {question.options.map((opt) => (
+                  <motion.button
+                    key={opt.value}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    disabled={saving}
+                    onClick={() => handleDiagAnswer(opt.value)}
+                    className={`w-full flex items-center gap-3 p-3.5 rounded-xl border transition-all text-left
+                      ${answers[question.id] === opt.value
+                        ? 'border-primary bg-primary/10 text-foreground'
+                        : 'border-border bg-card text-foreground hover:border-primary/40'
+                      }`}
+                  >
+                    <span className="text-primary">{opt.icon}</span>
+                    <span className="text-sm font-medium">{opt.label}</span>
+                  </motion.button>
+                ))}
+              </div>
+            </motion.div>
+          </AnimatePresence>
+
+          {diagStep > 0 && (
+            <button
+              onClick={() => setDiagStep(diagStep - 1)}
+              className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <ChevronLeft className="w-4 h-4" /> Voltar
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  /* ── Render: Intro slides ── */
   const slide = SLIDES[currentSlide];
 
   return (
     <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4">
       <div className="w-full max-w-lg space-y-6">
-        {/* Logo */}
         <div className="flex justify-center">
           <Logo className="w-10 h-10 text-primary" />
         </div>
 
-        {/* Slide content */}
         <AnimatePresence mode="wait">
           <motion.div
             key={currentSlide}
@@ -79,28 +353,17 @@ const OnboardingPage: React.FC = () => {
             transition={{ duration: 0.25 }}
             className="bg-card border border-border rounded-3xl overflow-hidden"
           >
-            {/* Image */}
-            <img
-              src={slide.image}
-              alt={slide.title}
-              className="w-full h-48 md:h-56 object-cover"
-            />
-
-            {/* Text */}
+            <img src={slide.image} alt={slide.title} className="w-full h-48 md:h-56 object-cover" />
             <div className="p-6 md:p-8 text-center space-y-3">
-              <div className="flex justify-center text-primary">
-                {slide.icon}
-              </div>
+              <div className="flex justify-center text-primary">{slide.icon}</div>
               <h1 className="text-2xl md:text-3xl font-serif font-bold text-foreground">{slide.title}</h1>
               <p className="text-[10px] font-black uppercase tracking-widest text-primary">{slide.subtitle}</p>
-              <p className="text-muted-foreground leading-relaxed text-sm">
-                {slide.description}
-              </p>
+              <p className="text-muted-foreground leading-relaxed text-sm">{slide.description}</p>
             </div>
           </motion.div>
         </AnimatePresence>
 
-        {/* Progress dots */}
+        {/* Progress dots — slides + 1 for diagnosis */}
         <div className="flex justify-center gap-2">
           {SLIDES.map((_, i) => (
             <button
@@ -111,25 +374,25 @@ const OnboardingPage: React.FC = () => {
               }`}
             />
           ))}
+          <div className="w-2.5 h-2.5 rounded-full bg-muted-foreground/30" />
         </div>
 
-        {/* Navigation buttons */}
         <div className="flex items-center justify-between">
           {currentSlide > 0 ? (
-            <button onClick={handlePrev} className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <button onClick={handleSlidePrev} className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
               <ChevronLeft className="w-4 h-4" /> Voltar
             </button>
           ) : (
-            <button onClick={handleFinish} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <button onClick={handleSkipSlides} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               Pular
             </button>
           )}
 
           <button
-            onClick={handleNext}
+            onClick={handleSlideNext}
             className="flex items-center gap-2 px-6 py-3 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-primary hover:text-primary-foreground transition-all"
           >
-            {isLast ? 'Começar' : 'Próximo'}
+            {isLastSlide ? 'Diagnóstico' : 'Próximo'}
             <ChevronRight className="w-4 h-4" />
           </button>
         </div>

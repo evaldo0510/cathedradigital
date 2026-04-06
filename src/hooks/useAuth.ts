@@ -19,6 +19,7 @@ export interface Profile {
   completed_books?: string[];
   badges?: string[];
   total_minutes_read?: number;
+  diagnosis_result?: Record<string, string> | null;
 }
 
 interface AuthContextValue {

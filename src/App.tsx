@@ -113,8 +113,11 @@ const AppLayout: React.FC = () => {
 
   const getPostAuthRoute = useCallback(() => {
     if (profile?.role === 'admin') return AppRoute.ADMIN;
-    return readStoredValue('cathedra_onboarding_done') ? AppRoute.DASHBOARD : AppRoute.ONBOARDING;
-  }, [profile?.role]);
+    // If no onboarding done or no diagnosis, go to onboarding (which includes diagnosis)
+    const onboardingDone = readStoredValue('cathedra_onboarding_done');
+    if (!onboardingDone || !profile?.diagnosis_result) return AppRoute.ONBOARDING;
+    return AppRoute.HOJE;
+  }, [profile?.role, profile?.diagnosis_result]);
 
   useEffect(() => {
     const timer = setTimeout(() => setShowSplash(false), 2200);
