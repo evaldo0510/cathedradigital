@@ -79,6 +79,7 @@ const HojePage = lazy(() => import('./components/cathedra/HojePage'));
 const JornadaDetailPage = lazy(() => import('./components/cathedra/JornadaDetailPage'));
 const JornadaStepPage = lazy(() => import('./components/cathedra/JornadaStepPage'));
 const BibliotecaPage = lazy(() => import('./components/cathedra/BibliotecaPage'));
+const JornadasPage = lazy(() => import('./components/cathedra/JornadasPage'));
 
 const LoadingFallback = () => (
   <div className="flex items-center justify-center min-h-[40vh]">
