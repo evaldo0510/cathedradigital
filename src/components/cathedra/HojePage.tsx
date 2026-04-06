@@ -198,14 +198,14 @@ const HojePage: React.FC = () => {
         </Card>
       </motion.div>
 
-      {/* Active Journey */}
-      {activeJourney && journeyStep && (
+      {/* Active Journey with Progress */}
+      {activeJourney && (
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}
         >
-          <Card className="border-primary/30 overflow-hidden">
+          <Card className="border-primary/30 overflow-hidden bg-gradient-to-br from-primary/5 to-transparent">
             <CardHeader className="pb-2">
               <CardTitle className="text-base flex items-center gap-2">
                 <Flame className="w-4 h-4 text-primary" />
@@ -213,13 +213,53 @@ const HojePage: React.FC = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              <p className="text-sm text-muted-foreground">Próxima etapa: <strong>{journeyStep.title}</strong></p>
+              {journeyProgress.total > 0 && (
+                <div className="space-y-1.5">
+                  <Progress value={journeyProgress.total > 0 ? (journeyProgress.completed / journeyProgress.total) * 100 : 0} className="h-2" />
+                  <p className="text-[10px] text-muted-foreground">
+                    {journeyProgress.completed}/{journeyProgress.total} etapas concluídas
+                    {journeyProgress.completed >= journeyProgress.total && ' ✓ Concluída!'}
+                  </p>
+                </div>
+              )}
+              {journeyStep ? (
+                <p className="text-sm text-muted-foreground">Próxima etapa: <strong className="text-foreground">{journeyStep.title}</strong></p>
+              ) : (
+                <p className="text-sm text-primary font-semibold">🎉 Parabéns! Jornada concluída!</p>
+              )}
               <Button
                 size="sm"
                 onClick={() => navigate(`/jornadas/${activeJourney.id}`)}
                 className="w-full"
               >
-                Continuar Jornada <ChevronRight className="w-4 h-4 ml-1" />
+                {journeyStep ? 'Continuar Jornada' : 'Ver Resumo'} <ChevronRight className="w-4 h-4 ml-1" />
+              </Button>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
+
+      {/* Recommended Journey (no progress yet) */}
+      {!activeJourney && recommendedJourney && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
+        >
+          <Card className="border-primary/20 bg-primary/5">
+            <CardContent className="p-4 space-y-3">
+              <div className="flex items-center gap-2">
+                <Compass className="w-5 h-5 text-primary" />
+                <h3 className="font-semibold text-sm text-foreground">Jornada Recomendada</h3>
+              </div>
+              <p className="text-sm text-foreground font-bold">{recommendedJourney.title}</p>
+              <p className="text-xs text-muted-foreground">{recommendedJourney.description}</p>
+              <Button
+                size="sm"
+                onClick={() => navigate(`/jornadas/${recommendedJourney.id}`)}
+                className="w-full"
+              >
+                Começar Jornada <ChevronRight className="w-4 h-4 ml-1" />
               </Button>
             </CardContent>
           </Card>
