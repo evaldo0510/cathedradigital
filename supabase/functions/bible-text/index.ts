@@ -90,7 +90,11 @@ async function fetchFromBollsLife(bookId: number, chapter: number) {
   if (!Array.isArray(data) || data.length === 0) return null;
   return data.map((v: any) => ({
     number: v.verse,
-    text: (v.text || '').replace(/<br\s*\/?>/g, ' ').trim(),
+    text: (v.text || '')
+      .replace(/<sup>.*?<\/sup>/g, '')
+      .replace(/<[^>]+>/g, '')
+      .replace(/\s{2,}/g, ' ')
+      .trim(),
   }));
 }
 
