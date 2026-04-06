@@ -119,13 +119,14 @@ const JornadaStepPage: React.FC = () => {
   }
 
   if (!step) {
-    return (
+    return createPortal(
       <div className="fixed inset-0 bg-background flex items-center justify-center z-[200]">
         <div className="text-center space-y-4">
           <p className="text-muted-foreground">Etapa não encontrada.</p>
           <button onClick={() => navigate(-1)} className="text-primary underline text-sm">Voltar</button>
         </div>
-      </div>
+      </div>,
+      document.body
     );
   }
 
