@@ -78,6 +78,7 @@ const DiagnosticoPage = lazy(() => import('./components/cathedra/DiagnosticoPage
 const HojePage = lazy(() => import('./components/cathedra/HojePage'));
 const JornadaDetailPage = lazy(() => import('./components/cathedra/JornadaDetailPage'));
 const JornadaStepPage = lazy(() => import('./components/cathedra/JornadaStepPage'));
+const JornadaCompletePage = lazy(() => import('./components/cathedra/JornadaCompletePage'));
 const BibliotecaPage = lazy(() => import('./components/cathedra/BibliotecaPage'));
 const JornadasPage = lazy(() => import('./components/cathedra/JornadasPage'));
 
