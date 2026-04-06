@@ -171,13 +171,13 @@ const JornadaDetailPage: React.FC = () => {
                   </div>
 
                   {/* Action */}
-                  {!isCompleted && !isStepLocked && (
+                  {!isStepLocked && (
                     <Button
                       size="sm"
                       variant={isNext ? 'default' : 'outline'}
-                      onClick={() => completeStep(step.id)}
+                      onClick={() => navigate(`/jornadas/${id}/step?step=${step.id}`)}
                     >
-                      {isNext ? 'Iniciar' : 'Completar'}
+                      {isCompleted ? 'Rever' : isNext ? 'Iniciar' : 'Abrir'}
                       <ChevronRight className="w-4 h-4 ml-1" />
                     </Button>
                   )}
