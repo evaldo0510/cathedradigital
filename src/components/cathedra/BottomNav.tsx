@@ -47,7 +47,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user }) => {
   const items = [
     { label: 'Hoje', icon: <Sun className="w-5 h-5" />, route: AppRoute.HOJE },
     { label: 'Jornadas', icon: <Compass className="w-5 h-5" />, route: AppRoute.JORNADAS },
-    { label: 'Biblioteca', icon: <BookOpen className="w-5 h-5" />, route: AppRoute.BIBLE },
+    { label: 'Biblioteca', icon: <BookOpen className="w-5 h-5" />, route: AppRoute.BIBLIOTECA },
     { label: 'Progresso', icon: <TrendingUp className="w-5 h-5" />, route: AppRoute.DASHBOARD },
     { label: 'Perfil', icon: <User className="w-5 h-5" />, route: AppRoute.PROFILE },
   ];
