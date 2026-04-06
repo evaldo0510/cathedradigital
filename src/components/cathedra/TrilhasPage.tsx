@@ -1,9 +1,13 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../constants';
 import { AppRoute } from '../../types';
-import { Sprout, Scale, HandHeart, Cross, ScrollText, ChevronDown, ChevronRight, Check } from 'lucide-react';
+import { Sprout, Scale, HandHeart, Cross, ScrollText, ChevronDown, ChevronRight, Check, PartyPopper } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
+import confetti from 'canvas-confetti';
 
 interface TrailStep {
   label: string;
@@ -87,7 +91,7 @@ const LEVEL_COLORS: Record<string, string> = {
 
 const STORAGE_KEY = 'cathedra-trail-progress';
 
-function loadProgress(): Record<string, boolean[]> {
+function loadLocalProgress(): Record<string, boolean[]> {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     return raw ? JSON.parse(raw) : {};
@@ -96,27 +100,110 @@ function loadProgress(): Record<string, boolean[]> {
   }
 }
 
-function saveProgress(progress: Record<string, boolean[]>) {
+function saveLocalProgress(progress: Record<string, boolean[]>) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+}
+
+function dbToProgress(rows: { trail_id: string; step_index: number }[]): Record<string, boolean[]> {
+  const result: Record<string, boolean[]> = {};
+  for (const row of rows) {
+    const trail = TRAILS.find(t => t.id === row.trail_id);
+    if (!trail) continue;
+    if (!result[row.trail_id]) result[row.trail_id] = new Array(trail.steps.length).fill(false);
+    if (row.step_index < trail.steps.length) result[row.trail_id][row.step_index] = true;
+  }
+  return result;
+}
+
+function fireConfetti() {
+  const duration = 2000;
+  const end = Date.now() + duration;
+  const frame = () => {
+    confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#c8a96e', '#8B5E3C', '#d4af37'] });
+    confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#c8a96e', '#8B5E3C', '#d4af37'] });
+    if (Date.now() < end) requestAnimationFrame(frame);
+  };
+  frame();
 }
 
 const TrilhasPage: React.FC = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [expandedTrail, setExpandedTrail] = useState<string | null>(null);
-  const [progress, setProgress] = useState<Record<string, boolean[]>>(loadProgress);
+  const [progress, setProgress] = useState<Record<string, boolean[]>>(loadLocalProgress);
+  const completedTrailsRef = useRef<Set<string>>(new Set());
 
-  const toggleStep = useCallback((trailId: string, stepIndex: number, e: React.MouseEvent) => {
+  // Load from DB when user is logged in
+  useEffect(() => {
+    if (!user) return;
+    const load = async () => {
+      const { data, error } = await supabase
+        .from('trail_progress')
+        .select('trail_id, step_index')
+        .eq('user_id', user.id);
+      if (error) {
+        console.error('Error loading trail progress:', error);
+        return;
+      }
+      if (data && data.length > 0) {
+        const dbProgress = dbToProgress(data);
+        setProgress(dbProgress);
+        saveLocalProgress(dbProgress);
+        // Track already-completed trails so we don't fire confetti on load
+        for (const trail of TRAILS) {
+          const arr = dbProgress[trail.id] || [];
+          if (arr.length === trail.steps.length && arr.every(Boolean)) {
+            completedTrailsRef.current.add(trail.id);
+          }
+        }
+      }
+    };
+    load();
+  }, [user]);
+
+  const toggleStep = useCallback(async (trailId: string, stepIndex: number, e: React.MouseEvent) => {
     e.stopPropagation();
+    const trail = TRAILS.find(t => t.id === trailId)!;
+    
     setProgress(prev => {
-      const trail = TRAILS.find(t => t.id === trailId)!;
       const current = prev[trailId] || new Array(trail.steps.length).fill(false);
       const updated = [...current];
-      updated[stepIndex] = !updated[stepIndex];
+      const wasCompleted = updated[stepIndex];
+      updated[stepIndex] = !wasCompleted;
       const next = { ...prev, [trailId]: updated };
-      saveProgress(next);
+      saveLocalProgress(next);
+
+      // Check if trail just became fully completed
+      const allDone = updated.every(Boolean);
+      if (allDone && !completedTrailsRef.current.has(trailId)) {
+        completedTrailsRef.current.add(trailId);
+        fireConfetti();
+        toast.success(`🎉 Trilha "${trail.title}" concluída!`, { description: 'Parabéns pela sua dedicação!' });
+      } else if (!allDone) {
+        completedTrailsRef.current.delete(trailId);
+      }
+
+      // Sync with DB
+      if (user) {
+        if (!wasCompleted) {
+          supabase.from('trail_progress').insert({
+            user_id: user.id,
+            trail_id: trailId,
+            step_index: stepIndex,
+          }).then(({ error }) => { if (error) console.error('Error saving progress:', error); });
+        } else {
+          supabase.from('trail_progress')
+            .delete()
+            .eq('user_id', user.id)
+            .eq('trail_id', trailId)
+            .eq('step_index', stepIndex)
+            .then(({ error }) => { if (error) console.error('Error removing progress:', error); });
+        }
+      }
+
       return next;
     });
-  }, []);
+  }, [user]);
 
   const getCompleted = (trailId: string) => (progress[trailId] || []).filter(Boolean).length;
 
@@ -136,20 +223,22 @@ const TrilhasPage: React.FC = () => {
           const completed = getCompleted(trail.id);
           const total = trail.steps.length;
           const pct = Math.round((completed / total) * 100);
+          const isFullyDone = completed === total;
 
           return (
-            <div key={trail.id} className="bg-card border border-border rounded-2xl overflow-hidden hover:border-primary/30 transition-all">
+            <div key={trail.id} className={`bg-card border rounded-2xl overflow-hidden transition-all ${isFullyDone ? 'border-primary/50 shadow-md' : 'border-border hover:border-primary/30'}`}>
               <button
                 onClick={() => setExpandedTrail(expandedTrail === trail.id ? null : trail.id)}
                 className="w-full p-6 flex items-start gap-4 text-left hover:bg-primary/5 transition-all"
               >
                 <div className={`w-12 h-12 rounded-xl bg-muted flex items-center justify-center shrink-0 ${trail.color}`}>
-                  {trail.icon}
+                  {isFullyDone ? <PartyPopper className="w-6 h-6" /> : trail.icon}
                 </div>
                 <div className="flex-1 space-y-2">
                   <div className="flex items-center gap-2 flex-wrap">
                     <h3 className="text-lg font-serif font-bold text-foreground">{trail.title}</h3>
                     <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${LEVEL_COLORS[trail.level]}`}>{trail.level}</span>
+                    {isFullyDone && <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary/10 text-primary">✓ Concluída</span>}
                   </div>
                   <p className="text-sm text-muted-foreground font-serif">{trail.description}</p>
                   <div className="flex items-center gap-3">

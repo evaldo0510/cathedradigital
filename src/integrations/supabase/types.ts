@@ -398,6 +398,30 @@ export type Database = {
         }
         Relationships: []
       }
+      trail_progress: {
+        Row: {
+          completed_at: string
+          id: string
+          step_index: number
+          trail_id: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string
+          id?: string
+          step_index: number
+          trail_id: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string
+          id?: string
+          step_index?: number
+          trail_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       transactions: {
         Row: {
           amount: number
