@@ -109,7 +109,13 @@ const AdminDashboard: React.FC = () => {
           revenueData,
         });
 
-        setUsers(allProfiles as UserProfile[]);
+        const sensitiveMap = new Map<string, string>();
+        (sensitiveRes.data as SensitiveRow[] || []).forEach((s: SensitiveRow) => sensitiveMap.set(s.user_id, s.email));
+        
+        setUsers(allProfiles.map(p => ({
+          ...p,
+          email: sensitiveMap.get(p.id) || '',
+        })) as UserProfile[]);
       } catch (err: any) {
         console.error('Error fetching admin stats:', err);
         setError(err.message);
@@ -158,11 +164,24 @@ const AdminDashboard: React.FC = () => {
       return;
     }
     setManualLoading(true);
+    // Find user_id by email from sensitive data, then update profile
+    const { data: sensitiveData, error: sensitiveError } = await (supabase as any)
+      .from('user_sensitive_data')
+      .select('user_id')
+      .eq('email', manualEmail.trim())
+      .maybeSingle();
+
+    if (sensitiveError || !sensitiveData) {
+      setManualLoading(false);
+      toast.error('Nenhum usuário encontrado com esse email');
+      return;
+    }
+
     const { data, error } = await supabase
       .from('profiles')
       .update({ is_premium: grant })
-      .eq('email', manualEmail.trim())
-      .select('id, email, is_premium');
+      .eq('id', sensitiveData.user_id)
+      .select('id, is_premium');
 
     setManualLoading(false);
 
