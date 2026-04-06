@@ -129,7 +129,7 @@ const Index = () => {
           <img
             src="https://images.unsplash.com/photo-1548610762-656391d1ad4d?auto=format&fit=crop&q=40&w=800"
             alt="Catedral interior com vitrais"
-            className="w-full h-full object-cover opacity-10 scale-110 blur-[1px]"
+            className="w-full h-full object-cover opacity-10 dark:opacity-[0.06] scale-110 blur-[1px]"
             loading="eager"
             decoding="async"
           />
@@ -162,7 +162,7 @@ const Index = () => {
               </Button>
             </motion.div>
             <motion.div variants={buttonHover} initial="rest" whileHover="hover" whileTap="tap">
-              <Button size="lg" variant="outline" className="h-16 px-12 rounded-2xl border-primary/20 bg-white/50 dark:bg-white/5 backdrop-blur-md font-black uppercase tracking-widest text-base" onClick={() => navigate(AppRoute.ABOUT)}>
+              <Button size="lg" variant="outline" className="h-16 px-12 rounded-2xl border-primary/20 bg-card/50 backdrop-blur-md font-black uppercase tracking-widest text-base" onClick={() => navigate(AppRoute.ABOUT)}>
                 Conhecer o Projeto
               </Button>
             </motion.div>
@@ -294,7 +294,7 @@ const Index = () => {
       </section>
 
       {/* ═══ REGISTRATION BENEFITS ═══ */}
-      <section className="w-full bg-[hsl(var(--card-foreground))] text-[hsl(var(--card))] py-24 px-6 overflow-hidden relative">
+      <section className="w-full bg-foreground text-background py-24 px-6 overflow-hidden relative">
         <div className="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none">
           <div className="absolute inset-0" style={{ backgroundImage: "radial-gradient(circle, hsl(var(--primary)) 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
         </div>
@@ -353,7 +353,7 @@ const Index = () => {
               className="relative aspect-square rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl"
             >
               <img src="https://images.unsplash.com/photo-1544427928-201cd49e6657?auto=format&fit=crop&q=40&w=600" alt="Devoção católica" className="w-full h-full object-cover grayscale opacity-60" loading="lazy" decoding="async" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[hsl(var(--card-foreground))] via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-foreground via-transparent to-transparent" />
               <div className="absolute bottom-10 left-10 right-10 p-8 bg-white/10 backdrop-blur-md rounded-3xl border border-white/10">
                 <p className="text-xl font-serif italic mb-4">"Onde está o teu tesouro, aí estará também o teu coração."</p>
                 <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">Mateus 6,21</p>
@@ -454,7 +454,7 @@ const Index = () => {
       </section>
 
       {/* ═══ FOOTER ═══ */}
-      <footer className="w-full bg-[hsl(var(--card-foreground))] text-[hsl(var(--card))] pt-20 pb-10 px-6 border-t border-white/5">
+      <footer className="w-full bg-foreground text-background pt-20 pb-10 px-6 border-t border-background/5">
         <div className="max-w-7xl mx-auto space-y-16">
           <div className="text-center space-y-4 pb-16 border-b border-white/5">
             <Logo className="w-10 h-10 mx-auto text-primary opacity-70" />
