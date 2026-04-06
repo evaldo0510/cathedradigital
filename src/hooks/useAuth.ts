@@ -67,6 +67,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } as Profile;
   }, []);
 
+  const updateStreak = useCallback(async (currentUser: SupabaseUser, currentProfile: Profile) => {
+    try {
+      const now = new Date();
+      const todayStr = now.toISOString().split('T')[0];
+      const lastVisit = currentProfile.last_visit ? new Date(currentProfile.last_visit) : null;
+      const lastVisitStr = lastVisit ? lastVisit.toISOString().split('T')[0] : null;
+
+      // Already visited today
+      if (lastVisitStr === todayStr) return;
+
+      const yesterday = new Date(now);
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+      let newStreak = 1;
+      if (lastVisitStr === yesterdayStr) {
+        // Consecutive day — increment
+        newStreak = (currentProfile.streak || 0) + 1;
+      }
+      // else: streak resets to 1
+
+      await supabase
+        .from('profiles')
+        .update({ streak: newStreak, last_visit: now.toISOString() })
+        .eq('id', currentUser.id);
+    } catch (err) {
+      console.error('Streak update error:', err);
+    }
+  }, []);
+
   const syncAuthState = useCallback(async (currentUser: SupabaseUser | null) => {
     const requestId = ++authRequestId.current;
     setUser(currentUser);
@@ -82,6 +112,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const resolvedProfile = await fetchProfile(currentUser);
       if (requestId !== authRequestId.current) return;
       setProfile(resolvedProfile);
+
+      // Update streak after setting profile
+      if (resolvedProfile) {
+        void updateStreak(currentUser, resolvedProfile);
+      }
     } catch (error) {
       if (requestId !== authRequestId.current) return;
       console.error('Session sync error:', error);
@@ -91,7 +126,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setLoading(false);
       }
     }
-  }, [fetchProfile]);
+  }, [fetchProfile, updateStreak]);
 
   useEffect(() => {
     let active = true;
