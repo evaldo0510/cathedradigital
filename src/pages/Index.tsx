@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef, lazy, Suspense, memo } from "react";
 import {
   Youtube,
   Heart,
@@ -27,7 +27,6 @@ import { useNavigate } from "react-router-dom";
 import { AppRoute } from "@/types";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
-import { useRef } from "react";
 
 /* ─── Shared animation helpers ─── */
 const ease = [0.25, 0.46, 0.45, 0.94] as [number, number, number, number];
