@@ -123,6 +123,15 @@ const Index = () => {
     { name: "João Paulo", role: "Seminarista", text: "Uso diariamente para estudar os documentos do Magistério. A busca inteligente economiza muito tempo.", avatar: "JP" },
   ];
 
+  const faqs = [
+    { q: "O Cathedra é gratuito?", a: "Sim! O acesso à Bíblia, Catecismo, Santos, Liturgia e Orações é totalmente gratuito. Recursos avançados como o Colloquium IA e análises aprofundadas estão disponíveis no plano Premium." },
+    { q: "Preciso ser católico para usar?", a: "Não. Embora o conteúdo seja baseado na tradição católica, qualquer pessoa interessada em estudar a Bíblia, a história dos santos ou a teologia cristã é bem-vinda." },
+    { q: "Posso usar offline?", a: "Sim! O Cathedra é um Progressive Web App (PWA). Após o primeiro acesso, grande parte do conteúdo fica disponível mesmo sem conexão à internet." },
+    { q: "Como funciona o Colloquium IA?", a: "É um assistente de inteligência artificial treinado com documentos do Magistério da Igreja. Ele responde perguntas teológicas com citações das fontes oficiais, auxiliando seus estudos." },
+    { q: "Meus dados estão seguros?", a: "Absolutamente. Utilizamos criptografia de ponta e seguimos as melhores práticas de segurança. Seus dados de oração e estudo são privados e nunca compartilhados." },
+    { q: "Posso instalar no celular?", a: "Sim! O Cathedra pode ser instalado como um app no seu dispositivo Android ou iOS diretamente pelo navegador, sem precisar de loja de aplicativos." },
+  ];
+
   return (
     <div className="flex min-h-screen flex-col items-center bg-background text-foreground overflow-x-hidden">
       {/* ═══ HERO ═══ */}
