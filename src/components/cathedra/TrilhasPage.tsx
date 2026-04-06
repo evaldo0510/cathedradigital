@@ -134,7 +134,7 @@ const TrilhasPage: React.FC = () => {
                         <p className="font-bold text-sm text-foreground group-hover:text-primary transition-colors">{step.label}</p>
                         <p className="text-xs text-muted-foreground">{step.description}</p>
                       </div>
-                      <Icons.ArrowDown className="w-4 h-4 -rotate-90 text-muted-foreground group-hover:text-primary transition-colors" />
+                      <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
                     </button>
                   ))}
                 </div>
