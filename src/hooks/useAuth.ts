@@ -76,7 +76,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const lastVisitStr = lastVisit ? lastVisit.toISOString().split('T')[0] : null;
 
       // Already visited today
-      if (lastVisitStr === todayStr) return;
+      if (lastVisitStr === todayStr) {
+        // Still check badges even if already visited today
+        await checkAndAwardBadges(currentUser, currentProfile, currentProfile.streak || 0);
+        return;
+      }
 
       const yesterday = new Date(now);
       yesterday.setDate(yesterday.getDate() - 1);
@@ -84,17 +88,48 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       let newStreak = 1;
       if (lastVisitStr === yesterdayStr) {
-        // Consecutive day — increment
         newStreak = (currentProfile.streak || 0) + 1;
       }
-      // else: streak resets to 1
 
       await supabase
         .from('profiles')
         .update({ streak: newStreak, last_visit: now.toISOString() })
         .eq('id', currentUser.id);
+
+      // Check badges after streak update
+      await checkAndAwardBadges(currentUser, currentProfile, newStreak);
     } catch (err) {
       console.error('Streak update error:', err);
+    }
+  }, []);
+
+  const checkAndAwardBadges = useCallback(async (currentUser: SupabaseUser, currentProfile: Profile, streak: number) => {
+    try {
+      // Count completed journeys
+      const { count } = await supabase
+        .from('journey_progress')
+        .select('journey_id', { count: 'exact', head: true })
+        .eq('user_id', currentUser.id);
+
+      const currentBadges = currentProfile.badges || [];
+      const ctx: BadgeContext = {
+        completedBooks: new Set(currentProfile.completed_books || []),
+        chaptersRead: {},
+        totalMinutesRead: currentProfile.total_minutes_read || 0,
+        streak,
+        completedJourneys: count || 0,
+      };
+
+      const newBadgeIds = checkNewBadges(currentBadges, ctx);
+      if (newBadgeIds.length > 0) {
+        const updatedBadges = [...currentBadges, ...newBadgeIds];
+        await supabase
+          .from('profiles')
+          .update({ badges: updatedBadges })
+          .eq('id', currentUser.id);
+      }
+    } catch (err) {
+      console.error('Badge check error:', err);
     }
   }, []);
 
