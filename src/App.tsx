@@ -276,6 +276,7 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.CHECKOUT_RESULT} element={<PageTransition><AuthGuard><CheckoutResultPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.TERMS} element={<PageTransition><TermsPage /></PageTransition>} />
                   <Route path={AppRoute.PRIVACY} element={<PageTransition><PrivacyPage /></PageTransition>} />
+                  <Route path={AppRoute.PRICING} element={<PageTransition><PricingPage /></PageTransition>} />
                   <Route path={AppRoute.ADMIN} element={
                     <PageTransition>
                       <AdminGuard>
