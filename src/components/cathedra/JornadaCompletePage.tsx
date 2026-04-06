@@ -280,6 +280,45 @@ const JornadaCompletePage: React.FC = () => {
         </div>
       </motion.div>
 
+      {/* XP & Badges Reward */}
+      {(xpAwarded > 0 || newBadges.length > 0) && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          <Card className="border-primary/20 bg-gradient-to-r from-primary/5 to-accent/5">
+            <CardContent className="p-6 space-y-4">
+              <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
+                <Star className="w-5 h-5 text-primary" /> Recompensas
+              </h2>
+              {xpAwarded > 0 && (
+                <div className="flex items-center gap-3 p-3 bg-primary/10 rounded-xl">
+                  <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-lg">⚡</div>
+                  <div>
+                    <p className="text-sm font-bold text-foreground">+{xpAwarded} XP</p>
+                    <p className="text-xs text-muted-foreground">Por concluir esta jornada</p>
+                  </div>
+                </div>
+              )}
+              {newBadges.map(badgeId => {
+                const badge = getBadgeById(badgeId);
+                if (!badge) return null;
+                return (
+                  <div key={badgeId} className="flex items-center gap-3 p-3 bg-accent/10 rounded-xl">
+                    <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center text-lg">{badge.icon}</div>
+                    <div>
+                      <p className="text-sm font-bold text-foreground">{badge.name}</p>
+                      <p className="text-xs text-muted-foreground">{badge.description}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
+
       {/* Reflections Summary */}
       {reflections.length > 0 && (
         <motion.div
