@@ -121,7 +121,7 @@ const AppLayout: React.FC = () => {
   }, [profile?.role, profile?.diagnosis_result]);
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowSplash(false), 2200);
+    const timer = setTimeout(() => setShowSplash(false), 1000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -135,17 +135,17 @@ const AppLayout: React.FC = () => {
     navigate(getPostAuthRoute(), { replace: true });
   }, [getPostAuthRoute, loading, location.pathname, navigate, user, profile]);
 
+  const lastTrackedPath = useRef('');
   useEffect(() => {
-    const trackVisit = async () => {
-      try {
-        await supabase
-          .from('app_metrics')
-          .insert([{ metric_type: 'visit', metadata: { path: location.pathname, user_agent: navigator.userAgent } }]);
-      } catch (err) {
-        console.error('Failed to track visit:', err);
-      }
-    };
-    trackVisit();
+    if (lastTrackedPath.current === location.pathname) return;
+    lastTrackedPath.current = location.pathname;
+    const timer = setTimeout(() => {
+      supabase
+        .from('app_metrics')
+        .insert([{ metric_type: 'visit', metadata: { path: location.pathname } }])
+        .then(() => {}, () => {});
+    }, 2000);
+    return () => clearTimeout(timer);
   }, [location.pathname]);
 
   const t = useCallback((key: string) => {
@@ -225,8 +225,8 @@ const AppLayout: React.FC = () => {
           )}
           <div className={location.pathname === AppRoute.HOME || location.pathname === AppRoute.ONBOARDING ? "flex-1" : "flex-1 p-3 sm:p-4 md:p-5 lg:p-6 pb-24 w-full max-w-5xl mx-auto"}>
 
-            <AnimatePresence mode="wait">
-              <Suspense fallback={<LoadingFallback />}>
+            <Suspense fallback={<LoadingFallback />}>
+              <AnimatePresence mode="wait">
                 <Routes location={location} key={location.pathname}>
                   <Route path={AppRoute.HOME} element={<PageTransition><Index /></PageTransition>} />
                   <Route path={AppRoute.DASHBOARD} element={<PageTransition><AuthGuard><Dashboard user={appUser} /></AuthGuard></PageTransition>} />
@@ -292,8 +292,8 @@ const AppLayout: React.FC = () => {
                   } />
                   <Route path="*" element={<PageTransition><AuthGuard><Dashboard user={appUser} /></AuthGuard></PageTransition>} />
                 </Routes>
-              </Suspense>
-            </AnimatePresence>
+              </AnimatePresence>
+            </Suspense>
           </div>
           {location.pathname !== AppRoute.HOME && location.pathname !== AppRoute.ONBOARDING && (
             <>
