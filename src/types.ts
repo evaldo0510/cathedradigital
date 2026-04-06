@@ -46,6 +46,7 @@ export enum AppRoute {
   JORNADAS = '/jornadas',
   JORNADA_DETAIL = '/jornadas/:id',
   JORNADA_STEP = '/jornadas/:id/step',
+  JORNADA_COMPLETE = '/jornadas/:id/complete',
   BIBLIOTECA = '/biblioteca'
 }
 
