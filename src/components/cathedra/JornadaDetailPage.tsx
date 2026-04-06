@@ -93,6 +93,7 @@ const JornadaDetailPage: React.FC = () => {
   const totalSteps = steps.length;
   const progressPercent = totalSteps > 0 ? (completedCount / totalSteps) * 100 : 0;
   const isLocked = journey.is_premium && !isPremium;
+  const isJourneyComplete = totalSteps > 0 && completedCount === totalSteps;
 
   return (
     <div className="space-y-6 max-w-2xl mx-auto">
