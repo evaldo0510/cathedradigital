@@ -290,7 +290,8 @@ const JornadaStepPage: React.FC = () => {
           )}
         </div>
       </div>
-    </motion.div>
+    </motion.div>,
+    document.body
   );
 };
 
