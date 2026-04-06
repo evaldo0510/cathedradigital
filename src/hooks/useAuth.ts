@@ -129,6 +129,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           .from('profiles')
           .update({ badges: updatedBadges })
           .eq('id', currentUser.id);
+
+        // Celebrate!
+        confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 }, colors: ['#FFD700', '#FF6B35', '#4ECDC4', '#8B5CF6'] });
+        for (const id of newBadgeIds) {
+          const badge = getBadgeById(id);
+          if (badge) {
+            toast.success(`${badge.icon} ${badge.name}`, { description: badge.description, duration: 5000 });
+          }
+        }
       }
     } catch (err) {
       console.error('Badge check error:', err);
