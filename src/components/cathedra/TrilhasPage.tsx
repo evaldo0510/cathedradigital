@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../constants';
 import { AppRoute } from '../../types';
-import { Sprout, Scale, HandHeart, Cross, ScrollText, ChevronDown, ChevronRight } from 'lucide-react';
+import { Sprout, Scale, HandHeart, Cross, ScrollText, ChevronDown, ChevronRight, Check } from 'lucide-react';
+import { Progress } from '@/components/ui/progress';
 
 interface TrailStep {
   label: string;
@@ -84,9 +85,40 @@ const LEVEL_COLORS: Record<string, string> = {
   'Avançado': 'bg-red-500/10 text-red-700 dark:text-red-300',
 };
 
+const STORAGE_KEY = 'cathedra-trail-progress';
+
+function loadProgress(): Record<string, boolean[]> {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
+
+function saveProgress(progress: Record<string, boolean[]>) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+}
+
 const TrilhasPage: React.FC = () => {
   const navigate = useNavigate();
   const [expandedTrail, setExpandedTrail] = useState<string | null>(null);
+  const [progress, setProgress] = useState<Record<string, boolean[]>>(loadProgress);
+
+  const toggleStep = useCallback((trailId: string, stepIndex: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setProgress(prev => {
+      const trail = TRAILS.find(t => t.id === trailId)!;
+      const current = prev[trailId] || new Array(trail.steps.length).fill(false);
+      const updated = [...current];
+      updated[stepIndex] = !updated[stepIndex];
+      const next = { ...prev, [trailId]: updated };
+      saveProgress(next);
+      return next;
+    });
+  }, []);
+
+  const getCompleted = (trailId: string) => (progress[trailId] || []).filter(Boolean).length;
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
@@ -100,48 +132,70 @@ const TrilhasPage: React.FC = () => {
       </div>
 
       <div className="space-y-4">
-        {TRAILS.map(trail => (
-          <div key={trail.id} className="bg-card border border-border rounded-2xl overflow-hidden hover:border-primary/30 transition-all">
-            <button
-              onClick={() => setExpandedTrail(expandedTrail === trail.id ? null : trail.id)}
-              className="w-full p-6 flex items-start gap-4 text-left hover:bg-primary/5 transition-all"
-            >
-              <div className={`w-12 h-12 rounded-xl bg-muted flex items-center justify-center shrink-0 ${trail.color}`}>
-                {trail.icon}
-              </div>
-              <div className="flex-1 space-y-1">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <h3 className="text-lg font-serif font-bold text-foreground">{trail.title}</h3>
-                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${LEVEL_COLORS[trail.level]}`}>{trail.level}</span>
-                </div>
-                <p className="text-sm text-muted-foreground font-serif">{trail.description}</p>
-                <p className="text-[10px] text-muted-foreground font-bold">{trail.steps.length} etapas</p>
-              </div>
-              <ChevronDown className={`w-5 h-5 text-muted-foreground transition-transform mt-1 ${expandedTrail === trail.id ? 'rotate-180' : ''}`} />
-            </button>
+        {TRAILS.map(trail => {
+          const completed = getCompleted(trail.id);
+          const total = trail.steps.length;
+          const pct = Math.round((completed / total) * 100);
 
-            {expandedTrail === trail.id && (
-              <div className="border-t border-border px-6 pb-6 pt-2">
-                <div className="space-y-2">
-                  {trail.steps.map((step, i) => (
-                    <button
-                      key={i}
-                      onClick={() => navigate(step.route)}
-                      className="w-full flex items-center gap-4 p-4 rounded-xl text-left hover:bg-primary/5 transition-all group"
-                    >
-                      <div className="w-8 h-8 rounded-lg bg-foreground text-background flex items-center justify-center text-sm font-black shrink-0">{i + 1}</div>
-                      <div className="flex-1">
-                        <p className="font-bold text-sm text-foreground group-hover:text-primary transition-colors">{step.label}</p>
-                        <p className="text-xs text-muted-foreground">{step.description}</p>
-                      </div>
-                      <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                    </button>
-                  ))}
+          return (
+            <div key={trail.id} className="bg-card border border-border rounded-2xl overflow-hidden hover:border-primary/30 transition-all">
+              <button
+                onClick={() => setExpandedTrail(expandedTrail === trail.id ? null : trail.id)}
+                className="w-full p-6 flex items-start gap-4 text-left hover:bg-primary/5 transition-all"
+              >
+                <div className={`w-12 h-12 rounded-xl bg-muted flex items-center justify-center shrink-0 ${trail.color}`}>
+                  {trail.icon}
                 </div>
-              </div>
-            )}
-          </div>
-        ))}
+                <div className="flex-1 space-y-2">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h3 className="text-lg font-serif font-bold text-foreground">{trail.title}</h3>
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${LEVEL_COLORS[trail.level]}`}>{trail.level}</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground font-serif">{trail.description}</p>
+                  <div className="flex items-center gap-3">
+                    <Progress value={pct} className="h-2 flex-1" />
+                    <span className="text-[11px] font-bold text-muted-foreground whitespace-nowrap">{completed}/{total}</span>
+                  </div>
+                </div>
+                <ChevronDown className={`w-5 h-5 text-muted-foreground transition-transform mt-1 ${expandedTrail === trail.id ? 'rotate-180' : ''}`} />
+              </button>
+
+              {expandedTrail === trail.id && (
+                <div className="border-t border-border px-6 pb-6 pt-2">
+                  <div className="space-y-2">
+                    {trail.steps.map((step, i) => {
+                      const done = progress[trail.id]?.[i] ?? false;
+                      return (
+                        <div key={i} className="flex items-center gap-2">
+                          <button
+                            onClick={(e) => toggleStep(trail.id, i, e)}
+                            className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-black shrink-0 transition-colors ${
+                              done
+                                ? 'bg-primary text-primary-foreground'
+                                : 'bg-foreground text-background'
+                            }`}
+                          >
+                            {done ? <Check className="w-4 h-4" /> : i + 1}
+                          </button>
+                          <button
+                            onClick={() => navigate(step.route)}
+                            className="flex-1 flex items-center gap-3 p-3 rounded-xl text-left hover:bg-primary/5 transition-all group"
+                          >
+                            <div className="flex-1">
+                              <p className={`font-bold text-sm transition-colors ${done ? 'text-muted-foreground line-through' : 'text-foreground group-hover:text-primary'}`}>{step.label}</p>
+                              <p className="text-xs text-muted-foreground">{step.description}</p>
+                            </div>
+                            <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
