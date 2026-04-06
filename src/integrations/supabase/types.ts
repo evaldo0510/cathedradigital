@@ -742,6 +742,33 @@ export type Database = {
         }
         Relationships: []
       }
+      user_sensitive_data: {
+        Row: {
+          created_at: string
+          diagnosis_result: Json | null
+          email: string
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          diagnosis_result?: Json | null
+          email?: string
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          diagnosis_result?: Json | null
+          email?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       public_profiles: {
