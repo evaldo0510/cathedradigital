@@ -106,7 +106,9 @@ const TrilhasPage: React.FC = () => {
               onClick={() => setExpandedTrail(expandedTrail === trail.id ? null : trail.id)}
               className="w-full p-6 flex items-start gap-4 text-left hover:bg-primary/5 transition-all"
             >
-              <span className="text-3xl">{trail.icon}</span>
+              <div className={`w-12 h-12 rounded-xl bg-muted flex items-center justify-center shrink-0 ${trail.color}`}>
+                {trail.icon}
+              </div>
               <div className="flex-1 space-y-1">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h3 className="text-lg font-serif font-bold text-foreground">{trail.title}</h3>
@@ -115,7 +117,7 @@ const TrilhasPage: React.FC = () => {
                 <p className="text-sm text-muted-foreground font-serif">{trail.description}</p>
                 <p className="text-[10px] text-muted-foreground font-bold">{trail.steps.length} etapas</p>
               </div>
-              <Icons.ArrowDown className={`w-5 h-5 text-muted-foreground transition-transform mt-1 ${expandedTrail === trail.id ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`w-5 h-5 text-muted-foreground transition-transform mt-1 ${expandedTrail === trail.id ? 'rotate-180' : ''}`} />
             </button>
 
             {expandedTrail === trail.id && (
