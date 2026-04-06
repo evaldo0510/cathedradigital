@@ -133,6 +133,26 @@ const JornadaDetailPage: React.FC = () => {
         <p className="text-sm text-muted-foreground leading-relaxed">{journey.description}</p>
       )}
 
+      {/* Completion Banner */}
+      {isJourneyComplete && (
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+          <Card className="border-primary/30 bg-gradient-to-r from-primary/10 to-primary/5">
+            <CardContent className="p-5 flex items-center gap-4">
+              <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+                <Award className="w-6 h-6 text-primary" />
+              </div>
+              <div className="flex-1">
+                <p className="font-bold text-sm text-foreground">🎉 Jornada Concluída!</p>
+                <p className="text-xs text-muted-foreground">Parabéns! Veja seu certificado e reflexões.</p>
+              </div>
+              <Button size="sm" onClick={() => navigate(`/jornadas/${id}/complete`)}>
+                Ver <ChevronRight className="w-4 h-4 ml-1" />
+              </Button>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
+
       {/* Steps */}
       <div className="space-y-3">
         <h2 className="text-lg font-semibold text-foreground">Etapas</h2>
