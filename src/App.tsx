@@ -79,6 +79,7 @@ const HojePage = lazy(() => import('./components/cathedra/HojePage'));
 const JornadaDetailPage = lazy(() => import('./components/cathedra/JornadaDetailPage'));
 const JornadaStepPage = lazy(() => import('./components/cathedra/JornadaStepPage'));
 const BibliotecaPage = lazy(() => import('./components/cathedra/BibliotecaPage'));
+const JornadasPage = lazy(() => import('./components/cathedra/JornadasPage'));
 
 const LoadingFallback = () => (
   <div className="flex items-center justify-center min-h-[40vh]">
@@ -284,7 +285,7 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.PRICING} element={<PageTransition><PricingPage /></PageTransition>} />
                   <Route path={AppRoute.DIAGNOSTICO} element={<PageTransition><AuthGuard><DiagnosticoPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.HOJE} element={<PageTransition><AuthGuard><HojePage /></AuthGuard></PageTransition>} />
-                  <Route path={AppRoute.JORNADAS} element={<PageTransition><AuthGuard><TrilhasPage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.JORNADAS} element={<PageTransition><AuthGuard><JornadasPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.JORNADA_DETAIL} element={<PageTransition><AuthGuard><JornadaDetailPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.JORNADA_STEP} element={<PageTransition><AuthGuard><JornadaStepPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.BIBLIOTECA} element={<PageTransition><AuthGuard><BibliotecaPage /></AuthGuard></PageTransition>} />
