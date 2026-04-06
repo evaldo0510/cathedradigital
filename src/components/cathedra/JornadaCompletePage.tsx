@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Award, ArrowRight, BookOpen, Quote, ChevronRight, Sparkles, ArrowLeft, Share2, Download } from 'lucide-react';
+import { Award, ArrowRight, BookOpen, Quote, ChevronRight, Sparkles, ArrowLeft, Share2, Star } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import html2canvas from 'html2canvas';
 import { Button } from '@/components/ui/button';
@@ -10,6 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 import { toast } from 'sonner';
+import { checkNewBadges, getBadgeById, BadgeContext } from '@/lib/badges';
 
 const JornadaCompletePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -21,6 +22,9 @@ const JornadaCompletePage: React.FC = () => {
   const [nextJourney, setNextJourney] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [sharing, setSharing] = useState(false);
+  const [xpAwarded, setXpAwarded] = useState(0);
+  const [newBadges, setNewBadges] = useState<string[]>([]);
+  const [rewardsProcessed, setRewardsProcessed] = useState(false);
   const certificateRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -83,6 +87,88 @@ const JornadaCompletePage: React.FC = () => {
       console.error(err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Award XP and badges on first visit to completion page
+  useEffect(() => {
+    if (!loading && journey && user && !rewardsProcessed) {
+      processRewards();
+    }
+  }, [loading, journey, user, rewardsProcessed]);
+
+  const processRewards = async () => {
+    if (!user) return;
+    setRewardsProcessed(true);
+    try {
+      // Get profile
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('xp, badges, streak, completed_books, total_minutes_read')
+        .eq('id', user.id)
+        .single();
+      if (!profile) return;
+
+      // Count completed journeys (distinct journey_ids where all steps done)
+      const { data: allJourneys } = await supabase
+        .from('journeys')
+        .select('id')
+        .eq('is_active', true);
+
+      let completedJourneyCount = 0;
+      if (allJourneys) {
+        for (const j of allJourneys) {
+          const { count: totalSteps } = await supabase
+            .from('journey_steps')
+            .select('*', { count: 'exact', head: true })
+            .eq('journey_id', j.id);
+          const { count: doneSteps } = await supabase
+            .from('journey_progress')
+            .select('*', { count: 'exact', head: true })
+            .eq('user_id', user.id)
+            .eq('journey_id', j.id);
+          if (totalSteps && doneSteps && doneSteps >= totalSteps) {
+            completedJourneyCount++;
+          }
+        }
+      }
+
+      // Award XP: 100 per journey completion
+      const xpGain = 100;
+      const newXp = (profile.xp || 0) + xpGain;
+      setXpAwarded(xpGain);
+
+      // Check badges
+      const ctx: BadgeContext = {
+        completedBooks: new Set(profile.completed_books || []),
+        chaptersRead: {},
+        totalMinutesRead: profile.total_minutes_read || 0,
+        streak: profile.streak || 0,
+        completedJourneys: completedJourneyCount,
+      };
+
+      const earned = checkNewBadges(profile.badges || [], ctx);
+      setNewBadges(earned);
+
+      // Update profile
+      const updatedBadges = [...(profile.badges || []), ...earned];
+      await supabase
+        .from('profiles')
+        .update({ xp: newXp, badges: updatedBadges })
+        .eq('id', user.id);
+
+      // Show toast for badges
+      earned.forEach(badgeId => {
+        const badge = getBadgeById(badgeId);
+        if (badge) {
+          toast.success(`${badge.icon} Nova conquista: ${badge.name}!`, {
+            description: badge.description,
+            duration: 5000,
+          });
+        }
+      });
+    } catch (err) {
+      console.error('Rewards error:', err);
     }
   };
 
@@ -193,6 +279,45 @@ const JornadaCompletePage: React.FC = () => {
           </Button>
         </div>
       </motion.div>
+
+      {/* XP & Badges Reward */}
+      {(xpAwarded > 0 || newBadges.length > 0) && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          <Card className="border-primary/20 bg-gradient-to-r from-primary/5 to-accent/5">
+            <CardContent className="p-6 space-y-4">
+              <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
+                <Star className="w-5 h-5 text-primary" /> Recompensas
+              </h2>
+              {xpAwarded > 0 && (
+                <div className="flex items-center gap-3 p-3 bg-primary/10 rounded-xl">
+                  <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-lg">⚡</div>
+                  <div>
+                    <p className="text-sm font-bold text-foreground">+{xpAwarded} XP</p>
+                    <p className="text-xs text-muted-foreground">Por concluir esta jornada</p>
+                  </div>
+                </div>
+              )}
+              {newBadges.map(badgeId => {
+                const badge = getBadgeById(badgeId);
+                if (!badge) return null;
+                return (
+                  <div key={badgeId} className="flex items-center gap-3 p-3 bg-accent/10 rounded-xl">
+                    <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center text-lg">{badge.icon}</div>
+                    <div>
+                      <p className="text-sm font-bold text-foreground">{badge.name}</p>
+                      <p className="text-xs text-muted-foreground">{badge.description}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
 
       {/* Reflections Summary */}
       {reflections.length > 0 && (
