@@ -42,6 +42,11 @@ interface UserProfile {
   last_visit: string | null;
 }
 
+interface SensitiveRow {
+  user_id: string;
+  email: string;
+}
+
 const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
   const [stats, setStats] = useState<Stats | null>(null);
@@ -59,8 +64,9 @@ const AdminDashboard: React.FC = () => {
       try {
         setLoading(true);
 
-        const [profilesRes, metricsRes, transactionsRes] = await Promise.all([
+        const [profilesRes, sensitiveRes, metricsRes, transactionsRes] = await Promise.all([
           supabase.from('profiles').select('*'),
+          (supabase as any).from('user_sensitive_data').select('user_id, email'),
           supabase.from('app_metrics').select('*'),
           supabase.from('transactions').select('*').order('created_at', { ascending: false }),
         ]);
