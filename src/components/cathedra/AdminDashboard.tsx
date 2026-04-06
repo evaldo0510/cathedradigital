@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { 
   Users, TrendingUp, Download, DollarSign, ArrowUpRight,
   BarChart3, Calendar, AlertCircle, Crown, Shield, Search,
-  ChevronDown, ChevronUp, UserCog
+  ChevronDown, ChevronUp, UserCog, ArrowLeft, Home
 } from 'lucide-react';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, 
@@ -42,6 +43,7 @@ interface UserProfile {
 }
 
 const AdminDashboard: React.FC = () => {
+  const navigate = useNavigate();
   const [stats, setStats] = useState<Stats | null>(null);
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [loading, setLoading] = useState(true);
@@ -217,9 +219,20 @@ const AdminDashboard: React.FC = () => {
 
   return (
     <div className="space-y-8 pb-10">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold tracking-tight">Painel Administrativo</h1>
-        <p className="text-muted-foreground">Visão geral do desempenho e gestão de usuários.</p>
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-col gap-2">
+          <h1 className="text-3xl font-bold tracking-tight">Painel Administrativo</h1>
+          <p className="text-muted-foreground">Visão geral do desempenho e gestão de usuários.</p>
+        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => navigate('/hoje')}
+          className="flex items-center gap-2 shrink-0"
+        >
+          <Home className="w-4 h-4" />
+          <span className="hidden sm:inline">Voltar ao App</span>
+        </Button>
       </div>
 
       {/* Stats Overview */}
