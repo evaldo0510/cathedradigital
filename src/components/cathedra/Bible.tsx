@@ -427,7 +427,7 @@ const Bible: React.FC = () => {
                     }`}
                   >
                     <sup className="text-primary font-bold mr-1 text-xs select-none">{v.number}</sup>
-                    <span className="font-serif">{v.text}</span>
+                    <span className="font-serif">{v.text.replace(/<[^>]+>/g, '').replace(/\s{2,}/g, ' ')}</span>
                     {highlightedVerse === v.number && (
                       <span className="inline-flex gap-1 ml-2 align-middle">
                         <button
