@@ -42,7 +42,11 @@ const TestimonialsSection = () => (
             <Card className="h-full border-none bg-card shadow-lg hover:shadow-2xl rounded-[2rem] overflow-hidden transition-shadow duration-300 relative group">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary/60 via-primary to-primary/60 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
               <CardContent className="p-8 space-y-6 relative">
-                <motion.div variants={floatingQuote} initial="initial" animate="animate" className="absolute top-4 right-4">
+                <motion.div
+                  animate={{ rotate: [-6, 0, -6], scale: [0.8, 1, 0.8], opacity: [0.2, 0.35, 0.2] }}
+                  transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" as const }}
+                  className="absolute top-4 right-4"
+                >
                   <Quote className="w-12 h-12 text-primary/15" />
                 </motion.div>
 
