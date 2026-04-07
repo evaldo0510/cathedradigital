@@ -176,10 +176,14 @@ const OnboardingPage: React.FC = () => {
 
     try {
       if (user) {
+        // Use upsert to ensure the record exists, since it's not automatically created on signup
         await (supabase as any)
           .from('user_sensitive_data')
-          .update({ diagnosis_result: result })
-          .eq('user_id', user.id);
+          .upsert({ 
+            user_id: user.id, 
+            diagnosis_result: result,
+            email: user.email || ''
+          }, { onConflict: 'user_id' });
       }
     } catch (err) {
       console.error('Failed to save diagnosis:', err);
