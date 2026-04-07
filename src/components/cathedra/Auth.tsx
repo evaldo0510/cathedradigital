@@ -138,29 +138,51 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
           <div className="flex-1 h-px bg-border" />
         </div>
 
-        <button
-          type="button"
-          onClick={async () => {
-            setLoading(true);
-            setError('');
-            const result = await lovable.auth.signInWithOAuth('apple', {
-              redirect_uri: window.location.origin,
-            });
-            if (result.error) {
-              setError('Erro ao entrar com Apple. Tente novamente.');
-            } else if (!result.redirected) {
-              onSuccess();
-            }
-            setLoading(false);
-          }}
-          disabled={loading}
-          className="w-full py-4 bg-black text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-black/80 transition-all disabled:opacity-50 flex items-center justify-center gap-3"
-        >
-          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.53-3.23 0-1.44.62-2.2.44-3.06-.4C3.79 16.17 4.36 9.53 8.73 9.28c1.26.06 2.13.72 2.87.76.98-.2 1.92-.77 2.98-.7 1.26.1 2.22.6 2.84 1.52-2.6 1.56-1.98 4.98.34 5.94-.5 1.3-.76 1.88-1.71 3.48zM12.04 9.2c-.15-2.38 1.78-4.38 4-4.58.3 2.68-2.38 4.7-4 4.58z"/>
-          </svg>
-          Entrar com Apple
-        </button>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <button
+            type="button"
+            onClick={async () => {
+              setLoading(true);
+              setError('');
+              const result = await lovable.auth.signInWithOAuth('google', {
+                redirect_uri: window.location.origin,
+              });
+              if (result.error) {
+                setError('Erro ao entrar com Google. Tente novamente.');
+              } else if (!result.redirected) {
+                onSuccess();
+              }
+              setLoading(false);
+            }}
+            disabled={loading}
+            className="w-full py-3.5 bg-white text-gray-900 border border-border rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-sm hover:bg-gray-50 transition-all disabled:opacity-50 flex items-center justify-center gap-3"
+          >
+            <Icons.Google className="w-5 h-5" />
+            Google
+          </button>
+
+          <button
+            type="button"
+            onClick={async () => {
+              setLoading(true);
+              setError('');
+              const result = await lovable.auth.signInWithOAuth('apple', {
+                redirect_uri: window.location.origin,
+              });
+              if (result.error) {
+                setError('Erro ao entrar com Apple. Tente novamente.');
+              } else if (!result.redirected) {
+                onSuccess();
+              }
+              setLoading(false);
+            }}
+            disabled={loading}
+            className="w-full py-3.5 bg-black text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-black/80 transition-all disabled:opacity-50 flex items-center justify-center gap-3"
+          >
+            <Icons.Apple className="w-5 h-5" />
+            Apple
+          </button>
+        </div>
 
         <div className="text-center space-y-2">
           {mode === 'login' && (
