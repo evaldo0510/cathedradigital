@@ -343,7 +343,7 @@ const Bible: React.FC = () => {
         {/* Header */}
         <div className="flex items-center gap-4">
           <button onClick={goBack} className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all">
-            <Icons.ArrowDown className="w-5 h-5 rotate-90 text-foreground" />
+            <Icons.ChevronLeft className="w-5 h-5 text-foreground" />
           </button>
           <div className="flex-1 min-w-0">
             <h1 className="text-xl md:text-2xl font-serif font-bold text-foreground truncate">{selectedBook.name}</h1>
