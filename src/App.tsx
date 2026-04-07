@@ -37,8 +37,8 @@ const queryClient = new QueryClient({
 
 // Lazy-loaded route components
 import Dashboard from './components/cathedra/Dashboard';
-const Bible = lazy(() => import('./components/cathedra/Bible'));
-const Catechism = lazy(() => import('./components/cathedra/Catechism'));
+import Bible from './components/cathedra/Bible';
+import Catechism from './components/cathedra/Catechism';
 const StudyMode = lazy(() => import('./components/cathedra/StudyMode'));
 const Saints = lazy(() => import('./components/cathedra/Saints'));
 const Magisterium = lazy(() => import('./components/cathedra/Magisterium'));
@@ -299,7 +299,7 @@ const AppLayout: React.FC = () => {
           <div className={isChromeless ? "flex-1 pb-20 lg:pb-0" : "flex-1 p-3 sm:p-4 md:p-5 lg:p-8 pb-20 lg:pb-8 w-full max-w-7xl mx-auto"}>
 
             <Suspense fallback={<LoadingFallback />}>
-              <AnimatePresence mode="wait">
+              <AnimatePresence mode="popLayout">
                 <Routes location={location} key={location.pathname}>
                   <Route path={AppRoute.HOME} element={<PageTransition><Index /></PageTransition>} />
                   <Route path={AppRoute.DASHBOARD} element={<PageTransition><AuthGuard><Dashboard user={appUser} /></AuthGuard></PageTransition>} />
