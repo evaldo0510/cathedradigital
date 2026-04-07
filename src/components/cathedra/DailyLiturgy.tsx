@@ -180,7 +180,7 @@ const DailyLiturgy: React.FC = () => {
 
   const isToday = selectedDate.toDateString() === new Date().toDateString();
 
-  const { data: liturgyData, isLoading: isLiturgyLoading, error: liturgyError } = useQuery({
+  const { data: liturgy, isLoading: isLiturgyLoading, error: liturgyError, refetch: refetchLiturgy } = useQuery({
     queryKey: ['liturgy-calendar', selectedDate.toDateString()],
     queryFn: async () => {
       const day = selectedDate.getDate();
@@ -197,7 +197,7 @@ const DailyLiturgy: React.FC = () => {
     staleTime: 1000 * 60 * 60, // 1 hour
   });
 
-  const { data: readingsData, isLoading: isReadingsLoading, error: readingsError } = useQuery({
+  const { data: readings, isLoading: isReadingsLoading, error: readingsError, refetch: refetchReadings } = useQuery({
     queryKey: ['liturgy-readings', selectedDate.toDateString()],
     queryFn: async () => {
       const day = selectedDate.getDate();
@@ -212,26 +212,13 @@ const DailyLiturgy: React.FC = () => {
     staleTime: 1000 * 60 * 60, // 1 hour
   });
 
-  useEffect(() => {
-    try { localStorage.setItem(FONT_SIZE_KEY, fontSize); } catch {}
-  }, [fontSize]);
-
-  useEffect(() => {
-    try { localStorage.setItem(LINE_SPACING_KEY, lineSpacing); } catch {}
-  }, [lineSpacing]);
-
-  useEffect(() => {
-    setMeditation(null);
-  }, [selectedDate]);
-
-  const fc = FONT_CLASSES[fontSize];
-  const lc = LINE_SPACING_CLASSES[lineSpacing];
-
   const isLoading = isLiturgyLoading || isReadingsLoading;
   const error = (liturgyError || readingsError) ? 'Erro ao carregar dados da liturgia.' : '';
-  
-  const liturgy = liturgyData;
-  const readings = readingsData;
+
+  const fetchData = useCallback(() => {
+    refetchLiturgy();
+    refetchReadings();
+  }, [refetchLiturgy, refetchReadings]);
 
   const navigateDay = (offset: number) => {
     const d = new Date(selectedDate);
@@ -286,7 +273,6 @@ const DailyLiturgy: React.FC = () => {
       }
     } catch (err) {
       console.error('Error fetching meditation:', err);
-      setError('Erro ao gerar meditação.');
     } finally {
       setIsMeditationLoading(false);
     }
