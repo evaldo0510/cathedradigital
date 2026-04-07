@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import ShareButton from './ShareButton';
 import ReactMarkdown from 'react-markdown';
@@ -166,22 +167,49 @@ const LINE_SPACING_CLASSES: Record<LineSpacingType, string> = {
   relaxed: 'leading-[2.4] md:leading-[2.6]',
 };
 
-// Cache for readings
-const readingsCache = new Map<string, LiturgyReadings>();
-
 const DailyLiturgy: React.FC = () => {
-  const [liturgy, setLiturgy] = useState<LiturgicalDay | null>(null);
-  const [readings, setReadings] = useState<LiturgyReadings | null>(null);
-  const [meditation, setMeditation] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isMeditationLoading, setIsMeditationLoading] = useState(false);
-  const [error, setError] = useState('');
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [meditation, setMeditation] = useState<string | null>(null);
+  const [isMeditationLoading, setIsMeditationLoading] = useState(false);
   const [fontSize, setFontSize] = useState<FontSize>(() => {
     try { return (localStorage.getItem(FONT_SIZE_KEY) as FontSize) || 'M'; } catch { return 'M'; }
   });
   const [lineSpacing, setLineSpacing] = useState<LineSpacingType>(() => {
     try { return (localStorage.getItem(LINE_SPACING_KEY) as LineSpacingType) || 'normal'; } catch { return 'normal'; }
+  });
+
+  const isToday = selectedDate.toDateString() === new Date().toDateString();
+
+  const { data: liturgyData, isLoading: isLiturgyLoading, error: liturgyError } = useQuery({
+    queryKey: ['liturgy-calendar', selectedDate.toDateString()],
+    queryFn: async () => {
+      const day = selectedDate.getDate();
+      const month = selectedDate.getMonth() + 1;
+      const year = selectedDate.getFullYear();
+      const calAction = isToday ? 'today' : 'date';
+
+      const { data, error } = await supabase.functions.invoke('liturgical-calendar', {
+        body: { action: calAction, lang: 'la', calendar: 'general-la', year, month, day }
+      });
+      if (error) throw error;
+      return data as LiturgicalDay;
+    },
+    staleTime: 1000 * 60 * 60, // 1 hour
+  });
+
+  const { data: readingsData, isLoading: isReadingsLoading, error: readingsError } = useQuery({
+    queryKey: ['liturgy-readings', selectedDate.toDateString()],
+    queryFn: async () => {
+      const day = selectedDate.getDate();
+      const month = selectedDate.getMonth() + 1;
+
+      const { data, error } = await supabase.functions.invoke('liturgical-calendar', {
+        body: { action: 'readings', day, month }
+      });
+      if (error) throw error;
+      return data as LiturgyReadings;
+    },
+    staleTime: 1000 * 60 * 60, // 1 hour
   });
 
   useEffect(() => {
@@ -192,54 +220,18 @@ const DailyLiturgy: React.FC = () => {
     try { localStorage.setItem(LINE_SPACING_KEY, lineSpacing); } catch {}
   }, [lineSpacing]);
 
+  useEffect(() => {
+    setMeditation(null);
+  }, [selectedDate]);
+
   const fc = FONT_CLASSES[fontSize];
   const lc = LINE_SPACING_CLASSES[lineSpacing];
 
-  const isToday = selectedDate.toDateString() === new Date().toDateString();
-
-  const fetchData = useCallback(async (date: Date) => {
-    setIsLoading(true);
-    setError('');
-    setMeditation(null);
-
-    const day = date.getDate();
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear();
-    const cacheKey = `${year}-${month}-${day}`;
-
-    try {
-      const cached = readingsCache.get(cacheKey);
-      const calAction = isToday ? 'today' : 'date';
-
-      const [calRes, readRes] = await Promise.all([
-        supabase.functions.invoke('liturgical-calendar', {
-          body: { action: calAction, lang: 'la', calendar: 'general-la', year, month, day }
-        }),
-        cached ? Promise.resolve({ data: cached }) : supabase.functions.invoke('liturgical-calendar', {
-          body: { action: 'readings', day, month }
-        })
-      ]);
-
-      if (calRes.data) setLiturgy(calRes.data);
-      if (readRes.data) {
-        setReadings(readRes.data);
-        if (!cached) readingsCache.set(cacheKey, readRes.data);
-      }
-
-      if (!calRes.data && !readRes.data) {
-        setError('Não foi possível carregar a liturgia do dia.');
-      }
-    } catch (err) {
-      console.error('Error fetching liturgy:', err);
-      setError('Erro ao carregar dados da liturgia.');
-    } finally {
-      setIsLoading(false);
-    }
-  }, [isToday]);
-
-  useEffect(() => {
-    fetchData(selectedDate);
-  }, [selectedDate, fetchData]);
+  const isLoading = isLiturgyLoading || isReadingsLoading;
+  const error = (liturgyError || readingsError) ? 'Erro ao carregar dados da liturgia.' : '';
+  
+  const liturgy = liturgyData;
+  const readings = readingsData;
 
   const navigateDay = (offset: number) => {
     const d = new Date(selectedDate);
