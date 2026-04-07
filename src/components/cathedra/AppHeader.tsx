@@ -40,7 +40,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             className="p-1.5 sm:p-2 bg-background/50 backdrop-blur-xl text-foreground/80 border border-border/10 rounded-xl flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.05)] active:scale-95 transition-all hover:bg-primary/10 hover:text-primary hover:border-primary/20 group hover:shadow-md"
           >
             <Icons.ChevronLeft className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" />
-            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest hidden xs:inline-block">Voltar</span>
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest hidden sm:inline-block">Voltar</span>
           </button>
         ) : (
           <button 
