@@ -80,7 +80,7 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
             <Logo className="w-10 h-10" />
           </div>
           <div>
-            <h1 className="text-xl font-black tracking-[0.2em] text-foreground leading-none uppercase font-serif">CATHEDRA</h1>
+            <h1 className="text-lg font-black tracking-[0.2em] text-foreground leading-none uppercase font-serif">CATHEDRA</h1>
             <p className="text-[9px] font-black uppercase text-primary/70 tracking-[0.3em] mt-1.5 flex items-center gap-1.5">
               <span className="w-1 h-1 rounded-full bg-primary animate-pulse" />
               Digital Sanctuarium
