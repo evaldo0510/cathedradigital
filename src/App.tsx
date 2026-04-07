@@ -368,16 +368,21 @@ const AppLayout: React.FC = () => {
               </AnimatePresence>
             </Suspense>
           </div>
-          {!isChromeless && (
-            <>
-              <CathedralFooter />
-              <BottomNav onOpenSidebar={() => setIsSidebarOpen(true)} user={appUser} />
-              {[AppRoute.BIBLE, AppRoute.DAILY_LITURGY, AppRoute.LITURGIA, AppRoute.BREVIARY, AppRoute.LECTIO_DIVINA, AppRoute.CATECHISM, AppRoute.MAGISTERIUM].includes(location.pathname as AppRoute) && (
-                <ReadingModeToggle />
-              )}
-            </>
-          )}
         </main>
+        {!isChromeless && (
+          <>
+            <div className="hidden lg:block">
+              <CathedralFooter />
+            </div>
+            <Suspense fallback={null}>
+              <BottomNav onOpenSidebar={() => setIsSidebarOpen(true)} user={appUser} />
+            </Suspense>
+            {[AppRoute.BIBLE, AppRoute.DAILY_LITURGY, AppRoute.LITURGIA, AppRoute.BREVIARY, AppRoute.LECTIO_DIVINA, AppRoute.CATECHISM, AppRoute.MAGISTERIUM].includes(location.pathname as AppRoute) && (
+              <ReadingModeToggle />
+            )}
+          </>
+        )}
+      </div>
       </div>
       </Suspense>
     </LangContext.Provider>
