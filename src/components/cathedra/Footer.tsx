@@ -161,7 +161,7 @@ const Footer: React.FC = React.memo(() => {
   const dioceseUrl = DIOCESE_URLS[selectedDiocese];
 
   return (
-    <footer className="mt-auto w-full border-t border-primary/10 pt-6 lg:pt-12 pb-28 lg:pb-12 px-4 sm:px-6 md:px-12 bg-foreground/[0.03] backdrop-blur-sm relative overflow-hidden">
+    <footer className="mt-auto w-full border-t border-primary/10 pt-6 lg:pt-12 pb-32 lg:pb-16 px-4 sm:px-6 md:px-12 bg-foreground/[0.03] backdrop-blur-sm relative overflow-hidden">
       <div className="absolute inset-0 pointer-events-none opacity-[0.02]" />
       
       <div className="max-w-7xl mx-auto relative z-10">
@@ -239,9 +239,12 @@ const Footer: React.FC = React.memo(() => {
             <div className="flex items-center justify-between">
               <p className="text-[7px] font-black uppercase tracking-widest text-muted-foreground/50 dark:text-muted-foreground/70">
                 © {new Date().getFullYear()} CATHEDRA •{' '}
-                <span onClick={() => navigate(AppRoute.ADMIN)} className="cursor-default hover:text-primary/60 transition-colors select-none">
-                  evaldo.os
-                </span>
+                <button 
+                  onClick={() => navigate(AppRoute.ADMIN)} 
+                  className="cursor-pointer hover:text-primary transition-all select-none hover:underline underline-offset-2 decoration-primary/30"
+                >
+                  ADMIN PANEL
+                </button>
               </p>
               <div className="flex items-center gap-2">
                 {[
