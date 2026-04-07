@@ -7,11 +7,12 @@ import HeroSection from "./landing/HeroSection";
 import StatsSection from "./landing/StatsSection";
 import FeaturesSection from "./landing/FeaturesSection";
 import HowItWorksSection from "./landing/HowItWorksSection";
+import AcolhimentoSection from "./landing/AcolhimentoSection";
 import BenefitsSection from "./landing/BenefitsSection";
 import TestimonialsSection from "./landing/TestimonialsSection";
 import FaqSection from "./landing/FaqSection";
 import CtaBannerSection from "./landing/CtaBannerSection";
-import LandingFooter from "./landing/LandingFooter";
+import FeedbackWidget from "@/components/landing/FeedbackWidget";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -46,11 +47,12 @@ const Index = () => {
       <StatsSection />
       <FeaturesSection onNavigate={handleNavigate} />
       <HowItWorksSection />
+      <AcolhimentoSection />
       <BenefitsSection onLogin={() => navigate(AppRoute.LOGIN)} />
       <TestimonialsSection />
       <FaqSection />
       <CtaBannerSection onStart={handleStart} />
-      {/* Landing footer removed in favor of global navigation */}
+      <FeedbackWidget />
     </div>
   );
 };
