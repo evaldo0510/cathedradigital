@@ -124,6 +124,45 @@ const InstitutionalVideoSection = () => {
           </div>
         </motion.div>
       </div>
+
+      {/* Video Modal Overlay */}
+      <AnimatePresence>
+        {isPlaying && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex items-center justify-center p-4 md:p-12"
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className="relative w-full max-w-6xl aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl border border-white/10"
+            >
+              {/* Close Button */}
+              <button 
+                onClick={() => setIsPlaying(false)}
+                className="absolute top-4 right-4 z-50 p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors"
+              >
+                <X className="w-6 h-6 text-white" />
+              </button>
+
+              {/* Real YouTube Embed (A Catholic-themed high quality video as example) */}
+              <iframe 
+                width="100%" 
+                height="100%" 
+                src="https://www.youtube.com/embed/S_C2_S2EisE?autoplay=1" 
+                title="Cathedra Digital Institutional" 
+                frameBorder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                allowFullScreen
+                className="w-full h-full"
+              ></iframe>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };
