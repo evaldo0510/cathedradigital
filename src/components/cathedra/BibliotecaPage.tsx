@@ -77,6 +77,7 @@ const BibliotecaPage: React.FC = () => {
             transition={{ delay: i * 0.06 }}
             role="button"
             tabIndex={0}
+            onClick={() => navigate(section.route)}
             onTap={() => navigate(section.route)}
             onKeyDown={(e) => { if (e.key === 'Enter') navigate(section.route); }}
             className="cursor-pointer"
