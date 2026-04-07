@@ -39,8 +39,8 @@ const HeroSection = ({ onStart, onAbout }: HeroSectionProps) => {
         </motion.div>
 
         <motion.h1 variants={fadeUp} initial="hidden" animate="visible" custom={1} className="text-5xl md:text-7xl lg:text-8xl font-display font-bold tracking-tight text-foreground leading-[1.05]">
-          Aprofunde sua <br />
-          <span className="text-primary italic font-light drop-shadow-sm">Vida Interior.</span>
+          Aprofunde sua fé e <br />
+          <span className="text-primary italic font-light drop-shadow-sm">Sinta-se em Casa.</span>
         </motion.h1>
 
         <motion.p variants={fadeUp} initial="hidden" animate="visible" custom={2} className="max-w-2xl mx-auto text-xl md:text-2xl text-muted-foreground font-serif italic">
