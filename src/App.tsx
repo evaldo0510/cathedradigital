@@ -24,6 +24,7 @@ import AppHeader from './components/cathedra/AppHeader';
 import ProGate from './components/cathedra/ProGate';
 import CommandCenter from './components/cathedra/CommandCenter';
 import OfflineIndicator from './components/cathedra/OfflineIndicator';
+import SplashScreen from './components/cathedra/SplashScreen';
 
 
 const queryClient = new QueryClient({
@@ -386,18 +387,33 @@ const AppLayout: React.FC = () => {
   );
 };
 
-const App: React.FC = () => (
-  <HelmetProvider>
-    <AppErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <BrowserRouter>
-            <AppLayout />
-          </BrowserRouter>
-        </AuthProvider>
-      </QueryClientProvider>
-    </AppErrorBoundary>
-  </HelmetProvider>
-);
+const App: React.FC = () => {
+  const [showSplash, setShowSplash] = useState(() => {
+    // Only show splash once per session
+    try {
+      return !sessionStorage.getItem('cathedra_splash_shown');
+    } catch { return true; }
+  });
+
+  const handleSplashComplete = useCallback(() => {
+    setShowSplash(false);
+    try { sessionStorage.setItem('cathedra_splash_shown', '1'); } catch {}
+  }, []);
+
+  return (
+    <HelmetProvider>
+      <AppErrorBoundary>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <BrowserRouter>
+              {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
+              <AppLayout />
+            </BrowserRouter>
+          </AuthProvider>
+        </QueryClientProvider>
+      </AppErrorBoundary>
+    </HelmetProvider>
+  );
+};
 
 export default App;
