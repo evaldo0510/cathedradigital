@@ -58,27 +58,11 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ visible }) => (
 
 const SplashLogo: React.FC<{ className?: string }> = ({ className = "w-24 h-24" }) => (
   <div className={className}>
-    <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-      <defs>
-        <linearGradient id="splash-gold" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#e8c547" />
-          <stop offset="50%" stopColor="#d4af37" />
-          <stop offset="100%" stopColor="#b8860b" />
-        </linearGradient>
-        <linearGradient id="splash-gold-light" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#f0d56c" />
-          <stop offset="100%" stopColor="#c9a227" />
-        </linearGradient>
-      </defs>
-      <circle cx="60" cy="60" r="56" stroke="url(#splash-gold)" strokeWidth="2.5" fill="none" />
-      <circle cx="60" cy="60" r="52" fill="#1a1a1a" />
-      <line x1="60" y1="25" x2="60" y2="95" stroke="url(#splash-gold)" strokeWidth="4.5" strokeLinecap="round" />
-      <path d="M60 25 C60 25, 82 27, 82 42 C82 54, 60 56, 60 56" stroke="url(#splash-gold)" strokeWidth="4.5" strokeLinecap="round" fill="none" />
-      <line x1="40" y1="42" x2="80" y2="82" stroke="url(#splash-gold-light)" strokeWidth="3.5" strokeLinecap="round" />
-      <line x1="80" y1="42" x2="40" y2="82" stroke="url(#splash-gold-light)" strokeWidth="3.5" strokeLinecap="round" />
-      <text x="32" y="94" fill="url(#splash-gold)" fontSize="12" fontFamily="Cinzel, serif" fontWeight="bold">α</text>
-      <text x="78" y="94" fill="url(#splash-gold)" fontSize="12" fontFamily="Cinzel, serif" fontWeight="bold">ω</text>
-    </svg>
+    <img 
+      src="/icon-512.png" 
+      alt="Cathedra Logo" 
+      className="w-full h-full object-contain drop-shadow-[0_0_20px_rgba(212,175,55,0.3)]"
+    />
   </div>
 );
 
