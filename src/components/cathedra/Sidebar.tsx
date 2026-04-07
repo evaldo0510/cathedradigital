@@ -76,8 +76,8 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
     <>
       <aside className="h-full w-72 bg-card border-r border-border flex flex-col p-5 overflow-hidden">
         <div className="mb-6 px-2 flex items-center gap-3 cursor-pointer group hover:opacity-90 transition-opacity" onClick={() => handleNav(AppRoute.DASHBOARD)}>
-          <div className="p-2 bg-primary/5 rounded-2xl group-hover:bg-primary/10 transition-all group-hover:rotate-3 border border-primary/10">
-            <Logo className="w-10 h-10" />
+          <div className="transition-all group-hover:rotate-3">
+            <Logo className="w-12 h-12" />
           </div>
           <div>
             <h1 className="text-lg font-black tracking-[0.2em] text-foreground leading-none uppercase font-serif">CATHEDRA</h1>
