@@ -74,6 +74,7 @@ const InstitutionalVideoSection = () => {
               <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={() => setIsPlaying(true)}
                 className="w-20 h-20 md:w-24 md:h-24 bg-primary text-primary-foreground rounded-full flex items-center justify-center shadow-2xl shadow-primary/40 relative z-20 group-hover:bg-primary/90 transition-colors"
               >
                 <Play className="w-8 h-8 md:w-10 md:h-10 fill-current ml-1" />
