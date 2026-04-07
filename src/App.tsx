@@ -195,7 +195,17 @@ const AppLayout: React.FC = () => {
         <CommandCenter />
         <OfflineIndicator />
         <div className="flex h-[100dvh] w-full overflow-hidden bg-background selection:bg-primary/20">
-          {/* Sidebar is only accessible via overlay/drawer on all screens */}
+          {/* Persistent Sidebar for Desktop */}
+          {!isChromeless && (
+            <div className="hidden lg:block h-full w-72 flex-shrink-0">
+              <CathedralSidebar 
+                user={appUser} 
+                isDark={isDark}
+                onToggleDark={() => setIsDark(!isDark)}
+                onSignOut={signOut}
+              />
+            </div>
+          )}
 
           {/* Mobile sidebar overlay - only when open */}
           <AnimatePresence>
@@ -206,7 +216,7 @@ const AppLayout: React.FC = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.15 }}
-              className="fixed inset-0 z-[150]"
+              className="fixed inset-0 z-[150] lg:hidden"
             >
               <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsSidebarOpen(false)} />
               <motion.div
@@ -238,7 +248,7 @@ const AppLayout: React.FC = () => {
               onSignOut={signOut}
             />
           )}
-          <div className={isChromeless ? "flex-1" : "flex-1 p-3 sm:p-4 md:p-5 lg:p-6 pb-28 w-full max-w-5xl mx-auto"}>
+          <div className={isChromeless ? "flex-1" : "flex-1 p-3 sm:p-4 md:p-5 lg:p-8 pb-28 w-full max-w-7xl mx-auto"}>
 
             <Suspense fallback={<LoadingFallback />}>
               <AnimatePresence mode="wait">
