@@ -14,16 +14,16 @@ import AuthGuard from './components/cathedra/AuthGuard';
 import AdminGuard from './components/cathedra/AdminGuard';
 import AppErrorBoundary from './components/cathedra/AppErrorBoundary';
 
-// Lazy-loaded UI components
-const ReadingModeToggle = lazy(() => import('./components/cathedra/ReadingModeToggle'));
-const PageTransition = lazy(() => import('./components/PageTransition'));
-const CathedralSidebar = lazy(() => import('./components/cathedra/Sidebar'));
-const CathedralFooter = lazy(() => import('./components/cathedra/Footer'));
-const BottomNav = lazy(() => import('./components/cathedra/BottomNav'));
-const AppHeader = lazy(() => import('./components/cathedra/AppHeader'));
-const ProGate = lazy(() => import('./components/cathedra/ProGate'));
-const CommandCenter = lazy(() => import('./components/cathedra/CommandCenter'));
-const OfflineIndicator = lazy(() => import('./components/cathedra/OfflineIndicator'));
+// Core UI components (not lazy to ensure layout is instant)
+import ReadingModeToggle from './components/cathedra/ReadingModeToggle';
+import PageTransition from './components/PageTransition';
+import CathedralSidebar from './components/cathedra/Sidebar';
+import CathedralFooter from './components/cathedra/Footer';
+import BottomNav from './components/cathedra/BottomNav';
+import AppHeader from './components/cathedra/AppHeader';
+import ProGate from './components/cathedra/ProGate';
+import CommandCenter from './components/cathedra/CommandCenter';
+import OfflineIndicator from './components/cathedra/OfflineIndicator';
 
 
 const queryClient = new QueryClient({
@@ -36,9 +36,9 @@ const queryClient = new QueryClient({
 });
 
 // Lazy-loaded route components
-const Dashboard = lazy(() => import('./components/cathedra/Dashboard'));
-const Bible = lazy(() => import('./components/cathedra/Bible'));
-const Catechism = lazy(() => import('./components/cathedra/Catechism'));
+import Dashboard from './components/cathedra/Dashboard';
+import Bible from './components/cathedra/Bible';
+import Catechism from './components/cathedra/Catechism';
 const StudyMode = lazy(() => import('./components/cathedra/StudyMode'));
 const Saints = lazy(() => import('./components/cathedra/Saints'));
 const Magisterium = lazy(() => import('./components/cathedra/Magisterium'));
@@ -50,9 +50,9 @@ const Auth = lazy(() => import('./components/cathedra/Auth'));
 const AquinasOpera = lazy(() => import('./components/cathedra/AquinasOpera'));
 const Certamen = lazy(() => import('./components/cathedra/Certamen'));
 const MissalPage = lazy(() => import('./components/cathedra/MissalPage'));
-const LiturgiaPage = lazy(() => import('./components/cathedra/LiturgiaPage'));
-const FavoritesPage = lazy(() => import('./components/cathedra/FavoritesPage'));
-const TrilhasPage = lazy(() => import('./components/cathedra/TrilhasPage'));
+import LiturgiaPage from './components/cathedra/LiturgiaPage';
+import FavoritesPage from './components/cathedra/FavoritesPage';
+import TrilhasPage from './components/cathedra/TrilhasPage';
 const AboutPage = lazy(() => import('./components/cathedra/AboutPage'));
 const DogmasPage = lazy(() => import('./components/cathedra/DogmasPage'));
 const LectioDivina = lazy(() => import('./components/cathedra/LectioDivina'));
@@ -60,7 +60,7 @@ const BreviaryPage = lazy(() => import('./components/cathedra/BreviaryPage'));
 const LitaniesPage = lazy(() => import('./components/cathedra/LitaniesPage'));
 const LiturgicalCalendarPage = lazy(() => import('./components/cathedra/LiturgicalCalendarPage'));
 const CommunityPage = lazy(() => import('./components/cathedra/CommunityPage'));
-const ProfilePage = lazy(() => import('./components/cathedra/ProfilePage'));
+import ProfilePage from './components/cathedra/ProfilePage';
 const AdminDashboard = lazy(() => import('./components/cathedra/AdminDashboard'));
 const PoenitentiaPage = lazy(() => import('./components/cathedra/PoenitentiaPage'));
 const GlossaryPage = lazy(() => import('./components/cathedra/GlossaryPage'));
@@ -73,13 +73,13 @@ const TermsPage = lazy(() => import('./components/cathedra/TermsPage'));
 const PrivacyPage = lazy(() => import('./components/cathedra/PrivacyPage'));
 const PricingPage = lazy(() => import('./components/cathedra/PricingPage'));
 const DiagnosticoPage = lazy(() => import('./components/cathedra/DiagnosticoPage'));
-const HojePage = lazy(() => import('./components/cathedra/HojePage'));
-const JornadaDetailPage = lazy(() => import('./components/cathedra/JornadaDetailPage'));
-const JornadaStepPage = lazy(() => import('./components/cathedra/JornadaStepPage'));
-const JornadaCompletePage = lazy(() => import('./components/cathedra/JornadaCompletePage'));
-const BibliotecaPage = lazy(() => import('./components/cathedra/BibliotecaPage'));
-const JornadasPage = lazy(() => import('./components/cathedra/JornadasPage'));
-const Index = lazy(() => import('./pages/Index'));
+import HojePage from './components/cathedra/HojePage';
+import JornadaDetailPage from './components/cathedra/JornadaDetailPage';
+import JornadaStepPage from './components/cathedra/JornadaStepPage';
+import JornadaCompletePage from './components/cathedra/JornadaCompletePage';
+import BibliotecaPage from './components/cathedra/BibliotecaPage';
+import JornadasPage from './components/cathedra/JornadasPage';
+import Index from './pages/Index';
 const PlaceholderPage = lazy(() => import('./components/cathedra/PlaceholderPage'));
 const CheckoutPage = lazy(() => import('./components/cathedra/CheckoutPage'));
 const DiagnosticsPage = lazy(() => import('./components/cathedra/DiagnosticsPage'));
@@ -194,7 +194,7 @@ const AppLayout: React.FC = () => {
   }, [isDark]);
   
   useEffect(() => {
-    if (location.pathname !== AppRoute.LOGIN || loading || !user || !profile) return;
+    if (location.pathname !== AppRoute.LOGIN || loading || !user) return;
     navigate(getPostAuthRoute(), { replace: true });
   }, [getPostAuthRoute, loading, location.pathname, navigate, user, profile]);
 
@@ -299,7 +299,7 @@ const AppLayout: React.FC = () => {
           <div className={isChromeless ? "flex-1 pb-20 lg:pb-0" : "flex-1 p-3 sm:p-4 md:p-5 lg:p-8 pb-20 lg:pb-8 w-full max-w-7xl mx-auto"}>
 
             <Suspense fallback={<LoadingFallback />}>
-              <AnimatePresence mode="wait">
+              <AnimatePresence mode="popLayout">
                 <Routes location={location} key={location.pathname}>
                   <Route path={AppRoute.HOME} element={<PageTransition><Index /></PageTransition>} />
                   <Route path={AppRoute.DASHBOARD} element={<PageTransition><AuthGuard><Dashboard user={appUser} /></AuthGuard></PageTransition>} />
