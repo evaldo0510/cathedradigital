@@ -368,12 +368,10 @@ const AppLayout: React.FC = () => {
               </AnimatePresence>
             </Suspense>
           </div>
+          <CathedralFooter />
         </main>
         {!isChromeless && (
           <>
-            <div className="hidden lg:block">
-              <CathedralFooter />
-            </div>
             <Suspense fallback={null}>
               <BottomNav onOpenSidebar={() => setIsSidebarOpen(true)} user={appUser} />
             </Suspense>
