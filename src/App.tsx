@@ -80,7 +80,7 @@ import JornadaCompletePage from './components/cathedra/JornadaCompletePage';
 import BibliotecaPage from './components/cathedra/BibliotecaPage';
 import JornadasPage from './components/cathedra/JornadasPage';
 import Index from './pages/Index';
-const PlaceholderPage = lazy(() => import('./components/cathedra/PlaceholderPage'));
+
 const CheckoutPage = lazy(() => import('./components/cathedra/CheckoutPage'));
 const DiagnosticsPage = lazy(() => import('./components/cathedra/DiagnosticsPage'));
 
