@@ -45,6 +45,7 @@ const Index = () => {
         <link rel="canonical" href="https://cathedradigital.lovable.app/" />
       </Helmet>
       <HeroSection onStart={handleStart} onAbout={() => navigate(AppRoute.ABOUT)} />
+      <InstitutionalVideoSection />
       <StatsSection />
       <FeaturesSection onNavigate={handleNavigate} />
       <HowItWorksSection />
