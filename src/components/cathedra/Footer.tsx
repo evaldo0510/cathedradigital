@@ -381,9 +381,12 @@ const Footer: React.FC = React.memo(() => {
           <div className="pt-8 border-t border-foreground/10 dark:border-foreground/15 flex flex-row items-center justify-between gap-6">
             <p className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 dark:text-muted-foreground/70">
               © {new Date().getFullYear()} CATHEDRA • OMNIA AD MAIOREM DEI GLORIAM •{' '}
-              <span onClick={() => navigate(AppRoute.ADMIN)} className="cursor-default hover:text-primary/60 transition-colors select-none">
-                evaldo.os
-              </span>
+              <button 
+                onClick={() => navigate(AppRoute.ADMIN)} 
+                className="cursor-pointer hover:text-primary transition-all select-none hover:underline underline-offset-4 decoration-primary/30"
+              >
+                ADMIN PANEL
+              </button>
             </p>
             <div className="flex items-center gap-8">
               <nav className="flex items-center gap-6">
