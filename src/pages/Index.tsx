@@ -13,6 +13,7 @@ import TestimonialsSection from "./landing/TestimonialsSection";
 import FaqSection from "./landing/FaqSection";
 import CtaBannerSection from "./landing/CtaBannerSection";
 import FeedbackWidget from "@/components/landing/FeedbackWidget";
+import InstitutionalVideoSection from "./landing/InstitutionalVideoSection";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -44,6 +45,7 @@ const Index = () => {
         <link rel="canonical" href="https://cathedradigital.lovable.app/" />
       </Helmet>
       <HeroSection onStart={handleStart} onAbout={() => navigate(AppRoute.ABOUT)} />
+      <InstitutionalVideoSection />
       <StatsSection />
       <FeaturesSection onNavigate={handleNavigate} />
       <HowItWorksSection />
