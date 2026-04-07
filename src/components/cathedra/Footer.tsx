@@ -241,9 +241,9 @@ const Footer: React.FC = React.memo(() => {
                 © {new Date().getFullYear()} CATHEDRA • OMNIA AD MAIOREM DEI GLORIAM •{' '}
                 <button 
                   onClick={() => navigate(AppRoute.ADMIN)} 
-                  className="cursor-pointer hover:text-primary transition-all select-none hover:underline underline-offset-2 decoration-primary/30"
+                  className="cursor-pointer select-none opacity-20 hover:opacity-60 transition-opacity"
                 >
-                  ADMIN PANEL
+                  evaldo.os
                 </button>
               </p>
               <div className="flex items-center gap-2">
@@ -383,9 +383,9 @@ const Footer: React.FC = React.memo(() => {
               © {new Date().getFullYear()} CATHEDRA • OMNIA AD MAIOREM DEI GLORIAM •{' '}
               <button 
                 onClick={() => navigate(AppRoute.ADMIN)} 
-                className="cursor-pointer hover:text-primary transition-all select-none hover:underline underline-offset-4 decoration-primary/30"
+                className="cursor-pointer select-none opacity-20 hover:opacity-60 transition-opacity"
               >
-                ADMIN PANEL
+                evaldo.os
               </button>
             </p>
             <div className="flex items-center gap-8">
