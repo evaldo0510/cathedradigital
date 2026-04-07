@@ -1,6 +1,6 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Icons } from '../../constants';
+import { Icons } from '@/constants';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -427,7 +427,7 @@ const LiturgicalCalendarPage: React.FC = () => {
               <div className="bg-card border border-border rounded-3xl overflow-hidden shadow-lg animate-in fade-in slide-in-from-bottom-4 duration-300">
                 {selectedSaint ? (
                   <div className="relative h-48 group">
-                    <SacredImage src={selectedSaint.imageUrl} alt={selectedSaint.name} className="w-full h-full" />
+                    <SacredImage src={selectedSaint.image} alt={selectedSaint.name} className="w-full h-full" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                     <div className="absolute bottom-4 left-4 right-4">
                       <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/70">Santo do Dia</p>
@@ -435,14 +435,13 @@ const LiturgicalCalendarPage: React.FC = () => {
                     </div>
                     <button 
                       onClick={() => toggleFavorite({ 
-                        id: selectedSaint.id, 
                         title: selectedSaint.name, 
                         type: 'saint', 
-                        image: selectedSaint.imageUrl 
+                        content: selectedSaint.bio 
                       })}
                       className="absolute top-4 right-4 p-2 rounded-full bg-black/20 hover:bg-black/40 backdrop-blur-sm transition-all"
                     >
-                      <Icons.Heart className={`w-4 h-4 ${isFavorite(selectedSaint.id) ? 'fill-red-500 text-red-500' : 'text-white'}`} />
+                      <Icons.Heart className={`w-4 h-4 ${isFavorite('saint', selectedSaint.name) ? 'fill-red-500 text-red-500' : 'text-white'}`} />
                     </button>
                     <button 
                       onClick={() => navigate(`/cathedra/daily-liturgy?date=${selectedDay.toISOString()}`)}
@@ -499,7 +498,7 @@ const LiturgicalCalendarPage: React.FC = () => {
               </div>
             ) : (
               <div className="bg-muted/30 border-2 border-dashed border-border rounded-3xl p-12 text-center space-y-3">
-                <Icons.Calendar className="w-12 h-12 text-muted-foreground/30 mx-auto" />
+                <Icons.LiturgicalCalendar className="w-12 h-12 text-muted-foreground/30 mx-auto" />
                 <p className="text-sm text-muted-foreground font-serif italic">Selecione um dia para ver os detalhes</p>
               </div>
             )}
