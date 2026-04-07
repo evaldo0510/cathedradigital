@@ -161,7 +161,7 @@ const Footer: React.FC = React.memo(() => {
   const dioceseUrl = DIOCESE_URLS[selectedDiocese];
 
   return (
-    <footer className="mt-auto w-full border-t border-primary/10 pt-6 lg:pt-12 pb-32 lg:pb-16 px-4 sm:px-6 md:px-12 bg-foreground/[0.03] backdrop-blur-sm relative overflow-hidden">
+    <footer className="mt-auto w-full border-t border-primary/10 pt-6 lg:pt-12 pb-24 lg:pb-16 px-4 sm:px-6 md:px-12 bg-foreground/[0.03] backdrop-blur-sm relative overflow-hidden">
       <div className="absolute inset-0 pointer-events-none opacity-[0.02]" />
       
       <div className="max-w-7xl mx-auto relative z-10">
@@ -172,24 +172,24 @@ const Footer: React.FC = React.memo(() => {
             <Logo className="w-8 h-8 border border-primary/20 p-1 rounded-lg bg-primary/5" />
             <div>
               <h3 className="text-base font-serif font-bold text-foreground tracking-tight">CATHEDRA</h3>
-              <p className="text-[7px] font-black uppercase text-primary tracking-[0.3em]">Digital Sanctuarium</p>
+              <p className="text-[9px] font-black uppercase text-primary tracking-[0.3em]">Digital Sanctuarium</p>
             </div>
           </div>
 
           {/* Compact links row */}
           <div className="grid grid-cols-2 gap-x-4 gap-y-2 mb-4">
             <div>
-              <h4 className="text-[9px] font-black uppercase tracking-wider text-primary mb-1.5">🏛️ Santa Sé</h4>
+              <h4 className="text-[10px] font-black uppercase tracking-wider text-primary mb-1.5">🏛️ Santa Sé</h4>
               {vaticanLinks.slice(0, 2).map(link => (
-                <a key={link.title} href={link.url} target="_blank" rel="noopener noreferrer" className="block text-[10px] text-muted-foreground dark:text-muted-foreground/80 hover:text-foreground hover:text-primary py-0.5 truncate">
+                <a key={link.title} href={link.url} target="_blank" rel="noopener noreferrer" className="block text-xs text-muted-foreground dark:text-muted-foreground/80 hover:text-foreground hover:text-primary py-0.5 truncate">
                   {link.title}
                 </a>
               ))}
             </div>
             <div>
-              <h4 className="text-[9px] font-black uppercase tracking-wider text-primary mb-1.5">🇧🇷 CNBB</h4>
+              <h4 className="text-[10px] font-black uppercase tracking-wider text-primary mb-1.5">🇧🇷 CNBB</h4>
               {cnbbLinks.slice(0, 2).map(link => (
-                <a key={link.title} href={link.url} target="_blank" rel="noopener noreferrer" className="block text-[10px] text-muted-foreground dark:text-muted-foreground/80 hover:text-primary py-0.5 truncate">
+                <a key={link.title} href={link.url} target="_blank" rel="noopener noreferrer" className="block text-xs text-muted-foreground dark:text-muted-foreground/80 hover:text-primary py-0.5 truncate">
                   {link.title}
                 </a>
               ))}
@@ -201,7 +201,7 @@ const Footer: React.FC = React.memo(() => {
             <select 
               value={selectedDiocese}
               onChange={(e) => handleDioceseChange(e.target.value)}
-              className="w-full bg-foreground/5 border border-foreground/10 rounded-lg px-2 py-1.5 text-[10px] text-foreground focus:outline-none focus:border-primary/50 cursor-pointer appearance-none"
+              className="w-full bg-foreground/5 border border-foreground/10 rounded-lg px-2 py-1.5 text-xs text-foreground focus:outline-none focus:border-primary/50 cursor-pointer appearance-none"
             >
               <option value="">Sua Diocese</option>
               {DIOCESES_BR.map(d => (
@@ -215,7 +215,7 @@ const Footer: React.FC = React.memo(() => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full bg-foreground/5 border border-foreground/10 rounded-lg pl-2 pr-8 py-1.5 text-[10px] focus:outline-none focus:border-primary/50"
+                className="w-full bg-foreground/5 border border-foreground/10 rounded-lg pl-2 pr-8 py-1.5 text-xs focus:outline-none focus:border-primary/50"
               />
               <button type="submit" disabled={isSubmitting} className="absolute right-1 top-1 bottom-1 px-1.5 bg-primary text-primary-foreground rounded text-xs">
                 →
@@ -230,14 +230,14 @@ const Footer: React.FC = React.memo(() => {
                 <button 
                   key={item.label} 
                   onClick={() => navigate(item.route)} 
-                  className="text-[8px] font-black uppercase tracking-widest text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors"
+                  className="text-[9px] font-black uppercase tracking-widest text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors"
                 >
                   {item.label}
                 </button>
               ))}
             </div>
             <div className="flex items-center justify-between">
-              <p className="text-[7px] font-black uppercase tracking-widest text-muted-foreground/50 dark:text-muted-foreground/70">
+              <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/50 dark:text-muted-foreground/70">
                 © {new Date().getFullYear()} CATHEDRA •{' '}
                 <button 
                   onClick={() => navigate(AppRoute.ADMIN)} 

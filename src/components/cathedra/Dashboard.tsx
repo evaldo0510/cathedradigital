@@ -222,7 +222,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-10 md:py-16 space-y-12 pb-28">
+    <div className="max-w-2xl mx-auto px-4 py-10 md:py-16 space-y-12">
 
       {/* ═══ 1. HEADER — Spiritual greeting ═══ */}
       <FadeUp>
