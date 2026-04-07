@@ -1,5 +1,6 @@
-import { motion } from "framer-motion";
-import { Bookmark, Star, Trophy, ShieldCheck, Heart } from "lucide-react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
+import { Bookmark, Star, Trophy, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { fadeUp, cardHover, buttonHover } from "./animations";
 
@@ -14,57 +15,75 @@ interface BenefitsSectionProps {
   onLogin: () => void;
 }
 
-const BenefitsSection = ({ onLogin }: BenefitsSectionProps) => (
-  <section className="w-full bg-foreground text-background py-24 px-6 overflow-hidden relative">
-    <div className="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none">
-      <div className="absolute inset-0" style={{ backgroundImage: "radial-gradient(circle, hsl(var(--primary)) 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
-    </div>
+const BenefitsSection = ({ onLogin }: BenefitsSectionProps) => {
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
 
-    <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
-      <div className="space-y-10">
-        <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="space-y-6">
-          <h2 className="text-4xl md:text-5xl font-display font-bold leading-tight">
-            Por que criar sua conta no <span className="text-primary italic font-serif">Cathedra?</span>
-          </h2>
-          <p className="text-lg opacity-70 leading-relaxed max-w-xl">
-            O acesso completo permite uma experiência personalizada e contínua, guardando sua história com a Palavra de Deus e a Tradição.
-          </p>
-        </motion.div>
+  const imageY = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
+  const imageScale = useTransform(scrollYProgress, [0, 0.5, 1], [1.1, 1.05, 1]);
 
-        <div className="grid sm:grid-cols-2 gap-6">
-          {registerBenefits.map((benefit, i) => (
-            <motion.div key={benefit.title} variants={cardHover} initial="rest" whileHover="hover" whileTap="tap">
-              <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} className="space-y-3 p-6 rounded-3xl bg-white/5 border border-white/10 cursor-pointer h-full">
-                <motion.div whileHover={{ rotate: 15, scale: 1.15 }} transition={{ type: "spring", stiffness: 400 }} className="w-10 h-10 rounded-2xl bg-primary/20 flex items-center justify-center">
-                  {benefit.icon}
+  return (
+    <section ref={sectionRef} className="w-full bg-foreground text-background py-24 px-6 overflow-hidden relative">
+      <div className="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none">
+        <div className="absolute inset-0" style={{ backgroundImage: "radial-gradient(circle, hsl(var(--primary)) 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
+      </div>
+
+      <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
+        <div className="space-y-10">
+          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="space-y-6">
+            <h2 className="text-4xl md:text-5xl font-display font-bold leading-tight">
+              Por que criar sua conta no <span className="text-primary italic font-serif">Cathedra?</span>
+            </h2>
+            <p className="text-lg opacity-70 leading-relaxed max-w-xl">
+              O acesso completo permite uma experiência personalizada e contínua, guardando sua história com a Palavra de Deus e a Tradição.
+            </p>
+          </motion.div>
+
+          <div className="grid sm:grid-cols-2 gap-6">
+            {registerBenefits.map((benefit, i) => (
+              <motion.div key={benefit.title} variants={cardHover} initial="rest" whileHover="hover" whileTap="tap">
+                <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} className="space-y-3 p-6 rounded-3xl bg-white/5 border border-white/10 cursor-pointer h-full">
+                  <motion.div whileHover={{ rotate: 15, scale: 1.15 }} transition={{ type: "spring", stiffness: 400 }} className="w-10 h-10 rounded-2xl bg-primary/20 flex items-center justify-center">
+                    {benefit.icon}
+                  </motion.div>
+                  <h3 className="font-bold text-lg">{benefit.title}</h3>
+                  <p className="text-sm opacity-50 leading-relaxed">{benefit.description}</p>
                 </motion.div>
-                <h3 className="font-bold text-lg">{benefit.title}</h3>
-                <p className="text-sm opacity-50 leading-relaxed">{benefit.description}</p>
               </motion.div>
-            </motion.div>
-          ))}
+            ))}
+          </div>
+
+          <motion.div variants={buttonHover} initial="rest" whileHover="hover" whileTap="tap">
+            <Button size="lg" className="h-16 px-12 rounded-2xl bg-primary text-primary-foreground font-black uppercase tracking-widest w-full sm:w-auto" onClick={onLogin}>
+              Criar Conta Gratuitamente
+            </Button>
+          </motion.div>
         </div>
 
-        <motion.div variants={buttonHover} initial="rest" whileHover="hover" whileTap="tap">
-          <Button size="lg" className="h-16 px-12 rounded-2xl bg-primary text-primary-foreground font-black uppercase tracking-widest w-full sm:w-auto" onClick={onLogin}>
-            Criar Conta Gratuitamente
-          </Button>
-        </motion.div>
+        <div className="relative hidden lg:block">
+          <div className="absolute -inset-10 bg-primary/20 blur-[100px] rounded-full animate-pulse" />
+          <motion.div initial={{ rotate: 3 }} whileHover={{ rotate: 0, scale: 1.02 }} transition={{ duration: 0.5 }} className="relative aspect-square rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl">
+            <motion.img
+              src="https://images.unsplash.com/photo-1544427928-201cd49e6657?auto=format&fit=crop&q=40&w=600"
+              alt="Devoção católica"
+              className="w-full h-full object-cover grayscale opacity-60"
+              loading="lazy"
+              decoding="async"
+              style={{ y: imageY, scale: imageScale }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-foreground via-transparent to-transparent" />
+            <div className="absolute bottom-10 left-10 right-10 p-8 bg-white/10 backdrop-blur-md rounded-3xl border border-white/10">
+              <p className="text-xl font-serif italic mb-4">"Onde está o teu tesouro, aí estará também o teu coração."</p>
+              <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">Mateus 6,21</p>
+            </div>
+          </motion.div>
+        </div>
       </div>
-
-      <div className="relative hidden lg:block">
-        <div className="absolute -inset-10 bg-primary/20 blur-[100px] rounded-full animate-pulse" />
-        <motion.div initial={{ rotate: 3 }} whileHover={{ rotate: 0, scale: 1.02 }} transition={{ duration: 0.5 }} className="relative aspect-square rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl">
-          <img src="https://images.unsplash.com/photo-1544427928-201cd49e6657?auto=format&fit=crop&q=40&w=600" alt="Devoção católica" className="w-full h-full object-cover grayscale opacity-60" loading="lazy" decoding="async" />
-          <div className="absolute inset-0 bg-gradient-to-t from-foreground via-transparent to-transparent" />
-          <div className="absolute bottom-10 left-10 right-10 p-8 bg-white/10 backdrop-blur-md rounded-3xl border border-white/10">
-            <p className="text-xl font-serif italic mb-4">"Onde está o teu tesouro, aí estará também o teu coração."</p>
-            <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">Mateus 6,21</p>
-          </div>
-        </motion.div>
-      </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 export default BenefitsSection;
