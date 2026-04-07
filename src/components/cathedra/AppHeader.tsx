@@ -42,11 +42,11 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
         )}
         {isDashboard && (
           <div className="flex items-center gap-10">
-            <div className="flex items-center gap-3 ml-2 cursor-pointer group" onClick={() => navigate(AppRoute.DASHBOARD)}>
-              <div className="p-1.5 bg-primary/10 rounded-xl group-hover:bg-primary/20 transition-all group-hover:scale-110">
-                <Logo className="w-8 h-8" />
+            <div className="flex items-center gap-2 sm:gap-3 ml-1 sm:ml-2 cursor-pointer group" onClick={() => navigate(AppRoute.DASHBOARD)}>
+              <div className="p-1.5 sm:p-2 bg-primary/5 rounded-2xl group-hover:bg-primary/15 transition-all group-hover:scale-110 group-hover:rotate-6 border border-primary/10">
+                <Logo className="w-8 h-8 sm:w-10 sm:h-10" />
               </div>
-              <span className="text-xl md:text-2xl font-serif font-black uppercase tracking-[0.25em] text-foreground group-hover:text-primary transition-all">Cathedra</span>
+              <span className="text-lg sm:text-xl md:text-2xl font-serif font-black uppercase tracking-[0.2em] sm:tracking-[0.25em] text-foreground group-hover:text-primary transition-all">Cathedra</span>
             </div>
             
             <nav className="hidden xl:flex items-center gap-4 2xl:gap-6 border-l border-border pl-4 2xl:pl-6">
