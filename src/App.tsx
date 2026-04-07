@@ -190,16 +190,16 @@ const AppLayout: React.FC = () => {
 
   return (
     <LangContext.Provider value={{ lang, setLang: setLangState, t }}>
-      
-      <ScrollToTop />
-      <CommandCenter />
-      <OfflineIndicator />
-      <div className="flex h-[100dvh] w-full overflow-hidden bg-background selection:bg-primary/20">
-        {/* Sidebar is only accessible via overlay/drawer on all screens */}
+      <Suspense fallback={<div className="h-screen w-screen flex items-center justify-center bg-background"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div></div>}>
+        <ScrollToTop />
+        <CommandCenter />
+        <OfflineIndicator />
+        <div className="flex h-[100dvh] w-full overflow-hidden bg-background selection:bg-primary/20">
+          {/* Sidebar is only accessible via overlay/drawer on all screens */}
 
-        {/* Mobile sidebar overlay - only when open */}
-        <AnimatePresence>
-         {!isChromeless && isSidebarOpen && (
+          {/* Mobile sidebar overlay - only when open */}
+          <AnimatePresence>
+           {!isChromeless && isSidebarOpen && (
             <motion.div 
               key="mobile-sidebar"
               initial={{ opacity: 0 }}
