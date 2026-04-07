@@ -22,7 +22,7 @@ const cardVariants = {
 const floatingQuote = {
   initial: { rotate: -6, scale: 0.8, opacity: 0.2 },
   animate: {
-    rotate: [−6, 0, −6],
+    rotate: [-6, 0, -6],
     scale: [0.8, 1, 0.8],
     opacity: [0.2, 0.35, 0.2],
     transition: { duration: 6, repeat: Infinity, ease: "easeInOut" },
