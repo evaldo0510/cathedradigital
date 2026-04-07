@@ -229,7 +229,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       authRequestId.current += 1;
       subscription.unsubscribe();
     };
-  }, [syncAuthState, loading]);
+  }, [syncAuthState]);
 
   const signOut = useCallback(async () => {
     authRequestId.current += 1;
