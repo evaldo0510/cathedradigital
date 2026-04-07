@@ -9,7 +9,7 @@ export const COLORS = {
 
 export const Logo = forwardRef<HTMLDivElement, { className?: string }>(({ className = "w-12 h-12" }, ref) => (
   <div ref={ref} className={`relative flex items-center justify-center group ${className}`}>
-    <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-xl transition-all duration-700 group-hover:scale-110">
+    <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full transition-all duration-700 group-hover:scale-110">
       <defs>
         <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#e8c547" />
@@ -20,32 +20,25 @@ export const Logo = forwardRef<HTMLDivElement, { className?: string }>(({ classN
           <stop offset="0%" stopColor="#f0d56c" />
           <stop offset="100%" stopColor="#c9a227" />
         </linearGradient>
-        <filter id="glow">
-          <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
-          <feMerge>
-            <feMergeNode in="coloredBlur"/>
-            <feMergeNode in="SourceGraphic"/>
-          </feMerge>
-        </filter>
       </defs>
       
       {/* Outer Ring */}
-      <circle cx="60" cy="60" r="57" stroke="url(#logo-grad)" strokeWidth="1.5" fill="none" />
+      <circle cx="60" cy="60" r="56" stroke="url(#logo-grad)" strokeWidth="2.5" fill="none" />
       
       {/* Background */}
       <circle cx="60" cy="60" r="52" className="fill-background dark:fill-card transition-colors duration-300" />
       
       {/* Chi-Rho (XP) Symbol */}
-      <g filter="url(#glow)">
-        <line x1="60" y1="25" x2="60" y2="95" stroke="url(#logo-grad)" strokeWidth="4" strokeLinecap="round" />
-        <path d="M60 25 C60 25, 80 27, 80 42 C80 54, 60 56, 60 56" stroke="url(#logo-grad)" strokeWidth="4" strokeLinecap="round" fill="none" />
-        <line x1="40" y1="40" x2="80" y2="80" stroke="url(#logo-grad-light)" strokeWidth="3" strokeLinecap="round" opacity="0.9" />
-        <line x1="80" y1="40" x2="40" y2="80" stroke="url(#logo-grad-light)" strokeWidth="3" strokeLinecap="round" opacity="0.9" />
+      <g>
+        <line x1="60" y1="25" x2="60" y2="95" stroke="url(#logo-grad)" strokeWidth="5" strokeLinecap="round" />
+        <path d="M60 25 C60 25, 82 27, 82 42 C82 54, 60 56, 60 56" stroke="url(#logo-grad)" strokeWidth="5" strokeLinecap="round" fill="none" />
+        <line x1="40" y1="42" x2="80" y2="82" stroke="url(#logo-grad-light)" strokeWidth="4" strokeLinecap="round" />
+        <line x1="80" y1="42" x2="40" y2="82" stroke="url(#logo-grad-light)" strokeWidth="4" strokeLinecap="round" />
       </g>
       
       {/* Alpha and Omega */}
-      <text x="32" y="92" fill="url(#logo-grad)" fontSize="10" fontFamily="Cinzel, serif" fontWeight="bold" opacity="0.7">α</text>
-      <text x="80" y="92" fill="url(#logo-grad)" fontSize="10" fontFamily="Cinzel, serif" fontWeight="bold" opacity="0.7">ω</text>
+      <text x="32" y="94" fill="url(#logo-grad)" fontSize="12" fontFamily="Cinzel, serif" fontWeight="bold">α</text>
+      <text x="78" y="94" fill="url(#logo-grad)" fontSize="12" fontFamily="Cinzel, serif" fontWeight="bold">ω</text>
     </svg>
   </div>
 ));
