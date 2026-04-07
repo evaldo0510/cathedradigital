@@ -26,6 +26,8 @@ export default defineConfig(({ mode }) => ({
           'vendor-supabase': ['@supabase/supabase-js'],
           'vendor-motion': ['framer-motion'],
           'vendor-recharts': ['recharts'],
+          'vendor-confetti': ['canvas-confetti'],
+          'vendor-html2canvas': ['html2canvas'],
           'vendor-ui': [
             '@radix-ui/react-dialog',
             '@radix-ui/react-popover',
