@@ -33,32 +33,33 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
 
   return (
     <header className="px-4 py-2.5 sm:px-6 md:py-3.5 border-b border-border/5 bg-background/60 backdrop-blur-3xl flex items-center justify-between sticky top-0 z-[140] safe-area-top transition-all hover:bg-background/80 gap-3">
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 sm:gap-4">
         {!isDashboard ? (
           <button 
             onClick={() => navigate(-1)} 
-            className="p-1.5 sm:p-2 bg-background/50 backdrop-blur-xl text-foreground/80 border border-border/10 rounded-xl flex items-center gap-2 px-3 sm:px-4 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.05)] active:scale-95 transition-all hover:bg-primary/10 hover:text-primary hover:border-primary/20 group hover:shadow-md"
+            className="p-1.5 sm:p-2 bg-background/50 backdrop-blur-xl text-foreground/80 border border-border/10 rounded-xl flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.05)] active:scale-95 transition-all hover:bg-primary/10 hover:text-primary hover:border-primary/20 group hover:shadow-md"
           >
             <Icons.ChevronLeft className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" />
-            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-widest">Voltar</span>
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest hidden xs:inline-block">Voltar</span>
           </button>
         ) : (
           <button 
             onClick={onOpenSidebar} 
-            className="p-3 bg-muted text-foreground active:bg-primary rounded-full transition-all hover:scale-110 lg:hidden"
+            className="p-2.5 sm:p-3 bg-muted text-foreground active:bg-primary rounded-full transition-all hover:scale-110 lg:hidden"
           >
-            <Icons.Menu className="w-6 h-6" />
+            <Icons.Menu className="w-5 h-5 sm:w-6 h-6" />
           </button>
         )}
-        {isDashboard && (
-          <div className="flex items-center gap-10">
-            <div className="flex items-center gap-2 sm:gap-3 ml-1 sm:ml-2 cursor-pointer group" onClick={() => navigate(AppRoute.DASHBOARD)}>
-              <div className="transition-all group-hover:scale-110 group-hover:rotate-6">
-                <Logo className="w-9 h-9 sm:w-10 sm:h-10" />
-              </div>
-              <span className="text-base sm:text-lg md:text-xl font-display font-black uppercase tracking-[0.2em] sm:tracking-[0.25em] text-foreground group-hover:text-primary transition-all">Cathedra</span>
+        
+        <div className="flex items-center gap-6 sm:gap-10">
+          <div className="flex items-center gap-2 sm:gap-3 ml-1 sm:ml-2 cursor-pointer group" onClick={() => navigate(AppRoute.DASHBOARD)}>
+            <div className="transition-all group-hover:scale-110 group-hover:rotate-6">
+              <Logo className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10" />
             </div>
-            
+            <span className="text-sm sm:text-lg md:text-xl font-display font-black uppercase tracking-[0.2em] sm:tracking-[0.25em] text-foreground group-hover:text-primary transition-all hidden sm:inline-block">Cathedra</span>
+          </div>
+          
+          {isDashboard && (
             <nav className="hidden xl:flex items-center gap-4 2xl:gap-6 border-l border-border pl-4 2xl:pl-6">
               {[
                 { label: 'Bíblia', route: AppRoute.BIBLE },
@@ -82,8 +83,8 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                 </button>
               ))}
             </nav>
-          </div>
-        )}
+          )}
+        </div>
       </div>
       <div className="flex items-center gap-2 flex-shrink-0">
         {/* Search Bar - Hidden on mobile, shown as icon on tablet, full on desktop */}
