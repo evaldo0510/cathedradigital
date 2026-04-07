@@ -126,7 +126,6 @@ const AppLayout: React.FC = () => {
   const { user, profile, signOut, isPremium, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const navigate = useNavigate();
 
   // Pages that should NOT show header, footer, sidebar, or bottom nav
   const chromelessPages: string[] = [AppRoute.HOME, AppRoute.ONBOARDING, AppRoute.LOGIN, '/reset-password'];
