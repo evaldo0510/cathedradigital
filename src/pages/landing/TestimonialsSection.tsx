@@ -15,18 +15,8 @@ const cardVariants = {
     opacity: 1,
     y: 0,
     rotateX: 0,
-    transition: { duration: 0.7, delay: i * 0.15, ease: [0.25, 0.46, 0.45, 0.94] },
+    transition: { duration: 0.7, delay: i * 0.15, ease: [0.25, 0.46, 0.45, 0.94] as const },
   }),
-};
-
-const floatingQuote = {
-  initial: { rotate: -6, scale: 0.8, opacity: 0.2 },
-  animate: {
-    rotate: [-6, 0, -6],
-    scale: [0.8, 1, 0.8],
-    opacity: [0.2, 0.35, 0.2],
-    transition: { duration: 6, repeat: Infinity, ease: "easeInOut" },
-  },
 };
 
 const TestimonialsSection = () => (
