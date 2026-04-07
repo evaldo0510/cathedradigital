@@ -75,10 +75,11 @@ const BibliotecaPage: React.FC = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.06 }}
+            onClick={() => navigate(section.route)}
+            className="cursor-pointer"
           >
             <Card
-              className="cursor-pointer hover:border-primary/40 transition-all group"
-              onClick={() => navigate(section.route)}
+              className="hover:border-primary/40 transition-all group pointer-events-none"
             >
               <CardContent className="p-4 flex items-center gap-4">
                 <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${section.color}`}>
