@@ -41,7 +41,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void }> = ({ saint, o
         <SacredImage src={saint.image} className="w-full h-full object-cover" alt={saint.name} />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
         <button onClick={onClose} className="absolute top-6 left-6 p-2 bg-white/20 hover:bg-white/40 rounded-full backdrop-blur-md text-white transition-colors">
-          <Icons.ArrowDown className="w-5 h-5 rotate-90" />
+          <Icons.ChevronLeft className="w-5 h-5" />
         </button>
         <div className="absolute bottom-6 left-6 right-6 md:hidden">
           <h2 className="text-2xl font-serif font-bold text-white">{saint.name}</h2>

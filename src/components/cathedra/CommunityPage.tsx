@@ -245,7 +245,7 @@ const CommunityPage: React.FC = () => {
     return (
       <div className="max-w-3xl mx-auto space-y-6">
         <button onClick={() => { setSelectedPost(null); setReplies([]); }} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
-          <Icons.ArrowDown className="w-4 h-4 rotate-90" /> Voltar
+          <Icons.ChevronLeft className="w-4 h-4" /> Voltar
         </button>
 
         <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
