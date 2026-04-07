@@ -367,8 +367,8 @@ const AppLayout: React.FC = () => {
                 </Routes>
               </AnimatePresence>
             </Suspense>
-            {!isChromeless && <CathedralFooter />}
           </div>
+          <CathedralFooter />
         </main>
         {!isChromeless && (
           <>
