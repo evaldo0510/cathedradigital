@@ -161,7 +161,13 @@ serve(async (req) => {
           verses,
           text: verses.map((v: any) => `${v.number}. ${v.text}`).join('\n'),
         }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        { 
+          headers: { 
+            ...corsHeaders, 
+            'Content-Type': 'application/json',
+            'Cache-Control': 'public, max-age=604800, s-maxage=604800' // 1 week
+          } 
+        }
       );
     }
 
