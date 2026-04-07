@@ -82,6 +82,7 @@ const HojePage: React.FC = () => {
           const allSteps = stepsRes.data;
 
           if (allSteps) {
+            const completedIds = (completedSteps || []).map(s => s.step_id);
             setJourneyProgress({ completed: completedIds.length, total: allSteps.length });
             const next = allSteps.find(s => !completedIds.includes(s.id));
             setJourneyStep(next || null);
