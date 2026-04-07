@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AppRoute } from '../../types';
-import { Sun, Compass, BookOpen, TrendingUp, User } from 'lucide-react';
+import { Sun, Compass, BookOpen, Users, User } from 'lucide-react';
 
 interface BottomNavItemProps {
   label: string;
@@ -14,22 +14,22 @@ interface BottomNavItemProps {
 const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon, isActive, onClick }) => (
   <button 
     onClick={onClick}
-    className={`flex flex-col items-center justify-center gap-0.5 sm:gap-1 flex-1 py-1.5 transition-all relative tap-highlight-transparent touch-manipulation ${
+    className={`flex flex-col items-center justify-center gap-1 flex-1 py-1 transition-all relative tap-highlight-transparent touch-manipulation ${
       isActive ? 'text-primary' : 'text-muted-foreground active:text-foreground'
     }`}
   >
-    <div className={`transition-all duration-300 ${isActive ? 'scale-105 -translate-y-0.5' : 'active:scale-90'}`}>
+    <div className={`transition-all duration-300 ${isActive ? 'scale-110 -translate-y-0.5' : 'active:scale-95'}`}>
       {React.cloneElement(icon as React.ReactElement, { 
-        className: `w-5 h-5 sm:w-6 sm:h-6 ${isActive ? 'drop-shadow-[0_0_8px_hsl(var(--primary)/0.4)]' : ''}` 
+        className: `w-5 h-5 sm:w-6 sm:h-6 ${isActive ? 'stroke-[2.5px] drop-shadow-[0_0_8px_hsl(var(--primary)/0.4)]' : 'stroke-[1.5px]'}` 
       })}
     </div>
-    <span className={`text-[9px] sm:text-[10px] font-black uppercase tracking-widest transition-opacity leading-none ${
+    <span className={`text-[9px] sm:text-[10px] font-bold uppercase tracking-widest transition-opacity leading-none ${
       isActive ? 'opacity-100' : 'opacity-60'
     }`}>
       {label}
     </span>
     {isActive && (
-      <div className="absolute top-0.5 left-1/2 -translate-x-1/2 w-6 h-0.5 bg-primary rounded-full shadow-sm" />
+      <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-primary rounded-full shadow-[0_0_8px_hsl(var(--primary))]" />
     )}
   </button>
 );
@@ -45,23 +45,23 @@ const BottomNav: React.FC<BottomNavProps> = ({ user }) => {
   const currentPath = location.pathname;
 
   const items = [
-    { label: 'Hoje', icon: <Sun className="w-5 h-5" />, route: AppRoute.HOJE },
-    { label: 'Jornadas', icon: <Compass className="w-5 h-5" />, route: AppRoute.JORNADAS },
-    { label: 'Biblioteca', icon: <BookOpen className="w-5 h-5" />, route: AppRoute.BIBLIOTECA },
-    { label: 'Progresso', icon: <TrendingUp className="w-5 h-5" />, route: AppRoute.DASHBOARD },
-    { label: 'Perfil', icon: <User className="w-5 h-5" />, route: AppRoute.PROFILE },
+    { label: 'Hoje', icon: <Sun />, route: AppRoute.HOJE },
+    { label: 'Jornadas', icon: <Compass />, route: AppRoute.JORNADAS },
+    { label: 'Biblioteca', icon: <BookOpen />, route: AppRoute.BIBLIOTECA },
+    { label: 'Comunidade', icon: <Users />, route: AppRoute.COMMUNITY },
+    { label: 'Perfil', icon: <User />, route: AppRoute.PROFILE },
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-[160] px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pointer-events-none">
-      <div className="max-w-md mx-auto bg-black/95 backdrop-blur-3xl border border-white/10 rounded-2xl shadow-[0_20px_50px_-12px_rgba(0,0,0,0.8)] flex items-stretch pointer-events-auto overflow-hidden ring-1 ring-primary/20">
+    <div className="fixed bottom-0 left-0 right-0 z-[160] lg:hidden">
+      <div className="bg-background/80 backdrop-blur-xl border-t border-foreground/5 flex items-stretch h-[calc(4rem+env(safe-area-inset-bottom))] pb-[env(safe-area-inset-bottom)] px-2 safe-area-bottom">
         {items.map((item) => (
           <BottomNavItem 
             key={item.label}
             label={item.label}
             icon={item.icon}
             route={item.route}
-            isActive={currentPath === item.route || (item.route === AppRoute.BIBLE && [AppRoute.BIBLE, AppRoute.CATECHISM, AppRoute.MAGISTERIUM, AppRoute.SAINTS].includes(currentPath as AppRoute))}
+            isActive={currentPath === item.route || (item.route === AppRoute.BIBLIOTECA && [AppRoute.BIBLE, AppRoute.CATECHISM, AppRoute.MAGISTERIUM, AppRoute.SAINTS].includes(currentPath as AppRoute))}
             onClick={() => navigate(item.route)}
           />
         ))}
