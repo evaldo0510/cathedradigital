@@ -70,14 +70,14 @@ const SplashLogo: React.FC<{ className?: string }> = ({ className = "w-24 h-24" 
           <stop offset="100%" stopColor="#c9a227" />
         </linearGradient>
       </defs>
-      <circle cx="60" cy="60" r="57" stroke="url(#splash-gold)" strokeWidth="1.5" fill="none" />
-      <circle cx="60" cy="60" r="50" fill="#1a1a1a" />
-      <line x1="60" y1="22" x2="60" y2="98" stroke="url(#splash-gold)" strokeWidth="3.5" strokeLinecap="round" />
-      <path d="M60 22 C60 22, 82 24, 82 40 C82 54, 60 56, 60 56" stroke="url(#splash-gold)" strokeWidth="3.5" strokeLinecap="round" fill="none" />
-      <line x1="38" y1="34" x2="82" y2="78" stroke="url(#splash-gold-light)" strokeWidth="2.5" strokeLinecap="round" opacity="0.8" />
-      <line x1="82" y1="34" x2="38" y2="78" stroke="url(#splash-gold-light)" strokeWidth="2.5" strokeLinecap="round" opacity="0.8" />
-      <text x="30" y="98" fill="url(#splash-gold)" fontSize="11" fontFamily="Cinzel, serif" opacity="0.6">α</text>
-      <text x="82" y="98" fill="url(#splash-gold)" fontSize="11" fontFamily="Cinzel, serif" opacity="0.6">ω</text>
+      <circle cx="60" cy="60" r="56" stroke="url(#splash-gold)" strokeWidth="2.5" fill="none" />
+      <circle cx="60" cy="60" r="52" fill="#1a1a1a" />
+      <line x1="60" y1="25" x2="60" y2="95" stroke="url(#splash-gold)" strokeWidth="4.5" strokeLinecap="round" />
+      <path d="M60 25 C60 25, 82 27, 82 42 C82 54, 60 56, 60 56" stroke="url(#splash-gold)" strokeWidth="4.5" strokeLinecap="round" fill="none" />
+      <line x1="40" y1="42" x2="80" y2="82" stroke="url(#splash-gold-light)" strokeWidth="3.5" strokeLinecap="round" />
+      <line x1="80" y1="42" x2="40" y2="82" stroke="url(#splash-gold-light)" strokeWidth="3.5" strokeLinecap="round" />
+      <text x="32" y="94" fill="url(#splash-gold)" fontSize="12" fontFamily="Cinzel, serif" fontWeight="bold">α</text>
+      <text x="78" y="94" fill="url(#splash-gold)" fontSize="12" fontFamily="Cinzel, serif" fontWeight="bold">ω</text>
     </svg>
   </div>
 );

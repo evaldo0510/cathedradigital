@@ -53,8 +53,8 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
         {isDashboard && (
           <div className="flex items-center gap-10">
             <div className="flex items-center gap-2 sm:gap-3 ml-1 sm:ml-2 cursor-pointer group" onClick={() => navigate(AppRoute.DASHBOARD)}>
-              <div className="p-1.5 sm:p-2 bg-primary/5 rounded-2xl group-hover:bg-primary/15 transition-all group-hover:scale-110 group-hover:rotate-6 border border-primary/10">
-                <Logo className="w-8 h-8 sm:w-10 sm:h-10" />
+              <div className="transition-all group-hover:scale-110 group-hover:rotate-6">
+                <Logo className="w-9 h-9 sm:w-10 sm:h-10" />
               </div>
               <span className="text-base sm:text-lg md:text-xl font-display font-black uppercase tracking-[0.2em] sm:tracking-[0.25em] text-foreground group-hover:text-primary transition-all">Cathedra</span>
             </div>
