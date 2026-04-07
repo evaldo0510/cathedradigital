@@ -9,28 +9,58 @@ export const COLORS = {
 
 export const Logo = forwardRef<HTMLDivElement, { className?: string }>(({ className = "w-12 h-12" }, ref) => (
   <div ref={ref} className={`relative flex items-center justify-center group ${className}`}>
-    <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-sm">
+    <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-xl transition-transform duration-500 group-hover:rotate-[360deg]">
       <defs>
         <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#e8c547" />
+          <stop offset="0%" stopColor="#f5d142" />
           <stop offset="50%" stopColor="#d4af37" />
-          <stop offset="100%" stopColor="#b8860b" />
+          <stop offset="100%" stopColor="#967e2a" />
         </linearGradient>
-        <linearGradient id="logo-grad-light" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#f0d56c" />
-          <stop offset="100%" stopColor="#c9a227" />
-        </linearGradient>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+          <feMerge>
+            <feMergeNode in="coloredBlur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
       </defs>
-      <circle cx="60" cy="60" r="57" stroke="url(#logo-grad)" strokeWidth="1.5" fill="none" />
-      <circle cx="60" cy="60" r="50" className="fill-[#f5f0e6] dark:fill-[#1a1a1a]" />
-      <line x1="60" y1="22" x2="60" y2="98" stroke="url(#logo-grad)" strokeWidth="3.5" strokeLinecap="round" />
-      <path d="M60 22 C60 22, 82 24, 82 40 C82 54, 60 56, 60 56" stroke="url(#logo-grad)" strokeWidth="3.5" strokeLinecap="round" fill="none" />
-      <line x1="38" y1="34" x2="82" y2="78" stroke="url(#logo-grad-light)" strokeWidth="2.5" strokeLinecap="round" opacity="0.8" />
-      <line x1="82" y1="34" x2="38" y2="78" stroke="url(#logo-grad-light)" strokeWidth="2.5" strokeLinecap="round" opacity="0.8" />
-      <circle cx="60" cy="8" r="1.5" fill="#d4af37" opacity="0.5" />
-      <circle cx="60" cy="112" r="1.5" fill="#d4af37" opacity="0.5" />
-      <circle cx="8" cy="60" r="1.5" fill="#d4af37" opacity="0.5" />
-      <circle cx="112" cy="60" r="1.5" fill="#d4af37" opacity="0.5" />
+      
+      {/* Outer Glow Ring */}
+      <circle cx="60" cy="60" r="58" stroke="url(#logo-grad)" strokeWidth="0.5" strokeDasharray="4 2" opacity="0.3" />
+      
+      {/* Main Circular Border */}
+      <circle cx="60" cy="60" r="54" stroke="url(#logo-grad)" strokeWidth="2.5" fill="none" />
+      
+      {/* Background with Theme Support */}
+      <circle cx="60" cy="60" r="50" className="fill-background dark:fill-card transition-colors duration-300" />
+      
+      {/* Central Gothic Window Arch */}
+      <path 
+        d="M60 25 C45 25 35 45 35 65 V90 H85 V65 C85 45 75 25 60 25Z" 
+        stroke="url(#logo-grad)" 
+        strokeWidth="3" 
+        strokeLinecap="round" 
+        strokeLinejoin="round"
+        fill="none"
+      />
+      
+      {/* Stylized Cross */}
+      <line x1="60" y1="35" x2="60" y2="80" stroke="url(#logo-grad)" strokeWidth="3.5" strokeLinecap="round" />
+      <line x1="45" y1="55" x2="75" y2="55" stroke="url(#logo-grad)" strokeWidth="3.5" strokeLinecap="round" />
+      
+      {/* Rose Window - Center Piece */}
+      <circle cx="60" cy="55" r="8" stroke="url(#logo-grad)" strokeWidth="1.5" fill="none" />
+      <circle cx="60" cy="55" r="3" fill="url(#logo-grad)" filter="url(#glow)" />
+      
+      {/* Decorative Cardinal Points */}
+      <circle cx="60" cy="10" r="2" fill="url(#logo-grad)" />
+      <circle cx="60" cy="110" r="2" fill="url(#logo-grad)" />
+      <circle cx="10" cy="60" r="2" fill="url(#logo-grad)" />
+      <circle cx="110" cy="60" r="2" fill="url(#logo-grad)" />
+      
+      {/* Bottom Foundation Lines */}
+      <line x1="40" y1="82" x2="80" y2="82" stroke="url(#logo-grad)" strokeWidth="1" opacity="0.4" />
+      <line x1="45" y1="86" x2="75" y2="86" stroke="url(#logo-grad)" strokeWidth="1" opacity="0.2" />
     </svg>
   </div>
 ));

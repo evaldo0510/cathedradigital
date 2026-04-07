@@ -22,7 +22,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
   const [showNotifs, setShowNotifs] = useState(false);
 
   return (
-    <header className="px-3 py-1.5 sm:px-4 md:px-6 md:py-3 border-b border-border/5 bg-background/40 backdrop-blur-2xl flex items-center justify-between sticky top-0 z-[140] safe-area-top transition-all hover:bg-background/60 gap-2">
+    <header className="px-4 py-2.5 sm:px-6 md:py-3.5 border-b border-border/5 bg-background/60 backdrop-blur-3xl flex items-center justify-between sticky top-0 z-[140] safe-area-top transition-all hover:bg-background/80 gap-3">
       <div className="flex items-center gap-4">
         {!isDashboard ? (
           <button 
@@ -42,11 +42,11 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
         )}
         {isDashboard && (
           <div className="flex items-center gap-10">
-            <div className="flex items-center gap-3 ml-2 cursor-pointer group" onClick={() => navigate(AppRoute.DASHBOARD)}>
-              <div className="p-1.5 bg-primary/10 rounded-xl group-hover:bg-primary/20 transition-all group-hover:scale-110">
-                <Logo className="w-8 h-8" />
+            <div className="flex items-center gap-2 sm:gap-3 ml-1 sm:ml-2 cursor-pointer group" onClick={() => navigate(AppRoute.DASHBOARD)}>
+              <div className="p-1.5 sm:p-2 bg-primary/5 rounded-2xl group-hover:bg-primary/15 transition-all group-hover:scale-110 group-hover:rotate-6 border border-primary/10">
+                <Logo className="w-8 h-8 sm:w-10 sm:h-10" />
               </div>
-              <span className="text-xl md:text-2xl font-serif font-black uppercase tracking-[0.25em] text-foreground group-hover:text-primary transition-all">Cathedra</span>
+              <span className="text-lg sm:text-xl md:text-2xl font-serif font-black uppercase tracking-[0.2em] sm:tracking-[0.25em] text-foreground group-hover:text-primary transition-all">Cathedra</span>
             </div>
             
             <nav className="hidden xl:flex items-center gap-4 2xl:gap-6 border-l border-border pl-4 2xl:pl-6">
@@ -150,7 +150,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           </button>
         )}
         <button onClick={onToggleDark} className="hidden sm:flex p-3 bg-muted text-muted-foreground hover:text-primary rounded-2xl border border-border">
-          {isDark ? <Icons.Star className="w-5 h-5 text-yellow-400 fill-current" /> : <Icons.History className="w-5 h-5" />}
+          {isDark ? <Icons.Star className="w-5 h-5 text-primary fill-current animate-pulse" /> : <Icons.History className="w-5 h-5" />}
         </button>
       </div>
     </header>
