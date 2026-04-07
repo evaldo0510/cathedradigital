@@ -24,6 +24,7 @@ import AppHeader from './components/cathedra/AppHeader';
 import ProGate from './components/cathedra/ProGate';
 import CommandCenter from './components/cathedra/CommandCenter';
 import OfflineIndicator from './components/cathedra/OfflineIndicator';
+import SplashScreen from './components/cathedra/SplashScreen';
 
 
 const queryClient = new QueryClient({
