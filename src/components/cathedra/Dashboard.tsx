@@ -18,8 +18,15 @@ interface DashboardProps {
 }
 
 /* ── Fade-up animation ── */
-const FadeUp: React.FC<{ children: React.ReactNode; delay?: number; className?: string }> = ({ children, delay = 0, className }) => (
+interface FadeUpProps {
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
+}
+
+const FadeUp = React.forwardRef<HTMLDivElement, FadeUpProps>(({ children, delay = 0, className }, ref) => (
   <motion.div
+    ref={ref}
     initial={{ opacity: 0, y: 18 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.7, delay, ease: [0.25, 0.46, 0.45, 0.94] }}
@@ -27,7 +34,9 @@ const FadeUp: React.FC<{ children: React.ReactNode; delay?: number; className?: 
   >
     {children}
   </motion.div>
-);
+));
+
+FadeUp.displayName = 'FadeUp';
 
 /* ── Journey steps ── */
 const JOURNEY_STEPS = [
