@@ -36,7 +36,7 @@ const queryClient = new QueryClient({
 });
 
 // Lazy-loaded route components
-const Dashboard = lazy(() => import('./components/cathedra/Dashboard'));
+import Dashboard from './components/cathedra/Dashboard';
 const Bible = lazy(() => import('./components/cathedra/Bible'));
 const Catechism = lazy(() => import('./components/cathedra/Catechism'));
 const StudyMode = lazy(() => import('./components/cathedra/StudyMode'));
@@ -73,13 +73,13 @@ const TermsPage = lazy(() => import('./components/cathedra/TermsPage'));
 const PrivacyPage = lazy(() => import('./components/cathedra/PrivacyPage'));
 const PricingPage = lazy(() => import('./components/cathedra/PricingPage'));
 const DiagnosticoPage = lazy(() => import('./components/cathedra/DiagnosticoPage'));
-const HojePage = lazy(() => import('./components/cathedra/HojePage'));
+import HojePage from './components/cathedra/HojePage';
 const JornadaDetailPage = lazy(() => import('./components/cathedra/JornadaDetailPage'));
 const JornadaStepPage = lazy(() => import('./components/cathedra/JornadaStepPage'));
 const JornadaCompletePage = lazy(() => import('./components/cathedra/JornadaCompletePage'));
 const BibliotecaPage = lazy(() => import('./components/cathedra/BibliotecaPage'));
 const JornadasPage = lazy(() => import('./components/cathedra/JornadasPage'));
-const Index = lazy(() => import('./pages/Index'));
+import Index from './pages/Index';
 const PlaceholderPage = lazy(() => import('./components/cathedra/PlaceholderPage'));
 const CheckoutPage = lazy(() => import('./components/cathedra/CheckoutPage'));
 const DiagnosticsPage = lazy(() => import('./components/cathedra/DiagnosticsPage'));
