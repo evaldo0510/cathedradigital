@@ -1,4 +1,5 @@
 import React, { forwardRef } from 'react';
+import cathedraLogo from '@/assets/cathedra-logo.png';
 
 export const COLORS = {
   primary: '#1a1a1a',
@@ -10,7 +11,7 @@ export const COLORS = {
 export const Logo = forwardRef<HTMLDivElement, { className?: string }>(({ className = "w-12 h-12" }, ref) => (
   <div ref={ref} className={`relative flex items-center justify-center group ${className}`}>
     <img 
-      src="/icon-512.png" 
+      src={cathedraLogo} 
       alt="Cathedra Logo" 
       className="w-full h-full object-contain transition-all duration-700 group-hover:scale-110 drop-shadow-sm"
     />
