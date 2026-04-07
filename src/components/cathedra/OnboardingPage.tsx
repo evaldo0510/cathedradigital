@@ -263,7 +263,7 @@ const OnboardingPage: React.FC = () => {
 
     return (
       <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4">
-        <div className="w-full max-w-lg lg:max-w-4xl space-y-6 lg:space-y-10">>
+        <div className="w-full max-w-lg lg:max-w-4xl space-y-6 lg:space-y-10">
           <div className="flex justify-center">
             <Logo className="w-10 h-10 text-primary" />
           </div>
