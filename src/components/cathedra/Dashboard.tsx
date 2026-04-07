@@ -611,17 +611,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         </div>
       </FadeUp>
 
-      {/* ═══ 8. FOOTER ═══ */}
-      <FadeUp delay={0.4}>
-        <div className="text-center pt-6 space-y-2">
-          <p className="text-xs text-muted-foreground/40 font-serif italic">
-            A fé cresce passo a passo.
-          </p>
-          <p className="text-[10px] text-muted-foreground/25 tracking-widest uppercase">
-            Omnia ad maiorem Dei gloriam
-          </p>
-        </div>
-      </FadeUp>
+      {/* Redundant footer removed as it is now global in App.tsx */}
     </div>
   );
 };

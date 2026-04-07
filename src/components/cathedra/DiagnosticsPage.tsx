@@ -131,9 +131,7 @@ const DiagnosticsPage: React.FC = () => {
         </div>
       </div>
       
-      <p className="text-center text-[10px] text-muted-foreground uppercase tracking-widest opacity-40">
-        Cathedra Digital — Status v1.0.4 — © 2024
-      </p>
+      {/* Redundant footer removed */}
     </div>
   );
 };
