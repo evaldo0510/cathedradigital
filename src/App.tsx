@@ -383,7 +383,6 @@ const AppLayout: React.FC = () => {
           </>
         )}
       </div>
-      </div>
       </Suspense>
     </LangContext.Provider>
   );
