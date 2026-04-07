@@ -50,7 +50,7 @@ const Index = () => {
       <TestimonialsSection />
       <FaqSection />
       <CtaBannerSection onStart={handleStart} />
-      <LandingFooter onNavigate={handleNavigate} onStart={handleStart} />
+      {/* Landing footer removed in favor of global navigation */}
     </div>
   );
 };

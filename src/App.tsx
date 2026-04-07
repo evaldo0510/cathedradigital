@@ -128,7 +128,7 @@ const AppLayout: React.FC = () => {
   const location = useLocation();
 
   // Pages that should NOT show header, footer, sidebar, or bottom nav
-  const chromelessPages: string[] = [AppRoute.HOME, AppRoute.ONBOARDING, AppRoute.LOGIN, '/reset-password'];
+  const chromelessPages: string[] = [AppRoute.ONBOARDING, AppRoute.LOGIN, '/reset-password'];
   const isChromeless = chromelessPages.includes(location.pathname);
 
   // Main pages where "Back" button shouldn't show (root pages)
@@ -296,7 +296,7 @@ const AppLayout: React.FC = () => {
               onSignOut={signOut}
             />
           )}
-          <div className={isChromeless ? "flex-1" : "flex-1 p-3 sm:p-4 md:p-5 lg:p-8 w-full max-w-7xl mx-auto"}>
+          <div className={isChromeless ? "flex-1 pb-20 lg:pb-0" : "flex-1 p-3 sm:p-4 md:p-5 lg:p-8 pb-20 lg:pb-8 w-full max-w-7xl mx-auto"}>
 
             <Suspense fallback={<LoadingFallback />}>
               <AnimatePresence mode="wait">
@@ -368,16 +368,20 @@ const AppLayout: React.FC = () => {
               </AnimatePresence>
             </Suspense>
           </div>
-          {!isChromeless && (
-            <>
-              <CathedralFooter />
-              <BottomNav onOpenSidebar={() => setIsSidebarOpen(true)} user={appUser} />
-              {[AppRoute.BIBLE, AppRoute.DAILY_LITURGY, AppRoute.LITURGIA, AppRoute.BREVIARY, AppRoute.LECTIO_DIVINA, AppRoute.CATECHISM, AppRoute.MAGISTERIUM].includes(location.pathname as AppRoute) && (
-                <ReadingModeToggle />
-              )}
-            </>
-          )}
         </main>
+        {!isChromeless && (
+          <>
+            <div className="hidden lg:block">
+              <CathedralFooter />
+            </div>
+            <Suspense fallback={null}>
+              <BottomNav onOpenSidebar={() => setIsSidebarOpen(true)} user={appUser} />
+            </Suspense>
+            {[AppRoute.BIBLE, AppRoute.DAILY_LITURGY, AppRoute.LITURGIA, AppRoute.BREVIARY, AppRoute.LECTIO_DIVINA, AppRoute.CATECHISM, AppRoute.MAGISTERIUM].includes(location.pathname as AppRoute) && (
+              <ReadingModeToggle />
+            )}
+          </>
+        )}
       </div>
       </Suspense>
     </LangContext.Provider>
