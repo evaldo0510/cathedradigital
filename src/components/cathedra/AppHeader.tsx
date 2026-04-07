@@ -17,7 +17,16 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
 }) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const isDashboard = pathname === AppRoute.DASHBOARD || pathname === AppRoute.HOME;
+  const isMainPage = [
+    AppRoute.DASHBOARD,
+    AppRoute.HOME,
+    AppRoute.HOJE,
+    AppRoute.JORNADAS,
+    AppRoute.BIBLIOTECA,
+    AppRoute.PROFILE,
+    AppRoute.LITURGIA
+  ].includes(pathname as AppRoute);
+  const isDashboard = isMainPage;
   const { notifications, unreadCount, markAsRead, markAllRead } = useNotifications();
   const [showNotifs, setShowNotifs] = useState(false);
 
