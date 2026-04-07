@@ -69,31 +69,38 @@ const BibliotecaPage: React.FC = () => {
       </div>
 
       <div className="space-y-3">
-        {sections.map((section, i) => (
-          <motion.div
-            key={section.title}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.06 }}
-            onClick={() => navigate(section.route)}
-            className="cursor-pointer"
-          >
-            <Card
-              className="hover:border-primary/40 transition-all group pointer-events-none"
+        {sections.map((section, i) => {
+          const handleNavigate = () => navigate(section.route);
+          return (
+            <motion.div
+              key={section.title}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.06 }}
             >
-              <CardContent className="p-4 flex items-center gap-4">
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${section.color}`}>
-                  {section.icon}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground">{section.title}</h3>
-                  <p className="text-xs text-muted-foreground mt-0.5">{section.description}</p>
-                </div>
-                <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
+              <div
+                role="button"
+                tabIndex={0}
+                onClick={handleNavigate}
+                onKeyDown={(e) => { if (e.key === 'Enter') handleNavigate(); }}
+                className="cursor-pointer"
+              >
+                <Card className="hover:border-primary/40 transition-all group">
+                  <CardContent className="p-4 flex items-center gap-4">
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${section.color}`}>
+                      {section.icon}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold text-foreground">{section.title}</h3>
+                      <p className="text-xs text-muted-foreground mt-0.5">{section.description}</p>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                  </CardContent>
+                </Card>
+              </div>
+            </motion.div>
+          );
+        })}
       </div>
     </div>
   );
