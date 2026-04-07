@@ -112,7 +112,11 @@ serve(async (req) => {
       : [];
 
     return new Response(JSON.stringify({ query, total: results.length, results }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      headers: { 
+        ...corsHeaders, 
+        'Content-Type': 'application/json',
+        'Cache-Control': 'public, max-age=600, s-maxage=600' // 10 minutes
+      },
     });
   } catch (error) {
     console.error('Bible search error:', error);
