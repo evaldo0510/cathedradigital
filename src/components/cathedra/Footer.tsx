@@ -238,7 +238,7 @@ const Footer: React.FC = React.memo(() => {
             </div>
             <div className="flex items-center justify-between">
               <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/50 dark:text-muted-foreground/70">
-                © {new Date().getFullYear()} CATHEDRA •{' '}
+                © {new Date().getFullYear()} CATHEDRA • OMNIA AD MAIOREM DEI GLORIAM •{' '}
                 <button 
                   onClick={() => navigate(AppRoute.ADMIN)} 
                   className="cursor-pointer hover:text-primary transition-all select-none hover:underline underline-offset-2 decoration-primary/30"
