@@ -83,19 +83,35 @@ const AdminDashboard: React.FC = () => {
         const downloadsCount = metrics.filter(m => m.metric_type === 'download').length;
         const totalRevenue = transactions.reduce((acc, curr) => acc + Number(curr.amount), 0);
 
-        const userGrowth = [
-          { name: 'Jan', total: 400 },
-          { name: 'Fev', total: 700 },
-          { name: 'Mar', total: 1200 },
-          { name: 'Abr', total: allProfiles.length },
-        ];
+        // Group users by month for growth chart
+        const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+        const currentYear = new Date().getFullYear();
+        
+        const userGrowth = months.map((month, index) => {
+          const count = allProfiles.filter(p => {
+            const date = new Date(p.created_at);
+            return date.getMonth() <= index && date.getFullYear() <= currentYear;
+          }).length;
+          return { name: month, total: count };
+        }).slice(0, new Date().getMonth() + 1);
 
-        const revenueData = [
-          { name: 'Sem 1', amount: 200 },
-          { name: 'Sem 2', amount: 450 },
-          { name: 'Sem 3', amount: 800 },
-          { name: 'Sem 4', amount: totalRevenue },
-        ];
+        // Group revenue by week (last 4 weeks)
+        const now = new Date();
+        const revenueData = [3, 2, 1, 0].map(weeksAgo => {
+          const start = new Date(now);
+          start.setDate(now.getDate() - (weeksAgo + 1) * 7);
+          const end = new Date(now);
+          end.setDate(now.getDate() - weeksAgo * 7);
+          
+          const amount = transactions
+            .filter(t => {
+              const date = new Date(t.created_at);
+              return date >= start && date <= end;
+            })
+            .reduce((acc, curr) => acc + Number(curr.amount), 0);
+            
+          return { name: `Sem ${4 - weeksAgo}`, amount };
+        });
 
         setStats({
           totalUsers: allProfiles.length,
