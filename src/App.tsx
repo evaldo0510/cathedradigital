@@ -321,6 +321,7 @@ const AppLayout: React.FC = () => {
           )}
         </main>
       </div>
+      </Suspense>
     </LangContext.Provider>
   );
 };
