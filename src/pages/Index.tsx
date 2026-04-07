@@ -7,6 +7,7 @@ import HeroSection from "./landing/HeroSection";
 import StatsSection from "./landing/StatsSection";
 import FeaturesSection from "./landing/FeaturesSection";
 import HowItWorksSection from "./landing/HowItWorksSection";
+import AcolhimentoSection from "./landing/AcolhimentoSection";
 import BenefitsSection from "./landing/BenefitsSection";
 import TestimonialsSection from "./landing/TestimonialsSection";
 import FaqSection from "./landing/FaqSection";
@@ -46,6 +47,7 @@ const Index = () => {
       <StatsSection />
       <FeaturesSection onNavigate={handleNavigate} />
       <HowItWorksSection />
+      <AcolhimentoSection />
       <BenefitsSection onLogin={() => navigate(AppRoute.LOGIN)} />
       <TestimonialsSection />
       <FaqSection />
