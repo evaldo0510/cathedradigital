@@ -9,6 +9,7 @@ const faqs = [
   { q: "Como funciona o Colloquium IA?", a: "É um assistente de inteligência artificial treinado com documentos do Magistério da Igreja. Ele responde perguntas teológicas com citações das fontes oficiais, auxiliando seus estudos." },
   { q: "Meus dados estão seguros?", a: "Absolutamente. Utilizamos criptografia de ponta e seguimos as melhores práticas de segurança. Seus dados de oração e estudo são privados e nunca compartilhados." },
   { q: "Posso instalar no celular?", a: "Sim! O Cathedra pode ser instalado como um app no seu dispositivo Android ou iOS diretamente pelo navegador, sem precisar de loja de aplicativos." },
+  { q: "Como dou feedback ou peço ajuda?", a: "Você pode usar o botão de feedback no canto inferior da tela a qualquer momento! Adoramos ouvir nossos usuários para tornar o Cathedra cada vez melhor." },
 ];
 
 const FaqSection = () => (
