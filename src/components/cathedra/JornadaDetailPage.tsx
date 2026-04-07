@@ -99,9 +99,6 @@ const JornadaDetailPage: React.FC = () => {
     <div className="space-y-6 max-w-2xl mx-auto">
       {/* Header */}
       <div className="flex items-center gap-3">
-        <Button variant="ghost" size="icon" onClick={() => navigate(AppRoute.JORNADAS)}>
-          <ArrowLeft className="w-5 h-5" />
-        </Button>
         <div className="flex-1">
           <h1 className="text-xl font-bold font-serif text-foreground">{journey.title}</h1>
           {journey.subtitle && <p className="text-sm text-muted-foreground">{journey.subtitle}</p>}
