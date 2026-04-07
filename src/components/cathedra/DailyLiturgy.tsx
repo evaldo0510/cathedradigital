@@ -220,6 +220,21 @@ const DailyLiturgy: React.FC = () => {
     refetchReadings();
   }, [refetchLiturgy, refetchReadings]);
 
+  useEffect(() => {
+    try { localStorage.setItem(FONT_SIZE_KEY, fontSize); } catch {}
+  }, [fontSize]);
+
+  useEffect(() => {
+    try { localStorage.setItem(LINE_SPACING_KEY, lineSpacing); } catch {}
+  }, [lineSpacing]);
+
+  useEffect(() => {
+    setMeditation(null);
+  }, [selectedDate]);
+
+  const fc = FONT_CLASSES[fontSize];
+  const lc = LINE_SPACING_CLASSES[lineSpacing];
+
   const navigateDay = (offset: number) => {
     const d = new Date(selectedDate);
     d.setDate(d.getDate() + offset);
