@@ -39,15 +39,16 @@ const JornadasPage: React.FC = () => {
       if (!journeyData) { setLoading(false); return; }
       setJourneys(journeyData);
 
-      // Load step counts per journey
+      // Load step counts per journey in parallel
+      const { data: countsData } = await supabase
+        .from('journey_steps')
+        .select('journey_id')
+        .in('journey_id', journeyData.map(j => j.id));
+
       const counts: Record<string, number> = {};
-      for (const j of journeyData) {
-        const { count } = await supabase
-          .from('journey_steps')
-          .select('*', { count: 'exact', head: true })
-          .eq('journey_id', j.id);
-        counts[j.id] = count || 0;
-      }
+      countsData?.forEach(s => {
+        counts[s.journey_id] = (counts[s.journey_id] || 0) + 1;
+      });
       setStepsCountMap(counts);
 
       // Load user progress

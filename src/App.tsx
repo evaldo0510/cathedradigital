@@ -14,16 +14,16 @@ import AuthGuard from './components/cathedra/AuthGuard';
 import AdminGuard from './components/cathedra/AdminGuard';
 import AppErrorBoundary from './components/cathedra/AppErrorBoundary';
 
-// Lazy-loaded UI components
-const ReadingModeToggle = lazy(() => import('./components/cathedra/ReadingModeToggle'));
-const PageTransition = lazy(() => import('./components/PageTransition'));
-const CathedralSidebar = lazy(() => import('./components/cathedra/Sidebar'));
-const CathedralFooter = lazy(() => import('./components/cathedra/Footer'));
-const BottomNav = lazy(() => import('./components/cathedra/BottomNav'));
-const AppHeader = lazy(() => import('./components/cathedra/AppHeader'));
-const ProGate = lazy(() => import('./components/cathedra/ProGate'));
-const CommandCenter = lazy(() => import('./components/cathedra/CommandCenter'));
-const OfflineIndicator = lazy(() => import('./components/cathedra/OfflineIndicator'));
+// Core UI components (not lazy to ensure layout is instant)
+import ReadingModeToggle from './components/cathedra/ReadingModeToggle';
+import PageTransition from './components/PageTransition';
+import CathedralSidebar from './components/cathedra/Sidebar';
+import CathedralFooter from './components/cathedra/Footer';
+import BottomNav from './components/cathedra/BottomNav';
+import AppHeader from './components/cathedra/AppHeader';
+import ProGate from './components/cathedra/ProGate';
+import CommandCenter from './components/cathedra/CommandCenter';
+import OfflineIndicator from './components/cathedra/OfflineIndicator';
 
 
 const queryClient = new QueryClient({
