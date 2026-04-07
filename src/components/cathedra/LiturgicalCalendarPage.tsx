@@ -206,7 +206,9 @@ const LiturgicalCalendarPage: React.FC = () => {
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth());
   const [selectedDay, setSelectedDay] = useState<Date | null>(null);
-  const todayKey = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
+  const { toggleFavorite, isFavorite } = useFavorites();
+  const navigate = useNavigate();
+  const [showSaintModal, setShowSaintModal] = useState(false);
 
   const { data: apiData = {}, isLoading: isLoadingApi } = useQuery({
     queryKey: ['liturgical-month', year, month],
@@ -223,6 +225,21 @@ const LiturgicalCalendarPage: React.FC = () => {
     },
     staleTime: 1000 * 60 * 60 * 24, // 24 hours
   });
+
+  // Build a set of "MM-DD" keys for days that have a saint
+  const saintDaysSet = useMemo(() => {
+    const set = new Set<string>();
+    SAINTS_DATA.forEach(s => {
+      set.add(`${String(s.feastMonth).padStart(2, '0')}-${String(s.feastDayNum).padStart(2, '0')}`);
+    });
+    return set;
+  }, []);
+
+  // Merge fixed + movable celebrations
+  const allCelebrations = useMemo(() => {
+    const movable = getMovableCelebrations(year);
+    return { ...FIXED_CELEBRATIONS, ...movable };
+  }, [year]);
 
   const days = useMemo(() => getDaysInMonth(year, month), [year, month]);
   const firstDayOfWeek = new Date(year, month, 1).getDay();
@@ -368,163 +385,155 @@ const LiturgicalCalendarPage: React.FC = () => {
               const colorStyle = LITURGICAL_COLORS[info.color];
               const isToday = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}` === todayKey;
               const isSelected = selectedDay && date.getTime() === selectedDay.getTime();
-              const hasCelebration = !!info.celebration && info.rank !== 'feria';
-              const dayKey = `${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-              const hasSaint = saintDaysSet.has(dayKey);
+              const hasSaint = saintDaysSet.has(`${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`);
 
               return (
                 <button
-                  key={date.getDate()}
+                  key={date.toISOString()}
                   onClick={() => setSelectedDay(date)}
-                  className={`relative aspect-square rounded-xl flex flex-col items-center justify-center transition-all text-sm
-                    ${isSelected ? 'ring-2 ring-primary shadow-lg scale-105' : ''}
-                    ${isToday ? 'ring-2 ring-foreground' : ''}
-                    ${colorStyle?.bg} ${colorStyle?.border} border
-                    hover:scale-105 hover:shadow-md
+                  className={`
+                    aspect-square rounded-xl p-1 relative flex flex-col items-center justify-center transition-all group
+                    ${isSelected ? 'ring-2 ring-primary ring-offset-2 z-10' : 'hover:bg-muted'}
+                    ${isToday ? 'bg-primary/5' : ''}
                   `}
                 >
-                  <span className={`font-bold ${colorStyle?.text} ${isToday ? 'text-foreground' : ''}`}>{date.getDate()}</span>
-                  {hasCelebration && (
-                    <div className={`absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full ${
-                      info.rank === 'solenidade' ? 'bg-amber-500' : info.rank === 'festa' ? 'bg-primary' : 'bg-muted-foreground'
-                    }`} />
-                  )}
-                  {hasSaint && (
-                    <div className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-amber-500 ring-1 ring-amber-300" />
-                  )}
+                  <div className={`
+                    w-full h-full rounded-lg flex flex-col items-center justify-center gap-0.5 border
+                    ${info.rank === 'solenidade' ? 'border-primary/20 bg-primary/5 shadow-sm' : 'border-transparent'}
+                    ${colorStyle?.bg}
+                  `}>
+                    <span className={`text-xs md:text-sm font-bold ${isToday ? 'text-primary' : colorStyle?.text}`}>
+                      {date.getDate()}
+                    </span>
+                    {info.rank === 'solenidade' && (
+                      <div className="w-1 h-1 rounded-full bg-primary" />
+                    )}
+                    {hasSaint && (
+                      <div className="absolute top-1.5 right-1.5">
+                        <Icons.Star className="w-2.5 h-2.5 text-amber-500 fill-amber-500" />
+                      </div>
+                    )}
+                  </div>
                 </button>
               );
             })}
           </div>
         </div>
 
-        {/* Side panel */}
-        <div className="space-y-4">
-          {selectedInfo ? (
-            <div className={`rounded-2xl border p-5 space-y-3 ${LITURGICAL_COLORS[selectedInfo.color]?.bg} ${LITURGICAL_COLORS[selectedInfo.color]?.border}`}>
-              <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
-                {selectedDay!.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
-              </p>
-              <h3 className={`text-lg font-serif font-bold ${LITURGICAL_COLORS[selectedInfo.color]?.text}`}>
-                {selectedInfo.celebration || 'Féria'}
-              </h3>
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-full ${LITURGICAL_COLORS[selectedInfo.color]?.bg} ${LITURGICAL_COLORS[selectedInfo.color]?.text}`}>
-                  {LITURGICAL_COLORS[selectedInfo.color]?.label}
-                </span>
-                {selectedInfo.rank && (
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">
-                    {selectedInfo.rank}
-                  </span>
-                )}
-              </div>
-              <p className="text-sm text-muted-foreground font-serif">
-                {getLiturgicalSeason(selectedDay!, year).season}
-              </p>
-              <div className="flex items-center gap-2 pt-2 border-t border-border/50">
-                {selectedInfo.celebration && selectedInfo.rank !== 'feria' && (() => {
-                  const favTitle = selectedInfo.celebration || '';
-                  const faved = isFavorite('liturgy', favTitle);
-                  return (
-                    <button onClick={() => toggleFavorite({ type: 'liturgy', title: favTitle, content: `${selectedDay!.toLocaleDateString('pt-BR')} — ${favTitle}` })}
-                      className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors">
-                      <Icons.Heart className={`w-4 h-4 ${faved ? 'fill-primary text-primary' : ''}`} />
-                      {faved ? 'Salvo' : 'Favoritar'}
+        {/* Selected day info */}
+        <div className="space-y-6">
+          <AnimatePresence mode="wait">
+            {selectedDay ? (
+              <div className="bg-card border border-border rounded-3xl overflow-hidden shadow-lg animate-in fade-in slide-in-from-bottom-4 duration-300">
+                {selectedSaint ? (
+                  <div className="relative h-48 group">
+                    <SacredImage src={selectedSaint.imageUrl} alt={selectedSaint.name} className="w-full h-full" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                    <div className="absolute bottom-4 left-4 right-4">
+                      <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/70">Santo do Dia</p>
+                      <h3 className="text-lg font-serif font-bold text-white line-clamp-1">{selectedSaint.name}</h3>
+                    </div>
+                    <button 
+                      onClick={() => toggleFavorite({ 
+                        id: selectedSaint.id, 
+                        title: selectedSaint.name, 
+                        type: 'saint', 
+                        image: selectedSaint.imageUrl 
+                      })}
+                      className="absolute top-4 right-4 p-2 rounded-full bg-black/20 hover:bg-black/40 backdrop-blur-sm transition-all"
+                    >
+                      <Icons.Heart className={`w-4 h-4 ${isFavorite(selectedSaint.id) ? 'fill-red-500 text-red-500' : 'text-white'}`} />
                     </button>
-                  );
-                })()}
-                <button onClick={() => navigate('/liturgia?tab=liturgia')}
-                  className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors ml-auto">
-                  <Icons.Book className="w-4 h-4" /> Leituras
-                </button>
-              </div>
-            </div>
-          ) : (
-            <div className="rounded-2xl border border-border bg-card p-5 text-center">
-              <p className="text-sm text-muted-foreground italic">Selecione um dia no calendário</p>
-            </div>
-          )}
-
-          {/* Saint of the selected day */}
-          {selectedSaint && (
-            <div className="bg-card border border-border rounded-2xl overflow-hidden">
-              {selectedSaint.image && (
-                <div className="h-32 overflow-hidden">
-                  <SacredImage src={selectedSaint.image} className="w-full h-full object-cover" alt={selectedSaint.name} />
-                </div>
-              )}
-              <div className="p-5 space-y-3">
-                <div>
-                  <span className="text-[9px] font-black uppercase tracking-widest text-primary block">{selectedSaint.feastDay}</span>
-                  <h3 className="text-lg font-serif font-bold text-foreground">{selectedSaint.name}</h3>
-                  <p className="text-xs text-muted-foreground font-serif italic">{selectedSaint.title}</p>
-                </div>
-                <p className="text-xs text-muted-foreground leading-relaxed line-clamp-4">{selectedSaint.bio}</p>
-                {selectedSaint.quotes[0] && (
-                  <blockquote className="border-l-2 border-primary/30 pl-3 py-1">
-                    <p className="text-[11px] text-foreground/70 font-serif italic">{selectedSaint.quotes[0]}</p>
-                  </blockquote>
-                )}
-                {selectedSaint.works.length > 0 && (
-                  <div className="space-y-1">
-                    <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Obras</span>
-                    {selectedSaint.works.slice(0, 3).map((w, i) => (
-                      <div key={i} className="text-[11px]">
-                        {w.url ? (
-                          <a href={w.url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-bold">{w.title}</a>
-                        ) : (
-                          <span className="text-foreground/80 font-bold">{w.title}</span>
-                        )}
-                      </div>
-                    ))}
+                    <button 
+                      onClick={() => navigate(`/cathedra/daily-liturgy?date=${selectedDay.toISOString()}`)}
+                      className="absolute top-4 left-4 p-2 rounded-full bg-black/20 hover:bg-black/40 backdrop-blur-sm transition-all"
+                    >
+                      <Icons.Book className="w-4 h-4 text-white" />
+                    </button>
+                  </div>
+                ) : (
+                  <div className={`h-24 ${LITURGICAL_COLORS[selectedInfo?.color || 'verde']?.bg} flex items-center justify-center`}>
+                    <Icons.Cross className={`w-8 h-8 ${LITURGICAL_COLORS[selectedInfo?.color || 'verde']?.text} opacity-20`} />
                   </div>
                 )}
-                <button
-                  onClick={() => setShowSaintModal(true)}
-                  className="text-[10px] font-bold text-primary hover:underline flex items-center gap-1 pt-1"
-                >
-                  Ver biografia completa <Icons.ArrowDown className="w-3 h-3 -rotate-90" />
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* Upcoming celebrations */}
-          <div className="bg-card border border-border rounded-2xl p-5 space-y-4">
-            <h3 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Próximas Celebrações</h3>
-            <div className="space-y-2">
-              {upcomingCelebrations.map((c, i) => {
-                const cStyle = LITURGICAL_COLORS[c.color] || LITURGICAL_COLORS.verde;
-                return (
-                  <div key={i} className={`p-3 rounded-xl ${cStyle.bg} border ${cStyle.border}`}>
-                    <p className="text-[9px] font-bold text-muted-foreground">
-                      {c.date.toLocaleDateString('pt-BR', { day: 'numeric', month: 'short', weekday: 'short' })}
+                
+                <div className="p-6 space-y-4">
+                  <div>
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-1">
+                      {selectedDay.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}
                     </p>
-                    <p className={`text-sm font-semibold ${cStyle.text}`}>{c.name}</p>
-                    <span className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground">{c.rank}</span>
+                    <h3 className="text-xl font-serif font-bold text-foreground">
+                      {selectedInfo?.celebration || 'Féria'}
+                    </h3>
                   </div>
-                );
-              })}
-              {upcomingCelebrations.length === 0 && (
-                <p className="text-xs text-muted-foreground italic text-center py-2">Carregando...</p>
-              )}
-            </div>
-          </div>
 
-          {/* Rank legend */}
-          <div className="bg-card border border-border rounded-2xl p-5 space-y-3">
-            <h3 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Classificação</h3>
-            <div className="space-y-1.5 text-xs">
-              <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full bg-amber-500" /><span className="text-foreground">Solenidade</span></div>
-              <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full bg-primary" /><span className="text-foreground">Festa</span></div>
-              <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full bg-muted-foreground" /><span className="text-foreground">Memória</span></div>
-              <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full bg-amber-500 ring-1 ring-amber-300" /><span className="text-foreground">Santo com biografia</span></div>
+                  <div className="flex flex-wrap gap-2">
+                    <div className={`px-2 py-1 rounded-md border text-[10px] font-bold uppercase tracking-wider ${LITURGICAL_COLORS[selectedInfo?.color || 'verde']?.bg} ${LITURGICAL_COLORS[selectedInfo?.color || 'verde']?.text} ${LITURGICAL_COLORS[selectedInfo?.color || 'verde']?.border}`}>
+                      {LITURGICAL_COLORS[selectedInfo?.color || 'verde']?.label}
+                    </div>
+                    {selectedInfo?.rank && (
+                      <div className="px-2 py-1 rounded-md bg-muted border border-border text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                        {selectedInfo.rank}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="pt-4 border-t border-border flex gap-3">
+                    <button 
+                      onClick={() => navigate(`/cathedra/daily-liturgy?date=${selectedDay.toISOString()}`)}
+                      className="flex-1 py-3 px-4 bg-primary text-primary-foreground rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-md shadow-primary/10"
+                    >
+                      <Icons.Book className="w-4 h-4" />
+                      Ver Liturgia
+                    </button>
+                    {selectedSaint && (
+                      <button 
+                        onClick={() => setShowSaintModal(true)}
+                        className="p-3 bg-secondary text-foreground rounded-xl hover:bg-muted transition-all border border-border"
+                      >
+                        <Icons.ArrowDown className="w-4 h-4 -rotate-90" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-muted/30 border-2 border-dashed border-border rounded-3xl p-12 text-center space-y-3">
+                <Icons.Calendar className="w-12 h-12 text-muted-foreground/30 mx-auto" />
+                <p className="text-sm text-muted-foreground font-serif italic">Selecione um dia para ver os detalhes</p>
+              </div>
+            )}
+          </AnimatePresence>
+
+          {/* Upcoming list */}
+          <div className="bg-card border border-border rounded-3xl p-6">
+            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground mb-4">Próximas Solenidades</h3>
+            <div className="space-y-3">
+              {upcomingCelebrations.map((c, i) => (
+                <button
+                  key={i}
+                  onClick={() => {
+                    setYear(c.date.getFullYear());
+                    setMonth(c.date.getMonth());
+                    setSelectedDay(c.date);
+                  }}
+                  className="w-full flex items-center gap-3 p-2 rounded-xl hover:bg-muted transition-all group text-left"
+                >
+                  <div className={`w-10 h-10 rounded-lg shrink-0 flex flex-col items-center justify-center ${LITURGICAL_COLORS[c.color]?.bg}`}>
+                    <span className={`text-[10px] font-black ${LITURGICAL_COLORS[c.color]?.text}`}>{c.date.getDate()}</span>
+                    <span className={`text-[8px] font-bold uppercase ${LITURGICAL_COLORS[c.color]?.text}`}>{MONTH_NAMES[c.date.getMonth()].slice(0, 3)}</span>
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-sm font-bold text-foreground line-clamp-1 group-hover:text-primary transition-colors">{c.name}</p>
+                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">{c.rank}</p>
+                  </div>
+                </button>
+              ))}
             </div>
           </div>
         </div>
       </div>
 
-      {/* Saint Detail Modal */}
       <AnimatePresence>
         {showSaintModal && selectedSaint && (
           <SaintDetail saint={selectedSaint} onClose={() => setShowSaintModal(false)} />
