@@ -225,7 +225,7 @@ const Magisterium: React.FC = () => {
       <div className="max-w-3xl mx-auto space-y-8">
         <div className="flex items-center gap-4">
           <button onClick={() => { setSelectedDoc(null); setFullText(null); }} className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all">
-            <Icons.ArrowDown className="w-5 h-5 rotate-90 text-foreground" />
+            <Icons.ChevronLeft className="w-5 h-5 text-foreground" />
           </button>
           <div>
             <h1 className="text-2xl font-serif font-bold text-foreground">{selectedDoc.title}</h1>

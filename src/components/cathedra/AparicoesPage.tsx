@@ -25,7 +25,7 @@ const AparicoesPage: React.FC = () => {
         {/* Back + Header */}
         <div className="flex items-center gap-4">
           <button onClick={() => setSelectedApparition(null)} className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all">
-            <Icons.ArrowDown className="w-5 h-5 rotate-90 text-foreground" />
+            <Icons.ChevronLeft className="w-5 h-5 text-foreground" />
           </button>
           <div className="flex-1 min-w-0">
             <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">{selectedApparition.country} • {selectedApparition.year}</span>

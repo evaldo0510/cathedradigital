@@ -131,6 +131,54 @@ const AppLayout: React.FC = () => {
   const chromelessPages: string[] = [AppRoute.HOME, AppRoute.ONBOARDING, AppRoute.LOGIN, '/reset-password'];
   const isChromeless = chromelessPages.includes(location.pathname);
 
+  // Main pages where "Back" button shouldn't show (root pages)
+  const isMainPage = [
+    AppRoute.DASHBOARD,
+    AppRoute.HOME,
+    AppRoute.HOJE,
+    AppRoute.JORNADAS,
+    AppRoute.BIBLIOTECA,
+    AppRoute.PROFILE,
+    AppRoute.LITURGIA
+  ].includes(location.pathname as AppRoute);
+
+  // Swipe to go back logic for better mobile UX
+  useEffect(() => {
+    let startX = 0;
+    let startY = 0;
+    
+    const handleTouchStart = (e: TouchEvent) => {
+      // Only track if swipe starts from the far left (0-40px)
+      if (e.touches[0].clientX < 40) {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+      } else {
+        startX = 0;
+      }
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (startX > 0) {
+        const deltaX = e.changedTouches[0].clientX - startX;
+        const deltaY = Math.abs(e.changedTouches[0].clientY - startY);
+        
+        // Horizontal swipe must be significantly larger than vertical movement
+        if (deltaX > 80 && deltaY < 50) {
+          if (!isChromeless && !isMainPage) {
+            navigate(-1);
+          }
+        }
+      }
+    };
+
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchend', handleTouchEnd, { passive: true });
+    return () => {
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [isChromeless, isMainPage, navigate]);
+
   const getPostAuthRoute = useCallback(() => {
     if (profile?.role === 'admin') return AppRoute.ADMIN;
     // If no onboarding done or no diagnosis, go to onboarding (which includes diagnosis)

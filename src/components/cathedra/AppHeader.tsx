@@ -17,7 +17,16 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
 }) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const isDashboard = pathname === AppRoute.DASHBOARD || pathname === AppRoute.HOME;
+  const isMainPage = [
+    AppRoute.DASHBOARD,
+    AppRoute.HOME,
+    AppRoute.HOJE,
+    AppRoute.JORNADAS,
+    AppRoute.BIBLIOTECA,
+    AppRoute.PROFILE,
+    AppRoute.LITURGIA
+  ].includes(pathname as AppRoute);
+  const isDashboard = isMainPage;
   const { notifications, unreadCount, markAsRead, markAllRead } = useNotifications();
   const [showNotifs, setShowNotifs] = useState(false);
 
@@ -27,10 +36,10 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
         {!isDashboard ? (
           <button 
             onClick={() => navigate(-1)} 
-            className="p-2 sm:p-3 bg-foreground text-background rounded-full flex items-center gap-2 sm:gap-3 px-4 sm:px-6 shadow-2xl active:scale-95 transition-all hover:bg-primary hover:text-primary-foreground group"
+            className="p-1.5 sm:p-2 bg-background/50 backdrop-blur-xl text-foreground/80 border border-border/10 rounded-xl flex items-center gap-2 px-3 sm:px-4 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.05)] active:scale-95 transition-all hover:bg-primary/10 hover:text-primary hover:border-primary/20 group hover:shadow-md"
           >
-            <Icons.ArrowDown className="w-4 h-4 rotate-90 group-hover:-translate-x-1 transition-transform" />
-            <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest">Retornar</span>
+            <Icons.ChevronLeft className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" />
+            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-widest">Voltar</span>
           </button>
         ) : (
           <button 
