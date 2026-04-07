@@ -65,19 +65,21 @@ const HojePage: React.FC = () => {
 
         if (journey) {
           setActiveJourney(journey);
-          const { data: completedSteps } = await supabase
-            .from('journey_progress')
-            .select('step_id')
-            .eq('user_id', user.id)
-            .eq('journey_id', lastJourneyId);
+          const [completedRes, stepsRes] = await Promise.all([
+            supabase
+              .from('journey_progress')
+              .select('step_id')
+              .eq('user_id', user.id)
+              .eq('journey_id', lastJourneyId),
+            supabase
+              .from('journey_steps')
+              .select('*')
+              .eq('journey_id', lastJourneyId)
+              .order('step_order', { ascending: true })
+          ]);
 
-          const completedIds = (completedSteps || []).map(s => s.step_id);
-
-          const { data: allSteps } = await supabase
-            .from('journey_steps')
-            .select('*')
-            .eq('journey_id', lastJourneyId)
-            .order('step_order', { ascending: true });
+          const completedSteps = completedRes.data;
+          const allSteps = stepsRes.data;
 
           if (allSteps) {
             setJourneyProgress({ completed: completedIds.length, total: allSteps.length });
