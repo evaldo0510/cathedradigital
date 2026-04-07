@@ -75,11 +75,16 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
   return (
     <>
       <aside className="h-full w-72 bg-card border-r border-border flex flex-col p-5 overflow-hidden">
-        <div className="mb-6 px-2 flex items-center gap-3 cursor-pointer group" onClick={() => handleNav(AppRoute.DASHBOARD)}>
-          <Logo className="w-9 h-9" />
+        <div className="mb-6 px-2 flex items-center gap-3 cursor-pointer group hover:opacity-90 transition-opacity" onClick={() => handleNav(AppRoute.DASHBOARD)}>
+          <div className="p-2 bg-primary/5 rounded-2xl group-hover:bg-primary/10 transition-all group-hover:rotate-3 border border-primary/10">
+            <Logo className="w-10 h-10" />
+          </div>
           <div>
-            <h1 className="text-lg font-black tracking-tight text-foreground leading-none uppercase">CATHEDRA</h1>
-            <p className="text-[8px] font-black uppercase text-primary tracking-widest mt-1">Digital Sanctuarium</p>
+            <h1 className="text-xl font-black tracking-[0.2em] text-foreground leading-none uppercase font-serif">CATHEDRA</h1>
+            <p className="text-[9px] font-black uppercase text-primary/70 tracking-[0.3em] mt-1.5 flex items-center gap-1.5">
+              <span className="w-1 h-1 rounded-full bg-primary animate-pulse" />
+              Digital Sanctuarium
+            </p>
           </div>
         </div>
 

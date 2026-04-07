@@ -150,7 +150,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           </button>
         )}
         <button onClick={onToggleDark} className="hidden sm:flex p-3 bg-muted text-muted-foreground hover:text-primary rounded-2xl border border-border">
-          {isDark ? <Icons.Star className="w-5 h-5 text-yellow-400 fill-current" /> : <Icons.History className="w-5 h-5" />}
+          {isDark ? <Icons.Star className="w-5 h-5 text-primary fill-current animate-pulse" /> : <Icons.History className="w-5 h-5" />}
         </button>
       </div>
     </header>
