@@ -383,7 +383,7 @@ const DailyLiturgy: React.FC = () => {
           <div className="text-center py-16 space-y-3">
             <Cloud className="w-12 h-12 text-muted-foreground mx-auto opacity-20" />
             <p className="text-muted-foreground italic font-serif">{error}</p>
-            <button onClick={() => fetchData(selectedDate)} className="text-xs font-bold text-primary hover:underline">
+            <button onClick={() => fetchData()} className="text-xs font-bold text-primary hover:underline">
               Tentar novamente
             </button>
           </div>
