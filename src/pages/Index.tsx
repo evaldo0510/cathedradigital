@@ -11,7 +11,6 @@ import BenefitsSection from "./landing/BenefitsSection";
 import TestimonialsSection from "./landing/TestimonialsSection";
 import FaqSection from "./landing/FaqSection";
 import CtaBannerSection from "./landing/CtaBannerSection";
-import LandingFooter from "./landing/LandingFooter";
 import FeedbackWidget from "@/components/landing/FeedbackWidget";
 
 const Index = () => {
@@ -51,7 +50,7 @@ const Index = () => {
       <TestimonialsSection />
       <FaqSection />
       <CtaBannerSection onStart={handleStart} />
-      {/* Landing footer removed in favor of global navigation */}
+      <FeedbackWidget />
     </div>
   );
 };
