@@ -1,8 +1,10 @@
-import { motion } from "framer-motion";
-import { Play, Sparkles } from "lucide-react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Play, Sparkles, X } from "lucide-react";
 import { fadeUp } from "./animations";
 
 const InstitutionalVideoSection = () => {
+  const [isPlaying, setIsPlaying] = useState(false);
   return (
     <section className="relative w-full py-24 md:py-32 bg-background overflow-hidden">
       {/* Background Decorative Elements */}
