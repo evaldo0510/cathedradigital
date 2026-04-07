@@ -296,7 +296,7 @@ const AppLayout: React.FC = () => {
               onSignOut={signOut}
             />
           )}
-          <div className={isChromeless ? "flex-1 pb-20 lg:pb-0" : "flex-1 p-3 sm:p-4 md:p-5 lg:p-8 pb-20 lg:pb-8 w-full max-w-7xl mx-auto"}>
+          <div className={isChromeless ? "flex-1 pb-20 lg:pb-0" : "flex-1 p-3 sm:p-4 md:p-5 lg:p-8 pb-32 lg:pb-12 w-full max-w-7xl mx-auto flex flex-col"}>
 
             <Suspense fallback={<LoadingFallback />}>
               <AnimatePresence mode="popLayout">
@@ -367,8 +367,8 @@ const AppLayout: React.FC = () => {
                 </Routes>
               </AnimatePresence>
             </Suspense>
+            <CathedralFooter />
           </div>
-          <CathedralFooter />
         </main>
         {!isChromeless && (
           <>
