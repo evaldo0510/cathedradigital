@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { Icons } from '../../constants';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useNavigate } from 'react-router-dom';
@@ -205,48 +206,23 @@ const LiturgicalCalendarPage: React.FC = () => {
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth());
   const [selectedDay, setSelectedDay] = useState<Date | null>(null);
-  const [apiData, setApiData] = useState<Record<string, ApiDayData>>({});
-  const [isLoadingApi, setIsLoadingApi] = useState(false);
-  const { toggleFavorite, isFavorite } = useFavorites();
-  const navigate = useNavigate();
-  const [showSaintModal, setShowSaintModal] = useState(false);
+  const todayKey = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
 
-  // Build a set of "MM-DD" keys for days that have a saint
-  const saintDaysSet = useMemo(() => {
-    const set = new Set<string>();
-    SAINTS_DATA.forEach(s => {
-      set.add(`${String(s.feastMonth).padStart(2, '0')}-${String(s.feastDayNum).padStart(2, '0')}`);
-    });
-    return set;
-  }, []);
-
-  // Merge fixed + movable celebrations
-  const allCelebrations = useMemo(() => {
-    const movable = getMovableCelebrations(year);
-    return { ...FIXED_CELEBRATIONS, ...movable };
-  }, [year]);
-
-  // Fetch month data from API
-  useEffect(() => {
-    const fetchMonth = async () => {
-      setIsLoadingApi(true);
-      try {
-        const { data } = await supabase.functions.invoke('liturgical-calendar', {
-          body: { action: 'month', year, month: month + 1, lang: 'la', calendar: 'general-la' }
-        });
-        if (Array.isArray(data)) {
-          const map: Record<string, ApiDayData> = {};
-          data.forEach((d: ApiDayData) => { map[d.date] = d; });
-          setApiData(map);
-        }
-      } catch (err) {
-        console.error('Error fetching calendar month:', err);
-      } finally {
-        setIsLoadingApi(false);
+  const { data: apiData = {}, isLoading: isLoadingApi } = useQuery({
+    queryKey: ['liturgical-month', year, month],
+    queryFn: async () => {
+      const { data } = await supabase.functions.invoke('liturgical-calendar', {
+        body: { action: 'month', year, month: month + 1, lang: 'la', calendar: 'general-la' }
+      });
+      if (Array.isArray(data)) {
+        const map: Record<string, ApiDayData> = {};
+        data.forEach((d: ApiDayData) => { map[d.date] = d; });
+        return map;
       }
-    };
-    fetchMonth();
-  }, [year, month]);
+      return {};
+    },
+    staleTime: 1000 * 60 * 60 * 24, // 24 hours
+  });
 
   const days = useMemo(() => getDaysInMonth(year, month), [year, month]);
   const firstDayOfWeek = new Date(year, month, 1).getDay();
