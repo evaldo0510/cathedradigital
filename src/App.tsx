@@ -2,26 +2,28 @@ import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense, useRe
 import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 
-import ReadingModeToggle from './components/cathedra/ReadingModeToggle';
 import { AnimatePresence, motion } from 'framer-motion';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import PageTransition from './components/PageTransition';
 import ScrollToTop from './components/ScrollToTop';
-import CathedralSidebar from './components/cathedra/Sidebar';
-import CathedralFooter from './components/cathedra/Footer';
-import BottomNav from './components/cathedra/BottomNav';
-import AppHeader from './components/cathedra/AppHeader';
-import ProGate from './components/cathedra/ProGate';
 import { AppRoute, Language } from './types';
 import { UI_TRANSLATIONS } from './services/translations';
 import { AuthProvider, useAuth } from './hooks/useAuth';
 import { LangContext } from './contexts/LangContext';
 import { supabase } from '@/integrations/supabase/client';
-import CommandCenter from './components/cathedra/CommandCenter';
-import OfflineIndicator from './components/cathedra/OfflineIndicator';
 import AuthGuard from './components/cathedra/AuthGuard';
 import AdminGuard from './components/cathedra/AdminGuard';
 import AppErrorBoundary from './components/cathedra/AppErrorBoundary';
+
+// Lazy-loaded UI components
+const ReadingModeToggle = lazy(() => import('./components/cathedra/ReadingModeToggle'));
+const PageTransition = lazy(() => import('./components/PageTransition'));
+const CathedralSidebar = lazy(() => import('./components/cathedra/Sidebar'));
+const CathedralFooter = lazy(() => import('./components/cathedra/Footer'));
+const BottomNav = lazy(() => import('./components/cathedra/BottomNav'));
+const AppHeader = lazy(() => import('./components/cathedra/AppHeader'));
+const ProGate = lazy(() => import('./components/cathedra/ProGate'));
+const CommandCenter = lazy(() => import('./components/cathedra/CommandCenter'));
+const OfflineIndicator = lazy(() => import('./components/cathedra/OfflineIndicator'));
 
 
 const queryClient = new QueryClient({
@@ -188,16 +190,16 @@ const AppLayout: React.FC = () => {
 
   return (
     <LangContext.Provider value={{ lang, setLang: setLangState, t }}>
-      
-      <ScrollToTop />
-      <CommandCenter />
-      <OfflineIndicator />
-      <div className="flex h-[100dvh] w-full overflow-hidden bg-background selection:bg-primary/20">
-        {/* Sidebar is only accessible via overlay/drawer on all screens */}
+      <Suspense fallback={<div className="h-screen w-screen flex items-center justify-center bg-background"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div></div>}>
+        <ScrollToTop />
+        <CommandCenter />
+        <OfflineIndicator />
+        <div className="flex h-[100dvh] w-full overflow-hidden bg-background selection:bg-primary/20">
+          {/* Sidebar is only accessible via overlay/drawer on all screens */}
 
-        {/* Mobile sidebar overlay - only when open */}
-        <AnimatePresence>
-         {!isChromeless && isSidebarOpen && (
+          {/* Mobile sidebar overlay - only when open */}
+          <AnimatePresence>
+           {!isChromeless && isSidebarOpen && (
             <motion.div 
               key="mobile-sidebar"
               initial={{ opacity: 0 }}
@@ -319,6 +321,7 @@ const AppLayout: React.FC = () => {
           )}
         </main>
       </div>
+      </Suspense>
     </LangContext.Provider>
   );
 };
