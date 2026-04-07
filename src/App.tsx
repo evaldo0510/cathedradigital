@@ -194,7 +194,7 @@ const AppLayout: React.FC = () => {
   }, [isDark]);
   
   useEffect(() => {
-    if (location.pathname !== AppRoute.LOGIN || loading || !user || !profile) return;
+    if (location.pathname !== AppRoute.LOGIN || loading || !user) return;
     navigate(getPostAuthRoute(), { replace: true });
   }, [getPostAuthRoute, loading, location.pathname, navigate, user, profile]);
 
