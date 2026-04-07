@@ -279,7 +279,9 @@ serve(async (req) => {
 
     // 1. Static check (instant)
     if (PT_PARAGRAPHS[paragraph]) {
-      return new Response(JSON.stringify({ paragraph, content: PT_PARAGRAPHS[paragraph] }), { headers: corsHeaders });
+      return new Response(JSON.stringify({ paragraph, content: PT_PARAGRAPHS[paragraph] }), { 
+        headers: { ...corsHeaders, 'Cache-Control': 'public, max-age=604800, s-maxage=604800' } 
+      });
     }
 
     // 2. Database check (fast)
@@ -294,7 +296,9 @@ serve(async (req) => {
       .single();
 
     if (cached) {
-      return new Response(JSON.stringify({ paragraph, content: cached.content }), { headers: corsHeaders });
+      return new Response(JSON.stringify({ paragraph, content: cached.content }), { 
+        headers: { ...corsHeaders, 'Cache-Control': 'public, max-age=86400, s-maxage=86400' } 
+      });
     }
 
     // 3. AI Generation (slowest, but only once)
@@ -302,7 +306,9 @@ serve(async (req) => {
     if (aiText && aiText.length > 20) {
       // Save to cache
       await supabase.from('catechism_cache').insert({ paragraph, content: aiText });
-      return new Response(JSON.stringify({ paragraph, content: aiText }), { headers: corsHeaders });
+      return new Response(JSON.stringify({ paragraph, content: aiText }), { 
+        headers: { ...corsHeaders, 'Cache-Control': 'public, max-age=86400, s-maxage=86400' } 
+      });
     }
 
     return new Response(JSON.stringify({ 
