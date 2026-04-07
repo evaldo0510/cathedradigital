@@ -296,7 +296,7 @@ const AppLayout: React.FC = () => {
               onSignOut={signOut}
             />
           )}
-          <div className={isChromeless ? "flex-1" : "flex-1 p-3 sm:p-4 md:p-5 lg:p-8 pb-28 w-full max-w-7xl mx-auto"}>
+          <div className={isChromeless ? "flex-1" : "flex-1 p-3 sm:p-4 md:p-5 lg:p-8 w-full max-w-7xl mx-auto"}>
 
             <Suspense fallback={<LoadingFallback />}>
               <AnimatePresence mode="wait">

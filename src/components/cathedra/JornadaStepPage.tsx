@@ -163,7 +163,7 @@ const JornadaStepPage: React.FC = () => {
 
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto custom-scrollbar overscroll-auto">
-        <div className="max-w-2xl mx-auto px-4 py-6 space-y-6 pb-32">
+        <div className="max-w-2xl mx-auto px-4 py-6 space-y-6 pb-24">
           {/* Step Title */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
