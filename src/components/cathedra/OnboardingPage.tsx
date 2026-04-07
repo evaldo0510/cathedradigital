@@ -225,7 +225,7 @@ const OnboardingPage: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="w-full max-w-lg space-y-6"
+          className="w-full max-w-lg lg:max-w-3xl space-y-6 lg:space-y-12"
         >
           <div className="text-center space-y-3">
             <motion.div
@@ -263,7 +263,7 @@ const OnboardingPage: React.FC = () => {
 
     return (
       <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4">
-        <div className="w-full max-w-lg space-y-6">
+        <div className="w-full max-w-lg lg:max-w-4xl space-y-6 lg:space-y-10">
           <div className="flex justify-center">
             <Logo className="w-10 h-10 text-primary" />
           </div>
@@ -299,7 +299,7 @@ const OnboardingPage: React.FC = () => {
             >
               <h2 className="text-base font-semibold text-foreground text-center">{question.question}</h2>
 
-              <div className="space-y-2.5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                 {question.options.map((opt) => (
                   <motion.button
                     key={opt.value}
@@ -339,9 +339,9 @@ const OnboardingPage: React.FC = () => {
 
   return (
     <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4">
-      <div className="w-full max-w-lg space-y-6">
+      <div className="w-full max-w-lg lg:max-w-5xl space-y-6 lg:space-y-10">
         <div className="flex justify-center">
-          <Logo className="w-10 h-10 text-primary" />
+          <Logo className="w-10 h-10 lg:w-16 lg:h-16 text-primary" />
         </div>
 
         <AnimatePresence mode="wait">
@@ -351,14 +351,14 @@ const OnboardingPage: React.FC = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -40 }}
             transition={{ duration: 0.25 }}
-            className="bg-card border border-border rounded-3xl overflow-hidden"
+            className="bg-card border border-border rounded-3xl overflow-hidden lg:flex lg:items-center lg:min-h-[500px]"
           >
-            <img src={slide.image} alt={slide.title} className="w-full h-48 md:h-56 object-cover" />
-            <div className="p-6 md:p-8 text-center space-y-3">
-              <div className="flex justify-center text-primary">{slide.icon}</div>
-              <h1 className="text-2xl md:text-3xl font-serif font-bold text-foreground">{slide.title}</h1>
-              <p className="text-[10px] font-black uppercase tracking-widest text-primary">{slide.subtitle}</p>
-              <p className="text-muted-foreground leading-relaxed text-sm">{slide.description}</p>
+            <img src={slide.image} alt={slide.title} className="w-full h-48 md:h-64 lg:h-full lg:w-1/2 object-cover" />
+            <div className="p-6 md:p-8 lg:p-16 text-center lg:text-left lg:w-1/2 space-y-4 lg:space-y-8">
+              <div className="flex justify-center lg:justify-start text-primary mb-2 lg:mb-4">{slide.icon}</div>
+              <h1 className="text-2xl md:text-3xl lg:text-5xl font-serif font-bold text-foreground leading-tight">{slide.title}</h1>
+              <p className="text-[10px] lg:text-xs font-black uppercase tracking-widest text-primary">{slide.subtitle}</p>
+              <p className="text-muted-foreground leading-relaxed text-sm lg:text-lg lg:max-w-md">{slide.description}</p>
             </div>
           </motion.div>
         </AnimatePresence>

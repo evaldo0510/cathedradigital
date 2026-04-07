@@ -163,7 +163,7 @@ const HojePage: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-6 max-w-2xl mx-auto">
+    <div className="space-y-6 max-w-2xl lg:max-w-4xl mx-auto">
       {/* Greeting */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -272,33 +272,34 @@ const HojePage: React.FC = () => {
         </motion.div>
       )}
 
-      {/* Daily Sections */}
-      <div className="space-y-3">
+      <div className="space-y-4">
         <h2 className="text-lg font-semibold text-foreground">Experiência Diária</h2>
-        {dailySections.map((section, i) => (
-          <motion.div
-            key={section.title}
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 + i * 0.1 }}
-          >
-            <Card
-              className="cursor-pointer hover:border-primary/40 transition-all"
-              onClick={() => navigate(section.route)}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {dailySections.map((section, i) => (
+            <motion.div
+              key={section.title}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2 + i * 0.1 }}
             >
-              <CardContent className="p-4 flex items-center gap-4">
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${section.color}`}>
-                  {section.icon}
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-sm text-foreground">{section.title}</h3>
-                  <p className="text-xs text-muted-foreground">{section.description}</p>
-                </div>
-                <ChevronRight className="w-4 h-4 text-muted-foreground" />
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
+              <Card
+                className="h-full cursor-pointer hover:border-primary/40 transition-all"
+                onClick={() => navigate(section.route)}
+              >
+                <CardContent className="p-4 flex flex-col gap-4 h-full">
+                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${section.color}`}>
+                    {section.icon}
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-sm text-foreground">{section.title}</h3>
+                    <p className="text-xs text-muted-foreground">{section.description}</p>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-muted-foreground self-end" />
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
       </div>
 
       {/* Spiritual Journal */}
