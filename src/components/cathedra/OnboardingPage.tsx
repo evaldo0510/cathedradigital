@@ -225,7 +225,7 @@ const OnboardingPage: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="w-full max-w-lg space-y-6"
+          className="w-full max-w-lg lg:max-w-3xl space-y-6 lg:space-y-12"
         >
           <div className="text-center space-y-3">
             <motion.div
@@ -263,7 +263,7 @@ const OnboardingPage: React.FC = () => {
 
     return (
       <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4">
-        <div className="w-full max-w-lg space-y-6">
+        <div className="w-full max-w-lg lg:max-w-4xl space-y-6 lg:space-y-10">>
           <div className="flex justify-center">
             <Logo className="w-10 h-10 text-primary" />
           </div>
@@ -299,7 +299,7 @@ const OnboardingPage: React.FC = () => {
             >
               <h2 className="text-base font-semibold text-foreground text-center">{question.question}</h2>
 
-              <div className="space-y-2.5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                 {question.options.map((opt) => (
                   <motion.button
                     key={opt.value}
