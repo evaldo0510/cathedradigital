@@ -70,14 +70,16 @@ const BibliotecaPage: React.FC = () => {
 
       <div className="space-y-3">
         {sections.map((section, i) => (
-          <motion.button
+          <motion.div
             key={section.title}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.06 }}
-            onClick={() => navigate(section.route)}
-            className="cursor-pointer w-full text-left"
-            type="button"
+            role="button"
+            tabIndex={0}
+            onTap={() => navigate(section.route)}
+            onKeyDown={(e) => { if (e.key === 'Enter') navigate(section.route); }}
+            className="cursor-pointer"
           >
             <Card className="hover:border-primary/40 transition-all group">
               <CardContent className="p-4 flex items-center gap-4">
@@ -91,7 +93,7 @@ const BibliotecaPage: React.FC = () => {
                 <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
               </CardContent>
             </Card>
-          </motion.button>
+          </motion.div>
         ))}
       </div>
     </div>
