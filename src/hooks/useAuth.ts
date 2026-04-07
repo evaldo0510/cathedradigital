@@ -189,6 +189,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let active = true;
 
+    // Safety timeout: never stay in loading state for more than 8 seconds
+    const safetyTimeout = setTimeout(() => {
+      if (active && loading) {
+        console.warn('Auth loading timed out. Forcing loading state to false.');
+        setLoading(false);
+      }
+    }, 8000);
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (!active || event === 'INITIAL_SESSION' || event === 'TOKEN_REFRESHED') return;
       void syncAuthState(session?.user ?? null);
@@ -217,10 +225,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     return () => {
       active = false;
+      clearTimeout(safetyTimeout);
       authRequestId.current += 1;
       subscription.unsubscribe();
     };
-  }, [syncAuthState]);
+  }, [syncAuthState, loading]);
 
   const signOut = useCallback(async () => {
     authRequestId.current += 1;
