@@ -1,6 +1,8 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
+import { AppRoute } from '@/types';
 import NotesPanel from './NotesPanel';
 
 type DocCategory = 'all' | 'council' | 'encyclical' | 'exhortation' | 'letter' | 'constitution';
