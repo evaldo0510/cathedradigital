@@ -209,6 +209,11 @@ const LiturgicalCalendarPage: React.FC = () => {
   const { toggleFavorite, isFavorite } = useFavorites();
   const navigate = useNavigate();
   const [showSaintModal, setShowSaintModal] = useState(false);
+  const [saintsData, setSaintsData] = useState<Saint[]>([]);
+
+  React.useEffect(() => {
+    import('@/data/saints').then(m => setSaintsData(m.SAINTS_DATA));
+  }, []);
 
   const { data: apiData = {}, isLoading: isLoadingApi } = useQuery({
     queryKey: ['liturgical-month', year, month],
@@ -229,11 +234,11 @@ const LiturgicalCalendarPage: React.FC = () => {
   // Build a set of "MM-DD" keys for days that have a saint
   const saintDaysSet = useMemo(() => {
     const set = new Set<string>();
-    SAINTS_DATA.forEach(s => {
+    saintsData.forEach(s => {
       set.add(`${String(s.feastMonth).padStart(2, '0')}-${String(s.feastDayNum).padStart(2, '0')}`);
     });
     return set;
-  }, []);
+  }, [saintsData]);
 
   // Merge fixed + movable celebrations
   const allCelebrations = useMemo(() => {
@@ -311,8 +316,8 @@ const LiturgicalCalendarPage: React.FC = () => {
     if (!selectedDay) return null;
     const m = selectedDay.getMonth() + 1;
     const d = selectedDay.getDate();
-    return SAINTS_DATA.find(s => s.feastMonth === m && s.feastDayNum === d) || null;
-  }, [selectedDay]);
+    return saintsData.find(s => s.feastMonth === m && s.feastDayNum === d) || null;
+  }, [selectedDay, saintsData]);
 
   const selectedInfo = selectedDay ? getLiturgicalInfo(selectedDay) : null;
 
