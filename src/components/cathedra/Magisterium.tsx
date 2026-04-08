@@ -658,35 +658,39 @@ const Magisterium: React.FC = () => {
         })()}
       </div>
 
-      <div className="border-t border-border pt-8">
-        <h2 className="text-lg font-serif font-bold text-foreground text-center mb-6">📜 Documentos do Magistério</h2>
-      </div>
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Documentos</p>
-        </div>
-        <div>
-          <p className="text-2xl font-serif font-bold text-foreground">{new Set(filteredDocs.map(d => d.author)).size}</p>
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Autores</p>
-        </div>
-        <div>
-          <p className="text-2xl font-serif font-bold text-foreground">{filteredDocs.filter(d => d.vaticanUrl).length}</p>
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Com texto integral</p>
-        </div>
-        <div>
-          <p className="text-2xl font-serif font-bold text-foreground">{cachedIds.length}</p>
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Salvos offline</p>
-        </div>
-      </div>
+      <div className="border-t border-border pt-8 space-y-6">
+        <h2 className="text-lg font-serif font-bold text-foreground text-center">📜 Documentos do Magistério</h2>
 
-      {cachedIds.length > 0 && (
-        <div className="flex justify-center">
-          <button
-            onClick={clearAllCache}
-            className="px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest text-destructive border border-destructive/30 hover:bg-destructive/10 transition-all"
-          >
-            🗑️ Limpar todo o cache ({cachedIds.length} documento{cachedIds.length !== 1 ? 's' : ''})
-          </button>
+        <div className="flex justify-center gap-6 text-center">
+          <div>
+            <p className="text-2xl font-serif font-bold text-foreground">{filteredDocs.length}</p>
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Documentos</p>
+          </div>
+          <div>
+            <p className="text-2xl font-serif font-bold text-foreground">{new Set(filteredDocs.map(d => d.author)).size}</p>
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Autores</p>
+          </div>
+          <div>
+            <p className="text-2xl font-serif font-bold text-foreground">{filteredDocs.filter(d => d.vaticanUrl).length}</p>
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Com texto integral</p>
+          </div>
+          <div>
+            <p className="text-2xl font-serif font-bold text-foreground">{cachedIds.length}</p>
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Salvos offline</p>
+          </div>
         </div>
-      )}
+
+        {cachedIds.length > 0 && (
+          <div className="flex justify-center">
+            <button
+              onClick={clearAllCache}
+              className="px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest text-destructive border border-destructive/30 hover:bg-destructive/10 transition-all"
+            >
+              🗑️ Limpar todo o cache ({cachedIds.length} documento{cachedIds.length !== 1 ? 's' : ''})
+            </button>
+          </div>
+        )}
+      </div>
 
       {/* Documents grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
