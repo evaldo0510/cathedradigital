@@ -38,7 +38,7 @@ const Index = () => {
   const handleNavigate = (route: string) => navigate(route);
 
   return (
-    <div className="flex min-h-[200vh] flex-col items-center bg-background text-foreground overflow-x-hidden">
+    <div className="flex min-h-screen flex-col items-center bg-background text-foreground overflow-x-hidden">
       <Helmet>
         <title>Cathedra Digital — Bíblia, Catecismo e Tradição Católica</title>
         <meta name="description" content="Aprofunde sua fé católica com Bíblia Sagrada, Catecismo da Igreja, vidas dos santos, liturgia diária e IA teológica." />
