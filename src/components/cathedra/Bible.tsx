@@ -263,36 +263,18 @@ const Bible: React.FC = () => {
     navigate(`/catechism?p=${paragraph}`);
   }, [navigate]);
 
-  // Persistent cache for Bible texts using localStorage + in-memory Map
+  // In-memory cache with IndexedDB persistence for offline access
   const bibleCache = useMemo(() => {
-    const STORAGE_KEY = 'cathedra_bible_cache';
-    const MAX_ENTRIES = 50;
-    
-    // Load from localStorage
     const map = new Map<string, { number: number; text: string }[]>();
+    // Migrate localStorage cache to memory on first load
     try {
-      const stored = localStorage.getItem(STORAGE_KEY);
+      const stored = localStorage.getItem('cathedra_bible_cache');
       if (stored) {
         const entries = JSON.parse(stored);
         entries.forEach(([k, v]: [string, any]) => map.set(k, v));
+        localStorage.removeItem('cathedra_bible_cache'); // migrated
       }
     } catch {}
-
-    // Wrap set to persist
-    const originalSet = map.set.bind(map);
-    map.set = (key, value) => {
-      originalSet(key, value);
-      // Evict oldest if over limit
-      if (map.size > MAX_ENTRIES) {
-        const firstKey = map.keys().next().value;
-        if (firstKey) map.delete(firstKey);
-      }
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify([...map.entries()]));
-      } catch {}
-      return map;
-    };
-
     return map;
   }, []);
 
@@ -300,9 +282,10 @@ const Bible: React.FC = () => {
     if (viewMode === 'reading' && selectedBook && selectedChapter > 0) {
       const cacheKey = `${selectedBook.abbr}_${selectedChapter}`;
       
-      const cached = bibleCache.get(cacheKey);
-      if (cached) {
-        setVerses(cached);
+      // 1) Check in-memory cache
+      const memCached = bibleCache.get(cacheKey);
+      if (memCached) {
+        setVerses(memCached);
         setBibleError('');
         setHighlightedVerse(null);
         return;
@@ -312,18 +295,34 @@ const Bible: React.FC = () => {
       setBibleError('');
       setVerses([]);
       setHighlightedVerse(null);
-      supabase.functions.invoke('bible-text', {
-        body: { abbrev: selectedBook.abbr, chapter: selectedChapter }
-      }).then(({ data, error }) => {
-        if (error) {
-          setBibleError('Erro ao carregar o texto. Tente novamente.');
-        } else if (data?.verses?.length > 0) {
-          setVerses(data.verses);
-          bibleCache.set(cacheKey, data.verses);
-        } else {
-          setBibleError('Texto não disponível para este capítulo.');
-        }
-        setIsLoading(false);
+
+      // 2) Check IndexedDB cache, then fetch if miss
+      import('@/lib/offlineCache').then(({ getCachedBibleChapter, cacheBibleChapter }) => {
+        getCachedBibleChapter(selectedBook.abbr, selectedChapter).then((idbCached) => {
+          if (idbCached?.verses?.length > 0) {
+            setVerses(idbCached.verses);
+            bibleCache.set(cacheKey, idbCached.verses);
+            setIsLoading(false);
+            return;
+          }
+
+          // 3) Fetch from edge function
+          supabase.functions.invoke('bible-text', {
+            body: { abbrev: selectedBook.abbr, chapter: selectedChapter }
+          }).then(({ data, error }) => {
+            if (error) {
+              setBibleError('Erro ao carregar o texto. Tente novamente.');
+            } else if (data?.verses?.length > 0) {
+              setVerses(data.verses);
+              bibleCache.set(cacheKey, data.verses);
+              // Persist to IndexedDB for offline
+              cacheBibleChapter(selectedBook.abbr, selectedChapter, data);
+            } else {
+              setBibleError('Texto não disponível para este capítulo.');
+            }
+            setIsLoading(false);
+          });
+        });
       });
     }
   }, [viewMode, selectedBook, selectedChapter, bibleCache]);
