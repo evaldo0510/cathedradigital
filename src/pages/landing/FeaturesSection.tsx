@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { BookOpen, Library, Star, Zap, Clock, Users, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -18,12 +18,12 @@ interface FeaturesSectionProps {
   onNavigate: (route: string) => void;
 }
 
-const FeatureCard = ({ feature, index, onNavigate }: { feature: typeof features[0]; index: number; onNavigate: (r: string) => void }) => {
-  // Alternate cards slide from left/right
+const FeatureCard = React.forwardRef<HTMLDivElement, { feature: typeof features[0]; index: number; onNavigate: (r: string) => void }>(({ feature, index, onNavigate }, ref) => {
   const isLeft = index % 2 === 0;
 
   return (
     <motion.div
+      ref={ref}
       initial={{ opacity: 0, x: isLeft ? -60 : 60, rotateY: isLeft ? 8 : -8 }}
       whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
       viewport={{ once: true, margin: "-60px" }}
@@ -82,7 +82,8 @@ const FeatureCard = ({ feature, index, onNavigate }: { feature: typeof features[
       </motion.div>
     </motion.div>
   );
-};
+});
+FeatureCard.displayName = 'FeatureCard';
 
 const FeaturesSection = ({ onNavigate }: FeaturesSectionProps) => {
   const sectionRef = useRef<HTMLElement>(null);
