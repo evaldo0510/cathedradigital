@@ -1,13 +1,27 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Play, Sparkles, X } from "lucide-react";
+import { Play, Pause, Sparkles, X } from "lucide-react";
 import { fadeUp } from "./animations";
+import videoAsset from "../../../public/institutional-video.mp4.asset.json";
 
 const InstitutionalVideoSection = () => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const modalVideoRef = useRef<HTMLVideoElement>(null);
+
+  const handlePlay = () => {
+    setIsPlaying(true);
+  };
+
+  const handleClose = () => {
+    setIsPlaying(false);
+    if (modalVideoRef.current) {
+      modalVideoRef.current.pause();
+    }
+  };
+
   return (
     <section className="relative w-full py-24 md:py-32 bg-background overflow-hidden">
-      {/* Background Decorative Elements */}
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-[120px] -translate-y-1/2" />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-primary/5 rounded-full blur-[120px] translate-y-1/2" />
 
@@ -57,47 +71,44 @@ const InstitutionalVideoSection = () => {
           custom={3}
           className="relative max-w-5xl mx-auto group"
         >
-          {/* Video Placeholder / Player Container */}
-          <div className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl shadow-primary/10 border border-border bg-card/50 backdrop-blur-sm group-hover:shadow-primary/20 transition-all duration-500">
-            {/* Background Image / Thumbnail */}
-            <img 
-              src="https://images.unsplash.com/photo-1478147427282-58a87a120781?auto=format&fit=crop&q=80&w=2000" 
-              alt="Interior de Catedral" 
-              className="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700"
+          <div className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl shadow-primary/10 border border-border bg-card/50 group-hover:shadow-primary/20 transition-all duration-500">
+            {/* Preview video (muted, looping) */}
+            <video
+              ref={videoRef}
+              src={videoAsset.url}
+              muted
+              loop
+              autoPlay
+              playsInline
+              className="w-full h-full object-cover opacity-70 group-hover:scale-105 transition-transform duration-700"
             />
             
-            {/* Overlay Gradient */}
             <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-60" />
             
-            {/* Play Button Interface */}
             <div className="absolute inset-0 flex items-center justify-center">
               <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => setIsPlaying(true)}
+                onClick={handlePlay}
                 className="w-20 h-20 md:w-24 md:h-24 bg-primary text-primary-foreground rounded-full flex items-center justify-center shadow-2xl shadow-primary/40 relative z-20 group-hover:bg-primary/90 transition-colors"
               >
                 <Play className="w-8 h-8 md:w-10 md:h-10 fill-current ml-1" />
-                
-                {/* Pulsing Ring Animation */}
                 <div className="absolute inset-0 rounded-full bg-primary/40 animate-ping -z-10" />
                 <div className="absolute -inset-4 rounded-full border border-primary/20 animate-pulse -z-10" />
               </motion.button>
             </div>
 
-            {/* Video Info Overlay */}
             <div className="absolute bottom-0 left-0 right-0 p-8 flex justify-between items-end bg-gradient-to-t from-black/60 to-transparent">
               <div className="space-y-1">
                 <p className="text-white/70 text-xs font-black uppercase tracking-widest">Apresentação</p>
                 <h3 className="text-white text-xl font-bold">A Nova Era da Fé Digital</h3>
               </div>
               <div className="text-white/60 text-sm font-medium">
-                03:45
+                0:05
               </div>
             </div>
           </div>
 
-          {/* Decorative Corner Accents */}
           <div className="absolute -top-4 -left-4 w-12 h-12 border-t-2 border-l-2 border-primary/40 rounded-tl-2xl -z-10" />
           <div className="absolute -bottom-4 -right-4 w-12 h-12 border-b-2 border-r-2 border-primary/40 rounded-br-2xl -z-10" />
         </motion.div>
@@ -125,7 +136,7 @@ const InstitutionalVideoSection = () => {
         </motion.div>
       </div>
 
-      {/* Video Modal Overlay */}
+      {/* Video Modal */}
       <AnimatePresence>
         {isPlaying && (
           <motion.div 
@@ -133,32 +144,31 @@ const InstitutionalVideoSection = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex items-center justify-center p-4 md:p-12"
+            onClick={handleClose}
           >
             <motion.div
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
               className="relative w-full max-w-6xl aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl border border-white/10"
+              onClick={e => e.stopPropagation()}
             >
-              {/* Close Button */}
               <button 
-                onClick={() => setIsPlaying(false)}
+                onClick={handleClose}
                 className="absolute top-4 right-4 z-50 p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors"
               >
                 <X className="w-6 h-6 text-white" />
               </button>
 
-              {/* Real YouTube Embed (A Catholic-themed high quality video as example) */}
-              <iframe 
-                width="100%" 
-                height="100%" 
-                src="https://www.youtube.com/embed/S_C2_S2EisE?autoplay=1" 
-                title="Cathedra Digital Institutional" 
-                frameBorder="0" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                allowFullScreen
-                className="w-full h-full"
-              ></iframe>
+              <video
+                ref={modalVideoRef}
+                src={videoAsset.url}
+                autoPlay
+                loop
+                controls
+                playsInline
+                className="w-full h-full object-cover"
+              />
             </motion.div>
           </motion.div>
         )}
