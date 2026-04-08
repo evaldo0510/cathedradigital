@@ -489,7 +489,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       <FadeUp delay={0.28}>
         {(() => {
           const today = new Date();
-          const saintOfDay = SAINTS_DATA.find(s => s.feastMonth === today.getMonth() + 1 && s.feastDayNum === today.getDate()) || SAINTS_DATA[0];
+          const saintOfDay = saintsData.find(s => s.feastMonth === today.getMonth() + 1 && s.feastDayNum === today.getDate()) || saintsData[0];
           return (
             <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
               <div className="flex items-stretch">
