@@ -174,9 +174,9 @@ const JornadasPage: React.FC = () => {
                     <span className="flex items-center gap-1">
                       <Clock className="w-3.5 h-3.5" /> ~{journey.estimated_days} dias
                     </span>
-                    <Badge variant="outline" className="text-[10px] capitalize">
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${DIFFICULTY_COLORS[journey.difficulty] || 'bg-muted text-muted-foreground'}`}>
                       {DIFFICULTY_LABELS[journey.difficulty] || journey.difficulty}
-                    </Badge>
+                    </span>
                     <span>{totalSteps} etapas</span>
                   </div>
 
