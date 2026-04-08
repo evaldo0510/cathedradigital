@@ -14,6 +14,23 @@ const DIFFICULTY_LABELS: Record<string, string> = {
   iniciante: 'Iniciante',
   intermediario: 'Intermediário',
   'avançado': 'Avançado',
+  avancado: 'Avançado',
+};
+
+const DIFFICULTY_COLORS: Record<string, string> = {
+  iniciante: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300',
+  intermediario: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300',
+  'avançado': 'bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-300',
+  avancado: 'bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-300',
+};
+
+const CATEGORY_ICONS: Record<string, string> = {
+  fundamentos: '🌱',
+  formacao: '📚',
+  rotina: '🔁',
+  oracao: '🙏',
+  mistico: '✨',
+  cura: '💛',
 };
 
 const JornadasPage: React.FC = () => {
