@@ -1,5 +1,6 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { getCachedCatechismParagraph, cacheCatechismParagraph } from '@/lib/offlineCache';
 
 export interface CatechismParagraph {
   paragraph: number;
@@ -8,6 +9,13 @@ export interface CatechismParagraph {
 }
 
 export const fetchCatechismParagraph = async (paragraph: number): Promise<CatechismParagraph> => {
+  // 1) Check IndexedDB cache first
+  const cached = await getCachedCatechismParagraph(paragraph);
+  if (cached?.content) {
+    return cached as CatechismParagraph;
+  }
+
+  // 2) Fetch from edge function
   const { data, error } = await supabase.functions.invoke('catechism-text', {
     body: { paragraph }
   });
@@ -16,22 +24,26 @@ export const fetchCatechismParagraph = async (paragraph: number): Promise<Catech
     throw new Error(error.message || `Erro ao carregar o parágrafo §${paragraph}`);
   }
 
-  // Handle case where data comes as string (text/plain response)
   const parsed = typeof data === 'string' ? JSON.parse(data) : data;
 
-  return {
+  const result: CatechismParagraph = {
     paragraph: parsed.paragraph || paragraph,
     content: parsed.content || `Parágrafo §${paragraph} — conteúdo não disponível.`,
     language: parsed.language || 'pt'
   };
+
+  // 3) Persist to IndexedDB for offline
+  cacheCatechismParagraph(paragraph, result);
+
+  return result;
 };
 
 export const useCatechismParagraph = (paragraph: number) => {
   return useQuery({
     queryKey: ['catechism-paragraph', paragraph],
     queryFn: () => fetchCatechismParagraph(paragraph),
-    staleTime: 1000 * 60 * 60 * 24, // 24 hours (static content)
-    gcTime: 1000 * 60 * 60 * 24 * 7, // 7 days
+    staleTime: 1000 * 60 * 60 * 24,
+    gcTime: 1000 * 60 * 60 * 24 * 7,
   });
 };
 
