@@ -79,7 +79,7 @@ const InstitutionalVideoSection = () => {
           <div className="absolute -inset-1 bg-gradient-to-br from-primary/20 via-primary/5 to-primary/20 rounded-[28px] blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
           <div className="relative aspect-video rounded-3xl overflow-hidden shadow-[0_20px_60px_-15px_hsl(var(--primary)/0.25)] border border-border/80 bg-black group-hover:shadow-[0_25px_70px_-10px_hsl(var(--primary)/0.35)] transition-all duration-500">
-            {/* Preview video — full opacity, vibrant */}
+            {/* Preview video — lazy loaded, low quality preview */}
             <video
               ref={videoRef}
               src={videoAsset.url}
@@ -87,6 +87,7 @@ const InstitutionalVideoSection = () => {
               loop
               autoPlay
               playsInline
+              preload="none"
               className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700"
             />
             
