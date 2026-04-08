@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle2, Clock, PenTool, Heart, RotateCcw, Calendar } from 'lucide-react';
 import { STEPS } from './constants';
 import ShareButton from '../ShareButton';
+import FlowConnector from '../FlowConnector';
+import { routeUser } from '@/lib/smartRouter';
 
 interface LectioConclusioProps {
   selectedPassage: string;
@@ -15,6 +17,8 @@ const formatTime = (s: number) => `${Math.floor(s / 60).toString().padStart(2, '
 
 const LectioConclusio: React.FC<LectioConclusioProps> = ({ selectedPassage, notes, seconds, onRestart }) => {
   const notesWritten = STEPS.filter(s => notes[s.id]?.trim());
+  const allNotesText = Object.values(notes).filter(Boolean).join(' ');
+  const recommendations = useMemo(() => routeUser(allNotesText), [allNotesText]);
 
   return (
     <div className="max-w-3xl mx-auto space-y-10 pb-16 animate-in fade-in duration-700">
@@ -108,7 +112,14 @@ const LectioConclusio: React.FC<LectioConclusioProps> = ({ selectedPassage, note
         </div>
       </motion.div>
 
-      {/* Actions */}
+      {/* Smart Flow Connector */}
+      <FlowConnector
+        recommendations={recommendations}
+        title="Continue sua experiência"
+        subtitle="Com base nas suas reflexões, sugerimos:"
+      />
+
+
       <div className="flex gap-4 justify-center">
         <ShareButton
           title={`Lectio Divina — ${selectedPassage}`}
