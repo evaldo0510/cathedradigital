@@ -1,19 +1,21 @@
-import { useEffect } from "react";
+import { useEffect, lazy, Suspense } from "react";
 import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
 import { AppRoute } from "@/types";
 import { useAuth } from "@/hooks/useAuth";
 import HeroSection from "./landing/HeroSection";
-import StatsSection from "./landing/StatsSection";
-import FeaturesSection from "./landing/FeaturesSection";
-import HowItWorksSection from "./landing/HowItWorksSection";
-import AcolhimentoSection from "./landing/AcolhimentoSection";
-import BenefitsSection from "./landing/BenefitsSection";
-import TestimonialsSection from "./landing/TestimonialsSection";
-import FaqSection from "./landing/FaqSection";
-import CtaBannerSection from "./landing/CtaBannerSection";
-import FeedbackWidget from "@/components/landing/FeedbackWidget";
-import InstitutionalVideoSection from "./landing/InstitutionalVideoSection";
+
+// Lazy-load below-the-fold sections
+const InstitutionalVideoSection = lazy(() => import("./landing/InstitutionalVideoSection"));
+const StatsSection = lazy(() => import("./landing/StatsSection"));
+const FeaturesSection = lazy(() => import("./landing/FeaturesSection"));
+const HowItWorksSection = lazy(() => import("./landing/HowItWorksSection"));
+const AcolhimentoSection = lazy(() => import("./landing/AcolhimentoSection"));
+const BenefitsSection = lazy(() => import("./landing/BenefitsSection"));
+const TestimonialsSection = lazy(() => import("./landing/TestimonialsSection"));
+const FaqSection = lazy(() => import("./landing/FaqSection"));
+const CtaBannerSection = lazy(() => import("./landing/CtaBannerSection"));
+const FeedbackWidget = lazy(() => import("@/components/landing/FeedbackWidget"));
 
 const Index = () => {
   const navigate = useNavigate();
@@ -45,16 +47,18 @@ const Index = () => {
         <link rel="canonical" href="https://cathedradigital.lovable.app/" />
       </Helmet>
       <HeroSection onStart={handleStart} onAbout={() => navigate(AppRoute.ABOUT)} />
-      <InstitutionalVideoSection />
-      <StatsSection />
-      <FeaturesSection onNavigate={handleNavigate} />
-      <HowItWorksSection />
-      <AcolhimentoSection />
-      <BenefitsSection onLogin={() => navigate(AppRoute.LOGIN)} />
-      <TestimonialsSection />
-      <FaqSection />
-      <CtaBannerSection onStart={handleStart} />
-      <FeedbackWidget />
+      <Suspense fallback={null}>
+        <InstitutionalVideoSection />
+        <StatsSection />
+        <FeaturesSection onNavigate={handleNavigate} />
+        <HowItWorksSection />
+        <AcolhimentoSection />
+        <BenefitsSection onLogin={() => navigate(AppRoute.LOGIN)} />
+        <TestimonialsSection />
+        <FaqSection />
+        <CtaBannerSection onStart={handleStart} />
+        <FeedbackWidget />
+      </Suspense>
     </div>
   );
 };
