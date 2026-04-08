@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { BookOpen, Shield, ScrollText, Users, BookMarked, Crown, ChevronRight, Library } from 'lucide-react';
+import { BookOpen, Shield, ScrollText, Users, BookMarked, Crown, ChevronRight, Library, Search } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { AppRoute } from '@/types';
 
