@@ -5,7 +5,7 @@ import { AppRoute, User } from '../../types';
 import { useAuth } from '../../hooks/useAuth';
 import { useNotes } from '../../hooks/useNotes';
 import { supabase } from '@/integrations/supabase/client';
-import { SAINTS_DATA } from '@/data/saints';
+
 import SacredImage from './SacredImage';
 import {
   BookOpen, Church, Cross, Heart, Flame, Star,
@@ -106,6 +106,12 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   const navigate = useNavigate();
   const { profile } = useAuth();
   const { notes, addNote } = useNotes('reflection');
+
+  // Lazy-load saints data
+  const [saintsData, setSaintsData] = useState<import('@/data/saints').Saint[]>([]);
+  useEffect(() => {
+    import('@/data/saints').then(m => setSaintsData(m.SAINTS_DATA));
+  }, []);
 
   // Reflection writing state
   const [showReflection, setShowReflection] = useState(false);
@@ -482,8 +488,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       {/* ═══ SANTO DO DIA ═══ */}
       <FadeUp delay={0.28}>
         {(() => {
+          if (saintsData.length === 0) return null;
           const today = new Date();
-          const saintOfDay = SAINTS_DATA.find(s => s.feastMonth === today.getMonth() + 1 && s.feastDayNum === today.getDate()) || SAINTS_DATA[0];
+          const saintOfDay = saintsData.find(s => s.feastMonth === today.getMonth() + 1 && s.feastDayNum === today.getDate()) || saintsData[0];
           return (
             <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
               <div className="flex items-stretch">
