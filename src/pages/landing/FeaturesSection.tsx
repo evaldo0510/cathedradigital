@@ -82,7 +82,8 @@ const FeatureCard = React.forwardRef<HTMLDivElement, { feature: typeof features[
       </motion.div>
     </motion.div>
   );
-};
+});
+FeatureCard.displayName = 'FeatureCard';
 
 const FeaturesSection = ({ onNavigate }: FeaturesSectionProps) => {
   const sectionRef = useRef<HTMLElement>(null);
