@@ -13,6 +13,8 @@ export const Logo = forwardRef<HTMLDivElement, { className?: string }>(({ classN
     <img 
       src={cathedraLogo} 
       alt="Cathedra Logo" 
+      loading="lazy"
+      decoding="async"
       className="w-full h-full object-contain transition-all duration-700 group-hover:scale-110 drop-shadow-sm"
     />
   </div>
