@@ -146,9 +146,10 @@ const JornadasPage: React.FC = () => {
               >
                 <CardContent className="p-5 space-y-4">
                   {/* Title row */}
-                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-start justify-between gap-3">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap mb-1">
+                        <span className="text-xl">{CATEGORY_ICONS[journey.category] || '📖'}</span>
                         <h2 className="text-lg font-bold font-serif text-foreground">{journey.title}</h2>
                         {journey.is_premium && (
                           <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 text-[10px]">
@@ -157,7 +158,7 @@ const JornadasPage: React.FC = () => {
                         )}
                       </div>
                       {journey.subtitle && (
-                        <p className="text-sm text-muted-foreground">{journey.subtitle}</p>
+                        <p className="text-sm text-muted-foreground font-serif italic">{journey.subtitle}</p>
                       )}
                     </div>
                     <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0 mt-1" />
