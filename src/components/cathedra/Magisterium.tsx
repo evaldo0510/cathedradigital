@@ -190,6 +190,7 @@ const getCachedDocIds = (): string[] => {
 };
 
 const Magisterium: React.FC = () => {
+  const navigate = useNavigate();
   const [category, setCategory] = useState<DocCategory>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDoc, setSelectedDoc] = useState<MagisteriumDoc | null>(null);
@@ -201,6 +202,7 @@ const Magisterium: React.FC = () => {
   const [cachedIds, setCachedIds] = useState<string[]>([]);
   const [nightMode, setNightMode] = useState(false);
   const [fontSize, setFontSize] = useState(15);
+  const [expandedGuidance, setExpandedGuidance] = useState<string | null>(null);
 
   const filteredDocs = useMemo(() => {
     let docs = DOCUMENTS;
