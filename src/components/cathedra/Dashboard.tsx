@@ -488,6 +488,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       {/* ═══ SANTO DO DIA ═══ */}
       <FadeUp delay={0.28}>
         {(() => {
+          if (saintsData.length === 0) return null;
           const today = new Date();
           const saintOfDay = saintsData.find(s => s.feastMonth === today.getMonth() + 1 && s.feastDayNum === today.getDate()) || saintsData[0];
           return (
