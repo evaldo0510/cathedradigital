@@ -86,6 +86,9 @@ const BibliotecaPage: React.FC = () => {
       </div>
 
       <div className="space-y-3">
+        {filtered.length === 0 && (
+          <p className="text-center text-sm text-muted-foreground py-8">Nenhum módulo encontrado.</p>
+        )}
         {filtered.map((section, i) => {
           const handleNavigate = () => navigate(section.route);
           return (
