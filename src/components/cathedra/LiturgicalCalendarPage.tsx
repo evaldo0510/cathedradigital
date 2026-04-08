@@ -4,7 +4,7 @@ import { Icons } from '@/constants';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { SAINTS_DATA, type Saint } from '@/data/saints';
+import type { Saint } from '@/data/saints';
 import SacredImage from './SacredImage';
 import SaintDetail from './SaintDetail';
 import { AnimatePresence } from 'framer-motion';
