@@ -112,7 +112,14 @@ const LectioConclusio: React.FC<LectioConclusioProps> = ({ selectedPassage, note
         </div>
       </motion.div>
 
-      {/* Actions */}
+      {/* Smart Flow Connector */}
+      <FlowConnector
+        recommendations={recommendations}
+        title="Continue sua experiência"
+        subtitle="Com base nas suas reflexões, sugerimos:"
+      />
+
+
       <div className="flex gap-4 justify-center">
         <ShareButton
           title={`Lectio Divina — ${selectedPassage}`}
