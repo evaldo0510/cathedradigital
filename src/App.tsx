@@ -175,8 +175,8 @@ const AppLayout: React.FC = () => {
     let startY = 0;
     
     const handleTouchStart = (e: TouchEvent) => {
-      // Only track if swipe starts from the far left (0-40px)
-      if (e.touches[0].clientX < 40) {
+      // Only track if swipe starts from the very far left (0-20px) to avoid conflicts
+      if (e.touches[0].clientX < 20) {
         startX = e.touches[0].clientX;
         startY = e.touches[0].clientY;
       } else {
@@ -189,13 +189,14 @@ const AppLayout: React.FC = () => {
         const deltaX = e.changedTouches[0].clientX - startX;
         const deltaY = Math.abs(e.changedTouches[0].clientY - startY);
         
-        // Horizontal swipe must be significantly larger than vertical movement
-        if (deltaX > 80 && deltaY < 50) {
+        // Require a very clear horizontal swipe (120px+) with minimal vertical movement
+        if (deltaX > 120 && deltaY < 40) {
           if (!isChromeless && !isMainPage) {
             navigate(-1);
           }
         }
       }
+      startX = 0;
     };
 
     window.addEventListener('touchstart', handleTouchStart, { passive: true });
@@ -326,7 +327,7 @@ const AppLayout: React.FC = () => {
           <div className={isChromeless ? "flex-1 pb-20 lg:pb-0" : "flex-1 p-3 sm:p-4 md:p-5 lg:p-8 pb-32 lg:pb-12 w-full max-w-7xl mx-auto flex flex-col"}>
 
             <Suspense fallback={<LoadingFallback />}>
-              <AnimatePresence mode="popLayout">
+              <AnimatePresence mode="wait" initial={false}>
                 <Routes location={location} key={location.pathname}>
                   <Route path={AppRoute.HOME} element={<PageTransition><Index /></PageTransition>} />
                   <Route path={AppRoute.DASHBOARD} element={<PageTransition><AuthGuard><Dashboard user={appUser} /></AuthGuard></PageTransition>} />

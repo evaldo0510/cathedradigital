@@ -6,16 +6,20 @@ const routeImports: Record<string, () => Promise<any>> = {
   '/hoje': () => import('@/components/cathedra/HojePage'),
   '/jornadas': () => import('@/components/cathedra/JornadasPage'),
   '/biblioteca': () => import('@/components/cathedra/BibliotecaPage'),
-  '/comunidade': () => import('@/components/cathedra/CommunityPage'),
-  '/perfil': () => import('@/components/cathedra/ProfilePage'),
-  '/biblia': () => import('@/components/cathedra/Bible'),
-  '/catecismo': () => import('@/components/cathedra/Catechism'),
-  '/santos': () => import('@/components/cathedra/Saints'),
+  '/community': () => import('@/components/cathedra/CommunityPage'),
+  '/profile': () => import('@/components/cathedra/ProfilePage'),
+  '/bible': () => import('@/components/cathedra/Bible'),
+  '/catechism': () => import('@/components/cathedra/Catechism'),
+  '/saints': () => import('@/components/cathedra/Saints'),
   '/liturgia': () => import('@/components/cathedra/LiturgiaPage'),
-  '/colloquium': () => import('@/components/cathedra/StudyMode'),
-  '/rosario': () => import('@/components/cathedra/Rosary'),
+  '/study': () => import('@/components/cathedra/StudyMode'),
+  '/rosary': () => import('@/components/cathedra/Rosary'),
   '/oracao': () => import('@/components/cathedra/PrayerPage'),
   '/login': () => import('@/components/cathedra/Auth'),
+  '/magisterium': () => import('@/components/cathedra/Magisterium'),
+  '/diagnostico': () => import('@/components/cathedra/DiagnosticoPage'),
+  '/viacrucis': () => import('@/components/cathedra/ViaCrucis'),
+  '/checkout': () => import('@/components/cathedra/CheckoutPage'),
 };
 
 export function prefetchRoute(route: string) {
@@ -37,7 +41,7 @@ export function prefetchCoreModules() {
   // Skip on save-data mode
   if ('connection' in navigator && (navigator as any).connection?.saveData) return;
 
-  const coreRoutes = ['/dashboard', '/hoje', '/biblia', '/catecismo', '/jornadas', '/biblioteca'];
+  const coreRoutes = ['/dashboard', '/hoje', '/bible', '/catechism', '/jornadas', '/biblioteca', '/community', '/profile'];
   let i = 0;
   const prefetchNext = () => {
     if (i < coreRoutes.length) {
