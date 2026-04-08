@@ -87,7 +87,7 @@ const CheckoutPage = lazy(() => import('./components/cathedra/CheckoutPage'));
 const DiagnosticsPage = lazy(() => import('./components/cathedra/DiagnosticsPage'));
 
 const LoadingFallback = () => (
-  <div className="animate-in fade-in duration-150 space-y-4 p-4">
+  <div className="animate-in fade-in duration-150 space-y-4 p-4 min-h-[100dvh]">
     <div className="h-8 w-48 rounded-md bg-muted animate-pulse" />
     <div className="space-y-3">
       <div className="h-4 w-full rounded bg-muted animate-pulse" />
