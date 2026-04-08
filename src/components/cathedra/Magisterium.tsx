@@ -80,6 +80,88 @@ const CATEGORY_COLORS: Record<string, string> = {
   constitution: 'bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-300',
 };
 
+/* ── Spiritual Guidance (Direção Espiritual) ── */
+interface SpiritualGuidance {
+  id: string;
+  theme: string;
+  icon: string;
+  question: string;
+  magisteriumAnswer: string;
+  sourceDoc: string;
+  pch: string;
+  innerQuestion: string;
+  relatedDocs: string[]; // ids from DOCUMENTS
+}
+
+const SPIRITUAL_GUIDANCE: SpiritualGuidance[] = [
+  {
+    id: 'ansiedade',
+    theme: 'Ansiedade',
+    icon: '🌊',
+    question: 'O que a Igreja diz sobre a ansiedade?',
+    magisteriumAnswer: 'A confiança em Deus é o caminho da paz interior. "Não andeis ansiosos" não é um comando vazio — é um convite a entregar o peso ao único que pode carregá-lo.',
+    sourceDoc: 'Gaudete et Exsultate §112',
+    pch: '"Ansiedade é tentar prever…\no que só pode ser vivido."',
+    innerQuestion: 'O que você está tentando resolver sem confiar?',
+    relatedDocs: ['ge', 'ss', 'vat2-gs'],
+  },
+  {
+    id: 'medo',
+    theme: 'Medo',
+    icon: '🕯️',
+    question: 'O que a Igreja diz sobre o medo?',
+    magisteriumAnswer: 'O medo é humano, mas não deve governar. A presença de Deus é mais forte que qualquer escuridão. "Não temas, porque eu te resgatei."',
+    sourceDoc: 'Spe Salvi §32',
+    pch: '"O medo cresce…\nonde a presença é esquecida."',
+    innerQuestion: 'Onde você se sente sozinho diante do medo?',
+    relatedDocs: ['ss', 'dce', 'lf'],
+  },
+  {
+    id: 'proposito',
+    theme: 'Propósito',
+    icon: '🧭',
+    question: 'Qual é o sentido da minha vida?',
+    magisteriumAnswer: 'Cada pessoa tem uma vocação única. A santidade não é privilégio de poucos, mas chamado universal — é encontrar Deus no concreto da vida.',
+    sourceDoc: 'Gaudete et Exsultate §14',
+    pch: '"Força não é ausência de fraqueza…\né direção apesar dela."',
+    innerQuestion: 'O que ainda te move quando tudo pesa?',
+    relatedDocs: ['ge', 'vat2-lg', 'cv'],
+  },
+  {
+    id: 'sofrimento',
+    theme: 'Sofrimento',
+    icon: '✝️',
+    question: 'Por que existe sofrimento?',
+    magisteriumAnswer: 'O sofrimento, quando unido à cruz de Cristo, tem poder redentor. Não é castigo, mas mistério de amor e transformação.',
+    sourceDoc: 'Salvifici Doloris §19',
+    pch: '"A dor não veio destruir…\nveio revelar o que ainda é frágil."',
+    innerQuestion: 'O que o sofrimento está tentando te ensinar?',
+    relatedDocs: ['ss', 'ev', 'vat2-gs'],
+  },
+  {
+    id: 'relacionamentos',
+    theme: 'Relacionamentos',
+    icon: '💛',
+    question: 'Como amar de verdade?',
+    magisteriumAnswer: 'O amor autêntico é dom de si mesmo. Não é posse, é entrega. A família é escola de amor e comunhão.',
+    sourceDoc: 'Amoris Laetitia §89',
+    pch: '"Amar não é completar o outro…\né caminhar junto sem exigir destino."',
+    innerQuestion: 'Você está amando ou controlando?',
+    relatedDocs: ['al', 'dce', 'hv'],
+  },
+  {
+    id: 'perdao',
+    theme: 'Perdão',
+    icon: '🕊️',
+    question: 'Como perdoar o imperdoável?',
+    magisteriumAnswer: 'O perdão é libertação interior. Quem não perdoa permanece preso ao que o feriu. A misericórdia é o rosto de Deus.',
+    sourceDoc: 'Fratelli Tutti §250',
+    pch: '"Perdoar não é esquecer…\né parar de beber o veneno\nesperando que o outro adoeça."',
+    innerQuestion: 'O que você ainda carrega que não é seu?',
+    relatedDocs: ['ft', 'dce', 'eg'],
+  },
+];
+
 const CACHE_PREFIX = 'cathedra_doc_';
 
 const getCachedDoc = (docId: string): { text: string; title: string; cachedAt: string } | null => {
