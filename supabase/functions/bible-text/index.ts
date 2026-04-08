@@ -141,15 +141,22 @@ serve(async (req) => {
 
     const englishName = BOOK_NAME_MAP[abbrev] || abbrev.toLowerCase();
     const ptName = BOOK_PT_MAP[abbrev] || abbrev;
+    const bookId = BOLLS_BOOK_ID[abbrev];
 
-    // 1) Try bible-api.com
-    let verses = await fetchFromBibleApi(englishName, chapter);
+    // Race both APIs in parallel — use whichever responds first with valid data
+    const bibleApiPromise = fetchFromBibleApi(englishName, chapter)
+      .catch(() => null);
+    const bollsPromise = bookId
+      ? fetchFromBollsLife(bookId, chapter).catch(() => null)
+      : Promise.resolve(null);
 
-    // 2) Fallback to bolls.life
-    if (!verses) {
-      const bookId = BOLLS_BOOK_ID[abbrev];
-      if (bookId) {
-        verses = await fetchFromBollsLife(bookId, chapter);
+    const results = await Promise.allSettled([bibleApiPromise, bollsPromise]);
+    
+    let verses = null;
+    for (const r of results) {
+      if (r.status === 'fulfilled' && r.value && r.value.length > 0) {
+        verses = r.value;
+        break;
       }
     }
 
@@ -165,7 +172,7 @@ serve(async (req) => {
           headers: { 
             ...corsHeaders, 
             'Content-Type': 'application/json',
-            'Cache-Control': 'public, max-age=604800, s-maxage=604800' // 1 week
+            'Cache-Control': 'public, max-age=604800, s-maxage=604800'
           } 
         }
       );

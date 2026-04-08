@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Play, Pause, Sparkles, X } from "lucide-react";
 import { fadeUp } from "./animations";
-import videoAsset from "../../../public/institutional-video.mp4.asset.json";
+import videoAsset from "../../assets/institutional-video.mp4.asset.json";
 
 const InstitutionalVideoSection = () => {
   const [isPlaying, setIsPlaying] = useState(false);
