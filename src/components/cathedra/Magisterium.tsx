@@ -568,10 +568,99 @@ const Magisterium: React.FC = () => {
         ))}
       </div>
 
-      {/* Stats */}
-      <div className="flex justify-center gap-6 text-center">
-        <div>
-          <p className="text-2xl font-serif font-bold text-foreground">{filteredDocs.length}</p>
+      {/* ── Spiritual Guidance Section ── */}
+      <div className="space-y-4">
+        <div className="text-center space-y-2">
+          <h2 className="text-xl md:text-2xl font-serif font-bold text-foreground">🧭 Direção da Verdade</h2>
+          <p className="text-sm text-muted-foreground font-serif italic">"Quando a dúvida fala… a verdade responde."</p>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          {SPIRITUAL_GUIDANCE.map(g => (
+            <button
+              key={g.id}
+              onClick={() => setExpandedGuidance(expandedGuidance === g.id ? null : g.id)}
+              className={`p-4 rounded-2xl border text-left transition-all ${
+                expandedGuidance === g.id
+                  ? 'bg-primary/10 border-primary/40 shadow-lg'
+                  : 'bg-card border-border hover:border-primary/30 hover:bg-primary/5'
+              }`}
+            >
+              <span className="text-2xl">{g.icon}</span>
+              <p className="text-sm font-bold text-foreground mt-1">{g.theme}</p>
+              <p className="text-[10px] text-muted-foreground mt-0.5 line-clamp-1">{g.question}</p>
+            </button>
+          ))}
+        </div>
+
+        {expandedGuidance && (() => {
+          const g = SPIRITUAL_GUIDANCE.find(x => x.id === expandedGuidance);
+          if (!g) return null;
+          return (
+            <div className="bg-card border border-border rounded-3xl p-6 md:p-8 space-y-5 animate-in fade-in slide-in-from-top-2 duration-300">
+              <div className="flex items-center gap-3">
+                <span className="text-3xl">{g.icon}</span>
+                <div>
+                  <h3 className="text-lg font-serif font-bold text-foreground">{g.theme}</h3>
+                  <p className="text-xs text-muted-foreground italic">{g.question}</p>
+                </div>
+              </div>
+
+              {/* Magisterium Answer */}
+              <div className="border-l-4 border-primary pl-4 space-y-1">
+                <p className="text-sm font-black uppercase tracking-widest text-primary">📘 Magistério</p>
+                <p className="text-foreground/90 leading-relaxed text-sm">{g.magisteriumAnswer}</p>
+                <p className="text-[10px] text-muted-foreground italic">— {g.sourceDoc}</p>
+              </div>
+
+              {/* PCH */}
+              <div className="bg-primary/5 rounded-2xl p-5 text-center space-y-2">
+                <p className="text-[10px] font-black uppercase tracking-widest text-primary/70">🧠 Reflexão Poética</p>
+                <p className="text-foreground font-serif italic leading-relaxed whitespace-pre-line text-sm">{g.pch}</p>
+              </div>
+
+              {/* Inner Question */}
+              <div className="bg-accent/30 rounded-2xl p-5 text-center space-y-2">
+                <p className="text-[10px] font-black uppercase tracking-widest text-accent-foreground/70">❓ Pergunta Interior</p>
+                <p className="text-foreground font-bold text-base">{g.innerQuestion}</p>
+              </div>
+
+              {/* Related Documents */}
+              <div className="space-y-2">
+                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">📄 Documentos Relacionados</p>
+                <div className="flex flex-wrap gap-2">
+                  {g.relatedDocs.map(docId => {
+                    const doc = DOCUMENTS.find(d => d.id === docId);
+                    if (!doc) return null;
+                    return (
+                      <button
+                        key={docId}
+                        onClick={() => handleSelectDoc(doc)}
+                        className="px-3 py-1.5 rounded-xl text-xs font-bold bg-muted text-muted-foreground hover:bg-primary/10 hover:text-primary transition-all"
+                      >
+                        {doc.title}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* CTA: Viver essa verdade */}
+              <button
+                onClick={() => navigate(AppRoute.LECTIO_DIVINA)}
+                className="w-full py-4 rounded-2xl bg-foreground text-background font-black uppercase text-xs tracking-[0.2em] shadow-xl hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-2 group"
+              >
+                <Icons.Heart className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                Viver essa Verdade
+              </button>
+            </div>
+          );
+        })()}
+      </div>
+
+      <div className="border-t border-border pt-8">
+        <h2 className="text-lg font-serif font-bold text-foreground text-center mb-6">📜 Documentos do Magistério</h2>
+      </div>
           <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Documentos</p>
         </div>
         <div>
