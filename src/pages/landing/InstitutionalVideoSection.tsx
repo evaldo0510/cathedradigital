@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Play, Pause, Sparkles, X } from "lucide-react";
+import { Play, Sparkles, X, Volume2, VolumeX } from "lucide-react";
 import { fadeUp } from "./animations";
 import videoAsset from "../../assets/institutional-video.mp4.asset.json";
 
@@ -21,12 +21,14 @@ const InstitutionalVideoSection = () => {
   };
 
   return (
-    <section className="relative w-full py-24 md:py-32 bg-background overflow-hidden">
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-[120px] -translate-y-1/2" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-primary/5 rounded-full blur-[120px] translate-y-1/2" />
+    <section className="relative w-full py-20 md:py-28 bg-gradient-to-b from-background via-card/30 to-background overflow-hidden">
+      {/* Decorative blurs */}
+      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/8 rounded-full blur-[150px] -translate-y-1/2" />
+      <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-primary/8 rounded-full blur-[150px] translate-y-1/2" />
 
       <div className="container px-6 mx-auto relative z-10">
-        <div className="max-w-4xl mx-auto text-center mb-16 space-y-4">
+        {/* Header */}
+        <div className="max-w-4xl mx-auto text-center mb-12 space-y-4">
           <motion.div
             variants={fadeUp}
             initial="hidden"
@@ -63,16 +65,21 @@ const InstitutionalVideoSection = () => {
           </motion.p>
         </div>
 
+        {/* Video Player */}
         <motion.div
           variants={fadeUp}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
           custom={3}
-          className="relative max-w-5xl mx-auto group"
+          className="relative max-w-5xl mx-auto group cursor-pointer"
+          onClick={handlePlay}
         >
-          <div className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl shadow-primary/10 border border-border bg-card/50 group-hover:shadow-primary/20 transition-all duration-500">
-            {/* Preview video (muted, looping) */}
+          {/* Glow ring behind the video */}
+          <div className="absolute -inset-1 bg-gradient-to-br from-primary/20 via-primary/5 to-primary/20 rounded-[28px] blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+          <div className="relative aspect-video rounded-3xl overflow-hidden shadow-[0_20px_60px_-15px_hsl(var(--primary)/0.25)] border border-border/80 bg-black group-hover:shadow-[0_25px_70px_-10px_hsl(var(--primary)/0.35)] transition-all duration-500">
+            {/* Preview video — full opacity, vibrant */}
             <video
               ref={videoRef}
               src={videoAsset.url}
@@ -80,63 +87,66 @@ const InstitutionalVideoSection = () => {
               loop
               autoPlay
               playsInline
-              className="w-full h-full object-cover opacity-70 group-hover:scale-105 transition-transform duration-700"
+              className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700"
             />
             
-            <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-60" />
+            {/* Subtle bottom gradient for text readability */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
             
+            {/* Central play button */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <motion.button
+              <motion.div
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={handlePlay}
-                className="w-20 h-20 md:w-24 md:h-24 bg-primary text-primary-foreground rounded-full flex items-center justify-center shadow-2xl shadow-primary/40 relative z-20 group-hover:bg-primary/90 transition-colors"
+                className="w-20 h-20 md:w-24 md:h-24 bg-primary text-primary-foreground rounded-full flex items-center justify-center shadow-2xl shadow-primary/50 relative z-20 group-hover:bg-primary/90 transition-colors"
               >
                 <Play className="w-8 h-8 md:w-10 md:h-10 fill-current ml-1" />
-                <div className="absolute inset-0 rounded-full bg-primary/40 animate-ping -z-10" />
-                <div className="absolute -inset-4 rounded-full border border-primary/20 animate-pulse -z-10" />
-              </motion.button>
+                <div className="absolute inset-0 rounded-full bg-primary/30 animate-ping -z-10" />
+                <div className="absolute -inset-4 rounded-full border-2 border-primary/30 animate-pulse -z-10" />
+              </motion.div>
             </div>
 
-            <div className="absolute bottom-0 left-0 right-0 p-8 flex justify-between items-end bg-gradient-to-t from-black/60 to-transparent">
+            {/* Bottom info bar */}
+            <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 flex justify-between items-end">
               <div className="space-y-1">
-                <p className="text-white/70 text-xs font-black uppercase tracking-widest">Apresentação</p>
-                <h3 className="text-white text-xl font-bold">A Nova Era da Fé Digital</h3>
+                <p className="text-white/60 text-[10px] font-black uppercase tracking-[0.2em]">Apresentação</p>
+                <h3 className="text-white text-lg md:text-xl font-bold">A Nova Era da Fé Digital</h3>
               </div>
-              <div className="text-white/60 text-sm font-medium">
-                0:05
+              <div className="flex items-center gap-2 text-white/50 text-sm font-medium">
+                <VolumeX className="w-4 h-4" />
+                <span>Clique para assistir</span>
               </div>
             </div>
           </div>
 
-          <div className="absolute -top-4 -left-4 w-12 h-12 border-t-2 border-l-2 border-primary/40 rounded-tl-2xl -z-10" />
-          <div className="absolute -bottom-4 -right-4 w-12 h-12 border-b-2 border-r-2 border-primary/40 rounded-br-2xl -z-10" />
+          {/* Corner decorations */}
+          <div className="absolute -top-3 -left-3 w-10 h-10 border-t-2 border-l-2 border-primary/50 rounded-tl-xl -z-10" />
+          <div className="absolute -bottom-3 -right-3 w-10 h-10 border-b-2 border-r-2 border-primary/50 rounded-br-xl -z-10" />
         </motion.div>
         
+        {/* Feature cards */}
         <motion.div
           variants={fadeUp}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
           custom={4}
-          className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto"
+          className="mt-14 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto"
         >
-          <div className="p-6 rounded-2xl bg-card/30 border border-border/50 hover:border-primary/20 transition-colors">
-            <h4 className="text-primary font-bold mb-2">Tradição Viva</h4>
-            <p className="text-sm text-muted-foreground">O conteúdo milenar da Igreja Católica acessível de forma inteligente e organizada.</p>
-          </div>
-          <div className="p-6 rounded-2xl bg-card/30 border border-border/50 hover:border-primary/20 transition-colors">
-            <h4 className="text-primary font-bold mb-2">Comunidade Digital</h4>
-            <p className="text-sm text-muted-foreground">Uma rede de oração e estudo que conecta fiéis ao redor do mundo em um só espírito.</p>
-          </div>
-          <div className="p-6 rounded-2xl bg-card/30 border border-border/50 hover:border-primary/20 transition-colors">
-            <h4 className="text-primary font-bold mb-2">Fé Aumentada</h4>
-            <p className="text-sm text-muted-foreground">Use a inteligência teológica para aprofundar seu conhecimento nas Escrituras Sagradas.</p>
-          </div>
+          {[
+            { title: "Tradição Viva", desc: "O conteúdo milenar da Igreja Católica acessível de forma inteligente e organizada." },
+            { title: "Comunidade Digital", desc: "Uma rede de oração e estudo que conecta fiéis ao redor do mundo em um só espírito." },
+            { title: "Fé Aumentada", desc: "Use a inteligência teológica para aprofundar seu conhecimento nas Escrituras Sagradas." },
+          ].map((card) => (
+            <div key={card.title} className="p-6 rounded-2xl bg-card/40 border border-border/50 hover:border-primary/30 hover:bg-card/60 transition-all duration-300">
+              <h4 className="text-primary font-bold mb-2">{card.title}</h4>
+              <p className="text-sm text-muted-foreground leading-relaxed">{card.desc}</p>
+            </div>
+          ))}
         </motion.div>
       </div>
 
-      {/* Video Modal */}
+      {/* Fullscreen Video Modal */}
       <AnimatePresence>
         {isPlaying && (
           <motion.div 
@@ -155,7 +165,7 @@ const InstitutionalVideoSection = () => {
             >
               <button 
                 onClick={handleClose}
-                className="absolute top-4 right-4 z-50 p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors"
+                className="absolute top-4 right-4 z-50 p-2.5 bg-white/10 hover:bg-white/20 rounded-full transition-colors backdrop-blur-sm"
               >
                 <X className="w-6 h-6 text-white" />
               </button>
