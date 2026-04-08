@@ -160,3 +160,10 @@
   line-height: 2;
   letter-spacing: 0.01em;
 }
+
+@keyframes ripple-expand {
+  to {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
