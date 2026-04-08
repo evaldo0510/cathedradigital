@@ -1,6 +1,7 @@
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
+import { prefetchCoreModules } from "./lib/prefetch";
 
 // Guard: unregister service workers in preview/iframe contexts
 const isInIframe = (() => {
@@ -22,3 +23,6 @@ if (isPreviewHost || isInIframe) {
 }
 
 createRoot(document.getElementById("root")!).render(<App />);
+
+// Prefetch core modules after initial render
+prefetchCoreModules();
