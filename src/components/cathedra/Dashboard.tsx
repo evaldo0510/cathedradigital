@@ -107,6 +107,12 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   const { profile } = useAuth();
   const { notes, addNote } = useNotes('reflection');
 
+  // Lazy-load saints data
+  const [saintsData, setSaintsData] = useState<import('@/data/saints').Saint[]>([]);
+  useEffect(() => {
+    import('@/data/saints').then(m => setSaintsData(m.SAINTS_DATA));
+  }, []);
+
   // Reflection writing state
   const [showReflection, setShowReflection] = useState(false);
   const [reflectionText, setReflectionText] = useState('');
