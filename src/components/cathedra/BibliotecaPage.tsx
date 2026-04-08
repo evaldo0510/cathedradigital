@@ -60,6 +60,12 @@ const sections = [
 
 const BibliotecaPage: React.FC = () => {
   const navigate = useNavigate();
+  const [query, setQuery] = useState('');
+  const filtered = useMemo(() => {
+    if (!query.trim()) return sections;
+    const q = query.toLowerCase();
+    return sections.filter(s => s.title.toLowerCase().includes(q) || s.description.toLowerCase().includes(q));
+  }, [query]);
 
   return (
     <div className="space-y-6 max-w-2xl mx-auto pb-24">
@@ -69,8 +75,18 @@ const BibliotecaPage: React.FC = () => {
         <p className="text-sm text-muted-foreground">Todo o acervo da fé católica ao seu alcance.</p>
       </div>
 
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+        <Input
+          placeholder="Buscar módulo..."
+          value={query}
+          onChange={e => setQuery(e.target.value)}
+          className="pl-9"
+        />
+      </div>
+
       <div className="space-y-3">
-        {sections.map((section, i) => {
+        {filtered.map((section, i) => {
           const handleNavigate = () => navigate(section.route);
           return (
             <motion.div
