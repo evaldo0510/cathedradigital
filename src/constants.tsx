@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react';
-import cathedraLogo from '@/assets/cathedra-logo.png';
+import cathedraLogo from '@/assets/cathedra-logo.webp';
 
 export const COLORS = {
   primary: '#1a1a1a',
@@ -13,6 +13,8 @@ export const Logo = forwardRef<HTMLDivElement, { className?: string }>(({ classN
     <img 
       src={cathedraLogo} 
       alt="Cathedra Logo" 
+      loading="lazy"
+      decoding="async"
       className="w-full h-full object-contain transition-all duration-700 group-hover:scale-110 drop-shadow-sm"
     />
   </div>
