@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle2, Clock, PenTool, Heart, RotateCcw, Calendar } from 'lucide-react';
 import { STEPS } from './constants';
 import ShareButton from '../ShareButton';
+import FlowConnector from '../FlowConnector';
+import { routeUser } from '@/lib/smartRouter';
 
 interface LectioConclusioProps {
   selectedPassage: string;
