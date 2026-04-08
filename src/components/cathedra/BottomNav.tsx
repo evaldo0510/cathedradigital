@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AppRoute } from '../../types';
 import { Sun, Compass, BookOpen, Users, User } from 'lucide-react';
+import { prefetchRoute } from '@/lib/prefetch';
 
 interface BottomNavItemProps {
   label: string;
