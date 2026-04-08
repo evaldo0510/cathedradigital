@@ -6,6 +6,34 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
+// Rate limiter: max requests per window (in-memory, resets on cold start)
+const rateLimitMap = new Map<string, number[]>();
+const RATE_LIMIT = 20; // max requests
+const RATE_WINDOW_MS = 60_000; // per minute
+
+function isRateLimited(key: string): boolean {
+  const now = Date.now();
+  const timestamps = (rateLimitMap.get(key) ?? []).filter(t => now - t < RATE_WINDOW_MS);
+  if (timestamps.length >= RATE_LIMIT) {
+    rateLimitMap.set(key, timestamps);
+    return true;
+  }
+  timestamps.push(now);
+  rateLimitMap.set(key, timestamps);
+  if (rateLimitMap.size > 10000) {
+    for (const [k, v] of rateLimitMap) {
+      if (v.every(t => now - t >= RATE_WINDOW_MS)) rateLimitMap.delete(k);
+    }
+  }
+  return false;
+}
+
+function getClientIP(req: Request): string {
+  return req.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+    ?? req.headers.get("x-real-ip")
+    ?? "unknown";
+}
+
 /**
  * Secure notification sender — bypasses RLS using service role.
  * Called internally by other edge functions or by admin users.
@@ -13,6 +41,14 @@ const corsHeaders = {
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
+  }
+
+  const clientIP = getClientIP(req);
+  if (isRateLimited(clientIP)) {
+    return new Response(
+      JSON.stringify({ error: "Rate limit exceeded. Try again later." }),
+      { headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": "60" }, status: 429 }
+    );
   }
 
   try {
