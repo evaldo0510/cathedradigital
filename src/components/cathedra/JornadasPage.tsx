@@ -14,6 +14,23 @@ const DIFFICULTY_LABELS: Record<string, string> = {
   iniciante: 'Iniciante',
   intermediario: 'Intermediário',
   'avançado': 'Avançado',
+  avancado: 'Avançado',
+};
+
+const DIFFICULTY_COLORS: Record<string, string> = {
+  iniciante: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300',
+  intermediario: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300',
+  'avançado': 'bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-300',
+  avancado: 'bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-300',
+};
+
+const CATEGORY_ICONS: Record<string, string> = {
+  fundamentos: '🌱',
+  formacao: '📚',
+  rotina: '🔁',
+  oracao: '🙏',
+  mistico: '✨',
+  cura: '💛',
 };
 
 const JornadasPage: React.FC = () => {
@@ -84,10 +101,12 @@ const JornadasPage: React.FC = () => {
   return (
     <div className="space-y-6 max-w-2xl mx-auto">
       {/* Header */}
-      <div className="text-center space-y-2">
+      <div className="text-center space-y-3">
         <Compass className="w-10 h-10 mx-auto text-primary" />
-        <h1 className="text-2xl font-bold font-serif text-foreground">Jornadas de Transformação</h1>
-        <p className="text-sm text-muted-foreground">Caminhos guiados para aprofundar sua vida espiritual.</p>
+        <h1 className="text-2xl md:text-3xl font-bold font-serif text-foreground">🌱 Jornadas de Transformação</h1>
+        <p className="text-muted-foreground font-serif italic max-w-md mx-auto">
+          "Não é sobre assistir… é sobre atravessar."
+        </p>
       </div>
 
       {/* CTA Diagnóstico */}
@@ -127,9 +146,10 @@ const JornadasPage: React.FC = () => {
               >
                 <CardContent className="p-5 space-y-4">
                   {/* Title row */}
-                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-start justify-between gap-3">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap mb-1">
+                        <span className="text-xl">{CATEGORY_ICONS[journey.category] || '📖'}</span>
                         <h2 className="text-lg font-bold font-serif text-foreground">{journey.title}</h2>
                         {journey.is_premium && (
                           <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 text-[10px]">
@@ -138,7 +158,7 @@ const JornadasPage: React.FC = () => {
                         )}
                       </div>
                       {journey.subtitle && (
-                        <p className="text-sm text-muted-foreground">{journey.subtitle}</p>
+                        <p className="text-sm text-muted-foreground font-serif italic">{journey.subtitle}</p>
                       )}
                     </div>
                     <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0 mt-1" />
@@ -154,9 +174,9 @@ const JornadasPage: React.FC = () => {
                     <span className="flex items-center gap-1">
                       <Clock className="w-3.5 h-3.5" /> ~{journey.estimated_days} dias
                     </span>
-                    <Badge variant="outline" className="text-[10px] capitalize">
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${DIFFICULTY_COLORS[journey.difficulty] || 'bg-muted text-muted-foreground'}`}>
                       {DIFFICULTY_LABELS[journey.difficulty] || journey.difficulty}
-                    </Badge>
+                    </span>
                     <span>{totalSteps} etapas</span>
                   </div>
 
