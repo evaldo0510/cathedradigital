@@ -1,13 +1,27 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Play, Sparkles, X, Volume2, VolumeX } from "lucide-react";
+import { Play, Sparkles, X, VolumeX } from "lucide-react";
 import { fadeUp } from "./animations";
 import videoAsset from "../../assets/institutional-video.mp4.asset.json";
 
 const InstitutionalVideoSection = () => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const modalVideoRef = useRef<HTMLVideoElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
+
+  // Lazy-load video only when section is near viewport
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setIsVisible(true); observer.disconnect(); } },
+      { rootMargin: '200px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const handlePlay = () => {
     setIsPlaying(true);
@@ -21,7 +35,7 @@ const InstitutionalVideoSection = () => {
   };
 
   return (
-    <section className="relative w-full py-20 md:py-28 bg-gradient-to-b from-background via-card/30 to-background overflow-hidden">
+    <section ref={sectionRef} className="relative w-full py-20 md:py-28 bg-gradient-to-b from-background via-card/30 to-background overflow-hidden">
       {/* Decorative blurs */}
       <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/8 rounded-full blur-[150px] -translate-y-1/2" />
       <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-primary/8 rounded-full blur-[150px] translate-y-1/2" />
@@ -79,16 +93,21 @@ const InstitutionalVideoSection = () => {
           <div className="absolute -inset-1 bg-gradient-to-br from-primary/20 via-primary/5 to-primary/20 rounded-[28px] blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
           <div className="relative aspect-video rounded-3xl overflow-hidden shadow-[0_20px_60px_-15px_hsl(var(--primary)/0.25)] border border-border/80 bg-black group-hover:shadow-[0_25px_70px_-10px_hsl(var(--primary)/0.35)] transition-all duration-500">
-            {/* Preview video — full opacity, vibrant */}
-            <video
-              ref={videoRef}
-              src={videoAsset.url}
-              muted
-              loop
-              autoPlay
-              playsInline
-              className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700"
-            />
+            {/* Preview video — lazy loaded when visible */}
+            {isVisible ? (
+              <video
+                ref={videoRef}
+                src={videoAsset.url}
+                muted
+                loop
+                autoPlay
+                playsInline
+                preload="metadata"
+                className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700"
+              />
+            ) : (
+              <div className="w-full h-full bg-muted animate-pulse" />
+            )}
             
             {/* Subtle bottom gradient for text readability */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
