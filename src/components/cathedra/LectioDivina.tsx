@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Step } from './lectio/constants';
 import LectioIntro from './lectio/LectioIntro';
@@ -6,8 +7,10 @@ import LectioStep from './lectio/LectioStep';
 import LectioConclusio from './lectio/LectioConclusio';
 
 const LectioDivina: React.FC = () => {
-  const [currentStep, setCurrentStep] = useState<Step>('intro');
-  const [selectedPassage, setSelectedPassage] = useState('');
+  const [searchParams] = useSearchParams();
+  const initialRef = searchParams.get('ref') || '';
+  const [currentStep, setCurrentStep] = useState<Step>(initialRef ? 'lectio' : 'intro');
+  const [selectedPassage, setSelectedPassage] = useState(initialRef);
   const [notes, setNotes] = useState<Record<string, string>>({});
   const [seconds, setSeconds] = useState(0);
   const [bibleText, setBibleText] = useState<{ number: number; text: string }[]>([]);

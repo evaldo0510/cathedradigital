@@ -453,20 +453,28 @@ const Bible: React.FC = () => {
           </div>
         </div>
 
-        {/* Mark chapter as read */}
-        {!isLoading && verses.length > 0 && user && (
-          <div className="flex justify-center">
-            {chaptersRead[selectedBook.abbr]?.has(selectedChapter) ? (
-              <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-primary/10 text-primary text-sm font-bold">
-                <CheckCircle2 className="w-4 h-4" /> Capítulo lido
-              </div>
-            ) : (
-              <button
-                onClick={() => markChapterRead(selectedBook.abbr, selectedChapter, selectedBook.chapters)}
-                className="px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 transition-all">
-                ✓ Marcar como lido
-              </button>
+        {/* Mark chapter as read + Viver essa Palavra */}
+        {!isLoading && verses.length > 0 && (
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            {user && (
+              chaptersRead[selectedBook.abbr]?.has(selectedChapter) ? (
+                <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-primary/10 text-primary text-sm font-bold">
+                  <CheckCircle2 className="w-4 h-4" /> Capítulo lido
+                </div>
+              ) : (
+                <button
+                  onClick={() => markChapterRead(selectedBook.abbr, selectedChapter, selectedBook.chapters)}
+                  className="px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 transition-all">
+                  ✓ Marcar como lido
+                </button>
+              )
             )}
+            <button
+              onClick={() => navigate(`/lectio?ref=${encodeURIComponent(`${selectedBook.abbr} ${selectedChapter}`)}`)}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-bold hover:opacity-90 transition-all shadow-lg shadow-amber-500/20"
+            >
+              <Sparkles className="w-4 h-4" /> Viver essa Palavra
+            </button>
           </div>
         )}
 
