@@ -12,9 +12,11 @@ interface BottomNavItemProps {
   onClick: () => void;
 }
 
-const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon, isActive, onClick }) => (
+const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon, route, isActive, onClick }) => (
   <button 
     onClick={onClick}
+    onTouchStart={() => prefetchRoute(route)}
+    onMouseEnter={() => prefetchRoute(route)}
     className={`flex flex-col items-center justify-center gap-1 flex-1 py-1 transition-all relative tap-highlight-transparent touch-manipulation ${
       isActive ? 'text-primary' : 'text-muted-foreground active:text-foreground'
     }`}
