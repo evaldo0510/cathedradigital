@@ -1,6 +1,8 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
+import { AppRoute } from '@/types';
 import NotesPanel from './NotesPanel';
 
 type DocCategory = 'all' | 'council' | 'encyclical' | 'exhortation' | 'letter' | 'constitution';
@@ -78,6 +80,88 @@ const CATEGORY_COLORS: Record<string, string> = {
   constitution: 'bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-300',
 };
 
+/* ── Spiritual Guidance (Direção Espiritual) ── */
+interface SpiritualGuidance {
+  id: string;
+  theme: string;
+  icon: string;
+  question: string;
+  magisteriumAnswer: string;
+  sourceDoc: string;
+  pch: string;
+  innerQuestion: string;
+  relatedDocs: string[]; // ids from DOCUMENTS
+}
+
+const SPIRITUAL_GUIDANCE: SpiritualGuidance[] = [
+  {
+    id: 'ansiedade',
+    theme: 'Ansiedade',
+    icon: '🌊',
+    question: 'O que a Igreja diz sobre a ansiedade?',
+    magisteriumAnswer: 'A confiança em Deus é o caminho da paz interior. "Não andeis ansiosos" não é um comando vazio — é um convite a entregar o peso ao único que pode carregá-lo.',
+    sourceDoc: 'Gaudete et Exsultate §112',
+    pch: '"Ansiedade é tentar prever…\no que só pode ser vivido."',
+    innerQuestion: 'O que você está tentando resolver sem confiar?',
+    relatedDocs: ['ge', 'ss', 'vat2-gs'],
+  },
+  {
+    id: 'medo',
+    theme: 'Medo',
+    icon: '🕯️',
+    question: 'O que a Igreja diz sobre o medo?',
+    magisteriumAnswer: 'O medo é humano, mas não deve governar. A presença de Deus é mais forte que qualquer escuridão. "Não temas, porque eu te resgatei."',
+    sourceDoc: 'Spe Salvi §32',
+    pch: '"O medo cresce…\nonde a presença é esquecida."',
+    innerQuestion: 'Onde você se sente sozinho diante do medo?',
+    relatedDocs: ['ss', 'dce', 'lf'],
+  },
+  {
+    id: 'proposito',
+    theme: 'Propósito',
+    icon: '🧭',
+    question: 'Qual é o sentido da minha vida?',
+    magisteriumAnswer: 'Cada pessoa tem uma vocação única. A santidade não é privilégio de poucos, mas chamado universal — é encontrar Deus no concreto da vida.',
+    sourceDoc: 'Gaudete et Exsultate §14',
+    pch: '"Força não é ausência de fraqueza…\né direção apesar dela."',
+    innerQuestion: 'O que ainda te move quando tudo pesa?',
+    relatedDocs: ['ge', 'vat2-lg', 'cv'],
+  },
+  {
+    id: 'sofrimento',
+    theme: 'Sofrimento',
+    icon: '✝️',
+    question: 'Por que existe sofrimento?',
+    magisteriumAnswer: 'O sofrimento, quando unido à cruz de Cristo, tem poder redentor. Não é castigo, mas mistério de amor e transformação.',
+    sourceDoc: 'Salvifici Doloris §19',
+    pch: '"A dor não veio destruir…\nveio revelar o que ainda é frágil."',
+    innerQuestion: 'O que o sofrimento está tentando te ensinar?',
+    relatedDocs: ['ss', 'ev', 'vat2-gs'],
+  },
+  {
+    id: 'relacionamentos',
+    theme: 'Relacionamentos',
+    icon: '💛',
+    question: 'Como amar de verdade?',
+    magisteriumAnswer: 'O amor autêntico é dom de si mesmo. Não é posse, é entrega. A família é escola de amor e comunhão.',
+    sourceDoc: 'Amoris Laetitia §89',
+    pch: '"Amar não é completar o outro…\né caminhar junto sem exigir destino."',
+    innerQuestion: 'Você está amando ou controlando?',
+    relatedDocs: ['al', 'dce', 'hv'],
+  },
+  {
+    id: 'perdao',
+    theme: 'Perdão',
+    icon: '🕊️',
+    question: 'Como perdoar o imperdoável?',
+    magisteriumAnswer: 'O perdão é libertação interior. Quem não perdoa permanece preso ao que o feriu. A misericórdia é o rosto de Deus.',
+    sourceDoc: 'Fratelli Tutti §250',
+    pch: '"Perdoar não é esquecer…\né parar de beber o veneno\nesperando que o outro adoeça."',
+    innerQuestion: 'O que você ainda carrega que não é seu?',
+    relatedDocs: ['ft', 'dce', 'eg'],
+  },
+];
+
 const CACHE_PREFIX = 'cathedra_doc_';
 
 const getCachedDoc = (docId: string): { text: string; title: string; cachedAt: string } | null => {
@@ -106,6 +190,7 @@ const getCachedDocIds = (): string[] => {
 };
 
 const Magisterium: React.FC = () => {
+  const navigate = useNavigate();
   const [category, setCategory] = useState<DocCategory>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDoc, setSelectedDoc] = useState<MagisteriumDoc | null>(null);
@@ -117,6 +202,7 @@ const Magisterium: React.FC = () => {
   const [cachedIds, setCachedIds] = useState<string[]>([]);
   const [nightMode, setNightMode] = useState(false);
   const [fontSize, setFontSize] = useState(15);
+  const [expandedGuidance, setExpandedGuidance] = useState<string | null>(null);
 
   const filteredDocs = useMemo(() => {
     let docs = DOCUMENTS;
@@ -482,36 +568,129 @@ const Magisterium: React.FC = () => {
         ))}
       </div>
 
-      {/* Stats */}
-      <div className="flex justify-center gap-6 text-center">
-        <div>
-          <p className="text-2xl font-serif font-bold text-foreground">{filteredDocs.length}</p>
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Documentos</p>
+      {/* ── Spiritual Guidance Section ── */}
+      <div className="space-y-4">
+        <div className="text-center space-y-2">
+          <h2 className="text-xl md:text-2xl font-serif font-bold text-foreground">🧭 Direção da Verdade</h2>
+          <p className="text-sm text-muted-foreground font-serif italic">"Quando a dúvida fala… a verdade responde."</p>
         </div>
-        <div>
-          <p className="text-2xl font-serif font-bold text-foreground">{new Set(filteredDocs.map(d => d.author)).size}</p>
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Autores</p>
+
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          {SPIRITUAL_GUIDANCE.map(g => (
+            <button
+              key={g.id}
+              onClick={() => setExpandedGuidance(expandedGuidance === g.id ? null : g.id)}
+              className={`p-4 rounded-2xl border text-left transition-all ${
+                expandedGuidance === g.id
+                  ? 'bg-primary/10 border-primary/40 shadow-lg'
+                  : 'bg-card border-border hover:border-primary/30 hover:bg-primary/5'
+              }`}
+            >
+              <span className="text-2xl">{g.icon}</span>
+              <p className="text-sm font-bold text-foreground mt-1">{g.theme}</p>
+              <p className="text-[10px] text-muted-foreground mt-0.5 line-clamp-1">{g.question}</p>
+            </button>
+          ))}
         </div>
-        <div>
-          <p className="text-2xl font-serif font-bold text-foreground">{filteredDocs.filter(d => d.vaticanUrl).length}</p>
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Com texto integral</p>
-        </div>
-        <div>
-          <p className="text-2xl font-serif font-bold text-foreground">{cachedIds.length}</p>
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Salvos offline</p>
-        </div>
+
+        {expandedGuidance && (() => {
+          const g = SPIRITUAL_GUIDANCE.find(x => x.id === expandedGuidance);
+          if (!g) return null;
+          return (
+            <div className="bg-card border border-border rounded-3xl p-6 md:p-8 space-y-5 animate-in fade-in slide-in-from-top-2 duration-300">
+              <div className="flex items-center gap-3">
+                <span className="text-3xl">{g.icon}</span>
+                <div>
+                  <h3 className="text-lg font-serif font-bold text-foreground">{g.theme}</h3>
+                  <p className="text-xs text-muted-foreground italic">{g.question}</p>
+                </div>
+              </div>
+
+              {/* Magisterium Answer */}
+              <div className="border-l-4 border-primary pl-4 space-y-1">
+                <p className="text-sm font-black uppercase tracking-widest text-primary">📘 Magistério</p>
+                <p className="text-foreground/90 leading-relaxed text-sm">{g.magisteriumAnswer}</p>
+                <p className="text-[10px] text-muted-foreground italic">— {g.sourceDoc}</p>
+              </div>
+
+              {/* PCH */}
+              <div className="bg-primary/5 rounded-2xl p-5 text-center space-y-2">
+                <p className="text-[10px] font-black uppercase tracking-widest text-primary/70">🧠 Reflexão Poética</p>
+                <p className="text-foreground font-serif italic leading-relaxed whitespace-pre-line text-sm">{g.pch}</p>
+              </div>
+
+              {/* Inner Question */}
+              <div className="bg-accent/30 rounded-2xl p-5 text-center space-y-2">
+                <p className="text-[10px] font-black uppercase tracking-widest text-accent-foreground/70">❓ Pergunta Interior</p>
+                <p className="text-foreground font-bold text-base">{g.innerQuestion}</p>
+              </div>
+
+              {/* Related Documents */}
+              <div className="space-y-2">
+                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">📄 Documentos Relacionados</p>
+                <div className="flex flex-wrap gap-2">
+                  {g.relatedDocs.map(docId => {
+                    const doc = DOCUMENTS.find(d => d.id === docId);
+                    if (!doc) return null;
+                    return (
+                      <button
+                        key={docId}
+                        onClick={() => handleSelectDoc(doc)}
+                        className="px-3 py-1.5 rounded-xl text-xs font-bold bg-muted text-muted-foreground hover:bg-primary/10 hover:text-primary transition-all"
+                      >
+                        {doc.title}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* CTA: Viver essa verdade */}
+              <button
+                onClick={() => navigate(AppRoute.LECTIO_DIVINA)}
+                className="w-full py-4 rounded-2xl bg-foreground text-background font-black uppercase text-xs tracking-[0.2em] shadow-xl hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-2 group"
+              >
+                <Icons.Heart className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                Viver essa Verdade
+              </button>
+            </div>
+          );
+        })()}
       </div>
 
-      {cachedIds.length > 0 && (
-        <div className="flex justify-center">
-          <button
-            onClick={clearAllCache}
-            className="px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest text-destructive border border-destructive/30 hover:bg-destructive/10 transition-all"
-          >
-            🗑️ Limpar todo o cache ({cachedIds.length} documento{cachedIds.length !== 1 ? 's' : ''})
-          </button>
+      <div className="border-t border-border pt-8 space-y-6">
+        <h2 className="text-lg font-serif font-bold text-foreground text-center">📜 Documentos do Magistério</h2>
+
+        <div className="flex justify-center gap-6 text-center">
+          <div>
+            <p className="text-2xl font-serif font-bold text-foreground">{filteredDocs.length}</p>
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Documentos</p>
+          </div>
+          <div>
+            <p className="text-2xl font-serif font-bold text-foreground">{new Set(filteredDocs.map(d => d.author)).size}</p>
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Autores</p>
+          </div>
+          <div>
+            <p className="text-2xl font-serif font-bold text-foreground">{filteredDocs.filter(d => d.vaticanUrl).length}</p>
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Com texto integral</p>
+          </div>
+          <div>
+            <p className="text-2xl font-serif font-bold text-foreground">{cachedIds.length}</p>
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Salvos offline</p>
+          </div>
         </div>
-      )}
+
+        {cachedIds.length > 0 && (
+          <div className="flex justify-center">
+            <button
+              onClick={clearAllCache}
+              className="px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest text-destructive border border-destructive/30 hover:bg-destructive/10 transition-all"
+            >
+              🗑️ Limpar todo o cache ({cachedIds.length} documento{cachedIds.length !== 1 ? 's' : ''})
+            </button>
+          </div>
+        )}
+      </div>
 
       {/* Documents grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
