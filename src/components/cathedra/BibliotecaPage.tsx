@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { prefetchRoute } from '@/lib/prefetch';
 import { motion } from 'framer-motion';
 import { BookOpen, Shield, ScrollText, Users, BookMarked, Crown, ChevronRight, Library, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -102,6 +103,8 @@ const BibliotecaPage: React.FC = () => {
                 role="button"
                 tabIndex={0}
                 onClick={handleNavigate}
+                onMouseEnter={() => prefetchRoute(section.route)}
+                onTouchStart={() => prefetchRoute(section.route)}
                 onKeyDown={(e) => { if (e.key === 'Enter') handleNavigate(); }}
                 className="cursor-pointer"
               >
