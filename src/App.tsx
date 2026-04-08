@@ -86,21 +86,46 @@ const Index = lazy(() => import('./pages/Index'));
 const CheckoutPage = lazy(() => import('./components/cathedra/CheckoutPage'));
 const DiagnosticsPage = lazy(() => import('./components/cathedra/DiagnosticsPage'));
 
+const SkeletonBar = ({ w = 'w-full', h = 'h-4', className = '' }: { w?: string; h?: string; className?: string }) => (
+  <div className={`${w} ${h} rounded-lg bg-muted/60 animate-pulse ${className}`} />
+);
+
 const LoadingFallback = () => (
-  <div className="animate-in fade-in duration-150 space-y-4 p-4 min-h-[100dvh]">
-    <div className="h-8 w-48 rounded-md bg-muted animate-pulse" />
-    <div className="space-y-3">
-      <div className="h-4 w-full rounded bg-muted animate-pulse" />
-      <div className="h-4 w-3/4 rounded bg-muted animate-pulse" />
-      <div className="h-4 w-5/6 rounded bg-muted animate-pulse" />
+  <div className="animate-in fade-in duration-100 p-4 min-h-[60dvh] space-y-6">
+    {/* Page title skeleton */}
+    <div className="flex items-center gap-3">
+      <div className="w-10 h-10 rounded-xl bg-primary/10 animate-pulse" />
+      <div className="space-y-2 flex-1">
+        <SkeletonBar w="w-40" h="h-5" />
+        <SkeletonBar w="w-56" h="h-3" className="opacity-50" />
+      </div>
     </div>
-    <div className="grid grid-cols-2 gap-3 pt-2">
-      <div className="h-24 rounded-lg bg-muted animate-pulse" />
-      <div className="h-24 rounded-lg bg-muted animate-pulse" />
+
+    {/* Hero card skeleton */}
+    <div className="rounded-2xl bg-muted/30 border border-border/30 p-5 space-y-3">
+      <SkeletonBar w="w-32" h="h-3" className="opacity-40" />
+      <SkeletonBar w="w-3/4" h="h-5" />
+      <SkeletonBar w="w-full" h="h-3" className="opacity-60" />
+      <SkeletonBar w="w-5/6" h="h-3" className="opacity-60" />
     </div>
-    <div className="space-y-3 pt-2">
-      <div className="h-4 w-2/3 rounded bg-muted animate-pulse" />
-      <div className="h-4 w-full rounded bg-muted animate-pulse" />
+
+    {/* Grid cards skeleton */}
+    <div className="grid grid-cols-2 gap-3">
+      {[1, 2, 3, 4].map(i => (
+        <div key={i} className="rounded-xl bg-muted/20 border border-border/20 p-4 space-y-3" style={{ animationDelay: `${i * 80}ms` }}>
+          <div className="w-8 h-8 rounded-lg bg-primary/8 animate-pulse" />
+          <SkeletonBar w="w-20" h="h-3" />
+          <SkeletonBar w="w-full" h="h-2" className="opacity-40" />
+        </div>
+      ))}
+    </div>
+
+    {/* Text block skeleton */}
+    <div className="space-y-2.5 pt-2">
+      <SkeletonBar w="w-28" h="h-4" />
+      <SkeletonBar w="w-full" h="h-3" className="opacity-50" />
+      <SkeletonBar w="w-4/5" h="h-3" className="opacity-50" />
+      <SkeletonBar w="w-2/3" h="h-3" className="opacity-40" />
     </div>
   </div>
 );
