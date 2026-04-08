@@ -21,23 +21,18 @@ export default defineConfig(({ mode }) => ({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
-          'vendor-supabase': ['@supabase/supabase-js'],
-          'vendor-motion': ['framer-motion'],
-          'vendor-recharts': ['recharts'],
-          'vendor-confetti': ['canvas-confetti'],
-          'vendor-html2canvas': ['html2canvas'],
-          'vendor-ui': [
-            '@radix-ui/react-dialog',
-            '@radix-ui/react-popover',
-            '@radix-ui/react-tabs',
-            '@radix-ui/react-accordion',
-            '@radix-ui/react-dropdown-menu',
-            '@radix-ui/react-scroll-area',
-            '@radix-ui/react-select',
-            '@radix-ui/react-tooltip',
-          ],
+        manualChunks(id) {
+          if (id.includes('node_modules/react-dom') || id.includes('node_modules/react/') || id.includes('node_modules/react-router')) return 'vendor-react';
+          if (id.includes('node_modules/@supabase')) return 'vendor-supabase';
+          if (id.includes('node_modules/framer-motion')) return 'vendor-motion';
+          if (id.includes('node_modules/recharts') || id.includes('node_modules/d3-')) return 'vendor-recharts';
+          if (id.includes('node_modules/canvas-confetti')) return 'vendor-confetti';
+          if (id.includes('node_modules/html2canvas')) return 'vendor-html2canvas';
+          if (id.includes('node_modules/@radix-ui/react-dialog') || id.includes('node_modules/@radix-ui/react-popover') || id.includes('node_modules/@radix-ui/react-tabs') || id.includes('node_modules/@radix-ui/react-accordion') || id.includes('node_modules/@radix-ui/react-dropdown-menu') || id.includes('node_modules/@radix-ui/react-scroll-area') || id.includes('node_modules/@radix-ui/react-select') || id.includes('node_modules/@radix-ui/react-tooltip')) return 'vendor-ui';
+          // Isolate heavy data files
+          if (id.includes('src/data/saints')) return 'data-saints';
+          if (id.includes('src/data/apparitions')) return 'data-apparitions';
+          if (id.includes('src/data/cross-references')) return 'data-cross-refs';
         },
       },
     },
