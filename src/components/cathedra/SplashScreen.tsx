@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import cathedraLogo from '@/assets/cathedra-logo.png';
+import cathedraLogo from '@/assets/cathedra-logo.webp';
 
 const SplashScreen: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
   const [phase, setPhase] = useState<'logo' | 'text' | 'exit'>('logo');

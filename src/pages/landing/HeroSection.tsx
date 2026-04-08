@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { ChevronRight, Sparkles, ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { buttonHover } from "./animations";
-import cathedraLogo from "@/assets/cathedra-logo.png";
+import cathedraLogo from "@/assets/cathedra-logo.webp";
 
 interface HeroSectionProps {
   onStart: () => void;

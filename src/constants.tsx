@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react';
-import cathedraLogo from '@/assets/cathedra-logo.png';
+import cathedraLogo from '@/assets/cathedra-logo.webp';
 
 export const COLORS = {
   primary: '#1a1a1a',
