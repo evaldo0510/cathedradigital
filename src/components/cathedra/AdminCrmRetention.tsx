@@ -1,4 +1,5 @@
 import React, { useMemo, useCallback, useState } from 'react';
+import { motion } from 'framer-motion';
 import {
   Flame, TrendingDown, TrendingUp, Users, Clock, Activity,
   AlertTriangle, UserMinus, UserPlus, Download, DollarSign,
@@ -320,129 +321,82 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
       </div>
       {/* KPI Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Taxa de Retenção</CardTitle>
-            <TrendingUp className="h-4 w-4 text-primary" />
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-bold text-primary">{metrics.retentionRate}%</span>
-                  {prevPeriod && periodLabel && <DeltaBadge current={parseFloat(metrics.retentionRate)} previous={prevPeriod.retentionRate} tooltip={periodLabel} />}
-                </div>
-                <p className="text-[11px] text-muted-foreground mt-1">{metrics.active.length} ativos de {filteredUsers.length}</p>
-              </div>
-              <Sparkline data={sparklines.retention} />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Taxa de Churn</CardTitle>
-            <TrendingDown className="h-4 w-4 text-destructive" />
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-bold text-destructive">{metrics.churnRate}%</span>
-                  {prevPeriod && periodLabel && <DeltaBadge current={parseFloat(metrics.churnRate)} previous={prevPeriod.churnRate} invertColor tooltip={periodLabel} />}
-                </div>
-                <p className="text-[11px] text-muted-foreground mt-1">{metrics.churned.length} inativos ({'>'}14 dias)</p>
-              </div>
-              <Sparkline data={sparklines.churn} color="hsl(var(--destructive))" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Streak Médio</CardTitle>
-            <Flame className="h-4 w-4 text-accent-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-bold">{metrics.avgStreak}</span>
-                  {prevPeriod && periodLabel && <DeltaBadge current={parseFloat(metrics.avgStreak)} previous={prevPeriod.avgStreak} tooltip={periodLabel} />}
-                </div>
-                <p className="text-[11px] text-muted-foreground mt-1">dias consecutivos</p>
-              </div>
-              <Sparkline data={sparklines.streak} />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Novos (7d)</CardTitle>
-            <UserPlus className="h-4 w-4 text-primary" />
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-bold text-primary">{metrics.newUsers7d.length}</span>
-                  {prevPeriod && periodLabel && <DeltaBadge current={metrics.newUsers7d.length} previous={prevPeriod.newUsers7d} tooltip={periodLabel} />}
-                </div>
-                <p className="text-[11px] text-muted-foreground mt-1">{metrics.newUsers30d.length} nos últimos 30 dias</p>
-              </div>
-              <Sparkline data={sparklines.newUsers} />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-xs font-medium uppercase tracking-wider text-muted-foreground">LTV Médio</CardTitle>
-            <DollarSign className="h-4 w-4 text-primary" />
-          </CardHeader>
-          <CardContent>
-            {(() => {
-              const ltv = metrics.premium.length > 0 ? filteredRevenue / metrics.premium.length : 0;
-              return (
+        {[
+          {
+            title: 'Taxa de Retenção',
+            icon: <TrendingUp className="h-4 w-4 text-primary" />,
+            value: <span className="text-3xl font-bold text-primary">{metrics.retentionRate}%</span>,
+            delta: prevPeriod && periodLabel ? <DeltaBadge current={parseFloat(metrics.retentionRate)} previous={prevPeriod.retentionRate} tooltip={periodLabel} /> : null,
+            sub: <>{metrics.active.length} ativos de {filteredUsers.length}</>,
+            spark: <Sparkline data={sparklines.retention} />,
+          },
+          {
+            title: 'Taxa de Churn',
+            icon: <TrendingDown className="h-4 w-4 text-destructive" />,
+            value: <span className="text-3xl font-bold text-destructive">{metrics.churnRate}%</span>,
+            delta: prevPeriod && periodLabel ? <DeltaBadge current={parseFloat(metrics.churnRate)} previous={prevPeriod.churnRate} invertColor tooltip={periodLabel} /> : null,
+            sub: <>{metrics.churned.length} inativos ({'>'}14 dias)</>,
+            spark: <Sparkline data={sparklines.churn} color="hsl(var(--destructive))" />,
+          },
+          {
+            title: 'Streak Médio',
+            icon: <Flame className="h-4 w-4 text-accent-foreground" />,
+            value: <span className="text-3xl font-bold">{metrics.avgStreak}</span>,
+            delta: prevPeriod && periodLabel ? <DeltaBadge current={parseFloat(metrics.avgStreak)} previous={prevPeriod.avgStreak} tooltip={periodLabel} /> : null,
+            sub: 'dias consecutivos',
+            spark: <Sparkline data={sparklines.streak} />,
+          },
+          {
+            title: 'Novos (7d)',
+            icon: <UserPlus className="h-4 w-4 text-primary" />,
+            value: <span className="text-3xl font-bold text-primary">{metrics.newUsers7d.length}</span>,
+            delta: prevPeriod && periodLabel ? <DeltaBadge current={metrics.newUsers7d.length} previous={prevPeriod.newUsers7d} tooltip={periodLabel} /> : null,
+            sub: <>{metrics.newUsers30d.length} nos últimos 30 dias</>,
+            spark: <Sparkline data={sparklines.newUsers} />,
+          },
+          {
+            title: 'LTV Médio',
+            icon: <DollarSign className="h-4 w-4 text-primary" />,
+            value: (() => { const ltv = metrics.premium.length > 0 ? filteredRevenue / metrics.premium.length : 0; return <span className="text-3xl font-bold">R$ {ltv.toFixed(2)}</span>; })(),
+            delta: (() => { const ltv = metrics.premium.length > 0 ? filteredRevenue / metrics.premium.length : 0; return prevPeriod && periodLabel ? <DeltaBadge current={ltv} previous={prevPeriod.ltv} tooltip={periodLabel} /> : null; })(),
+            sub: 'receita / cliente PRO',
+            spark: <Sparkline data={sparklines.ltv} />,
+          },
+          {
+            title: 'ARPU',
+            icon: <DollarSign className="h-4 w-4 text-muted-foreground" />,
+            value: (() => { const arpu = filteredUsers.length > 0 ? filteredRevenue / filteredUsers.length : 0; return <span className="text-3xl font-bold">R$ {arpu.toFixed(2)}</span>; })(),
+            delta: (() => { const arpu = filteredUsers.length > 0 ? filteredRevenue / filteredUsers.length : 0; return prevPeriod && periodLabel ? <DeltaBadge current={arpu} previous={prevPeriod.arpu} tooltip={periodLabel} /> : null; })(),
+            sub: 'receita / usuário total',
+            spark: <Sparkline data={sparklines.arpu} />,
+          },
+        ].map((kpi, i) => (
+          <motion.div
+            key={kpi.title}
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, delay: i * 0.08, ease: [0.25, 0.46, 0.45, 0.94] }}
+          >
+            <Card className="h-full">
+              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                <CardTitle className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{kpi.title}</CardTitle>
+                {kpi.icon}
+              </CardHeader>
+              <CardContent>
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="flex items-baseline gap-2">
-                      <span className="text-3xl font-bold">R$ {ltv.toFixed(2)}</span>
-                      {prevPeriod && periodLabel && <DeltaBadge current={ltv} previous={prevPeriod.ltv} tooltip={periodLabel} />}
+                      {kpi.value}
+                      {kpi.delta}
                     </div>
-                    <p className="text-[11px] text-muted-foreground mt-1">receita / cliente PRO</p>
+                    <p className="text-[11px] text-muted-foreground mt-1">{kpi.sub}</p>
                   </div>
-                  <Sparkline data={sparklines.ltv} />
+                  {kpi.spark}
                 </div>
-              );
-            })()}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-xs font-medium uppercase tracking-wider text-muted-foreground">ARPU</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            {(() => {
-              const arpu = filteredUsers.length > 0 ? filteredRevenue / filteredUsers.length : 0;
-              return (
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-3xl font-bold">R$ {arpu.toFixed(2)}</span>
-                      {prevPeriod && periodLabel && <DeltaBadge current={arpu} previous={prevPeriod.arpu} tooltip={periodLabel} />}
-                    </div>
-                    <p className="text-[11px] text-muted-foreground mt-1">receita / usuário total</p>
-                  </div>
-                  <Sparkline data={sparklines.arpu} />
-                </div>
-              );
-            })()}
-          </CardContent>
-        </Card>
+              </CardContent>
+            </Card>
+          </motion.div>
+        ))}
       </div>
 
       {/* Charts */}
