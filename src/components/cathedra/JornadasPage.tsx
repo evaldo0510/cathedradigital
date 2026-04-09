@@ -144,6 +144,16 @@ const JornadasPage: React.FC = () => {
                 }`}
                 onClick={() => navigate(`/jornadas/${journey.id}`)}
               >
+                {journey.cover_url && (
+                  <div className="w-full h-36 overflow-hidden">
+                    <img
+                      src={journey.cover_url}
+                      alt={journey.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
+                    />
+                  </div>
+                )}
                 <CardContent className="p-5 space-y-4">
                   {/* Title row */}
                     <div className="flex items-start justify-between gap-3">
