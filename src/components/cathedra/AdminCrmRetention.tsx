@@ -7,9 +7,10 @@ import {
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip,
   ResponsiveContainer, PieChart, Pie, Cell, AreaChart, Area
 } from 'recharts';
 
@@ -52,17 +53,24 @@ const calcDelta = (current: number, previous: number): { pct: string; direction:
   return { pct: `${delta > 0 ? '+' : ''}${delta.toFixed(1)}`, direction: delta > 0 ? 'up' : 'down' };
 };
 
-const DeltaBadge: React.FC<{ current: number; previous: number; invertColor?: boolean }> = ({ current, previous, invertColor }) => {
+const DeltaBadge: React.FC<{ current: number; previous: number; invertColor?: boolean; tooltip?: string }> = ({ current, previous, invertColor, tooltip }) => {
   const { pct, direction } = calcDelta(current, previous);
   const isGood = invertColor ? direction === 'down' : direction === 'up';
   const isBad = invertColor ? direction === 'up' : direction === 'down';
-  return (
-    <span className={`inline-flex items-center gap-0.5 text-[10px] font-medium ${isGood ? 'text-emerald-600' : isBad ? 'text-destructive' : 'text-muted-foreground'}`}>
+  const badge = (
+    <span className={`inline-flex items-center gap-0.5 text-[10px] font-medium cursor-default ${isGood ? 'text-emerald-600' : isBad ? 'text-destructive' : 'text-muted-foreground'}`}>
       {direction === 'up' && <ArrowUp className="w-3 h-3" />}
       {direction === 'down' && <ArrowDown className="w-3 h-3" />}
       {direction === 'flat' && <Minus className="w-3 h-3" />}
       {pct}%
     </span>
+  );
+  if (!tooltip) return badge;
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>{badge}</TooltipTrigger>
+      <TooltipContent side="top" className="text-xs">{tooltip}</TooltipContent>
+    </Tooltip>
   );
 };
 
