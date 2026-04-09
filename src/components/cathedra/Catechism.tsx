@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
@@ -49,28 +50,28 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
   }
 
   return (
-    <div className="reader-text text-foreground/90 leading-[2] text-lg md:text-xl">
-      <p className="font-serif">
-        {segments.map((seg, i) =>
-          seg.type === 'bibleRef' && seg.abbr ? (
-            <BibleVersePopover
-              key={i}
-              abbr={seg.abbr}
-              chapter={seg.chapter!}
-              verse={seg.verse}
-              label={seg.value}
-              onNavigate={onNavigateToBible}
-            />
-          ) : seg.type === 'catechismRef' && seg.paragraph ? (
-            <CatechismPopover
-              key={i}
-              paragraph={seg.paragraph}
-            />
-          ) : (
-            <React.Fragment key={i}>{seg.value}</React.Fragment>
-          )
-        )}
-      </p>
+    <div className="reader-text text-foreground/90 leading-[2] text-lg md:text-xl font-serif prose prose-lg dark:prose-invert max-w-none prose-headings:font-serif prose-headings:text-primary prose-p:my-2">
+      {segments.map((seg, i) =>
+        seg.type === 'bibleRef' && seg.abbr ? (
+          <BibleVersePopover
+            key={i}
+            abbr={seg.abbr}
+            chapter={seg.chapter!}
+            verse={seg.verse}
+            label={seg.value}
+            onNavigate={onNavigateToBible}
+          />
+        ) : seg.type === 'catechismRef' && seg.paragraph ? (
+          <CatechismPopover
+            key={i}
+            paragraph={seg.paragraph}
+          />
+        ) : (
+          <ReactMarkdown key={i} components={{
+            p: ({ children }) => <span>{children}</span>,
+          }}>{seg.value}</ReactMarkdown>
+        )
+      )}
     </div>
   );
 };
