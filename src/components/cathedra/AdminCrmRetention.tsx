@@ -306,12 +306,18 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
             <DollarSign className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">
-              R$ {metrics.premium.length > 0
-                ? (filteredRevenue / metrics.premium.length).toFixed(2)
-                : '0.00'}
-            </div>
-            <p className="text-[11px] text-muted-foreground mt-1">receita / cliente PRO</p>
+            {(() => {
+              const ltv = metrics.premium.length > 0 ? filteredRevenue / metrics.premium.length : 0;
+              return (
+                <>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-bold">R$ {ltv.toFixed(2)}</span>
+                    {prevPeriod && <DeltaBadge current={ltv} previous={prevPeriod.ltv} />}
+                  </div>
+                  <p className="text-[11px] text-muted-foreground mt-1">receita / cliente PRO</p>
+                </>
+              );
+            })()}
           </CardContent>
         </Card>
 
