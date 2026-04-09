@@ -229,7 +229,13 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
     toast.success(`Relatório de retenção exportado (${filteredUsers.length} usuários).`);
   }, [filteredUsers]);
 
+  const periodLabel = useMemo(() => {
+    const opt = PERIOD_OPTIONS.find(o => o.value === periodMonths);
+    return periodMonths === 0 ? null : `vs ${opt?.label ?? periodMonths + ' meses'} anteriores`;
+  }, [periodMonths]);
+
   return (
+    <TooltipProvider delayDuration={200}>
     <div className="space-y-6">
       {/* Period Filter + Export */}
       <div className="flex items-center justify-between flex-wrap gap-2">
@@ -474,6 +480,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
         </Card>
       )}
     </div>
+    </TooltipProvider>
   );
 };
 
