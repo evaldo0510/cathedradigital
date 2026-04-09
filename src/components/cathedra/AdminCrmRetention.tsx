@@ -144,7 +144,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
 
   const exportRetentionCsv = useCallback(() => {
     const headers = ['Nome', 'Email', 'Status', 'Plano', 'Streak', 'XP', 'Dias Inativo', 'Cadastro'];
-    const rows = users.map(u => {
+    const rows = filteredUsers.map(u => {
       const days = daysSince(u.last_visit);
       const status = days <= 3 ? 'Ativo' : days <= 14 ? 'Em risco' : 'Inativo';
       return [
@@ -161,14 +161,27 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
     a.download = `retencao_${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
-    toast.success(`Relatório de retenção exportado (${users.length} usuários).`);
-  }, [users]);
+    toast.success(`Relatório de retenção exportado (${filteredUsers.length} usuários).`);
+  }, [filteredUsers]);
 
   return (
     <div className="space-y-6">
-      {/* Export + KPI Cards */}
-      <div className="flex justify-end">
-        <Button size="sm" variant="outline" className="h-8 text-xs gap-1.5" onClick={exportRetentionCsv} disabled={users.length === 0}>
+      {/* Period Filter + Export */}
+      <div className="flex items-center justify-between flex-wrap gap-2">
+        <div className="flex gap-1.5">
+          {PERIOD_OPTIONS.map(opt => (
+            <Button
+              key={opt.value}
+              size="sm"
+              variant={periodMonths === opt.value ? 'default' : 'outline'}
+              className="h-8 text-xs"
+              onClick={() => setPeriodMonths(opt.value)}
+            >
+              {opt.label}
+            </Button>
+          ))}
+        </div>
+        <Button size="sm" variant="outline" className="h-8 text-xs gap-1.5" onClick={exportRetentionCsv} disabled={filteredUsers.length === 0}>
           <Download className="w-3.5 h-3.5" /> Exportar CSV
         </Button>
       </div>
