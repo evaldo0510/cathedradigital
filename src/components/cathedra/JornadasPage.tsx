@@ -51,6 +51,26 @@ const JornadasPage: React.FC = () => {
   const [progressMap, setProgressMap] = useState<Record<string, number>>({});
   const [stepsCountMap, setStepsCountMap] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
+  const [filterCategory, setFilterCategory] = useState<string>('all');
+  const [filterDifficulty, setFilterDifficulty] = useState<string>('all');
+
+  const categories = useMemo(() => {
+    const cats = [...new Set(journeys.map(j => j.category))];
+    return cats.sort();
+  }, [journeys]);
+
+  const difficulties = useMemo(() => {
+    const diffs = [...new Set(journeys.map(j => j.difficulty))];
+    return diffs;
+  }, [journeys]);
+
+  const filteredJourneys = useMemo(() => {
+    return journeys.filter(j => {
+      if (filterCategory !== 'all' && j.category !== filterCategory) return false;
+      if (filterDifficulty !== 'all' && j.difficulty !== filterDifficulty) return false;
+      return true;
+    });
+  }, [journeys, filterCategory, filterDifficulty]);
 
   useEffect(() => {
     loadJourneys();
