@@ -326,11 +326,16 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
             <TrendingUp className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-bold text-primary">{metrics.retentionRate}%</span>
-              {prevPeriod && periodLabel && <DeltaBadge current={parseFloat(metrics.retentionRate)} previous={prevPeriod.retentionRate} tooltip={periodLabel} />}
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl font-bold text-primary">{metrics.retentionRate}%</span>
+                  {prevPeriod && periodLabel && <DeltaBadge current={parseFloat(metrics.retentionRate)} previous={prevPeriod.retentionRate} tooltip={periodLabel} />}
+                </div>
+                <p className="text-[11px] text-muted-foreground mt-1">{metrics.active.length} ativos de {filteredUsers.length}</p>
+              </div>
+              <Sparkline data={sparklines.retention} />
             </div>
-            <p className="text-[11px] text-muted-foreground mt-1">{metrics.active.length} ativos de {filteredUsers.length}</p>
           </CardContent>
         </Card>
 
