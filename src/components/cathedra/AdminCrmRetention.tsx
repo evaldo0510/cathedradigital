@@ -44,6 +44,28 @@ const daysSince = (date: string | null) => {
   return Math.floor((Date.now() - new Date(date).getTime()) / (1000 * 60 * 60 * 24));
 };
 
+const calcDelta = (current: number, previous: number): { pct: string; direction: 'up' | 'down' | 'flat' } => {
+  if (previous === 0 && current === 0) return { pct: '0', direction: 'flat' };
+  if (previous === 0) return { pct: '+∞', direction: 'up' };
+  const delta = ((current - previous) / previous) * 100;
+  if (Math.abs(delta) < 0.5) return { pct: '0', direction: 'flat' };
+  return { pct: `${delta > 0 ? '+' : ''}${delta.toFixed(1)}`, direction: delta > 0 ? 'up' : 'down' };
+};
+
+const DeltaBadge: React.FC<{ current: number; previous: number; invertColor?: boolean }> = ({ current, previous, invertColor }) => {
+  const { pct, direction } = calcDelta(current, previous);
+  const isGood = invertColor ? direction === 'down' : direction === 'up';
+  const isBad = invertColor ? direction === 'up' : direction === 'down';
+  return (
+    <span className={`inline-flex items-center gap-0.5 text-[10px] font-medium ${isGood ? 'text-emerald-600' : isBad ? 'text-destructive' : 'text-muted-foreground'}`}>
+      {direction === 'up' && <ArrowUp className="w-3 h-3" />}
+      {direction === 'down' && <ArrowDown className="w-3 h-3" />}
+      {direction === 'flat' && <Minus className="w-3 h-3" />}
+      {pct}%
+    </span>
+  );
+};
+
 const COLORS = ['hsl(var(--primary))', 'hsl(142 76% 36%)', 'hsl(45 93% 47%)', 'hsl(0 84% 60%)'];
 
 const PERIOD_OPTIONS = [
