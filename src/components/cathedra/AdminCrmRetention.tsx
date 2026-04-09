@@ -96,7 +96,18 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
     return { active, atRisk, churned, newUsers7d, newUsers30d, avgStreak, avgXp, retentionRate, churnRate, streakBuckets, statusPie, funnelData };
   }, [users]);
 
-  const PIE_COLORS = ['hsl(142 76% 36%)', 'hsl(45 93% 47%)', 'hsl(0 84% 60%)'];
+  const mrrData = useMemo(() => {
+    const approved = transactions.filter(t => t.status === 'approved' && t.created_at);
+    const monthMap: Record<string, number> = {};
+    approved.forEach(t => {
+      const d = new Date(t.created_at!);
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      monthMap[key] = (monthMap[key] || 0) + Number(t.amount);
+    });
+    return Object.entries(monthMap)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([month, total]) => ({ month, total: Number(total.toFixed(2)) }));
+  }, [transactions]);
 
   const exportRetentionCsv = useCallback(() => {
     const headers = ['Nome', 'Email', 'Status', 'Plano', 'Streak', 'XP', 'Dias Inativo', 'Cadastro'];
