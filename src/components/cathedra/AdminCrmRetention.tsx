@@ -45,9 +45,41 @@ const daysSince = (date: string | null) => {
 
 const COLORS = ['hsl(var(--primary))', 'hsl(142 76% 36%)', 'hsl(45 93% 47%)', 'hsl(0 84% 60%)'];
 
+const PERIOD_OPTIONS = [
+  { label: '3 meses', value: 3 },
+  { label: '6 meses', value: 6 },
+  { label: '12 meses', value: 12 },
+  { label: 'Tudo', value: 0 },
+] as const;
+
 const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions }) => {
+  const [periodMonths, setPeriodMonths] = useState<number>(0);
+
+  const cutoffDate = useMemo(() => {
+    if (periodMonths === 0) return null;
+    const d = new Date();
+    d.setMonth(d.getMonth() - periodMonths);
+    return d;
+  }, [periodMonths]);
+
+  const filteredUsers = useMemo(() => {
+    if (!cutoffDate) return users;
+    return users.filter(u => new Date(u.created_at) >= cutoffDate);
+  }, [users, cutoffDate]);
+
+  const filteredTransactions = useMemo(() => {
+    if (!cutoffDate) return transactions;
+    return transactions.filter(t => t.created_at && new Date(t.created_at) >= cutoffDate);
+  }, [transactions, cutoffDate]);
+
+  const filteredRevenue = useMemo(() => {
+    return filteredTransactions
+      .filter(t => t.status === 'approved')
+      .reduce((sum, t) => sum + Number(t.amount), 0);
+  }, [filteredTransactions]);
+
   const metrics = useMemo(() => {
-    const active = users.filter(u => daysSince(u.last_visit) <= 3);
+    const active = filteredUsers.filter(u => daysSince(u.last_visit) <= 3);
     const atRisk = users.filter(u => daysSince(u.last_visit) >= 4 && daysSince(u.last_visit) <= 14);
     const churned = users.filter(u => daysSince(u.last_visit) > 14);
     const newUsers7d = users.filter(u => daysSince(u.created_at) <= 7);
