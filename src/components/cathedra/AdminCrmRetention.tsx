@@ -7,9 +7,10 @@ import {
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip,
   ResponsiveContainer, PieChart, Pie, Cell, AreaChart, Area
 } from 'recharts';
 
@@ -52,17 +53,24 @@ const calcDelta = (current: number, previous: number): { pct: string; direction:
   return { pct: `${delta > 0 ? '+' : ''}${delta.toFixed(1)}`, direction: delta > 0 ? 'up' : 'down' };
 };
 
-const DeltaBadge: React.FC<{ current: number; previous: number; invertColor?: boolean }> = ({ current, previous, invertColor }) => {
+const DeltaBadge: React.FC<{ current: number; previous: number; invertColor?: boolean; tooltip?: string }> = ({ current, previous, invertColor, tooltip }) => {
   const { pct, direction } = calcDelta(current, previous);
   const isGood = invertColor ? direction === 'down' : direction === 'up';
   const isBad = invertColor ? direction === 'up' : direction === 'down';
-  return (
-    <span className={`inline-flex items-center gap-0.5 text-[10px] font-medium ${isGood ? 'text-emerald-600' : isBad ? 'text-destructive' : 'text-muted-foreground'}`}>
+  const badge = (
+    <span className={`inline-flex items-center gap-0.5 text-[10px] font-medium cursor-default ${isGood ? 'text-emerald-600' : isBad ? 'text-destructive' : 'text-muted-foreground'}`}>
       {direction === 'up' && <ArrowUp className="w-3 h-3" />}
       {direction === 'down' && <ArrowDown className="w-3 h-3" />}
       {direction === 'flat' && <Minus className="w-3 h-3" />}
       {pct}%
     </span>
+  );
+  if (!tooltip) return badge;
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>{badge}</TooltipTrigger>
+      <TooltipContent side="top" className="text-xs">{tooltip}</TooltipContent>
+    </Tooltip>
   );
 };
 
@@ -221,7 +229,13 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
     toast.success(`Relatório de retenção exportado (${filteredUsers.length} usuários).`);
   }, [filteredUsers]);
 
+  const periodLabel = useMemo(() => {
+    const opt = PERIOD_OPTIONS.find(o => o.value === periodMonths);
+    return periodMonths === 0 ? null : `vs ${opt?.label ?? periodMonths + ' meses'} anteriores`;
+  }, [periodMonths]);
+
   return (
+    <TooltipProvider delayDuration={200}>
     <div className="space-y-6">
       {/* Period Filter + Export */}
       <div className="flex items-center justify-between flex-wrap gap-2">
@@ -252,7 +266,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
           <CardContent>
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-bold text-primary">{metrics.retentionRate}%</span>
-              {prevPeriod && <DeltaBadge current={parseFloat(metrics.retentionRate)} previous={prevPeriod.retentionRate} />}
+              {prevPeriod && periodLabel && <DeltaBadge current={parseFloat(metrics.retentionRate)} previous={prevPeriod.retentionRate} tooltip={periodLabel} />}
             </div>
             <p className="text-[11px] text-muted-foreground mt-1">{metrics.active.length} ativos de {filteredUsers.length}</p>
           </CardContent>
@@ -266,7 +280,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
           <CardContent>
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-bold text-destructive">{metrics.churnRate}%</span>
-              {prevPeriod && <DeltaBadge current={parseFloat(metrics.churnRate)} previous={prevPeriod.churnRate} invertColor />}
+              {prevPeriod && periodLabel && <DeltaBadge current={parseFloat(metrics.churnRate)} previous={prevPeriod.churnRate} invertColor tooltip={periodLabel} />}
             </div>
             <p className="text-[11px] text-muted-foreground mt-1">{metrics.churned.length} inativos ({'>'}14 dias)</p>
           </CardContent>
@@ -280,7 +294,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
           <CardContent>
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-bold">{metrics.avgStreak}</span>
-              {prevPeriod && <DeltaBadge current={parseFloat(metrics.avgStreak)} previous={prevPeriod.avgStreak} />}
+              {prevPeriod && periodLabel && <DeltaBadge current={parseFloat(metrics.avgStreak)} previous={prevPeriod.avgStreak} tooltip={periodLabel} />}
             </div>
             <p className="text-[11px] text-muted-foreground mt-1">dias consecutivos</p>
           </CardContent>
@@ -294,7 +308,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
           <CardContent>
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-bold text-primary">{metrics.newUsers7d.length}</span>
-              {prevPeriod && <DeltaBadge current={metrics.newUsers7d.length} previous={prevPeriod.newUsers7d} />}
+              {prevPeriod && periodLabel && <DeltaBadge current={metrics.newUsers7d.length} previous={prevPeriod.newUsers7d} tooltip={periodLabel} />}
             </div>
             <p className="text-[11px] text-muted-foreground mt-1">{metrics.newUsers30d.length} nos últimos 30 dias</p>
           </CardContent>
@@ -312,7 +326,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
                 <>
                   <div className="flex items-baseline gap-2">
                     <span className="text-3xl font-bold">R$ {ltv.toFixed(2)}</span>
-                    {prevPeriod && <DeltaBadge current={ltv} previous={prevPeriod.ltv} />}
+                    {prevPeriod && periodLabel && <DeltaBadge current={ltv} previous={prevPeriod.ltv} tooltip={periodLabel} />}
                   </div>
                   <p className="text-[11px] text-muted-foreground mt-1">receita / cliente PRO</p>
                 </>
@@ -333,7 +347,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
                 <>
                   <div className="flex items-baseline gap-2">
                     <span className="text-3xl font-bold">R$ {arpu.toFixed(2)}</span>
-                    {prevPeriod && <DeltaBadge current={arpu} previous={prevPeriod.arpu} />}
+                    {prevPeriod && periodLabel && <DeltaBadge current={arpu} previous={prevPeriod.arpu} tooltip={periodLabel} />}
                   </div>
                   <p className="text-[11px] text-muted-foreground mt-1">receita / usuário total</p>
                 </>
@@ -356,7 +370,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--muted-foreground) / 0.15)" />
                 <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={11} tickLine={false} axisLine={false} />
                 <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} tickLine={false} axisLine={false} />
-                <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--background))', borderColor: 'hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
+                <RechartsTooltip contentStyle={{ backgroundColor: 'hsl(var(--background))', borderColor: 'hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
                 <Bar dataKey="count" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} barSize={32} name="Usuários" />
               </BarChart>
             </ResponsiveContainer>
@@ -377,7 +391,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
                       <Cell key={i} fill={PIE_COLORS[i]} />
                     ))}
                   </Pie>
-                  <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--background))', borderColor: 'hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
+                  <RechartsTooltip contentStyle={{ backgroundColor: 'hsl(var(--background))', borderColor: 'hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
                 </PieChart>
               </ResponsiveContainer>
             ) : (
@@ -400,7 +414,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
                 <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="hsl(var(--muted-foreground) / 0.15)" />
                 <XAxis type="number" stroke="hsl(var(--muted-foreground))" fontSize={11} tickLine={false} axisLine={false} />
                 <YAxis type="category" dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={11} tickLine={false} axisLine={false} width={100} />
-                <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--background))', borderColor: 'hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
+                <RechartsTooltip contentStyle={{ backgroundColor: 'hsl(var(--background))', borderColor: 'hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
                 <Bar dataKey="value" radius={[0, 6, 6, 0]} barSize={36} name="Usuários">
                   {metrics.funnelData.map((entry, i) => (
                     <Cell key={i} fill={entry.fill} />
@@ -433,7 +447,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--muted-foreground) / 0.15)" />
                 <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" fontSize={11} tickLine={false} axisLine={false} />
                 <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `R$${v}`} />
-                <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--background))', borderColor: 'hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} formatter={(value: number) => [`R$ ${value.toFixed(2)}`, 'Receita']} />
+                <RechartsTooltip contentStyle={{ backgroundColor: 'hsl(var(--background))', borderColor: 'hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} formatter={(value: number) => [`R$ ${value.toFixed(2)}`, 'Receita']} />
                 <Area type="monotone" dataKey="total" stroke="hsl(var(--primary))" fillOpacity={1} fill="url(#colorMrr)" strokeWidth={2} />
               </AreaChart>
             </ResponsiveContainer>
@@ -466,6 +480,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
         </Card>
       )}
     </div>
+    </TooltipProvider>
   );
 };
 
