@@ -13,9 +13,14 @@ import {
   RotateCcw,
   ChevronLeft,
   ChevronRight,
-  CalendarDays
+  CalendarDays,
+  ChevronDown,
+  BookOpen,
+  ScrollText,
+  Flame,
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 interface Celebration {
   title: string;
@@ -63,94 +68,91 @@ const COLOUR_MAP: Record<string, string> = {
   rose: 'bg-pink-400 ring-pink-400/20',
 };
 
-/* ─── Reading Block ─── */
-const ReadingBlock: React.FC<{
-  label: string;
-  numeral: string;
-  reference: string;
-  title: string;
-  text: string;
-  accent?: 'primary' | 'gold';
-  fontBody?: string;
-  fontTitle?: string;
-  lineSpacing?: string;
-}> = ({ label, numeral, reference, title, text, accent = 'primary', fontBody = 'text-[15px] md:text-lg', fontTitle = 'text-base md:text-lg', lineSpacing = 'leading-[2] md:leading-[2.1]' }) => {
-  const isGold = accent === 'gold';
-  return (
-    <section className="space-y-5">
-      <div className="flex items-center gap-4">
-        <div className={`w-11 h-11 rounded-xl flex items-center justify-center font-display text-sm tracking-wider shadow-md shrink-0 ${
-          isGold ? 'bg-primary text-primary-foreground shadow-primary/20' : 'bg-accent text-accent-foreground shadow-accent/20'
-        }`}>
-          {numeral}
-        </div>
-        <div>
-          <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">{label}</h3>
-          <p className="text-sm font-semibold text-foreground/60 mt-0.5">{reference}</p>
-        </div>
-      </div>
-      <div className="ml-0 md:ml-[3.75rem] space-y-4">
-        <p className={`reader-text italic ${fontTitle} text-muted-foreground border-l-2 border-primary/20 pl-5 py-1.5`}>{title}</p>
-        <p className={`reader-text ${fontBody} ${lineSpacing} text-foreground/90 whitespace-pre-wrap tracking-[0.005em]`}>{text}</p>
-      </div>
-    </section>
-  );
+/* ─── Reading categories (Bible-style) ─── */
+const READING_CATEGORIES = {
+  primeiraLeitura: {
+    label: 'Primeira Leitura',
+    numeral: 'I',
+    icon: ScrollText,
+    color: 'text-amber-600',
+    bgColor: 'bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800',
+  },
+  salmo: {
+    label: 'Salmo Responsorial',
+    numeral: 'Ps',
+    icon: Music,
+    color: 'text-sky-600',
+    bgColor: 'bg-sky-50 dark:bg-sky-950/30 border-sky-200 dark:border-sky-800',
+  },
+  segundaLeitura: {
+    label: 'Segunda Leitura',
+    numeral: 'II',
+    icon: BookOpen,
+    color: 'text-indigo-600',
+    bgColor: 'bg-indigo-50 dark:bg-indigo-950/30 border-indigo-200 dark:border-indigo-800',
+  },
+  evangelho: {
+    label: 'Evangelho',
+    numeral: 'Ev',
+    icon: Flame,
+    color: 'text-rose-600',
+    bgColor: 'bg-rose-50 dark:bg-rose-950/30 border-rose-200 dark:border-rose-800',
+  },
 };
 
-/* ─── Psalm Block ─── */
-const PsalmBlock: React.FC<{
+/* ─── Collapsible Reading Section (Bible-style) ─── */
+const ReadingSection: React.FC<{
+  catKey: keyof typeof READING_CATEGORIES;
   reference: string;
-  refrain: string;
+  title?: string;
   text: string;
-  fontPsalm?: string;
+  refrain?: string;
   fontBody?: string;
-  lineSpacing?: string;
-}> = ({ reference, refrain, text, fontPsalm = 'text-lg md:text-xl', fontBody = 'text-[15px] md:text-lg', lineSpacing = 'leading-[2] md:leading-[2.1]' }) => (
-  <section className="space-y-5">
-    <div className="flex items-center gap-4">
-      <div className="w-11 h-11 rounded-xl bg-secondary text-primary flex items-center justify-center font-display text-sm tracking-wider border border-border shrink-0">
-        Ps
-      </div>
-      <div>
-        <h3 className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground">Salmo Responsorial</h3>
-        <p className="text-xs font-semibold text-foreground/60 mt-0.5">{reference}</p>
-      </div>
-    </div>
-    <div className="ml-0 md:ml-[3.75rem] bg-secondary/50 rounded-2xl p-5 md:p-8 border border-border relative overflow-hidden">
-      <Music className="absolute -top-2 -right-2 w-8 h-8 text-primary/5 rotate-12" />
-      <p className={`font-display ${fontPsalm} text-primary leading-snug mb-5`}>℟ {refrain}</p>
-      <p className={`reader-text ${fontBody} ${lineSpacing} text-foreground/80 whitespace-pre-wrap italic tracking-[0.005em]`}>{text}</p>
-    </div>
-  </section>
-);
-
-/* ─── Gospel Block ─── */
-const GospelBlock: React.FC<{
-  reference: string;
-  title: string;
-  text: string;
-  fontGospel?: string;
   fontTitle?: string;
+  fontPsalm?: string;
   lineSpacing?: string;
-}> = ({ reference, title, text, fontGospel = 'text-[16px] md:text-xl', fontTitle = 'text-base md:text-lg', lineSpacing = 'leading-[2] md:leading-[2.1]' }) => (
-  <section className="space-y-5">
-    <div className="flex items-center gap-4">
-      <div className="w-11 h-11 rounded-xl bg-primary text-primary-foreground flex items-center justify-center font-display text-sm tracking-wider shadow-md shadow-primary/20 shrink-0">
-        Ev
-      </div>
-      <div>
-        <h3 className="text-[9px] font-black uppercase tracking-[0.25em] text-primary">Evangelho</h3>
-        <p className="text-xs font-semibold text-foreground/60 mt-0.5">{reference}</p>
-      </div>
-    </div>
-    <div className="ml-0 md:ml-[3.75rem] space-y-4">
-      <p className={`reader-text italic ${fontTitle} text-muted-foreground border-l-2 border-primary/30 pl-5 py-1.5`}>{title}</p>
-      <div className="bg-primary/5 p-5 md:p-10 rounded-2xl border border-primary/10">
-        <p className={`reader-text ${fontGospel} ${lineSpacing} text-foreground/95 whitespace-pre-wrap text-center tracking-[0.005em]`}>{text}</p>
-      </div>
-    </div>
-  </section>
-);
+  defaultOpen?: boolean;
+}> = ({ catKey, reference, title, text, refrain, fontBody = 'text-[15px] md:text-lg', fontTitle = 'text-base md:text-lg', fontPsalm = 'text-lg md:text-xl', lineSpacing = 'leading-[2] md:leading-[2.1]', defaultOpen = true }) => {
+  const cat = READING_CATEGORIES[catKey];
+  const CatIcon = cat.icon;
+  const isPsalm = catKey === 'salmo';
+  const isGospel = catKey === 'evangelho';
+
+  return (
+    <Collapsible defaultOpen={defaultOpen}>
+      <CollapsibleTrigger className={`flex items-center gap-2.5 w-full px-4 py-3 rounded-xl border transition-all group ${cat.bgColor}`}>
+        <div className="p-1.5 rounded-lg bg-white/70 dark:bg-black/20">
+          <CatIcon className={`w-4 h-4 ${cat.color}`} />
+        </div>
+        <div className="flex flex-col items-start flex-1 min-w-0">
+          <span className={`text-xs font-black uppercase tracking-widest ${cat.color}`}>{cat.label}</span>
+          <span className="text-[10px] text-muted-foreground truncate w-full text-left">{reference}</span>
+        </div>
+        <ChevronDown className="w-4 h-4 text-muted-foreground transition-transform duration-200 group-data-[state=open]:rotate-180" />
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        <div className={`mt-2 rounded-2xl border border-border bg-card p-5 md:p-8 space-y-4 ${isGospel ? 'border-rose-200/50 dark:border-rose-800/30' : ''}`}>
+          {title && (
+            <p className={`reader-text italic ${fontTitle} text-muted-foreground border-l-2 ${isGospel ? 'border-rose-300 dark:border-rose-700' : 'border-primary/20'} pl-5 py-1.5`}>{title}</p>
+          )}
+          {isPsalm && refrain && (
+            <div className="bg-sky-50/50 dark:bg-sky-950/20 rounded-xl p-4 border border-sky-200/50 dark:border-sky-800/30 relative overflow-hidden">
+              <Music className="absolute -top-2 -right-2 w-8 h-8 text-sky-500/5 rotate-12" />
+              <p className={`font-display ${fontPsalm} text-sky-600 dark:text-sky-400 leading-snug`}>℟ {refrain}</p>
+            </div>
+          )}
+          {isGospel ? (
+            <div className="bg-rose-50/30 dark:bg-rose-950/10 p-5 md:p-8 rounded-xl border border-rose-200/30 dark:border-rose-800/20">
+              <p className={`reader-text text-[16px] md:text-xl ${lineSpacing} text-foreground/95 whitespace-pre-wrap text-center tracking-[0.005em]`}>{text}</p>
+            </div>
+          ) : (
+            <p className={`reader-text ${fontBody} ${lineSpacing} text-foreground/90 whitespace-pre-wrap tracking-[0.005em] ${isPsalm ? 'italic text-foreground/80' : ''}`}>{text}</p>
+          )}
+        </div>
+      </CollapsibleContent>
+    </Collapsible>
+  );
+};
 
 type FontSize = 'P' | 'M' | 'G';
 type LineSpacingType = 'compact' | 'normal' | 'relaxed';
@@ -417,12 +419,11 @@ const DailyLiturgy: React.FC = () => {
               </div>
             </div>
 
-            {/* Readings */}
+            {/* Readings (Bible-style collapsible sections) */}
             {readings ? (
-              <div className="space-y-12 pt-10">
-                <ReadingBlock
-                  label="Primeira Leitura"
-                  numeral="I"
+              <div className="space-y-3 pt-10">
+                <ReadingSection
+                  catKey="primeiraLeitura"
                   reference={readings.primeiraLeitura.referencia}
                   title={readings.primeiraLeitura.titulo}
                   text={readings.primeiraLeitura.texto}
@@ -431,7 +432,8 @@ const DailyLiturgy: React.FC = () => {
                   lineSpacing={lc}
                 />
 
-                <PsalmBlock
+                <ReadingSection
+                  catKey="salmo"
                   reference={readings.salmo.referencia}
                   refrain={readings.salmo.refrao}
                   text={readings.salmo.texto}
@@ -441,9 +443,8 @@ const DailyLiturgy: React.FC = () => {
                 />
 
                 {readings.segundaLeitura && typeof readings.segundaLeitura === 'object' && (
-                  <ReadingBlock
-                    label="Segunda Leitura"
-                    numeral="II"
+                  <ReadingSection
+                    catKey="segundaLeitura"
                     reference={readings.segundaLeitura.referencia}
                     title={readings.segundaLeitura.titulo}
                     text={readings.segundaLeitura.texto}
@@ -453,11 +454,12 @@ const DailyLiturgy: React.FC = () => {
                   />
                 )}
 
-                <GospelBlock
+                <ReadingSection
+                  catKey="evangelho"
                   reference={readings.evangelho.referencia}
                   title={readings.evangelho.titulo}
                   text={readings.evangelho.texto}
-                  fontGospel={fc.gospel}
+                  fontBody={fc.body}
                   fontTitle={fc.title}
                   lineSpacing={lc}
                 />
