@@ -74,7 +74,7 @@ interface BottomNavProps {
   user?: { role?: string } | null;
 }
 
-const BottomNav: React.FC<BottomNavProps> = ({ user }) => {
+const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
@@ -97,8 +97,14 @@ const BottomNav: React.FC<BottomNavProps> = ({ user }) => {
             label={item.label}
             icon={item.icon}
             route={item.route}
-            isActive={currentPath === item.route || (item.route === AppRoute.BIBLIOTECA && [AppRoute.BIBLE, AppRoute.CATECHISM, AppRoute.MAGISTERIUM, AppRoute.SAINTS].includes(currentPath as AppRoute))}
-            onClick={() => navigate(item.route)}
+            isActive={item.route !== '__sidebar__' && (currentPath === item.route || (item.route === AppRoute.BIBLIOTECA && [AppRoute.BIBLE, AppRoute.CATECHISM, AppRoute.MAGISTERIUM, AppRoute.SAINTS].includes(currentPath as AppRoute)))}
+            onClick={() => {
+              if (item.route === '__sidebar__') {
+                onOpenSidebar();
+              } else {
+                navigate(item.route);
+              }
+            }}
             onRipple={triggerRipple}
           />
         ))}
