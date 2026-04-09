@@ -4,7 +4,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { 
   Users, TrendingUp, Download, DollarSign, ArrowUpRight,
   BarChart3, Calendar, AlertCircle, Crown, Shield, Search,
-  ChevronDown, ChevronUp, UserCog, ArrowLeft, Home, Smartphone, MonitorSmartphone
+  ChevronDown, ChevronUp, UserCog, ArrowLeft, Home, Smartphone, MonitorSmartphone,
+  Target, Activity, Bell, LayoutGrid
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -16,6 +17,10 @@ import { toast } from 'sonner';
 
 const AdminChartsTab = lazy(() => import('./AdminChartsTab'));
 const AdminTransactionsTab = lazy(() => import('./AdminTransactionsTab'));
+const AdminCrmSegmentation = lazy(() => import('./AdminCrmSegmentation'));
+const AdminCrmRetention = lazy(() => import('./AdminCrmRetention'));
+const AdminCrmUserProfile = lazy(() => import('./AdminCrmUserProfile'));
+const AdminCrmAutomations = lazy(() => import('./AdminCrmAutomations'));
 
 interface Stats {
   totalUsers: number;
@@ -59,6 +64,8 @@ const AdminDashboard: React.FC = () => {
   const [manualLoading, setManualLoading] = useState(false);
   const [sortField, setSortField] = useState<'name' | 'created_at' | 'xp'>('created_at');
   const [sortAsc, setSortAsc] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
+  const [activeTab, setActiveTab] = useState('overview');
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -87,7 +94,6 @@ const AdminDashboard: React.FC = () => {
         const pwaOpens = metrics.filter(m => m.metric_type === 'pwa_open').length;
         const totalRevenue = transactions.reduce((acc, curr) => acc + Number(curr.amount), 0);
 
-        // Group users by month for growth chart
         const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
         const currentYear = new Date().getFullYear();
         
@@ -99,7 +105,6 @@ const AdminDashboard: React.FC = () => {
           return { name: month, total: count };
         }).slice(0, new Date().getMonth() + 1);
 
-        // Group revenue by week (last 4 weeks)
         const now = new Date();
         const revenueData = [3, 2, 1, 0].map(weeksAgo => {
           const start = new Date(now);
@@ -125,7 +130,7 @@ const AdminDashboard: React.FC = () => {
           pwaInstalls,
           pwaOpens,
           totalRevenue,
-          recentTransactions: transactions.slice(0, 5),
+          recentTransactions: transactions.slice(0, 10),
           userGrowth,
           revenueData,
         });
@@ -185,7 +190,6 @@ const AdminDashboard: React.FC = () => {
       return;
     }
     setManualLoading(true);
-    // Find user_id by email from sensitive data, then update profile
     const { data: sensitiveData, error: sensitiveError } = await (supabase as any)
       .from('user_sensitive_data')
       .select('user_id')
@@ -242,6 +246,17 @@ const AdminDashboard: React.FC = () => {
     return sortAsc ? <ChevronUp className="w-3 h-3 inline ml-1" /> : <ChevronDown className="w-3 h-3 inline ml-1" />;
   };
 
+  // If a user profile is selected, show it
+  if (selectedUser) {
+    return (
+      <div className="space-y-8 pb-10">
+        <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
+          <AdminCrmUserProfile user={selectedUser} onBack={() => setSelectedUser(null)} />
+        </Suspense>
+      </div>
+    );
+  }
+
   if (loading) {
     return (
       <div className="space-y-6 animate-pulse">
@@ -266,9 +281,9 @@ const AdminDashboard: React.FC = () => {
   return (
     <div className="space-y-8 pb-10">
       <div className="flex items-center justify-between gap-4">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-3xl font-bold tracking-tight">Painel Administrativo</h1>
-          <p className="text-muted-foreground">Visão geral do desempenho e gestão de usuários.</p>
+        <div className="flex flex-col gap-1">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Painel Administrativo</h1>
+          <p className="text-sm text-muted-foreground">CRM & Gestão completa da plataforma.</p>
         </div>
         <Button
           variant="outline"
@@ -281,89 +296,139 @@ const AdminDashboard: React.FC = () => {
         </Button>
       </div>
 
-      {/* Stats Overview */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-sm font-medium">Usuários</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats?.totalUsers}</div>
-            <p className="text-xs text-muted-foreground mt-1">Total cadastrados</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-sm font-medium">Assinantes PRO</CardTitle>
-            <Crown className="h-4 w-4 text-primary" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-primary">{stats?.premiumUsers}</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              {stats && stats.totalUsers > 0 ? `${((stats.premiumUsers / stats.totalUsers) * 100).toFixed(1)}%` : '0%'} do total
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-sm font-medium">Acessos</CardTitle>
-            <BarChart3 className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats?.totalVisits}</div>
-            <p className="text-xs text-muted-foreground mt-1">Visitas registradas</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-sm font-medium">Receita</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(stats?.totalRevenue || 0)}
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">Receita acumulada</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* PWA Metrics */}
-      <div className="grid grid-cols-2 gap-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-sm font-medium">Instalações PWA</CardTitle>
-            <Smartphone className="h-4 w-4 text-primary" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-primary">{stats?.pwaInstalls}</div>
-            <p className="text-xs text-muted-foreground mt-1">App instalado no dispositivo</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-sm font-medium">Acessos Standalone</CardTitle>
-            <MonitorSmartphone className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats?.pwaOpens}</div>
-            <p className="text-xs text-muted-foreground mt-1">Aberturas via app instalado</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Tabs defaultValue="users" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="users">Usuários</TabsTrigger>
-          <TabsTrigger value="charts">Gráficos</TabsTrigger>
-          <TabsTrigger value="transactions">Transações</TabsTrigger>
-          <TabsTrigger value="manual">Controle Manual</TabsTrigger>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <TabsList className="flex w-full overflow-x-auto">
+          <TabsTrigger value="overview" className="gap-1.5 text-xs sm:text-sm">
+            <LayoutGrid className="w-3.5 h-3.5 hidden sm:block" /> Visão Geral
+          </TabsTrigger>
+          <TabsTrigger value="segmentation" className="gap-1.5 text-xs sm:text-sm">
+            <Target className="w-3.5 h-3.5 hidden sm:block" /> Segmentação
+          </TabsTrigger>
+          <TabsTrigger value="retention" className="gap-1.5 text-xs sm:text-sm">
+            <Activity className="w-3.5 h-3.5 hidden sm:block" /> Retenção
+          </TabsTrigger>
+          <TabsTrigger value="automations" className="gap-1.5 text-xs sm:text-sm">
+            <Bell className="w-3.5 h-3.5 hidden sm:block" /> Automações
+          </TabsTrigger>
+          <TabsTrigger value="transactions" className="gap-1.5 text-xs sm:text-sm">
+            <DollarSign className="w-3.5 h-3.5 hidden sm:block" /> Financeiro
+          </TabsTrigger>
+          <TabsTrigger value="users" className="gap-1.5 text-xs sm:text-sm">
+            <Users className="w-3.5 h-3.5 hidden sm:block" /> Usuários
+          </TabsTrigger>
         </TabsList>
+
+        {/* Overview Tab */}
+        <TabsContent value="overview" className="space-y-6">
+          {/* Stats Overview */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                <CardTitle className="text-sm font-medium">Usuários</CardTitle>
+                <Users className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{stats?.totalUsers}</div>
+                <p className="text-xs text-muted-foreground mt-1">Total cadastrados</p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                <CardTitle className="text-sm font-medium">Assinantes PRO</CardTitle>
+                <Crown className="h-4 w-4 text-primary" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-primary">{stats?.premiumUsers}</div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {stats && stats.totalUsers > 0 ? `${((stats.premiumUsers / stats.totalUsers) * 100).toFixed(1)}%` : '0%'} do total
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                <CardTitle className="text-sm font-medium">Acessos</CardTitle>
+                <BarChart3 className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{stats?.totalVisits}</div>
+                <p className="text-xs text-muted-foreground mt-1">Visitas registradas</p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                <CardTitle className="text-sm font-medium">Receita</CardTitle>
+                <DollarSign className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(stats?.totalRevenue || 0)}
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">Receita acumulada</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* PWA Metrics */}
+          <div className="grid grid-cols-2 gap-4">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                <CardTitle className="text-sm font-medium">Instalações PWA</CardTitle>
+                <Smartphone className="h-4 w-4 text-primary" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-primary">{stats?.pwaInstalls}</div>
+                <p className="text-xs text-muted-foreground mt-1">App instalado no dispositivo</p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                <CardTitle className="text-sm font-medium">Acessos Standalone</CardTitle>
+                <MonitorSmartphone className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{stats?.pwaOpens}</div>
+                <p className="text-xs text-muted-foreground mt-1">Aberturas via app instalado</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Charts */}
+          <Suspense fallback={<Skeleton className="h-[350px] rounded-xl" />}>
+            <AdminChartsTab userGrowth={stats?.userGrowth || []} revenueData={stats?.revenueData || []} />
+          </Suspense>
+        </TabsContent>
+
+        {/* Segmentation Tab */}
+        <TabsContent value="segmentation">
+          <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
+            <AdminCrmSegmentation users={users} onSelectUser={setSelectedUser} />
+          </Suspense>
+        </TabsContent>
+
+        {/* Retention Tab */}
+        <TabsContent value="retention">
+          <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
+            <AdminCrmRetention users={users} />
+          </Suspense>
+        </TabsContent>
+
+        {/* Automations Tab */}
+        <TabsContent value="automations">
+          <Suspense fallback={<Skeleton className="h-[300px] rounded-xl" />}>
+            <AdminCrmAutomations />
+          </Suspense>
+        </TabsContent>
+
+        {/* Transactions Tab */}
+        <TabsContent value="transactions">
+          <Suspense fallback={<Skeleton className="h-[300px] rounded-xl" />}>
+            <AdminTransactionsTab transactions={stats?.recentTransactions || []} />
+          </Suspense>
+        </TabsContent>
 
         {/* Users Tab */}
         <TabsContent value="users" className="space-y-4">
@@ -465,27 +530,11 @@ const AdminDashboard: React.FC = () => {
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
 
-        {/* Charts Tab */}
-        <TabsContent value="charts">
-          <Suspense fallback={<Skeleton className="h-[350px] rounded-xl" />}>
-            <AdminChartsTab userGrowth={stats?.userGrowth || []} revenueData={stats?.revenueData || []} />
-          </Suspense>
-        </TabsContent>
-
-        {/* Transactions Tab */}
-        <TabsContent value="transactions">
-          <Suspense fallback={<Skeleton className="h-[300px] rounded-xl" />}>
-            <AdminTransactionsTab transactions={stats?.recentTransactions || []} />
-          </Suspense>
-        </TabsContent>
-
-        {/* Manual Control Tab */}
-        <TabsContent value="manual">
+          {/* Manual Control */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2"><Crown className="w-5 h-5 text-primary" /> Controle Manual de Acesso</CardTitle>
+              <CardTitle className="flex items-center gap-2 text-sm"><Crown className="w-4 h-4 text-primary" /> Controle Manual de Acesso</CardTitle>
               <CardDescription>Libere ou remova o acesso PRO de um usuário pelo email.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -502,6 +551,7 @@ const AdminDashboard: React.FC = () => {
                     onClick={() => handleManualPremium(true)}
                     disabled={manualLoading || !manualEmail.trim()}
                     className="gap-2"
+                    size="sm"
                   >
                     <Crown className="w-4 h-4" /> Liberar PRO
                   </Button>
@@ -510,6 +560,7 @@ const AdminDashboard: React.FC = () => {
                     onClick={() => handleManualPremium(false)}
                     disabled={manualLoading || !manualEmail.trim()}
                     className="gap-2"
+                    size="sm"
                   >
                     Remover PRO
                   </Button>
