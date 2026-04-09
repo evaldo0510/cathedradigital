@@ -412,7 +412,7 @@ const AdminDashboard: React.FC = () => {
         {/* Retention Tab */}
         <TabsContent value="retention">
           <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
-            <AdminCrmRetention users={users} />
+            <AdminCrmRetention users={users} totalRevenue={stats?.totalRevenue ?? 0} />
           </Suspense>
         </TabsContent>
 

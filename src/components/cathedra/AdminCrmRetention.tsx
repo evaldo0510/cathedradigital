@@ -1,7 +1,7 @@
 import React, { useMemo, useCallback } from 'react';
 import {
   Flame, TrendingDown, TrendingUp, Users, Clock, Activity,
-  AlertTriangle, UserMinus, UserPlus, Download
+  AlertTriangle, UserMinus, UserPlus, Download, DollarSign
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -27,6 +27,7 @@ interface UserProfile {
 
 interface Props {
   users: UserProfile[];
+  totalRevenue: number;
 }
 
 const daysSince = (date: string | null) => {
@@ -36,7 +37,7 @@ const daysSince = (date: string | null) => {
 
 const COLORS = ['hsl(var(--primary))', 'hsl(142 76% 36%)', 'hsl(45 93% 47%)', 'hsl(0 84% 60%)'];
 
-const AdminCrmRetention: React.FC<Props> = ({ users }) => {
+const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue }) => {
   const metrics = useMemo(() => {
     const active = users.filter(u => daysSince(u.last_visit) <= 3);
     const atRisk = users.filter(u => daysSince(u.last_visit) >= 4 && daysSince(u.last_visit) <= 14);
@@ -120,14 +121,14 @@ const AdminCrmRetention: React.FC<Props> = ({ users }) => {
         </Button>
       </div>
       {/* KPI Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardTitle className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Taxa de Retenção</CardTitle>
-            <TrendingUp className="h-4 w-4 text-emerald-500" />
+            <TrendingUp className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-emerald-500">{metrics.retentionRate}%</div>
+            <div className="text-3xl font-bold text-primary">{metrics.retentionRate}%</div>
             <p className="text-[11px] text-muted-foreground mt-1">{metrics.active.length} ativos de {users.length}</p>
           </CardContent>
         </Card>
@@ -146,7 +147,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users }) => {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardTitle className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Streak Médio</CardTitle>
-            <Flame className="h-4 w-4 text-orange-500" />
+            <Flame className="h-4 w-4 text-accent-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">{metrics.avgStreak}</div>
@@ -157,11 +158,39 @@ const AdminCrmRetention: React.FC<Props> = ({ users }) => {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardTitle className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Novos (7d)</CardTitle>
-            <UserPlus className="h-4 w-4 text-blue-500" />
+            <UserPlus className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-blue-500">{metrics.newUsers7d.length}</div>
+            <div className="text-3xl font-bold text-primary">{metrics.newUsers7d.length}</div>
             <p className="text-[11px] text-muted-foreground mt-1">{metrics.newUsers30d.length} nos últimos 30 dias</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+            <CardTitle className="text-xs font-medium uppercase tracking-wider text-muted-foreground">LTV Médio</CardTitle>
+            <DollarSign className="h-4 w-4 text-primary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold">
+              R$ {users.filter(u => u.is_premium).length > 0
+                ? (totalRevenue / users.filter(u => u.is_premium).length).toFixed(2)
+                : '0.00'}
+            </div>
+            <p className="text-[11px] text-muted-foreground mt-1">receita / cliente PRO</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+            <CardTitle className="text-xs font-medium uppercase tracking-wider text-muted-foreground">ARPU</CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold">
+              R$ {users.length > 0 ? (totalRevenue / users.length).toFixed(2) : '0.00'}
+            </div>
+            <p className="text-[11px] text-muted-foreground mt-1">receita / usuário total</p>
           </CardContent>
         </Card>
       </div>
