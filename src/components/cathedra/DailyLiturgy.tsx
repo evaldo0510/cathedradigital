@@ -118,6 +118,10 @@ const ReadingSection: React.FC<{
   const isPsalm = catKey === 'salmo';
   const isGospel = catKey === 'evangelho';
 
+  const shareText = isPsalm && refrain
+    ? `℟ ${refrain}\n\n${text}`
+    : text;
+
   return (
     <Collapsible defaultOpen={defaultOpen}>
       <CollapsibleTrigger className={`flex items-center gap-2.5 w-full px-4 py-3 rounded-xl border transition-all group ${cat.bgColor}`}>
@@ -148,6 +152,14 @@ const ReadingSection: React.FC<{
           ) : (
             <p className={`reader-text ${fontBody} ${lineSpacing} text-foreground/90 whitespace-pre-wrap tracking-[0.005em] ${isPsalm ? 'italic text-foreground/80' : ''}`}>{text}</p>
           )}
+          <div className="flex justify-end pt-2">
+            <ShareButton
+              title={`${cat.label} — ${reference}`}
+              text={shareText.substring(0, 500)}
+              size="sm"
+              variant="button"
+            />
+          </div>
         </div>
       </CollapsibleContent>
     </Collapsible>
