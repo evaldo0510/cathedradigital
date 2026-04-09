@@ -80,35 +80,34 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
 
   const metrics = useMemo(() => {
     const active = filteredUsers.filter(u => daysSince(u.last_visit) <= 3);
-    const atRisk = users.filter(u => daysSince(u.last_visit) >= 4 && daysSince(u.last_visit) <= 14);
-    const churned = users.filter(u => daysSince(u.last_visit) > 14);
-    const newUsers7d = users.filter(u => daysSince(u.created_at) <= 7);
-    const newUsers30d = users.filter(u => daysSince(u.created_at) <= 30);
+    const atRisk = filteredUsers.filter(u => daysSince(u.last_visit) >= 4 && daysSince(u.last_visit) <= 14);
+    const churned = filteredUsers.filter(u => daysSince(u.last_visit) > 14);
+    const newUsers7d = filteredUsers.filter(u => daysSince(u.created_at) <= 7);
+    const newUsers30d = filteredUsers.filter(u => daysSince(u.created_at) <= 30);
 
-    const avgStreak = users.length > 0
-      ? (users.reduce((sum, u) => sum + (u.streak ?? 0), 0) / users.length).toFixed(1)
+    const avgStreak = filteredUsers.length > 0
+      ? (filteredUsers.reduce((sum, u) => sum + (u.streak ?? 0), 0) / filteredUsers.length).toFixed(1)
       : '0';
 
-    const avgXp = users.length > 0
-      ? Math.round(users.reduce((sum, u) => sum + (u.xp ?? 0), 0) / users.length)
+    const avgXp = filteredUsers.length > 0
+      ? Math.round(filteredUsers.reduce((sum, u) => sum + (u.xp ?? 0), 0) / filteredUsers.length)
       : 0;
 
-    const retentionRate = users.length > 0
-      ? ((active.length / users.length) * 100).toFixed(1)
+    const retentionRate = filteredUsers.length > 0
+      ? ((active.length / filteredUsers.length) * 100).toFixed(1)
       : '0';
 
-    const churnRate = users.length > 0
-      ? ((churned.length / users.length) * 100).toFixed(1)
+    const churnRate = filteredUsers.length > 0
+      ? ((churned.length / filteredUsers.length) * 100).toFixed(1)
       : '0';
 
-    // Streak distribution
     const streakBuckets = [
-      { name: '0', count: users.filter(u => (u.streak ?? 0) === 0).length },
-      { name: '1-3', count: users.filter(u => (u.streak ?? 0) >= 1 && (u.streak ?? 0) <= 3).length },
-      { name: '4-7', count: users.filter(u => (u.streak ?? 0) >= 4 && (u.streak ?? 0) <= 7).length },
-      { name: '8-14', count: users.filter(u => (u.streak ?? 0) >= 8 && (u.streak ?? 0) <= 14).length },
-      { name: '15-30', count: users.filter(u => (u.streak ?? 0) >= 15 && (u.streak ?? 0) <= 30).length },
-      { name: '30+', count: users.filter(u => (u.streak ?? 0) > 30).length },
+      { name: '0', count: filteredUsers.filter(u => (u.streak ?? 0) === 0).length },
+      { name: '1-3', count: filteredUsers.filter(u => (u.streak ?? 0) >= 1 && (u.streak ?? 0) <= 3).length },
+      { name: '4-7', count: filteredUsers.filter(u => (u.streak ?? 0) >= 4 && (u.streak ?? 0) <= 7).length },
+      { name: '8-14', count: filteredUsers.filter(u => (u.streak ?? 0) >= 8 && (u.streak ?? 0) <= 14).length },
+      { name: '15-30', count: filteredUsers.filter(u => (u.streak ?? 0) >= 15 && (u.streak ?? 0) <= 30).length },
+      { name: '30+', count: filteredUsers.filter(u => (u.streak ?? 0) > 30).length },
     ];
 
     const statusPie = [
@@ -117,16 +116,16 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
       { name: 'Inativos', value: churned.length },
     ].filter(d => d.value > 0);
 
-    const premium = users.filter(u => u.is_premium);
+    const premium = filteredUsers.filter(u => u.is_premium);
 
     const funnelData = [
-      { name: 'Cadastrados', value: users.length, fill: 'hsl(var(--primary))' },
+      { name: 'Cadastrados', value: filteredUsers.length, fill: 'hsl(var(--primary))' },
       { name: 'Ativos (≤3d)', value: active.length, fill: 'hsl(142 76% 36%)' },
       { name: 'PRO', value: premium.length, fill: 'hsl(45 93% 47%)' },
     ];
 
-    return { active, atRisk, churned, newUsers7d, newUsers30d, avgStreak, avgXp, retentionRate, churnRate, streakBuckets, statusPie, funnelData };
-  }, [users]);
+    return { active, atRisk, churned, newUsers7d, newUsers30d, avgStreak, avgXp, retentionRate, churnRate, streakBuckets, statusPie, funnelData, premium };
+  }, [filteredUsers]);
 
   const mrrData = useMemo(() => {
     const approved = transactions.filter(t => t.status === 'approved' && t.created_at);
