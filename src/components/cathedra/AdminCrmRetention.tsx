@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback, useState } from 'react';
 import {
   Flame, TrendingDown, TrendingUp, Users, Clock, Activity,
   AlertTriangle, UserMinus, UserPlus, Download, DollarSign
@@ -45,38 +45,69 @@ const daysSince = (date: string | null) => {
 
 const COLORS = ['hsl(var(--primary))', 'hsl(142 76% 36%)', 'hsl(45 93% 47%)', 'hsl(0 84% 60%)'];
 
-const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions }) => {
-  const metrics = useMemo(() => {
-    const active = users.filter(u => daysSince(u.last_visit) <= 3);
-    const atRisk = users.filter(u => daysSince(u.last_visit) >= 4 && daysSince(u.last_visit) <= 14);
-    const churned = users.filter(u => daysSince(u.last_visit) > 14);
-    const newUsers7d = users.filter(u => daysSince(u.created_at) <= 7);
-    const newUsers30d = users.filter(u => daysSince(u.created_at) <= 30);
+const PERIOD_OPTIONS = [
+  { label: '3 meses', value: 3 },
+  { label: '6 meses', value: 6 },
+  { label: '12 meses', value: 12 },
+  { label: 'Tudo', value: 0 },
+] as const;
 
-    const avgStreak = users.length > 0
-      ? (users.reduce((sum, u) => sum + (u.streak ?? 0), 0) / users.length).toFixed(1)
+const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions }) => {
+  const [periodMonths, setPeriodMonths] = useState<number>(0);
+
+  const cutoffDate = useMemo(() => {
+    if (periodMonths === 0) return null;
+    const d = new Date();
+    d.setMonth(d.getMonth() - periodMonths);
+    return d;
+  }, [periodMonths]);
+
+  const filteredUsers = useMemo(() => {
+    if (!cutoffDate) return users;
+    return users.filter(u => new Date(u.created_at) >= cutoffDate);
+  }, [users, cutoffDate]);
+
+  const filteredTransactions = useMemo(() => {
+    if (!cutoffDate) return transactions;
+    return transactions.filter(t => t.created_at && new Date(t.created_at) >= cutoffDate);
+  }, [transactions, cutoffDate]);
+
+  const filteredRevenue = useMemo(() => {
+    return filteredTransactions
+      .filter(t => t.status === 'approved')
+      .reduce((sum, t) => sum + Number(t.amount), 0);
+  }, [filteredTransactions]);
+
+  const metrics = useMemo(() => {
+    const active = filteredUsers.filter(u => daysSince(u.last_visit) <= 3);
+    const atRisk = filteredUsers.filter(u => daysSince(u.last_visit) >= 4 && daysSince(u.last_visit) <= 14);
+    const churned = filteredUsers.filter(u => daysSince(u.last_visit) > 14);
+    const newUsers7d = filteredUsers.filter(u => daysSince(u.created_at) <= 7);
+    const newUsers30d = filteredUsers.filter(u => daysSince(u.created_at) <= 30);
+
+    const avgStreak = filteredUsers.length > 0
+      ? (filteredUsers.reduce((sum, u) => sum + (u.streak ?? 0), 0) / filteredUsers.length).toFixed(1)
       : '0';
 
-    const avgXp = users.length > 0
-      ? Math.round(users.reduce((sum, u) => sum + (u.xp ?? 0), 0) / users.length)
+    const avgXp = filteredUsers.length > 0
+      ? Math.round(filteredUsers.reduce((sum, u) => sum + (u.xp ?? 0), 0) / filteredUsers.length)
       : 0;
 
-    const retentionRate = users.length > 0
-      ? ((active.length / users.length) * 100).toFixed(1)
+    const retentionRate = filteredUsers.length > 0
+      ? ((active.length / filteredUsers.length) * 100).toFixed(1)
       : '0';
 
-    const churnRate = users.length > 0
-      ? ((churned.length / users.length) * 100).toFixed(1)
+    const churnRate = filteredUsers.length > 0
+      ? ((churned.length / filteredUsers.length) * 100).toFixed(1)
       : '0';
 
-    // Streak distribution
     const streakBuckets = [
-      { name: '0', count: users.filter(u => (u.streak ?? 0) === 0).length },
-      { name: '1-3', count: users.filter(u => (u.streak ?? 0) >= 1 && (u.streak ?? 0) <= 3).length },
-      { name: '4-7', count: users.filter(u => (u.streak ?? 0) >= 4 && (u.streak ?? 0) <= 7).length },
-      { name: '8-14', count: users.filter(u => (u.streak ?? 0) >= 8 && (u.streak ?? 0) <= 14).length },
-      { name: '15-30', count: users.filter(u => (u.streak ?? 0) >= 15 && (u.streak ?? 0) <= 30).length },
-      { name: '30+', count: users.filter(u => (u.streak ?? 0) > 30).length },
+      { name: '0', count: filteredUsers.filter(u => (u.streak ?? 0) === 0).length },
+      { name: '1-3', count: filteredUsers.filter(u => (u.streak ?? 0) >= 1 && (u.streak ?? 0) <= 3).length },
+      { name: '4-7', count: filteredUsers.filter(u => (u.streak ?? 0) >= 4 && (u.streak ?? 0) <= 7).length },
+      { name: '8-14', count: filteredUsers.filter(u => (u.streak ?? 0) >= 8 && (u.streak ?? 0) <= 14).length },
+      { name: '15-30', count: filteredUsers.filter(u => (u.streak ?? 0) >= 15 && (u.streak ?? 0) <= 30).length },
+      { name: '30+', count: filteredUsers.filter(u => (u.streak ?? 0) > 30).length },
     ];
 
     const statusPie = [
@@ -85,19 +116,19 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
       { name: 'Inativos', value: churned.length },
     ].filter(d => d.value > 0);
 
-    const premium = users.filter(u => u.is_premium);
+    const premium = filteredUsers.filter(u => u.is_premium);
 
     const funnelData = [
-      { name: 'Cadastrados', value: users.length, fill: 'hsl(var(--primary))' },
+      { name: 'Cadastrados', value: filteredUsers.length, fill: 'hsl(var(--primary))' },
       { name: 'Ativos (≤3d)', value: active.length, fill: 'hsl(142 76% 36%)' },
       { name: 'PRO', value: premium.length, fill: 'hsl(45 93% 47%)' },
     ];
 
-    return { active, atRisk, churned, newUsers7d, newUsers30d, avgStreak, avgXp, retentionRate, churnRate, streakBuckets, statusPie, funnelData };
-  }, [users]);
+    return { active, atRisk, churned, newUsers7d, newUsers30d, avgStreak, avgXp, retentionRate, churnRate, streakBuckets, statusPie, funnelData, premium };
+  }, [filteredUsers]);
 
   const mrrData = useMemo(() => {
-    const approved = transactions.filter(t => t.status === 'approved' && t.created_at);
+    const approved = filteredTransactions.filter(t => t.status === 'approved' && t.created_at);
     const monthMap: Record<string, number> = {};
     approved.forEach(t => {
       const d = new Date(t.created_at!);
@@ -107,13 +138,13 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
     return Object.entries(monthMap)
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([month, total]) => ({ month, total: Number(total.toFixed(2)) }));
-  }, [transactions]);
+  }, [filteredTransactions]);
 
   const PIE_COLORS = ['hsl(142 76% 36%)', 'hsl(45 93% 47%)', 'hsl(0 84% 60%)'];
 
   const exportRetentionCsv = useCallback(() => {
     const headers = ['Nome', 'Email', 'Status', 'Plano', 'Streak', 'XP', 'Dias Inativo', 'Cadastro'];
-    const rows = users.map(u => {
+    const rows = filteredUsers.map(u => {
       const days = daysSince(u.last_visit);
       const status = days <= 3 ? 'Ativo' : days <= 14 ? 'Em risco' : 'Inativo';
       return [
@@ -130,14 +161,27 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
     a.download = `retencao_${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
-    toast.success(`Relatório de retenção exportado (${users.length} usuários).`);
-  }, [users]);
+    toast.success(`Relatório de retenção exportado (${filteredUsers.length} usuários).`);
+  }, [filteredUsers]);
 
   return (
     <div className="space-y-6">
-      {/* Export + KPI Cards */}
-      <div className="flex justify-end">
-        <Button size="sm" variant="outline" className="h-8 text-xs gap-1.5" onClick={exportRetentionCsv} disabled={users.length === 0}>
+      {/* Period Filter + Export */}
+      <div className="flex items-center justify-between flex-wrap gap-2">
+        <div className="flex gap-1.5">
+          {PERIOD_OPTIONS.map(opt => (
+            <Button
+              key={opt.value}
+              size="sm"
+              variant={periodMonths === opt.value ? 'default' : 'outline'}
+              className="h-8 text-xs"
+              onClick={() => setPeriodMonths(opt.value)}
+            >
+              {opt.label}
+            </Button>
+          ))}
+        </div>
+        <Button size="sm" variant="outline" className="h-8 text-xs gap-1.5" onClick={exportRetentionCsv} disabled={filteredUsers.length === 0}>
           <Download className="w-3.5 h-3.5" /> Exportar CSV
         </Button>
       </div>
@@ -150,7 +194,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-primary">{metrics.retentionRate}%</div>
-            <p className="text-[11px] text-muted-foreground mt-1">{metrics.active.length} ativos de {users.length}</p>
+            <p className="text-[11px] text-muted-foreground mt-1">{metrics.active.length} ativos de {filteredUsers.length}</p>
           </CardContent>
         </Card>
 
@@ -194,8 +238,8 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">
-              R$ {users.filter(u => u.is_premium).length > 0
-                ? (totalRevenue / users.filter(u => u.is_premium).length).toFixed(2)
+              R$ {metrics.premium.length > 0
+                ? (filteredRevenue / metrics.premium.length).toFixed(2)
                 : '0.00'}
             </div>
             <p className="text-[11px] text-muted-foreground mt-1">receita / cliente PRO</p>
@@ -209,7 +253,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">
-              R$ {users.length > 0 ? (totalRevenue / users.length).toFixed(2) : '0.00'}
+              R$ {filteredUsers.length > 0 ? (filteredRevenue / filteredUsers.length).toFixed(2) : '0.00'}
             </div>
             <p className="text-[11px] text-muted-foreground mt-1">receita / usuário total</p>
           </CardContent>
@@ -267,7 +311,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
           <CardDescription>Cadastro → Ativo → PRO</CardDescription>
         </CardHeader>
         <CardContent className="h-[280px]">
-          {users.length > 0 ? (
+          {filteredUsers.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={metrics.funnelData} layout="vertical" barCategoryGap="20%">
                 <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="hsl(var(--muted-foreground) / 0.15)" />
