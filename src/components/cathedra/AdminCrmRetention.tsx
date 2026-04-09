@@ -281,6 +281,15 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
     return result;
   }, [users, transactions]);
 
+  const SparkTooltip = ({ active, payload }: any) => {
+    if (!active || !payload?.[0]) return null;
+    return (
+      <div className="rounded-md bg-popover px-2 py-1 text-[10px] font-medium text-popover-foreground shadow-md border border-border">
+        {Number(payload[0].value).toFixed(1)}
+      </div>
+    );
+  };
+
   const Sparkline: React.FC<{ data: { v: number }[]; color?: string }> = ({ data, color = 'hsl(var(--primary))' }) => (
     <div className="h-8 w-20 ml-auto">
       <ResponsiveContainer width="100%" height="100%">
@@ -291,7 +300,8 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
               <stop offset="95%" stopColor={color} stopOpacity={0} />
             </linearGradient>
           </defs>
-          <Area type="monotone" dataKey="v" stroke={color} strokeWidth={1.5} fill={`url(#spark-${color.replace(/[^a-z0-9]/gi, '')})`} dot={false} />
+          <RechartsTooltip content={<SparkTooltip />} cursor={false} />
+          <Area type="monotone" dataKey="v" stroke={color} strokeWidth={1.5} fill={`url(#spark-${color.replace(/[^a-z0-9]/gi, '')})`} dot={false} activeDot={{ r: 2.5, strokeWidth: 0, fill: color }} />
         </AreaChart>
       </ResponsiveContainer>
     </div>
