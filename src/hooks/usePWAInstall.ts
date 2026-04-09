@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -27,6 +28,11 @@ export const usePWAInstall = () => {
       setIsInstalled(true);
       setIsInstallable(false);
       setDeferredPrompt(null);
+      // Track PWA install
+      supabase.from('app_metrics').insert([{
+        metric_type: 'pwa_install',
+        metadata: { userAgent: navigator.userAgent, timestamp: new Date().toISOString() }
+      }]).then(() => {}, () => {});
     };
 
     window.addEventListener('beforeinstallprompt', handler);
