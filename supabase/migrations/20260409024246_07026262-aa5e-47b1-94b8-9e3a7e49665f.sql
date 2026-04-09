@@ -1,0 +1,5 @@
+
+DELETE FROM journey_progress WHERE journey_id = 'a1b2c3d4-0002-4000-8000-000000000002';
+DELETE FROM spiritual_journal WHERE journey_id = 'a1b2c3d4-0002-4000-8000-000000000002';
+DELETE FROM journey_steps WHERE journey_id = 'a1b2c3d4-0002-4000-8000-000000000002';
+DELETE FROM journeys WHERE id = 'a1b2c3d4-0002-4000-8000-000000000002';
