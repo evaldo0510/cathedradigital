@@ -311,7 +311,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
           <CardDescription>Cadastro → Ativo → PRO</CardDescription>
         </CardHeader>
         <CardContent className="h-[280px]">
-          {users.length > 0 ? (
+          {filteredUsers.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={metrics.funnelData} layout="vertical" barCategoryGap="20%">
                 <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="hsl(var(--muted-foreground) / 0.15)" />
