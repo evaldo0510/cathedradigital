@@ -60,14 +60,28 @@ const JornadasPage: React.FC = () => {
   }, [journeys]);
 
   const difficulties = useMemo(() => {
-    const diffs = [...new Set(journeys.map(j => j.difficulty))];
-    return diffs;
+    const normalize = (d: string) => d.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    const seen = new Set<string>();
+    const result: string[] = [];
+    journeys.forEach(j => {
+      const key = normalize(j.difficulty);
+      if (!seen.has(key)) {
+        seen.add(key);
+        result.push(j.difficulty);
+      }
+    });
+    return result;
   }, [journeys]);
+
+  const difficultyMatches = (journeyDiff: string, filterDiff: string) => {
+    const normalize = (d: string) => d.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    return normalize(journeyDiff) === normalize(filterDiff);
+  };
 
   const filteredJourneys = useMemo(() => {
     return journeys.filter(j => {
       if (filterCategory !== 'all' && j.category !== filterCategory) return false;
-      if (filterDifficulty !== 'all' && j.difficulty !== filterDifficulty) return false;
+      if (filterDifficulty !== 'all' && !difficultyMatches(j.difficulty, filterDifficulty)) return false;
       return true;
     });
   }, [journeys, filterCategory, filterDifficulty]);
