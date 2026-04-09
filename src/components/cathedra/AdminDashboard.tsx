@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { 
   Users, TrendingUp, Download, DollarSign, ArrowUpRight,
   BarChart3, Calendar, AlertCircle, Crown, Shield, Search,
-  ChevronDown, ChevronUp, UserCog, ArrowLeft, Home
+  ChevronDown, ChevronUp, UserCog, ArrowLeft, Home, Smartphone, MonitorSmartphone
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -23,6 +23,8 @@ interface Stats {
   totalVisits: number;
   totalDownloads: number;
   totalRevenue: number;
+  pwaInstalls: number;
+  pwaOpens: number;
   recentTransactions: any[];
   userGrowth: any[];
   revenueData: any[];
@@ -81,6 +83,8 @@ const AdminDashboard: React.FC = () => {
         const premiumCount = allProfiles.filter(p => p.is_premium).length;
         const visitsCount = metrics.filter(m => m.metric_type === 'visit').length;
         const downloadsCount = metrics.filter(m => m.metric_type === 'download').length;
+        const pwaInstalls = metrics.filter(m => m.metric_type === 'pwa_install').length;
+        const pwaOpens = metrics.filter(m => m.metric_type === 'pwa_open').length;
         const totalRevenue = transactions.reduce((acc, curr) => acc + Number(curr.amount), 0);
 
         // Group users by month for growth chart
@@ -118,6 +122,8 @@ const AdminDashboard: React.FC = () => {
           premiumUsers: premiumCount,
           totalVisits: visitsCount,
           totalDownloads: downloadsCount,
+          pwaInstalls,
+          pwaOpens,
           totalRevenue,
           recentTransactions: transactions.slice(0, 5),
           userGrowth,
@@ -322,6 +328,31 @@ const AdminDashboard: React.FC = () => {
               {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(stats?.totalRevenue || 0)}
             </div>
             <p className="text-xs text-muted-foreground mt-1">Receita acumulada</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* PWA Metrics */}
+      <div className="grid grid-cols-2 gap-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+            <CardTitle className="text-sm font-medium">Instalações PWA</CardTitle>
+            <Smartphone className="h-4 w-4 text-primary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-primary">{stats?.pwaInstalls}</div>
+            <p className="text-xs text-muted-foreground mt-1">App instalado no dispositivo</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+            <CardTitle className="text-sm font-medium">Acessos Standalone</CardTitle>
+            <MonitorSmartphone className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats?.pwaOpens}</div>
+            <p className="text-xs text-muted-foreground mt-1">Aberturas via app instalado</p>
           </CardContent>
         </Card>
       </div>
