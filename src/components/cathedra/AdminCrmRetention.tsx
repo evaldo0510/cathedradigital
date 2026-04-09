@@ -1,7 +1,8 @@
 import React, { useMemo, useCallback, useState } from 'react';
 import {
   Flame, TrendingDown, TrendingUp, Users, Clock, Activity,
-  AlertTriangle, UserMinus, UserPlus, Download, DollarSign
+  AlertTriangle, UserMinus, UserPlus, Download, DollarSign,
+  ArrowUp, ArrowDown, Minus
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
