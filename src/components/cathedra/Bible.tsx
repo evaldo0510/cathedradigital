@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
+import SEOHead from '@/components/SEOHead';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
 import StaggeredList from './StaggeredList';
@@ -538,8 +539,11 @@ const Bible: React.FC = () => {
 
   // Books list
   return (
-    <motion.div 
+    <>
+    <SEOHead title="Bíblia Sagrada Online" description="Leia a Bíblia Sagrada completa com 73 livros do cânon católico. Acesse o Antigo e Novo Testamento online e gratuitamente." path="/bible" keywords="bíblia católica online, bíblia sagrada, antigo testamento, novo testamento, leitura bíblica" />
+    <motion.div
       className="max-w-5xl mx-auto space-y-8"
+
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
@@ -658,6 +662,7 @@ const Bible: React.FC = () => {
         })}
       </div>
     </motion.div>
+    </>
   );
 };
 

@@ -1,5 +1,6 @@
 import React, { lazy, Suspense, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import SEOHead from '@/components/SEOHead';
 import { motion } from 'framer-motion';
 import { Icons } from '../../constants';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
@@ -97,6 +98,8 @@ const LiturgiaPage: React.FC = () => {
   };
 
   return (
+    <>
+    <SEOHead title="Liturgia Diária e Orações" description="Acompanhe a liturgia diária, missal romano, calendário litúrgico e orações católicas. Reze online todos os dias." path="/liturgia" keywords="liturgia diária online, missal romano, calendário litúrgico, oração diária católica" />
     <motion.div
       className="max-w-6xl mx-auto space-y-6"
       initial={{ opacity: 0 }}
@@ -216,6 +219,7 @@ const LiturgiaPage: React.FC = () => {
         </div>
       </Tabs>
     </motion.div>
+    </>
   );
 };
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import SEOHead from '@/components/SEOHead';
 import { motion } from 'framer-motion';
 import { Compass, Sparkles, Clock, ChevronRight, ArrowRight, Filter } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -144,6 +145,8 @@ const JornadasPage: React.FC = () => {
   }
 
   return (
+    <>
+    <SEOHead title="Jornadas Espirituais" description="Percorra jornadas de transformação espiritual com conteúdos guiados de formação católica. Cresça na fé passo a passo." path="/jornadas" keywords="jornada espiritual, formação católica, crescimento espiritual, retiro online" />
     <div className="space-y-6 max-w-2xl mx-auto">
       {/* Header */}
       <div className="text-center space-y-3">
@@ -322,6 +325,7 @@ const JornadasPage: React.FC = () => {
         </div>
       )}
     </div>
+    </>
   );
 };
 
