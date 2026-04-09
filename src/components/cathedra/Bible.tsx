@@ -539,8 +539,11 @@ const Bible: React.FC = () => {
 
   // Books list
   return (
-    <motion.div 
+    <>
+    <SEOHead title="Bíblia Sagrada Online" description="Leia a Bíblia Sagrada completa com 73 livros do cânon católico. Acesse o Antigo e Novo Testamento online e gratuitamente." path="/bible" keywords="bíblia católica online, bíblia sagrada, antigo testamento, novo testamento, leitura bíblica" />
+    <motion.div
       className="max-w-5xl mx-auto space-y-8"
+
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
