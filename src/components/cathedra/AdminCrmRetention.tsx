@@ -194,7 +194,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-primary">{metrics.retentionRate}%</div>
-            <p className="text-[11px] text-muted-foreground mt-1">{metrics.active.length} ativos de {users.length}</p>
+            <p className="text-[11px] text-muted-foreground mt-1">{metrics.active.length} ativos de {filteredUsers.length}</p>
           </CardContent>
         </Card>
 
@@ -238,8 +238,8 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">
-              R$ {users.filter(u => u.is_premium).length > 0
-                ? (totalRevenue / users.filter(u => u.is_premium).length).toFixed(2)
+              R$ {metrics.premium.length > 0
+                ? (filteredRevenue / metrics.premium.length).toFixed(2)
                 : '0.00'}
             </div>
             <p className="text-[11px] text-muted-foreground mt-1">receita / cliente PRO</p>
@@ -253,7 +253,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">
-              R$ {users.length > 0 ? (totalRevenue / users.length).toFixed(2) : '0.00'}
+              R$ {filteredUsers.length > 0 ? (filteredRevenue / filteredUsers.length).toFixed(2) : '0.00'}
             </div>
             <p className="text-[11px] text-muted-foreground mt-1">receita / usuário total</p>
           </CardContent>
