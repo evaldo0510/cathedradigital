@@ -234,6 +234,68 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
     return periodMonths === 0 ? null : `vs ${opt?.label ?? periodMonths + ' meses'} anteriores`;
   }, [periodMonths]);
 
+  // Monthly sparkline data for KPIs
+  const sparklines = useMemo(() => {
+    const now = new Date();
+    const months = 6;
+    const result: { retention: { v: number }[]; churn: { v: number }[]; streak: { v: number }[]; newUsers: { v: number }[]; ltv: { v: number }[]; arpu: { v: number }[] } = {
+      retention: [], churn: [], streak: [], newUsers: [], ltv: [], arpu: [],
+    };
+
+    for (let i = months - 1; i >= 0; i--) {
+      const end = new Date(now.getFullYear(), now.getMonth() - i + 1, 0);
+      const start = new Date(end.getFullYear(), end.getMonth(), 1);
+
+      const usersAtTime = users.filter(u => new Date(u.created_at) <= end);
+      const active = usersAtTime.filter(u => {
+        if (!u.last_visit) return false;
+        const lv = new Date(u.last_visit);
+        return lv >= start;
+      });
+      const churned = usersAtTime.filter(u => {
+        if (!u.last_visit) return true;
+        const diff = (end.getTime() - new Date(u.last_visit).getTime()) / (1000 * 60 * 60 * 24);
+        return diff > 14;
+      });
+      const newU = users.filter(u => {
+        const d = new Date(u.created_at);
+        return d >= start && d <= end;
+      });
+      const monthTx = transactions.filter(t => {
+        if (!t.created_at || t.status !== 'approved') return false;
+        const d = new Date(t.created_at);
+        return d >= start && d <= end;
+      });
+      const monthRev = monthTx.reduce((s, t) => s + Number(t.amount), 0);
+      const premium = usersAtTime.filter(u => u.is_premium);
+      const total = usersAtTime.length || 1;
+
+      result.retention.push({ v: (active.length / total) * 100 });
+      result.churn.push({ v: (churned.length / total) * 100 });
+      result.streak.push({ v: usersAtTime.length > 0 ? usersAtTime.reduce((s, u) => s + (u.streak ?? 0), 0) / usersAtTime.length : 0 });
+      result.newUsers.push({ v: newU.length });
+      result.ltv.push({ v: premium.length > 0 ? monthRev / premium.length : 0 });
+      result.arpu.push({ v: monthRev / total });
+    }
+    return result;
+  }, [users, transactions]);
+
+  const Sparkline: React.FC<{ data: { v: number }[]; color?: string }> = ({ data, color = 'hsl(var(--primary))' }) => (
+    <div className="h-8 w-20 ml-auto">
+      <ResponsiveContainer width="100%" height="100%">
+        <AreaChart data={data} margin={{ top: 2, right: 0, bottom: 0, left: 0 }}>
+          <defs>
+            <linearGradient id={`spark-${color.replace(/[^a-z0-9]/gi, '')}`} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor={color} stopOpacity={0.3} />
+              <stop offset="95%" stopColor={color} stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <Area type="monotone" dataKey="v" stroke={color} strokeWidth={1.5} fill={`url(#spark-${color.replace(/[^a-z0-9]/gi, '')})`} dot={false} />
+        </AreaChart>
+      </ResponsiveContainer>
+    </div>
+  );
+
   return (
     <TooltipProvider delayDuration={200}>
     <div className="space-y-6">
