@@ -4,6 +4,7 @@ import { CheckCircle2, Clock, PenTool, Heart, RotateCcw, Calendar } from 'lucide
 import { STEPS } from './constants';
 import ShareButton from '../ShareButton';
 import FlowConnector from '../FlowConnector';
+import ProConversionBanner from '../ProConversionBanner';
 import { routeUser } from '@/lib/smartRouter';
 
 interface LectioConclusioProps {
