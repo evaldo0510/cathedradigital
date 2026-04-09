@@ -153,9 +153,59 @@ const JornadasPage: React.FC = () => {
         </CardContent>
       </Card>
 
+      {/* Filters */}
+      <div className="space-y-3">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Filter className="w-4 h-4" />
+          <span className="font-medium">Filtrar por:</span>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={() => setFilterCategory('all')}
+            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+              filterCategory === 'all' ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:bg-muted/80'
+            }`}
+          >
+            Todas
+          </button>
+          {categories.map(cat => (
+            <button
+              key={cat}
+              onClick={() => setFilterCategory(cat)}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                filterCategory === cat ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:bg-muted/80'
+              }`}
+            >
+              {CATEGORY_ICONS[cat] || '📖'} {CATEGORY_LABELS[cat] || cat}
+            </button>
+          ))}
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={() => setFilterDifficulty('all')}
+            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+              filterDifficulty === 'all' ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:bg-muted/80'
+            }`}
+          >
+            Todos os níveis
+          </button>
+          {difficulties.map(diff => (
+            <button
+              key={diff}
+              onClick={() => setFilterDifficulty(diff)}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                filterDifficulty === diff ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:bg-muted/80'
+              }`}
+            >
+              {DIFFICULTY_LABELS[diff] || diff}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Journey Cards */}
       <div className="space-y-4">
-        {journeys.map((journey, i) => {
+        {filteredJourneys.map((journey, i) => {
           const totalSteps = stepsCountMap[journey.id] || 0;
           const completedSteps = progressMap[journey.id] || 0;
           const progressPercent = totalSteps > 0 ? (completedSteps / totalSteps) * 100 : 0;
