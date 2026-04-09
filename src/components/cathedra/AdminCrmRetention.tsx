@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer, PieChart, Pie, Cell, FunnelChart, Funnel, LabelList
+  ResponsiveContainer, PieChart, Pie, Cell
 } from 'recharts';
 
 interface UserProfile {
@@ -219,13 +219,17 @@ const AdminCrmRetention: React.FC<Props> = ({ users }) => {
         <CardContent className="h-[280px]">
           {users.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
-              <FunnelChart>
+              <BarChart data={metrics.funnelData} layout="vertical" barCategoryGap="20%">
+                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="hsl(var(--muted-foreground) / 0.15)" />
+                <XAxis type="number" stroke="hsl(var(--muted-foreground))" fontSize={11} tickLine={false} axisLine={false} />
+                <YAxis type="category" dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={11} tickLine={false} axisLine={false} width={100} />
                 <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--background))', borderColor: 'hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
-                <Funnel dataKey="value" data={metrics.funnelData} isAnimationActive>
-                  <LabelList position="right" fill="hsl(var(--foreground))" stroke="none" fontSize={12} formatter={(value: number) => `${value}`} />
-                  <LabelList position="center" fill="#fff" stroke="none" fontSize={11} dataKey="name" />
-                </Funnel>
-              </FunnelChart>
+                <Bar dataKey="value" radius={[0, 6, 6, 0]} barSize={36} name="Usuários">
+                  {metrics.funnelData.map((entry, i) => (
+                    <Cell key={i} fill={entry.fill} />
+                  ))}
+                </Bar>
+              </BarChart>
             </ResponsiveContainer>
           ) : (
             <p className="text-muted-foreground text-sm text-center pt-20">Sem dados suficientes.</p>
