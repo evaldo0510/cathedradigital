@@ -81,7 +81,7 @@ const JornadasPage: React.FC = () => {
   const filteredJourneys = useMemo(() => {
     return journeys.filter(j => {
       if (filterCategory !== 'all' && j.category !== filterCategory) return false;
-      if (filterDifficulty !== 'all' && j.difficulty !== filterDifficulty) return false;
+      if (filterDifficulty !== 'all' && !difficultyMatches(j.difficulty, filterDifficulty)) return false;
       return true;
     });
   }, [journeys, filterCategory, filterDifficulty]);
