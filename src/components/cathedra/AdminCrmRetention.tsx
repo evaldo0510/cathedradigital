@@ -287,7 +287,35 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
         </CardContent>
       </Card>
 
-      {/* At-Risk Users Alert */}
+      {/* MRR Chart */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-sm">Receita Mensal Recorrente (MRR)</CardTitle>
+          <CardDescription>Evolução mensal da receita aprovada</CardDescription>
+        </CardHeader>
+        <CardContent className="h-[280px]">
+          {mrrData.length > 0 ? (
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={mrrData}>
+                <defs>
+                  <linearGradient id="colorMrr" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--muted-foreground) / 0.15)" />
+                <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" fontSize={11} tickLine={false} axisLine={false} />
+                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `R$${v}`} />
+                <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--background))', borderColor: 'hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} formatter={(value: number) => [`R$ ${value.toFixed(2)}`, 'Receita']} />
+                <Area type="monotone" dataKey="total" stroke="hsl(var(--primary))" fillOpacity={1} fill="url(#colorMrr)" strokeWidth={2} />
+              </AreaChart>
+            </ResponsiveContainer>
+          ) : (
+            <p className="text-muted-foreground text-sm text-center pt-20">Sem transações aprovadas.</p>
+          )}
+        </CardContent>
+      </Card>
+
       {metrics.atRisk.length > 0 && (
         <Card className="border-amber-500/30 bg-amber-500/5">
           <CardHeader className="pb-3">
