@@ -1,7 +1,6 @@
 import { useEffect, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
-import { useNavigate } from "react-router-dom";
 import { AppRoute } from "@/types";
 import { useAuth } from "@/hooks/useAuth";
 import HeroSection from "./landing/HeroSection";
