@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import SEOHead from '@/components/SEOHead';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
 import { AppRoute } from '@/types';

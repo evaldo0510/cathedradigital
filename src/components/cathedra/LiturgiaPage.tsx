@@ -1,5 +1,6 @@
 import React, { lazy, Suspense, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import SEOHead from '@/components/SEOHead';
 import { motion } from 'framer-motion';
 import { Icons } from '../../constants';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';

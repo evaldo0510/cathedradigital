@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import SEOHead from '@/components/SEOHead';
 import { Icons } from '../../constants';
 import { AppRoute } from '@/types';
 import { Badge } from '@/components/ui/badge';

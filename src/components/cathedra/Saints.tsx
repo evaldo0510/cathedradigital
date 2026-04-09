@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import SEOHead from '@/components/SEOHead';
 import { Icons } from '../../constants';
 import StaggeredList from './StaggeredList';
 import SacredImage from './SacredImage';
