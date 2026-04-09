@@ -124,7 +124,7 @@ const HeroSection = ({ onStart, onAbout }: HeroSectionProps) => {
         </motion.div>
 
         {/* Title with letter-by-letter animation */}
-        <div className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-display font-bold tracking-tight text-foreground leading-[1.1]">
+        <div className="text-4xl sm:text-5xl md:text-7xl font-display font-bold tracking-tight text-foreground leading-[1.1] lg:text-7xl">
           <AnimatedTitle text="Aprofunde sua fé" />
           <br className="hidden sm:block" />
           <span className="inline sm:hidden">{" "}</span>
