@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer, PieChart, Pie, Cell
+  ResponsiveContainer, PieChart, Pie, Cell, FunnelChart, Funnel, LabelList
 } from 'recharts';
 
 interface UserProfile {
@@ -76,7 +76,15 @@ const AdminCrmRetention: React.FC<Props> = ({ users }) => {
       { name: 'Inativos', value: churned.length },
     ].filter(d => d.value > 0);
 
-    return { active, atRisk, churned, newUsers7d, newUsers30d, avgStreak, avgXp, retentionRate, churnRate, streakBuckets, statusPie };
+    const premium = users.filter(u => u.is_premium);
+
+    const funnelData = [
+      { name: 'Cadastrados', value: users.length, fill: 'hsl(var(--primary))' },
+      { name: 'Ativos (≤3d)', value: active.length, fill: 'hsl(142 76% 36%)' },
+      { name: 'PRO', value: premium.length, fill: 'hsl(45 93% 47%)' },
+    ];
+
+    return { active, atRisk, churned, newUsers7d, newUsers30d, avgStreak, avgXp, retentionRate, churnRate, streakBuckets, statusPie, funnelData };
   }, [users]);
 
   const PIE_COLORS = ['hsl(142 76% 36%)', 'hsl(45 93% 47%)', 'hsl(0 84% 60%)'];
@@ -201,6 +209,29 @@ const AdminCrmRetention: React.FC<Props> = ({ users }) => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Conversion Funnel */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-sm">Funil de Conversão</CardTitle>
+          <CardDescription>Cadastro → Ativo → PRO</CardDescription>
+        </CardHeader>
+        <CardContent className="h-[280px]">
+          {users.length > 0 ? (
+            <ResponsiveContainer width="100%" height="100%">
+              <FunnelChart>
+                <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--background))', borderColor: 'hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
+                <Funnel dataKey="value" data={metrics.funnelData} isAnimationActive>
+                  <LabelList position="right" fill="hsl(var(--foreground))" stroke="none" fontSize={12} formatter={(value: number) => `${value}`} />
+                  <LabelList position="center" fill="#fff" stroke="none" fontSize={11} dataKey="name" />
+                </Funnel>
+              </FunnelChart>
+            </ResponsiveContainer>
+          ) : (
+            <p className="text-muted-foreground text-sm text-center pt-20">Sem dados suficientes.</p>
+          )}
+        </CardContent>
+      </Card>
 
       {/* At-Risk Users Alert */}
       {metrics.atRisk.length > 0 && (
