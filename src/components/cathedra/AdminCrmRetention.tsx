@@ -1,7 +1,8 @@
 import React, { useMemo, useCallback, useState } from 'react';
 import {
   Flame, TrendingDown, TrendingUp, Users, Clock, Activity,
-  AlertTriangle, UserMinus, UserPlus, Download, DollarSign
+  AlertTriangle, UserMinus, UserPlus, Download, DollarSign,
+  ArrowUp, ArrowDown, Minus
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -43,6 +44,28 @@ const daysSince = (date: string | null) => {
   return Math.floor((Date.now() - new Date(date).getTime()) / (1000 * 60 * 60 * 24));
 };
 
+const calcDelta = (current: number, previous: number): { pct: string; direction: 'up' | 'down' | 'flat' } => {
+  if (previous === 0 && current === 0) return { pct: '0', direction: 'flat' };
+  if (previous === 0) return { pct: '+∞', direction: 'up' };
+  const delta = ((current - previous) / previous) * 100;
+  if (Math.abs(delta) < 0.5) return { pct: '0', direction: 'flat' };
+  return { pct: `${delta > 0 ? '+' : ''}${delta.toFixed(1)}`, direction: delta > 0 ? 'up' : 'down' };
+};
+
+const DeltaBadge: React.FC<{ current: number; previous: number; invertColor?: boolean }> = ({ current, previous, invertColor }) => {
+  const { pct, direction } = calcDelta(current, previous);
+  const isGood = invertColor ? direction === 'down' : direction === 'up';
+  const isBad = invertColor ? direction === 'up' : direction === 'down';
+  return (
+    <span className={`inline-flex items-center gap-0.5 text-[10px] font-medium ${isGood ? 'text-emerald-600' : isBad ? 'text-destructive' : 'text-muted-foreground'}`}>
+      {direction === 'up' && <ArrowUp className="w-3 h-3" />}
+      {direction === 'down' && <ArrowDown className="w-3 h-3" />}
+      {direction === 'flat' && <Minus className="w-3 h-3" />}
+      {pct}%
+    </span>
+  );
+};
+
 const COLORS = ['hsl(var(--primary))', 'hsl(142 76% 36%)', 'hsl(45 93% 47%)', 'hsl(0 84% 60%)'];
 
 const PERIOD_OPTIONS = [
@@ -77,6 +100,40 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
       .filter(t => t.status === 'approved')
       .reduce((sum, t) => sum + Number(t.amount), 0);
   }, [filteredTransactions]);
+
+  // Previous period data for comparison
+  const prevPeriod = useMemo(() => {
+    if (periodMonths === 0) return null;
+    const prevEnd = new Date();
+    prevEnd.setMonth(prevEnd.getMonth() - periodMonths);
+    const prevStart = new Date(prevEnd);
+    prevStart.setMonth(prevStart.getMonth() - periodMonths);
+
+    const prevUsers = users.filter(u => {
+      const d = new Date(u.created_at);
+      return d >= prevStart && d < prevEnd;
+    });
+    const prevTx = transactions.filter(t => {
+      if (!t.created_at) return false;
+      const d = new Date(t.created_at);
+      return d >= prevStart && d < prevEnd;
+    });
+
+    const prevActive = prevUsers.filter(u => daysSince(u.last_visit) <= 3);
+    const prevChurned = prevUsers.filter(u => daysSince(u.last_visit) > 14);
+    const prevPremium = prevUsers.filter(u => u.is_premium);
+    const prevAvgStreak = prevUsers.length > 0
+      ? prevUsers.reduce((s, u) => s + (u.streak ?? 0), 0) / prevUsers.length
+      : 0;
+    const prevNewUsers7d = prevUsers.filter(u => daysSince(u.created_at) <= 7);
+    const prevRevenue = prevTx.filter(t => t.status === 'approved').reduce((s, t) => s + Number(t.amount), 0);
+    const prevRetention = prevUsers.length > 0 ? (prevActive.length / prevUsers.length) * 100 : 0;
+    const prevChurn = prevUsers.length > 0 ? (prevChurned.length / prevUsers.length) * 100 : 0;
+    const prevLtv = prevPremium.length > 0 ? prevRevenue / prevPremium.length : 0;
+    const prevArpu = prevUsers.length > 0 ? prevRevenue / prevUsers.length : 0;
+
+    return { retentionRate: prevRetention, churnRate: prevChurn, avgStreak: prevAvgStreak, newUsers7d: prevNewUsers7d.length, ltv: prevLtv, arpu: prevArpu };
+  }, [periodMonths, users, transactions]);
 
   const metrics = useMemo(() => {
     const active = filteredUsers.filter(u => daysSince(u.last_visit) <= 3);
@@ -193,7 +250,10 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
             <TrendingUp className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-primary">{metrics.retentionRate}%</div>
+            <div className="flex items-baseline gap-2">
+              <span className="text-3xl font-bold text-primary">{metrics.retentionRate}%</span>
+              {prevPeriod && <DeltaBadge current={parseFloat(metrics.retentionRate)} previous={prevPeriod.retentionRate} />}
+            </div>
             <p className="text-[11px] text-muted-foreground mt-1">{metrics.active.length} ativos de {filteredUsers.length}</p>
           </CardContent>
         </Card>
@@ -204,7 +264,10 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
             <TrendingDown className="h-4 w-4 text-destructive" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-destructive">{metrics.churnRate}%</div>
+            <div className="flex items-baseline gap-2">
+              <span className="text-3xl font-bold text-destructive">{metrics.churnRate}%</span>
+              {prevPeriod && <DeltaBadge current={parseFloat(metrics.churnRate)} previous={prevPeriod.churnRate} invertColor />}
+            </div>
             <p className="text-[11px] text-muted-foreground mt-1">{metrics.churned.length} inativos ({'>'}14 dias)</p>
           </CardContent>
         </Card>
@@ -215,7 +278,10 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
             <Flame className="h-4 w-4 text-accent-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">{metrics.avgStreak}</div>
+            <div className="flex items-baseline gap-2">
+              <span className="text-3xl font-bold">{metrics.avgStreak}</span>
+              {prevPeriod && <DeltaBadge current={parseFloat(metrics.avgStreak)} previous={prevPeriod.avgStreak} />}
+            </div>
             <p className="text-[11px] text-muted-foreground mt-1">dias consecutivos</p>
           </CardContent>
         </Card>
@@ -226,7 +292,10 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
             <UserPlus className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-primary">{metrics.newUsers7d.length}</div>
+            <div className="flex items-baseline gap-2">
+              <span className="text-3xl font-bold text-primary">{metrics.newUsers7d.length}</span>
+              {prevPeriod && <DeltaBadge current={metrics.newUsers7d.length} previous={prevPeriod.newUsers7d} />}
+            </div>
             <p className="text-[11px] text-muted-foreground mt-1">{metrics.newUsers30d.length} nos últimos 30 dias</p>
           </CardContent>
         </Card>
@@ -237,12 +306,18 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
             <DollarSign className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">
-              R$ {metrics.premium.length > 0
-                ? (filteredRevenue / metrics.premium.length).toFixed(2)
-                : '0.00'}
-            </div>
-            <p className="text-[11px] text-muted-foreground mt-1">receita / cliente PRO</p>
+            {(() => {
+              const ltv = metrics.premium.length > 0 ? filteredRevenue / metrics.premium.length : 0;
+              return (
+                <>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-bold">R$ {ltv.toFixed(2)}</span>
+                    {prevPeriod && <DeltaBadge current={ltv} previous={prevPeriod.ltv} />}
+                  </div>
+                  <p className="text-[11px] text-muted-foreground mt-1">receita / cliente PRO</p>
+                </>
+              );
+            })()}
           </CardContent>
         </Card>
 
@@ -252,10 +327,18 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">
-              R$ {filteredUsers.length > 0 ? (filteredRevenue / filteredUsers.length).toFixed(2) : '0.00'}
-            </div>
-            <p className="text-[11px] text-muted-foreground mt-1">receita / usuário total</p>
+            {(() => {
+              const arpu = filteredUsers.length > 0 ? filteredRevenue / filteredUsers.length : 0;
+              return (
+                <>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-bold">R$ {arpu.toFixed(2)}</span>
+                    {prevPeriod && <DeltaBadge current={arpu} previous={prevPeriod.arpu} />}
+                  </div>
+                  <p className="text-[11px] text-muted-foreground mt-1">receita / usuário total</p>
+                </>
+              );
+            })()}
           </CardContent>
         </Card>
       </div>
