@@ -419,12 +419,11 @@ const DailyLiturgy: React.FC = () => {
               </div>
             </div>
 
-            {/* Readings */}
+            {/* Readings (Bible-style collapsible sections) */}
             {readings ? (
-              <div className="space-y-12 pt-10">
-                <ReadingBlock
-                  label="Primeira Leitura"
-                  numeral="I"
+              <div className="space-y-3 pt-10">
+                <ReadingSection
+                  catKey="primeiraLeitura"
                   reference={readings.primeiraLeitura.referencia}
                   title={readings.primeiraLeitura.titulo}
                   text={readings.primeiraLeitura.texto}
@@ -433,7 +432,8 @@ const DailyLiturgy: React.FC = () => {
                   lineSpacing={lc}
                 />
 
-                <PsalmBlock
+                <ReadingSection
+                  catKey="salmo"
                   reference={readings.salmo.referencia}
                   refrain={readings.salmo.refrao}
                   text={readings.salmo.texto}
@@ -443,9 +443,8 @@ const DailyLiturgy: React.FC = () => {
                 />
 
                 {readings.segundaLeitura && typeof readings.segundaLeitura === 'object' && (
-                  <ReadingBlock
-                    label="Segunda Leitura"
-                    numeral="II"
+                  <ReadingSection
+                    catKey="segundaLeitura"
                     reference={readings.segundaLeitura.referencia}
                     title={readings.segundaLeitura.titulo}
                     text={readings.segundaLeitura.texto}
@@ -455,11 +454,12 @@ const DailyLiturgy: React.FC = () => {
                   />
                 )}
 
-                <GospelBlock
+                <ReadingSection
+                  catKey="evangelho"
                   reference={readings.evangelho.referencia}
                   title={readings.evangelho.titulo}
                   text={readings.evangelho.texto}
-                  fontGospel={fc.gospel}
+                  fontBody={fc.body}
                   fontTitle={fc.title}
                   lineSpacing={lc}
                 />
