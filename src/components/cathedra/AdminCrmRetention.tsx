@@ -345,11 +345,16 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
             <TrendingDown className="h-4 w-4 text-destructive" />
           </CardHeader>
           <CardContent>
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-bold text-destructive">{metrics.churnRate}%</span>
-              {prevPeriod && periodLabel && <DeltaBadge current={parseFloat(metrics.churnRate)} previous={prevPeriod.churnRate} invertColor tooltip={periodLabel} />}
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl font-bold text-destructive">{metrics.churnRate}%</span>
+                  {prevPeriod && periodLabel && <DeltaBadge current={parseFloat(metrics.churnRate)} previous={prevPeriod.churnRate} invertColor tooltip={periodLabel} />}
+                </div>
+                <p className="text-[11px] text-muted-foreground mt-1">{metrics.churned.length} inativos ({'>'}14 dias)</p>
+              </div>
+              <Sparkline data={sparklines.churn} color="hsl(var(--destructive))" />
             </div>
-            <p className="text-[11px] text-muted-foreground mt-1">{metrics.churned.length} inativos ({'>'}14 dias)</p>
           </CardContent>
         </Card>
 
@@ -359,11 +364,16 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
             <Flame className="h-4 w-4 text-accent-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-bold">{metrics.avgStreak}</span>
-              {prevPeriod && periodLabel && <DeltaBadge current={parseFloat(metrics.avgStreak)} previous={prevPeriod.avgStreak} tooltip={periodLabel} />}
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl font-bold">{metrics.avgStreak}</span>
+                  {prevPeriod && periodLabel && <DeltaBadge current={parseFloat(metrics.avgStreak)} previous={prevPeriod.avgStreak} tooltip={periodLabel} />}
+                </div>
+                <p className="text-[11px] text-muted-foreground mt-1">dias consecutivos</p>
+              </div>
+              <Sparkline data={sparklines.streak} />
             </div>
-            <p className="text-[11px] text-muted-foreground mt-1">dias consecutivos</p>
           </CardContent>
         </Card>
 
@@ -373,11 +383,16 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
             <UserPlus className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-bold text-primary">{metrics.newUsers7d.length}</span>
-              {prevPeriod && periodLabel && <DeltaBadge current={metrics.newUsers7d.length} previous={prevPeriod.newUsers7d} tooltip={periodLabel} />}
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl font-bold text-primary">{metrics.newUsers7d.length}</span>
+                  {prevPeriod && periodLabel && <DeltaBadge current={metrics.newUsers7d.length} previous={prevPeriod.newUsers7d} tooltip={periodLabel} />}
+                </div>
+                <p className="text-[11px] text-muted-foreground mt-1">{metrics.newUsers30d.length} nos últimos 30 dias</p>
+              </div>
+              <Sparkline data={sparklines.newUsers} />
             </div>
-            <p className="text-[11px] text-muted-foreground mt-1">{metrics.newUsers30d.length} nos últimos 30 dias</p>
           </CardContent>
         </Card>
 
@@ -390,13 +405,16 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
             {(() => {
               const ltv = metrics.premium.length > 0 ? filteredRevenue / metrics.premium.length : 0;
               return (
-                <>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-bold">R$ {ltv.toFixed(2)}</span>
-                    {prevPeriod && periodLabel && <DeltaBadge current={ltv} previous={prevPeriod.ltv} tooltip={periodLabel} />}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-3xl font-bold">R$ {ltv.toFixed(2)}</span>
+                      {prevPeriod && periodLabel && <DeltaBadge current={ltv} previous={prevPeriod.ltv} tooltip={periodLabel} />}
+                    </div>
+                    <p className="text-[11px] text-muted-foreground mt-1">receita / cliente PRO</p>
                   </div>
-                  <p className="text-[11px] text-muted-foreground mt-1">receita / cliente PRO</p>
-                </>
+                  <Sparkline data={sparklines.ltv} />
+                </div>
               );
             })()}
           </CardContent>
@@ -411,13 +429,16 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
             {(() => {
               const arpu = filteredUsers.length > 0 ? filteredRevenue / filteredUsers.length : 0;
               return (
-                <>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-bold">R$ {arpu.toFixed(2)}</span>
-                    {prevPeriod && periodLabel && <DeltaBadge current={arpu} previous={prevPeriod.arpu} tooltip={periodLabel} />}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-3xl font-bold">R$ {arpu.toFixed(2)}</span>
+                      {prevPeriod && periodLabel && <DeltaBadge current={arpu} previous={prevPeriod.arpu} tooltip={periodLabel} />}
+                    </div>
+                    <p className="text-[11px] text-muted-foreground mt-1">receita / usuário total</p>
                   </div>
-                  <p className="text-[11px] text-muted-foreground mt-1">receita / usuário total</p>
-                </>
+                  <Sparkline data={sparklines.arpu} />
+                </div>
               );
             })()}
           </CardContent>
