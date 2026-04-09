@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Progress } from '@/components/ui/progress';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import ProConversionBanner from './ProConversionBanner';
 
 const SECTION_CONFIG = [
   { key: 'intro', label: 'Leitura Guiada', icon: <BookOpen className="w-4 h-4" /> },

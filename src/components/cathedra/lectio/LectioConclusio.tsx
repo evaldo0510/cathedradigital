@@ -113,6 +113,9 @@ const LectioConclusio: React.FC<LectioConclusioProps> = ({ selectedPassage, note
         </div>
       </motion.div>
 
+      {/* PRO Conversion Banner */}
+      <ProConversionBanner context="lectio" />
+
       {/* Smart Flow Connector */}
       <FlowConnector
         recommendations={recommendations}
