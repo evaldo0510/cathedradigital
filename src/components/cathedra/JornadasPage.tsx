@@ -31,6 +31,17 @@ const CATEGORY_ICONS: Record<string, string> = {
   oracao: '🙏',
   mistico: '✨',
   cura: '💛',
+  transformacao: '🦋',
+};
+
+const CATEGORY_LABELS: Record<string, string> = {
+  fundamentos: 'Fundamentos',
+  formacao: 'Formação',
+  rotina: 'Rotina',
+  oracao: 'Oração',
+  mistico: 'Místico',
+  cura: 'Cura',
+  transformacao: 'Transformação',
 };
 
 const JornadasPage: React.FC = () => {
