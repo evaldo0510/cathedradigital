@@ -1,7 +1,7 @@
 import React, { useCallback, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AppRoute } from '../../types';
-import { Sun, Compass, BookOpen, Users, User } from 'lucide-react';
+import { Sun, Compass, BookOpen, LayoutGrid, User } from 'lucide-react';
 import { prefetchRoute } from '@/lib/prefetch';
 
 /* ── Ripple helper ── */
@@ -84,7 +84,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user }) => {
     { label: 'Hoje', icon: <Sun />, route: AppRoute.HOJE },
     { label: 'Jornadas', icon: <Compass />, route: AppRoute.JORNADAS },
     { label: 'Biblioteca', icon: <BookOpen />, route: AppRoute.BIBLIOTECA },
-    { label: 'Comunidade', icon: <Users />, route: AppRoute.COMMUNITY },
+    { label: 'Ferramentas', icon: <LayoutGrid />, route: AppRoute.DASHBOARD },
     { label: 'Perfil', icon: <User />, route: AppRoute.PROFILE },
   ];
 
