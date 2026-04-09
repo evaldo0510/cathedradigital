@@ -288,9 +288,22 @@ const JornadasPage: React.FC = () => {
         })}
       </div>
 
-      {journeys.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-muted-foreground">Nenhuma jornada disponível ainda.</p>
+      {filteredJourneys.length === 0 && (
+        <div className="text-center py-12 space-y-3">
+          <p className="text-muted-foreground">
+            {journeys.length === 0
+              ? 'Nenhuma jornada disponível ainda.'
+              : 'Nenhuma jornada encontrada com esses filtros.'}
+          </p>
+          {journeys.length > 0 && (
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => { setFilterCategory('all'); setFilterDifficulty('all'); }}
+            >
+              Limpar filtros
+            </Button>
+          )}
         </div>
       )}
     </div>
