@@ -15,6 +15,11 @@ export const usePWAInstall = () => {
     // Check if already installed
     if (window.matchMedia('(display-mode: standalone)').matches) {
       setIsInstalled(true);
+      // Track PWA open (already installed)
+      supabase.from('app_metrics').insert([{
+        metric_type: 'pwa_open',
+        metadata: { userAgent: navigator.userAgent }
+      }]).then(() => {}, () => {});
       return;
     }
 
