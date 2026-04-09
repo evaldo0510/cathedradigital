@@ -13,9 +13,14 @@ import {
   RotateCcw,
   ChevronLeft,
   ChevronRight,
-  CalendarDays
+  CalendarDays,
+  ChevronDown,
+  BookOpen,
+  ScrollText,
+  Flame,
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 interface Celebration {
   title: string;
@@ -63,38 +68,36 @@ const COLOUR_MAP: Record<string, string> = {
   rose: 'bg-pink-400 ring-pink-400/20',
 };
 
-/* ─── Reading Block ─── */
-const ReadingBlock: React.FC<{
-  label: string;
-  numeral: string;
-  reference: string;
-  title: string;
-  text: string;
-  accent?: 'primary' | 'gold';
-  fontBody?: string;
-  fontTitle?: string;
-  lineSpacing?: string;
-}> = ({ label, numeral, reference, title, text, accent = 'primary', fontBody = 'text-[15px] md:text-lg', fontTitle = 'text-base md:text-lg', lineSpacing = 'leading-[2] md:leading-[2.1]' }) => {
-  const isGold = accent === 'gold';
-  return (
-    <section className="space-y-5">
-      <div className="flex items-center gap-4">
-        <div className={`w-11 h-11 rounded-xl flex items-center justify-center font-display text-sm tracking-wider shadow-md shrink-0 ${
-          isGold ? 'bg-primary text-primary-foreground shadow-primary/20' : 'bg-accent text-accent-foreground shadow-accent/20'
-        }`}>
-          {numeral}
-        </div>
-        <div>
-          <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">{label}</h3>
-          <p className="text-sm font-semibold text-foreground/60 mt-0.5">{reference}</p>
-        </div>
-      </div>
-      <div className="ml-0 md:ml-[3.75rem] space-y-4">
-        <p className={`reader-text italic ${fontTitle} text-muted-foreground border-l-2 border-primary/20 pl-5 py-1.5`}>{title}</p>
-        <p className={`reader-text ${fontBody} ${lineSpacing} text-foreground/90 whitespace-pre-wrap tracking-[0.005em]`}>{text}</p>
-      </div>
-    </section>
-  );
+/* ─── Reading categories (Bible-style) ─── */
+const READING_CATEGORIES = {
+  primeiraLeitura: {
+    label: 'Primeira Leitura',
+    numeral: 'I',
+    icon: ScrollText,
+    color: 'text-amber-600',
+    bgColor: 'bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800',
+  },
+  salmo: {
+    label: 'Salmo Responsorial',
+    numeral: 'Ps',
+    icon: Music,
+    color: 'text-sky-600',
+    bgColor: 'bg-sky-50 dark:bg-sky-950/30 border-sky-200 dark:border-sky-800',
+  },
+  segundaLeitura: {
+    label: 'Segunda Leitura',
+    numeral: 'II',
+    icon: BookOpen,
+    color: 'text-indigo-600',
+    bgColor: 'bg-indigo-50 dark:bg-indigo-950/30 border-indigo-200 dark:border-indigo-800',
+  },
+  evangelho: {
+    label: 'Evangelho',
+    numeral: 'Ev',
+    icon: Flame,
+    color: 'text-rose-600',
+    bgColor: 'bg-rose-50 dark:bg-rose-950/30 border-rose-200 dark:border-rose-800',
+  },
 };
 
 /* ─── Psalm Block ─── */
