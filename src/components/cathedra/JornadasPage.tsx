@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Compass, Sparkles, Clock, ChevronRight, ArrowRight } from 'lucide-react';
+import { Compass, Sparkles, Clock, ChevronRight, ArrowRight, Filter } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -31,6 +31,17 @@ const CATEGORY_ICONS: Record<string, string> = {
   oracao: '🙏',
   mistico: '✨',
   cura: '💛',
+  transformacao: '🦋',
+};
+
+const CATEGORY_LABELS: Record<string, string> = {
+  fundamentos: 'Fundamentos',
+  formacao: 'Formação',
+  rotina: 'Rotina',
+  oracao: 'Oração',
+  mistico: 'Místico',
+  cura: 'Cura',
+  transformacao: 'Transformação',
 };
 
 const JornadasPage: React.FC = () => {
@@ -40,6 +51,26 @@ const JornadasPage: React.FC = () => {
   const [progressMap, setProgressMap] = useState<Record<string, number>>({});
   const [stepsCountMap, setStepsCountMap] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
+  const [filterCategory, setFilterCategory] = useState<string>('all');
+  const [filterDifficulty, setFilterDifficulty] = useState<string>('all');
+
+  const categories = useMemo(() => {
+    const cats = [...new Set(journeys.map(j => j.category))];
+    return cats.sort();
+  }, [journeys]);
+
+  const difficulties = useMemo(() => {
+    const diffs = [...new Set(journeys.map(j => j.difficulty))];
+    return diffs;
+  }, [journeys]);
+
+  const filteredJourneys = useMemo(() => {
+    return journeys.filter(j => {
+      if (filterCategory !== 'all' && j.category !== filterCategory) return false;
+      if (filterDifficulty !== 'all' && j.difficulty !== filterDifficulty) return false;
+      return true;
+    });
+  }, [journeys, filterCategory, filterDifficulty]);
 
   useEffect(() => {
     loadJourneys();
@@ -122,9 +153,59 @@ const JornadasPage: React.FC = () => {
         </CardContent>
       </Card>
 
+      {/* Filters */}
+      <div className="space-y-3">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Filter className="w-4 h-4" />
+          <span className="font-medium">Filtrar por:</span>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={() => setFilterCategory('all')}
+            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+              filterCategory === 'all' ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:bg-muted/80'
+            }`}
+          >
+            Todas
+          </button>
+          {categories.map(cat => (
+            <button
+              key={cat}
+              onClick={() => setFilterCategory(cat)}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                filterCategory === cat ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:bg-muted/80'
+              }`}
+            >
+              {CATEGORY_ICONS[cat] || '📖'} {CATEGORY_LABELS[cat] || cat}
+            </button>
+          ))}
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={() => setFilterDifficulty('all')}
+            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+              filterDifficulty === 'all' ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:bg-muted/80'
+            }`}
+          >
+            Todos os níveis
+          </button>
+          {difficulties.map(diff => (
+            <button
+              key={diff}
+              onClick={() => setFilterDifficulty(diff)}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                filterDifficulty === diff ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:bg-muted/80'
+              }`}
+            >
+              {DIFFICULTY_LABELS[diff] || diff}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Journey Cards */}
       <div className="space-y-4">
-        {journeys.map((journey, i) => {
+        {filteredJourneys.map((journey, i) => {
           const totalSteps = stepsCountMap[journey.id] || 0;
           const completedSteps = progressMap[journey.id] || 0;
           const progressPercent = totalSteps > 0 ? (completedSteps / totalSteps) * 100 : 0;
@@ -207,9 +288,22 @@ const JornadasPage: React.FC = () => {
         })}
       </div>
 
-      {journeys.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-muted-foreground">Nenhuma jornada disponível ainda.</p>
+      {filteredJourneys.length === 0 && (
+        <div className="text-center py-12 space-y-3">
+          <p className="text-muted-foreground">
+            {journeys.length === 0
+              ? 'Nenhuma jornada disponível ainda.'
+              : 'Nenhuma jornada encontrada com esses filtros.'}
+          </p>
+          {journeys.length > 0 && (
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => { setFilterCategory('all'); setFilterDifficulty('all'); }}
+            >
+              Limpar filtros
+            </Button>
+          )}
         </div>
       )}
     </div>
