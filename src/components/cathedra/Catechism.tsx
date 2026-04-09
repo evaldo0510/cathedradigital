@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
