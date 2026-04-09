@@ -277,10 +277,11 @@ const JornadaStepPage: React.FC = () => {
               )}
             </button>
           ) : (
-            <div className="space-y-2">
+            <div className="space-y-3">
               <div className="text-center">
                 <p className="text-sm font-bold text-primary">✓ Etapa concluída!</p>
               </div>
+              <ProConversionBanner context="jornada" />
               <button
                 onClick={() => navigate(`/jornadas/${journeyId}`)}
                 className="w-full py-4 bg-muted text-foreground rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-2"
