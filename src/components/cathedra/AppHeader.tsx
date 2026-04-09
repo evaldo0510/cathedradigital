@@ -43,7 +43,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest hidden sm:inline-block">Voltar</span>
           </button>
         ) : (
-          <div className="w-0 lg:hidden" /> {/* spacer – sidebar access via bottom nav "Tudo" */}
+          <span className="lg:hidden" />
         )}
         
         <div className="flex items-center gap-6 sm:gap-10">
