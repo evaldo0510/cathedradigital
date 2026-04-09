@@ -325,6 +325,7 @@ const JornadasPage: React.FC = () => {
         </div>
       )}
     </div>
+    </>
   );
 };
 

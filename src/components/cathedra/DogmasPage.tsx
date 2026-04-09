@@ -421,6 +421,7 @@ const DogmasPage: React.FC = () => {
         ))}
       </div>
     </div>
+    </>
   );
 };
 

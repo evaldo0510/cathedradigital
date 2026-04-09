@@ -290,6 +290,7 @@ const GlossaryPage: React.FC = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 

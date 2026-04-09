@@ -350,6 +350,7 @@ const Catechism: React.FC = () => {
         ))}
       </div>
     </motion.div>
+    </>
   );
 };
 

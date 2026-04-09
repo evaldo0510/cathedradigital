@@ -269,6 +269,7 @@ const Saints: React.FC = () => {
         {selectedSaint && <SaintDetail saint={selectedSaint} onClose={() => setSelectedSaint(null)} />}
       </AnimatePresence>
     </motion.div>
+    </>
   );
 };
 
