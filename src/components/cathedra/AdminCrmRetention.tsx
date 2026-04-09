@@ -327,10 +327,18 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">
-              R$ {filteredUsers.length > 0 ? (filteredRevenue / filteredUsers.length).toFixed(2) : '0.00'}
-            </div>
-            <p className="text-[11px] text-muted-foreground mt-1">receita / usuário total</p>
+            {(() => {
+              const arpu = filteredUsers.length > 0 ? filteredRevenue / filteredUsers.length : 0;
+              return (
+                <>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-bold">R$ {arpu.toFixed(2)}</span>
+                    {prevPeriod && <DeltaBadge current={arpu} previous={prevPeriod.arpu} />}
+                  </div>
+                  <p className="text-[11px] text-muted-foreground mt-1">receita / usuário total</p>
+                </>
+              );
+            })()}
           </CardContent>
         </Card>
       </div>
