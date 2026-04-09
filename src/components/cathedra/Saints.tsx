@@ -59,7 +59,7 @@ const Saints: React.FC = () => {
 
   return (
     <>
-    <SEOHead title="Santos da Igreja Católica" description="Conheça a vida dos santos católicos, mártires, doutores da Igreja e padroeiros. Histórias de fé e inspiração." path="/saints" keywords="santos católicos, santos do dia, vida dos santos, mártires, doutores da igreja" />
+    <SEOHead title="Santos da Igreja Católica" description="Conheça a vida dos santos católicos, mártires, doutores da Igreja e padroeiros. Histórias de fé e inspiração." path="/saints" keywords="santos católicos, santos do dia, vida dos santos, mártires, doutores da igreja" breadcrumbs={[{ name: "Início", path: "/" }, { name: "Santos", path: "/saints" }]} />
     <motion.div
       className="space-y-12"
       initial={{ opacity: 0 }}

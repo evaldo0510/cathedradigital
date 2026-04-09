@@ -296,7 +296,7 @@ const Catechism: React.FC = () => {
   // Parts overview
   return (
     <>
-    <SEOHead title="Catecismo da Igreja Católica" description="Acesse o Catecismo da Igreja Católica online. Estude a doutrina católica organizada por partes, seções e parágrafos." path="/catechism" keywords="catecismo online, catecismo da igreja católica, doutrina católica, CIC" />
+    <SEOHead title="Catecismo da Igreja Católica" description="Acesse o Catecismo da Igreja Católica online. Estude a doutrina católica organizada por partes, seções e parágrafos." path="/catechism" keywords="catecismo online, catecismo da igreja católica, doutrina católica, CIC" breadcrumbs={[{ name: "Início", path: "/" }, { name: "Catecismo", path: "/catechism" }]} />
     <motion.div
       className="max-w-5xl mx-auto space-y-8"
       initial={{ opacity: 0 }}
