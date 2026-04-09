@@ -1,10 +1,12 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import {
   Flame, TrendingDown, TrendingUp, Users, Clock, Activity,
-  AlertTriangle, UserMinus, UserPlus
+  AlertTriangle, UserMinus, UserPlus, Download
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, PieChart, Pie, Cell
@@ -79,8 +81,36 @@ const AdminCrmRetention: React.FC<Props> = ({ users }) => {
 
   const PIE_COLORS = ['hsl(142 76% 36%)', 'hsl(45 93% 47%)', 'hsl(0 84% 60%)'];
 
+  const exportRetentionCsv = useCallback(() => {
+    const headers = ['Nome', 'Email', 'Status', 'Plano', 'Streak', 'XP', 'Dias Inativo', 'Cadastro'];
+    const rows = users.map(u => {
+      const days = daysSince(u.last_visit);
+      const status = days <= 3 ? 'Ativo' : days <= 14 ? 'Em risco' : 'Inativo';
+      return [
+        u.name || '', u.email, status, u.is_premium ? 'PRO' : 'Free',
+        u.streak ?? 0, u.xp ?? 0, days,
+        new Date(u.created_at).toLocaleDateString('pt-BR'),
+      ].map(v => `"${v}"`).join(',');
+    });
+    const csv = [headers.join(','), ...rows].join('\n');
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `retencao_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success(`Relatório de retenção exportado (${users.length} usuários).`);
+  }, [users]);
+
   return (
     <div className="space-y-6">
+      {/* Export + KPI Cards */}
+      <div className="flex justify-end">
+        <Button size="sm" variant="outline" className="h-8 text-xs gap-1.5" onClick={exportRetentionCsv} disabled={users.length === 0}>
+          <Download className="w-3.5 h-3.5" /> Exportar CSV
+        </Button>
+      </div>
       {/* KPI Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
