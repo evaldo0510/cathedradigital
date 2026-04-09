@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer, PieChart, Pie, Cell
+  ResponsiveContainer, PieChart, Pie, Cell, AreaChart, Area
 } from 'recharts';
 
 interface UserProfile {
@@ -25,9 +25,17 @@ interface UserProfile {
   last_visit: string | null;
 }
 
+interface Transaction {
+  id: string;
+  amount: number;
+  status: string | null;
+  created_at: string | null;
+}
+
 interface Props {
   users: UserProfile[];
   totalRevenue: number;
+  transactions: Transaction[];
 }
 
 const daysSince = (date: string | null) => {
@@ -37,7 +45,7 @@ const daysSince = (date: string | null) => {
 
 const COLORS = ['hsl(var(--primary))', 'hsl(142 76% 36%)', 'hsl(45 93% 47%)', 'hsl(0 84% 60%)'];
 
-const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue }) => {
+const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions }) => {
   const metrics = useMemo(() => {
     const active = users.filter(u => daysSince(u.last_visit) <= 3);
     const atRisk = users.filter(u => daysSince(u.last_visit) >= 4 && daysSince(u.last_visit) <= 14);
@@ -87,6 +95,19 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue }) => {
 
     return { active, atRisk, churned, newUsers7d, newUsers30d, avgStreak, avgXp, retentionRate, churnRate, streakBuckets, statusPie, funnelData };
   }, [users]);
+
+  const mrrData = useMemo(() => {
+    const approved = transactions.filter(t => t.status === 'approved' && t.created_at);
+    const monthMap: Record<string, number> = {};
+    approved.forEach(t => {
+      const d = new Date(t.created_at!);
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      monthMap[key] = (monthMap[key] || 0) + Number(t.amount);
+    });
+    return Object.entries(monthMap)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([month, total]) => ({ month, total: Number(total.toFixed(2)) }));
+  }, [transactions]);
 
   const PIE_COLORS = ['hsl(142 76% 36%)', 'hsl(45 93% 47%)', 'hsl(0 84% 60%)'];
 
@@ -266,7 +287,35 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue }) => {
         </CardContent>
       </Card>
 
-      {/* At-Risk Users Alert */}
+      {/* MRR Chart */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-sm">Receita Mensal Recorrente (MRR)</CardTitle>
+          <CardDescription>Evolução mensal da receita aprovada</CardDescription>
+        </CardHeader>
+        <CardContent className="h-[280px]">
+          {mrrData.length > 0 ? (
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={mrrData}>
+                <defs>
+                  <linearGradient id="colorMrr" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--muted-foreground) / 0.15)" />
+                <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" fontSize={11} tickLine={false} axisLine={false} />
+                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `R$${v}`} />
+                <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--background))', borderColor: 'hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} formatter={(value: number) => [`R$ ${value.toFixed(2)}`, 'Receita']} />
+                <Area type="monotone" dataKey="total" stroke="hsl(var(--primary))" fillOpacity={1} fill="url(#colorMrr)" strokeWidth={2} />
+              </AreaChart>
+            </ResponsiveContainer>
+          ) : (
+            <p className="text-muted-foreground text-sm text-center pt-20">Sem transações aprovadas.</p>
+          )}
+        </CardContent>
+      </Card>
+
       {metrics.atRisk.length > 0 && (
         <Card className="border-amber-500/30 bg-amber-500/5">
           <CardHeader className="pb-3">
