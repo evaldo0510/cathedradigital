@@ -45,7 +45,7 @@ const daysSince = (date: string | null) => {
 
 const COLORS = ['hsl(var(--primary))', 'hsl(142 76% 36%)', 'hsl(45 93% 47%)', 'hsl(0 84% 60%)'];
 
-const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue }) => {
+const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions }) => {
   const metrics = useMemo(() => {
     const active = users.filter(u => daysSince(u.last_visit) <= 3);
     const atRisk = users.filter(u => daysSince(u.last_visit) >= 4 && daysSince(u.last_visit) <= 14);
