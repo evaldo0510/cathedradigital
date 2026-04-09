@@ -136,6 +136,8 @@ const GlossaryPage: React.FC = () => {
   const enrichedCount = useMemo(() => terms.filter(t => ENRICHMENTS[t.term]).length, [terms]);
 
   return (
+    <>
+    <SEOHead title="Glossário Teológico" description="Consulte o glossário de termos teológicos e católicos. Definições claras e acessíveis para aprofundar seus estudos." path="/glossary" keywords="glossário teológico, termos católicos, vocabulário religioso, teologia" />
     <div className="max-w-5xl mx-auto space-y-8">
       {/* Header */}
       <div className="text-center space-y-3">

@@ -145,6 +145,8 @@ const JornadasPage: React.FC = () => {
   }
 
   return (
+    <>
+    <SEOHead title="Jornadas Espirituais" description="Percorra jornadas de transformação espiritual com conteúdos guiados de formação católica. Cresça na fé passo a passo." path="/jornadas" keywords="jornada espiritual, formação católica, crescimento espiritual, retiro online" />
     <div className="space-y-6 max-w-2xl mx-auto">
       {/* Header */}
       <div className="text-center space-y-3">

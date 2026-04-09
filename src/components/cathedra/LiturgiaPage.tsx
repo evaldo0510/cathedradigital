@@ -98,6 +98,8 @@ const LiturgiaPage: React.FC = () => {
   };
 
   return (
+    <>
+    <SEOHead title="Liturgia Diária e Orações" description="Acompanhe a liturgia diária, missal romano, calendário litúrgico e orações católicas. Reze online todos os dias." path="/liturgia" keywords="liturgia diária online, missal romano, calendário litúrgico, oração diária católica" />
     <motion.div
       className="max-w-6xl mx-auto space-y-6"
       initial={{ opacity: 0 }}

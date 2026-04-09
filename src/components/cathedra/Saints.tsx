@@ -58,6 +58,8 @@ const Saints: React.FC = () => {
   }, [filteredSaints]);
 
   return (
+    <>
+    <SEOHead title="Santos da Igreja Católica" description="Conheça a vida dos santos católicos, mártires, doutores da Igreja e padroeiros. Histórias de fé e inspiração." path="/saints" keywords="santos católicos, santos do dia, vida dos santos, mártires, doutores da igreja" />
     <motion.div
       className="space-y-12"
       initial={{ opacity: 0 }}
