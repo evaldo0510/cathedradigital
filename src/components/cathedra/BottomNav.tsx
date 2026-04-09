@@ -74,7 +74,7 @@ interface BottomNavProps {
   user?: { role?: string } | null;
 }
 
-const BottomNav: React.FC<BottomNavProps> = ({ user }) => {
+const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
@@ -84,7 +84,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user }) => {
     { label: 'Hoje', icon: <Sun />, route: AppRoute.HOJE },
     { label: 'Jornadas', icon: <Compass />, route: AppRoute.JORNADAS },
     { label: 'Biblioteca', icon: <BookOpen />, route: AppRoute.BIBLIOTECA },
-    { label: 'Ferramentas', icon: <LayoutGrid />, route: AppRoute.DASHBOARD },
+    { label: 'Tudo', icon: <LayoutGrid />, route: '__sidebar__' },
     { label: 'Perfil', icon: <User />, route: AppRoute.PROFILE },
   ];
 
@@ -97,8 +97,14 @@ const BottomNav: React.FC<BottomNavProps> = ({ user }) => {
             label={item.label}
             icon={item.icon}
             route={item.route}
-            isActive={currentPath === item.route || (item.route === AppRoute.BIBLIOTECA && [AppRoute.BIBLE, AppRoute.CATECHISM, AppRoute.MAGISTERIUM, AppRoute.SAINTS].includes(currentPath as AppRoute))}
-            onClick={() => navigate(item.route)}
+            isActive={item.route !== '__sidebar__' && (currentPath === item.route || (item.route === AppRoute.BIBLIOTECA && [AppRoute.BIBLE, AppRoute.CATECHISM, AppRoute.MAGISTERIUM, AppRoute.SAINTS].includes(currentPath as AppRoute)))}
+            onClick={() => {
+              if (item.route === '__sidebar__') {
+                onOpenSidebar();
+              } else {
+                navigate(item.route);
+              }
+            }}
             onRipple={triggerRipple}
           />
         ))}
