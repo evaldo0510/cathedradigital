@@ -662,6 +662,7 @@ const Bible: React.FC = () => {
         })}
       </div>
     </motion.div>
+    </>
   );
 };
 
