@@ -27,6 +27,7 @@ interface UserProfile {
 
 interface Props {
   users: UserProfile[];
+  totalRevenue: number;
 }
 
 const daysSince = (date: string | null) => {
