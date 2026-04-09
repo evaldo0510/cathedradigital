@@ -109,6 +109,8 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
       .map(([month, total]) => ({ month, total: Number(total.toFixed(2)) }));
   }, [transactions]);
 
+  const PIE_COLORS = ['hsl(142 76% 36%)', 'hsl(45 93% 47%)', 'hsl(0 84% 60%)'];
+
   const exportRetentionCsv = useCallback(() => {
     const headers = ['Nome', 'Email', 'Status', 'Plano', 'Streak', 'XP', 'Dias Inativo', 'Cadastro'];
     const rows = users.map(u => {
