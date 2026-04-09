@@ -116,9 +116,9 @@ const FeedbackWidget = () => {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-3 px-6 py-4 bg-primary text-primary-foreground rounded-full shadow-2xl shadow-primary/30 font-black uppercase tracking-widest text-[10px]"
+        className="flex items-center justify-center gap-2 px-5 py-3 bg-primary text-primary-foreground rounded-full shadow-2xl shadow-primary/30 font-black uppercase tracking-widest text-[10px] min-w-0"
       >
-        <MessageSquare className="w-4 h-4" />
+        <MessageSquare className="w-4 h-4 shrink-0" />
         {isOpen ? 'Fechar' : 'Feedback'}
       </motion.button>
     </div>
