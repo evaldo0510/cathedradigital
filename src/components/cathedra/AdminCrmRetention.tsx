@@ -250,7 +250,10 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
             <TrendingUp className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-primary">{metrics.retentionRate}%</div>
+            <div className="flex items-baseline gap-2">
+              <span className="text-3xl font-bold text-primary">{metrics.retentionRate}%</span>
+              {prevPeriod && <DeltaBadge current={parseFloat(metrics.retentionRate)} previous={prevPeriod.retentionRate} />}
+            </div>
             <p className="text-[11px] text-muted-foreground mt-1">{metrics.active.length} ativos de {filteredUsers.length}</p>
           </CardContent>
         </Card>
@@ -261,7 +264,10 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
             <TrendingDown className="h-4 w-4 text-destructive" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-destructive">{metrics.churnRate}%</div>
+            <div className="flex items-baseline gap-2">
+              <span className="text-3xl font-bold text-destructive">{metrics.churnRate}%</span>
+              {prevPeriod && <DeltaBadge current={parseFloat(metrics.churnRate)} previous={prevPeriod.churnRate} invertColor />}
+            </div>
             <p className="text-[11px] text-muted-foreground mt-1">{metrics.churned.length} inativos ({'>'}14 dias)</p>
           </CardContent>
         </Card>
@@ -272,7 +278,10 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
             <Flame className="h-4 w-4 text-accent-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">{metrics.avgStreak}</div>
+            <div className="flex items-baseline gap-2">
+              <span className="text-3xl font-bold">{metrics.avgStreak}</span>
+              {prevPeriod && <DeltaBadge current={parseFloat(metrics.avgStreak)} previous={prevPeriod.avgStreak} />}
+            </div>
             <p className="text-[11px] text-muted-foreground mt-1">dias consecutivos</p>
           </CardContent>
         </Card>
@@ -283,7 +292,10 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
             <UserPlus className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-primary">{metrics.newUsers7d.length}</div>
+            <div className="flex items-baseline gap-2">
+              <span className="text-3xl font-bold text-primary">{metrics.newUsers7d.length}</span>
+              {prevPeriod && <DeltaBadge current={metrics.newUsers7d.length} previous={prevPeriod.newUsers7d} />}
+            </div>
             <p className="text-[11px] text-muted-foreground mt-1">{metrics.newUsers30d.length} nos últimos 30 dias</p>
           </CardContent>
         </Card>
