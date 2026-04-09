@@ -101,6 +101,40 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
       .reduce((sum, t) => sum + Number(t.amount), 0);
   }, [filteredTransactions]);
 
+  // Previous period data for comparison
+  const prevPeriod = useMemo(() => {
+    if (periodMonths === 0) return null;
+    const prevEnd = new Date();
+    prevEnd.setMonth(prevEnd.getMonth() - periodMonths);
+    const prevStart = new Date(prevEnd);
+    prevStart.setMonth(prevStart.getMonth() - periodMonths);
+
+    const prevUsers = users.filter(u => {
+      const d = new Date(u.created_at);
+      return d >= prevStart && d < prevEnd;
+    });
+    const prevTx = transactions.filter(t => {
+      if (!t.created_at) return false;
+      const d = new Date(t.created_at);
+      return d >= prevStart && d < prevEnd;
+    });
+
+    const prevActive = prevUsers.filter(u => daysSince(u.last_visit) <= 3);
+    const prevChurned = prevUsers.filter(u => daysSince(u.last_visit) > 14);
+    const prevPremium = prevUsers.filter(u => u.is_premium);
+    const prevAvgStreak = prevUsers.length > 0
+      ? prevUsers.reduce((s, u) => s + (u.streak ?? 0), 0) / prevUsers.length
+      : 0;
+    const prevNewUsers7d = prevUsers.filter(u => daysSince(u.created_at) <= 7);
+    const prevRevenue = prevTx.filter(t => t.status === 'approved').reduce((s, t) => s + Number(t.amount), 0);
+    const prevRetention = prevUsers.length > 0 ? (prevActive.length / prevUsers.length) * 100 : 0;
+    const prevChurn = prevUsers.length > 0 ? (prevChurned.length / prevUsers.length) * 100 : 0;
+    const prevLtv = prevPremium.length > 0 ? prevRevenue / prevPremium.length : 0;
+    const prevArpu = prevUsers.length > 0 ? prevRevenue / prevUsers.length : 0;
+
+    return { retentionRate: prevRetention, churnRate: prevChurn, avgStreak: prevAvgStreak, newUsers7d: prevNewUsers7d.length, ltv: prevLtv, arpu: prevArpu };
+  }, [periodMonths, users, transactions]);
+
   const metrics = useMemo(() => {
     const active = filteredUsers.filter(u => daysSince(u.last_visit) <= 3);
     const atRisk = filteredUsers.filter(u => daysSince(u.last_visit) >= 4 && daysSince(u.last_visit) <= 14);
