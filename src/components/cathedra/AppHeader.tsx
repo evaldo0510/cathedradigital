@@ -43,12 +43,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest hidden sm:inline-block">Voltar</span>
           </button>
         ) : (
-          <button 
-            onClick={onOpenSidebar} 
-            className="p-2.5 sm:p-3 bg-muted text-foreground active:bg-primary rounded-full transition-all hover:scale-110 lg:hidden"
-          >
-            <Icons.Menu className="w-5 h-5 sm:w-6 h-6" />
-          </button>
+          <span className="lg:hidden" />
         )}
         
         <div className="flex items-center gap-6 sm:gap-10">
