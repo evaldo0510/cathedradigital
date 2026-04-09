@@ -216,6 +216,11 @@ const StudyMode: React.FC = () => {
 
       if (!resp.ok) {
         const err = await resp.json().catch(() => ({ error: 'Erro na conexão' }));
+        if (err.limit_reached) {
+          toast.error('Limite diário atingido! Assine o PRO para mensagens ilimitadas.');
+          navigate('/pricing');
+          throw new Error(err.error);
+        }
         throw new Error(err.error || `Erro ${resp.status}`);
       }
       if (!resp.body) throw new Error('Sem resposta do servidor');
