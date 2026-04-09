@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer, PieChart, Pie, Cell
+  ResponsiveContainer, PieChart, Pie, Cell, AreaChart, Area
 } from 'recharts';
 
 interface UserProfile {
@@ -25,9 +25,17 @@ interface UserProfile {
   last_visit: string | null;
 }
 
+interface Transaction {
+  id: string;
+  amount: number;
+  status: string | null;
+  created_at: string | null;
+}
+
 interface Props {
   users: UserProfile[];
   totalRevenue: number;
+  transactions: Transaction[];
 }
 
 const daysSince = (date: string | null) => {
