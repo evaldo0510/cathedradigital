@@ -540,7 +540,7 @@ const Bible: React.FC = () => {
   // Books list
   return (
     <>
-    <SEOHead title="Bíblia Sagrada Online" description="Leia a Bíblia Sagrada completa com 73 livros do cânon católico. Acesse o Antigo e Novo Testamento online e gratuitamente." path="/bible" keywords="bíblia católica online, bíblia sagrada, antigo testamento, novo testamento, leitura bíblica" />
+    <SEOHead title="Bíblia Sagrada Online" description="Leia a Bíblia Sagrada completa com 73 livros do cânon católico. Acesse o Antigo e Novo Testamento online e gratuitamente." path="/bible" keywords="bíblia católica online, bíblia sagrada, antigo testamento, novo testamento, leitura bíblica" breadcrumbs={[{ name: "Início", path: "/" }, { name: "Bíblia Sagrada", path: "/bible" }]} />
     <motion.div
       className="max-w-5xl mx-auto space-y-8"
 

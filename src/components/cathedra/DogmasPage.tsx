@@ -288,7 +288,7 @@ const DogmasPage: React.FC = () => {
 
   return (
     <>
-    <SEOHead title="Dogmas da Fé Católica" description="Estude os dogmas da fé católica com referências bíblicas, do catecismo e do magistério. Depositum Fidei completo." path="/dogmas" keywords="dogmas católicos, depositum fidei, doutrina da igreja, verdades de fé" />
+    <SEOHead title="Dogmas da Fé Católica" description="Estude os dogmas da fé católica com referências bíblicas, do catecismo e do magistério. Depositum Fidei completo." path="/dogmas" keywords="dogmas católicos, depositum fidei, doutrina da igreja, verdades de fé" breadcrumbs={[{ name: "Início", path: "/" }, { name: "Dogmas", path: "/dogmas" }]} />
     <div className="max-w-5xl mx-auto space-y-8">
       <div className="text-center space-y-3">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">

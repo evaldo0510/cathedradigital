@@ -137,7 +137,7 @@ const GlossaryPage: React.FC = () => {
 
   return (
     <>
-    <SEOHead title="Glossário Teológico" description="Consulte o glossário de termos teológicos e católicos. Definições claras e acessíveis para aprofundar seus estudos." path="/glossary" keywords="glossário teológico, termos católicos, vocabulário religioso, teologia" />
+    <SEOHead title="Glossário Teológico" description="Consulte o glossário de termos teológicos e católicos. Definições claras e acessíveis para aprofundar seus estudos." path="/glossary" keywords="glossário teológico, termos católicos, vocabulário religioso, teologia" breadcrumbs={[{ name: "Início", path: "/" }, { name: "Glossário", path: "/glossary" }]} />
     <div className="max-w-5xl mx-auto space-y-8">
       {/* Header */}
       <div className="text-center space-y-3">
