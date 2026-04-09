@@ -236,10 +236,12 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
   }, [periodMonths]);
 
   // Monthly sparkline data for KPIs
+  const MONTH_ABBR = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+
   const sparklines = useMemo(() => {
     const now = new Date();
     const months = 6;
-    const result: { retention: { v: number }[]; churn: { v: number }[]; streak: { v: number }[]; newUsers: { v: number }[]; ltv: { v: number }[]; arpu: { v: number }[] } = {
+    const result: { retention: { v: number; label: string }[]; churn: { v: number; label: string }[]; streak: { v: number; label: string }[]; newUsers: { v: number; label: string }[]; ltv: { v: number; label: string }[]; arpu: { v: number; label: string }[] } = {
       retention: [], churn: [], streak: [], newUsers: [], ltv: [], arpu: [],
     };
 
@@ -271,26 +273,28 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
       const premium = usersAtTime.filter(u => u.is_premium);
       const total = usersAtTime.length || 1;
 
-      result.retention.push({ v: (active.length / total) * 100 });
-      result.churn.push({ v: (churned.length / total) * 100 });
-      result.streak.push({ v: usersAtTime.length > 0 ? usersAtTime.reduce((s, u) => s + (u.streak ?? 0), 0) / usersAtTime.length : 0 });
-      result.newUsers.push({ v: newU.length });
-      result.ltv.push({ v: premium.length > 0 ? monthRev / premium.length : 0 });
-      result.arpu.push({ v: monthRev / total });
+      const label = MONTH_ABBR[start.getMonth()];
+      result.retention.push({ v: (active.length / total) * 100, label });
+      result.churn.push({ v: (churned.length / total) * 100, label });
+      result.streak.push({ v: usersAtTime.length > 0 ? usersAtTime.reduce((s, u) => s + (u.streak ?? 0), 0) / usersAtTime.length : 0, label });
+      result.newUsers.push({ v: newU.length, label });
+      result.ltv.push({ v: premium.length > 0 ? monthRev / premium.length : 0, label });
+      result.arpu.push({ v: monthRev / total, label });
     }
     return result;
   }, [users, transactions]);
 
   const SparkTooltip = ({ active, payload }: any) => {
     if (!active || !payload?.[0]) return null;
+    const label = payload[0]?.payload?.label || '';
     return (
       <div className="rounded-md bg-popover px-2 py-1 text-[10px] font-medium text-popover-foreground shadow-md border border-border">
-        {Number(payload[0].value).toFixed(1)}
+        {label}: {Number(payload[0].value).toFixed(1)}
       </div>
     );
   };
 
-  const Sparkline: React.FC<{ data: { v: number }[]; color?: string }> = ({ data, color = 'hsl(var(--primary))' }) => (
+  const Sparkline: React.FC<{ data: { v: number; label: string }[]; color?: string }> = ({ data, color = 'hsl(var(--primary))' }) => (
     <div className="h-8 w-20 ml-auto">
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={data} margin={{ top: 2, right: 0, bottom: 0, left: 0 }}>
