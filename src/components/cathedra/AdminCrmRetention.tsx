@@ -1,4 +1,5 @@
 import React, { useMemo, useCallback, useState } from 'react';
+import { motion } from 'framer-motion';
 import {
   Flame, TrendingDown, TrendingUp, Users, Clock, Activity,
   AlertTriangle, UserMinus, UserPlus, Download, DollarSign,
