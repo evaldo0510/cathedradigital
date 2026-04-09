@@ -1,12 +1,13 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import {
   Users, Crown, AlertTriangle, Flame, UserCheck, Clock,
-  Filter, ChevronDown, ChevronUp, Eye
+  Filter, ChevronDown, ChevronUp, Eye, Download
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { toast } from 'sonner';
 
 interface UserProfile {
   id: string;
@@ -81,6 +82,29 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
     return <Badge className="bg-destructive/15 text-destructive border-destructive/30 text-[10px]">Inativo</Badge>;
   };
 
+  const exportCsv = useCallback(() => {
+    const headers = ['Nome', 'Email', 'Status', 'Plano', 'Streak', 'XP', 'Nível', 'Última Visita', 'Cadastro'];
+    const rows = filtered.map(u => {
+      const days = daysSince(u.last_visit);
+      const status = days <= 3 ? 'Ativo' : days <= 14 ? 'Em risco' : 'Inativo';
+      return [
+        u.name || '', u.email, status, u.is_premium ? 'PRO' : 'Free',
+        u.streak ?? 0, u.xp ?? 0, u.level ?? 1,
+        u.last_visit ? new Date(u.last_visit).toLocaleDateString('pt-BR') : '—',
+        new Date(u.created_at).toLocaleDateString('pt-BR'),
+      ].map(v => `"${v}"`).join(',');
+    });
+    const csv = [headers.join(','), ...rows].join('\n');
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `segmentacao_${segment}_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success(`${filtered.length} usuários exportados.`);
+  }, [filtered, segment]);
+
   return (
     <div className="space-y-4">
       {/* Segment Cards */}
@@ -111,6 +135,10 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
             <CardTitle className="text-sm">
               {segments.find(s => s.key === segment)?.label} — {filtered.length} usuário{filtered.length !== 1 ? 's' : ''}
             </CardTitle>
+            <div className="flex items-center gap-2">
+              <Button size="sm" variant="outline" className="h-8 text-xs gap-1.5" onClick={exportCsv} disabled={filtered.length === 0}>
+                <Download className="w-3.5 h-3.5" /> CSV
+              </Button>
             <Select value={sortBy} onValueChange={(v) => setSortBy(v as typeof sortBy)}>
               <SelectTrigger className="w-[160px] h-8 text-xs">
                 <SelectValue />
@@ -121,6 +149,7 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
                 <SelectItem value="created_at">Cadastro</SelectItem>
               </SelectContent>
             </Select>
+            </div>
           </div>
         </CardHeader>
         <CardContent className="p-0">
