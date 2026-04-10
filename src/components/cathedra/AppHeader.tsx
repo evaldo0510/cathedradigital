@@ -32,27 +32,28 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
   const [showNotifs, setShowNotifs] = useState(false);
 
   return (
-    <header className="px-4 py-3 sm:px-8 md:py-5 border-b border-border bg-background/80 backdrop-blur-2xl flex items-center justify-between sticky top-0 z-[140] safe-area-top transition-all gap-4">
-      <div className="flex items-center gap-2 sm:gap-4">
-        {!isDashboard ? (
+    <header className="px-6 py-4 sm:px-12 md:py-6 border-b border-border bg-background/90 backdrop-blur-xl flex items-center justify-between sticky top-0 z-[140] safe-area-top transition-all">
+      <div className="flex items-center gap-6 sm:gap-10">
+        <div className="flex items-center gap-3 sm:gap-4 cursor-pointer group" onClick={() => navigate(AppRoute.DASHBOARD)}>
+          <div className="transition-all group-hover:scale-105 group-hover:-rotate-3">
+            <Logo className="w-10 h-10 sm:w-12 sm:h-12" />
+          </div>
+          <div className="flex flex-col">
+            <span className="text-lg sm:text-xl font-display font-black uppercase tracking-[0.25em] text-primary">Cathedra</span>
+            <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-secondary -mt-1 opacity-80">Digital</span>
+          </div>
+        </div>
+        
+        {!isDashboard && (
           <button 
             onClick={() => navigate(-1)} 
-            className="p-1.5 sm:p-2 bg-background/50 backdrop-blur-xl text-foreground/80 border border-border/10 rounded-xl flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.05)] active:scale-95 transition-all hover:bg-primary/10 hover:text-primary hover:border-primary/20 group hover:shadow-md"
+            className="p-2 sm:p-2.5 bg-muted text-primary border border-border rounded-xl flex items-center gap-2 px-3 sm:px-5 active:scale-95 transition-all hover:bg-primary hover:text-white group"
           >
-            <Icons.ChevronLeft className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" />
-            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest font-serif hidden sm:inline-block">Voltar</span>
+            <Icons.ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
+            <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline-block">Voltar</span>
           </button>
-        ) : (
-          <span className="lg:hidden" />
         )}
-        
-        <div className="flex items-center gap-6 sm:gap-10">
-          <div className="flex items-center gap-2 sm:gap-3 ml-1 sm:ml-2 cursor-pointer group" onClick={() => navigate(AppRoute.DASHBOARD)}>
-            <div className="transition-all group-hover:scale-110 group-hover:rotate-6 animate-[pulse_3s_ease-in-out_infinite]">
-              <Logo className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10" />
-            </div>
-            <span className="text-sm sm:text-lg md:text-xl font-serif font-black uppercase tracking-[0.2em] sm:tracking-[0.25em] text-foreground group-hover:text-primary transition-all hidden sm:inline-block">Cathedra</span>
-          </div>
+      </div>
           
           {isDashboard && (
             <nav className="hidden xl:flex items-center gap-4 2xl:gap-6 border-l border-border pl-4 2xl:pl-6">
