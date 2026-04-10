@@ -187,7 +187,26 @@ const HojePage: React.FC = () => {
 
           if (journey) {
             setRecommendedLogosJourney(journey);
+            
+            // Fetch next step for this journey
+            const [completedRes, stepsRes] = await Promise.all([
+              supabase
+                .from('journey_progress')
+                .select('step_id')
+                .eq('user_id', user.id)
+                .eq('journey_id', journey.id),
+              supabase
+                .from('journey_steps')
+                .select('*')
+                .eq('journey_id', journey.id)
+                .order('step_order', { ascending: true })
+            ]);
+
+            const completedIds = (completedRes.data || []).map(s => s.step_id);
+            const next = (stepsRes.data || []).find(s => !completedIds.includes(s.id));
+            setRecommendedLogosStep(next || null);
           }
+
         } catch (e) {
           console.error('Failed to parse recommendation:', e);
         }
