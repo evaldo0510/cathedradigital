@@ -229,9 +229,10 @@ const JornadaStepPage: React.FC = () => {
 
           {/* Content Sections */}
           {SECTION_CONFIG.map(({ key, label, icon }, i) => {
-            const sectionContent = content[key];
+            const sectionContent = getVariantContent(key, content);
             if (!sectionContent) return null;
             const isExpanded = expandedSection === key;
+
 
             return (
               <motion.div
