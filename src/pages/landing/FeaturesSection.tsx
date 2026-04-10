@@ -1,16 +1,14 @@
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { BookOpen, Library, Star, Zap, Clock, Users, ChevronRight } from "lucide-react";
+import { BookOpen, Star, Clock, Users, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AppRoute } from "@/types";
 
 const features = [
   { title: "Bíblia Sagrada", description: "Acesso completo às Escrituras com ferramentas de estudo, anotações e busca avançada.", benefit: "Fortaleça seu conhecimento bíblico e guarde suas passagens favoritas.", icon: <BookOpen className="h-7 w-7" />, route: AppRoute.BIBLE },
-  { title: "Catechismus", description: "O Catecismo da Igreja Católica organizado por parágrafos para consulta rápida e segura.", benefit: "Tenha a doutrina sempre à mão para tirar dúvidas e aprofundar a fé.", icon: <Library className="h-7 w-7" />, route: AppRoute.CATECHISM },
-  { title: "Vidas dos Santos", description: "Histórias inspiradoras e ensinamentos dos grandes santos da tradição católica.", benefit: "Encontre exemplos práticos de santidade para o seu dia a dia.", icon: <Star className="h-7 w-7" />, route: AppRoute.SAINTS },
-  { title: "Colloquium IA", description: "Inteligência Artificial treinada no Magistério para auxiliar seus estudos teológicos.", benefit: "Respostas rápidas baseadas na sã doutrina para suas pesquisas complexas.", icon: <Zap className="h-7 w-7" />, route: AppRoute.STUDY_MODE, premium: true },
-  { title: "Liturgia Diária", description: "Acompanhe as leituras da Santa Missa, o santo do dia e meditações diárias.", benefit: "Viva o tempo litúrgico em comunhão com toda a Igreja no mundo.", icon: <Clock className="h-7 w-7" />, route: AppRoute.DAILY_LITURGY },
+  { title: "Liturgia do Dia", description: "Acompanhe as leituras da Santa Missa, o santo do dia e meditações diárias.", benefit: "Viva o tempo litúrgico em comunhão com toda a Igreja no mundo.", icon: <Clock className="h-7 w-7" />, route: AppRoute.LITURGIA },
+  { title: "Jornadas de Fé", description: "Trilhas guiadas de formação espiritual que transformam seu conhecimento em vivência.", benefit: "Um caminho claro, passo a passo, para crescer na fé com profundidade.", icon: <Star className="h-7 w-7" />, route: AppRoute.JORNADAS },
   { title: "Comunidade", description: "Conecte-se com outros fiéis, compartilhe orações e participe de grupos de estudo.", benefit: "Nunca caminhe sozinho; encontre apoio e partilha na sua jornada cristã.", icon: <Users className="h-7 w-7" />, route: AppRoute.COMMUNITY },
 ];
 
@@ -129,7 +127,7 @@ const FeaturesSection = ({ onNavigate }: FeaturesSectionProps) => {
         />
       </motion.div>
 
-      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 relative z-10">
+      <div className="grid gap-8 md:grid-cols-2 relative z-10">
         {features.map((feature, idx) => (
           <FeatureCard key={feature.title} feature={feature} index={idx} onNavigate={onNavigate} />
         ))}

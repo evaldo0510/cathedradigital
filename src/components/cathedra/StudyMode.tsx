@@ -410,6 +410,18 @@ const StudyMode: React.FC = () => {
             Colloquium usa IA para auxiliar seus estudos. Sempre consulte fontes oficiais do Magistério.
           </p>
         </div>
+
+        {/* CTA: Continue to Jornadas */}
+        {messages.length >= 4 && (
+          <div className="pt-4 border-t border-border mt-4">
+            <button
+              onClick={() => navigate(AppRoute.JORNADAS)}
+              className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-primary text-primary-foreground text-sm font-bold hover:opacity-90 transition-all shadow-lg shadow-primary/10"
+            >
+              <Map className="w-4 h-4" /> Iniciar uma Jornada de Fé
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
