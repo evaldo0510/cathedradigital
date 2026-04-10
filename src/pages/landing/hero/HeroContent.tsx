@@ -63,18 +63,9 @@ const HeroContent = ({ heroOpacity, heroScale, heroY, onStart, onAbout }: HeroCo
       transition={{ duration: 1, delay: 0.5, ease: EASE }}
       className="flex justify-center"
     >
-      <motion.img
-        src={cathedraLogo}
-        alt="Cathedra"
-        className="w-20 h-20 md:w-28 md:h-28 object-contain"
-        animate={{
-          filter: [
-            "drop-shadow(0 0 15px hsl(43 72% 53% / 0.2))",
-            "drop-shadow(0 0 30px hsl(43 72% 53% / 0.4))",
-            "drop-shadow(0 0 15px hsl(43 72% 53% / 0.2))",
-          ],
-        }}
-        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+      <Logo 
+        variant="gold" 
+        className="w-20 h-20 md:w-28 md:h-28" 
       />
     </motion.div>
 
