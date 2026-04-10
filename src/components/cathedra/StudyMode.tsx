@@ -8,7 +8,8 @@ import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
-import { Copy, Check, Plus, MessageSquare, Trash2, ChevronLeft, Compass } from 'lucide-react';
+import { Copy, Check, Plus, MessageSquare, Trash2, ChevronLeft, Compass, Sparkles } from 'lucide-react';
+import ProConversionBanner from './ProConversionBanner';
 import { toast } from 'sonner';
 
 interface Message {
