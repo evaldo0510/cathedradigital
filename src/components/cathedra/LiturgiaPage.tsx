@@ -6,8 +6,10 @@ import { ArrowLeft, BookOpen, ScrollText, Music, Flame, ChevronRight, ChevronLef
 import { Button } from '@/components/ui/button';
 import SEOHead from '@/components/SEOHead';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 import { routeUser, type RouteRecommendation } from '@/lib/smartRouter';
+import { saveUserPsychology } from '@/lib/psychologicalProfile';
 import { SAINTS_DATA } from '@/data/saints';
 import ReactMarkdown from 'react-markdown';
 import { toast } from 'sonner';
@@ -140,6 +142,7 @@ const ReadingCard: React.FC<{
 /* ─── Main Page ─── */
 const LiturgiaPage: React.FC = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [selectedDate, setSelectedDate] = useState(() => new Date());
   const today = selectedDate;
   const [meditation, setMeditation] = useState<string | null>(null);
@@ -289,8 +292,13 @@ Instruções:
     if (meditation && !isMeditationLoading && meditation.length > 50) {
       const combinedText = `${readings?.evangelho?.texto || ''} ${meditation}`;
       setEmotionalRoutes(routeUser(combinedText));
+      
+      // Save psychological profile
+      if (user?.id) {
+        saveUserPsychology(user.id, combinedText, 'liturgia');
+      }
     }
-  }, [meditation, isMeditationLoading, readings]);
+  }, [meditation, isMeditationLoading, readings, user?.id]);
 
   const shareMeditation = useCallback(async (method: 'whatsapp' | 'copy') => {
     if (!meditation) return;

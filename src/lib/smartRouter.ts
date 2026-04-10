@@ -47,13 +47,17 @@ function countMatches(text: string, keywords: string[]): number {
   return keywords.reduce((count, kw) => count + (lower.includes(kw) ? 1 : 0), 0);
 }
 
-export function routeUser(reflectionText: string): RouteRecommendation[] {
-  const scores = {
-    emotion: countMatches(reflectionText, EMOTION_KEYWORDS),
-    doubt: countMatches(reflectionText, DOUBT_KEYWORDS),
-    moral: countMatches(reflectionText, MORAL_KEYWORDS),
-    spiritual: countMatches(reflectionText, SPIRITUAL_KEYWORDS),
+export function detectCategories(text: string) {
+  return {
+    emotion: countMatches(text, EMOTION_KEYWORDS),
+    doubt: countMatches(text, DOUBT_KEYWORDS),
+    moral: countMatches(text, MORAL_KEYWORDS),
+    spiritual: countMatches(text, SPIRITUAL_KEYWORDS),
   };
+}
+
+export function routeUser(reflectionText: string): RouteRecommendation[] {
+  const scores = detectCategories(reflectionText);
 
   const routes: RouteRecommendation[] = [];
 
