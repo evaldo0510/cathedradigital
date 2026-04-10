@@ -658,6 +658,36 @@ export type Database = {
           },
         ]
       }
+      user_emotions: {
+        Row: {
+          context_text: string | null
+          created_at: string
+          emotion_type: string
+          id: string
+          score: number
+          source_feature: string | null
+          user_id: string
+        }
+        Insert: {
+          context_text?: string | null
+          created_at?: string
+          emotion_type: string
+          id?: string
+          score?: number
+          source_feature?: string | null
+          user_id: string
+        }
+        Update: {
+          context_text?: string | null
+          created_at?: string
+          emotion_type?: string
+          id?: string
+          score?: number
+          source_feature?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_history: {
         Row: {
           id: string
@@ -714,6 +744,36 @@ export type Database = {
           id?: string
           note_text?: string
           updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_psychological_profiles: {
+        Row: {
+          created_at: string
+          dominant_emotion: string | null
+          id: string
+          last_updated: string
+          mood_history: Json | null
+          traits: Json | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          dominant_emotion?: string | null
+          id?: string
+          last_updated?: string
+          mood_history?: Json | null
+          traits?: Json | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          dominant_emotion?: string | null
+          id?: string
+          last_updated?: string
+          mood_history?: Json | null
+          traits?: Json | null
           user_id?: string
         }
         Relationships: []
