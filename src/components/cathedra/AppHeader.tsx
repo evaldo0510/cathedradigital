@@ -76,7 +76,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
         )}
       </div>
 
-      <div className="flex items-center gap-3 flex-shrink-0">
+      <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
         <button className="p-3 bg-muted text-primary rounded-2xl border border-border hover:bg-primary hover:text-white transition-all shadow-sm" onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}>
           <Icons.Search className="w-5 h-5" />
         </button>
