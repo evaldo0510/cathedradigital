@@ -599,7 +599,67 @@ const HojePage: React.FC = () => {
                 </div>
               )}
               
-              {!isAnalyzing && recommendedLogosJourney && (
+              {!isAnalyzing && logosRecommendation?.scores && (
+                <div className="mt-6 pt-6 border-t border-primary/20 space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-700">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">Análise da Reflexão</h3>
+                      <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold border border-primary/20">
+                        Estado Principal: {logosRecommendation.main_state}
+                      </span>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {[
+                        { key: 'ansiedade', label: 'Ansiedade', color: 'bg-orange-500', icon: <Flame className="w-3 h-3" /> },
+                        { key: 'confusao', label: 'Confusão', color: 'bg-blue-500', icon: <Compass className="w-3 h-3" /> },
+                        { key: 'dor_emocional', label: 'Dor Emocional', color: 'bg-red-500', icon: <Moon className="w-3 h-3" /> },
+                        { key: 'busca_espiritual', label: 'Busca Espiritual', color: 'bg-emerald-500', icon: <Sparkles className="w-3 h-3" /> },
+                      ].map((state) => (
+                        <div key={state.key} className="space-y-1.5">
+                          <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                            <span className="flex items-center gap-1">{state.icon} {state.label}</span>
+                            <span>{(logosRecommendation.scores[state.key] || 0) * 10}%</span>
+                          </div>
+                          <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+                            <motion.div 
+                              initial={{ width: 0 }}
+                              animate={{ width: `${(logosRecommendation.scores[state.key] || 0) * 10}%` }}
+                              className={`h-full ${state.color} rounded-full`}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {recommendedLogosJourney && (
+                    <div className="space-y-4 pt-4 border-t border-primary/10">
+                      <div className="flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-wider">
+                        <Compass className="w-4 h-4" />
+                        Jornada Sugerida: {recommendedLogosJourney.title}
+                      </div>
+                      <p className="text-sm text-muted-foreground leading-relaxed italic">
+                        "{logosRecommendation?.reason || "Esta jornada foi selecionada especialmente para o seu momento atual."}"
+                      </p>
+                      <Button 
+                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground h-12 text-base font-semibold shadow-lg shadow-primary/20 group"
+                        onClick={() => {
+                          if (recommendedLogosStep) {
+                            navigate(`/jornadas/${recommendedLogosJourney.id}/step?step=${recommendedLogosStep.id}`);
+                          } else {
+                            navigate(`/jornadas/${recommendedLogosJourney.id}/complete`);
+                          }
+                        }}
+                      >
+                        Continuar por aqui <ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {!isAnalyzing && !logosRecommendation?.scores && recommendedLogosJourney && (
                 <div className="mt-6 pt-6 border-t border-primary/20 space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-700">
                   <div className="flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-wider">
                     <Compass className="w-4 h-4" />
@@ -620,7 +680,6 @@ const HojePage: React.FC = () => {
                   >
                     Continuar por aqui <ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                   </Button>
-
                 </div>
               )}
             </CardContent>
