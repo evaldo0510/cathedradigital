@@ -8,7 +8,9 @@ import { AppRoute } from '@/types';
 
 interface ProConversionBannerProps {
   /** Where the banner is shown for analytics */
-  context: 'lectio' | 'jornada' | 'dashboard';
+  context: 'lectio' | 'jornada' | 'dashboard' | 'logos';
+  /** Optional override to force visibility (e.g. for Logos deep response) */
+  forceVisible?: boolean;
 }
 
 /**
@@ -16,7 +18,7 @@ interface ProConversionBannerProps {
  * Only shows after the user has written 2+ reflections (journal entries or journey reflections).
  * Does not show for PRO users or if dismissed in this session.
  */
-const ProConversionBanner: React.FC<ProConversionBannerProps> = ({ context }) => {
+const ProConversionBanner: React.FC<ProConversionBannerProps> = ({ context, forceVisible }) => {
   const { user, isPremium } = useAuth();
   const navigate = useNavigate();
   const [visible, setVisible] = useState(false);
@@ -25,6 +27,11 @@ const ProConversionBanner: React.FC<ProConversionBannerProps> = ({ context }) =>
 
   useEffect(() => {
     if (!user || isPremium) return;
+
+    if (forceVisible) {
+      setVisible(true);
+      return;
+    }
 
     const checkReflections = async () => {
       // Count total reflections: journal entries + journey reflections
@@ -43,8 +50,8 @@ const ProConversionBanner: React.FC<ProConversionBannerProps> = ({ context }) =>
       const total = (journalRes.count ?? 0) + (journeyRes.count ?? 0);
       setReflectionCount(total);
 
-      // Show after 2+ reflections
-      if (total >= 2) {
+      // Show after 2+ reflections or if context is logos (handled by forceVisible usually)
+      if (total >= 2 || context === 'logos') {
         const sessionKey = `pro_banner_dismissed_${context}`;
         if (!sessionStorage.getItem(sessionKey)) {
           setVisible(true);
@@ -53,7 +60,7 @@ const ProConversionBanner: React.FC<ProConversionBannerProps> = ({ context }) =>
     };
 
     checkReflections();
-  }, [user, isPremium, context]);
+  }, [user, isPremium, context, forceVisible]);
 
   const handleDismiss = () => {
     setDismissed(true);
@@ -97,7 +104,7 @@ const ProConversionBanner: React.FC<ProConversionBannerProps> = ({ context }) =>
           <div className="flex-1 space-y-1.5 min-w-0">
             <h4 className="text-sm font-bold text-foreground">{copy.title}</h4>
             <p className="text-xs text-muted-foreground leading-relaxed">{copy.message}</p>
-            {reflectionCount >= 2 && (
+            {reflectionCount >= 2 && context !== 'logos' && (
               <div className="flex items-center gap-1.5 text-xs text-primary/70">
                 <Flame className="w-3.5 h-3.5" />
                 <span>{reflectionCount} reflexões escritas</span>
@@ -110,7 +117,7 @@ const ProConversionBanner: React.FC<ProConversionBannerProps> = ({ context }) =>
             onClick={() => navigate(AppRoute.PRICING)}
             className="flex items-center gap-2 px-5 py-3 bg-primary text-primary-foreground rounded-2xl text-[10px] font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-md whitespace-nowrap flex-shrink-0"
           >
-            Desbloquear <ArrowRight className="w-3.5 h-3.5" />
+            Desbloquear experiência completa <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
       </motion.div>
@@ -119,28 +126,40 @@ const ProConversionBanner: React.FC<ProConversionBannerProps> = ({ context }) =>
 };
 
 function getCopy(context: string, reflections: number): { title: string; message: string } {
+  // Moments of conversion as requested:
+  
+  if (context === 'logos') {
+    return {
+      title: 'Existe um nível mais profundo disso.',
+      message: 'A Logos pode ir muito além. Tenha acesso a respostas ilimitadas e análises teológicas avançadas.',
+    };
+  }
+
+  if (context === 'jornada') {
+    return {
+      title: 'Continue essa transformação.',
+      message: 'O progresso que você fez até agora é real. Desbloqueie o caminho completo e não pare agora.',
+    };
+  }
+
+  if (reflections >= 2) {
+    return {
+      title: 'Você começou a entender…',
+      message: 'Aprofunde isso. Com o PRO, você tem acesso ao diário completo e todas as ferramentas de meditação.',
+    };
+  }
+
+  // Fallbacks
   if (context === 'lectio') {
     return {
       title: 'A Palavra está agindo em você',
-      message: 'Você já escreveu reflexões profundas. Com o PRO, acesse todas as jornadas de 30 dias, IA personalizada e diário espiritual completo.',
+      message: 'Sua alma já começou a refletir profundamente. O PRO desbloqueia o caminho completo.',
     };
   }
-  if (context === 'jornada') {
-    if (reflections >= 5) {
-      return {
-        title: 'Sua transformação está em andamento',
-        message: 'Você já percorreu um caminho real. Desbloqueie as jornadas completas e continue sua transformação interior.',
-      };
-    }
-    return {
-      title: 'Você começou… mas ainda não terminou',
-      message: 'A mudança acontece na continuidade. Desbloqueie a jornada completa e vá até o fim.',
-    };
-  }
-  // dashboard
+
   return {
-    title: 'Continue o que começou',
-    message: 'Suas reflexões mostram que algo está acontecendo dentro de você. O PRO desbloqueia o caminho completo.',
+    title: 'Aprofunde sua caminhada',
+    message: 'Suas reflexões mostram que algo está acontecendo dentro de você. O PRO desbloqueia a experiência completa.',
   };
 }
 

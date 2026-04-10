@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
 import { Icons } from '../../constants';
 import BibleVersePopover from './BibleVersePopover';
@@ -8,7 +9,8 @@ import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
-import { Copy, Check, Plus, MessageSquare, Trash2, ChevronLeft, Compass } from 'lucide-react';
+import { Copy, Check, Plus, MessageSquare, Trash2, ChevronLeft, Compass, Sparkles } from 'lucide-react';
+import ProConversionBanner from './ProConversionBanner';
 import { toast } from 'sonner';
 
 interface Message {
@@ -370,6 +372,19 @@ const StudyMode: React.FC = () => {
               </div>
             </div>
           ))}
+
+          {/* Natural conversion: Logos deep response */}
+          {!isLoading && messages.length > 0 && messages[messages.length - 1].role === 'assistant' && (
+            messages[messages.length - 1].content.length > 400 || messages.filter(m => m.role === 'assistant').length >= 2
+          ) && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="px-2"
+            >
+              <ProConversionBanner context="logos" />
+            </motion.div>
+          )}
 
           {isLoading && messages[messages.length - 1]?.role !== 'assistant' && (
             <div className="flex justify-start">
