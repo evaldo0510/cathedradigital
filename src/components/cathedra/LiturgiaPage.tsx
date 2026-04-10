@@ -2,7 +2,7 @@ import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { Sun, Moon, LogOut, ArrowLeft, Loader2, Share2, Copy, Check, WifiOff } from 'lucide-react';
+
 import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
 import SEOHead from '@/components/SEOHead';
