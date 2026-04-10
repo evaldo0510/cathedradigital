@@ -56,7 +56,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
         )}
 
         {isDashboard && (
-          <nav className="hidden xl:flex items-center gap-6 border-l border-border pl-8 ml-2">
+          <nav className="hidden lg:flex items-center gap-6 border-l border-border pl-8 ml-2">
             {[
               { label: 'Bíblia', route: AppRoute.BIBLE },
               { label: 'Catecismo', route: AppRoute.CATECHISM },
@@ -66,9 +66,10 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
               <button 
                 key={item.label} 
                 onClick={() => navigate(item.route)}
-                className="text-[11px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-all whitespace-nowrap"
+                className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-all whitespace-nowrap relative group"
               >
                 {item.label}
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full" />
               </button>
             ))}
           </nav>
