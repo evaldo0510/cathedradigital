@@ -14,9 +14,9 @@ import ProConversionBanner from './ProConversionBanner';
 
 const getGreeting = () => {
   const h = new Date().getHours();
-  if (h < 12) return { text: 'Bom dia', icon: <Sun className="w-6 h-6 text-primary" />, period: 'manhã' };
-  if (h < 18) return { text: 'Boa tarde', icon: <Sun className="w-6 h-6 text-primary" />, period: 'tarde' };
-  return { text: 'Boa noite', icon: <Moon className="w-6 h-6 text-primary" />, period: 'noite' };
+  if (h < 12) return { text: 'Bom dia', icon: <Icons.Sun className="w-6 h-6 text-primary" />, period: 'manhã' };
+  if (h < 18) return { text: 'Boa tarde', icon: <Icons.Sun className="w-6 h-6 text-primary" />, period: 'tarde' };
+  return { text: 'Boa noite', icon: <Icons.Moon className="w-6 h-6 text-primary" />, period: 'noite' };
 };
 
 const LITURGICAL_QUOTES = [
