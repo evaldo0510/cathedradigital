@@ -194,12 +194,18 @@ const JornadaStepPage: React.FC = () => {
             <X className="w-4 h-4 text-foreground" />
           </button>
           <div className="flex-1 min-w-0">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground truncate">{journeyTitle}</p>
+            <div className="flex items-center gap-2">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground truncate">{journeyTitle}</p>
+              <span className="px-1.5 py-0.5 rounded-full text-[8px] font-black uppercase bg-primary/10 text-primary border border-primary/20">
+                {userLevelClass}
+              </span>
+            </div>
             <p className="text-xs text-muted-foreground">Etapa {step.step_order} de {totalSteps}</p>
           </div>
           <span className="text-[10px] font-bold text-muted-foreground flex items-center gap-1">
             <Clock className="w-3 h-3" /> {step.duration_minutes}min
           </span>
+
         </div>
         <div className="max-w-2xl mx-auto mt-2">
           <Progress value={stepProgress} className="h-1" />
