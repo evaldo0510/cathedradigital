@@ -10,12 +10,14 @@ export const COLORS = {
 
 export const Logo = forwardRef<HTMLDivElement, { className?: string }>(({ className = "w-12 h-12" }, ref) => (
   <div ref={ref} className={`relative flex items-center justify-center group ${className}`}>
+    {/* Glow halo visible only in light mode */}
+    <div className="absolute inset-0 rounded-full bg-primary/15 blur-xl scale-150 opacity-0 group-hover:opacity-100 dark:hidden transition-opacity duration-700" />
     <img 
       src={cathedraLogo} 
       alt="Cathedra Logo" 
       loading="lazy"
       decoding="async"
-      className="w-full h-full object-contain transition-all duration-700 group-hover:scale-110 drop-shadow-sm"
+      className="relative w-full h-full object-contain transition-all duration-700 group-hover:scale-110 drop-shadow-[0_2px_8px_hsl(43,72%,53%,0.35)] dark:drop-shadow-sm"
     />
   </div>
 ));
