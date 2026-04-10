@@ -461,7 +461,7 @@ const HojePage: React.FC = () => {
               {journeyStep ? (
                 <p className="text-sm text-muted-foreground">Próxima etapa: <strong className="text-foreground">{journeyStep.title}</strong></p>
               ) : (
-                <p className="text-sm text-primary font-semibold">🎉 Parabéns! Jornada concluída!</p>
+                <p className="text-sm text-primary font-semibold"><Icons.PartyPopper className="w-4 h-4 inline mr-2" /> Parabéns! Jornada concluída!</p>
               )}
               <Button
                 size="sm"
