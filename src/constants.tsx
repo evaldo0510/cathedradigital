@@ -176,7 +176,9 @@ export const Icons = {
   Bell: createIcon(Bell),
   Sun: createIcon(Sun),
   Moon: createIcon(Moon),
+  LogOut: createIcon(LogOut),
   PenLine: createIcon(PenLine),
+
   Calendar: createIcon(Calendar),
   Compass: createIcon(Compass),
   Loader: createIcon(Loader2),
