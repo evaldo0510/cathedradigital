@@ -25,7 +25,7 @@ const JornadaStepPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const stepId = searchParams.get('step');
   const navigate = useNavigate();
-  const { user, profile } = useAuth();
+  const { user, profile, userLevel: userLevelClass } = useAuth();
 
   const [step, setStep] = useState<any>(null);
   const [journeyTitle, setJourneyTitle] = useState('');
