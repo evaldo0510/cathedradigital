@@ -338,7 +338,7 @@ const Bible: React.FC = () => {
         {/* Back to Dashboard */}
         {fromDashboard && (
           <button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-xs text-primary hover:underline">
-            <ArrowLeft className="w-3.5 h-3.5" /> Voltar ao Dashboard
+            <Icons.ArrowLeft className="w-3.5 h-3.5" /> Voltar ao Dashboard
           </button>
         )}
         {/* Header */}
