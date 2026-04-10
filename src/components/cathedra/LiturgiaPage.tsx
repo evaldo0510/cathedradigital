@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import SEOHead from '@/components/SEOHead';
 import { supabase } from '@/integrations/supabase/client';
 import { AppRoute } from '@/types';
+import { routeUser, type RouteRecommendation } from '@/lib/smartRouter';
 import { SAINTS_DATA } from '@/data/saints';
 import ReactMarkdown from 'react-markdown';
 import { toast } from 'sonner';
