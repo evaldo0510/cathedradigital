@@ -1,8 +1,7 @@
 import { motion, MotionValue } from "framer-motion";
-import { ChevronRight, Sparkles } from "lucide-react";
+import { Icons, Logo } from "@/constants";
 import { Button } from "@/components/ui/button";
 import { buttonHover } from "../animations";
-import { Logo } from "@/constants";
 
 const EASE = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
@@ -52,7 +51,7 @@ const HeroContent = ({ heroOpacity, heroScale, heroY, onStart, onAbout }: HeroCo
       transition={{ duration: 0.6, delay: 0.3, ease: EASE }}
       className="inline-flex items-center gap-2.5 px-6 py-2.5 bg-primary/10 border border-primary/20 rounded-full text-primary backdrop-blur-sm"
     >
-      <Sparkles className="w-4 h-4" />
+      <Icons.Sparkles className="w-4 h-4" />
       <span className="text-xs font-black uppercase tracking-[0.25em]">O Santuário Digital da Fé</span>
     </motion.div>
 
@@ -122,7 +121,7 @@ const HeroContent = ({ heroOpacity, heroScale, heroY, onStart, onAbout }: HeroCo
             onClick={onStart}
           >
             <span className="relative z-10 flex items-center">
-              Começar Jornada <ChevronRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              Começar Jornada <Icons.ChevronRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </span>
             <motion.div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/80 to-primary opacity-0 group-hover:opacity-100 transition-opacity" />
           </Button>
