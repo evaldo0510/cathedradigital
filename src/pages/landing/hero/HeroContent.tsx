@@ -2,7 +2,7 @@ import { motion, MotionValue } from "framer-motion";
 import { ChevronRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { buttonHover } from "../animations";
-import cathedraLogo from "@/assets/cathedra-logo.webp";
+import { Logo } from "@/constants";
 
 const EASE = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
