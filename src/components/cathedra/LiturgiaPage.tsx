@@ -165,7 +165,7 @@ const LiturgiaPage: React.FC = () => {
   }, [today]);
 
   const navigateToLectio = (ref?: string) => {
-    const q = ref ? `?passage=${encodeURIComponent(ref)}` : '';
+    const q = ref ? `?ref=${encodeURIComponent(ref)}` : '';
     navigate(`${AppRoute.LECTIO_DIVINA}${q}`);
   };
 
