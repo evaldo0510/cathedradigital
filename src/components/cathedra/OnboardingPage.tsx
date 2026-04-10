@@ -269,83 +269,9 @@ const OnboardingPage: React.FC = () => {
       <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4">
         <div className="w-full max-w-lg lg:max-w-4xl space-y-6 lg:space-y-10">
           <div className="flex justify-center">
-            <Logo className="w-10 h-10 text-primary" />
-          </div>
-
-          <div className="text-center space-y-2">
-            <Compass className="w-8 h-8 mx-auto text-primary" />
-            <h1 className="text-xl font-bold font-serif text-foreground">Diagnóstico Espiritual</h1>
-            <p className="text-xs text-muted-foreground">Responda com sinceridade para encontrarmos a jornada ideal.</p>
-          </div>
-
-          <div className="space-y-1">
-            <div className="h-1.5 bg-muted rounded-full overflow-hidden">
-              <motion.div
-                className="h-full bg-primary rounded-full"
-                initial={{ width: 0 }}
-                animate={{ width: `${diagProgress}%` }}
-                transition={{ duration: 0.3 }}
-              />
-            </div>
-            <p className="text-[10px] text-muted-foreground text-center">
-              Pergunta {diagStep + 1} de {QUESTIONS.length}
-            </p>
-          </div>
-
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={question.id}
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -40 }}
-              transition={{ duration: 0.25 }}
-              className="space-y-4"
-            >
-              <h2 className="text-base font-semibold text-foreground text-center">{question.question}</h2>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
-                {question.options.map((opt) => (
-                  <motion.button
-                    key={opt.value}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    disabled={saving}
-                    onClick={() => handleDiagAnswer(opt.value)}
-                    className={`w-full flex items-center gap-3 p-3.5 rounded-xl border transition-all text-left
-                      ${answers[question.id] === opt.value
-                        ? 'border-primary bg-primary/10 text-foreground'
-                        : 'border-border bg-card text-foreground hover:border-primary/40'
-                      }`}
-                  >
-                    <span className="text-primary">{opt.icon}</span>
-                    <span className="text-sm font-medium">{opt.label}</span>
-                  </motion.button>
-                ))}
-              </div>
-            </motion.div>
-          </AnimatePresence>
-
-          {diagStep > 0 && (
-            <button
-              onClick={() => setDiagStep(diagStep - 1)}
-              className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <ChevronLeft className="w-4 h-4" /> Voltar
-            </button>
-          )}
-        </div>
-      </div>
-    );
-  }
-
-  /* ── Render: Intro slides ── */
-  const slide = SLIDES[currentSlide];
-
-  return (
-    <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4">
-      <div className="w-full max-w-lg lg:max-w-5xl space-y-6 lg:space-y-10">
-        <div className="flex justify-center">
-          <Logo className="w-10 h-10 lg:w-16 lg:h-16 text-primary" />
+            <Logo variant="gold" className="w-10 h-10" />
+...
+          <Logo variant="gold" className="w-10 h-10 lg:w-16 lg:h-16" />
         </div>
 
         <AnimatePresence mode="wait">

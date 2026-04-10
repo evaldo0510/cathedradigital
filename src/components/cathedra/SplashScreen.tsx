@@ -67,7 +67,8 @@ const SplashScreen: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
           className="relative z-10"
         >
           <Logo 
-            className="w-24 h-24 md:w-32 md:h-32 drop-shadow-[0_0_30px_hsl(43,72%,53%,0.4)] text-primary" 
+            variant="gold"
+            className="w-24 h-24 md:w-32 md:h-32 drop-shadow-[0_0_30px_hsl(43,72%,53%,0.4)]" 
           />
         </motion.div>
 

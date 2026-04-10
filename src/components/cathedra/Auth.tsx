@@ -79,7 +79,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
     <div className="max-w-md mx-auto space-y-8">
       <div className="text-center space-y-4">
         <div className="flex justify-center">
-          <Logo className="w-16 h-16" />
+          <Logo variant="gold" className="w-16 h-16" />
         </div>
         <h1 className="text-3xl font-serif font-bold text-foreground">
           {mode === 'login' ? 'Acessar Cathedra' : mode === 'signup' ? 'Criar Conta' : 'Redefinir Senha'}
