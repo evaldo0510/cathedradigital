@@ -42,6 +42,8 @@ const HojePage: React.FC = () => {
   const [logosResponse, setLogosResponse] = useState('');
   const [logosRecommendation, setLogosRecommendation] = useState<any>(null);
   const [recommendedLogosJourney, setRecommendedLogosJourney] = useState<any>(null);
+  const [recommendedLogosStep, setRecommendedLogosStep] = useState<any>(null);
+
 
   useEffect(() => {
     if (!user) return;
