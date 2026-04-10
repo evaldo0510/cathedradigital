@@ -113,6 +113,8 @@ const ReadingCard: React.FC<{
 const LiturgiaPage: React.FC = () => {
   const navigate = useNavigate();
   const today = new Date();
+  const [meditation, setMeditation] = useState<string | null>(null);
+  const [isMeditationLoading, setIsMeditationLoading] = useState(false);
 
   const { data: readings, isLoading } = useQuery({
     queryKey: ['liturgy-readings', today.toDateString()],
