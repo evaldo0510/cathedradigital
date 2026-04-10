@@ -26,17 +26,17 @@ const DIFFICULTY_COLORS: Record<string, string> = {
 };
 
 const CATEGORY_ICONS: Record<string, string> = {
-  fundamentos: '🌱',
-  formacao: '📚',
-  rotina: '🔁',
-  oracao: '🙏',
-  mistico: '✨',
-  cura: '💛',
-  transformacao: '🦋',
+  fundamentos: '✨',
+  formacao: '🌱',
+  rotina: '🦋',
+  oracao: '🔁',
+  mistico: '🙏',
+  cura: '📚',
+  transformacao: '✨',
 };
 
 const CATEGORY_LABELS: Record<string, string> = {
-  fundamentos: 'Fundamentos',
+  fundamentos: 'Fundamento0s',
   formacao: 'Formação',
   rotina: 'Rotina',
   oracao: 'Oração',
