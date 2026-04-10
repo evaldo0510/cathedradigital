@@ -278,7 +278,25 @@ Use Markdown para formatação.`
           <h1 className="text-3xl md:text-4xl font-display font-bold text-foreground tracking-tight">
             Liturgia do Dia
           </h1>
-          <p className="text-sm text-muted-foreground capitalize">{formatDate()}</p>
+          <div className="flex items-center justify-center gap-4">
+            <button
+              onClick={goToPrevDay}
+              className="p-2 rounded-xl hover:bg-primary/10 transition-colors text-muted-foreground hover:text-foreground"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <p className="text-sm text-muted-foreground capitalize min-w-[200px]">
+              {formatDate()}
+              {isToday && <span className="ml-1 text-primary font-bold">(Hoje)</span>}
+            </p>
+            <button
+              onClick={goToNextDay}
+              disabled={isToday}
+              className="p-2 rounded-xl hover:bg-primary/10 transition-colors text-muted-foreground hover:text-foreground disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
         </motion.div>
 
         {/* LOADING */}
