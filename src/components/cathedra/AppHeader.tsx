@@ -48,7 +48,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
         
         <div className="flex items-center gap-6 sm:gap-10">
           <div className="flex items-center gap-2 sm:gap-3 ml-1 sm:ml-2 cursor-pointer group" onClick={() => navigate(AppRoute.DASHBOARD)}>
-            <div className="transition-all group-hover:scale-110 group-hover:rotate-6">
+            <div className="transition-all group-hover:scale-110 group-hover:rotate-6 animate-[pulse_3s_ease-in-out_infinite]">
               <Logo className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10" />
             </div>
             <span className="text-sm sm:text-lg md:text-xl font-display font-black uppercase tracking-[0.2em] sm:tracking-[0.25em] text-foreground group-hover:text-primary transition-all hidden sm:inline-block">Cathedra</span>
