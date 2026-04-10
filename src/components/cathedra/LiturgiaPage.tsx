@@ -281,6 +281,15 @@ Instruções:
       setIsMeditationLoading(false);
     }
   }, [readings, isMeditationLoading]);
+
+  // Classify meditation text emotionally whenever it finishes
+  useEffect(() => {
+    if (meditation && !isMeditationLoading && meditation.length > 50) {
+      const combinedText = `${readings?.evangelho?.texto || ''} ${meditation}`;
+      setEmotionalRoutes(routeUser(combinedText));
+    }
+  }, [meditation, isMeditationLoading, readings]);
+
   const shareMeditation = useCallback(async (method: 'whatsapp' | 'copy') => {
     if (!meditation) return;
     const text = `✨ Meditação do Dia — ${readings?.evangelho?.referencia || ''}\n\n${meditation}\n\n— Via Cathedra Digital`;
