@@ -150,8 +150,8 @@ const JornadasPage: React.FC = () => {
     <div className="space-y-6 max-w-2xl mx-auto">
       {/* Header */}
       <div className="text-center space-y-3">
-        <Compass className="w-10 h-10 mx-auto text-primary" />
-        <h1 className="text-2xl md:text-3xl font-bold font-serif text-foreground">🌱 Jornadas de Transformação</h1>
+        <Icons.Compass className="w-10 h-10 mx-auto text-primary" />
+        <h1 className="text-2xl md:text-3xl font-bold font-serif text-foreground">Jornadas de Transformação</h1>
         <p className="text-muted-foreground font-serif italic max-w-md mx-auto">
           "Não é sobre assistir… é sobre atravessar."
         </p>
