@@ -504,6 +504,35 @@ Instruções:
               </Button>
             </div>
           )}
+
+          {/* Emotional classification — smart route suggestions */}
+          {emotionalRoutes.length > 0 && meditation && !isMeditationLoading && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="space-y-3 pt-2"
+            >
+              <p className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground text-center">
+                🧭 Próximo passo sugerido
+              </p>
+              <div className="grid grid-cols-2 gap-2">
+                {emotionalRoutes.map((rec) => (
+                  <button
+                    key={rec.route}
+                    onClick={() => navigate(rec.route)}
+                    className="flex items-center gap-2 p-3 rounded-xl border border-border bg-background hover:bg-primary/5 transition-colors text-left group"
+                  >
+                    <span className="text-lg">{rec.icon}</span>
+                    <div className="min-w-0">
+                      <p className="text-xs font-bold text-foreground truncate">{rec.label}</p>
+                      <p className="text-[10px] text-muted-foreground truncate">{rec.reason}</p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          )}
         </motion.div>
 
         <motion.div
