@@ -81,7 +81,11 @@ import {
   Stethoscope,
   Route,
   Library,
-  Hand
+  Hand,
+  ScrollText,
+  Swords,
+  Mail,
+  ChevronDown
 } from 'lucide-react';
 import { cn } from './lib/utils';
 
@@ -202,6 +206,10 @@ export const Icons = {
   Route: createIcon(Route),
   Library: createIcon(Library),
   Hand: createIcon(Hand),
+  ScrollText: createIcon(ScrollText),
+  Swords: createIcon(Swords),
+  Mail: createIcon(Mail),
+  ChevronDown: createIcon(ChevronDown),
 
   // Semantic Aliases & Backward Compatibility
   Bible: createIcon(BookOpen),
