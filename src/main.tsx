@@ -20,6 +20,13 @@ if (isPreviewHost || isInIframe) {
   navigator.serviceWorker?.getRegistrations().then((registrations) => {
     registrations.forEach((r) => r.unregister());
   });
+} else if ('serviceWorker' in navigator) {
+  // Register combined SW (push + offline cache) only in production
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch((err) => {
+      console.warn('SW registration failed:', err);
+    });
+  });
 }
 
 createRoot(document.getElementById("root")!).render(<App />);
