@@ -292,8 +292,13 @@ Instruções:
     if (meditation && !isMeditationLoading && meditation.length > 50) {
       const combinedText = `${readings?.evangelho?.texto || ''} ${meditation}`;
       setEmotionalRoutes(routeUser(combinedText));
+      
+      // Save psychological profile
+      if (user?.id) {
+        saveUserPsychology(user.id, combinedText, 'liturgia');
+      }
     }
-  }, [meditation, isMeditationLoading, readings]);
+  }, [meditation, isMeditationLoading, readings, user?.id]);
 
   const shareMeditation = useCallback(async (method: 'whatsapp' | 'copy') => {
     if (!meditation) return;
