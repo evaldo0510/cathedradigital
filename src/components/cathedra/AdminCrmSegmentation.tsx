@@ -84,8 +84,8 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
   const exportCsv = useCallback(() => {
     const headers = ['Nome', 'Email', 'Status', 'Plano', 'Streak', 'XP', 'Nível', 'Última Visita', 'Cadastro'];
     const rows = filtered.map(u => {
-      const days = daysSince(u.last_visit);
-      const status = days <= 3 ? 'Ativo' : days <= 14 ? 'Em risco' : 'Inativo';
+      const hours = hoursSince(u.last_visit);
+      const status = hours <= 48 ? 'Ativo' : 'Inativo';
       return [
         u.name || '', u.email, status, u.is_premium ? 'PRO' : 'Free',
         u.streak ?? 0, u.xp ?? 0, u.level ?? 1,
