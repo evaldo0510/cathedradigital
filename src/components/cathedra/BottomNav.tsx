@@ -55,7 +55,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon, route, isAct
   >
     <div className={`transition-transform duration-150 ${isActive ? 'scale-110 -translate-y-0.5' : 'active:scale-90'}`}>
       {React.cloneElement(icon as React.ReactElement, { 
-        className: `w-5 h-5 sm:w-6 sm:h-6 ${isActive ? 'stroke-[2.5px] drop-shadow-[0_0_8px_hsl(var(--primary)/0.4)]' : 'stroke-[1.5px]'}`,
+        className: `w-5 h-5 sm:w-6 sm:h-6 ${isActive ? 'stroke-[2.2px] drop-shadow-[0_0_8px_hsl(var(--primary)/0.4)]' : 'stroke-[1.8px]'}`,
         size: undefined, // Let Tailwind classes handle size if needed, but our standard is size=20
         strokeWidth: undefined // Let dynamic class handle it
       })}
