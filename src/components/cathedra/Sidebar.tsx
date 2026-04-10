@@ -4,12 +4,7 @@ import { prefetchRoute } from '@/lib/prefetch';
 import { Logo, Icons } from '../../constants';
 import { AppRoute, User } from '../../types';
 import { BibleModal, CatechismModal, DocumentsModal } from './QuickModals';
-import {
-  ShieldCheck, ListChecks, Feather, Bookmark,
-  Crown, Route, Library, MessageCircle,
-  Sparkles, Trophy, Zap, Stethoscope, Search,
-  Sun, Moon, LogOut, Menu, Command
-} from 'lucide-react';
+
 
 interface SidebarProps {
   onClose?: () => void;
