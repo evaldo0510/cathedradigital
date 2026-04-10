@@ -519,6 +519,7 @@ const Bible: React.FC = () => {
       <SEOHead 
         title="Bíblia Sagrada | Cathedra" 
         description="Leia e estude a Sagrada Escritura com referências cruzadas e comentários."
+        path="/bible"
       />
       
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
