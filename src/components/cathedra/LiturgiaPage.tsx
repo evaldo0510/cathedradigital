@@ -282,6 +282,19 @@ Use Markdown para formatação.`
       setIsMeditationLoading(false);
     }
   }, [readings, isMeditationLoading]);
+  const shareMeditation = useCallback(async (method: 'whatsapp' | 'copy') => {
+    if (!meditation) return;
+    const text = `✨ Meditação do Dia — ${readings?.evangelho?.referencia || ''}\n\n${meditation}\n\n— Via Cathedra Digital`;
+    if (method === 'whatsapp') {
+      window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+    } else {
+      await navigator.clipboard.writeText(text);
+      setCopiedMeditation(true);
+      toast.success('Meditação copiada!');
+      setTimeout(() => setCopiedMeditation(false), 2000);
+    }
+  }, [meditation, readings]);
+
   const formatDate = () =>
     today.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
