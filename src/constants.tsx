@@ -10,15 +10,37 @@ export const COLORS = {
 
 export const Logo = forwardRef<HTMLDivElement, { className?: string }>(({ className = "w-12 h-12" }, ref) => (
   <div ref={ref} className={`relative flex items-center justify-center group ${className}`}>
-    {/* Glow halo visible only in light mode */}
-    <div className="absolute inset-0 rounded-full bg-primary/15 blur-xl scale-150 opacity-0 group-hover:opacity-100 dark:hidden transition-opacity duration-700" />
-    <img 
-      src={cathedraLogo} 
-      alt="Cathedra Logo" 
-      loading="lazy"
-      decoding="async"
-      className="relative w-full h-full object-contain transition-all duration-700 group-hover:scale-110 drop-shadow-[0_2px_8px_hsl(43,72%,53%,0.35)] dark:drop-shadow-sm"
-    />
+    {/* Glow halo */}
+    <div className="absolute inset-0 rounded-full bg-primary/10 blur-2xl scale-150 opacity-0 group-hover:opacity-100 transition-all duration-700" />
+    <svg 
+      viewBox="0 0 100 100" 
+      fill="none" 
+      xmlns="http://www.w3.org/2000/svg"
+      className="relative w-full h-full transition-all duration-700 group-hover:scale-110 drop-shadow-[0_2px_12px_rgba(0,0,0,0.1)]"
+    >
+      {/* Halo element */}
+      <circle cx="50" cy="50" r="45" stroke="currentColor" strokeWidth="0.5" strokeDasharray="4 4" className="opacity-20" />
+      
+      {/* Cathedral / Temple Structure */}
+      <path 
+        d="M50 8L20 38V85H80V38L50 8Z" 
+        stroke="currentColor" 
+        strokeWidth="3.5" 
+        strokeLinejoin="round" 
+        className="text-primary"
+      />
+      
+      {/* Rose Window with Cross */}
+      <circle cx="50" cy="45" r="12" stroke="currentColor" strokeWidth="2.5" className="text-primary" />
+      <path d="M50 38V52M43 45H57" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      
+      {/* Architectural details */}
+      <path d="M20 38H80" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="opacity-40" />
+      <path d="M42 85V70C42 65.5817 45.5817 62 50 62C54.4183 62 58 65.5817 58 70V85" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+      
+      {/* Side Spires */}
+      <path d="M20 38V28M80 38V28" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+    </svg>
   </div>
 ));
 
