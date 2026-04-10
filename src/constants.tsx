@@ -46,15 +46,25 @@ const createIcon = (d: string, viewBox = "0 0 24 24", fill = "none", stroke = "c
 
 const NavIcons = {
   Bible: createIcon("M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"),
-  Liturgy: createIcon("M12 2v20M8 6h8M12 2l-4 4M12 2l4 4"),
+  HolyBible: createIcon("M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"),
+  Liturgy: createIcon("M12 2v20M8 6h8"),
+  Chalice: createIcon("M8 2h8l-1 8a3 3 0 01-6 0L8 2zM12 12v5M8 21h8"),
   Journeys: createIcon("M9 20l-5-5 5-5m6-6l5 5-5 5"),
-  Community: createIcon("M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2m16-10a4 4 0 100-8 4 4 0 000 8zM7 7a4 4 0 11-8 0 4 4 0 018 0z"),
+  Community: createIcon("M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2m16-10a4 4 0 100-8 4 4 0 000 8z"),
   Lectio: createIcon("M12 2l3 6 6 3-6 3-3 6-3-6-6-3 6-3 3-6z"),
   Saints: createIcon("M12 7l1.5 3h3.5l-2.5 2 1 3.5-3.5-2-3.5 2 1-3.5-2.5-2h3.5l1.5-3z"),
+  SaintHalo: createIcon("M12 5c2.76 0 5 1.34 5 3s-2.24 3-5 3-5-1.34-5-3 2.24-3 5-3zM12 12c-2.21 0-4 1.79-4 4v5h8v-5c0-2.21-1.79-4-4-4z"),
   Catechism: createIcon("M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8zM14 2l6 6M14 2v6h6"),
+  CatechismShield: createIcon("M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10zM12 7v6M9 10h6"),
   Glossary: createIcon("M4 19h6M4 5l8 14L20 5"),
   Aquinas: createIcon("M8 2h8v20H8V2zM4 6h16M4 18h16"),
   Dove: createIcon("M12 8c-2-3-6-3-8-1 2 0 3 2 3 4l5 5 5-5c0-2 1-4 3-4-2-2-6-2-8 1z"),
+  LiturgicalCalendar: createIcon("M19 4H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM16 2v4M8 2v4M3 10h18M12 14v4M10 16h4"),
+  PrayingHands: createIcon("M10 8c-1.1 0-2 .9-2 2v10l2 2h4l2-2V10c0-1.1-.9-2-2-2h-4zM12 3v3"),
+  Rosary: createIcon("M12 10a4 4 0 100 8 4 4 0 000-8zM12 18v3M10 21h4"),
+  ViaCrucis: createIcon("M12 2v20M8 6h8M4 22l4-6M20 22l-4-6"),
+  Scroll: createIcon("M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8zM14 2l6 6M14 2v6h6"),
+  Cathedral: createIcon("M12 2L3 10v11a1 1 0 001 1h16a1 1 0 001-1V10L12 2zM12 6v4M10 8h4M9 22v-5h6v5"),
 };
 
 export const Icons = {

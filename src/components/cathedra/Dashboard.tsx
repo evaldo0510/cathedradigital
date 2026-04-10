@@ -183,9 +183,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           {/* Streak & XP */}
           <div className="flex items-center justify-center gap-3 flex-wrap">
             {streak > 0 && (
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20">
-                <Flame className="w-3.5 h-3.5 text-orange-500" />
-                <span className="text-xs font-bold text-orange-600 dark:text-orange-400">{streak} {streak === 1 ? 'dia' : 'dias'}</span>
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary/10 border border-secondary/20">
+                <Flame className="w-3.5 h-3.5 text-secondary" />
+                <span className="text-xs font-bold text-secondary">{streak} {streak === 1 ? 'dia' : 'dias'}</span>
               </div>
             )}
             <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
