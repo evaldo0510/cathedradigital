@@ -85,8 +85,10 @@ import {
   ScrollText,
   Swords,
   Mail,
-  ChevronDown
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
+
 import { cn } from './lib/utils';
 
 export const COLORS = {
