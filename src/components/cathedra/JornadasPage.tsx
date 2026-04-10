@@ -183,7 +183,7 @@ const JornadasPage: React.FC = () => {
               filterCategory === 'all' ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:bg-muted/80'
             }`}
           >
-            Todas
+            Todas 💛
           </button>
           {categories.map(cat => (
             <button
