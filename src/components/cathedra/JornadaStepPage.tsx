@@ -112,6 +112,43 @@ const JornadaStepPage: React.FC = () => {
     }
   };
 
+  const userLevelClass = useMemo<UserLevelClass>(() => {
+    if (!profile) return 'iniciante';
+    
+    // Check diagnosis from sensitive data
+    const diagnosis = profile._sensitive?.diagnosis_result as any;
+    if (diagnosis) {
+      const knowledge = diagnosis.knowledge;
+      if (knowledge === 'basic') return 'iniciante';
+      if (knowledge === 'moderate') return 'intermediário';
+      if (knowledge === 'advanced' || knowledge === 'theological') return 'avançado';
+    }
+
+    // Fallback to integer level
+    const levelNum = profile.level || 1;
+    if (levelNum >= 10) return 'avançado';
+    if (levelNum >= 4) return 'intermediário';
+    return 'iniciante';
+  }, [profile]);
+
+  const getVariantContent = (key: string, content: any): string | null => {
+    if (!content) return null;
+    
+    // If it's a string, return it
+    if (typeof content[key] === 'string') return content[key];
+    
+    // If it's an object with variants
+    if (content[key] && typeof content[key] === 'object') {
+      return content[key][userLevelClass] || content[key]['iniciante'] || Object.values(content[key])[0] as string;
+    }
+    
+    // Try separate keys (e.g. reflection_iniciante)
+    const variantKey = `${key}_${userLevelClass}`;
+    if (content[variantKey]) return content[variantKey];
+    
+    return content[key] || null;
+  };
+
   const toggleSection = (key: string) => {
     setExpandedSection(prev => prev === key ? null : key);
   };
@@ -139,6 +176,7 @@ const JornadaStepPage: React.FC = () => {
 
   const content = step.content as Record<string, any>;
   const stepProgress = totalSteps > 0 ? (step.step_order / totalSteps) * 100 : 0;
+
 
   return createPortal(
     <motion.div
