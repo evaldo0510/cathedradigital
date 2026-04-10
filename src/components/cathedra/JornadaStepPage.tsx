@@ -84,13 +84,16 @@ const JornadaStepPage: React.FC = () => {
 
       // Also save to spiritual journal if there's a journal prompt response
       if (reflection.trim()) {
-        await supabase.from('spiritual_journal').insert([{
-          user_id: user.id,
-          content: reflection.trim(),
-          journey_id: journeyId,
-          step_id: stepId,
-          entry_date: new Date().toISOString().split('T')[0],
-        }]);
+        await Promise.all([
+          supabase.from('spiritual_journal').insert([{
+            user_id: user.id,
+            content: reflection.trim(),
+            journey_id: journeyId,
+            step_id: stepId,
+            entry_date: new Date().toISOString().split('T')[0],
+          }]),
+          saveUserPsychology(user.id, reflection.trim(), `journey_${journeyId}`)
+        ]);
       }
 
       setCompleted(true);
