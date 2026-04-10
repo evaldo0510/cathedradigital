@@ -1,8 +1,14 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { ArrowLeft, BookOpen, ScrollText, Music, Flame, ChevronRight, Sparkles, User } from 'lucide-react';
+import { ArrowLeft, BookOpen, ScrollText, Music, Flame, ChevronRight, Sparkles, User, Brain, Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import SEOHead from '@/components/SEOHead';
+import { supabase } from '@/integrations/supabase/client';
+import { AppRoute } from '@/types';
+import { SAINTS_DATA } from '@/data/saints';
+import ReactMarkdown from 'react-markdown';
 import { Button } from '@/components/ui/button';
 import SEOHead from '@/components/SEOHead';
 import { supabase } from '@/integrations/supabase/client';
