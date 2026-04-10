@@ -212,16 +212,42 @@ const AppLayout: React.FC = () => {
 
   const lastTrackedPath = useRef('');
   useEffect(() => {
-    if (lastTrackedPath.current === location.pathname) return;
+    if (lastTrackedPath.current === location.pathname || !user) return;
     lastTrackedPath.current = location.pathname;
+    
     const timer = setTimeout(() => {
+      // Find a readable title for the current route
+      let pageTitle = '';
+      const path = location.pathname;
+      
+      if (path.includes('biblia')) pageTitle = 'Sagrada Escritura';
+      else if (path.includes('catecismo')) pageTitle = 'Catecismo da Igreja';
+      else if (path.includes('hoje')) pageTitle = 'Liturgia do Dia';
+      else if (path.includes('estudo')) pageTitle = 'Colloquium IA';
+      else if (path.includes('jornada')) pageTitle = 'Jornada Espiritual';
+      else if (path.includes('santos')) pageTitle = 'Vida dos Santos';
+      else if (path.includes('oracao')) pageTitle = 'Momento de Oração';
+      else if (path.includes('comunidade')) pageTitle = 'Comunidade Cathedra';
+      
+      if (pageTitle) {
+        supabase
+          .from('user_history')
+          .insert([{ 
+            user_id: user.id, 
+            route: path, 
+            title: pageTitle,
+            visited_at: new Date().toISOString()
+          }])
+          .then(() => {}, () => {});
+      }
+
       supabase
         .from('app_metrics')
-        .insert([{ metric_type: 'visit', metadata: { path: location.pathname } }])
+        .insert([{ metric_type: 'visit', metadata: { path, user_id: user.id } }])
         .then(() => {}, () => {});
-    }, 2000);
+    }, 3000);
     return () => clearTimeout(timer);
-  }, [location.pathname]);
+  }, [location.pathname, user]);
 
   const t = useCallback((key: string) => {
     return UI_TRANSLATIONS[lang]?.[key] || UI_TRANSLATIONS['en']?.[key] || key;
