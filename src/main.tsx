@@ -2,6 +2,7 @@ import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 import { prefetchCoreModules } from "./lib/prefetch";
+import { registerSW } from 'virtual:pwa-register';
 
 // Guard: unregister service workers in preview/iframe contexts
 const isInIframe = (() => {
@@ -20,12 +21,16 @@ if (isPreviewHost || isInIframe) {
   navigator.serviceWorker?.getRegistrations().then((registrations) => {
     registrations.forEach((r) => r.unregister());
   });
-} else if ('serviceWorker' in navigator) {
-  // Register combined SW (push + offline cache) only in production
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch((err) => {
-      console.warn('SW registration failed:', err);
-    });
+} else {
+  // Register combined SW (push + offline cache) with vite-plugin-pwa
+  registerSW({
+    immediate: true,
+    onRegisteredSW(swUrl, registration) {
+      console.log('SW registered at:', swUrl);
+    },
+    onRegisterError(error) {
+      console.error('SW registration error:', error);
+    }
   });
 }
 
