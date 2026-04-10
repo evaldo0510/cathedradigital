@@ -40,7 +40,9 @@ import {
   Bell,
   Sun,
   Moon,
+  LogOut,
   PenLine,
+
   Calendar,
   Compass,
   Loader2,
