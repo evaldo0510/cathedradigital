@@ -352,7 +352,14 @@ const HojePage: React.FC = () => {
             </div>
             <CardHeader className="pb-2 flex flex-row items-center justify-between">
               <div className="space-y-1">
-                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/70">Reflexão Profunda</p>
+                <div className="flex items-center gap-2">
+                  <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/70">
+                    Reflexão {userLevel === 'iniciante' ? 'Guiada' : userLevel === 'intermediário' ? 'Profunda' : 'Intensiva'}
+                  </p>
+                  <span className="px-1 py-0.5 rounded-full text-[8px] font-black uppercase bg-primary/10 text-primary border border-primary/20">
+                    {userLevel}
+                  </span>
+                </div>
                 <CardTitle className="text-lg font-serif italic text-foreground">
                   {DEEP_INSIGHT.theme}
                 </CardTitle>
