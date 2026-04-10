@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Check, BookOpen, Hand, PenLine, Sparkles, Clock, ChevronDown, X } from 'lucide-react';
+import { ArrowLeft, Check, BookOpen, Hand, PenLine, Sparkles, Clock, ChevronDown, X, ShieldQuestion } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { Textarea } from '@/components/ui/textarea';
 import { Progress } from '@/components/ui/progress';
@@ -18,12 +18,14 @@ const SECTION_CONFIG = [
   { key: 'prayer', label: 'Exercício Guiado', icon: <Sparkles className="w-4 h-4" /> },
 ];
 
+type UserLevelClass = 'iniciante' | 'intermediário' | 'avançado';
+
 const JornadaStepPage: React.FC = () => {
   const { id: journeyId } = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
   const stepId = searchParams.get('step');
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
 
   const [step, setStep] = useState<any>(null);
   const [journeyTitle, setJourneyTitle] = useState('');
@@ -33,6 +35,7 @@ const JornadaStepPage: React.FC = () => {
   const [completed, setCompleted] = useState(false);
   const [saving, setSaving] = useState(false);
   const [expandedSection, setExpandedSection] = useState<string | null>('intro');
+
 
   useEffect(() => {
     if (stepId && journeyId) loadData();
