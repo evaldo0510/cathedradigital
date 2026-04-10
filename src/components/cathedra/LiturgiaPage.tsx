@@ -461,6 +461,29 @@ Use Markdown para formatação.`
               <ReactMarkdown>{meditation}</ReactMarkdown>
             </div>
           )}
+
+          {meditation && !isMeditationLoading && (
+            <div className="flex justify-center gap-2 pt-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-xl border-primary/20 text-xs font-bold uppercase tracking-widest hover:bg-primary/5"
+                onClick={() => shareMeditation('whatsapp')}
+              >
+                <Share2 className="w-3.5 h-3.5 mr-1.5" />
+                WhatsApp
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-xl border-primary/20 text-xs font-bold uppercase tracking-widest hover:bg-primary/5"
+                onClick={() => shareMeditation('copy')}
+              >
+                {copiedMeditation ? <Check className="w-3.5 h-3.5 mr-1.5" /> : <Copy className="w-3.5 h-3.5 mr-1.5" />}
+                {copiedMeditation ? 'Copiado!' : 'Copiar'}
+              </Button>
+            </div>
+          )}
         </motion.div>
 
         <motion.div
