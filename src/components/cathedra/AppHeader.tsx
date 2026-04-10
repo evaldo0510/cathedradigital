@@ -39,126 +39,110 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             <Logo className="w-10 h-10 sm:w-12 sm:h-12" />
           </div>
           <div className="flex flex-col">
-            <span className="text-lg sm:text-xl font-display font-black uppercase tracking-[0.25em] text-primary">Cathedra</span>
-            <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-secondary -mt-1 opacity-80">Digital</span>
+            <span className="text-lg sm:text-xl font-display font-black uppercase tracking-[0.25em] text-primary leading-none">Cathedra</span>
+            <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-secondary opacity-80 mt-1">Digital</span>
           </div>
         </div>
         
         {!isDashboard && (
           <button 
             onClick={() => navigate(-1)} 
-            className="p-2 sm:p-2.5 bg-muted text-primary border border-border rounded-xl flex items-center gap-2 px-3 sm:px-5 active:scale-95 transition-all hover:bg-primary hover:text-white group"
+            className="p-2 sm:p-2.5 bg-muted text-primary border border-border rounded-xl flex items-center gap-2 px-3 sm:px-5 active:scale-95 transition-all hover:bg-primary hover:text-white group shadow-sm"
           >
             <Icons.ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
             <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline-block">Voltar</span>
           </button>
         )}
+
+        {isDashboard && (
+          <nav className="hidden xl:flex items-center gap-6 border-l border-border pl-8 ml-2">
+            {[
+              { label: 'Bíblia', route: AppRoute.BIBLE },
+              { label: 'Catecismo', route: AppRoute.CATECHISM },
+              { label: 'Liturgia', route: AppRoute.LITURGIA },
+              { label: 'Colloquium', route: AppRoute.STUDY_MODE },
+            ].map(item => (
+              <button 
+                key={item.label} 
+                onClick={() => navigate(item.route)}
+                className="text-[11px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-all whitespace-nowrap"
+              >
+                {item.label}
+              </button>
+            ))}
+          </nav>
+        )}
       </div>
-          
-          {isDashboard && (
-            <nav className="hidden xl:flex items-center gap-4 2xl:gap-6 border-l border-border pl-4 2xl:pl-6">
-              {[
-                { label: 'Bíblia', route: AppRoute.BIBLE },
-                { label: 'Catecismo', route: AppRoute.CATECHISM },
-                { label: 'Liturgia', route: AppRoute.LITURGIA },
-                { label: 'Colloquium', route: AppRoute.STUDY_MODE },
-              ].map(item => (
-                <button 
-                  key={item.label} 
-                  onClick={() => navigate(item.route)}
-                  onMouseEnter={() => {
-                    if (item.route === AppRoute.CATECHISM) {
-                      import('@/components/cathedra/Catechism');
-                    } else if (item.route === AppRoute.BIBLE) {
-                      import('@/components/cathedra/Bible');
-                    }
-                  }}
-                  className="text-[11px] font-black uppercase tracking-wider text-muted-foreground hover:text-primary transition-all whitespace-nowrap"
-                >
-                  {item.label}
-                </button>
-              ))}
-            </nav>
-          )}
-        </div>
-      </div>
-      <div className="flex items-center gap-2 flex-shrink-0">
-        {/* Search Bar - Hidden on mobile, shown as icon on tablet, full on desktop */}
-        <div className="hidden sm:flex items-center gap-2 px-3 py-2 bg-muted border border-border rounded-xl text-muted-foreground hover:border-primary/50 transition-all cursor-pointer group" onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}>
-          <Icons.Search className="w-4 h-4 group-hover:text-primary transition-colors" />
-          <span className="text-xs font-bold uppercase tracking-wider hidden lg:inline whitespace-nowrap">Buscar...</span>
-          <kbd className="hidden lg:inline-flex px-1.5 py-0.5 rounded bg-background border border-border text-[10px] font-mono font-bold">⌘K</kbd>
-        </div>
-        
-        {/* Mobile Search Icon */}
-        <button className="sm:hidden p-3 bg-muted text-muted-foreground rounded-2xl border border-border" onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}>
+
+      <div className="flex items-center gap-3 flex-shrink-0">
+        <button className="p-3 bg-muted text-primary rounded-2xl border border-border hover:bg-primary hover:text-white transition-all shadow-sm" onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}>
           <Icons.Search className="w-5 h-5" />
         </button>
 
-        {/* Notification bell */}
         {user && (
           <button 
             onClick={() => setShowNotifs(!showNotifs)} 
-            className="p-3 bg-muted text-muted-foreground hover:text-primary rounded-2xl border border-border relative transition-all"
+            className="p-3 bg-muted text-primary hover:bg-primary hover:text-white rounded-2xl border border-border relative transition-all shadow-sm"
           >
             <Icons.Message className="w-5 h-5" />
             {unreadCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-primary-foreground text-xs font-black flex items-center justify-center rounded-full border-2 border-background animate-pulse">
+              <span className="absolute -top-1 -right-1 w-5 h-5 bg-secondary text-primary text-[10px] font-black flex items-center justify-center rounded-full border-2 border-background shadow-lg">
                 {unreadCount}
               </span>
             )}
           </button>
         )}
         
-        {/* Notification Popover */}
         {showNotifs && user && (
-          <div className="absolute top-full right-4 mt-2 w-80 bg-card border border-border rounded-3xl shadow-2xl z-[150] overflow-hidden animate-in fade-in zoom-in duration-200">
-            <div className="p-4 border-b border-border flex items-center justify-between">
-              <h3 className="text-xs font-black uppercase tracking-widest text-foreground">Notificações</h3>
-              <button onClick={markAllRead} className="text-xs font-black uppercase tracking-widest text-primary hover:opacity-70">Marcar tudo como lido</button>
+          <div className="absolute top-full right-4 mt-4 w-80 bg-card border border-border rounded-3xl shadow-2xl z-[150] overflow-hidden animate-in fade-in zoom-in duration-300">
+            <div className="p-5 border-b border-border flex items-center justify-between bg-muted/30">
+              <h3 className="text-[10px] font-black uppercase tracking-widest text-primary">Notificações</h3>
+              <button onClick={markAllRead} className="text-[10px] font-black uppercase tracking-widest text-secondary hover:opacity-70">Limpar</button>
             </div>
             <div className="max-h-[60vh] overflow-y-auto custom-scrollbar">
               {notifications.length > 0 ? (
                 notifications.map((n) => (
                   <div 
                     key={n.id} 
-                    className={`p-4 border-b border-border/50 hover:bg-muted/50 transition-colors cursor-pointer ${!n.is_read ? 'bg-primary/5' : ''}`}
+                    className={`p-5 border-b border-border/50 hover:bg-muted/50 transition-colors cursor-pointer ${!n.is_read ? 'bg-primary/5' : ''}`}
                     onClick={() => markAsRead(n.id)}
                   >
-                    <p className="text-xs font-semibold text-foreground mb-1">{n.title}</p>
-                    <p className="text-xs text-muted-foreground leading-relaxed">{n.message}</p>
+                    <p className="text-xs font-bold text-primary mb-1">{n.title}</p>
+                    <p className="text-[11px] text-muted-foreground leading-relaxed">{n.message}</p>
                   </div>
                 ))
               ) : (
-                <div className="p-10 text-center">
-                  <Icons.Message className="w-8 h-8 text-muted-foreground/20 mx-auto mb-3" />
-                  <p className="text-xs font-black uppercase tracking-widest text-muted-foreground/40">Nenhuma notificação</p>
+                <div className="p-12 text-center">
+                  <Icons.Message className="w-10 h-10 text-muted-foreground/20 mx-auto mb-4" />
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">Silêncio</p>
                 </div>
               )}
             </div>
           </div>
         )}
+
         {user && user.role === 'admin' && (
           <button 
             onClick={() => navigate(AppRoute.ADMIN)} 
-            className="flex px-3 py-2 text-[10px] sm:text-xs font-black uppercase tracking-widest text-primary hover:text-primary/80 transition-all items-center gap-2 bg-primary/10 rounded-xl border border-primary/20"
+            className="hidden sm:flex px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-primary hover:bg-primary hover:text-white transition-all items-center gap-2 bg-secondary/20 rounded-xl border border-secondary/30 shadow-sm"
           >
             <Icons.Star className="w-4 h-4" />
             <span>Admin</span>
           </button>
         )}
+
         {user ? (
-          <button onClick={onSignOut} className="flex px-2 sm:px-3 py-2 text-[10px] sm:text-xs font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-all items-center gap-2">
-            <LogOut className="w-4 h-4 sm:hidden" />
-            <span className="hidden sm:inline">Sair</span>
+          <button onClick={onSignOut} className="px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-all">
+            Sair
           </button>
         ) : (
-          <button onClick={() => navigate(AppRoute.LOGIN)} className="px-4 py-2 bg-primary text-primary-foreground rounded-xl text-xs font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-lg shadow-primary/20">
+          <button onClick={() => navigate(AppRoute.LOGIN)} className="px-6 py-2.5 bg-primary text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-lg shadow-primary/20">
             Entrar
           </button>
         )}
-        <button onClick={onToggleDark} className="flex p-2 sm:p-3 bg-muted text-muted-foreground hover:text-primary rounded-2xl border border-border transition-all active:scale-95">
-          {isDark ? <Sun className="w-4 h-4 sm:w-5 sm:h-5 text-primary" /> : <Moon className="w-4 h-4 sm:w-5 sm:h-5" />}
+
+        <button onClick={onToggleDark} className="p-3 bg-muted text-primary hover:bg-primary hover:text-white rounded-2xl border border-border transition-all active:scale-95 shadow-sm">
+          {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
         </button>
       </div>
     </header>
