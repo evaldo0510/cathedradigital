@@ -46,6 +46,10 @@ export function useNotes(contentType: string, contentId?: string) {
       .single();
     if (!error && data) {
       setNotes(prev => [data as UserNote, ...prev]);
+      
+      // Save psychological profile
+      saveUserPsychology(user.id, text.trim(), `note_${contentType}`);
+      
       return data as UserNote;
     }
     return null;
