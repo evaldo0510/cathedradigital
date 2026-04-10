@@ -44,12 +44,15 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
   const [sortAsc, setSortAsc] = useState(false);
 
   const segmentedUsers = useMemo(() => {
+    const inactive = users.filter(u => hoursSince(u.last_visit) >= 48);
+    const others = users.filter(u => hoursSince(u.last_visit) < 48);
+    
     return {
       all: users,
-      new: users.filter(u => (u.reflections_count || 0) <= 1),
-      active: users.filter(u => hoursSince(u.last_visit) < 48 && (u.reflections_count || 0) > 1 && (u.reflections_count || 0) <= 10),
-      deep: users.filter(u => (u.reflections_count || 0) > 10),
-      inactive: users.filter(u => hoursSince(u.last_visit) >= 48),
+      inactive,
+      deep: others.filter(u => (u.reflections_count || 0) > 10),
+      new: others.filter(u => (u.reflections_count || 0) <= 1),
+      active: others.filter(u => (u.reflections_count || 0) > 1 && (u.reflections_count || 0) <= 10),
     };
   }, [users]);
 
@@ -75,6 +78,7 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
   };
 
   const getStatusBadge = (u: UserProfile) => {
+    if (hoursSince(u.last_visit) >= 48) return <Badge className="bg-destructive/15 text-destructive border-destructive/30 text-[10px]">Inativo</Badge>;
     if (hoursSince(u.last_visit) >= 48) return <Badge className="bg-destructive/15 text-destructive border-destructive/30 text-[10px]">Inativo</Badge>;
     if ((u.reflections_count || 0) > 10) return <Badge className="bg-primary/15 text-primary border-primary/30 text-[10px]">Profundo</Badge>;
     if ((u.reflections_count || 0) <= 1) return <Badge className="bg-blue-500/15 text-blue-600 border-blue-500/30 text-[10px]">Novo</Badge>;
