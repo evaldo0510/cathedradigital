@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ChevronRight, Sparkles } from 'lucide-react';
+import { Icons } from '@/constants';
 import { Card, CardContent } from '@/components/ui/card';
 import { RouteRecommendation } from '@/lib/smartRouter';
 
