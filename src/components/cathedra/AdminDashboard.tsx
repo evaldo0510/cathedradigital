@@ -5,7 +5,7 @@ import {
   Users, TrendingUp, Download, DollarSign, ArrowUpRight,
   BarChart3, Calendar, AlertCircle, Crown, Shield, Search,
   ChevronDown, ChevronUp, UserCog, ArrowLeft, Home, Smartphone, MonitorSmartphone,
-  Target, Activity, Bell, LayoutGrid
+  Target, Activity, Bell, LayoutGrid, UserCheck
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';

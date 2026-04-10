@@ -31,11 +31,11 @@ interface Props {
   onSelectUser: (user: UserProfile) => void;
 }
 
-type Segment = 'all' | 'new' | 'exploring' | 'engaged' | 'deep' | 'inactive';
+type Segment = 'all' | 'new' | 'active' | 'deep' | 'inactive';
 
-const daysSince = (date: string | null) => {
-  if (!date) return 999;
-  return Math.floor((Date.now() - new Date(date).getTime()) / (1000 * 60 * 60 * 24));
+const hoursSince = (date: string | null) => {
+  if (!date) return 9999;
+  return Math.floor((Date.now() - new Date(date).getTime()) / (1000 * 60 * 60));
 };
 
 const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
@@ -46,19 +46,17 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
   const segmentedUsers = useMemo(() => {
     return {
       all: users,
-      new: users.filter(u => (u.reflections_count || 0) <= 1 || daysSince(u.created_at) <= 3),
-      exploring: users.filter(u => (u.reflections_count || 0) > 1 && (u.reflections_count || 0) < 5),
-      engaged: users.filter(u => (u.reflections_count || 0) >= 5 && (u.streak || 0) >= 3),
-      deep: users.filter(u => u.depth_level === 'Profundo' || (u.reflections_count || 0) > 15),
-      inactive: users.filter(u => daysSince(u.last_visit) > 7),
+      new: users.filter(u => (u.reflections_count || 0) <= 1),
+      active: users.filter(u => hoursSince(u.last_visit) < 48 && (u.reflections_count || 0) > 1 && (u.reflections_count || 0) <= 10),
+      deep: users.filter(u => (u.reflections_count || 0) > 10),
+      inactive: users.filter(u => hoursSince(u.last_visit) >= 48),
     };
   }, [users]);
 
   const segments: { key: Segment; label: string; icon: React.ReactNode; color: string }[] = [
     { key: 'all', label: 'Todos', icon: <Users className="w-4 h-4" />, color: 'text-foreground' },
-    { key: 'new', label: 'Novo (0-1)', icon: <UserCheck className="w-4 h-4" />, color: 'text-blue-500' },
-    { key: 'exploring', label: 'Explorando', icon: <Search className="w-4 h-4" />, color: 'text-amber-500' },
-    { key: 'engaged', label: 'Engajado', icon: <Flame className="w-4 h-4" />, color: 'text-emerald-500' },
+    { key: 'new', label: 'Novo', icon: <UserCheck className="w-4 h-4" />, color: 'text-blue-500' },
+    { key: 'active', label: 'Ativo', icon: <Flame className="w-4 h-4" />, color: 'text-emerald-500' },
     { key: 'deep', label: 'Profundo', icon: <Crown className="w-4 h-4" />, color: 'text-primary' },
     { key: 'inactive', label: 'Inativo', icon: <Clock className="w-4 h-4" />, color: 'text-destructive' },
   ];
@@ -77,11 +75,10 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
   };
 
   const getStatusBadge = (u: UserProfile) => {
-    if (daysSince(u.last_visit) > 7) return <Badge className="bg-destructive/15 text-destructive border-destructive/30 text-[10px]">Abandono</Badge>;
-    if (u.depth_level === 'Profundo') return <Badge className="bg-primary/15 text-primary border-primary/30 text-[10px]">Profundo</Badge>;
-    if ((u.reflections_count || 0) >= 5) return <Badge className="bg-emerald-500/15 text-emerald-600 border-emerald-500/30 text-[10px]">Engajado</Badge>;
-    if ((u.reflections_count || 0) > 1) return <Badge className="bg-amber-500/15 text-amber-600 border-amber-500/30 text-[10px]">Explorando</Badge>;
-    return <Badge className="bg-blue-500/15 text-blue-600 border-blue-500/30 text-[10px]">Novo</Badge>;
+    if (hoursSince(u.last_visit) >= 48) return <Badge className="bg-destructive/15 text-destructive border-destructive/30 text-[10px]">Inativo</Badge>;
+    if ((u.reflections_count || 0) > 10) return <Badge className="bg-primary/15 text-primary border-primary/30 text-[10px]">Profundo</Badge>;
+    if ((u.reflections_count || 0) <= 1) return <Badge className="bg-blue-500/15 text-blue-600 border-blue-500/30 text-[10px]">Novo</Badge>;
+    return <Badge className="bg-emerald-500/15 text-emerald-600 border-emerald-500/30 text-[10px]">Ativo</Badge>;
   };
 
   const exportCsv = useCallback(() => {
@@ -197,7 +194,7 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
                       </span>
                     </td>
                     <td className="p-3 text-center hidden md:table-cell text-xs text-muted-foreground">
-                      {u.last_visit ? `${daysSince(u.last_visit)}d atrás` : '—'}
+                      {u.last_visit ? (hoursSince(u.last_visit) < 24 ? 'Hoje' : `${Math.floor(hoursSince(u.last_visit) / 24)}d atrás`) : '—'}
                     </td>
                     <td className="p-3 text-center">
                       <Button size="sm" variant="ghost" className="h-7 px-2 text-xs gap-1" onClick={() => onSelectUser(u)}>
