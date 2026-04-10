@@ -313,7 +313,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
                 </div>
               </div>
               <button onClick={onClose} className="w-full py-4 bg-amber-400 text-amber-950 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-amber-300 transition-all shadow-xl shadow-amber-400/20">
-                ✝ Amém — Finalizar
+                <Icons.Cross className="w-4 h-4 inline mr-2" /> Amém — Finalizar
               </button>
             </div>
           )}
