@@ -38,39 +38,39 @@ const QUOTES = [
 const MAIN_DOORS = [
   {
     label: 'Bíblia',
-    description: 'Sagrada Escritura com busca e anotações',
+    description: 'Sagrada Escritura',
     icon: BookOpen,
     route: AppRoute.BIBLE,
-    gradient: 'from-amber-500/15 to-amber-600/5',
-    iconColor: 'text-amber-600 dark:text-amber-400',
-    borderColor: 'border-amber-500/20 hover:border-amber-500/40',
+    gradient: 'from-primary/5 to-primary/[0.02]',
+    iconColor: 'text-primary',
+    borderColor: 'border-primary/10 hover:border-primary/30',
   },
   {
     label: 'Liturgia',
-    description: 'Leituras, reflexão e santo do dia',
+    description: 'Leituras do dia',
     icon: Church,
     route: AppRoute.LITURGIA,
-    gradient: 'from-violet-500/15 to-violet-600/5',
-    iconColor: 'text-violet-600 dark:text-violet-400',
-    borderColor: 'border-violet-500/20 hover:border-violet-500/40',
+    gradient: 'from-primary/5 to-primary/[0.02]',
+    iconColor: 'text-primary',
+    borderColor: 'border-primary/10 hover:border-primary/30',
   },
   {
     label: 'Jornadas',
-    description: 'Trilhas guiadas de formação espiritual',
+    description: 'Trilhas de formação',
     icon: Map,
     route: AppRoute.JORNADAS,
-    gradient: 'from-emerald-500/15 to-emerald-600/5',
-    iconColor: 'text-emerald-600 dark:text-emerald-400',
-    borderColor: 'border-emerald-500/20 hover:border-emerald-500/40',
+    gradient: 'from-primary/5 to-primary/[0.02]',
+    iconColor: 'text-primary',
+    borderColor: 'border-primary/10 hover:border-primary/30',
   },
   {
     label: 'Comunidade',
-    description: 'Compartilhe e caminhe junto',
+    description: 'Caminhe junto',
     icon: Users,
     route: AppRoute.COMMUNITY,
-    gradient: 'from-sky-500/15 to-sky-600/5',
-    iconColor: 'text-sky-600 dark:text-sky-400',
-    borderColor: 'border-sky-500/20 hover:border-sky-500/40',
+    gradient: 'from-primary/5 to-primary/[0.02]',
+    iconColor: 'text-primary',
+    borderColor: 'border-primary/10 hover:border-primary/30',
   },
 ];
 
@@ -176,8 +176,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           <p className="text-[11px] font-medium uppercase tracking-[0.3em] text-muted-foreground/70">
             Cathedra Digital
           </p>
-          <h1 className="text-3xl md:text-4xl font-display font-bold text-foreground leading-snug">
-            Bem-vindo de volta
+          <h1 className="text-3xl md:text-5xl font-display font-bold text-foreground leading-tight tracking-tight">
+            Pax et Bonum
           </h1>
 
           {/* Streak & XP */}
