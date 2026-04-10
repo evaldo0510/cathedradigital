@@ -95,47 +95,48 @@ const ReadingCard: React.FC<{
     initial={{ opacity: 0, y: 24 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.5, delay }}
-    className="space-y-4"
+    className="space-y-6 bg-card border border-border rounded-3xl p-8 shadow-sm hover:shadow-md transition-all group"
   >
-    <div className="flex items-center gap-2">
-      {icon}
-      <h2 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">{label}</h2>
+    <div className="flex items-center justify-between">
+      <div className="flex items-center gap-3">
+        <div className="p-2 rounded-xl bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all">
+          {icon}
+        </div>
+        <h2 className="text-[10px] font-black uppercase tracking-[0.25em] text-primary">{label}</h2>
+      </div>
+      <p className="text-[9px] font-bold text-secondary uppercase tracking-[0.2em]">{reference}</p>
     </div>
 
-    <p className="text-[10px] font-bold text-primary/70 uppercase tracking-widest">{reference}</p>
-
     {refrain && (
-      <div className="bg-primary/5 rounded-2xl p-4 border border-primary/10">
-        <p className="text-sm font-serif italic text-primary">℟ {refrain}</p>
+      <div className="bg-secondary/5 rounded-2xl p-5 border border-secondary/20 border-l-4">
+        <p className="text-base font-serif italic text-primary leading-relaxed">℟ {refrain}</p>
       </div>
     )}
 
-    <p className="text-base md:text-lg leading-[2] text-foreground/90 font-serif whitespace-pre-line">
+    <p className="text-lg md:text-xl leading-[2] text-primary font-serif whitespace-pre-line selection:bg-secondary/30">
       {text}
     </p>
 
-    <div className="flex flex-col sm:flex-row gap-2">
+    <div className="flex flex-col sm:flex-row gap-3 pt-4">
       <Button
         variant="outline"
         size="sm"
-        className="rounded-xl border-primary/20 text-xs font-bold uppercase tracking-widest hover:bg-primary/5"
+        className="rounded-xl text-[10px] font-black uppercase tracking-widest flex-1 h-12"
         onClick={onContext}
       >
-        <BookOpen className="w-3.5 h-3.5 mr-1.5" />
-        Ver no contexto bíblico
+        <Icons.Bible className="w-4 h-4 mr-2" />
+        Contexto Bíblico
       </Button>
       <Button
-        variant="ghost"
+        variant="secondary"
         size="sm"
-        className="rounded-xl text-xs font-bold uppercase tracking-widest text-primary hover:bg-primary/10"
+        className="rounded-xl text-[10px] font-black uppercase tracking-widest flex-1 h-12 bg-secondary/10 border-none hover:bg-secondary/20 text-primary"
         onClick={onReflect}
       >
-        <Sparkles className="w-3.5 h-3.5 mr-1.5" />
-        Refletir sobre isso
+        <Icons.Lectio className="w-4 h-4 mr-2 text-secondary" />
+        Lectio Divina
       </Button>
     </div>
-
-    <div className="w-full h-px bg-border" />
   </motion.div>
 );
 
@@ -390,7 +391,7 @@ Instruções:
             {readings.primeiraLeitura && (
               <ReadingCard
                 label="Primeira Leitura"
-                icon={<ScrollText className="w-4 h-4 text-amber-600" />}
+                icon={<Icons.Bible className="w-4 h-4" />}
                 reference={readings.primeiraLeitura.referencia}
                 text={readings.primeiraLeitura.texto}
                 onContext={() => navigate(parseRefToRoute(readings.primeiraLeitura.referencia))}
@@ -403,7 +404,7 @@ Instruções:
             {readings.salmo && (
               <ReadingCard
                 label="Salmo Responsorial"
-                icon={<Music className="w-4 h-4 text-sky-600" />}
+                icon={<Icons.Music className="w-4 h-4" />}
                 reference={readings.salmo.referencia}
                 text={readings.salmo.texto}
                 refrain={readings.salmo.refrao}
@@ -417,7 +418,7 @@ Instruções:
             {readings.segundaLeitura && typeof readings.segundaLeitura === 'object' && 'referencia' in readings.segundaLeitura && (
               <ReadingCard
                 label="Segunda Leitura"
-                icon={<BookMarked className="w-4 h-4 text-emerald-600" />}
+                icon={<Icons.BookOpen className="w-4 h-4" />}
                 reference={(readings.segundaLeitura as Reading).referencia}
                 text={(readings.segundaLeitura as Reading).texto}
                 onContext={() => navigate(parseRefToRoute((readings.segundaLeitura as Reading).referencia))}
@@ -429,7 +430,7 @@ Instruções:
             {readings.evangelho && (
               <ReadingCard
                 label="Evangelho"
-                icon={<Flame className="w-4 h-4 text-rose-600" />}
+                icon={<Icons.Lectio className="w-4 h-4" />}
                 reference={readings.evangelho.referencia}
                 text={readings.evangelho.texto}
                 onContext={() => navigate(parseRefToRoute(readings.evangelho.referencia))}
