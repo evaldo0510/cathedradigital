@@ -2,7 +2,7 @@ import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { ArrowLeft, BookOpen, ScrollText, Music, Flame, ChevronRight, ChevronLeft, Sparkles, User, Brain, Loader2, BookMarked, Share2, Copy, Check } from 'lucide-react';
+import { ArrowLeft, BookOpen, ScrollText, Music, Flame, ChevronRight, ChevronLeft, Sparkles, User, Brain, Loader2, BookMarked, Share2, Copy, Check, WifiOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import SEOHead from '@/components/SEOHead';
 import { supabase } from '@/integrations/supabase/client';
@@ -145,6 +145,7 @@ const LiturgiaPage: React.FC = () => {
   const [isMeditationLoading, setIsMeditationLoading] = useState(false);
 
   const [copiedMeditation, setCopiedMeditation] = useState(false);
+  const [isOfflineData, setIsOfflineData] = useState(false);
 
   usePrefetchLiturgyCache();
 
@@ -155,6 +156,7 @@ const LiturgiaPage: React.FC = () => {
     d.setDate(d.getDate() - 1);
     setSelectedDate(d);
     setMeditation(null);
+    setIsOfflineData(false);
   };
 
   const goToNextDay = () => {
@@ -163,6 +165,7 @@ const LiturgiaPage: React.FC = () => {
     if (d <= new Date()) {
       setSelectedDate(d);
       setMeditation(null);
+      setIsOfflineData(false);
     }
   };
 
@@ -171,7 +174,6 @@ const LiturgiaPage: React.FC = () => {
   const { data: readings, isLoading } = useQuery({
     queryKey: ['liturgy-readings', dateKey],
     queryFn: async () => {
-      // Try IndexedDB cache first (works offline)
       const cached = await getCachedLiturgy(dateKey);
       try {
         const { data, error } = await supabase.functions.invoke('liturgical-calendar', {
@@ -180,10 +182,13 @@ const LiturgiaPage: React.FC = () => {
         if (error) throw error;
         const result = data as LiturgyReadings;
         await cacheLiturgy(dateKey, result);
+        setIsOfflineData(false);
         return result;
       } catch (e) {
-        // Offline fallback: return cached data if available
-        if (cached) return cached as LiturgyReadings;
+        if (cached) {
+          setIsOfflineData(true);
+          return cached as LiturgyReadings;
+        }
         throw e;
       }
     },
@@ -336,6 +341,18 @@ Instruções:
               <ChevronRight className="w-5 h-5" />
             </button>
           </div>
+
+          {/* Offline indicator */}
+          {isOfflineData && (
+            <motion.div
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex items-center justify-center gap-2 text-xs text-muted-foreground bg-muted/50 rounded-full px-3 py-1.5 mt-2"
+            >
+              <WifiOff className="w-3.5 h-3.5" />
+              <span>Modo offline — leitura do cache local</span>
+            </motion.div>
+          )}
         </motion.div>
 
         {/* LOADING */}
