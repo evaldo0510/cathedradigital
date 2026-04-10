@@ -135,15 +135,20 @@ const LiturgiaPage: React.FC = () => {
   const [meditation, setMeditation] = useState<string | null>(null);
   const [isMeditationLoading, setIsMeditationLoading] = useState(false);
 
+  const dateKey = today.toDateString();
+
   const { data: readings, isLoading } = useQuery({
-    queryKey: ['liturgy-readings', today.toDateString()],
+    queryKey: ['liturgy-readings', dateKey],
     queryFn: async () => {
       const { data, error } = await supabase.functions.invoke('liturgical-calendar', {
         body: { action: 'readings', day: today.getDate(), month: today.getMonth() + 1 }
       });
       if (error) throw error;
-      return data as LiturgyReadings;
+      const result = data as LiturgyReadings;
+      setCachedReadings(dateKey, result);
+      return result;
     },
+    initialData: () => getCachedReadings(dateKey) ?? undefined,
     staleTime: 1000 * 60 * 60,
   });
 
