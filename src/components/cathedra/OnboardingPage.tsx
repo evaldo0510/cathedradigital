@@ -103,18 +103,6 @@ const QUESTIONS: DiagnosisQuestion[] = [
   },
 ];
 
-const CATEGORY_MAP: Record<string, string> = {
-  beginning: 'fundamentos',
-  basic: 'fundamentos',
-  struggling: 'mistico',
-  peace: 'mistico',
-  contemplative: 'mistico',
-  transformation: 'mistico',
-  rarely: 'rotina',
-  sometimes: 'rotina',
-  routine: 'rotina',
-};
-
 function getRecommendedCategory(answers: Record<string, string>): string {
   const { moment, prayer, knowledge, goal } = answers;
   if (moment === 'beginning' || knowledge === 'basic') return 'fundamentos';
@@ -176,7 +164,6 @@ const OnboardingPage: React.FC = () => {
 
     try {
       if (user) {
-        // Use upsert to ensure the record exists, since it's not automatically created on signup
         await (supabase as any)
           .from('user_sensitive_data')
           .upsert({ 
@@ -267,10 +254,59 @@ const OnboardingPage: React.FC = () => {
 
     return (
       <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4">
-        <div className="w-full max-w-lg lg:max-w-4xl space-y-6 lg:space-y-10">
-          <div className="flex justify-center">
-            <Logo variant="gold" className="w-10 h-10" />
-...
+        <div className="w-full max-w-lg lg:max-w-4xl space-y-6 lg:space-y-10 text-center">
+          <div className="flex justify-center mb-6">
+            <Logo variant="gold" className="w-12 h-12" />
+          </div>
+          
+          <div className="space-y-2 mb-8">
+            <div className="w-full h-1 bg-muted rounded-full overflow-hidden">
+              <motion.div 
+                className="h-full bg-primary"
+                initial={{ width: 0 }}
+                animate={{ width: `${diagProgress}%` }}
+              />
+            </div>
+            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Pergunta {diagStep + 1} de {QUESTIONS.length}</p>
+          </div>
+
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={question.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="space-y-8"
+            >
+              <h2 className="text-2xl lg:text-4xl font-serif font-bold text-foreground leading-tight px-4">{question.question}</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {question.options.map((opt) => (
+                  <button
+                    key={opt.value}
+                    onClick={() => handleDiagAnswer(opt.value)}
+                    className="flex items-center gap-4 p-5 rounded-2xl border border-border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all text-left group"
+                  >
+                    <div className="p-3 rounded-xl bg-muted group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                      {opt.icon}
+                    </div>
+                    <span className="font-bold text-foreground">{opt.label}</span>
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </div>
+    );
+  }
+
+  /* ── Render: Slides phase ── */
+  const slide = SLIDES[currentSlide];
+
+  return (
+    <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4">
+      <div className="w-full max-w-lg lg:max-w-5xl space-y-6 lg:space-y-10">
+        <div className="flex justify-center">
           <Logo variant="gold" className="w-10 h-10 lg:w-16 lg:h-16" />
         </div>
 
@@ -293,7 +329,6 @@ const OnboardingPage: React.FC = () => {
           </motion.div>
         </AnimatePresence>
 
-        {/* Progress dots — slides + 1 for diagnosis */}
         <div className="flex justify-center gap-2">
           {SLIDES.map((_, i) => (
             <button
