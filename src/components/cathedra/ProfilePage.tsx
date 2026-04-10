@@ -2,12 +2,14 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { AppRoute } from '@/types';
 import { Icons } from '@/constants';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getLevelInfo } from '@/lib/levels';
+import { Switch } from '@/components/ui/switch';
 
 interface Badge {
   id: string;
@@ -20,8 +22,12 @@ interface Badge {
 const ProfilePage: React.FC = () => {
   const { user, profile, loading } = useAuth();
   const navigate = useNavigate();
+  const { subscribe, unsubscribe, isSubscribing } = usePushNotifications();
   const [name, setName] = useState('');
   const [bio, setBio] = useState('');
+  const [whatsappNumber, setWhatsappNumber] = useState('');
+  const [whatsappEnabled, setWhatsappEnabled] = useState(false);
+  const [pushEnabled, setPushEnabled] = useState(true);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -38,6 +44,9 @@ const ProfilePage: React.FC = () => {
     if (profile) {
       setName(profile.name || '');
       setAvatarUrl(profile.avatar_url || null);
+      setWhatsappNumber((profile as any).whatsapp_number || '');
+      setWhatsappEnabled((profile as any).whatsapp_enabled || false);
+      setPushEnabled((profile as any).push_enabled ?? true);
       supabase.from('profiles').select('bio').eq('id', profile.id).single()
         .then(({ data }) => setBio((data as any)?.bio || ''));
     }
@@ -127,7 +136,21 @@ const ProfilePage: React.FC = () => {
   const handleSave = async () => {
     if (!user) return;
     setSaving(true);
-    const { error } = await supabase.from('profiles').update({ name, bio } as any).eq('id', user.id);
+    
+    // Manage push permission if toggle changed
+    if (pushEnabled) {
+      await subscribe();
+    } else {
+      await unsubscribe();
+    }
+
+    const { error } = await supabase.from('profiles').update({ 
+      name, 
+      bio, 
+      whatsapp_number: whatsappNumber,
+      whatsapp_enabled: whatsappEnabled,
+      push_enabled: pushEnabled 
+    } as any).eq('id', user.id);
     setSaving(false);
     if (error) toast.error('Erro ao salvar perfil');
     else toast.success('Perfil atualizado!');
@@ -291,6 +314,62 @@ const ProfilePage: React.FC = () => {
               )}
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Notification Settings */}
+      <div className="bg-card border border-border rounded-2xl p-6 space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Notificações Inteligentes</h2>
+          <span className="text-[10px] font-bold text-primary">Ative para não perder sua jornada</span>
+        </div>
+
+        <div className="space-y-4">
+          <div className="flex items-center justify-between p-3 bg-muted/30 rounded-xl border border-border/50">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <Icons.Bell className="w-4 h-4 text-primary" />
+                <p className="text-sm font-bold text-foreground">Push Notifications</p>
+              </div>
+              <p className="text-[10px] text-muted-foreground">Lembretes diários e avisos de inatividade no seu navegador.</p>
+            </div>
+            <Switch checked={pushEnabled} onCheckedChange={setPushEnabled} />
+          </div>
+
+          <div className="flex items-center justify-between p-3 bg-muted/30 rounded-xl border border-border/50">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <Icons.Message className="w-4 h-4 text-green-500" />
+                <p className="text-sm font-bold text-foreground">WhatsApp (Beta)</p>
+              </div>
+              <p className="text-[10px] text-muted-foreground">Receba mensagens personalizadas diretamente no seu WhatsApp.</p>
+            </div>
+            <Switch checked={whatsappEnabled} onCheckedChange={setWhatsappEnabled} />
+          </div>
+
+          {whatsappEnabled && (
+            <motion.div 
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              className="space-y-2 pt-2"
+            >
+              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground pl-1">Número do WhatsApp (com DDD)</label>
+              <div className="relative">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground text-sm font-bold">+55</span>
+                <input
+                  type="tel"
+                  value={whatsappNumber}
+                  onChange={e => setWhatsappNumber(e.target.value.replace(/\D/g, ''))}
+                  className="w-full pl-12 pr-4 py-3 bg-muted border border-border rounded-xl text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary font-mono"
+                  placeholder="11999999999"
+                  maxLength={11}
+                />
+              </div>
+              <p className="text-[9px] text-muted-foreground italic pl-1">
+                Ao ativar, você autoriza o envio de até 1 mensagem por dia com foco no seu progresso espiritual.
+              </p>
+            </motion.div>
+          )}
         </div>
       </div>
 

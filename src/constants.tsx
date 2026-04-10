@@ -36,7 +36,8 @@ import {
   User,
   ArrowDown,
   ArrowLeft,
-  Music
+  Music,
+  Bell
 } from 'lucide-react';
 
 export const COLORS = {
@@ -144,4 +145,5 @@ export const Icons = {
   Sparkles: createIcon(Sparkles),
   User: createIcon(User),
   Music: createIcon(Music),
+  Bell: createIcon(Bell),
 };
