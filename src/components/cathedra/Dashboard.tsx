@@ -216,70 +216,79 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         </div>
       </FadeUp>
 
-      {/* ═══ WEEKLY SUMMARY ═══ */}
-      <FadeUp delay={0.12}>
-        <div className="bg-card border border-border rounded-2xl p-5 shadow-sm space-y-3">
-          <div className="flex items-center gap-2">
-            <TrendingUp className="w-4 h-4 text-primary" />
-            <h2 className="text-sm font-bold text-foreground uppercase tracking-wide">Resumo da Semana</h2>
-          </div>
-          <div className="grid grid-cols-3 gap-3">
-            <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
-              <p className="text-2xl font-bold text-foreground">{weeklyStats.chaptersRead}</p>
-              <p className="text-[10px] text-muted-foreground font-medium mt-0.5 flex items-center justify-center gap-1">
-                <BookMarked className="w-3 h-3" /> Capítulos
-              </p>
+      {/* ═══ STATS & JOURNEYS GRID ═══ */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+        {/* ═══ WEEKLY SUMMARY ═══ */}
+        <FadeUp delay={0.12}>
+          <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4 h-full">
+            <div className="flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-primary" />
+              <h2 className="text-sm font-bold text-foreground uppercase tracking-wide">Resumo da Semana</h2>
             </div>
-            <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
-              <p className="text-2xl font-bold text-foreground">{streak}</p>
-              <p className="text-[10px] text-muted-foreground font-medium mt-0.5 flex items-center justify-center gap-1">
-                <Flame className="w-3 h-3" /> Streak
-              </p>
+            <div className="grid grid-cols-3 gap-3">
+              <div className="text-center p-4 rounded-xl bg-primary/[0.04] border border-primary/10">
+                <p className="text-2xl md:text-3xl font-bold text-foreground">{weeklyStats.chaptersRead}</p>
+                <p className="text-[10px] text-muted-foreground font-medium mt-1 flex items-center justify-center gap-1">
+                  <BookMarked className="w-3 h-3" /> Capítulos
+                </p>
+              </div>
+              <div className="text-center p-4 rounded-xl bg-primary/[0.04] border border-primary/10">
+                <p className="text-2xl md:text-3xl font-bold text-foreground">{streak}</p>
+                <p className="text-[10px] text-muted-foreground font-medium mt-1 flex items-center justify-center gap-1">
+                  <Flame className="w-3 h-3" /> Streak
+                </p>
+              </div>
+              <div className="text-center p-4 rounded-xl bg-primary/[0.04] border border-primary/10">
+                <p className="text-2xl md:text-3xl font-bold text-foreground">{weeklyStats.journeySteps}</p>
+                <p className="text-[10px] text-muted-foreground font-medium mt-1 flex items-center justify-center gap-1">
+                  <Calendar className="w-3 h-3" /> Etapas
+                </p>
+              </div>
             </div>
-            <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
-              <p className="text-2xl font-bold text-foreground">{weeklyStats.journeySteps}</p>
-              <p className="text-[10px] text-muted-foreground font-medium mt-0.5 flex items-center justify-center gap-1">
-                <Calendar className="w-3 h-3" /> Etapas
-              </p>
-            </div>
-          </div>
-        </div>
-      </FadeUp>
-
-      {/* ═══ ACTIVE JOURNEYS (if any) ═══ */}
-      {activeJourneys.length > 0 && (
-        <FadeUp delay={0.15}>
-          <div className="bg-card border border-border rounded-2xl p-5 shadow-sm space-y-3">
-            <div className="flex items-center justify-between">
-              <h2 className="text-sm font-bold text-foreground uppercase tracking-wide">Suas Jornadas</h2>
-              <button onClick={() => goTo(AppRoute.JORNADAS)} className="text-xs text-primary hover:underline flex items-center gap-1">
-                Ver todas <ChevronRight className="w-3 h-3" />
-              </button>
-            </div>
-            {activeJourneys.slice(0, 2).map((j) => {
-              const pct = j.totalSteps > 0 ? Math.round((j.completedSteps / j.totalSteps) * 100) : 0;
-              return (
-                <button
-                  key={j.id}
-                  onClick={() => goTo(`/jornadas/${j.id}`)}
-                  className="w-full flex items-center gap-3 p-3 rounded-xl bg-primary/[0.03] border border-primary/10 hover:border-primary/30 transition-colors text-left"
-                >
-                  <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center text-base shrink-0">
-                    {j.icon === 'compass' ? '🧭' : j.icon === 'cross' ? '✝' : j.icon === 'book-open' ? '📖' : '🙏'}
-                  </div>
-                  <div className="flex-1 min-w-0 space-y-1">
-                    <p className="text-sm font-semibold text-foreground truncate">{j.title}</p>
-                    <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden">
-                      <div className="h-full bg-primary rounded-full transition-all" style={{ width: `${pct}%` }} />
-                    </div>
-                  </div>
-                  <span className="text-xs font-bold text-primary shrink-0">{pct}%</span>
-                </button>
-              );
-            })}
           </div>
         </FadeUp>
-      )}
+
+        {/* ═══ ACTIVE JOURNEYS ═══ */}
+        {activeJourneys.length > 0 && (
+          <FadeUp delay={0.15}>
+            <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4 h-full">
+              <div className="flex items-center justify-between">
+                <h2 className="text-sm font-bold text-foreground uppercase tracking-wide">Suas Jornadas</h2>
+                <button onClick={() => goTo(AppRoute.JORNADAS)} className="text-xs text-primary hover:underline flex items-center gap-1">
+                  Ver todas <ChevronRight className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="space-y-3">
+                {activeJourneys.slice(0, 2).map((j) => {
+                  const pct = j.totalSteps > 0 ? Math.round((j.completedSteps / j.totalSteps) * 100) : 0;
+                  return (
+                    <button
+                      key={j.id}
+                      onClick={() => goTo(`/jornadas/${j.id}`)}
+                      className="w-full flex items-center gap-4 p-4 rounded-xl bg-primary/[0.03] border border-primary/10 hover:border-primary/30 transition-colors text-left"
+                    >
+                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-lg shrink-0">
+                        {j.icon === 'compass' ? '🧭' : j.icon === 'cross' ? '✝' : j.icon === 'book-open' ? '📖' : '🙏'}
+                      </div>
+                      <div className="flex-1 min-w-0 space-y-2">
+                        <p className="text-sm font-semibold text-foreground truncate">{j.title}</p>
+                        <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
+                          <motion.div 
+                            initial={{ width: 0 }}
+                            animate={{ width: `${pct}%` }}
+                            className="h-full bg-primary rounded-full transition-all" 
+                          />
+                        </div>
+                      </div>
+                      <span className="text-xs font-bold text-primary shrink-0">{pct}%</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </FadeUp>
+        )}
+      </div>
 
       {/* ═══ SANTO DO DIA ═══ */}
       {saintOfDay && (
