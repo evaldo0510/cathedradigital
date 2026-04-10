@@ -144,7 +144,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
 
   return (
     <div className="fixed inset-0 z-[200] flex flex-col overflow-y-auto"
-      style={{ background: 'linear-gradient(180deg, #1a1510 0%, #0d0b08 50%, #1a1510 100%)' }}>
+      style={{ background: 'linear-gradient(180deg, #0B1F3A 0%, #050D19 50%, #0B1F3A 100%)' }}>
       {/* Header — minimal */}
       <div className="flex items-center justify-between p-4 sticky top-0 z-10 bg-inherit/80 backdrop-blur-md">
         <button onClick={onClose} className="p-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all">
@@ -158,7 +158,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
       {(phase === 'mystery' || phase === 'decade') && (
         <div className="flex gap-1 px-6 pt-2 max-w-xl mx-auto w-full">
           {[0, 1, 2, 3, 4].map(i => (
-            <div key={i} className={`flex-1 h-1 rounded-full transition-all duration-500 ${i <= currentMystery ? 'bg-secondary shadow-[0_0_8px_rgba(251,191,36,0.5)]' : 'bg-white/10'}`} />
+            <div key={i} className={`flex-1 h-1 rounded-full transition-all duration-500 ${i <= currentMystery ? 'bg-secondary shadow-[0_0_8px_rgba(200,169,106,0.5)]' : 'bg-white/10'}`} />
           ))}
         </div>
       )}
@@ -210,7 +210,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
                   </div>
                 ))}
               </div>
-              <button onClick={() => setPhase('mystery')} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-secondary/30 transition-all shadow-lg shadow-amber-900/20">
+              <button onClick={() => setPhase('mystery')} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-secondary/30 transition-all shadow-lg shadow-primary/20">
                 Iniciar 1º Mistério
               </button>
             </div>
@@ -227,7 +227,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
                 <Icons.Feather className="absolute -top-3 -right-3 w-8 h-8 text-secondary/10 rotate-12" />
                 <p className="text-xl text-secondary/70 font-serif leading-relaxed text-center italic">"{mystery.meditation}"</p>
               </div>
-              <button onClick={() => setPhase('decade')} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-secondary/30 transition-all shadow-lg shadow-amber-900/20">
+              <button onClick={() => setPhase('decade')} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-secondary/30 transition-all shadow-lg shadow-primary/20">
                 Rezar a Dezena
               </button>
             </div>
@@ -247,7 +247,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
                         onClick={() => setAveCount(i + 1)}
                         className={`w-6 h-6 rounded-full border-2 transition-all duration-300 ${
                           i < aveCount
-                            ? 'bg-secondary border-secondary shadow-[0_0_12px_rgba(251,191,36,0.6)] scale-110'
+                            ? 'bg-secondary border-secondary shadow-[0_0_12px_rgba(200,169,106,0.6)] scale-110'
                             : 'bg-transparent border-secondary/25 hover:border-secondary/50'
                         }`}
                       />
@@ -284,7 +284,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
                 } else {
                   setPhase('closing');
                 }
-              }} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-secondary/30 transition-all shadow-lg shadow-amber-900/20">
+              }} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-secondary/30 transition-all shadow-lg shadow-primary/20">
                 {currentMystery < 4 ? 'Próximo Mistério' : 'Concluir Rosário'}
               </button>
             </div>
@@ -312,7 +312,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
                   <p className="text-base text-secondary/40 font-serif italic max-w-[280px] mx-auto leading-relaxed">Que Nossa Senhora interceda por vós e por todas as vossas intenções.</p>
                 </div>
               </div>
-              <button onClick={onClose} className="w-full py-4 bg-secondary text-amber-950 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-secondary transition-all shadow-xl shadow-secondary/20">
+              <button onClick={onClose} className="w-full py-4 bg-secondary text-primary rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-secondary transition-all shadow-xl shadow-secondary/20">
                 <Icons.Cross className="w-4 h-4 inline mr-2" /> Amém — Finalizar
               </button>
             </div>
