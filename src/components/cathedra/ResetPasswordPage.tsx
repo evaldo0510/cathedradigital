@@ -14,7 +14,6 @@ const ResetPasswordPage: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check for recovery token in URL hash
     const hash = window.location.hash;
     if (hash.includes('type=recovery')) {
       setIsRecovery(true);
@@ -57,7 +56,18 @@ const ResetPasswordPage: React.FC = () => {
     return (
       <div className="max-w-md mx-auto text-center space-y-6 py-20">
         <Logo variant="gold" className="w-16 h-16 mx-auto" />
-...
+        <h1 className="text-2xl font-serif font-bold text-foreground">Link inválido</h1>
+        <p className="text-muted-foreground">Este link de redefinição de senha é inválido ou já expirou.</p>
+        <button onClick={() => navigate(AppRoute.LOGIN)} className="text-primary hover:underline font-medium">
+          Voltar ao login
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-md mx-auto space-y-8 py-20">
+      <div className="text-center space-y-4">
         <Logo variant="gold" className="w-16 h-16 mx-auto" />
         <h1 className="text-3xl font-serif font-bold text-foreground">Nova Senha</h1>
         <p className="text-muted-foreground font-serif italic">Defina sua nova senha abaixo.</p>
