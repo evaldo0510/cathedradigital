@@ -165,7 +165,7 @@ const JornadasPage: React.FC = () => {
             <p className="text-xs text-muted-foreground">Faça nosso diagnóstico espiritual e descubra a jornada ideal.</p>
           </div>
           <Button size="sm" variant="outline" onClick={() => navigate(AppRoute.DIAGNOSTICO)}>
-            Diagnóstico <ArrowRight className="w-4 h-4 ml-1" />
+            Diagnóstico <Icons.ArrowRight className="w-4 h-4 ml-1" />
           </Button>
         </CardContent>
       </Card>
@@ -173,7 +173,7 @@ const JornadasPage: React.FC = () => {
       {/* Filters */}
       <div className="space-y-3">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Filter className="w-4 h-4" />
+          <Icons.Filter className="w-4 h-4" />
           <span className="font-medium">Filtrar por:</span>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -183,17 +183,18 @@ const JornadasPage: React.FC = () => {
               filterCategory === 'all' ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:bg-muted/80'
             }`}
           >
-            Todas 💛
+            Todas
           </button>
           {categories.map(cat => (
             <button
               key={cat}
               onClick={() => setFilterCategory(cat)}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors flex items-center gap-2 ${
                 filterCategory === cat ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:bg-muted/80'
               }`}
             >
-              {CATEGORY_ICONS[cat] || '📖'} {CATEGORY_LABELS[cat] || cat}
+              {CATEGORY_ICONS[cat] || <Icons.BookOpen className="w-4 h-4" />}
+              {CATEGORY_LABELS[cat] || cat}
             </button>
           ))}
         </div>
@@ -258,11 +259,13 @@ const JornadasPage: React.FC = () => {
                     <div className="flex items-start justify-between gap-3">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap mb-1">
-                        <span className="text-xl">{CATEGORY_ICONS[journey.category] || '📖'}</span>
+                        <div className="opacity-80">
+                          {CATEGORY_ICONS[journey.category] || <Icons.BookOpen className="w-5 h-5" />}
+                        </div>
                         <h2 className="text-lg font-bold font-serif text-foreground">{journey.title}</h2>
                         {journey.is_premium && (
                           <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 text-[10px]">
-                            <Sparkles className="w-3 h-3 mr-0.5" /> PRO
+                            <Icons.Sparkles className="w-3 h-3 mr-0.5" /> PRO
                           </Badge>
                         )}
                       </div>
@@ -270,7 +273,7 @@ const JornadasPage: React.FC = () => {
                         <p className="text-sm text-muted-foreground font-serif italic">{journey.subtitle}</p>
                       )}
                     </div>
-                    <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0 mt-1" />
+                    <Icons.ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0 mt-1" />
                   </div>
 
                   {/* Description */}
@@ -281,7 +284,7 @@ const JornadasPage: React.FC = () => {
                   {/* Meta */}
                   <div className="flex items-center gap-4 text-xs text-muted-foreground">
                     <span className="flex items-center gap-1">
-                      <Clock className="w-3.5 h-3.5" /> ~{journey.estimated_days} dias
+                      <Icons.Clock className="w-3.5 h-3.5" /> ~{journey.estimated_days} dias
                     </span>
                     <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${DIFFICULTY_COLORS[journey.difficulty] || 'bg-muted text-muted-foreground'}`}>
                       {DIFFICULTY_LABELS[journey.difficulty] || journey.difficulty}
