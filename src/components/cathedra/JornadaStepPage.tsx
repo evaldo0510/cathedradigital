@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Check, BookOpen, Hand, PenLine, Sparkles, Clock, ChevronDown, X } from 'lucide-react';
+import { ArrowLeft, Check, BookOpen, Hand, PenLine, Sparkles, Clock, ChevronDown, X, ShieldQuestion } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { Textarea } from '@/components/ui/textarea';
 import { Progress } from '@/components/ui/progress';
@@ -18,12 +18,14 @@ const SECTION_CONFIG = [
   { key: 'prayer', label: 'Exercício Guiado', icon: <Sparkles className="w-4 h-4" /> },
 ];
 
+type UserLevelClass = 'iniciante' | 'intermediário' | 'avançado';
+
 const JornadaStepPage: React.FC = () => {
   const { id: journeyId } = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
   const stepId = searchParams.get('step');
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
 
   const [step, setStep] = useState<any>(null);
   const [journeyTitle, setJourneyTitle] = useState('');
@@ -33,6 +35,7 @@ const JornadaStepPage: React.FC = () => {
   const [completed, setCompleted] = useState(false);
   const [saving, setSaving] = useState(false);
   const [expandedSection, setExpandedSection] = useState<string | null>('intro');
+
 
   useEffect(() => {
     if (stepId && journeyId) loadData();
@@ -109,6 +112,43 @@ const JornadaStepPage: React.FC = () => {
     }
   };
 
+  const userLevelClass = useMemo<UserLevelClass>(() => {
+    if (!profile) return 'iniciante';
+    
+    // Check diagnosis from sensitive data
+    const diagnosis = profile._sensitive?.diagnosis_result as any;
+    if (diagnosis) {
+      const knowledge = diagnosis.knowledge;
+      if (knowledge === 'basic') return 'iniciante';
+      if (knowledge === 'moderate') return 'intermediário';
+      if (knowledge === 'advanced' || knowledge === 'theological') return 'avançado';
+    }
+
+    // Fallback to integer level
+    const levelNum = profile.level || 1;
+    if (levelNum >= 10) return 'avançado';
+    if (levelNum >= 4) return 'intermediário';
+    return 'iniciante';
+  }, [profile]);
+
+  const getVariantContent = (key: string, content: any): string | null => {
+    if (!content) return null;
+    
+    // If it's a string, return it
+    if (typeof content[key] === 'string') return content[key];
+    
+    // If it's an object with variants
+    if (content[key] && typeof content[key] === 'object') {
+      return content[key][userLevelClass] || content[key]['iniciante'] || Object.values(content[key])[0] as string;
+    }
+    
+    // Try separate keys (e.g. reflection_iniciante)
+    const variantKey = `${key}_${userLevelClass}`;
+    if (content[variantKey]) return content[variantKey];
+    
+    return content[key] || null;
+  };
+
   const toggleSection = (key: string) => {
     setExpandedSection(prev => prev === key ? null : key);
   };
@@ -137,6 +177,7 @@ const JornadaStepPage: React.FC = () => {
   const content = step.content as Record<string, any>;
   const stepProgress = totalSteps > 0 ? (step.step_order / totalSteps) * 100 : 0;
 
+
   return createPortal(
     <motion.div
       initial={{ opacity: 0 }}
@@ -153,12 +194,29 @@ const JornadaStepPage: React.FC = () => {
             <X className="w-4 h-4 text-foreground" />
           </button>
           <div className="flex-1 min-w-0">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground truncate">{journeyTitle}</p>
+            <div className="flex items-center gap-2">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground truncate">{journeyTitle}</p>
+              <div className="group relative">
+                <span className="cursor-help px-1.5 py-0.5 rounded-full text-[8px] font-black uppercase bg-primary/10 text-primary border border-primary/20 flex items-center gap-1">
+                  {userLevelClass} <ShieldQuestion className="w-2 h-2 opacity-50" />
+                </span>
+                <div className="absolute left-0 top-full mt-2 w-48 p-2 bg-popover text-popover-foreground rounded-lg border border-border shadow-xl text-[10px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                  <p className="font-bold mb-1">Conteúdo Adaptado</p>
+                  <p className="opacity-80">
+                    {userLevelClass === 'iniciante' && "Nível Iniciante: conteúdo simplificado e guiado."}
+                    {userLevelClass === 'intermediário' && "Nível Intermediário: foco em reflexão e aprofundamento."}
+                    {userLevelClass === 'avançado' && "Nível Avançado: foco em profundidade e confrontação."}
+                  </p>
+                </div>
+              </div>
+            </div>
+
             <p className="text-xs text-muted-foreground">Etapa {step.step_order} de {totalSteps}</p>
           </div>
           <span className="text-[10px] font-bold text-muted-foreground flex items-center gap-1">
             <Clock className="w-3 h-3" /> {step.duration_minutes}min
           </span>
+
         </div>
         <div className="max-w-2xl mx-auto mt-2">
           <Progress value={stepProgress} className="h-1" />
@@ -182,9 +240,10 @@ const JornadaStepPage: React.FC = () => {
 
           {/* Content Sections */}
           {SECTION_CONFIG.map(({ key, label, icon }, i) => {
-            const sectionContent = content[key];
+            const sectionContent = getVariantContent(key, content);
             if (!sectionContent) return null;
             const isExpanded = expandedSection === key;
+
 
             return (
               <motion.div
@@ -245,11 +304,14 @@ const JornadaStepPage: React.FC = () => {
               <h3 className="text-sm font-bold text-foreground">Diário Espiritual</h3>
             </div>
 
-            {content.journal_prompt && (
+            {getVariantContent('journal_prompt', content) && (
               <div className="bg-primary/5 border border-primary/10 rounded-xl p-4">
-                <p className="text-sm text-foreground/80 italic font-serif">{content.journal_prompt}</p>
+                <p className="text-sm text-foreground/80 italic font-serif">
+                  {getVariantContent('journal_prompt', content)}
+                </p>
               </div>
             )}
+
 
             <Textarea
               placeholder="Escreva sua reflexão aqui... Suas palavras são privadas e só você pode ver."
