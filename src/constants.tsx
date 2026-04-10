@@ -10,36 +10,27 @@ export const COLORS = {
 
 export const Logo = forwardRef<HTMLDivElement, { className?: string }>(({ className = "w-12 h-12" }, ref) => (
   <div ref={ref} className={`relative flex items-center justify-center group ${className}`}>
-    {/* Glow halo */}
-    <div className="absolute inset-0 rounded-full bg-primary/10 blur-2xl scale-150 opacity-0 group-hover:opacity-100 transition-all duration-700" />
     <svg 
       viewBox="0 0 100 100" 
       fill="none" 
       xmlns="http://www.w3.org/2000/svg"
-      className="relative w-full h-full transition-all duration-700 group-hover:scale-110 drop-shadow-[0_2px_12px_rgba(0,0,0,0.1)]"
+      className="relative w-full h-full transition-all duration-700 group-hover:scale-110"
     >
-      {/* Halo element */}
-      <circle cx="50" cy="50" r="45" stroke="currentColor" strokeWidth="0.5" strokeDasharray="4 4" className="opacity-20" />
-      
-      {/* Cathedral / Temple Structure */}
       <path 
-        d="M50 8L20 38V85H80V38L50 8Z" 
+        d="M30 80C30 80 30 20 50 20C70 20 70 40 70 40M30 50H60M30 80H70" 
         stroke="currentColor" 
-        strokeWidth="3.5" 
+        strokeWidth="6" 
+        strokeLinecap="round" 
         strokeLinejoin="round" 
-        className="text-primary"
+        className="text-secondary"
       />
-      
-      {/* Rose Window with Cross */}
-      <circle cx="50" cy="45" r="12" stroke="currentColor" strokeWidth="2.5" className="text-primary" />
-      <path d="M50 38V52M43 45H57" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-      
-      {/* Architectural details */}
-      <path d="M20 38H80" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="opacity-40" />
-      <path d="M42 85V70C42 65.5817 45.5817 62 50 62C54.4183 62 58 65.5817 58 70V85" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-      
-      {/* Side Spires */}
-      <path d="M20 38V28M80 38V28" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+      <path 
+        d="M25 85V15C25 15 25 10 30 10H70C75 10 75 15 75 15V85" 
+        stroke="currentColor" 
+        strokeWidth="2" 
+        strokeLinecap="round" 
+        className="opacity-30"
+      />
     </svg>
   </div>
 ));
@@ -48,111 +39,32 @@ Logo.displayName = 'Logo';
 
 const createIcon = (d: string, viewBox = "0 0 24 24", fill = "none", stroke = "currentColor") => 
   forwardRef<SVGSVGElement, React.SVGProps<SVGSVGElement>>((props, ref) => (
-    <svg ref={ref} fill={fill} viewBox={viewBox} stroke={stroke} {...props}>
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={d} />
+    <svg ref={ref} fill={fill} viewBox={viewBox} stroke={stroke} strokeWidth={1.5} {...props}>
+      <path strokeLinecap="round" strokeLinejoin="round" d={d} />
     </svg>
   ));
 
-/* ── Navigation Icons (custom sacred-themed SVGs) ── */
 const NavIcons = {
-  /** Cathedral / Home — stylised facade with rose window */
-  Cathedral: forwardRef<SVGSVGElement, React.SVGProps<SVGSVGElement>>((props, ref) => (
-    <svg ref={ref} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <path d="M12 2L3 10v11a1 1 0 001 1h16a1 1 0 001-1V10L12 2z" />
-      <path d="M12 6v4M10 8h4" />
-      <circle cx="12" cy="14" r="2.5" />
-      <path d="M9 22v-5h6v5" />
-    </svg>
-  )),
-  /** Holy Bible — book with cross bookmark */
-  HolyBible: forwardRef<SVGSVGElement, React.SVGProps<SVGSVGElement>>((props, ref) => (
-    <svg ref={ref} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <path d="M4 19.5A2.5 2.5 0 016.5 17H20" />
-      <path d="M4 4.5A2.5 2.5 0 016.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15z" />
-      <path d="M12 6v6M10 8h4" />
-      <path d="M16 2v4l-1.5-1L13 6V2" />
-    </svg>
-  )),
-  /** Praying Hands — folded hands for prayer section */
-  PrayingHands: forwardRef<SVGSVGElement, React.SVGProps<SVGSVGElement>>((props, ref) => (
-    <svg ref={ref} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <path d="M12 3c0 0-3 4-3 8v4l-2 3" />
-      <path d="M12 3c0 0 3 4 3 8v4l2 3" />
-      <path d="M9 11c0 0 1.5 1 3 1s3-1 3-1" />
-      <path d="M7 18l2 3h6l2-3" />
-      <path d="M10 14v2M14 14v2" />
-    </svg>
-  )),
-  /** Catechism Shield — shield with cross for doctrine */
-  CatechismShield: forwardRef<SVGSVGElement, React.SVGProps<SVGSVGElement>>((props, ref) => (
-    <svg ref={ref} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <path d="M12 2L4 6v5c0 5.55 3.84 10.74 8 12 4.16-1.26 8-6.45 8-12V6L12 2z" />
-      <path d="M12 7v6M9 10h6" />
-    </svg>
-  )),
-  /** Rosary — circle with beads and cross */
-  Rosary: forwardRef<SVGSVGElement, React.SVGProps<SVGSVGElement>>((props, ref) => (
-    <svg ref={ref} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <circle cx="12" cy="10" r="7" />
-      <circle cx="12" cy="3" r="0.8" fill="currentColor" />
-      <circle cx="5.5" cy="7" r="0.8" fill="currentColor" />
-      <circle cx="5.5" cy="13" r="0.8" fill="currentColor" />
-      <circle cx="18.5" cy="7" r="0.8" fill="currentColor" />
-      <circle cx="18.5" cy="13" r="0.8" fill="currentColor" />
-      <path d="M12 17v2M11 19h2M12 21v1" />
-    </svg>
-  )),
-  /** Chalice — liturgy/mass symbol */
-  Chalice: forwardRef<SVGSVGElement, React.SVGProps<SVGSVGElement>>((props, ref) => (
-    <svg ref={ref} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <path d="M8 2h8l-1 8a3 3 0 01-6 0L8 2z" />
-      <path d="M12 12v5" />
-      <path d="M8 21h8" />
-      <path d="M10 17h4" />
-      <path d="M6 2h12" />
-    </svg>
-  )),
-  /** Calendar Cross — liturgical calendar */
-  LiturgicalCalendar: forwardRef<SVGSVGElement, React.SVGProps<SVGSVGElement>>((props, ref) => (
-    <svg ref={ref} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <rect x="3" y="4" width="18" height="18" rx="2" />
-      <path d="M16 2v4M8 2v4M3 10h18" />
-      <path d="M12 14v4M10 16h4" />
-    </svg>
-  )),
-  /** Via Crucis — cross with path */
-  ViaCrucis: forwardRef<SVGSVGElement, React.SVGProps<SVGSVGElement>>((props, ref) => (
-    <svg ref={ref} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <path d="M12 2v20M8 6h8" />
-      <path d="M4 22l4-6M20 22l-4-6" />
-    </svg>
-  )),
-  /** Scroll — for magisterium/documents */
-  Scroll: forwardRef<SVGSVGElement, React.SVGProps<SVGSVGElement>>((props, ref) => (
-    <svg ref={ref} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <path d="M8 21h12a2 2 0 002-2V5a2 2 0 00-2-2H8" />
-      <path d="M8 3a2 2 0 00-2 2v14a2 2 0 002 2" />
-      <path d="M4 5a2 2 0 012-2h0a2 2 0 012 2v0" />
-      <path d="M4 19a2 2 0 012 2h0a2 2 0 012-2v0" />
-      <path d="M11 8h6M11 12h6M11 16h4" />
-    </svg>
-  )),
-  /** Saint Halo — for saints section */
-  SaintHalo: forwardRef<SVGSVGElement, React.SVGProps<SVGSVGElement>>((props, ref) => (
-    <svg ref={ref} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <ellipse cx="12" cy="5" rx="5" ry="2" />
-      <circle cx="12" cy="12" r="4" />
-      <path d="M8 19c0-2.2 1.8-4 4-4s4 1.8 4 4v2H8v-2z" />
-    </svg>
-  )),
-  /** Dove — Holy Spirit / Colloquium */
-  Dove: forwardRef<SVGSVGElement, React.SVGProps<SVGSVGElement>>((props, ref) => (
-    <svg ref={ref} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <path d="M12 8c-2-3-6-3-8-1 2 0 3 2 3 4l5 5 5-5c0-2 1-4 3-4-2-2-6-2-8 1z" />
-      <path d="M12 13v5" />
-      <path d="M9 20h6" />
-    </svg>
-  )),
+  Bible: createIcon("M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"),
+  HolyBible: createIcon("M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"),
+  Liturgy: createIcon("M12 2v20M8 6h8"),
+  Chalice: createIcon("M8 2h8l-1 8a3 3 0 01-6 0L8 2zM12 12v5M8 21h8"),
+  Journeys: createIcon("M9 20l-5-5 5-5m6-6l5 5-5 5"),
+  Community: createIcon("M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2m16-10a4 4 0 100-8 4 4 0 000 8z"),
+  Lectio: createIcon("M12 2l3 6 6 3-6 3-3 6-3-6-6-3 6-3 3-6z"),
+  Saints: createIcon("M12 7l1.5 3h3.5l-2.5 2 1 3.5-3.5-2-3.5 2 1-3.5-2.5-2h3.5l1.5-3z"),
+  SaintHalo: createIcon("M12 5c2.76 0 5 1.34 5 3s-2.24 3-5 3-5-1.34-5-3 2.24-3 5-3zM12 12c-2.21 0-4 1.79-4 4v5h8v-5c0-2.21-1.79-4-4-4z"),
+  Catechism: createIcon("M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8zM14 2l6 6M14 2v6h6"),
+  CatechismShield: createIcon("M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10zM12 7v6M9 10h6"),
+  Glossary: createIcon("M4 19h6M4 5l8 14L20 5"),
+  Aquinas: createIcon("M8 2h8v20H8V2zM4 6h16M4 18h16"),
+  Dove: createIcon("M12 8c-2-3-6-3-8-1 2 0 3 2 3 4l5 5 5-5c0-2 1-4 3-4-2-2-6-2-8 1z"),
+  LiturgicalCalendar: createIcon("M19 4H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM16 2v4M8 2v4M3 10h18M12 14v4M10 16h4"),
+  PrayingHands: createIcon("M10 8c-1.1 0-2 .9-2 2v10l2 2h4l2-2V10c0-1.1-.9-2-2-2h-4zM12 3v3"),
+  Rosary: createIcon("M12 10a4 4 0 100 8 4 4 0 000-8zM12 18v3M10 21h4"),
+  ViaCrucis: createIcon("M12 2v20M8 6h8M4 22l4-6M20 22l-4-6"),
+  Scroll: createIcon("M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8zM14 2l6 6M14 2v6h6"),
+  Cathedral: createIcon("M12 2L3 10v11a1 1 0 001 1h16a1 1 0 001-1V10L12 2zM12 6v4M10 8h4M9 22v-5h6v5"),
 };
 
 export const Icons = {

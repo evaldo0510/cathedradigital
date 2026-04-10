@@ -5,9 +5,9 @@ import { AppRoute, User } from '../../types';
 import { useAuth } from '../../hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import SacredImage from './SacredImage';
+import { Icons } from '@/constants';
 import {
-  BookOpen, Church, ChevronRight, Flame, Star, Zap, Map, Users,
-  TrendingUp, Calendar, BookMarked
+  ChevronRight, Flame, Star, Zap, TrendingUp, Calendar, BookMarked
 } from 'lucide-react';
 
 interface DashboardProps {
@@ -38,39 +38,39 @@ const QUOTES = [
 const MAIN_DOORS = [
   {
     label: 'Bíblia',
-    description: 'Sagrada Escritura com busca e anotações',
-    icon: BookOpen,
+    description: 'Sagrada Escritura',
+    icon: Icons.Bible,
     route: AppRoute.BIBLE,
-    gradient: 'from-amber-500/15 to-amber-600/5',
-    iconColor: 'text-amber-600 dark:text-amber-400',
-    borderColor: 'border-amber-500/20 hover:border-amber-500/40',
+    gradient: 'from-primary/5 to-primary/[0.02]',
+    iconColor: 'text-primary',
+    borderColor: 'border-primary/10 hover:border-primary/30',
   },
   {
     label: 'Liturgia',
-    description: 'Leituras, reflexão e santo do dia',
-    icon: Church,
+    description: 'Leituras do dia',
+    icon: Icons.Liturgy,
     route: AppRoute.LITURGIA,
-    gradient: 'from-violet-500/15 to-violet-600/5',
-    iconColor: 'text-violet-600 dark:text-violet-400',
-    borderColor: 'border-violet-500/20 hover:border-violet-500/40',
+    gradient: 'from-primary/5 to-primary/[0.02]',
+    iconColor: 'text-primary',
+    borderColor: 'border-primary/10 hover:border-primary/30',
   },
   {
     label: 'Jornadas',
-    description: 'Trilhas guiadas de formação espiritual',
-    icon: Map,
+    description: 'Trilhas de formação',
+    icon: Icons.Journeys,
     route: AppRoute.JORNADAS,
-    gradient: 'from-emerald-500/15 to-emerald-600/5',
-    iconColor: 'text-emerald-600 dark:text-emerald-400',
-    borderColor: 'border-emerald-500/20 hover:border-emerald-500/40',
+    gradient: 'from-primary/5 to-primary/[0.02]',
+    iconColor: 'text-primary',
+    borderColor: 'border-primary/10 hover:border-primary/30',
   },
   {
     label: 'Comunidade',
-    description: 'Compartilhe e caminhe junto',
-    icon: Users,
+    description: 'Caminhe junto',
+    icon: Icons.Community,
     route: AppRoute.COMMUNITY,
-    gradient: 'from-sky-500/15 to-sky-600/5',
-    iconColor: 'text-sky-600 dark:text-sky-400',
-    borderColor: 'border-sky-500/20 hover:border-sky-500/40',
+    gradient: 'from-primary/5 to-primary/[0.02]',
+    iconColor: 'text-primary',
+    borderColor: 'border-primary/10 hover:border-primary/30',
   },
 ];
 
@@ -151,41 +151,35 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               <div className="absolute inset-0 bg-primary/20 blur-2xl rounded-full scale-150 opacity-0 group-hover:opacity-100 transition-opacity" />
               <svg 
                 viewBox="0 0 100 100" 
-                className="w-16 h-16 md:w-20 md:h-20 text-primary/15 transition-all group-hover:text-primary/30 group-hover:scale-110"
+                className="w-20 h-20 md:w-24 md:h-24 text-primary transition-all group-hover:scale-110"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <circle cx="50" cy="50" r="45" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" />
                 <path 
-                  d="M50 15V85M30 40H70" 
+                  d="M50 20C50 20 20 20 20 50C20 80 50 80 50 80M50 20C50 20 80 20 80 50C80 80 50 80 50 80M50 15V85" 
                   stroke="currentColor" 
-                  strokeWidth="6" 
+                  strokeWidth="2" 
                   strokeLinecap="round" 
+                  strokeLinejoin="round" 
                 />
-                {/* Cross caps/serifs */}
-                <path d="M44 15H56M44 85H56M30 34V46M70 34V46" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-                <path 
-                  d="M50 15L42 24M50 15L58 24" 
-                  stroke="currentColor" 
-                  strokeWidth="3" 
-                  strokeLinecap="round" 
-                />
+                <circle cx="50" cy="50" r="10" stroke="currentColor" strokeWidth="1.5" className="text-secondary" />
+                <path d="M50 45V55M45 50H55" stroke="currentColor" strokeWidth="1" strokeLinecap="round" className="text-secondary" />
               </svg>
             </div>
           </motion.div>
           <p className="text-[11px] font-medium uppercase tracking-[0.3em] text-muted-foreground/70">
             Cathedra Digital
           </p>
-          <h1 className="text-3xl md:text-4xl font-display font-bold text-foreground leading-snug">
-            Bem-vindo de volta
+          <h1 className="text-3xl md:text-5xl font-display font-bold text-foreground leading-tight tracking-tight">
+            Pax et Bonum
           </h1>
 
           {/* Streak & XP */}
           <div className="flex items-center justify-center gap-3 flex-wrap">
             {streak > 0 && (
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20">
-                <Flame className="w-3.5 h-3.5 text-orange-500" />
-                <span className="text-xs font-bold text-orange-600 dark:text-orange-400">{streak} {streak === 1 ? 'dia' : 'dias'}</span>
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary/10 border border-secondary/20">
+                <Flame className="w-3.5 h-3.5 text-secondary" />
+                <span className="text-xs font-bold text-secondary">{streak} {streak === 1 ? 'dia' : 'dias'}</span>
               </div>
             )}
             <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
