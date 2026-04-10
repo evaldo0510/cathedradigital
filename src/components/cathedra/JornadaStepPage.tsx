@@ -196,10 +196,21 @@ const JornadaStepPage: React.FC = () => {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
               <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground truncate">{journeyTitle}</p>
-              <span className="px-1.5 py-0.5 rounded-full text-[8px] font-black uppercase bg-primary/10 text-primary border border-primary/20">
-                {userLevelClass}
-              </span>
+              <div className="group relative">
+                <span className="cursor-help px-1.5 py-0.5 rounded-full text-[8px] font-black uppercase bg-primary/10 text-primary border border-primary/20 flex items-center gap-1">
+                  {userLevelClass} <ShieldQuestion className="w-2 h-2 opacity-50" />
+                </span>
+                <div className="absolute left-0 top-full mt-2 w-48 p-2 bg-popover text-popover-foreground rounded-lg border border-border shadow-xl text-[10px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                  <p className="font-bold mb-1">Conteúdo Adaptado</p>
+                  <p className="opacity-80">
+                    {userLevelClass === 'iniciante' && "Nível Iniciante: conteúdo simplificado e guiado."}
+                    {userLevelClass === 'intermediário' && "Nível Intermediário: foco em reflexão e aprofundamento."}
+                    {userLevelClass === 'avançado' && "Nível Avançado: foco em profundidade e confrontação."}
+                  </p>
+                </div>
+              </div>
             </div>
+
             <p className="text-xs text-muted-foreground">Etapa {step.step_order} de {totalSteps}</p>
           </div>
           <span className="text-[10px] font-bold text-muted-foreground flex items-center gap-1">
