@@ -42,7 +42,6 @@ import {
   Moon,
   LogOut,
   PenLine,
-
   Calendar,
   Compass,
   Loader2,
@@ -81,7 +80,8 @@ import {
   UserCheck,
   Stethoscope,
   Route,
-  Library
+  Library,
+  Hand
 } from 'lucide-react';
 import { cn } from './lib/utils';
 
@@ -178,7 +178,6 @@ export const Icons = {
   Moon: createIcon(Moon),
   LogOut: createIcon(LogOut),
   PenLine: createIcon(PenLine),
-
   Calendar: createIcon(Calendar),
   Compass: createIcon(Compass),
   Loader: createIcon(Loader2),
@@ -218,4 +217,5 @@ export const Icons = {
   Stethoscope: createIcon(Stethoscope),
   Route: createIcon(Route),
   Library: createIcon(Library),
+  Hand: createIcon(Hand)
 };
