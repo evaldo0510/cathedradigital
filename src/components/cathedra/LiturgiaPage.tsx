@@ -11,33 +11,10 @@ import { SAINTS_DATA } from '@/data/saints';
 import ReactMarkdown from 'react-markdown';
 import { toast } from 'sonner';
 
-/* ─── Local cache helpers ─── */
-const CACHE_PREFIX = 'cathedra_liturgy_';
-const MAX_CACHED_DAYS = 7;
+/* ─── IndexedDB cache (via offlineCache.ts) ─── */
+import { getCachedLiturgy, cacheLiturgy } from '@/lib/offlineCache';
 
-function getCachedReadings(dateKey: string): LiturgyReadings | null {
-  try {
-    const raw = localStorage.getItem(CACHE_PREFIX + dateKey);
-    if (!raw) return null;
-    return JSON.parse(raw);
-  } catch { return null; }
-}
-
-function setCachedReadings(dateKey: string, data: LiturgyReadings) {
-  try {
-    localStorage.setItem(CACHE_PREFIX + dateKey, JSON.stringify(data));
-    // Prune old entries beyond 7 days
-    const keys = Object.keys(localStorage).filter(k => k.startsWith(CACHE_PREFIX));
-    if (keys.length > MAX_CACHED_DAYS) {
-      keys.sort();
-      for (let i = 0; i < keys.length - MAX_CACHED_DAYS; i++) {
-        localStorage.removeItem(keys[i]);
-      }
-    }
-  } catch { /* quota exceeded */ }
-}
-
-/** Pre-fetch last 7 days into cache on mount */
+/** Pre-fetch last 7 days into IndexedDB cache on mount */
 function usePrefetchLiturgyCache() {
   useEffect(() => {
     const prefetch = async () => {
@@ -46,12 +23,13 @@ function usePrefetchLiturgyCache() {
         const d = new Date(now);
         d.setDate(d.getDate() - i);
         const key = d.toDateString();
-        if (getCachedReadings(key)) continue;
+        const cached = await getCachedLiturgy(key);
+        if (cached) continue;
         try {
           const { data } = await supabase.functions.invoke('liturgical-calendar', {
             body: { action: 'readings', day: d.getDate(), month: d.getMonth() + 1 }
           });
-          if (data) setCachedReadings(key, data as LiturgyReadings);
+          if (data) await cacheLiturgy(key, data as LiturgyReadings);
         } catch { /* silent */ }
       }
     };
