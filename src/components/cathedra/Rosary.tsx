@@ -338,7 +338,7 @@ const Rosary: React.FC = () => {
           {showPrayer === 'salve' && <p className="text-lg text-amber-100/60 mt-4 font-serif leading-relaxed italic animate-in fade-in slide-in-from-top-2 duration-300">{PRAYERS.salveRainha.text}</p>}
         </div>
         <div className="text-center space-y-4 py-8">
-          <div className="relative inline-block">
+          <div className="relative inline-block font-serif">
             <Heart className="w-20 h-20 text-amber-400/20 mx-auto" />
             <Sparkles className="absolute -top-1 -right-1 w-8 h-8 text-amber-400/40 animate-pulse" />
           </div>

@@ -19,7 +19,7 @@ const CtaBannerSection = ({ onStart }: CtaBannerSectionProps) => (
         <p className="text-lg text-muted-foreground max-w-xl mx-auto">
           Junte-se a milhares de fiéis que usam o Cathedra para crescer espiritualmente todos os dias.
         </p>
-        <motion.div variants={buttonHover} initial="rest" whileHover="hover" whileTap="tap" className="inline-block">
+        <motion.div variants={buttonHover} initial="rest" whileHover="hover" whileTap="tap" className="inline-block font-serif">
           <Button size="lg" className="h-16 px-14 rounded-2xl bg-primary text-primary-foreground font-black uppercase tracking-widest shadow-2xl shadow-primary/20 text-base" onClick={onStart}>
             Começar Agora <ChevronRight className="ml-2 w-5 h-5" />
           </Button>

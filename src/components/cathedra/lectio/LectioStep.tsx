@@ -137,7 +137,7 @@ const LectioStep: React.FC<LectioStepProps> = ({
                   </div>
                   <div className="font-serif leading-relaxed text-xl text-foreground/90 text-center">
                     {bibleText.map((v, i) => (
-                      <span key={i} className="inline-block mb-1">
+                      <span key={i} className="inline-block font-serif mb-1">
                         <sup className="text-primary font-bold mr-1.5 text-xs select-none">{v.number}</sup>
                         {v.text}{' '}
                       </span>

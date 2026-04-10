@@ -303,7 +303,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
                 )}
               </div>
               <div className="text-center space-y-4 py-8">
-                <div className="relative inline-block">
+                <div className="relative inline-block font-serif">
                   <Heart className="w-16 h-16 text-amber-400/20 mx-auto" />
                   <Sparkles className="absolute -top-1 -right-1 w-6 h-6 text-amber-400/40 animate-pulse" />
                 </div>

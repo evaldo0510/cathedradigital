@@ -700,7 +700,7 @@ const Magisterium: React.FC = () => {
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
-                  <span className={`inline-block px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest ${CATEGORY_COLORS[doc.category] || 'bg-muted text-muted-foreground'}`}>
+                  <span className={`inline-block font-serif px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest ${CATEGORY_COLORS[doc.category] || 'bg-muted text-muted-foreground'}`}>
                     {CATEGORY_LABELS[doc.category]}
                   </span>
                   {cachedIds.includes(doc.id) ? (

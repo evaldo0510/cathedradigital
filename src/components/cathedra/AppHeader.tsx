@@ -40,7 +40,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             className="p-1.5 sm:p-2 bg-background/50 backdrop-blur-xl text-foreground/80 border border-border/10 rounded-xl flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.05)] active:scale-95 transition-all hover:bg-primary/10 hover:text-primary hover:border-primary/20 group hover:shadow-md"
           >
             <Icons.ChevronLeft className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" />
-            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest hidden sm:inline-block">Voltar</span>
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest font-serif hidden sm:inline-block">Voltar</span>
           </button>
         ) : (
           <span className="lg:hidden" />
@@ -51,7 +51,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             <div className="transition-all group-hover:scale-110 group-hover:rotate-6 animate-[pulse_3s_ease-in-out_infinite]">
               <Logo className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10" />
             </div>
-            <span className="text-sm sm:text-lg md:text-xl font-display font-black uppercase tracking-[0.2em] sm:tracking-[0.25em] text-foreground group-hover:text-primary transition-all hidden sm:inline-block">Cathedra</span>
+            <span className="text-sm sm:text-lg md:text-xl font-serif font-black uppercase tracking-[0.2em] sm:tracking-[0.25em] text-foreground group-hover:text-primary transition-all hidden sm:inline-block">Cathedra</span>
           </div>
           
           {isDashboard && (
