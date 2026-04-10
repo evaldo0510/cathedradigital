@@ -500,6 +500,7 @@ const HojePage: React.FC = () => {
 
       {/* Spiritual Journal */}
       <motion.div
+        id="spiritual-journal"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
