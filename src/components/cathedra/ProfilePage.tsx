@@ -22,8 +22,12 @@ interface Badge {
 const ProfilePage: React.FC = () => {
   const { user, profile, loading } = useAuth();
   const navigate = useNavigate();
+  const { subscribe, unsubscribe, isSubscribing } = usePushNotifications();
   const [name, setName] = useState('');
   const [bio, setBio] = useState('');
+  const [whatsappNumber, setWhatsappNumber] = useState('');
+  const [whatsappEnabled, setWhatsappEnabled] = useState(false);
+  const [pushEnabled, setPushEnabled] = useState(true);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
