@@ -118,7 +118,7 @@ export const Logo = forwardRef<HTMLDivElement, { className?: string, variant?: '
   const colors = {
     gold: '#C8A96A',
     light: '#FFFFFF',
-    dark: '#0B1F3A'
+    dark: '#1A1A1A'
   };
 
   const currentColor = colors[variant];
@@ -131,47 +131,63 @@ export const Logo = forwardRef<HTMLDivElement, { className?: string, variant?: '
         xmlns="http://www.w3.org/2000/svg"
         className="w-full h-full transition-all duration-700 group-hover:scale-105"
       >
+        {/* Main Vertical Staff - Foundation of Faith */}
         <path 
-          d="M50 20V80" 
+          d="M50 15V85" 
           stroke={currentColor} 
-          strokeWidth="3.5" 
+          strokeWidth="3" 
           strokeLinecap="round" 
+          className="transition-all duration-700"
         />
+        
+        {/* Mandorla - The Sanctuary of the Soul */}
         <path 
-          d="M50 35C40 35 32 42 32 50C32 58 40 65 50 65" 
+          d="M50 32C35 32 30 41 30 50C30 59 35 68 50 68" 
           stroke={currentColor} 
-          strokeWidth="3.5" 
-          strokeLinecap="round" 
-          strokeLinejoin="round"
-        />
-        <path 
-          d="M50 35C60 35 68 42 68 50C68 58 60 65 50 65" 
-          stroke={currentColor} 
-          strokeWidth="3.5" 
+          strokeWidth="3" 
           strokeLinecap="round" 
           strokeLinejoin="round"
+          className="transition-all duration-700"
         />
         <path 
-          d="M50 10L56 20L50 26L44 20L50 10Z" 
+          d="M50 32C65 32 70 41 70 50C70 59 65 68 50 68" 
+          stroke={currentColor} 
+          strokeWidth="3" 
+          strokeLinecap="round" 
+          strokeLinejoin="round"
+          className="transition-all duration-700"
+        />
+        
+        {/* Top Jewel - The Divine Wisdom */}
+        <path 
+          d="M50 5L57 15L50 24L43 15L50 5Z" 
           fill={currentColor}
+          className="transition-all duration-700"
         />
+        
+        {/* Horizontal Balance - Harmony of Spirit */}
         <path 
-          d="M42 42H58" 
+          d="M44 44H56" 
           stroke={currentColor} 
           strokeWidth="2" 
           strokeLinecap="round" 
+          className="transition-all duration-700"
         />
         <path 
-          d="M42 58H58" 
+          d="M44 56H56" 
           stroke={currentColor} 
           strokeWidth="2" 
           strokeLinecap="round" 
+          className="transition-all duration-700"
         />
+        
+        {/* Base Support - Firm in Tradition */}
         <path 
-          d="M40 80H60" 
+          d="M38 85H62" 
           stroke={currentColor} 
           strokeWidth="2.5" 
           strokeLinecap="round" 
+          className="transition-all duration-700"
         />
       </svg>
       {variant === 'gold' && (
