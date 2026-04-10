@@ -50,8 +50,8 @@ const ProConversionBanner: React.FC<ProConversionBannerProps> = ({ context, forc
       const total = (journalRes.count ?? 0) + (journeyRes.count ?? 0);
       setReflectionCount(total);
 
-      // Show after 2+ reflections or if context is logos (handled by forceVisible usually)
-      if (total >= 2 || context === 'logos') {
+      // Show after 2+ reflections or if context is logos/jornada
+      if (total >= 2 || context === 'logos' || context === 'jornada') {
         const sessionKey = `pro_banner_dismissed_${context}`;
         if (!sessionStorage.getItem(sessionKey)) {
           setVisible(true);
