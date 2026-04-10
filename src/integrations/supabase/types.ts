@@ -497,6 +497,7 @@ export type Database = {
           id: string
           is_premium: boolean
           last_action_at: string | null
+          last_notified_at: string | null
           last_visit: string | null
           level: number | null
           name: string
@@ -518,6 +519,7 @@ export type Database = {
           id: string
           is_premium?: boolean
           last_action_at?: string | null
+          last_notified_at?: string | null
           last_visit?: string | null
           level?: number | null
           name?: string
@@ -539,6 +541,7 @@ export type Database = {
           id?: string
           is_premium?: boolean
           last_action_at?: string | null
+          last_notified_at?: string | null
           last_visit?: string | null
           level?: number | null
           name?: string
