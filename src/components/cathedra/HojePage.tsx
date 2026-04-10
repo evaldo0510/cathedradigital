@@ -320,7 +320,7 @@ const HojePage: React.FC = () => {
           <p className="text-sm text-muted-foreground">
             {streak > 0 ? (
               <span className="flex items-center gap-1">
-                <Icons.Flame className="w-4 h-4 text-orange-500" /> {streak} dias consecutivos
+                <Icons.Flame className="w-4 h-4 text-secondary" /> {streak} dias consecutivos
               </span>
             ) : 'Comece seu dia com Deus'}
           </p>

@@ -83,7 +83,7 @@ const SplashScreen: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
             initial={{ opacity: 0, letterSpacing: '0.5em' }}
             animate={{ opacity: 1, letterSpacing: '0.3em' }}
             transition={{ duration: 1, delay: 0.9 }}
-            className="text-2xl md:text-3xl font-display font-bold text-[hsl(40,20%,90%)] uppercase"
+            className="text-2xl md:text-3xl font-display font-bold text-secondary uppercase"
           >
             Cathedra
           </motion.h1>

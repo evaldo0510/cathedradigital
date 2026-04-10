@@ -49,7 +49,7 @@ const SEASON_NAMES: Record<string, string> = {
 const COLOUR_MAP: Record<string, string> = {
   green: 'bg-primary ring-primary/20',
   violet: 'bg-primary ring-primary/40',
-  white: 'bg-secondary/10 border border-secondary/30 ring-secondary/20',
+  white: 'bg-secondary/10 border border-secondary/20 ring-secondary/10',
   red: 'bg-primary/80 ring-primary/20',
   rose: 'bg-secondary/40 ring-secondary/20',
 };
