@@ -50,8 +50,8 @@ const ProConversionBanner: React.FC<ProConversionBannerProps> = ({ context, forc
       const total = (journalRes.count ?? 0) + (journeyRes.count ?? 0);
       setReflectionCount(total);
 
-      // Show after 2+ reflections or if context is logos (handled by forceVisible usually)
-      if (total >= 2 || context === 'logos') {
+      // Show after 2+ reflections or if context is logos/jornada
+      if (total >= 2 || context === 'logos' || context === 'jornada') {
         const sessionKey = `pro_banner_dismissed_${context}`;
         if (!sessionStorage.getItem(sessionKey)) {
           setVisible(true);
@@ -129,21 +129,21 @@ function getCopy(context: string, reflections: number): { title: string; message
   if (context === 'logos') {
     return {
       title: 'Existe um nível mais profundo disso.',
-      message: 'Sua busca por entendimento tocou em algo real. A Logos Pro oferece análises teológicas sem limites e conexões que a versão gratuita ainda não revela.',
+      message: 'Sua busca por entendimento tocou em algo real. A experiência completa oferece conexões que a versão gratuita ainda não revela.',
     };
   }
 
   if (context === 'jornada') {
     return {
       title: 'Continue essa transformação.',
-      message: 'Você avançou no seu caminho e o progresso é visível. A experiência completa desbloqueia as próximas etapas e ferramentas exclusivas de contemplação.',
+      message: 'Você avançou no seu caminho e o progresso é visível. Desbloqueie as próximas etapas e ferramentas exclusivas de contemplação.',
     };
   }
 
   if (reflections >= 2) {
     return {
       title: 'Você começou a entender…',
-      message: 'Aprofunde isso. Suas reflexões estão amadurecendo e o Pro oferece o espaço ilimitado e as ferramentas de discernimento que sua alma busca agora.',
+      message: 'Aprofunde isso. Suas reflexões estão amadurecendo e a experiência completa oferece o espaço ilimitado que sua alma busca.',
     };
   }
 
@@ -151,13 +151,13 @@ function getCopy(context: string, reflections: number): { title: string; message
   if (context === 'lectio') {
     return {
       title: 'A Palavra está agindo em você',
-      message: 'Sua escuta se tornou mais atenta. Com o Pro, você acessa o repositório completo de meditações e o suporte contínuo da Logos.',
+      message: 'Sua escuta se tornou mais atenta. Com a experiência completa, você acessa o repositório total de meditações.',
     };
   }
 
   return {
     title: 'Aprofunde sua caminhada',
-    message: 'Suas reflexões mostram um novo horizonte. A experiência Pro oferece o suporte necessário para que essa clareza se torne constante.',
+    message: 'Suas reflexões mostram um novo horizonte. A experiência completa oferece o suporte necessário para que essa clareza se torne constante.',
   };
 }
 
