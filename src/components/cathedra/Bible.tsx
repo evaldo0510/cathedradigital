@@ -469,7 +469,8 @@ const Bible: React.FC = () => {
           {showCrossRefs && crossRefs.length > 0 && (
             <div className="lg:col-span-4 sticky top-24">
               <CrossReferencePanel 
-                references={crossRefs} 
+                type="bible"
+                cicParagraphs={crossRefs} 
                 onNavigateToCIC={handleNavigateToCIC}
               />
             </div>
