@@ -56,14 +56,15 @@ const HeroSection = ({ onStart, onAbout }: HeroSectionProps) => {
           className="w-full h-full object-cover opacity-10 dark:opacity-[0.06] scale-110 blur-[2px]"
           loading="eager"
           decoding="async"
+          fetchPriority="high"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background/5 via-background/70 to-background" />
         <div className="absolute inset-0 bg-gradient-to-r from-primary/[0.02] via-transparent to-primary/[0.02]" />
       </motion.div>
 
-      {/* Floating ornamental particles */}
+      {/* Floating ornamental particles – reduced to 3 for perf */}
       <div className="absolute inset-0 z-[1] pointer-events-none overflow-hidden">
-        {[...Array(6)].map((_, i) => (
+        {[0, 2, 4].map((i) => (
           <motion.div
             key={i}
             className="absolute w-1 h-1 rounded-full bg-primary/30"
@@ -74,7 +75,6 @@ const HeroSection = ({ onStart, onAbout }: HeroSectionProps) => {
             animate={{
               y: [0, -30, 0],
               opacity: [0.2, 0.6, 0.2],
-              scale: [1, 1.5, 1],
             }}
             transition={{
               duration: 4 + i * 0.5,
