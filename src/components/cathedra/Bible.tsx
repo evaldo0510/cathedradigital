@@ -378,9 +378,13 @@ const Bible: React.FC = () => {
               className={`p-2 rounded-xl border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}>
               <Icons.Columns className="w-5 h-5" />
             </button>
-            <ShareButton />
+            <ShareButton 
+              title={selectedBook.name} 
+              text={`Lendo ${selectedBook.name} na Cathedra: Digital Sanctuarium`} 
+            />
           </div>
         </div>
+
 
         {/* Content */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
