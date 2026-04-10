@@ -530,7 +530,7 @@ const Bible: React.FC = () => {
         </div>
 
         <p className="text-center text-xs text-muted-foreground flex items-center justify-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-primary inline-block" />
+          <span className="w-2 h-2 rounded-full bg-primary inline-block font-serif" />
           Capítulos com referências ao Catecismo
         </p>
       </div>

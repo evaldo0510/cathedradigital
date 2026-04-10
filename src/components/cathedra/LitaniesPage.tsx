@@ -310,7 +310,7 @@ const LitaniesPage: React.FC = () => {
               <BookOpen className="w-32 h-32 -mr-8 -mt-8 rotate-12" />
             </div>
             <div className="relative z-10 space-y-4">
-              <span className={`inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${CATEGORY_COLORS[l.category] || 'bg-muted text-muted-foreground border-border'}`}>
+              <span className={`inline-block font-serif px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${CATEGORY_COLORS[l.category] || 'bg-muted text-muted-foreground border-border'}`}>
                 {l.category}
               </span>
               <div className="space-y-1">

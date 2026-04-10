@@ -29,7 +29,7 @@ const AnimatedTitle = ({ text, className }: { text: string; className?: string }
         initial="hidden"
         animate="visible"
         custom={i}
-        className="inline-block"
+        className="inline-block font-serif"
         style={{ display: char === " " ? "inline" : "inline-block" }}
       >
         {char === " " ? "\u00A0" : char}
@@ -134,7 +134,7 @@ const HeroSection = ({ onStart, onAbout }: HeroSectionProps) => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.6, ease: [0.16, 1, 0.3, 1] }}
-            className="text-primary italic font-light drop-shadow-sm inline-block"
+            className="text-primary italic font-light drop-shadow-sm inline-block font-serif"
           >
             Sinta-se em Casa.
           </motion.span>

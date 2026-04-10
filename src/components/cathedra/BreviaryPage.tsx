@@ -231,7 +231,7 @@ const BreviaryPage: React.FC = () => {
             <p className="text-xs font-serif italic text-muted-foreground">{h.latin}</p>
             <p className="text-sm text-muted-foreground leading-relaxed">{h.description}</p>
             {h.id === suggestedHora && (
-              <span className="inline-block px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider bg-primary/10 text-primary">
+              <span className="inline-block font-serif px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider bg-primary/10 text-primary">
                 Hora atual
               </span>
             )}
