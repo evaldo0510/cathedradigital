@@ -1,6 +1,5 @@
 import React, { forwardRef } from 'react';
 import { 
-  Music,
   BookOpen, 
   Cross, 
   Map, 
@@ -34,7 +33,10 @@ import {
   Square,
   Brain,
   Sparkles,
-  User
+  User,
+  ArrowDown,
+  ArrowLeft,
+  Music
 } from 'lucide-react';
 
 export const COLORS = {
@@ -92,7 +94,6 @@ export const Icons = {
   Journeys: createIcon(Map),
   Community: createIcon(Users),
   Lectio: createIcon(Flame),
-  Music: createIcon(Music),
   Saints: createIcon(Sparkles),
   SaintHalo: createIcon(Sparkles),
   Catechism: createIcon(FileText),
@@ -123,8 +124,8 @@ export const Icons = {
   Star: createIcon(Star),
   Heart: createIcon(Heart),
   Message: createIcon(MessageCircle),
-  ArrowDown: createIcon(Search),
-  ArrowLeft: createIcon(ChevronLeft),
+  ArrowDown: createIcon(ArrowDown),
+  ArrowLeft: createIcon(ArrowLeft),
   ChevronLeft: createIcon(ChevronLeft),
   ChevronRight: createIcon(ChevronRight),
   Handshake: createIcon(Users),
@@ -142,4 +143,5 @@ export const Icons = {
   Brain: createIcon(Brain),
   Sparkles: createIcon(Sparkles),
   User: createIcon(User),
+  Music: createIcon(Music),
 };
