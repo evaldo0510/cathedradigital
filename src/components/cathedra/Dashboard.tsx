@@ -6,9 +6,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import SacredImage from './SacredImage';
 import { Icons } from '@/constants';
-import {
-  ChevronRight, Flame, Star, Zap, TrendingUp, Calendar, BookMarked
-} from 'lucide-react';
+
 
 interface DashboardProps {
   user: User | null;
