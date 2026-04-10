@@ -26,6 +26,15 @@ const LITURGICAL_QUOTES = [
   '"Amai-vos uns aos outros como eu vos amei." — Jo 15,12',
 ];
 
+const DEEP_INSIGHT = {
+  theme: 'A pressa como fuga',
+  quote: '“A pressa não nasce do tempo… nasce do desconforto de permanecer.”',
+  interpretation: 'Você não está com pressa do mundo… você está com pressa de não sentir algo que está dentro.',
+  direction: 'Hoje não tente acelerar… tente perceber o que você evita quando desacelera.',
+  exercise: 'Pare por 5 minutos. Observe um momento em que você quis correr. Escreva o que estava por trás disso.',
+  question: '👉 O que em você não suporta silêncio?'
+};
+
 const HojePage: React.FC = () => {
   const navigate = useNavigate();
   const { user, profile } = useAuth();
@@ -43,6 +52,7 @@ const HojePage: React.FC = () => {
   const [logosRecommendation, setLogosRecommendation] = useState<any>(null);
   const [recommendedLogosJourney, setRecommendedLogosJourney] = useState<any>(null);
   const [recommendedLogosStep, setRecommendedLogosStep] = useState<any>(null);
+  const [showDeepInsight, setShowDeepInsight] = useState(true);
 
 
   useEffect(() => {
