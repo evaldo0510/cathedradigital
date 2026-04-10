@@ -1,22 +1,18 @@
+import { precacheAndRoute } from 'workbox-precaching';
+import { registerRoute } from 'workbox-routing';
+import { NetworkFirst, StaleWhileRevalidate, CacheFirst } from 'workbox-strategies';
+import { ExpirationPlugin } from 'workbox-expiration';
+import { CacheableResponsePlugin } from 'workbox-cacheable-response';
+
+// Workbox precaching (all build assets will be automatically injected here)
+precacheAndRoute(self.__WB_MANIFEST);
+
 // Cathedra Service Worker — Push Notifications + Offline Cache
-const CACHE_NAME = 'cathedra-v1';
-const LITURGY_CACHE = 'cathedra-liturgy-v1';
+const CACHE_NAME = 'cathedra-v3';
+const LITURGY_CACHE = 'cathedra-liturgy-v3';
 
-// Static assets to pre-cache (app shell)
-const APP_SHELL = [
-  '/',
-  '/favicon.svg',
-];
-
-// ─── Install: cache app shell ───
-self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL))
-  );
-  self.skipWaiting();
-});
-
-// ─── Activate: clean old caches ───
+// ─── Install & Activate ───
+self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
@@ -30,47 +26,75 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// ─── Fetch: network-first for liturgy API, cache fallback ───
+// ─── Custom Fetch: Liturgy API ───
+// We use a custom fetch listener for this because we want to use the request body as part of the cache key
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  // Only intercept liturgical-calendar API calls
   if (url.pathname.includes('/functions/v1/liturgical-calendar')) {
     event.respondWith(networkFirstLiturgy(event.request));
-    return;
   }
-
-  // For navigation requests, let the app handle it (SPA)
-  // Don't cache other requests to avoid interference
 });
 
 async function networkFirstLiturgy(request) {
   try {
     const response = await fetch(request.clone());
     if (response.ok) {
-      // Cache successful responses
       const cache = await caches.open(LITURGY_CACHE);
-      // Use request body as part of cache key via a custom header
       const body = await request.clone().text();
       const cacheKey = request.url + '?body=' + encodeURIComponent(body);
       await cache.put(new Request(cacheKey), response.clone());
     }
     return response;
   } catch (e) {
-    // Network failed — try cache
     const cache = await caches.open(LITURGY_CACHE);
     const body = await request.clone().text();
     const cacheKey = request.url + '?body=' + encodeURIComponent(body);
     const cached = await cache.match(new Request(cacheKey));
     if (cached) return cached;
     
-    // Nothing in cache either
     return new Response(
       JSON.stringify({ error: 'Offline — sem cache disponível para esta data.' }),
       { status: 503, headers: { 'Content-Type': 'application/json' } }
     );
   }
 }
+
+// ─── Workbox Routing for other assets ───
+// Google Fonts
+registerRoute(
+  /^https:\/\/fonts\.googleapis\.com\/.*/i,
+  new CacheFirst({
+    cacheName: 'google-fonts-cache',
+    plugins: [
+      new ExpirationPlugin({ maxEntries: 10, maxAgeSeconds: 365 * 24 * 60 * 60 }),
+      new CacheableResponsePlugin({ statuses: [0, 200] }),
+    ],
+  })
+);
+
+registerRoute(
+  /^https:\/\/fonts\.gstatic\.com\/.*/i,
+  new CacheFirst({
+    cacheName: 'gstatic-fonts-cache',
+    plugins: [
+      new ExpirationPlugin({ maxEntries: 20, maxAgeSeconds: 365 * 24 * 60 * 60 }),
+      new CacheableResponsePlugin({ statuses: [0, 200] }),
+    ],
+  })
+);
+
+// External Images
+registerRoute(
+  /^https:\/\/images\.unsplash\.com\/.*/i,
+  new StaleWhileRevalidate({
+    cacheName: 'unsplash-images-cache',
+    plugins: [
+      new ExpirationPlugin({ maxEntries: 50, maxAgeSeconds: 30 * 24 * 60 * 60 }),
+      new CacheableResponsePlugin({ statuses: [0, 200] }),
+    ],
+  })
+);
 
 // ─── Push Notifications ───
 self.addEventListener('push', (event) => {
@@ -83,7 +107,7 @@ self.addEventListener('push', (event) => {
 
   const options = {
     body: data.body,
-    icon: '/favicon.svg',
+    icon: '/icon-192.png',
     badge: '/favicon.svg',
     data: { url: data.url || '/dashboard' },
     vibrate: [100, 50, 100],
@@ -99,11 +123,11 @@ self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   const url = event.notification.data?.url || '/dashboard';
   event.waitUntil(
-    clients.matchAll({ type: 'window' }).then((clientList) => {
+    self.clients.matchAll({ type: 'window' }).then((clientList) => {
       for (const client of clientList) {
         if (client.url.includes(url) && 'focus' in client) return client.focus();
       }
-      if (clients.openWindow) return clients.openWindow(url);
+      if (self.clients.openWindow) return self.clients.openWindow(url);
     })
   );
 });
