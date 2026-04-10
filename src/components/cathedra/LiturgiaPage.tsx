@@ -145,6 +145,51 @@ const LiturgiaPage: React.FC = () => {
     navigate(`${AppRoute.LECTIO_DIVINA}${q}`);
   };
 
+  const fetchMeditation = useCallback(async () => {
+    if (!readings?.evangelho?.texto || isMeditationLoading) return;
+    setIsMeditationLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('colloquium', {
+        body: {
+          messages: [{
+            role: 'user',
+            content: `Gere uma Meditação Diária espiritual, curta e profunda, baseada no Evangelho do dia: ${readings.evangelho.referencia} - ${readings.evangelho.texto.substring(0, 800)}.
+A meditação deve ser escrita num tom orante e poético (PCH — Poesia Cognitiva Hipnótica), dividida em:
+1. Reflexão (um parágrafo curto)
+2. Propósito Prático para o dia
+3. Uma oração final curta.
+Use Markdown para formatação.`
+          }]
+        }
+      });
+      if (error) throw error;
+      const reader = data.getReader();
+      const decoder = new TextDecoder();
+      let fullText = '';
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value);
+        for (const line of chunk.split('\n')) {
+          if (line.startsWith('data: ')) {
+            const d = line.substring(6).trim();
+            if (d === '[DONE]') continue;
+            try {
+              const json = JSON.parse(d);
+              const content = json.choices?.[0]?.delta?.content || '';
+              fullText += content;
+              setMeditation(fullText);
+            } catch { /* partial chunk */ }
+          }
+        }
+      }
+    } catch (e) {
+      console.error('Meditation error:', e);
+      setMeditation('Não foi possível gerar a meditação. Tente novamente.');
+    } finally {
+      setIsMeditationLoading(false);
+    }
+  }, [readings, isMeditationLoading]);
   const formatDate = () =>
     today.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
