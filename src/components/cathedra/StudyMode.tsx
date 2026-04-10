@@ -372,6 +372,19 @@ const StudyMode: React.FC = () => {
             </div>
           ))}
 
+          {/* Natural conversion: Logos deep response */}
+          {!isLoading && messages.length > 0 && messages[messages.length - 1].role === 'assistant' && (
+            messages[messages.length - 1].content.length > 400 || messages.filter(m => m.role === 'assistant').length >= 2
+          ) && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="px-2"
+            >
+              <ProConversionBanner context="logos" />
+            </motion.div>
+          )}
+
           {isLoading && messages[messages.length - 1]?.role !== 'assistant' && (
             <div className="flex justify-start">
               <div className="bg-card border border-border rounded-2xl rounded-bl-md px-5 py-4">
