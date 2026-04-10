@@ -25,14 +25,14 @@ const DIFFICULTY_COLORS: Record<string, string> = {
   avancado: 'bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-300',
 };
 
-const CATEGORY_ICONS: Record<string, string> = {
-  fundamentos: '✨',
-  formacao: '🌱',
-  rotina: '🦋',
-  oracao: '🔁',
-  mistico: '🙏',
-  cura: '📚',
-  transformacao: '',
+const CATEGORY_ICONS: Record<string, React.ReactNode> = {
+  fundamentos: <Icons.Sparkles className="w-5 h-5" />,
+  formacao: <Icons.BookOpen className="w-5 h-5" />,
+  rotina: <Icons.Calendar className="w-5 h-5" />,
+  oracao: <Icons.Heart className="w-5 h-5" />,
+  mistico: <Icons.Sun className="w-5 h-5" />,
+  cura: <Icons.Stethoscope className="w-5 h-5" />,
+  transformacao: <Icons.Zap className="w-5 h-5" />,
 };
 
 const CATEGORY_LABELS: Record<string, string> = {
