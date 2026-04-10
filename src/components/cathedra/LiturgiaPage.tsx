@@ -310,12 +310,12 @@ const LiturgiaPage: React.FC = () => {
           </div>
           {isOfflineData && (
             <div className="flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground bg-muted/50 rounded-full px-4 py-2 mt-4 mx-auto w-fit">
-              <WifiOff className="w-3.5 h-3.5" /> <span>Modo Offline</span>
+              <Icons.WifiOff className="w-3.5 h-3.5" /> <span>Modo Offline</span>
             </div>
           )}
         </motion.div>
 
-        {isLoading && <div className="flex justify-center py-20"><Loader2 className="w-10 h-10 text-primary animate-spin" /></div>}
+        {isLoading && <div className="flex justify-center py-20"><Icons.Loader2 className="w-10 h-10 text-primary animate-spin" /></div>}
 
         {readings && (
           <div className="space-y-8">
@@ -348,7 +348,7 @@ const LiturgiaPage: React.FC = () => {
           {!meditation && !isMeditationLoading && (
             <Button onClick={fetchMeditation} className="w-full h-14 rounded-2xl bg-primary text-white font-black uppercase tracking-widest hover:scale-[1.02] transition-transform">Gerar Meditação Personalizada</Button>
           )}
-          {isMeditationLoading && <div className="flex flex-col items-center gap-3 py-6"><Loader2 className="w-8 h-8 text-primary animate-spin" /><p className="text-xs font-bold text-muted-foreground animate-pulse">Sintonizando frequências espirituais...</p></div>}
+          {isMeditationLoading && <div className="flex flex-col items-center gap-3 py-6"><Icons.Loader2 className="w-8 h-8 text-primary animate-spin" /><p className="text-xs font-bold text-muted-foreground animate-pulse">Sintonizando frequências espirituais...</p></div>}
           {meditation && (
             <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-1000">
               <div className="prose prose-sm dark:prose-invert font-serif leading-relaxed text-primary max-w-none"><ReactMarkdown>{meditation}</ReactMarkdown></div>
