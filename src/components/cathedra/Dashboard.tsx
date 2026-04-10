@@ -116,6 +116,25 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
     });
   }, []);
 
+  // Weekly stats
+  const [weeklyStats, setWeeklyStats] = useState({ chaptersRead: 0, journeySteps: 0 });
+  useEffect(() => {
+    if (!user) return;
+    const weekAgo = new Date();
+    weekAgo.setDate(weekAgo.getDate() - 7);
+    const iso = weekAgo.toISOString();
+
+    Promise.all([
+      supabase.from('bible_chapters_read').select('id', { count: 'exact', head: true }).eq('user_id', user.id).gte('read_at', iso),
+      supabase.from('journey_progress').select('id', { count: 'exact', head: true }).eq('user_id', user.id).gte('completed_at', iso),
+    ]).then(([chapRes, jpRes]) => {
+      setWeeklyStats({
+        chaptersRead: chapRes.count || 0,
+        journeySteps: jpRes.count || 0,
+      });
+    });
+  }, [user]);
+
   return (
     <div className="max-w-2xl mx-auto px-4 py-10 md:py-16 space-y-10">
 
