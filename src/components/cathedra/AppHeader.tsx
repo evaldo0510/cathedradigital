@@ -144,7 +144,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
         )}
 
         <button onClick={onToggleDark} className="p-3 bg-muted text-primary hover:bg-primary hover:text-white rounded-2xl border border-border transition-all active:scale-95 shadow-sm">
-          {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          {isDark ? <Icons.Sun className="w-5 h-5" /> : <Icons.Moon className="w-5 h-5" />}
         </button>
       </div>
       </div>
