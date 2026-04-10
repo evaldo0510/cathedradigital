@@ -139,15 +139,21 @@ const HojePage: React.FC = () => {
   };
 
   const loadRecommendedJourney = async () => {
-    if (!user || !profile?._sensitive?.diagnosis_result) return;
+    if (!user) return;
     try {
-      const result = profile._sensitive.diagnosis_result as Record<string, string>;
-      const { moment, prayer, knowledge, goal } = result;
+      const result = profile?._sensitive?.diagnosis_result as Record<string, string> | undefined;
+      const { moment, prayer, knowledge, goal } = result || {};
       let category = 'fundamentos';
-      if (moment === 'beginning' || knowledge === 'basic') category = 'fundamentos';
-      else if (moment === 'struggling' || goal === 'peace') category = 'mistico';
-      else if (prayer === 'contemplative' || goal === 'transformation') category = 'mistico';
-      else if (goal === 'routine' || prayer === 'rarely' || prayer === 'sometimes') category = 'rotina';
+      
+      if (userLevel === 'iniciante' || moment === 'beginning' || knowledge === 'basic') {
+        category = 'fundamentos';
+      } else if (userLevel === 'avançado' || prayer === 'contemplative' || goal === 'transformation') {
+        category = 'formacao';
+      } else if (moment === 'struggling' || goal === 'peace') {
+        category = 'mistico';
+      } else if (goal === 'routine' || prayer === 'rarely' || prayer === 'sometimes') {
+        category = 'rotina';
+      }
 
       const { data } = await supabase
         .from('journeys')
