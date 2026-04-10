@@ -127,7 +127,7 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
         {[
           { icon: <Star className="w-4 h-4 text-primary" />, label: 'Nível', value: user.level ?? 1 },
           { icon: <MessageCircle className="w-4 h-4 text-primary" />, label: 'Reflexões', value: user.reflections_count || 0 },
-          { icon: <Flame className="w-4 h-4 text-orange-500" />, label: 'Freq. Acesso', value: `${user.streak ?? 0}d` },
+          { icon: <Flame className="w-4 h-4 text-secondary" />, label: 'Freq. Acesso', value: `${user.streak ?? 0}d` },
           { icon: <Brain className="w-4 h-4 text-primary" />, label: 'Profundidade', value: user.depth_level || 'Iniciante' },
         ].map((stat, i) => (
           <Card key={i}>

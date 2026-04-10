@@ -234,20 +234,20 @@ const DOGMAS: Dogma[] = [
 ];
 
 const CATEGORY_COLORS: Record<string, string> = {
-  'Deus': 'bg-secondary text-amber-800 dark:bg-amber-900/30 dark:text-secondary',
-  'Cristologia': 'bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-300',
-  'Mariologia': 'bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-300',
-  'Sacramentos': 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
-  'Eclesiologia': 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300',
-  'Escatologia': 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300',
-  'Antropologia': 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300',
-  'Graça': 'bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-300',
-  'Anjos': 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900/30 dark:text-cyan-300',
-  'Escritura': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
+  'Deus': 'bg-secondary/10 text-secondary border border-secondary/20',
+  'Cristologia': 'bg-primary/5 text-primary border border-primary/20',
+  'Mariologia': 'bg-secondary/10 text-secondary border border-secondary/20',
+  'Sacramentos': 'bg-primary/5 text-primary border border-primary/20',
+  'Eclesiologia': 'bg-secondary/10 text-secondary border border-secondary/20',
+  'Escatologia': 'bg-primary/5 text-primary border border-primary/20',
+  'Antropologia': 'bg-secondary/10 text-secondary border border-secondary/20',
+  'Graça': 'bg-primary/5 text-primary border border-primary/20',
+  'Anjos': 'bg-secondary/10 text-secondary border border-secondary/20',
+  'Escritura': 'bg-primary/5 text-primary border border-primary/20',
 };
 
 const REF_STYLES: Record<string, { icon: React.ReactNode; color: string }> = {
-  bible: { icon: <Icons.Book className="w-3 h-3" />, color: 'bg-amber-50 text-amber-700 border-secondary hover:bg-secondary dark:bg-amber-950/40 dark:text-secondary dark:border-amber-800 dark:hover:bg-amber-900/50' },
+  bible: { icon: <Icons.Book className="w-3 h-3" />, color: 'bg-primary/5 text-primary border-primary/20 hover:bg-primary/10' },
   catechism: { icon: <Icons.Heart className="w-3 h-3" />, color: 'bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-100 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800 dark:hover:bg-rose-900/50' },
   magisterium: { icon: <Icons.Globe className="w-3 h-3" />, color: 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800 dark:hover:bg-emerald-900/50' },
 };
