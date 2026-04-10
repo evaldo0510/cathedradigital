@@ -350,7 +350,7 @@ Instruções:
               onClick={goToPrevDay}
               className="p-2 rounded-xl hover:bg-primary/10 transition-colors text-muted-foreground hover:text-foreground"
             >
-              <ChevronLeft className="w-5 h-5" />
+              <Icons.ChevronLeft className="w-5 h-5" />
             </button>
             <p className="text-sm text-muted-foreground capitalize min-w-[200px]">
               {formatDate()}
@@ -361,7 +361,7 @@ Instruções:
               disabled={isToday}
               className="p-2 rounded-xl hover:bg-primary/10 transition-colors text-muted-foreground hover:text-foreground disabled:opacity-30 disabled:cursor-not-allowed"
             >
-              <ChevronRight className="w-5 h-5" />
+              <Icons.ChevronRight className="w-5 h-5" />
             </button>
           </div>
 
@@ -577,7 +577,7 @@ Instruções:
               {saintOfDay.image ? (
                 <img src={saintOfDay.image} alt={saintOfDay.name} className="w-full h-full object-cover rounded-2xl" />
               ) : (
-                <User className="w-6 h-6 text-primary" />
+                <Icons.User className="w-6 h-6 text-primary" />
               )}
             </div>
             <div className="flex-1 min-w-0">
