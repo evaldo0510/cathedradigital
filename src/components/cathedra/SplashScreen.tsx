@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import cathedraLogo from '@/assets/cathedra-logo.webp';
+import { Logo } from '@/constants';
 
 const SplashScreen: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
   const [phase, setPhase] = useState<'logo' | 'text' | 'exit'>('logo');
@@ -66,18 +66,8 @@ const SplashScreen: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="relative z-10"
         >
-          <motion.img
-            src={cathedraLogo}
-            alt="Cathedra"
-            className="w-24 h-24 md:w-32 md:h-32 object-contain drop-shadow-[0_0_30px_hsl(43,72%,53%,0.4)]"
-            animate={{ 
-              filter: [
-                'drop-shadow(0 0 20px hsl(43 72% 53% / 0.3))',
-                'drop-shadow(0 0 40px hsl(43 72% 53% / 0.6))',
-                'drop-shadow(0 0 20px hsl(43 72% 53% / 0.3))',
-              ]
-            }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+          <Logo 
+            className="w-24 h-24 md:w-32 md:h-32 drop-shadow-[0_0_30px_hsl(43,72%,53%,0.4)] text-primary" 
           />
         </motion.div>
 
