@@ -36,7 +36,8 @@ import {
   User,
   ArrowDown,
   ArrowLeft,
-  Music
+  Music,
+  Bell
 } from 'lucide-react';
 
 export const COLORS = {
