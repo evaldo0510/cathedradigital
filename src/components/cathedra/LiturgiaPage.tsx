@@ -341,6 +341,18 @@ Instruções:
               <ChevronRight className="w-5 h-5" />
             </button>
           </div>
+
+          {/* Offline indicator */}
+          {isOfflineData && (
+            <motion.div
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex items-center justify-center gap-2 text-xs text-muted-foreground bg-muted/50 rounded-full px-3 py-1.5 mt-2"
+            >
+              <WifiOff className="w-3.5 h-3.5" />
+              <span>Modo offline — leitura do cache local</span>
+            </motion.div>
+          )}
         </motion.div>
 
         {/* LOADING */}
