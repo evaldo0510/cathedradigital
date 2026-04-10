@@ -240,12 +240,19 @@ const LiturgiaPage: React.FC = () => {
         body: JSON.stringify({
           messages: [{
             role: 'user',
-            content: `Gere uma Meditação Diária espiritual, curta e profunda, baseada no Evangelho do dia: ${readings.evangelho.referencia} - ${readings.evangelho.texto.substring(0, 800)}.
-A meditação deve ser escrita num tom orante e poético (PCH — Poesia Cognitiva Hipnótica), dividida em:
-1. Reflexão (um parágrafo curto)
-2. Propósito Prático para o dia
-3. Uma oração final curta.
-Use Markdown para formatação.`
+            content: `Gere uma Meditação Diária Espiritual baseada no Evangelho do dia: ${readings.evangelho.referencia} - ${readings.evangelho.texto.substring(0, 800)}.
+
+Instruções:
+- Antes de responder, analise internamente: qual emoção dominante este texto evoca? Qual a intenção profunda desta passagem?
+- Tom: orante, poético e acolhedor (PCH — Poesia Cognitiva Hipnótica). Nunca genérico.
+- Estrutura em Markdown:
+  1. **Meditação Diária Espiritual** — Título com citação-chave do Evangelho
+  2. **Reflexão** — Um parágrafo curto e profundo
+  3. **Propósito Prático para o Dia** — Ação concreta e pessoal
+  4. **Oração Final** — Curta e íntima
+  5. **Próximo Passo** — Sugira uma ação na plataforma (Lectio Divina, Jornada, Santo do dia, Catecismo)
+- Insira sutilmente micro-gatilhos de continuidade ("isso está só começando", "há algo mais aqui").
+- Termine com uma pergunta profunda que convide o leitor a continuar refletindo.`
           }]
         })
       });
