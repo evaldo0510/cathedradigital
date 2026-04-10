@@ -326,7 +326,59 @@ const HojePage: React.FC = () => {
               </Button>
             </CardContent>
           </Card>
+      </motion.div>
+      
+      {/* Logos Analysis Response */}
+      {(isAnalyzing || logosResponse) && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="space-y-4"
+        >
+          <Card className="border-primary/40 bg-gradient-to-br from-primary/10 via-background to-background relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-4 opacity-10">
+              <Sparkles className="w-12 h-12 text-primary" />
+            </div>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base flex items-center gap-2 text-primary">
+                <Sparkles className="w-4 h-4" />
+                Resposta de Logos
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {isAnalyzing && !logosResponse ? (
+                <div className="flex items-center gap-3 py-4">
+                  <Loader2 className="w-5 h-5 text-primary animate-spin" />
+                  <p className="text-sm text-muted-foreground animate-pulse">Analisando sua reflexão...</p>
+                </div>
+              ) : (
+                <div className="prose prose-sm dark:prose-invert max-w-none text-foreground leading-relaxed whitespace-pre-wrap">
+                  {logosResponse.replace(/\[RECOMMENDATION:.*?\]/g, '').trim()}
+                </div>
+              )}
+              
+              {!isAnalyzing && recommendedLogosJourney && (
+                <div className="mt-6 pt-6 border-t border-primary/20 space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-500">
+                  <div className="flex items-center gap-2 text-primary font-semibold text-sm">
+                    <Compass className="w-4 h-4" />
+                    Sugestão de Jornada: {recommendedLogosJourney.title}
+                  </div>
+                  <p className="text-xs text-muted-foreground italic">
+                    {logosRecommendation?.reason || "Com base na sua reflexão, esta jornada ajudará no seu crescimento agora."}
+                  </p>
+                  <Button 
+                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 group"
+                    onClick={() => navigate(`/jornadas/${recommendedLogosJourney.id}`)}
+                  >
+                    Continuar por aqui <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </motion.div>
+      )}
+
       )}
 
       {/* Recommended Journey (no progress yet) */}
