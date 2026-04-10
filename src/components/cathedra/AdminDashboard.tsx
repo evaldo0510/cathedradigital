@@ -46,11 +46,16 @@ interface UserProfile {
   level: number | null;
   streak: number | null;
   last_visit: string | null;
+  reflections_count?: number;
+  depth_level?: string;
+  current_journey?: string;
+  access_frequency?: string;
 }
 
 interface SensitiveRow {
   user_id: string;
   email: string;
+  diagnosis_result?: any;
 }
 
 const AdminDashboard: React.FC = () => {
@@ -72,11 +77,13 @@ const AdminDashboard: React.FC = () => {
       try {
         setLoading(true);
 
-        const [profilesRes, sensitiveRes, metricsRes, transactionsRes] = await Promise.all([
+        const [profilesRes, sensitiveRes, metricsRes, transactionsRes, journalRes, journeysRes] = await Promise.all([
           supabase.from('profiles').select('*'),
-          (supabase as any).from('user_sensitive_data').select('user_id, email'),
+          (supabase as any).from('user_sensitive_data').select('user_id, email, diagnosis_result'),
           supabase.from('app_metrics').select('*'),
           supabase.from('transactions').select('*').order('created_at', { ascending: false }),
+          supabase.from('spiritual_journal').select('user_id'),
+          supabase.from('journey_progress').select('user_id, journey_id, journeys(title)').order('completed_at', { ascending: false })
         ]);
 
         if (profilesRes.error) throw profilesRes.error;
@@ -135,12 +142,37 @@ const AdminDashboard: React.FC = () => {
           revenueData,
         });
 
-        const sensitiveMap = new Map<string, string>();
-        (sensitiveRes.data as SensitiveRow[] || []).forEach((s: SensitiveRow) => sensitiveMap.set(s.user_id, s.email));
+        const sensitiveMap = new Map<string, {email: string, depth?: string}>();
+        (sensitiveRes.data as SensitiveRow[] || []).forEach((s: SensitiveRow) => {
+          let depth = 'Iniciante';
+          const diag = s.diagnosis_result;
+          if (diag && typeof diag === 'object') {
+            const values = Object.values(diag);
+            const highValues = values.filter(v => Number(v) > 7).length;
+            if (highValues > 5) depth = 'Profundo';
+            else if (highValues > 2) depth = 'Engajado';
+          }
+          sensitiveMap.set(s.user_id, { email: s.email, depth });
+        });
+        
+        const journalMap = new Map<string, number>();
+        (journalRes.data || []).forEach((j: any) => {
+          journalMap.set(j.user_id, (journalMap.get(j.user_id) || 0) + 1);
+        });
+
+        const journeyMap = new Map<string, string>();
+        (journeysRes.data || []).forEach((j: any) => {
+          if (!journeyMap.has(j.user_id)) {
+            journeyMap.set(j.user_id, j.journeys?.title || 'Jornada');
+          }
+        });
         
         setUsers(allProfiles.map(p => ({
           ...p,
-          email: sensitiveMap.get(p.id) || '',
+          email: sensitiveMap.get(p.id)?.email || '',
+          depth_level: sensitiveMap.get(p.id)?.depth || 'Iniciante',
+          reflections_count: journalMap.get(p.id) || 0,
+          current_journey: journeyMap.get(p.id) || 'Nenhuma',
         })) as UserProfile[]);
       } catch (err: any) {
         console.error('Error fetching admin stats:', err);
