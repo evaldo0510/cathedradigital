@@ -317,6 +317,62 @@ const ProfilePage: React.FC = () => {
         </div>
       </div>
 
+      {/* Notification Settings */}
+      <div className="bg-card border border-border rounded-2xl p-6 space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Notificações Inteligentes</h2>
+          <span className="text-[10px] font-bold text-primary">Ative para não perder sua jornada</span>
+        </div>
+
+        <div className="space-y-4">
+          <div className="flex items-center justify-between p-3 bg-muted/30 rounded-xl border border-border/50">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <Icons.Bell className="w-4 h-4 text-primary" />
+                <p className="text-sm font-bold text-foreground">Push Notifications</p>
+              </div>
+              <p className="text-[10px] text-muted-foreground">Lembretes diários e avisos de inatividade no seu navegador.</p>
+            </div>
+            <Switch checked={pushEnabled} onCheckedChange={setPushEnabled} />
+          </div>
+
+          <div className="flex items-center justify-between p-3 bg-muted/30 rounded-xl border border-border/50">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <Icons.Message className="w-4 h-4 text-green-500" />
+                <p className="text-sm font-bold text-foreground">WhatsApp (Beta)</p>
+              </div>
+              <p className="text-[10px] text-muted-foreground">Receba mensagens personalizadas diretamente no seu WhatsApp.</p>
+            </div>
+            <Switch checked={whatsappEnabled} onCheckedChange={setWhatsappEnabled} />
+          </div>
+
+          {whatsappEnabled && (
+            <motion.div 
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              className="space-y-2 pt-2"
+            >
+              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground pl-1">Número do WhatsApp (com DDD)</label>
+              <div className="relative">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground text-sm font-bold">+55</span>
+                <input
+                  type="tel"
+                  value={whatsappNumber}
+                  onChange={e => setWhatsappNumber(e.target.value.replace(/\D/g, ''))}
+                  className="w-full pl-12 pr-4 py-3 bg-muted border border-border rounded-xl text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary font-mono"
+                  placeholder="11999999999"
+                  maxLength={11}
+                />
+              </div>
+              <p className="text-[9px] text-muted-foreground italic pl-1">
+                Ao ativar, você autoriza o envio de até 1 mensagem por dia com foco no seu progresso espiritual.
+              </p>
+            </motion.div>
+          )}
+        </div>
+      </div>
+
       {/* Edit form */}
       <div className="bg-card border border-border rounded-2xl p-6 space-y-5">
         <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Editar Perfil</h2>
