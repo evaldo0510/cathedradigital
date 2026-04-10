@@ -307,6 +307,93 @@ const HojePage: React.FC = () => {
         </Card>
       </motion.div>
 
+      {/* Deep Insight Card */}
+      {showDeepInsight && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.15 }}
+        >
+          <Card className="border-primary/40 bg-gradient-to-br from-primary/10 via-background to-background relative overflow-hidden shadow-lg">
+            <div className="absolute top-0 right-0 p-4 opacity-5">
+              <Sparkles className="w-16 h-16 text-primary" />
+            </div>
+            <CardHeader className="pb-2 flex flex-row items-center justify-between">
+              <div className="space-y-1">
+                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/70">Reflexão Profunda</p>
+                <CardTitle className="text-lg font-serif italic text-foreground">
+                  {DEEP_INSIGHT.theme}
+                </CardTitle>
+              </div>
+              <Sparkles className="w-5 h-5 text-primary/40" />
+            </CardHeader>
+            <CardContent className="space-y-6 pt-2">
+              <div className="space-y-3">
+                <p className="text-xl font-serif italic leading-relaxed text-foreground">
+                  {DEEP_INSIGHT.quote}
+                </p>
+                <div className="h-px w-12 bg-primary/20" />
+                <p className="text-sm text-foreground/80 leading-relaxed italic">
+                  {DEEP_INSIGHT.interpretation}
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 gap-4 pt-2">
+                <div className="bg-primary/5 rounded-xl p-4 border border-primary/10 space-y-2">
+                  <div className="flex items-center gap-2 text-primary">
+                    <Compass className="w-4 h-4" />
+                    <span className="text-[10px] font-black uppercase tracking-widest">Direção</span>
+                  </div>
+                  <p className="text-sm text-foreground/90 font-medium">
+                    {DEEP_INSIGHT.direction}
+                  </p>
+                </div>
+
+                <div className="bg-accent/5 rounded-xl p-4 border border-accent/10 space-y-2">
+                  <div className="flex items-center gap-2 text-accent">
+                    <PenLine className="w-4 h-4" />
+                    <span className="text-[10px] font-black uppercase tracking-widest">Exercício</span>
+                  </div>
+                  <p className="text-sm text-foreground/90 font-medium">
+                    {DEEP_INSIGHT.exercise}
+                  </p>
+                </div>
+              </div>
+
+              <div className="pt-4 border-t border-primary/10">
+                <p className="text-base font-serif italic text-primary font-semibold">
+                  {DEEP_INSIGHT.question}
+                </p>
+              </div>
+
+              <div className="flex gap-2 pt-2">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="w-full text-[10px] font-black uppercase tracking-widest h-10"
+                  onClick={() => {
+                    setJournalText(prev => prev ? prev + '\n\n' + DEEP_INSIGHT.question : DEEP_INSIGHT.question);
+                    // Scroll to journal area
+                    const journalElement = document.getElementById('spiritual-journal');
+                    journalElement?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                >
+                  <PenLine className="w-3 h-3 mr-2" /> Responder no Diário
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="w-full text-[10px] font-black uppercase tracking-widest h-10 text-muted-foreground"
+                  onClick={() => setShowDeepInsight(false)}
+                >
+                  Ocultar
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
+
       {/* Active Journey with Progress */}
       {activeJourney && (
         <motion.div
