@@ -36,7 +36,7 @@ const CATEGORY_ICONS: Record<string, string> = {
 };
 
 const CATEGORY_LABELS: Record<string, string> = {
-  fundamentos: 'Fundamento0s',
+  fundamentos: 'Fundamentos',
   formacao: 'Formação',
   rotina: 'Rotina',
   oracao: 'Oração',
