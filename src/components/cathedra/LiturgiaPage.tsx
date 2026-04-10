@@ -145,6 +145,7 @@ const LiturgiaPage: React.FC = () => {
   const [isMeditationLoading, setIsMeditationLoading] = useState(false);
 
   const [copiedMeditation, setCopiedMeditation] = useState(false);
+  const [isOfflineData, setIsOfflineData] = useState(false);
 
   usePrefetchLiturgyCache();
 
@@ -155,6 +156,7 @@ const LiturgiaPage: React.FC = () => {
     d.setDate(d.getDate() - 1);
     setSelectedDate(d);
     setMeditation(null);
+    setIsOfflineData(false);
   };
 
   const goToNextDay = () => {
@@ -163,6 +165,7 @@ const LiturgiaPage: React.FC = () => {
     if (d <= new Date()) {
       setSelectedDate(d);
       setMeditation(null);
+      setIsOfflineData(false);
     }
   };
 
@@ -171,7 +174,6 @@ const LiturgiaPage: React.FC = () => {
   const { data: readings, isLoading } = useQuery({
     queryKey: ['liturgy-readings', dateKey],
     queryFn: async () => {
-      // Try IndexedDB cache first (works offline)
       const cached = await getCachedLiturgy(dateKey);
       try {
         const { data, error } = await supabase.functions.invoke('liturgical-calendar', {
@@ -180,10 +182,13 @@ const LiturgiaPage: React.FC = () => {
         if (error) throw error;
         const result = data as LiturgyReadings;
         await cacheLiturgy(dateKey, result);
+        setIsOfflineData(false);
         return result;
       } catch (e) {
-        // Offline fallback: return cached data if available
-        if (cached) return cached as LiturgyReadings;
+        if (cached) {
+          setIsOfflineData(true);
+          return cached as LiturgyReadings;
+        }
         throw e;
       }
     },
