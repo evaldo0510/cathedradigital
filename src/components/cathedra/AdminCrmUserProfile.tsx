@@ -21,6 +21,10 @@ interface UserProfile {
   level: number | null;
   streak: number | null;
   last_visit: string | null;
+  reflections_count?: number;
+  depth_level?: string;
+  current_journey?: string;
+  access_frequency?: string;
 }
 
 interface Props {
@@ -73,8 +77,9 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
   };
 
   const statusDays = daysSince(user.last_visit);
-  const statusLabel = statusDays <= 3 ? 'Ativo' : statusDays <= 14 ? 'Em Risco' : 'Inativo';
-  const statusColor = statusDays <= 3 ? 'text-emerald-500' : statusDays <= 14 ? 'text-amber-500' : 'text-destructive';
+  const isAbandoned = statusDays > 7;
+  const statusLabel = isAbandoned ? 'Abandono' : statusDays <= 3 ? 'Ativo' : 'Em Risco';
+  const statusColor = isAbandoned ? 'text-destructive' : statusDays <= 3 ? 'text-emerald-500' : 'text-amber-500';
 
   return (
     <div className="space-y-6">
@@ -102,7 +107,7 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
               <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
                 <span className="flex items-center gap-1"><Mail className="w-3.5 h-3.5" /> {user.email}</span>
                 <span className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5" /> Cadastro: {new Date(user.created_at).toLocaleDateString('pt-BR')}</span>
-                <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> Última visita: {user.last_visit ? `${statusDays}d atrás` : 'Nunca'}</span>
+                <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> Última atividade: {user.last_visit ? `${statusDays}d atrás` : 'Nunca'}</span>
               </div>
             </div>
             <div className="flex gap-2">
@@ -118,9 +123,9 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
           { icon: <Star className="w-4 h-4 text-primary" />, label: 'Nível', value: user.level ?? 1 },
-          { icon: <Flame className="w-4 h-4 text-orange-500" />, label: 'Streak', value: `${user.streak ?? 0}d` },
-          { icon: <BookOpen className="w-4 h-4 text-blue-500" />, label: 'Capítulos Lidos', value: chaptersRead },
-          { icon: <MessageCircle className="w-4 h-4 text-emerald-500" />, label: 'Posts', value: communityPosts },
+          { icon: <MessageCircle className="w-4 h-4 text-purple-500" />, label: 'Reflexões', value: user.reflections_count || 0 },
+          { icon: <Flame className="w-4 h-4 text-orange-500" />, label: 'Freq. Acesso', value: `${user.streak ?? 0}d` },
+          { icon: <Brain className="w-4 h-4 text-emerald-500" />, label: 'Profundidade', value: user.depth_level || 'Iniciante' },
         ].map((stat, i) => (
           <Card key={i}>
             <CardContent className="pt-4 pb-3 px-4 flex items-center gap-3">
