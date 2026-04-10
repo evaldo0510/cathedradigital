@@ -143,11 +143,34 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         <div className="text-center space-y-4">
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 0.12 }}
+            animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 1.2 }}
-            className="text-6xl md:text-7xl leading-none select-none"
+            className="flex justify-center"
           >
-            ✝
+            <div className="relative group">
+              <div className="absolute inset-0 bg-primary/20 blur-2xl rounded-full scale-150 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <svg 
+                viewBox="0 0 100 100" 
+                className="w-16 h-16 md:w-20 md:h-20 text-primary/15 transition-all group-hover:text-primary/30 group-hover:scale-110"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle cx="50" cy="50" r="45" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" />
+                <path 
+                  d="M50 15V85M30 40H70" 
+                  stroke="currentColor" 
+                  strokeWidth="6" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                />
+                <path 
+                  d="M50 15L42 30M50 15L58 30" 
+                  stroke="currentColor" 
+                  strokeWidth="4" 
+                  strokeLinecap="round" 
+                />
+              </svg>
+            </div>
           </motion.div>
           <p className="text-[11px] font-medium uppercase tracking-[0.3em] text-muted-foreground/70">
             Cathedra Digital
