@@ -5,9 +5,10 @@ import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import { useNavigate } from 'react-router-dom';
+import { AppRoute } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
-import { Copy, Check, Plus, MessageSquare, Trash2, ChevronLeft } from 'lucide-react';
+import { Copy, Check, Plus, MessageSquare, Trash2, ChevronLeft, Compass } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface Message {
@@ -418,7 +419,7 @@ const StudyMode: React.FC = () => {
               onClick={() => navigate(AppRoute.JORNADAS)}
               className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-primary text-primary-foreground text-sm font-bold hover:opacity-90 transition-all shadow-lg shadow-primary/10"
             >
-              <Map className="w-4 h-4" /> Iniciar uma Jornada de Fé
+              <Compass className="w-4 h-4" /> Iniciar uma Jornada de Fé
             </button>
           </div>
         )}
