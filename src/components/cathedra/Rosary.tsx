@@ -234,7 +234,7 @@ const Rosary: React.FC = () => {
             ))}
           </div>
           <p className="text-xs text-secondary/40 text-center font-serif italic max-w-xs mx-auto leading-relaxed">Reze 3 Ave-Marias pelas virtudes da Fé, Esperança e Caridade, seguidas do Glória.</p>
-          <button onClick={() => setStep('mystery')} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-secondary/30 transition-all shadow-lg shadow-amber-900/20">
+          <button onClick={() => setStep('mystery')} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-secondary/30 transition-all shadow-lg shadow-primary/20">
             Iniciar 1º Mistério
           </button>
         </div>
@@ -261,7 +261,7 @@ const Rosary: React.FC = () => {
               variant="button"
             />
           </div>
-          <button onClick={() => setStep('decade')} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-secondary/30 transition-all shadow-lg shadow-amber-900/20">
+          <button onClick={() => setStep('decade')} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-secondary/30 transition-all shadow-lg shadow-primary/20">
             Rezar a Dezena
           </button>
         </div>
@@ -283,7 +283,7 @@ const Rosary: React.FC = () => {
                     onClick={() => setAveCount(i + 1)}
                     className={`w-7 h-7 rounded-full border-2 transition-all duration-300 ${
                       i < aveCount
-                        ? 'bg-secondary border-secondary shadow-[0_0_15px_rgba(251,191,36,0.6)] scale-110'
+                        ? 'bg-secondary border-secondary shadow-[0_0_15px_rgba(200,169,106,0.6)] scale-110'
                         : 'bg-transparent border-secondary/25 hover:border-secondary/50'
                     }`}
                   />
@@ -316,7 +316,7 @@ const Rosary: React.FC = () => {
             } else {
               setStep('closing');
             }
-          }} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-secondary/30 transition-all shadow-lg shadow-amber-900/20">
+          }} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-secondary/30 transition-all shadow-lg shadow-primary/20">
             {currentMystery < 4 ? `Próximo Mistério` : 'Concluir Rosário'}
           </button>
         </div>
@@ -348,7 +348,7 @@ const Rosary: React.FC = () => {
           </div>
         </div>
         <button onClick={() => { setIsPraying(false); setSelectedSet(null); }}
-          className="w-full py-4 bg-secondary text-amber-950 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-secondary transition-all shadow-xl shadow-secondary/20">
+          className="w-full py-4 bg-secondary text-primary rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-secondary transition-all shadow-xl shadow-secondary/20">
           <Icons.Cross className="w-4 h-4 inline mr-2" /> Amém — Finalizar
         </button>
       </div>
