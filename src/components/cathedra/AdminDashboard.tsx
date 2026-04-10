@@ -101,6 +101,23 @@ const AdminDashboard: React.FC = () => {
         const pwaOpens = metrics.filter(m => m.metric_type === 'pwa_open').length;
         const totalRevenue = transactions.reduce((acc, curr) => acc + Number(curr.amount), 0);
 
+        // New CRM specific stats
+        const now = new Date();
+        const activeToday = allProfiles.filter(p => {
+          if (!p.last_visit) return false;
+          const visitDate = new Date(p.last_visit);
+          return visitDate.toDateString() === now.toDateString();
+        }).length;
+
+        const inactiveUsers = allProfiles.filter(p => {
+          if (!p.last_visit) return true;
+          const diff = (now.getTime() - new Date(p.last_visit).getTime()) / (1000 * 60 * 60);
+          return diff >= 48;
+        }).length;
+
+        const journeysInProgress = (journeysRes.data || []).length;
+        const returnRate = allProfiles.length > 0 ? ((allProfiles.length - inactiveUsers) / allProfiles.length) * 100 : 0;
+
         const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
         const currentYear = new Date().getFullYear();
         
