@@ -41,36 +41,36 @@ const MAIN_DOORS = [
     description: 'Sagrada Escritura',
     icon: Icons.Bible,
     route: AppRoute.BIBLE,
-    gradient: 'from-primary/5 to-primary/[0.02]',
+    gradient: 'from-primary/5 to-transparent',
     iconColor: 'text-primary',
-    borderColor: 'border-primary/10 hover:border-primary/30',
+    borderColor: 'border-border hover:border-secondary/50',
   },
   {
     label: 'Liturgia',
     description: 'Leituras do dia',
     icon: Icons.Liturgy,
     route: AppRoute.LITURGIA,
-    gradient: 'from-primary/5 to-primary/[0.02]',
+    gradient: 'from-primary/5 to-transparent',
     iconColor: 'text-primary',
-    borderColor: 'border-primary/10 hover:border-primary/30',
+    borderColor: 'border-border hover:border-secondary/50',
   },
   {
     label: 'Jornadas',
     description: 'Trilhas de formação',
     icon: Icons.Journeys,
     route: AppRoute.JORNADAS,
-    gradient: 'from-primary/5 to-primary/[0.02]',
+    gradient: 'from-primary/5 to-transparent',
     iconColor: 'text-primary',
-    borderColor: 'border-primary/10 hover:border-primary/30',
+    borderColor: 'border-border hover:border-secondary/50',
   },
   {
     label: 'Comunidade',
     description: 'Caminhe junto',
     icon: Icons.Community,
     route: AppRoute.COMMUNITY,
-    gradient: 'from-primary/5 to-primary/[0.02]',
+    gradient: 'from-primary/5 to-transparent',
     iconColor: 'text-primary',
-    borderColor: 'border-primary/10 hover:border-primary/30',
+    borderColor: 'border-border hover:border-secondary/50',
   },
 ];
 
@@ -140,63 +140,50 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
 
       {/* ═══ HEADER ═══ */}
       <FadeUp>
-        <div className="text-center space-y-4">
+        <div className="text-center space-y-6">
           <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
+            initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 1.2 }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
             className="flex justify-center"
           >
             <div className="relative group">
-              <div className="absolute inset-0 bg-primary/20 blur-2xl rounded-full scale-150 opacity-0 group-hover:opacity-100 transition-opacity" />
-              <svg 
-                viewBox="0 0 100 100" 
-                className="w-20 h-20 md:w-24 md:h-24 text-primary transition-all group-hover:scale-110"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path 
-                  d="M50 20C50 20 20 20 20 50C20 80 50 80 50 80M50 20C50 20 80 20 80 50C80 80 50 80 50 80M50 15V85" 
-                  stroke="currentColor" 
-                  strokeWidth="2" 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                />
-                <circle cx="50" cy="50" r="10" stroke="currentColor" strokeWidth="1.5" className="text-secondary" />
-                <path d="M50 45V55M45 50H55" stroke="currentColor" strokeWidth="1" strokeLinecap="round" className="text-secondary" />
-              </svg>
+              <div className="absolute inset-0 bg-secondary/10 blur-3xl rounded-full scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+              <Icons.Saints className="w-16 h-16 md:w-20 md:h-20 text-secondary transition-all duration-700 group-hover:rotate-12" />
             </div>
           </motion.div>
-          <p className="text-[11px] font-medium uppercase tracking-[0.3em] text-muted-foreground/70">
-            Cathedra Digital
-          </p>
-          <h1 className="text-3xl md:text-5xl font-display font-bold text-foreground leading-tight tracking-tight">
-            Pax et Bonum
-          </h1>
+          <div className="space-y-2">
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-secondary opacity-80">
+              Cathedra Digital
+            </p>
+            <h1 className="text-4xl md:text-6xl font-display font-black text-primary leading-tight tracking-tight">
+              Pax et Bonum
+            </h1>
+          </div>
 
           {/* Streak & XP */}
-          <div className="flex items-center justify-center gap-3 flex-wrap">
+          <div className="flex items-center justify-center gap-4 flex-wrap pt-2">
             {streak > 0 && (
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary/10 border border-secondary/20">
-                <Flame className="w-3.5 h-3.5 text-secondary" />
-                <span className="text-xs font-bold text-secondary">{streak} {streak === 1 ? 'dia' : 'dias'}</span>
+              <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-secondary/10 border border-secondary/20 shadow-sm">
+                <Icons.Zap className="w-4 h-4 text-secondary" />
+                <span className="text-xs font-black text-primary uppercase tracking-wider">{streak} {streak === 1 ? 'dia' : 'dias'}</span>
               </div>
             )}
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
-              <Zap className="w-3.5 h-3.5 text-primary" />
-              <span className="text-xs font-bold text-primary">{profile?.xp || 0} XP</span>
+            <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-primary/5 border border-border shadow-sm">
+              <Icons.Star className="w-4 h-4 text-primary" />
+              <span className="text-xs font-black text-primary uppercase tracking-wider">{profile?.xp || 0} XP</span>
             </div>
           </div>
         </div>
       </FadeUp>
 
       {/* ═══ DAILY QUOTE ═══ */}
-      <FadeUp delay={0.05}>
-        <div className="text-center py-5 border-y border-border/40 space-y-1.5">
-          <p className="text-base md:text-lg font-serif italic text-foreground/80 leading-relaxed max-w-md mx-auto">
+      <FadeUp delay={0.1}>
+        <div className="text-center py-8 border-y border-border/60 space-y-3">
+          <p className="text-lg md:text-xl font-serif italic text-primary leading-relaxed max-w-lg mx-auto">
             {dailyQuote.text}
           </p>
-          <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-primary/70">
+          <p className="text-[11px] font-black uppercase tracking-[0.3em] text-secondary opacity-80">
             — {dailyQuote.author}
           </p>
         </div>
