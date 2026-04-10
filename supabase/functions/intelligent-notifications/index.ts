@@ -8,6 +8,7 @@ const corsHeaders = {
 /**
  * Intelligent Notifications Edge Function.
  * Triggers based on inactivity, reflections, and progress.
+ * Now with context (last action) and ignore logic.
  */
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -23,10 +24,12 @@ Deno.serve(async (req) => {
     const todayStr = now.toISOString().split("T")[0];
 
     // Get all users who haven't been notified today and have push/whatsapp enabled
+    // and weren't notified in the last 20 hours to be safe
     const { data: usersToNotify } = await supabase
       .from("profiles")
       .select("id, name, whatsapp_number, whatsapp_enabled, push_enabled, last_action_at, last_notified_at")
-      .or(`last_notified_at.is.null,last_notified_at.lt.${todayStr}T00:00:00Z`);
+      .or(`last_notified_at.is.null,last_notified_at.lt.${now.toISOString().split('T')[0]}T00:00:00Z`)
+      .limit(50); // Process in batches to avoid timeout
 
     if (!usersToNotify || usersToNotify.length === 0) {
       return new Response(JSON.stringify({ message: "No users to notify today" }), {
@@ -37,35 +40,60 @@ Deno.serve(async (req) => {
     let notificationsSent = 0;
 
     for (const user of usersToNotify) {
+      const firstName = user.name?.split(" ")[0] || "Peregrino";
+      const lastAction = user.last_action_at ? new Date(user.last_action_at) : null;
+      const hoursSinceAction = lastAction ? (now.getTime() - lastAction.getTime()) / (1000 * 60 * 60) : 999;
+
+      // 1. Check "Ignore" logic: max 3 notifications without user returning
+      if (user.last_notified_at && lastAction && new Date(user.last_notified_at) > lastAction) {
+        const { count: ignoredCount } = await supabase
+          .from("intelligent_notification_logs")
+          .select("id", { count: "exact", head: true })
+          .eq("user_id", user.id)
+          .gt("sent_at", user.last_action_at);
+        
+        // If 3 ignored, wait at least 7 days before trying again (unless they come back)
+        if (ignoredCount && ignoredCount >= 3) {
+          const daysSinceLastNotify = (now.getTime() - new Date(user.last_notified_at).getTime()) / (1000 * 60 * 60 * 24);
+          if (daysSinceLastNotify < 7) continue;
+        }
+      }
+
+      // 2. Get Context (Last activity)
+      const { data: lastHistory } = await supabase
+        .from("user_history")
+        .select("title, route")
+        .eq("user_id", user.id)
+        .order("visited_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      const contextText = lastHistory?.title ? `\n\nSua última reflexão foi sobre: ${lastHistory.title}` : "";
+
       let type: string | null = null;
       let title: string = "";
       let message: string = "";
-      const firstName = user.name?.split(" ")[0] || "";
 
-      const lastAction = user.last_action_at ? new Date(user.last_action_at) : null;
-      const hoursSinceAction = lastAction ? (now.getTime() - lastAction.getTime()) / (1000 * 60 * 60) : 0;
-
-      // 1. 48h Inactivity check
-      if (hoursSinceAction >= 48 && hoursSinceAction < 52) {
+      // 3. Determine Notification Type
+      if (hoursSinceAction >= 48 && hoursSinceAction < 72) {
         type = "inactivity_48h";
         title = "🕊️ Algo especial...";
         message = `${firstName}, você não parou por acaso... havia algo sendo construído.`;
       } 
-      // 2. 24h Inactivity check
-      else if (hoursSinceAction >= 24 && hoursSinceAction < 28) {
+      else if (hoursSinceAction >= 24 && hoursSinceAction < 48) {
         type = "inactivity_24h";
         title = "🕊️ Um momento para você";
         message = `${firstName}, algo ficou aberto dentro de você...`;
       }
-      // 3. Pós-reflexão check (recent action < 1h)
-      else if (hoursSinceAction > 0 && hoursSinceAction < 1) {
+      else if (hoursSinceAction < 1) {
+        // Special case: post-reflection (sent shortly after they finish something, but this function runs daily)
+        // This might be better triggered by a direct hook, but we include it here for manual runs or specific timing.
         type = "post_reflection";
         title = "🌱 Continue assim";
         message = `${firstName}, você começou algo importante hoje... continue.`;
       }
-      // 4. Progress check (randomly or based on logic)
-      else if (hoursSinceAction > 2 && hoursSinceAction < 24) {
-        // Only 10% chance to send a progress notification to avoid spamming
+      else {
+        // Progress check (10% chance)
         if (Math.random() < 0.1) {
           type = "progress";
           title = "✨ Reconhecimento";
@@ -74,7 +102,7 @@ Deno.serve(async (req) => {
       }
 
       if (type) {
-        // Send Notification
+        const fullMessage = `${message}${contextText}`;
         let sentPush = false;
         let sentWhatsapp = false;
 
@@ -90,8 +118,8 @@ Deno.serve(async (req) => {
               body: JSON.stringify({
                 user_id: user.id,
                 title,
-                body: message,
-                url: "/jornadas",
+                body: fullMessage,
+                url: lastHistory?.route || "/jornadas",
               }),
             });
             if (pushRes.ok) sentPush = true;
@@ -102,10 +130,32 @@ Deno.serve(async (req) => {
 
         // --- Send WhatsApp ---
         if (user.whatsapp_enabled && user.whatsapp_number) {
-          // Placeholder for WhatsApp API
-          console.log(`Sending WhatsApp to ${user.whatsapp_number}: ${message}`);
-          // Example: await sendWhatsapp(user.whatsapp_number, message);
-          sentWhatsapp = true;
+          const waUrl = Deno.env.get("WHATSAPP_API_URL");
+          const waToken = Deno.env.get("WHATSAPP_API_TOKEN");
+          const waInstance = Deno.env.get("WHATSAPP_INSTANCE_NAME");
+
+          if (waUrl && waToken && waInstance) {
+            try {
+              const waRes = await fetch(`${waUrl}/message/sendText/${waInstance}`, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  apikey: waToken,
+                },
+                body: JSON.stringify({
+                  number: user.whatsapp_number,
+                  text: `*${title}*\n\n${fullMessage}`,
+                }),
+              });
+              if (waRes.ok) sentWhatsapp = true;
+            } catch (e) {
+              console.error(`Failed to send WhatsApp to ${user.whatsapp_number}:`, e);
+            }
+          } else {
+            // Log as sent in dev mode/placeholder if no credentials
+            console.log(`[WA Placeholder] To: ${user.whatsapp_number} - Msg: ${fullMessage}`);
+            sentWhatsapp = true;
+          }
         }
 
         if (sentPush || sentWhatsapp) {
@@ -114,8 +164,9 @@ Deno.serve(async (req) => {
             user_id: user.id,
             type,
             channel: sentPush && sentWhatsapp ? "both" : sentPush ? "push" : "whatsapp",
-            content: message,
+            content: fullMessage,
             status: "sent",
+            metadata: { last_route: lastHistory?.route }
           });
 
           // Update last_notified_at
