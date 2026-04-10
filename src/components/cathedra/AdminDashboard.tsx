@@ -106,8 +106,7 @@ const AdminDashboard: React.FC = () => {
         const totalRevenue = transactions.reduce((acc, curr) => acc + Number(curr.amount), 0);
 
         // New CRM specific stats
-        // now is already declared above
-        // const now = new Date();
+        const now = new Date();
         const activeToday = allProfiles.filter(p => {
           if (!p.last_visit) return false;
           const visitDate = new Date(p.last_visit);
@@ -134,7 +133,6 @@ const AdminDashboard: React.FC = () => {
           return { name: month, total: count };
         }).slice(0, new Date().getMonth() + 1);
 
-        const now = new Date();
         const revenueData = [3, 2, 1, 0].map(weeksAgo => {
           const start = new Date(now);
           start.setDate(now.getDate() - (weeksAgo + 1) * 7);
