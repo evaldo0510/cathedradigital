@@ -161,12 +161,13 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
                   stroke="currentColor" 
                   strokeWidth="6" 
                   strokeLinecap="round" 
-                  strokeLinejoin="round" 
                 />
+                {/* Cross caps/serifs */}
+                <path d="M44 15H56M44 85H56M30 34V46M70 34V46" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
                 <path 
-                  d="M50 15L42 30M50 15L58 30" 
+                  d="M50 15L42 24M50 15L58 24" 
                   stroke="currentColor" 
-                  strokeWidth="4" 
+                  strokeWidth="3" 
                   strokeLinecap="round" 
                 />
               </svg>
