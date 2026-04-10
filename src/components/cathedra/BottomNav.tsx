@@ -1,7 +1,7 @@
 import React, { useCallback, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AppRoute } from '../../types';
-import { Sun, Compass, BookOpen, LayoutGrid, User } from 'lucide-react';
+import { Icons } from '@/constants';
 import { prefetchRoute } from '@/lib/prefetch';
 
 /* ── Ripple helper ── */
@@ -81,11 +81,11 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   const triggerRipple = useRipple();
 
   const items = [
-    { label: 'Hoje', icon: <Sun />, route: AppRoute.HOJE },
-    { label: 'Jornadas', icon: <Compass />, route: AppRoute.JORNADAS },
-    { label: 'Biblioteca', icon: <BookOpen />, route: AppRoute.BIBLIOTECA },
-    { label: 'Tudo', icon: <LayoutGrid />, route: '__sidebar__' },
-    { label: 'Perfil', icon: <User />, route: AppRoute.PROFILE },
+    { label: 'Hoje', icon: <Icons.Liturgy />, route: AppRoute.HOJE },
+    { label: 'Jornadas', icon: <Icons.Journeys />, route: AppRoute.JORNADAS },
+    { label: 'Biblioteca', icon: <Icons.Bible />, route: AppRoute.BIBLIOTECA },
+    { label: 'Tudo', icon: <Icons.Menu />, route: '__sidebar__' },
+    { label: 'Perfil', icon: <Icons.Users />, route: AppRoute.PROFILE },
   ];
 
   return (
