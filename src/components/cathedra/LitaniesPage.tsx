@@ -219,7 +219,7 @@ const LITANIES: Litany[] = [
 const CATEGORY_COLORS: Record<string, string> = {
   'Jesus Cristo': 'bg-rose-50 text-rose-700 border-rose-100',
   'Virgem Maria': 'bg-sky-50 text-sky-700 border-sky-100',
-  'Santos': 'bg-amber-50 text-amber-700 border-amber-100',
+  'Santos': 'bg-amber-50 text-amber-700 border-secondary',
 };
 
 const LitaniesPage: React.FC = () => {

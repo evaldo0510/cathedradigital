@@ -82,7 +82,7 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
   const isNew = (user.reflections_count || 0) <= 1;
 
   const statusLabel = isInactive ? 'Inativo' : isDeep ? 'Profundo' : isNew ? 'Novo' : 'Ativo';
-  const statusColor = isInactive ? 'text-destructive' : isDeep ? 'text-primary' : isNew ? 'text-blue-500' : 'text-emerald-500';
+  const statusColor = isInactive ? 'text-destructive' : isDeep ? 'text-primary' : isNew ? 'text-primary' : 'text-primary';
 
   return (
     <div className="space-y-6">
@@ -126,9 +126,9 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
           { icon: <Star className="w-4 h-4 text-primary" />, label: 'Nível', value: user.level ?? 1 },
-          { icon: <MessageCircle className="w-4 h-4 text-purple-500" />, label: 'Reflexões', value: user.reflections_count || 0 },
+          { icon: <MessageCircle className="w-4 h-4 text-primary" />, label: 'Reflexões', value: user.reflections_count || 0 },
           { icon: <Flame className="w-4 h-4 text-orange-500" />, label: 'Freq. Acesso', value: `${user.streak ?? 0}d` },
-          { icon: <Brain className="w-4 h-4 text-emerald-500" />, label: 'Profundidade', value: user.depth_level || 'Iniciante' },
+          { icon: <Brain className="w-4 h-4 text-primary" />, label: 'Profundidade', value: user.depth_level || 'Iniciante' },
         ].map((stat, i) => (
           <Card key={i}>
             <CardContent className="pt-4 pb-3 px-4 flex items-center gap-3">
@@ -146,7 +146,7 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
         {/* Diagnosis */}
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm flex items-center gap-2"><Brain className="w-4 h-4 text-purple-500" /> Diagnóstico Espiritual</CardTitle>
+            <CardTitle className="text-sm flex items-center gap-2"><Brain className="w-4 h-4 text-primary" /> Diagnóstico Espiritual</CardTitle>
           </CardHeader>
           <CardContent>
             {diagnosis ? (

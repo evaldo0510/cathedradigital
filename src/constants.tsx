@@ -104,10 +104,11 @@ import {
 import { cn } from './lib/utils';
 
 export const COLORS = {
-  primary: '#0A192F', // Azul escuro profundo
-  secondary: '#D4AF37', // Dourado suave
-  background: '#F8FAFC', // Neutro claro
-  accent: '#C5A02D',
+  primary: '#0B1F3A',
+  secondary: '#C8A96A',
+  background: '#FFFFFF',
+  text: '#1A1A1A',
+  accent: '#C8A96A',
 };
 
 export const Logo = forwardRef<HTMLDivElement, { className?: string, variant?: 'gold' | 'light' | 'dark' }>(({ 
@@ -117,7 +118,7 @@ export const Logo = forwardRef<HTMLDivElement, { className?: string, variant?: '
   const colors = {
     gold: '#C8A96A',
     light: '#FFFFFF',
-    dark: '#0A192F'
+    dark: '#0B1F3A'
   };
 
   const currentColor = colors[variant];
@@ -130,15 +131,12 @@ export const Logo = forwardRef<HTMLDivElement, { className?: string, variant?: '
         xmlns="http://www.w3.org/2000/svg"
         className="w-full h-full transition-all duration-700 group-hover:scale-105"
       >
-        {/* Central Vertical Axis */}
         <path 
           d="M50 20V80" 
           stroke={currentColor} 
           strokeWidth="3.5" 
           strokeLinecap="round" 
         />
-        
-        {/* Left Arch (Refined Proportion) */}
         <path 
           d="M50 35C40 35 32 42 32 50C32 58 40 65 50 65" 
           stroke={currentColor} 
@@ -146,8 +144,6 @@ export const Logo = forwardRef<HTMLDivElement, { className?: string, variant?: '
           strokeLinecap="round" 
           strokeLinejoin="round"
         />
-        
-        {/* Right Arch (Symmetrical) */}
         <path 
           d="M50 35C60 35 68 42 68 50C68 58 60 65 50 65" 
           stroke={currentColor} 
@@ -155,14 +151,10 @@ export const Logo = forwardRef<HTMLDivElement, { className?: string, variant?: '
           strokeLinecap="round" 
           strokeLinejoin="round"
         />
-
-        {/* Top Diamond / Cross Head */}
         <path 
           d="M50 10L56 20L50 26L44 20L50 10Z" 
           fill={currentColor}
         />
-
-        {/* Horizontal Detail Bars */}
         <path 
           d="M42 42H58" 
           stroke={currentColor} 
@@ -175,8 +167,6 @@ export const Logo = forwardRef<HTMLDivElement, { className?: string, variant?: '
           strokeWidth="2" 
           strokeLinecap="round" 
         />
-
-        {/* Bottom Base Detail */}
         <path 
           d="M40 80H60" 
           stroke={currentColor} 
@@ -185,7 +175,7 @@ export const Logo = forwardRef<HTMLDivElement, { className?: string, variant?: '
         />
       </svg>
       {variant === 'gold' && (
-        <div className="absolute inset-0 bg-[#C8A96A]/5 blur-xl rounded-full -z-10 opacity-0 group-hover:opacity-100 transition-opacity" />
+        <div className="absolute inset-0 bg-secondary/5 blur-xl rounded-full -z-10 opacity-0 group-hover:opacity-100 transition-opacity" />
       )}
     </div>
   );
@@ -209,7 +199,6 @@ const createIcon = (IconComponent: any) =>
   ));
 
 export const Icons = {
-  // Core UI
   Home: createIcon(Layout),
   Bible: createIcon(BookOpen),
   HolyBible: createIcon(BookOpen),
@@ -240,8 +229,6 @@ export const Icons = {
   Share: createIcon(Share2),
   Audio: createIcon(Volume2),
   Stop: createIcon(Square),
-
-  // Lucide Names (Direct)
   BookOpen: createIcon(BookOpen),
   Cross: createIcon(Cross),
   Map: createIcon(Map),

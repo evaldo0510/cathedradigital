@@ -79,7 +79,7 @@ const ENRICHMENTS: Record<string, TermEnrichment> = {
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
-  'Eucaristia': 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300',
+  'Eucaristia': 'bg-secondary text-amber-800 dark:bg-amber-900/30 dark:text-secondary',
   'Teologia Sistemática': 'bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-300',
   'Igreja': 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300',
   'Sacramentos': 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
@@ -197,7 +197,7 @@ const GlossaryPage: React.FC = () => {
       <div className="space-y-3">
         {loading ? (
           <div className="flex justify-center py-12">
-            <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+            <div className="w-8 h-8 border-2 border-secondary border-t-transparent rounded-full animate-spin" />
           </div>
         ) : filtered.length > 0 ? (
           filtered.map(term => {

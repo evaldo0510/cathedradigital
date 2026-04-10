@@ -58,8 +58,8 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
 
   const segments: { key: Segment; label: string; icon: React.ReactNode; color: string }[] = [
     { key: 'all', label: 'Todos', icon: <Users className="w-4 h-4" />, color: 'text-foreground' },
-    { key: 'new', label: 'Novo', icon: <UserCheck className="w-4 h-4" />, color: 'text-blue-500' },
-    { key: 'active', label: 'Ativo', icon: <Flame className="w-4 h-4" />, color: 'text-emerald-500' },
+    { key: 'new', label: 'Novo', icon: <UserCheck className="w-4 h-4" />, color: 'text-primary' },
+    { key: 'active', label: 'Ativo', icon: <Flame className="w-4 h-4" />, color: 'text-primary' },
     { key: 'deep', label: 'Profundo', icon: <Crown className="w-4 h-4" />, color: 'text-primary' },
     { key: 'inactive', label: 'Inativo', icon: <Clock className="w-4 h-4" />, color: 'text-destructive' },
   ];
@@ -81,8 +81,8 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
     if (hoursSince(u.last_visit) >= 48) return <Badge className="bg-destructive/15 text-destructive border-destructive/30 text-[10px]">Inativo</Badge>;
     if (hoursSince(u.last_visit) >= 48) return <Badge className="bg-destructive/15 text-destructive border-destructive/30 text-[10px]">Inativo</Badge>;
     if ((u.reflections_count || 0) > 10) return <Badge className="bg-primary/15 text-primary border-primary/30 text-[10px]">Profundo</Badge>;
-    if ((u.reflections_count || 0) <= 1) return <Badge className="bg-blue-500/15 text-blue-600 border-blue-500/30 text-[10px]">Novo</Badge>;
-    return <Badge className="bg-emerald-500/15 text-emerald-600 border-emerald-500/30 text-[10px]">Ativo</Badge>;
+    if ((u.reflections_count || 0) <= 1) return <Badge className="bg-primary/15 text-primary border-primary/30 text-[10px]">Novo</Badge>;
+    return <Badge className="bg-primary/15 text-primary border-primary/30 text-[10px]">Ativo</Badge>;
   };
 
   const exportCsv = useCallback(() => {

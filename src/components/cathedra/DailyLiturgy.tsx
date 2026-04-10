@@ -47,7 +47,7 @@ const SEASON_NAMES: Record<string, string> = {
 };
 
 const COLOUR_MAP: Record<string, string> = {
-  green: 'bg-emerald-500 ring-emerald-500/20',
+  green: 'bg-primary ring-primary/20',
   violet: 'bg-violet-600 ring-violet-600/20',
   white: 'bg-slate-100 border border-slate-300 ring-slate-100/20',
   red: 'bg-red-600 ring-red-600/20',
@@ -253,7 +253,7 @@ const DailyLiturgy: React.FC = () => {
 
       <div className="bg-card border border-border rounded-[2.5rem] p-8 md:p-16 space-y-12 shadow-sm relative overflow-hidden">
         {isLoading ? (
-          <div className="flex justify-center py-20"><Loader2 className="w-10 h-10 text-primary animate-spin" /></div>
+          <div className="flex justify-center py-20"><Loader2 className="w-10 h-10 text-secondary animate-spin" /></div>
         ) : error ? (
           <div className="text-center py-16 space-y-4"><Cloud className="w-12 h-12 text-muted-foreground mx-auto opacity-20" /><p className="text-primary italic font-serif">{error}</p></div>
         ) : (

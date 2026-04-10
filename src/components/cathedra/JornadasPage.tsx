@@ -20,7 +20,7 @@ const DIFFICULTY_LABELS: Record<string, string> = {
 
 const DIFFICULTY_COLORS: Record<string, string> = {
   iniciante: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300',
-  intermediario: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300',
+  intermediario: 'bg-secondary text-amber-800 dark:bg-amber-900/30 dark:text-secondary',
   'avançado': 'bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-300',
   avancado: 'bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-300',
 };
@@ -139,7 +139,7 @@ const JornadasPage: React.FC = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[40vh]">
-        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-secondary border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }

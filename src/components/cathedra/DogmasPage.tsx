@@ -234,7 +234,7 @@ const DOGMAS: Dogma[] = [
 ];
 
 const CATEGORY_COLORS: Record<string, string> = {
-  'Deus': 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300',
+  'Deus': 'bg-secondary text-amber-800 dark:bg-amber-900/30 dark:text-secondary',
   'Cristologia': 'bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-300',
   'Mariologia': 'bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-300',
   'Sacramentos': 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
@@ -247,7 +247,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 };
 
 const REF_STYLES: Record<string, { icon: React.ReactNode; color: string }> = {
-  bible: { icon: <Icons.Book className="w-3 h-3" />, color: 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800 dark:hover:bg-amber-900/50' },
+  bible: { icon: <Icons.Book className="w-3 h-3" />, color: 'bg-amber-50 text-amber-700 border-secondary hover:bg-secondary dark:bg-amber-950/40 dark:text-secondary dark:border-amber-800 dark:hover:bg-amber-900/50' },
   catechism: { icon: <Icons.Heart className="w-3 h-3" />, color: 'bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-100 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800 dark:hover:bg-rose-900/50' },
   magisterium: { icon: <Icons.Globe className="w-3 h-3" />, color: 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800 dark:hover:bg-emerald-900/50' },
 };

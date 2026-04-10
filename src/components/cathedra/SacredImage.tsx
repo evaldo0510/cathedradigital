@@ -65,7 +65,7 @@ const SacredImage: React.FC<SacredImageProps> = ({ src, alt, className, priority
       {/* Loading spinner */}
       {!isLoaded && (
         <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
-          <Icons.Cross className="w-10 h-10 opacity-20 text-[#d4af37] animate-spin" style={{ animationDuration: '12s' }} />
+          <Icons.Cross className="w-10 h-10 opacity-20 text-secondary animate-spin" style={{ animationDuration: '12s' }} />
         </div>
       )}
 

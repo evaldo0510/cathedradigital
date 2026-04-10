@@ -312,7 +312,7 @@ const CommunityPage: React.FC = () => {
     );
   }
 
-  const MEDAL_COLORS = ['text-yellow-500', 'text-gray-400', 'text-amber-700'];
+  const MEDAL_COLORS = ['text-secondary', 'text-gray-400', 'text-amber-700'];
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">

@@ -89,7 +89,7 @@ const MagisteriumPopover: React.FC<MagisteriumPopoverProps> = ({
       >
         <div className="p-3 border-b border-border bg-emerald-50 dark:bg-emerald-950/40 flex items-center justify-between">
           <div className="flex items-center gap-2 min-w-0">
-            <Icons.Globe className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+            <Icons.Globe className="w-3.5 h-3.5 text-primary dark:text-emerald-400 shrink-0" />
             <span className="text-xs font-black uppercase tracking-wider text-emerald-700 dark:text-emerald-300 truncate">
               {title || label}
             </span>
@@ -97,7 +97,7 @@ const MagisteriumPopover: React.FC<MagisteriumPopoverProps> = ({
           {onNavigate && (
             <button
               onClick={() => onNavigate(documentName)}
-              className="text-[10px] font-bold text-muted-foreground hover:text-emerald-600 transition-colors flex items-center gap-1 shrink-0 ml-2"
+              className="text-[10px] font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 shrink-0 ml-2"
             >
               Abrir completo
               <Icons.ArrowDown className="w-3 h-3 -rotate-90" />

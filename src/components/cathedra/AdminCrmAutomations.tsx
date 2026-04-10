@@ -26,7 +26,7 @@ const automations = [
     id: 'retention_3d',
     name: 'Reengajamento (3 dias)',
     description: 'Notifica usuários inativos há 3+ dias com conteúdo personalizado.',
-    icon: <UserMinus className="w-5 h-5 text-amber-500" />,
+    icon: <UserMinus className="w-5 h-5 text-secondary" />,
     schedule: 'Diário — 10:00',
     status: 'active' as const,
     edgeFunction: 'retention-notifications',
@@ -35,7 +35,7 @@ const automations = [
     id: 'community_digest',
     name: 'Resumo da Comunidade',
     description: 'Notificação semanal com destaques da comunidade.',
-    icon: <MessageCircle className="w-5 h-5 text-blue-500" />,
+    icon: <MessageCircle className="w-5 h-5 text-primary" />,
     schedule: 'Semanal — Domingo 09:00',
     status: 'inactive' as const,
     edgeFunction: null,
@@ -125,7 +125,7 @@ const AdminCrmAutomations: React.FC = () => {
                     )}
                   </div>
                   <Badge className={auto.status === 'active'
-                    ? 'bg-emerald-500/15 text-emerald-600 border-emerald-500/30'
+                    ? 'bg-primary/15 text-primary border-primary/30'
                     : 'bg-muted text-muted-foreground'
                   }>
                     {auto.status === 'active' ? (

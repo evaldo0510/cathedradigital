@@ -10,7 +10,7 @@ export const STEPS = [
     instruction: 'Leia o texto sagrado com atenção, lentamente, como quem escuta a voz de Deus. Repita a leitura quantas vezes precisar.',
     prompt: 'O que diz o texto? Quais palavras ou frases chamam sua atenção?',
     icon: Book,
-    color: 'text-sky-500 bg-sky-500/10',
+    color: 'text-primary bg-primary/10',
     duration: '5-10 min',
   },
   {
@@ -20,7 +20,7 @@ export const STEPS = [
     instruction: 'Reflita sobre o que leu. Mastigue a Palavra como um alimento espiritual. Deixe-a penetrar no coração e na mente.',
     prompt: 'O que Deus está me dizendo através deste texto? Como isso se aplica à minha vida?',
     icon: Brain,
-    color: 'text-rose-500 bg-rose-500/10',
+    color: 'text-secondary bg-secondary/10',
     duration: '10-15 min',
   },
   {
@@ -30,7 +30,7 @@ export const STEPS = [
     instruction: 'Responda a Deus com a oração que brota do coração. Fale com Ele sobre o que a meditação suscitou em você.',
     prompt: 'O que desejo dizer a Deus? Que graça pedir? Que louvor ou agradecimento oferecer?',
     icon: Sparkles,
-    color: 'text-amber-500 bg-amber-500/10',
+    color: 'text-secondary bg-secondary/10',
     duration: '5-10 min',
   },
   {
@@ -50,7 +50,7 @@ export const STEPS = [
     instruction: 'Leve a Palavra para a vida concreta. Que resolução prática você faz a partir deste encontro com Deus?',
     prompt: 'O que vou fazer hoje como resposta à Palavra de Deus?',
     icon: Zap,
-    color: 'text-emerald-500 bg-emerald-500/10',
+    color: 'text-primary bg-primary/10',
     duration: '2-5 min',
   },
 ];

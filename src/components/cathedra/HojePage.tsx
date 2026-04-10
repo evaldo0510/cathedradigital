@@ -591,7 +591,7 @@ const HojePage: React.FC = () => {
             <CardContent className="space-y-4">
               {isAnalyzing && !logosResponse ? (
                 <div className="flex items-center gap-3 py-6">
-                  <Icons.Loader className="w-6 h-6 text-primary animate-spin" />
+                  <Icons.Loader className="w-6 h-6 text-secondary animate-spin" />
                   <p className="text-sm text-muted-foreground animate-pulse font-medium">Logos está refletindo sobre sua partilha...</p>
                 </div>
               ) : (
@@ -613,9 +613,9 @@ const HojePage: React.FC = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {[
                         { key: 'ansiedade', label: 'Ansiedade', color: 'bg-orange-500', icon: <Icons.Flame className="w-3 h-3" /> },
-                        { key: 'confusao', label: 'Confusão', color: 'bg-blue-500', icon: <Icons.Compass className="w-3 h-3" /> },
+                        { key: 'confusao', label: 'Confusão', color: 'bg-primary', icon: <Icons.Compass className="w-3 h-3" /> },
                         { key: 'dor_emocional', label: 'Dor Emocional', color: 'bg-red-500', icon: <Icons.Moon className="w-3 h-3" /> },
-                        { key: 'busca_espiritual', label: 'Busca Espiritual', color: 'bg-emerald-500', icon: <Icons.Sparkles className="w-3 h-3" /> },
+                        { key: 'busca_espiritual', label: 'Busca Espiritual', color: 'bg-primary', icon: <Icons.Sparkles className="w-3 h-3" /> },
                       ].map((state) => (
                         <div key={state.key} className="space-y-1.5">
                           <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
