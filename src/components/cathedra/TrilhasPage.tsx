@@ -84,9 +84,9 @@ const TRAILS: Trail[] = [
 ];
 
 const LEVEL_COLORS: Record<string, string> = {
-  'Iniciante': 'bg-green-500/10 text-green-700 dark:text-green-300',
-  'Intermediário': 'bg-secondary/10 text-amber-700 dark:text-secondary',
-  'Avançado': 'bg-red-500/10 text-red-700 dark:text-red-300',
+  'Iniciante': 'bg-primary/5 text-primary border border-primary/20',
+  'Intermediário': 'bg-secondary/10 text-secondary border border-secondary/20',
+  'Avançado': 'bg-primary/20 text-primary font-bold border border-primary/30',
 };
 
 const STORAGE_KEY = 'cathedra-trail-progress';

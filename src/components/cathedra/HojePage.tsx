@@ -612,9 +612,9 @@ const HojePage: React.FC = () => {
                     
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {[
-                        { key: 'ansiedade', label: 'Ansiedade', color: 'bg-orange-500', icon: <Icons.Flame className="w-3 h-3" /> },
+                        { key: 'ansiedade', label: 'Ansiedade', color: 'bg-secondary', icon: <Icons.Flame className="w-3 h-3" /> },
                         { key: 'confusao', label: 'Confusão', color: 'bg-primary', icon: <Icons.Compass className="w-3 h-3" /> },
-                        { key: 'dor_emocional', label: 'Dor Emocional', color: 'bg-red-500', icon: <Icons.Moon className="w-3 h-3" /> },
+                        { key: 'dor_emocional', label: 'Dor Emocional', color: 'bg-primary/80', icon: <Icons.Moon className="w-3 h-3" /> },
                         { key: 'busca_espiritual', label: 'Busca Espiritual', color: 'bg-primary', icon: <Icons.Sparkles className="w-3 h-3" /> },
                       ].map((state) => (
                         <div key={state.key} className="space-y-1.5">
