@@ -473,10 +473,17 @@ const HojePage: React.FC = () => {
                   </p>
                   <Button 
                     className="w-full bg-primary hover:bg-primary/90 text-primary-foreground h-12 text-base font-semibold shadow-lg shadow-primary/20 group"
-                    onClick={() => navigate(`/jornadas/${recommendedLogosJourney.id}`)}
+                    onClick={() => {
+                      if (recommendedLogosStep) {
+                        navigate(`/jornadas/${recommendedLogosJourney.id}/step?step=${recommendedLogosStep.id}`);
+                      } else {
+                        navigate(`/jornadas/${recommendedLogosJourney.id}/complete`);
+                      }
+                    }}
                   >
                     Continuar por aqui <ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                   </Button>
+
                 </div>
               )}
             </CardContent>
