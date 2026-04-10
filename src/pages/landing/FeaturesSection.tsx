@@ -53,17 +53,8 @@ const FeatureCard = React.forwardRef<HTMLDivElement, { feature: typeof features[
               {/* Pulse ring on hover */}
               <div className="absolute inset-0 rounded-3xl border-2 border-primary/0 group-hover:border-primary/30 group-hover:scale-125 transition-all duration-700 opacity-0 group-hover:opacity-100" />
             </motion.div>
-            <CardTitle className="text-2xl font-serif flex items-center justify-between">
+            <CardTitle className="text-2xl font-serif">
               {feature.title}
-              {feature.premium && (
-                <motion.span
-                  animate={{ opacity: [0.7, 1, 0.7] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                  className="text-[10px] bg-primary/20 text-primary px-2 py-1 rounded-full uppercase tracking-widest font-black"
-                >
-                  Premium
-                </motion.span>
-              )}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6 flex-1 flex flex-col relative z-10">
