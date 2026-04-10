@@ -1,13 +1,14 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { ArrowLeft, BookOpen, ScrollText, Music, Flame, ChevronRight, Sparkles, User } from 'lucide-react';
+import { ArrowLeft, BookOpen, ScrollText, Music, Flame, ChevronRight, Sparkles, User, Brain, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import SEOHead from '@/components/SEOHead';
 import { supabase } from '@/integrations/supabase/client';
 import { AppRoute } from '@/types';
 import { SAINTS_DATA } from '@/data/saints';
+import ReactMarkdown from 'react-markdown';
 
 /* ─── Types ─── */
 interface Reading {
@@ -112,6 +113,8 @@ const ReadingCard: React.FC<{
 const LiturgiaPage: React.FC = () => {
   const navigate = useNavigate();
   const today = new Date();
+  const [meditation, setMeditation] = useState<string | null>(null);
+  const [isMeditationLoading, setIsMeditationLoading] = useState(false);
 
   const { data: readings, isLoading } = useQuery({
     queryKey: ['liturgy-readings', today.toDateString()],
@@ -142,6 +145,51 @@ const LiturgiaPage: React.FC = () => {
     navigate(`${AppRoute.LECTIO_DIVINA}${q}`);
   };
 
+  const fetchMeditation = useCallback(async () => {
+    if (!readings?.evangelho?.texto || isMeditationLoading) return;
+    setIsMeditationLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('colloquium', {
+        body: {
+          messages: [{
+            role: 'user',
+            content: `Gere uma Meditação Diária espiritual, curta e profunda, baseada no Evangelho do dia: ${readings.evangelho.referencia} - ${readings.evangelho.texto.substring(0, 800)}.
+A meditação deve ser escrita num tom orante e poético (PCH — Poesia Cognitiva Hipnótica), dividida em:
+1. Reflexão (um parágrafo curto)
+2. Propósito Prático para o dia
+3. Uma oração final curta.
+Use Markdown para formatação.`
+          }]
+        }
+      });
+      if (error) throw error;
+      const reader = data.getReader();
+      const decoder = new TextDecoder();
+      let fullText = '';
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value);
+        for (const line of chunk.split('\n')) {
+          if (line.startsWith('data: ')) {
+            const d = line.substring(6).trim();
+            if (d === '[DONE]') continue;
+            try {
+              const json = JSON.parse(d);
+              const content = json.choices?.[0]?.delta?.content || '';
+              fullText += content;
+              setMeditation(fullText);
+            } catch { /* partial chunk */ }
+          }
+        }
+      }
+    } catch (e) {
+      console.error('Meditation error:', e);
+      setMeditation('Não foi possível gerar a meditação. Tente novamente.');
+    } finally {
+      setIsMeditationLoading(false);
+    }
+  }, [readings, isMeditationLoading]);
   const formatDate = () =>
     today.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
@@ -240,7 +288,46 @@ const LiturgiaPage: React.FC = () => {
           </p>
         </motion.div>
 
-        {/* CTA PRINCIPAL */}
+        {/* MEDITAÇÃO IA (IARA) */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.55 }}
+          className="bg-card border border-border rounded-3xl p-6 space-y-4"
+        >
+          <p className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground text-center">✨ Meditação com IARA</p>
+
+          {!meditation && !isMeditationLoading && (
+            <div className="text-center space-y-3">
+              <p className="text-sm text-muted-foreground font-serif italic">
+                Peça à IARA uma meditação personalizada baseada no Evangelho de hoje.
+              </p>
+              <Button
+                variant="outline"
+                className="rounded-xl border-primary/20 text-xs font-bold uppercase tracking-widest hover:bg-primary/5"
+                onClick={fetchMeditation}
+                disabled={!readings?.evangelho}
+              >
+                <Brain className="w-3.5 h-3.5 mr-1.5" />
+                Gerar Meditação
+              </Button>
+            </div>
+          )}
+
+          {isMeditationLoading && !meditation && (
+            <div className="flex items-center justify-center gap-2 py-4">
+              <Loader2 className="w-4 h-4 animate-spin text-primary" />
+              <span className="text-xs text-muted-foreground">IARA está meditando...</span>
+            </div>
+          )}
+
+          {meditation && (
+            <div className="prose prose-sm dark:prose-invert max-w-none font-serif">
+              <ReactMarkdown>{meditation}</ReactMarkdown>
+            </div>
+          )}
+        </motion.div>
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
