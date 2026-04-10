@@ -49,29 +49,11 @@ export const COLORS = {
 
 export const Logo = forwardRef<HTMLDivElement, { className?: string }>(({ className = "w-12 h-12" }, ref) => (
   <div ref={ref} className={`relative flex items-center justify-center group ${className}`}>
-    <svg 
-      viewBox="0 0 100 100" 
-      fill="none" 
-      xmlns="http://www.w3.org/2000/svg"
-      className="relative w-full h-full transition-all duration-700 group-hover:scale-110 drop-shadow-[0_0_15px_rgba(212,175,55,0.3)]"
-    >
-      <path 
-        d="M35 85C35 85 35 15 55 15C75 15 75 35 75 35M35 50H65M35 85H75" 
-        stroke="currentColor" 
-        strokeWidth="4" 
-        strokeLinecap="round" 
-        strokeLinejoin="round" 
-        className="text-secondary"
-      />
-      <path 
-        d="M30 90V10C30 10 30 5 35 5H75C80 5 80 10 80 10V90" 
-        stroke="currentColor" 
-        strokeWidth="1.5" 
-        strokeLinecap="round" 
-        className="opacity-20"
-      />
-      <circle cx="55" cy="15" r="4" fill="currentColor" className="text-secondary opacity-80" />
-    </svg>
+    <img 
+      src="/src/assets/cathedra-logo.webp" 
+      alt="Cathedra" 
+      className="relative w-full h-full object-contain transition-all duration-700 group-hover:scale-110 drop-shadow-[0_0_15px_rgba(212,175,55,0.3)]"
+    />
   </div>
 ));
 
