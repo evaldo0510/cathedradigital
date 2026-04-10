@@ -128,54 +128,64 @@ export const Logo = forwardRef<HTMLDivElement, { className?: string, variant?: '
         viewBox="0 0 100 100" 
         fill="none" 
         xmlns="http://www.w3.org/2000/svg"
-        className="w-full h-full transition-all duration-700 group-hover:scale-110"
+        className="w-full h-full transition-all duration-700 group-hover:scale-105"
       >
-        {/* Monstrance / Cathedral Base */}
+        {/* Central Vertical Axis */}
         <path 
-          d="M50 15L30 45H70L50 15Z" 
+          d="M50 20V80" 
           stroke={currentColor} 
-          strokeWidth="2" 
+          strokeWidth="3.5" 
+          strokeLinecap="round" 
+        />
+        
+        {/* Left Arch (Refined Proportion) */}
+        <path 
+          d="M50 35C40 35 32 42 32 50C32 58 40 65 50 65" 
+          stroke={currentColor} 
+          strokeWidth="3.5" 
           strokeLinecap="round" 
           strokeLinejoin="round"
         />
-        {/* Internal Cross Structure */}
+        
+        {/* Right Arch (Symmetrical) */}
         <path 
-          d="M50 25V75M35 55H65" 
+          d="M50 35C60 35 68 42 68 50C68 58 60 65 50 65" 
           stroke={currentColor} 
-          strokeWidth="3" 
-          strokeLinecap="round"
+          strokeWidth="3.5" 
+          strokeLinecap="round" 
+          strokeLinejoin="round"
         />
-        {/* Arches / Rays */}
+
+        {/* Top Diamond / Cross Head */}
         <path 
-          d="M25 65C25 65 35 85 50 85C65 85 75 65 75 65" 
-          stroke={currentColor} 
-          strokeWidth="2" 
-          strokeLinecap="round"
+          d="M50 10L56 20L50 26L44 20L50 10Z" 
+          fill={currentColor}
         />
-        {/* Central Detail */}
-        <circle 
-          cx="50" 
-          cy="45" 
-          r="8" 
-          stroke={currentColor} 
-          strokeWidth="1.5"
-        />
+
+        {/* Horizontal Detail Bars */}
         <path 
-          d="M50 37V53M42 45H58" 
-          stroke={currentColor} 
-          strokeWidth="1"
-        />
-        {/* Stylized Spires */}
-        <path 
-          d="M40 30L50 10L60 30" 
+          d="M42 42H58" 
           stroke={currentColor} 
           strokeWidth="2" 
           strokeLinecap="round" 
-          strokeLinejoin="round"
+        />
+        <path 
+          d="M42 58H58" 
+          stroke={currentColor} 
+          strokeWidth="2" 
+          strokeLinecap="round" 
+        />
+
+        {/* Bottom Base Detail */}
+        <path 
+          d="M40 80H60" 
+          stroke={currentColor} 
+          strokeWidth="2.5" 
+          strokeLinecap="round" 
         />
       </svg>
       {variant === 'gold' && (
-        <div className="absolute inset-0 bg-gold/10 blur-xl rounded-full -z-10 opacity-0 group-hover:opacity-100 transition-opacity" />
+        <div className="absolute inset-0 bg-[#C8A96A]/5 blur-xl rounded-full -z-10 opacity-0 group-hover:opacity-100 transition-opacity" />
       )}
     </div>
   );
