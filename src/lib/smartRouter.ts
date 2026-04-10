@@ -8,7 +8,7 @@ import { AppRoute } from '@/types';
 export interface RouteRecommendation {
   route: string;
   label: string;
-  icon: string;
+  icon: string; // Key for Icons component
   reason: string;
 }
 
@@ -67,13 +67,13 @@ export function routeUser(reflectionText: string): RouteRecommendation[] {
         routes.push({
           route: AppRoute.JORNADAS,
           label: 'Rotina de Transformação',
-          icon: '🌱',
+          icon: 'Calendar',
           reason: 'Para desacelerar e encontrar paz',
         });
         routes.push({
           route: AppRoute.ORACAO,
           label: 'Oração e Silêncio',
-          icon: '🙏',
+          icon: 'Sparkles',
           reason: 'Acalme seu coração',
         });
         break;
@@ -81,13 +81,13 @@ export function routeUser(reflectionText: string): RouteRecommendation[] {
         routes.push({
           route: AppRoute.CATECHISM,
           label: 'Fundamentos da Fé',
-          icon: '📘',
+          icon: 'FileText',
           reason: 'Para trazer clareza à sua busca',
         });
         routes.push({
           route: AppRoute.AQUINAS_OPERA,
           label: 'Aquinas — Razão',
-          icon: '🧠',
+          icon: 'Brain',
           reason: 'Luz para o intelecto',
         });
         break;
@@ -95,13 +95,13 @@ export function routeUser(reflectionText: string): RouteRecommendation[] {
         routes.push({
           route: AppRoute.JORNADAS,
           label: 'Caminho de Cura',
-          icon: '❤️',
+          icon: 'Heart',
           reason: 'Para tratar as feridas da alma',
         });
         routes.push({
           route: AppRoute.SAINTS,
           label: 'Exemplos de Superação',
-          icon: '🌟',
+          icon: 'Star',
           reason: 'Você não está sozinho',
         });
         break;
@@ -109,13 +109,13 @@ export function routeUser(reflectionText: string): RouteRecommendation[] {
         routes.push({
           route: AppRoute.LECTIO_DIVINA,
           label: 'Lectio Divina',
-          icon: '📖',
+          icon: 'BookOpen',
           reason: 'Aprofunde-se na Palavra',
         });
         routes.push({
           route: AppRoute.JORNADAS,
           label: 'Jornada Mística',
-          icon: '🕊️',
+          icon: 'Dove',
           reason: 'Busque a união com Deus',
         });
         break;
@@ -128,19 +128,19 @@ export function routeUser(reflectionText: string): RouteRecommendation[] {
       {
         route: AppRoute.JORNADAS,
         label: 'Iniciar uma Jornada',
-        icon: '🌱',
+        icon: 'Compass',
         reason: 'Continue sua transformação',
       },
       {
         route: AppRoute.LECTIO_DIVINA,
         label: 'Nova Lectio',
-        icon: '📖',
+        icon: 'BookOpen',
         reason: 'Aprofunde na Palavra',
       },
       {
         route: AppRoute.COMMUNITY,
         label: 'Comunidade',
-        icon: '🤝',
+        icon: 'Users',
         reason: 'Compartilhe sua experiência',
       },
     );
@@ -151,7 +151,7 @@ export function routeUser(reflectionText: string): RouteRecommendation[] {
     routes.push({
       route: AppRoute.COMMUNITY,
       label: 'Compartilhar',
-      icon: '🤝',
+      icon: 'Users',
       reason: 'Conecte-se com outros',
     });
   }
