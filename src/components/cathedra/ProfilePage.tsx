@@ -44,6 +44,9 @@ const ProfilePage: React.FC = () => {
     if (profile) {
       setName(profile.name || '');
       setAvatarUrl(profile.avatar_url || null);
+      setWhatsappNumber((profile as any).whatsapp_number || '');
+      setWhatsappEnabled((profile as any).whatsapp_enabled || false);
+      setPushEnabled((profile as any).push_enabled ?? true);
       supabase.from('profiles').select('bio').eq('id', profile.id).single()
         .then(({ data }) => setBio((data as any)?.bio || ''));
     }
