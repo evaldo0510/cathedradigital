@@ -293,11 +293,14 @@ const JornadaStepPage: React.FC = () => {
               <h3 className="text-sm font-bold text-foreground">Diário Espiritual</h3>
             </div>
 
-            {content.journal_prompt && (
+            {getVariantContent('journal_prompt', content) && (
               <div className="bg-primary/5 border border-primary/10 rounded-xl p-4">
-                <p className="text-sm text-foreground/80 italic font-serif">{content.journal_prompt}</p>
+                <p className="text-sm text-foreground/80 italic font-serif">
+                  {getVariantContent('journal_prompt', content)}
+                </p>
               </div>
             )}
+
 
             <Textarea
               placeholder="Escreva sua reflexão aqui... Suas palavras são privadas e só você pode ver."
