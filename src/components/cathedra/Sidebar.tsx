@@ -133,7 +133,7 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
         {/* Ctrl+K hint */}
         <div className="px-4 pb-3">
           <div className="flex items-center gap-2 text-muted-foreground/60">
-            <Search className="w-3 h-3" />
+            <Icons.Search className="w-3 h-3" />
             <span className="text-[9px]">Pressione</span>
             <kbd className="px-1.5 py-0.5 rounded bg-muted text-[9px] font-mono font-bold">⌘K</kbd>
             <span className="text-[9px]">para buscar</span>
@@ -146,7 +146,7 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
               onClick={onToggleDark} 
               className="flex-1 p-3 bg-muted text-muted-foreground hover:text-primary rounded-xl border border-border flex items-center justify-center gap-2 transition-all active:scale-95"
             >
-              {isDark ? <Sun className="w-4 h-4 text-primary" /> : <Moon className="w-4 h-4" />}
+              {isDark ? <Icons.Sun className="w-4 h-4 text-primary" /> : <Icons.Moon className="w-4 h-4" />}
               <span className="text-[10px] font-black uppercase tracking-widest">{isDark ? 'Claro' : 'Escuro'}</span>
             </button>
             
@@ -155,7 +155,7 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
                 onClick={onSignOut} 
                 className="flex-1 p-3 bg-muted text-muted-foreground hover:text-destructive rounded-xl border border-border flex items-center justify-center gap-2 transition-all active:scale-95"
               >
-                <LogOut className="w-4 h-4" />
+                <Icons.LogOut className="w-4 h-4" />
                 <span className="text-[10px] font-black uppercase tracking-widest">Sair</span>
               </button>
             )}
