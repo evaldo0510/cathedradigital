@@ -12,11 +12,10 @@ import { saveUserPsychology } from '@/lib/psychologicalProfile';
 import ProConversionBanner from './ProConversionBanner';
 
 const SECTION_CONFIG = [
-  { key: 'intro', label: 'Leitura Guiada', icon: <BookOpen className="w-4 h-4" /> },
-  { key: 'scripture', label: 'Palavra de Deus', icon: <Sparkles className="w-4 h-4" /> },
   { key: 'reflection', label: 'Reflexão', icon: <PenLine className="w-4 h-4" /> },
-  { key: 'practice', label: 'Prática', icon: <Hand className="w-4 h-4" /> },
-  { key: 'prayer', label: 'Oração', icon: <Hand className="w-4 h-4" /> },
+  { key: 'intro', label: 'Interpretação', icon: <BookOpen className="w-4 h-4" /> },
+  { key: 'practice', label: 'Direção Prática', icon: <Hand className="w-4 h-4" /> },
+  { key: 'prayer', label: 'Exercício Guiado', icon: <Sparkles className="w-4 h-4" /> },
 ];
 
 const JornadaStepPage: React.FC = () => {
