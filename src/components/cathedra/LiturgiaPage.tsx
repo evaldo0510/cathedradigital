@@ -288,7 +288,46 @@ Use Markdown para formatação.`
           </p>
         </motion.div>
 
-        {/* CTA PRINCIPAL */}
+        {/* MEDITAÇÃO IA (IARA) */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.55 }}
+          className="bg-card border border-border rounded-3xl p-6 space-y-4"
+        >
+          <p className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground text-center">✨ Meditação com IARA</p>
+
+          {!meditation && !isMeditationLoading && (
+            <div className="text-center space-y-3">
+              <p className="text-sm text-muted-foreground font-serif italic">
+                Peça à IARA uma meditação personalizada baseada no Evangelho de hoje.
+              </p>
+              <Button
+                variant="outline"
+                className="rounded-xl border-primary/20 text-xs font-bold uppercase tracking-widest hover:bg-primary/5"
+                onClick={fetchMeditation}
+                disabled={!readings?.evangelho}
+              >
+                <Brain className="w-3.5 h-3.5 mr-1.5" />
+                Gerar Meditação
+              </Button>
+            </div>
+          )}
+
+          {isMeditationLoading && !meditation && (
+            <div className="flex items-center justify-center gap-2 py-4">
+              <Loader2 className="w-4 h-4 animate-spin text-primary" />
+              <span className="text-xs text-muted-foreground">IARA está meditando...</span>
+            </div>
+          )}
+
+          {meditation && (
+            <div className="prose prose-sm dark:prose-invert max-w-none font-serif">
+              <ReactMarkdown>{meditation}</ReactMarkdown>
+            </div>
+          )}
+        </motion.div>
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
