@@ -24,17 +24,17 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
     ...(user?.role === 'admin' ? [{
       label: 'Administração',
       items: [
-        { label: 'Painel Admin', path: AppRoute.ADMIN, icon: <ShieldCheck className="w-5 h-5" /> },
+        { label: 'Painel Admin', path: AppRoute.ADMIN, icon: <Icons.ShieldCheck className="w-5 h-5" /> },
       ]
     }] : []),
     {
       label: 'Principal',
       items: [
-        { label: 'Hoje', path: AppRoute.HOJE, icon: <Sun className="w-5 h-5" /> },
-        { label: 'Jornadas', path: AppRoute.JORNADAS, icon: <Route className="w-5 h-5" /> },
-        { label: 'Diagnóstico', path: AppRoute.DIAGNOSTICO, icon: <Stethoscope className="w-5 h-5" /> },
-        { label: 'Biblioteca', path: AppRoute.BIBLIOTECA, icon: <Library className="w-5 h-5" /> },
-        { label: 'Favoritos', path: AppRoute.FAVORITES, icon: <Bookmark className="w-5 h-5" /> },
+        { label: 'Hoje', path: AppRoute.HOJE, icon: <Icons.Sun className="w-5 h-5" /> },
+        { label: 'Jornadas', path: AppRoute.JORNADAS, icon: <Icons.Route className="w-5 h-5" /> },
+        { label: 'Diagnóstico', path: AppRoute.DIAGNOSTICO, icon: <Icons.Stethoscope className="w-5 h-5" /> },
+        { label: 'Biblioteca', path: AppRoute.BIBLIOTECA, icon: <Icons.Library className="w-5 h-5" /> },
+        { label: 'Favoritos', path: AppRoute.FAVORITES, icon: <Icons.Bookmark className="w-5 h-5" /> },
       ]
     },
     {
@@ -45,8 +45,8 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
         { label: 'Santo Rosário', path: AppRoute.ROSARY, icon: <Icons.Rosary className="w-5 h-5" /> },
         { label: 'Via Crucis', path: AppRoute.VIA_CRUCIS, icon: <Icons.ViaCrucis className="w-5 h-5" /> },
         { label: 'Breviário', path: AppRoute.BREVIARY, icon: <Icons.HolyBible className="w-5 h-5" /> },
-        { label: 'Confissão (Exame)', path: AppRoute.POENITENTIA, icon: <ListChecks className="w-5 h-5" /> },
-        { label: 'Lectio Divina', path: AppRoute.LECTIO_DIVINA, icon: <Feather className="w-5 h-5" /> },
+        { label: 'Confissão (Exame)', path: AppRoute.POENITENTIA, icon: <Icons.Check className="w-5 h-5" /> },
+        { label: 'Lectio Divina', path: AppRoute.LECTIO_DIVINA, icon: <Icons.Feather className="w-5 h-5" /> },
         { label: 'Litanias', path: AppRoute.LITANIES, icon: <Icons.Scroll className="w-5 h-5" /> },
         { label: 'Aparições Marianas', path: AppRoute.APARICOES, icon: <Icons.SaintHalo className="w-5 h-5" /> },
       ]
@@ -56,9 +56,9 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
       items: [
         { label: 'Colloquium IA', path: AppRoute.STUDY_MODE, icon: <Icons.Dove className="w-5 h-5" />, pro: true },
         { label: 'Suma Teológica', path: AppRoute.AQUINAS_OPERA, icon: <Icons.Scroll className="w-5 h-5" /> },
-        { label: 'Certamen (Quiz)', path: AppRoute.CERTAMEN, icon: <Trophy className="w-5 h-5" /> },
-        { label: 'Assinatura PRO', path: AppRoute.CHECKOUT, icon: <Zap className="w-5 h-5" />, pro: true },
-        { label: 'Comunidade', path: AppRoute.COMMUNITY, icon: <MessageCircle className="w-5 h-5" /> },
+        { label: 'Certamen (Quiz)', path: AppRoute.CERTAMEN, icon: <Icons.Trophy className="w-5 h-5" /> },
+        { label: 'Assinatura PRO', path: AppRoute.CHECKOUT, icon: <Icons.Zap className="w-5 h-5" />, pro: true },
+        { label: 'Comunidade', path: AppRoute.COMMUNITY, icon: <Icons.Message className="w-5 h-5" /> },
       ]
     }
   ];
