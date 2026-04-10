@@ -211,6 +211,36 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         </div>
       </FadeUp>
 
+      {/* ═══ WEEKLY SUMMARY ═══ */}
+      <FadeUp delay={0.12}>
+        <div className="bg-card border border-border rounded-2xl p-5 shadow-sm space-y-3">
+          <div className="flex items-center gap-2">
+            <TrendingUp className="w-4 h-4 text-primary" />
+            <h2 className="text-sm font-bold text-foreground uppercase tracking-wide">Resumo da Semana</h2>
+          </div>
+          <div className="grid grid-cols-3 gap-3">
+            <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
+              <p className="text-2xl font-bold text-foreground">{weeklyStats.chaptersRead}</p>
+              <p className="text-[10px] text-muted-foreground font-medium mt-0.5 flex items-center justify-center gap-1">
+                <BookMarked className="w-3 h-3" /> Capítulos
+              </p>
+            </div>
+            <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
+              <p className="text-2xl font-bold text-foreground">{streak}</p>
+              <p className="text-[10px] text-muted-foreground font-medium mt-0.5 flex items-center justify-center gap-1">
+                <Flame className="w-3 h-3" /> Streak
+              </p>
+            </div>
+            <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
+              <p className="text-2xl font-bold text-foreground">{weeklyStats.journeySteps}</p>
+              <p className="text-[10px] text-muted-foreground font-medium mt-0.5 flex items-center justify-center gap-1">
+                <Calendar className="w-3 h-3" /> Etapas
+              </p>
+            </div>
+          </div>
+        </div>
+      </FadeUp>
+
       {/* ═══ ACTIVE JOURNEYS (if any) ═══ */}
       {activeJourneys.length > 0 && (
         <FadeUp delay={0.15}>
