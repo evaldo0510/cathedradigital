@@ -5,6 +5,8 @@ import confetti from 'canvas-confetti';
 import { toast } from 'sonner';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 
+export type UserLevelClass = 'iniciante' | 'intermediário' | 'avançado';
+
 export interface SensitiveData {
   email: string;
   diagnosis_result: Record<string, string> | null;
@@ -32,6 +34,7 @@ interface AuthContextValue {
   loading: boolean;
   signOut: () => Promise<void>;
   isPremium: boolean;
+  userLevel: UserLevelClass;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
