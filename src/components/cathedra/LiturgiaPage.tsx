@@ -142,6 +142,7 @@ const ReadingCard: React.FC<{
 /* ─── Main Page ─── */
 const LiturgiaPage: React.FC = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [selectedDate, setSelectedDate] = useState(() => new Date());
   const today = selectedDate;
   const [meditation, setMeditation] = useState<string | null>(null);
