@@ -172,9 +172,19 @@ const LiturgiaPage: React.FC = () => {
   const fetchMeditation = useCallback(async () => {
     if (!readings?.evangelho?.texto || isMeditationLoading) return;
     setIsMeditationLoading(true);
+    setMeditation(null);
     try {
-      const { data, error } = await supabase.functions.invoke('colloquium', {
-        body: {
+      const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
+      const anonKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+      const url = `https://${projectId}.supabase.co/functions/v1/colloquium`;
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': anonKey,
+        },
+        body: JSON.stringify({
           messages: [{
             role: 'user',
             content: `Gere uma Meditação Diária espiritual, curta e profunda, baseada no Evangelho do dia: ${readings.evangelho.referencia} - ${readings.evangelho.texto.substring(0, 800)}.
@@ -184,10 +194,15 @@ A meditação deve ser escrita num tom orante e poético (PCH — Poesia Cogniti
 3. Uma oração final curta.
 Use Markdown para formatação.`
           }]
-        }
+        })
       });
-      if (error) throw error;
-      const reader = data.getReader();
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      const reader = response.body?.getReader();
+      if (!reader) throw new Error('No reader');
       const decoder = new TextDecoder();
       let fullText = '';
       while (true) {
