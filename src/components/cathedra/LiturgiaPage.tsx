@@ -284,7 +284,19 @@ Use Markdown para formatação.`
               />
             )}
 
-            {/* Evangelho */}
+            {/* Segunda Leitura (domingos e solenidades) */}
+            {readings.segundaLeitura && typeof readings.segundaLeitura === 'object' && 'referencia' in readings.segundaLeitura && (
+              <ReadingCard
+                label="Segunda Leitura"
+                icon={<BookMarked className="w-4 h-4 text-emerald-600" />}
+                reference={(readings.segundaLeitura as Reading).referencia}
+                text={(readings.segundaLeitura as Reading).texto}
+                onContext={() => navigate(parseRefToRoute((readings.segundaLeitura as Reading).referencia))}
+                onReflect={() => navigateToLectio((readings.segundaLeitura as Reading).referencia)}
+                delay={0.25}
+              />
+            )}
+
             {readings.evangelho && (
               <ReadingCard
                 label="Evangelho"
