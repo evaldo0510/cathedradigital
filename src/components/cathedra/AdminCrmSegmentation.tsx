@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import {
   Users, Crown, AlertTriangle, Flame, UserCheck, Clock,
-  Filter, ChevronDown, ChevronUp, Eye, Download
+  Filter, ChevronDown, ChevronUp, Eye, Download, Search
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
