@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Sun, Moon, BookOpen, Hand, PenLine, ChevronRight, Flame, Calendar, Compass } from 'lucide-react';
+import { Sun, Moon, BookOpen, Hand, PenLine, ChevronRight, Flame, Calendar, Compass, Sparkles, Loader2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -38,6 +38,12 @@ const HojePage: React.FC = () => {
   const [journeyStep, setJourneyStep] = useState<any>(null);
   const [journeyProgress, setJourneyProgress] = useState({ completed: 0, total: 0 });
   const [recommendedJourney, setRecommendedJourney] = useState<any>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [logosResponse, setLogosResponse] = useState('');
+  const [logosRecommendation, setLogosRecommendation] = useState<any>(null);
+  const [recommendedLogosJourney, setRecommendedLogosJourney] = useState<any>(null);
+  const [recommendedLogosStep, setRecommendedLogosStep] = useState<any>(null);
+
 
   useEffect(() => {
     if (!user) return;
@@ -89,7 +95,6 @@ const HojePage: React.FC = () => {
           }
         }
       } else {
-        // No progress yet — load recommended journey from diagnosis
         loadRecommendedJourney();
       }
     } catch (err) {
@@ -123,6 +128,96 @@ const HojePage: React.FC = () => {
     }
   };
 
+  const analyzeReflection = async (text: string) => {
+    if (!user || !text.trim()) return;
+    setIsAnalyzing(true);
+    setLogosResponse('');
+    setLogosRecommendation(null);
+    setRecommendedLogosJourney(null);
+
+    try {
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/colloquium`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ messages: [{ role: 'user', content: text }] }),
+      });
+
+      if (!response.ok) throw new Error('Failed to fetch Logos response');
+
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      let fullText = '';
+
+      if (reader) {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          const chunk = decoder.decode(value);
+          const lines = chunk.split('\n');
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              try {
+                const data = JSON.parse(line.slice(6));
+                const content = data.choices?.[0]?.delta?.content || '';
+                fullText += content;
+                setLogosResponse(fullText);
+              } catch (e) { /* skip */ }
+            }
+          }
+        }
+      }
+
+      const match = fullText.match(/\[RECOMMENDATION:(.*?)\]/);
+      if (match) {
+        try {
+          const recommendation = JSON.parse(match[1]);
+          setLogosRecommendation(recommendation);
+          
+          const { data: journey } = await supabase
+            .from('journeys')
+            .select('*')
+            .eq('category', recommendation.category)
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true })
+            .limit(1)
+            .maybeSingle();
+
+          if (journey) {
+            setRecommendedLogosJourney(journey);
+            
+            // Fetch next step for this journey
+            const [completedRes, stepsRes] = await Promise.all([
+              supabase
+                .from('journey_progress')
+                .select('step_id')
+                .eq('user_id', user.id)
+                .eq('journey_id', journey.id),
+              supabase
+                .from('journey_steps')
+                .select('*')
+                .eq('journey_id', journey.id)
+                .order('step_order', { ascending: true })
+            ]);
+
+            const completedIds = (completedRes.data || []).map(s => s.step_id);
+            const next = (stepsRes.data || []).find(s => !completedIds.includes(s.id));
+            setRecommendedLogosStep(next || null);
+          }
+
+        } catch (e) {
+          console.error('Failed to parse recommendation:', e);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to analyze reflection:', err);
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
   const saveJournal = async () => {
     if (!user || !journalText.trim()) return;
     try {
@@ -132,6 +227,7 @@ const HojePage: React.FC = () => {
         entry_date: new Date().toISOString().split('T')[0],
       }]);
       setJournalSaved(true);
+      await analyzeReflection(journalText);
       setTimeout(() => setJournalSaved(false), 3000);
     } catch (err) {
       console.error('Failed to save journal:', err);
@@ -248,7 +344,7 @@ const HojePage: React.FC = () => {
         </motion.div>
       )}
 
-      {/* Recommended Journey (no progress yet) */}
+      {/* Recommended Journey (no active journey) */}
       {!activeJourney && recommendedJourney && (
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -329,20 +425,78 @@ const HojePage: React.FC = () => {
               <p className="text-xs text-muted-foreground">
                 {journalSaved ? '✓ Salvo com sucesso!' : 'Suas reflexões são privadas.'}
               </p>
-              <Button size="sm" onClick={saveJournal} disabled={!journalText.trim()}>
-                Salvar
+              <Button size="sm" onClick={saveJournal} disabled={!journalText.trim() || isAnalyzing}>
+                {isAnalyzing ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Salvar'}
               </Button>
             </div>
           </CardContent>
         </Card>
       </motion.div>
 
+      {/* Logos Analysis Response */}
+      {(isAnalyzing || logosResponse) && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="space-y-4 pb-4"
+        >
+          <Card className="border-primary/40 bg-gradient-to-br from-primary/10 via-background to-background relative overflow-hidden shadow-xl">
+            <div className="absolute top-0 right-0 p-4 opacity-10">
+              <Sparkles className="w-12 h-12 text-primary" />
+            </div>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base flex items-center gap-2 text-primary font-serif">
+                <Sparkles className="w-4 h-4" />
+                Logos
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {isAnalyzing && !logosResponse ? (
+                <div className="flex items-center gap-3 py-6">
+                  <Loader2 className="w-6 h-6 text-primary animate-spin" />
+                  <p className="text-sm text-muted-foreground animate-pulse font-medium">Logos está refletindo sobre sua partilha...</p>
+                </div>
+              ) : (
+                <div className="prose prose-sm dark:prose-invert max-w-none text-foreground leading-relaxed whitespace-pre-wrap font-serif text-base italic">
+                  {logosResponse.replace(/\[RECOMMENDATION:.*?\]/g, '').trim()}
+                </div>
+              )}
+              
+              {!isAnalyzing && recommendedLogosJourney && (
+                <div className="mt-6 pt-6 border-t border-primary/20 space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-700">
+                  <div className="flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-wider">
+                    <Compass className="w-4 h-4" />
+                    Jornada Sugerida: {recommendedLogosJourney.title}
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    {logosRecommendation?.reason || "Esta jornada foi selecionada especialmente para o seu momento atual."}
+                  </p>
+                  <Button 
+                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground h-12 text-base font-semibold shadow-lg shadow-primary/20 group"
+                    onClick={() => {
+                      if (recommendedLogosStep) {
+                        navigate(`/jornadas/${recommendedLogosJourney.id}/step?step=${recommendedLogosStep.id}`);
+                      } else {
+                        navigate(`/jornadas/${recommendedLogosJourney.id}/complete`);
+                      }
+                    }}
+                  >
+                    Continuar por aqui <ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
+
       {/* Quick Links */}
-      <div className="grid grid-cols-2 gap-3">
-        <Button variant="outline" size="sm" onClick={() => navigate(AppRoute.DIAGNOSTICO)} className="text-xs">
+      <div className="grid grid-cols-2 gap-3 pt-4">
+        <Button variant="outline" size="sm" onClick={() => navigate(AppRoute.DIAGNOSTICO)} className="text-xs h-9">
           Refazer Diagnóstico
         </Button>
-        <Button variant="outline" size="sm" onClick={() => navigate(AppRoute.JORNADAS)} className="text-xs">
+        <Button variant="outline" size="sm" onClick={() => navigate(AppRoute.JORNADAS)} className="text-xs h-9">
           Ver Jornadas
         </Button>
       </div>
