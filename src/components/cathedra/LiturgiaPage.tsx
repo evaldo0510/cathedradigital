@@ -1,14 +1,33 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { ArrowLeft, BookOpen, ScrollText, Music, Flame, ChevronRight, Sparkles, User, Brain, Loader2 } from 'lucide-react';
+import { ArrowLeft, BookOpen, ScrollText, Music, Flame, ChevronRight, Sparkles, User, Brain, Loader2, BookMarked } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import SEOHead from '@/components/SEOHead';
 import { supabase } from '@/integrations/supabase/client';
 import { AppRoute } from '@/types';
 import { SAINTS_DATA } from '@/data/saints';
 import ReactMarkdown from 'react-markdown';
+
+/* ─── Local cache helpers ─── */
+const CACHE_KEY = 'cathedra_liturgy_cache';
+
+function getCachedReadings(dateKey: string): LiturgyReadings | null {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (parsed.dateKey === dateKey) return parsed.data;
+    return null;
+  } catch { return null; }
+}
+
+function setCachedReadings(dateKey: string, data: LiturgyReadings) {
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify({ dateKey, data }));
+  } catch { /* quota exceeded */ }
+}
 
 /* ─── Types ─── */
 interface Reading {
