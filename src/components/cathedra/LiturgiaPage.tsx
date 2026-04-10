@@ -9,11 +9,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { AppRoute } from '@/types';
 import { SAINTS_DATA } from '@/data/saints';
 import ReactMarkdown from 'react-markdown';
-import { Button } from '@/components/ui/button';
-import SEOHead from '@/components/SEOHead';
-import { supabase } from '@/integrations/supabase/client';
-import { AppRoute } from '@/types';
-import { SAINTS_DATA } from '@/data/saints';
 
 /* ─── Types ─── */
 interface Reading {
