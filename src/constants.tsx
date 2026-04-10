@@ -145,4 +145,5 @@ export const Icons = {
   Sparkles: createIcon(Sparkles),
   User: createIcon(User),
   Music: createIcon(Music),
+  Bell: createIcon(Bell),
 };
