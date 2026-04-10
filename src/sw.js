@@ -1,22 +1,30 @@
+import { precacheAndRoute } from 'workbox-precaching';
+import { registerRoute } from 'workbox-routing';
+import { NetworkFirst, StaleWhileRevalidate, CacheFirst } from 'workbox-strategies';
+import { ExpirationPlugin } from 'workbox-expiration';
+import { CacheableResponsePlugin } from 'workbox-cacheable-response';
+
+// Workbox precaching (all build assets will be automatically injected here)
+precacheAndRoute(self.__WB_MANIFEST);
+
 // Cathedra Service Worker — Push Notifications + Offline Cache
-const CACHE_NAME = 'cathedra-v1';
-const LITURGY_CACHE = 'cathedra-liturgy-v1';
+const CACHE_NAME = 'cathedra-v2';
+const LITURGY_CACHE = 'cathedra-liturgy-v2';
 
-// Static assets to pre-cache (app shell)
-const APP_SHELL = [
-  '/',
-  '/favicon.svg',
-];
-
-// ─── Install: cache app shell ───
-self.addEventListener('install', (event) => {
+// ─── Install & Activate ───
+self.addEventListener('install', () => self.skipWaiting());
+self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL))
+    caches.keys().then((keys) =>
+      Promise.all(
+        keys
+          .filter((k) => k !== CACHE_NAME && k !== LITURGY_CACHE)
+          .map((k) => caches.delete(k))
+      )
+    )
   );
-  self.skipWaiting();
+  self.clients.claim();
 });
-
-// ─── Activate: clean old caches ───
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
