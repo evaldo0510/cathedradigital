@@ -145,9 +145,9 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
   }, [periodMonths, users, transactions]);
 
   const metrics = useMemo(() => {
-    const active = filteredUsers.filter(u => daysSince(u.last_visit) <= 3);
-    const atRisk = filteredUsers.filter(u => daysSince(u.last_visit) >= 4 && daysSince(u.last_visit) <= 14);
-    const churned = filteredUsers.filter(u => daysSince(u.last_visit) > 14);
+    const active = filteredUsers.filter(u => daysSince(u.last_visit) < 2);
+    const atRisk = filteredUsers.filter(u => daysSince(u.last_visit) >= 2 && daysSince(u.last_visit) <= 7);
+    const churned = filteredUsers.filter(u => daysSince(u.last_visit) > 7);
     const newUsers7d = filteredUsers.filter(u => daysSince(u.created_at) <= 7);
     const newUsers30d = filteredUsers.filter(u => daysSince(u.created_at) <= 30);
 
@@ -212,7 +212,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
     const headers = ['Nome', 'Email', 'Status', 'Plano', 'Streak', 'XP', 'Dias Inativo', 'Cadastro'];
     const rows = filteredUsers.map(u => {
       const days = daysSince(u.last_visit);
-      const status = days <= 3 ? 'Ativo' : days <= 14 ? 'Em risco' : 'Inativo';
+      const status = days < 2 ? 'Ativo' : 'Inativo';
       return [
         u.name || '', u.email, status, u.is_premium ? 'PRO' : 'Free',
         u.streak ?? 0, u.xp ?? 0, days,
@@ -258,7 +258,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
       const churned = usersAtTime.filter(u => {
         if (!u.last_visit) return true;
         const diff = (end.getTime() - new Date(u.last_visit).getTime()) / (1000 * 60 * 60 * 24);
-        return diff > 14;
+        return diff > 2;
       });
       const newU = users.filter(u => {
         const d = new Date(u.created_at);
