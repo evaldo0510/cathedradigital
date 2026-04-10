@@ -131,11 +131,30 @@ const ReadingCard: React.FC<{
 /* ─── Main Page ─── */
 const LiturgiaPage: React.FC = () => {
   const navigate = useNavigate();
-  const today = new Date();
+  const [selectedDate, setSelectedDate] = useState(() => new Date());
+  const today = selectedDate;
   const [meditation, setMeditation] = useState<string | null>(null);
   const [isMeditationLoading, setIsMeditationLoading] = useState(false);
 
   const dateKey = today.toDateString();
+
+  const goToPrevDay = () => {
+    const d = new Date(selectedDate);
+    d.setDate(d.getDate() - 1);
+    setSelectedDate(d);
+    setMeditation(null);
+  };
+
+  const goToNextDay = () => {
+    const d = new Date(selectedDate);
+    d.setDate(d.getDate() + 1);
+    if (d <= new Date()) {
+      setSelectedDate(d);
+      setMeditation(null);
+    }
+  };
+
+  const isToday = selectedDate.toDateString() === new Date().toDateString();
 
   const { data: readings, isLoading } = useQuery({
     queryKey: ['liturgy-readings', dateKey],
