@@ -160,6 +160,7 @@ const LiturgiaPage: React.FC = () => {
     setMeditation(null);
     setIsOfflineData(false);
     setEmotionalRoutes([]);
+  };
 
   const goToNextDay = () => {
     const d = new Date(selectedDate);
