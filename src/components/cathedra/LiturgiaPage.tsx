@@ -6,8 +6,10 @@ import { ArrowLeft, BookOpen, ScrollText, Music, Flame, ChevronRight, ChevronLef
 import { Button } from '@/components/ui/button';
 import SEOHead from '@/components/SEOHead';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 import { routeUser, type RouteRecommendation } from '@/lib/smartRouter';
+import { saveUserPsychology } from '@/lib/psychologicalProfile';
 import { SAINTS_DATA } from '@/data/saints';
 import ReactMarkdown from 'react-markdown';
 import { toast } from 'sonner';
