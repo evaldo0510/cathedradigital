@@ -10,7 +10,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useFavorites } from '@/hooks/useFavorites';
 import BibleSearch from './BibleSearch';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { ChevronDown, ScrollText, Swords, Feather, Flame, Cross, Globe, Mail, BookOpen, Sparkles, CheckCircle2, ArrowLeft } from 'lucide-react';
+import { Icons } from '../../constants';
 import ShareButton from './ShareButton';
 import { useAuth } from '@/hooks/useAuth';
 import { Progress } from '@/components/ui/progress';
