@@ -2,15 +2,7 @@ import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import SEOHead from '@/components/SEOHead';
 import { Icons } from '../../constants';
-import { supabase } from '@/integrations/supabase/client';
-import StaggeredList from './StaggeredList';
-import CrossReferencePanel from './CrossReferencePanel';
-import { getBibleCrossRefs } from '@/data/cross-references';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useFavorites } from '@/hooks/useFavorites';
-import BibleSearch from './BibleSearch';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { Icons } from '../../constants';
+
 import ShareButton from './ShareButton';
 import { useAuth } from '@/hooks/useAuth';
 import { Progress } from '@/components/ui/progress';
