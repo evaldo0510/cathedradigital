@@ -136,7 +136,21 @@ const ProfilePage: React.FC = () => {
   const handleSave = async () => {
     if (!user) return;
     setSaving(true);
-    const { error } = await supabase.from('profiles').update({ name, bio } as any).eq('id', user.id);
+    
+    // Manage push permission if toggle changed
+    if (pushEnabled) {
+      await subscribe();
+    } else {
+      await unsubscribe();
+    }
+
+    const { error } = await supabase.from('profiles').update({ 
+      name, 
+      bio, 
+      whatsapp_number: whatsappNumber,
+      whatsapp_enabled: whatsappEnabled,
+      push_enabled: pushEnabled 
+    } as any).eq('id', user.id);
     setSaving(false);
     if (error) toast.error('Erro ao salvar perfil');
     else toast.success('Perfil atualizado!');
