@@ -121,26 +121,26 @@ const ProConversionBanner: React.FC<ProConversionBannerProps> = ({ context }) =>
 function getCopy(context: string, reflections: number): { title: string; message: string } {
   if (context === 'lectio') {
     return {
-      title: 'A Palavra está agindo em você',
-      message: 'Você já escreveu reflexões profundas. Com o PRO, acesse todas as jornadas de 30 dias, IA personalizada e diário espiritual completo.',
+      title: 'Você começou a entender…',
+      message: 'Sua alma já começou a refletir profundamente. Com o PRO, aprofunde isso com ferramentas exclusivas de meditação.',
     };
   }
   if (context === 'jornada') {
-    if (reflections >= 5) {
-      return {
-        title: 'Sua transformação está em andamento',
-        message: 'Você já percorreu um caminho real. Desbloqueie as jornadas completas e continue sua transformação interior.',
-      };
-    }
     return {
-      title: 'Você começou… mas ainda não terminou',
-      message: 'A mudança acontece na continuidade. Desbloqueie a jornada completa e vá até o fim.',
+      title: 'Continue essa transformação',
+      message: 'O progresso que você fez até agora é real. Desbloqueie o caminho completo e não pare agora.',
+    };
+  }
+  if (context === 'logos') {
+    return {
+      title: 'Existe um nível mais profundo disso',
+      message: 'A Logos pode ir muito além. Tenha acesso a respostas ilimitadas e análises teológicas avançadas.',
     };
   }
   // dashboard
   return {
-    title: 'Continue o que começou',
-    message: 'Suas reflexões mostram que algo está acontecendo dentro de você. O PRO desbloqueia o caminho completo.',
+    title: 'Aprofunde sua caminhada',
+    message: 'Suas reflexões mostram que algo está acontecendo dentro de você. O PRO desbloqueia a experiência completa.',
   };
 }
 
