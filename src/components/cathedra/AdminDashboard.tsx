@@ -30,6 +30,10 @@ interface Stats {
   totalRevenue: number;
   pwaInstalls: number;
   pwaOpens: number;
+  activeToday: number;
+  inactiveUsers: number;
+  journeysInProgress: number;
+  returnRate: number;
   recentTransactions: any[];
   userGrowth: any[];
   revenueData: any[];
@@ -102,7 +106,8 @@ const AdminDashboard: React.FC = () => {
         const totalRevenue = transactions.reduce((acc, curr) => acc + Number(curr.amount), 0);
 
         // New CRM specific stats
-        const now = new Date();
+        // now is already declared above
+        // const now = new Date();
         const activeToday = allProfiles.filter(p => {
           if (!p.last_visit) return false;
           const visitDate = new Date(p.last_visit);
@@ -153,6 +158,10 @@ const AdminDashboard: React.FC = () => {
           totalDownloads: downloadsCount,
           pwaInstalls,
           pwaOpens,
+          activeToday,
+          inactiveUsers,
+          journeysInProgress,
+          returnRate,
           totalRevenue,
           recentTransactions: transactions.slice(0, 10),
           userGrowth,
