@@ -166,9 +166,11 @@ const LiturgiaPage: React.FC = () => {
   const [meditation, setMeditation] = useState<string | null>(null);
   const [isMeditationLoading, setIsMeditationLoading] = useState(false);
 
-  const dateKey = today.toDateString();
+  const [copiedMeditation, setCopiedMeditation] = useState(false);
 
-  const goToPrevDay = () => {
+  usePrefetchLiturgyCache();
+
+  const dateKey = today.toDateString();
     const d = new Date(selectedDate);
     d.setDate(d.getDate() - 1);
     setSelectedDate(d);
