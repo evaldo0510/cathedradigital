@@ -10,25 +10,26 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useFavorites } from '@/hooks/useFavorites';
 import BibleSearch from './BibleSearch';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { ChevronDown, ScrollText, Swords, Feather, Flame, Cross, Globe, Mail, BookOpen, Sparkles, CheckCircle2, ArrowLeft } from 'lucide-react';
 import ShareButton from './ShareButton';
 import { useAuth } from '@/hooks/useAuth';
 import { Progress } from '@/components/ui/progress';
 import { checkNewBadges, getBadgeById } from '@/lib/badges';
 import { toast } from 'sonner';
 import confetti from 'canvas-confetti';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 
 type BibleBook = { name: string; abbr: string; chapters: number };
 type BibleCategory = { label: string; icon: React.ElementType; color: string; bgColor: string; books: BibleBook[] };
 
 const BIBLE_CATEGORIES: Record<string, BibleCategory[]> = {
   'Antigo Testamento': [
-    { label: 'Pentateuco', icon: ScrollText, color: 'text-primary', bgColor: 'bg-muted border-border', books: [
+    { label: 'Pentateuco', icon: Icons.ScrollText, color: 'text-primary', bgColor: 'bg-muted border-border', books: [
       { name: 'Gênesis', abbr: 'Gn', chapters: 50 }, { name: 'Êxodo', abbr: 'Ex', chapters: 40 },
       { name: 'Levítico', abbr: 'Lv', chapters: 27 }, { name: 'Números', abbr: 'Nm', chapters: 36 },
       { name: 'Deuteronômio', abbr: 'Dt', chapters: 34 },
     ]},
-    { label: 'Históricos', icon: Swords, color: 'text-primary', bgColor: 'bg-muted border-border', books: [
+    { label: 'Históricos', icon: Icons.Swords, color: 'text-primary', bgColor: 'bg-muted border-border', books: [
       { name: 'Josué', abbr: 'Js', chapters: 24 }, { name: 'Juízes', abbr: 'Jz', chapters: 21 },
       { name: 'Rute', abbr: 'Rt', chapters: 4 }, { name: '1 Samuel', abbr: '1Sm', chapters: 31 },
       { name: '2 Samuel', abbr: '2Sm', chapters: 24 }, { name: '1 Reis', abbr: '1Rs', chapters: 22 },
@@ -38,13 +39,13 @@ const BIBLE_CATEGORIES: Record<string, BibleCategory[]> = {
       { name: 'Judite', abbr: 'Jt', chapters: 16 }, { name: 'Ester', abbr: 'Est', chapters: 10 },
       { name: '1 Macabeus', abbr: '1Mc', chapters: 16 }, { name: '2 Macabeus', abbr: '2Mc', chapters: 15 },
     ]},
-    { label: 'Sapienciais', icon: Feather, color: 'text-primary', bgColor: 'bg-muted border-border', books: [
+    { label: 'Sapienciais', icon: Icons.Feather, color: 'text-primary', bgColor: 'bg-muted border-border', books: [
       { name: 'Jó', abbr: 'Jó', chapters: 42 }, { name: 'Salmos', abbr: 'Sl', chapters: 150 },
       { name: 'Provérbios', abbr: 'Pr', chapters: 31 }, { name: 'Eclesiastes', abbr: 'Ecl', chapters: 12 },
       { name: 'Cântico dos Cânticos', abbr: 'Ct', chapters: 8 }, { name: 'Sabedoria', abbr: 'Sb', chapters: 19 },
       { name: 'Eclesiástico', abbr: 'Eclo', chapters: 51 },
     ]},
-    { label: 'Profetas', icon: Flame, color: 'text-primary', bgColor: 'bg-muted border-border', books: [
+    { label: 'Profetas', icon: Icons.Flame, color: 'text-primary', bgColor: 'bg-muted border-border', books: [
       { name: 'Isaías', abbr: 'Is', chapters: 66 }, { name: 'Jeremias', abbr: 'Jr', chapters: 52 },
       { name: 'Lamentações', abbr: 'Lm', chapters: 5 }, { name: 'Baruc', abbr: 'Br', chapters: 6 },
       { name: 'Ezequiel', abbr: 'Ez', chapters: 48 }, { name: 'Daniel', abbr: 'Dn', chapters: 14 },
@@ -57,14 +58,14 @@ const BIBLE_CATEGORIES: Record<string, BibleCategory[]> = {
     ]},
   ],
   'Novo Testamento': [
-    { label: 'Evangelhos', icon: Cross, color: 'text-primary', bgColor: 'bg-muted border-border', books: [
+    { label: 'Evangelhos', icon: Icons.Cross, color: 'text-primary', bgColor: 'bg-muted border-border', books: [
       { name: 'Mateus', abbr: 'Mt', chapters: 28 }, { name: 'Marcos', abbr: 'Mc', chapters: 16 },
       { name: 'Lucas', abbr: 'Lc', chapters: 24 }, { name: 'João', abbr: 'Jo', chapters: 21 },
     ]},
-    { label: 'Atos', icon: Globe, color: 'text-primary', bgColor: 'bg-muted border-border', books: [
+    { label: 'Atos', icon: Icons.Globe, color: 'text-primary', bgColor: 'bg-muted border-border', books: [
       { name: 'Atos dos Apóstolos', abbr: 'At', chapters: 28 },
     ]},
-    { label: 'Cartas Paulinas', icon: Mail, color: 'text-primary', bgColor: 'bg-muted border-border', books: [
+    { label: 'Cartas Paulinas', icon: Icons.Mail, color: 'text-primary', bgColor: 'bg-muted border-border', books: [
       { name: 'Romanos', abbr: 'Rm', chapters: 16 }, { name: '1 Coríntios', abbr: '1Cor', chapters: 16 },
       { name: '2 Coríntios', abbr: '2Cor', chapters: 13 }, { name: 'Gálatas', abbr: 'Gl', chapters: 6 },
       { name: 'Efésios', abbr: 'Ef', chapters: 6 }, { name: 'Filipenses', abbr: 'Fl', chapters: 4 },
@@ -73,13 +74,13 @@ const BIBLE_CATEGORIES: Record<string, BibleCategory[]> = {
       { name: '2 Timóteo', abbr: '2Tm', chapters: 4 }, { name: 'Tito', abbr: 'Tt', chapters: 3 },
       { name: 'Filemon', abbr: 'Fm', chapters: 1 }, { name: 'Hebreus', abbr: 'Hb', chapters: 13 },
     ]},
-    { label: 'Cartas Católicas', icon: BookOpen, color: 'text-primary', bgColor: 'bg-muted border-border', books: [
+    { label: 'Cartas Católicas', icon: Icons.BookOpen, color: 'text-primary', bgColor: 'bg-muted border-border', books: [
       { name: 'Tiago', abbr: 'Tg', chapters: 5 }, { name: '1 Pedro', abbr: '1Pd', chapters: 5 },
       { name: '2 Pedro', abbr: '2Pd', chapters: 3 }, { name: '1 João', abbr: '1Jo', chapters: 5 },
       { name: '2 João', abbr: '2Jo', chapters: 1 }, { name: '3 João', abbr: '3Jo', chapters: 1 },
       { name: 'Judas', abbr: 'Jd', chapters: 1 },
     ]},
-    { label: 'Apocalipse', icon: Sparkles, color: 'text-primary', bgColor: 'bg-muted border-border', books: [
+    { label: 'Apocalipse', icon: Icons.Sparkles, color: 'text-primary', bgColor: 'bg-muted border-border', books: [
       { name: 'Apocalipse', abbr: 'Ap', chapters: 22 },
     ]},
   ],
@@ -337,7 +338,7 @@ const Bible: React.FC = () => {
         {/* Back to Dashboard */}
         {fromDashboard && (
           <button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-xs text-primary hover:underline">
-            <ArrowLeft className="w-3.5 h-3.5" /> Voltar ao Dashboard
+            <Icons.ArrowLeft className="w-3.5 h-3.5" /> Voltar ao Dashboard
           </button>
         )}
         {/* Header */}
@@ -373,296 +374,238 @@ const Bible: React.FC = () => {
                 </button>
               ))}
             </div>
-            {/* Cross-ref toggle */}
-            {crossRefs.length > 0 && (
-              <button onClick={() => setShowCrossRefs(!showCrossRefs)}
-                className={`p-2 rounded-xl border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}
-                title="Nexus Theologicus">
-                <Icons.Cross className="w-4 h-4" />
-              </button>
-            )}
-            {/* Share chapter */}
-            <ShareButton
-              title={`${selectedBook.name} ${selectedChapter}`}
-              text={`Leia ${selectedBook.name}, Capítulo ${selectedChapter} — Cathedra Digital`}
-              url={`${window.location.origin}/bible?book=${selectedBook.abbr}&ch=${selectedChapter}`}
+            <button onClick={() => setShowCrossRefs(!showCrossRefs)}
+              className={`p-2 rounded-xl border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}>
+              <Icons.Columns className="w-5 h-5" />
+            </button>
+            <ShareButton 
+              title={selectedBook.name} 
+              text={`Lendo ${selectedBook.name} na Cathedra: Digital Sanctuarium`} 
             />
           </div>
         </div>
 
-        {/* Cross references panel */}
-        {showCrossRefs && crossRefs.length > 0 && (
-          <CrossReferencePanel
-            type="bible"
-            cicParagraphs={crossRefs}
-            onNavigateToCIC={handleNavigateToCIC}
-          />
-        )}
 
         {/* Content */}
-        <div className="bg-card border border-border rounded-3xl p-6 md:p-10 space-y-6">
-          <div className="text-center space-y-2 pb-4 border-b border-border">
-            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">{selectedBook.abbr} {selectedChapter}</span>
-            <h2 className="text-lg font-serif font-bold text-foreground">{selectedBook.name} — Capítulo {selectedChapter}</h2>
-          </div>
-          <div className={`reader-text text-foreground/90 ${fs.size} ${fs.leading} space-y-2`}>
-            {isLoading ? (
-              <div className="space-y-3 py-8">
-                {Array.from({ length: 10 }).map((_, i) => (
-                  <div key={i} className="h-4 bg-muted rounded animate-pulse" style={{ width: `${65 + Math.random() * 35}%` }} />
-                ))}
-              </div>
-            ) : bibleError ? (
-              <p className="text-muted-foreground italic text-center py-12">{bibleError}</p>
-            ) : verses.length > 0 ? (
-              verses.map(v => {
-                const verseTitle = `${selectedBook.abbr} ${selectedChapter},${v.number}`;
-                const faved = isFavorite('verse', verseTitle);
-                return (
-                  <p
-                    key={v.number}
-                    onClick={() => setHighlightedVerse(highlightedVerse === v.number ? null : v.number)}
-                    className={`cursor-pointer rounded-lg px-2 py-1 -mx-2 transition-all group/verse ${
-                      highlightedVerse === v.number ? 'bg-primary/10 border-l-2 border-primary' : 'hover:bg-muted/50'
-                    }`}
-                  >
-                    <sup className="text-primary font-bold mr-1 text-xs select-none">{v.number}</sup>
-                    <span className="font-serif">{v.text.replace(/<[^>]+>/g, '').replace(/\s{2,}/g, ' ')}</span>
-                    {highlightedVerse === v.number && (
-                      <span className="inline-flex gap-1 ml-2 align-middle">
-                        <button
-                          onClick={e => { e.stopPropagation(); toggleFavorite({ type: 'verse', title: verseTitle, content: v.text }); }}
-                          title={faved ? 'Remover dos favoritos' : 'Salvar nos favoritos'}
-                        >
-                          <Icons.Heart className={`w-4 h-4 transition-all ${faved ? 'fill-primary text-primary' : 'text-muted-foreground hover:text-primary'}`} />
-                        </button>
-                        <ShareButton
-                          title={verseTitle}
-                          text={`"${v.text}" — ${verseTitle}`}
-                          url={`${window.location.origin}/bible?book=${selectedBook.abbr}&ch=${selectedChapter}`}
-                          className="border-0 p-0 hover:bg-transparent"
-                          size="sm"
-                        />
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          <div className={`lg:col-span-${showCrossRefs && crossRefs.length > 0 ? '8' : '12'} space-y-6`}>
+            <Card className="border-border/40 shadow-sm overflow-hidden bg-card/50 backdrop-blur-sm">
+              <CardContent className="p-6 md:p-8">
+                {isLoading ? (
+                  <div className="space-y-4 py-8">
+                    {[1, 2, 3, 4, 5].map(i => (
+                      <div key={i} className={`h-4 bg-muted animate-pulse rounded-full ${i % 2 === 0 ? 'w-full' : 'w-3/4'}`} />
+                    ))}
+                  </div>
+                ) : bibleError ? (
+                  <div className="text-center py-12 space-y-4">
+                    <p className="text-muted-foreground">{bibleError}</p>
+                    <Button variant="outline" onClick={() => window.location.reload()}>Recarregar</Button>
+                  </div>
+                ) : (
+                  <div className={`font-serif ${fs.size} ${fs.leading} text-foreground/90 transition-all duration-300`}>
+                    {verses.map(v => (
+                      <span key={v.number} 
+                        id={`v${v.number}`}
+                        onClick={() => setHighlightedVerse(v.number === highlightedVerse ? null : v.number)}
+                        className={`inline transition-colors duration-300 cursor-pointer rounded px-0.5
+                          ${highlightedVerse === v.number ? 'bg-primary/20 ring-1 ring-primary/30' : 'hover:bg-muted/50'}`}>
+                        <sup className="text-[0.6em] font-bold text-primary mr-1 select-none">{v.number}</sup>
+                        {v.text}{' '}
                       </span>
-                    )}
-                  </p>
-                );
-              })
-            ) : (
-              <p className="text-muted-foreground italic text-center py-12">Carregando...</p>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Mark as read button */}
+            {!isLoading && !bibleError && (
+              <Button 
+                variant={chaptersRead[selectedBook.abbr]?.has(selectedChapter) ? "outline" : "default"}
+                onClick={() => markChapterRead(selectedBook.abbr, selectedChapter, selectedBook.chapters)}
+                className="w-full h-12 text-base font-bold"
+              >
+                {chaptersRead[selectedBook.abbr]?.has(selectedChapter) ? (
+                  <><Icons.CheckCircle2 className="w-5 h-5 mr-2" /> Capítulo Lido</>
+                ) : (
+                  'Marcar como Lido'
+                )}
+              </Button>
+            )}
+
+            {/* Next Chapter Card */}
+            {!isLoading && !bibleError && selectedChapter < selectedBook.chapters && (
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
+                <Card className="border-primary/20 bg-primary/5 cursor-pointer hover:border-primary/40 transition-all"
+                  onClick={() => navigateChapter(1)}>
+                  <CardContent className="p-6 flex items-center justify-between">
+                    <div>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-1">Próximo Capítulo</p>
+                      <h3 className="text-lg font-bold font-serif">{selectedBook.name} {selectedChapter + 1}</h3>
+                    </div>
+                    <Icons.ChevronRight className="w-6 h-6 text-primary" />
+                  </CardContent>
+                </Card>
+              </motion.div>
+            )}
+
+            {/* If end of book */}
+            {!isLoading && !bibleError && selectedChapter >= selectedBook.chapters && (
+              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}>
+                <Card className="border-secondary/40 bg-secondary/5 text-center p-8">
+                  <div className="flex flex-col items-center gap-4">
+                    <Icons.CheckCircle2 className="w-12 h-12 text-primary" />
+                    <h2 className="text-xl font-bold font-serif">Livro Concluído!</h2>
+                    <p className="text-sm text-muted-foreground">Você concluiu a leitura de {selectedBook.name}. Que a Palavra de Deus continue frutificando em seu coração.</p>
+                    <Button onClick={() => setViewMode('books')} className="mt-4">Ver Todos os Livros</Button>
+                  </div>
+                </Card>
+              </motion.div>
             )}
           </div>
-        </div>
 
-        {/* Mark chapter as read + Viver essa Palavra */}
-        {!isLoading && verses.length > 0 && (
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            {user && (
-              chaptersRead[selectedBook.abbr]?.has(selectedChapter) ? (
-                <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-primary/10 text-primary text-sm font-bold">
-                  <CheckCircle2 className="w-4 h-4" /> Capítulo lido
-                </div>
-              ) : (
-                <button
-                  onClick={() => markChapterRead(selectedBook.abbr, selectedChapter, selectedBook.chapters)}
-                  className="px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 transition-all">
-                  ✓ Marcar como lido
-                </button>
-              )
-            )}
-            <button
-              onClick={() => navigate(`/lectio?ref=${encodeURIComponent(`${selectedBook.abbr} ${selectedChapter}`)}`)}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-bold hover:opacity-90 transition-all shadow-lg shadow-amber-500/20"
-            >
-              <Sparkles className="w-4 h-4" /> Viver essa Palavra
-            </button>
-          </div>
-        )}
-
-        {/* Bottom navigation */}
-        <div className="flex justify-between items-center pt-2">
-          <button disabled={selectedChapter <= 1} onClick={() => navigateChapter(-1)}
-            className="px-4 py-2.5 rounded-xl bg-card border border-border text-sm font-bold disabled:opacity-30 hover:bg-primary/10 transition-all">
-            ← Capítulo {selectedChapter - 1}
-          </button>
-          <span className="text-xs text-muted-foreground font-bold">{selectedChapter} / {selectedBook.chapters}</span>
-          <button disabled={selectedChapter >= selectedBook.chapters} onClick={() => navigateChapter(1)}
-            className="px-4 py-2.5 rounded-xl bg-card border border-border text-sm font-bold disabled:opacity-30 hover:bg-primary/10 transition-all">
-            Capítulo {selectedChapter + 1} →
-          </button>
+          {/* Cross References Panel */}
+          {showCrossRefs && crossRefs.length > 0 && (
+            <div className="lg:col-span-4 sticky top-24">
+              <CrossReferencePanel 
+                type="bible"
+                cicParagraphs={crossRefs} 
+                onNavigateToCIC={handleNavigateToCIC}
+              />
+            </div>
+          )}
         </div>
       </div>
     );
   }
 
-  // Chapter selection
+  // Chapter selection view
   if (viewMode === 'chapters' && selectedBook) {
     return (
-      <div className="max-w-4xl mx-auto space-y-8">
+      <div className="max-w-4xl mx-auto space-y-6">
         <div className="flex items-center gap-4">
           <button onClick={goBack} className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all">
-            <Icons.ArrowDown className="w-5 h-5 rotate-90 text-foreground" />
+            <Icons.ChevronLeft className="w-5 h-5 text-foreground" />
           </button>
-          <div>
-            <h1 className="text-3xl font-serif font-bold text-foreground">{selectedBook.name}</h1>
-            <p className="text-sm text-muted-foreground">{selectedBook.chapters} capítulos • {selectedBook.abbr}</p>
-          </div>
+          <h1 className="text-2xl font-serif font-bold text-foreground">{selectedBook.name}</h1>
         </div>
 
-        <div className="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 gap-2">
+        <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3">
           {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map(ch => {
-            const hasRefs = getBibleCrossRefs(selectedBook.abbr, ch).length > 0;
-            const isChRead = chaptersRead[selectedBook.abbr]?.has(ch);
+            const isRead = chaptersRead[selectedBook.abbr]?.has(ch);
             return (
-              <button key={ch} onClick={() => selectChapter(ch)}
-                className={`aspect-square rounded-xl border flex items-center justify-center text-sm font-bold transition-all shadow-sm relative ${
-                  isChRead ? 'bg-primary/15 border-primary/40 text-primary' :
-                  hasRefs ? 'bg-card border-primary/30 hover:bg-primary hover:text-primary-foreground hover:border-primary' : 'bg-card border-border text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary'
-                }`}>
+              <button 
+                key={ch} 
+                onClick={() => selectChapter(ch)}
+                className={`aspect-square flex items-center justify-center rounded-xl border font-bold transition-all relative
+                  ${isRead 
+                    ? 'bg-primary/10 border-primary/30 text-primary' 
+                    : 'bg-card border-border text-muted-foreground hover:border-primary/40 hover:text-foreground'}`}
+              >
                 {ch}
-                {isChRead && <CheckCircle2 className="absolute -top-1 -right-1 w-3 h-3 text-primary" />}
-                {!isChRead && hasRefs && (
-                  <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-primary" />
-                )}
+                {isRead && <Icons.CheckCircle2 className="w-2.5 h-2.5 absolute top-1 right-1" />}
               </button>
             );
           })}
         </div>
-
-        <p className="text-center text-xs text-muted-foreground flex items-center justify-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-primary inline-block font-serif" />
-          Capítulos com referências ao Catecismo
-        </p>
       </div>
     );
   }
 
-  // Books list
+  // Book selection view
   return (
-    <>
-    <SEOHead title="Bíblia Sagrada Online" description="Leia a Bíblia Sagrada completa com 73 livros do cânon católico. Acesse o Antigo e Novo Testamento online e gratuitamente." path="/bible" keywords="bíblia católica online, bíblia sagrada, antigo testamento, novo testamento, leitura bíblica" breadcrumbs={[{ name: "Início", path: "/" }, { name: "Bíblia Sagrada", path: "/bible" }]} />
-    <motion.div
-      className="max-w-5xl mx-auto space-y-8"
-
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.4 }}
-    >
-      <motion.div 
-        className="text-center space-y-3"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
-      >
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
-          <Icons.Book className="w-4 h-4 text-primary" />
-          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Scriptuarium</span>
+    <div className="max-w-4xl mx-auto space-y-8">
+      <SEOHead 
+        title="Bíblia Sagrada | Cathedra" 
+        description="Leia e estude a Sagrada Escritura com referências cruzadas e comentários."
+        path="/bible"
+      />
+      
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div>
+          <h1 className="text-3xl font-serif font-black text-foreground tracking-tight">Sagrada Escritura</h1>
+          <p className="text-muted-foreground mt-1">Lâmpada para meus pés é a vossa palavra.</p>
         </div>
-        <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Bíblia Sagrada</h1>
-        <p className="text-muted-foreground font-serif italic">Cânon completo com 73 livros da tradição católica.</p>
-        {/* Overall progress */}
-        {user && totalBooksRead > 0 && (
-          <div className="max-w-xs mx-auto mt-2 space-y-1.5">
-            <div className="flex items-center justify-between text-xs">
-              <span className="font-bold text-foreground">{totalBooksRead} de 73 livros</span>
-              <span className="font-bold text-primary">{overallProgress}%</span>
-            </div>
-            <Progress value={overallProgress} className="h-2" />
-          </div>
-        )}
-      </motion.div>
-
-      {/* Full-text search */}
-      {showFullTextSearch ? (
-        <div className="max-w-2xl mx-auto bg-card border border-border rounded-2xl p-5">
-          <BibleSearch onClose={() => setShowFullTextSearch(false)} />
+        
+        <div className="w-full md:w-auto flex flex-col gap-2">
+           <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-primary/60 mb-1">
+             <span>Progresso Geral</span>
+             <span>{overallProgress}%</span>
+           </div>
+           <Progress value={overallProgress} className="h-2 w-full md:w-48" />
         </div>
-      ) : (
-        <>
-          {/* Search */}
-          <div className="max-w-md mx-auto flex gap-2">
-            <div className="relative flex-1">
-              <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <input
-                value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-                placeholder="Buscar livro..."
-                className="w-full pl-11 pr-4 py-3 rounded-2xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
-              />
-            </div>
-            <button onClick={() => setShowFullTextSearch(true)}
-              className="px-4 py-3 rounded-2xl bg-foreground text-background text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-primary-foreground transition-all whitespace-nowrap">
-              Buscar Versículos
-            </button>
-          </div>
-        </>
-      )}
+      </div>
 
-      {/* Testament tabs */}
-      <div className="flex gap-2 justify-center">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {(['Antigo Testamento', 'Novo Testamento'] as const).map(t => (
-          <button key={t} onClick={() => setTestament(t)}
-            className={`px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
-              testament === t ? 'bg-foreground text-background shadow-lg' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
-            }`}>
+          <button
+            key={t}
+            onClick={() => setTestament(t)}
+            className={`px-6 py-4 rounded-2xl font-bold transition-all border-2 text-sm
+              ${testament === t 
+                ? 'bg-primary border-primary text-white shadow-lg shadow-primary/20 scale-[1.02]' 
+                : 'bg-card border-border text-muted-foreground hover:border-primary/40'}`}
+          >
             {t}
           </button>
         ))}
       </div>
 
-      {/* Books by category */}
-      <div className="space-y-3">
-        {filteredCategories.map(cat => {
-          const CatIcon = cat.icon;
-          const readCount = cat.books.filter(b => completedBooks.has(b.abbr)).length;
-          const progress = Math.round((readCount / cat.books.length) * 100);
-          return (
-            <Collapsible key={cat.label} defaultOpen>
-              <CollapsibleTrigger className={`flex items-center gap-2.5 w-full px-4 py-3 rounded-xl border transition-all group ${cat.bgColor}`}>
-                <div className={`p-1.5 rounded-lg bg-white/70 dark:bg-black/20`}>
-                  <CatIcon className={`w-4 h-4 ${cat.color}`} />
-                </div>
-                <div className="flex flex-col items-start flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className={`text-xs font-black uppercase tracking-widest ${cat.color}`}>{cat.label}</span>
-                    <span className="text-[10px] text-muted-foreground">({cat.books.length})</span>
-                  </div>
-                  {readCount > 0 && (
-                    <div className="flex items-center gap-2 mt-1 w-full">
-                      <div className="h-1 flex-1 max-w-[120px] bg-black/10 dark:bg-white/10 rounded-full overflow-hidden">
-                        <div className="h-full bg-current rounded-full transition-all" style={{ width: `${progress}%`, color: 'inherit' }} />
-                      </div>
-                      <span className="text-[9px] font-bold text-muted-foreground">{readCount}/{cat.books.length}</span>
-                    </div>
-                  )}
-                </div>
-                <ChevronDown className="w-4 h-4 text-muted-foreground transition-transform duration-200 group-data-[state=open]:rotate-180" />
-              </CollapsibleTrigger>
-              <CollapsibleContent>
-                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-1.5 mt-2 ml-1">
-                  {cat.books.map(book => {
-                    const isRead = completedBooks.has(book.abbr);
-                    return (
-                      <button key={book.abbr} onClick={() => selectBook(book)}
-                        className={`text-left px-2.5 py-2 rounded-lg border transition-all group/book ${
-                          isRead ? 'bg-primary/5 border-primary/30' : 'bg-card border-border hover:border-primary/50 hover:bg-primary/5'
-                        }`}>
-                        <div className="flex items-center justify-between">
-                          <span className={`text-[9px] font-black uppercase tracking-widest ${cat.color}`}>{book.abbr}</span>
-                          {isRead && <span className="text-[8px]">✓</span>}
-                        </div>
-                        <p className="text-xs font-bold text-foreground mt-0.5 group-hover/book:text-primary transition-colors truncate">{book.name}</p>
-                        <p className="text-[9px] text-muted-foreground">{book.chapters} cap.</p>
-                      </button>
-                    );
-                  })}
-                </div>
-              </CollapsibleContent>
-            </Collapsible>
-          );
-        })}
+      <div className="relative">
+        <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+        <input
+          type="text"
+          placeholder="Buscar livro..."
+          className="w-full pl-12 pr-4 py-4 bg-card border border-border rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
       </div>
-    </motion.div>
-    </>
+
+      <div className="space-y-8">
+        {filteredCategories.map((cat, idx) => (
+          <Collapsible key={cat.label} defaultOpen={idx === 0 || !!searchQuery}>
+            <CollapsibleTrigger className="w-full flex items-center justify-between group p-2 hover:bg-muted/50 rounded-xl transition-all">
+              <div className="flex items-center gap-4">
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${cat.bgColor}`}>
+                  <cat.icon className={`w-5 h-5 ${cat.color}`} />
+                </div>
+                <h2 className="text-base font-bold text-foreground uppercase tracking-widest">{cat.label}</h2>
+              </div>
+              <Icons.ChevronDown className="w-5 h-5 text-muted-foreground group-data-[state=open]:rotate-180 transition-transform" />
+            </CollapsibleTrigger>
+            <CollapsibleContent className="pt-4 animate-in fade-in slide-in-from-top-2 duration-300">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                {cat.books.map(book => {
+                  const isRead = completedBooks.has(book.abbr);
+                  return (
+                    <button
+                      key={book.abbr}
+                      onClick={() => selectBook(book)}
+                      className={`flex flex-col items-center gap-2 p-4 rounded-2xl border transition-all relative overflow-hidden group
+                        ${isRead 
+                          ? 'bg-primary/5 border-primary/20 text-primary' 
+                          : 'bg-card border-border text-muted-foreground hover:border-primary/40 hover:text-foreground hover:scale-[1.02] shadow-sm'}`}
+                    >
+                      {isRead && (
+                        <div className="absolute top-0 right-0 p-1.5 bg-primary text-white rounded-bl-xl shadow-lg">
+                          <Icons.CheckCircle2 className="w-3 h-3" />
+                        </div>
+                      )}
+                      <span className="text-lg font-bold font-serif">{book.abbr}</span>
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-center leading-tight truncate w-full">
+                        {book.name}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
+        ))}
+      </div>
+    </div>
   );
 };
 

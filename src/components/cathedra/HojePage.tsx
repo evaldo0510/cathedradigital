@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Sun, Moon, BookOpen, Hand, PenLine, ChevronRight, Flame, Calendar, Compass, Sparkles, Loader2 } from 'lucide-react';
+import { Icons } from '@/constants';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -14,9 +14,9 @@ import ProConversionBanner from './ProConversionBanner';
 
 const getGreeting = () => {
   const h = new Date().getHours();
-  if (h < 12) return { text: 'Bom dia', icon: <Sun className="w-6 h-6 text-primary" />, period: 'manhã' };
-  if (h < 18) return { text: 'Boa tarde', icon: <Sun className="w-6 h-6 text-primary" />, period: 'tarde' };
-  return { text: 'Boa noite', icon: <Moon className="w-6 h-6 text-primary" />, period: 'noite' };
+  if (h < 12) return { text: 'Bom dia', icon: <Icons.Sun className="w-6 h-6 text-primary" />, period: 'manhã' };
+  if (h < 18) return { text: 'Boa tarde', icon: <Icons.Sun className="w-6 h-6 text-primary" />, period: 'tarde' };
+  return { text: 'Boa noite', icon: <Icons.Moon className="w-6 h-6 text-primary" />, period: 'noite' };
 };
 
 const LITURGICAL_QUOTES = [
@@ -284,21 +284,21 @@ const HojePage: React.FC = () => {
     {
       title: 'Liturgia do Dia',
       description: 'Leituras e reflexão da liturgia diária',
-      icon: <Calendar className="w-5 h-5" />,
+      icon: <Icons.Calendar className="w-5 h-5" />,
       route: `${AppRoute.LITURGIA}?tab=liturgia`,
       color: 'bg-primary/10 text-primary',
     },
     {
       title: 'Oração',
       description: 'Rosário, Liturgia das Horas e orações',
-      icon: <Hand className="w-5 h-5" />,
+      icon: <Icons.Hand className="w-5 h-5" />,
       route: AppRoute.ORACAO,
       color: 'bg-accent/10 text-accent',
     },
     {
       title: 'Lectio Divina',
       description: 'Leitura orante da Palavra de Deus',
-      icon: <BookOpen className="w-5 h-5" />,
+      icon: <Icons.BookOpen className="w-5 h-5" />,
       route: AppRoute.LECTIO_DIVINA,
       color: 'bg-primary/10 text-primary',
     },
@@ -320,7 +320,7 @@ const HojePage: React.FC = () => {
           <p className="text-sm text-muted-foreground">
             {streak > 0 ? (
               <span className="flex items-center gap-1">
-                <Flame className="w-4 h-4 text-orange-500" /> {streak} dias consecutivos
+                <Icons.Flame className="w-4 h-4 text-orange-500" /> {streak} dias consecutivos
               </span>
             ) : 'Comece seu dia com Deus'}
           </p>
@@ -349,7 +349,7 @@ const HojePage: React.FC = () => {
         >
           <Card className="border-primary/40 bg-gradient-to-br from-primary/10 via-background to-background relative overflow-hidden shadow-lg">
             <div className="absolute top-0 right-0 p-4 opacity-5">
-              <Sparkles className="w-16 h-16 text-primary" />
+              <Icons.Sparkles className="w-16 h-16 text-primary" />
             </div>
             <CardHeader className="pb-2 flex flex-row items-center justify-between">
               <div className="space-y-1">
@@ -365,7 +365,7 @@ const HojePage: React.FC = () => {
                   {DEEP_INSIGHT.theme}
                 </CardTitle>
               </div>
-              <Sparkles className="w-5 h-5 text-primary/40" />
+              <Icons.Sparkles className="w-5 h-5 text-primary/40" />
             </CardHeader>
             <CardContent className="space-y-6 pt-2">
               <div className="space-y-3">
@@ -381,7 +381,7 @@ const HojePage: React.FC = () => {
               <div className="grid grid-cols-1 gap-4 pt-2">
                 <div className="bg-primary/5 rounded-xl p-4 border border-primary/10 space-y-2">
                   <div className="flex items-center gap-2 text-primary">
-                    <Compass className="w-4 h-4" />
+                    <Icons.Compass className="w-4 h-4" />
                     <span className="text-[10px] font-black uppercase tracking-widest">Direção</span>
                   </div>
                   <p className="text-sm text-foreground/90 font-medium">
@@ -391,7 +391,7 @@ const HojePage: React.FC = () => {
 
                 <div className="bg-accent/5 rounded-xl p-4 border border-accent/10 space-y-2">
                   <div className="flex items-center gap-2 text-accent">
-                    <PenLine className="w-4 h-4" />
+                    <Icons.PenLine className="w-4 h-4" />
                     <span className="text-[10px] font-black uppercase tracking-widest">Exercício</span>
                   </div>
                   <p className="text-sm text-foreground/90 font-medium">
@@ -418,7 +418,7 @@ const HojePage: React.FC = () => {
                     journalElement?.scrollIntoView({ behavior: 'smooth' });
                   }}
                 >
-                  <PenLine className="w-3 h-3 mr-2" /> Responder no Diário
+                  <Icons.PenLine className="w-3 h-3 mr-2" /> Responder no Diário
                 </Button>
                 <Button 
                   variant="ghost" 
@@ -444,7 +444,7 @@ const HojePage: React.FC = () => {
           <Card className="border-primary/30 overflow-hidden bg-gradient-to-br from-primary/5 to-transparent">
             <CardHeader className="pb-2">
               <CardTitle className="text-base flex items-center gap-2">
-                <Flame className="w-4 h-4 text-primary" />
+                <Icons.Flame className="w-4 h-4 text-primary" />
                 Sua Jornada: {activeJourney.title}
               </CardTitle>
             </CardHeader>
@@ -474,7 +474,7 @@ const HojePage: React.FC = () => {
                 }}
                 className="w-full"
               >
-                {journeyStep ? 'Continuar Jornada' : 'Ver Certificado'} <ChevronRight className="w-4 h-4 ml-1" />
+                {journeyStep ? 'Continuar Jornada' : 'Ver Certificado'} <Icons.ChevronRight className="w-4 h-4 ml-1" />
               </Button>
             </CardContent>
           </Card>
@@ -491,7 +491,7 @@ const HojePage: React.FC = () => {
           <Card className="border-primary/20 bg-primary/5">
             <CardContent className="p-4 space-y-3">
               <div className="flex items-center gap-2">
-                <Compass className="w-5 h-5 text-primary" />
+                <Icons.Compass className="w-5 h-5 text-primary" />
                 <h3 className="font-semibold text-sm text-foreground">Jornada Recomendada</h3>
               </div>
               <p className="text-sm text-foreground font-bold">{recommendedJourney.title}</p>
@@ -501,7 +501,7 @@ const HojePage: React.FC = () => {
                 onClick={() => navigate(`/jornadas/${recommendedJourney.id}`)}
                 className="w-full"
               >
-                Começar Jornada <ChevronRight className="w-4 h-4 ml-1" />
+                Começar Jornada <Icons.ChevronRight className="w-4 h-4 ml-1" />
               </Button>
             </CardContent>
           </Card>
@@ -530,7 +530,7 @@ const HojePage: React.FC = () => {
                     <h3 className="font-semibold text-sm text-foreground">{section.title}</h3>
                     <p className="text-xs text-muted-foreground">{section.description}</p>
                   </div>
-                  <ChevronRight className="w-4 h-4 text-muted-foreground self-end" />
+                  <Icons.ChevronRight className="w-4 h-4 text-muted-foreground self-end" />
                 </CardContent>
               </Card>
             </motion.div>
@@ -548,7 +548,7 @@ const HojePage: React.FC = () => {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-base flex items-center gap-2">
-              <PenLine className="w-4 h-4 text-primary" />
+              <Icons.PenLine className="w-4 h-4 text-primary" />
               Diário Espiritual
             </CardTitle>
           </CardHeader>
@@ -564,7 +564,7 @@ const HojePage: React.FC = () => {
                 {journalSaved ? '✓ Salvo com sucesso!' : 'Suas reflexões são privadas.'}
               </p>
               <Button size="sm" onClick={saveJournal} disabled={!journalText.trim() || isAnalyzing}>
-                {isAnalyzing ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Salvar'}
+                {isAnalyzing ? <Icons.Loader className="w-4 h-4 animate-spin" /> : 'Salvar'}
               </Button>
             </div>
           </CardContent>
@@ -580,18 +580,18 @@ const HojePage: React.FC = () => {
         >
           <Card className="border-primary/40 bg-gradient-to-br from-primary/10 via-background to-background relative overflow-hidden shadow-xl">
             <div className="absolute top-0 right-0 p-4 opacity-10">
-              <Sparkles className="w-12 h-12 text-primary" />
+              <Icons.Sparkles className="w-12 h-12 text-primary" />
             </div>
             <CardHeader className="pb-2">
               <CardTitle className="text-base flex items-center gap-2 text-primary font-serif">
-                <Sparkles className="w-4 h-4" />
+                <Icons.Sparkles className="w-4 h-4" />
                 Logos
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               {isAnalyzing && !logosResponse ? (
                 <div className="flex items-center gap-3 py-6">
-                  <Loader2 className="w-6 h-6 text-primary animate-spin" />
+                  <Icons.Loader className="w-6 h-6 text-primary animate-spin" />
                   <p className="text-sm text-muted-foreground animate-pulse font-medium">Logos está refletindo sobre sua partilha...</p>
                 </div>
               ) : (
@@ -612,10 +612,10 @@ const HojePage: React.FC = () => {
                     
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {[
-                        { key: 'ansiedade', label: 'Ansiedade', color: 'bg-orange-500', icon: <Flame className="w-3 h-3" /> },
-                        { key: 'confusao', label: 'Confusão', color: 'bg-blue-500', icon: <Compass className="w-3 h-3" /> },
-                        { key: 'dor_emocional', label: 'Dor Emocional', color: 'bg-red-500', icon: <Moon className="w-3 h-3" /> },
-                        { key: 'busca_espiritual', label: 'Busca Espiritual', color: 'bg-emerald-500', icon: <Sparkles className="w-3 h-3" /> },
+                        { key: 'ansiedade', label: 'Ansiedade', color: 'bg-orange-500', icon: <Icons.Flame className="w-3 h-3" /> },
+                        { key: 'confusao', label: 'Confusão', color: 'bg-blue-500', icon: <Icons.Compass className="w-3 h-3" /> },
+                        { key: 'dor_emocional', label: 'Dor Emocional', color: 'bg-red-500', icon: <Icons.Moon className="w-3 h-3" /> },
+                        { key: 'busca_espiritual', label: 'Busca Espiritual', color: 'bg-emerald-500', icon: <Icons.Sparkles className="w-3 h-3" /> },
                       ].map((state) => (
                         <div key={state.key} className="space-y-1.5">
                           <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
@@ -637,7 +637,7 @@ const HojePage: React.FC = () => {
                   {recommendedLogosJourney && (
                     <div className="space-y-4 pt-4 border-t border-primary/10">
                       <div className="flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-wider">
-                        <Compass className="w-4 h-4" />
+                        <Icons.Compass className="w-4 h-4" />
                         Jornada Sugerida: {recommendedLogosJourney.title}
                       </div>
                       <p className="text-sm text-muted-foreground leading-relaxed italic">
@@ -653,7 +653,7 @@ const HojePage: React.FC = () => {
                           }
                         }}
                       >
-                        Continuar por aqui <ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                        Continuar por aqui <Icons.ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                       </Button>
                     </div>
                   )}
@@ -663,7 +663,7 @@ const HojePage: React.FC = () => {
               {!isAnalyzing && !logosRecommendation?.scores && recommendedLogosJourney && (
                 <div className="mt-6 pt-6 border-t border-primary/20 space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-700">
                   <div className="flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-wider">
-                    <Compass className="w-4 h-4" />
+                    <Icons.Compass className="w-4 h-4" />
                     Jornada Sugerida: {recommendedLogosJourney.title}
                   </div>
                   <p className="text-sm text-muted-foreground">
@@ -679,7 +679,7 @@ const HojePage: React.FC = () => {
                       }
                     }}
                   >
-                    Continuar por aqui <ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                    Continuar por aqui <Icons.ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </div>
               )}
