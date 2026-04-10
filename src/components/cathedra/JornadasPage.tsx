@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
 import { motion } from 'framer-motion';
-import { Compass, Sparkles, Clock, ChevronRight, ArrowRight, Filter } from 'lucide-react';
+import { Icons } from '@/constants';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
