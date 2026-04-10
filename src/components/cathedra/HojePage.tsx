@@ -10,6 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 import { LangContext } from '@/contexts/LangContext';
+import ProConversionBanner from './ProConversionBanner';
 
 const getGreeting = () => {
   const h = new Date().getHours();
@@ -680,6 +681,11 @@ const HojePage: React.FC = () => {
                   >
                     Continuar por aqui <ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                   </Button>
+                </div>
+              )}
+              {!isAnalyzing && logosResponse && (
+                <div className="pt-4 mt-4 border-t border-primary/10">
+                  <ProConversionBanner context="logos" />
                 </div>
               )}
             </CardContent>
