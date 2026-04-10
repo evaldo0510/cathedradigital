@@ -126,26 +126,24 @@ const ProConversionBanner: React.FC<ProConversionBannerProps> = ({ context, forc
 };
 
 function getCopy(context: string, reflections: number): { title: string; message: string } {
-  // Moments of conversion as requested:
-  
   if (context === 'logos') {
     return {
       title: 'Existe um nível mais profundo disso.',
-      message: 'A Logos pode ir muito além. Tenha acesso a respostas ilimitadas e análises teológicas avançadas.',
+      message: 'Sua busca por entendimento tocou em algo real. A Logos Pro oferece análises teológicas sem limites e conexões que a versão gratuita ainda não revela.',
     };
   }
 
   if (context === 'jornada') {
     return {
       title: 'Continue essa transformação.',
-      message: 'O progresso que você fez até agora é real. Desbloqueie o caminho completo e não pare agora.',
+      message: 'Você avançou no seu caminho e o progresso é visível. A experiência completa desbloqueia as próximas etapas e ferramentas exclusivas de contemplação.',
     };
   }
 
   if (reflections >= 2) {
     return {
       title: 'Você começou a entender…',
-      message: 'Aprofunde isso. Com o PRO, você tem acesso ao diário completo e todas as ferramentas de meditação.',
+      message: 'Aprofunde isso. Suas reflexões estão amadurecendo e o Pro oferece o espaço ilimitado e as ferramentas de discernimento que sua alma busca agora.',
     };
   }
 
@@ -153,13 +151,13 @@ function getCopy(context: string, reflections: number): { title: string; message
   if (context === 'lectio') {
     return {
       title: 'A Palavra está agindo em você',
-      message: 'Sua alma já começou a refletir profundamente. O PRO desbloqueia o caminho completo.',
+      message: 'Sua escuta se tornou mais atenta. Com o Pro, você acessa o repositório completo de meditações e o suporte contínuo da Logos.',
     };
   }
 
   return {
     title: 'Aprofunde sua caminhada',
-    message: 'Suas reflexões mostram que algo está acontecendo dentro de você. O PRO desbloqueia a experiência completa.',
+    message: 'Suas reflexões mostram um novo horizonte. A experiência Pro oferece o suporte necessário para que essa clareza se torne constante.',
   };
 }
 
