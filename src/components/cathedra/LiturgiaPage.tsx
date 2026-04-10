@@ -1,14 +1,33 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { ArrowLeft, BookOpen, ScrollText, Music, Flame, ChevronRight, Sparkles, User, Brain, Loader2 } from 'lucide-react';
+import { ArrowLeft, BookOpen, ScrollText, Music, Flame, ChevronRight, Sparkles, User, Brain, Loader2, BookMarked } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import SEOHead from '@/components/SEOHead';
 import { supabase } from '@/integrations/supabase/client';
 import { AppRoute } from '@/types';
 import { SAINTS_DATA } from '@/data/saints';
 import ReactMarkdown from 'react-markdown';
+
+/* ─── Local cache helpers ─── */
+const CACHE_KEY = 'cathedra_liturgy_cache';
+
+function getCachedReadings(dateKey: string): LiturgyReadings | null {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (parsed.dateKey === dateKey) return parsed.data;
+    return null;
+  } catch { return null; }
+}
+
+function setCachedReadings(dateKey: string, data: LiturgyReadings) {
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify({ dateKey, data }));
+  } catch { /* quota exceeded */ }
+}
 
 /* ─── Types ─── */
 interface Reading {
@@ -116,15 +135,20 @@ const LiturgiaPage: React.FC = () => {
   const [meditation, setMeditation] = useState<string | null>(null);
   const [isMeditationLoading, setIsMeditationLoading] = useState(false);
 
+  const dateKey = today.toDateString();
+
   const { data: readings, isLoading } = useQuery({
-    queryKey: ['liturgy-readings', today.toDateString()],
+    queryKey: ['liturgy-readings', dateKey],
     queryFn: async () => {
       const { data, error } = await supabase.functions.invoke('liturgical-calendar', {
         body: { action: 'readings', day: today.getDate(), month: today.getMonth() + 1 }
       });
       if (error) throw error;
-      return data as LiturgyReadings;
+      const result = data as LiturgyReadings;
+      setCachedReadings(dateKey, result);
+      return result;
     },
+    initialData: () => getCachedReadings(dateKey) ?? undefined,
     staleTime: 1000 * 60 * 60,
   });
 
@@ -148,9 +172,19 @@ const LiturgiaPage: React.FC = () => {
   const fetchMeditation = useCallback(async () => {
     if (!readings?.evangelho?.texto || isMeditationLoading) return;
     setIsMeditationLoading(true);
+    setMeditation(null);
     try {
-      const { data, error } = await supabase.functions.invoke('colloquium', {
-        body: {
+      const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
+      const anonKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+      const url = `https://${projectId}.supabase.co/functions/v1/colloquium`;
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': anonKey,
+        },
+        body: JSON.stringify({
           messages: [{
             role: 'user',
             content: `Gere uma Meditação Diária espiritual, curta e profunda, baseada no Evangelho do dia: ${readings.evangelho.referencia} - ${readings.evangelho.texto.substring(0, 800)}.
@@ -160,10 +194,15 @@ A meditação deve ser escrita num tom orante e poético (PCH — Poesia Cogniti
 3. Uma oração final curta.
 Use Markdown para formatação.`
           }]
-        }
+        })
       });
-      if (error) throw error;
-      const reader = data.getReader();
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      const reader = response.body?.getReader();
+      if (!reader) throw new Error('No reader');
       const decoder = new TextDecoder();
       let fullText = '';
       while (true) {
@@ -260,7 +299,19 @@ Use Markdown para formatação.`
               />
             )}
 
-            {/* Evangelho */}
+            {/* Segunda Leitura (domingos e solenidades) */}
+            {readings.segundaLeitura && typeof readings.segundaLeitura === 'object' && 'referencia' in readings.segundaLeitura && (
+              <ReadingCard
+                label="Segunda Leitura"
+                icon={<BookMarked className="w-4 h-4 text-emerald-600" />}
+                reference={(readings.segundaLeitura as Reading).referencia}
+                text={(readings.segundaLeitura as Reading).texto}
+                onContext={() => navigate(parseRefToRoute((readings.segundaLeitura as Reading).referencia))}
+                onReflect={() => navigateToLectio((readings.segundaLeitura as Reading).referencia)}
+                delay={0.25}
+              />
+            )}
+
             {readings.evangelho && (
               <ReadingCard
                 label="Evangelho"
