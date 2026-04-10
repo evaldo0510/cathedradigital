@@ -62,8 +62,9 @@ const DEEP_INSIGHTS: Record<string, {
 
 const HojePage: React.FC = () => {
   const navigate = useNavigate();
-  const { user, profile } = useAuth();
+  const { user, profile, userLevel } = useAuth();
   const { t } = useContext(LangContext);
+  const DEEP_INSIGHT = DEEP_INSIGHTS[userLevel];
   const greeting = getGreeting();
   const [journalText, setJournalText] = useState('');
   const [journalSaved, setJournalSaved] = useState(false);
