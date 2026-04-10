@@ -119,6 +119,12 @@ const ProConversionBanner: React.FC<ProConversionBannerProps> = ({ context }) =>
 };
 
 function getCopy(context: string, reflections: number): { title: string; message: string } {
+  if (reflections >= 2 && context !== 'logos') {
+    return {
+      title: 'Você começou a entender…',
+      message: 'Aprofunde isso. Com o PRO, você tem acesso ao diário completo e todas as ferramentas de meditação.',
+    };
+  }
   if (context === 'lectio') {
     return {
       title: 'Você começou a entender…',
