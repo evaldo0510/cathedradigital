@@ -154,7 +154,7 @@ const ProfilePage: React.FC = () => {
 
   if (loading) return (
     <div className="flex items-center justify-center min-h-[40vh]">
-      <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+      <div className="w-8 h-8 border-2 border-secondary border-t-transparent rounded-full animate-spin" />
     </div>
   );
 
@@ -217,7 +217,7 @@ const ProfilePage: React.FC = () => {
             className="absolute inset-0 rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
           >
             {uploading ? (
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              <div className="w-5 h-5 border-2 border-secondary border-t-transparent rounded-full animate-spin" />
             ) : (
               <Icons.Feather className="w-5 h-5 text-white" />
             )}

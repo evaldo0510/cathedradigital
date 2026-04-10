@@ -369,7 +369,7 @@ const LiturgicalCalendarPage: React.FC = () => {
           {/* Loading indicator */}
           {isLoadingApi && (
             <div className="flex justify-center mb-3">
-              <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+              <div className="w-4 h-4 border-2 border-secondary border-t-transparent rounded-full animate-spin" />
             </div>
           )}
 

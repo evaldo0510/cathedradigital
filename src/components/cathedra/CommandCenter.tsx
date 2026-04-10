@@ -228,7 +228,7 @@ const CommandCenter: React.FC = () => {
         <div className="max-h-[50vh] overflow-y-auto py-2">
           {globalLoading && (
             <div className="flex items-center justify-center py-6">
-              <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+              <div className="w-5 h-5 border-2 border-secondary border-t-transparent rounded-full animate-spin" />
               <span className="ml-2 text-xs text-muted-foreground">Buscando...</span>
             </div>
           )}

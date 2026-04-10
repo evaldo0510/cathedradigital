@@ -253,7 +253,7 @@ const DailyLiturgy: React.FC = () => {
 
       <div className="bg-card border border-border rounded-[2.5rem] p-8 md:p-16 space-y-12 shadow-sm relative overflow-hidden">
         {isLoading ? (
-          <div className="flex justify-center py-20"><Loader2 className="w-10 h-10 text-primary animate-spin" /></div>
+          <div className="flex justify-center py-20"><Loader2 className="w-10 h-10 text-secondary animate-spin" /></div>
         ) : error ? (
           <div className="text-center py-16 space-y-4"><Cloud className="w-12 h-12 text-muted-foreground mx-auto opacity-20" /><p className="text-primary italic font-serif">{error}</p></div>
         ) : (

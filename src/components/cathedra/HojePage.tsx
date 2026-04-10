@@ -591,7 +591,7 @@ const HojePage: React.FC = () => {
             <CardContent className="space-y-4">
               {isAnalyzing && !logosResponse ? (
                 <div className="flex items-center gap-3 py-6">
-                  <Icons.Loader className="w-6 h-6 text-primary animate-spin" />
+                  <Icons.Loader className="w-6 h-6 text-secondary animate-spin" />
                   <p className="text-sm text-muted-foreground animate-pulse font-medium">Logos está refletindo sobre sua partilha...</p>
                 </div>
               ) : (
