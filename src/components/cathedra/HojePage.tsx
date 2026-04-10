@@ -93,7 +93,6 @@ const HojePage: React.FC = () => {
           }
         }
       } else {
-        // No progress yet — load recommended journey from diagnosis
         loadRecommendedJourney();
       }
     } catch (err) {
@@ -155,8 +154,6 @@ const HojePage: React.FC = () => {
           const { done, value } = await reader.read();
           if (done) break;
           const chunk = decoder.decode(value);
-          // Standard SSE parsing if the function returns it, or just plain text if it's simplified.
-          // Our function uses streaming completions.
           const lines = chunk.split('\n');
           for (const line of lines) {
             if (line.startsWith('data: ')) {
@@ -165,20 +162,18 @@ const HojePage: React.FC = () => {
                 const content = data.choices?.[0]?.delta?.content || '';
                 fullText += content;
                 setLogosResponse(fullText);
-              } catch (e) { /* skip partial JSON */ }
+              } catch (e) { /* skip */ }
             }
           }
         }
       }
 
-      // Extract recommendation metadata
       const match = fullText.match(/\[RECOMMENDATION:(.*?)\]/);
       if (match) {
         try {
           const recommendation = JSON.parse(match[1]);
           setLogosRecommendation(recommendation);
           
-          // Fetch the journey by category
           const { data: journey } = await supabase
             .from('journeys')
             .select('*')
@@ -217,7 +212,6 @@ const HojePage: React.FC = () => {
       console.error('Failed to save journal:', err);
     }
   };
-
 
   const streak = (profile as any)?.streak || 0;
   const userName = (profile as any)?.name || user?.email?.split('@')[0] || '';
@@ -326,62 +320,10 @@ const HojePage: React.FC = () => {
               </Button>
             </CardContent>
           </Card>
-      </motion.div>
-      
-      {/* Logos Analysis Response */}
-      {(isAnalyzing || logosResponse) && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="space-y-4"
-        >
-          <Card className="border-primary/40 bg-gradient-to-br from-primary/10 via-background to-background relative overflow-hidden">
-            <div className="absolute top-0 right-0 p-4 opacity-10">
-              <Sparkles className="w-12 h-12 text-primary" />
-            </div>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base flex items-center gap-2 text-primary">
-                <Sparkles className="w-4 h-4" />
-                Resposta de Logos
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {isAnalyzing && !logosResponse ? (
-                <div className="flex items-center gap-3 py-4">
-                  <Loader2 className="w-5 h-5 text-primary animate-spin" />
-                  <p className="text-sm text-muted-foreground animate-pulse">Analisando sua reflexão...</p>
-                </div>
-              ) : (
-                <div className="prose prose-sm dark:prose-invert max-w-none text-foreground leading-relaxed whitespace-pre-wrap">
-                  {logosResponse.replace(/\[RECOMMENDATION:.*?\]/g, '').trim()}
-                </div>
-              )}
-              
-              {!isAnalyzing && recommendedLogosJourney && (
-                <div className="mt-6 pt-6 border-t border-primary/20 space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-500">
-                  <div className="flex items-center gap-2 text-primary font-semibold text-sm">
-                    <Compass className="w-4 h-4" />
-                    Sugestão de Jornada: {recommendedLogosJourney.title}
-                  </div>
-                  <p className="text-xs text-muted-foreground italic">
-                    {logosRecommendation?.reason || "Com base na sua reflexão, esta jornada ajudará no seu crescimento agora."}
-                  </p>
-                  <Button 
-                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 group"
-                    onClick={() => navigate(`/jornadas/${recommendedLogosJourney.id}`)}
-                  >
-                    Continuar por aqui <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </div>
-              )}
-            </CardContent>
-          </Card>
         </motion.div>
       )}
 
-      )}
-
-      {/* Recommended Journey (no progress yet) */}
+      {/* Recommended Journey (no active journey) */}
       {!activeJourney && recommendedJourney && (
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -462,20 +404,71 @@ const HojePage: React.FC = () => {
               <p className="text-xs text-muted-foreground">
                 {journalSaved ? '✓ Salvo com sucesso!' : 'Suas reflexões são privadas.'}
               </p>
-              <Button size="sm" onClick={saveJournal} disabled={!journalText.trim()}>
-                Salvar
+              <Button size="sm" onClick={saveJournal} disabled={!journalText.trim() || isAnalyzing}>
+                {isAnalyzing ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Salvar'}
               </Button>
             </div>
           </CardContent>
         </Card>
       </motion.div>
 
+      {/* Logos Analysis Response */}
+      {(isAnalyzing || logosResponse) && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="space-y-4 pb-4"
+        >
+          <Card className="border-primary/40 bg-gradient-to-br from-primary/10 via-background to-background relative overflow-hidden shadow-xl">
+            <div className="absolute top-0 right-0 p-4 opacity-10">
+              <Sparkles className="w-12 h-12 text-primary" />
+            </div>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base flex items-center gap-2 text-primary font-serif">
+                <Sparkles className="w-4 h-4" />
+                Logos
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {isAnalyzing && !logosResponse ? (
+                <div className="flex items-center gap-3 py-6">
+                  <Loader2 className="w-6 h-6 text-primary animate-spin" />
+                  <p className="text-sm text-muted-foreground animate-pulse font-medium">Logos está refletindo sobre sua partilha...</p>
+                </div>
+              ) : (
+                <div className="prose prose-sm dark:prose-invert max-w-none text-foreground leading-relaxed whitespace-pre-wrap font-serif text-base italic">
+                  {logosResponse.replace(/\[RECOMMENDATION:.*?\]/g, '').trim()}
+                </div>
+              )}
+              
+              {!isAnalyzing && recommendedLogosJourney && (
+                <div className="mt-6 pt-6 border-t border-primary/20 space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-700">
+                  <div className="flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-wider">
+                    <Compass className="w-4 h-4" />
+                    Jornada Sugerida: {recommendedLogosJourney.title}
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    {logosRecommendation?.reason || "Esta jornada foi selecionada especialmente para o seu momento atual."}
+                  </p>
+                  <Button 
+                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground h-12 text-base font-semibold shadow-lg shadow-primary/20 group"
+                    onClick={() => navigate(`/jornadas/${recommendedLogosJourney.id}`)}
+                  >
+                    Continuar por aqui <ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
+
       {/* Quick Links */}
-      <div className="grid grid-cols-2 gap-3">
-        <Button variant="outline" size="sm" onClick={() => navigate(AppRoute.DIAGNOSTICO)} className="text-xs">
+      <div className="grid grid-cols-2 gap-3 pt-4">
+        <Button variant="outline" size="sm" onClick={() => navigate(AppRoute.DIAGNOSTICO)} className="text-xs h-9">
           Refazer Diagnóstico
         </Button>
-        <Button variant="outline" size="sm" onClick={() => navigate(AppRoute.JORNADAS)} className="text-xs">
+        <Button variant="outline" size="sm" onClick={() => navigate(AppRoute.JORNADAS)} className="text-xs h-9">
           Ver Jornadas
         </Button>
       </div>
