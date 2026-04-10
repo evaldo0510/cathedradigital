@@ -6,7 +6,8 @@ import { useAuth } from '../../hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import SacredImage from './SacredImage';
 import {
-  BookOpen, Church, ChevronRight, Flame, Star, Zap, Map, Users
+  BookOpen, Church, ChevronRight, Flame, Star, Zap, Map, Users,
+  TrendingUp, Calendar, BookMarked
 } from 'lucide-react';
 
 interface DashboardProps {
@@ -115,6 +116,25 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
     });
   }, []);
 
+  // Weekly stats
+  const [weeklyStats, setWeeklyStats] = useState({ chaptersRead: 0, journeySteps: 0 });
+  useEffect(() => {
+    if (!user) return;
+    const weekAgo = new Date();
+    weekAgo.setDate(weekAgo.getDate() - 7);
+    const iso = weekAgo.toISOString();
+
+    Promise.all([
+      supabase.from('bible_chapters_read').select('id', { count: 'exact', head: true }).eq('user_id', user.id).gte('read_at', iso),
+      supabase.from('journey_progress').select('id', { count: 'exact', head: true }).eq('user_id', user.id).gte('completed_at', iso),
+    ]).then(([chapRes, jpRes]) => {
+      setWeeklyStats({
+        chaptersRead: chapRes.count || 0,
+        journeySteps: jpRes.count || 0,
+      });
+    });
+  }, [user]);
+
   return (
     <div className="max-w-2xl mx-auto px-4 py-10 md:py-16 space-y-10">
 
@@ -188,6 +208,36 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               </button>
             );
           })}
+        </div>
+      </FadeUp>
+
+      {/* ═══ WEEKLY SUMMARY ═══ */}
+      <FadeUp delay={0.12}>
+        <div className="bg-card border border-border rounded-2xl p-5 shadow-sm space-y-3">
+          <div className="flex items-center gap-2">
+            <TrendingUp className="w-4 h-4 text-primary" />
+            <h2 className="text-sm font-bold text-foreground uppercase tracking-wide">Resumo da Semana</h2>
+          </div>
+          <div className="grid grid-cols-3 gap-3">
+            <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
+              <p className="text-2xl font-bold text-foreground">{weeklyStats.chaptersRead}</p>
+              <p className="text-[10px] text-muted-foreground font-medium mt-0.5 flex items-center justify-center gap-1">
+                <BookMarked className="w-3 h-3" /> Capítulos
+              </p>
+            </div>
+            <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
+              <p className="text-2xl font-bold text-foreground">{streak}</p>
+              <p className="text-[10px] text-muted-foreground font-medium mt-0.5 flex items-center justify-center gap-1">
+                <Flame className="w-3 h-3" /> Streak
+              </p>
+            </div>
+            <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
+              <p className="text-2xl font-bold text-foreground">{weeklyStats.journeySteps}</p>
+              <p className="text-[10px] text-muted-foreground font-medium mt-0.5 flex items-center justify-center gap-1">
+                <Calendar className="w-3 h-3" /> Etapas
+              </p>
+            </div>
+          </div>
         </div>
       </FadeUp>
 
