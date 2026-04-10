@@ -12,6 +12,7 @@ import {
   Activity,
   ChevronLeft
 } from 'lucide-react';
+import { Icons } from '../../constants';
 import ShareButton from './ShareButton';
 
 const STATIONS = [
