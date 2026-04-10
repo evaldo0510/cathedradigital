@@ -275,6 +275,39 @@ export type Database = {
         }
         Relationships: []
       }
+      intelligent_notification_logs: {
+        Row: {
+          channel: string
+          content: string
+          id: string
+          metadata: Json | null
+          sent_at: string
+          status: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          channel: string
+          content: string
+          id?: string
+          metadata?: Json | null
+          sent_at?: string
+          status?: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          channel?: string
+          content?: string
+          id?: string
+          metadata?: Json | null
+          sent_at?: string
+          status?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       journey_progress: {
         Row: {
           completed_at: string
@@ -463,13 +496,17 @@ export type Database = {
           created_at: string
           id: string
           is_premium: boolean
+          last_action_at: string | null
           last_visit: string | null
           level: number | null
           name: string
+          push_enabled: boolean | null
           role: string | null
           streak: number | null
           total_minutes_read: number | null
           updated_at: string
+          whatsapp_enabled: boolean | null
+          whatsapp_number: string | null
           xp: number | null
         }
         Insert: {
@@ -480,13 +517,17 @@ export type Database = {
           created_at?: string
           id: string
           is_premium?: boolean
+          last_action_at?: string | null
           last_visit?: string | null
           level?: number | null
           name?: string
+          push_enabled?: boolean | null
           role?: string | null
           streak?: number | null
           total_minutes_read?: number | null
           updated_at?: string
+          whatsapp_enabled?: boolean | null
+          whatsapp_number?: string | null
           xp?: number | null
         }
         Update: {
@@ -497,13 +538,17 @@ export type Database = {
           created_at?: string
           id?: string
           is_premium?: boolean
+          last_action_at?: string | null
           last_visit?: string | null
           level?: number | null
           name?: string
+          push_enabled?: boolean | null
           role?: string | null
           streak?: number | null
           total_minutes_read?: number | null
           updated_at?: string
+          whatsapp_enabled?: boolean | null
+          whatsapp_number?: string | null
           xp?: number | null
         }
         Relationships: []
