@@ -1,103 +1,33 @@
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Icons } from '../../constants';
+import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Icons } from '@/constants';
+import SEOHead from '@/components/SEOHead';
 import { supabase } from '@/integrations/supabase/client';
-import { AppRoute } from '@/types';
-import NotesPanel from './NotesPanel';
+import { useAuth } from '@/hooks/useAuth';
+import SacredImage from './SacredImage';
+import { toast } from 'sonner';
 
-type DocCategory = 'all' | 'council' | 'encyclical' | 'exhortation' | 'letter' | 'constitution';
-
-interface MagisteriumDoc {
-  id: string;
-  title: string;
-  latinTitle?: string;
-  author: string;
-  year: number;
-  category: DocCategory;
-  summary: string;
-  topics: string[];
-  vaticanUrl?: string;
-  pdfUrl?: string;
-}
-
-const DOCUMENTS: MagisteriumDoc[] = [
-  // Councils / Constitutions - Vatican II
-  { id: 'vat2-lg', title: 'Lumen Gentium', latinTitle: 'Lumen Gentium', author: 'Concílio Vaticano II', year: 1964, category: 'constitution', summary: 'Constituição dogmática sobre a Igreja. Define a natureza e missão universal da Igreja como sacramento de salvação.', topics: ['Eclesiologia', 'Povo de Deus', 'Colegialidade'], vaticanUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_const_19641121_lumen-gentium_pt.html', pdfUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_const_19641121_lumen-gentium_pt.pdf' },
-  { id: 'vat2-dv', title: 'Dei Verbum', latinTitle: 'Dei Verbum', author: 'Concílio Vaticano II', year: 1965, category: 'constitution', summary: 'Constituição dogmática sobre a Revelação Divina. Trata das Escrituras, Tradição e Magistério.', topics: ['Revelação', 'Escritura', 'Tradição'], vaticanUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_const_19651118_dei-verbum_pt.html', pdfUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_const_19651118_dei-verbum_pt.pdf' },
-  { id: 'vat2-sc', title: 'Sacrosanctum Concilium', latinTitle: 'Sacrosanctum Concilium', author: 'Concílio Vaticano II', year: 1963, category: 'constitution', summary: 'Constituição sobre a Sagrada Liturgia. Promoveu a reforma litúrgica e a participação ativa dos fiéis.', topics: ['Liturgia', 'Sacramentos', 'Reforma'], vaticanUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_const_19631204_sacrosanctum-concilium_pt.html', pdfUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_const_19631204_sacrosanctum-concilium_pt.pdf' },
-  { id: 'vat2-gs', title: 'Gaudium et Spes', latinTitle: 'Gaudium et Spes', author: 'Concílio Vaticano II', year: 1965, category: 'constitution', summary: 'Constituição pastoral sobre a Igreja no mundo atual. Aborda temas como dignidade humana, cultura e vida social.', topics: ['Doutrina Social', 'Dignidade', 'Cultura'], vaticanUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_const_19651207_gaudium-et-spes_pt.html', pdfUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_const_19651207_gaudium-et-spes_pt.pdf' },
-  { id: 'vat2-na', title: 'Nostra Aetate', latinTitle: 'Nostra Aetate', author: 'Concílio Vaticano II', year: 1965, category: 'council', summary: 'Declaração sobre as relações da Igreja com as religiões não cristãs.', topics: ['Diálogo Inter-religioso', 'Judaísmo'], vaticanUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_decl_19651028_nostra-aetate_pt.html', pdfUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_decl_19651028_nostra-aetate_pt.pdf' },
-  { id: 'vat2-dh', title: 'Dignitatis Humanae', latinTitle: 'Dignitatis Humanae', author: 'Concílio Vaticano II', year: 1965, category: 'council', summary: 'Declaração sobre a liberdade religiosa. Defende o direito à liberdade de consciência e religião.', topics: ['Liberdade Religiosa', 'Dignidade'], vaticanUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_decl_19651207_dignitatis-humanae_pt.html', pdfUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_decl_19651207_dignitatis-humanae_pt.pdf' },
-  { id: 'vat2-ur', title: 'Unitatis Redintegratio', latinTitle: 'Unitatis Redintegratio', author: 'Concílio Vaticano II', year: 1964, category: 'council', summary: 'Decreto sobre o ecumenismo. Promove a unidade dos cristãos.', topics: ['Ecumenismo', 'Unidade'], vaticanUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_decree_19641121_unitatis-redintegratio_pt.html', pdfUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_decree_19641121_unitatis-redintegratio_pt.pdf' },
-  { id: 'vat2-ag', title: 'Ad Gentes', latinTitle: 'Ad Gentes', author: 'Concílio Vaticano II', year: 1965, category: 'council', summary: 'Decreto sobre a atividade missionária da Igreja.', topics: ['Missão', 'Evangelização'], vaticanUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_decree_19651207_ad-gentes_pt.html', pdfUrl: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_decree_19651207_ad-gentes_pt.pdf' },
-  { id: 'trent', title: 'Concílio de Trento', author: 'Concílio Ecumênico', year: 1563, category: 'council', summary: 'Reforma da Igreja e resposta à Reforma Protestante. Definiu a doutrina sobre os sacramentos, a justificação e o cânon bíblico.', topics: ['Sacramentos', 'Justificação', 'Cânon Bíblico'] },
-  { id: 'vat1', title: 'Concílio Vaticano I', author: 'Concílio Ecumênico', year: 1870, category: 'council', summary: 'Definiu o dogma da infalibilidade papal e a constituição dogmática Dei Filius sobre a fé católica.', topics: ['Infalibilidade', 'Fé e Razão'] },
-  // Encyclicals
-  { id: 'rn', title: 'Rerum Novarum', latinTitle: 'Rerum Novarum', author: 'Leão XIII', year: 1891, category: 'encyclical', summary: 'Sobre a condição dos operários. Marco fundador da Doutrina Social da Igreja, defende os direitos dos trabalhadores.', topics: ['Doutrina Social', 'Trabalho', 'Propriedade'], vaticanUrl: 'https://www.vatican.va/content/leo-xiii/pt/encyclicals/documents/hf_l-xiii_enc_15051891_rerum-novarum.html' },
-  { id: 'qa', title: 'Quadragesimo Anno', latinTitle: 'Quadragesimo Anno', author: 'Pio XI', year: 1931, category: 'encyclical', summary: 'Sobre a restauração da ordem social. Desenvolve o princípio da subsidiariedade.', topics: ['Doutrina Social', 'Subsidiariedade'], vaticanUrl: 'https://www.vatican.va/content/pius-xi/pt/encyclicals/documents/hf_p-xi_enc_19310515_quadragesimo-anno.html' },
-  { id: 'mbs', title: 'Mit brennender Sorge', author: 'Pio XI', year: 1937, category: 'encyclical', summary: 'Condenação do nazismo e do racismo. Escrita em alemão, foi lida em todas as igrejas da Alemanha.', topics: ['Nazismo', 'Direitos Humanos'] },
-  { id: 'mc', title: 'Mystici Corporis Christi', latinTitle: 'Mystici Corporis Christi', author: 'Pio XII', year: 1943, category: 'encyclical', summary: 'Sobre o Corpo Místico de Cristo. Define a Igreja como corpo vivo de Cristo.', topics: ['Eclesiologia', 'Corpo Místico'], vaticanUrl: 'https://www.vatican.va/content/pius-xii/pt/encyclicals/documents/hf_p-xii_enc_29061943_mystici-corporis-christi.html' },
-  { id: 'hv', title: 'Humanae Vitae', latinTitle: 'Humanae Vitae', author: 'Paulo VI', year: 1968, category: 'encyclical', summary: 'Sobre a regulação da natalidade. Reafirma a doutrina da Igreja sobre contracepção e abertura à vida.', topics: ['Moral', 'Família', 'Bioética'], vaticanUrl: 'https://www.vatican.va/content/paul-vi/pt/encyclicals/documents/hf_p-vi_enc_25071968_humanae-vitae.html' },
-  { id: 'pp', title: 'Populorum Progressio', latinTitle: 'Populorum Progressio', author: 'Paulo VI', year: 1967, category: 'encyclical', summary: 'Sobre o desenvolvimento dos povos. Aborda justiça social e solidariedade internacional.', topics: ['Desenvolvimento', 'Justiça Social'], vaticanUrl: 'https://www.vatican.va/content/paul-vi/pt/encyclicals/documents/hf_p-vi_enc_26031967_populorum.html' },
-  { id: 'rh', title: 'Redemptor Hominis', latinTitle: 'Redemptor Hominis', author: 'João Paulo II', year: 1979, category: 'encyclical', summary: 'Primeira encíclica de João Paulo II. Cristo como redentor do homem e centro do cosmos.', topics: ['Cristologia', 'Antropologia'], vaticanUrl: 'https://www.vatican.va/content/john-paul-ii/pt/encyclicals/documents/hf_jp-ii_enc_04031979_redemptor-hominis.html' },
-  { id: 'le', title: 'Laborem Exercens', latinTitle: 'Laborem Exercens', author: 'João Paulo II', year: 1981, category: 'encyclical', summary: 'Sobre o trabalho humano. Dignidade do trabalho e direitos dos trabalhadores.', topics: ['Trabalho', 'Doutrina Social'], vaticanUrl: 'https://www.vatican.va/content/john-paul-ii/pt/encyclicals/documents/hf_jp-ii_enc_14091981_laborem-exercens.html' },
-  { id: 'srs', title: 'Sollicitudo Rei Socialis', latinTitle: 'Sollicitudo Rei Socialis', author: 'João Paulo II', year: 1987, category: 'encyclical', summary: 'Sobre a questão social. Conceito de estruturas de pecado e solidariedade.', topics: ['Doutrina Social', 'Solidariedade'], vaticanUrl: 'https://www.vatican.va/content/john-paul-ii/pt/encyclicals/documents/hf_jp-ii_enc_30121987_sollicitudo-rei-socialis.html' },
-  { id: 'ca', title: 'Centesimus Annus', latinTitle: 'Centesimus Annus', author: 'João Paulo II', year: 1991, category: 'encyclical', summary: 'No centenário da Rerum Novarum. Reflexão sobre capitalismo, socialismo e livre mercado.', topics: ['Doutrina Social', 'Economia'], vaticanUrl: 'https://www.vatican.va/content/john-paul-ii/pt/encyclicals/documents/hf_jp-ii_enc_01051991_centesimus-annus.html' },
-  { id: 'vs', title: 'Veritatis Splendor', latinTitle: 'Veritatis Splendor', author: 'João Paulo II', year: 1993, category: 'encyclical', summary: 'Sobre questões fundamentais do ensinamento moral da Igreja. Defende a existência de normas morais absolutas.', topics: ['Moral', 'Verdade', 'Liberdade'], vaticanUrl: 'https://www.vatican.va/content/john-paul-ii/pt/encyclicals/documents/hf_jp-ii_enc_06081993_veritatis-splendor.html' },
-  { id: 'ev', title: 'Evangelium Vitae', latinTitle: 'Evangelium Vitae', author: 'João Paulo II', year: 1995, category: 'encyclical', summary: 'Sobre o valor e a inviolabilidade da vida humana. Condena o aborto e a eutanásia.', topics: ['Vida', 'Bioética', 'Dignidade'], vaticanUrl: 'https://www.vatican.va/content/john-paul-ii/pt/encyclicals/documents/hf_jp-ii_enc_25031995_evangelium-vitae.html' },
-  { id: 'fr', title: 'Fides et Ratio', latinTitle: 'Fides et Ratio', author: 'João Paulo II', year: 1998, category: 'encyclical', summary: 'Sobre as relações entre fé e razão. Defende a harmonia entre filosofia e teologia.', topics: ['Fé e Razão', 'Filosofia', 'Teologia'], vaticanUrl: 'https://www.vatican.va/content/john-paul-ii/pt/encyclicals/documents/hf_jp-ii_enc_14091998_fides-et-ratio.html' },
-  { id: 'dce', title: 'Deus Caritas Est', latinTitle: 'Deus Caritas Est', author: 'Bento XVI', year: 2005, category: 'encyclical', summary: 'Sobre o amor cristão. Primeira encíclica de Bento XVI sobre a caridade como essência do cristianismo.', topics: ['Caridade', 'Amor', 'Eros e Ágape'], vaticanUrl: 'https://www.vatican.va/content/benedict-xvi/pt/encyclicals/documents/hf_ben-xvi_enc_20051225_deus-caritas-est.html' },
-  { id: 'ss', title: 'Spe Salvi', latinTitle: 'Spe Salvi', author: 'Bento XVI', year: 2007, category: 'encyclical', summary: 'Sobre a esperança cristã. Reflexão sobre o sentido da esperança na vida e na história.', topics: ['Esperança', 'Escatologia'], vaticanUrl: 'https://www.vatican.va/content/benedict-xvi/pt/encyclicals/documents/hf_ben-xvi_enc_20071130_spe-salvi.html' },
-  { id: 'cv2', title: 'Caritas in Veritate', latinTitle: 'Caritas in Veritate', author: 'Bento XVI', year: 2009, category: 'encyclical', summary: 'Sobre o desenvolvimento humano integral na caridade e na verdade.', topics: ['Doutrina Social', 'Desenvolvimento'], vaticanUrl: 'https://www.vatican.va/content/benedict-xvi/pt/encyclicals/documents/hf_ben-xvi_enc_20090629_caritas-in-veritate.html' },
-  { id: 'lf', title: 'Lumen Fidei', latinTitle: 'Lumen Fidei', author: 'Francisco', year: 2013, category: 'encyclical', summary: 'Sobre a fé. Iniciada por Bento XVI e concluída por Francisco. A luz da fé que ilumina a existência.', topics: ['Fé', 'Verdade', 'Amor'], vaticanUrl: 'https://www.vatican.va/content/francesco/pt/encyclicals/documents/papa-francesco_20130629_enciclica-lumen-fidei.html' },
-  { id: 'ls', title: 'Laudato Si\'', latinTitle: 'Laudato Si\'', author: 'Francisco', year: 2015, category: 'encyclical', summary: 'Sobre o cuidado da casa comum. Aborda ecologia integral, mudanças climáticas e justiça social.', topics: ['Ecologia', 'Criação', 'Justiça Social'], vaticanUrl: 'https://www.vatican.va/content/francesco/pt/encyclicals/documents/papa-francesco_20150524_enciclica-laudato-si.html' },
-  { id: 'ft', title: 'Fratelli Tutti', latinTitle: 'Fratelli Tutti', author: 'Francisco', year: 2020, category: 'encyclical', summary: 'Sobre a fraternidade e a amizade social. Promoção do diálogo e da solidariedade universal.', topics: ['Fraternidade', 'Diálogo', 'Paz'], vaticanUrl: 'https://www.vatican.va/content/francesco/pt/encyclicals/documents/papa-francesco_20201003_enciclica-fratelli-tutti.html' },
-  { id: 'dn', title: 'Dilexit Nos', latinTitle: 'Dilexit Nos', author: 'Francisco', year: 2024, category: 'encyclical', summary: 'Sobre o amor humano e divino do Coração de Jesus Cristo. Reflete sobre a devoção ao Sagrado Coração.', topics: ['Sagrado Coração', 'Amor Divino'], vaticanUrl: 'https://www.vatican.va/content/francesco/pt/encyclicals/documents/20241024-enciclica-dilexit-nos.html' },
-  // Exhortations
-  { id: 'eg', title: 'Evangelii Gaudium', latinTitle: 'Evangelii Gaudium', author: 'Francisco', year: 2013, category: 'exhortation', summary: 'Sobre o anúncio do Evangelho no mundo atual. Programa pastoral do pontificado de Francisco.', topics: ['Evangelização', 'Pastoral', 'Missão'], vaticanUrl: 'https://www.vatican.va/content/francesco/pt/apost_exhortations/documents/papa-francesco_esortazione-ap_20131124_evangelii-gaudium.html' },
-  { id: 'al', title: 'Amoris Laetitia', latinTitle: 'Amoris Laetitia', author: 'Francisco', year: 2016, category: 'exhortation', summary: 'Sobre o amor na família. Reflexão sobre o matrimônio, a família e os desafios contemporâneos.', topics: ['Família', 'Matrimônio', 'Pastoral'], vaticanUrl: 'https://www.vatican.va/content/francesco/pt/apost_exhortations/documents/papa-francesco_esortazione-ap_20160319_amoris-laetitia.html' },
-  { id: 'ge', title: 'Gaudete et Exsultate', latinTitle: 'Gaudete et Exsultate', author: 'Francisco', year: 2018, category: 'exhortation', summary: 'Sobre o chamado à santidade no mundo atual. A santidade como vocação universal.', topics: ['Santidade', 'Vocação'], vaticanUrl: 'https://www.vatican.va/content/francesco/pt/apost_exhortations/documents/papa-francesco_esortazione-ap_20180319_gaudete-et-exsultate.html' },
-  { id: 'cv', title: 'Christus Vivit', latinTitle: 'Christus Vivit', author: 'Francisco', year: 2019, category: 'exhortation', summary: 'Aos jovens e a todo o Povo de Deus. Sobre a vocação e missão dos jovens na Igreja.', topics: ['Juventude', 'Vocação', 'Discernimento'], vaticanUrl: 'https://www.vatican.va/content/francesco/pt/apost_exhortations/documents/papa-francesco_esortazione-ap_20190325_christus-vivit.html' },
-  { id: 'qd', title: 'Querida Amazônia', latinTitle: 'Querida Amazonia', author: 'Francisco', year: 2020, category: 'exhortation', summary: 'Sonhos para a Amazônia: social, cultural, ecológico e eclesial.', topics: ['Amazônia', 'Ecologia', 'Inculturação'], vaticanUrl: 'https://www.vatican.va/content/francesco/pt/apost_exhortations/documents/papa-francesco_esortazione-ap_20200202_querida-amazonia.html' },
-  // Letters
-  { id: 'mp-tc', title: 'Traditionis Custodes', latinTitle: 'Traditionis Custodes', author: 'Francisco', year: 2021, category: 'letter', summary: 'Motu Proprio sobre o uso da liturgia romana anterior à reforma de 1970.', topics: ['Liturgia', 'Missa Tridentina'], vaticanUrl: 'https://www.vatican.va/content/francesco/pt/motu_proprio/documents/20210716-motu-proprio-traditionis-custodes.html' },
-];
-
-const CATEGORY_LABELS: Record<DocCategory, string> = {
-  all: 'Todos',
-  council: 'Concílios',
-  encyclical: 'Encíclicas',
-  exhortation: 'Exortações',
-  letter: 'Cartas',
-  constitution: 'Constituições',
+const DOCS = {
+  'ge': { name: 'Gaudete et Exsultate', type: 'Exortação Apostólica', year: 2018 },
+  'ss': { name: 'Spe Salvi', type: 'Encíclica', year: 2007 },
+  'dce': { name: 'Deus Caritas Est', type: 'Encíclica', year: 2005 },
+  'lf': { name: 'Lumen Fidei', type: 'Encíclica', year: 2013 },
+  'vat2-gs': { name: 'Gaudium et Spes', type: 'Constituição Pastoral', year: 1965 },
+  'vat2-lg': { name: 'Lumen Gentium', type: 'Constituição Dogmática', year: 1964 },
+  'cv': { name: 'Christus Vivit', type: 'Exortação Apostólica', year: 2019 },
+  'ev': { name: 'Evangelium Vitae', type: 'Encíclica', year: 1995 },
+  'al': { name: 'Amoris Laetitia', type: 'Exortação Apostólica', year: 2016 },
+  'hv': { name: 'Humanae Vitae', type: 'Encíclica', year: 1968 },
 };
 
-const CATEGORY_COLORS: Record<string, string> = {
-  council: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300',
-  encyclical: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
-  exhortation: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300',
-  letter: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
-  constitution: 'bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-300',
-};
+const getDocName = (id: string) => DOCS[id as keyof typeof DOCS]?.name || 'Documento';
+const getDocType = (id: string) => DOCS[id as keyof typeof DOCS]?.type || 'Magistério';
 
-/* ── Spiritual Guidance (Direção Espiritual) ── */
-interface SpiritualGuidance {
-  id: string;
-  theme: string;
-  icon: string;
-  question: string;
-  magisteriumAnswer: string;
-  sourceDoc: string;
-  pch: string;
-  innerQuestion: string;
-  relatedDocs: string[]; // ids from DOCUMENTS
-}
-
-const SPIRITUAL_GUIDANCE: SpiritualGuidance[] = [
+const SPIRITUAL_GUIDANCE = [
   {
     id: 'ansiedade',
     theme: 'Ansiedade',
-    icon: '🌊',
+    icon: <Icons.Activity className="w-5 h-5" />,
     question: 'O que a Igreja diz sobre a ansiedade?',
     magisteriumAnswer: 'A confiança em Deus é o caminho da paz interior. "Não andeis ansiosos" não é um comando vazio — é um convite a entregar o peso ao único que pode carregá-lo.',
     sourceDoc: 'Gaudete et Exsultate §112',
@@ -108,7 +38,7 @@ const SPIRITUAL_GUIDANCE: SpiritualGuidance[] = [
   {
     id: 'medo',
     theme: 'Medo',
-    icon: '🕯️',
+    icon: <Icons.Sun className="w-5 h-5" />,
     question: 'O que a Igreja diz sobre o medo?',
     magisteriumAnswer: 'O medo é humano, mas não deve governar. A presença de Deus é mais forte que qualquer escuridão. "Não temas, porque eu te resgatei."',
     sourceDoc: 'Spe Salvi §32',
@@ -119,7 +49,7 @@ const SPIRITUAL_GUIDANCE: SpiritualGuidance[] = [
   {
     id: 'proposito',
     theme: 'Propósito',
-    icon: '🧭',
+    icon: <Icons.Compass className="w-5 h-5" />,
     question: 'Qual é o sentido da minha vida?',
     magisteriumAnswer: 'Cada pessoa tem uma vocação única. A santidade não é privilégio de poucos, mas chamado universal — é encontrar Deus no concreto da vida.',
     sourceDoc: 'Gaudete et Exsultate §14',
@@ -130,7 +60,7 @@ const SPIRITUAL_GUIDANCE: SpiritualGuidance[] = [
   {
     id: 'sofrimento',
     theme: 'Sofrimento',
-    icon: '✝️',
+    icon: <Icons.Cross className="w-5 h-5" />,
     question: 'Por que existe sofrimento?',
     magisteriumAnswer: 'O sofrimento, quando unido à cruz de Cristo, tem poder redentor. Não é castigo, mas mistério de amor e transformação.',
     sourceDoc: 'Salvifici Doloris §19',
@@ -141,7 +71,7 @@ const SPIRITUAL_GUIDANCE: SpiritualGuidance[] = [
   {
     id: 'relacionamentos',
     theme: 'Relacionamentos',
-    icon: '💛',
+    icon: <Icons.Heart className="w-5 h-5" />,
     question: 'Como amar de verdade?',
     magisteriumAnswer: 'O amor autêntico é dom de si mesmo. Não é posse, é entrega. A família é escola de amor e comunhão.',
     sourceDoc: 'Amoris Laetitia §89',
@@ -149,586 +79,98 @@ const SPIRITUAL_GUIDANCE: SpiritualGuidance[] = [
     innerQuestion: 'Você está amando ou controlando?',
     relatedDocs: ['al', 'dce', 'hv'],
   },
-  {
-    id: 'perdao',
-    theme: 'Perdão',
-    icon: '🕊️',
-    question: 'Como perdoar o imperdoável?',
-    magisteriumAnswer: 'O perdão é libertação interior. Quem não perdoa permanece preso ao que o feriu. A misericórdia é o rosto de Deus.',
-    sourceDoc: 'Fratelli Tutti §250',
-    pch: '"Perdoar não é esquecer…\né parar de beber o veneno\nesperando que o outro adoeça."',
-    innerQuestion: 'O que você ainda carrega que não é seu?',
-    relatedDocs: ['ft', 'dce', 'eg'],
-  },
 ];
 
-const CACHE_PREFIX = 'cathedra_doc_';
-
-const getCachedDoc = (docId: string): { text: string; title: string; cachedAt: string } | null => {
-  try {
-    const raw = localStorage.getItem(CACHE_PREFIX + docId);
-    return raw ? JSON.parse(raw) : null;
-  } catch { return null; }
-};
-
-const setCachedDoc = (docId: string, text: string, title: string) => {
-  try {
-    localStorage.setItem(CACHE_PREFIX + docId, JSON.stringify({ text, title, cachedAt: new Date().toISOString() }));
-  } catch (e) {
-    console.warn('Cache storage full, clearing old docs');
-    // Clear oldest cached docs if storage is full
-    const keys = Object.keys(localStorage).filter(k => k.startsWith(CACHE_PREFIX));
-    if (keys.length > 0) {
-      localStorage.removeItem(keys[0]);
-      try { localStorage.setItem(CACHE_PREFIX + docId, JSON.stringify({ text, title, cachedAt: new Date().toISOString() })); } catch {}
-    }
-  }
-};
-
-const getCachedDocIds = (): string[] => {
-  return Object.keys(localStorage).filter(k => k.startsWith(CACHE_PREFIX)).map(k => k.replace(CACHE_PREFIX, ''));
-};
-
 const Magisterium: React.FC = () => {
-  const navigate = useNavigate();
-  const [category, setCategory] = useState<DocCategory>('all');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedDoc, setSelectedDoc] = useState<MagisteriumDoc | null>(null);
-  const [fullText, setFullText] = useState<string | null>(null);
-  const [loadingText, setLoadingText] = useState(false);
-  const [textError, setTextError] = useState<string | null>(null);
-  const [textSearch, setTextSearch] = useState('');
-  const [matchCount, setMatchCount] = useState(0);
-  const [cachedIds, setCachedIds] = useState<string[]>([]);
-  const [nightMode, setNightMode] = useState(false);
-  const [fontSize, setFontSize] = useState(15);
-  const [expandedGuidance, setExpandedGuidance] = useState<string | null>(null);
+  const [selected, setSelected] = useState(SPIRITUAL_GUIDANCE[0]);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
-  const filteredDocs = useMemo(() => {
-    let docs = DOCUMENTS;
-    if (category !== 'all') docs = docs.filter(d => d.category === category);
-    if (searchQuery) {
-      const q = searchQuery.toLowerCase();
-      docs = docs.filter(d =>
-        d.title.toLowerCase().includes(q) ||
-        d.author.toLowerCase().includes(q) ||
-        d.summary.toLowerCase().includes(q) ||
-        d.topics.some(t => t.toLowerCase().includes(q))
-      );
-    }
-    return docs.sort((a, b) => b.year - a.year);
-  }, [category, searchQuery]);
-
-  useEffect(() => {
-    setCachedIds(getCachedDocIds());
-  }, [fullText]);
-
-  const fetchFullText = useCallback(async (doc: MagisteriumDoc) => {
-    if (!doc.vaticanUrl) return;
-
-    // Try cache first
-    const cached = getCachedDoc(doc.id);
-    if (cached) {
-      setFullText(cached.text);
-      setLoadingText(false);
-      setTextError(null);
-      return;
-    }
-
-    setLoadingText(true);
-    setTextError(null);
-    setFullText(null);
-
-    try {
-      const { data, error } = await supabase.functions.invoke('vatican-document', {
-        body: { url: doc.vaticanUrl },
-      });
-
-      if (error) throw new Error(error.message);
-      if (data?.text) {
-        setFullText(data.text);
-        setCachedDoc(doc.id, data.text, data.title || doc.title);
-      } else {
-        setTextError('Não foi possível extrair o texto do documento.');
-      }
-    } catch (err) {
-      console.error('Error fetching Vatican document:', err);
-      // Try cache as fallback even on error
-      const fallback = getCachedDoc(doc.id);
-      if (fallback) {
-        setFullText(fallback.text);
-        setTextError(null);
-      } else {
-        setTextError('Erro ao carregar o documento. Tente novamente.');
-      }
-    } finally {
-      setLoadingText(false);
-    }
-  }, []);
-
-  const clearDocCache = useCallback((docId: string) => {
-    localStorage.removeItem(CACHE_PREFIX + docId);
-    setCachedIds(getCachedDocIds());
-    if (selectedDoc?.id === docId) setFullText(null);
-  }, [selectedDoc]);
-
-  const clearAllCache = useCallback(() => {
-    const keys = Object.keys(localStorage).filter(k => k.startsWith(CACHE_PREFIX));
-    keys.forEach(k => localStorage.removeItem(k));
-    setCachedIds([]);
-    setFullText(null);
-  }, []);
-
-  const exportToPdf = useCallback(() => {
-    if (!fullText || !selectedDoc) return;
-    const printWindow = window.open('', '_blank');
-    if (!printWindow) return;
-    printWindow.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>${selectedDoc.title}</title><style>
-      body { font-family: Georgia, 'Times New Roman', serif; max-width: 700px; margin: 40px auto; padding: 20px; color: #1a1a1a; line-height: 1.8; font-size: 14px; }
-      h1 { text-align: center; font-size: 24px; margin-bottom: 4px; }
-      .meta { text-align: center; color: #666; font-size: 12px; margin-bottom: 32px; border-bottom: 1px solid #ddd; padding-bottom: 16px; }
-      .content { white-space: pre-line; }
-      @media print { body { margin: 0; } }
-    </style></head><body>
-      <h1>${selectedDoc.title}</h1>
-      <p class="meta">${selectedDoc.author} • ${selectedDoc.year}<br/>Fonte: Vatican.va — Cathedra Digital</p>
-      <div class="content">${fullText.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
-    </body></html>`);
-    printWindow.document.close();
-    setTimeout(() => printWindow.print(), 500);
-  }, [fullText, selectedDoc]);
-
-  const handleSelectDoc = useCallback((doc: MagisteriumDoc) => {
-    setSelectedDoc(doc);
-    setFullText(null);
-    setTextError(null);
-    setTextSearch('');
-    setMatchCount(0);
-  }, []);
-
-  if (selectedDoc) {
-    return (
-      <div className="max-w-3xl mx-auto space-y-8">
-        <div className="flex items-center gap-4">
-          <button onClick={() => { setSelectedDoc(null); setFullText(null); }} className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all">
-            <Icons.ChevronLeft className="w-5 h-5 text-foreground" />
-          </button>
-          <div>
-            <h1 className="text-2xl font-serif font-bold text-foreground">{selectedDoc.title}</h1>
-            <p className="text-sm text-muted-foreground">{selectedDoc.author} • {selectedDoc.year}</p>
-          </div>
-        </div>
-
-        <div className="bg-card border border-border rounded-3xl p-8 md:p-12 space-y-6">
-          {selectedDoc.latinTitle && (
-            <p className="text-center text-sm font-serif italic text-muted-foreground">{selectedDoc.latinTitle}</p>
-          )}
-          <div className="flex items-center justify-center gap-3 flex-wrap">
-            <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${CATEGORY_COLORS[selectedDoc.category] || 'bg-muted text-muted-foreground'}`}>
-              {CATEGORY_LABELS[selectedDoc.category]}
-            </span>
-            <span className="text-xs text-muted-foreground">{selectedDoc.year}</span>
-          </div>
-          <div className="border-t border-border pt-6">
-            <h3 className="text-sm font-black uppercase tracking-widest text-primary mb-3">Resumo</h3>
-            <p className="text-foreground/90 leading-relaxed">{selectedDoc.summary}</p>
-          </div>
-          <div className="border-t border-border pt-6">
-            <h3 className="text-sm font-black uppercase tracking-widest text-primary mb-3">Temas</h3>
-            <div className="flex flex-wrap gap-2">
-              {selectedDoc.topics.map(topic => (
-                <span key={topic} className="px-3 py-1.5 bg-primary/10 text-primary rounded-xl text-xs font-bold">
-                  {topic}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* Full text section */}
-          <div className="border-t border-border pt-6 space-y-4">
-            {!fullText && !loadingText && !textError && (
-              <div className="flex flex-col items-center gap-4">
-                {selectedDoc.vaticanUrl ? (
-                  <div className="w-full flex flex-col gap-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-                      <button
-                        onClick={() => fetchFullText(selectedDoc)}
-                        className="flex-1 px-8 py-5 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] shadow-xl hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-2 group"
-                      >
-                        <Icons.BookOpen className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                        {cachedIds.includes(selectedDoc.id) ? 'Abrir no App' : 'Ler no App'}
-                      </button>
-
-                      <a
-                        href={selectedDoc.pdfUrl || selectedDoc.vaticanUrl.replace('.html', '.pdf')}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1 px-8 py-5 bg-primary/10 text-primary border border-primary/20 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-primary/20 transition-all flex items-center justify-center gap-2 group"
-                      >
-                        <Icons.Download className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                        Abrir PDF Completo
-                      </a>
-                    </div>
-                    
-                    <div className="flex flex-col items-center gap-2">
-                      {cachedIds.includes(selectedDoc.id) && (
-                        <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-[0.2em]">✓ Disponível para leitura offline</span>
-                      )}
-                      <a
-                        href={selectedDoc.vaticanUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors"
-                      >
-                        <Icons.ExternalLink className="w-3 h-3" />
-                        Ver no site da Santa Sé
-                      </a>
-                    </div>
-                  </div>
-                ) : (
-                  <p className="text-muted-foreground italic text-center text-sm">
-                    Texto completo ainda não disponível para este documento.
-                  </p>
-                )}
-              </div>
-            )}
-
-            {loadingText && (
-              <div className="flex flex-col items-center gap-3 py-8">
-                <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                <p className="text-sm text-muted-foreground italic">Carregando documento da Santa Sé...</p>
-              </div>
-            )}
-
-            {textError && (
-              <div className="text-center space-y-3">
-                <p className="text-sm text-destructive">{textError}</p>
-                {selectedDoc.vaticanUrl && (
-                  <div className="flex flex-col items-center gap-2">
-                    <button
-                      onClick={() => fetchFullText(selectedDoc)}
-                      className="px-6 py-3 bg-primary/10 text-primary rounded-xl text-sm font-bold hover:bg-primary/20 transition-all"
-                    >
-                      Tentar novamente
-                    </button>
-                    <a
-                      href={selectedDoc.vaticanUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      <Icons.ExternalLink className="w-4 h-4" />
-                      Abrir diretamente no Vatican.va
-                    </a>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {fullText && (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between flex-wrap gap-2">
-                  <div className="flex items-center gap-3">
-                    <h3 className="text-sm font-black uppercase tracking-widest text-primary">Texto Integral</h3>
-                    {cachedIds.includes(selectedDoc.id) && (
-                      <span className="px-2 py-0.5 rounded-full text-[8px] font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 uppercase tracking-wider">
-                        Salvo offline
-                      </span>
-                    )}
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] text-muted-foreground italic mr-2">Fonte: Vatican.va</span>
-                    {selectedDoc.vaticanUrl && (
-                      <a
-                        href={selectedDoc.pdfUrl || selectedDoc.vaticanUrl.replace('.html', '.pdf')}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="px-3 py-1.5 rounded-lg text-[10px] font-bold bg-secondary/10 text-secondary-foreground hover:bg-secondary/20 transition-all uppercase tracking-wider flex items-center gap-1"
-                      >
-                        <Icons.Download className="w-3 h-3" />
-                        PDF Original
-                      </a>
-                    )}
-                    <button
-                      onClick={exportToPdf}
-                      className="px-3 py-1.5 rounded-lg text-[10px] font-bold bg-primary/10 text-primary hover:bg-primary/20 transition-all uppercase tracking-wider flex items-center gap-1"
-                    >
-                      <Icons.Download className="w-3 h-3" />
-                      Exportar PDF
-                    </button>
-                    {cachedIds.includes(selectedDoc.id) && (
-                      <button
-                        onClick={() => clearDocCache(selectedDoc.id)}
-                        className="text-[10px] text-destructive hover:underline"
-                      >
-                        Limpar cache
-                      </button>
-                    )}
-                    <NotesPanel contentType="magisterium" contentId={selectedDoc.id} contentLabel={selectedDoc.title} />
-                  </div>
-                </div>
-
-                {/* Reading controls: night mode + font size */}
-                <div className="flex items-center gap-4 flex-wrap">
-                  <button
-                    onClick={() => setNightMode(!nightMode)}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all ${
-                      nightMode
-                        ? 'bg-foreground text-background'
-                        : 'bg-card border border-border text-muted-foreground hover:text-foreground'
-                    }`}
-                  >
-                    {nightMode ? '☀️' : '🌙'} {nightMode ? 'Modo Claro' : 'Modo Noturno'}
-                  </button>
-                  <div className="flex items-center gap-2">
-                    <button onClick={() => setFontSize(Math.max(12, fontSize - 1))} className="w-7 h-7 rounded-lg bg-card border border-border text-xs font-bold text-muted-foreground hover:text-foreground transition-all">A-</button>
-                    <span className="text-[10px] font-bold text-muted-foreground w-8 text-center">{fontSize}px</span>
-                    <button onClick={() => setFontSize(Math.min(24, fontSize + 1))} className="w-7 h-7 rounded-lg bg-card border border-border text-xs font-bold text-muted-foreground hover:text-foreground transition-all">A+</button>
-                  </div>
-                </div>
-
-                {/* Search within document */}
-                <div className="relative">
-                  <Icons.Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <input
-                    value={textSearch}
-                    onChange={e => {
-                      setTextSearch(e.target.value);
-                      if (e.target.value && fullText) {
-                        const regex = new RegExp(e.target.value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
-                        const matches = fullText.match(regex);
-                        setMatchCount(matches ? matches.length : 0);
-                      } else {
-                        setMatchCount(0);
-                      }
-                    }}
-                    placeholder="Buscar no texto do documento..."
-                    className="w-full pl-10 pr-20 py-2.5 rounded-xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
-                  />
-                  {textSearch && (
-                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-muted-foreground">
-                      {matchCount} resultado{matchCount !== 1 ? 's' : ''}
-                    </span>
-                  )}
-                </div>
-
-                <div className={`rounded-2xl p-6 md:p-8 max-h-[70vh] overflow-y-auto custom-scrollbar transition-colors duration-300 ${
-                  nightMode ? 'bg-[#1a1a2e] text-[#e0d8c8]' : 'bg-secondary/50'
-                }`}>
-                  <div className={`leading-relaxed whitespace-pre-line font-serif ${nightMode ? '' : 'text-foreground/90'}`} style={{ fontSize: `${fontSize}px` }}>
-                    {textSearch ? (
-                      fullText.split(new RegExp(`(${textSearch.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')).map((part, i) =>
-                        part.toLowerCase() === textSearch.toLowerCase()
-                          ? <mark key={i} className={`rounded px-0.5 ${nightMode ? 'bg-amber-700/50 text-amber-100' : 'bg-primary/30 text-foreground'}`}>{part}</mark>
-                          : part
-                      )
-                    ) : fullText}
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const handleSelect = (item: typeof SPIRITUAL_GUIDANCE[0]) => {
+    if (selected.id === item.id) return;
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setSelected(item);
+      setIsTransitioning(false);
+    }, 300);
+  };
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8">
-      <div className="text-center space-y-3">
+    <div className="max-w-5xl mx-auto space-y-12 pb-20 px-4">
+      <SEOHead 
+        title="Magistério da Igreja" 
+        description="Acesse encíclicas, exortações e documentos fundamentais do Magistério da Igreja Católica." 
+        path="/magisterium"
+      />
+
+      <div className="text-center space-y-4">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
-          <Icons.Book className="w-4 h-4 text-primary" />
-          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Magisterium</span>
+          <Icons.Scroll className="w-4 h-4 text-primary" />
+          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Magisterium Ecclesiae</span>
         </div>
-        <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Magistério da Igreja</h1>
-        <p className="text-muted-foreground font-serif italic">Encíclicas, Concílios e Documentos da Santa Sé — integrado ao repositório oficial do Vaticano.</p>
+        <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Magistério</h1>
+        <p className="text-muted-foreground font-serif italic max-w-lg mx-auto">A voz da Igreja guiando o coração dos fiéis através dos séculos.</p>
       </div>
 
-      {/* Search */}
-      <div className="max-w-md mx-auto">
-        <div className="relative">
-          <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <input
-            value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-            placeholder="Buscar documento, autor ou tema..."
-            className="w-full pl-11 pr-4 py-3 rounded-2xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
-          />
-        </div>
-      </div>
-
-      {/* Category tabs */}
-      <div className="flex gap-2 justify-center flex-wrap">
-        {(Object.keys(CATEGORY_LABELS) as DocCategory[]).map(cat => (
-          <button key={cat} onClick={() => setCategory(cat)}
-            className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
-              category === cat ? 'bg-foreground text-background shadow-lg' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
-            }`}>
-            {CATEGORY_LABELS[cat]}
-          </button>
-        ))}
-      </div>
-
-      {/* ── Spiritual Guidance Section ── */}
-      <div className="space-y-4">
-        <div className="text-center space-y-2">
-          <h2 className="text-xl md:text-2xl font-serif font-bold text-foreground">🧭 Direção da Verdade</h2>
-          <p className="text-sm text-muted-foreground font-serif italic">"Quando a dúvida fala… a verdade responde."</p>
-        </div>
-
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-          {SPIRITUAL_GUIDANCE.map(g => (
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="lg:col-span-4 space-y-3">
+          {SPIRITUAL_GUIDANCE.map((item) => (
             <button
-              key={g.id}
-              onClick={() => setExpandedGuidance(expandedGuidance === g.id ? null : g.id)}
-              className={`p-4 rounded-2xl border text-left transition-all ${
-                expandedGuidance === g.id
-                  ? 'bg-primary/10 border-primary/40 shadow-lg'
-                  : 'bg-card border-border hover:border-primary/30 hover:bg-primary/5'
+              key={item.id}
+              onClick={() => handleSelect(item)}
+              className={`w-full flex items-center gap-4 p-4 rounded-2xl border transition-all text-left ${
+                selected.id === item.id 
+                  ? 'bg-primary text-primary-foreground shadow-lg border-primary' 
+                  : 'bg-card border-border hover:border-primary/30'
               }`}
             >
-              <span className="text-2xl">{g.icon}</span>
-              <p className="text-sm font-bold text-foreground mt-1">{g.theme}</p>
-              <p className="text-[10px] text-muted-foreground mt-0.5 line-clamp-1">{g.question}</p>
+              <div className={`p-2 rounded-xl ${selected.id === item.id ? 'bg-white/20' : 'bg-muted'}`}>
+                {item.icon}
+              </div>
+              <span className="font-bold text-sm">{item.theme}</span>
             </button>
           ))}
         </div>
 
-        {expandedGuidance && (() => {
-          const g = SPIRITUAL_GUIDANCE.find(x => x.id === expandedGuidance);
-          if (!g) return null;
-          return (
-            <div className="bg-card border border-border rounded-3xl p-6 md:p-8 space-y-5 animate-in fade-in slide-in-from-top-2 duration-300">
-              <div className="flex items-center gap-3">
-                <span className="text-3xl">{g.icon}</span>
-                <div>
-                  <h3 className="text-lg font-serif font-bold text-foreground">{g.theme}</h3>
-                  <p className="text-xs text-muted-foreground italic">{g.question}</p>
-                </div>
-              </div>
-
-              {/* Magisterium Answer */}
-              <div className="border-l-4 border-primary pl-4 space-y-1">
-                <p className="text-sm font-black uppercase tracking-widest text-primary">📘 Magistério</p>
-                <p className="text-foreground/90 leading-relaxed text-sm">{g.magisteriumAnswer}</p>
-                <p className="text-[10px] text-muted-foreground italic">— {g.sourceDoc}</p>
-              </div>
-
-              {/* PCH */}
-              <div className="bg-primary/5 rounded-2xl p-5 text-center space-y-2">
-                <p className="text-[10px] font-black uppercase tracking-widest text-primary/70">🧠 Reflexão Poética</p>
-                <p className="text-foreground font-serif italic leading-relaxed whitespace-pre-line text-sm">{g.pch}</p>
-              </div>
-
-              {/* Inner Question */}
-              <div className="bg-accent/30 rounded-2xl p-5 text-center space-y-2">
-                <p className="text-[10px] font-black uppercase tracking-widest text-accent-foreground/70">❓ Pergunta Interior</p>
-                <p className="text-foreground font-bold text-base">{g.innerQuestion}</p>
-              </div>
-
-              {/* Related Documents */}
-              <div className="space-y-2">
-                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">📄 Documentos Relacionados</p>
-                <div className="flex flex-wrap gap-2">
-                  {g.relatedDocs.map(docId => {
-                    const doc = DOCUMENTS.find(d => d.id === docId);
-                    if (!doc) return null;
-                    return (
-                      <button
-                        key={docId}
-                        onClick={() => handleSelectDoc(doc)}
-                        className="px-3 py-1.5 rounded-xl text-xs font-bold bg-muted text-muted-foreground hover:bg-primary/10 hover:text-primary transition-all"
-                      >
-                        {doc.title}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* CTA: Viver essa verdade */}
-              <button
-                onClick={() => navigate(AppRoute.LECTIO_DIVINA)}
-                className="w-full py-4 rounded-2xl bg-foreground text-background font-black uppercase text-xs tracking-[0.2em] shadow-xl hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-2 group"
-              >
-                <Icons.Heart className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                Viver essa Verdade
-              </button>
-            </div>
-          );
-        })()}
-      </div>
-
-      <div className="border-t border-border pt-8 space-y-6">
-        <h2 className="text-lg font-serif font-bold text-foreground text-center">📜 Documentos do Magistério</h2>
-
-        <div className="flex justify-center gap-6 text-center">
-          <div>
-            <p className="text-2xl font-serif font-bold text-foreground">{filteredDocs.length}</p>
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Documentos</p>
-          </div>
-          <div>
-            <p className="text-2xl font-serif font-bold text-foreground">{new Set(filteredDocs.map(d => d.author)).size}</p>
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Autores</p>
-          </div>
-          <div>
-            <p className="text-2xl font-serif font-bold text-foreground">{filteredDocs.filter(d => d.vaticanUrl).length}</p>
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Com texto integral</p>
-          </div>
-          <div>
-            <p className="text-2xl font-serif font-bold text-foreground">{cachedIds.length}</p>
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Salvos offline</p>
-          </div>
-        </div>
-
-        {cachedIds.length > 0 && (
-          <div className="flex justify-center">
-            <button
-              onClick={clearAllCache}
-              className="px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest text-destructive border border-destructive/30 hover:bg-destructive/10 transition-all"
+        <div className="lg:col-span-8">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={selected.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+              className="bg-card border border-border rounded-[2.5rem] p-8 md:p-12 shadow-sm space-y-8"
             >
-              🗑️ Limpar todo o cache ({cachedIds.length} documento{cachedIds.length !== 1 ? 's' : ''})
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* Documents grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {filteredDocs.map(doc => (
-          <button key={doc.id} onClick={() => handleSelectDoc(doc)}
-            className="text-left p-6 rounded-2xl bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group space-y-3">
-            <div className="flex items-start justify-between gap-3">
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className={`inline-block font-serif px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest ${CATEGORY_COLORS[doc.category] || 'bg-muted text-muted-foreground'}`}>
-                    {CATEGORY_LABELS[doc.category]}
-                  </span>
-                  {cachedIds.includes(doc.id) ? (
-                    <span className="px-2 py-0.5 rounded-full text-[8px] font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 uppercase tracking-wider">
-                      📥 Offline
-                    </span>
-                  ) : doc.vaticanUrl ? (
-                    <span className="px-2 py-0.5 rounded-full text-[8px] font-bold bg-primary/10 text-primary uppercase tracking-wider">
-                      Texto disponível
-                    </span>
-                  ) : null}
+              <div className="space-y-4">
+                <h2 className="text-2xl md:text-3xl font-serif font-bold text-foreground">{selected.question}</h2>
+                <p className="text-lg text-muted-foreground leading-relaxed font-serif italic">"{selected.magisteriumAnswer}"</p>
+                <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-primary">
+                  <Icons.Scroll className="w-4 h-4" /> {selected.sourceDoc}
                 </div>
-                <h3 className="text-base font-bold text-foreground group-hover:text-primary transition-colors">{doc.title}</h3>
-                {doc.latinTitle && doc.latinTitle !== doc.title && (
-                  <p className="text-xs font-serif italic text-muted-foreground">{doc.latinTitle}</p>
-                )}
               </div>
-              <span className="text-sm font-bold text-primary shrink-0">{doc.year}</span>
-            </div>
-            <p className="text-xs text-muted-foreground">{doc.author}</p>
-            <p className="text-sm text-foreground/70 line-clamp-2">{doc.summary}</p>
-            <div className="flex flex-wrap gap-1.5">
-              {doc.topics.slice(0, 3).map(t => (
-                <span key={t} className="px-2 py-0.5 bg-muted text-muted-foreground rounded-lg text-[10px] font-bold">{t}</span>
-              ))}
-            </div>
-          </button>
-        ))}
+
+              <div className="bg-primary/5 rounded-2xl p-6 border border-primary/10 space-y-4">
+                <p className="text-xl font-serif font-bold text-primary leading-tight">{selected.pch}</p>
+                <p className="text-sm font-bold text-foreground">{selected.innerQuestion}</p>
+              </div>
+
+              <div className="space-y-4">
+                <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Documentos Relacionados</h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {selected.relatedDocs.map(docId => (
+                    <div key={docId} className="p-4 rounded-xl border border-border bg-muted/30 flex items-center gap-3">
+                      <Icons.FileText className="w-5 h-5 text-primary" />
+                      <div>
+                        <p className="text-xs font-bold text-foreground">{getDocName(docId)}</p>
+                        <p className="text-[10px] text-muted-foreground">{getDocType(docId)} • {DOCS[docId as keyof typeof DOCS]?.year}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
       </div>
     </div>
   );
