@@ -175,7 +175,7 @@ const Bible: React.FC = () => {
               newBadgeIds.forEach(id => {
                 const badge = getBadgeById(id);
                 if (badge) {
-                  toast.success(`🏅 Nova conquista: ${badge.icon} ${badge.name}`, { description: badge.description, duration: 5000 });
+                  toast.success(`Nova conquista: ${badge.name}`, { description: badge.description, duration: 5000 });
                 }
               });
             }
