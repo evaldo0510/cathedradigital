@@ -7,7 +7,6 @@ import { supabase } from '@/integrations/supabase/client';
 import SacredImage from './SacredImage';
 import { Icons } from '@/constants';
 
-
 interface DashboardProps {
   user: User | null;
 }
@@ -207,7 +206,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
                     <p className="text-[11px] text-muted-foreground leading-snug mt-0.5">{door.description}</p>
                   </div>
                 </div>
-                <ChevronRight className="absolute top-5 right-4 w-4 h-4 text-muted-foreground/40 group-hover:text-foreground/60 transition-colors" />
+                <Icons.ChevronRight className="absolute top-5 right-4 w-4 h-4 text-muted-foreground/40 group-hover:text-foreground/60 transition-colors" />
               </button>
             );
           })}
@@ -220,26 +219,26 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         <FadeUp delay={0.12}>
           <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4 h-full">
             <div className="flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-primary" />
+              <Icons.Activity className="w-4 h-4 text-primary" />
               <h2 className="text-sm font-bold text-foreground uppercase tracking-wide">Resumo da Semana</h2>
             </div>
             <div className="grid grid-cols-3 gap-3">
               <div className="text-center p-4 rounded-xl bg-primary/[0.04] border border-primary/10">
                 <p className="text-2xl md:text-3xl font-bold text-foreground">{weeklyStats.chaptersRead}</p>
                 <p className="text-[10px] text-muted-foreground font-medium mt-1 flex items-center justify-center gap-1">
-                  <BookMarked className="w-3 h-3" /> Capítulos
+                  <Icons.Bookmark className="w-3 h-3" /> Capítulos
                 </p>
               </div>
               <div className="text-center p-4 rounded-xl bg-primary/[0.04] border border-primary/10">
                 <p className="text-2xl md:text-3xl font-bold text-foreground">{streak}</p>
                 <p className="text-[10px] text-muted-foreground font-medium mt-1 flex items-center justify-center gap-1">
-                  <Flame className="w-3 h-3" /> Streak
+                  <Icons.Flame className="w-3 h-3" /> Streak
                 </p>
               </div>
               <div className="text-center p-4 rounded-xl bg-primary/[0.04] border border-primary/10">
                 <p className="text-2xl md:text-3xl font-bold text-foreground">{weeklyStats.journeySteps}</p>
                 <p className="text-[10px] text-muted-foreground font-medium mt-1 flex items-center justify-center gap-1">
-                  <Calendar className="w-3 h-3" /> Etapas
+                  <Icons.Calendar className="w-3 h-3" /> Etapas
                 </p>
               </div>
             </div>
@@ -253,7 +252,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               <div className="flex items-center justify-between">
                 <h2 className="text-sm font-bold text-foreground uppercase tracking-wide">Suas Jornadas</h2>
                 <button onClick={() => goTo(AppRoute.JORNADAS)} className="text-xs text-primary hover:underline flex items-center gap-1">
-                  Ver todas <ChevronRight className="w-3 h-3" />
+                  Ver todas <Icons.ChevronRight className="w-3 h-3" />
                 </button>
               </div>
               <div className="space-y-3">
@@ -303,7 +302,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
                 </div>
                 <div className="flex-1 p-5 md:p-6 flex flex-col justify-center space-y-2">
                   <p className="text-[9px] font-black uppercase tracking-widest text-primary flex items-center gap-1.5">
-                    <Star className="w-3.5 h-3.5 fill-primary/10" /> Santo do Dia
+                    <Icons.Star className="w-3.5 h-3.5 fill-primary/10" /> Santo do Dia
                   </p>
                   <h3 className="text-base md:text-xl font-serif font-bold text-foreground leading-tight">{saintOfDay.name}</h3>
                   <p className="text-xs md:text-sm text-muted-foreground font-serif italic line-clamp-3 leading-relaxed">"{saintOfDay.quotes[0]}"</p>
@@ -311,7 +310,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
                     onClick={() => goTo(AppRoute.SAINTS)}
                     className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-primary hover:underline pt-2"
                   >
-                    Conhecer <ChevronRight className="w-3 h-3" />
+                    Conhecer <Icons.ChevronRight className="w-3 h-3" />
                   </button>
                 </div>
               </div>
@@ -328,7 +327,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             >
               <div className="flex items-center gap-6">
                 <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500 shadow-inner">
-                  <Zap className="w-7 h-7 text-primary group-hover:text-primary-foreground transition-colors" />
+                  <Icons.Zap className="w-7 h-7 text-primary group-hover:text-primary-foreground transition-colors" />
                 </div>
                 <div className="flex-1 min-w-0 space-y-1.5">
                   <div className="flex items-center gap-2">
@@ -340,7 +339,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
                     <span className="text-primary font-bold whitespace-nowrap">R$ 15,92/mês</span>
                   </p>
                 </div>
-                <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-all group-hover:translate-x-1 shrink-0" />
+                <Icons.ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-all group-hover:translate-x-1 shrink-0" />
               </div>
             </button>
           </FadeUp>
