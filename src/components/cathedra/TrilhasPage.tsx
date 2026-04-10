@@ -39,7 +39,7 @@ const TRAILS: Trail[] = [
   },
   {
     id: 'moral', title: 'Vida Moral Cristã', description: 'Entenda os princípios morais que orientam a vida do cristão.',
-    level: 'Intermediário', icon: <Scale className="w-6 h-6" />, color: 'text-amber-600 dark:text-amber-400',
+    level: 'Intermediário', icon: <Scale className="w-6 h-6" />, color: 'text-secondary dark:text-secondary',
     steps: [
       { label: 'A dignidade da pessoa', route: AppRoute.CATECHISM, description: 'Catecismo §§ 1700-1761: O homem à imagem de Deus.' },
       { label: 'As virtudes', route: AppRoute.CATECHISM, description: 'As 4 virtudes cardeais e as 3 teologais.' },
@@ -50,7 +50,7 @@ const TRAILS: Trail[] = [
   },
   {
     id: 'prayer-life', title: 'Vida de Oração', description: 'Aprofunde sua intimidade com Deus através das diversas formas de oração.',
-    level: 'Iniciante', icon: <HandHeart className="w-6 h-6" />, color: 'text-rose-600 dark:text-rose-400',
+    level: 'Iniciante', icon: <HandHeart className="w-6 h-6" />, color: 'text-secondary dark:text-rose-400',
     steps: [
       { label: 'O que é oração?', route: AppRoute.CATECHISM, description: 'Catecismo §§ 2558-2565: A oração na vida cristã.' },
       { label: 'O Santo Rosário', route: AppRoute.ROSARY, description: 'Aprenda e reze os quatro mistérios do Rosário.' },
@@ -85,7 +85,7 @@ const TRAILS: Trail[] = [
 
 const LEVEL_COLORS: Record<string, string> = {
   'Iniciante': 'bg-green-500/10 text-green-700 dark:text-green-300',
-  'Intermediário': 'bg-amber-500/10 text-amber-700 dark:text-amber-300',
+  'Intermediário': 'bg-secondary/10 text-amber-700 dark:text-secondary',
   'Avançado': 'bg-red-500/10 text-red-700 dark:text-red-300',
 };
 

@@ -85,7 +85,7 @@ const FeedbackWidget = () => {
                       key={star}
                       type="button"
                       onClick={() => setRating(star)}
-                      className={`transition-all ${rating >= star ? 'text-yellow-500 scale-110' : 'text-muted-foreground/30'}`}
+                      className={`transition-all ${rating >= star ? 'text-secondary scale-110' : 'text-muted-foreground/30'}`}
                     >
                       <Star className="w-6 h-6 fill-current" />
                     </button>

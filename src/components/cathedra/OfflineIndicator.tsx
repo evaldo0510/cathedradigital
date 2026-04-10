@@ -17,7 +17,7 @@ const OfflineIndicator: React.FC = () => {
   if (!isOffline) return null;
 
   return (
-    <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[200] px-5 py-2.5 bg-amber-600 text-white rounded-2xl shadow-xl flex items-center gap-2 animate-in fade-in slide-in-from-bottom-4">
+    <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[200] px-5 py-2.5 bg-secondary text-white rounded-2xl shadow-xl flex items-center gap-2 animate-in fade-in slide-in-from-bottom-4">
       <span className="w-2 h-2 rounded-full bg-white/70 animate-pulse" />
       <span className="text-xs font-bold uppercase tracking-wider">Modo Offline — usando cache local</span>
     </div>

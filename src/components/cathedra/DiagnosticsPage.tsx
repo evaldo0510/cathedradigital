@@ -65,7 +65,7 @@ const DiagnosticsPage: React.FC = () => {
           <CardContent className="space-y-4">
             <div className="flex items-center gap-3">
               <div className={`w-3 h-3 rounded-full animate-pulse ${
-                supabaseStatus === 'ok' ? 'bg-emerald-500' : supabaseStatus === 'error' ? 'bg-red-500' : 'bg-amber-500'
+                supabaseStatus === 'ok' ? 'bg-primary' : supabaseStatus === 'error' ? 'bg-red-500' : 'bg-secondary'
               }`} />
               <span className="text-lg font-bold text-foreground">
                 {supabaseStatus === 'ok' ? 'Conectado' : supabaseStatus === 'error' ? 'Erro crítico' : 'Verificando...'}
@@ -117,7 +117,7 @@ const DiagnosticsPage: React.FC = () => {
             <div key={i} className="flex items-center justify-between py-3 border-b border-border/50 last:border-0">
               <span className="text-sm font-bold text-foreground/80">{service.label}</span>
               <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${
-                service.status === 'Online' ? 'bg-emerald-500/10 text-emerald-600' : 'bg-amber-500/10 text-amber-600'
+                service.status === 'Online' ? 'bg-primary/10 text-primary' : 'bg-secondary/10 text-secondary'
               }`}>
                 {service.status}
               </span>

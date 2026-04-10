@@ -64,9 +64,9 @@ const AnimatedStat = ({ value, label, index }: { value: string; label: string; i
         className="text-5xl md:text-6xl font-display font-bold text-primary"
         whileInView={{
           textShadow: [
-            "0 0 0px hsl(43 72% 53% / 0)",
-            "0 0 20px hsl(43 72% 53% / 0.3)",
-            "0 0 0px hsl(43 72% 53% / 0)",
+            "0 0 0px hsl(var(--secondary) / 0)",
+            "0 0 20px hsl(var(--secondary) / 0.3)",
+            "0 0 0px hsl(var(--secondary) / 0)",
           ],
         }}
         transition={{ duration: 2, delay: 0.5 + index * 0.15, repeat: 0 }}

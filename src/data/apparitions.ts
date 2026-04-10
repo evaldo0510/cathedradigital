@@ -43,7 +43,7 @@ export const APPARITIONS: Apparition[] = [
     approved: true,
     image: '🌹',
     imageSrc: guadalupeImg,
-    color: 'from-emerald-500/20 to-emerald-600/5 border-emerald-500/30',
+    color: 'from-primary/20 to-primary/5 border-primary/30',
   },
   {
     id: 'la-salette',
@@ -79,7 +79,7 @@ export const APPARITIONS: Apparition[] = [
     approved: true,
     image: '💧',
     imageSrc: lourdesImg,
-    color: 'from-blue-500/20 to-blue-600/5 border-blue-500/30',
+    color: 'from-primary/20 to-primary/5 border-primary/30',
   },
   {
     id: 'knock',
@@ -115,7 +115,7 @@ export const APPARITIONS: Apparition[] = [
     approved: true,
     image: '☀️',
     imageSrc: fatimaImg,
-    color: 'from-amber-500/20 to-amber-600/5 border-amber-500/30',
+    color: 'from-secondary/20 to-secondary/5 border-secondary/30',
   },
   {
     id: 'aparecida',
@@ -133,7 +133,7 @@ export const APPARITIONS: Apparition[] = [
     approved: true,
     image: '🐟',
     imageSrc: aparecidaImg,
-    color: 'from-sky-500/20 to-sky-600/5 border-sky-500/30',
+    color: 'from-primary/20 to-primary/5 border-primary/30',
   },
   {
     id: 'kibeho',
@@ -169,6 +169,6 @@ export const APPARITIONS: Apparition[] = [
     approved: true,
     image: '😭',
     imageSrc: akitaImg,
-    color: 'from-rose-500/20 to-rose-600/5 border-rose-500/30',
+    color: 'from-secondary/20 to-secondary/5 border-secondary/30',
   },
 ].sort((a, b) => a.year - b.year);

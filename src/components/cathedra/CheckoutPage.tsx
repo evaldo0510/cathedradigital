@@ -218,7 +218,7 @@ const CheckoutPage: React.FC = () => {
               )}
               {appliedCoupon && (
                 <div className="flex items-center justify-center gap-2">
-                  <Badge className="bg-emerald-500/15 text-emerald-600 border-emerald-500/30 text-xs">
+                  <Badge className="bg-primary/15 text-primary border-primary/30 text-xs">
                     Cupom {appliedCoupon.code} · -{appliedCoupon.discount_percent}%
                   </Badge>
                   <button onClick={() => { setAppliedCoupon(null); setCouponCode(''); }} className="text-xs text-muted-foreground hover:text-destructive">
@@ -293,7 +293,7 @@ const CheckoutPage: React.FC = () => {
                     <td className="p-4 font-medium">{row.feature}</td>
                     <td className="p-4 text-center">
                       {row.free ? (
-                        <span className="text-emerald-500 text-lg">✓</span>
+                        <span className="text-primary text-lg">✓</span>
                       ) : (
                         <span className="text-muted-foreground text-lg">—</span>
                       )}

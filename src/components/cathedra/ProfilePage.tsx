@@ -316,7 +316,7 @@ const ProfilePage: React.FC = () => {
           <div className="flex items-center justify-between p-3 bg-muted/30 rounded-xl border border-border/50">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <Icons.Message className="w-4 h-4 text-emerald-500" />
+                <Icons.Message className="w-4 h-4 text-primary" />
                 <p className="text-sm font-bold text-foreground">WhatsApp (Beta)</p>
               </div>
               <p className="text-[10px] text-muted-foreground">Receba conteúdos no seu WhatsApp.</p>

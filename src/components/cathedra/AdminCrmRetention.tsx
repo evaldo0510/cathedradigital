@@ -59,7 +59,7 @@ const DeltaBadge: React.FC<{ current: number; previous: number; invertColor?: bo
   const isGood = invertColor ? direction === 'down' : direction === 'up';
   const isBad = invertColor ? direction === 'up' : direction === 'down';
   const badge = (
-    <span className={`inline-flex items-center gap-0.5 text-[10px] font-medium cursor-default ${isGood ? 'text-emerald-600' : isBad ? 'text-destructive' : 'text-muted-foreground'}`}>
+    <span className={`inline-flex items-center gap-0.5 text-[10px] font-medium cursor-default ${isGood ? 'text-primary' : isBad ? 'text-destructive' : 'text-muted-foreground'}`}>
       {direction === 'up' && <ArrowUp className="w-3 h-3" />}
       {direction === 'down' && <ArrowDown className="w-3 h-3" />}
       {direction === 'flat' && <Minus className="w-3 h-3" />}
@@ -514,9 +514,9 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
       </Card>
 
       {metrics.atRisk.length > 0 && (
-        <Card className="border-amber-500/30 bg-amber-500/5">
+        <Card className="border-secondary/30 bg-secondary/5">
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm flex items-center gap-2 text-amber-600">
+            <CardTitle className="text-sm flex items-center gap-2 text-secondary">
               <AlertTriangle className="w-4 h-4" /> Usuários em Risco ({metrics.atRisk.length})
             </CardTitle>
             <CardDescription>Não acessam há 4-14 dias. Considere enviar notificação de reengajamento.</CardDescription>
@@ -524,7 +524,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
           <CardContent>
             <div className="flex flex-wrap gap-2">
               {metrics.atRisk.slice(0, 12).map(u => (
-                <Badge key={u.id} variant="outline" className="gap-1.5 border-amber-500/30 text-amber-700">
+                <Badge key={u.id} variant="outline" className="gap-1.5 border-secondary/30 text-amber-700">
                   {u.name || u.email.split('@')[0]} · {daysSince(u.last_visit)}d
                 </Badge>
               ))}

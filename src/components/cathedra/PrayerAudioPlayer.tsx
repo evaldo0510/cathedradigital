@@ -85,10 +85,10 @@ const PrayerAudioPlayer: React.FC<PrayerAudioPlayerProps> = ({ prayers, variant 
   }, []);
 
   const bgClass = isDark ? 'bg-white/[0.04] border-white/[0.08]' : 'bg-muted border-border';
-  const textClass = isDark ? 'text-amber-100' : 'text-foreground';
-  const mutedClass = isDark ? 'text-amber-200/50' : 'text-muted-foreground';
+  const textClass = isDark ? 'text-secondary' : 'text-foreground';
+  const mutedClass = isDark ? 'text-secondary/50' : 'text-muted-foreground';
   const btnClass = isDark
-    ? 'bg-amber-400/20 text-amber-200 border-amber-400/20 hover:bg-amber-400/30'
+    ? 'bg-secondary/20 text-secondary border-secondary/20 hover:bg-secondary/30'
     : 'bg-primary/10 text-primary border-primary/20 hover:bg-primary/20';
 
   return (
@@ -108,8 +108,8 @@ const PrayerAudioPlayer: React.FC<PrayerAudioPlayerProps> = ({ prayers, variant 
               onClick={() => setRate(r)}
               className={`w-6 h-6 rounded-md text-[10px] font-bold transition-all ${
                 rate === r
-                  ? (isDark ? 'bg-amber-400/30 text-amber-200' : 'bg-primary text-primary-foreground')
-                  : (isDark ? 'bg-white/5 text-amber-200/40' : 'bg-card text-muted-foreground')
+                  ? (isDark ? 'bg-secondary/30 text-secondary' : 'bg-primary text-primary-foreground')
+                  : (isDark ? 'bg-white/5 text-secondary/40' : 'bg-card text-muted-foreground')
               }`}
             >
               {r === 0.7 ? '−' : r === 1.0 ? '+' : '•'}
@@ -124,7 +124,7 @@ const PrayerAudioPlayer: React.FC<PrayerAudioPlayerProps> = ({ prayers, variant 
           {prayers.map((_, i) => (
             <div key={i} className={`flex-1 h-1 rounded-full transition-all ${
               i <= currentIdx
-                ? (isDark ? 'bg-amber-400/60' : 'bg-primary')
+                ? (isDark ? 'bg-secondary/60' : 'bg-primary')
                 : (isDark ? 'bg-white/10' : 'bg-border')
             }`} />
           ))}

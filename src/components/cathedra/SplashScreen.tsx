@@ -20,7 +20,7 @@ const SplashScreen: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
         initial={{ opacity: 1 }}
         animate={{ opacity: phase === 'exit' ? 0 : 1 }}
         transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
-        className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[hsl(20,14%,4%)] overflow-hidden"
+        className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[hsl(var(--primary))] overflow-hidden"
       >
         {/* Radial glow behind logo */}
         <motion.div
@@ -29,7 +29,7 @@ const SplashScreen: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
           transition={{ duration: 2, ease: 'easeOut' }}
           className="absolute w-[500px] h-[500px] rounded-full"
           style={{
-            background: 'radial-gradient(circle, hsl(43 72% 53% / 0.4) 0%, transparent 70%)',
+            background: 'radial-gradient(circle, hsl(var(--secondary) / 0.4) 0%, transparent 70%)',
           }}
         />
 
@@ -40,7 +40,7 @@ const SplashScreen: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
           transition={{ opacity: { duration: 1 }, rotate: { duration: 30, repeat: Infinity, ease: 'linear' } }}
           className="absolute w-[600px] h-[600px]"
           style={{
-            background: `conic-gradient(from 0deg, transparent 0%, hsl(43 72% 53% / 0.15) 10%, transparent 20%, transparent 25%, hsl(43 72% 53% / 0.1) 35%, transparent 45%, transparent 50%, hsl(43 72% 53% / 0.12) 60%, transparent 70%, transparent 75%, hsl(43 72% 53% / 0.08) 85%, transparent 95%)`,
+            background: `conic-gradient(from 0deg, transparent 0%, hsl(var(--secondary) / 0.15) 10%, transparent 20%, transparent 25%, hsl(var(--secondary) / 0.1) 35%, transparent 45%, transparent 50%, hsl(var(--secondary) / 0.12) 60%, transparent 70%, transparent 75%, hsl(var(--secondary) / 0.08) 85%, transparent 95%)`,
           }}
         />
 
