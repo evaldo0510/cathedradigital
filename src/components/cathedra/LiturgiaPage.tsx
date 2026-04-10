@@ -2,31 +2,61 @@ import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { ArrowLeft, BookOpen, ScrollText, Music, Flame, ChevronRight, ChevronLeft, Sparkles, User, Brain, Loader2, BookMarked } from 'lucide-react';
+import { ArrowLeft, BookOpen, ScrollText, Music, Flame, ChevronRight, ChevronLeft, Sparkles, User, Brain, Loader2, BookMarked, Share2, Copy, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import SEOHead from '@/components/SEOHead';
 import { supabase } from '@/integrations/supabase/client';
 import { AppRoute } from '@/types';
 import { SAINTS_DATA } from '@/data/saints';
 import ReactMarkdown from 'react-markdown';
+import { toast } from 'sonner';
 
 /* ─── Local cache helpers ─── */
-const CACHE_KEY = 'cathedra_liturgy_cache';
+const CACHE_PREFIX = 'cathedra_liturgy_';
+const MAX_CACHED_DAYS = 7;
 
 function getCachedReadings(dateKey: string): LiturgyReadings | null {
   try {
-    const raw = localStorage.getItem(CACHE_KEY);
+    const raw = localStorage.getItem(CACHE_PREFIX + dateKey);
     if (!raw) return null;
-    const parsed = JSON.parse(raw);
-    if (parsed.dateKey === dateKey) return parsed.data;
-    return null;
+    return JSON.parse(raw);
   } catch { return null; }
 }
 
 function setCachedReadings(dateKey: string, data: LiturgyReadings) {
   try {
-    localStorage.setItem(CACHE_KEY, JSON.stringify({ dateKey, data }));
+    localStorage.setItem(CACHE_PREFIX + dateKey, JSON.stringify(data));
+    // Prune old entries beyond 7 days
+    const keys = Object.keys(localStorage).filter(k => k.startsWith(CACHE_PREFIX));
+    if (keys.length > MAX_CACHED_DAYS) {
+      keys.sort();
+      for (let i = 0; i < keys.length - MAX_CACHED_DAYS; i++) {
+        localStorage.removeItem(keys[i]);
+      }
+    }
   } catch { /* quota exceeded */ }
+}
+
+/** Pre-fetch last 7 days into cache on mount */
+function usePrefetchLiturgyCache() {
+  useEffect(() => {
+    const prefetch = async () => {
+      const now = new Date();
+      for (let i = 1; i <= 6; i++) {
+        const d = new Date(now);
+        d.setDate(d.getDate() - i);
+        const key = d.toDateString();
+        if (getCachedReadings(key)) continue;
+        try {
+          const { data } = await supabase.functions.invoke('liturgical-calendar', {
+            body: { action: 'readings', day: d.getDate(), month: d.getMonth() + 1 }
+          });
+          if (data) setCachedReadings(key, data as LiturgyReadings);
+        } catch { /* silent */ }
+      }
+    };
+    prefetch();
+  }, []);
 }
 
 /* ─── Types ─── */
@@ -135,6 +165,10 @@ const LiturgiaPage: React.FC = () => {
   const today = selectedDate;
   const [meditation, setMeditation] = useState<string | null>(null);
   const [isMeditationLoading, setIsMeditationLoading] = useState(false);
+
+  const [copiedMeditation, setCopiedMeditation] = useState(false);
+
+  usePrefetchLiturgyCache();
 
   const dateKey = today.toDateString();
 
@@ -248,6 +282,19 @@ Use Markdown para formatação.`
       setIsMeditationLoading(false);
     }
   }, [readings, isMeditationLoading]);
+  const shareMeditation = useCallback(async (method: 'whatsapp' | 'copy') => {
+    if (!meditation) return;
+    const text = `✨ Meditação do Dia — ${readings?.evangelho?.referencia || ''}\n\n${meditation}\n\n— Via Cathedra Digital`;
+    if (method === 'whatsapp') {
+      window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+    } else {
+      await navigator.clipboard.writeText(text);
+      setCopiedMeditation(true);
+      toast.success('Meditação copiada!');
+      setTimeout(() => setCopiedMeditation(false), 2000);
+    }
+  }, [meditation, readings]);
+
   const formatDate = () =>
     today.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
@@ -412,6 +459,29 @@ Use Markdown para formatação.`
           {meditation && (
             <div className="prose prose-sm dark:prose-invert max-w-none font-serif">
               <ReactMarkdown>{meditation}</ReactMarkdown>
+            </div>
+          )}
+
+          {meditation && !isMeditationLoading && (
+            <div className="flex justify-center gap-2 pt-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-xl border-primary/20 text-xs font-bold uppercase tracking-widest hover:bg-primary/5"
+                onClick={() => shareMeditation('whatsapp')}
+              >
+                <Share2 className="w-3.5 h-3.5 mr-1.5" />
+                WhatsApp
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-xl border-primary/20 text-xs font-bold uppercase tracking-widest hover:bg-primary/5"
+                onClick={() => shareMeditation('copy')}
+              >
+                {copiedMeditation ? <Check className="w-3.5 h-3.5 mr-1.5" /> : <Copy className="w-3.5 h-3.5 mr-1.5" />}
+                {copiedMeditation ? 'Copiado!' : 'Copiar'}
+              </Button>
             </div>
           )}
         </motion.div>
