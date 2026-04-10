@@ -1,19 +1,5 @@
 import React, { useState } from 'react';
-import { 
-  Cross, 
-  ArrowLeft, 
-  ChevronRight, 
-  CheckCircle2, 
-  BookOpen, 
-  Flame, 
-  Sparkles, 
-  Activity,
-  User,
-  Heart,
-  Calendar,
-  Search,
-  ChevronLeft
-} from 'lucide-react';
+import { Icons } from '../../constants';
 
 interface ConfessionStep {
   title: string;
