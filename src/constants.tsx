@@ -203,7 +203,7 @@ export const Icons = {
   Library: createIcon(Library),
   Hand: createIcon(Hand),
 
-  // Semantic Aliases
+  // Semantic Aliases & Backward Compatibility
   Bible: createIcon(BookOpen),
   HolyBible: createIcon(BookOpen),
   Liturgy: createIcon(Cross),
@@ -232,4 +232,6 @@ export const Icons = {
   Google: createIcon(Sparkles),
   Apple: createIcon(Sparkles),
   Share: createIcon(Share2),
+  Audio: createIcon(Volume2),
+  Stop: createIcon(Square),
 };
