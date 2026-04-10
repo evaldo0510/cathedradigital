@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { Icons, Logo } from '@/constants';
 import { useNotifications } from '@/hooks/useNotifications';
-import { Sun, Moon, LogOut } from 'lucide-react';
+
 
 interface AppHeaderProps {
   user: any;
