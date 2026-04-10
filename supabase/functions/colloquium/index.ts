@@ -122,13 +122,12 @@ serve(async (req) => {
 
 ## ANTES DE RESPONDER — ANÁLISE INTERNA
 1. Analise emocionalmente o conteúdo do usuário.
-2. Classifique o estado do usuário em uma destas categorias psicospirituais:
-   - ansiedade (ansiedade)
-   - confusão (confusão)
-   - dor emocional (dor emocional)
-   - busca espiritual (busca espiritual)
-   - identidade (identidade)
-   - crescimento (crescimento)
+2. Identifique a presença destes quatro estados (atribua uma pontuação de 0 a 10 para cada):
+   - ansiedade (agitação, pressa, controle)
+   - confusão (falta de clareza, dúvida)
+   - dor emocional (culpa, medo, vazio)
+   - busca espiritual (sentido, crescimento, profundidade)
+3. Classifique o estado principal (o de maior pontuação).
 
 ## ADAPTAÇÃO DA RESPOSTA
 - Acolha o usuário com profunda empatia primeiro.
@@ -142,14 +141,10 @@ No final da sua resposta, você DEVE recomendar a jornada ideal seguindo estrita
 - confusão → Fundamentos (slug: fundamentos)
 - dor emocional → Cura (slug: cura)
 - busca espiritual → Mística (slug: mistico)
-- identidade → Coração (slug: oracao)
-- crescimento → Formação (slug: formacao)
 
 ## FORMATO DE SAÍDA PARA O SISTEMA
-Toda resposta DEVE terminar com uma linha contendo apenas o metadado:
-[RECOMMENDATION:{"category": "slug_da_categoria", "reason": "breve justificativa baseada na sua análise"}]
-
-Exemplo: [RECOMMENDATION:{"category": "cura", "reason": "Detectei dor emocional profunda e feridas que pedem cura interior."}]
+Toda resposta DEVE terminar com uma linha contendo apenas o metadado (incluindo as pontuações e o estado principal):
+[RECOMMENDATION:{"category": "slug_da_categoria", "reason": "breve justificativa", "scores": {"ansiedade": 0-10, "confusao": 0-10, "dor_emocional": 0-10, "busca_espiritual": 0-10}, "main_state": "nome_do_estado_principal"}]
 
 ## ENCERRAMENTO
 Termine com uma pergunta profunda que convide à ação/reflexão continuada e, então, adicione o metadado de recomendação.`
