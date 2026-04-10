@@ -38,6 +38,10 @@ const HojePage: React.FC = () => {
   const [journeyStep, setJourneyStep] = useState<any>(null);
   const [journeyProgress, setJourneyProgress] = useState({ completed: 0, total: 0 });
   const [recommendedJourney, setRecommendedJourney] = useState<any>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [logosResponse, setLogosResponse] = useState('');
+  const [logosRecommendation, setLogosRecommendation] = useState<any>(null);
+  const [recommendedLogosJourney, setRecommendedLogosJourney] = useState<any>(null);
 
   useEffect(() => {
     if (!user) return;
