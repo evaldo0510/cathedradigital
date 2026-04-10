@@ -290,55 +290,61 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         )}
       </div>
 
-      {/* ═══ SANTO DO DIA ═══ */}
-      {saintOfDay && (
-        <FadeUp delay={0.2}>
-          <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
-            <div className="flex items-stretch">
-              <div className="w-24 md:w-28 flex-shrink-0">
-                <SacredImage src={saintOfDay.image || ''} alt={saintOfDay.name} className="w-full h-full min-h-[110px]" />
-              </div>
-              <div className="flex-1 p-4 space-y-1">
-                <p className="text-[9px] font-black uppercase tracking-widest text-primary flex items-center gap-1">
-                  <Star className="w-3 h-3" /> Santo do Dia
-                </p>
-                <h3 className="text-sm md:text-base font-serif font-bold text-foreground">{saintOfDay.name}</h3>
-                <p className="text-xs text-muted-foreground font-serif italic line-clamp-2">{saintOfDay.quotes[0]}</p>
-                <button
-                  onClick={() => goTo(AppRoute.SAINTS)}
-                  className="flex items-center gap-1 text-xs font-medium text-primary hover:underline pt-1"
-                >
-                  Conhecer <ChevronRight className="w-3 h-3" />
-                </button>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+        {/* ═══ SANTO DO DIA ═══ */}
+        {saintOfDay && (
+          <FadeUp delay={0.2}>
+            <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm h-full group hover:shadow-md transition-all">
+              <div className="flex h-full items-stretch">
+                <div className="w-28 md:w-32 lg:w-40 flex-shrink-0 relative overflow-hidden">
+                  <SacredImage src={saintOfDay.image || ''} alt={saintOfDay.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent" />
+                </div>
+                <div className="flex-1 p-5 md:p-6 flex flex-col justify-center space-y-2">
+                  <p className="text-[9px] font-black uppercase tracking-widest text-primary flex items-center gap-1.5">
+                    <Star className="w-3.5 h-3.5 fill-primary/10" /> Santo do Dia
+                  </p>
+                  <h3 className="text-base md:text-xl font-serif font-bold text-foreground leading-tight">{saintOfDay.name}</h3>
+                  <p className="text-xs md:text-sm text-muted-foreground font-serif italic line-clamp-3 leading-relaxed">"{saintOfDay.quotes[0]}"</p>
+                  <button
+                    onClick={() => goTo(AppRoute.SAINTS)}
+                    className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-primary hover:underline pt-2"
+                  >
+                    Conhecer <ChevronRight className="w-3 h-3" />
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        </FadeUp>
-      )}
+          </FadeUp>
+        )}
 
-      {/* ═══ PRO BANNER ═══ */}
-      {!profile?.is_premium && (
-        <FadeUp delay={0.25}>
-          <button
-            onClick={() => goTo(AppRoute.CHECKOUT)}
-            className="w-full group relative overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent p-5 text-left transition-all hover:border-primary/40 hover:shadow-lg hover:shadow-primary/10"
-          >
-            <div className="flex items-center gap-4">
-              <div className="w-11 h-11 rounded-xl bg-primary/15 flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                <Zap className="w-5 h-5 text-primary group-hover:text-primary-foreground" />
+        {/* ═══ PRO BANNER ═══ */}
+        {!profile?.is_premium && (
+          <FadeUp delay={0.25}>
+            <button
+              onClick={() => goTo(AppRoute.CHECKOUT)}
+              className="w-full h-full group relative overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 via-primary/[0.02] to-transparent p-6 md:p-8 text-left transition-all hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5 flex flex-col justify-center"
+            >
+              <div className="flex items-center gap-6">
+                <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500 shadow-inner">
+                  <Zap className="w-7 h-7 text-primary group-hover:text-primary-foreground transition-colors" />
+                </div>
+                <div className="flex-1 min-w-0 space-y-1.5">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-black text-foreground text-base md:text-lg uppercase tracking-wider">Cathedra PRO</h3>
+                    <span className="bg-primary text-primary-foreground text-[8px] font-black px-2 py-0.5 rounded-full uppercase tracking-tighter">Premium</span>
+                  </div>
+                  <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
+                    IA Teológica, trilhas exclusivas e modo offline para seu estudo diário.{' '}
+                    <span className="text-primary font-bold whitespace-nowrap">R$ 15,92/mês</span>
+                  </p>
+                </div>
+                <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-all group-hover:translate-x-1 shrink-0" />
               </div>
-              <div className="flex-1 min-w-0 space-y-0.5">
-                <h3 className="font-bold text-foreground text-sm">Cathedra PRO</h3>
-                <p className="text-xs text-muted-foreground">
-                  IA Teológica, trilhas e modo offline.{' '}
-                  <span className="text-primary font-semibold">R$ 15,92/mês</span>
-                </p>
-              </div>
-              <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
-            </div>
-          </button>
-        </FadeUp>
-      )}
+            </button>
+          </FadeUp>
+        )}
+      </div>
     </div>
   );
 };
