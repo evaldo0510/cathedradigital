@@ -91,41 +91,25 @@ const SkeletonBar = ({ w = 'w-full', h = 'h-4', className = '' }: { w?: string; 
 );
 
 const LoadingFallback = () => (
-  <div className="animate-in fade-in duration-100 p-4 min-h-[60dvh] space-y-6">
-    {/* Page title skeleton */}
-    <div className="flex items-center gap-3">
-      <div className="w-10 h-10 rounded-xl bg-primary/10 animate-pulse" />
-      <div className="space-y-2 flex-1">
-        <SkeletonBar w="w-40" h="h-5" />
-        <SkeletonBar w="w-56" h="h-3" className="opacity-50" />
-      </div>
+  <div className="flex flex-col items-center justify-center min-h-[60dvh] w-full p-6 animate-in fade-in duration-500">
+    <div className="relative mb-8">
+      <div className="w-16 h-16 rounded-2xl bg-primary/10 animate-pulse border-2 border-primary/20" />
+      <div className="absolute inset-0 w-16 h-16 rounded-2xl border-t-2 border-primary animate-spin" />
     </div>
-
-    {/* Hero card skeleton */}
-    <div className="rounded-2xl bg-muted/30 border border-border/30 p-5 space-y-3">
-      <SkeletonBar w="w-32" h="h-3" className="opacity-40" />
-      <SkeletonBar w="w-3/4" h="h-5" />
-      <SkeletonBar w="w-full" h="h-3" className="opacity-60" />
-      <SkeletonBar w="w-5/6" h="h-3" className="opacity-60" />
-    </div>
-
-    {/* Grid cards skeleton */}
-    <div className="grid grid-cols-2 gap-3">
-      {[1, 2, 3, 4].map(i => (
-        <div key={i} className="rounded-xl bg-muted/20 border border-border/20 p-4 space-y-3" style={{ animationDelay: `${i * 80}ms` }}>
-          <div className="w-8 h-8 rounded-lg bg-primary/8 animate-pulse" />
-          <SkeletonBar w="w-20" h="h-3" />
-          <SkeletonBar w="w-full" h="h-2" className="opacity-40" />
-        </div>
-      ))}
-    </div>
-
-    {/* Text block skeleton */}
-    <div className="space-y-2.5 pt-2">
-      <SkeletonBar w="w-28" h="h-4" />
+    
+    <div className="w-full max-w-sm space-y-4">
+      <SkeletonBar w="w-3/4 mx-auto" h="h-5" />
       <SkeletonBar w="w-full" h="h-3" className="opacity-50" />
-      <SkeletonBar w="w-4/5" h="h-3" className="opacity-50" />
-      <SkeletonBar w="w-2/3" h="h-3" className="opacity-40" />
+      <SkeletonBar w="w-5/6 mx-auto" h="h-3" className="opacity-40" />
+      
+      <div className="grid grid-cols-2 gap-3 pt-6">
+        {[1, 2].map(i => (
+          <div key={i} className="rounded-xl bg-muted/20 border border-border/20 p-4 space-y-3">
+            <SkeletonBar w="w-12 mx-auto" h="h-12" className="rounded-lg" />
+            <SkeletonBar w="w-2/3 mx-auto" h="h-3" />
+          </div>
+        ))}
+      </div>
     </div>
   </div>
 );
@@ -324,7 +308,7 @@ const AppLayout: React.FC = () => {
               onSignOut={signOut}
             />
           )}
-          <div className={isChromeless ? "flex-1 pb-20 lg:pb-0" : "flex-1 p-3 sm:p-4 md:p-5 lg:p-8 pb-32 lg:pb-12 w-full max-w-7xl mx-auto flex flex-col"}>
+          <div className={isChromeless ? "flex-1 pb-24 lg:pb-0" : "flex-1 pb-32 lg:pb-12 w-full max-w-[1200px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 pt-4 md:pt-6 lg:pt-8"}>
 
             <Suspense fallback={<LoadingFallback />}>
               <AnimatePresence mode="wait" initial={false}>

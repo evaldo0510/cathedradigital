@@ -32,8 +32,9 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
   const [showNotifs, setShowNotifs] = useState(false);
 
   return (
-    <header className="px-6 py-4 sm:px-12 md:py-6 border-b border-border bg-background/90 backdrop-blur-xl flex items-center justify-between sticky top-0 z-[140] safe-area-top transition-all">
-      <div className="flex items-center gap-6 sm:gap-10">
+    <header className="border-b border-border bg-background/90 backdrop-blur-xl sticky top-0 z-[140] safe-area-top transition-all">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-3 sm:py-4 flex items-center justify-between">
+        <div className="flex items-center gap-4 sm:gap-10">
         <div className="flex items-center gap-3 sm:gap-4 cursor-pointer group" onClick={() => navigate(AppRoute.DASHBOARD)}>
           <div className="transition-all group-hover:scale-105 group-hover:-rotate-3">
             <Logo className="w-10 h-10 sm:w-12 sm:h-12" />
@@ -55,7 +56,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
         )}
 
         {isDashboard && (
-          <nav className="hidden xl:flex items-center gap-6 border-l border-border pl-8 ml-2">
+          <nav className="hidden lg:flex items-center gap-6 border-l border-border pl-8 ml-2">
             {[
               { label: 'Bíblia', route: AppRoute.BIBLE },
               { label: 'Catecismo', route: AppRoute.CATECHISM },
@@ -65,16 +66,17 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
               <button 
                 key={item.label} 
                 onClick={() => navigate(item.route)}
-                className="text-[11px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-all whitespace-nowrap"
+                className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-all whitespace-nowrap relative group"
               >
                 {item.label}
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full" />
               </button>
             ))}
           </nav>
         )}
       </div>
 
-      <div className="flex items-center gap-3 flex-shrink-0">
+      <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
         <button className="p-3 bg-muted text-primary rounded-2xl border border-border hover:bg-primary hover:text-white transition-all shadow-sm" onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}>
           <Icons.Search className="w-5 h-5" />
         </button>
@@ -144,6 +146,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
         <button onClick={onToggleDark} className="p-3 bg-muted text-primary hover:bg-primary hover:text-white rounded-2xl border border-border transition-all active:scale-95 shadow-sm">
           {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
         </button>
+      </div>
       </div>
     </header>
   );

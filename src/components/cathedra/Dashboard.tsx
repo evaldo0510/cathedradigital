@@ -136,7 +136,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   }, [user]);
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-10 md:py-16 space-y-10">
+    <div className="w-full mx-auto space-y-12 md:space-y-16 py-6 md:py-10">
 
       {/* ═══ HEADER ═══ */}
       <FadeUp>
@@ -191,7 +191,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
 
       {/* ═══ 4 MAIN DOORS ═══ */}
       <FadeUp delay={0.1}>
-        <div className="grid grid-cols-2 gap-3 md:gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           {MAIN_DOORS.map((door) => {
             const Icon = door.icon;
             return (
@@ -216,120 +216,135 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         </div>
       </FadeUp>
 
-      {/* ═══ WEEKLY SUMMARY ═══ */}
-      <FadeUp delay={0.12}>
-        <div className="bg-card border border-border rounded-2xl p-5 shadow-sm space-y-3">
-          <div className="flex items-center gap-2">
-            <TrendingUp className="w-4 h-4 text-primary" />
-            <h2 className="text-sm font-bold text-foreground uppercase tracking-wide">Resumo da Semana</h2>
-          </div>
-          <div className="grid grid-cols-3 gap-3">
-            <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
-              <p className="text-2xl font-bold text-foreground">{weeklyStats.chaptersRead}</p>
-              <p className="text-[10px] text-muted-foreground font-medium mt-0.5 flex items-center justify-center gap-1">
-                <BookMarked className="w-3 h-3" /> Capítulos
-              </p>
+      {/* ═══ STATS & JOURNEYS GRID ═══ */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+        {/* ═══ WEEKLY SUMMARY ═══ */}
+        <FadeUp delay={0.12}>
+          <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4 h-full">
+            <div className="flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-primary" />
+              <h2 className="text-sm font-bold text-foreground uppercase tracking-wide">Resumo da Semana</h2>
             </div>
-            <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
-              <p className="text-2xl font-bold text-foreground">{streak}</p>
-              <p className="text-[10px] text-muted-foreground font-medium mt-0.5 flex items-center justify-center gap-1">
-                <Flame className="w-3 h-3" /> Streak
-              </p>
-            </div>
-            <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
-              <p className="text-2xl font-bold text-foreground">{weeklyStats.journeySteps}</p>
-              <p className="text-[10px] text-muted-foreground font-medium mt-0.5 flex items-center justify-center gap-1">
-                <Calendar className="w-3 h-3" /> Etapas
-              </p>
-            </div>
-          </div>
-        </div>
-      </FadeUp>
-
-      {/* ═══ ACTIVE JOURNEYS (if any) ═══ */}
-      {activeJourneys.length > 0 && (
-        <FadeUp delay={0.15}>
-          <div className="bg-card border border-border rounded-2xl p-5 shadow-sm space-y-3">
-            <div className="flex items-center justify-between">
-              <h2 className="text-sm font-bold text-foreground uppercase tracking-wide">Suas Jornadas</h2>
-              <button onClick={() => goTo(AppRoute.JORNADAS)} className="text-xs text-primary hover:underline flex items-center gap-1">
-                Ver todas <ChevronRight className="w-3 h-3" />
-              </button>
-            </div>
-            {activeJourneys.slice(0, 2).map((j) => {
-              const pct = j.totalSteps > 0 ? Math.round((j.completedSteps / j.totalSteps) * 100) : 0;
-              return (
-                <button
-                  key={j.id}
-                  onClick={() => goTo(`/jornadas/${j.id}`)}
-                  className="w-full flex items-center gap-3 p-3 rounded-xl bg-primary/[0.03] border border-primary/10 hover:border-primary/30 transition-colors text-left"
-                >
-                  <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center text-base shrink-0">
-                    {j.icon === 'compass' ? '🧭' : j.icon === 'cross' ? '✝' : j.icon === 'book-open' ? '📖' : '🙏'}
-                  </div>
-                  <div className="flex-1 min-w-0 space-y-1">
-                    <p className="text-sm font-semibold text-foreground truncate">{j.title}</p>
-                    <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden">
-                      <div className="h-full bg-primary rounded-full transition-all" style={{ width: `${pct}%` }} />
-                    </div>
-                  </div>
-                  <span className="text-xs font-bold text-primary shrink-0">{pct}%</span>
-                </button>
-              );
-            })}
-          </div>
-        </FadeUp>
-      )}
-
-      {/* ═══ SANTO DO DIA ═══ */}
-      {saintOfDay && (
-        <FadeUp delay={0.2}>
-          <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
-            <div className="flex items-stretch">
-              <div className="w-24 md:w-28 flex-shrink-0">
-                <SacredImage src={saintOfDay.image || ''} alt={saintOfDay.name} className="w-full h-full min-h-[110px]" />
-              </div>
-              <div className="flex-1 p-4 space-y-1">
-                <p className="text-[9px] font-black uppercase tracking-widest text-primary flex items-center gap-1">
-                  <Star className="w-3 h-3" /> Santo do Dia
-                </p>
-                <h3 className="text-sm md:text-base font-serif font-bold text-foreground">{saintOfDay.name}</h3>
-                <p className="text-xs text-muted-foreground font-serif italic line-clamp-2">{saintOfDay.quotes[0]}</p>
-                <button
-                  onClick={() => goTo(AppRoute.SAINTS)}
-                  className="flex items-center gap-1 text-xs font-medium text-primary hover:underline pt-1"
-                >
-                  Conhecer <ChevronRight className="w-3 h-3" />
-                </button>
-              </div>
-            </div>
-          </div>
-        </FadeUp>
-      )}
-
-      {/* ═══ PRO BANNER ═══ */}
-      {!profile?.is_premium && (
-        <FadeUp delay={0.25}>
-          <button
-            onClick={() => goTo(AppRoute.CHECKOUT)}
-            className="w-full group relative overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent p-5 text-left transition-all hover:border-primary/40 hover:shadow-lg hover:shadow-primary/10"
-          >
-            <div className="flex items-center gap-4">
-              <div className="w-11 h-11 rounded-xl bg-primary/15 flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                <Zap className="w-5 h-5 text-primary group-hover:text-primary-foreground" />
-              </div>
-              <div className="flex-1 min-w-0 space-y-0.5">
-                <h3 className="font-bold text-foreground text-sm">Cathedra PRO</h3>
-                <p className="text-xs text-muted-foreground">
-                  IA Teológica, trilhas e modo offline.{' '}
-                  <span className="text-primary font-semibold">R$ 15,92/mês</span>
+            <div className="grid grid-cols-3 gap-3">
+              <div className="text-center p-4 rounded-xl bg-primary/[0.04] border border-primary/10">
+                <p className="text-2xl md:text-3xl font-bold text-foreground">{weeklyStats.chaptersRead}</p>
+                <p className="text-[10px] text-muted-foreground font-medium mt-1 flex items-center justify-center gap-1">
+                  <BookMarked className="w-3 h-3" /> Capítulos
                 </p>
               </div>
-              <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
+              <div className="text-center p-4 rounded-xl bg-primary/[0.04] border border-primary/10">
+                <p className="text-2xl md:text-3xl font-bold text-foreground">{streak}</p>
+                <p className="text-[10px] text-muted-foreground font-medium mt-1 flex items-center justify-center gap-1">
+                  <Flame className="w-3 h-3" /> Streak
+                </p>
+              </div>
+              <div className="text-center p-4 rounded-xl bg-primary/[0.04] border border-primary/10">
+                <p className="text-2xl md:text-3xl font-bold text-foreground">{weeklyStats.journeySteps}</p>
+                <p className="text-[10px] text-muted-foreground font-medium mt-1 flex items-center justify-center gap-1">
+                  <Calendar className="w-3 h-3" /> Etapas
+                </p>
+              </div>
             </div>
-          </button>
+          </div>
         </FadeUp>
-      )}
+
+        {/* ═══ ACTIVE JOURNEYS ═══ */}
+        {activeJourneys.length > 0 && (
+          <FadeUp delay={0.15}>
+            <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4 h-full">
+              <div className="flex items-center justify-between">
+                <h2 className="text-sm font-bold text-foreground uppercase tracking-wide">Suas Jornadas</h2>
+                <button onClick={() => goTo(AppRoute.JORNADAS)} className="text-xs text-primary hover:underline flex items-center gap-1">
+                  Ver todas <ChevronRight className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="space-y-3">
+                {activeJourneys.slice(0, 2).map((j) => {
+                  const pct = j.totalSteps > 0 ? Math.round((j.completedSteps / j.totalSteps) * 100) : 0;
+                  return (
+                    <button
+                      key={j.id}
+                      onClick={() => goTo(`/jornadas/${j.id}`)}
+                      className="w-full flex items-center gap-4 p-4 rounded-xl bg-primary/[0.03] border border-primary/10 hover:border-primary/30 transition-colors text-left"
+                    >
+                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-lg shrink-0">
+                        {j.icon === 'compass' ? '🧭' : j.icon === 'cross' ? '✝' : j.icon === 'book-open' ? '📖' : '🙏'}
+                      </div>
+                      <div className="flex-1 min-w-0 space-y-2">
+                        <p className="text-sm font-semibold text-foreground truncate">{j.title}</p>
+                        <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
+                          <motion.div 
+                            initial={{ width: 0 }}
+                            animate={{ width: `${pct}%` }}
+                            className="h-full bg-primary rounded-full transition-all" 
+                          />
+                        </div>
+                      </div>
+                      <span className="text-xs font-bold text-primary shrink-0">{pct}%</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </FadeUp>
+        )}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+        {/* ═══ SANTO DO DIA ═══ */}
+        {saintOfDay && (
+          <FadeUp delay={0.2}>
+            <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm h-full group hover:shadow-md transition-all">
+              <div className="flex h-full items-stretch">
+                <div className="w-28 md:w-32 lg:w-40 flex-shrink-0 relative overflow-hidden">
+                  <SacredImage src={saintOfDay.image || ''} alt={saintOfDay.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent" />
+                </div>
+                <div className="flex-1 p-5 md:p-6 flex flex-col justify-center space-y-2">
+                  <p className="text-[9px] font-black uppercase tracking-widest text-primary flex items-center gap-1.5">
+                    <Star className="w-3.5 h-3.5 fill-primary/10" /> Santo do Dia
+                  </p>
+                  <h3 className="text-base md:text-xl font-serif font-bold text-foreground leading-tight">{saintOfDay.name}</h3>
+                  <p className="text-xs md:text-sm text-muted-foreground font-serif italic line-clamp-3 leading-relaxed">"{saintOfDay.quotes[0]}"</p>
+                  <button
+                    onClick={() => goTo(AppRoute.SAINTS)}
+                    className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-primary hover:underline pt-2"
+                  >
+                    Conhecer <ChevronRight className="w-3 h-3" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </FadeUp>
+        )}
+
+        {/* ═══ PRO BANNER ═══ */}
+        {!profile?.is_premium && (
+          <FadeUp delay={0.25}>
+            <button
+              onClick={() => goTo(AppRoute.CHECKOUT)}
+              className="w-full h-full group relative overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 via-primary/[0.02] to-transparent p-6 md:p-8 text-left transition-all hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5 flex flex-col justify-center"
+            >
+              <div className="flex items-center gap-6">
+                <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500 shadow-inner">
+                  <Zap className="w-7 h-7 text-primary group-hover:text-primary-foreground transition-colors" />
+                </div>
+                <div className="flex-1 min-w-0 space-y-1.5">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-black text-foreground text-base md:text-lg uppercase tracking-wider">Cathedra PRO</h3>
+                    <span className="bg-primary text-primary-foreground text-[8px] font-black px-2 py-0.5 rounded-full uppercase tracking-tighter">Premium</span>
+                  </div>
+                  <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
+                    IA Teológica, trilhas exclusivas e modo offline para seu estudo diário.{' '}
+                    <span className="text-primary font-bold whitespace-nowrap">R$ 15,92/mês</span>
+                  </p>
+                </div>
+                <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-all group-hover:translate-x-1 shrink-0" />
+              </div>
+            </button>
+          </FadeUp>
+        )}
+      </div>
     </div>
   );
 };
