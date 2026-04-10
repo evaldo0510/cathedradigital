@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle2, Clock, PenTool, Heart, RotateCcw, Calendar } from 'lucide-react';
 import { STEPS } from './constants';
@@ -6,6 +6,8 @@ import ShareButton from '../ShareButton';
 import FlowConnector from '../FlowConnector';
 import ProConversionBanner from '../ProConversionBanner';
 import { routeUser } from '@/lib/smartRouter';
+import { useAuth } from '@/hooks/useAuth';
+import { saveUserPsychology } from '@/lib/psychologicalProfile';
 
 interface LectioConclusioProps {
   selectedPassage: string;
