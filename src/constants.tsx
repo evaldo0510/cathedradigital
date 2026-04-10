@@ -194,17 +194,49 @@ export const Logo = forwardRef<HTMLDivElement, { className?: string, variant?: '
 Logo.displayName = 'Logo';
 
 const createIcon = (IconComponent: any) => 
-  forwardRef<SVGSVGElement, React.SVGProps<SVGSVGElement>>(({ className, ...props }, ref) => (
+  forwardRef<SVGSVGElement, React.SVGProps<SVGSVGElement>>(({ className, strokeWidth = 1.5, size = 20, ...props }, ref) => (
     <IconComponent 
       ref={ref} 
-      strokeWidth={1.5} 
-      size={20}
-      className={cn("transition-colors duration-200", className)}
+      strokeWidth={strokeWidth} 
+      size={size}
+      className={cn("transition-colors duration-200 shrink-0", className)}
       {...props} 
     />
   ));
 
 export const Icons = {
+  // Core UI
+  Home: createIcon(Layout),
+  Bible: createIcon(BookOpen),
+  HolyBible: createIcon(BookOpen),
+  Liturgy: createIcon(Cross),
+  Chalice: createIcon(Sparkle),
+  Journeys: createIcon(Map),
+  Community: createIcon(Users),
+  Lectio: createIcon(Flame),
+  Saints: createIcon(Sparkles),
+  SaintHalo: createIcon(Sparkles),
+  Catechism: createIcon(FileText),
+  CatechismShield: createIcon(FileText),
+  Glossary: createIcon(Type),
+  Aquinas: createIcon(Columns),
+  Dove: createIcon(Sparkles),
+  LiturgicalCalendar: createIcon(Map),
+  PrayingHands: createIcon(Sparkles),
+  Rosary: createIcon(Sparkles),
+  ViaCrucis: createIcon(Cross),
+  Scroll: createIcon(FileText),
+  Cathedral: createIcon(Columns),
+  Book: createIcon(BookOpen),
+  Message: createIcon(MessageCircle),
+  Handshake: createIcon(Users),
+  Whatsapp: createIcon(MessageCircle),
+  Google: createIcon(Sparkles),
+  Apple: createIcon(Sparkles),
+  Share: createIcon(Share2),
+  Audio: createIcon(Volume2),
+  Stop: createIcon(Square),
+
   // Lucide Names (Direct)
   BookOpen: createIcon(BookOpen),
   Cross: createIcon(Cross),
@@ -309,36 +341,4 @@ export const Icons = {
   XCircle: createIcon(XCircle),
   CreditCard: createIcon(CreditCard),
   WifiOff: createIcon(WifiOff),
-
-  // Semantic Aliases & Backward Compatibility
-  Bible: createIcon(BookOpen),
-  HolyBible: createIcon(BookOpen),
-  Liturgy: createIcon(Cross),
-  Chalice: createIcon(Sparkle),
-  Journeys: createIcon(Map),
-  Community: createIcon(Users),
-  Lectio: createIcon(Flame),
-  Saints: createIcon(Sparkles),
-  SaintHalo: createIcon(Sparkles),
-  Catechism: createIcon(FileText),
-  CatechismShield: createIcon(FileText),
-  Glossary: createIcon(Type),
-  Aquinas: createIcon(Columns),
-  Dove: createIcon(Sparkles),
-  LiturgicalCalendar: createIcon(Map),
-  PrayingHands: createIcon(Sparkles),
-  Rosary: createIcon(Sparkles),
-  ViaCrucis: createIcon(Cross),
-  Scroll: createIcon(FileText),
-  Cathedral: createIcon(Columns),
-  Home: createIcon(Layout),
-  Book: createIcon(BookOpen),
-  Message: createIcon(MessageCircle),
-  Handshake: createIcon(Users),
-  Whatsapp: createIcon(MessageCircle),
-  Google: createIcon(Sparkles),
-  Apple: createIcon(Sparkles),
-  Share: createIcon(Share2),
-  Audio: createIcon(Volume2),
-  Stop: createIcon(Square),
 };
