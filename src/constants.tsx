@@ -193,8 +193,12 @@ export const Logo = forwardRef<HTMLDivElement, { className?: string, variant?: '
 
 Logo.displayName = 'Logo';
 
+interface IconProps extends React.SVGProps<SVGSVGElement> {
+  size?: number | string;
+}
+
 const createIcon = (IconComponent: any) => 
-  forwardRef<SVGSVGElement, React.SVGProps<SVGSVGElement>>(({ className, strokeWidth = 1.5, size = 20, ...props }, ref) => (
+  forwardRef<SVGSVGElement, IconProps>(({ className, strokeWidth = 1.5, size = 20, ...props }, ref) => (
     <IconComponent 
       ref={ref} 
       strokeWidth={strokeWidth} 
