@@ -86,9 +86,22 @@ import {
   Swords,
   Mail,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Settings,
+  Info,
+  Maximize2,
+  Minimize2,
+  List,
+  Grid,
+  Filter,
+  Eye,
+  EyeOff,
+  AlertTriangle,
+  CheckCircle,
+  XCircle,
+  CreditCard,
+  CreditCard as PaymentIcon
 } from 'lucide-react';
-
 import { cn } from './lib/utils';
 
 export const COLORS = {
@@ -135,6 +148,8 @@ export const Icons = {
   Search: createIcon(Search),
   ChevronLeft: createIcon(ChevronLeft),
   ChevronRight: createIcon(ChevronRight),
+  ChevronDown: createIcon(ChevronDown),
+  ChevronUp: createIcon(ChevronUp),
   Star: createIcon(Star),
   MessageCircle: createIcon(MessageCircle),
   Zap: createIcon(Zap),
@@ -211,7 +226,18 @@ export const Icons = {
   ScrollText: createIcon(ScrollText),
   Swords: createIcon(Swords),
   Mail: createIcon(Mail),
-  ChevronDown: createIcon(ChevronDown),
+  Settings: createIcon(Settings),
+  Info: createIcon(Info),
+  Maximize: createIcon(Maximize2),
+  Minimize: createIcon(Minimize2),
+  List: createIcon(List),
+  Grid: createIcon(Grid),
+  Filter: createIcon(Filter),
+  Eye: createIcon(Eye),
+  EyeOff: createIcon(EyeOff),
+  AlertTriangle: createIcon(AlertTriangle),
+  XCircle: createIcon(XCircle),
+  CreditCard: createIcon(CreditCard),
 
   // Semantic Aliases & Backward Compatibility
   Bible: createIcon(BookOpen),
