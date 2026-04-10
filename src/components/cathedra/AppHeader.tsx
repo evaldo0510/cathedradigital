@@ -146,6 +146,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
         </button>
       </div>
+      </div>
     </header>
   );
 });
