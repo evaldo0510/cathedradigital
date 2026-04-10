@@ -5,7 +5,7 @@ import {
   Users, TrendingUp, Download, DollarSign, ArrowUpRight,
   BarChart3, Calendar, AlertCircle, Crown, Shield, Search,
   ChevronDown, ChevronUp, UserCog, ArrowLeft, Home, Smartphone, MonitorSmartphone,
-  Target, Activity, Bell, LayoutGrid
+  Target, Activity, Bell, LayoutGrid, UserCheck
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -30,6 +30,10 @@ interface Stats {
   totalRevenue: number;
   pwaInstalls: number;
   pwaOpens: number;
+  activeToday: number;
+  inactiveUsers: number;
+  journeysInProgress: number;
+  returnRate: number;
   recentTransactions: any[];
   userGrowth: any[];
   revenueData: any[];
@@ -101,6 +105,24 @@ const AdminDashboard: React.FC = () => {
         const pwaOpens = metrics.filter(m => m.metric_type === 'pwa_open').length;
         const totalRevenue = transactions.reduce((acc, curr) => acc + Number(curr.amount), 0);
 
+        // New CRM specific stats
+        // now is already declared above
+        // const now = new Date();
+        const activeToday = allProfiles.filter(p => {
+          if (!p.last_visit) return false;
+          const visitDate = new Date(p.last_visit);
+          return visitDate.toDateString() === now.toDateString();
+        }).length;
+
+        const inactiveUsers = allProfiles.filter(p => {
+          if (!p.last_visit) return true;
+          const diff = (now.getTime() - new Date(p.last_visit).getTime()) / (1000 * 60 * 60);
+          return diff >= 48;
+        }).length;
+
+        const journeysInProgress = (journeysRes.data || []).length;
+        const returnRate = allProfiles.length > 0 ? ((allProfiles.length - inactiveUsers) / allProfiles.length) * 100 : 0;
+
         const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
         const currentYear = new Date().getFullYear();
         
@@ -136,6 +158,10 @@ const AdminDashboard: React.FC = () => {
           totalDownloads: downloadsCount,
           pwaInstalls,
           pwaOpens,
+          activeToday,
+          inactiveUsers,
+          journeysInProgress,
+          returnRate,
           totalRevenue,
           recentTransactions: transactions.slice(0, 10),
           userGrowth,
@@ -353,7 +379,7 @@ const AdminDashboard: React.FC = () => {
         {/* Overview Tab */}
         <TabsContent value="overview" className="space-y-6">
           {/* Stats Overview */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                 <CardTitle className="text-sm font-medium">Usuários</CardTitle>
@@ -365,6 +391,52 @@ const AdminDashboard: React.FC = () => {
               </CardContent>
             </Card>
 
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                <CardTitle className="text-sm font-medium">Ativos Hoje</CardTitle>
+                <UserCheck className="h-4 w-4 text-emerald-500" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-emerald-500">{stats?.activeToday}</div>
+                <p className="text-xs text-muted-foreground mt-1">Visitantes hoje</p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                <CardTitle className="text-sm font-medium">Inativos</CardTitle>
+                <AlertCircle className="h-4 w-4 text-destructive" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-destructive">{stats?.inactiveUsers}</div>
+                <p className="text-xs text-muted-foreground mt-1">{'>'} 48h sem acesso</p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                <CardTitle className="text-sm font-medium">Jornadas</CardTitle>
+                <Target className="h-4 w-4 text-blue-500" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-blue-500">{stats?.journeysInProgress}</div>
+                <p className="text-xs text-muted-foreground mt-1">Em andamento</p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                <CardTitle className="text-sm font-medium">Retorno</CardTitle>
+                <TrendingUp className="h-4 w-4 text-primary" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-primary">{stats?.returnRate.toFixed(1)}%</div>
+                <p className="text-xs text-muted-foreground mt-1">Taxa de retenção</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                 <CardTitle className="text-sm font-medium">Assinantes PRO</CardTitle>
@@ -380,17 +452,6 @@ const AdminDashboard: React.FC = () => {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <CardTitle className="text-sm font-medium">Acessos</CardTitle>
-                <BarChart3 className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stats?.totalVisits}</div>
-                <p className="text-xs text-muted-foreground mt-1">Visitas registradas</p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                 <CardTitle className="text-sm font-medium">Receita</CardTitle>
                 <DollarSign className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
@@ -398,7 +459,7 @@ const AdminDashboard: React.FC = () => {
                 <div className="text-2xl font-bold">
                   {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(stats?.totalRevenue || 0)}
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">Receita acumulada</p>
+                <p className="text-xs text-muted-foreground mt-1">Acumulado</p>
               </CardContent>
             </Card>
           </div>

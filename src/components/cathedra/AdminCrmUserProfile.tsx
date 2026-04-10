@@ -32,9 +32,9 @@ interface Props {
   onBack: () => void;
 }
 
-const daysSince = (date: string | null) => {
-  if (!date) return 999;
-  return Math.floor((Date.now() - new Date(date).getTime()) / (1000 * 60 * 60 * 24));
+const hoursSince = (date: string | null) => {
+  if (!date) return 9999;
+  return Math.floor((Date.now() - new Date(date).getTime()) / (1000 * 60 * 60));
 };
 
 const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
@@ -76,10 +76,13 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
     // Parent needs to refresh
   };
 
-  const statusDays = daysSince(user.last_visit);
-  const isAbandoned = statusDays > 7;
-  const statusLabel = isAbandoned ? 'Abandono' : statusDays <= 3 ? 'Ativo' : 'Em Risco';
-  const statusColor = isAbandoned ? 'text-destructive' : statusDays <= 3 ? 'text-emerald-500' : 'text-amber-500';
+  const statusHours = hoursSince(user.last_visit);
+  const isInactive = statusHours >= 48;
+  const isDeep = (user.reflections_count || 0) > 10;
+  const isNew = (user.reflections_count || 0) <= 1;
+
+  const statusLabel = isInactive ? 'Inativo' : isDeep ? 'Profundo' : isNew ? 'Novo' : 'Ativo';
+  const statusColor = isInactive ? 'text-destructive' : isDeep ? 'text-primary' : isNew ? 'text-blue-500' : 'text-emerald-500';
 
   return (
     <div className="space-y-6">
@@ -107,7 +110,7 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
               <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
                 <span className="flex items-center gap-1"><Mail className="w-3.5 h-3.5" /> {user.email}</span>
                 <span className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5" /> Cadastro: {new Date(user.created_at).toLocaleDateString('pt-BR')}</span>
-                <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> Última atividade: {user.last_visit ? `${statusDays}d atrás` : 'Nunca'}</span>
+                <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> Última atividade: {user.last_visit ? (statusHours < 24 ? 'Hoje' : `${Math.floor(statusHours/24)}d atrás`) : 'Nunca'}</span>
               </div>
             </div>
             <div className="flex gap-2">
