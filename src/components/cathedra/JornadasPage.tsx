@@ -32,7 +32,7 @@ const CATEGORY_ICONS: Record<string, string> = {
   oracao: '🔁',
   mistico: '🙏',
   cura: '📚',
-  transformacao: '✨',
+  transformacao: '',
 };
 
 const CATEGORY_LABELS: Record<string, string> = {
