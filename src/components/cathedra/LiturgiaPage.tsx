@@ -171,15 +171,22 @@ const LiturgiaPage: React.FC = () => {
   const { data: readings, isLoading } = useQuery({
     queryKey: ['liturgy-readings', dateKey],
     queryFn: async () => {
-      const { data, error } = await supabase.functions.invoke('liturgical-calendar', {
-        body: { action: 'readings', day: today.getDate(), month: today.getMonth() + 1 }
-      });
-      if (error) throw error;
-      const result = data as LiturgyReadings;
-      setCachedReadings(dateKey, result);
-      return result;
+      // Try IndexedDB cache first (works offline)
+      const cached = await getCachedLiturgy(dateKey);
+      try {
+        const { data, error } = await supabase.functions.invoke('liturgical-calendar', {
+          body: { action: 'readings', day: today.getDate(), month: today.getMonth() + 1 }
+        });
+        if (error) throw error;
+        const result = data as LiturgyReadings;
+        await cacheLiturgy(dateKey, result);
+        return result;
+      } catch (e) {
+        // Offline fallback: return cached data if available
+        if (cached) return cached as LiturgyReadings;
+        throw e;
+      }
     },
-    initialData: () => getCachedReadings(dateKey) ?? undefined,
     staleTime: 1000 * 60 * 60,
   });
 
