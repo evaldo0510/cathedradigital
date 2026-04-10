@@ -110,15 +110,76 @@ export const COLORS = {
   accent: '#C5A02D',
 };
 
-export const Logo = forwardRef<HTMLDivElement, { className?: string }>(({ className = "w-12 h-12" }, ref) => (
-  <div ref={ref} className={cn("relative flex items-center justify-center group", className)}>
-    <img 
-      src="/src/assets/cathedra-logo.webp" 
-      alt="Cathedra" 
-      className="relative w-full h-full object-contain transition-all duration-700 group-hover:scale-110 drop-shadow-[0_0_15px_rgba(212,175,55,0.3)]"
-    />
-  </div>
-));
+export const Logo = forwardRef<HTMLDivElement, { className?: string, variant?: 'gold' | 'light' | 'dark' }>(({ 
+  className = "w-12 h-12", 
+  variant = 'gold' 
+}, ref) => {
+  const colors = {
+    gold: '#C8A96A',
+    light: '#FFFFFF',
+    dark: '#0A192F'
+  };
+
+  const currentColor = colors[variant];
+
+  return (
+    <div ref={ref} className={cn("relative flex items-center justify-center group", className)}>
+      <svg 
+        viewBox="0 0 100 100" 
+        fill="none" 
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-full h-full transition-all duration-700 group-hover:scale-110"
+      >
+        {/* Monstrance / Cathedral Base */}
+        <path 
+          d="M50 15L30 45H70L50 15Z" 
+          stroke={currentColor} 
+          strokeWidth="2" 
+          strokeLinecap="round" 
+          strokeLinejoin="round"
+        />
+        {/* Internal Cross Structure */}
+        <path 
+          d="M50 25V75M35 55H65" 
+          stroke={currentColor} 
+          strokeWidth="3" 
+          strokeLinecap="round"
+        />
+        {/* Arches / Rays */}
+        <path 
+          d="M25 65C25 65 35 85 50 85C65 85 75 65 75 65" 
+          stroke={currentColor} 
+          strokeWidth="2" 
+          strokeLinecap="round"
+        />
+        {/* Central Detail */}
+        <circle 
+          cx="50" 
+          cy="45" 
+          r="8" 
+          stroke={currentColor} 
+          strokeWidth="1.5"
+        />
+        <path 
+          d="M50 37V53M42 45H58" 
+          stroke={currentColor} 
+          strokeWidth="1"
+        />
+        {/* Stylized Spires */}
+        <path 
+          d="M40 30L50 10L60 30" 
+          stroke={currentColor} 
+          strokeWidth="2" 
+          strokeLinecap="round" 
+          strokeLinejoin="round"
+        />
+      </svg>
+      {variant === 'gold' && (
+        <div className="absolute inset-0 bg-gold/10 blur-xl rounded-full -z-10 opacity-0 group-hover:opacity-100 transition-opacity" />
+      )}
+    </div>
+  );
+});
 
 Logo.displayName = 'Logo';
 
