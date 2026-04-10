@@ -321,7 +321,7 @@ const ProfilePage: React.FC = () => {
               </div>
               <p className="text-[10px] text-muted-foreground">Receba conteúdos no seu WhatsApp.</p>
             </div>
-            <Switch checked={whatsappEnabled} onCheckedChange={setwhatsappEnabled} />
+            <Switch checked={whatsappEnabled} onCheckedChange={setWhatsappEnabled} />
           </div>
 
           {whatsappEnabled && (
