@@ -12,34 +12,29 @@ export interface RouteRecommendation {
   reason: string;
 }
 
-const EMOTION_KEYWORDS = [
-  'ansiedade', 'ansioso', 'medo', 'triste', 'tristeza', 'angústia', 'angustia',
-  'dor', 'sofrimento', 'choro', 'chorei', 'solidão', 'solidao', 'vazio',
-  'cansado', 'cansaço', 'exausto', 'perdido', 'confuso', 'raiva', 'culpa',
-  'vergonha', 'depressão', 'depressao', 'desespero', 'saudade', 'luto',
-  'ferida', 'ferido', 'machucado', 'abandonado', 'rejeitado', 'frustração',
+const ANSIEDADE_KEYWORDS = [
+  'ansiedade', 'ansioso', 'ansiosa', 'agitação', 'agitacao', 'agitado', 'agitada',
+  'pressa', 'correndo', 'acelerado', 'acelerada', 'controle', 'controlar', 'impaciência',
+  'impaciencia', 'impaciente', 'nervoso', 'nervosa', 'preocupação', 'preocupado',
 ];
 
-const DOUBT_KEYWORDS = [
-  'dúvida', 'duvida', 'não entendo', 'nao entendo', 'por que', 'porque',
-  'como assim', 'será que', 'sera que', 'não sei', 'nao sei', 'questiono',
-  'questão', 'questao', 'pergunta', 'sentido', 'significado', 'razão',
-  'explicar', 'explicação', 'teologia', 'filosofia', 'lógica', 'logica',
+const CONFUSAO_KEYWORDS = [
+  'confusão', 'confusao', 'confuso', 'confusa', 'falta de clareza', 'dúvida', 'duvida',
+  'incerteza', 'não sei', 'nao sei', 'perdido', 'perdida', 'desorientado', 'desorientada',
+  'obscuro', 'obscura', 'questionamento', 'não entendo', 'nao entendo',
 ];
 
-const MORAL_KEYWORDS = [
-  'pecado', 'pecador', 'errado', 'certo', 'moral', 'ética', 'etica',
-  'consciência', 'consciencia', 'conflito', 'dilema', 'tentação', 'tentacao',
-  'perdão', 'perdao', 'confissão', 'confissao', 'arrependimento', 'justiça',
-  'justica', 'mandamento', 'lei', 'dever', 'obrigação', 'virtude', 'vício',
+const DOR_EMOCIONAL_KEYWORDS = [
+  'dor', 'sofrimento', 'tristeza', 'triste', 'angústia', 'angustia', 'culpa', 'culpado',
+  'culpada', 'medo', 'temor', 'vazio', 'solidão', 'solidao', 'ferida', 'ferido',
+  'ferida', 'abandono', 'abandonado', 'rejeição', 'rejeitado', 'desespero',
 ];
 
-const SPIRITUAL_KEYWORDS = [
-  'oração', 'oracao', 'rezar', 'missa', 'eucaristia', 'sacramento',
-  'presença', 'presenca', 'Deus', 'Jesus', 'Espírito', 'espirito',
-  'sagrado', 'divino', 'contemplação', 'contemplacao', 'silêncio', 'silencio',
-  'adoração', 'adoracao', 'louvor', 'liturgia', 'comunhão', 'comunhao',
-  'graça', 'graca', 'bênção', 'bencao', 'consagração', 'vocação',
+const BUSCA_ESPIRITUAL_KEYWORDS = [
+  'sentido', 'significado', 'crescimento', 'crescer', 'profundidade', 'profundo',
+  'profunda', 'propósito', 'proposito', 'Deus', 'Jesus', 'Espírito', 'espirito',
+  'oração', 'oracao', 'alma', 'interior', 'transcendência', 'transcendencia',
+  'busca', 'buscando', 'encontrar', 'verdade',
 ];
 
 function countMatches(text: string, keywords: string[]): number {
@@ -49,10 +44,10 @@ function countMatches(text: string, keywords: string[]): number {
 
 export function detectCategories(text: string) {
   return {
-    emotion: countMatches(text, EMOTION_KEYWORDS),
-    doubt: countMatches(text, DOUBT_KEYWORDS),
-    moral: countMatches(text, MORAL_KEYWORDS),
-    spiritual: countMatches(text, SPIRITUAL_KEYWORDS),
+    ansiedade: countMatches(text, ANSIEDADE_KEYWORDS),
+    confusao: countMatches(text, CONFUSAO_KEYWORDS),
+    dor_emocional: countMatches(text, DOR_EMOCIONAL_KEYWORDS),
+    busca_espiritual: countMatches(text, BUSCA_ESPIRITUAL_KEYWORDS),
   };
 }
 
@@ -68,60 +63,60 @@ export function routeUser(reflectionText: string): RouteRecommendation[] {
 
   for (const [category] of ranked) {
     switch (category) {
-      case 'emotion':
+      case 'ansiedade':
         routes.push({
           route: AppRoute.JORNADAS,
-          label: 'Jornada de Transformação',
+          label: 'Rotina de Transformação',
           icon: '🌱',
-          reason: 'Para acolher o que você sente',
-        });
-        routes.push({
-          route: AppRoute.SAINTS,
-          label: 'Santos que viveram isso',
-          icon: '🌟',
-          reason: 'Encontre identificação',
-        });
-        break;
-      case 'doubt':
-        routes.push({
-          route: AppRoute.AQUINAS_OPERA,
-          label: 'Aquinas — Clareza',
-          icon: '🧠',
-          reason: 'Para iluminar suas dúvidas',
-        });
-        routes.push({
-          route: AppRoute.GLOSSARY,
-          label: 'Glossário Teológico',
-          icon: '📖',
-          reason: 'Entenda os termos',
-        });
-        break;
-      case 'moral':
-        routes.push({
-          route: AppRoute.CATECHISM,
-          label: 'Catecismo',
-          icon: '📘',
-          reason: 'O que a Igreja ensina',
-        });
-        routes.push({
-          route: AppRoute.MAGISTERIUM,
-          label: 'Magistério',
-          icon: '🧭',
-          reason: 'Direção segura',
-        });
-        break;
-      case 'spiritual':
-        routes.push({
-          route: `${AppRoute.LITURGIA}?tab=liturgia`,
-          label: 'Liturgia Viva',
-          icon: '🕊️',
-          reason: 'Viva o mistério',
+          reason: 'Para desacelerar e encontrar paz',
         });
         routes.push({
           route: AppRoute.ORACAO,
-          label: 'Oração',
+          label: 'Oração e Silêncio',
           icon: '🙏',
-          reason: 'Aprofunde sua oração',
+          reason: 'Acalme seu coração',
+        });
+        break;
+      case 'confusao':
+        routes.push({
+          route: AppRoute.CATECHISM,
+          label: 'Fundamentos da Fé',
+          icon: '📘',
+          reason: 'Para trazer clareza à sua busca',
+        });
+        routes.push({
+          route: AppRoute.AQUINAS_OPERA,
+          label: 'Aquinas — Razão',
+          icon: '🧠',
+          reason: 'Luz para o intelecto',
+        });
+        break;
+      case 'dor_emocional':
+        routes.push({
+          route: AppRoute.JORNADAS,
+          label: 'Caminho de Cura',
+          icon: '❤️',
+          reason: 'Para tratar as feridas da alma',
+        });
+        routes.push({
+          route: AppRoute.SAINTS,
+          label: 'Exemplos de Superação',
+          icon: '🌟',
+          reason: 'Você não está sozinho',
+        });
+        break;
+      case 'busca_espiritual':
+        routes.push({
+          route: AppRoute.LECTIO_DIVINA,
+          label: 'Lectio Divina',
+          icon: '📖',
+          reason: 'Aprofunde-se na Palavra',
+        });
+        routes.push({
+          route: AppRoute.JORNADAS,
+          label: 'Jornada Mística',
+          icon: '🕊️',
+          reason: 'Busque a união com Deus',
         });
         break;
     }
