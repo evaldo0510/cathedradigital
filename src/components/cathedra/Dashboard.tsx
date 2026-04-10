@@ -5,9 +5,9 @@ import { AppRoute, User } from '../../types';
 import { useAuth } from '../../hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import SacredImage from './SacredImage';
+import { Icons } from '@/constants';
 import {
-  BookOpen, Church, ChevronRight, Flame, Star, Zap, Map, Users,
-  TrendingUp, Calendar, BookMarked
+  ChevronRight, Flame, Star, Zap, TrendingUp, Calendar, BookMarked
 } from 'lucide-react';
 
 interface DashboardProps {
@@ -39,7 +39,7 @@ const MAIN_DOORS = [
   {
     label: 'Bíblia',
     description: 'Sagrada Escritura',
-    icon: BookOpen,
+    icon: Icons.Bible,
     route: AppRoute.BIBLE,
     gradient: 'from-primary/5 to-primary/[0.02]',
     iconColor: 'text-primary',
@@ -48,7 +48,7 @@ const MAIN_DOORS = [
   {
     label: 'Liturgia',
     description: 'Leituras do dia',
-    icon: Church,
+    icon: Icons.Liturgy,
     route: AppRoute.LITURGIA,
     gradient: 'from-primary/5 to-primary/[0.02]',
     iconColor: 'text-primary',
@@ -57,7 +57,7 @@ const MAIN_DOORS = [
   {
     label: 'Jornadas',
     description: 'Trilhas de formação',
-    icon: Map,
+    icon: Icons.Journeys,
     route: AppRoute.JORNADAS,
     gradient: 'from-primary/5 to-primary/[0.02]',
     iconColor: 'text-primary',
@@ -66,7 +66,7 @@ const MAIN_DOORS = [
   {
     label: 'Comunidade',
     description: 'Caminhe junto',
-    icon: Users,
+    icon: Icons.Community,
     route: AppRoute.COMMUNITY,
     gradient: 'from-primary/5 to-primary/[0.02]',
     iconColor: 'text-primary',
@@ -151,25 +151,19 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               <div className="absolute inset-0 bg-primary/20 blur-2xl rounded-full scale-150 opacity-0 group-hover:opacity-100 transition-opacity" />
               <svg 
                 viewBox="0 0 100 100" 
-                className="w-16 h-16 md:w-20 md:h-20 text-primary/15 transition-all group-hover:text-primary/30 group-hover:scale-110"
+                className="w-20 h-20 md:w-24 md:h-24 text-primary transition-all group-hover:scale-110"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <circle cx="50" cy="50" r="45" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" />
                 <path 
-                  d="M50 15V85M30 40H70" 
+                  d="M50 20C50 20 20 20 20 50C20 80 50 80 50 80M50 20C50 20 80 20 80 50C80 80 50 80 50 80M50 15V85" 
                   stroke="currentColor" 
-                  strokeWidth="6" 
+                  strokeWidth="2" 
                   strokeLinecap="round" 
+                  strokeLinejoin="round" 
                 />
-                {/* Cross caps/serifs */}
-                <path d="M44 15H56M44 85H56M30 34V46M70 34V46" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-                <path 
-                  d="M50 15L42 24M50 15L58 24" 
-                  stroke="currentColor" 
-                  strokeWidth="3" 
-                  strokeLinecap="round" 
-                />
+                <circle cx="50" cy="50" r="10" stroke="currentColor" strokeWidth="1.5" className="text-secondary" />
+                <path d="M50 45V55M45 50H55" stroke="currentColor" strokeWidth="1" strokeLinecap="round" className="text-secondary" />
               </svg>
             </div>
           </motion.div>
