@@ -37,8 +37,51 @@ import {
   ArrowDown,
   ArrowLeft,
   Music,
-  Bell
+  Bell,
+  Sun,
+  Moon,
+  PenLine,
+  Calendar,
+  Compass,
+  Loader2,
+  Award,
+  ArrowRight,
+  Quote,
+  Share2,
+  Check,
+  Circle,
+  Dot,
+  X,
+  ShieldQuestion,
+  MessageSquare,
+  Send,
+  Trophy,
+  ShieldCheck,
+  Clock,
+  CheckCircle2,
+  PenTool,
+  Copy,
+  Plus,
+  Trash2,
+  GripVertical,
+  Lock,
+  HelpCircle,
+  PartyPopper,
+  MoreHorizontal,
+  Coffee,
+  Church,
+  Bookmark,
+  Smartphone,
+  MonitorSmartphone,
+  Activity,
+  UserCog,
+  LayoutGrid,
+  UserCheck,
+  Stethoscope,
+  Route,
+  Library
 } from 'lucide-react';
+import { cn } from './lib/utils';
 
 export const COLORS = {
   primary: '#0A192F', // Azul escuro profundo
@@ -48,7 +91,7 @@ export const COLORS = {
 };
 
 export const Logo = forwardRef<HTMLDivElement, { className?: string }>(({ className = "w-12 h-12" }, ref) => (
-  <div ref={ref} className={`relative flex items-center justify-center group ${className}`}>
+  <div ref={ref} className={cn("relative flex items-center justify-center group", className)}>
     <img 
       src="/src/assets/cathedra-logo.webp" 
       alt="Cathedra" 
@@ -60,11 +103,12 @@ export const Logo = forwardRef<HTMLDivElement, { className?: string }>(({ classN
 Logo.displayName = 'Logo';
 
 const createIcon = (IconComponent: any) => 
-  forwardRef<SVGSVGElement, React.SVGProps<SVGSVGElement>>((props, ref) => (
+  forwardRef<SVGSVGElement, React.SVGProps<SVGSVGElement>>(({ className, ...props }, ref) => (
     <IconComponent 
       ref={ref} 
       strokeWidth={1.5} 
-      className={`transition-colors duration-200 ${props.className || ''}`}
+      size={20}
+      className={cn("transition-colors duration-200", className)}
       {...props} 
     />
   ));
@@ -128,4 +172,46 @@ export const Icons = {
   User: createIcon(User),
   Music: createIcon(Music),
   Bell: createIcon(Bell),
+  Sun: createIcon(Sun),
+  Moon: createIcon(Moon),
+  PenLine: createIcon(PenLine),
+  Calendar: createIcon(Calendar),
+  Compass: createIcon(Compass),
+  Loader: createIcon(Loader2),
+  Award: createIcon(Award),
+  ArrowRight: createIcon(ArrowRight),
+  Quote: createIcon(Quote),
+  Share: createIcon(Share2),
+  Check: createIcon(Check),
+  Circle: createIcon(Circle),
+  Dot: createIcon(Dot),
+  X: createIcon(X),
+  ShieldQuestion: createIcon(ShieldQuestion),
+  MessageSquare: createIcon(MessageSquare),
+  Send: createIcon(Send),
+  Trophy: createIcon(Trophy),
+  ShieldCheck: createIcon(ShieldCheck),
+  Clock: createIcon(Clock),
+  CheckCircle: createIcon(CheckCircle2),
+  PenTool: createIcon(PenTool),
+  Copy: createIcon(Copy),
+  Plus: createIcon(Plus),
+  Trash: createIcon(Trash2),
+  GripVertical: createIcon(GripVertical),
+  Lock: createIcon(Lock),
+  HelpCircle: createIcon(HelpCircle),
+  PartyPopper: createIcon(PartyPopper),
+  MoreHorizontal: createIcon(MoreHorizontal),
+  Coffee: createIcon(Coffee),
+  Church: createIcon(Church),
+  Bookmark: createIcon(Bookmark),
+  Smartphone: createIcon(Smartphone),
+  MonitorSmartphone: createIcon(MonitorSmartphone),
+  Activity: createIcon(Activity),
+  UserCog: createIcon(UserCog),
+  LayoutGrid: createIcon(LayoutGrid),
+  UserCheck: createIcon(UserCheck),
+  Stethoscope: createIcon(Stethoscope),
+  Route: createIcon(Route),
+  Library: createIcon(Library),
 };
