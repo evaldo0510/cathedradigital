@@ -19,9 +19,16 @@ interface LectioConclusioProps {
 const formatTime = (s: number) => `${Math.floor(s / 60).toString().padStart(2, '0')}:${(s % 60).toString().padStart(2, '0')}`;
 
 const LectioConclusio: React.FC<LectioConclusioProps> = ({ selectedPassage, notes, seconds, onRestart }) => {
+  const { user } = useAuth();
   const notesWritten = STEPS.filter(s => notes[s.id]?.trim());
   const allNotesText = Object.values(notes).filter(Boolean).join(' ');
   const recommendations = useMemo(() => routeUser(allNotesText), [allNotesText]);
+
+  useEffect(() => {
+    if (user?.id && allNotesText.length > 20) {
+      saveUserPsychology(user.id, allNotesText, 'lectio');
+    }
+  }, [user?.id, allNotesText]);
 
   return (
     <div className="max-w-3xl mx-auto space-y-10 pb-16 animate-in fade-in duration-700">
