@@ -171,6 +171,8 @@ const LiturgiaPage: React.FC = () => {
   usePrefetchLiturgyCache();
 
   const dateKey = today.toDateString();
+
+  const goToPrevDay = () => {
     const d = new Date(selectedDate);
     d.setDate(d.getDate() - 1);
     setSelectedDate(d);
