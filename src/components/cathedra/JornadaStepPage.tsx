@@ -112,24 +112,6 @@ const JornadaStepPage: React.FC = () => {
     }
   };
 
-  const userLevelClass = useMemo<UserLevelClass>(() => {
-    if (!profile) return 'iniciante';
-    
-    // Check diagnosis from sensitive data
-    const diagnosis = profile._sensitive?.diagnosis_result as any;
-    if (diagnosis) {
-      const knowledge = diagnosis.knowledge;
-      if (knowledge === 'basic') return 'iniciante';
-      if (knowledge === 'moderate') return 'intermediário';
-      if (knowledge === 'advanced' || knowledge === 'theological') return 'avançado';
-    }
-
-    // Fallback to integer level
-    const levelNum = profile.level || 1;
-    if (levelNum >= 10) return 'avançado';
-    if (levelNum >= 4) return 'intermediário';
-    return 'iniciante';
-  }, [profile]);
 
   const getVariantContent = (key: string, content: any): string | null => {
     if (!content) return null;
