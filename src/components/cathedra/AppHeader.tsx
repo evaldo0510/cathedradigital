@@ -32,8 +32,9 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
   const [showNotifs, setShowNotifs] = useState(false);
 
   return (
-    <header className="px-6 py-4 sm:px-12 md:py-6 border-b border-border bg-background/90 backdrop-blur-xl flex items-center justify-between sticky top-0 z-[140] safe-area-top transition-all">
-      <div className="flex items-center gap-6 sm:gap-10">
+    <header className="border-b border-border bg-background/90 backdrop-blur-xl sticky top-0 z-[140] safe-area-top transition-all">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-3 sm:py-4 flex items-center justify-between">
+        <div className="flex items-center gap-4 sm:gap-10">
         <div className="flex items-center gap-3 sm:gap-4 cursor-pointer group" onClick={() => navigate(AppRoute.DASHBOARD)}>
           <div className="transition-all group-hover:scale-105 group-hover:-rotate-3">
             <Logo className="w-10 h-10 sm:w-12 sm:h-12" />
