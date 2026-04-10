@@ -138,6 +138,16 @@
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
+@layer utilities {
+  .responsive-padding {
+    @apply p-4 sm:p-6 md:p-8 lg:p-12;
+  }
+  
+  .responsive-gap {
+    @apply gap-4 md:gap-6 lg:gap-8;
+  }
+}
+
 /* Page transitions */
 .page-enter {
   animation: fadeIn 0.3s ease-out forwards;
