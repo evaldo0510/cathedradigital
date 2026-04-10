@@ -2,7 +2,7 @@ import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { ArrowLeft, BookOpen, ScrollText, Music, Flame, ChevronRight, Sparkles, User, Brain, Loader2, BookMarked } from 'lucide-react';
+import { ArrowLeft, BookOpen, ScrollText, Music, Flame, ChevronRight, ChevronLeft, Sparkles, User, Brain, Loader2, BookMarked } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import SEOHead from '@/components/SEOHead';
 import { supabase } from '@/integrations/supabase/client';
@@ -131,11 +131,30 @@ const ReadingCard: React.FC<{
 /* ─── Main Page ─── */
 const LiturgiaPage: React.FC = () => {
   const navigate = useNavigate();
-  const today = new Date();
+  const [selectedDate, setSelectedDate] = useState(() => new Date());
+  const today = selectedDate;
   const [meditation, setMeditation] = useState<string | null>(null);
   const [isMeditationLoading, setIsMeditationLoading] = useState(false);
 
   const dateKey = today.toDateString();
+
+  const goToPrevDay = () => {
+    const d = new Date(selectedDate);
+    d.setDate(d.getDate() - 1);
+    setSelectedDate(d);
+    setMeditation(null);
+  };
+
+  const goToNextDay = () => {
+    const d = new Date(selectedDate);
+    d.setDate(d.getDate() + 1);
+    if (d <= new Date()) {
+      setSelectedDate(d);
+      setMeditation(null);
+    }
+  };
+
+  const isToday = selectedDate.toDateString() === new Date().toDateString();
 
   const { data: readings, isLoading } = useQuery({
     queryKey: ['liturgy-readings', dateKey],
@@ -259,7 +278,25 @@ Use Markdown para formatação.`
           <h1 className="text-3xl md:text-4xl font-display font-bold text-foreground tracking-tight">
             Liturgia do Dia
           </h1>
-          <p className="text-sm text-muted-foreground capitalize">{formatDate()}</p>
+          <div className="flex items-center justify-center gap-4">
+            <button
+              onClick={goToPrevDay}
+              className="p-2 rounded-xl hover:bg-primary/10 transition-colors text-muted-foreground hover:text-foreground"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <p className="text-sm text-muted-foreground capitalize min-w-[200px]">
+              {formatDate()}
+              {isToday && <span className="ml-1 text-primary font-bold">(Hoje)</span>}
+            </p>
+            <button
+              onClick={goToNextDay}
+              disabled={isToday}
+              className="p-2 rounded-xl hover:bg-primary/10 transition-colors text-muted-foreground hover:text-foreground disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
         </motion.div>
 
         {/* LOADING */}
