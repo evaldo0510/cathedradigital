@@ -20,6 +20,10 @@ interface UserProfile {
   level: number | null;
   streak: number | null;
   last_visit: string | null;
+  reflections_count?: number;
+  depth_level?: string;
+  current_journey?: string;
+  access_frequency?: string;
 }
 
 interface Props {
@@ -27,7 +31,7 @@ interface Props {
   onSelectUser: (user: UserProfile) => void;
 }
 
-type Segment = 'all' | 'active' | 'at_risk' | 'churned' | 'new' | 'premium' | 'free';
+type Segment = 'all' | 'new' | 'exploring' | 'engaged' | 'deep' | 'inactive';
 
 const daysSince = (date: string | null) => {
   if (!date) return 999;
@@ -40,26 +44,23 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
   const [sortAsc, setSortAsc] = useState(false);
 
   const segmentedUsers = useMemo(() => {
-    const now = Date.now();
     return {
       all: users,
-      active: users.filter(u => daysSince(u.last_visit) <= 3),
-      at_risk: users.filter(u => daysSince(u.last_visit) >= 4 && daysSince(u.last_visit) <= 14),
-      churned: users.filter(u => daysSince(u.last_visit) > 14),
-      new: users.filter(u => daysSince(u.created_at) <= 7),
-      premium: users.filter(u => u.is_premium),
-      free: users.filter(u => !u.is_premium),
+      new: users.filter(u => (u.reflections_count || 0) <= 1 || daysSince(u.created_at) <= 3),
+      exploring: users.filter(u => (u.reflections_count || 0) > 1 && (u.reflections_count || 0) < 5),
+      engaged: users.filter(u => (u.reflections_count || 0) >= 5 && (u.streak || 0) >= 3),
+      deep: users.filter(u => u.depth_level === 'Profundo' || (u.reflections_count || 0) > 15),
+      inactive: users.filter(u => daysSince(u.last_visit) > 7),
     };
   }, [users]);
 
   const segments: { key: Segment; label: string; icon: React.ReactNode; color: string }[] = [
     { key: 'all', label: 'Todos', icon: <Users className="w-4 h-4" />, color: 'text-foreground' },
-    { key: 'active', label: 'Ativos', icon: <Flame className="w-4 h-4" />, color: 'text-emerald-500' },
-    { key: 'at_risk', label: 'Em Risco', icon: <AlertTriangle className="w-4 h-4" />, color: 'text-amber-500' },
-    { key: 'churned', label: 'Inativos', icon: <Clock className="w-4 h-4" />, color: 'text-destructive' },
-    { key: 'new', label: 'Novos (7d)', icon: <UserCheck className="w-4 h-4" />, color: 'text-blue-500' },
-    { key: 'premium', label: 'PRO', icon: <Crown className="w-4 h-4" />, color: 'text-primary' },
-    { key: 'free', label: 'Gratuitos', icon: <Users className="w-4 h-4" />, color: 'text-muted-foreground' },
+    { key: 'new', label: 'Novo (0-1)', icon: <UserCheck className="w-4 h-4" />, color: 'text-blue-500' },
+    { key: 'exploring', label: 'Explorando', icon: <Search className="w-4 h-4" />, color: 'text-amber-500' },
+    { key: 'engaged', label: 'Engajado', icon: <Flame className="w-4 h-4" />, color: 'text-emerald-500' },
+    { key: 'deep', label: 'Profundo', icon: <Crown className="w-4 h-4" />, color: 'text-primary' },
+    { key: 'inactive', label: 'Inativo', icon: <Clock className="w-4 h-4" />, color: 'text-destructive' },
   ];
 
   const filtered = segmentedUsers[segment]
@@ -76,10 +77,11 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
   };
 
   const getStatusBadge = (u: UserProfile) => {
-    const days = daysSince(u.last_visit);
-    if (days <= 3) return <Badge className="bg-emerald-500/15 text-emerald-600 border-emerald-500/30 text-[10px]">Ativo</Badge>;
-    if (days <= 14) return <Badge className="bg-amber-500/15 text-amber-600 border-amber-500/30 text-[10px]">Em risco</Badge>;
-    return <Badge className="bg-destructive/15 text-destructive border-destructive/30 text-[10px]">Inativo</Badge>;
+    if (daysSince(u.last_visit) > 7) return <Badge className="bg-destructive/15 text-destructive border-destructive/30 text-[10px]">Abandono</Badge>;
+    if (u.depth_level === 'Profundo') return <Badge className="bg-primary/15 text-primary border-primary/30 text-[10px]">Profundo</Badge>;
+    if ((u.reflections_count || 0) >= 5) return <Badge className="bg-emerald-500/15 text-emerald-600 border-emerald-500/30 text-[10px]">Engajado</Badge>;
+    if ((u.reflections_count || 0) > 1) return <Badge className="bg-amber-500/15 text-amber-600 border-amber-500/30 text-[10px]">Explorando</Badge>;
+    return <Badge className="bg-blue-500/15 text-blue-600 border-blue-500/30 text-[10px]">Novo</Badge>;
   };
 
   const exportCsv = useCallback(() => {
@@ -158,11 +160,11 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
               <thead className="sticky top-0 bg-card z-10">
                 <tr className="border-b border-border">
                   <th className="text-left p-3 font-semibold">Usuário</th>
-                  <th className="text-center p-3 font-semibold hidden sm:table-cell">Status</th>
-                  <th className="text-center p-3 font-semibold hidden md:table-cell">Plano</th>
-                  <th className="text-center p-3 font-semibold hidden lg:table-cell">Streak</th>
-                  <th className="text-center p-3 font-semibold hidden lg:table-cell">XP</th>
-                  <th className="text-center p-3 font-semibold hidden md:table-cell">Última Visita</th>
+                  <th className="text-center p-3 font-semibold">Segmento</th>
+                  <th className="text-center p-3 font-semibold hidden md:table-cell">Reflexões</th>
+                  <th className="text-center p-3 font-semibold hidden lg:table-cell">Jornada</th>
+                  <th className="text-center p-3 font-semibold hidden lg:table-cell">Freq.</th>
+                  <th className="text-center p-3 font-semibold hidden md:table-cell">Última Ativ.</th>
                   <th className="text-center p-3 font-semibold">Ações</th>
                 </tr>
               </thead>
@@ -180,20 +182,20 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
                         </div>
                       </div>
                     </td>
-                    <td className="p-3 text-center hidden sm:table-cell">{getStatusBadge(u)}</td>
+                    <td className="p-3 text-center">{getStatusBadge(u)}</td>
                     <td className="p-3 text-center hidden md:table-cell">
-                      {u.is_premium ? (
-                        <Badge className="bg-primary/15 text-primary border-primary/30 text-[10px] gap-1"><Crown className="w-3 h-3" /> PRO</Badge>
-                      ) : (
-                        <Badge variant="secondary" className="text-[10px]">Free</Badge>
-                      )}
+                      <span className="text-xs font-medium">{u.reflections_count || 0}</span>
+                    </td>
+                    <td className="p-3 text-center hidden lg:table-cell">
+                      <span className="text-[10px] text-muted-foreground truncate max-w-[100px] block">
+                        {u.current_journey || 'Nenhuma'}
+                      </span>
                     </td>
                     <td className="p-3 text-center hidden lg:table-cell">
                       <span className="flex items-center justify-center gap-1 text-xs">
-                        <Flame className="w-3 h-3 text-orange-500" /> {u.streak ?? 0}
+                        <Flame className={`w-3 h-3 ${u.streak ? 'text-orange-500' : 'text-muted-foreground'}`} /> {u.streak || 0}
                       </span>
                     </td>
-                    <td className="p-3 text-center hidden lg:table-cell font-mono text-xs">{u.xp ?? 0}</td>
                     <td className="p-3 text-center hidden md:table-cell text-xs text-muted-foreground">
                       {u.last_visit ? `${daysSince(u.last_visit)}d atrás` : '—'}
                     </td>
