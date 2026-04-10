@@ -32,6 +32,8 @@ import {
   Feather,
   History,
   Volume2,
+  Volume1,
+  Volume,
   Square,
   Brain,
   Sparkles,
@@ -101,7 +103,9 @@ import {
   CreditCard,
   WifiOff,
   Wine,
-  Play
+  Play,
+  Target,
+  Link
 } from 'lucide-react';
 import { cn } from './lib/utils';
 
@@ -325,6 +329,7 @@ export const Icons = {
   // Media & Controls
   Audio: createIcon(Volume2),
   Volume2: createIcon(Volume2),
+  Volume1: createIcon(Volume1),
   Volume: createIcon(Volume),
   Play: createIcon(Play),
   Stop: createIcon(Square),
@@ -373,6 +378,6 @@ export const Icons = {
   Twitter: createIcon(Twitter),
   Youtube: createIcon(Youtube),
   Whatsapp: createIcon(MessageCircle),
-  Google: createIcon(Globe), // Modern outline fallback for Google
-  Apple: createIcon(Smartphone), // Modern outline fallback for Apple
+  Google: createIcon(Globe), 
+  Apple: createIcon(Smartphone),
 };
