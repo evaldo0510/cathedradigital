@@ -93,7 +93,7 @@ const MissalPage: React.FC = () => {
           {showLatin ? '🔤 Latim ativado' : '🔤 Mostrar Latim'}
         </button>
         <button onClick={() => setShowRubrics(!showRubrics)}
-          className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all ${showRubrics ? 'bg-red-600/10 text-red-600 border border-red-600/20' : 'bg-card border border-border text-foreground'}`}>
+          className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all ${showRubrics ? 'bg-primary text-secondary border border-secondary/20' : 'bg-card border border-border text-foreground'}`}>
           {showRubrics ? '📕 Rubricas ativadas' : '📕 Mostrar Rubricas'}
         </button>
       </div>
@@ -136,7 +136,7 @@ const MissalPage: React.FC = () => {
                   <div key={i} className="p-5 space-y-3">
                     <h4 className="text-sm font-black uppercase tracking-widest text-primary">{part.label}</h4>
                     {showRubrics && part.rubric && (
-                      <p className="text-xs text-red-600 dark:text-red-400 italic bg-red-500/5 rounded-xl px-4 py-2 border border-red-500/10">
+                      <p className="text-xs text-primary font-medium italic bg-secondary/5 rounded-xl px-4 py-2 border border-secondary/10">
                         ✠ {part.rubric}
                       </p>
                     )}

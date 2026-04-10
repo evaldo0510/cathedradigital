@@ -10,10 +10,10 @@ interface NotesPanelProps {
 }
 
 const COLORS = [
-  { id: 'yellow', bg: 'bg-secondary dark:bg-amber-900/30', border: 'border-secondary dark:border-amber-700' },
-  { id: 'blue', bg: 'bg-blue-100 dark:bg-blue-900/30', border: 'border-blue-300 dark:border-primary' },
-  { id: 'green', bg: 'bg-emerald-100 dark:bg-emerald-900/30', border: 'border-emerald-300 dark:border-emerald-700' },
-  { id: 'pink', bg: 'bg-rose-100 dark:bg-rose-900/30', border: 'border-rose-300 dark:border-rose-700' },
+  { id: 'primary', bg: 'bg-primary/10', border: 'border-primary/20' },
+  { id: 'secondary', bg: 'bg-secondary/10', border: 'border-secondary/20' },
+  { id: 'primary-soft', bg: 'bg-primary/5', border: 'border-primary/10' },
+  { id: 'secondary-soft', bg: 'bg-secondary/5', border: 'border-secondary/10' },
 ];
 
 const NotesPanel: React.FC<NotesPanelProps> = ({ contentType, contentId, contentLabel }) => {
@@ -47,7 +47,7 @@ const NotesPanel: React.FC<NotesPanelProps> = ({ contentType, contentId, content
         onClick={() => setIsOpen(!isOpen)}
         className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${
           notes.length > 0
-            ? 'bg-secondary text-amber-800 dark:bg-amber-900/30 dark:text-secondary'
+            ? 'bg-secondary/20 text-primary border border-secondary/30'
             : 'bg-card border border-border text-muted-foreground hover:text-foreground'
         }`}
         title="Minhas Anotações"

@@ -48,10 +48,10 @@ const SEASON_NAMES: Record<string, string> = {
 
 const COLOUR_MAP: Record<string, string> = {
   green: 'bg-primary ring-primary/20',
-  violet: 'bg-violet-600 ring-violet-600/20',
-  white: 'bg-slate-100 border border-slate-300 ring-slate-100/20',
-  red: 'bg-red-600 ring-red-600/20',
-  rose: 'bg-pink-400 ring-pink-400/20',
+  violet: 'bg-primary ring-primary/40',
+  white: 'bg-secondary/10 border border-secondary/20 ring-secondary/10',
+  red: 'bg-primary/80 ring-primary/20',
+  rose: 'bg-secondary/40 ring-secondary/20',
 };
 
 const READING_CATEGORIES = {

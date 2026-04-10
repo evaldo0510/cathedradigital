@@ -5,23 +5,23 @@
 @layer base {
   :root {
     --background: 0 0% 100%; /* #FFFFFF */
-    --foreground: 0 0% 0%;   /* #000000 */
+    --foreground: 0 0% 10%;   /* #1A1A1A */
     --card: 0 0% 100%;
     --card-foreground: 0 0% 10%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 10%;
-    --primary: 214 68% 14%;
+    --primary: 214 68% 14%;    /* #0B1F3A */
     --primary-foreground: 0 0% 100%;
-    --secondary: 40 47% 60%;
-    --secondary-foreground: 0 0% 10%;
+    --secondary: 40 48% 60%;   /* #C8A96A */
+    --secondary-foreground: 214 68% 14%;
     --muted: 0 0% 96%;
     --muted-foreground: 0 0% 45%;
-    --accent: 40 47% 60%;
+    --accent: 40 48% 60%;
     --accent-foreground: 214 68% 14%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
+    --border: 214 68% 14% / 0.1;
+    --input: 214 68% 14% / 0.1;
     --ring: 214 68% 14%;
     --radius: 0.5rem;
     --sidebar-background: 0 0% 100%;
@@ -34,34 +34,35 @@
     --sidebar-ring: 214 68% 14%;
   }
 
-  .dark {
-    --background: 214 68% 5%;
-    --foreground: 0 0% 98%;
-    --card: 214 68% 7%;
-    --card-foreground: 0 0% 98%;
-    --popover: 214 68% 7%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 40 47% 60%;
-    --primary-foreground: 214 68% 10%;
-    --secondary: 214 68% 14%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 214 68% 12%;
-    --muted-foreground: 0 0% 65%;
-    --accent: 214 68% 12%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62% 30%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 214 68% 15%;
-    --input: 214 68% 15%;
-    --ring: 40 47% 60%;
-    --sidebar-background: 214 68% 7%;
-    --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 40 47% 60%;
-    --sidebar-primary-foreground: 214 68% 10%;
-    --sidebar-accent: 214 68% 10%;
-    --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 214 68% 15%;
-    --sidebar-ring: 40 47% 60%;
+  /* Universal colors for all modes */
+  .dark, [data-theme='dark'] {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 10%;
+    --primary: 214 68% 14%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 40 48% 60%;
+    --secondary-foreground: 214 68% 14%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 40 48% 60%;
+    --accent-foreground: 214 68% 14%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 214 68% 14% / 0.1;
+    --input: 214 68% 14% / 0.1;
+    --ring: 214 68% 14%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 0 0% 10%;
+    --sidebar-primary: 214 68% 14%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 96%;
+    --sidebar-accent-foreground: 214 68% 14%;
+    --sidebar-border: 0 0% 90%;
+    --sidebar-ring: 214 68% 14%;
   }
 }
 
@@ -88,7 +89,7 @@
   body {
     @apply bg-background text-foreground;
     background-color: #FFFFFF !important;
-    color: #000000 !important;
+    color: #1A1A1A !important;
     width: 100% !important;
     min-height: 100vh !important;
     display: block !important;
@@ -105,6 +106,7 @@
     display: block !important;
     opacity: 1 !important;
     visibility: visible !important;
+    background-color: #FFFFFF !important;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -115,7 +117,7 @@
   h2 { @apply text-2xl md:text-3xl lg:text-4xl font-bold; }
   h3 { @apply text-xl md:text-2xl font-bold; }
 
-  p { @apply max-w-[70ch]; }
+  p { @apply max-w-[70ch] text-foreground; }
 
   .font-serif {
     font-family: 'Playfair Display', serif;
@@ -127,7 +129,7 @@
 
   .reader-text {
     font-family: 'Merriweather', serif;
-    @apply selection:bg-primary/30 max-w-[70ch] mx-auto;
+    @apply selection:bg-primary/30 max-w-[70ch] mx-auto text-foreground;
   }
 }
 
@@ -179,34 +181,36 @@
   100% { transform: translate(0, 0) rotate(0deg) scale(1); }
 }
 
-/* Updated Reading Mode to match new palette */
+/* Standardize reading mode to project colors */
 .reading-night {
-  --background: 214 68% 5%;
-  --foreground: 40 47% 85%;
-  --card: 214 68% 7%;
-  --card-foreground: 40 47% 85%;
-  --popover: 214 68% 7%;
-  --popover-foreground: 40 47% 85%;
-  --primary: 40 47% 60%;
-  --primary-foreground: 214 68% 5%;
-  --secondary: 214 68% 14%;
-  --secondary-foreground: 40 47% 80%;
-  --muted: 214 68% 12%;
-  --muted-foreground: 40 47% 55%;
-  --accent: 40 47% 60%;
-  --accent-foreground: 214 68% 5%;
-  --border: 214 68% 18%;
-  --input: 214 68% 18%;
-  --ring: 40 47% 60%;
+  --background: 0 0% 100%;
+  --foreground: 0 0% 10%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 10%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 10%;
+  --primary: 214 68% 14%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 40 48% 60%;
+  --secondary-foreground: 214 68% 14%;
+  --muted: 0 0% 96%;
+  --muted-foreground: 0 0% 45%;
+  --accent: 40 48% 60%;
+  --accent-foreground: 214 68% 14%;
+  --border: 214 68% 14% / 0.1;
+  --input: 214 68% 14% / 0.1;
+  --ring: 214 68% 14%;
 }
 
 .reading-night body,
 .reading-night {
   transition: background-color 0.5s ease, color 0.5s ease;
+  background-color: #FFFFFF !important;
+  color: #1A1A1A !important;
 }
 
 .reading-night .reader-text {
-  color: hsl(40 47% 78%);
+  color: #1A1A1A;
   line-height: 2;
   letter-spacing: 0.01em;
 }

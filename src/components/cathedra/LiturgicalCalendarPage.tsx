@@ -29,11 +29,11 @@ interface ApiDayData {
 }
 
 const LITURGICAL_COLORS: Record<string, { bg: string; text: string; border: string; label: string }> = {
-  verde: { bg: 'bg-primary/15', text: 'text-emerald-700 dark:text-emerald-400', border: 'border-primary/30', label: 'Verde' },
-  roxo: { bg: 'bg-primary/15', text: 'text-purple-700 dark:text-purple-400', border: 'border-primary/30', label: 'Roxo' },
-  branco: { bg: 'bg-secondary/40 dark:bg-secondary/10', text: 'text-amber-700 dark:text-secondary', border: 'border-secondary/30', label: 'Branco' },
-  vermelho: { bg: 'bg-red-500/15', text: 'text-red-700 dark:text-red-400', border: 'border-red-500/30', label: 'Vermelho' },
-  rosa: { bg: 'bg-secondary/15', text: 'text-pink-700 dark:text-pink-400', border: 'border-secondary/30', label: 'Rosa' },
+  verde: { bg: 'bg-primary/10', text: 'text-primary', border: 'border-primary/20', label: 'Verde' },
+  roxo: { bg: 'bg-primary/10', text: 'text-primary', border: 'border-primary/20', label: 'Roxo' },
+  branco: { bg: 'bg-secondary/20', text: 'text-secondary', border: 'border-secondary/30', label: 'Branco' },
+  vermelho: { bg: 'bg-primary/20', text: 'text-primary font-bold', border: 'border-primary/40', label: 'Vermelho' },
+  rosa: { bg: 'bg-secondary/10', text: 'text-secondary', border: 'border-secondary/20', label: 'Rosa' },
 };
 
 const COLOUR_TO_PT: Record<string, string> = {
@@ -339,7 +339,7 @@ const LiturgicalCalendarPage: React.FC = () => {
       <div className="flex flex-wrap gap-2 justify-center">
         {Object.entries(LITURGICAL_COLORS).map(([key, val]) => (
           <div key={key} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full ${val.bg} ${val.border} border`}>
-            <div className={`w-2.5 h-2.5 rounded-full ${key === 'verde' ? 'bg-primary' : key === 'roxo' ? 'bg-primary' : key === 'branco' ? 'bg-secondary' : key === 'vermelho' ? 'bg-red-500' : 'bg-secondary'}`} />
+            <div className={`w-2.5 h-2.5 rounded-full ${key === 'verde' ? 'bg-primary' : key === 'roxo' ? 'bg-primary' : key === 'branco' ? 'bg-secondary' : key === 'vermelho' ? 'bg-primary' : 'bg-secondary'}`} />
             <span className={`text-[10px] font-bold uppercase tracking-wider ${val.text}`}>{val.label}</span>
           </div>
         ))}

@@ -177,8 +177,8 @@ const Certamen: React.FC = () => {
           {question.options.map((opt, idx) => {
             let cls = 'bg-muted border-border hover:border-primary/50 hover:bg-primary/5';
             if (selected !== null) {
-              if (idx === question.correct) cls = 'bg-green-500/10 border-green-500/50 text-green-700 dark:text-green-300';
-              else if (idx === selected) cls = 'bg-red-500/10 border-red-500/50 text-red-700 dark:text-red-300';
+              if (idx === question.correct) cls = 'bg-primary/10 border-primary/50 text-primary font-bold';
+              else if (idx === selected) cls = 'bg-secondary/10 border-secondary/50 text-secondary font-bold';
               else cls = 'opacity-50 bg-muted border-border';
             }
             return (

@@ -65,7 +65,7 @@ const DiagnosticsPage: React.FC = () => {
           <CardContent className="space-y-4">
             <div className="flex items-center gap-3">
               <div className={`w-3 h-3 rounded-full animate-pulse ${
-                supabaseStatus === 'ok' ? 'bg-primary' : supabaseStatus === 'error' ? 'bg-red-500' : 'bg-secondary'
+                supabaseStatus === 'ok' ? 'bg-primary' : supabaseStatus === 'error' ? 'bg-secondary' : 'bg-secondary/50'
               }`} />
               <span className="text-lg font-bold text-foreground">
                 {supabaseStatus === 'ok' ? 'Conectado' : supabaseStatus === 'error' ? 'Erro crítico' : 'Verificando...'}

@@ -40,7 +40,7 @@ export const STEPS = [
     instruction: 'Faça silêncio interior. Repouse na presença de Deus sem palavras, sem pensamentos, apenas acolhendo Seu amor.',
     prompt: 'Descanse em Deus. Não é preciso pensar nem falar — apenas estar.',
     icon: Sun,
-    color: 'text-indigo-500 bg-indigo-500/10',
+    color: 'text-secondary bg-secondary/10',
     duration: '5-15 min',
   },
   {

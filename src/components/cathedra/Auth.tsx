@@ -155,7 +155,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
               setLoading(false);
             }}
             disabled={loading}
-            className="w-full py-3.5 bg-white text-gray-900 border border-border rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-sm hover:bg-gray-50 transition-all disabled:opacity-50 flex items-center justify-center gap-3"
+            className="w-full py-3.5 bg-background text-foreground border border-border rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-sm hover:bg-muted transition-all disabled:opacity-50 flex items-center justify-center gap-3"
           >
             <Icons.Google className="w-5 h-5" />
             Google
@@ -177,7 +177,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
               setLoading(false);
             }}
             disabled={loading}
-            className="w-full py-3.5 bg-black text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-black/80 transition-all disabled:opacity-50 flex items-center justify-center gap-3"
+            className="w-full py-3.5 bg-primary text-primary-foreground rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary/90 transition-all disabled:opacity-50 flex items-center justify-center gap-3"
           >
             <Icons.Apple className="w-5 h-5" />
             Apple
