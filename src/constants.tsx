@@ -1,5 +1,6 @@
 import React, { forwardRef } from 'react';
 import { 
+  Music,
   BookOpen, 
   Cross, 
   Map, 
@@ -11,6 +12,7 @@ import {
   Columns,
   Search,
   ChevronLeft,
+  ChevronRight,
   Star,
   MessageCircle,
   Zap,
@@ -29,7 +31,10 @@ import {
   Feather,
   History,
   Volume2,
-  Square
+  Square,
+  Brain,
+  Sparkles,
+  User
 } from 'lucide-react';
 
 export const COLORS = {
@@ -87,16 +92,17 @@ export const Icons = {
   Journeys: createIcon(Map),
   Community: createIcon(Users),
   Lectio: createIcon(Flame),
-  Saints: createIcon(Sparkle),
-  SaintHalo: createIcon(Sparkle),
+  Music: createIcon(Music),
+  Saints: createIcon(Sparkles),
+  SaintHalo: createIcon(Sparkles),
   Catechism: createIcon(FileText),
   CatechismShield: createIcon(FileText),
   Glossary: createIcon(Type),
   Aquinas: createIcon(Columns),
-  Dove: createIcon(Sparkle),
+  Dove: createIcon(Sparkles),
   LiturgicalCalendar: createIcon(Map),
-  PrayingHands: createIcon(Sparkle),
-  Rosary: createIcon(Sparkle),
+  PrayingHands: createIcon(Sparkles),
+  Rosary: createIcon(Sparkles),
   ViaCrucis: createIcon(Cross),
   Scroll: createIcon(FileText),
   Cathedral: createIcon(Columns),
@@ -120,6 +126,7 @@ export const Icons = {
   ArrowDown: createIcon(Search),
   ArrowLeft: createIcon(ChevronLeft),
   ChevronLeft: createIcon(ChevronLeft),
+  ChevronRight: createIcon(ChevronRight),
   Handshake: createIcon(Users),
   Download: createIcon(Download),
   BookOpen: createIcon(BookOpen),
@@ -130,6 +137,9 @@ export const Icons = {
   Twitter: createIcon(Twitter),
   Whatsapp: createIcon(MessageCircle),
   Youtube: createIcon(Youtube),
-  Google: createIcon(Sparkle),
-  Apple: createIcon(Sparkle),
+  Google: createIcon(Sparkles),
+  Apple: createIcon(Sparkles),
+  Brain: createIcon(Brain),
+  Sparkles: createIcon(Sparkles),
+  User: createIcon(User),
 };
