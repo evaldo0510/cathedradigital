@@ -127,6 +127,81 @@ const HojePage: React.FC = () => {
     }
   };
 
+  const analyzeReflection = async (text: string) => {
+    if (!user || !text.trim()) return;
+    setIsAnalyzing(true);
+    setLogosResponse('');
+    setLogosRecommendation(null);
+    setRecommendedLogosJourney(null);
+
+    try {
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/colloquium`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ messages: [{ role: 'user', content: text }] }),
+      });
+
+      if (!response.ok) throw new Error('Failed to fetch Logos response');
+
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      let fullText = '';
+
+      if (reader) {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          const chunk = decoder.decode(value);
+          // Standard SSE parsing if the function returns it, or just plain text if it's simplified.
+          // Our function uses streaming completions.
+          const lines = chunk.split('\n');
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              try {
+                const data = JSON.parse(line.slice(6));
+                const content = data.choices?.[0]?.delta?.content || '';
+                fullText += content;
+                setLogosResponse(fullText);
+              } catch (e) { /* skip partial JSON */ }
+            }
+          }
+        }
+      }
+
+      // Extract recommendation metadata
+      const match = fullText.match(/\[RECOMMENDATION:(.*?)\]/);
+      if (match) {
+        try {
+          const recommendation = JSON.parse(match[1]);
+          setLogosRecommendation(recommendation);
+          
+          // Fetch the journey by category
+          const { data: journey } = await supabase
+            .from('journeys')
+            .select('*')
+            .eq('category', recommendation.category)
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true })
+            .limit(1)
+            .maybeSingle();
+
+          if (journey) {
+            setRecommendedLogosJourney(journey);
+          }
+        } catch (e) {
+          console.error('Failed to parse recommendation:', e);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to analyze reflection:', err);
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
   const saveJournal = async () => {
     if (!user || !journalText.trim()) return;
     try {
@@ -136,11 +211,13 @@ const HojePage: React.FC = () => {
         entry_date: new Date().toISOString().split('T')[0],
       }]);
       setJournalSaved(true);
+      await analyzeReflection(journalText);
       setTimeout(() => setJournalSaved(false), 3000);
     } catch (err) {
       console.error('Failed to save journal:', err);
     }
   };
+
 
   const streak = (profile as any)?.streak || 0;
   const userName = (profile as any)?.name || user?.email?.split('@')[0] || '';
