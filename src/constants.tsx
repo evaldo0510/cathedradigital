@@ -12,6 +12,8 @@ import {
   Search,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
+  ChevronUp,
   Star,
   MessageCircle,
   Zap,
@@ -85,8 +87,6 @@ import {
   ScrollText,
   Swords,
   Mail,
-  ChevronDown,
-  ChevronUp,
   Settings,
   Info,
   Maximize2,
@@ -97,10 +97,9 @@ import {
   Eye,
   EyeOff,
   AlertTriangle,
-  CheckCircle,
   XCircle,
   CreditCard,
-  CreditCard as PaymentIcon
+  WifiOff
 } from 'lucide-react';
 import { cn } from './lib/utils';
 
@@ -238,6 +237,7 @@ export const Icons = {
   AlertTriangle: createIcon(AlertTriangle),
   XCircle: createIcon(XCircle),
   CreditCard: createIcon(CreditCard),
+  WifiOff: createIcon(WifiOff),
 
   // Semantic Aliases & Backward Compatibility
   Bible: createIcon(BookOpen),
