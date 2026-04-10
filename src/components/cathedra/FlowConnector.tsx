@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ChevronRight, Sparkles } from 'lucide-react';
+import { Icons } from '@/constants';
 import { Card, CardContent } from '@/components/ui/card';
 import { RouteRecommendation } from '@/lib/smartRouter';
 
@@ -29,35 +29,38 @@ const FlowConnector: React.FC<FlowConnectorProps> = ({
     >
       <div className="text-center space-y-1">
         <div className="flex items-center justify-center gap-2">
-          <Sparkles className="w-4 h-4 text-primary" />
+          <Icons.Sparkles className="w-4 h-4 text-primary" />
           <h3 className="text-sm font-bold text-foreground">{title}</h3>
         </div>
         <p className="text-xs text-muted-foreground">{subtitle}</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {recommendations.map((rec, i) => (
-          <motion.div
-            key={rec.route}
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 1 + i * 0.1 }}
-          >
-            <Card
-              className="cursor-pointer hover:border-primary/40 hover:bg-primary/5 transition-all group"
-              onClick={() => navigate(rec.route)}
+        {recommendations.map((rec, i) => {
+          const Icon = (Icons as any)[rec.icon] || Icons.Compass;
+          return (
+            <motion.div
+              key={rec.route}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 1 + i * 0.1 }}
             >
-              <CardContent className="p-4 flex items-center gap-3">
-                <span className="text-2xl">{rec.icon}</span>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-foreground truncate">{rec.label}</p>
-                  <p className="text-xs text-muted-foreground">{rec.reason}</p>
-                </div>
-                <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
+              <Card
+                className="cursor-pointer hover:border-primary/40 hover:bg-primary/5 transition-all group"
+                onClick={() => navigate(rec.route)}
+              >
+                <CardContent className="p-4 flex items-center gap-3">
+                  <Icon className="w-6 h-6 text-primary" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-foreground truncate">{rec.label}</p>
+                    <p className="text-xs text-muted-foreground">{rec.reason}</p>
+                  </div>
+                  <Icons.ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
+                </CardContent>
+              </Card>
+            </motion.div>
+          );
+        })}
       </div>
     </motion.div>
   );

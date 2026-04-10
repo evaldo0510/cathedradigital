@@ -372,11 +372,11 @@ const CommunityPage: React.FC = () => {
                   <div key={entry.id} className={`flex items-center gap-4 p-4 rounded-xl transition-all ${
                     idx < 3 ? 'bg-primary/5 border border-primary/20' : 'bg-muted/50 border border-border'
                   } ${entry.id === user?.id ? 'ring-2 ring-primary' : ''}`}>
-                    <div className="w-8 text-center">
+                    <div className="w-8 flex justify-center items-center">
                       {idx < 3 ? (
-                        <span className={`text-xl font-black ${MEDAL_COLORS[idx]}`}>
-                          {idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉'}
-                        </span>
+                        <div className={`p-1.5 rounded-full bg-primary/10 ${MEDAL_COLORS[idx]}`}>
+                          <Icons.Trophy className="w-4 h-4" />
+                        </div>
                       ) : (
                         <span className="text-sm font-black text-muted-foreground">#{idx + 1}</span>
                       )}

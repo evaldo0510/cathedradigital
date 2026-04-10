@@ -9,7 +9,7 @@ interface HoraInfo {
   latin: string;
   time: string;
   description: string;
-  icon: string;
+  icon: React.ReactNode;
   psalms: string[];
   hymn: string;
   prayer: string;
@@ -23,7 +23,7 @@ const HORAS: HoraInfo[] = [
     latin: 'Officium Lectionis',
     time: 'Qualquer hora',
     description: 'Leituras bíblicas e patrísticas para meditação profunda.',
-    icon: '📚',
+    icon: <Icons.BookOpen className="w-5 h-5" />,
     psalms: ['Sl 3 — Senhor, como são numerosos os meus adversários!', 'Sl 95 — Vinde, cantemos ao Senhor!'],
     hymn: 'Aeterne rerum Conditor — Eterno Criador de todas as coisas, que governas a noite e o dia e dás a cada tempo a sua medida.',
     prayer: 'Ó Deus, que iluminastes esta noite com o esplendor da verdadeira luz, concedei que, iluminados na terra pela mesma luz, alcancemos no céu a plenitude da sua alegria. Por nosso Senhor Jesus Cristo.',
@@ -35,7 +35,7 @@ const HORAS: HoraInfo[] = [
     latin: 'Laudes Matutinae',
     time: '06:00',
     description: 'Oração da manhã — Louvor ao Senhor pelo novo dia que se inicia.',
-    icon: '🌅',
+    icon: <Icons.Sun className="w-5 h-5" />,
     psalms: ['Sl 63 — Ó Deus, tu és o meu Deus, eu te procuro!', 'Cântico de Daniel — Bendito sejais, Senhor, Deus de nossos pais!', 'Sl 149 — Cantai ao Senhor um cântico novo!'],
     hymn: 'Iam lucis orto sidere — Agora que a estrela da manhã se levanta, supliquemos humildemente a Deus que nos guarde de todo mal durante este dia.',
     prayer: 'Senhor, nosso Deus, Rei do céu e da terra, dignai-vos dirigir e santificar, reger e governar hoje os nossos corações e os nossos corpos, os nossos pensamentos, as nossas palavras e as nossas ações, na observância da vossa lei. Amém.',
@@ -46,7 +46,7 @@ const HORAS: HoraInfo[] = [
     latin: 'Tertia',
     time: '09:00',
     description: 'Hora em que o Espírito Santo desceu sobre os Apóstolos.',
-    icon: '🕘',
+    icon: <Icons.Clock className="w-5 h-5" />,
     psalms: ['Sl 119,1-8 — Bem-aventurados os que trilham caminhos retos!', 'Sl 119,9-16 — Como poderá o jovem guardar puro o seu caminho?'],
     hymn: 'Nunc Sancte nobis Spiritus — Vinde agora, Espírito Santo, uno com o Pai e o Filho, dignai-vos habitar em nossos corações.',
     prayer: 'Senhor Deus todo-poderoso, que nos fizestes chegar ao meio deste dia, concedei-nos a vossa graça para o restante dele e protegei-nos com a vossa misericórdia.',
@@ -57,7 +57,7 @@ const HORAS: HoraInfo[] = [
     latin: 'Sexta',
     time: '12:00',
     description: 'Meio-dia — hora em que Cristo foi pregado na Cruz.',
-    icon: '☀️',
+    icon: <Icons.Sun className="w-5 h-5" />,
     psalms: ['Sl 119,17-24 — Fazei bem ao vosso servo, para que eu viva.', 'Sl 119,25-32 — A minha alma está colada ao pó da terra.'],
     hymn: 'Rector potens, verax Deus — Regedor poderoso, Deus verdadeiro, que moderais os tempos e as estações, iluminando a manhã e acendendo o fogo do meio-dia.',
     prayer: 'Ó Deus, que pela hora sexta subistes à cruz para a redenção do mundo, concedei-nos que estejamos sempre unidos a vós pela mesma caridade com que nos amastes.',
@@ -68,7 +68,7 @@ const HORAS: HoraInfo[] = [
     latin: 'Nona',
     time: '15:00',
     description: 'Hora em que Cristo entregou o espírito na Cruz.',
-    icon: '🕐',
+    icon: <Icons.Clock className="w-5 h-5" />,
     psalms: ['Sl 119,33-40 — Ensinai-me, Senhor, o caminho dos vossos preceitos.', 'Sl 119,41-48 — Venha sobre mim a vossa misericórdia, Senhor.'],
     hymn: 'Rerum, Deus, tenax vigor — Ó Deus, força constante de todas as coisas, que permaneceis em vós mesmo imutável e governais o curso das horas do dia.',
     prayer: 'Senhor Jesus Cristo, que à hora nona entregastes o espírito ao Pai e abris as portas do paraíso ao ladrão arrependido, abri também as portas da vossa misericórdia a nós pecadores.',
@@ -79,7 +79,7 @@ const HORAS: HoraInfo[] = [
     latin: 'Vesperae',
     time: '18:00',
     description: 'Oração do entardecer — Ação de graças pelo dia que termina.',
-    icon: '🌇',
+    icon: <Icons.Sun className="w-5 h-5" />,
     psalms: ['Sl 141 — Senhor, eu vos invoco, vinde depressa!', 'Sl 142 — Com a minha voz clamo ao Senhor.', 'Cântico: Fl 2,6-11 — Cristo Jesus, sendo de condição divina...'],
     hymn: 'Lucis Creator optime — Ó ótimo Criador da luz, que fizestes brilhar a luminosidade dos dias, que estabelecestes os princípios do mundo pela primeira luz criada.',
     prayer: 'Ouvi, Senhor, a nossa oração vespertina e concedei que, seguindo os vestígios da vossa paixão, alcancemos a glória da ressurreição. Vós que viveis e reinais pelos séculos dos séculos. Amém.',
@@ -90,19 +90,18 @@ const HORAS: HoraInfo[] = [
     latin: 'Completorium',
     time: '21:00',
     description: 'Última oração do dia — Entrega da noite a Deus.',
-    icon: '🌙',
+    icon: <Icons.Moon className="w-5 h-5" />,
     psalms: ['Sl 91 — Aquele que habita no abrigo do Altíssimo repousa à sombra do Todo-poderoso.', 'Sl 134 — Vinde, bendizei ao Senhor, vós todos, servos do Senhor!'],
     hymn: 'Te lucis ante terminum — Antes do fim da luz, vos suplicamos, ó Criador de todas as coisas, que pela vossa clemência sejais nosso protetor e guarda.',
     prayer: 'Visitai, vos pedimos, Senhor, esta morada e afastai dela todas as insídias do inimigo. Que os vossos santos anjos nela habitem para nos guardar em paz, e a vossa bênção esteja sempre conosco. Por nosso Senhor Jesus Cristo.',
   },
 ];
 
-/* ─── Hora Detail View ─── */
 const HoraDetail: React.FC<{ hora: HoraInfo; onBack: () => void }> = ({ hora, onBack }) => (
   <div className="max-w-3xl mx-auto space-y-6">
     <div className="flex items-center gap-4">
       <button onClick={onBack} className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all">
-        <Icons.ArrowDown className="w-5 h-5 rotate-90 text-foreground" />
+        <Icons.ChevronLeft className="w-5 h-5 text-foreground" />
       </button>
       <div>
         <span className="text-[9px] font-black uppercase tracking-[0.25em] text-primary">{hora.time}</span>
@@ -166,7 +165,6 @@ const HoraDetail: React.FC<{ hora: HoraInfo; onBack: () => void }> = ({ hora, on
   </div>
 );
 
-/* ─── Main Page ─── */
 const BreviaryPage: React.FC = () => {
   const [selectedHora, setSelectedHora] = useState<Hora | null>(null);
 
@@ -196,22 +194,20 @@ const BreviaryPage: React.FC = () => {
         </div>
         <h1 className="text-3xl md:text-5xl font-display font-bold text-foreground">Breviário</h1>
         <p className="text-muted-foreground font-serif italic max-w-lg mx-auto leading-relaxed">
-          A Liturgia das Horas santifica cada momento do dia pela oração da Igreja — os Salmos, hinos e leituras que a tradição consagrou.
+          A Liturgia das Horas santifica cada momento do dia pela oração da Igreja.
         </p>
       </div>
 
-      {/* Hora suggestion */}
       <div className="text-center">
         <p className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground mb-3">Hora sugerida agora</p>
         <button
           onClick={() => setSelectedHora(suggestedHora as Hora)}
-          className="px-6 py-3 bg-foreground text-background rounded-xl font-black uppercase text-[10px] tracking-widest shadow-lg hover:bg-primary hover:text-primary-foreground transition-all"
+          className="px-6 py-3 bg-foreground text-background rounded-xl font-black uppercase text-[10px] tracking-widest shadow-lg hover:bg-primary hover:text-primary-foreground transition-all flex items-center gap-2 mx-auto"
         >
           {HORAS.find(h => h.id === suggestedHora)?.icon} Rezar {HORAS.find(h => h.id === suggestedHora)?.title}
         </button>
       </div>
 
-      {/* Hours grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {HORAS.map(h => (
           <button
@@ -224,7 +220,7 @@ const BreviaryPage: React.FC = () => {
             }`}
           >
             <div className="flex items-center justify-between">
-              <span className="text-xl">{h.icon}</span>
+              <span className="opacity-80">{h.icon}</span>
               <span className="text-[9px] font-black text-primary tracking-widest">{h.time}</span>
             </div>
             <h3 className="text-base font-display font-bold text-foreground group-hover:text-primary transition-colors">{h.title}</h3>

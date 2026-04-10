@@ -267,8 +267,11 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
                       onClick={() => goTo(`/jornadas/${j.id}`)}
                       className="w-full flex items-center gap-4 p-4 rounded-xl bg-primary/[0.03] border border-primary/10 hover:border-primary/30 transition-colors text-left"
                     >
-                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-lg shrink-0">
-                        {j.icon === 'compass' ? '🧭' : j.icon === 'cross' ? '✝' : j.icon === 'book-open' ? '📖' : '🙏'}
+                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                        {j.icon === 'compass' ? <Icons.Compass className="w-5 h-5 text-primary" /> : 
+                         j.icon === 'cross' ? <Icons.Cross className="w-5 h-5 text-primary" /> : 
+                         j.icon === 'book-open' ? <Icons.BookOpen className="w-5 h-5 text-primary" /> : 
+                         <Icons.Sparkles className="w-5 h-5 text-primary" />}
                       </div>
                       <div className="flex-1 min-w-0 space-y-2">
                         <p className="text-sm font-semibold text-foreground truncate">{j.title}</p>

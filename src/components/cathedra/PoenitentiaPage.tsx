@@ -1,19 +1,5 @@
 import React, { useState } from 'react';
-import { 
-  Cross, 
-  ArrowLeft, 
-  ChevronRight, 
-  CheckCircle2, 
-  BookOpen, 
-  Flame, 
-  Sparkles, 
-  Activity,
-  User,
-  Heart,
-  Calendar,
-  Search,
-  ChevronLeft
-} from 'lucide-react';
+import { Icons } from '../../constants';
 
 interface ConfessionStep {
   title: string;
@@ -74,7 +60,7 @@ const PoenitentiaPage: React.FC = () => {
     <div className="max-w-5xl mx-auto space-y-12 pb-12">
       <div className="text-center space-y-4 pt-4">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/5 border border-primary/10 rounded-full">
-          <Cross className="w-4 h-4 text-primary" />
+          <Icons.Cross className="w-4 h-4 text-primary" />
           <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Sacramentum Poenitentiae</span>
         </div>
         <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground tracking-tight">Confissão</h1>
@@ -96,7 +82,7 @@ const PoenitentiaPage: React.FC = () => {
             <div className="font-serif font-bold text-lg leading-tight group-hover:text-primary transition-colors group-data-[state=active]:text-white">{step.title}</div>
             {activeStep === i && (
               <div className="absolute top-0 right-0 p-4 opacity-10">
-                <CheckCircle2 className="w-12 h-12" />
+                <Icons.CheckCircle2 className="w-12 h-12" />
               </div>
             )}
           </button>
@@ -105,7 +91,7 @@ const PoenitentiaPage: React.FC = () => {
 
       <div className="bg-card border border-border rounded-[3rem] p-8 md:p-16 space-y-10 shadow-2xl shadow-black/[0.02] animate-in fade-in slide-in-from-bottom-4 duration-700 relative overflow-hidden">
         <div className="absolute top-0 right-0 p-12 opacity-[0.02]">
-          <Cross className="w-64 h-64 -mr-16 -mt-16 rotate-12" />
+          <Icons.Cross className="w-64 h-64 -mr-16 -mt-16 rotate-12" />
         </div>
 
         <div className="relative space-y-8 max-w-3xl mx-auto">
@@ -130,7 +116,7 @@ const PoenitentiaPage: React.FC = () => {
 
           {activeStep === 0 && (
             <div className="mt-12 p-8 bg-primary/5 rounded-[2.5rem] border border-primary/10 text-center space-y-4 shadow-sm">
-              <BookOpen className="w-8 h-8 text-primary/30 mx-auto" />
+              <Icons.BookOpen className="w-8 h-8 text-primary/30 mx-auto" />
               <p className="text-lg text-foreground/80 font-serif italic max-w-xl mx-auto leading-relaxed">
                 "O exame de consciência é a confrontação sincera da nossa vida com a lei moral de Deus, o Evangelho e os Seus Mandamentos."
               </p>
@@ -141,18 +127,18 @@ const PoenitentiaPage: React.FC = () => {
             <div className="space-y-8 pt-8">
               <div className="flex items-center gap-3 justify-center">
                 <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                  <Flame className="w-5 h-5" />
+                  <Icons.Flame className="w-5 h-5" />
                 </div>
                 <h3 className="text-xl font-serif font-bold">Ato de Contrição</h3>
               </div>
               <div className="bg-primary text-primary-foreground p-10 md:p-14 rounded-[3rem] border border-primary/10 shadow-2xl shadow-primary/20 relative">
-                <Sparkles className="absolute -top-3 -right-3 w-10 h-10 text-white/20 rotate-12" />
+                <Icons.Sparkles className="absolute -top-3 -right-3 w-10 h-10 text-white/20 rotate-12" />
                 <p className="text-xl md:text-2xl font-serif leading-relaxed text-center italic opacity-95">
                   "Meu Deus, porque sois infinitamente bom e Vos amo de todo o meu coração, pesa-me de Vos ter ofendido, e com o auxílio da Vossa divina graça proponho firmemente não tornar a pecar e evitar as próximas ocasiões de pecado. Amém."
                 </p>
               </div>
               <div className="flex items-center justify-center gap-2 text-xs font-black uppercase tracking-widest text-primary/60">
-                <Activity className="w-3 h-3" /> Reze antes ou depois de confessar
+                <Icons.Activity className="w-3 h-3" /> Reze antes ou depois de confessar
               </div>
             </div>
           )}
@@ -162,18 +148,17 @@ const PoenitentiaPage: React.FC = () => {
               onClick={() => setActiveStep((prev) => (prev + 1) % CONFESSION_STEPS.length)}
               className="px-10 py-5 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] shadow-xl hover:bg-primary hover:text-primary-foreground transition-all active:scale-95 flex items-center gap-3"
             >
-              {activeStep === CONFESSION_STEPS.length - 1 ? 'Reiniciar Guia' : 'Próximo Passo'} <ChevronRight className="w-4 h-4" />
+              {activeStep === CONFESSION_STEPS.length - 1 ? 'Reiniciar Guia' : 'Próximo Passo'} <Icons.ChevronRight className="w-4 h-4" />
             </button>
           </div>
         </div>
       </div>
       
-      {/* Additional Info Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="bg-card border border-border rounded-[2.5rem] p-10 space-y-6 shadow-sm">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-              <User className="w-6 h-6" />
+              <Icons.User className="w-6 h-6" />
             </div>
             <h3 className="text-2xl font-serif font-bold">Como Começar?</h3>
           </div>
@@ -184,7 +169,7 @@ const PoenitentiaPage: React.FC = () => {
         <div className="bg-card border border-border rounded-[2.5rem] p-10 space-y-6 shadow-sm">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-              <Heart className="w-6 h-6" />
+              <Icons.Heart className="w-6 h-6" />
             </div>
             <h3 className="text-2xl font-serif font-bold">A Absolvição</h3>
           </div>

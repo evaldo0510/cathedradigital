@@ -104,7 +104,7 @@ const CheckoutPage: React.FC = () => {
 
   const handleCheckout = async (planId: string, price: number, title: string) => {
     if (!user) { navigate(AppRoute.LOGIN); return; }
-    if (isPremium) { toast.info('Você já é PRO! 🎉'); return; }
+    if (isPremium) { toast.info('Você já é PRO!'); return; }
 
     const finalPrice = getDiscountedPrice(price);
     setLoading(true);

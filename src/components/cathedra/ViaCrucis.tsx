@@ -12,6 +12,7 @@ import {
   Activity,
   ChevronLeft
 } from 'lucide-react';
+import { Icons } from '../../constants';
 import ShareButton from './ShareButton';
 
 const STATIONS = [
@@ -166,7 +167,7 @@ const ViaCrucis: React.FC = () => {
             onClick={() => setIsJourney(false)}
             className="flex-1 max-w-[200px] h-14 rounded-2xl bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-2 group shadow-xl shadow-primary/20"
           >
-            ✝ Concluir
+            <Icons.Cross className="w-4 h-4" /> Concluir
           </button>
         )}
       </div>

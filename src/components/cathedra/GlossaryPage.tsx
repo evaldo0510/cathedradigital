@@ -222,7 +222,7 @@ const GlossaryPage: React.FC = () => {
                       )}
                       {enrichment && (
                         <span className="px-2 py-0.5 rounded-full text-[8px] font-bold bg-primary/10 text-primary uppercase tracking-wider">
-                          ✨ Com reflexão
+                          <Icons.Sparkles className="w-2.5 h-2.5 inline mr-1" /> Com reflexão
                         </span>
                       )}
                     </div>

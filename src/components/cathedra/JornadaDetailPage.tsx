@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Check, Lock, Clock, BookOpen, Hand, PenLine, HelpCircle, ChevronRight, Sparkles, Award, PartyPopper } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Icons } from '../../constants';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
@@ -139,7 +140,7 @@ const JornadaDetailPage: React.FC = () => {
                 <Award className="w-6 h-6 text-primary" />
               </div>
               <div className="flex-1">
-                <p className="font-bold text-sm text-foreground">🎉 Jornada Concluída!</p>
+                <p className="font-bold text-sm text-foreground"><Icons.PartyPopper className="w-4 h-4 inline mr-2 text-primary" /> Jornada Concluída!</p>
                 <p className="text-xs text-muted-foreground">Parabéns! Veja seu certificado e reflexões.</p>
               </div>
               <Button size="sm" onClick={() => navigate(`/jornadas/${id}/complete`)}>

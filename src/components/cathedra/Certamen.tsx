@@ -123,8 +123,8 @@ const Certamen: React.FC = () => {
     return (
       <div className="max-w-2xl mx-auto space-y-8">
         <div className="bg-card border border-border rounded-3xl p-10 text-center space-y-6">
-          <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
-            <span className="text-4xl">{pct >= 80 ? '🏆' : pct >= 50 ? '📖' : '🙏'}</span>
+          <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto text-primary">
+            {pct >= 80 ? <Icons.Trophy className="w-10 h-10" /> : pct >= 50 ? <Icons.BookOpen className="w-10 h-10" /> : <Icons.Heart className="w-10 h-10" />}
           </div>
           <h2 className="text-3xl font-serif font-bold text-foreground">Resultado</h2>
           <p className="text-5xl font-black text-primary">{score}/{answered}</p>
