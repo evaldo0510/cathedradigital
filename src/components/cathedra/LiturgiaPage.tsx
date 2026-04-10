@@ -147,6 +147,7 @@ const LiturgiaPage: React.FC = () => {
 
   const [copiedMeditation, setCopiedMeditation] = useState(false);
   const [isOfflineData, setIsOfflineData] = useState(false);
+  const [emotionalRoutes, setEmotionalRoutes] = useState<RouteRecommendation[]>([]);
 
   usePrefetchLiturgyCache();
 
