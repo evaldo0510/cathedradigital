@@ -5,6 +5,8 @@ import confetti from 'canvas-confetti';
 import { toast } from 'sonner';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 
+export type UserLevelClass = 'iniciante' | 'intermediário' | 'avançado';
+
 export interface SensitiveData {
   email: string;
   diagnosis_result: Record<string, string> | null;
@@ -32,6 +34,7 @@ interface AuthContextValue {
   loading: boolean;
   signOut: () => Promise<void>;
   isPremium: boolean;
+  userLevel: UserLevelClass;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -250,13 +253,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLoading(false);
   }, []);
 
+  const userLevel = useMemo<UserLevelClass>(() => {
+    if (!profile) return 'iniciante';
+    
+    // Check diagnosis from sensitive data
+    const diagnosis = profile._sensitive?.diagnosis_result as any;
+    if (diagnosis) {
+      const knowledge = diagnosis.knowledge;
+      if (knowledge === 'basic') return 'iniciante';
+      if (knowledge === 'moderate') return 'intermediário';
+      if (knowledge === 'advanced' || knowledge === 'theological') return 'avançado';
+    }
+
+    // Fallback to integer level
+    const levelNum = profile.level || 1;
+    if (levelNum >= 10) return 'avançado';
+    if (levelNum >= 4) return 'intermediário';
+    return 'iniciante';
+  }, [profile]);
+
   const value = useMemo<AuthContextValue>(() => ({
     user,
     profile,
     loading,
     signOut,
     isPremium: profile?.is_premium ?? false,
-  }), [user, profile, loading, signOut]);
+    userLevel,
+  }), [user, profile, loading, signOut, userLevel]);
 
   return createElement(AuthContext.Provider, { value }, children);
 }

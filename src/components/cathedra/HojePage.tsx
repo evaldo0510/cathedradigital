@@ -26,19 +26,45 @@ const LITURGICAL_QUOTES = [
   '"Amai-vos uns aos outros como eu vos amei." — Jo 15,12',
 ];
 
-const DEEP_INSIGHT = {
-  theme: 'A pressa como fuga',
-  quote: '“A pressa não nasce do tempo… nasce do desconforto de permanecer.”',
-  interpretation: 'Você não está com pressa do mundo… você está com pressa de não sentir algo que está dentro.',
-  direction: 'Hoje não tente acelerar… tente perceber o que você evita quando desacelera.',
-  exercise: 'Pare por 5 minutos. Observe um momento em que você quis correr. Escreva o que estava por trás disso.',
-  question: '👉 O que em você não suporta silêncio?'
+const DEEP_INSIGHTS: Record<string, {
+  theme: string;
+  quote: string;
+  interpretation: string;
+  direction: string;
+  exercise: string;
+  question: string;
+}> = {
+  iniciante: {
+    theme: 'O Silêncio de Deus',
+    quote: '“O silêncio é a primeira linguagem de Deus.”',
+    interpretation: 'No silêncio, conseguimos ouvir a voz de Deus em nosso coração, que fala sem palavras mas com clareza.',
+    direction: 'Hoje não tente preencher todos os vazios… deixe um tempo para o Senhor falar no silêncio.',
+    exercise: 'Pare por 2 minutos. Feche os olhos e apenas respire, oferecendo este tempo a Deus em silêncio.',
+    question: '👉 Como você se sentiu nesse pequeno tempo de silêncio?'
+  },
+  intermediário: {
+    theme: 'A pressa como fuga',
+    quote: '“A pressa não nasce do tempo… nasce do desconforto de permanecer.”',
+    interpretation: 'Você não está com pressa do mundo… você está com pressa de não sentir algo que está dentro.',
+    direction: 'Hoje não tente acelerar… tente perceber o que você evita quando desacelera.',
+    exercise: 'Pare por 5 minutos. Observe um momento em que você quis correr. Escreva o que estava por trás disso.',
+    question: '👉 O que em você não suporta silêncio?'
+  },
+  avançado: {
+    theme: 'A pressa como idolatria do "eu"',
+    quote: '“A pressa é o ruído da alma que foge de si mesma.”',
+    interpretation: 'Sua agitação não é falta de tempo, é medo do que o silêncio revelará sobre sua dependência das criaturas em vez do Criador.',
+    direction: 'Identifique em qual atividade você usa a pressa para evitar o exame de consciência e a confrontação com sua própria fragilidade.',
+    exercise: 'Durante uma tarefa mecânica, não use fones nem distrações. Enfrente o fluxo de pensamentos e sentimentos sem fugir pelo ruído.',
+    question: '👉 Do que exatamente você está tentando fugir quando se mantém ocupado?'
+  }
 };
 
 const HojePage: React.FC = () => {
   const navigate = useNavigate();
-  const { user, profile } = useAuth();
+  const { user, profile, userLevel } = useAuth();
   const { t } = useContext(LangContext);
+  const DEEP_INSIGHT = DEEP_INSIGHTS[userLevel];
   const greeting = getGreeting();
   const [journalText, setJournalText] = useState('');
   const [journalSaved, setJournalSaved] = useState(false);
@@ -113,15 +139,21 @@ const HojePage: React.FC = () => {
   };
 
   const loadRecommendedJourney = async () => {
-    if (!user || !profile?._sensitive?.diagnosis_result) return;
+    if (!user) return;
     try {
-      const result = profile._sensitive.diagnosis_result as Record<string, string>;
-      const { moment, prayer, knowledge, goal } = result;
+      const result = profile?._sensitive?.diagnosis_result as Record<string, string> | undefined;
+      const { moment, prayer, knowledge, goal } = result || {};
       let category = 'fundamentos';
-      if (moment === 'beginning' || knowledge === 'basic') category = 'fundamentos';
-      else if (moment === 'struggling' || goal === 'peace') category = 'mistico';
-      else if (prayer === 'contemplative' || goal === 'transformation') category = 'mistico';
-      else if (goal === 'routine' || prayer === 'rarely' || prayer === 'sometimes') category = 'rotina';
+      
+      if (userLevel === 'iniciante' || moment === 'beginning' || knowledge === 'basic') {
+        category = 'fundamentos';
+      } else if (userLevel === 'avançado' || prayer === 'contemplative' || goal === 'transformation') {
+        category = 'formacao';
+      } else if (moment === 'struggling' || goal === 'peace') {
+        category = 'mistico';
+      } else if (goal === 'routine' || prayer === 'rarely' || prayer === 'sometimes') {
+        category = 'rotina';
+      }
 
       const { data } = await supabase
         .from('journeys')
@@ -320,7 +352,14 @@ const HojePage: React.FC = () => {
             </div>
             <CardHeader className="pb-2 flex flex-row items-center justify-between">
               <div className="space-y-1">
-                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/70">Reflexão Profunda</p>
+                <div className="flex items-center gap-2">
+                  <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/70">
+                    Reflexão {userLevel === 'iniciante' ? 'Guiada' : userLevel === 'intermediário' ? 'Profunda' : 'Intensiva'}
+                  </p>
+                  <span className="px-1 py-0.5 rounded-full text-[8px] font-black uppercase bg-primary/10 text-primary border border-primary/20">
+                    {userLevel}
+                  </span>
+                </div>
                 <CardTitle className="text-lg font-serif italic text-foreground">
                   {DEEP_INSIGHT.theme}
                 </CardTitle>
