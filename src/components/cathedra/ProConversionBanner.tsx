@@ -8,7 +8,7 @@ import { AppRoute } from '@/types';
 
 interface ProConversionBannerProps {
   /** Where the banner is shown for analytics */
-  context: 'lectio' | 'jornada' | 'dashboard';
+  context: 'lectio' | 'jornada' | 'dashboard' | 'logos';
 }
 
 /**
