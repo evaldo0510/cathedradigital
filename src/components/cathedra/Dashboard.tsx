@@ -136,7 +136,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   }, [user]);
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-10 md:py-16 space-y-10">
+    <div className="w-full mx-auto space-y-12 md:space-y-16 py-6 md:py-10">
 
       {/* ═══ HEADER ═══ */}
       <FadeUp>
