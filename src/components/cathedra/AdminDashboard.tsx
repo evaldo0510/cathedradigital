@@ -354,7 +354,7 @@ const AdminDashboard: React.FC = () => {
             <LayoutGrid className="w-3.5 h-3.5 hidden sm:block" /> Visão Geral
           </TabsTrigger>
           <TabsTrigger value="segmentation" className="gap-1.5 text-xs sm:text-sm">
-            <Target className="w-3.5 h-3.5 hidden sm:block" /> Segmentação
+            <Target className="w-3.5 h-3.5 hidden sm:block" /> Gestão de Usuários
           </TabsTrigger>
           <TabsTrigger value="retention" className="gap-1.5 text-xs sm:text-sm">
             <Activity className="w-3.5 h-3.5 hidden sm:block" /> Retenção
