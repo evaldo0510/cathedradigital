@@ -611,35 +611,35 @@ const Bible: React.FC = () => {
       <div className="space-y-8">
         {filteredCategories.map((cat, idx) => (
           <Collapsible key={cat.label} defaultOpen={idx === 0 || !!searchQuery}>
-            <CollapsibleTrigger className="w-full flex items-center justify-between group p-2 hover:bg-muted/50 rounded-xl transition-all">
-              <div className="flex items-center gap-4">
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${cat.bgColor}`}>
-                  <cat.icon className={`w-5 h-5 ${cat.color}`} />
+            <CollapsibleTrigger className="w-full flex items-center justify-between group p-1.5 hover:bg-muted/50 rounded-xl transition-all">
+              <div className="flex items-center gap-3">
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${cat.bgColor}`}>
+                  <cat.icon className={`w-4 h-4 ${cat.color}`} />
                 </div>
-                <h2 className="text-base font-bold text-foreground uppercase tracking-widest">{cat.label}</h2>
+                <h2 className="text-xs font-black text-foreground uppercase tracking-widest">{cat.label}</h2>
               </div>
-              <Icons.ChevronDown className="w-5 h-5 text-muted-foreground group-data-[state=open]:rotate-180 transition-transform" />
+              <Icons.ChevronDown className="w-4 h-4 text-muted-foreground group-data-[state=open]:rotate-180 transition-transform" />
             </CollapsibleTrigger>
-            <CollapsibleContent className="pt-4 animate-in fade-in slide-in-from-top-2 duration-300">
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+            <CollapsibleContent className="pt-3 animate-in fade-in slide-in-from-top-1 duration-300">
+              <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2">
                 {cat.books.map(book => {
                   const isRead = completedBooks.has(book.abbr);
                   return (
                     <button
                       key={book.abbr}
                       onClick={() => selectBook(book)}
-                      className={`flex flex-col items-center gap-2 p-4 rounded-2xl border transition-all relative overflow-hidden group
+                      className={`flex flex-col items-center justify-center gap-1 p-2.5 rounded-xl border transition-all relative overflow-hidden group aspect-square
                         ${isRead 
                           ? 'bg-primary/5 border-primary/20 text-primary' 
-                          : 'bg-card border-border text-muted-foreground hover:border-primary/40 hover:text-foreground hover:scale-[1.02] shadow-sm'}`}
+                          : 'bg-card border-border text-muted-foreground hover:border-primary/40 hover:text-foreground hover:scale-[1.05] shadow-sm'}`}
                     >
                       {isRead && (
-                        <div className="absolute top-0 right-0 p-1.5 bg-primary text-white rounded-bl-xl shadow-lg">
-                          <Icons.CheckCircle2 className="w-3 h-3" />
+                        <div className="absolute top-0 right-0 p-1 bg-primary text-white rounded-bl-lg shadow-sm">
+                          <Icons.CheckCircle2 className="w-2.5 h-2.5" />
                         </div>
                       )}
-                      <span className="text-lg font-bold font-serif">{book.abbr}</span>
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-center leading-tight truncate w-full">
+                      <span className="text-sm sm:text-base font-bold font-serif leading-none">{book.abbr}</span>
+                      <span className="text-[7px] sm:text-[9px] font-bold uppercase tracking-tight text-center leading-tight truncate w-full">
                         {book.name}
                       </span>
                     </button>
