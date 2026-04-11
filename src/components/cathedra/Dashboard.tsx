@@ -192,7 +192,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   }, [user]);
 
   return (
-    <div className="content-section py-6 md:py-10">
+    <div className="desktop-layout py-6 md:py-10">
+      <div className="desktop-main content-section">
 
       {/* ═══ HEADER ═══ */}
       <FadeUp>
