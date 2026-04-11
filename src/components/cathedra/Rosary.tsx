@@ -164,6 +164,29 @@ const Rosary: React.FC = () => {
             </button>
           ))}
         </div>
+
+        <motion.div 
+          className="bg-card border border-border rounded-[2.5rem] p-8 md:p-12 text-center space-y-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
+          <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mx-auto mb-4">
+            <BookOpen className="w-8 h-8" />
+          </div>
+          <div className="space-y-2">
+            <h2 className="text-2xl font-serif font-bold text-foreground">Outras Orações e Devoções</h2>
+            <p className="text-muted-foreground font-serif italic max-w-xl mx-auto">
+              Encontre o Pai Nosso, Ave Maria, Salve Rainha, Via-Sacra e outras orações tradicionais da Igreja.
+            </p>
+          </div>
+          <button 
+            onClick={() => window.location.href = '/oracao'}
+            className="inline-flex items-center gap-2 px-8 py-4 bg-muted hover:bg-muted/80 text-foreground rounded-2xl font-bold text-xs uppercase tracking-widest transition-all"
+          >
+            Explorar Devoções <ChevronRight className="w-4 h-4" />
+          </button>
+        </motion.div>
       </motion.div>
     );
   }
