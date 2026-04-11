@@ -413,7 +413,8 @@ const AppLayout: React.FC = () => {
             </Suspense>
             <CathedralFooter />
           </div>
-        </main>
+        </div>
+      </main>
         {!isChromeless && (
           <>
             <Suspense fallback={null}>
