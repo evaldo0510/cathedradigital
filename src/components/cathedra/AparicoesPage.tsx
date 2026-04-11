@@ -4,6 +4,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { APPARITIONS, Apparition } from '@/data/apparitions';
 import { useFavorites } from '@/hooks/useFavorites';
 import DeepContentSection from './DeepContentSection';
+import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
+import BibleVersePopover from './BibleVersePopover';
+import CatechismPopover from './CatechismPopover';
 
 const AparicoesPage: React.FC = () => {
   const [selectedApparition, setSelectedApparition] = useState<Apparition | null>(null);
