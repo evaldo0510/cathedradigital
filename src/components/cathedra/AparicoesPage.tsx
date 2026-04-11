@@ -111,6 +111,22 @@ const AparicoesPage: React.FC = () => {
                 </blockquote>
               </div>
             )}
+            {activeTab === 'profundidade' && selectedApparition.textoBase && (
+              <DeepContentSection content={{
+                textoBase: selectedApparition.textoBase,
+                explicacao: selectedApparition.explicacao || '',
+                interpretacaoProfunda: selectedApparition.interpretacaoProfunda || '',
+                aplicacaoPratica: selectedApparition.aplicacaoPratica || '',
+                reflexaoFinal: selectedApparition.reflexaoFinal || '',
+                exercicio: selectedApparition.exercicio || ''
+              }} title="Mistério e Significado" />
+            )}
+            {activeTab === 'profundidade' && !selectedApparition.textoBase && (
+              <div className="text-center py-12 space-y-4">
+                <Icons.Search className="w-12 h-12 text-muted-foreground mx-auto opacity-20" />
+                <p className="text-muted-foreground italic font-serif">Conteúdo profundo em preparação para esta aparição.</p>
+              </div>
+            )}
           </motion.div>
         </AnimatePresence>
       </div>
