@@ -2,11 +2,12 @@ import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
 import { Icons } from '../../constants';
-import { AppRoute } from '@/types';
+import { AppRoute, DeepContent } from '@/types';
 import { Badge } from '@/components/ui/badge';
 import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
 import MagisteriumPopover from './MagisteriumPopover';
+import DeepContentSection from './DeepContentSection';
 
 interface DogmaRef {
   type: 'bible' | 'catechism' | 'magisterium';
@@ -15,7 +16,7 @@ interface DogmaRef {
   target: string;
 }
 
-interface Dogma {
+interface Dogma extends Partial<DeepContent> {
   id: number;
   title: string;
   definition: string;
