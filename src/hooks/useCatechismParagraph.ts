@@ -30,7 +30,13 @@ export const fetchCatechismParagraph = async (paragraph: number): Promise<Catech
   const result: CatechismParagraph = {
     paragraph: parsed.paragraph || paragraph,
     content: parsed.content || `Parágrafo §${paragraph} — conteúdo não disponível.`,
-    language: parsed.language || 'pt'
+    language: parsed.language || 'pt',
+    textoBase: parsed.textoBase,
+    explicacao: parsed.explicacao,
+    interpretacaoProfunda: parsed.interpretacaoProfunda,
+    aplicacaoPratica: parsed.aplicacaoPratica,
+    reflexaoFinal: parsed.reflexaoFinal,
+    exercicio: parsed.exercicio
   };
 
   // 3) Persist to IndexedDB for offline
