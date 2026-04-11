@@ -103,13 +103,13 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
     load();
   }, [user]);
 
-  // Saint of the day
-  const [saintOfDay, setSaintOfDay] = useState<any>(null);
+  // Saints of the day
+  const [saintsToday, setSaintsToday] = useState<any[]>([]);
   useEffect(() => {
     import('@/data/saints').then(m => {
       const today = new Date();
-      const saint = m.SAINTS_DATA.find(s => s.feastMonth === today.getMonth() + 1 && s.feastDayNum === today.getDate()) || m.SAINTS_DATA[0];
-      setSaintOfDay(saint);
+      const matched = m.SAINTS_DATA.filter(s => s.feastMonth === today.getMonth() + 1 && s.feastDayNum === today.getDate());
+      setSaintsToday(matched.length > 0 ? matched : [m.SAINTS_DATA[0]]);
     });
   }, []);
 
@@ -379,21 +379,25 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
-        {/* ═══ SANTO DO DIA ═══ */}
-        {saintOfDay && (
+        {/* ═══ SANTOS DO DIA ═══ */}
+        {saintsToday.length > 0 && (
           <FadeUp delay={0.2}>
             <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm h-full group hover:shadow-md transition-all">
               <div className="flex h-full items-stretch">
-                <div className="w-28 md:w-32 lg:w-40 flex-shrink-0 relative overflow-hidden">
-                  <SacredImage src={saintOfDay.image || ''} alt={saintOfDay.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                <div className="w-28 md:w-32 lg:w-40 flex-shrink-0 relative overflow-hidden bg-muted">
+                  <SacredImage src={saintsToday[0].image || ''} alt={saintsToday[0].name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                   <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent" />
                 </div>
                 <div className="flex-1 p-5 md:p-6 flex flex-col justify-center space-y-2">
                   <p className="text-[9px] font-black uppercase tracking-widest text-primary flex items-center gap-1.5">
-                    <Icons.Star className="w-3.5 h-3.5 fill-primary/10" /> Santo do Dia
+                    <Icons.Star className="w-3.5 h-3.5 fill-primary/10" /> {saintsToday.length > 1 ? 'Santos do Dia' : 'Santo do Dia'}
                   </p>
-                  <h3 className="text-base md:text-xl font-serif font-bold text-foreground leading-tight">{saintOfDay.name}</h3>
-                  <p className="text-xs md:text-sm text-muted-foreground font-serif italic line-clamp-3 leading-relaxed">"{saintOfDay.quotes[0]}"</p>
+                  <h3 className="text-base md:text-xl font-serif font-bold text-foreground leading-tight">
+                    {saintsToday.map(s => s.name).join(' e ')}
+                  </h3>
+                  <p className="text-xs md:text-sm text-muted-foreground font-serif italic line-clamp-2 leading-relaxed">
+                    "{saintsToday[0].quotes?.[0] || saintsToday[0].bio}"
+                  </p>
                   <div className="flex gap-4 pt-4">
                     <button
                       onClick={() => goTo(`${AppRoute.SAINTS}`)}

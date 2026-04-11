@@ -200,10 +200,11 @@ const LiturgiaPage: React.FC = () => {
     [today]
   );
 
-  const saintOfDay = useMemo(() => {
+  const saintsToday = useMemo(() => {
     const m = today.getMonth() + 1;
     const d = today.getDate();
-    return SAINTS_DATA.find(s => s.feastMonth === m && s.feastDayNum === d) || SAINTS_DATA[0];
+    const matched = SAINTS_DATA.filter(s => s.feastMonth === m && s.feastDayNum === d);
+    return matched.length > 0 ? matched : [SAINTS_DATA[0]];
   }, [today]);
 
   const navigateToLectio = (ref?: string) => {
@@ -357,10 +358,19 @@ const LiturgiaPage: React.FC = () => {
           )}
         </motion.div>
 
-        {saintOfDay && (
+        {saintsToday.length > 0 && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} className="bg-muted/30 border border-border rounded-[2rem] p-8 flex flex-col items-center text-center space-y-4">
-            <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-secondary p-1 shadow-lg shadow-secondary/10"><img src={saintOfDay.image} alt={saintOfDay.name} className="w-full h-full object-cover rounded-full" /></div>
-            <div className="space-y-1"><p className="text-[9px] font-black uppercase tracking-[0.3em] text-secondary">Santo do Dia</p><h3 className="text-xl font-display font-black text-primary">{saintOfDay.name}</h3></div>
+            <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-secondary p-1 shadow-lg shadow-secondary/10">
+              <img src={saintsToday[0].image} alt={saintsToday[0].name} className="w-full h-full object-cover rounded-full" />
+            </div>
+            <div className="space-y-1">
+              <p className="text-[9px] font-black uppercase tracking-[0.3em] text-secondary">
+                {saintsToday.length > 1 ? 'Santos do Dia' : 'Santo do Dia'}
+              </p>
+              <h3 className="text-xl font-display font-black text-primary">
+                {saintsToday.map(s => s.name).join(' e ')}
+              </h3>
+            </div>
             <div className="flex flex-col gap-2 w-full">
               <Button 
                 variant="ghost" 
