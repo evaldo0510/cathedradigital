@@ -433,7 +433,7 @@ const AdminDashboard: React.FC = () => {
             </Card>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Card className="bg-primary/5 border-primary/20">
               <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                 <CardTitle className="text-sm font-medium">Receita Total</CardTitle>
@@ -446,6 +446,40 @@ const AdminDashboard: React.FC = () => {
                 <p className="text-xs text-muted-foreground mt-1">Acumulado bruto</p>
               </CardContent>
             </Card>
+
+            <Card className="bg-secondary/5 border-secondary/20">
+              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                <CardTitle className="text-sm font-medium">Reflexões Criadas</CardTitle>
+                <Heart className="h-4 w-4 text-secondary" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-secondary">{stats?.totalReflections}</div>
+                <p className="text-xs text-muted-foreground mt-1">Impacto espiritual</p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-primary/5 border-primary/20">
+              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                <CardTitle className="text-sm font-medium">Jornadas Iniciadas</CardTitle>
+                <MapIcon className="h-4 w-4 text-primary" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-primary">{stats?.totalJourneysStarted}</div>
+                <p className="text-xs text-muted-foreground mt-1">Engajamento em trilhas</p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-primary/5 border-primary/20">
+              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                <CardTitle className="text-sm font-medium">Jornadas Concluídas</CardTitle>
+                <Activity className="h-4 w-4 text-primary" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-primary">{stats?.totalJourneysCompleted}</div>
+                <p className="text-xs text-muted-foreground mt-1">Sucesso formativo</p>
+              </CardContent>
+            </Card>
+          </div>
 
             <Card className="bg-destructive/5 border-destructive/20">
               <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
