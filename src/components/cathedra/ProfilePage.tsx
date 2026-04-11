@@ -330,13 +330,14 @@ const ProfilePage: React.FC = () => {
             <Switch checked={pushEnabled} onCheckedChange={setPushEnabled} />
           </div>
 
-          <div className="flex items-center justify-between p-3 bg-muted/30 rounded-xl border border-border/50">
+          <div className="flex items-center justify-between p-3 bg-primary/5 rounded-xl border border-primary/20 shadow-sm">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <Icons.Message className="w-4 h-4 text-primary" />
-                <p className="text-sm font-bold text-foreground">WhatsApp (Beta)</p>
+                <Icons.Whatsapp className="w-4 h-4 text-primary" />
+                <p className="text-sm font-bold text-foreground">WhatsApp Oficial</p>
+                <div className="px-1.5 py-0.5 rounded-full bg-primary text-primary-foreground text-[8px] font-black uppercase tracking-wider">Novo</div>
               </div>
-              <p className="text-[10px] text-muted-foreground">Receba conteúdos no seu WhatsApp.</p>
+              <p className="text-[10px] text-muted-foreground font-medium">Receba meditações e avisos diretamente no seu WhatsApp.</p>
             </div>
             <Switch checked={whatsappEnabled} onCheckedChange={setWhatsappEnabled} />
           </div>
