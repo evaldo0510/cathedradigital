@@ -2,11 +2,12 @@ import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
 import { Icons } from '../../constants';
-import { AppRoute } from '@/types';
+import { AppRoute, DeepContent } from '@/types';
 import { Badge } from '@/components/ui/badge';
 import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
 import MagisteriumPopover from './MagisteriumPopover';
+import DeepContentSection from './DeepContentSection';
 
 interface DogmaRef {
   type: 'bible' | 'catechism' | 'magisterium';
@@ -15,7 +16,7 @@ interface DogmaRef {
   target: string;
 }
 
-interface Dogma {
+interface Dogma extends Partial<DeepContent> {
   id: number;
   title: string;
   definition: string;
@@ -34,7 +35,14 @@ const DOGMAS: Dogma[] = [
     { type: 'catechism', label: 'CIC §36', target: '36' },
     { type: 'catechism', label: 'CIC §286', target: '286' },
     { type: 'magisterium', label: 'Dei Filius', target: 'Dei Filius' },
-  ]},
+  ],
+  textoBase: 'Desde a criação do mundo, as perfeições invisíveis de Deus, o seu poder eterno e a sua divindade, tornam-se visíveis à inteligência, por meio das suas obras.',
+  explicacao: 'A Igreja ensina que não precisamos de uma revelação sobrenatural para saber que Deus existe. Apenas observando a ordem do universo, a beleza da natureza e a complexidade da vida, nossa inteligência pode concluir, com certeza, que existe um Criador.',
+  interpretacaoProfunda: 'Este dogma protege a dignidade da razão humana contra o fideísmo (que diz que só a fé importa) e contra o ateísmo materialista. Ele afirma que o mundo é um "livro" escrito por Deus, onde cada criatura é uma palavra que aponta para o seu Autor.',
+  aplicacaoPratica: 'Tente hoje olhar para uma flor, para o céu ou para a complexidade do seu próprio corpo não apenas como matéria, mas como um sinal. Deixe que a beleza do mundo te leve a um pensamento de gratidão ao Criador.',
+  reflexaoFinal: 'Se eu pudesse ver a "assinatura" de Deus em cada coisa que encontro hoje, como isso mudaria meu humor?',
+  exercicio: 'Saia de casa ou olhe pela janela por 2 minutos. Escolha um elemento da natureza e tente encontrar nele um motivo para dizer: "Obrigado, Senhor, por teres criado isso".'
+  },
   { id: 2, title: 'Santíssima Trindade', definition: 'Há em Deus três Pessoas divinas: Pai, Filho e Espírito Santo. Cada uma das três Pessoas possui a essência divina inteira.', source: 'Concílio de Nicéia / Constantinopla', year: 325, category: 'Deus', refs: [
     { type: 'bible', label: 'Mt 28,19', target: 'Mat 28' },
     { type: 'bible', label: '2Cor 13,13', target: '2Co 13' },
@@ -371,6 +379,20 @@ const DogmasPage: React.FC = () => {
                   <span className="text-[10px] font-black uppercase tracking-widest text-primary">Fonte:</span>
                   <span className="text-sm text-muted-foreground">{dogma.source} ({dogma.year})</span>
                 </div>
+
+                {/* Deep Content Section for Dogmas */}
+                {dogma.textoBase && (
+                  <div className="pt-4 border-t border-border/40">
+                    <DeepContentSection content={{
+                      textoBase: dogma.textoBase,
+                      explicacao: dogma.explicacao || '',
+                      interpretacaoProfunda: dogma.interpretacaoProfunda || '',
+                      aplicacaoPratica: dogma.aplicacaoPratica || '',
+                      reflexaoFinal: dogma.reflexaoFinal || '',
+                      exercicio: dogma.exercicio || ''
+                    }} title="Aprofundamento Dogmático" />
+                  </div>
+                )}
 
                 {/* Cross-references */}
                 {dogma.refs.length > 0 && (

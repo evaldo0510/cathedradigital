@@ -9,6 +9,7 @@ import { supabase } from '@/integrations/supabase/client';
 import CrossReferencePanel from './CrossReferencePanel';
 import NotesPanel from './NotesPanel';
 import BibleVersePopover from './BibleVersePopover';
+import DeepContentSection from './DeepContentSection';
 import { getCatechismCrossRefs } from '@/data/cross-references';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useFavorites } from '@/hooks/useFavorites';
@@ -248,6 +249,19 @@ const Catechism: React.FC = () => {
             <NotesPanel contentType="catechism" contentId={`${currentParagraph}`} contentLabel={`§${currentParagraph}`} />
           </div>
           <CatechismContent paragraph={currentParagraph} onNavigateToBible={handleNavigateToBible} />
+          {/* Deep content section for Catechism */}
+          {currentParagraph === 1324 && (
+            <div className="mt-8 pt-8 border-t border-border">
+              <DeepContentSection content={{
+                textoBase: "A Eucaristia é «fonte e cume de toda a vida cristã».",
+                explicacao: "Isso significa que tudo o que a Igreja faz nasce da Eucaristia e para ela caminha. Não é apenas mais um rito, mas o centro gravitacional de nossa fé.",
+                interpretacaoProfunda: "São João Paulo II dizia que a Eucaristia contém todo o bem espiritual da Igreja, ou seja, o próprio Cristo. Ser 'fonte' significa que dela jorra a graça; ser 'cume' significa que não há nada mais alto ou importante a ser alcançado nesta terra.",
+                aplicacaoPratica: "Tente colocar a Missa e a Adoração como os pontos centrais da sua semana, não como algo que você encaixa se sobrar tempo, mas como o compromisso do qual tudo o mais depende.",
+                reflexaoFinal: "Se a Eucaristia é o sol da minha vida, o que está girando em torno dela hoje?",
+                exercicio: "Faça uma visita de 5 minutos ao Santíssimo Sacramento hoje, apenas para reconhecer que Ele é a fonte de tudo o que você tem."
+              }} title="Reflexão Doutrinária" />
+            </div>
+          )}
         </div>
 
         {/* Quick nav */}

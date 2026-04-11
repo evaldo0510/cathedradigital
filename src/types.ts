@@ -100,14 +100,23 @@ export interface User {
   };
 }
 
-export interface Verse {
+export interface DeepContent {
+  textoBase: string;
+  explicacao: string;
+  interpretacaoProfunda: string;
+  aplicacaoPratica: string;
+  reflexaoFinal: string;
+  exercicio: string;
+}
+
+export interface Verse extends Partial<DeepContent> {
   book: string;
   chapter: number;
   verse: number;
   text: string;
 }
 
-export interface CatechismParagraph {
+export interface CatechismParagraph extends Partial<DeepContent> {
   number: number;
   content: string;
   context?: string;
@@ -122,16 +131,16 @@ export interface StudyResult {
   saintsQuotes: any[];
 }
 
-export interface SavedItem {
+export interface SavedItem extends Partial<DeepContent> {
   id: string;
-  type: 'verse' | 'catechism' | 'dogma' | 'study' | 'liturgy' | 'prayer' | 'aquinas';
+  type: 'verse' | 'catechism' | 'dogma' | 'study' | 'liturgy' | 'prayer' | 'aquinas' | 'apparition';
   title: string;
   content: string;
   timestamp: string;
   metadata?: any;
 }
 
-export interface Prayer {
+export interface Prayer extends Partial<DeepContent> {
   id: string;
   title: string;
   latin?: string;

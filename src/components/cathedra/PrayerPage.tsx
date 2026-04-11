@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import ShareButton from './ShareButton';
 import { createPortal } from 'react-dom';
 import { Icons } from '../../constants';
+import DeepContentSection from './DeepContentSection';
 import { 
   Heart, 
   ArrowLeft, 
@@ -119,6 +120,25 @@ const PRAYERS = {
   salveRainha: 'Salve Rainha, Mãe de Misericórdia, vida, doçura, esperança nossa, salve! A vós bradamos, os degredados filhos de Eva. A vós suspiramos, gemendo e chorando neste vale de lágrimas. Eia, pois, advogada nossa, esses vossos olhos misericordiosos a nós volvei. E depois deste desterro, mostrai-nos Jesus, bendito fruto do vosso ventre. Ó clemente, ó piedosa, ó doce sempre Virgem Maria. Rogai por nós, Santa Mãe de Deus, para que sejamos dignos das promessas de Cristo. Amém.',
 };
 
+const PRAYER_DETAILS = {
+  paiNosso: {
+    textoBase: PRAYERS.paiNosso,
+    explicacao: 'A oração que o próprio Jesus nos ensinou. É o modelo perfeito de oração, onde primeiro louvamos ao Pai e depois pedimos o que necessitamos para o corpo e para a alma.',
+    interpretacaoProfunda: 'Dizemos "Pai Nosso", não "meu Pai", porque somos uma família em Cristo. Ao dizer "Seja feita a vossa vontade", entregamos nossa liberdade a Deus, confiando que Seu plano é melhor que o nosso.',
+    aplicacaoPratica: 'Ao rezar hoje, tente pausar em "seja feita a vossa vontade" e pense em uma situação difícil que você está vivendo, entregando-a totalmente a Ele.',
+    reflexaoFinal: 'Eu realmente quero que a vontade de Deus seja feita, ou estou apenas tentando convencer Deus a fazer a minha?',
+    exercicio: 'Reze o Pai Nosso uma única vez, mas demore pelo menos 1 minuto, saboreando cada palavra.'
+  },
+  aveMaria: {
+    textoBase: PRAYERS.aveMaria,
+    explicacao: 'A saudação angélica unida à oração da Igreja. Reconhecemos a cheia de graça e pedimos sua intercessão agora e no momento final de nossa vida.',
+    interpretacaoProfunda: 'A primeira parte da oração é bíblica (Lucas 1). A segunda parte é a súplica da Igreja. Maria é o canal pelo qual Jesus veio ao mundo e continua sendo o caminho mais curto para chegar a Ele.',
+    aplicacaoPratica: 'Quando estiver em uma situação de pecado ou tentação, diga: "rogai por nós pecadores, agora". Sinta o socorro imediato de Maria.',
+    reflexaoFinal: 'Como Maria pode me ajudar a ser mais fiel a Jesus hoje?',
+    exercicio: 'Reze uma Ave Maria em latim (Ave Maria, gratia plena...) para conectar-se com a tradição milenar da Igreja.'
+  }
+};
+
 function getMysteryOfDay(): MysteryKey {
   const day = new Date().getDay();
   if (day === 1 || day === 6) return 'gozosos';
@@ -209,6 +229,12 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
                     )}
                   </div>
                 ))}
+
+                {expandedPrayer && (PRAYER_DETAILS as any)[expandedPrayer] && (
+                  <div className="mt-8 pt-8 border-t border-white/10">
+                    <DeepContentSection content={(PRAYER_DETAILS as any)[expandedPrayer]} title="Profundidade da Oração" />
+                  </div>
+                )}
               </div>
               <button onClick={() => setPhase('mystery')} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-secondary/30 transition-all shadow-lg shadow-primary/20">
                 Iniciar 1º Mistério

@@ -1,10 +1,11 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import SEOHead from '@/components/SEOHead';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
 import StaggeredList from './StaggeredList';
 import CrossReferencePanel from './CrossReferencePanel';
+import DeepContentSection from './DeepContentSection';
 import { getBibleCrossRefs } from '@/data/cross-references';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useFavorites } from '@/hooks/useFavorites';
@@ -418,6 +419,18 @@ const Bible: React.FC = () => {
                 )}
               </CardContent>
             </Card>
+
+            {/* Deep Content Section for famous Bible Chapters */}
+            {selectedBook.abbr === 'Jo' && selectedChapter === 3 && (
+              <DeepContentSection content={{
+                textoBase: "Porque Deus amou tanto o mundo que deu o seu Filho unigénito, para que todo o que n’Ele crê não pereça, mas tenha a vida eterna.",
+                explicacao: "Este versículo (João 3:16) é frequentemente chamado de 'o Evangelho em miniatura'. Ele resume o plano de salvação de Deus: amor sacrificial que busca resgatar a humanidade através de Jesus.",
+                interpretacaoProfunda: "O 'amor' aqui mencionado (ágapé) não é um sentimento, mas uma decisão da vontade de dar-se inteiramente. Deus não 'precisava' salvar o mundo, mas escolheu fazê-lo pelo valor infinito que Ele atribui a cada alma humana.",
+                aplicacaoPratica: "Tente olhar para as pessoas ao seu redor hoje como pessoas que Deus amou a ponto de dar Seu Filho. Isso muda como tratamos os outros e como vemos a nós mesmos.",
+                reflexaoFinal: "Eu realmente acredito que sou amado por Deus com essa intensidade, ou trato minha fé como apenas um conjunto de regras?",
+                exercicio: "Passe 2 minutos em silêncio repetindo mentalmente: 'Deus me amou tanto que deu Seu Filho por mim'."
+              }} title="Lectio Divina Profunda" />
+            )}
 
             {/* Mark as read button */}
             {!isLoading && !bibleError && (

@@ -3,10 +3,11 @@ import { Icons } from '../../constants';
 import { motion, AnimatePresence } from 'framer-motion';
 import { APPARITIONS, Apparition } from '@/data/apparitions';
 import { useFavorites } from '@/hooks/useFavorites';
+import DeepContentSection from './DeepContentSection';
 
 const AparicoesPage: React.FC = () => {
   const [selectedApparition, setSelectedApparition] = useState<Apparition | null>(null);
-  const [activeTab, setActiveTab] = useState<'historia' | 'vidente' | 'mensagem'>('historia');
+  const [activeTab, setActiveTab] = useState<'historia' | 'vidente' | 'mensagem' | 'profundidade'>('historia');
   const { isFavorite, toggleFavorite } = useFavorites();
 
   const handleToggleFavorite = (apparition: Apparition, e?: React.MouseEvent) => {
@@ -63,10 +64,11 @@ const AparicoesPage: React.FC = () => {
             { id: 'historia' as const, label: 'A Aparição', icon: <Icons.Book className="w-3.5 h-3.5" /> },
             { id: 'vidente' as const, label: 'O Vidente', icon: <Icons.Users className="w-3.5 h-3.5" /> },
             { id: 'mensagem' as const, label: 'A Mensagem', icon: <Icons.Heart className="w-3.5 h-3.5" /> },
+            { id: 'profundidade' as const, label: 'Profundidade', icon: <Icons.Star className="w-3.5 h-3.5" /> },
           ].map(tab => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => setActiveTab(tab.id as any)}
               className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-xs font-bold transition-all ${
                 activeTab === tab.id ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
               }`}
@@ -107,6 +109,22 @@ const AparicoesPage: React.FC = () => {
                 <blockquote className="border-l-4 border-primary pl-4 py-2">
                   <p className="font-serif italic text-foreground/90 leading-[1.9] text-base">{selectedApparition.message}</p>
                 </blockquote>
+              </div>
+            )}
+            {activeTab === 'profundidade' && selectedApparition.textoBase && (
+              <DeepContentSection content={{
+                textoBase: selectedApparition.textoBase,
+                explicacao: selectedApparition.explicacao || '',
+                interpretacaoProfunda: selectedApparition.interpretacaoProfunda || '',
+                aplicacaoPratica: selectedApparition.aplicacaoPratica || '',
+                reflexaoFinal: selectedApparition.reflexaoFinal || '',
+                exercicio: selectedApparition.exercicio || ''
+              }} title="Mistério e Significado" />
+            )}
+            {activeTab === 'profundidade' && !selectedApparition.textoBase && (
+              <div className="text-center py-12 space-y-4">
+                <Icons.Search className="w-12 h-12 text-muted-foreground mx-auto opacity-20" />
+                <p className="text-muted-foreground italic font-serif">Conteúdo profundo em preparação para esta aparição.</p>
               </div>
             )}
           </motion.div>

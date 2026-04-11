@@ -1,8 +1,9 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { getCachedCatechismParagraph, cacheCatechismParagraph } from '@/lib/offlineCache';
+import { DeepContent } from '@/types';
 
-export interface CatechismParagraph {
+export interface CatechismParagraph extends Partial<DeepContent> {
   paragraph: number;
   content: string;
   language: string;
@@ -29,7 +30,13 @@ export const fetchCatechismParagraph = async (paragraph: number): Promise<Catech
   const result: CatechismParagraph = {
     paragraph: parsed.paragraph || paragraph,
     content: parsed.content || `Parágrafo §${paragraph} — conteúdo não disponível.`,
-    language: parsed.language || 'pt'
+    language: parsed.language || 'pt',
+    textoBase: parsed.textoBase,
+    explicacao: parsed.explicacao,
+    interpretacaoProfunda: parsed.interpretacaoProfunda,
+    aplicacaoPratica: parsed.aplicacaoPratica,
+    reflexaoFinal: parsed.reflexaoFinal,
+    exercicio: parsed.exercicio
   };
 
   // 3) Persist to IndexedDB for offline
