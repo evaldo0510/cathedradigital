@@ -162,7 +162,7 @@ const AdminDashboard: React.FC = () => {
           const amount = transactions
             .filter(t => {
               const date = new Date(t.created_at);
-              return date >= start && date <= end;
+              return t.status === 'approved' && date >= start && date <= end;
             })
             .reduce((acc, curr) => acc + Number(curr.amount), 0);
             
@@ -185,6 +185,7 @@ const AdminDashboard: React.FC = () => {
           totalJourneysCompleted: journeysCompletedRes.count || 0,
           returnRate,
           totalRevenue,
+          pendingRevenue,
           recentTransactions: transactions.slice(0, 10),
           userGrowth,
           revenueData,
