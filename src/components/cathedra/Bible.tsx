@@ -335,7 +335,7 @@ const Bible: React.FC = () => {
     const fs = FONT_SIZES[fontSizeIdx];
     const fromDashboard = searchParams.get('from') === 'dashboard';
     return (
-      <div className="max-w-3xl mx-auto space-y-6">
+      <div className={`mx-auto space-y-6 transition-all duration-500 ${showCrossRefs && crossRefs.length > 0 ? 'max-w-3xl lg:max-w-6xl' : 'max-w-3xl'}`}>
         {/* Back to Dashboard */}
         {fromDashboard && (
           <button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-xs text-primary hover:underline">
