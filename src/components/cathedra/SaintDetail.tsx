@@ -234,6 +234,17 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
               </div>
             )}
           </div>
+          {!showLogos && (
+            <div className="flex justify-center pt-2">
+              <Button 
+                onClick={generateLogosReflection}
+                className="bg-primary hover:bg-primary/90 text-primary-foreground font-black text-xs uppercase tracking-widest h-12 px-8 rounded-2xl shadow-lg shadow-primary/20 flex items-center gap-3 group transition-all"
+              >
+                <Icons.Sparkles className="w-4 h-4 group-hover:rotate-12 transition-transform" />
+                Viver este exemplo com Logos
+              </Button>
+            </div>
+          )}
         </section>
 
         {/* Quote & Practical Application & Reflection */}
