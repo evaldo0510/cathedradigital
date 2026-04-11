@@ -357,7 +357,7 @@ const SPIRITUAL_GUIDANCE = [
     sourceDoc: 'Salvifici Doloris §19',
     pch: '"A dor não veio destruir…\nveio revelar o que ainda é frágil."',
     innerQuestion: 'O que o sofrimento está tentando te ensinar?',
-    relatedDocs: ['ss', 'ev', 'gs'], // Changed 'vat2-gs' to 'gs'
+    relatedDocs: ['ss', 'ev', 'gs', 'sd'],
   },
   {
     id: 'relacionamentos',
