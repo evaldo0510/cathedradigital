@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../constants';
 import { AppRoute } from '../../types';
 import cathedraLogo from '@/assets/cathedra-logo.png';
+import { useLang } from '@/hooks/useLang';
 
 const DIOCESES_BR = [
   // Arquidioceses de SP
@@ -120,21 +121,22 @@ const DIOCESE_URLS: Record<string, string> = {
 
 const Footer: React.FC = React.memo(() => {
   const navigate = useNavigate();
+  const { t, lang } = useLang();
   const [selectedDiocese, setSelectedDiocese] = useState(() => localStorage.getItem('cathedra_diocese') || '');
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const vaticanLinks = [
     { title: 'Santa Sé (Vatican)', url: 'https://www.vatican.va' },
-    { title: 'Catecismo Oficial', url: 'https://www.vatican.va/archive/ccc/index_po.htm' },
+    { title: lang === 'pt' ? 'Catecismo Oficial' : 'Official Catechism', url: 'https://www.vatican.va/archive/ccc/index_po.htm' },
     { title: 'Vatican News', url: 'https://www.vaticannews.va/pt.html' },
-    { title: 'Dicastérios', url: 'https://www.vatican.va/content/romancuria/pt.html' },
+    { title: lang === 'pt' ? 'Dicastérios' : 'Dicasteries', url: 'https://www.vatican.va/content/romancuria/pt.html' },
   ];
 
   const cnbbLinks = [
     { title: 'CNBB Oficial', url: 'https://www.cnbb.org.br' },
-    { title: 'Liturgia Diária CNBB', url: 'https://www.cnbb.org.br/liturgia' },
-    { title: 'Documentos e Publicações', url: 'https://www.cnbb.org.br/category/publicacoes' },
+    { title: lang === 'pt' ? 'Liturgia Diária CNBB' : 'CNBB Daily Liturgy', url: 'https://www.cnbb.org.br/liturgia' },
+    { title: lang === 'pt' ? 'Documentos e Publicações' : 'Documents & Publications', url: 'https://www.cnbb.org.br/category/publicacoes' },
   ];
 
   const scrollToTop = () => {
@@ -148,7 +150,7 @@ const Footer: React.FC = React.memo(() => {
     e.preventDefault();
     setIsSubmitting(true);
     await new Promise(resolve => setTimeout(resolve, 1500));
-    alert(`E-mail ${email} cadastrado com sucesso!`);
+    alert(lang === 'pt' ? `E-mail ${email} cadastrado com sucesso!` : `Email ${email} registered successfully!`);
     setEmail('');
     setIsSubmitting(false);
   };
@@ -166,10 +168,8 @@ const Footer: React.FC = React.memo(() => {
       <div className="absolute inset-0 pointer-events-none opacity-[0.02]" />
       
       <div className="max-w-[1200px] mx-auto relative z-10">
-        {/* ─── Desktop Footer ─── */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16 mb-12">
           
-          {/* Brand Column */}
           <div className="flex flex-col gap-6">
              <div className="flex items-center gap-4">
                <img src={cathedraLogo} alt="Cathedra" className="w-10 h-10 object-contain" />
@@ -179,8 +179,9 @@ const Footer: React.FC = React.memo(() => {
                </div>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
-              Uma plataforma dedicada ao estudo, oração e vivência da fé católica, 
-              unindo a tradição milenar à tecnologia moderna.
+              {lang === 'pt' 
+                ? 'Uma plataforma dedicada ao estudo, oração e vivência da fé católica, unindo a tradição milenar à tecnologia moderna.'
+                : 'A platform dedicated to the study, prayer, and living of the Catholic faith, uniting ancient tradition with modern technology.'}
             </p>
             <div className="flex gap-3">
               {[
@@ -195,7 +196,6 @@ const Footer: React.FC = React.memo(() => {
             </div>
           </div>
 
-          {/* Links Column - Vatican */}
           <div>
             <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-6 flex items-center gap-2">
               <span className="text-lg">🏛️</span> Santa Sé
@@ -212,7 +212,6 @@ const Footer: React.FC = React.memo(() => {
             </ul>
           </div>
 
-          {/* Links Column - CNBB */}
           <div>
             <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-6 flex items-center gap-2">
               <span className="text-lg">🇧🇷</span> CNBB
@@ -229,35 +228,36 @@ const Footer: React.FC = React.memo(() => {
             </ul>
           </div>
 
-          {/* Newsletter / Diocese Column */}
           <div className="flex flex-col gap-8">
             <div>
-              <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-4">Sua Diocese</h4>
+              <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-4">{lang === 'pt' ? 'Sua Diocese' : 'Your Diocese'}</h4>
               <select 
                 value={selectedDiocese}
                 onChange={(e) => handleDioceseChange(e.target.value)}
                 className="w-full bg-foreground/5 border border-foreground/10 rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors cursor-pointer appearance-none"
               >
-                <option value="">Selecione sua Diocese</option>
+                <option value="">{lang === 'pt' ? 'Selecione sua Diocese' : 'Select your Diocese'}</option>
                 {DIOCESES_BR.map(d => (
                   <option key={d} value={d}>{d}</option>
                 ))}
               </select>
               {dioceseUrl && (
                 <a href={dioceseUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 mt-3 text-xs text-primary hover:underline">
-                  Acessar portal <Icons.ExternalLink className="w-3 h-3" />
+                  {lang === 'pt' ? 'Acessar portal' : 'Access portal'} <Icons.ExternalLink className="w-3 h-3" />
                 </a>
               )}
             </div>
             <div>
-              <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-4">Boletim Informativo</h4>
+              <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-4">{lang === 'pt' ? 'Boletim Informativo' : 'Newsletter'}</h4>
               <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
-                Receba reflexões teológicas e atualizações da plataforma em seu e-mail.
+                {lang === 'pt' 
+                  ? 'Receba reflexões teológicas e atualizações da plataforma em seu e-mail.'
+                  : 'Receive theological reflections and platform updates in your email.'}
               </p>
               <form onSubmit={handleSubscribe} className="relative">
                 <input 
                   type="email" 
-                  placeholder="Seu melhor e-mail" 
+                  placeholder={lang === 'pt' ? "Seu melhor e-mail" : "Your best email"}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -279,14 +279,13 @@ const Footer: React.FC = React.memo(() => {
           </div>
         </div>
 
-        {/* Bottom Bar */}
         <div className="pt-8 border-t border-foreground/10 dark:border-foreground/15 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex flex-col items-center md:items-start gap-2">
             <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 dark:text-muted-foreground/70">
               © {new Date().getFullYear()} CATHEDRA • OMNIA AD MAIOREM DEI GLORIAM
             </p>
             <p className="text-[12px] font-bold text-muted-foreground/80 dark:text-muted-foreground/90 flex items-center gap-1.5 tracking-widest">
-              Criado por 
+              {lang === 'pt' ? 'Criado por' : 'Created by'}
               <button 
                 onClick={() => navigate(AppRoute.ADMIN)} 
                 className="cursor-pointer select-none text-primary hover:text-primary/80 transition-colors font-black"
@@ -298,10 +297,10 @@ const Footer: React.FC = React.memo(() => {
           <div className="flex items-center gap-8">
             <nav className="flex items-center gap-6">
               {[
-                { label: 'Sobre', route: AppRoute.ABOUT }, 
-                { label: 'Parceiros', route: AppRoute.PARTNERS },
-                { label: 'Privacidade', route: AppRoute.PRIVACY }, 
-                { label: 'Termos', route: AppRoute.TERMS }
+                { label: t('about') || 'Sobre', route: AppRoute.ABOUT }, 
+                { label: t('partners') || 'Parceiros', route: AppRoute.PARTNERS },
+                { label: t('privacy') || 'Privacidade', route: AppRoute.PRIVACY }, 
+                { label: t('terms') || 'Termos', route: AppRoute.TERMS }
               ].map(item => (
                 <button 
                   key={item.label} 
