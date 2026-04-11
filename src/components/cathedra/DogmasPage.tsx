@@ -380,6 +380,20 @@ const DogmasPage: React.FC = () => {
                   <span className="text-sm text-muted-foreground">{dogma.source} ({dogma.year})</span>
                 </div>
 
+                {/* Deep Content Section for Dogmas */}
+                {dogma.textoBase && (
+                  <div className="pt-4 border-t border-border/40">
+                    <DeepContentSection content={{
+                      textoBase: dogma.textoBase,
+                      explicacao: dogma.explicacao || '',
+                      interpretacaoProfunda: dogma.interpretacaoProfunda || '',
+                      aplicacaoPratica: dogma.aplicacaoPratica || '',
+                      reflexaoFinal: dogma.reflexaoFinal || '',
+                      exercicio: dogma.exercicio || ''
+                    }} title="Aprofundamento Dogmático" />
+                  </div>
+                )}
+
                 {/* Cross-references */}
                 {dogma.refs.length > 0 && (
                   <div className="space-y-2">
