@@ -410,7 +410,7 @@ const FAITH_TERMS: FaithTerm[] = [
 ];
 
 /* Featured terms shown as highlight bubbles */
-const FEATURED_TERMS = ['Amor', 'Fé', 'Graça', 'Perdão'];
+const FEATURED_TERMS = ['Amor', 'Fé', 'Graça', 'Eucaristia', 'Trindade', 'Perdão'];
 
 const AZFaithPage: React.FC = () => {
   const navigate = useNavigate();
