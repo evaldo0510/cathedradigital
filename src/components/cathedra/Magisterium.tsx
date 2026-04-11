@@ -15,6 +15,8 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import AudioButton from './AudioButton';
+
 
 const SPIRITUAL_GUIDANCE = [
   {
@@ -218,8 +220,12 @@ const Magisterium: React.FC = () => {
                     }} title="Lumen Veritatis" />
                   </div>
 
-                  <div className="space-y-4">
-                    <h2 className="text-2xl md:text-3xl font-serif font-bold text-foreground">{selectedGuidance.question}</h2>
+                  <div className="space-y-4 relative">
+                    <div className="flex items-center justify-between gap-4">
+                      <h2 className="text-2xl md:text-3xl font-serif font-bold text-foreground">{selectedGuidance.question}</h2>
+                      <AudioButton variant="ghost" className="shrink-0" />
+                    </div>
+
                     <p className="text-lg text-muted-foreground leading-relaxed font-serif italic">
                       "
                       {parseTheologicalReferences(selectedGuidance.magisteriumAnswer).map((seg, i) => {

@@ -20,6 +20,8 @@ import { toast } from 'sonner';
 import confetti from 'canvas-confetti';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import AudioButton from './AudioButton';
+
 
 type BibleBook = { name: string; abbr: string; chapters: number };
 type BibleCategory = { label: string; icon: React.ElementType; color: string; bgColor: string; books: BibleBook[] };
@@ -379,7 +381,16 @@ const Bible: React.FC = () => {
         </div>
 
         {/* Toolbar */}
-        <div className="flex items-center justify-between gap-3 flex-wrap">
+        <div className="flex items-center justify-between gap-3 flex-wrap bg-card/50 backdrop-blur-md p-2 rounded-2xl border border-border shadow-sm">
+          <div className="flex items-center gap-2">
+            <AudioButton variant="solid" className="px-6" />
+            <ShareButton
+              title={`${selectedBook.name} ${selectedChapter}`}
+              text={`Leia ${selectedBook.name}, capítulo ${selectedChapter} na Cathedra Digital`}
+              url={`${window.location.origin}/biblia?book=${selectedBook.abbr}&ch=${selectedChapter}`}
+            />
+          </div>
+
           <div className="flex items-center gap-2">
             <button disabled={selectedChapter <= 1} onClick={() => navigateChapter(-1)}
               className="px-3 py-2 rounded-xl bg-card border border-border text-sm font-bold disabled:opacity-30 hover:bg-primary/10 transition-all">

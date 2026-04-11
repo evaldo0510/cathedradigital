@@ -264,6 +264,23 @@ const AppLayout: React.FC = () => {
   }, [lang]);
 
   useEffect(() => {
+    const handleAudioToggle = () => toggleSpeak();
+    window.addEventListener('toggle-audio' as any, handleAudioToggle);
+    return () => window.removeEventListener('toggle-audio' as any, handleAudioToggle);
+  }, [toggleSpeak]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const isActuallySpeaking = window.speechSynthesis.speaking;
+      if (isActuallySpeaking !== isSpeaking) {
+        setIsSpeaking(isActuallySpeaking);
+      }
+    }, 500);
+    return () => clearInterval(timer);
+  }, [isSpeaking]);
+
+
+  useEffect(() => {
     if (location.pathname !== AppRoute.LOGIN || loading || !user) return;
     navigate(getPostAuthRoute(), { replace: true });
   }, [getPostAuthRoute, loading, location.pathname, navigate, user, profile]);

@@ -3,6 +3,8 @@ import { Icons } from '../../constants';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { motion, AnimatePresence } from 'framer-motion';
+import AudioButton from './AudioButton';
+
 
 const AQUINO_CONCEPTS = [
   {
@@ -200,6 +202,10 @@ const AquinasOpera: React.FC = () => {
             <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Motor de Autoridade</span>
           </div>
           <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground">S. Tomás de Aquino</h1>
+          <div className="flex justify-center mt-4">
+            <AudioButton variant="solid" className="px-6" />
+          </div>
+
           <p className="text-muted-foreground font-serif italic max-w-lg mx-auto">
             Não apenas conteúdo… domínio intelectual aplicado à alma.
           </p>
