@@ -27,7 +27,7 @@ const AboutCreatorSection = () => {
                 <div className="w-full h-full rounded-full bg-muted flex items-center justify-center overflow-hidden border border-border">
                   <Icons.User className="w-24 h-24 text-muted-foreground/30" />
                   {/* If the creator has a photo, replace the Icon with an img tag:
-                  <img src="/creator-photo.jpg" alt="eevaldo.os" className="w-full h-full object-cover" />
+                  <img src="/creator-photo.jpg" alt="Evaldo.os" className="w-full h-full object-cover" />
                   */}
                 </div>
                 <div className="absolute -bottom-2 -right-2 bg-primary text-white p-3 rounded-full shadow-lg border-4 border-background">

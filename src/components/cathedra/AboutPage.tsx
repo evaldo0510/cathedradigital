@@ -71,7 +71,7 @@ const AboutPage: React.FC = () => (
               <div className="w-full h-full rounded-full bg-muted flex items-center justify-center overflow-hidden border border-border group-hover:scale-105 transition-transform duration-700">
                 <Icons.User className="w-20 h-20 text-muted-foreground/30" />
                 {/* Optional Creator Photo:
-                <img src="/creator-photo.jpg" alt="eevaldo.os" className="w-full h-full object-cover" />
+                <img src="/creator-photo.jpg" alt="Evaldo.os" className="w-full h-full object-cover" />
                 */}
               </div>
               <div className="absolute -bottom-1 -right-1 bg-primary text-white p-2.5 rounded-full shadow-lg border-4 border-background">
