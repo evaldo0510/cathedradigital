@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Icons } from '../../constants';
 import SEOHead from '@/components/SEOHead';
 import { AppRoute } from '@/types';
