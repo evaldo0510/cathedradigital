@@ -419,10 +419,10 @@ const AdminDashboard: React.FC = () => {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                 <CardTitle className="text-sm font-medium">Usuários PRO</CardTitle>
-                <Crown className="h-4 w-4 text-amber-500" />
+                <Crown className="h-4 w-4 text-secondary" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-amber-500">{stats?.premiumUsers}</div>
+                <div className="text-2xl font-bold text-secondary">{stats?.premiumUsers}</div>
                 <p className="text-xs text-muted-foreground mt-1">Assinantes ativos</p>
               </CardContent>
             </Card>
