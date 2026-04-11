@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import {
-  Users, Crown, AlertTriangle, Flame, UserCheck, Clock,
+  Users, Crown, AlertTriangle, Flame, UserCheck, Clock, Star,
   Filter, ChevronDown, ChevronUp, Eye, Download, Search
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -31,7 +31,7 @@ interface Props {
   onSelectUser: (user: UserProfile) => void;
 }
 
-type Segment = 'all' | 'new' | 'active' | 'deep' | 'inactive';
+type Segment = 'all' | 'new' | 'active' | 'engaged' | 'deep' | 'inactive';
 
 const hoursSince = (date: string | null) => {
   if (!date) return 9999;
@@ -44,15 +44,13 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
   const [sortAsc, setSortAsc] = useState(false);
 
   const segmentedUsers = useMemo(() => {
-    const inactive = users.filter(u => hoursSince(u.last_visit) >= 48);
-    const others = users.filter(u => hoursSince(u.last_visit) < 48);
-    
     return {
       all: users,
-      inactive,
-      deep: others.filter(u => (u.reflections_count || 0) > 10),
-      new: others.filter(u => (u.reflections_count || 0) <= 1),
-      active: others.filter(u => (u.reflections_count || 0) > 1 && (u.reflections_count || 0) <= 10),
+      new: users.filter(u => u.depth_level === 'Novo'),
+      active: users.filter(u => u.depth_level === 'Ativo'),
+      engaged: users.filter(u => u.depth_level === 'Engajado'),
+      deep: users.filter(u => u.depth_level === 'Profundo'),
+      inactive: users.filter(u => u.depth_level === 'Inativo'),
     };
   }, [users]);
 
@@ -60,6 +58,7 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
     { key: 'all', label: 'Todos', icon: <Users className="w-4 h-4" />, color: 'text-foreground' },
     { key: 'new', label: 'Novo', icon: <UserCheck className="w-4 h-4" />, color: 'text-primary' },
     { key: 'active', label: 'Ativo', icon: <Flame className="w-4 h-4" />, color: 'text-primary' },
+    { key: 'engaged', label: 'Engajado', icon: <Star className="w-4 h-4" />, color: 'text-orange-500' },
     { key: 'deep', label: 'Profundo', icon: <Crown className="w-4 h-4" />, color: 'text-primary' },
     { key: 'inactive', label: 'Inativo', icon: <Clock className="w-4 h-4" />, color: 'text-destructive' },
   ];
@@ -78,11 +77,14 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
   };
 
   const getStatusBadge = (u: UserProfile) => {
-    if (hoursSince(u.last_visit) >= 48) return <Badge className="bg-destructive/15 text-destructive border-destructive/30 text-[10px]">Inativo</Badge>;
-    if (hoursSince(u.last_visit) >= 48) return <Badge className="bg-destructive/15 text-destructive border-destructive/30 text-[10px]">Inativo</Badge>;
-    if ((u.reflections_count || 0) > 10) return <Badge className="bg-primary/15 text-primary border-primary/30 text-[10px]">Profundo</Badge>;
-    if ((u.reflections_count || 0) <= 1) return <Badge className="bg-primary/15 text-primary border-primary/30 text-[10px]">Novo</Badge>;
-    return <Badge className="bg-primary/15 text-primary border-primary/30 text-[10px]">Ativo</Badge>;
+    const status = u.depth_level || 'Inativo';
+    switch (status) {
+      case 'Profundo': return <Badge variant="default" className="text-[10px]">Profundo</Badge>;
+      case 'Engajado': return <Badge variant="secondary" className="text-[10px]">Engajado</Badge>;
+      case 'Ativo': return <Badge variant="outline" className="border-primary/30 text-primary text-[10px]">Ativo</Badge>;
+      case 'Novo': return <Badge variant="outline" className="border-secondary/30 text-secondary text-[10px]">Novo</Badge>;
+      default: return <Badge variant="destructive" className="text-[10px]">Inativo</Badge>;
+    }
   };
 
   const exportCsv = useCallback(() => {
@@ -161,10 +163,10 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
               <thead className="sticky top-0 bg-card z-10">
                 <tr className="border-b border-border">
                   <th className="text-left p-3 font-semibold">Usuário</th>
+                  <th className="text-center p-3 font-semibold">Plano</th>
                   <th className="text-center p-3 font-semibold">Segmento</th>
                   <th className="text-center p-3 font-semibold hidden md:table-cell">Reflexões</th>
                   <th className="text-center p-3 font-semibold hidden lg:table-cell">Jornada</th>
-                  <th className="text-center p-3 font-semibold hidden lg:table-cell">Freq.</th>
                   <th className="text-center p-3 font-semibold hidden md:table-cell">Última Ativ.</th>
                   <th className="text-center p-3 font-semibold">Ações</th>
                 </tr>
@@ -183,18 +185,18 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
                         </div>
                       </div>
                     </td>
+                    <td className="p-3 text-center">
+                      <Badge variant={u.is_premium ? "default" : "outline"} className="text-[10px]">
+                        {u.is_premium ? 'PRO' : 'Free'}
+                      </Badge>
+                    </td>
                     <td className="p-3 text-center">{getStatusBadge(u)}</td>
                     <td className="p-3 text-center hidden md:table-cell">
                       <span className="text-xs font-medium">{u.reflections_count || 0}</span>
                     </td>
                     <td className="p-3 text-center hidden lg:table-cell">
-                      <span className="text-[10px] text-muted-foreground truncate max-w-[100px] block">
+                      <span className="text-[10px] text-muted-foreground truncate max-w-[150px] block mx-auto">
                         {u.current_journey || 'Nenhuma'}
-                      </span>
-                    </td>
-                    <td className="p-3 text-center hidden lg:table-cell">
-                      <span className="flex items-center justify-center gap-1 text-xs">
-                        <Flame className={`w-3 h-3 ${u.streak ? 'text-orange-500' : 'text-muted-foreground'}`} /> {u.streak || 0}
                       </span>
                     </td>
                     <td className="p-3 text-center hidden md:table-cell text-xs text-muted-foreground">

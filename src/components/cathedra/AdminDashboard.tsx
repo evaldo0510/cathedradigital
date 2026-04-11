@@ -83,22 +83,23 @@ const AdminDashboard: React.FC = () => {
       try {
         setLoading(true);
 
-        const [profilesRes, sensitiveRes, metricsRes, transactionsRes, journalRes, journeysRes] = await Promise.all([
+        const [statsRes, metricsRes, transactionsRes, journalRes, journeysRes, crmRes] = await Promise.all([
           supabase.from('profiles').select('*'),
-          (supabase as any).from('user_sensitive_data').select('user_id, email, diagnosis_result'),
           supabase.from('app_metrics').select('*'),
           supabase.from('transactions').select('*').order('created_at', { ascending: false }),
           supabase.from('spiritual_journal').select('user_id'),
-          supabase.from('journey_progress').select('user_id, journey_id, journeys(title)').order('completed_at', { ascending: false })
+          supabase.from('journey_progress').select('user_id, journey_id, journeys(title)').order('completed_at', { ascending: false }),
+          supabase.from('user_management_stats').select('*')
         ]);
 
-        if (profilesRes.error) throw profilesRes.error;
+        if (statsRes.error) throw statsRes.error;
         if (metricsRes.error) throw metricsRes.error;
         if (transactionsRes.error) throw transactionsRes.error;
 
-        const allProfiles = profilesRes.data || [];
+        const allProfiles = statsRes.data || [];
         const metrics = metricsRes.data || [];
         const transactions = transactionsRes.data || [];
+        const crmUsers = crmRes.data || [];
 
         const premiumCount = allProfiles.filter(p => p.is_premium).length;
         const visitsCount = metrics.filter(m => m.metric_type === 'visit').length;
@@ -177,38 +178,20 @@ const AdminDashboard: React.FC = () => {
           revenueData,
         });
 
-        const sensitiveMap = new Map<string, {email: string, depth?: string}>();
-        (sensitiveRes.data as SensitiveRow[] || []).forEach((s: SensitiveRow) => {
-          let depth = 'Iniciante';
-          const diag = s.diagnosis_result;
-          if (diag && typeof diag === 'object') {
-            const values = Object.values(diag);
-            const highValues = values.filter(v => Number(v) > 7).length;
-            if (highValues > 5) depth = 'Profundo';
-            else if (highValues > 2) depth = 'Engajado';
-          }
-          sensitiveMap.set(s.user_id, { email: s.email, depth });
-        });
-        
-        const journalMap = new Map<string, number>();
-        (journalRes.data || []).forEach((j: any) => {
-          journalMap.set(j.user_id, (journalMap.get(j.user_id) || 0) + 1);
-        });
+        const crmMap = new Map<string, any>();
+        crmUsers.forEach(u => crmMap.set(u.id, u));
 
-        const journeyMap = new Map<string, string>();
-        (journeysRes.data || []).forEach((j: any) => {
-          if (!journeyMap.has(j.user_id)) {
-            journeyMap.set(j.user_id, j.journeys?.title || 'Jornada');
-          }
-        });
-        
-        setUsers(allProfiles.map(p => ({
-          ...p,
-          email: sensitiveMap.get(p.id)?.email || '',
-          depth_level: sensitiveMap.get(p.id)?.depth || 'Iniciante',
-          reflections_count: journalMap.get(p.id) || 0,
-          current_journey: journeyMap.get(p.id) || 'Nenhuma',
-        })) as UserProfile[]);
+        setUsers(allProfiles.map(p => {
+          const crm = crmMap.get(p.id) || {};
+          return {
+            ...p,
+            email: crm.email || '',
+            depth_level: crm.classification || 'Novo',
+            reflections_count: crm.reflections_count || 0,
+            current_journey: crm.current_journey || 'Nenhuma',
+            last_visit: crm.last_activity // Map view's activity to last_visit for UI consistency
+          };
+        }) as UserProfile[]);
       } catch (err: any) {
         console.error('Error fetching admin stats:', err);
         setError(err.message);
@@ -371,7 +354,7 @@ const AdminDashboard: React.FC = () => {
             <LayoutGrid className="w-3.5 h-3.5 hidden sm:block" /> Visão Geral
           </TabsTrigger>
           <TabsTrigger value="segmentation" className="gap-1.5 text-xs sm:text-sm">
-            <Target className="w-3.5 h-3.5 hidden sm:block" /> Segmentação
+            <Target className="w-3.5 h-3.5 hidden sm:block" /> Gestão de Usuários
           </TabsTrigger>
           <TabsTrigger value="retention" className="gap-1.5 text-xs sm:text-sm">
             <Activity className="w-3.5 h-3.5 hidden sm:block" /> Retenção

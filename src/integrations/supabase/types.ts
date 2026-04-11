@@ -761,6 +761,13 @@ export type Database = {
             referencedRelation: "public_profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "transactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_management_stats"
+            referencedColumns: ["id"]
+          },
         ]
       }
       user_emotions: {
@@ -957,6 +964,20 @@ export type Database = {
         }
         Relationships: []
       }
+      user_management_stats: {
+        Row: {
+          classification: string | null
+          created_at: string | null
+          current_journey: string | null
+          email: string | null
+          id: string | null
+          last_activity: string | null
+          name: string | null
+          plan: string | null
+          reflections_count: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       can_update_own_profile: {
@@ -968,6 +989,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      get_latest_journey_title: { Args: { p_user_id: string }; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
