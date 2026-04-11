@@ -5,7 +5,7 @@ import {
   Users, TrendingUp, Download, DollarSign, ArrowUpRight,
   BarChart3, Calendar, AlertCircle, Crown, Shield, Search,
   ChevronDown, ChevronUp, UserCog, ArrowLeft, Home, Smartphone, MonitorSmartphone,
-  Target, Activity, Bell, LayoutGrid, UserCheck, Handshake
+  Target, Activity, Bell, LayoutGrid, UserCheck, Handshake, Heart, Wallet
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -32,6 +32,7 @@ interface Stats {
   pwaInstalls: number;
   pwaOpens: number;
   activeToday: number;
+  activeLast30Days: number;
   inactiveUsers: number;
   journeysInProgress: number;
   returnRate: number;
@@ -113,6 +114,14 @@ const AdminDashboard: React.FC = () => {
           const visitDate = new Date(p.last_visit);
           return visitDate.toDateString() === now.toDateString();
         }).length;
+        
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(now.getDate() - 30);
+        const activeLast30Days = allProfiles.filter(p => {
+          if (!p.last_visit) return false;
+          const visitDate = new Date(p.last_visit);
+          return visitDate >= thirtyDaysAgo;
+        }).length;
 
         const inactiveUsers = allProfiles.filter(p => {
           if (!p.last_visit) return true;
@@ -158,6 +167,7 @@ const AdminDashboard: React.FC = () => {
           pwaInstalls,
           pwaOpens,
           activeToday,
+          activeLast30Days,
           inactiveUsers,
           journeysInProgress,
           returnRate,
@@ -208,6 +218,8 @@ const AdminDashboard: React.FC = () => {
     };
 
     fetchStats();
+    const interval = setInterval(fetchStats, 60000); // Atualiza a cada 60 segundos
+    return () => clearInterval(interval);
   }, []);
 
   const handleTogglePremium = async (userId: string, currentStatus: boolean) => {
@@ -381,59 +393,89 @@ const AdminDashboard: React.FC = () => {
         {/* Overview Tab */}
         <TabsContent value="overview" className="space-y-6">
           {/* Stats Overview */}
-          <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <CardTitle className="text-sm font-medium">Usuários</CardTitle>
+                <CardTitle className="text-sm font-medium">Total de Usuários</CardTitle>
                 <Users className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{stats?.totalUsers}</div>
-                <p className="text-xs text-muted-foreground mt-1">Total cadastrados</p>
+                <p className="text-xs text-muted-foreground mt-1">Usuários cadastrados</p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <CardTitle className="text-sm font-medium">Ativos Hoje</CardTitle>
+                <CardTitle className="text-sm font-medium">Usuários Ativos</CardTitle>
                 <UserCheck className="h-4 w-4 text-primary" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-primary">{stats?.activeToday}</div>
-                <p className="text-xs text-muted-foreground mt-1">Visitantes hoje</p>
+                <div className="text-2xl font-bold text-primary">{stats?.activeLast30Days}</div>
+                <p className="text-xs text-muted-foreground mt-1">Ativos nos últimos 30 dias</p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <CardTitle className="text-sm font-medium">Inativos</CardTitle>
-                <AlertCircle className="h-4 w-4 text-destructive" />
+                <CardTitle className="text-sm font-medium">Usuários PRO</CardTitle>
+                <Crown className="h-4 w-4 text-secondary" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-destructive">{stats?.inactiveUsers}</div>
-                <p className="text-xs text-muted-foreground mt-1">{'>'} 48h sem acesso</p>
+                <div className="text-2xl font-bold text-secondary">{stats?.premiumUsers}</div>
+                <p className="text-xs text-muted-foreground mt-1">Assinantes ativos</p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <CardTitle className="text-sm font-medium">Jornadas</CardTitle>
-                <Target className="h-4 w-4 text-primary" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-primary">{stats?.journeysInProgress}</div>
-                <p className="text-xs text-muted-foreground mt-1">Em andamento</p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <CardTitle className="text-sm font-medium">Retorno</CardTitle>
+                <CardTitle className="text-sm font-medium">Taxa de Retenção</CardTitle>
                 <TrendingUp className="h-4 w-4 text-primary" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-primary">{stats?.returnRate.toFixed(1)}%</div>
-                <p className="text-xs text-muted-foreground mt-1">Taxa de retenção</p>
+                <p className="text-xs text-muted-foreground mt-1">Usuários recorrentes</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card className="bg-primary/5 border-primary/20">
+              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                <CardTitle className="text-sm font-medium">Receita Total</CardTitle>
+                <DollarSign className="h-4 w-4 text-primary" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-primary">
+                  {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(stats?.totalRevenue || 0)}
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">Acumulado bruto</p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-destructive/5 border-destructive/20">
+              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                <CardTitle className="text-sm font-medium">Doação (50%)</CardTitle>
+                <Heart className="h-4 w-4 text-destructive" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-destructive">
+                  {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format((stats?.totalRevenue || 0) * 0.5)}
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">Destinado à caridade</p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-primary/5 border-primary/20">
+              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                <CardTitle className="text-sm font-medium">Valor Restante</CardTitle>
+                <Wallet className="h-4 w-4 text-primary" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-primary">
+                  {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format((stats?.totalRevenue || 0) * 0.5)}
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">Manutenção e operação</p>
               </CardContent>
             </Card>
           </div>
@@ -441,55 +483,50 @@ const AdminDashboard: React.FC = () => {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <CardTitle className="text-sm font-medium">Assinantes PRO</CardTitle>
-                <Crown className="h-4 w-4 text-primary" />
+                <CardTitle className="text-sm font-medium">Ativos Hoje</CardTitle>
+                <UserCheck className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-primary">{stats?.premiumUsers}</div>
-                <p className="text-xs text-muted-foreground mt-1">
-                  {stats && stats.totalUsers > 0 ? `${((stats.premiumUsers / stats.totalUsers) * 100).toFixed(1)}%` : '0%'} do total
-                </p>
+                <div className="text-2xl font-bold">{stats?.activeToday}</div>
+                <p className="text-xs text-muted-foreground mt-1">Visitantes hoje</p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <CardTitle className="text-sm font-medium">Receita</CardTitle>
-                <DollarSign className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-sm font-medium">Inativos</CardTitle>
+                <AlertCircle className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">
-                  {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(stats?.totalRevenue || 0)}
-                </div>
-                <p className="text-xs text-muted-foreground mt-1">Acumulado</p>
+                <div className="text-2xl font-bold">{stats?.inactiveUsers}</div>
+                <p className="text-xs text-muted-foreground mt-1">{'>'} 48h sem acesso</p>
               </CardContent>
             </Card>
-          </div>
 
-          {/* PWA Metrics */}
-          <div className="grid grid-cols-2 gap-4">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                 <CardTitle className="text-sm font-medium">Instalações PWA</CardTitle>
-                <Smartphone className="h-4 w-4 text-primary" />
+                <Smartphone className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-primary">{stats?.pwaInstalls}</div>
-                <p className="text-xs text-muted-foreground mt-1">App instalado no dispositivo</p>
+                <div className="text-2xl font-bold">{stats?.pwaInstalls}</div>
+                <p className="text-xs text-muted-foreground mt-1">Total instalados</p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <CardTitle className="text-sm font-medium">Acessos Standalone</CardTitle>
-                <MonitorSmartphone className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-sm font-medium">Jornadas</CardTitle>
+                <Target className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{stats?.pwaOpens}</div>
-                <p className="text-xs text-muted-foreground mt-1">Aberturas via app instalado</p>
+                <div className="text-2xl font-bold">{stats?.journeysInProgress}</div>
+                <p className="text-xs text-muted-foreground mt-1">Em andamento</p>
               </CardContent>
             </Card>
           </div>
+
+          {/* Removido duplicatas de cards financeiros e PWA já incluídos acima */}
 
           {/* Charts */}
           <Suspense fallback={<Skeleton className="h-[350px] rounded-xl" />}>
