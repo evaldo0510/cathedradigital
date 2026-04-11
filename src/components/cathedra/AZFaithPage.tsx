@@ -197,7 +197,8 @@ const FAITH_TERMS: FaithTerm[] = [
     practicalApplication: 'Pense em alguém que o magoou. Reze por essa pessoa hoje. Peça a graça de perdoar.',
     bibleVerses: ['Mt 18,21-22 (Setenta vezes sete)', 'Lc 23,34 (Pai, perdoai-lhes)', 'Cl 3,13 (Perdoai-vos mutuamente)'],
     catechismReferences: ['§2838-2845 (Perdoai-nos as nossas ofensas)'],
-    magisteriumReferences: ['Dives in Misericordia (João Paulo II)']
+    magisteriumReferences: ['Dives in Misericordia (João Paulo II)'],
+    journey_id: 'a0a0a0a0-0003-4000-8000-000000000001'
   },
   { term: 'Profeta', definition: 'Aquele que fala em nome de Deus para o povo.', reference: 'Is 1,1', category: 'Ministérios' },
   { term: 'Purgatório', definition: 'Estado de purificação final dos que morrem na amizade de Deus.', reference: '2Mc 12,45', category: 'Escatologia' },
