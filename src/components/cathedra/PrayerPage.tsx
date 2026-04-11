@@ -229,6 +229,12 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
                     )}
                   </div>
                 ))}
+
+                {expandedPrayer && (PRAYER_DETAILS as any)[expandedPrayer] && (
+                  <div className="mt-8 pt-8 border-t border-white/10">
+                    <DeepContentSection content={(PRAYER_DETAILS as any)[expandedPrayer]} title="Profundidade da Oração" />
+                  </div>
+                )}
               </div>
               <button onClick={() => setPhase('mystery')} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-secondary/30 transition-all shadow-lg shadow-primary/20">
                 Iniciar 1º Mistério
