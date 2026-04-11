@@ -131,25 +131,25 @@ const TemasPage = () => {
               transition={{ duration: 0.3 }}
               className="space-y-8"
             >
-              <div className="bg-gradient-to-br from-card to-muted/20 border border-border/60 rounded-[2.5rem] p-10 shadow-xl relative overflow-hidden group">
+              <div className="bg-gradient-to-br from-card to-muted/20 border border-border/60 rounded-3xl sm:rounded-[2.5rem] p-6 sm:p-10 shadow-xl relative overflow-hidden group">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -mr-10 -mt-10 group-hover:bg-primary/10 transition-colors" />
                 
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8">
                   <div>
                     <div className="flex items-center gap-3 mb-4">
-                      <span className="h-1.5 w-12 bg-primary rounded-full" />
-                      <Badge variant="secondary" className="bg-primary/10 text-primary hover:bg-primary/20 border-none px-4 py-1 text-xs uppercase tracking-widest font-bold">
+                      <span className="h-1.5 w-8 sm:w-12 bg-primary rounded-full" />
+                      <Badge variant="secondary" className="bg-primary/10 text-primary hover:bg-primary/20 border-none px-3 sm:px-4 py-1 text-[10px] sm:text-xs uppercase tracking-widest font-bold">
                         Estudo de Tema
                       </Badge>
                     </div>
-                    <h2 className="text-5xl font-black mb-4 tracking-tight leading-tight text-foreground">{selectedTheme.name}</h2>
+                    <h2 className="text-3xl sm:text-5xl font-black mb-4 tracking-tight leading-tight text-foreground">{selectedTheme.name}</h2>
                   </div>
-                  <Button variant="outline" className="rounded-2xl border-primary/20 hover:bg-primary/5 hover:border-primary/40 group/btn h-14 px-6">
-                    <Bookmark className="mr-2 h-5 w-5 transition-transform group-hover/btn:scale-110" />
+                  <Button variant="outline" className="rounded-2xl border-primary/20 hover:bg-primary/5 hover:border-primary/40 group/btn h-12 sm:h-14 px-4 sm:px-6">
+                    <Bookmark className="mr-2 h-4 w-4 sm:h-5 sm:w-5 transition-transform group-hover/btn:scale-110" />
                     Salvar Estudo
                   </Button>
                 </div>
-                
+
                 <p className="text-xl text-muted-foreground/90 leading-relaxed max-w-3xl font-medium">
                   {selectedTheme.description}
                 </p>

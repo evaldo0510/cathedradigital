@@ -1,8 +1,9 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AppRoute } from '../../types';
 import { Icons } from '@/constants';
 import { prefetchRoute } from '@/lib/prefetch';
+import { LangContext } from '@/contexts/LangContext';
 
 /* ── Ripple helper ── */
 function useRipple() {
@@ -60,7 +61,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon, route, isAct
         strokeWidth: 2
       })}
     </div>
-    <span className={`text-[9px] sm:text-[10px] font-bold uppercase tracking-widest leading-none ${
+    <span className={`text-[8px] sm:text-[10px] font-bold uppercase tracking-tight sm:tracking-widest leading-none ${
       isActive ? 'opacity-100' : 'opacity-60'
     }`}>
       {label}
@@ -81,25 +82,27 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   const location = useLocation();
   const currentPath = location.pathname;
   const triggerRipple = useRipple();
+  const { t } = useContext(LangContext);
 
   const items = [
-    { label: 'Início', icon: <Icons.Home />, route: AppRoute.HOJE },
-    { label: 'Jornada', icon: <Icons.Journeys />, route: AppRoute.JORNADAS },
-    { label: 'Explorar', icon: <Icons.Search />, route: AppRoute.BIBLIOTECA },
-    { label: 'Comunidade', icon: <Icons.Community />, route: AppRoute.COMMUNITY },
-    { label: 'Perfil', icon: <Icons.User />, route: AppRoute.PROFILE },
+    { label: t('home'), icon: <Icons.Home />, route: AppRoute.HOJE },
+    { label: t('journeys'), icon: <Icons.Journeys />, route: AppRoute.JORNADAS },
+    { label: t('themes'), icon: <Icons.Tag />, route: AppRoute.TEMAS },
+    { label: t('explore'), icon: <Icons.Search />, route: AppRoute.BIBLIOTECA },
+    { label: t('community'), icon: <Icons.Community />, route: AppRoute.COMMUNITY },
+    { label: t('profile'), icon: <Icons.User />, route: AppRoute.PROFILE },
   ];
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-[160] lg:hidden bg-background/80 backdrop-blur-xl border-t border-foreground/5 safe-area-bottom">
-      <div className="flex items-stretch h-16 px-2">
+      <div className="flex items-stretch h-16 px-1">
         {items.map((item) => (
           <BottomNavItem 
             key={item.label}
             label={item.label}
             icon={item.icon}
             route={item.route}
-            isActive={currentPath === item.route || (item.route === AppRoute.BIBLIOTECA && [AppRoute.BIBLE, AppRoute.CATECHISM, AppRoute.MAGISTERIUM, AppRoute.SAINTS, AppRoute.LITURGIA, AppRoute.AQUINAS_OPERA, AppRoute.GLOSSARY, AppRoute.ROSARY, AppRoute.ORACAO, AppRoute.VIA_CRUCIS, AppRoute.TEMAS].includes(currentPath as AppRoute))}
+            isActive={currentPath === item.route || (item.route === AppRoute.BIBLIOTECA && [AppRoute.BIBLE, AppRoute.CATECHISM, AppRoute.MAGISTERIUM, AppRoute.SAINTS, AppRoute.LITURGIA, AppRoute.AQUINAS_OPERA, AppRoute.GLOSSARY, AppRoute.ROSARY, AppRoute.ORACAO, AppRoute.VIA_CRUCIS].includes(currentPath as AppRoute))}
             onClick={() => {
               navigate(item.route);
             }}
