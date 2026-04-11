@@ -95,7 +95,13 @@ const AparicoesPage: React.FC = () => {
             {activeTab === 'historia' && (
               <div className="space-y-4">
                 <h2 className="text-lg font-serif font-bold text-foreground">A História da Aparição</h2>
-                <p className="font-serif text-foreground/90 leading-[1.9] text-base">{selectedApparition.fullStory}</p>
+                <p className="font-serif text-foreground/90 leading-[1.9] text-base">
+                  {parseTheologicalReferences(selectedApparition.fullStory).map((seg, i) => {
+                    if (seg.type === 'bibleRef') return <BibleVersePopover key={i} abbr={seg.abbr!} chapter={seg.chapter!} verse={seg.verse} label={seg.value} />;
+                    if (seg.type === 'catechismRef') return <CatechismPopover key={i} paragraph={seg.paragraph!} />;
+                    return <span key={i}>{seg.value}</span>;
+                  })}
+                </p>
               </div>
             )}
             {activeTab === 'vidente' && (
