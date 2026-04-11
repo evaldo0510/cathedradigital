@@ -200,10 +200,11 @@ const LiturgiaPage: React.FC = () => {
     [today]
   );
 
-  const saintOfDay = useMemo(() => {
+  const saintsToday = useMemo(() => {
     const m = today.getMonth() + 1;
     const d = today.getDate();
-    return SAINTS_DATA.find(s => s.feastMonth === m && s.feastDayNum === d) || SAINTS_DATA[0];
+    const matched = SAINTS_DATA.filter(s => s.feastMonth === m && s.feastDayNum === d);
+    return matched.length > 0 ? matched : [SAINTS_DATA[0]];
   }, [today]);
 
   const navigateToLectio = (ref?: string) => {
