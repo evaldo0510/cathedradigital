@@ -374,24 +374,6 @@ const SPIRITUAL_GUIDANCE = [
 
 // Let's fix DOCS_LIST to include all used in SPIRITUAL_GUIDANCE
 
-const Button = React.forwardRef<HTMLButtonElement, React.ComponentProps<"button"> & { variant?: string, size?: string }>(
-  ({ className, variant, size, ...props }, ref) => {
-    const base = "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
-    const variants = {
-      default: "bg-primary text-primary-foreground hover:bg-primary/90",
-      outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
-      ghost: "hover:bg-accent hover:text-accent-foreground",
-      link: "text-primary underline-offset-4 hover:underline",
-    };
-    return (
-      <button
-        ref={ref}
-        className={base + " " + (variants[variant as keyof typeof variants] || variants.default) + " " + className}
-        {...props}
-      />
-    );
-  }
-);
-Button.displayName = "Button";
-
+// ... keep existing code
 export default Magisterium;
+
