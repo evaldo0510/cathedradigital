@@ -32,7 +32,7 @@ const ProGate: React.FC<ProGateProps> = ({ isPremium, isLoggedIn, onLogin, child
           </button>
         ) : (
           <button
-            onClick={() => navigate(AppRoute.CHECKOUT)}
+            onClick={() => navigate(AppRoute.UPGRADE)}
             className="w-full py-4 bg-primary text-primary-foreground rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:opacity-90 transition-all"
           >
             Assinar PRO
