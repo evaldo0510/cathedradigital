@@ -844,6 +844,13 @@ export type Database = {
             referencedRelation: "public_profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "transactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_management_stats"
+            referencedColumns: ["id"]
+          },
         ]
       }
       user_emotions: {
@@ -1048,9 +1055,15 @@ export type Database = {
       }
       user_management_stats: {
         Row: {
-          admin_users: number | null
-          premium_users: number | null
-          total_users: number | null
+          classification: string | null
+          created_at: string | null
+          current_journey: string | null
+          email: string | null
+          id: string | null
+          last_activity: string | null
+          name: string | null
+          plan: string | null
+          reflections_count: number | null
         }
         Relationships: []
       }
