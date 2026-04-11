@@ -36,33 +36,33 @@
 
   /* Universal colors for all modes */
   .dark, [data-theme='dark'] {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 10%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 10%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 10%;
-    --primary: 214 68% 14%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 40 48% 60%;
-    --secondary-foreground: 214 68% 14%;
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
-    --accent: 40 48% 60%;
-    --accent-foreground: 214 68% 14%;
+    --background: 214 68% 5%;    /* #050B14 */
+    --foreground: 0 0% 98%;      /* #F8F9FA */
+    --card: 214 68% 7%;
+    --card-foreground: 0 0% 98%;
+    --popover: 214 68% 6%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 40 48% 60%;       /* #C8A96A - Gold becomes primary in dark */
+    --primary-foreground: 214 68% 5%;
+    --secondary: 214 40% 15%;
+    --secondary-foreground: 40 48% 60%;
+    --muted: 214 40% 12%;
+    --muted-foreground: 214 10% 70%;
+    --accent: 40 48% 60% / 0.15;
+    --accent-foreground: 40 48% 60%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 214 68% 14% / 0.1;
-    --input: 214 68% 14% / 0.1;
-    --ring: 214 68% 14%;
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 0 0% 10%;
-    --sidebar-primary: 214 68% 14%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 96%;
-    --sidebar-accent-foreground: 214 68% 14%;
-    --sidebar-border: 0 0% 90%;
-    --sidebar-ring: 214 68% 14%;
+    --border: 214 40% 20%;
+    --input: 214 40% 20%;
+    --ring: 40 48% 60%;
+    --sidebar-background: 214 68% 4%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 40 48% 60%;
+    --sidebar-primary-foreground: 214 68% 5%;
+    --sidebar-accent: 214 40% 12%;
+    --sidebar-accent-foreground: 40 48% 60%;
+    --sidebar-border: 214 40% 15%;
+    --sidebar-ring: 40 48% 60%;
   }
 }
 
