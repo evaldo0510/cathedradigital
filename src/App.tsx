@@ -374,6 +374,8 @@ const AppLayout: React.FC = () => {
                   user={appUser}
                   isDark={isDark}
                   onToggleDark={() => setIsDark(!isDark)}
+                  lang={lang}
+                  onChangeLang={(l) => window.dispatchEvent(new CustomEvent('change-lang', { detail: l }))}
                   isSpeaking={isSpeaking}
                   onToggleSpeak={toggleSpeak}
                   onOpenSidebar={() => setIsSidebarOpen(true)}
