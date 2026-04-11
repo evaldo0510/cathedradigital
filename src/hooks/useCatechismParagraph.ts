@@ -12,7 +12,9 @@ export interface CatechismParagraph extends Partial<DeepContent> {
 export const fetchCatechismParagraph = async (paragraph: number): Promise<CatechismParagraph> => {
   // 1) Check IndexedDB cache first
   const cached = await getCachedCatechismParagraph(paragraph);
-  if (cached?.content) {
+  const isStale = cached?.content && (cached.content.includes('processamento') || cached.content.length < 20);
+  
+  if (cached?.content && !isStale) {
     return cached as CatechismParagraph;
   }
 
