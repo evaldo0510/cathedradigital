@@ -9,7 +9,9 @@ import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import { AppRoute } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
-import { Copy, Check, Plus, MessageSquare, Trash2, ChevronLeft, Compass, Sparkles } from 'lucide-react';
+import { Copy, Check, Plus, MessageSquare, Trash2, ChevronLeft, Compass, Sparkles, BookOpen, ArrowRight } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import ProConversionBanner from './ProConversionBanner';
 import { toast } from 'sonner';
 import logosAvatarImg from '@/assets/logos-avatar.png';
@@ -84,6 +86,7 @@ const StudyMode: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
+  const [lastMetadata, setLastMetadata] = useState<any>(null);
   const [showSidebar, setShowSidebar] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -201,6 +204,7 @@ const StudyMode: React.FC = () => {
 
   const sendMessage = async (text: string) => {
     if (!text.trim() || isLoading) return;
+    setLastMetadata(null);
     const userMsg: Message = { role: 'user', content: text.trim() };
     const allMessages = [...messages, userMsg];
     setMessages(allMessages);
@@ -241,12 +245,24 @@ const StudyMode: React.FC = () => {
       let buffer = '';
 
       const upsertAssistant = (content: string) => {
+        // Look for metadata line: [RECOMMENDATION:{"category":...}]
+        const metadataMatch = content.match(/\[RECOMMENDATION:({.*})\]$/);
+        let displayContent = content;
+        if (metadataMatch) {
+          try {
+            const meta = JSON.parse(metadataMatch[1]);
+            setLastMetadata(meta);
+            // Remove metadata from display content if it's the last line
+            displayContent = content.replace(/\[RECOMMENDATION:({.*})\]$/, '').trim();
+          } catch (e) { console.error('Meta parse error:', e); }
+        }
+
         setMessages(prev => {
           const last = prev[prev.length - 1];
           if (last?.role === 'assistant') {
-            return prev.map((m, i) => i === prev.length - 1 ? { ...m, content } : m);
+            return prev.map((m, i) => i === prev.length - 1 ? { ...m, content: displayContent } : m);
           }
-          return [...prev, { role: 'assistant', content }];
+          return [...prev, { role: 'assistant', content: displayContent }];
         });
       };
 
@@ -406,6 +422,49 @@ const StudyMode: React.FC = () => {
               </div>
             </div>
           ))}
+
+          {/* New A-Z / Theme Suggestion */}
+          {!isLoading && lastMetadata && lastMetadata.theme && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-primary/5 border border-primary/10 rounded-2xl p-6 space-y-4"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 bg-primary/10 rounded-lg">
+                    <BookOpen className="w-4 h-4 text-primary" />
+                  </div>
+                  <h3 className="text-sm font-bold text-primary tracking-tight">Explorar tema: {lastMetadata.theme}</h3>
+                </div>
+                <Badge variant="outline" className="bg-background/50 text-[9px] uppercase tracking-widest px-2 py-0.5 border-primary/20">A–Z da Fé</Badge>
+              </div>
+
+              {lastMetadata.az_terms && lastMetadata.az_terms.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {lastMetadata.az_terms.map((term: string, idx: number) => (
+                    <button
+                      key={idx}
+                      onClick={() => navigate(`${AppRoute.AZ_FAITH}?q=${encodeURIComponent(term)}`)}
+                      className="px-3 py-1.5 bg-card hover:bg-primary/10 border border-border hover:border-primary/30 rounded-xl text-xs font-medium transition-all flex items-center gap-1.5 group"
+                    >
+                      {term}
+                      <ArrowRight className="w-3 h-3 text-muted-foreground group-hover:text-primary transition-colors" />
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              <Button
+                variant="default"
+                size="sm"
+                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase text-[10px] tracking-[0.2em] h-10 rounded-xl flex items-center justify-center gap-2"
+                onClick={() => navigate(AppRoute.AZ_FAITH)}
+              >
+                Ver glossário completo <ArrowRight className="w-3.5 h-3.5" />
+              </Button>
+            </motion.div>
+          )}
 
           {/* Natural conversion: Logos deep response */}
           {!isLoading && messages.length > 0 && messages[messages.length - 1].role === 'assistant' && (
