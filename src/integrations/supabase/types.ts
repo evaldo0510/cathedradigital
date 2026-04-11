@@ -275,6 +275,7 @@ export type Database = {
           created_at: string
           definition: string
           id: string
+          journey_id: string | null
           language: string
           term: string
           updated_at: string
@@ -284,6 +285,7 @@ export type Database = {
           created_at?: string
           definition: string
           id?: string
+          journey_id?: string | null
           language?: string
           term: string
           updated_at?: string
@@ -293,11 +295,20 @@ export type Database = {
           created_at?: string
           definition?: string
           id?: string
+          journey_id?: string | null
           language?: string
           term?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "glossary_journey_id_fkey"
+            columns: ["journey_id"]
+            isOneToOne: false
+            referencedRelation: "journeys"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       intelligent_notification_logs: {
         Row: {

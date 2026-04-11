@@ -4,12 +4,15 @@ import SEOHead from '@/components/SEOHead';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
 import { AppRoute } from '@/types';
+import { Button } from '@/components/ui/button';
+import { Compass, Heart, ArrowDown, Search, Sparkles, Book, BookOpen } from 'lucide-react';
 
 interface GlossaryTerm {
   id: string;
   term: string;
   definition: string;
   category: string;
+  journey_id?: string;
 }
 
 /* ── PCH enrichment for featured terms ── */
@@ -261,6 +264,25 @@ const GlossaryPage: React.FC = () => {
                           <div className="flex items-center gap-2 text-sm text-muted-foreground">
                             <Icons.Book className="w-4 h-4 text-primary" />
                             <span className="font-serif italic">Referência: {enrichment.relatedVerse}</span>
+                          </div>
+                        )}
+
+                        {/* Journey Link */}
+                        {term.journey_id && (
+                          <div className="bg-primary/10 border border-primary/20 rounded-2xl p-5 space-y-3">
+                            <div className="flex items-center gap-2">
+                              <Icons.Compass className="w-5 h-5 text-primary" />
+                              <p className="text-xs font-bold text-primary uppercase tracking-widest">Jornada Prática</p>
+                            </div>
+                            <p className="text-xs text-foreground/80 leading-relaxed">
+                              Transforme este conhecimento em hábito com uma jornada curta de 3 a 7 dias.
+                            </p>
+                            <Button 
+                              onClick={() => navigate(`/jornadas/${term.journey_id}`)}
+                              className="w-full bg-primary hover:bg-primary/90 text-white font-bold uppercase text-[10px] tracking-widest py-4"
+                            >
+                              Iniciar Jornada Prática
+                            </Button>
                           </div>
                         )}
 

@@ -22,7 +22,9 @@ import {
   Sparkles,
   Brain,
   Globe,
-  Target
+  Target,
+  Compass,
+  Heart
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -39,6 +41,7 @@ interface FaithTerm {
   bibleVerses?: string[];
   catechismReferences?: string[];
   magisteriumReferences?: string[];
+  journey_id?: string;
 }
 
 const FAITH_TERMS: FaithTerm[] = [
@@ -82,7 +85,8 @@ const FAITH_TERMS: FaithTerm[] = [
     practicalApplication: 'A participação frequente na Missa e a adoração eucarística nos transformam naquilo que recebemos, dando-nos força para amar e servir aos irmãos, especialmente os mais pobres.',
     bibleVerses: ['Jo 6,51-58 (O Pão da Vida)', '1Cor 11,23-26 (A Instituição)', 'Lc 24,30-35 (Emaús)'],
     catechismReferences: ['§1322-1419 (O Sacramento da Eucaristia)', '§1324 (Fonte e Ápice)'],
-    magisteriumReferences: ['Sacrosanctum Concilium n. 47-48 (O Mistério Eucarístico)', 'Ecclesia de Eucharistia (João Paulo II)']
+    magisteriumReferences: ['Sacrosanctum Concilium n. 47-48 (O Mistério Eucarístico)', 'Ecclesia de Eucharistia (João Paulo II)'],
+    journey_id: 'e7a1b2c3-d4e5-4000-8000-000000000002'
   },
   { term: 'Espírito Santo', definition: 'A terceira pessoa da Santíssima Trindade, o Paráclito prometido por Jesus.', reference: 'Jo 14,26', category: 'Teologia' },
   { 
@@ -96,7 +100,13 @@ const FAITH_TERMS: FaithTerm[] = [
     catechismReferences: ['§142-184 (A Resposta do homem a Deus)', '§1814-1816 (A virtude da Fé)'],
     magisteriumReferences: ['Lumen Fidei (Papa Francisco)', 'Fides et Ratio (João Paulo II)']
   },
-  { term: 'Graça', definition: 'O dom gratuito de Deus que nos torna participantes da sua vida divina.', reference: 'Ef 2,8', category: 'Teologia' },
+  { 
+    term: 'Graça', 
+    definition: 'O dom gratuito de Deus que nos torna participantes da sua vida divina.', 
+    reference: 'Ef 2,8', 
+    category: 'Teologia',
+    journey_id: 'e7a1b2c3-d4e5-4000-8000-000000000001'
+  },
   { 
     term: 'Igreja', 
     definition: 'O Povo de Deus reunido em Cristo, Corpo Místico de Cristo.', 
@@ -135,11 +145,12 @@ const FAITH_TERMS: FaithTerm[] = [
     definition: 'O diálogo de amor entre o homem e Deus.', 
     reference: 'Mt 6,5-15', 
     category: 'Espiritualidade',
-    deepInterpretation: 'A oração é a elevação da alma a Deus ou o pedido a Deus de bens convenientes. É um dom da graça e uma resposta decidida da nossa parte. Sempre pressupõe um esperto: a oração é um combate contra nós mesmos e contra as astúcias do Tentador.',
+    deepInterpretation: 'A oração é a elevação da alma a Deus ou o pedido a Deus de bens convenientes. É um dom da graça e uma resposta decidida da nossa parte. Sempre pressupõe um esforço: a oração é um combate contra nós mesmos e contra as astúcias do Tentador.',
     practicalApplication: 'Estabelecer momentos fixos de oração diária, como o oferecimento do dia, o Rosário ou a Lectio Divina, cultivando a presença de Deus em meio às tarefas cotidianas.',
     bibleVerses: ['Mt 6,5-15 (O Pai Nosso)', 'Lc 18,1 (Orar sem cessar)', '1Ts 5,17 (Rezai sem interrupção)'],
     catechismReferences: ['§2558-2865 (A Oração Cristã)', '§2626-2643 (As formas de oração)'],
-    magisteriumReferences: ['Novo Millennio Ineunte n. 32-34 (A arte da oração)', 'Verbum Domini (Bento XVI)']
+    magisteriumReferences: ['Novo Millennio Ineunte n. 32-34 (A arte da oração)', 'Verbum Domini (Bento XVI)'],
+    journey_id: 'e7a1b2c3-d4e5-4000-8000-000000000003'
   },
   { term: 'Pecado', definition: 'Uma ofensa a Deus, uma falta contra a razão, a verdade e a consciência reta.', reference: 'Rm 3,23', category: 'Moral' },
   { term: 'Reino de Deus', definition: 'A soberania de Deus que se manifesta na justiça, paz e alegria.', reference: 'Mc 1,15', category: 'Ensinamentos' },
@@ -531,6 +542,26 @@ const AZFaithPage: React.FC = () => {
                           <p className="text-foreground/80 leading-relaxed font-medium">
                             {selectedTerm.practicalApplication}
                           </p>
+                        </div>
+                      )}
+
+                      {/* Journey Practical CTA */}
+                      {selectedTerm.journey_id && (
+                        <div className="bg-primary/10 border border-primary/20 rounded-[2rem] p-6 space-y-4 group/journey cursor-pointer hover:bg-primary/20 transition-all"
+                             onClick={() => navigate(`/jornadas/${selectedTerm.journey_id}`)}>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2 text-primary">
+                              <Compass className="h-5 w-5 animate-spin-slow" />
+                              <h4 className="text-xs font-black uppercase tracking-widest">Jornada Prática</h4>
+                            </div>
+                            <ArrowRight className="h-4 w-4 text-primary group-hover/journey:translate-x-1 transition-transform" />
+                          </div>
+                          <p className="text-foreground/80 leading-relaxed font-medium text-sm">
+                            Transforme este conhecimento em prática com uma jornada guiada de 3 dias.
+                          </p>
+                          <Button className="w-full bg-primary text-white rounded-full font-bold uppercase text-[10px] tracking-widest h-10">
+                            Iniciar Agora
+                          </Button>
                         </div>
                       )}
 
