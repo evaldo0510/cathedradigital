@@ -201,7 +201,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
             </div>
           </div>
 
-          <div className="flex-1 flex justify-end">
+          <div className="flex-1 flex justify-end items-center gap-3">
             {!showLogos && (
               <Button 
                 onClick={generateLogosReflection}
@@ -212,6 +212,12 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
                 Refletir com Logos
               </Button>
             )}
+            
+            <AudioContentPlayer 
+              text={`${saint.name}. ${saint.title}. ${saint.bio}. ${saint.fullBio || ''}. ${saint.quotes[0] || ''}.`}
+              title="Ouvir conteúdo"
+              className="h-9"
+            />
           </div>
 
           <ShareButton
