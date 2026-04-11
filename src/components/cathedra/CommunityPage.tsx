@@ -439,10 +439,26 @@ const CommunityPage: React.FC = () => {
       {showNewPost && (
         <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
           <h3 className="text-sm font-bold text-foreground">Nova Discussão</h3>
+          <div className="flex gap-2 flex-wrap mb-2">
+            {[
+              { id: 'teologia', label: '📖 Discussão' },
+              { id: 'testemunho', label: '✝ Testemunho' },
+              { id: 'partilha', label: '💬 Partilha' },
+            ].map(t => (
+              <button key={t.id} type="button" onClick={() => setNewCategory(t.id)}
+                className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                  newCategory === t.id ? 'bg-foreground text-background' : 'bg-muted text-muted-foreground hover:text-foreground'
+                }`}>
+                {t.label}
+              </button>
+            ))}
+          </div>
           <input
             value={newTitle}
             onChange={e => setNewTitle(e.target.value)}
-            placeholder="Título da discussão..."
+            placeholder={newCategory === 'testemunho' ? 'Título do testemunho...' : newCategory === 'partilha' ? 'O que deseja partilhar?' : 'Título da discussão...'}
+            className="w-full px-4 py-2.5 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+          />
             className="w-full px-4 py-2.5 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
           />
           <textarea
