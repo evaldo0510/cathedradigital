@@ -118,7 +118,7 @@ const FeaturesSection = ({ onNavigate }: FeaturesSectionProps) => {
         />
       </motion.div>
 
-      <div className="grid gap-8 md:grid-cols-2 relative z-10">
+      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4 relative z-10">
         {features.map((feature, idx) => (
           <FeatureCard key={feature.title} feature={feature} index={idx} onNavigate={onNavigate} />
         ))}

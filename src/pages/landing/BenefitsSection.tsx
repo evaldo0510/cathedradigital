@@ -42,7 +42,7 @@ const BenefitsSection = ({ onLogin }: BenefitsSectionProps) => {
             </p>
           </motion.div>
 
-          <div className="grid sm:grid-cols-2 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-4">
             {registerBenefits.map((benefit, i) => (
               <motion.div key={benefit.title} variants={cardHover} initial="rest" whileHover="hover" whileTap="tap">
                 <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} className="space-y-3 p-6 rounded-3xl bg-white/5 border border-white/10 cursor-pointer h-full">
