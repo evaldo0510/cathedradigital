@@ -18,7 +18,7 @@ const HowItWorksSection = () => {
 
   return (
     <section ref={sectionRef} className="w-full py-24 px-6 bg-muted/30 border-y border-border/20 relative overflow-hidden">
-      <div className="max-w-5xl mx-auto space-y-16">
+      <div className="max-w-7xl mx-auto space-y-16">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
