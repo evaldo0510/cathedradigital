@@ -54,6 +54,7 @@ export function detectCategories(text: string) {
     confusao: countMatches(text, CONFUSAO_KEYWORDS),
     dor_emocional: countMatches(text, DOR_EMOCIONAL_KEYWORDS),
     busca_espiritual: countMatches(text, BUSCA_ESPIRITUAL_KEYWORDS),
+    virtudes_e_missao: countMatches(text, VIRTUDES_E_MISSAO_KEYWORDS),
   };
 }
 
@@ -125,7 +126,21 @@ export function routeUser(reflectionText: string): RouteRecommendation[] {
           reason: 'Busque a união com Deus',
         });
         break;
-    }
+      case 'virtudes_e_missao':
+        routes.push({
+          route: AppRoute.TEMAS,
+          label: 'Tesouros da Fé',
+          icon: 'Tag',
+          reason: 'Aprofunde-se nos fundamentos teológicos',
+        });
+        routes.push({
+          route: AppRoute.SAINTS,
+          label: 'Caminho dos Santos',
+          icon: 'Star',
+          reason: 'Exemplos vivos de virtude',
+        });
+        break;
+      }
   }
 
   // If no keywords matched, give default suggestions
