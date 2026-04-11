@@ -439,14 +439,27 @@ const AdminDashboard: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <Card className="bg-primary/5 border-primary/20">
               <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <CardTitle className="text-sm font-medium">Receita Total</CardTitle>
+                <CardTitle className="text-sm font-medium">Receita Aprovada</CardTitle>
                 <DollarSign className="h-4 w-4 text-primary" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-primary">
                   {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(stats?.totalRevenue || 0)}
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">Acumulado bruto</p>
+                <p className="text-xs text-muted-foreground mt-1">Pagamentos confirmados</p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-amber-500/5 border-amber-500/20">
+              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                <CardTitle className="text-sm font-medium">Aguardando Pagto</CardTitle>
+                <Clock className="h-4 w-4 text-amber-500" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-amber-500">
+                  {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(stats?.pendingRevenue || 0)}
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">Transações pendentes</p>
               </CardContent>
             </Card>
 
