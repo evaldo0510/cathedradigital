@@ -128,7 +128,7 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
                 }`}
               >
                 {isSpeaking ? <Icons.Message className="w-4 h-4 animate-pulse" /> : <Icons.Volume2 className="w-4 h-4" />}
-                <span className="text-[10px] font-black uppercase tracking-widest">{isSpeaking ? 'Parar' : 'Ouvir'}</span>
+                <span className="text-[10px] font-black uppercase tracking-widest">{isSpeaking ? t('audio_stop') : t('audio_read')}</span>
               </button>
             </div>
 
