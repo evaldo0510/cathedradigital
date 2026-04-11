@@ -15,13 +15,15 @@ const fadeUp = {
 };
 
 const FREE_VS_PRO = [
+  { feature: 'Acesso Inicial e Introdução', free: true, pro: true },
   { feature: 'Bíblia completa', free: true, pro: true },
   { feature: 'Catecismo da Igreja', free: true, pro: true },
   { feature: 'Liturgia diária', free: true, pro: true },
   { feature: 'Santos do dia', free: true, pro: true },
   { feature: 'Rosário e orações', free: true, pro: true },
+  { feature: 'Aprofundamento e Continuidade', free: false, pro: true },
+  { feature: 'Conteúdos Avançados', free: false, pro: true },
   { feature: 'Colloquium IA', free: false, pro: true },
-  { feature: 'Modo de estudo avançado', free: false, pro: true },
   { feature: 'Trilhas de formação', free: false, pro: true },
   { feature: 'Badges exclusivos', free: false, pro: true },
   { feature: 'Sem anúncios', free: false, pro: true },

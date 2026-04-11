@@ -2,28 +2,31 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Check, BookOpen, Hand, PenLine, Sparkles, Clock, ChevronDown, X, ShieldQuestion } from 'lucide-react';
+import { ArrowLeft, Check, BookOpen, Hand, PenLine, Sparkles, Clock, ChevronDown, X, ShieldQuestion, Lock } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { Textarea } from '@/components/ui/textarea';
 import { Progress } from '@/components/ui/progress';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { saveUserPsychology } from '@/lib/psychologicalProfile';
+import { AppRoute } from '@/types';
 import ProConversionBanner from './ProConversionBanner';
 import { Icons } from '@/constants';
 
 const SECTION_CONFIG = [
-  { key: 'pch', label: 'Reflexão Profunda (PCH)', icon: <Sparkles className="w-4 h-4" /> },
-  { key: 'interpretation', label: 'Interpretação', icon: <BookOpen className="w-4 h-4" /> },
-  { key: 'practical_direction', label: 'Direção Prática', icon: <Hand className="w-4 h-4" /> },
-  { key: 'guided_exercise', label: 'Exercício Guiado', icon: <PenLine className="w-4 h-4" /> },
+  { key: 'intro', label: 'Acesso Inicial', icon: <BookOpen className="w-4 h-4" />, isPremium: false },
+  { key: 'interpretation', label: 'Introdução', icon: <Icons.Bible className="w-4 h-4" />, isPremium: false },
+  { key: 'pch', label: 'Aprofundamento', icon: <Sparkles className="w-4 h-4" />, isPremium: true },
+  { key: 'practical_direction', label: 'Continuidade', icon: <Hand className="w-4 h-4" />, isPremium: true },
+  { key: 'guided_exercise', label: 'Conteúdos Avançados', icon: <PenLine className="w-4 h-4" />, isPremium: true },
   
-  // Legacy mappings for existing content
-  { key: 'intro', label: 'Interpretação', icon: <BookOpen className="w-4 h-4" /> },
-  { key: 'reflection', label: 'Reflexão', icon: <PenLine className="w-4 h-4" /> },
-  { key: 'practice', label: 'Prática', icon: <Hand className="w-4 h-4" /> },
-  { key: 'prayer', label: 'Exercício', icon: <Sparkles className="w-4 h-4" /> },
-  { key: 'lectio', label: 'Leitura Orante', icon: <BookOpen className="w-4 h-4" /> },
+  // Legacy mappings for backward compatibility
+  { key: 'reflection', label: 'Aprofundamento', icon: <PenLine className="w-4 h-4" />, isPremium: true },
+  { key: 'practice', label: 'Continuidade', icon: <Hand className="w-4 h-4" />, isPremium: true },
+  { key: 'prayer', label: 'Conteúdos Avançados', icon: <Sparkles className="w-4 h-4" />, isPremium: true },
+  { key: 'lectio', label: 'Acesso Inicial', icon: <BookOpen className="w-4 h-4" />, isPremium: false },
 ];
 
 type UserLevelClass = 'iniciante' | 'intermediário' | 'avançado';
@@ -33,7 +36,7 @@ const JornadaStepPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const stepId = searchParams.get('step');
   const navigate = useNavigate();
-  const { user, profile, userLevel: userLevelClass } = useAuth();
+  const { user, profile, userLevel: userLevelClass, isPremium: isUserPremium } = useAuth();
 
   const [step, setStep] = useState<any>(null);
   const [journeyTitle, setJourneyTitle] = useState('');
@@ -249,11 +252,11 @@ const JornadaStepPage: React.FC = () => {
           </motion.div>
 
           {/* Content Sections */}
-          {SECTION_CONFIG.map(({ key, label, icon }, i) => {
+          {SECTION_CONFIG.map(({ key, label, icon, isPremium: sectionIsPremium }, i) => {
             const sectionContent = getVariantContent(key, content);
             if (!sectionContent) return null;
             const isExpanded = expandedSection === key;
-
+            const isLocked = sectionIsPremium && !isUserPremium;
 
             return (
               <motion.div
@@ -266,18 +269,25 @@ const JornadaStepPage: React.FC = () => {
                   onClick={() => toggleSection(key)}
                   className={`w-full flex items-center gap-3 p-4 rounded-t-2xl transition-all text-left ${
                     isExpanded
-                      ? 'bg-card border border-b-0 border-border'
+                      ? 'bg-card border border-b-0 border-border shadow-sm'
                       : 'bg-card border border-border rounded-b-2xl hover:border-primary/30'
-                  }`}
+                  } ${isLocked ? 'opacity-70' : ''}`}
                 >
                   <span className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                    isExpanded ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
+                    isExpanded ? 'bg-primary text-primary-foreground shadow-md' : 'bg-muted text-muted-foreground'
                   }`}>
-                    {icon}
+                    {isLocked ? <Lock className="w-4 h-4" /> : icon}
                   </span>
-                  <span className={`flex-1 text-sm font-bold ${isExpanded ? 'text-foreground' : 'text-muted-foreground'}`}>
-                    {label}
-                  </span>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className={`text-sm font-bold ${isExpanded ? 'text-foreground' : 'text-muted-foreground'}`}>
+                        {label}
+                      </span>
+                      {sectionIsPremium && (
+                        <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 text-[8px] uppercase font-black px-1.5 py-0">PRO</Badge>
+                      )}
+                    </div>
+                  </div>
                   <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
                 </button>
 
@@ -290,10 +300,36 @@ const JornadaStepPage: React.FC = () => {
                       transition={{ duration: 0.3 }}
                       className="overflow-hidden"
                     >
-                      <div className="bg-card border border-t-0 border-border rounded-b-2xl p-5">
-                        <p className={`text-sm text-foreground/90 leading-relaxed whitespace-pre-line font-serif ${key === 'pch' ? 'text-lg italic text-primary text-center' : ''}`}>
-                          {sectionContent}
-                        </p>
+                      <div className="bg-card border border-t-0 border-border rounded-b-2xl p-5 relative min-h-[140px]">
+                        {isLocked ? (
+                          <div className="space-y-4 py-4 text-center">
+                            <div className="blur-[6px] select-none pointer-events-none opacity-40">
+                              <p className="text-sm font-serif line-clamp-4">
+                                {sectionContent}
+                              </p>
+                            </div>
+                            <div className="absolute inset-0 flex flex-col items-center justify-center bg-card/40 backdrop-blur-[2px] p-6 space-y-4 rounded-b-2xl">
+                              <Sparkles className="w-8 h-8 text-primary animate-pulse" />
+                              <p className="text-sm font-bold text-foreground max-w-[180px] leading-relaxed">
+                                Continue aprofundando essa experiência
+                              </p>
+                              <Button 
+                                size="sm" 
+                                className="font-bold text-[10px] uppercase tracking-widest bg-primary hover:bg-primary/90 shadow-lg"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  navigate(AppRoute.PRICING);
+                                }}
+                              >
+                                Desbloquear PRO
+                              </Button>
+                            </div>
+                          </div>
+                        ) : (
+                          <p className={`text-sm text-foreground/90 leading-relaxed whitespace-pre-line font-serif ${key === 'pch' ? 'text-lg italic text-primary text-center' : ''}`}>
+                            {sectionContent}
+                          </p>
+                        )}
                       </div>
                     </motion.div>
                   )}
