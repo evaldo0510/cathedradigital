@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { DOMParser } from "https://deno.land/x/deno_dom@v0.1.36-alpha/deno-dom-wasm.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -19,42 +20,58 @@ serve(async (req) => {
     }
 
     const html = await response.text();
+    const doc = new DOMParser().parseFromString(html, "text/html");
     
-    // Simple parsing for Saint of the Day
-    // We look for the first <h2> inside the main content or similar
-    // Note: In a production environment, a more robust parser like deno-dom would be better
-    // but here we can use regex for simplicity if the structure is consistent.
-    
-    const titleMatch = html.match(/<h2[^>]*>(.*?)<\/h2>/);
-    const title = titleMatch ? titleMatch[1].replace(/<[^>]*>/g, '').trim() : "Santo do Dia";
-    
-    // Look for the first image in the article section
-    const imgMatch = html.match(/<section class="section">[\s\S]*?<img[^>]*src="([^"]*)"/i) || 
-                   html.match(/<img[^>]*src="([^"]*)"[^>]*class="[^"]*img-responsive[^"]*"/i) ||
-                   html.match(/<img[^>]*src="([^"]*)"/i);
-    let imageUrl = imgMatch ? imgMatch[1] : null;
-    
-    if (imageUrl && !imageUrl.startsWith('http')) {
-      imageUrl = `https://www.vaticannews.va${imageUrl}`;
+    if (!doc) {
+      throw new Error("Failed to parse HTML");
     }
 
-    // Look for description (usually the first <p> after the <h2> or title)
-    // Actually, Vatican News has a specific structure
-    const descMatch = html.match(/<div class="teaser">[\s\S]*?<p>(.*?)<\/p>/) || 
-                     html.match(/<div class="text">[\s\S]*?<p>(.*?)<\/p>/);
-    const description = descMatch ? descMatch[1].replace(/<[^>]*>/g, '').trim() : "";
+    // Vatican News structure for Saint of the Day
+    // The main content is usually inside .section or .article
+    const mainSection = doc.querySelector("main") || doc.querySelector(".section") || doc.querySelector(".article");
+    if (!mainSection) {
+        throw new Error("Main content section not found");
+    }
 
-    const linkMatch = html.match(/<a[^>]*href="([^"]*)"[^>]*class="[^"]*link-read-more[^"]*"/i);
-    let moreLink = linkMatch ? linkMatch[1] : vaticanUrl;
-    if (moreLink && !moreLink.startsWith('http')) {
-      moreLink = `https://www.vaticannews.va${moreLink}`;
+    // Find the first <h2> which is the Saint's name
+    // Exclude header menus if they use <h2>
+    const titleElement = mainSection.querySelector("h2");
+    const name = titleElement ? titleElement.textContent.trim() : "Santo do Dia";
+    
+    // Find the image
+    // Typically inside a <figure> or an <img> with class responsive-img
+    let imageUrl = null;
+    const imgElement = mainSection.querySelector("img.img-responsive") || 
+                      mainSection.querySelector("figure img") ||
+                      mainSection.querySelector("img");
+    
+    if (imgElement) {
+      const src = imgElement.getAttribute("src");
+      if (src) {
+        imageUrl = src.startsWith("http") ? src : `https://www.vaticannews.va${src}`;
+      }
+    }
+
+    // Find the description
+    // Often in a .teaser or the first <p>
+    const teaserElement = mainSection.querySelector(".teaser") || mainSection.querySelector(".text p") || mainSection.querySelector("p");
+    const description = teaserElement ? teaserElement.textContent.trim() : "";
+
+    // Find the more link
+    const linkElement = mainSection.querySelector("a.link-read-more") || mainSection.querySelector("a[href*='/santo-do-dia/']");
+    let moreLink = vaticanUrl;
+    if (linkElement) {
+      const href = linkElement.getAttribute("href");
+      if (href) {
+        moreLink = href.startsWith("http") ? href : `https://www.vaticannews.va${href}`;
+      }
     }
 
     return new Response(
       JSON.stringify({
-        name: title,
+        name,
         image: imageUrl,
-        description: description,
+        description,
         url: moreLink,
         source: "Vatican News"
       }),
