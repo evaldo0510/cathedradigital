@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import SEOHead from '@/components/SEOHead';
 import { Icons } from '../../constants';
@@ -13,14 +14,29 @@ import { ptBR } from 'date-fns/locale';
 const Saints: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedSaint, setSelectedSaint] = useState<Saint | null>(null);
+  const [autoReflect, setAutoReflect] = useState(false);
   const [search, setSearch] = useState('');
   const [viewMode, setViewMode] = useState<'daily' | 'search'>('daily');
+  const [searchParams] = useSearchParams();
+
+
+  const handleOpenSaint = (saint: Saint, shouldReflect: boolean = false) => {
+    setAutoReflect(shouldReflect);
+    setSelectedSaint(saint);
+  };
 
   const saintsForSelectedDate = useMemo(() => {
     const day = selectedDate.getDate();
     const month = selectedDate.getMonth() + 1;
     return SAINTS_DATA.filter(s => s.feastMonth === month && s.feastDayNum === day);
   }, [selectedDate]);
+
+  useEffect(() => {
+    const action = searchParams.get('action');
+    if (action === 'reflect' && saintsForSelectedDate.length > 0) {
+      handleOpenSaint(saintsForSelectedDate[0], true);
+    }
+  }, [searchParams, saintsForSelectedDate]);
 
   const filteredSaints = useMemo(() => {
     if (!search.trim()) return [];
@@ -203,13 +219,23 @@ const Saints: React.FC = () => {
                             </div>
                           </div>
 
-                          <button
-                            onClick={() => setSelectedSaint(saint)}
-                            className="w-full py-4 bg-foreground text-background rounded-2xl text-xs font-black uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg shadow-foreground/10"
-                          >
-                            <BookOpen className="w-4 h-4" />
-                            Explorar Vida e Reflexão
-                          </button>
+                          <div className="flex flex-col gap-3">
+                            <button
+                              onClick={() => handleOpenSaint(saint, false)}
+                              className="w-full py-4 bg-secondary text-secondary-foreground rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                            >
+                              <BookOpen className="w-4 h-4" />
+                              Conhecer História
+                            </button>
+
+                            <button
+                              onClick={() => handleOpenSaint(saint, true)}
+                              className="w-full py-4 bg-primary text-primary-foreground rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20 group"
+                            >
+                              <Sparkles className="w-4 h-4 group-hover:rotate-12 transition-transform" />
+                              Refletir com Logos
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </motion.div>
@@ -262,7 +288,7 @@ const Saints: React.FC = () => {
                     {filteredSaints.map(saint => (
                       <button
                         key={saint.id}
-                        onClick={() => setSelectedSaint(saint)}
+                        onClick={() => handleOpenSaint(saint, false)}
                         className="group p-8 bg-card border border-border rounded-[2rem] hover:border-primary/50 hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 text-left flex flex-col h-full"
                       >
                         <div className="flex-1">
@@ -303,6 +329,7 @@ const Saints: React.FC = () => {
             <SaintDetail 
               saint={selectedSaint} 
               onClose={() => setSelectedSaint(null)} 
+              autoReflect={autoReflect}
             />
           )}
         </AnimatePresence>

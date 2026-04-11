@@ -394,12 +394,20 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
                   </p>
                   <h3 className="text-base md:text-xl font-serif font-bold text-foreground leading-tight">{saintOfDay.name}</h3>
                   <p className="text-xs md:text-sm text-muted-foreground font-serif italic line-clamp-3 leading-relaxed">"{saintOfDay.quotes[0]}"</p>
-                  <button
-                    onClick={() => goTo(AppRoute.SAINTS)}
-                    className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-primary hover:underline pt-2"
-                  >
-                    Conhecer <Icons.ChevronRight className="w-3 h-3" />
-                  </button>
+                  <div className="flex gap-4 pt-4">
+                    <button
+                      onClick={() => goTo(`${AppRoute.SAINTS}`)}
+                      className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      História <Icons.ChevronRight className="w-3 h-3" />
+                    </button>
+                    <button
+                      onClick={() => goTo(`${AppRoute.SAINTS}?action=reflect`)}
+                      className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-primary hover:scale-[1.02] active:scale-[0.98] transition-all bg-primary/5 px-3 py-1.5 rounded-lg border border-primary/10"
+                    >
+                      Refletir com Logos <Icons.Sparkles className="w-3 h-3" />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
