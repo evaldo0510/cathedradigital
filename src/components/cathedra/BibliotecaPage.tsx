@@ -12,56 +12,56 @@ const sections = [
   {
     title: 'Bíblia',
     description: 'Antigo e Novo Testamento com busca e anotações',
-    icon: <Icons.Bible className="w-6 h-6" />,
+    icon: <Icons.Bible className="w-5 h-5" />,
     route: AppRoute.BIBLE,
     color: 'bg-primary/10 text-primary',
   },
   {
     title: 'Temas',
     description: 'Navegação inteligente por conexões teológicas',
-    icon: <Icons.Tag className="w-6 h-6" />,
+    icon: <Icons.Tag className="w-5 h-5" />,
     route: AppRoute.TEMAS,
     color: 'bg-accent/10 text-accent',
   },
   {
     title: 'Liturgia',
     description: 'Liturgia do dia, Missal e Orações',
-    icon: <Icons.Liturgy className="w-6 h-6" />,
+    icon: <Icons.Liturgy className="w-5 h-5" />,
     route: AppRoute.LITURGIA,
     color: 'bg-primary/10 text-primary',
   },
   {
     title: 'Catecismo',
     description: 'Doutrina católica organizada por parágrafos',
-    icon: <Icons.Catechism className="w-6 h-6" />,
+    icon: <Icons.Catechism className="w-5 h-5" />,
     route: AppRoute.CATECHISM,
     color: 'bg-accent/10 text-accent',
   },
   {
     title: 'Magistério',
     description: 'Encíclicas, exortações e documentos pontifícios',
-    icon: <Icons.Magisterium className="w-6 h-6" />,
+    icon: <Icons.Magisterium className="w-5 h-5" />,
     route: AppRoute.MAGISTERIUM,
     color: 'bg-primary/10 text-primary',
   },
   {
     title: 'Santos',
     description: 'Vidas, escritos e ensinamentos dos santos',
-    icon: <Icons.Saints className="w-6 h-6" />,
+    icon: <Icons.Saints className="w-5 h-5" />,
     route: AppRoute.SAINTS,
     color: 'bg-accent/10 text-accent',
   },
   {
     title: 'Aquinas',
     description: 'A obra-prima de Santo Tomás de Aquino',
-    icon: <Icons.Aquinas className="w-6 h-6" />,
+    icon: <Icons.Aquinas className="w-5 h-5" />,
     route: AppRoute.AQUINAS_OPERA,
     color: 'bg-primary/10 text-primary',
   },
   {
     title: 'Glossário',
     description: 'Termos e conceitos da teologia católica',
-    icon: <Icons.Glossary className="w-6 h-6" />,
+    icon: <Icons.Glossary className="w-5 h-5" />,
     route: AppRoute.GLOSSARY,
     color: 'bg-accent/10 text-accent',
   },
@@ -79,7 +79,7 @@ const BibliotecaPage: React.FC = () => {
   return (
     <div className="space-y-6 max-w-2xl mx-auto pb-24">
       <div className="text-center space-y-2">
-        <Icons.Compass className="w-10 h-10 mx-auto text-primary" />
+        <Icons.Compass className="w-8 h-8 mx-auto text-primary" />
         <h1 className="text-2xl font-bold font-serif text-foreground">Explorar</h1>
         <p className="text-sm text-muted-foreground">Mergulhe na profundidade da tradição católica.</p>
       </div>
@@ -119,7 +119,7 @@ const BibliotecaPage: React.FC = () => {
               >
                 <Card className="hover:border-primary/40 transition-all group h-full overflow-hidden bg-white/5 border-white/10">
                   <CardContent className="p-5 flex flex-col items-center text-center space-y-3 h-full justify-center">
-                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 ${section.color} transition-transform group-hover:scale-110 duration-300`}>
+                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 ${section.color} transition-transform group-hover:scale-110 duration-300`}>
                       {section.icon}
                     </div>
                     <div className="space-y-1">
