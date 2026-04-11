@@ -161,10 +161,10 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
               <thead className="sticky top-0 bg-card z-10">
                 <tr className="border-b border-border">
                   <th className="text-left p-3 font-semibold">Usuário</th>
+                  <th className="text-center p-3 font-semibold">Plano</th>
                   <th className="text-center p-3 font-semibold">Segmento</th>
                   <th className="text-center p-3 font-semibold hidden md:table-cell">Reflexões</th>
                   <th className="text-center p-3 font-semibold hidden lg:table-cell">Jornada</th>
-                  <th className="text-center p-3 font-semibold hidden lg:table-cell">Freq.</th>
                   <th className="text-center p-3 font-semibold hidden md:table-cell">Última Ativ.</th>
                   <th className="text-center p-3 font-semibold">Ações</th>
                 </tr>
