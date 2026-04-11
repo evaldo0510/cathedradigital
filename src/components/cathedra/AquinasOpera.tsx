@@ -296,14 +296,43 @@ const AquinasOpera: React.FC = () => {
               </div>
             </div>
 
+            {/* Viral Content Section */}
+            <div className="bg-card border border-border rounded-3xl p-8 space-y-6">
+              <div className="flex items-center gap-2">
+                <Icons.Sparkles className="w-5 h-5 text-secondary" />
+                <h3 className="text-xl font-serif font-bold text-foreground">Pílulas de Sabedoria (Viral)</h3>
+              </div>
+              <p className="text-sm text-muted-foreground font-serif italic">Use estes ganchos para impactar sua audiência e posicionar sua autoridade.</p>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="p-5 bg-muted/50 rounded-2xl border border-border hover:border-primary/30 transition-all">
+                  <p className="text-xs font-black uppercase tracking-widest text-primary mb-2">Exemplo 1</p>
+                  <p className="text-sm font-serif">“Você acha que precisa ver para acreditar… Mas Aquino diria: você já acredita em coisas que nunca viu.”</p>
+                </div>
+                <div className="p-5 bg-muted/50 rounded-2xl border border-border hover:border-primary/30 transition-all">
+                  <p className="text-xs font-black uppercase tracking-widest text-primary mb-2">Exemplo 2</p>
+                  <p className="text-sm font-serif">“Você não está perdido… Só está tentando preencher o infinito com coisas finitas.”</p>
+                </div>
+                <div className="p-5 bg-muted/50 rounded-2xl border border-border hover:border-primary/30 transition-all">
+                  <p className="text-xs font-black uppercase tracking-widest text-primary mb-2">Exemplo 3</p>
+                  <p className="text-sm font-serif">“O problema não é falta de resposta… é ignorar o que você já sabe.”</p>
+                </div>
+                <div className="p-5 bg-primary/5 rounded-2xl border border-primary/20 flex flex-col justify-center items-center text-center">
+                  <Icons.Video className="w-6 h-6 text-primary mb-2" />
+                  <p className="text-[10px] font-black uppercase tracking-widest text-primary">30 Dias de Trilha</p>
+                  <p className="text-[10px] text-muted-foreground mt-1">Gere 2 vídeos/dia</p>
+                </div>
+              </div>
+            </div>
+
             {/* AI Interaction Button */}
             <div className="text-center space-y-4">
-              <p className="text-muted-foreground font-serif italic">Tem alguma dúvida sobre os ensinamentos de Aquino?</p>
+              <p className="text-muted-foreground font-serif italic">Dúvidas sobre o domínio intelectual?</p>
               <button
                 onClick={handleStartAquinasChat}
-                className="inline-flex items-center gap-3 px-8 py-4 bg-primary/10 text-primary rounded-2xl font-bold hover:bg-primary/20 transition-all group"
+                className="inline-flex items-center gap-3 px-8 py-4 bg-primary text-primary-foreground rounded-2xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all group shadow-lg shadow-primary/20"
               >
-                <Icons.Brain className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                <Icons.Brain className="w-5 h-5" />
                 Interagir com IARA (Modo Aquino)
               </button>
             </div>
