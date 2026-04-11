@@ -34,6 +34,10 @@ const ProfilePage: React.FC = () => {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [estado, setEstado] = useState('');
+  const [diocese, setDiocese] = useState('');
+  const [paroquia, setParoquia] = useState('');
+  const [movimentoPastoral, setMovimentoPastoral] = useState('');
   const [stats, setStats] = useState({ posts: 0, likes: 0, notes: 0, daysActive: 0 });
   const [showLevelUp, setShowLevelUp] = useState(false);
   const prevLevelRef = useRef<number | null>(null);
