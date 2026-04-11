@@ -261,7 +261,23 @@ const AppLayout: React.FC = () => {
     utterance.onerror = () => setIsSpeaking(false);
     
     window.speechSynthesis.speak(utterance);
-  }, [lang]);
+  useEffect(() => {
+    const handleAudioToggle = () => toggleSpeak();
+    window.addEventListener('toggle-audio' as any, handleAudioToggle);
+    return () => window.removeEventListener('toggle-audio' as any, handleAudioToggle);
+  }, [toggleSpeak]);
+
+  const [isSpeakingState, setIsSpeakingState] = useState(false);
+  useEffect(() => {
+    // Sync external state with the internal one (since it might change outside React)
+    const timer = setInterval(() => {
+      if (window.speechSynthesis.speaking !== isSpeakingState) {
+        setIsSpeakingState(window.speechSynthesis.speaking);
+      }
+    }, 500);
+    return () => clearInterval(timer);
+  }, [isSpeakingState]);
+
 
   useEffect(() => {
     if (location.pathname !== AppRoute.LOGIN || loading || !user) return;
