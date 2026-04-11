@@ -2,6 +2,7 @@ import { motion, MotionValue } from "framer-motion";
 import { Icons } from "@/constants";
 import { Button } from "@/components/ui/button";
 import { buttonHover } from "../animations";
+import logosAvatar from "@/assets/logos-avatar.png";
 
 const EASE = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
@@ -44,25 +45,33 @@ const HeroContent = ({ heroOpacity, heroScale, heroY, onStart, onAbout }: HeroCo
     style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
     className="relative z-10 max-w-5xl text-center space-y-8 sm:space-y-12 px-4"
   >
-    {/* Logos Visual Highlight */}
+    {/* Logos Avatar */}
     <motion.div
-      initial={{ opacity: 0, scale: 0.5, rotate: -10 }}
-      animate={{ opacity: 1, scale: 1, rotate: 0 }}
+      initial={{ opacity: 0, scale: 0.5 }}
+      animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 1, delay: 0.5, ease: EASE }}
       className="flex justify-center"
     >
       <div className="relative group">
-        <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full group-hover:bg-primary/30 transition-colors duration-700 animate-pulse-slow" />
-        <div className="relative p-8 rounded-[2.5rem] bg-card/40 backdrop-blur-2xl border border-primary/20 shadow-2xl group-hover:border-primary/40 transition-all duration-500">
-          <Icons.Sparkles className="w-16 h-16 sm:w-20 sm:h-20 text-primary" />
-        </div>
+        <div className="absolute inset-0 bg-secondary/20 blur-3xl rounded-full group-hover:bg-secondary/30 transition-colors duration-700 animate-pulse-slow" />
+        <motion.div
+          animate={{ y: [0, -6, 0] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          className="relative"
+        >
+          <div className="relative w-28 h-28 sm:w-36 sm:h-36 rounded-full overflow-hidden border-[3px] border-secondary/40 shadow-2xl group-hover:border-secondary/60 transition-all duration-500 bg-card/60 backdrop-blur-xl">
+            <img src={logosAvatar} alt="Logos — Mestre Contemplativo" className="w-full h-full object-cover" />
+          </div>
+          {/* Subtle halo glow */}
+          <div className="absolute -inset-3 rounded-full bg-gradient-to-b from-secondary/15 via-transparent to-transparent -z-10 blur-md" />
+        </motion.div>
         <motion.div 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.2 }}
-          className="absolute -bottom-5 left-1/2 -translate-x-1/2 px-6 py-2 rounded-full bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-[0.3em] whitespace-nowrap border-[6px] border-background shadow-2xl"
+          className="absolute -bottom-6 left-1/2 -translate-x-1/2 px-5 py-1.5 rounded-full bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-[0.3em] whitespace-nowrap border-[4px] border-background shadow-2xl"
         >
-          Logos Inteligência Artificial
+          Logos · Mestre Contemplativo
         </motion.div>
       </div>
     </motion.div>
