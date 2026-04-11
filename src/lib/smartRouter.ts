@@ -27,7 +27,7 @@ const CONFUSAO_KEYWORDS = [
 const DOR_EMOCIONAL_KEYWORDS = [
   'dor', 'sofrimento', 'tristeza', 'triste', 'angústia', 'angustia', 'culpa', 'culpado',
   'culpada', 'medo', 'temor', 'vazio', 'solidão', 'solidao', 'ferida', 'ferido',
-  'ferida', 'abandono', 'abandonado', 'rejeição', 'rejeitado', 'desespero',
+  'ferida', 'abandono', 'abandonado', 'rejeição', 'rejeitado', 'desespero', 'sofrer',
 ];
 
 const BUSCA_ESPIRITUAL_KEYWORDS = [
@@ -35,6 +35,12 @@ const BUSCA_ESPIRITUAL_KEYWORDS = [
   'profunda', 'propósito', 'proposito', 'Deus', 'Jesus', 'Espírito', 'espirito',
   'oração', 'oracao', 'alma', 'interior', 'transcendência', 'transcendencia',
   'busca', 'buscando', 'encontrar', 'verdade',
+];
+
+const VIRTUDES_E_MISSAO_KEYWORDS = [
+  'fé', 'fe', 'esperança', 'esperanca', 'caridade', 'virtude', 'santidade', 'santo', 'santa',
+  'humildade', 'humilde', 'missão', 'missao', 'vocação', 'vocacao', 'chamado', 'perdão',
+  'perdao', 'misericórdia', 'misericordia', 'amor', 'caridade',
 ];
 
 function countMatches(text: string, keywords: string[]): number {
@@ -48,6 +54,7 @@ export function detectCategories(text: string) {
     confusao: countMatches(text, CONFUSAO_KEYWORDS),
     dor_emocional: countMatches(text, DOR_EMOCIONAL_KEYWORDS),
     busca_espiritual: countMatches(text, BUSCA_ESPIRITUAL_KEYWORDS),
+    virtudes_e_missao: countMatches(text, VIRTUDES_E_MISSAO_KEYWORDS),
   };
 }
 
@@ -119,7 +126,21 @@ export function routeUser(reflectionText: string): RouteRecommendation[] {
           reason: 'Busque a união com Deus',
         });
         break;
-    }
+      case 'virtudes_e_missao':
+        routes.push({
+          route: AppRoute.TEMAS,
+          label: 'Tesouros da Fé',
+          icon: 'Tag',
+          reason: 'Aprofunde-se nos fundamentos teológicos',
+        });
+        routes.push({
+          route: AppRoute.SAINTS,
+          label: 'Caminho dos Santos',
+          icon: 'Star',
+          reason: 'Exemplos vivos de virtude',
+        });
+        break;
+      }
   }
 
   // If no keywords matched, give default suggestions
