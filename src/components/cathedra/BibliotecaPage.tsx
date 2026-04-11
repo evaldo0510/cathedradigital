@@ -2,59 +2,60 @@ import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { prefetchRoute } from '@/lib/prefetch';
 import { motion } from 'framer-motion';
-import { BookOpen, Shield, ScrollText, Users, BookMarked, Crown, ChevronRight, Library, Search } from 'lucide-react';
+import { ChevronRight, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { AppRoute } from '@/types';
+import { Icons } from '@/constants';
 
 const sections = [
   {
     title: 'Bíblia Sagrada',
     description: 'Antigo e Novo Testamento com busca e anotações',
-    icon: <BookOpen className="w-6 h-6" />,
+    icon: <Icons.Bible className="w-6 h-6" />,
     route: AppRoute.BIBLE,
     color: 'bg-primary/10 text-primary',
   },
   {
-    title: 'Catecismo da Igreja',
-    description: 'Doutrina católica organizada por parágrafos',
-    icon: <Shield className="w-6 h-6" />,
-    route: AppRoute.CATECHISM,
+    title: 'Liturgia',
+    description: 'Liturgia das Horas, Missal e Orações',
+    icon: <Icons.Liturgy className="w-6 h-6" />,
+    route: AppRoute.LITURGIA,
     color: 'bg-accent/10 text-accent',
+  },
+  {
+    title: 'Catecismo',
+    description: 'Doutrina católica organizada por parágrafos',
+    icon: <Icons.Catechism className="w-6 h-6" />,
+    route: AppRoute.CATECHISM,
+    color: 'bg-primary/10 text-primary',
   },
   {
     title: 'Magistério',
     description: 'Encíclicas, exortações e documentos pontifícios',
-    icon: <ScrollText className="w-6 h-6" />,
+    icon: <Icons.Magisterium className="w-6 h-6" />,
     route: AppRoute.MAGISTERIUM,
-    color: 'bg-primary/10 text-primary',
+    color: 'bg-accent/10 text-accent',
   },
   {
     title: 'Santos',
     description: 'Vidas, escritos e ensinamentos dos santos',
-    icon: <Users className="w-6 h-6" />,
+    icon: <Icons.Saints className="w-6 h-6" />,
     route: AppRoute.SAINTS,
-    color: 'bg-accent/10 text-accent',
-  },
-  {
-    title: 'Dogmas',
-    description: 'Verdades de fé definidas pela Igreja',
-    icon: <Crown className="w-6 h-6" />,
-    route: AppRoute.DOGMAS,
     color: 'bg-primary/10 text-primary',
   },
   {
-    title: 'Glossário Teológico',
-    description: 'Termos e conceitos da teologia católica',
-    icon: <BookMarked className="w-6 h-6" />,
-    route: AppRoute.GLOSSARY,
+    title: 'Aquinas (Suma)',
+    description: 'A obra-prima de Santo Tomás de Aquino',
+    icon: <Icons.Aquinas className="w-6 h-6" />,
+    route: AppRoute.AQUINAS_OPERA,
     color: 'bg-accent/10 text-accent',
   },
   {
-    title: 'Suma Teológica',
-    description: 'A obra-prima de Santo Tomás de Aquino',
-    icon: <Library className="w-6 h-6" />,
-    route: AppRoute.AQUINAS_OPERA,
+    title: 'Glossário',
+    description: 'Termos e conceitos da teologia católica',
+    icon: <Icons.Glossary className="w-6 h-6" />,
+    route: AppRoute.GLOSSARY,
     color: 'bg-primary/10 text-primary',
   },
 ];
@@ -71,9 +72,9 @@ const BibliotecaPage: React.FC = () => {
   return (
     <div className="space-y-6 max-w-2xl mx-auto pb-24">
       <div className="text-center space-y-2">
-        <Library className="w-10 h-10 mx-auto text-primary" />
-        <h1 className="text-2xl font-bold font-serif text-foreground">Biblioteca</h1>
-        <p className="text-sm text-muted-foreground">Todo o acervo da fé católica ao seu alcance.</p>
+        <Icons.Compass className="w-10 h-10 mx-auto text-primary" />
+        <h1 className="text-2xl font-bold font-serif text-foreground">Explorar</h1>
+        <p className="text-sm text-muted-foreground">Mergulhe na profundidade da tradição católica.</p>
       </div>
 
       <div className="relative">

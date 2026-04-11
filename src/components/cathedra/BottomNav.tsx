@@ -83,11 +83,11 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   const triggerRipple = useRipple();
 
   const items = [
-    { label: 'Hoje', icon: <Icons.Liturgy />, route: AppRoute.HOJE },
-    { label: 'Jornadas', icon: <Icons.Journeys />, route: AppRoute.JORNADAS },
-    { label: 'Biblioteca', icon: <Icons.Bible />, route: AppRoute.BIBLIOTECA },
-    { label: 'Tudo', icon: <Icons.Menu />, route: '__sidebar__' },
-    { label: 'Perfil', icon: <Icons.Users />, route: AppRoute.PROFILE },
+    { label: 'Início', icon: <Icons.Home />, route: AppRoute.HOJE },
+    { label: 'Jornada', icon: <Icons.Journeys />, route: AppRoute.JORNADAS },
+    { label: 'Explorar', icon: <Icons.Search />, route: AppRoute.BIBLIOTECA },
+    { label: 'Comunidade', icon: <Icons.Community />, route: AppRoute.COMMUNITY },
+    { label: 'Perfil', icon: <Icons.User />, route: AppRoute.PROFILE },
   ];
 
   return (
@@ -99,13 +99,9 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
             label={item.label}
             icon={item.icon}
             route={item.route}
-            isActive={item.route !== '__sidebar__' && (currentPath === item.route || (item.route === AppRoute.BIBLIOTECA && [AppRoute.BIBLE, AppRoute.CATECHISM, AppRoute.MAGISTERIUM, AppRoute.SAINTS].includes(currentPath as AppRoute)))}
+            isActive={currentPath === item.route || (item.route === AppRoute.BIBLIOTECA && [AppRoute.BIBLE, AppRoute.CATECHISM, AppRoute.MAGISTERIUM, AppRoute.SAINTS, AppRoute.LITURGIA, AppRoute.AQUINAS_OPERA, AppRoute.GLOSSARY].includes(currentPath as AppRoute))}
             onClick={() => {
-              if (item.route === '__sidebar__') {
-                onOpenSidebar();
-              } else {
-                navigate(item.route);
-              }
+              navigate(item.route);
             }}
             onRipple={triggerRipple}
           />
