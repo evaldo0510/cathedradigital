@@ -555,6 +555,20 @@ const AdminDashboard: React.FC = () => {
           </Suspense>
         </TabsContent>
 
+        {/* Content Tab */}
+        <TabsContent value="content" className="space-y-4">
+          <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
+            <AdminContentTab />
+          </Suspense>
+        </TabsContent>
+
+        {/* Journeys Tab */}
+        <TabsContent value="journeys" className="space-y-4">
+          <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
+            <AdminJourneysTab />
+          </Suspense>
+        </TabsContent>
+
         {/* Users Tab */}
         <TabsContent value="users" className="space-y-4">
           <div className="flex items-center gap-3">
