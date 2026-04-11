@@ -4,6 +4,30 @@ import { Icons } from '../../constants';
 import SEOHead from '@/components/SEOHead';
 import { AppRoute } from '@/types';
 import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Book, 
+  Bookmark, 
+  FileText, 
+  Tag, 
+  Loader2, 
+  ChevronRight, 
+  Hash, 
+  Search, 
+  X, 
+  BookOpen, 
+  Quote, 
+  Info, 
+  Zap,
+  ArrowRight,
+  Sparkles,
+  Brain,
+  Globe,
+  Target
+} from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface FaithTerm {
   term: string;
@@ -111,7 +135,7 @@ const FAITH_TERMS: FaithTerm[] = [
     definition: 'O diálogo de amor entre o homem e Deus.', 
     reference: 'Mt 6,5-15', 
     category: 'Espiritualidade',
-    deepInterpretation: 'A oração é a elevação da alma a Deus ou o pedido a Deus de bens convenientes. É um dom da graça e uma resposta decidida da nossa parte. Sempre pressupõe um esforço: a oração é um combate contra nós mesmos e contra as astúcias do Tentador.',
+    deepInterpretation: 'A oração é a elevação da alma a Deus ou o pedido a Deus de bens convenientes. É um dom da graça e uma resposta decidida da nossa parte. Sempre pressupõe um esperto: a oração é um combate contra nós mesmos e contra as astúcias do Tentador.',
     practicalApplication: 'Estabelecer momentos fixos de oração diária, como o oferecimento do dia, o Rosário ou a Lectio Divina, cultivando a presença de Deus em meio às tarefas cotidianas.',
     bibleVerses: ['Mt 6,5-15 (O Pai Nosso)', 'Lc 18,1 (Orar sem cessar)', '1Ts 5,17 (Rezai sem interrupção)'],
     catechismReferences: ['§2558-2865 (A Oração Cristã)', '§2626-2643 (As formas de oração)'],
@@ -121,7 +145,6 @@ const FAITH_TERMS: FaithTerm[] = [
   { term: 'Reino de Deus', definition: 'A soberania de Deus que se manifesta na justiça, paz e alegria.', reference: 'Mc 1,15', category: 'Ensinamentos' },
   { term: 'Salvação', definition: 'A libertação do pecado e a vida eterna oferecidas por Cristo.', reference: 'At 4,12', category: 'Soteriologia' },
   { term: 'Trindade', definition: 'O mistério de um só Deus em três pessoas distintas: Pai, Filho e Espírito Santo.', reference: 'Mt 28,19', category: 'Teologia' },
-  // Adding more terms to fill the alphabet a bit more
   { term: 'Beatitude', definition: 'O estado de suprema felicidade e bem-aventurança na presença de Deus.', reference: 'Mt 5,3', category: 'Teologia' },
   { term: 'Caridade', definition: 'A virtude teologal pela qual amamos a Deus sobre todas as coisas e ao próximo como a nós mesmos.', reference: '1Cor 13', category: 'Virtudes' },
   { term: 'Dogma', definition: 'Verdade de fé infalivelmente definida pela Igreja.', reference: 'Catecismo §88', category: 'Doutrina' },
@@ -186,11 +209,10 @@ const FAITH_TERMS: FaithTerm[] = [
 const AZFaithPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedLetter, setSelectedLetter] = useState<string | null>(null);
-  const [expandedTerm, setExpandedTerm] = useState<string | null>(null);
+  const [selectedLetter, setSelectedLetter] = useState<string | null>('A');
+  const [selectedTerm, setSelectedTerm] = useState<FaithTerm | null>(null);
   
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-  
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const filteredTerms = useMemo(() => {
@@ -200,33 +222,29 @@ const AZFaithPage: React.FC = () => {
       const q = searchQuery.toLowerCase();
       result = result.filter(t => 
         t.term.toLowerCase().includes(q) || 
-        t.definition.toLowerCase().includes(q)
+        t.definition.toLowerCase().includes(q) ||
+        t.category?.toLowerCase().includes(q)
       );
-    }
-    
-    if (selectedLetter) {
+    } else if (selectedLetter) {
       result = result.filter(t => t.term.toUpperCase().startsWith(selectedLetter));
     }
     
     return result.sort((a, b) => a.term.localeCompare(b.term));
   }, [searchQuery, selectedLetter]);
 
-  const groupedTerms = useMemo(() => {
-    const groups: Record<string, FaithTerm[]> = {};
-    filteredTerms.forEach(t => {
-      const firstLetter = t.term[0].toUpperCase();
-      if (!groups[firstLetter]) groups[firstLetter] = [];
-      groups[firstLetter].push(t);
-    });
-    return groups;
-  }, [filteredTerms]);
-
   const handleLetterClick = (letter: string) => {
-    if (selectedLetter === letter) {
-      setSelectedLetter(null);
-    } else {
-      setSelectedLetter(letter);
-      setSearchQuery('');
+    setSelectedLetter(letter);
+    setSearchQuery('');
+    setSelectedTerm(null);
+  };
+
+  const handleTermClick = (term: FaithTerm) => {
+    setSelectedTerm(selectedTerm?.term === term.term ? null : term);
+    // Smooth scroll to content area if on mobile
+    if (window.innerWidth < 768) {
+      setTimeout(() => {
+        document.getElementById('term-content')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
     }
   };
 
@@ -234,261 +252,313 @@ const AZFaithPage: React.FC = () => {
     <>
       <SEOHead 
         title="A–Z da Fé | Cathedra" 
-        description="Explore o índice alfabético de termos bíblicos e teológicos da Bíblia Ave Maria. Uma ferramenta interativa para aprofundar seu conhecimento da fé."
+        description="Explore o índice alfabético de termos bíblicos e teológicos da Bíblia Ave Maria através de um sistema intuitivo de bolhas."
         path="/az-faith"
       />
       
-      <div className="max-w-4xl mx-auto space-y-6 pb-20">
+      <div className="max-w-5xl mx-auto space-y-10 pb-24 animate-in fade-in slide-in-from-bottom-4 duration-500 px-4 md:px-0">
         {/* Header */}
-        <div className="text-center space-y-2 pt-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full mb-2">
-            <Icons.BookOpen className="w-3.5 h-3.5 text-primary" />
-            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Índice Bíblico Ave Maria</span>
+        <header className="text-center space-y-4 pt-6">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/5 rounded-full border border-primary/10 mb-2">
+            <BookOpen className="w-4 h-4 text-primary" />
+            <span className="text-[10px] font-black uppercase tracking-widest text-primary">Índice Alfabético da Fé</span>
           </div>
-          <h1 className="text-3xl md:text-4xl font-serif font-bold text-foreground">A–Z da Fé</h1>
-          <p className="text-muted-foreground text-sm max-w-md mx-auto italic font-serif">
-            Explore os fundamentos da nossa crença, de Gênesis ao Apocalipse.
+          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
+            A–Z da Fé
+          </h1>
+          <p className="text-muted-foreground text-lg max-w-2xl mx-auto font-medium">
+            Navegue pelos conceitos fundamentais da doutrina católica através do nosso sistema de temas integrados.
           </p>
-        </div>
+        </header>
 
-        {/* Search Bar */}
-        <div className="relative group max-w-md mx-auto">
-          <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
-          <input
-            type="text"
-            placeholder="Buscar termo ou conceito..."
-            value={searchQuery}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-              setSelectedLetter(null);
-            }}
-            className="w-full pl-11 pr-4 py-3 bg-card border border-border rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all text-sm"
-          />
-          {searchQuery && (
-            <button 
-              onClick={() => setSearchQuery('')}
-              className="absolute right-4 top-1/2 -translate-y-1/2"
-            >
-              <Icons.X className="w-4 h-4 text-muted-foreground" />
-            </button>
-          )}
-        </div>
-
-        {/* Alphabet Navigation */}
-        <div className="flex flex-wrap justify-center gap-1.5 py-4">
-          {alphabet.map(letter => {
-            const hasTerms = FAITH_TERMS.some(t => t.term.toUpperCase().startsWith(letter));
-            return (
-              <button
-                key={letter}
-                onClick={() => handleLetterClick(letter)}
-                disabled={!hasTerms && !selectedLetter}
-                className={`w-8 h-8 flex items-center justify-center rounded-lg text-[10px] font-black transition-all
-                  ${selectedLetter === letter 
-                    ? 'bg-primary text-primary-foreground shadow-md scale-110' 
-                    : hasTerms 
-                      ? 'bg-card border border-border text-foreground hover:border-primary/50' 
-                      : 'opacity-30 cursor-not-allowed'}`}
-              >
-                {letter}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* List of Terms */}
-        <div className="space-y-8 mt-4">
-          <AnimatePresence mode="popLayout">
-            {Object.entries(groupedTerms).length > 0 ? (
-              Object.entries(groupedTerms).sort().map(([letter, terms]) => (
-                <motion.div 
-                  key={letter}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  className="space-y-3"
+        {/* Search & Alphabet Integration */}
+        <div className="space-y-6">
+          <div className="relative group max-w-xl mx-auto">
+            <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-transparent blur opacity-25 group-focus-within:opacity-100 transition duration-1000" />
+            <div className="relative">
+              <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+              <input
+                type="text"
+                placeholder="Buscar por termo, definição ou categoria..."
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  if (e.target.value) setSelectedLetter(null);
+                }}
+                className="w-full pl-14 pr-6 py-4 bg-card/50 backdrop-blur-md border border-border/60 rounded-[2rem] focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all text-base shadow-sm"
+              />
+              {searchQuery && (
+                <button 
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-5 top-1/2 -translate-y-1/2 p-1 hover:bg-muted rounded-full transition-colors"
                 >
-                  <div className="flex items-center gap-4 px-2">
-                    <span className="text-xl font-serif font-black text-primary/40">{letter}</span>
-                    <div className="h-px flex-1 bg-border/50" />
-                  </div>
+                  <X className="w-5 h-5 text-muted-foreground" />
+                </button>
+              )}
+            </div>
+          </div>
+
+          <div className="relative group">
+            <div className="absolute -inset-1 bg-gradient-to-r from-primary/5 to-transparent blur opacity-50 transition duration-1000" />
+            <div className="relative flex flex-wrap justify-center gap-2 p-2 bg-card/30 backdrop-blur-sm rounded-[2rem] border border-border/40 max-w-4xl mx-auto overflow-hidden">
+              {alphabet.map(letter => {
+                const hasTerms = FAITH_TERMS.some(t => t.term.toUpperCase().startsWith(letter));
+                const isSelected = selectedLetter === letter;
+                return (
+                  <motion.button
+                    key={letter}
+                    whileHover={hasTerms ? { scale: 1.1, y: -2 } : {}}
+                    whileTap={hasTerms ? { scale: 0.9 } : {}}
+                    onClick={() => hasTerms && handleLetterClick(letter)}
+                    disabled={!hasTerms}
+                    className={`w-10 h-10 flex items-center justify-center rounded-full text-xs font-black transition-all duration-300 border shadow-sm
+                      ${isSelected 
+                        ? 'bg-primary text-primary-foreground border-primary shadow-primary/30 ring-4 ring-primary/10' 
+                        : hasTerms 
+                          ? 'bg-card/50 text-foreground border-border/80 hover:border-primary/40 hover:text-primary hover:bg-white dark:hover:bg-slate-900' 
+                          : 'opacity-20 grayscale cursor-not-allowed border-transparent'}`}
+                  >
+                    {letter}
+                  </motion.button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* Term Bubbles */}
+        <div className="relative group">
+          <div className="absolute -inset-2 bg-gradient-to-b from-primary/5 to-transparent blur-2xl opacity-50" />
+          <div className="relative flex flex-wrap justify-center gap-3 p-6 min-h-[100px]">
+            <AnimatePresence mode="popLayout">
+              {filteredTerms.map((t, idx) => {
+                const isSelected = selectedTerm?.term === t.term;
+                return (
+                  <motion.button
+                    layout
+                    key={t.term}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    transition={{ duration: 0.2, delay: idx * 0.02 }}
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => handleTermClick(t)}
+                    className={`
+                      px-6 py-3 rounded-full text-sm font-bold transition-all duration-300
+                      flex items-center gap-2 border shadow-sm
+                      ${isSelected 
+                        ? 'bg-primary text-primary-foreground border-primary shadow-primary/40 ring-4 ring-primary/10 z-10' 
+                        : 'bg-card/40 backdrop-blur-md text-muted-foreground border-border/60 hover:border-primary/40 hover:text-primary hover:bg-white dark:hover:bg-slate-900'
+                      }
+                    `}
+                  >
+                    <Hash className={`h-3.5 w-3.5 ${isSelected ? 'text-primary-foreground' : 'text-primary/40'}`} />
+                    {t.term}
+                  </motion.button>
+                );
+              })}
+            </AnimatePresence>
+            {filteredTerms.length === 0 && (
+              <div className="w-full text-center py-12 text-muted-foreground font-medium italic">
+                Nenhum termo encontrado para este filtro.
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Content Hub Area */}
+        <div id="term-content" className="min-h-[400px]">
+          <AnimatePresence mode="wait">
+            {!selectedTerm ? (
+              <motion.div
+                key="empty"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="h-[300px] flex flex-col items-center justify-center text-center p-12 bg-muted/20 rounded-[3rem] border border-dashed border-border/60"
+              >
+                <div className="w-24 h-24 rounded-full bg-primary/5 flex items-center justify-center mb-8 border border-primary/10 shadow-inner relative">
+                  <Tag className="h-10 w-10 text-primary/30" />
+                  <div className="absolute inset-0 bg-primary/5 rounded-full animate-ping opacity-20" />
+                </div>
+                <h3 className="text-2xl font-bold mb-3 text-foreground tracking-tight">Explore os Tesouros da Fé</h3>
+                <p className="text-muted-foreground max-w-md text-lg">
+                  Selecione uma das "bolhas" acima para abrir o hub de conteúdos e navegar pelas conexões teológicas.
+                </p>
+              </motion.div>
+            ) : (
+              <motion.div
+                key={selectedTerm.term}
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: -20 }}
+                transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                className="space-y-8"
+              >
+                {/* Hero Card for Selected Term */}
+                <div className="bg-gradient-to-br from-card via-card to-primary/5 border border-border/60 rounded-[3rem] p-8 md:p-12 shadow-2xl relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -mr-20 -mt-20 group-hover:bg-primary/10 transition-colors duration-1000" />
                   
-                  <div className="grid grid-cols-1 gap-2">
-                    {terms.map((t) => (
-                      <div 
-                        key={t.term}
-                        className={`bg-card border rounded-2xl transition-all overflow-hidden ${
-                          expandedTerm === t.term ? 'border-primary/50 shadow-sm' : 'border-border hover:border-primary/30'
-                        }`}
-                      >
-                        <button
-                          onClick={() => setExpandedTerm(expandedTerm === t.term ? null : t.term)}
-                          className="w-full text-left p-4 flex items-center justify-between gap-4"
-                        >
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2">
-                              <h3 className="text-sm font-bold text-foreground">{t.term}</h3>
-                              {(t.deepInterpretation || t.practicalApplication) && (
-                                <span className="flex h-1.5 w-1.5 rounded-full bg-primary animate-pulse" title="Hub de conteúdo disponível" />
-                              )}
-                            </div>
-                            {t.category && (
-                              <span className="text-[8px] uppercase tracking-widest text-primary/70 font-black">{t.category}</span>
+                  <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-8 mb-10">
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-3">
+                        <span className="h-1.5 w-12 bg-primary rounded-full shadow-[0_0_10px_rgba(var(--primary),0.5)]" />
+                        <Badge variant="secondary" className="bg-primary/10 text-primary border-none px-4 py-1 text-[10px] uppercase tracking-[0.2em] font-black">
+                          {selectedTerm.category || 'Conceito de Fé'}
+                        </Badge>
+                      </div>
+                      <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-none text-foreground">
+                        {selectedTerm.term}
+                      </h2>
+                    </div>
+                    <Button 
+                      onClick={() => navigate(`${AppRoute.STUDY_MODE}?topic=${encodeURIComponent(selectedTerm.term)}`)}
+                      className="rounded-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/20 h-14 px-8 gap-3 group/ai"
+                    >
+                      <Brain className="h-5 w-5 transition-transform group-hover/ai:scale-110" />
+                      <span className="font-bold tracking-tight">Colloquium IA</span>
+                    </Button>
+                  </div>
+
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+                    <div className="lg:col-span-7 space-y-8">
+                      <div className="relative">
+                        <Quote className="absolute -left-6 -top-4 h-12 w-12 text-primary/10 -z-10" />
+                        <p className="text-2xl md:text-3xl text-foreground/90 leading-snug font-medium italic">
+                          {selectedTerm.definition}
+                        </p>
+                      </div>
+                      
+                      {selectedTerm.deepInterpretation && (
+                        <div className="p-8 bg-primary/5 rounded-[2.5rem] border border-primary/10 space-y-4 shadow-inner relative group/interpret">
+                          <div className="flex items-center gap-2 text-primary">
+                            <Sparkles className="h-5 w-5 animate-pulse" />
+                            <h4 className="text-xs font-black uppercase tracking-widest">Interpretação Profunda</h4>
+                          </div>
+                          <p className="text-muted-foreground leading-relaxed text-lg italic font-serif">
+                            {selectedTerm.deepInterpretation}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="lg:col-span-5 space-y-6">
+                      {selectedTerm.practicalApplication && (
+                        <div className="bg-card/40 backdrop-blur-sm border border-border/40 rounded-[2rem] p-6 space-y-4">
+                          <div className="flex items-center gap-2 text-secondary">
+                            <Target className="h-5 w-5" />
+                            <h4 className="text-xs font-black uppercase tracking-widest">Vida Prática</h4>
+                          </div>
+                          <p className="text-foreground/80 leading-relaxed font-medium">
+                            {selectedTerm.practicalApplication}
+                          </p>
+                        </div>
+                      )}
+
+                      <div className="grid grid-cols-1 gap-4">
+                        <div className="flex flex-col gap-3">
+                          <div className="flex items-center gap-2 text-muted-foreground">
+                            <BookOpen className="h-4 w-4" />
+                            <h4 className="text-[10px] font-black uppercase tracking-widest">Fontes & Referências</h4>
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            {selectedTerm.bibleVerses?.map(v => (
+                              <Badge key={v} variant="outline" className="bg-blue-500/5 text-blue-600 border-blue-500/20 px-3 py-1 rounded-full font-bold">
+                                <Book className="mr-1.5 h-3 w-3" /> {v}
+                              </Badge>
+                            ))}
+                            {selectedTerm.catechismReferences?.map(r => (
+                              <Badge key={r} variant="outline" className="bg-amber-500/5 text-amber-600 border-amber-500/20 px-3 py-1 rounded-full font-bold">
+                                <Bookmark className="mr-1.5 h-3 w-3" /> {r}
+                              </Badge>
+                            ))}
+                            {selectedTerm.magisteriumReferences?.map(m => (
+                              <Badge key={m} variant="outline" className="bg-emerald-500/5 text-emerald-600 border-emerald-500/20 px-3 py-1 rounded-full font-bold">
+                                <Globe className="mr-1.5 h-3 w-3" /> {m}
+                              </Badge>
+                            ))}
+                            {!selectedTerm.bibleVerses && selectedTerm.reference && (
+                              <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-3 py-1 rounded-full font-bold">
+                                <Info className="mr-1.5 h-3 w-3" /> {selectedTerm.reference}
+                              </Badge>
                             )}
                           </div>
-                          <Icons.ArrowDown className={`w-4 h-4 text-muted-foreground transition-transform duration-300 ${expandedTerm === t.term ? 'rotate-180' : ''}`} />
-                        </button>
-                        
-                        <AnimatePresence>
-                          {expandedTerm === t.term && (
-                            <motion.div
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: 'auto', opacity: 1 }}
-                              exit={{ height: 0, opacity: 0 }}
-                              className="overflow-hidden"
-                            >
-                                <div className="px-4 pb-6 space-y-6 border-t border-border pt-4">
-                                  {/* Explicação Simples */}
-                                  <div className="space-y-2">
-                                    <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/60 flex items-center gap-2">
-                                      <Icons.Info className="w-3 h-3" />
-                                      Explicação Simples
-                                    </h4>
-                                    <p className="text-sm text-foreground leading-relaxed font-serif">
-                                      {t.definition}
-                                    </p>
-                                  </div>
-
-                                  {/* Interpretação Profunda */}
-                                  {t.deepInterpretation && (
-                                    <div className="space-y-2 p-3 bg-primary/5 rounded-xl border border-primary/10">
-                                      <h4 className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-2">
-                                        <Icons.Sparkles className="w-3 h-3" />
-                                        Interpretação Profunda
-                                      </h4>
-                                      <p className="text-xs text-muted-foreground leading-relaxed italic">
-                                        {t.deepInterpretation}
-                                      </p>
-                                    </div>
-                                  )}
-
-                                  {/* Aplicação Prática */}
-                                  {t.practicalApplication && (
-                                    <div className="space-y-2">
-                                      <h4 className="text-[10px] font-black uppercase tracking-widest text-secondary flex items-center gap-2">
-                                        <Icons.Target className="w-3 h-3" />
-                                        Aplicação Prática
-                                      </h4>
-                                      <p className="text-xs text-foreground/80 leading-relaxed">
-                                        {t.practicalApplication}
-                                      </p>
-                                    </div>
-                                  )}
-
-                                  {/* Conexões */}
-                                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
-                                    {/* Bíblia */}
-                                    {(t.reference || (t.bibleVerses && t.bibleVerses.length > 0)) && (
-                                      <div className="space-y-2">
-                                        <h5 className="text-[9px] font-bold uppercase text-muted-foreground flex items-center gap-1.5">
-                                          <Icons.Bible className="w-2.5 h-2.5" />
-                                          Escrituras
-                                        </h5>
-                                        <div className="flex flex-wrap gap-1.5">
-                                          {t.bibleVerses ? t.bibleVerses.map(v => (
-                                            <span key={v} className="text-[9px] bg-muted/50 px-2 py-0.5 rounded-full border border-border/50 text-foreground/70">
-                                              {v}
-                                            </span>
-                                          )) : t.reference && (
-                                            <span className="text-[9px] bg-muted/50 px-2 py-0.5 rounded-full border border-border/50 text-foreground/70">
-                                              {t.reference}
-                                            </span>
-                                          )}
-                                        </div>
-                                      </div>
-                                    )}
-
-                                    {/* Catecismo */}
-                                    {t.catechismReferences && t.catechismReferences.length > 0 && (
-                                      <div className="space-y-2">
-                                        <h5 className="text-[9px] font-bold uppercase text-muted-foreground flex items-center gap-1.5">
-                                          <Icons.FileText className="w-2.5 h-2.5" />
-                                          Catecismo
-                                        </h5>
-                                        <div className="flex flex-wrap gap-1.5">
-                                          {t.catechismReferences.map(r => (
-                                            <span key={r} className="text-[9px] bg-primary/5 px-2 py-0.5 rounded-full border border-primary/10 text-primary/80">
-                                              {r}
-                                            </span>
-                                          ))}
-                                        </div>
-                                      </div>
-                                    )}
-
-                                    {/* Magistério */}
-                                    {t.magisteriumReferences && t.magisteriumReferences.length > 0 && (
-                                      <div className="space-y-2">
-                                        <h5 className="text-[9px] font-bold uppercase text-muted-foreground flex items-center gap-1.5">
-                                          <Icons.Globe className="w-2.5 h-2.5" />
-                                          Magistério
-                                        </h5>
-                                        <div className="flex flex-wrap gap-1.5">
-                                          {t.magisteriumReferences.map(m => (
-                                            <span key={m} className="text-[9px] bg-secondary/5 px-2 py-0.5 rounded-full border border-secondary/10 text-secondary-foreground/80">
-                                              {m}
-                                            </span>
-                                          ))}
-                                        </div>
-                                      </div>
-                                    )}
-                                  </div>
-                                  
-                                  <button 
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      navigate(`${AppRoute.STUDY_MODE}?topic=${encodeURIComponent(t.term)}`);
-                                    }}
-                                    className="w-full py-2 bg-primary text-primary-foreground rounded-xl text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors mt-4"
-                                  >
-                                    <Icons.Brain className="w-3.5 h-3.5" />
-                                    Aprofundar com Colloquium IA
-                                  </button>
-                                </div>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
+                        </div>
                       </div>
-                    ))}
+                    </div>
                   </div>
-                </motion.div>
-              ))
-            ) : (
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-center py-12 space-y-3"
-              >
-                <div className="w-12 h-12 bg-muted/20 rounded-full flex items-center justify-center mx-auto">
-                  <Icons.Search className="w-6 h-6 text-muted-foreground" />
                 </div>
-                <div>
-                  <p className="text-foreground font-bold">Nenhum termo encontrado</p>
-                  <p className="text-xs text-muted-foreground">Tente uma busca diferente ou limpe os filtros.</p>
+
+                {/* Additional Content Tabs - To be integrated with real data if needed */}
+                <div className="pt-8">
+                  <div className="flex items-center justify-between mb-8 px-4">
+                    <h3 className="text-2xl font-bold flex items-center gap-3">
+                      <Zap className="h-6 w-6 text-primary" />
+                      Conteúdos Conectados
+                    </h3>
+                    <Button variant="ghost" className="text-muted-foreground hover:text-primary gap-2 font-bold uppercase tracking-widest text-[10px]">
+                      Ver tudo <ArrowRight className="h-4 w-4" />
+                    </Button>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <ContentTypeCard 
+                      title="Estudo Bíblico" 
+                      description={`Aprofunde sua visão sobre ${selectedTerm.term} nas Escrituras.`}
+                      icon={<Book className="h-8 w-8" />}
+                      color="blue"
+                    />
+                    <ContentTypeCard 
+                      title="Doutrina da Fé" 
+                      description={`O que o Catecismo ensina especificamente sobre ${selectedTerm.term}.`}
+                      icon={<Bookmark className="h-8 w-8" />}
+                      color="amber"
+                    />
+                    <ContentTypeCard 
+                      title="Voz dos Papas" 
+                      description={`Documentos pontifícios que citam ou explicam ${selectedTerm.term}.`}
+                      icon={<FileText className="h-8 w-8" />}
+                      color="emerald"
+                    />
+                  </div>
                 </div>
-                {(searchQuery || selectedLetter) && (
-                  <button 
-                    onClick={() => { setSearchQuery(''); setSelectedLetter(null); }}
-                    className="text-xs font-black uppercase tracking-widest text-primary hover:underline"
-                  >
-                    Limpar Filtros
-                  </button>
-                )}
               </motion.div>
             )}
           </AnimatePresence>
         </div>
       </div>
     </>
+  );
+};
+
+interface ContentTypeCardProps {
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+  color: 'blue' | 'amber' | 'emerald';
+}
+
+const ContentTypeCard = ({ title, description, icon, color }: ContentTypeCardProps) => {
+  const colors = {
+    blue: "from-blue-500/20 text-blue-600 border-blue-500/20",
+    amber: "from-amber-500/20 text-amber-600 border-amber-500/20",
+    emerald: "from-emerald-500/20 text-emerald-600 border-emerald-500/20"
+  };
+
+  return (
+    <Card className="rounded-[2.5rem] border-border/40 bg-card/40 backdrop-blur-md hover:border-primary/40 transition-all duration-500 group cursor-pointer overflow-hidden shadow-sm hover:shadow-xl">
+      <CardContent className="p-8 space-y-4">
+        <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${colors[color]} to-transparent flex items-center justify-center transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3`}>
+          {icon}
+        </div>
+        <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors">{title}</CardTitle>
+        <CardDescription className="text-base font-medium leading-relaxed">{description}</CardDescription>
+        <div className="pt-2 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary opacity-0 group-hover:opacity-100 transition-all duration-500 -translate-x-2 group-hover:translate-x-0">
+          Explorar Agora <ArrowRight className="h-3 w-3" />
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 
