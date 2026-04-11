@@ -81,7 +81,11 @@ export const UI_TRANSLATIONS: Record<Language, any> = {
     view_all: "Ver todas",
     pax_et_bonum: "Pax et Bonum",
     salve: "Salve",
-    digital: "Digital"
+    digital: "Digital",
+    about: "Sobre",
+    partners: "Parceiros",
+    privacy: "Privacidade",
+    terms: "Termos"
   },
   en: {
     home: "Home (Narthex)",
@@ -147,7 +151,11 @@ export const UI_TRANSLATIONS: Record<Language, any> = {
     view_all: "View all",
     pax_et_bonum: "Pax et Bonum",
     salve: "Hail",
-    digital: "Digital"
+    digital: "Digital",
+    about: "About",
+    partners: "Partners",
+    privacy: "Privacy",
+    terms: "Terms"
   },
   es: {
     home: "Inicio (Nártex)",
@@ -213,7 +221,11 @@ export const UI_TRANSLATIONS: Record<Language, any> = {
     view_all: "Ver todas",
     pax_et_bonum: "Pax et Bonum",
     salve: "Salve",
-    digital: "Digital"
+    digital: "Digital",
+    about: "Sobre",
+    partners: "Socios",
+    privacy: "Privacidad",
+    terms: "Términos"
   },
   la: {
     home: "Initium (Narthex)",
@@ -279,7 +291,11 @@ export const UI_TRANSLATIONS: Record<Language, any> = {
     view_all: "Omnia videre",
     pax_et_bonum: "Pax et Bonum",
     salve: "Salve",
-    digital: "Digitalis"
+    digital: "Digitalis",
+    about: "De nobis",
+    partners: "Socii",
+    privacy: "Secretum",
+    terms: "Condiciones"
   },
   it: {
     home: "Inizio (Nartece)",
@@ -345,7 +361,11 @@ export const UI_TRANSLATIONS: Record<Language, any> = {
     view_all: "Vedi tutti",
     pax_et_bonum: "Pax et Bonum",
     salve: "Salve",
-    digital: "Digitale"
+    digital: "Digitale",
+    about: "Chi siamo",
+    partners: "Partner",
+    privacy: "Privacy",
+    terms: "Termini"
   },
   fr: {
     home: "Accueil (Narthex)",
@@ -411,7 +431,11 @@ export const UI_TRANSLATIONS: Record<Language, any> = {
     view_all: "Tout voir",
     pax_et_bonum: "Pax et Bonum",
     salve: "Salut",
-    digital: "Digital"
+    digital: "Digital",
+    about: "À propos",
+    partners: "Partenaires",
+    privacy: "Confidentialité",
+    terms: "Conditions"
   },
   de: {
     home: "Start (Narthex)",
@@ -477,6 +501,10 @@ export const UI_TRANSLATIONS: Record<Language, any> = {
     view_all: "Alle ansehen",
     pax_et_bonum: "Pax et Bonum",
     salve: "Heil",
-    digital: "Digital"
+    digital: "Digital",
+    about: "Über uns",
+    partners: "Partner",
+    privacy: "Datenschutz",
+    terms: "Bedingungen"
   }
 };
