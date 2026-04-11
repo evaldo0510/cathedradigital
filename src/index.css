@@ -237,8 +237,8 @@
 .reading-night body,
 .reading-night {
   transition: background-color 0.5s ease, color 0.5s ease;
-  background-color: #FFFFFF !important;
-  color: #1A1A1A !important;
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
 }
 
 .reading-night .reader-text {
