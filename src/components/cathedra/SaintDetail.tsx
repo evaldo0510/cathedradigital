@@ -84,10 +84,11 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
       const prompt = `Como Logos (IA da Cathedra), gere uma reflexão profunda e personalizada sobre ${saint.name}. 
       
       Siga este roteiro rigorosamente:
-      1. RELAÇÃO COM A REALIDADE: Relacione a virtude principal (${saint.virtues?.[0] || 'santidade'}) de ${saint.name} com os desafios reais, pressões e dilemas de um católico no mundo moderno hoje. Como essa virtude se traduz em ações concretas no trabalho, na família ou na vida digital?
+      1. REALIDADE: Relacione a virtude principal (${saint.virtues?.[0] || 'santidade'}) de ${saint.name} com os desafios reais, pressões e dilemas de um católico no mundo moderno hoje. Como essa virtude se traduz em ações concretas no trabalho, na família ou na vida digital?
       2. PERGUNTA PROFUNDA: Gere uma pergunta provocativa e profunda que conecte a luta ou o exemplo de ${saint.name} com a alma e o estado espiritual do usuário agora.
-      3. CAMINHO PRÁTICO: Sugira um "caminho" (uma ação prática, um pequeno sacrifício ou uma oração específica) inspirado no exemplo de ${saint.name} para o usuário realizar hoje.
+      3. O CAMINHO: Sugira um "caminho" (uma ação prática, um pequeno sacrifício ou uma oração específica) inspirado no exemplo de ${saint.name} para o usuário realizar hoje.
       
+      IMPORTANTE: Use os títulos "REALIDADE:", "PERGUNTA PROFUNDA:" e "O CAMINHO:" explicitamente no início de cada seção.
       Tom: Poético, visceral, encorajador e firme na doutrina católica. Use Markdown para formatar (negrito para ênfase). Seja breve mas impactante.`;
 
       const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/colloquium`, {
@@ -233,6 +234,17 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
               </div>
             )}
           </div>
+          {!showLogos && (
+            <div className="flex justify-center pt-2">
+              <Button 
+                onClick={generateLogosReflection}
+                className="bg-primary hover:bg-primary/90 text-primary-foreground font-black text-xs uppercase tracking-widest h-12 px-8 rounded-2xl shadow-lg shadow-primary/20 flex items-center gap-3 group transition-all"
+              >
+                <Icons.Sparkles className="w-4 h-4 group-hover:rotate-12 transition-transform" />
+                Viver este exemplo com Logos
+              </Button>
+            </div>
+          )}
         </section>
 
         {/* Quote & Practical Application & Reflection */}
@@ -345,10 +357,38 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
                     <span className="text-[10px] font-black uppercase tracking-[0.2em] text-background/40">Logos está guiando sua reflexão...</span>
                   </div>
                   
-                  <div className="">
-                    <p className="text-lg md:text-xl font-serif italic leading-relaxed text-background/90 whitespace-pre-wrap">
-                      {logosReflection || (isGenerating && "Conectando virtudes à sua vida...")}
-                    </p>
+                  <div className="space-y-6">
+                    {logosReflection ? (
+                      logosReflection.split(/(?=REALIDADE:|PERGUNTA PROFUNDA:|O CAMINHO:)/).filter(Boolean).map((section, idx) => {
+                        const isReality = section.includes('REALIDADE:');
+                        const isQuestion = section.includes('PERGUNTA PROFUNDA:');
+                        const isPath = section.includes('O CAMINHO:');
+                        
+                        let content = section.replace(/REALIDADE:|PERGUNTA PROFUNDA:|O CAMINHO:/, '').trim();
+                        
+                        return (
+                          <div key={idx} className={`p-8 rounded-[2rem] ${isReality ? 'bg-primary/5 border border-primary/20' : isQuestion ? 'bg-secondary/40 border border-border shadow-inner' : isPath ? 'bg-primary text-primary-foreground shadow-2xl shadow-primary/30 border-t-4 border-primary-foreground/20' : ''}`}>
+                            <div className="flex items-center gap-3 mb-4">
+                              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${isPath ? 'bg-primary-foreground/20' : 'bg-primary/10'}`}>
+                                {isReality && <Icons.Globe className="w-4 h-4 text-primary" />}
+                                {isQuestion && <Icons.MessageSquare className="w-4 h-4 text-primary" />}
+                                {isPath && <Icons.Flame className="w-4 h-4 text-primary-foreground" />}
+                              </div>
+                              {isReality && <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Realidade Moderna</h4>}
+                              {isQuestion && <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Para sua Alma</h4>}
+                              {isPath && <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary-foreground/70">O Caminho Prático</h4>}
+                            </div>
+                            <p className={`text-lg font-serif italic leading-relaxed ${isPath ? 'text-primary-foreground' : 'text-background/90'}`}>
+                              {content}
+                            </p>
+                          </div>
+                        );
+                      })
+                    ) : (
+                      <p className="text-lg md:text-xl font-serif italic leading-relaxed text-background/90 whitespace-pre-wrap">
+                        {isGenerating && "Conectando virtudes à sua vida..."}
+                      </p>
+                    )}
                   </div>
 
                   {!isGenerating && (
