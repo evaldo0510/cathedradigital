@@ -270,6 +270,28 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         </div>
       </FadeUp>
 
+      {/* ═══ WHATSAPP RELEASE ═══ */}
+      <FadeUp delay={0.105}>
+        <div 
+          onClick={() => navigate(AppRoute.PROFILE)}
+          className="p-4 rounded-3xl border border-primary/30 bg-primary/5 cursor-pointer hover:bg-primary/10 transition-all flex items-center justify-between group"
+        >
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+              <Icons.Whatsapp className="w-6 h-6" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <p className="text-[10px] font-black uppercase tracking-widest text-primary">WhatsApp Liberado</p>
+                <div className="px-1.5 py-0.5 rounded-full bg-primary text-primary-foreground text-[8px] font-black uppercase tracking-wider">Novo</div>
+              </div>
+              <h3 className="text-sm font-bold text-foreground leading-tight">Receba meditações diárias no seu celular</h3>
+            </div>
+          </div>
+          <Icons.ChevronRight className="w-4 h-4 text-primary group-hover:translate-x-1 transition-transform" />
+        </div>
+      </FadeUp>
+
       {/* ═══ NEXT UP ═══ */}
       {nextUp && (
         <FadeUp delay={0.11}>
