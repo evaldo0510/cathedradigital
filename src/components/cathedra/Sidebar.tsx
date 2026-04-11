@@ -12,10 +12,12 @@ interface SidebarProps {
   user: User | null;
   isDark?: boolean;
   onToggleDark?: () => void;
+  isSpeaking?: boolean;
+  onToggleSpeak?: () => void;
   onSignOut?: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onToggleDark, onSignOut }) => {
+const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onToggleDark, isSpeaking, onToggleSpeak, onSignOut }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
