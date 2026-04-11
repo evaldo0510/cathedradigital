@@ -12,10 +12,14 @@ import { saveUserPsychology } from '@/lib/psychologicalProfile';
 import ProConversionBanner from './ProConversionBanner';
 
 const SECTION_CONFIG = [
+  { key: 'pch', label: 'Reflexão Profunda (PCH)', icon: <Sparkles className="w-4 h-4" /> },
+  { key: 'interpretation', label: 'Interpretação', icon: <BookOpen className="w-4 h-4" /> },
+  { key: 'practical_direction', label: 'Direção Prática', icon: <Hand className="w-4 h-4" /> },
+  { key: 'guided_exercise', label: 'Exercício Guiado', icon: <PenLine className="w-4 h-4" /> },
   { key: 'reflection', label: 'Reflexão', icon: <PenLine className="w-4 h-4" /> },
-  { key: 'intro', label: 'Interpretação', icon: <BookOpen className="w-4 h-4" /> },
-  { key: 'practice', label: 'Direção Prática', icon: <Hand className="w-4 h-4" /> },
-  { key: 'prayer', label: 'Exercício Guiado', icon: <Sparkles className="w-4 h-4" /> },
+  { key: 'intro', label: 'Contexto', icon: <BookOpen className="w-4 h-4" /> },
+  { key: 'practice', label: 'Prática', icon: <Hand className="w-4 h-4" /> },
+  { key: 'prayer', label: 'Oração', icon: <Sparkles className="w-4 h-4" /> },
 ];
 
 type UserLevelClass = 'iniciante' | 'intermediário' | 'avançado';
