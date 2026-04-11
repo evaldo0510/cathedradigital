@@ -12,10 +12,17 @@ import { saveUserPsychology } from '@/lib/psychologicalProfile';
 import ProConversionBanner from './ProConversionBanner';
 
 const SECTION_CONFIG = [
-  { key: 'reflection', label: 'Reflexão', icon: <PenLine className="w-4 h-4" /> },
+  { key: 'pch', label: 'Reflexão Profunda (PCH)', icon: <Sparkles className="w-4 h-4" /> },
+  { key: 'interpretation', label: 'Interpretação', icon: <BookOpen className="w-4 h-4" /> },
+  { key: 'practical_direction', label: 'Direção Prática', icon: <Hand className="w-4 h-4" /> },
+  { key: 'guided_exercise', label: 'Exercício Guiado', icon: <PenLine className="w-4 h-4" /> },
+  
+  // Legacy mappings for existing content
   { key: 'intro', label: 'Interpretação', icon: <BookOpen className="w-4 h-4" /> },
-  { key: 'practice', label: 'Direção Prática', icon: <Hand className="w-4 h-4" /> },
-  { key: 'prayer', label: 'Exercício Guiado', icon: <Sparkles className="w-4 h-4" /> },
+  { key: 'reflection', label: 'Reflexão', icon: <PenLine className="w-4 h-4" /> },
+  { key: 'practice', label: 'Prática', icon: <Hand className="w-4 h-4" /> },
+  { key: 'prayer', label: 'Exercício', icon: <Sparkles className="w-4 h-4" /> },
+  { key: 'lectio', label: 'Leitura Orante', icon: <BookOpen className="w-4 h-4" /> },
 ];
 
 type UserLevelClass = 'iniciante' | 'intermediário' | 'avançado';
@@ -218,6 +225,11 @@ const JornadaStepPage: React.FC = () => {
             {step.subtitle && (
               <p className="text-sm text-muted-foreground italic">{step.subtitle}</p>
             )}
+            {content.bible_ref && (
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 text-[10px] font-black uppercase tracking-wider mx-auto">
+                <BookOpen className="w-3 h-3" /> {content.bible_ref}
+              </div>
+            )}
           </motion.div>
 
           {/* Content Sections */}
@@ -263,7 +275,7 @@ const JornadaStepPage: React.FC = () => {
                       className="overflow-hidden"
                     >
                       <div className="bg-card border border-t-0 border-border rounded-b-2xl p-5">
-                        <p className="text-sm text-foreground/90 leading-relaxed whitespace-pre-line font-serif">
+                        <p className={`text-sm text-foreground/90 leading-relaxed whitespace-pre-line font-serif ${key === 'pch' ? 'text-lg italic text-primary text-center' : ''}`}>
                           {sectionContent}
                         </p>
                       </div>
@@ -286,10 +298,10 @@ const JornadaStepPage: React.FC = () => {
               <h3 className="text-sm font-bold text-foreground">Diário Espiritual</h3>
             </div>
 
-            {getVariantContent('journal_prompt', content) && (
+            {(getVariantContent('journal_prompt', content) || getVariantContent('question', content)) && (
               <div className="bg-primary/5 border border-primary/10 rounded-xl p-4">
                 <p className="text-sm text-foreground/80 italic font-serif">
-                  {getVariantContent('journal_prompt', content)}
+                  {getVariantContent('journal_prompt', content) || getVariantContent('question', content)}
                 </p>
               </div>
             )}
