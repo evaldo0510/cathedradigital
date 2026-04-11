@@ -132,7 +132,7 @@ export const Logo = forwardRef<HTMLDivElement, { className?: string, variant?: '
   return (
     <div ref={ref} className={cn(
       "relative flex items-center justify-center group overflow-hidden", 
-      variant === 'blue' && "bg-primary rounded-xl p-2 shadow-lg border border-primary/20",
+      variant === 'blue' && "bg-primary rounded-full p-2 shadow-lg border border-primary/20",
       className
     )}>
       <img 
