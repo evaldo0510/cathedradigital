@@ -26,33 +26,48 @@ serve(async (req) => {
       throw new Error("Failed to parse HTML");
     }
 
-    // Target the specific section for Saint of the Day
-    const saintSection = doc.querySelector(".section--isStatic") || doc.querySelector(".section--evidence");
-    
-    if (!saintSection) {
-        throw new Error("Saint section not found");
-    }
-
-    const titleElement = saintSection.querySelector("h2");
-    const name = titleElement ? titleElement.textContent.trim() : "Santo do Dia";
-    
-    let imageUrl = null;
-    const imgElement = saintSection.querySelector("img");
-    if (imgElement) {
-      // Vatican News uses data-original for lazy loading
-      const src = imgElement.getAttribute("data-original") || imgElement.getAttribute("src");
-      if (src && !src.includes("data:image/gif")) {
-        imageUrl = src.startsWith("http") ? src : `https://www.vaticannews.va${src}`;
+    // Attempt to find the saint's name
+    // It's usually the first H2 in the main content area
+    const h2s = Array.from(doc.querySelectorAll("h2"));
+    let saintTitle = null;
+    for (const h2 of h2s) {
+      const text = h2.textContent.trim();
+      // Heuristic: skip short titles or common menu items
+      if (text.length > 5 && !['Menu', 'Siga-nos', 'Newsletter'].includes(text)) {
+        saintTitle = h2;
+        break;
       }
     }
 
-    const descElement = saintSection.querySelector("p");
-    const description = descElement ? descElement.textContent.trim() : "";
+    const name = saintTitle ? saintTitle.textContent.trim() : "Santo do Dia";
+    
+    // Find image
+    // Look for image with 'santi' in the path or inside the same parent as the title
+    let imageUrl = null;
+    const allImgs = Array.from(doc.querySelectorAll("img"));
+    for (const img of allImgs) {
+      const src = img.getAttribute("data-original") || img.getAttribute("src");
+      if (src && (src.includes("/santi/") || src.includes("/santo/"))) {
+        imageUrl = src.startsWith("http") ? src : `https://www.vaticannews.va${src}`;
+        break;
+      }
+    }
 
-    const linkElement = saintSection.querySelector("a.saintReadMore") || saintSection.querySelector("a[href*='/santo-do-dia/']");
+    // Find description
+    // It's usually a <p> near the title
+    let description = "";
+    if (saintTitle) {
+      // Look for next sibling or p in parent
+      const parent = saintTitle.closest(".section") || saintTitle.parentElement;
+      const p = parent?.querySelector("p:not([style*='justify'])");
+      if (p) description = p.textContent.trim();
+    }
+
+    // More Link
+    const readMore = doc.querySelector("a.saintReadMore") || doc.querySelector("a[href*='/santo-do-dia/']");
     let moreLink = vaticanUrl;
-    if (linkElement) {
-      const href = linkElement.getAttribute("href");
+    if (readMore) {
+      const href = readMore.getAttribute("href");
       if (href) {
         moreLink = href.startsWith("http") ? href : `https://www.vaticannews.va${href}`;
       }
