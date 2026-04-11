@@ -6,8 +6,9 @@ import laSaletteImg from '@/assets/aparicao-la-salette.jpg';
 import knockImg from '@/assets/aparicao-knock.jpg';
 import kibehoImg from '@/assets/aparicao-kibeho.jpg';
 import akitaImg from '@/assets/aparicao-akita.jpg';
+import { DeepContent } from '@/types';
 
-export interface Apparition {
+export interface Apparition extends Partial<DeepContent> {
   id: string;
   title: string;
   location: string;
