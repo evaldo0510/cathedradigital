@@ -84,9 +84,9 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
         {user && (
           <button 
             onClick={() => setShowNotifs(!showNotifs)} 
-            className="p-3 bg-muted text-primary hover:bg-primary hover:text-white rounded-2xl border border-border relative transition-all shadow-sm"
+            className="p-2.5 sm:p-3 bg-muted text-primary hover:bg-primary hover:text-white rounded-xl sm:rounded-2xl border border-border relative transition-all shadow-sm active:scale-95"
           >
-            <Icons.Message className="w-5 h-5" />
+            <Icons.Message className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
             {unreadCount > 0 && (
               <span className="absolute -top-1 -right-1 w-5 h-5 bg-secondary text-primary text-[10px] font-black flex items-center justify-center rounded-full border-2 border-background shadow-lg">
                 {unreadCount}
