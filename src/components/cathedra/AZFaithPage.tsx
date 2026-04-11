@@ -204,6 +204,7 @@ const FAITH_TERMS: FaithTerm[] = [
   { term: 'Babilônia', definition: 'Símbolo do exílio de Israel e do poder mundano oposto a Deus.', reference: 'Sl 137', category: 'Geografia Bíblica' },
   { term: 'Apóstolo', definition: 'Um dos doze escolhidos por Jesus para serem testemunhas de sua ressurreição.', reference: 'Lc 6,13', category: 'Ministérios' },
   { term: 'Amém', definition: 'Palavra hebraica que significa "assim seja" ou "verdadeiramente".', reference: 'Ap 3,14', category: 'Liturgia' },
+  { term: 'Amor', definition: 'Doação de si segundo Deus', category: 'Virtudes' },
 ];
 
 const AZFaithPage: React.FC = () => {
