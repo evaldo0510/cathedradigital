@@ -45,6 +45,12 @@ export const APPARITIONS: Apparition[] = [
     image: '🌹',
     imageSrc: guadalupeImg,
     color: 'from-primary/20 to-primary/5 border-primary/30',
+    textoBase: 'Não estou eu aqui, que sou tua Mãe? Não estás sob o meu manto e sob a minha proteção?',
+    explicacao: 'Maria fala a Juan Diego quando ele estava angustiado com a doença de seu tio. Ela assegura que sua presença materna é um escudo e que nada deve nos perturbar, pois ela cuida de nós como seus filhos mais queridos.',
+    interpretacaoProfunda: 'As palavras de Maria ecoam a proteção de Deus sobre Israel e a maternidade espiritual da Igreja. O "manto" de Guadalupe é, simbolicamente, o abraço misericordioso de Deus que acolhe todas as culturas e dores, transformando a angústia em esperança.',
+    aplicacaoPratica: 'Quando sentir medo ou ansiedade hoje, pare um momento e imagine-se sob o manto de Maria. Deixe que essa certeza de ser cuidado por uma Mãe Celestial acalme seu coração e te dê forças para enfrentar os desafios.',
+    reflexaoFinal: 'O que eu tenho tentado carregar sozinho, esquecendo-me de que tenho uma Mãe que me protege?',
+    exercicio: 'Reze uma Salve Rainha bem devagar, visualizando a proteção materna de Maria sobre sua família.',
   },
   {
     id: 'la-salette',
