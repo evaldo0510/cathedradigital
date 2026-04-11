@@ -37,6 +37,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-3 sm:py-4 flex items-center justify-between min-h-[56px] sm:min-h-[64px]">
         <div className="flex items-center gap-2 sm:gap-10">
         <div className="flex items-center gap-2 sm:gap-4 cursor-pointer group" onClick={() => navigate(AppRoute.DASHBOARD)}>
+          <img src={cathedraLogo} alt="Cathedra" className="w-8 h-8 sm:w-10 sm:h-10 object-contain" />
           <div className="flex flex-col">
             <span className="text-base sm:text-xl font-display font-black uppercase tracking-[0.2em] sm:tracking-[0.25em] text-primary leading-none">Cathedra</span>
             <span className="text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-secondary opacity-80 mt-0.5 sm:mt-1">Digital</span>
