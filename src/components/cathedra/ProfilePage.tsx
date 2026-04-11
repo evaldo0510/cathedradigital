@@ -414,7 +414,76 @@ const ProfilePage: React.FC = () => {
           />
         </div>
 
-        <button
+        {/* Localização Eclesial */}
+        <div className="border-t border-border pt-5 space-y-4">
+          <div className="flex items-center gap-2 mb-1">
+            <Icons.Church className="w-4 h-4 text-primary" />
+            <h3 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Localização Eclesial</h3>
+          </div>
+          <p className="text-[10px] text-muted-foreground -mt-2">Opcional — ajuda a personalizar sua experiência.</p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Estado */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-foreground">Estado</label>
+              <select
+                value={estado}
+                onChange={e => { setEstado(e.target.value); setDiocese(''); }}
+                className="w-full bg-background border border-border rounded-xl p-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 appearance-none"
+              >
+                <option value="">Selecione...</option>
+                {ESTADOS_BRASIL.map(uf => (
+                  <option key={uf} value={uf}>{ESTADO_NOME[uf]} ({uf})</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Diocese */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-foreground">Diocese</label>
+              <select
+                value={diocese}
+                onChange={e => setDiocese(e.target.value)}
+                disabled={!estado}
+                className="w-full bg-background border border-border rounded-xl p-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 appearance-none disabled:opacity-40"
+              >
+                <option value="">{estado ? 'Selecione a diocese...' : 'Selecione o estado primeiro'}</option>
+                {estado && DIOCESES_POR_ESTADO[estado]?.map(d => (
+                  <option key={d} value={d}>{d}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Paróquia */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-foreground">Paróquia</label>
+              <input
+                type="text"
+                value={paroquia}
+                onChange={e => setParoquia(e.target.value)}
+                placeholder="Ex: Paróquia São José"
+                className="w-full bg-background border border-border rounded-xl p-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+              />
+            </div>
+
+            {/* Movimento/Pastoral */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-foreground">Movimento / Pastoral</label>
+              <select
+                value={movimentoPastoral}
+                onChange={e => setMovimentoPastoral(e.target.value)}
+                className="w-full bg-background border border-border rounded-xl p-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 appearance-none"
+              >
+                <option value="">Nenhum</option>
+                {MOVIMENTOS_PASTORAIS.map(m => (
+                  <option key={m} value={m}>{m}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </div>
+
+
           onClick={handleSave}
           disabled={saving}
           className="w-full py-4 bg-primary text-primary-foreground rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:opacity-90 transition-all disabled:opacity-50"
