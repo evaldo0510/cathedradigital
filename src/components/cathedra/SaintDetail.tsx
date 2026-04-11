@@ -265,7 +265,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
                     <span className="text-[10px] font-black uppercase tracking-[0.2em] text-background/40">Logos está guiando sua reflexão...</span>
                   </div>
                   
-                  <div className="prose prose-invert prose-sm max-w-none">
+                  <div className="">
                     <p className="text-lg md:text-xl font-serif italic leading-relaxed text-background/90 whitespace-pre-wrap">
                       {logosReflection || (isGenerating && "Conectando virtudes à sua vida...")}
                     </p>
