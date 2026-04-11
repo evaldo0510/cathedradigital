@@ -11,9 +11,6 @@ serve(async (req) => {
   }
 
   try {
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
-
     const vaticanUrl = "https://www.vaticannews.va/pt/santo-do-dia.html";
     const response = await fetch(vaticanUrl, {
       headers: {
@@ -27,50 +24,34 @@ serve(async (req) => {
 
     const html = await response.text();
     
-    // Even smaller chunk
-    const startIdx = Math.max(0, html.indexOf('section--evidence') - 200);
-    const endIdx = Math.min(html.length, html.indexOf('social-utility', startIdx) + 500);
-    const relevantHtml = html.substring(startIdx, endIdx);
-
-    // Use AI to extract the data
-    const aiResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "openai/gpt-4o-mini",
-        messages: [
-          {
-            role: "system",
-            content: "Você é um extrator de dados. Extraia o nome do santo, resumo e URL da imagem (resolva caminhos relativos para https://www.vaticannews.va). Retorne APENAS um JSON válido."
-          },
-          {
-            role: "user",
-            content: `HTML: ${relevantHtml}`
-          }
-        ],
-        temperature: 0
-      }),
-    });
-
-    if (!aiResponse.ok) {
-      const err = await aiResponse.text();
-      console.error('AI Error:', err);
-      throw new Error(`AI Gateway error: ${aiResponse.status}`);
+    // Regex based extraction
+    // Find the saint's name inside the first <h2> after "intro--saint"
+    const nameMatch = html.match(/section--evidence section--isStatic">[\s\S]*?<h2[^>]*>([\s\S]*?)<\/h2>/i) ||
+                     html.match(/<h2[^>]*>([\s\S]*?)<\/h2>/i);
+    let name = nameMatch ? nameMatch[1].replace(/<[^>]*>/g, '').trim() : "Santo do Dia";
+    
+    // Image
+    const imgMatch = html.match(/section--isStatic">[\s\S]*?data-original="([^"]*)"/i) ||
+                    html.match(/section--isStatic">[\s\S]*?src="([^"]*)"/i);
+    let imageUrl = null;
+    if (imgMatch) {
+      const src = imgMatch[1];
+      if (src && !src.includes('data:image')) {
+        imageUrl = src.startsWith('http') ? src : `https://www.vaticannews.va${src}`;
+      }
     }
-
-    const aiData = await aiResponse.json();
-    const content = aiData.choices[0].message.content.replace(/```json|```/g, '').trim();
-    const result = JSON.parse(content);
-
+    
+    // Description
+    const pMatch = html.match(/section--isStatic">[\s\S]*?<p>([\s\S]*?)<\/p>/i);
+    const description = pMatch ? pMatch[1].replace(/<[^>]*>/g, '').trim() : "";
+    
     return new Response(
       JSON.stringify({
-        ...result,
-        source: "Vatican News",
+        name,
+        image: imageUrl,
+        description,
         url: vaticanUrl,
-        fetched_at: new Date().toISOString()
+        source: "Vatican News"
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
