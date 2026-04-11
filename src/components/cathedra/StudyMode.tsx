@@ -276,7 +276,6 @@ const StudyMode: React.FC = () => {
         const finalMessages = [...allMessages, { role: 'assistant' as const, content: assistantContent }];
         saveMessages(convId, finalMessages).catch(e => console.error('BG Save failed:', e));
       }
-      }
     } catch (e: any) {
       setMessages(prev => [...prev, { role: 'assistant', content: `⚠️ ${e.message || 'Erro ao consultar a IA. Tente novamente.'}` }]);
     } finally {
