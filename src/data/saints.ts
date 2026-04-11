@@ -24,6 +24,9 @@ export interface Saint extends Partial<DeepContent> {
   image?: string;
   prayer?: string;
   virtues?: string[];
+  bibleRefs?: { ref: string; label: string }[];
+  catechismRefs?: number[];
+  churchDocRefs?: { title: string; url: string }[];
 }
 
 export const SAINTS_DATA: Saint[] = [
@@ -63,6 +66,15 @@ export const SAINTS_DATA: Saint[] = [
     aplicacaoPratica: 'Hoje, não tente ser uma pessoa "diferente" de quem você é para agradar a Deus. Em vez disso, convide a graça de Deus para entrar nas suas atividades normais: seu trabalho, seu estudo, suas conversas. Deixe que o amor de Deus refine seu jeito de ser.',
     reflexaoFinal: 'Quais partes da minha natureza eu estou escondendo de Deus, achando que elas não podem ser santificadas?',
     exercicio: 'Escreva em um papel um talento seu e uma limitação sua. Reze entregando ambos a Deus, pedindo que a Sua graça os aperfeiçoe hoje.',
+    bibleRefs: [
+      { ref: 'Jo 1,1', label: 'No princípio era o Verbo' },
+      { ref: 'Rm 1,20', label: 'Conhecimento de Deus pela razão' }
+    ],
+    catechismRefs: [36, 156, 159, 2500],
+    churchDocRefs: [
+      { title: 'Aeterni Patris (Leão XIII)', url: 'https://www.vatican.va/content/leo-xiii/pt/encyclicals/documents/hf_l-xiii_enc_04081879_aeterni-patris.html' },
+      { title: 'Fides et Ratio (João Paulo II)', url: 'https://www.vatican.va/content/john-paul-ii/pt/encyclicals/documents/hf_jp-ii_enc_14091998_fides-et-ratio.html' }
+    ],
   },
   {
     id: 'agostinho',
@@ -99,6 +111,14 @@ export const SAINTS_DATA: Saint[] = [
     interpretacaoProfunda: 'Santo Agostinho ensina que a inquietude não é um defeito, mas a "bússola" da alma que nos atrai para nossa origem e fim: Deus.',
     aplicacaoPratica: 'Identifique hoje o que tem te causado ansiedade ou busca incessante. Entregue esse desejo a Deus, reconhecendo que só Ele é o descanso verdadeiro.',
     reflexaoFinal: 'Onde estou buscando paz fora de Deus?',
+    bibleRefs: [
+      { ref: 'Sl 42,2', label: 'A minha alma tem sede de Deus' },
+      { ref: 'Rm 13,13-14', label: 'Revesti-vos do Senhor Jesus Cristo' }
+    ],
+    catechismRefs: [27, 30, 1718, 2560],
+    churchDocRefs: [
+      { title: 'Augustinum Hipponensem (João Paulo II)', url: 'https://www.vatican.va/content/john-paul-ii/pt/apost_letters/1986/documents/hf_jp-ii_apl_26081986_augustinum-hipponensem.html' }
+    ],
   },
   {
     id: 'francisco-assis',
@@ -133,6 +153,15 @@ export const SAINTS_DATA: Saint[] = [
     interpretacaoProfunda: 'São Francisco via a santidade como um caminho de humildade onde nunca nos sentimos "prontos". Cada dia é uma nova oportunidade de conversão radical.',
     aplicacaoPratica: 'Não desanime por suas quedas de ontem. Hoje, recomece seu serviço a Deus com a alegria de um iniciante.',
     reflexaoFinal: 'O que posso "recomeçar" hoje na minha vida espiritual?',
+    bibleRefs: [
+      { ref: 'Mt 10,7-10', label: 'A missão dos doze' },
+      { ref: 'Mt 19,21', label: 'Vende tudo o que tens' }
+    ],
+    catechismRefs: [301, 344, 125, 1438, 2444],
+    churchDocRefs: [
+      { title: 'Laudato Si (Papa Francisco)', url: 'https://www.vatican.va/content/francesco/pt/encyclicals/documents/papa-francesco_20150524_enciclica-laudato-si.html' },
+      { title: 'Fratelli Tutti (Papa Francisco)', url: 'https://www.vatican.va/content/francesco/pt/encyclicals/documents/papa-francesco_20201003_enciclica-fratelli-tutti.html' }
+    ],
   },
   {
     id: 'judas-tadeu',
