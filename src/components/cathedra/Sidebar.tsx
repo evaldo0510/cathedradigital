@@ -32,6 +32,7 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
       items: [
         { label: 'Início', path: AppRoute.HOJE, icon: <Icons.Home className="w-5 h-5" /> },
         { label: 'Jornada', path: AppRoute.JORNADAS, icon: <Icons.Route className="w-5 h-5" /> },
+        { label: 'Temas', path: AppRoute.TEMAS, icon: <Icons.Tag className="w-5 h-5" /> },
         { label: 'Explorar', path: AppRoute.BIBLIOTECA, icon: <Icons.Search className="w-5 h-5" /> },
         { label: 'Comunidade', path: AppRoute.COMMUNITY, icon: <Icons.Users className="w-5 h-5" /> },
         { label: 'Perfil', path: AppRoute.PROFILE, icon: <Icons.User className="w-5 h-5" /> },

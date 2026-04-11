@@ -110,7 +110,8 @@ import {
   Play,
   Target,
   Link,
-  Video
+  Video,
+  Tag
 } from 'lucide-react';
 import { cn } from './lib/utils';
 
@@ -302,6 +303,7 @@ export const Icons = {
   Glossary: createIcon(Type),
   History: createIcon(History),
   Bookmark: createIcon(Bookmark),
+  Tag: createIcon(Tag),
   Swords: createIcon(Swords),
   
   // Spiritual Life

@@ -49,7 +49,8 @@ export enum AppRoute {
   JORNADA_COMPLETE = '/jornadas/:id/complete',
   BIBLIOTECA = '/biblioteca',
   PARTNERS = '/partners',
-  UPGRADE = '/upgrade'
+  UPGRADE = '/upgrade',
+  TEMAS = '/temas'
 }
 
 export interface TrackStep {
