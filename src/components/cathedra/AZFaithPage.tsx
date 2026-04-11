@@ -210,6 +210,22 @@ const AZFaithPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedLetter, setSelectedLetter] = useState<string | null>('A');
+  const [selectedTerm, setSelectedTerm] = useState<FaithTerm | null>(null);
+
+  const categories = useMemo(() => {
+    const cats = new Set(FAITH_TERMS.map(t => t.category).filter(Boolean) as string[]);
+    return Array.from(cats).sort();
+  }, []);
+
+  const letterStatus = useMemo(() => {
+    const status: Record<string, boolean> = {};
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(l => {
+      status[l] = FAITH_TERMS.some(t => t.term.toUpperCase().startsWith(l));
+    });
+    return status;
+  }, []);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -217,10 +233,9 @@ const AZFaithPage: React.FC = () => {
     if (q) {
       setSearchQuery(q);
       setSelectedLetter(null);
+      setSelectedCategory(null);
     }
   }, [location.search]);
-  const [selectedLetter, setSelectedLetter] = useState<string | null>('A');
-  const [selectedTerm, setSelectedTerm] = useState<FaithTerm | null>(null);
   
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -235,22 +250,31 @@ const AZFaithPage: React.FC = () => {
         t.definition.toLowerCase().includes(q) ||
         t.category?.toLowerCase().includes(q)
       );
+    } else if (selectedCategory) {
+      result = result.filter(t => t.category === selectedCategory);
     } else if (selectedLetter) {
       result = result.filter(t => t.term.toUpperCase().startsWith(selectedLetter));
     }
     
     return result.sort((a, b) => a.term.localeCompare(b.term));
-  }, [searchQuery, selectedLetter]);
+  }, [searchQuery, selectedLetter, selectedCategory]);
 
   const handleLetterClick = (letter: string) => {
     setSelectedLetter(letter);
     setSearchQuery('');
+    setSelectedCategory(null);
+    setSelectedTerm(null);
+  };
+
+  const handleCategoryClick = (category: string | null) => {
+    setSelectedCategory(category);
+    setSearchQuery('');
+    setSelectedLetter(null);
     setSelectedTerm(null);
   };
 
   const handleTermClick = (term: FaithTerm) => {
     setSelectedTerm(selectedTerm?.term === term.term ? null : term);
-    // Smooth scroll to content area if on mobile
     if (window.innerWidth < 768) {
       setTimeout(() => {
         document.getElementById('term-content')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -308,30 +332,55 @@ const AZFaithPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="relative group">
-            <div className="absolute -inset-1 bg-gradient-to-r from-primary/5 to-transparent blur opacity-50 transition duration-1000" />
-            <div className="relative flex flex-wrap justify-center gap-2 p-2 bg-card/30 backdrop-blur-sm rounded-[2rem] border border-border/40 max-w-4xl mx-auto overflow-hidden">
-              {alphabet.map(letter => {
-                const hasTerms = FAITH_TERMS.some(t => t.term.toUpperCase().startsWith(letter));
-                const isSelected = selectedLetter === letter;
-                return (
-                  <motion.button
-                    key={letter}
-                    whileHover={hasTerms ? { scale: 1.1, y: -2 } : {}}
-                    whileTap={hasTerms ? { scale: 0.9 } : {}}
-                    onClick={() => hasTerms && handleLetterClick(letter)}
-                    disabled={!hasTerms}
-                    className={`w-10 h-10 flex items-center justify-center rounded-full text-xs font-black transition-all duration-300 border shadow-sm
-                      ${isSelected 
-                        ? 'bg-primary text-primary-foreground border-primary shadow-primary/30 ring-4 ring-primary/10' 
-                        : hasTerms 
-                          ? 'bg-card/50 text-foreground border-border/80 hover:border-primary/40 hover:text-primary hover:bg-white dark:hover:bg-slate-900' 
-                          : 'opacity-20 grayscale cursor-not-allowed border-transparent'}`}
-                  >
-                    {letter}
-                  </motion.button>
-                );
-              })}
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-wrap justify-center gap-2 max-w-4xl mx-auto px-4 overflow-x-auto no-scrollbar pb-2">
+              <Button
+                variant={!selectedCategory && !selectedLetter && !searchQuery ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => handleCategoryClick(null)}
+                className="rounded-full px-6 h-10 text-[10px] font-black uppercase tracking-widest shadow-sm transition-all whitespace-nowrap"
+              >
+                Tudo
+              </Button>
+              {categories.map(cat => (
+                <Button
+                  key={cat}
+                  variant={selectedCategory === cat ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => handleCategoryClick(cat)}
+                  className={`rounded-full px-6 h-10 text-[10px] font-black uppercase tracking-widest shadow-sm transition-all whitespace-nowrap
+                    ${selectedCategory === cat ? '' : 'bg-card/40 border border-border/40 text-muted-foreground hover:text-primary hover:border-primary/20'}`}
+                >
+                  {cat}
+                </Button>
+              ))}
+            </div>
+
+            <div className="relative group px-4">
+              <div className="absolute -inset-1 bg-gradient-to-r from-primary/5 to-transparent blur opacity-50 transition duration-1000" />
+              <div className="relative flex flex-wrap justify-center gap-2 p-3 bg-card/30 backdrop-blur-md rounded-[2.5rem] border border-border/40 max-w-4xl mx-auto">
+                {alphabet.map(letter => {
+                  const hasTerms = letterStatus[letter];
+                  const isSelected = selectedLetter === letter;
+                  return (
+                    <motion.button
+                      key={letter}
+                      whileHover={hasTerms ? { scale: 1.1, y: -2 } : {}}
+                      whileTap={hasTerms ? { scale: 0.9 } : {}}
+                      onClick={() => hasTerms && handleLetterClick(letter)}
+                      disabled={!hasTerms}
+                      className={`w-9 h-9 flex items-center justify-center rounded-xl text-xs font-black transition-all duration-300 border
+                        ${isSelected 
+                          ? 'bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/20 ring-2 ring-primary/10' 
+                          : hasTerms 
+                            ? 'bg-card/50 text-foreground border-border/80 hover:border-primary/40 hover:text-primary hover:bg-white dark:hover:bg-slate-900 shadow-sm' 
+                            : 'opacity-10 grayscale cursor-not-allowed border-transparent'}`}
+                    >
+                      {letter}
+                    </motion.button>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
@@ -386,16 +435,34 @@ const AZFaithPage: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                className="h-[300px] flex flex-col items-center justify-center text-center p-12 bg-muted/20 rounded-[3rem] border border-dashed border-border/60"
+                className="min-h-[400px] flex flex-col items-center justify-center text-center p-8 bg-muted/10 rounded-[3rem] border border-dashed border-border/40 relative overflow-hidden"
               >
-                <div className="w-24 h-24 rounded-full bg-primary/5 flex items-center justify-center mb-8 border border-primary/10 shadow-inner relative">
-                  <Tag className="h-10 w-10 text-primary/30" />
-                  <div className="absolute inset-0 bg-primary/5 rounded-full animate-ping opacity-20" />
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-50" />
+                <div className="relative z-10 space-y-8">
+                  <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center mx-auto border border-primary/20 shadow-xl animate-bounce duration-3000">
+                    <Sparkles className="h-10 w-10 text-primary" />
+                  </div>
+                  <div className="space-y-4">
+                    <h3 className="text-3xl font-black text-foreground tracking-tight">Tesouros da Fé</h3>
+                    <p className="text-muted-foreground max-w-sm mx-auto text-lg">
+                      Selecione um termo para mergulhar em sua profundidade teológica.
+                    </p>
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => {
+                      const random = FAITH_TERMS[Math.floor(Math.random() * FAITH_TERMS.length)];
+                      setSelectedTerm(random);
+                      if (window.innerWidth < 768) {
+                        document.getElementById('term-content')?.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    }}
+                    className="rounded-full border-primary/20 hover:bg-primary/10 px-8 h-12 gap-3"
+                  >
+                    <Zap className="w-5 h-5 text-primary" />
+                    <span>Descobrir termo aleatório</span>
+                  </Button>
                 </div>
-                <h3 className="text-2xl font-bold mb-3 text-foreground tracking-tight">Explore os Tesouros da Fé</h3>
-                <p className="text-muted-foreground max-w-md text-lg">
-                  Selecione uma das "bolhas" acima para abrir o hub de conteúdos e navegar pelas conexões teológicas.
-                </p>
               </motion.div>
             ) : (
               <motion.div
