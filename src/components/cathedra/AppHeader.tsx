@@ -76,9 +76,9 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
         )}
       </div>
 
-      <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
-        <button className="p-3 bg-muted text-primary rounded-2xl border border-border hover:bg-primary hover:text-white transition-all shadow-sm" onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}>
-          <Icons.Search className="w-5 h-5" />
+      <div className="flex items-center gap-1.5 sm:gap-4 flex-shrink-0">
+        <button className="p-2.5 sm:p-3 bg-muted text-primary rounded-xl sm:rounded-2xl border border-border hover:bg-primary hover:text-white transition-all shadow-sm active:scale-95" onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}>
+          <Icons.Search className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
         </button>
 
         {user && (
