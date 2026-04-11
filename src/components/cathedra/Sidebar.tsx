@@ -22,6 +22,7 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
+  const { lang, t } = useContext(LangContext);
   
 
   const sections = [
