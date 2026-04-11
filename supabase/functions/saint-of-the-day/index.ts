@@ -14,8 +14,7 @@ serve(async (req) => {
     const vaticanUrl = "https://www.vaticannews.va/pt/santo-do-dia.html";
     const response = await fetch(vaticanUrl, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-        'Accept-Language': 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
       }
     });
     
@@ -25,44 +24,48 @@ serve(async (req) => {
 
     const html = await response.text();
     
-    // Find the main section for the saint
-    // Usually <section class="section section--evidence section--isStatic">
-    const sectionMatch = html.match(/<section[^>]*class="[^"]*section--isStatic[^"]*"[\s\S]*?<\/section>/i) ||
-                        html.match(/<section[^>]*class="[^"]*section--evidence[^"]*"[\s\S]*?<\/section>/i);
+    // Look for the saint's name which usually starts with S. or São
+    const nameMatch = html.match(/<h2>(S\.|São|Santa|S\.\s|Santos|Santas)(.*?)<\/h2>/i);
+    let name = nameMatch ? nameMatch[0].replace(/<[^>]*>/g, '').trim() : "Santo do Dia";
     
-    const sectionHtml = sectionMatch ? sectionMatch[0] : html;
+    // If name is too short or still "Menu", try to find any h2 that isn't menu
+    if (name.toLowerCase().includes("menu") || name.length < 5) {
+       const h2s = html.match(/<h2[^>]*>(.*?)<\/h2>/gi) || [];
+       for (const h2 of h2s) {
+         const clean = h2.replace(/<[^>]*>/g, '').trim();
+         if (clean.length > 5 && !clean.toLowerCase().includes("menu") && !clean.toLowerCase().includes("newsletter")) {
+           name = clean;
+           break;
+         }
+       }
+    }
 
-    // Extract Name from H2
-    const nameMatch = sectionHtml.match(/<h2[^>]*>([\s\S]*?)<\/h2>/i);
-    let name = nameMatch ? nameMatch[1].replace(/<[^>]*>/g, '').trim() : "Santo do Dia";
-    
-    // Extract Image
+    // Extract image near the name
     let imageUrl = null;
-    const imgMatch = sectionHtml.match(/<img[^>]*data-original="([^"]*)"/i) || 
-                   sectionHtml.match(/<img[^>]*src="([^"]*)"/i);
-    
-    if (imgMatch) {
-      const src = imgMatch[1];
-      if (src && !src.includes('data:image')) {
-        imageUrl = src.startsWith('http') ? src : `https://www.vaticannews.va${src}`;
+    const allImgs = html.match(/<img[^>]*src="([^"]*)"[^>]*>/gi) || [];
+    for (const img of allImgs) {
+      if (img.includes("/santi/") || img.includes("/santo/")) {
+        const srcMatch = img.match(/src="([^"]*)"/i);
+        if (srcMatch) {
+          const src = srcMatch[1];
+          imageUrl = src.startsWith('http') ? src : `https://www.vaticannews.va${src}`;
+          break;
+        }
       }
     }
     
-    // Extract Description
-    const pMatch = sectionHtml.match(/<p>([\s\S]*?)<\/p>/i);
+    // Extract description
+    const pMatch = html.match(/<section class="section section--evidence section--isStatic">[\s\S]*?<p>([\s\S]*?)<\/p>/i) ||
+                  html.match(/<div class="teaser">[\s\S]*?<p>([\s\S]*?)<\/p>/i);
     const description = pMatch ? pMatch[1].replace(/<[^>]*>/g, '').trim() : "";
     
-    // Extract Read More Link
-    const linkMatch = sectionHtml.match(/<a[^>]*href="([^"]*)"[^>]*class="[^"]*saintReadMore[^"]*"/i) ||
-                     sectionHtml.match(/<a[^>]*href="([^"]*)"[^>]*title="[^"]*Leia tudo[^"]*"/i);
+    // Read more
+    const linkMatch = html.match(/<a[^>]*href="([^"]*)"[^>]*class="[^"]*saintReadMore[^"]*"/i);
     let moreLink = vaticanUrl;
     if (linkMatch) {
       const href = linkMatch[1];
       moreLink = href.startsWith('http') ? href : `https://www.vaticannews.va${href}`;
     }
-
-    // Clean up name if it contains whitespace or newlines
-    name = name.split('\n')[0].trim();
 
     return new Response(
       JSON.stringify({
