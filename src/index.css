@@ -85,6 +85,9 @@
     @screen lg {
       font-size: 16px;
     }
+    @screen xl {
+      font-size: 16.5px;
+    }
   }
 
   input, select, textarea {
@@ -114,13 +117,14 @@
 
   h1, h2, h3, h4, h5, h6 {
     @apply tracking-tight font-display text-primary;
+    text-wrap: balance;
   }
 
-  h1 { @apply text-3xl md:text-5xl lg:text-6xl font-black; }
-  h2 { @apply text-2xl md:text-3xl lg:text-4xl font-bold; }
-  h3 { @apply text-xl md:text-2xl font-bold; }
+  h1 { @apply text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-black leading-[1.1]; }
+  h2 { @apply text-2xl md:text-3xl lg:text-4xl font-bold leading-tight; }
+  h3 { @apply text-xl md:text-2xl lg:text-[1.75rem] font-bold leading-snug; }
 
-  p { @apply max-w-[70ch] text-foreground; }
+  p { @apply max-w-[70ch] text-foreground leading-relaxed; }
 
   .font-serif {
     font-family: 'Playfair Display', serif;
@@ -138,15 +142,40 @@
 
 @layer components {
   .app-container {
-    @apply w-full max-w-[1200px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12;
+    @apply w-full max-w-[1200px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16;
   }
 
   .content-section {
-    @apply w-full max-w-[1200px] mx-auto space-y-6 md:space-y-12 lg:space-y-16;
+    @apply w-full max-w-[1200px] mx-auto space-y-8 md:space-y-12 lg:space-y-16;
   }
 
   .responsive-grid {
     @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8;
+  }
+
+  /* Desktop two-column layout: main content + optional side panel */
+  .desktop-layout {
+    @apply w-full;
+  }
+  @screen lg {
+    .desktop-layout {
+      @apply grid gap-10;
+      grid-template-columns: 1fr 320px;
+    }
+  }
+  @screen xl {
+    .desktop-layout {
+      grid-template-columns: 1fr 360px;
+      @apply gap-12;
+    }
+  }
+
+  .desktop-main {
+    @apply min-w-0;
+  }
+
+  .desktop-aside {
+    @apply hidden lg:flex flex-col gap-6 sticky top-24 self-start;
   }
 
   .btn-full-mobile {
@@ -167,6 +196,11 @@
 
   .pb-safe {
     padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+  }
+
+  /* Desktop card with refined shadow */
+  .desktop-card {
+    @apply bg-card border border-border rounded-2xl lg:rounded-3xl p-5 md:p-6 lg:p-8 shadow-sm hover:shadow-md transition-shadow;
   }
 }
 
