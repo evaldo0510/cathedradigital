@@ -164,7 +164,19 @@ const Magisterium: React.FC = () => {
 
               <div className="space-y-4">
                 <h2 className="text-2xl md:text-3xl font-serif font-bold text-foreground">{selected.question}</h2>
-                <p className="text-lg text-muted-foreground leading-relaxed font-serif italic">"{selected.magisteriumAnswer}"</p>
+                <p className="text-lg text-muted-foreground leading-relaxed font-serif italic">
+                  "
+                  {parseTheologicalReferences(selected.magisteriumAnswer).map((seg, i) => {
+                    if (seg.type === 'bibleRef') {
+                      return <BibleVersePopover key={i} abbr={seg.abbr!} chapter={seg.chapter!} verse={seg.verse} label={seg.value} />;
+                    }
+                    if (seg.type === 'catechismRef') {
+                      return <CatechismPopover key={i} paragraph={seg.paragraph!} />;
+                    }
+                    return <span key={i}>{seg.value}</span>;
+                  })}
+                  "
+                </p>
                 <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-primary">
                   <Icons.Scroll className="w-4 h-4" /> {selected.sourceDoc}
                 </div>
@@ -172,7 +184,17 @@ const Magisterium: React.FC = () => {
 
               <div className="bg-primary/5 rounded-2xl p-6 border border-primary/10 space-y-4">
                 <p className="text-xl font-serif font-bold text-primary leading-tight">{selected.pch}</p>
-                <p className="text-sm font-bold text-foreground">{selected.innerQuestion}</p>
+                <p className="text-sm font-bold text-foreground">
+                  {parseTheologicalReferences(selected.innerQuestion).map((seg, i) => {
+                    if (seg.type === 'bibleRef') {
+                      return <BibleVersePopover key={i} abbr={seg.abbr!} chapter={seg.chapter!} verse={seg.verse} label={seg.value} />;
+                    }
+                    if (seg.type === 'catechismRef') {
+                      return <CatechismPopover key={i} paragraph={seg.paragraph!} />;
+                    }
+                    return <span key={i}>{seg.value}</span>;
+                  })}
+                </p>
               </div>
 
               <div className="space-y-4">
