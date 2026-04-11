@@ -94,6 +94,11 @@ export const SAINTS_DATA: Saint[] = [
     image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Saint_Augustine_by_Philippe_de_Champaigne.jpg/440px-Saint_Augustine_by_Philippe_de_Champaigne.jpg',
     virtues: ['Contrição', 'Busca pela Verdade', 'Caridade', 'Perseverança'],
     prayer: 'Tarde te amei, ó Beleza tão antiga e tão nova! Estavas dentro de mim e eu procurava-Te fora. Chamaste, gritaste, e rompeste a minha surdez.',
+    textoBase: 'Fizeste-nos para Ti, Senhor, e o nosso coração está inquieto enquanto não descansar em Ti.',
+    explicacao: 'O desejo de Deus está inscrito no coração humano. Nascemos com um vazio que só o Infinito pode preencher.',
+    interpretacaoProfunda: 'Santo Agostinho ensina que a inquietude não é um defeito, mas a "bússola" da alma que nos atrai para nossa origem e fim: Deus.',
+    aplicacaoPratica: 'Identifique hoje o que tem te causado ansiedade ou busca incessante. Entregue esse desejo a Deus, reconhecendo que só Ele é o descanso verdadeiro.',
+    reflexaoFinal: 'Onde estou buscando paz fora de Deus?',
   },
   {
     id: 'francisco-assis',
@@ -123,6 +128,11 @@ export const SAINTS_DATA: Saint[] = [
     image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Giotto_di_Bondone_-_Legend_of_St_Francis_-_15._Sermon_to_the_Birds_-_WGA09139.jpg/440px-Giotto_di_Bondone_-_Legend_of_St_Francis_-_15._Sermon_to_the_Birds_-_WGA09139.jpg',
     virtues: ['Pobreza', 'Fraternidade', 'Alegria', 'Humildade'],
     prayer: 'Senhor, fazei-me instrumento de vossa paz. Onde houver ódio, que eu leve o amor; onde houver ofensa, que eu leve o perdão.',
+    textoBase: 'Comecemos, irmãos, a servir o Senhor, porque até agora pouco ou nada fizemos.',
+    explicacao: 'A vida espiritual é um eterno recomeço. Não importa quanto avançamos, devemos sempre manter o zelo do primeiro amor.',
+    interpretacaoProfunda: 'São Francisco via a santidade como um caminho de humildade onde nunca nos sentimos "prontos". Cada dia é uma nova oportunidade de conversão radical.',
+    aplicacaoPratica: 'Não desanime por suas quedas de ontem. Hoje, recomece seu serviço a Deus com a alegria de um iniciante.',
+    reflexaoFinal: 'O que posso "recomeçar" hoje na minha vida espiritual?',
   },
   {
     id: 'judas-tadeu',
