@@ -34,6 +34,7 @@ const DOCS_LIST = [
   { id: 'ge', title: 'Gaudete et Exsultate', type: 'Exortação Apostólica', author: 'Francisco', year: 2018, theme: ['Santidade'], summary: 'Sobre o chamado à santidade no mundo atual.' },
   { id: 'al', title: 'Amoris Laetitia', type: 'Exortação Apostólica', author: 'Francisco', year: 2016, theme: ['Família', 'Amor'], summary: 'Sobre o amor na família.' },
   { id: 'cv', title: 'Christus Vivit', type: 'Exortação Apostólica', author: 'Francisco', year: 2019, theme: ['Jovens', 'Vocação'], summary: 'Exortação aos jovens e a todo o Povo de Deus.' },
+  { id: 'sd', title: 'Salvifici Doloris', type: 'Carta Apostólica', author: 'João Paulo II', year: 1984, theme: ['Sofrimento'], summary: 'Sobre o sentido cristão do sofrimento humano.' },
 
   // Constituições
   { id: 'lg', title: 'Lumen Gentium', type: 'Constituição', author: 'Concílio Vaticano II', year: 1964, theme: ['Eclesiologia'], summary: 'Constituição Dogmática sobre a Igreja.' },
