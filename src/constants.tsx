@@ -182,6 +182,7 @@ export const Logo = forwardRef<HTMLDivElement, { className?: string, variant?: '
         <path 
           d="M50 4L59 15L50 26L41 15L50 4Z" 
           fill={fillColor}
+          filter={variant === 'gold' ? "url(#glow)" : undefined}
           className="transition-all duration-700"
         />
         
