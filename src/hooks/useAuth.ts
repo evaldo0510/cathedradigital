@@ -25,6 +25,10 @@ export interface Profile {
   completed_books?: string[];
   badges?: string[];
   total_minutes_read?: number;
+  estado?: string;
+  diocese?: string;
+  paroquia?: string;
+  movimento_pastoral?: string;
   _sensitive?: SensitiveData;
 }
 
