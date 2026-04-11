@@ -448,9 +448,9 @@ const Bible: React.FC = () => {
                           <sup className="text-[0.6em] font-bold text-primary mr-1 select-none">{v.number}</sup>
                           {v.text}{' '}
                           {relatedP && (
-                            <span className="inline-flex gap-0.5 ml-1">
+                            <span className="inline-flex gap-0.5">
                               {relatedP.map(p => (
-                                <CatechismPopover key={p} paragraph={p} onNavigate={handleNavigateToCIC} />
+                                <CatechismPopover key={p} paragraph={p} onNavigate={handleNavigateToCIC} variant="mini" />
                               ))}
                             </span>
                           )}
