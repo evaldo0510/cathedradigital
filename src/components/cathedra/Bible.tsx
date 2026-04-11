@@ -141,7 +141,7 @@ const Bible: React.FC = () => {
   const markChapterRead = useCallback(async (bookAbbr: string, chapter: number, totalChapters: number) => {
     if (!user) return;
     
-    // Optimistic update
+    // Optimistic update for immediate UI feedback
     setChaptersRead(prev => {
       const next = { ...prev };
       if (!next[bookAbbr]) next[bookAbbr] = new Set();
@@ -150,20 +150,48 @@ const Bible: React.FC = () => {
     });
 
     try {
-      await supabase
+      // Async save to database
+      supabase
         .from('bible_chapters_read' as any)
-        .upsert({ user_id: user.id, book_abbr: bookAbbr, chapter } as any, { onConflict: 'user_id,book_abbr,chapter' });
+        .upsert({ user_id: user.id, book_abbr: bookAbbr, chapter } as any, { onConflict: 'user_id,book_abbr,chapter' })
+        .then(({ error }) => {
+          if (error) console.error('Error saving chapter read:', error);
+        });
       
-      // Auto-mark book as completed if all chapters read
+      // Complete book logic (must use the updated set)
       const currentRead = chaptersRead[bookAbbr] || new Set();
       const nextRead = new Set(currentRead).add(chapter);
-      
+
       if (nextRead.size >= totalChapters && !completedBooks.has(bookAbbr)) {
-        // ... (rest of the logic for completion)
+        const newCompleted = [...(profile?.completed_books || []), bookAbbr];
+        const newCompletedSet = new Set(newCompleted);
+        
+        const currentBadges = profile?.badges || [];
+        const newBadgeIds = checkNewBadges(currentBadges, {
+          completedBooks: newCompletedSet,
+          chaptersRead: { ...chaptersRead, [bookAbbr]: nextRead },
+          totalMinutesRead: profile?.total_minutes_read || 0,
+          streak: profile?.streak || 0,
+          completedJourneys: 0,
+        });
+        
+        const updatedBadges = [...currentBadges, ...newBadgeIds];
+        
+        supabase.from('profiles')
+          .update({ completed_books: newCompleted, badges: updatedBadges })
+          .eq('id', user.id)
+          .then(() => {
+            if (newBadgeIds.length > 0) {
+              confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 }, colors: ['#FFD700', '#FF6B35', '#4ECDC4', '#8B5CF6'] });
+              newBadgeIds.forEach(id => {
+                const badge = getBadgeById(id);
+                if (badge) toast.success(`Nova conquista: ${badge.name}`, { description: badge.description, duration: 5000 });
+              });
+            }
+          });
       }
-    } catch (error) {
-      console.error('Failed to mark chapter read:', error);
-      // Rollback if needed, but usually not critical for this app
+    } catch (err) {
+      console.error('Failed to process chapter read:', err);
     }
   }, [user, profile, completedBooks, chaptersRead]);
 
