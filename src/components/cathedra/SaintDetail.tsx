@@ -358,6 +358,98 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           </section>
         )}
 
+        {/* Deep Connections - PRO ONLY */}
+        {(saint.bibleRefs || saint.catechismRefs || saint.churchDocRefs) && (
+          <section className="space-y-6 pt-6 border-t border-border/50">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-primary">
+                <Icons.Sparkles className="w-4 h-4" />
+                <h3 className="text-[11px] font-black uppercase tracking-[0.2em]">Conexões Profundas</h3>
+              </div>
+              {!isPremium && (
+                <span className="text-[9px] font-black uppercase tracking-widest bg-primary/10 text-primary px-3 py-1.5 rounded-full border border-primary/20">
+                  Conteúdo Premium
+                </span>
+              )}
+            </div>
+
+            {!isPremium ? (
+              <div className="relative group cursor-pointer" onClick={() => navigate(AppRoute.PRICING)}>
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background/40 to-background/80 backdrop-blur-[2px] z-10 rounded-[2rem] flex items-center justify-center border border-primary/10">
+                  <div className="text-center space-y-3 p-8">
+                    <Icons.Lock className="w-8 h-8 text-primary mx-auto mb-2" />
+                    <h4 className="text-lg font-bold">Aprofunde seus estudos</h4>
+                    <p className="text-sm text-muted-foreground max-w-xs mx-auto">
+                      Assine o Cathedra Pro para acessar referências bíblicas, parágrafos do Catecismo e documentos da Igreja relacionados a {saint.name}.
+                    </p>
+                    <Button size="sm" className="bg-primary text-white rounded-full px-8 shadow-lg shadow-primary/20">Ver Planos</Button>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 opacity-30 filter blur-md select-none pointer-events-none">
+                  <div className="p-4 bg-muted rounded-2xl h-32" />
+                  <div className="p-4 bg-muted rounded-2xl h-32" />
+                  <div className="p-4 bg-muted rounded-2xl h-32" />
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-in fade-in duration-500">
+                {saint.bibleRefs && saint.bibleRefs.length > 0 && (
+                  <div className="space-y-4">
+                    <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                      <Icons.Book className="w-3.5 h-3.5" /> Escritura
+                    </h4>
+                    <div className="space-y-2">
+                      {saint.bibleRefs.map((ref, i) => (
+                        <div key={i} className="p-3 bg-secondary/30 rounded-xl border border-border/50 hover:border-primary/30 transition-colors">
+                          <p className="text-xs font-bold text-foreground">{ref.ref}</p>
+                          <p className="text-[10px] text-muted-foreground italic mt-0.5">{ref.label}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {saint.catechismRefs && saint.catechismRefs.length > 0 && (
+                  <div className="space-y-4">
+                    <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                      <Icons.Cross className="w-3.5 h-3.5" /> Catecismo
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      {saint.catechismRefs.map(ref => (
+                        <div key={ref} className="px-3 py-1.5 bg-primary/5 text-primary text-[10px] font-bold rounded-lg border border-primary/10">
+                          CIC {ref}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {saint.churchDocRefs && saint.churchDocRefs.length > 0 && (
+                  <div className="space-y-4">
+                    <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                      <Icons.FileText className="w-3.5 h-3.5" /> Documentos
+                    </h4>
+                    <div className="space-y-2">
+                      {saint.churchDocRefs.map((doc, i) => (
+                        <div key={i} className="flex items-center justify-between p-3 bg-card border border-border rounded-xl group hover:border-primary/40 transition-all">
+                          <span className="text-[10px] font-bold text-foreground truncate pr-2">{doc.title}</span>
+                          <button 
+                            onClick={() => window.open(doc.url, '_blank')}
+                            className="p-1.5 text-primary hover:bg-primary/10 rounded-md transition-colors"
+                          >
+                            <Icons.ExternalLink className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </section>
+        )}
+
         {/* Prayer */}
         {saint.prayer && (
           <section className="pt-6">
