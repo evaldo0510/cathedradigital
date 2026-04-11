@@ -1,7 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Icons } from '../../constants';
-import { DeepContent } from '@/types';
+import { DeepContent, AppRoute } from '@/types';
+import { useAuth } from '@/hooks/useAuth';
+import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
+import { Sparkles, Lock } from 'lucide-react';
 
 interface DeepContentSectionProps {
   content: DeepContent;
@@ -9,13 +13,16 @@ interface DeepContentSectionProps {
 }
 
 const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title }) => {
+  const { isPremium } = useAuth();
+  const navigate = useNavigate();
+
   const sections = [
-    { id: 'textoBase', label: 'Texto Base', icon: <Icons.Book className="w-4 h-4" />, value: content.textoBase },
-    { id: 'explicacao', label: 'Explicação', icon: <Icons.Search className="w-4 h-4" />, value: content.explicacao },
-    { id: 'interpretacaoProfunda', label: 'Interpretação Profunda', icon: <Icons.Star className="w-4 h-4" />, value: content.interpretacaoProfunda },
-    { id: 'aplicacaoPratica', label: 'Aplicação Prática', icon: <Icons.CheckCircle2 className="w-4 h-4" />, value: content.aplicacaoPratica },
-    { id: 'reflexaoFinal', label: 'Reflexão Final', icon: <Icons.Compass className="w-4 h-4" />, value: content.reflexaoFinal },
-    { id: 'exercicio', label: 'Exercício', icon: <Icons.Play className="w-4 h-4" />, value: content.exercicio },
+    { id: 'textoBase', label: 'Acesso Inicial', icon: <Icons.Book className="w-4 h-4" />, value: content.textoBase, isPremium: false },
+    { id: 'explicacao', label: 'Introdução', icon: <Icons.Search className="w-4 h-4" />, value: content.explicacao, isPremium: false },
+    { id: 'interpretacaoProfunda', label: 'Aprofundamento', icon: <Icons.Star className="w-4 h-4" />, value: content.interpretacaoProfunda, isPremium: true },
+    { id: 'aplicacaoPratica', label: 'Continuidade', icon: <Icons.CheckCircle2 className="w-4 h-4" />, value: content.aplicacaoPratica, isPremium: true },
+    { id: 'reflexaoFinal', label: 'Conteúdos Avançados', icon: <Icons.Compass className="w-4 h-4" />, value: content.reflexaoFinal, isPremium: true },
+    { id: 'exercicio', label: 'Conteúdos Avançados', icon: <Icons.Play className="w-4 h-4" />, value: content.exercicio, isPremium: true },
   ].filter(s => s.value);
 
   if (sections.length === 0) return null;
@@ -31,44 +38,74 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title 
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {sections.map((section, idx) => (
-          <motion.div
-            key={section.id}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: idx * 0.1 }}
-            className={`p-6 rounded-3xl border transition-all hover:shadow-lg group ${
-              section.id === 'textoBase' 
-                ? 'bg-primary/5 border-primary/20 md:col-span-2' 
-                : 'bg-card border-border hover:border-primary/30'
-            }`}
-          >
-            <div className="flex items-center gap-3 mb-4">
-              <div className={`p-2 rounded-xl ${section.id === 'textoBase' ? 'bg-primary text-primary-foreground' : 'bg-secondary text-primary group-hover:bg-primary group-hover:text-primary-foreground'} transition-colors`}>
-                {section.icon}
-              </div>
-              <h4 className={`text-xs font-black uppercase tracking-widest ${section.id === 'textoBase' ? 'text-primary' : 'text-muted-foreground group-hover:text-primary'}`}>
-                {section.label}
-              </h4>
-            </div>
-            
-            <div className={`font-serif leading-relaxed ${section.id === 'textoBase' ? 'text-lg italic text-foreground' : 'text-foreground/90 text-sm'}`}>
-              {section.value.split('\n\n').map((p, i) => (
-                <p key={i} className={i > 0 ? 'mt-3' : ''}>{p}</p>
-              ))}
-            </div>
+        {sections.map((section, idx) => {
+          const isLocked = section.isPremium && !isPremium;
 
-            {section.id === 'reflexaoFinal' && (
-              <div className="mt-6 pt-6 border-t border-border/40">
-                <div className="flex items-start gap-3">
-                  <Icons.MessageSquare className="w-4 h-4 text-primary mt-0.5" />
-                  <p className="text-xs italic text-muted-foreground">Silencie e deixe que esta pergunta ecoe em seu coração.</p>
+          return (
+            <motion.div
+              key={`${section.id}-${idx}`}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: idx * 0.1 }}
+              className={`p-6 rounded-3xl border transition-all relative overflow-hidden ${
+                section.id === 'textoBase' 
+                  ? 'bg-primary/5 border-primary/20 md:col-span-2' 
+                  : 'bg-card border-border hover:border-primary/30'
+              } ${isLocked ? 'hover:shadow-none cursor-default' : 'hover:shadow-lg'}`}
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className={`p-2 rounded-xl ${
+                  isLocked ? 'bg-muted text-muted-foreground' : (section.id === 'textoBase' ? 'bg-primary text-primary-foreground' : 'bg-secondary text-primary group-hover:bg-primary group-hover:text-primary-foreground')
+                } transition-colors`}>
+                  {isLocked ? <Lock className="w-4 h-4" /> : section.icon}
                 </div>
+                <h4 className={`text-xs font-black uppercase tracking-widest ${
+                  isLocked ? 'text-muted-foreground' : (section.id === 'textoBase' ? 'text-primary' : 'text-muted-foreground group-hover:text-primary')
+                }`}>
+                  {section.label}
+                  {section.isPremium && !isLocked && (
+                    <span className="ml-2 px-1.5 py-0.5 rounded-full bg-primary/10 text-primary text-[8px]">PRO</span>
+                  )}
+                </h4>
               </div>
-            )}
-          </motion.div>
-        ))}
+              
+              <div className="relative">
+                <div className={`font-serif leading-relaxed ${isLocked ? 'blur-[6px] select-none pointer-events-none opacity-40' : ''} ${section.id === 'textoBase' ? 'text-lg italic text-foreground' : 'text-foreground/90 text-sm'}`}>
+                  {section.value.split('\n\n').map((p, i) => (
+                    <p key={i} className={i > 0 ? 'mt-3' : ''}>{p}</p>
+                  ))}
+                </div>
+
+                {isLocked && (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center space-y-3 p-4 text-center">
+                    <Sparkles className="w-6 h-6 text-primary animate-pulse" />
+                    <p className="text-sm font-bold text-foreground">
+                      Continue aprofundando essa experiência
+                    </p>
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      className="font-bold text-[10px] uppercase tracking-widest h-9"
+                      onClick={() => navigate(AppRoute.PRICING)}
+                    >
+                      Desbloquear PRO
+                    </Button>
+                  </div>
+                )}
+              </div>
+
+              {section.id === 'reflexaoFinal' && !isLocked && (
+                <div className="mt-6 pt-6 border-t border-border/40">
+                  <div className="flex items-start gap-3">
+                    <Icons.MessageSquare className="w-4 h-4 text-primary mt-0.5" />
+                    <p className="text-xs italic text-muted-foreground">Silencie e deixe que esta pergunta ecoe em seu coração.</p>
+                  </div>
+                </div>
+              )}
+            </motion.div>
+          );
+        })}
       </div>
     </div>
   );
