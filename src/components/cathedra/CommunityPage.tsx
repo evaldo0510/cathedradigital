@@ -330,7 +330,8 @@ const CommunityPage: React.FC = () => {
           <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Communitas Fidelium</span>
         </div>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Comunidade</h1>
-        <p className="text-muted-foreground font-serif italic">Discussões e perguntas teológicas entre irmãos na fé.</p>
+        <p className="text-muted-foreground font-serif italic">Discussões, testemunhos e partilhas entre irmãos na fé.</p>
+        <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Todas as publicações são moderadas antes de aparecer para a comunidade</p>
       </div>
 
       {/* Tabs */}
