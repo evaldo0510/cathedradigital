@@ -302,17 +302,113 @@ const AZFaithPage: React.FC = () => {
                               exit={{ height: 0, opacity: 0 }}
                               className="overflow-hidden"
                             >
-                              <div className="px-4 pb-4 space-y-3 border-t border-border pt-3">
-                                <p className="text-sm text-muted-foreground leading-relaxed font-serif">
-                                  {t.definition}
-                                </p>
-                                {t.reference && (
-                                  <div className="flex items-center gap-2 text-[10px] text-primary bg-primary/5 px-2 py-1.5 rounded-lg w-fit">
-                                    <Icons.Book className="w-3 h-3" />
-                                    <span className="font-bold">{t.reference}</span>
+                                <div className="px-4 pb-6 space-y-6 border-t border-border pt-4">
+                                  {/* Explicação Simples */}
+                                  <div className="space-y-2">
+                                    <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/60 flex items-center gap-2">
+                                      <Icons.Info className="w-3 h-3" />
+                                      Explicação Simples
+                                    </h4>
+                                    <p className="text-sm text-foreground leading-relaxed font-serif">
+                                      {t.definition}
+                                    </p>
                                   </div>
-                                )}
-                              </div>
+
+                                  {/* Interpretação Profunda */}
+                                  {t.deepInterpretation && (
+                                    <div className="space-y-2 p-3 bg-primary/5 rounded-xl border border-primary/10">
+                                      <h4 className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-2">
+                                        <Icons.Sparkles className="w-3 h-3" />
+                                        Interpretação Profunda
+                                      </h4>
+                                      <p className="text-xs text-muted-foreground leading-relaxed italic">
+                                        {t.deepInterpretation}
+                                      </p>
+                                    </div>
+                                  )}
+
+                                  {/* Aplicação Prática */}
+                                  {t.practicalApplication && (
+                                    <div className="space-y-2">
+                                      <h4 className="text-[10px] font-black uppercase tracking-widest text-secondary flex items-center gap-2">
+                                        <Icons.Target className="w-3 h-3" />
+                                        Aplicação Prática
+                                      </h4>
+                                      <p className="text-xs text-foreground/80 leading-relaxed">
+                                        {t.practicalApplication}
+                                      </p>
+                                    </div>
+                                  )}
+
+                                  {/* Conexões */}
+                                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+                                    {/* Bíblia */}
+                                    {(t.reference || (t.bibleVerses && t.bibleVerses.length > 0)) && (
+                                      <div className="space-y-2">
+                                        <h5 className="text-[9px] font-bold uppercase text-muted-foreground flex items-center gap-1.5">
+                                          <Icons.Bible className="w-2.5 h-2.5" />
+                                          Escrituras
+                                        </h5>
+                                        <div className="flex flex-wrap gap-1.5">
+                                          {t.bibleVerses ? t.bibleVerses.map(v => (
+                                            <span key={v} className="text-[9px] bg-muted/50 px-2 py-0.5 rounded-full border border-border/50 text-foreground/70">
+                                              {v}
+                                            </span>
+                                          )) : t.reference && (
+                                            <span className="text-[9px] bg-muted/50 px-2 py-0.5 rounded-full border border-border/50 text-foreground/70">
+                                              {t.reference}
+                                            </span>
+                                          )}
+                                        </div>
+                                      </div>
+                                    )}
+
+                                    {/* Catecismo */}
+                                    {t.catechismReferences && t.catechismReferences.length > 0 && (
+                                      <div className="space-y-2">
+                                        <h5 className="text-[9px] font-bold uppercase text-muted-foreground flex items-center gap-1.5">
+                                          <Icons.FileText className="w-2.5 h-2.5" />
+                                          Catecismo
+                                        </h5>
+                                        <div className="flex flex-wrap gap-1.5">
+                                          {t.catechismReferences.map(r => (
+                                            <span key={r} className="text-[9px] bg-primary/5 px-2 py-0.5 rounded-full border border-primary/10 text-primary/80">
+                                              {r}
+                                            </span>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    )}
+
+                                    {/* Magistério */}
+                                    {t.magisteriumReferences && t.magisteriumReferences.length > 0 && (
+                                      <div className="space-y-2">
+                                        <h5 className="text-[9px] font-bold uppercase text-muted-foreground flex items-center gap-1.5">
+                                          <Icons.Globe className="w-2.5 h-2.5" />
+                                          Magistério
+                                        </h5>
+                                        <div className="flex flex-wrap gap-1.5">
+                                          {t.magisteriumReferences.map(m => (
+                                            <span key={m} className="text-[9px] bg-secondary/5 px-2 py-0.5 rounded-full border border-secondary/10 text-secondary-foreground/80">
+                                              {m}
+                                            </span>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    )}
+                                  </div>
+                                  
+                                  <button 
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      navigate(`${AppRoute.STUDY}?topic=${encodeURIComponent(t.term)}`);
+                                    }}
+                                    className="w-full py-2 bg-primary text-primary-foreground rounded-xl text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors mt-4"
+                                  >
+                                    <Icons.Brain className="w-3.5 h-3.5" />
+                                    Aprofundar com Colloquium IA
+                                  </button>
+                                </div>
                             </motion.div>
                           )}
                         </AnimatePresence>
