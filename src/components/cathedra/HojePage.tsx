@@ -297,6 +297,33 @@ const HojePage: React.FC = () => {
             const next = (stepsRes.data || []).find(s => !completedIds.includes(s.id));
             setRecommendedLogosStep(next || null);
           }
+
+          // Fetch theme contents based on main_state
+          const stateToThemeSlugs: Record<string, string[]> = {
+            'ansiedade': ['oracao', 'esperanca', 'fe'],
+            'confusao': ['fe', 'sabedoria', 'humildade'],
+            'dor_emocional': ['sofrimento', 'perdao', 'esperanca', 'amor'],
+            'busca_espiritual': ['santidade', 'vocacao', 'fe', 'oracao'],
+            'virtudes_e_missao': ['caridade', 'missao', 'humildade', 'santidade'],
+          };
+          const themeSlugs = stateToThemeSlugs[mainState] || ['fe', 'amor', 'oracao'];
+          
+          const { data: matchedThemes } = await supabase
+            .from('themes')
+            .select('id, name, slug')
+            .in('slug', themeSlugs)
+            .limit(3);
+
+          if (matchedThemes && matchedThemes.length > 0) {
+            setLogosThemeName(matchedThemes[0].name);
+            const themeIds = matchedThemes.map(t => t.id);
+            const { data: contents } = await supabase
+              .from('theme_contents')
+              .select('*')
+              .in('theme_id', themeIds)
+              .limit(6);
+            if (contents) setLogosThemeContents(contents);
+          }
         } catch (e) {
           console.error('Failed to parse recommendation:', e);
         }
