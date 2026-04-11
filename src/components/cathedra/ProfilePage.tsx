@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getLevelInfo } from '@/lib/levels';
 import { Switch } from '@/components/ui/switch';
+import { ESTADOS_BRASIL, ESTADO_NOME, DIOCESES_POR_ESTADO, MOVIMENTOS_PASTORAIS } from '@/data/dioceses-brasil';
 
 interface Badge {
   id: string;
@@ -53,8 +54,14 @@ const ProfilePage: React.FC = () => {
       setWhatsappNumber((profile as any).whatsapp_number || '');
       setWhatsappEnabled((profile as any).whatsapp_enabled || false);
       setPushEnabled((profile as any).push_enabled ?? true);
-      supabase.from('profiles').select('bio').eq('id', profile.id).single()
-        .then(({ data }) => setBio((data as any)?.bio || ''));
+      supabase.from('profiles').select('bio, estado, diocese, paroquia, movimento_pastoral').eq('id', profile.id).single()
+        .then(({ data }) => {
+          setBio((data as any)?.bio || '');
+          setEstado((data as any)?.estado || '');
+          setDiocese((data as any)?.diocese || '');
+          setParoquia((data as any)?.paroquia || '');
+          setMovimentoPastoral((data as any)?.movimento_pastoral || '');
+        });
     }
   }, [profile]);
 
@@ -151,7 +158,11 @@ const ProfilePage: React.FC = () => {
       bio, 
       whatsapp_number: whatsappNumber,
       whatsapp_enabled: whatsappEnabled,
-      push_enabled: pushEnabled 
+      push_enabled: pushEnabled,
+      estado: estado || null,
+      diocese: diocese || null,
+      paroquia: paroquia || null,
+      movimento_pastoral: movimentoPastoral || null,
     } as any).eq('id', user.id);
     setSaving(false);
     if (error) toast.error('Erro ao salvar perfil');
