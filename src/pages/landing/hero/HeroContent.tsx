@@ -114,7 +114,7 @@ const HeroContent = ({ heroOpacity, heroScale, heroY, onStart, onAbout }: HeroCo
         <motion.div variants={buttonHover} initial="rest" whileHover="hover" whileTap="tap">
           <Button
             size="lg"
-            className="h-20 px-16 rounded-[2rem] bg-primary text-primary-foreground font-black uppercase tracking-[0.2em] shadow-[0_20px_50px_rgba(11,31,58,0.3)] text-lg relative overflow-hidden group border border-primary-foreground/10"
+            className="h-16 sm:h-20 px-8 sm:px-16 rounded-[1.5rem] sm:rounded-[2rem] bg-primary text-primary-foreground font-black uppercase tracking-[0.2em] shadow-[0_20px_50px_rgba(11,31,58,0.3)] text-base sm:text-lg relative overflow-hidden group border border-primary-foreground/10"
             onClick={onStart}
           >
             <span className="relative z-10 flex items-center gap-3">
