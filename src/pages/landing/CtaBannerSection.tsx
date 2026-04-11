@@ -9,21 +9,36 @@ interface CtaBannerSectionProps {
 
 const CtaBannerSection = ({ onStart }: CtaBannerSectionProps) => (
   <section className="w-full py-20 px-6">
-    <motion.div variants={scaleIn} initial="hidden" whileInView="visible" viewport={{ once: true }} className="max-w-4xl mx-auto text-center space-y-8 p-12 md:p-16 rounded-[3rem] bg-primary/5 border border-primary/10 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10 pointer-events-none" />
-      <div className="relative z-10 space-y-8">
-        <Church className="w-12 h-12 text-primary mx-auto" />
-        <h2 className="text-3xl md:text-5xl font-display font-bold leading-tight">
-          Pronto para aprofundar sua <span className="text-primary italic">fé?</span>
-        </h2>
-        <p className="text-lg text-muted-foreground max-w-xl mx-auto">
-          Junte-se a milhares de fiéis que usam o Cathedra para crescer espiritualmente todos os dias.
-        </p>
-        <motion.div variants={buttonHover} initial="rest" whileHover="hover" whileTap="tap" className="inline-block font-serif">
-          <Button size="lg" className="h-16 px-14 rounded-2xl bg-primary text-primary-foreground font-black uppercase tracking-widest shadow-2xl shadow-primary/20 text-base" onClick={onStart}>
-            Começar Agora <ChevronRight className="ml-2 w-5 h-5" />
-          </Button>
-        </motion.div>
+    <motion.div variants={scaleIn} initial="hidden" whileInView="visible" viewport={{ once: true }} className="max-w-4xl mx-auto text-center space-y-8 p-12 md:p-16 rounded-[4rem] bg-card border border-primary/20 relative shadow-2xl overflow-hidden group">
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-primary/20 pointer-events-none group-hover:opacity-100 transition-opacity duration-700 opacity-60" />
+      <div className="relative z-10 space-y-10">
+        <div className="relative inline-flex items-center justify-center">
+          <div className="absolute inset-0 bg-primary/20 blur-2xl rounded-full" />
+          <Church className="w-16 h-16 text-primary relative z-10" />
+        </div>
+        <div className="space-y-4">
+          <h2 className="text-4xl md:text-6xl font-display font-bold leading-tight tracking-tight">
+            Sua jornada de <span className="text-primary italic">fé</span> <br />
+            começa aqui.
+          </h2>
+          <p className="text-xl text-muted-foreground max-w-xl mx-auto font-serif italic">
+            "Não tenhas medo, pois Eu estou contigo." <br />
+            <span className="text-base not-italic opacity-80 mt-2 block">
+              Deixe o Logos guiar seus primeiros passos no estudo da Sagrada Tradição.
+            </span>
+          </p>
+        </div>
+        <div className="flex flex-col items-center gap-4">
+          <motion.div variants={buttonHover} initial="rest" whileHover="hover" whileTap="tap" className="inline-block font-serif">
+            <Button size="lg" className="h-20 px-16 rounded-[2rem] bg-primary text-primary-foreground font-black uppercase tracking-[0.2em] shadow-[0_20px_50px_rgba(11,31,58,0.3)] text-lg border border-primary-foreground/10 group overflow-hidden" onClick={onStart}>
+              <span className="relative z-10">Escreva sua reflexão</span>
+              <motion.div className="absolute inset-0 bg-gradient-to-r from-primary via-secondary/20 to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            </Button>
+          </motion.div>
+          <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em] opacity-60">
+            Acesso totalmente gratuito · Inicie sua caminhada agora
+          </p>
+        </div>
       </div>
     </motion.div>
   </section>

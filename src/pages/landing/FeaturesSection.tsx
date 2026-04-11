@@ -1,15 +1,15 @@
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { BookOpen, Star, Clock, Users, ChevronRight } from "lucide-react";
+import { BookOpen, Star, Clock, Users, ChevronRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AppRoute } from "@/types";
 
 const features = [
+  { title: "Logos IA", description: "Assistente teológico treinado com o Magistério da Igreja para guiar suas reflexões e dúvidas de fé.", benefit: "Receba orientações espirituais personalizadas e fundamentadas na sã doutrina.", icon: <Sparkles className="h-7 w-7" />, route: AppRoute.DASHBOARD },
   { title: "Bíblia Sagrada", description: "Acesso completo às Escrituras com ferramentas de estudo, anotações e busca avançada.", benefit: "Fortaleça seu conhecimento bíblico e guarde suas passagens favoritas.", icon: <BookOpen className="h-7 w-7" />, route: AppRoute.BIBLE },
   { title: "Liturgia do Dia", description: "Acompanhe as leituras da Santa Missa, o santo do dia e meditações diárias.", benefit: "Viva o tempo litúrgico em comunhão com toda a Igreja no mundo.", icon: <Clock className="h-7 w-7" />, route: AppRoute.LITURGIA },
   { title: "Jornadas de Fé", description: "Trilhas guiadas de formação espiritual que transformam seu conhecimento em vivência.", benefit: "Um caminho claro, passo a passo, para crescer na fé com profundidade.", icon: <Star className="h-7 w-7" />, route: AppRoute.JORNADAS },
-  { title: "Comunidade", description: "Conecte-se com outros fiéis, compartilhe orações e participe de grupos de estudo.", benefit: "Nunca caminhe sozinho; encontre apoio e partilha na sua jornada cristã.", icon: <Users className="h-7 w-7" />, route: AppRoute.COMMUNITY },
 ];
 
 interface FeaturesSectionProps {

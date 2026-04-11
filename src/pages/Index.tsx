@@ -27,13 +27,13 @@ const Index = () => {
         navigate(AppRoute.ADMIN, { replace: true });
       } else {
         const onboardingDone = localStorage.getItem("cathedra_onboarding_done");
-        navigate(onboardingDone ? AppRoute.DASHBOARD : AppRoute.ONBOARDING, { replace: true });
+        navigate(onboardingDone ? AppRoute.HOJE : AppRoute.ONBOARDING, { replace: true });
       }
     }
   }, [user, profile, loading, navigate]);
 
   const handleStart = () => {
-    if (user) navigate(AppRoute.DASHBOARD);
+    if (user) navigate(AppRoute.HOJE);
     else navigate(AppRoute.LOGIN);
   };
 

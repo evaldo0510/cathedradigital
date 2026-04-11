@@ -183,6 +183,15 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.02); }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
 @keyframes drift-slow {
   0% { transform: translate(0, 0) rotate(0deg) scale(1); }
   50% { transform: translate(3%, 3%) rotate(2deg) scale(1.1); }
