@@ -27,7 +27,7 @@ const AboutCreatorSection = () => {
                 <div className="w-full h-full rounded-full bg-muted flex items-center justify-center overflow-hidden border border-border">
                   <Icons.User className="w-24 h-24 text-muted-foreground/30" />
                   {/* If the creator has a photo, replace the Icon with an img tag:
-                  <img src="/creator-photo.jpg" alt="eevaldo.os" className="w-full h-full object-cover" />
+                  <img src="/creator-photo.jpg" alt="Evaldo.os" className="w-full h-full object-cover" />
                   */}
                 </div>
                 <div className="absolute -bottom-2 -right-2 bg-primary text-white p-3 rounded-full shadow-lg border-4 border-background">
@@ -47,8 +47,8 @@ const AboutCreatorSection = () => {
               <span className="text-[10px] font-bold uppercase tracking-widest text-primary/70">O Fundador</span>
             </div>
             
-            <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground">
-              eevaldo.os
+            <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground">
+              Evaldo.os
             </h2>
             
             <div className="space-y-4 text-muted-foreground text-lg leading-relaxed">

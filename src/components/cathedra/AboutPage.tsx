@@ -71,7 +71,7 @@ const AboutPage: React.FC = () => (
               <div className="w-full h-full rounded-full bg-muted flex items-center justify-center overflow-hidden border border-border group-hover:scale-105 transition-transform duration-700">
                 <Icons.User className="w-20 h-20 text-muted-foreground/30" />
                 {/* Optional Creator Photo:
-                <img src="/creator-photo.jpg" alt="eevaldo.os" className="w-full h-full object-cover" />
+                <img src="/creator-photo.jpg" alt="Evaldo.os" className="w-full h-full object-cover" />
                 */}
               </div>
               <div className="absolute -bottom-1 -right-1 bg-primary text-white p-2.5 rounded-full shadow-lg border-4 border-background">
@@ -83,12 +83,12 @@ const AboutPage: React.FC = () => (
           <div className="space-y-6 flex-1 text-center md:text-left">
             <div className="space-y-2">
               <h2 className="text-2xl md:text-3xl font-bold text-foreground">Sobre o Criador</h2>
-              <p className="text-lg font-medium text-primary">eevaldo.os</p>
+              <p className="text-xl font-bold text-primary">Evaldo.os</p>
             </div>
             
             <div className="space-y-4 text-muted-foreground text-base leading-relaxed">
               <p>
-                O Cathedra Digital foi concebido e desenvolvido por <span className="text-foreground font-semibold">eevaldo.os</span> como uma resposta pessoal ao chamado de evangelização no mundo digital. Unindo a paixão pela tecnologia de ponta com a veneração pela Tradição Católica de dois mil anos.
+                O Cathedra Digital foi concebido e desenvolvido por <span className="text-foreground font-semibold">Evaldo.os</span> como uma resposta pessoal ao chamado de evangelização no mundo digital. Unindo a paixão pela tecnologia de ponta com a veneração pela Tradição Católica de dois mil anos.
               </p>
               <p>
                 Nossa missão é fornecer as ferramentas mais avançadas para que cada católico possa aprofundar sua fé, estudar as escrituras e viver a liturgia com clareza, beleza e profundidade, onde quer que esteja.
