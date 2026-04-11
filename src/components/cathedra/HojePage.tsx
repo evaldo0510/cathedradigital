@@ -401,36 +401,44 @@ const HojePage: React.FC = () => {
           </section>
         )}
 
-        {/* Santo do Dia - Logos Reflection Suggestion */}
-        {saintsToday.length > 0 && (
+        {/* Santo do Dia - Enhanced for Journey */}
+        {featuredSaint && (
           <section className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-250">
-            <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 flex items-center gap-3">
-              <div className="h-px w-6 bg-muted-foreground/30" />
-              Santo do Dia
-            </h2>
+            <div className="flex items-center justify-between">
+              <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 flex items-center gap-3">
+                <div className="h-px w-6 bg-muted-foreground/30" />
+                Santo do Dia
+              </h2>
+              {activeJourney && (
+                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[9px] font-bold uppercase tracking-wider border border-primary/20">
+                  <Icons.Star className="w-2.5 h-2.5 fill-primary" />
+                  Especial para sua jornada
+                </div>
+              )}
+            </div>
             
             <motion.div
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.99 }}
-              onClick={() => navigate(`${AppRoute.SAINTS}?action=reflect`)}
+              onClick={() => navigate(`${AppRoute.SAINTS}/${featuredSaint.id}?action=reflect`)}
               className="group cursor-pointer p-0 rounded-3xl border border-border bg-card overflow-hidden shadow-sm hover:border-primary/30 transition-all flex flex-col sm:flex-row h-full"
             >
               <div className="w-full sm:w-1/3 h-40 sm:h-auto relative shrink-0 overflow-hidden">
                 <SacredImage 
-                  src={saintsToday[0].image} 
+                  src={featuredSaint.image} 
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
-                  alt={saintsToday[0].name} 
+                  alt={featuredSaint.name} 
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 <div className="absolute bottom-4 left-4 right-4">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-white/70 mb-1">{saintsToday[0].feastDay}</p>
-                  <h3 className="text-xl font-serif font-bold text-white leading-tight">{saintsToday[0].name}</h3>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-white/70 mb-1">{featuredSaint.feastDay}</p>
+                  <h3 className="text-xl font-serif font-bold text-white leading-tight">{featuredSaint.name}</h3>
                 </div>
               </div>
               <div className="flex-1 p-6 space-y-4 flex flex-col justify-center">
                 <div className="space-y-2">
                   <p className="text-xs text-muted-foreground font-serif italic line-clamp-2 italic">
-                    {saintsToday[0].quotes?.[0] || saintsToday[0].bio}
+                    {featuredSaint.quotes?.[0] || featuredSaint.bio}
                   </p>
                 </div>
                 <div className="flex items-center justify-between">
@@ -441,6 +449,38 @@ const HojePage: React.FC = () => {
                     <span className="text-[10px] font-black uppercase tracking-widest text-primary">Refletir com Logos</span>
                   </div>
                   <Icons.ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-all group-hover:translate-x-1" />
+                </div>
+              </div>
+            </motion.div>
+          </section>
+        )}
+
+        {/* Recomendação de Santo Baseada no Momento Emocional */}
+        {logosSaint && (
+          <section className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-primary flex items-center gap-3">
+              <div className="h-px w-6 bg-primary/30" />
+              Sugerido para seu momento
+            </h2>
+            
+            <motion.div
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              onClick={() => navigate(`${AppRoute.SAINTS}/${logosSaint.id}`)}
+              className="group cursor-pointer p-6 rounded-3xl border border-primary/20 bg-primary/5 hover:border-primary/40 transition-all shadow-sm"
+            >
+              <div className="flex items-center gap-5">
+                <div className="w-16 h-16 rounded-2xl overflow-hidden shrink-0 border border-primary/10">
+                  <SacredImage src={logosSaint.image} className="w-full h-full object-cover" alt={logosSaint.name} />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-base font-bold text-foreground">São {logosSaint.name}</h3>
+                  <p className="text-xs text-muted-foreground mt-1 font-medium">
+                    {logosSaint.patronOf?.[0] ? `Padroeiro(a) de ${logosSaint.patronOf[0]}` : logosSaint.title}
+                  </p>
+                </div>
+                <div className="w-10 h-10 rounded-full bg-background border border-border flex items-center justify-center text-primary group-hover:border-primary/30 transition-all">
+                  <Icons.ChevronRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
                 </div>
               </div>
             </motion.div>
