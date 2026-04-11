@@ -16,10 +16,13 @@ const SECTION_CONFIG = [
   { key: 'interpretation', label: 'Interpretação', icon: <BookOpen className="w-4 h-4" /> },
   { key: 'practical_direction', label: 'Direção Prática', icon: <Hand className="w-4 h-4" /> },
   { key: 'guided_exercise', label: 'Exercício Guiado', icon: <PenLine className="w-4 h-4" /> },
+  
+  // Legacy mappings for existing content
+  { key: 'intro', label: 'Interpretação', icon: <BookOpen className="w-4 h-4" /> },
   { key: 'reflection', label: 'Reflexão', icon: <PenLine className="w-4 h-4" /> },
-  { key: 'intro', label: 'Contexto', icon: <BookOpen className="w-4 h-4" /> },
   { key: 'practice', label: 'Prática', icon: <Hand className="w-4 h-4" /> },
-  { key: 'prayer', label: 'Oração', icon: <Sparkles className="w-4 h-4" /> },
+  { key: 'prayer', label: 'Exercício', icon: <Sparkles className="w-4 h-4" /> },
+  { key: 'lectio', label: 'Leitura Orante', icon: <BookOpen className="w-4 h-4" /> },
 ];
 
 type UserLevelClass = 'iniciante' | 'intermediário' | 'avançado';
