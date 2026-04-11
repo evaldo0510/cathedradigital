@@ -554,13 +554,17 @@ export type Database = {
           bio: string | null
           completed_books: string[] | null
           created_at: string
+          diocese: string | null
+          estado: string | null
           id: string
           is_premium: boolean
           last_action_at: string | null
           last_notified_at: string | null
           last_visit: string | null
           level: number | null
+          movimento_pastoral: string | null
           name: string
+          paroquia: string | null
           push_enabled: boolean | null
           role: string | null
           streak: number | null
@@ -576,13 +580,17 @@ export type Database = {
           bio?: string | null
           completed_books?: string[] | null
           created_at?: string
+          diocese?: string | null
+          estado?: string | null
           id: string
           is_premium?: boolean
           last_action_at?: string | null
           last_notified_at?: string | null
           last_visit?: string | null
           level?: number | null
+          movimento_pastoral?: string | null
           name?: string
+          paroquia?: string | null
           push_enabled?: boolean | null
           role?: string | null
           streak?: number | null
@@ -598,13 +606,17 @@ export type Database = {
           bio?: string | null
           completed_books?: string[] | null
           created_at?: string
+          diocese?: string | null
+          estado?: string | null
           id?: string
           is_premium?: boolean
           last_action_at?: string | null
           last_notified_at?: string | null
           last_visit?: string | null
           level?: number | null
+          movimento_pastoral?: string | null
           name?: string
+          paroquia?: string | null
           push_enabled?: boolean | null
           role?: string | null
           streak?: number | null

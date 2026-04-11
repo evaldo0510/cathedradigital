@@ -1,0 +1,73 @@
+// Estados brasileiros e suas dioceses
+export const ESTADOS_BRASIL = [
+  'AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA',
+  'MG', 'MS', 'MT', 'PA', 'PB', 'PE', 'PI', 'PR', 'RJ', 'RN',
+  'RO', 'RR', 'RS', 'SC', 'SE', 'SP', 'TO'
+] as const;
+
+export const ESTADO_NOME: Record<string, string> = {
+  AC: 'Acre', AL: 'Alagoas', AM: 'Amazonas', AP: 'Amapá',
+  BA: 'Bahia', CE: 'Ceará', DF: 'Distrito Federal', ES: 'Espírito Santo',
+  GO: 'Goiás', MA: 'Maranhão', MG: 'Minas Gerais', MS: 'Mato Grosso do Sul',
+  MT: 'Mato Grosso', PA: 'Pará', PB: 'Paraíba', PE: 'Pernambuco',
+  PI: 'Piauí', PR: 'Paraná', RJ: 'Rio de Janeiro', RN: 'Rio Grande do Norte',
+  RO: 'Rondônia', RR: 'Roraima', RS: 'Rio Grande do Sul', SC: 'Santa Catarina',
+  SE: 'Sergipe', SP: 'São Paulo', TO: 'Tocantins',
+};
+
+export const DIOCESES_POR_ESTADO: Record<string, string[]> = {
+  AC: ['Diocese de Rio Branco', 'Diocese de Cruzeiro do Sul'],
+  AL: ['Arquidiocese de Maceió', 'Diocese de Penedo', 'Diocese de Palmeira dos Índios'],
+  AM: ['Arquidiocese de Manaus', 'Diocese de Parintins', 'Diocese de Coari', 'Prelazia de Tefé', 'Prelazia de São Gabriel da Cachoeira', 'Prelazia de Itacoatiara'],
+  AP: ['Diocese de Macapá'],
+  BA: ['Arquidiocese de São Salvador da Bahia', 'Arquidiocese de Feira de Santana', 'Diocese de Vitória da Conquista', 'Diocese de Ilhéus', 'Diocese de Jequié', 'Diocese de Camaçari', 'Diocese de Alagoinhas', 'Diocese de Bom Jesus da Lapa', 'Diocese de Barreiras', 'Diocese de Amargosa', 'Diocese de Ruy Barbosa', 'Diocese de Paulo Afonso', 'Diocese de Senhor do Bonfim', 'Diocese de Juazeiro', 'Diocese de Teixeira de Freitas-Caravelas', 'Diocese de Eunápolis', 'Diocese de Itabuna'],
+  CE: ['Arquidiocese de Fortaleza', 'Diocese de Sobral', 'Diocese de Crato', 'Diocese de Limoeiro do Norte', 'Diocese de Tianguá', 'Diocese de Quixadá', 'Diocese de Iguatu', 'Diocese de Itapipoca', 'Diocese de Crateús'],
+  DF: ['Arquidiocese de Brasília'],
+  ES: ['Arquidiocese de Vitória', 'Diocese de Cachoeiro de Itapemirim', 'Diocese de Colatina', 'Diocese de São Mateus'],
+  GO: ['Arquidiocese de Goiânia', 'Diocese de Anápolis', 'Diocese de Itumbiara', 'Diocese de Jataí', 'Diocese de Goiás', 'Diocese de Uruaçu', 'Diocese de Luziânia', 'Diocese de São Luís de Montes Belos', 'Diocese de Formosa', 'Diocese de Ipameri'],
+  MA: ['Arquidiocese de São Luís do Maranhão', 'Diocese de Caxias do Maranhão', 'Diocese de Imperatriz', 'Diocese de Bacabal', 'Diocese de Coroatá', 'Diocese de Pinheiro', 'Diocese de Balsas', 'Diocese de Brejo', 'Diocese de Viana', 'Diocese de Grajaú', 'Diocese de Carolina', 'Diocese de Zé Doca'],
+  MG: ['Arquidiocese de Belo Horizonte', 'Arquidiocese de Diamantina', 'Arquidiocese de Juiz de Fora', 'Arquidiocese de Mariana', 'Arquidiocese de Montes Claros', 'Arquidiocese de Pouso Alegre', 'Arquidiocese de Uberaba', 'Diocese de Araçuaí', 'Diocese de Caratinga', 'Diocese de Divinópolis', 'Diocese de Governador Valadares', 'Diocese de Guaxupé', 'Diocese de Itabira-Fabriciano', 'Diocese de Janaúba', 'Diocese de Luz', 'Diocese de Oliveira', 'Diocese de Paracatu', 'Diocese de Patos de Minas', 'Diocese de São João del-Rei', 'Diocese de Sete Lagoas', 'Diocese de Teófilo Otoni', 'Diocese de Uberlândia', 'Diocese de Leopoldina', 'Diocese de Campanha', 'Diocese de Januária', 'Diocese de Almenara'],
+  MS: ['Arquidiocese de Campo Grande', 'Diocese de Dourados', 'Diocese de Três Lagoas', 'Diocese de Corumbá', 'Diocese de Jardim', 'Diocese de Naviraí'],
+  MT: ['Arquidiocese de Cuiabá', 'Diocese de Rondonópolis-Guiratinga', 'Diocese de Sinop', 'Diocese de Barra do Garças', 'Diocese de Juína', 'Prelazia de São Félix do Araguaia', 'Diocese de Primavera do Leste-Paranatinga'],
+  PA: ['Arquidiocese de Belém do Pará', 'Diocese de Abaetetuba', 'Diocese de Bragança do Pará', 'Diocese de Cametá', 'Diocese de Castanhal', 'Diocese de Macapá', 'Diocese de Marabá', 'Diocese de Óbidos', 'Diocese de Ponta de Pedras', 'Diocese de Santarém', 'Prelazia de Itaituba', 'Prelazia de Xingu'],
+  PB: ['Arquidiocese de Paraíba', 'Diocese de Campina Grande', 'Diocese de Guarabira', 'Diocese de Patos', 'Diocese de Cajazeiras'],
+  PE: ['Arquidiocese de Olinda e Recife', 'Diocese de Caruaru', 'Diocese de Garanhuns', 'Diocese de Nazaré da Mata', 'Diocese de Palmares', 'Diocese de Pesqueira', 'Diocese de Petrolina', 'Diocese de Afogados da Ingazeira', 'Diocese de Salgueiro', 'Diocese de Floresta'],
+  PI: ['Arquidiocese de Teresina', 'Diocese de Parnaíba', 'Diocese de Campo Maior', 'Diocese de Floriano', 'Diocese de Picos', 'Diocese de Oeiras', 'Diocese de São Raimundo Nonato', 'Diocese de Bom Jesus do Gurguéia'],
+  PR: ['Arquidiocese de Curitiba', 'Arquidiocese de Londrina', 'Arquidiocese de Maringá', 'Arquidiocese de Cascavel', 'Diocese de Apucarana', 'Diocese de Campo Mourão', 'Diocese de Cornélio Procópio', 'Diocese de Foz do Iguaçu', 'Diocese de Guarapuava', 'Diocese de Jacarezinho', 'Diocese de Palmas-Francisco Beltrão', 'Diocese de Paranaguá', 'Diocese de Paranavaí', 'Diocese de Ponta Grossa', 'Diocese de São José dos Pinhais', 'Diocese de Toledo', 'Diocese de Umuarama', 'Diocese de União da Vitória'],
+  RJ: ['Arquidiocese de São Sebastião do Rio de Janeiro', 'Arquidiocese de Niterói', 'Diocese de Nova Iguaçu', 'Diocese de Duque de Caxias', 'Diocese de Petrópolis', 'Diocese de Volta Redonda-Barra Mansa', 'Diocese de Campos dos Goytacazes', 'Diocese de Valença', 'Diocese de Itaguaí', 'Diocese de Nova Friburgo'],
+  RN: ['Arquidiocese de Natal', 'Diocese de Mossoró', 'Diocese de Caicó'],
+  RO: ['Arquidiocese de Porto Velho', 'Diocese de Ji-Paraná', 'Diocese de Guajará-Mirim'],
+  RR: ['Diocese de Roraima'],
+  RS: ['Arquidiocese de Porto Alegre', 'Arquidiocese de Passo Fundo', 'Arquidiocese de Pelotas', 'Arquidiocese de Santa Maria', 'Diocese de Bagé', 'Diocese de Caxias do Sul', 'Diocese de Cruz Alta', 'Diocese de Erexim', 'Diocese de Frederico Westphalen', 'Diocese de Novo Hamburgo', 'Diocese de Osório', 'Diocese de Rio Grande', 'Diocese de Santa Cruz do Sul', 'Diocese de Santo Ângelo', 'Diocese de São Leopoldo', 'Diocese de Uruguaiana', 'Diocese de Vacaria'],
+  SC: ['Arquidiocese de Florianópolis', 'Diocese de Blumenau', 'Diocese de Caçador', 'Diocese de Chapecó', 'Diocese de Criciúma', 'Diocese de Joinville', 'Diocese de Joaçaba', 'Diocese de Lages', 'Diocese de Rio do Sul', 'Diocese de Tubarão'],
+  SE: ['Arquidiocese de Aracaju', 'Diocese de Propriá', 'Diocese de Estância'],
+  SP: ['Arquidiocese de São Paulo', 'Arquidiocese de Aparecida', 'Arquidiocese de Botucatu', 'Arquidiocese de Campinas', 'Arquidiocese de Ribeirão Preto', 'Arquidiocese de Sorocaba', 'Diocese de Assis', 'Diocese de Bauru', 'Diocese de Campo Limpo', 'Diocese de Caraguatatuba', 'Diocese de Catanduva', 'Diocese de Franca', 'Diocese de Guarulhos', 'Diocese de Itapetininga', 'Diocese de Itapeva', 'Diocese de Jales', 'Diocese de Jundiaí', 'Diocese de Limeira', 'Diocese de Lins', 'Diocese de Marília', 'Diocese de Mogi das Cruzes', 'Diocese de Osasco', 'Diocese de Ourinhos', 'Diocese de Piracicaba', 'Diocese de Presidente Prudente', 'Diocese de Registro', 'Diocese de Santo Amaro', 'Diocese de Santo André', 'Diocese de Santos', 'Diocese de São Carlos', 'Diocese de São José do Rio Preto', 'Diocese de São José dos Campos', 'Diocese de São Miguel Paulista', 'Diocese de Taubaté', 'Diocese de Votuporanga'],
+  TO: ['Diocese de Palmas', 'Diocese de Miracema do Tocantins', 'Diocese de Porto Nacional', 'Diocese de Tocantinópolis', 'Diocese de Cristalândia'],
+};
+
+export const MOVIMENTOS_PASTORAIS = [
+  'Renovação Carismática Católica',
+  'Comunidade Canção Nova',
+  'Comunidade Shalom',
+  'Opus Dei',
+  'Focolares',
+  'Neocatecumenato',
+  'Pastoral da Juventude',
+  'Pastoral Familiar',
+  'Pastoral da Criança',
+  'Pastoral da Saúde',
+  'Pastoral Carcerária',
+  'Legião de Maria',
+  'Apostolado da Oração',
+  'Vicentinos (SSVP)',
+  'Cursilho de Cristandade',
+  'Encontro de Casais com Cristo (ECC)',
+  'Movimento dos Focolares',
+  'Comunidade Católica Remidos',
+  'Arautos do Evangelho',
+  'TLC (Terço dos Homens)',
+  'Pastoral do Dízimo',
+  'Catequese',
+  'Ministério de Música',
+  'Outro',
+];

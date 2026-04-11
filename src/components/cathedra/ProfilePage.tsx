@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getLevelInfo } from '@/lib/levels';
 import { Switch } from '@/components/ui/switch';
+import { ESTADOS_BRASIL, ESTADO_NOME, DIOCESES_POR_ESTADO, MOVIMENTOS_PASTORAIS } from '@/data/dioceses-brasil';
 
 interface Badge {
   id: string;
@@ -34,6 +35,10 @@ const ProfilePage: React.FC = () => {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [estado, setEstado] = useState('');
+  const [diocese, setDiocese] = useState('');
+  const [paroquia, setParoquia] = useState('');
+  const [movimentoPastoral, setMovimentoPastoral] = useState('');
   const [stats, setStats] = useState({ posts: 0, likes: 0, notes: 0, daysActive: 0 });
   const [showLevelUp, setShowLevelUp] = useState(false);
   const prevLevelRef = useRef<number | null>(null);
@@ -49,8 +54,14 @@ const ProfilePage: React.FC = () => {
       setWhatsappNumber((profile as any).whatsapp_number || '');
       setWhatsappEnabled((profile as any).whatsapp_enabled || false);
       setPushEnabled((profile as any).push_enabled ?? true);
-      supabase.from('profiles').select('bio').eq('id', profile.id).single()
-        .then(({ data }) => setBio((data as any)?.bio || ''));
+      supabase.from('profiles').select('bio, estado, diocese, paroquia, movimento_pastoral').eq('id', profile.id).single()
+        .then(({ data }) => {
+          setBio((data as any)?.bio || '');
+          setEstado((data as any)?.estado || '');
+          setDiocese((data as any)?.diocese || '');
+          setParoquia((data as any)?.paroquia || '');
+          setMovimentoPastoral((data as any)?.movimento_pastoral || '');
+        });
     }
   }, [profile]);
 
@@ -147,7 +158,11 @@ const ProfilePage: React.FC = () => {
       bio, 
       whatsapp_number: whatsappNumber,
       whatsapp_enabled: whatsappEnabled,
-      push_enabled: pushEnabled 
+      push_enabled: pushEnabled,
+      estado: estado || null,
+      diocese: diocese || null,
+      paroquia: paroquia || null,
+      movimento_pastoral: movimentoPastoral || null,
     } as any).eq('id', user.id);
     setSaving(false);
     if (error) toast.error('Erro ao salvar perfil');
@@ -397,6 +412,75 @@ const ProfilePage: React.FC = () => {
             rows={4}
             className="w-full bg-background border border-border rounded-xl p-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
           />
+        </div>
+
+        {/* Localização Eclesial */}
+        <div className="border-t border-border pt-5 space-y-4">
+          <div className="flex items-center gap-2 mb-1">
+            <Icons.Church className="w-4 h-4 text-primary" />
+            <h3 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Localização Eclesial</h3>
+          </div>
+          <p className="text-[10px] text-muted-foreground -mt-2">Opcional — ajuda a personalizar sua experiência.</p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Estado */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-foreground">Estado</label>
+              <select
+                value={estado}
+                onChange={e => { setEstado(e.target.value); setDiocese(''); }}
+                className="w-full bg-background border border-border rounded-xl p-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 appearance-none"
+              >
+                <option value="">Selecione...</option>
+                {ESTADOS_BRASIL.map(uf => (
+                  <option key={uf} value={uf}>{ESTADO_NOME[uf]} ({uf})</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Diocese */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-foreground">Diocese</label>
+              <select
+                value={diocese}
+                onChange={e => setDiocese(e.target.value)}
+                disabled={!estado}
+                className="w-full bg-background border border-border rounded-xl p-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 appearance-none disabled:opacity-40"
+              >
+                <option value="">{estado ? 'Selecione a diocese...' : 'Selecione o estado primeiro'}</option>
+                {estado && DIOCESES_POR_ESTADO[estado]?.map(d => (
+                  <option key={d} value={d}>{d}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Paróquia */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-foreground">Paróquia</label>
+              <input
+                type="text"
+                value={paroquia}
+                onChange={e => setParoquia(e.target.value)}
+                placeholder="Ex: Paróquia São José"
+                className="w-full bg-background border border-border rounded-xl p-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+              />
+            </div>
+
+            {/* Movimento/Pastoral */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-foreground">Movimento / Pastoral</label>
+              <select
+                value={movimentoPastoral}
+                onChange={e => setMovimentoPastoral(e.target.value)}
+                className="w-full bg-background border border-border rounded-xl p-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 appearance-none"
+              >
+                <option value="">Nenhum</option>
+                {MOVIMENTOS_PASTORAIS.map(m => (
+                  <option key={m} value={m}>{m}</option>
+                ))}
+              </select>
+            </div>
+          </div>
         </div>
 
         <button
