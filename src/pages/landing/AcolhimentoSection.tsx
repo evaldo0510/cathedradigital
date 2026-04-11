@@ -25,8 +25,8 @@ const AcolhimentoSection = () => {
 
         <div className="grid md:grid-cols-3 gap-8">
           <div className="space-y-4 p-8 bg-card rounded-[2.5rem] border border-border/50 shadow-sm hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
-              <Home className="w-6 h-6" />
+            <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
+              <Home className="w-5 h-5" />
             </div>
             <h3 className="text-xl font-bold font-serif">Ambiente Familiar</h3>
             <p className="text-muted-foreground text-sm leading-relaxed">
@@ -35,8 +35,8 @@ const AcolhimentoSection = () => {
           </div>
 
           <div className="space-y-4 p-8 bg-card rounded-[2.5rem] border border-border/50 shadow-sm hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
-              <Coffee className="w-6 h-6" />
+            <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
+              <Coffee className="w-5 h-5" />
             </div>
             <h3 className="text-xl font-bold font-serif">Acolhimento e Suporte</h3>
             <p className="text-muted-foreground text-sm leading-relaxed">
@@ -45,8 +45,8 @@ const AcolhimentoSection = () => {
           </div>
 
           <div className="space-y-4 p-8 bg-card rounded-[2.5rem] border border-border/50 shadow-sm hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
-              <Users className="w-6 h-6" />
+            <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
+              <Users className="w-5 h-5" />
             </div>
             <h3 className="text-xl font-bold font-serif">Construído Juntos</h3>
             <p className="text-muted-foreground text-sm leading-relaxed">
