@@ -7,13 +7,13 @@ interface AuthGuardProps {
   children: React.ReactNode;
 }
 
-const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
+const AuthGuard = React.forwardRef<HTMLDivElement, AuthGuardProps>(({ children }, ref) => {
   const { user, loading } = useAuth();
   const location = useLocation();
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
+      <div ref={ref} className="flex items-center justify-center min-h-[60vh]">
         <div className="w-8 h-8 border-2 border-secondary border-t-transparent rounded-full animate-spin" />
       </div>
     );
@@ -24,7 +24,9 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
     return <Navigate to={AppRoute.LOGIN} state={{ from: location }} replace />;
   }
 
-  return <>{children}</>;
-};
+  return <div ref={ref}>{children}</div>;
+});
+
+AuthGuard.displayName = 'AuthGuard';
 
 export default AuthGuard;
