@@ -83,7 +83,8 @@ const FAITH_TERMS: FaithTerm[] = [
     practicalApplication: 'A participação frequente na Missa e a adoração eucarística nos transformam naquilo que recebemos, dando-nos força para amar e servir aos irmãos, especialmente os mais pobres.',
     bibleVerses: ['Jo 6,51-58 (O Pão da Vida)', '1Cor 11,23-26 (A Instituição)', 'Lc 24,30-35 (Emaús)'],
     catechismReferences: ['§1322-1419 (O Sacramento da Eucaristia)', '§1324 (Fonte e Ápice)'],
-    magisteriumReferences: ['Sacrosanctum Concilium n. 47-48 (O Mistério Eucarístico)', 'Ecclesia de Eucharistia (João Paulo II)']
+    magisteriumReferences: ['Sacrosanctum Concilium n. 47-48 (O Mistério Eucarístico)', 'Ecclesia de Eucharistia (João Paulo II)'],
+    journey_id: 'e7a1b2c3-d4e5-4000-8000-000000000002'
   },
   { term: 'Espírito Santo', definition: 'A terceira pessoa da Santíssima Trindade, o Paráclito prometido por Jesus.', reference: 'Jo 14,26', category: 'Teologia' },
   { 
