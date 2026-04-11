@@ -483,11 +483,23 @@ const AZFaithPage: React.FC = () => {
                         <p className="text-[10px] font-black uppercase tracking-widest text-amber-600">📘 Catecismo</p>
                       </div>
                       <div className="flex flex-wrap gap-2">
-                        {selectedTerm.catechismReferences.map(r => (
-                          <Badge key={r} variant="outline" className="bg-amber-500/5 text-amber-700 dark:text-amber-400 border-amber-500/20 rounded-full text-xs font-semibold">
-                            {r}
-                          </Badge>
-                        ))}
+                        {selectedTerm.catechismReferences.map((r, idx) => {
+                          const paraMatch = r.match(/§(\d+)/);
+                          if (paraMatch) {
+                            return (
+                              <CatechismPopover
+                                key={idx}
+                                paragraph={parseInt(paraMatch[1])}
+                                onNavigate={(p) => navigate(`${AppRoute.CATECHISM}?p=${p}`)}
+                              />
+                            );
+                          }
+                          return (
+                            <Badge key={idx} variant="outline" className="bg-amber-500/5 text-amber-700 dark:text-amber-400 border-amber-500/20 rounded-full text-xs font-semibold">
+                              {r}
+                            </Badge>
+                          );
+                        })}
                       </div>
                     </div>
                   )}
