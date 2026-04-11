@@ -1,5 +1,4 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { DOMParser } from "https://deno.land/x/deno_dom@v0.1.36-alpha/deno-dom-wasm.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -13,64 +12,61 @@ serve(async (req) => {
 
   try {
     const vaticanUrl = "https://www.vaticannews.va/pt/santo-do-dia.html";
-    const response = await fetch(vaticanUrl);
+    const response = await fetch(vaticanUrl, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+      }
+    });
     
     if (!response.ok) {
       throw new Error(`Failed to fetch Vatican News: ${response.status}`);
     }
 
     const html = await response.text();
-    const doc = new DOMParser().parseFromString(html, "text/html");
     
-    if (!doc) {
-      throw new Error("Failed to parse HTML");
-    }
-
-    // Attempt to find the saint's name
-    // It's usually the first H2 in the main content area
-    const h2s = Array.from(doc.querySelectorAll("h2"));
-    let saintTitle = null;
-    for (const h2 of h2s) {
-      const text = h2.textContent.trim();
-      // Heuristic: skip short titles or common menu items
-      if (text.length > 5 && !['Menu', 'Siga-nos', 'Newsletter'].includes(text)) {
-        saintTitle = h2;
-        break;
-      }
-    }
-
-    const name = saintTitle ? saintTitle.textContent.trim() : "Santo do Dia";
+    // Robust extraction using string manipulation for Vatican News
+    // Find the saint section
+    const sectionStart = html.indexOf('section--isStatic');
+    const content = sectionStart !== -1 ? html.substring(sectionStart) : html;
     
-    // Find image
-    // Look for image with 'santi' in the path or inside the same parent as the title
+    // Extract Name
+    const h2Start = content.indexOf('<h2');
+    const h2End = content.indexOf('</h2>', h2Start);
+    let name = "Santo do Dia";
+    if (h2Start !== -1 && h2End !== -1) {
+      name = content.substring(content.indexOf('>', h2Start) + 1, h2End).replace(/<[^>]*>/g, '').trim();
+    }
+    
+    // Extract Image
     let imageUrl = null;
-    const allImgs = Array.from(doc.querySelectorAll("img"));
-    for (const img of allImgs) {
-      const src = img.getAttribute("data-original") || img.getAttribute("src");
-      if (src && (src.includes("/santi/") || src.includes("/santo/"))) {
-        imageUrl = src.startsWith("http") ? src : `https://www.vaticannews.va${src}`;
-        break;
+    const imgTagStart = content.indexOf('<img', h2End);
+    if (imgTagStart !== -1) {
+      const imgTagEnd = content.indexOf('>', imgTagStart);
+      const imgTag = content.substring(imgTagStart, imgTagEnd);
+      
+      const srcMatch = imgTag.match(/data-original="([^"]*)"/) || imgTag.match(/src="([^"]*)"/);
+      if (srcMatch && !srcMatch[1].includes('data:image')) {
+        const src = srcMatch[1];
+        imageUrl = src.startsWith('http') ? src : `https://www.vaticannews.va${src}`;
       }
     }
-
-    // Find description
-    // It's usually a <p> near the title
+    
+    // Extract Description
     let description = "";
-    if (saintTitle) {
-      // Look for next sibling or p in parent
-      const parent = saintTitle.closest(".section") || saintTitle.parentElement;
-      const p = parent?.querySelector("p:not([style*='justify'])");
-      if (p) description = p.textContent.trim();
+    const pStart = content.indexOf('<p', h2End);
+    if (pStart !== -1) {
+      const pEnd = content.indexOf('</p>', pStart);
+      description = content.substring(content.indexOf('>', pStart) + 1, pEnd).replace(/<[^>]*>/g, '').trim();
     }
-
-    // More Link
-    const readMore = doc.querySelector("a.saintReadMore") || doc.querySelector("a[href*='/santo-do-dia/']");
+    
+    // Extract Read More Link
     let moreLink = vaticanUrl;
-    if (readMore) {
-      const href = readMore.getAttribute("href");
-      if (href) {
-        moreLink = href.startsWith("http") ? href : `https://www.vaticannews.va${href}`;
-      }
+    const linkStart = content.indexOf('saintReadMore', h2End);
+    if (linkStart !== -1) {
+      const hrefStart = content.lastIndexOf('href="', linkStart) + 6;
+      const hrefEnd = content.indexOf('"', hrefStart);
+      const href = content.substring(hrefStart, hrefEnd);
+      moreLink = href.startsWith('http') ? href : `https://www.vaticannews.va${href}`;
     }
 
     return new Response(
