@@ -1,5 +1,6 @@
 import React, { forwardRef } from 'react';
 import { 
+  Book,
   BookOpen, 
   Cross, 
   Map, 
@@ -38,6 +39,7 @@ import {
   Brain,
   Sparkles,
   User,
+  Crown,
   ArrowDown,
   ArrowLeft,
   Music,
