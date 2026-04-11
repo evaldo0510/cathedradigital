@@ -58,6 +58,7 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
     { key: 'all', label: 'Todos', icon: <Users className="w-4 h-4" />, color: 'text-foreground' },
     { key: 'new', label: 'Novo', icon: <UserCheck className="w-4 h-4" />, color: 'text-primary' },
     { key: 'active', label: 'Ativo', icon: <Flame className="w-4 h-4" />, color: 'text-primary' },
+    { key: 'engaged', label: 'Engajado', icon: <Star className="w-4 h-4" />, color: 'text-orange-500' },
     { key: 'deep', label: 'Profundo', icon: <Crown className="w-4 h-4" />, color: 'text-primary' },
     { key: 'inactive', label: 'Inativo', icon: <Clock className="w-4 h-4" />, color: 'text-destructive' },
   ];
