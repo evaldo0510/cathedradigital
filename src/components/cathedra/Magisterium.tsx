@@ -148,6 +148,17 @@ const Magisterium: React.FC = () => {
               transition={{ duration: 0.3 }}
               className="bg-card border border-border rounded-[2.5rem] p-8 md:p-12 shadow-sm space-y-8"
             >
+              <div className="pt-8 border-t border-border/40">
+                <DeepContentSection content={{
+                  textoBase: selected.textoBase || selected.magisteriumAnswer,
+                  explicacao: (selected as any).explicacao || '',
+                  interpretacaoProfunda: (selected as any).interpretacaoProfunda || '',
+                  aplicacaoPratica: (selected as any).aplicacaoPratica || '',
+                  reflexaoFinal: (selected as any).reflexaoFinal || '',
+                  exercicio: (selected as any).exercicio || ''
+                }} title="Lumen Veritatis" />
+              </div>
+
               <div className="space-y-4">
                 <h2 className="text-2xl md:text-3xl font-serif font-bold text-foreground">{selected.question}</h2>
                 <p className="text-lg text-muted-foreground leading-relaxed font-serif italic">"{selected.magisteriumAnswer}"</p>
