@@ -4,6 +4,7 @@ import { Icons } from '../../constants';
 import SacredImage from './SacredImage';
 import ShareButton from './ShareButton';
 import DocumentViewer from './DocumentViewer';
+import DeepContentSection from './DeepContentSection';
 import { type Saint } from '@/data/saints';
 
 const CATEGORY_LABELS: Record<string, string> = {
