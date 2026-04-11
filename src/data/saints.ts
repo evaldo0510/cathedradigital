@@ -111,6 +111,14 @@ export const SAINTS_DATA: Saint[] = [
     interpretacaoProfunda: 'Santo Agostinho ensina que a inquietude não é um defeito, mas a "bússola" da alma que nos atrai para nossa origem e fim: Deus.',
     aplicacaoPratica: 'Identifique hoje o que tem te causado ansiedade ou busca incessante. Entregue esse desejo a Deus, reconhecendo que só Ele é o descanso verdadeiro.',
     reflexaoFinal: 'Onde estou buscando paz fora de Deus?',
+    bibleRefs: [
+      { ref: 'Sl 42,2', label: 'A minha alma tem sede de Deus' },
+      { ref: 'Rm 13,13-14', label: 'Revesti-vos do Senhor Jesus Cristo' }
+    ],
+    catechismRefs: [27, 30, 1718, 2560],
+    churchDocRefs: [
+      { title: 'Augustinum Hipponensem (João Paulo II)', url: 'https://www.vatican.va/content/john-paul-ii/pt/apost_letters/1986/documents/hf_jp-ii_apl_26081986_augustinum-hipponensem.html' }
+    ],
   },
   {
     id: 'francisco-assis',
