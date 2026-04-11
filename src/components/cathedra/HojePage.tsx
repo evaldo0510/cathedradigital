@@ -381,7 +381,9 @@ const HojePage: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-12 max-w-2xl mx-auto pt-6 md:pt-12">
+    <div className="desktop-layout pt-6 md:pt-12">
+      {/* ═══ MAIN COLUMN ═══ */}
+      <div className="desktop-main space-y-12 max-w-2xl mx-auto lg:max-w-none lg:mx-0">
       {/* Logos IA Highlight - Centralized */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
