@@ -370,6 +370,9 @@ const AdminDashboard: React.FC = () => {
           <TabsTrigger value="transactions" className="gap-1.5 text-xs sm:text-sm">
             <DollarSign className="w-3.5 h-3.5 hidden sm:block" /> Financeiro
           </TabsTrigger>
+          <TabsTrigger value="partners" className="gap-1.5 text-xs sm:text-sm">
+            <Handshake className="w-3.5 h-3.5 hidden sm:block" /> Parceiros
+          </TabsTrigger>
           <TabsTrigger value="users" className="gap-1.5 text-xs sm:text-sm">
             <Users className="w-3.5 h-3.5 hidden sm:block" /> Usuários
           </TabsTrigger>
