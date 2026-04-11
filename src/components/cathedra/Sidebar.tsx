@@ -4,7 +4,7 @@ import { prefetchRoute } from '@/lib/prefetch';
 import { Icons } from '../../constants';
 import { AppRoute, User } from '../../types';
 import { LangContext } from '@/contexts/LangContext';
-import cathedraLogo from '@/assets/cathedra-logo.png';
+
 import { useLang } from '@/hooks/useLang';
 
 interface SidebarProps {
@@ -60,7 +60,7 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
     <>
       <aside className="h-full w-72 bg-card border-r border-border flex flex-col p-5 overflow-hidden">
         <div className="mb-4 px-2 flex items-center gap-3 cursor-pointer group hover:opacity-90 transition-opacity" onClick={() => handleNav(AppRoute.DASHBOARD)}>
-          <img src={cathedraLogo} alt="Cathedra" className="w-8 h-8 object-contain" />
+          <Icons.Logo className="w-8 h-8 flex-shrink-0" variant="blue" />
           <div>
             <h1 className="text-lg font-black tracking-[0.2em] text-foreground leading-none uppercase font-serif">CATHEDRA</h1>
             <p className="text-[9px] font-black uppercase text-primary/70 tracking-[0.3em] mt-1.5 flex items-center gap-1.5">

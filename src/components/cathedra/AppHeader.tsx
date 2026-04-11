@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AppRoute, Language } from '@/types';
 import { Icons } from '@/constants';
-import cathedraLogo from '@/assets/cathedra-logo.png';
+
 import { useNotifications } from '@/hooks/useNotifications';
 import { useLang } from '@/hooks/useLang';
 
@@ -46,7 +46,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-3 sm:py-4 flex items-center justify-between min-h-[56px] sm:min-h-[64px]">
         <div className="flex items-center gap-2 sm:gap-10 min-w-0">
           <div className="flex lg:hidden items-center gap-2 sm:gap-4 cursor-pointer group min-w-0" onClick={() => navigate(AppRoute.DASHBOARD)}>
-            <img src={cathedraLogo} alt="Cathedra" className="w-8 h-8 sm:w-10 sm:h-10 object-contain flex-shrink-0" />
+            <Icons.Logo className="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0" variant="blue" />
             <div className="flex flex-col min-w-0">
               <span className="text-xs sm:text-xl font-display font-black uppercase tracking-[0.1em] sm:tracking-[0.25em] text-primary leading-none truncate">Cathedra</span>
               <span className="text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.1em] sm:tracking-[0.3em] text-secondary opacity-80 mt-0.5 sm:mt-1 truncate">{t('digital')}</span>
