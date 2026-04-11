@@ -844,13 +844,6 @@ export type Database = {
             referencedRelation: "public_profiles"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "transactions_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user_management_stats"
-            referencedColumns: ["id"]
-          },
         ]
       }
       user_emotions: {
@@ -1029,35 +1022,35 @@ export type Database = {
       public_profiles: {
         Row: {
           avatar_url: string | null
-          bio: string | null
+          created_at: string | null
           id: string | null
+          is_premium: boolean | null
           name: string | null
+          role: string | null
         }
         Insert: {
           avatar_url?: string | null
-          bio?: string | null
+          created_at?: string | null
           id?: string | null
+          is_premium?: boolean | null
           name?: string | null
+          role?: string | null
         }
         Update: {
           avatar_url?: string | null
-          bio?: string | null
+          created_at?: string | null
           id?: string | null
+          is_premium?: boolean | null
           name?: string | null
+          role?: string | null
         }
         Relationships: []
       }
       user_management_stats: {
         Row: {
-          classification: string | null
-          created_at: string | null
-          current_journey: string | null
-          email: string | null
-          id: string | null
-          last_activity: string | null
-          name: string | null
-          plan: string | null
-          reflections_count: number | null
+          admin_users: number | null
+          premium_users: number | null
+          total_users: number | null
         }
         Relationships: []
       }
