@@ -87,9 +87,9 @@ const BibliotecaPage: React.FC = () => {
         />
       </div>
 
-      <div className="space-y-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {filtered.length === 0 && (
-          <p className="text-center text-sm text-muted-foreground py-8">Nenhum módulo encontrado.</p>
+          <p className="col-span-full text-center text-sm text-muted-foreground py-8">Nenhum módulo encontrado.</p>
         )}
         {filtered.map((section, i) => {
           const handleNavigate = () => navigate(section.route);
@@ -98,7 +98,8 @@ const BibliotecaPage: React.FC = () => {
               key={section.title}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.06 }}
+              transition={{ delay: i * 0.05 }}
+              className="h-full"
             >
               <div
                 role="button"
@@ -107,21 +108,17 @@ const BibliotecaPage: React.FC = () => {
                 onMouseEnter={() => prefetchRoute(section.route)}
                 onTouchStart={() => prefetchRoute(section.route)}
                 onKeyDown={(e) => { if (e.key === 'Enter') handleNavigate(); }}
-                className="cursor-pointer"
+                className="cursor-pointer h-full"
               >
-                <Card className="hover:border-primary/40 transition-all group">
-                  <CardContent className="p-4 flex items-center gap-4">
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${section.color}`}>
+                <Card className="hover:border-primary/40 transition-all group h-full overflow-hidden bg-white/5 border-white/10">
+                  <CardContent className="p-5 flex flex-col items-center text-center space-y-3 h-full justify-center">
+                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 ${section.color} transition-transform group-hover:scale-110 duration-300`}>
                       {section.icon}
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-semibold text-foreground">{section.title}</h3>
-                        {(section as any).pro && <span className="text-[8px] font-black uppercase tracking-widest text-primary bg-primary/10 px-1.5 py-0.5 rounded">PRO</span>}
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-0.5">{section.description}</p>
+                    <div className="space-y-1">
+                      <h3 className="font-bold text-foreground text-sm tracking-tight">{section.title}</h3>
+                      <p className="text-[10px] leading-relaxed text-muted-foreground line-clamp-2 max-w-[140px] mx-auto">{section.description}</p>
                     </div>
-                    <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
                   </CardContent>
                 </Card>
               </div>
