@@ -114,7 +114,62 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   }, []);
 
   // Weekly stats
-  const [weeklyStats, setWeeklyStats] = useState({ chaptersRead: 0, journeySteps: 0 });
+  const [weeklyStats, setWeeklyStats] = useState({ chaptersRead: 0, journeySteps: 0, catechismParagraphs: 0 });
+  const [nextUp, setNextUp] = useState<{ type: 'bible' | 'catechism' | 'journey'; label: string; route: string; subtitle: string } | null>(null);
+
+  useEffect(() => {
+    if (!user) return;
+    const loadNextUp = async () => {
+      // Get last Bible chapter read
+      const { data: lastBible } = await supabase
+        .from('bible_chapters_read')
+        .select('book_abbr, chapter')
+        .eq('user_id', user.id)
+        .order('read_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      // Get last Catechism paragraph read
+      const { data: lastCatechism } = await supabase
+        .from('catechism_paragraphs_read')
+        .select('paragraph')
+        .eq('user_id', user.id)
+        .order('read_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      // Get last Journey step completed
+      const { data: lastJourney } = await supabase
+        .from('journey_progress')
+        .select('journey_id, step_id')
+        .eq('user_id', user.id)
+        .order('completed_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (lastJourney) {
+        const { data: steps } = await supabase.from('journey_steps').select('id, title').eq('journey_id', lastJourney.journey_id).order('step_order', { ascending: true });
+        const currentIndex = steps?.findIndex(s => s.id === lastJourney.step_id) ?? -1;
+        if (steps && currentIndex !== -1 && currentIndex < steps.length - 1) {
+          const next = steps[currentIndex + 1];
+          setNextUp({ type: 'journey', label: next.title, route: `/jornadas/${lastJourney.journey_id}/step?step=${next.id}`, subtitle: 'Próxima Etapa da Jornada' });
+          return;
+        }
+      }
+
+      if (lastBible) {
+        setNextUp({ type: 'bible', label: `${lastBible.book_abbr} ${lastBible.chapter + 1}`, route: `/bible?book=${lastBible.book_abbr}&ch=${lastBible.chapter + 1}`, subtitle: 'Continuar Leitura da Bíblia' });
+        return;
+      }
+
+      if (lastCatechism) {
+        setNextUp({ type: 'catechism', label: `§${lastCatechism.paragraph + 1}`, route: `/catechism?p=${lastCatechism.paragraph + 1}`, subtitle: 'Continuar Estudo do Catecismo' });
+        return;
+      }
+    };
+    loadNextUp();
+  }, [user]);
+
   useEffect(() => {
     if (!user) return;
     const weekAgo = new Date();
@@ -124,10 +179,12 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
     Promise.all([
       supabase.from('bible_chapters_read').select('id', { count: 'exact', head: true }).eq('user_id', user.id).gte('read_at', iso),
       supabase.from('journey_progress').select('id', { count: 'exact', head: true }).eq('user_id', user.id).gte('completed_at', iso),
-    ]).then(([chapRes, jpRes]) => {
+      supabase.from('catechism_paragraphs_read').select('id', { count: 'exact', head: true }).eq('user_id', user.id).gte('read_at', iso),
+    ]).then(([chapRes, jpRes, catRes]) => {
       setWeeklyStats({
         chaptersRead: chapRes.count || 0,
         journeySteps: jpRes.count || 0,
+        catechismParagraphs: catRes.count || 0,
       });
     });
   }, [user]);
@@ -213,6 +270,31 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         </div>
       </FadeUp>
 
+      {/* ═══ NEXT UP ═══ */}
+      {nextUp && (
+        <FadeUp delay={0.11}>
+          <div 
+            onClick={() => goTo(nextUp.route)}
+            className="p-5 rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 via-background to-background cursor-pointer hover:border-primary/40 transition-all shadow-sm hover:shadow-md flex items-center justify-between group"
+          >
+            <div className="flex items-center gap-5">
+              <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                {nextUp.type === 'bible' ? <Icons.Bible className="w-7 h-7" /> : 
+                 nextUp.type === 'catechism' ? <Icons.Cross className="w-7 h-7" /> : 
+                 <Icons.Flame className="w-7 h-7" />}
+              </div>
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-1">{nextUp.subtitle}</p>
+                <h3 className="text-lg font-bold text-foreground leading-tight group-hover:text-primary transition-colors">{nextUp.label}</h3>
+              </div>
+            </div>
+            <div className="w-10 h-10 rounded-full border border-primary/20 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
+              <Icons.ChevronRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
+            </div>
+          </div>
+        </FadeUp>
+      )}
+
       {/* ═══ STATS & JOURNEYS GRID ═══ */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 items-start">
         {/* ═══ WEEKLY SUMMARY ═══ */}
@@ -222,23 +304,29 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               <Icons.Activity className="w-4 h-4 text-primary" />
               <h2 className="text-sm font-bold text-foreground uppercase tracking-wide">Resumo da Semana</h2>
             </div>
-            <div className="grid grid-cols-3 gap-3">
-              <div className="text-center p-4 rounded-xl bg-primary/[0.04] border border-primary/10">
-                <p className="text-2xl md:text-3xl font-bold text-foreground">{weeklyStats.chaptersRead}</p>
-                <p className="text-[10px] text-muted-foreground font-medium mt-1 flex items-center justify-center gap-1">
-                  <Icons.Bookmark className="w-3 h-3" /> Capítulos
+            <div className="grid grid-cols-4 gap-2">
+              <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
+                <p className="text-xl md:text-2xl font-bold text-foreground">{weeklyStats.chaptersRead}</p>
+                <p className="text-[9px] text-muted-foreground font-medium mt-1 flex flex-col items-center">
+                  <Icons.Bookmark className="w-3 h-3 mb-1" /> Bíblia
                 </p>
               </div>
-              <div className="text-center p-4 rounded-xl bg-primary/[0.04] border border-primary/10">
-                <p className="text-2xl md:text-3xl font-bold text-foreground">{streak}</p>
-                <p className="text-[10px] text-muted-foreground font-medium mt-1 flex items-center justify-center gap-1">
-                  <Icons.Flame className="w-3 h-3" /> Streak
+              <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
+                <p className="text-xl md:text-2xl font-bold text-foreground">{weeklyStats.catechismParagraphs}</p>
+                <p className="text-[9px] text-muted-foreground font-medium mt-1 flex flex-col items-center">
+                  <Icons.Cross className="w-3 h-3 mb-1" /> CIC
                 </p>
               </div>
-              <div className="text-center p-4 rounded-xl bg-primary/[0.04] border border-primary/10">
-                <p className="text-2xl md:text-3xl font-bold text-foreground">{weeklyStats.journeySteps}</p>
-                <p className="text-[10px] text-muted-foreground font-medium mt-1 flex items-center justify-center gap-1">
-                  <Icons.Calendar className="w-3 h-3" /> Etapas
+              <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
+                <p className="text-xl md:text-2xl font-bold text-foreground">{streak}</p>
+                <p className="text-[9px] text-muted-foreground font-medium mt-1 flex flex-col items-center">
+                  <Icons.Flame className="w-3 h-3 mb-1" /> Streak
+                </p>
+              </div>
+              <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
+                <p className="text-xl md:text-2xl font-bold text-foreground">{weeklyStats.journeySteps}</p>
+                <p className="text-[9px] text-muted-foreground font-medium mt-1 flex flex-col items-center">
+                  <Icons.Calendar className="w-3 h-3 mb-1" /> Trilhas
                 </p>
               </div>
             </div>

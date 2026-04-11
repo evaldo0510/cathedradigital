@@ -80,6 +80,27 @@ export type Database = {
         }
         Relationships: []
       }
+      catechism_paragraphs_read: {
+        Row: {
+          id: string
+          paragraph: number
+          read_at: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          paragraph: number
+          read_at?: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          paragraph?: number
+          read_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       colloquium_conversations: {
         Row: {
           created_at: string

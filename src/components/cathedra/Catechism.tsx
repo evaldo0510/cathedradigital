@@ -13,6 +13,7 @@ import DeepContentSection from './DeepContentSection';
 import { getCatechismCrossRefs } from '@/data/cross-references';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useFavorites } from '@/hooks/useFavorites';
+import { useAuth } from '@/hooks/useAuth';
 import { useCatechismParagraph, usePrefetchCatechismParagraph } from '@/hooks/useCatechismParagraph';
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import CatechismPopover from './CatechismPopover';
@@ -124,11 +125,46 @@ const Catechism: React.FC = () => {
   const [selectedPart, setSelectedPart] = useState<typeof CIC_SECTIONS[0] | null>(null);
   const [selectedSection, setSelectedSection] = useState<typeof CIC_SECTIONS[0]['sections'][0] | null>(null);
   const [currentParagraph, setCurrentParagraph] = useState(1);
+  const [paragraphsRead, setParagraphsRead] = useState<Set<number>>(new Set());
   const [searchQuery, setSearchQuery] = useState('');
   const [showCrossRefs, setShowCrossRefs] = useState(true);
   const { toggleFavorite, isFavorite } = useFavorites();
+  const { user } = useAuth();
 
   const crossRefs = getCatechismCrossRefs(currentParagraph);
+
+  // Track progress
+  useEffect(() => {
+    if (!user) return;
+    const loadProgress = async () => {
+      const { data } = await supabase
+        .from('catechism_paragraphs_read')
+        .select('paragraph')
+        .eq('user_id', user.id);
+      if (data) {
+        setParagraphsRead(new Set(data.map(p => p.paragraph)));
+      }
+    };
+    loadProgress();
+  }, [user]);
+
+  const markParagraphRead = useCallback(async (p: number) => {
+    if (!user) return;
+    try {
+      await supabase
+        .from('catechism_paragraphs_read')
+        .upsert({ user_id: user.id, paragraph: p }, { onConflict: 'user_id,paragraph' });
+      setParagraphsRead(prev => new Set([...prev, p]));
+    } catch (err) {
+      console.error('Failed to mark paragraph read:', err);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (viewMode === 'reading' && currentParagraph) {
+      markParagraphRead(currentParagraph);
+    }
+  }, [viewMode, currentParagraph, markParagraphRead]);
 
   // Handle deep-link from Bible cross-references (?p=1324)
   useEffect(() => {
@@ -170,6 +206,13 @@ const Catechism: React.FC = () => {
     if (viewMode === 'reading') { setViewMode('sections'); setSelectedSection(null); }
     else if (viewMode === 'sections') { setViewMode('parts'); setSelectedPart(null); }
   };
+
+  const nextUnreadParagraph = useMemo(() => {
+    for (let i = 1; i <= 2865; i++) {
+      if (!paragraphsRead.has(i)) return i;
+    }
+    return null;
+  }, [paragraphsRead]);
 
   // Reading view
   if (viewMode === 'reading' && selectedSection && selectedPart) {
@@ -268,10 +311,13 @@ const Catechism: React.FC = () => {
         <div className="flex flex-wrap gap-1 justify-center">
           {Array.from({ length: Math.min(20, end - start + 1) }, (_, i) => start + i).map(p => (
             <button key={p} onClick={() => setCurrentParagraph(p)}
-              className={`w-10 h-10 rounded-lg text-xs font-bold transition-all ${
-                currentParagraph === p ? 'bg-primary text-primary-foreground' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
+              className={`w-10 h-10 rounded-lg text-xs font-bold transition-all relative ${
+                currentParagraph === p ? 'bg-primary text-primary-foreground' : 
+                paragraphsRead.has(p) ? 'bg-primary/10 border-primary/30 text-primary' :
+                'bg-card border border-border text-muted-foreground hover:text-foreground'
               }`}>
               {p}
+              {paragraphsRead.has(p) && <Icons.Check className="w-2 h-2 absolute top-1 right-1" />}
             </button>
           ))}
           {end - start + 1 > 20 && <span className="self-center text-muted-foreground text-sm">...</span>}
@@ -330,7 +376,41 @@ const Catechism: React.FC = () => {
         </div>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Catecismo da Igreja Católica</h1>
         <p className="text-muted-foreground font-serif italic">2.865 parágrafos organizados em 4 partes fundamentais.</p>
+        <div className="max-w-xs mx-auto pt-4">
+          <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-primary/60 mb-2">
+            <span>Seu Progresso</span>
+            <span>{Math.round((paragraphsRead.size / 2865) * 100)}%</span>
+          </div>
+          <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+            <motion.div 
+              initial={{ width: 0 }}
+              animate={{ width: `${(paragraphsRead.size / 2865) * 100}%` }}
+              className="h-full bg-primary"
+            />
+          </div>
+        </div>
       </motion.div>
+
+      {/* Suggestion Card */}
+      {nextUnreadParagraph && (
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+          <div 
+            onClick={() => navigateToParagraph(nextUnreadParagraph)}
+            className="max-w-md mx-auto p-4 rounded-2xl border border-primary/20 bg-primary/5 cursor-pointer hover:border-primary/40 transition-all flex items-center justify-between group"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/20 transition-colors">
+                <Icons.Sparkles className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-widest text-primary">Continuar Formação</p>
+                <h3 className="text-sm font-bold text-foreground">Sugerido: §{nextUnreadParagraph}</h3>
+              </div>
+            </div>
+            <Icons.ChevronRight className="w-5 h-5 text-primary group-hover:translate-x-1 transition-transform" />
+          </div>
+        </motion.div>
+      )}
 
       {/* Search by paragraph */}
       <div className="max-w-md mx-auto">
