@@ -155,7 +155,9 @@ const AppLayout: React.FC = () => {
     AppRoute.JORNADAS,
     AppRoute.BIBLIOTECA,
     AppRoute.PROFILE,
-    AppRoute.LITURGIA
+    AppRoute.LITURGIA,
+    AppRoute.TEMAS,
+    AppRoute.COMMUNITY
   ].includes(location.pathname as AppRoute);
 
   // Swipe to go back logic for better mobile UX
