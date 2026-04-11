@@ -617,8 +617,6 @@ const AdminDashboard: React.FC = () => {
             </Card>
           </div>
 
-          {/* Removido duplicatas de cards financeiros e PWA já incluídos acima */}
-
           {/* Charts */}
           <Suspense fallback={<Skeleton className="h-[350px] rounded-xl" />}>
             <AdminChartsTab userGrowth={stats?.userGrowth || []} revenueData={stats?.revenueData || []} />
