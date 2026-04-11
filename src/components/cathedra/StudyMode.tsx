@@ -6,7 +6,6 @@ import { Icons } from '../../constants';
 import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
-import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
