@@ -371,6 +371,7 @@ const AppLayout: React.FC = () => {
                   } />
                   <Route path={AppRoute.LOGIN} element={<PageTransition><Auth onSuccess={() => undefined} onSignupSuccess={() => navigate(AppRoute.ONBOARDING)} /></PageTransition>} />
                   <Route path={AppRoute.AQUINAS_OPERA} element={<PageTransition><AuthGuard><AquinasOpera /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.TEMAS} element={<PageTransition><AuthGuard><TemasPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.CERTAMEN} element={<PageTransition><AuthGuard><Certamen /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.MISSAL} element={<Navigate to={`${AppRoute.LITURGIA}?tab=missal`} replace />} />
                   <Route path={AppRoute.FAVORITES} element={<PageTransition><AuthGuard><FavoritesPage /></AuthGuard></PageTransition>} />
