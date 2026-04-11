@@ -338,16 +338,23 @@ const HojePage: React.FC = () => {
   const saveJournal = async () => {
     if (!user || !journalText.trim()) return;
     try {
+      // 1. Initial save is awaited to ensure it's in the DB
       await supabase.from('spiritual_journal').insert([{
         user_id: user.id,
         content: journalText.trim(),
         entry_date: new Date().toISOString().split('T')[0],
       }]);
+      
+      // 2. Give immediate feedback
       setJournalSaved(true);
-      await analyzeReflection(journalText);
       setTimeout(() => setJournalSaved(false), 3000);
+      
+      // 3. Analysis is non-blocking (doesn't hold up the "saved" UI state)
+      analyzeReflection(journalText).catch(e => console.error('BG Analysis failed:', e));
+      
     } catch (err) {
       console.error('Failed to save journal:', err);
+      toast.error('Erro ao salvar diário');
     }
   };
 
