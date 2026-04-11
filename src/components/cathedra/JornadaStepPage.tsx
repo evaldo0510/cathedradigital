@@ -267,7 +267,7 @@ const JornadaStepPage: React.FC = () => {
                       className="overflow-hidden"
                     >
                       <div className="bg-card border border-t-0 border-border rounded-b-2xl p-5">
-                        <p className="text-sm text-foreground/90 leading-relaxed whitespace-pre-line font-serif">
+                        <p className={`text-sm text-foreground/90 leading-relaxed whitespace-pre-line font-serif ${key === 'pch' ? 'text-lg italic text-primary text-center' : ''}`}>
                           {sectionContent}
                         </p>
                       </div>
