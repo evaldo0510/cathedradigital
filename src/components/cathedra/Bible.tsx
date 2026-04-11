@@ -536,20 +536,20 @@ const Bible: React.FC = () => {
           <h1 className="text-2xl font-serif font-bold text-foreground">{selectedBook.name}</h1>
         </div>
 
-        <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3">
+        <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-2">
           {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map(ch => {
             const isRead = chaptersRead[selectedBook.abbr]?.has(ch);
             return (
               <button 
                 key={ch} 
                 onClick={() => selectChapter(ch)}
-                className={`aspect-square flex items-center justify-center rounded-xl border font-bold transition-all relative
+                className={`aspect-square flex items-center justify-center rounded-lg border text-xs sm:text-sm font-bold transition-all relative
                   ${isRead 
                     ? 'bg-primary/10 border-primary/30 text-primary' 
-                    : 'bg-card border-border text-muted-foreground hover:border-primary/40 hover:text-foreground'}`}
+                    : 'bg-card border-border text-muted-foreground hover:border-primary/40 hover:text-foreground hover:scale-[1.05]'}`}
               >
                 {ch}
-                {isRead && <Icons.CheckCircle2 className="w-2.5 h-2.5 absolute top-1 right-1" />}
+                {isRead && <Icons.CheckCircle2 className="w-2 h-2 absolute top-0.5 right-0.5" />}
               </button>
             );
           })}
