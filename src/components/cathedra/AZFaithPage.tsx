@@ -326,7 +326,12 @@ const AZFaithPage: React.FC = () => {
                           className="w-full text-left p-4 flex items-center justify-between gap-4"
                         >
                           <div className="flex-1 min-w-0">
-                            <h3 className="text-sm font-bold text-foreground">{t.term}</h3>
+                            <div className="flex items-center gap-2">
+                              <h3 className="text-sm font-bold text-foreground">{t.term}</h3>
+                              {(t.deepInterpretation || t.practicalApplication) && (
+                                <span className="flex h-1.5 w-1.5 rounded-full bg-primary animate-pulse" title="Hub de conteúdo disponível" />
+                              )}
+                            </div>
                             {t.category && (
                               <span className="text-[8px] uppercase tracking-widest text-primary/70 font-black">{t.category}</span>
                             )}
