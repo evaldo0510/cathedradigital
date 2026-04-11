@@ -437,16 +437,26 @@ const Bible: React.FC = () => {
                   </div>
                 ) : (
                   <div className={`font-serif ${fs.size} ${fs.leading} text-foreground/90 transition-all duration-300`}>
-                    {verses.map(v => (
-                      <span key={v.number} 
-                        id={`v${v.number}`}
-                        onClick={() => setHighlightedVerse(v.number === highlightedVerse ? null : v.number)}
-                        className={`inline transition-colors duration-300 cursor-pointer rounded px-0.5
-                          ${highlightedVerse === v.number ? 'bg-primary/20 ring-1 ring-primary/30' : 'hover:bg-muted/50'}`}>
-                        <sup className="text-[0.6em] font-bold text-primary mr-1 select-none">{v.number}</sup>
-                        {v.text}{' '}
-                      </span>
-                    ))}
+                    {verses.map(v => {
+                      const relatedP = verseToCic[v.number];
+                      return (
+                        <span key={v.number} 
+                          id={`v${v.number}`}
+                          onClick={() => setHighlightedVerse(v.number === highlightedVerse ? null : v.number)}
+                          className={`inline transition-colors duration-300 cursor-pointer rounded px-0.5
+                            ${highlightedVerse === v.number ? 'bg-primary/20 ring-1 ring-primary/30' : 'hover:bg-muted/50'}`}>
+                          <sup className="text-[0.6em] font-bold text-primary mr-1 select-none">{v.number}</sup>
+                          {v.text}{' '}
+                          {relatedP && (
+                            <span className="inline-flex gap-0.5 ml-1">
+                              {relatedP.map(p => (
+                                <CatechismPopover key={p} paragraph={p} onNavigate={handleNavigateToCIC} />
+                              ))}
+                            </span>
+                          )}
+                        </span>
+                      );
+                    })}
                   </div>
                 )}
               </CardContent>
