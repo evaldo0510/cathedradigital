@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { AppRoute } from '@/types';
+import { AppRoute, Language } from '@/types';
 import { Icons } from '@/constants';
 import cathedraLogo from '@/assets/cathedra-logo.png';
 import { useNotifications } from '@/hooks/useNotifications';
-
 
 interface AppHeaderProps {
   user: any;
   isDark: boolean;
   onToggleDark: () => void;
+  lang: Language;
+  onChangeLang: (lang: Language) => void;
   isSpeaking?: boolean;
   onToggleSpeak?: () => void;
   onSignOut: () => void;
@@ -17,7 +18,7 @@ interface AppHeaderProps {
 }
 
 const AppHeader: React.FC<AppHeaderProps> = React.memo(({
-  user, isDark, onToggleDark, isSpeaking, onToggleSpeak, onSignOut, onOpenSidebar
+  user, isDark, onToggleDark, lang, onChangeLang, isSpeaking, onToggleSpeak, onSignOut, onOpenSidebar
 }) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
