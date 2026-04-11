@@ -295,20 +295,24 @@ const Footer: React.FC = React.memo(() => {
             </p>
           </div>
           <div className="flex items-center gap-8">
-            <nav className="flex items-center gap-6">
+            <nav className="flex items-center">
               {[
                 { label: t('about') || 'Sobre', route: AppRoute.ABOUT }, 
                 { label: t('partners') || 'Parceiros', route: AppRoute.PARTNERS },
                 { label: t('privacy') || 'Privacidade', route: AppRoute.PRIVACY }, 
                 { label: t('terms') || 'Termos', route: AppRoute.TERMS }
-              ].map(item => (
-                <button 
-                  key={item.label} 
-                  onClick={() => navigate(item.route)} 
-                  className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors"
-                >
-                  {item.label}
-                </button>
+              ].map((item, index, array) => (
+                <React.Fragment key={item.label}>
+                  <button 
+                    onClick={() => navigate(item.route)} 
+                    className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors"
+                  >
+                    {item.label}
+                  </button>
+                  {index < array.length - 1 && (
+                    <span className="mx-3 text-muted-foreground/20 font-light select-none">|</span>
+                  )}
+                </React.Fragment>
               ))}
             </nav>
             <button onClick={scrollToTop} className="p-2.5 bg-foreground/5 dark:bg-foreground/10 hover:bg-primary hover:text-primary-foreground rounded-lg transition-all border border-foreground/10 dark:border-foreground/20 group">
