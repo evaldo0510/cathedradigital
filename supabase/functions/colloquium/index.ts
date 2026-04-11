@@ -160,7 +160,7 @@ No final da sua resposta, você DEVE recomendar a jornada ideal seguindo estrita
 
 ## FORMATO DE SAÍDA PARA O SISTEMA
 Toda resposta DEVE terminar com uma linha contendo apenas o metadado (incluindo as pontuações e o estado principal):
-[RECOMMENDATION:{"category": "slug_da_categoria", "reason": "breve justificativa", "scores": {"ansiedade": 0-10, "confusao": 0-10, "dor_emocional": 0-10, "busca_espiritual": 0-10}, "main_state": "nome_do_estado_principal"}]
+[RECOMMENDATION:{"category": "slug_da_categoria", "reason": "breve justificativa", "scores": {"ansiedade": 0-10, "confusao": 0-10, "dor_emocional": 0-10, "busca_espiritual": 0-10}, "main_state": "nome_do_estado_principal", "theme": "tema identificado", "az_terms": ["termo1", "termo2"]}]
 
 ## ENCERRAMENTO
 Termine com uma pergunta profunda que convide à ação/reflexão continuada e, então, adicione o metadado de recomendação.`
