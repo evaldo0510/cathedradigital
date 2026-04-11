@@ -97,15 +97,6 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
           )))}
         </nav>
 
-        {/* Ctrl+K hint */}
-        <div className="px-4 pb-3">
-          <div className="flex items-center gap-2 text-muted-foreground/60">
-            <Icons.Search className="w-3 h-3" />
-            <span className="text-[9px]">Pressione</span>
-            <kbd className="px-1.5 py-0.5 rounded bg-muted text-[9px] font-mono font-bold">⌘K</kbd>
-            <span className="text-[9px]">para buscar</span>
-          </div>
-        </div>
 
         <div className="pt-4 pb-20 lg:pb-0 border-t border-border space-y-3">
           <div className="flex flex-col gap-2 mb-2 px-1">
