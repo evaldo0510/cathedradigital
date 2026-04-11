@@ -61,7 +61,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon, route, isAct
         strokeWidth: 2
       })}
     </div>
-    <span className={`text-[8px] xs:text-[9px] sm:text-[10px] font-bold uppercase tracking-tight sm:tracking-widest leading-none ${
+    <span className={`text-[8px] sm:text-[10px] font-bold uppercase tracking-tight sm:tracking-widest leading-none ${
       isActive ? 'opacity-100' : 'opacity-60'
     }`}>
       {label}
