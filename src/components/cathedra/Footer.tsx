@@ -290,7 +290,12 @@ const Footer: React.FC = React.memo(() => {
           </p>
           <div className="flex items-center gap-8">
             <nav className="flex items-center gap-6">
-              {[{ label: 'Sobre', route: AppRoute.ABOUT }, { label: 'Privacidade', route: AppRoute.PRIVACY }, { label: 'Termos', route: AppRoute.TERMS }].map(item => (
+              {[
+                { label: 'Sobre', route: AppRoute.ABOUT }, 
+                { label: 'Parceiros', route: AppRoute.PARTNERS },
+                { label: 'Privacidade', route: AppRoute.PRIVACY }, 
+                { label: 'Termos', route: AppRoute.TERMS }
+              ].map(item => (
                 <button 
                   key={item.label} 
                   onClick={() => navigate(item.route)} 
