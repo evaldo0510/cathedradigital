@@ -205,7 +205,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           >
             <div className="relative group">
               <div className="absolute inset-0 bg-secondary/10 blur-3xl rounded-full scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
-              <Icons.Saints className="w-16 h-16 md:w-20 md:h-20 text-secondary transition-all duration-700 group-hover:rotate-12" />
+              <Icons.Saints className="w-12 h-12 md:w-16 md:h-16 text-secondary transition-all duration-700 group-hover:rotate-12" />
             </div>
           </motion.div>
           <div className="space-y-2">
@@ -257,8 +257,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
                 className={`group relative overflow-hidden rounded-2xl border bg-gradient-to-br ${door.gradient} ${door.borderColor} p-5 md:p-6 text-left transition-all hover:shadow-lg active:scale-[0.98]`}
               >
                 <div className="space-y-3">
-                  <div className="w-12 h-12 rounded-xl bg-background/80 backdrop-blur-sm flex items-center justify-center shadow-sm">
-                    <Icon className={`w-6 h-6 ${door.iconColor}`} />
+                  <div className="w-10 h-10 rounded-xl bg-background/80 backdrop-blur-sm flex items-center justify-center shadow-sm">
+                    <Icon className={`w-5 h-5 ${door.iconColor}`} />
                   </div>
                   <div>
                     <h3 className="text-base font-bold text-foreground">{door.label}</h3>
@@ -302,10 +302,10 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             className="p-5 rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 via-background to-background cursor-pointer hover:border-primary/40 transition-all shadow-sm hover:shadow-md flex items-center justify-between group"
           >
             <div className="flex items-center gap-5">
-              <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                {nextUp.type === 'bible' ? <Icons.Bible className="w-7 h-7" /> : 
-                 nextUp.type === 'catechism' ? <Icons.Cross className="w-7 h-7" /> : 
-                 <Icons.Flame className="w-7 h-7" />}
+              <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                {nextUp.type === 'bible' ? <Icons.Bible className="w-6 h-6" /> : 
+                 nextUp.type === 'catechism' ? <Icons.Cross className="w-6 h-6" /> : 
+                 <Icons.Flame className="w-6 h-6" />}
               </div>
               <div>
                 <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-1">{nextUp.subtitle}</p>

@@ -91,7 +91,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
 
       <div className="flex items-center gap-1.5 sm:gap-4 flex-shrink-0">
         <button className="p-2.5 sm:p-3 bg-muted text-primary rounded-xl sm:rounded-2xl border border-border hover:bg-primary hover:text-white transition-all shadow-sm active:scale-95" onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}>
-          <Icons.Search className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
+          <Icons.Search className="w-4 h-4" />
         </button>
 
         {user && (
@@ -99,7 +99,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             onClick={() => setShowNotifs(!showNotifs)} 
             className="p-2.5 sm:p-3 bg-muted text-primary hover:bg-primary hover:text-white rounded-xl sm:rounded-2xl border border-border relative transition-all shadow-sm active:scale-95"
           >
-            <Icons.Message className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
+            <Icons.Message className="w-4 h-4" />
             {unreadCount > 0 && (
               <span className="absolute -top-1 -right-1 w-5 h-5 bg-secondary text-primary text-[10px] font-black flex items-center justify-center rounded-full border-2 border-background shadow-lg">
                 {unreadCount}
@@ -177,11 +177,11 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           className={`hidden sm:flex p-2.5 sm:p-3 rounded-xl sm:rounded-2xl border border-border transition-all active:scale-95 shadow-sm items-center justify-center ${isSpeaking ? 'bg-primary text-white animate-pulse' : 'bg-muted text-primary hover:bg-primary hover:text-white'}`}
           title={isSpeaking ? t('audio_stop') : t('audio_read')}
         >
-          {isSpeaking ? <Icons.Stop className="w-4.5 h-4.5 sm:w-5 sm:h-5" /> : <Icons.Volume2 className="w-4.5 h-4.5 sm:w-5 sm:h-5" />}
+          {isSpeaking ? <Icons.Stop className="w-4 h-4" /> : <Icons.Volume2 className="w-4 h-4" />}
         </button>
 
         <button onClick={onToggleDark} className="hidden sm:flex p-2.5 sm:p-3 bg-muted text-primary hover:bg-primary hover:text-white rounded-xl sm:rounded-2xl border border-border transition-all active:scale-95 shadow-sm items-center justify-center">
-          {isDark ? <Icons.Sun className="w-4.5 h-4.5 sm:w-5 sm:h-5" /> : <Icons.Moon className="w-4.5 h-4.5 sm:w-5 sm:h-5" />}
+          {isDark ? <Icons.Sun className="w-4 h-4" /> : <Icons.Moon className="w-4 h-4" />}
         </button>
 
         <button onClick={onOpenSidebar} className="sm:hidden p-2.5 bg-muted text-primary hover:bg-primary hover:text-white rounded-xl border border-border transition-all active:scale-95 shadow-sm flex items-center justify-center">

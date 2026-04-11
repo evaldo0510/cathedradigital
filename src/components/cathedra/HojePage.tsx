@@ -443,8 +443,8 @@ const HojePage: React.FC = () => {
                 className="group cursor-pointer p-6 rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/5 via-transparent to-transparent hover:border-primary/40 transition-all shadow-sm hover:shadow-md"
               >
                 <div className="flex items-center gap-5">
-                  <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/20 transition-colors">
-                    <Icons.Flame className="w-7 h-7" />
+                  <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/20 transition-colors">
+                    <Icons.Flame className="w-6 h-6" />
                   </div>
                   <div className="flex-1">
                     <h3 className="text-base font-bold text-foreground">{activeJourney.title}</h3>
