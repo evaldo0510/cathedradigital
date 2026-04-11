@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SEOHead from '@/components/SEOHead';
 import { Icons } from '../../constants';
@@ -6,269 +6,307 @@ import StaggeredList from './StaggeredList';
 import SacredImage from './SacredImage';
 import SaintDetail, { CATEGORY_LABELS } from './SaintDetail';
 import { SAINTS_DATA, type Saint } from '@/data/saints';
-import { Search, X } from 'lucide-react';
-
-const ALL_CATEGORIES = Object.keys(CATEGORY_LABELS) as Saint['category'][];
-
-/** Extract a numeric birth year from the "born" string, e.g. "1225, …" → 1225 */
-function parseBirthYear(born: string): number | null {
-  const m = born.match(/(\d{3,4})/);
-  return m ? parseInt(m[1], 10) : null;
-}
+import { Search, X, Calendar as CalendarIcon, ChevronLeft, ChevronRight, Sparkles, BookOpen, Quote, Shield } from 'lucide-react';
+import { format, addDays, subDays, isSameDay, startOfMonth, endOfMonth, eachDayOfInterval } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 const Saints: React.FC = () => {
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedSaint, setSelectedSaint] = useState<Saint | null>(null);
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [search, setSearch] = useState('');
-  const [viewMode, setViewMode] = useState<'grid' | 'timeline'>('grid');
+  const [viewMode, setViewMode] = useState<'daily' | 'search'>('daily');
 
-  const saintOfTheDay = useMemo(() => {
-    const today = new Date();
-    const day = today.getDate();
-    const month = today.getMonth() + 1;
-    return SAINTS_DATA.find(s => s.feastMonth === month && s.feastDayNum === day) || SAINTS_DATA[0];
-  }, []);
+  const saintsForSelectedDate = useMemo(() => {
+    const day = selectedDate.getDate();
+    const month = selectedDate.getMonth() + 1;
+    return SAINTS_DATA.filter(s => s.feastMonth === month && s.feastDayNum === day);
+  }, [selectedDate]);
 
   const filteredSaints = useMemo(() => {
-    let list = SAINTS_DATA;
-    if (activeCategory) list = list.filter(s => s.category === activeCategory);
-    if (search.trim()) {
-      const q = search.toLowerCase().trim();
-      list = list.filter(s =>
-        s.name.toLowerCase().includes(q) ||
-        s.title.toLowerCase().includes(q) ||
-        s.patronOf.some(p => p.toLowerCase().includes(q))
-      );
-    }
-    return list;
-  }, [activeCategory, search]);
+    if (!search.trim()) return [];
+    const q = search.toLowerCase().trim();
+    return SAINTS_DATA.filter(s =>
+      s.name.toLowerCase().includes(q) ||
+      s.title.toLowerCase().includes(q) ||
+      s.patronOf.some(p => p.toLowerCase().includes(q))
+    );
+  }, [search]);
 
-  const categoryCounts = useMemo(() => {
-    const counts: Record<string, number> = {};
-    SAINTS_DATA.forEach(s => { counts[s.category] = (counts[s.category] || 0) + 1; });
-    return counts;
-  }, []);
-
-  /** Saints sorted by birth year for timeline */
-  const timelineSaints = useMemo(() => {
-    return [...filteredSaints]
-      .map(s => ({ ...s, birthYear: parseBirthYear(s.born) }))
-      .filter(s => s.birthYear !== null)
-      .sort((a, b) => a.birthYear! - b.birthYear!);
-  }, [filteredSaints]);
+  // Date strip logic
+  const dateStrip = useMemo(() => {
+    return Array.from({ length: 7 }).map((_, i) => addDays(subDays(selectedDate, 3), i));
+  }, [selectedDate]);
 
   return (
     <>
-    <SEOHead title="Santos da Igreja Católica" description="Conheça a vida dos santos católicos, mártires, doutores da Igreja e padroeiros. Histórias de fé e inspiração." path="/saints" keywords="santos católicos, santos do dia, vida dos santos, mártires, doutores da igreja" breadcrumbs={[{ name: "Início", path: "/" }, { name: "Santos", path: "/saints" }]} />
-    <motion.div
-      className="space-y-12"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.4 }}
-    >
-      <motion.div
-        className="text-center space-y-4"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
-      >
-        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Sanctorum</p>
-        <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground">Vidas dos Santos</h1>
-        <p className="text-muted-foreground font-serif italic max-w-xl mx-auto">
-          Heróis da fé que iluminam o caminho da santidade através dos séculos.
-        </p>
-      </motion.div>
+      <SEOHead 
+        title="Santo do Dia - Calendário de Santos" 
+        description="Conheça o santo do dia, sua história, virtudes e ensinamentos. Um calendário completo de santidade para cada dia do ano." 
+        path="/saints" 
+        keywords="santo do dia, calendário litúrgico, vida dos santos, catolicismo, oração dos santos"
+        breadcrumbs={[{ name: "Início", path: "/" }, { name: "Santos", path: "/saints" }]} 
+      />
 
-      {/* Saint of the Day */}
-      {saintOfTheDay && (
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-primary/5 border border-primary/20 rounded-3xl p-8 flex flex-col md:flex-row items-center gap-8 shadow-sm backdrop-blur-sm"
-        >
-          <div className="w-40 h-40 rounded-3xl overflow-hidden flex-shrink-0 border-4 border-card shadow-xl rotate-3 hover:rotate-0 transition-transform duration-500">
-            <SacredImage src={saintOfTheDay.image} className="w-full h-full object-cover" alt={saintOfTheDay.name} />
-          </div>
-          <div className="flex-1 text-center md:text-left">
-            <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
-              <Icons.Star className="w-4 h-4 text-primary animate-pulse" />
-              <span className="text-primary font-black uppercase tracking-widest text-[10px]">Santo do Dia — {saintOfTheDay.feastDay}</span>
-            </div>
-            <h2 className="text-4xl font-serif font-bold text-foreground mb-2">{saintOfTheDay.name}</h2>
-            <p className="text-primary font-serif italic text-lg mb-4">{saintOfTheDay.title}</p>
-            <p className="text-muted-foreground italic font-serif leading-relaxed line-clamp-2">{saintOfTheDay.quotes[0]}</p>
+      <div className="space-y-10 pb-20">
+        {/* Header */}
+        <header className="text-center space-y-4">
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full text-primary border border-primary/20"
+          >
+            <CalendarIcon className="w-3 h-3" />
+            <span className="text-[10px] font-black uppercase tracking-[0.2em]">Sanctorum Pro</span>
+          </motion.div>
+          <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground">Santos</h1>
+          <p className="text-muted-foreground font-serif italic max-w-xl mx-auto">
+            "Sede santos, porque eu, o Senhor vosso Deus, sou santo." — Levítico 19,2
+          </p>
+        </header>
+
+        {/* View Toggle */}
+        <div className="flex justify-center">
+          <div className="bg-secondary/50 p-1 rounded-2xl flex gap-1">
             <button
-              onClick={() => setSelectedSaint(saintOfTheDay)}
-              className="mt-6 px-6 py-2.5 bg-foreground text-background rounded-full text-xs font-black uppercase tracking-widest hover:scale-105 transition-transform"
+              onClick={() => setViewMode('daily')}
+              className={`px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
+                viewMode === 'daily' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
+              }`}
             >
-              Conhecer sua vida
+              Santo do Dia
+            </button>
+            <button
+              onClick={() => setViewMode('search')}
+              className={`px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
+                viewMode === 'search' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              Buscar Santo
             </button>
           </div>
-        </motion.section>
-      )}
-
-      {/* Search + View Toggle */}
-      <div className="flex flex-col sm:flex-row items-center gap-4">
-        <div className="relative flex-1 w-full">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <input
-            type="text"
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            placeholder="Buscar santo por nome, título ou padroado…"
-            className="w-full pl-11 pr-4 py-3 bg-card border border-border rounded-2xl text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
-          />
-          {search && (
-            <button onClick={() => setSearch('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
-              <X className="w-4 h-4" />
-            </button>
-          )}
         </div>
-        <div className="flex bg-secondary rounded-xl p-1 gap-1">
-          <button
-            onClick={() => setViewMode('grid')}
-            className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${
-              viewMode === 'grid' ? 'bg-foreground text-background' : 'text-muted-foreground hover:text-foreground'
-            }`}
-          >
-            Grade
-          </button>
-          <button
-            onClick={() => setViewMode('timeline')}
-            className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${
-              viewMode === 'timeline' ? 'bg-foreground text-background' : 'text-muted-foreground hover:text-foreground'
-            }`}
-          >
-            Cronologia
-          </button>
-        </div>
-      </div>
 
-      {/* Category Filters */}
-      <div className="flex flex-wrap justify-center gap-2">
-        <button
-          onClick={() => setActiveCategory(null)}
-          className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all ${
-            !activeCategory ? 'bg-foreground text-background' : 'bg-secondary text-muted-foreground hover:bg-primary/10 hover:text-primary'
-          }`}
-        >
-          Todos ({SAINTS_DATA.length})
-        </button>
-        {ALL_CATEGORIES.filter(c => categoryCounts[c]).map(cat => (
-          <button
-            key={cat}
-            onClick={() => setActiveCategory(activeCategory === cat ? null : cat)}
-            className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all ${
-              activeCategory === cat ? 'bg-foreground text-background' : 'bg-secondary text-muted-foreground hover:bg-primary/10 hover:text-primary'
-            }`}
-          >
-            {CATEGORY_LABELS[cat]} ({categoryCounts[cat]})
-          </button>
-        ))}
-      </div>
-
-      {/* Results count */}
-      {(search || activeCategory) && (
-        <p className="text-center text-sm text-muted-foreground">
-          {filteredSaints.length} santo{filteredSaints.length !== 1 ? 's' : ''} encontrado{filteredSaints.length !== 1 ? 's' : ''}
-        </p>
-      )}
-
-      {viewMode === 'grid' ? (
-        /* Saints Grid */
-        <StaggeredList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredSaints.map(saint => (
-            <button
-              key={saint.id}
-              onClick={() => setSelectedSaint(saint)}
-              className="group p-8 bg-card border border-border rounded-3xl hover:border-primary/50 hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 text-left flex flex-col h-full"
+        <AnimatePresence mode="wait">
+          {viewMode === 'daily' ? (
+            <motion.div
+              key="daily"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="space-y-8"
             >
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-primary">{saint.feastDay}</span>
-                  <span className="text-[9px] px-1.5 py-0.5 bg-secondary text-secondary-foreground rounded font-bold">{CATEGORY_LABELS[saint.category]}</span>
+              {/* Date Navigator */}
+              <div className="flex flex-col items-center gap-6">
+                <div className="flex items-center gap-4 md:gap-8">
+                  <button 
+                    onClick={() => setSelectedDate(subDays(selectedDate, 1))}
+                    className="p-3 bg-card border border-border rounded-full hover:bg-primary/5 hover:border-primary/30 transition-all text-muted-foreground hover:text-primary"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+                  
+                  <div className="text-center min-w-[200px]">
+                    <h2 className="text-2xl font-serif font-bold text-foreground">
+                      {format(selectedDate, "dd 'de' MMMM", { locale: ptBR })}
+                    </h2>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-primary mt-1">
+                      {format(selectedDate, "EEEE", { locale: ptBR })}
+                    </p>
+                  </div>
+
+                  <button 
+                    onClick={() => setSelectedDate(addDays(selectedDate, 1))}
+                    className="p-3 bg-card border border-border rounded-full hover:bg-primary/5 hover:border-primary/30 transition-all text-muted-foreground hover:text-primary"
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
                 </div>
-                <h3 className="text-2xl font-serif font-bold text-foreground group-hover:text-primary transition-colors mb-2">{saint.name}</h3>
-                <p className="text-sm text-muted-foreground font-serif italic mb-4">{saint.title}</p>
-                <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed mb-4">{saint.bio}</p>
-                {saint.works.length > 0 && (
-                  <p className="text-[10px] font-bold text-primary">
-                    {saint.works.length} obra{saint.works.length > 1 ? 's' : ''} disponíve{saint.works.length > 1 ? 'is' : 'l'}
-                  </p>
+
+                {/* Date Strip */}
+                <div className="flex gap-2 overflow-x-auto pb-2 px-4 max-w-full no-scrollbar">
+                  {dateStrip.map((date, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setSelectedDate(date)}
+                      className={`flex flex-col items-center justify-center min-w-[56px] h-20 rounded-2xl border transition-all ${
+                        isSameDay(date, selectedDate)
+                          ? 'bg-primary border-primary text-primary-foreground shadow-lg shadow-primary/20 scale-110'
+                          : 'bg-card border-border text-muted-foreground hover:border-primary/30 hover:text-primary'
+                      }`}
+                    >
+                      <span className="text-[9px] font-black uppercase tracking-tighter mb-1">
+                        {format(date, "EEE", { locale: ptBR }).replace('.', '')}
+                      </span>
+                      <span className="text-lg font-serif font-bold">{format(date, "dd")}</span>
+                    </button>
+                  ))}
+                </div>
+
+                {!isSameDay(selectedDate, new Date()) && (
+                  <button 
+                    onClick={() => setSelectedDate(new Date())}
+                    className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline"
+                  >
+                    Voltar para Hoje
+                  </button>
                 )}
               </div>
-              <div className="flex flex-wrap gap-2 mt-4">
-                {saint.virtues?.slice(0, 3).map(v => (
-                  <span key={v} className="px-2 py-1 bg-secondary text-[9px] font-black uppercase tracking-widest text-muted-foreground rounded-lg">{v}</span>
-                ))}
-              </div>
-            </button>
-          ))}
-        </StaggeredList>
-      ) : (
-        /* Timeline View */
-        <div className="relative">
-          {/* Vertical line */}
-          <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-px bg-border md:-translate-x-px" />
 
-          <div className="space-y-8">
-            {timelineSaints.map((saint, i) => {
-              const isLeft = i % 2 === 0;
-              return (
-                <motion.div
-                  key={saint.id}
-                  initial={{ opacity: 0, x: isLeft ? -30 : 30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.4, delay: i * 0.05 }}
-                  className={`relative flex items-start gap-4 md:gap-8 ${
-                    isLeft ? 'md:flex-row' : 'md:flex-row-reverse'
-                  } flex-row`}
-                >
-                  {/* Content card */}
-                  <div className={`flex-1 ml-14 md:ml-0 ${isLeft ? 'md:text-right' : 'md:text-left'}`}>
-                    <button
-                      onClick={() => setSelectedSaint(saint)}
-                      className="group w-full p-5 bg-card border border-border rounded-2xl hover:border-primary/50 hover:shadow-xl transition-all duration-300 text-left"
+              {/* Saint Content */}
+              <div className="max-w-4xl mx-auto space-y-6">
+                {saintsForSelectedDate.length > 0 ? (
+                  saintsForSelectedDate.map(saint => (
+                    <motion.div
+                      key={saint.id}
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="group relative bg-card border border-border rounded-[2.5rem] overflow-hidden hover:border-primary/30 transition-all shadow-xl"
                     >
-                      <div className="flex items-center gap-2 mb-1 flex-wrap">
-                        <span className="text-[10px] font-black uppercase tracking-widest text-primary">{saint.feastDay}</span>
-                        <span className="text-[9px] px-1.5 py-0.5 bg-secondary text-secondary-foreground rounded font-bold">{CATEGORY_LABELS[saint.category]}</span>
-                      </div>
-                      <h3 className="text-xl font-serif font-bold text-foreground group-hover:text-primary transition-colors">{saint.name}</h3>
-                      <p className="text-xs text-muted-foreground font-serif italic">{saint.title}</p>
-                      <p className="text-xs text-muted-foreground mt-2 line-clamp-2">{saint.bio}</p>
-                    </button>
-                  </div>
+                      <div className="flex flex-col md:flex-row h-full">
+                        {/* Image Section */}
+                        <div className="w-full md:w-1/3 h-64 md:h-auto relative">
+                          <SacredImage 
+                            src={saint.image} 
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                            alt={saint.name} 
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                          <div className="absolute bottom-6 left-6 right-6 text-white">
+                            <span className="text-[10px] font-black uppercase tracking-widest bg-primary px-2 py-1 rounded-md mb-2 inline-block">
+                              {CATEGORY_LABELS[saint.category] || saint.category}
+                            </span>
+                            <h3 className="text-2xl font-serif font-bold">{saint.name}</h3>
+                          </div>
+                        </div>
 
-                  {/* Timeline node */}
-                  <div className="absolute left-6 md:left-1/2 -translate-x-1/2 flex flex-col items-center z-10">
-                    <div className="w-10 h-10 rounded-full bg-primary/10 border-2 border-primary flex items-center justify-center">
-                      <span className="text-[9px] font-black text-primary">{saint.birthYear}</span>
+                        {/* Summary Content */}
+                        <div className="flex-1 p-8 space-y-6">
+                          <div>
+                            <p className="text-lg text-primary font-serif italic mb-4">"{saint.title}"</p>
+                            <p className="text-muted-foreground leading-relaxed line-clamp-4 font-serif italic">
+                              {saint.bio}
+                            </p>
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-1">
+                              <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground block">Virtude Principal</span>
+                              <div className="flex flex-wrap gap-1">
+                                {saint.virtues?.slice(0, 1).map(v => (
+                                  <span key={v} className="px-2 py-1 bg-primary/10 text-primary text-[10px] font-black uppercase rounded-lg">{v}</span>
+                                ))}
+                              </div>
+                            </div>
+                            <div className="space-y-1 text-right">
+                              <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground block">Padroeiro(a)</span>
+                              <p className="text-xs font-bold text-foreground truncate">{saint.patronOf[0] || '—'}</p>
+                            </div>
+                          </div>
+
+                          <button
+                            onClick={() => setSelectedSaint(saint)}
+                            className="w-full py-4 bg-foreground text-background rounded-2xl text-xs font-black uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg shadow-foreground/10"
+                          >
+                            <BookOpen className="w-4 h-4" />
+                            Explorar Vida e Reflexão
+                          </button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))
+                ) : (
+                  <div className="text-center py-20 bg-muted/20 rounded-[2.5rem] border border-dashed border-border space-y-4">
+                    <Icons.Star className="w-12 h-12 text-muted-foreground/30 mx-auto" />
+                    <div className="space-y-2">
+                      <p className="text-lg font-serif italic text-muted-foreground">O céu está repleto de heróis silenciosos.</p>
+                      <p className="text-xs text-muted-foreground/60 max-w-xs mx-auto">
+                        Embora não tenhamos um santo específico catalogado para hoje em nossa base, milhares de almas celebram na glória de Deus.
+                      </p>
                     </div>
                   </div>
+                )}
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="search"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="space-y-8"
+            >
+              {/* Search Bar */}
+              <div className="max-w-2xl mx-auto relative">
+                <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                <input
+                  type="text"
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  placeholder="Buscar santo por nome, título ou padroado…"
+                  className="w-full pl-14 pr-14 py-5 bg-card border border-border rounded-full text-base text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all shadow-sm"
+                />
+                {search && (
+                  <button 
+                    onClick={() => setSearch('')} 
+                    className="absolute right-6 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                )}
+              </div>
 
-                  {/* Spacer for the other side (desktop) */}
-                  <div className="hidden md:block flex-1" />
-                </motion.div>
-              );
-            })}
-          </div>
+              {/* Search Results */}
+              <div className="max-w-5xl mx-auto">
+                {search.trim() ? (
+                  <StaggeredList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {filteredSaints.map(saint => (
+                      <button
+                        key={saint.id}
+                        onClick={() => setSelectedSaint(saint)}
+                        className="group p-8 bg-card border border-border rounded-[2rem] hover:border-primary/50 hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 text-left flex flex-col h-full"
+                      >
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-4">
+                            <span className="text-[10px] font-black uppercase tracking-widest text-primary">{saint.feastDay}</span>
+                            <span className="text-[9px] px-2 py-0.5 bg-secondary text-secondary-foreground rounded-md font-bold uppercase">{CATEGORY_LABELS[saint.category]}</span>
+                          </div>
+                          <h3 className="text-2xl font-serif font-bold text-foreground group-hover:text-primary transition-colors mb-2">{saint.name}</h3>
+                          <p className="text-sm text-muted-foreground font-serif italic mb-4 line-clamp-1">{saint.title}</p>
+                          <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed mb-4">{saint.bio}</p>
+                        </div>
+                        <div className="flex flex-wrap gap-2 mt-4">
+                          {saint.virtues?.slice(0, 3).map(v => (
+                            <span key={v} className="px-2 py-1 bg-secondary text-[9px] font-black uppercase tracking-widest text-muted-foreground rounded-lg">{v}</span>
+                          ))}
+                        </div>
+                      </button>
+                    ))}
+                  </StaggeredList>
+                ) : (
+                  <div className="text-center py-20 text-muted-foreground/60 italic font-serif">
+                    <Search className="w-12 h-12 mx-auto mb-4 opacity-20" />
+                    <p>Comece a digitar para encontrar um santo específico...</p>
+                  </div>
+                )}
 
-          {timelineSaints.length === 0 && (
-            <p className="text-center text-sm text-muted-foreground py-8">Nenhum santo encontrado.</p>
+                {search.trim() && filteredSaints.length === 0 && (
+                  <p className="text-center text-muted-foreground py-20 italic font-serif">Nenhum santo encontrado para sua busca.</p>
+                )}
+              </div>
+            </motion.div>
           )}
-        </div>
-      )}
+        </AnimatePresence>
 
-      {filteredSaints.length === 0 && viewMode === 'grid' && (
-        <p className="text-center text-sm text-muted-foreground py-8">Nenhum santo encontrado.</p>
-      )}
-
-      {/* Detail Modal */}
-      <AnimatePresence>
-        {selectedSaint && <SaintDetail saint={selectedSaint} onClose={() => setSelectedSaint(null)} />}
-      </AnimatePresence>
-    </motion.div>
+        {/* Detail Modal */}
+        <AnimatePresence>
+          {selectedSaint && (
+            <SaintDetail 
+              saint={selectedSaint} 
+              onClose={() => setSelectedSaint(null)} 
+            />
+          )}
+        </AnimatePresence>
+      </div>
     </>
   );
 };
