@@ -347,6 +347,33 @@ const ProfilePage: React.FC = () => {
         </div>
       </div>
 
+      {!profile.is_premium && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+        >
+          <Card className="border-secondary/50 bg-secondary/10 border-2 overflow-hidden relative group cursor-pointer" onClick={() => navigate(AppRoute.PRICING)}>
+            <div className="absolute top-0 right-0 p-6 opacity-20 group-hover:opacity-40 transition-all group-hover:scale-110">
+              <Icons.Star className="w-20 h-20 text-secondary fill-current" />
+            </div>
+            <CardContent className="p-6 space-y-4">
+              <div className="flex items-center gap-2 mb-1">
+                <div className="px-2 py-0.5 rounded-full bg-secondary/20 text-amber-800 dark:text-secondary text-[9px] font-black uppercase tracking-widest border border-secondary/30">
+                  Acesso Completo
+                </div>
+              </div>
+              <h3 className="text-xl font-serif text-foreground font-bold">Eleve sua vida espiritual ao nível PRO.</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed max-w-[280px]">
+                Desbloqueie todas as jornadas, o Logos ilimitado e ferramentas exclusivas de estudo.
+              </p>
+              <Button size="sm" className="bg-secondary hover:bg-secondary/90 text-amber-950 font-black text-[10px] uppercase tracking-widest h-10 px-6">
+                Ver Planos <Icons.ChevronRight className="w-4 h-4 ml-1" />
+              </Button>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
+
       <div className="bg-card border border-border rounded-2xl p-6 space-y-5">
         <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Editar Perfil</h2>
 
