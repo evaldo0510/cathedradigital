@@ -268,6 +268,7 @@ export const Icons = {
   Heart: createIcon(Heart),
   Zap: createIcon(Zap),
   Globe: createIcon(Globe),
+  Handshake: createIcon(Handshake),
   ShieldCheck: createIcon(ShieldCheck),
   ShieldQuestion: createIcon(ShieldQuestion),
   PartyPopper: createIcon(PartyPopper),
