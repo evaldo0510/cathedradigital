@@ -10,6 +10,11 @@ interface FaithTerm {
   definition: string;
   reference?: string;
   category?: string;
+  deepInterpretation?: string;
+  practicalApplication?: string;
+  bibleVerses?: string[];
+  catechismReferences?: string[];
+  magisteriumReferences?: string[];
 }
 
 const FAITH_TERMS: FaithTerm[] = [
