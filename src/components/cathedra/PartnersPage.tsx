@@ -5,16 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { 
-  Handshake, 
-  ExternalLink, 
-  Plus, 
-  Info, 
-  CheckCircle2, 
-  Loader2,
-  Trophy,
-  Users
-} from 'lucide-react';
+import { Icons } from '@/constants';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -116,7 +107,7 @@ const PartnersPage: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-2"
         >
-          <Handshake className="w-4 h-4" />
+          <Icons.Handshake className="w-4 h-4" />
           Unidos pela Missão
         </motion.div>
         
@@ -166,7 +157,7 @@ const PartnersPage: React.FC = () => {
                       />
                     ) : (
                       <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                        <Trophy className="w-8 h-8" />
+                        <Icons.Trophy className="w-8 h-8" />
                       </div>
                     )}
                   </CardHeader>
@@ -187,7 +178,7 @@ const PartnersPage: React.FC = () => {
                         asChild
                       >
                         <a href={partner.website_url} target="_blank" rel="noopener noreferrer">
-                          Visitar Site <ExternalLink className="w-4 h-4" />
+                          Visitar Site <Icons.ExternalLink className="w-4 h-4" />
                         </a>
                       </Button>
                     )}
@@ -203,7 +194,7 @@ const PartnersPage: React.FC = () => {
             className="flex flex-col items-center justify-center py-20 px-6 text-center space-y-6 bg-muted/20 rounded-3xl border-2 border-dashed border-border/50"
           >
             <div className="w-20 h-20 rounded-full bg-primary/5 flex items-center justify-center">
-              <Users className="w-10 h-10 text-muted-foreground/50" />
+              <Icons.Community className="w-10 h-10 text-muted-foreground/50" />
             </div>
             <div className="space-y-2">
               <h3 className="text-2xl font-semibold text-foreground/80">
@@ -217,7 +208,7 @@ const PartnersPage: React.FC = () => {
             <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
               <DialogTrigger asChild>
                 <Button size="lg" className="rounded-full px-8 gap-2 shadow-lg shadow-primary/20">
-                  <Plus className="w-4 h-4" /> Tornar-se um Parceiro
+                  <Icons.Plus className="w-4 h-4" /> Tornar-se um Parceiro
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[500px] overflow-y-auto max-h-[90dvh]">
@@ -290,14 +281,14 @@ const PartnersPage: React.FC = () => {
                   </div>
 
                   <div className="bg-muted/30 p-4 rounded-xl flex gap-3 text-xs text-muted-foreground leading-relaxed">
-                    <Info className="w-4 h-4 shrink-0 text-primary" />
+                    <Icons.Info className="w-4 h-4 shrink-0 text-primary" />
                     <p>Ao enviar, sua solicitação passará por uma análise administrativa. Apenas parceiros aprovados serão exibidos publicamente na plataforma.</p>
                   </div>
 
                   <Button type="submit" className="w-full h-12 text-base font-semibold" disabled={isSubmitting}>
                     {isSubmitting ? (
                       <>
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        <Icons.Loader className="w-4 h-4 mr-2 animate-spin" />
                         Enviando...
                       </>
                     ) : (
@@ -360,7 +351,7 @@ const PartnersPage: React.FC = () => {
                       </div>
                     </div>
                     <Button type="submit" className="w-full h-12 text-base font-semibold" disabled={isSubmitting}>
-                      {isSubmitting ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Enviando...</> : 'Enviar Solicitação'}
+                      {isSubmitting ? <><Icons.Loader className="w-4 h-4 mr-2 animate-spin" /> Enviando...</> : 'Enviar Solicitação'}
                     </Button>
                   </form>
                 </DialogContent>

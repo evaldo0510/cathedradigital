@@ -1,5 +1,6 @@
 import React, { forwardRef } from 'react';
 import { 
+  Home,
   Book,
   BookOpen, 
   Cross, 
@@ -230,7 +231,7 @@ interface IconProps extends React.SVGProps<SVGSVGElement> {
 }
 
 const createIcon = (IconComponent: any) => 
-  forwardRef<SVGSVGElement, IconProps>(({ className, strokeWidth = 1.6, size = 20, ...props }, ref) => (
+  forwardRef<SVGSVGElement, IconProps>(({ className, strokeWidth = 2, size = 20, ...props }, ref) => (
     <IconComponent 
       ref={ref} 
       strokeWidth={strokeWidth} 
@@ -242,7 +243,7 @@ const createIcon = (IconComponent: any) =>
 
 export const Icons = {
   // Navigation & Core
-  Home: createIcon(Layout),
+  Home: createIcon(Home),
   Dashboard: createIcon(LayoutGrid),
   LayoutGrid: createIcon(LayoutGrid),
   Layout: createIcon(Layout),
