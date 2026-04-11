@@ -439,7 +439,12 @@ const PrayerPage: React.FC = () => {
           <div className="space-y-6">
             <div className="flex items-center justify-between px-2">
               <h3 className="text-2xl font-serif font-bold">Mistérios do Rosário</h3>
-              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Escolha um mistério</p>
+              <button 
+                onClick={() => navigate('/rosary')}
+                className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline transition-all"
+              >
+                Ver Rosário Completo <ChevronRight className="w-3 h-3 inline ml-1" />
+              </button>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {(Object.entries(MYSTERY_DATA) as [MysteryKey, typeof MYSTERY_DATA[MysteryKey]][]).map(([key, val]) => (

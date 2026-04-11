@@ -125,6 +125,7 @@ const Rosary: React.FC = () => {
   const [step, setStep] = useState<PrayerStep>('intro');
   const [showPrayer, setShowPrayer] = useState<string | null>(null);
   const [aveCount, setAveCount] = useState(0);
+  const [intention, setIntention] = useState('');
 
   if (!selectedSet) {
     return (
@@ -163,6 +164,29 @@ const Rosary: React.FC = () => {
             </button>
           ))}
         </div>
+
+        <motion.div 
+          className="bg-card border border-border rounded-[2.5rem] p-8 md:p-12 text-center space-y-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
+          <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mx-auto mb-4">
+            <BookOpen className="w-8 h-8" />
+          </div>
+          <div className="space-y-2">
+            <h2 className="text-2xl font-serif font-bold text-foreground">Outras Orações e Devoções</h2>
+            <p className="text-muted-foreground font-serif italic max-w-xl mx-auto">
+              Encontre o Pai Nosso, Ave Maria, Salve Rainha, Via-Sacra e outras orações tradicionais da Igreja.
+            </p>
+          </div>
+          <button 
+            onClick={() => window.location.href = '/oracao'}
+            className="inline-flex items-center gap-2 px-8 py-4 bg-muted hover:bg-muted/80 text-foreground rounded-2xl font-bold text-xs uppercase tracking-widest transition-all"
+          >
+            Explorar Devoções <ChevronRight className="w-4 h-4" />
+          </button>
+        </motion.div>
       </motion.div>
     );
   }
@@ -190,22 +214,51 @@ const Rosary: React.FC = () => {
 
         <YouTubePlayer videoId={YOUTUBE_IDS[selectedSet]} title={set.name} />
 
-        <div className="grid gap-4">
-          <h3 className="text-xl font-serif font-bold px-2">Mistérios e Meditações</h3>
-          {set.mysteries.map((m, i) => (
-            <div key={i} className="p-6 md:p-8 rounded-3xl bg-card border border-border shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex items-start gap-6">
-                <div className="w-12 h-12 rounded-2xl bg-primary/5 text-primary flex items-center justify-center font-black text-lg shrink-0 border border-primary/10">{i + 1}</div>
-                <div className="space-y-3">
-                  <div className="space-y-1">
-                    <p className="font-serif font-bold text-xl text-foreground">{m.title}</p>
-                    <p className="text-[10px] text-primary font-bold uppercase tracking-widest">{m.scripture}</p>
+        <div className="grid md:grid-cols-3 gap-8">
+          <div className="md:col-span-2 grid gap-4">
+            <h3 className="text-xl font-serif font-bold px-2">Mistérios e Meditações</h3>
+            {set.mysteries.map((m, i) => (
+              <div key={i} className="p-6 md:p-8 rounded-3xl bg-card border border-border shadow-sm hover:shadow-md transition-shadow">
+                <div className="flex items-start gap-6">
+                  <div className="w-12 h-12 rounded-2xl bg-primary/5 text-primary flex items-center justify-center font-black text-lg shrink-0 border border-primary/10">{i + 1}</div>
+                  <div className="space-y-3">
+                    <div className="space-y-1">
+                      <p className="font-serif font-bold text-xl text-foreground">{m.title}</p>
+                      <p className="text-[10px] text-primary font-bold uppercase tracking-widest">{m.scripture}</p>
+                    </div>
+                    <p className="text-base text-muted-foreground leading-relaxed font-serif italic">"{m.meditation}"</p>
                   </div>
-                  <p className="text-base text-muted-foreground leading-relaxed font-serif italic">"{m.meditation}"</p>
                 </div>
               </div>
+            ))}
+          </div>
+          
+          <div className="space-y-6">
+            <div className="p-8 rounded-[2rem] bg-card border border-border shadow-sm space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                  <Activity className="w-5 h-5" />
+                </div>
+                <h3 className="text-lg font-serif font-bold">Suas Intenções</h3>
+              </div>
+              <p className="text-xs text-muted-foreground font-serif italic leading-relaxed">
+                Escreva por quem ou pelo que você oferece este terço. Sua intenção guiará sua meditação.
+              </p>
+              <textarea
+                value={intention}
+                onChange={e => setIntention(e.target.value)}
+                placeholder="Ex: Pela minha família, pela paz no mundo..."
+                className="w-full px-5 py-4 rounded-2xl bg-muted/50 border border-border text-sm font-serif text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none h-32"
+              />
             </div>
-          ))}
+            
+            <div className="p-8 rounded-[2rem] bg-primary text-primary-foreground shadow-xl shadow-primary/20 space-y-4">
+              <p className="text-sm font-serif italic opacity-90 leading-relaxed">
+                "O Rosário é a minha oração predileta. Oração maravilhosa! Maravilhosa na sua simplicidade e na sua profundidade."
+              </p>
+              <p className="text-[10px] font-black uppercase tracking-widest opacity-60">— São João Paulo II</p>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -222,6 +275,13 @@ const Rosary: React.FC = () => {
             <h3 className="text-2xl font-serif font-bold text-secondary">Orações Iniciais</h3>
             <p className="text-xs text-secondary/40 font-serif italic">Sinal da Cruz + Credo + 3 Ave-Marias + Glória</p>
           </div>
+          
+          {intention && (
+            <div className="mx-auto p-5 bg-secondary/5 border border-secondary/10 rounded-2xl text-center max-w-sm animate-in fade-in slide-in-from-top-2 duration-700">
+              <p className="text-[10px] font-black uppercase tracking-widest text-secondary/50 mb-1">Intenção</p>
+              <p className="text-base font-serif text-secondary/70 italic leading-relaxed">"{intention}"</p>
+            </div>
+          )}
           <div className="space-y-3">
             {['signOfCross', 'creed', 'ourFather'].map(k => (
               <div key={k} className="group bg-white/[0.04] rounded-2xl p-6 cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setShowPrayer(showPrayer === k ? null : k)}>
