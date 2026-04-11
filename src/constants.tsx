@@ -243,7 +243,7 @@ const createIcon = (IconComponent: any) =>
 
 export const Icons = {
   // Navigation & Core
-  Home: createIcon(Layout),
+  Home: createIcon(Home),
   Dashboard: createIcon(LayoutGrid),
   LayoutGrid: createIcon(LayoutGrid),
   Layout: createIcon(Layout),
