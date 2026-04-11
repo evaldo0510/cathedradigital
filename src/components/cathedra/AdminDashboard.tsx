@@ -697,71 +697,71 @@ const AdminDashboard: React.FC = () => {
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-border">
-                      <th className="text-left p-4 font-semibold cursor-pointer hover:text-primary" onClick={() => toggleSort('name')}>
+                    <tr className="border-b border-border/60 bg-muted/20">
+                      <th className="text-left px-3 py-2 font-black uppercase tracking-widest text-[10px] opacity-60 cursor-pointer hover:text-primary" onClick={() => toggleSort('name')}>
                         Nome <SortIcon field="name" />
                       </th>
-                      <th className="text-left p-4 font-semibold hidden md:table-cell">Email</th>
-                      <th className="text-center p-4 font-semibold">Status</th>
-                      <th className="text-center p-4 font-semibold">Cargo</th>
-                      <th className="text-center p-4 font-semibold cursor-pointer hover:text-primary hidden lg:table-cell" onClick={() => toggleSort('xp')}>
+                      <th className="text-left px-3 py-2 font-black uppercase tracking-widest text-[10px] opacity-60 hidden md:table-cell">Email</th>
+                      <th className="text-center px-3 py-2 font-black uppercase tracking-widest text-[10px] opacity-60">Status</th>
+                      <th className="text-center px-3 py-2 font-black uppercase tracking-widest text-[10px] opacity-60">Cargo</th>
+                      <th className="text-center px-3 py-2 font-black uppercase tracking-widest text-[10px] opacity-60 cursor-pointer hover:text-primary hidden lg:table-cell" onClick={() => toggleSort('xp')}>
                         XP <SortIcon field="xp" />
                       </th>
-                      <th className="text-center p-4 font-semibold cursor-pointer hover:text-primary hidden lg:table-cell" onClick={() => toggleSort('created_at')}>
+                      <th className="text-center px-3 py-2 font-black uppercase tracking-widest text-[10px] opacity-60 cursor-pointer hover:text-primary hidden lg:table-cell" onClick={() => toggleSort('created_at')}>
                         Cadastro <SortIcon field="created_at" />
                       </th>
-                      <th className="text-center p-4 font-semibold">Ações</th>
+                      <th className="text-center px-3 py-2 font-black uppercase tracking-widest text-[10px] opacity-60">Ações</th>
                     </tr>
                   </thead>
                   <tbody>
                     {filteredUsers.map(u => (
                       <tr key={u.id} className="border-b border-border/50 hover:bg-muted/50 transition-colors">
-                        <td className="p-4">
-                          <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-lg bg-foreground text-background flex items-center justify-center font-black text-xs shrink-0">
+                        <td className="px-3 py-2">
+                          <div className="flex items-center gap-2">
+                            <div className="w-6 h-6 rounded bg-foreground text-background flex items-center justify-center font-black text-[10px] shrink-0">
                               {u.name?.charAt(0)?.toUpperCase() || '?'}
                             </div>
-                            <span className="font-medium truncate max-w-[150px]">{u.name || '—'}</span>
+                            <span className="font-bold text-xs truncate max-w-[120px]">{u.name || '—'}</span>
                           </div>
                         </td>
-                        <td className="p-4 text-muted-foreground hidden md:table-cell truncate max-w-[200px]">{u.email}</td>
-                        <td className="p-4 text-center">
+                        <td className="px-3 py-2 text-muted-foreground hidden md:table-cell truncate max-w-[180px] text-[10px] font-medium">{u.email}</td>
+                        <td className="px-3 py-2 text-center">
                           {u.is_premium ? (
-                            <Badge className="bg-primary/15 text-primary border-primary/30 gap-1">
-                              <Crown className="w-3 h-3" /> PRO
+                            <Badge className="bg-primary/10 text-primary border-primary/20 gap-1 text-[9px] font-bold h-5 px-1.5 shadow-none">
+                              <Crown className="w-2.5 h-2.5" /> PRO
                             </Badge>
                           ) : (
-                            <Badge variant="secondary" className="gap-1">Gratuito</Badge>
+                            <Badge variant="secondary" className="gap-1 text-[9px] font-bold h-5 px-1.5 shadow-none">GRATUITO</Badge>
                           )}
                         </td>
-                        <td className="p-4 text-center">
+                        <td className="px-3 py-2 text-center">
                           {u.role === 'admin' ? (
-                            <Badge className="bg-destructive/15 text-destructive border-destructive/30 gap-1">
-                              <Shield className="w-3 h-3" /> Admin
+                            <Badge className="bg-destructive/10 text-destructive border-destructive/20 gap-1 text-[9px] font-bold h-5 px-1.5 shadow-none">
+                              <Shield className="w-2.5 h-2.5" /> ADMIN
                             </Badge>
                           ) : (
-                            <Badge variant="outline" className="gap-1">Usuário</Badge>
+                            <Badge variant="outline" className="gap-1 text-[9px] font-bold h-5 px-1.5 shadow-none">USER</Badge>
                           )}
                         </td>
-                        <td className="p-4 text-center hidden lg:table-cell font-mono text-xs">{u.xp ?? 0}</td>
-                        <td className="p-4 text-center hidden lg:table-cell text-xs text-muted-foreground">
+                        <td className="px-3 py-2 text-center hidden lg:table-cell font-mono text-[10px] font-bold">{u.xp ?? 0}</td>
+                        <td className="px-3 py-2 text-center hidden lg:table-cell text-[10px] font-medium text-muted-foreground">
                           {new Date(u.created_at).toLocaleDateString('pt-BR')}
                         </td>
-                        <td className="p-4 text-center">
+                        <td className="px-3 py-2 text-center">
                           <div className="flex items-center justify-center gap-1">
                             <button
                               onClick={() => handleTogglePremium(u.id, u.is_premium)}
                               title={u.is_premium ? 'Remover PRO' : 'Ativar PRO'}
-                              className={`p-1.5 rounded-lg transition-all ${u.is_premium ? 'bg-primary/10 text-primary hover:bg-primary/20' : 'bg-muted text-muted-foreground hover:text-primary'}`}
+                              className={`p-1 rounded bg-muted/50 text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors`}
                             >
-                              <Crown className="w-4 h-4" />
+                              <Crown className="w-3.5 h-3.5" />
                             </button>
                             <button
                               onClick={() => handleToggleRole(u.id, u.role)}
                               title={u.role === 'admin' ? 'Remover Admin' : 'Tornar Admin'}
-                              className={`p-1.5 rounded-lg transition-all ${u.role === 'admin' ? 'bg-destructive/10 text-destructive hover:bg-destructive/20' : 'bg-muted text-muted-foreground hover:text-destructive'}`}
+                              className={`p-1 rounded bg-muted/50 text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors`}
                             >
-                              <UserCog className="w-4 h-4" />
+                              <UserCog className="w-3.5 h-3.5" />
                             </button>
                           </div>
                         </td>
