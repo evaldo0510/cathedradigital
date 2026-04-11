@@ -98,7 +98,13 @@ const FAITH_TERMS: FaithTerm[] = [
     catechismReferences: ['§142-184 (A Resposta do homem a Deus)', '§1814-1816 (A virtude da Fé)'],
     magisteriumReferences: ['Lumen Fidei (Papa Francisco)', 'Fides et Ratio (João Paulo II)']
   },
-  { term: 'Graça', definition: 'O dom gratuito de Deus que nos torna participantes da sua vida divina.', reference: 'Ef 2,8', category: 'Teologia' },
+  { 
+    term: 'Graça', 
+    definition: 'O dom gratuito de Deus que nos torna participantes da sua vida divina.', 
+    reference: 'Ef 2,8', 
+    category: 'Teologia',
+    journey_id: 'e7a1b2c3-d4e5-4000-8000-000000000001'
+  },
   { 
     term: 'Igreja', 
     definition: 'O Povo de Deus reunido em Cristo, Corpo Místico de Cristo.', 
@@ -137,11 +143,12 @@ const FAITH_TERMS: FaithTerm[] = [
     definition: 'O diálogo de amor entre o homem e Deus.', 
     reference: 'Mt 6,5-15', 
     category: 'Espiritualidade',
-    deepInterpretation: 'A oração é a elevação da alma a Deus ou o pedido a Deus de bens convenientes. É um dom da graça e uma resposta decidida da nossa parte. Sempre pressupõe um esperto: a oração é um combate contra nós mesmos e contra as astúcias do Tentador.',
+    deepInterpretation: 'A oração é a elevação da alma a Deus ou o pedido a Deus de bens convenientes. É um dom da graça e uma resposta decidida da nossa parte. Sempre pressupõe um esforço: a oração é um combate contra nós mesmos e contra as astúcias do Tentador.',
     practicalApplication: 'Estabelecer momentos fixos de oração diária, como o oferecimento do dia, o Rosário ou a Lectio Divina, cultivando a presença de Deus em meio às tarefas cotidianas.',
     bibleVerses: ['Mt 6,5-15 (O Pai Nosso)', 'Lc 18,1 (Orar sem cessar)', '1Ts 5,17 (Rezai sem interrupção)'],
     catechismReferences: ['§2558-2865 (A Oração Cristã)', '§2626-2643 (As formas de oração)'],
-    magisteriumReferences: ['Novo Millennio Ineunte n. 32-34 (A arte da oração)', 'Verbum Domini (Bento XVI)']
+    magisteriumReferences: ['Novo Millennio Ineunte n. 32-34 (A arte da oração)', 'Verbum Domini (Bento XVI)'],
+    journey_id: 'e7a1b2c3-d4e5-4000-8000-000000000003'
   },
   { term: 'Pecado', definition: 'Uma ofensa a Deus, uma falta contra a razão, a verdade e a consciência reta.', reference: 'Rm 3,23', category: 'Moral' },
   { term: 'Reino de Deus', definition: 'A soberania de Deus que se manifesta na justiça, paz e alegria.', reference: 'Mc 1,15', category: 'Ensinamentos' },
