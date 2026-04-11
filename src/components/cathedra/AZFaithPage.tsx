@@ -208,7 +208,17 @@ const FAITH_TERMS: FaithTerm[] = [
 
 const AZFaithPage: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const q = params.get('q');
+    if (q) {
+      setSearchQuery(q);
+      setSelectedLetter(null);
+    }
+  }, [location.search]);
   const [selectedLetter, setSelectedLetter] = useState<string | null>('A');
   const [selectedTerm, setSelectedTerm] = useState<FaithTerm | null>(null);
   
