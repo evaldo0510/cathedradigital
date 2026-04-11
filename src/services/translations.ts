@@ -41,7 +41,9 @@ export const UI_TRANSLATIONS: Record<Language, any> = {
     empty_state: "Este mistério ainda não foi catalogado.",
     save: "Guardar",
     copy: "Copiar",
-    share: "Partilhar"
+    share: "Partilhar",
+    audio_read: "Ouvir",
+    audio_stop: "Parar"
   },
   en: {
     home: "Home (Narthex)",
