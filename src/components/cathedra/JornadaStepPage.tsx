@@ -295,13 +295,13 @@ const JornadaStepPage: React.FC = () => {
           >
             <div className="flex items-center gap-2">
               <PenLine className="w-4 h-4 text-primary" />
-              <h3 className="text-sm font-bold text-foreground">Diário Espiritual</h3>
+              <h3 className="text-sm font-bold text-foreground">Pergunta Final & Reflexão</h3>
             </div>
 
-            {(getVariantContent('journal_prompt', content) || getVariantContent('question', content)) && (
+            {(getVariantContent('final_question', content) || getVariantContent('journal_prompt', content) || getVariantContent('question', content)) && (
               <div className="bg-primary/5 border border-primary/10 rounded-xl p-4">
                 <p className="text-sm text-foreground/80 italic font-serif">
-                  {getVariantContent('journal_prompt', content) || getVariantContent('question', content)}
+                  {getVariantContent('final_question', content) || getVariantContent('journal_prompt', content) || getVariantContent('question', content)}
                 </p>
               </div>
             )}
