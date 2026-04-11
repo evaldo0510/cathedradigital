@@ -83,11 +83,11 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   const triggerRipple = useRipple();
 
   const items = [
-    { label: 'Hoje', icon: <Icons.Liturgy />, route: AppRoute.HOJE },
-    { label: 'Jornadas', icon: <Icons.Journeys />, route: AppRoute.JORNADAS },
-    { label: 'Biblioteca', icon: <Icons.Bible />, route: AppRoute.BIBLIOTECA },
-    { label: 'Tudo', icon: <Icons.Menu />, route: '__sidebar__' },
-    { label: 'Perfil', icon: <Icons.Users />, route: AppRoute.PROFILE },
+    { label: 'Início', icon: <Icons.Home />, route: AppRoute.HOJE },
+    { label: 'Jornada', icon: <Icons.Journeys />, route: AppRoute.JORNADAS },
+    { label: 'Explorar', icon: <Icons.Search />, route: AppRoute.BIBLIOTECA },
+    { label: 'Comunidade', icon: <Icons.Community />, route: AppRoute.COMMUNITY },
+    { label: 'Perfil', icon: <Icons.User />, route: AppRoute.PROFILE },
   ];
 
   return (
