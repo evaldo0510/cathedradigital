@@ -171,6 +171,7 @@ const createIcon = (IconComponent: any) =>
   ));
 
 export const Icons = {
+  Logo: Logo,
   // Navigation & Core
   Home: createIcon(Home),
   Dashboard: createIcon(LayoutGrid),
