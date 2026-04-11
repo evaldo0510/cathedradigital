@@ -263,7 +263,7 @@ export const SAINTS_DATA: Saint[] = [
     ],
     category: 'mystic',
     image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Padre_Pio.jpg/440px-Padre_Pio.jpg',
-    virtues: ['Oração', 'Sofrimento redentor', 'Obediência', 'Caridade'],
+    virtues: ['Oração', 'Sofrimento redentor', 'Obediência', 'Caridade', 'Dor'],
     prayer: 'São Padre Pio, que trouxestes em vosso corpo as chagas de Cristo, rogai a Deus por nós e intercedei por nossas necessidades.',
   },
   {
