@@ -181,6 +181,7 @@ const TemasPage = () => {
                       <ContentSection title="Documentos Pontifícios" icon={<FileText className="h-6 w-6 text-emerald-500" />} items={magisterium} color="emerald" />
                     </TabsContent>
 
+
                     <TabsContent value="bible" className="mt-0 focus-visible:outline-none">
                       <ContentSection title="Bíblia Sagrada" icon={<Book className="h-6 w-6 text-blue-500" />} items={bibleVerses} showEmpty color="blue" />
                     </TabsContent>
