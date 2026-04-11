@@ -39,6 +39,8 @@ const HojePage: React.FC = () => {
   const [logosRecommendation, setLogosRecommendation] = useState<any>(null);
   const [recommendedLogosJourney, setRecommendedLogosJourney] = useState<any>(null);
   const [recommendedLogosStep, setRecommendedLogosStep] = useState<any>(null);
+  const [logosThemeContents, setLogosThemeContents] = useState<any[]>([]);
+  const [logosThemeName, setLogosThemeName] = useState<string>('');
   const [officialSaint, setOfficialSaint] = useState<any>(null);
 
   useEffect(() => {
@@ -207,6 +209,8 @@ const HojePage: React.FC = () => {
     setLogosResponse('');
     setLogosRecommendation(null);
     setRecommendedLogosJourney(null);
+    setLogosThemeContents([]);
+    setLogosThemeName('');
 
     try {
       const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/colloquium`, {
@@ -292,6 +296,33 @@ const HojePage: React.FC = () => {
             const completedIds = (completedRes.data || []).map(s => s.step_id);
             const next = (stepsRes.data || []).find(s => !completedIds.includes(s.id));
             setRecommendedLogosStep(next || null);
+          }
+
+          // Fetch theme contents based on main_state
+          const stateToThemeSlugs: Record<string, string[]> = {
+            'ansiedade': ['oracao', 'esperanca', 'fe'],
+            'confusao': ['fe', 'sabedoria', 'humildade'],
+            'dor_emocional': ['sofrimento', 'perdao', 'esperanca', 'amor'],
+            'busca_espiritual': ['santidade', 'vocacao', 'fe', 'oracao'],
+            'virtudes_e_missao': ['caridade', 'missao', 'humildade', 'santidade'],
+          };
+          const themeSlugs = stateToThemeSlugs[mainState] || ['fe', 'amor', 'oracao'];
+          
+          const { data: matchedThemes } = await supabase
+            .from('themes')
+            .select('id, name, slug')
+            .in('slug', themeSlugs)
+            .limit(3);
+
+          if (matchedThemes && matchedThemes.length > 0) {
+            setLogosThemeName(matchedThemes[0].name);
+            const themeIds = matchedThemes.map(t => t.id);
+            const { data: contents } = await supabase
+              .from('theme_contents')
+              .select('*')
+              .in('theme_id', themeIds)
+              .limit(6);
+            if (contents) setLogosThemeContents(contents);
           }
         } catch (e) {
           console.error('Failed to parse recommendation:', e);
@@ -616,6 +647,73 @@ const HojePage: React.FC = () => {
                 )}
               </CardContent>
             </Card>
+          </motion.div>
+        )}
+
+        {/* Theme-Connected Content Recommendations */}
+        {!isAnalyzing && logosThemeContents.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="space-y-4"
+          >
+            <div className="flex items-center gap-3">
+              <div className="h-px w-6 bg-primary/30" />
+              <h3 className="text-[11px] font-black uppercase tracking-[0.3em] text-primary flex items-center gap-2">
+                <Icons.Tag className="w-3.5 h-3.5" />
+                Conteúdos Conectados{logosThemeName ? ` — ${logosThemeName}` : ''}
+              </h3>
+            </div>
+            
+            <div className="grid grid-cols-1 gap-3">
+              {logosThemeContents.map((item: any) => {
+                const typeConfig: Record<string, { icon: React.ReactNode; label: string; color: string }> = {
+                  bible: { icon: <Icons.BookOpen className="w-4 h-4" />, label: 'Bíblia', color: 'bg-blue-500/10 text-blue-600 dark:text-blue-400' },
+                  catechism: { icon: <Icons.Bookmark className="w-4 h-4" />, label: 'Catecismo', color: 'bg-amber-500/10 text-amber-600 dark:text-amber-400' },
+                  magisterium: { icon: <Icons.FileText className="w-4 h-4" />, label: 'Magistério', color: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' },
+                };
+                const config = typeConfig[item.content_type] || typeConfig.bible;
+                
+                return (
+                  <motion.div
+                    key={item.id}
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                    onClick={() => navigate(AppRoute.TEMAS)}
+                    className="group cursor-pointer p-5 rounded-2xl border border-border bg-card hover:border-primary/30 hover:bg-primary/5 transition-all shadow-sm"
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className={`p-2.5 rounded-xl ${config.color} shrink-0`}>
+                        {config.icon}
+                      </div>
+                      <div className="flex-1 min-w-0 space-y-1.5">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{config.label}</span>
+                          <span className="text-[10px] text-primary/70 font-semibold">{item.reference}</span>
+                        </div>
+                        <p className="text-sm font-semibold text-foreground leading-snug">{item.title || item.reference}</p>
+                        {item.text_content && (
+                          <p className="text-xs text-muted-foreground italic line-clamp-2 font-serif leading-relaxed">
+                            "{item.text_content}"
+                          </p>
+                        )}
+                      </div>
+                      <Icons.ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0 mt-1" />
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full rounded-xl border-primary/20 text-primary hover:bg-primary/5 font-bold uppercase text-[10px] tracking-widest"
+              onClick={() => navigate(AppRoute.TEMAS)}
+            >
+              Ver todos os temas conectados
+            </Button>
           </motion.div>
         )}
 
