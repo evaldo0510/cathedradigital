@@ -59,7 +59,7 @@ const AdminContentTab: React.FC = () => {
     }
   };
 
-  const handleUpdateStatus = async (id: string, newStatus: 'approved' | 'rejected') => {
+  const handleUpdateStatus = async (id: string, newStatus: 'approved' | 'rejected' | 'pending') => {
     try {
       const { error } = await supabase
         .from('community_posts')
@@ -69,7 +69,7 @@ const AdminContentTab: React.FC = () => {
       if (error) throw error;
 
       setPosts(prev => prev.map(p => p.id === id ? { ...p, status: newStatus } : p));
-      toast.success(`Conteúdo ${newStatus === 'approved' ? 'aprovado' : 'rejeitado'} com sucesso.`);
+      toast.success(`Conteúdo ${newStatus === 'approved' ? 'aprovado' : newStatus === 'rejected' ? 'rejeitado' : 'marcado como pendente'} com sucesso.`);
     } catch (error: any) {
       toast.error('Erro ao atualizar conteúdo: ' + error.message);
     }
@@ -92,6 +92,7 @@ const AdminContentTab: React.FC = () => {
       toast.error('Erro ao excluir conteúdo: ' + error.message);
     }
   };
+
 
   const getStatusBadge = (status: string) => {
     switch (status) {
