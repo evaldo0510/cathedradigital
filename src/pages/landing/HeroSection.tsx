@@ -19,7 +19,7 @@ const HeroSection = ({ onStart, onAbout }: HeroSectionProps) => {
   const bgY = useTransform(scrollYProgress, [0, 1], [0, 60]);
 
   return (
-    <section ref={heroRef} className="relative w-full min-h-[100vh] flex items-center justify-center px-6 overflow-hidden">
+    <section ref={heroRef} className="relative w-full min-h-[100dvh] flex items-center justify-center px-6 overflow-hidden">
       <HeroBackground bgY={bgY} />
       <HeroParticles />
       <HeroContent heroOpacity={heroOpacity} heroScale={heroScale} heroY={heroY} onStart={onStart} onAbout={onAbout} />
