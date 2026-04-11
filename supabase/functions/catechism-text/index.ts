@@ -236,7 +236,12 @@ async function generateWithAI(paragraph: number, supabaseUrl: string, serviceKey
       }
     }
     
-    const cleaned = generated.trim().replace(/^§\d+\s*[-–]\s*/, '').trim();
+    const cleaned = generated
+      .trim()
+      .replace(/^(Compreendido|Com certeza|Aqui está|Segue o texto|Claro|Com prazer)[^:]*:\s*/i, '')
+      .replace(/^(###|##|\*\*)\s*§?\d+\s*[-\–]?\s*/i, '')
+      .replace(/---.*$/s, '')
+      .trim();
     return cleaned;
   } catch (e) {
     console.error(`AI generation failed for §${paragraph}:`, e);

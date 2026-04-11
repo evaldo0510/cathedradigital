@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import React from 'react';
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from '@/components/ui/hover-card';
 import { Icons } from '../../constants';
+import { useCatechismParagraph } from '@/hooks/useCatechismParagraph';
 
 interface CatechismPopoverProps {
   paragraph: number;
@@ -18,35 +18,14 @@ const CatechismPopover: React.FC<CatechismPopoverProps> = ({
   onNavigate,
   variant = 'default',
 }) => {
-  const [content, setContent] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [fetched, setFetched] = useState(false);
+  const { data, isLoading, isFetched } = useCatechismParagraph(paragraph);
 
-  const fetchContent = async () => {
-    if (fetched) return;
-    setLoading(true);
-    try {
-      const { data, error } = await supabase.functions.invoke('catechism-text', {
-        body: { paragraph },
-      });
-      if (!error && data?.content) {
-        setContent(data.content);
-      } else {
-        setContent(`Parágrafo §${paragraph} — conteúdo em breve.`);
-      }
-    } catch {
-      setContent('Erro ao carregar parágrafo.');
-    }
-    setLoading(false);
-    setFetched(true);
-  };
+  const content = data?.content || '';
 
   return (
     <HoverCard openDelay={100} closeDelay={200}>
       <HoverCardTrigger asChild>
         <button
-          onClick={fetchContent}
-          onMouseEnter={fetchContent}
           className={variant === 'mini' 
             ? "ml-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-primary/10 text-[8px] font-black text-primary border border-primary/20 hover:bg-primary hover:text-primary-foreground transition-all align-middle"
             : "px-2.5 py-1 rounded-lg bg-card border border-border text-xs font-bold text-primary hover:bg-primary hover:text-primary-foreground transition-all"}
@@ -77,19 +56,19 @@ const CatechismPopover: React.FC<CatechismPopoverProps> = ({
           )}
         </div>
         <div className="p-3">
-          {loading && (
+          {isLoading && (
             <div className="space-y-2 py-2">
               {[1, 2, 3].map(i => (
                 <div key={i} className="h-3 bg-muted rounded animate-pulse" style={{ width: `${50 + i * 15}%` }} />
               ))}
             </div>
           )}
-          {!loading && fetched && content && (
+          {!isLoading && isFetched && content && (
             <p className="text-xs leading-relaxed text-foreground/90 font-serif">
               {content.length > 300 ? content.slice(0, 300) + '…' : content}
             </p>
           )}
-          {!loading && fetched && !content && (
+          {!isLoading && isFetched && !content && (
             <p className="text-xs text-muted-foreground italic">Texto não disponível.</p>
           )}
         </div>
