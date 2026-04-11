@@ -133,7 +133,7 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
             </div>
 
             <div className="flex flex-wrap gap-1 mt-1">
-              {(['pt', 'en', 'es', 'la'] as const).map((l) => (
+              {(['pt', 'en', 'es', 'la', 'it', 'fr', 'de'] as const).map((l) => (
                 <button
                   key={l}
                   onClick={() => (window as any).dispatchEvent(new CustomEvent('change-lang', { detail: l }))}
