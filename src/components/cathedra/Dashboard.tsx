@@ -103,13 +103,13 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
     load();
   }, [user]);
 
-  // Saint of the day
-  const [saintOfDay, setSaintOfDay] = useState<any>(null);
+  // Saints of the day
+  const [saintsToday, setSaintsToday] = useState<any[]>([]);
   useEffect(() => {
     import('@/data/saints').then(m => {
       const today = new Date();
-      const saint = m.SAINTS_DATA.find(s => s.feastMonth === today.getMonth() + 1 && s.feastDayNum === today.getDate()) || m.SAINTS_DATA[0];
-      setSaintOfDay(saint);
+      const matched = m.SAINTS_DATA.filter(s => s.feastMonth === today.getMonth() + 1 && s.feastDayNum === today.getDate());
+      setSaintsToday(matched.length > 0 ? matched : [m.SAINTS_DATA[0]]);
     });
   }, []);
 
