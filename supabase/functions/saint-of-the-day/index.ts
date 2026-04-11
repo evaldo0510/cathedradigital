@@ -26,39 +26,30 @@ serve(async (req) => {
       throw new Error("Failed to parse HTML");
     }
 
-    // Vatican News structure for Saint of the Day
-    // The main content is usually inside .section or .article
-    const mainSection = doc.querySelector("main") || doc.querySelector(".section") || doc.querySelector(".article");
-    if (!mainSection) {
-        throw new Error("Main content section not found");
+    // Target the specific section for Saint of the Day
+    const saintSection = doc.querySelector(".section--isStatic") || doc.querySelector(".section--evidence");
+    
+    if (!saintSection) {
+        throw new Error("Saint section not found");
     }
 
-    // Find the first <h2> which is the Saint's name
-    // Exclude header menus if they use <h2>
-    const titleElement = mainSection.querySelector("h2");
+    const titleElement = saintSection.querySelector("h2");
     const name = titleElement ? titleElement.textContent.trim() : "Santo do Dia";
     
-    // Find the image
-    // Typically inside a <figure> or an <img> with class responsive-img
     let imageUrl = null;
-    const imgElement = mainSection.querySelector("img.img-responsive") || 
-                      mainSection.querySelector("figure img") ||
-                      mainSection.querySelector("img");
-    
+    const imgElement = saintSection.querySelector("img");
     if (imgElement) {
-      const src = imgElement.getAttribute("src");
-      if (src) {
+      // Vatican News uses data-original for lazy loading
+      const src = imgElement.getAttribute("data-original") || imgElement.getAttribute("src");
+      if (src && !src.includes("data:image/gif")) {
         imageUrl = src.startsWith("http") ? src : `https://www.vaticannews.va${src}`;
       }
     }
 
-    // Find the description
-    // Often in a .teaser or the first <p>
-    const teaserElement = mainSection.querySelector(".teaser") || mainSection.querySelector(".text p") || mainSection.querySelector("p");
-    const description = teaserElement ? teaserElement.textContent.trim() : "";
+    const descElement = saintSection.querySelector("p");
+    const description = descElement ? descElement.textContent.trim() : "";
 
-    // Find the more link
-    const linkElement = mainSection.querySelector("a.link-read-more") || mainSection.querySelector("a[href*='/santo-do-dia/']");
+    const linkElement = saintSection.querySelector("a.saintReadMore") || saintSection.querySelector("a[href*='/santo-do-dia/']");
     let moreLink = vaticanUrl;
     if (linkElement) {
       const href = linkElement.getAttribute("href");
