@@ -32,6 +32,7 @@ interface Stats {
   totalVisits: number;
   totalDownloads: number;
   totalRevenue: number;
+  pendingRevenue: number;
   pwaInstalls: number;
   pwaOpens: number;
   activeToday: number;
