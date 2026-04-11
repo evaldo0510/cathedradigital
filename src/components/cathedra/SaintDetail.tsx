@@ -225,9 +225,9 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
             {!showLogos && (
               <Button 
                 onClick={generateLogosReflection}
-                className="bg-primary/10 hover:bg-primary/20 text-primary border-none text-[10px] font-black uppercase tracking-widest h-8 px-4 rounded-full flex items-center gap-2 group transition-all"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground border-none text-[10px] font-black uppercase tracking-widest h-9 px-6 rounded-full flex items-center gap-2 group transition-all shadow-lg shadow-primary/20"
               >
-                <Icons.Sparkles className="w-3 h-3 group-hover:rotate-12 transition-transform" />
+                <Icons.Sparkles className="w-3.5 h-3.5 group-hover:rotate-12 transition-transform" />
                 Refletir com Logos
               </Button>
             )}
