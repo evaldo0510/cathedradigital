@@ -5,8 +5,7 @@ import { Icons } from '../../constants';
 import { AppRoute, User } from '../../types';
 import { LangContext } from '@/contexts/LangContext';
 import cathedraLogo from '@/assets/cathedra-logo.png';
-
-
+import { useLang } from '@/hooks/useLang';
 
 interface SidebarProps {
   onClose?: () => void;
@@ -22,32 +21,31 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
-  const { lang, t } = useContext(LangContext);
+  const { lang, t } = useLang();
   
-
   const sections = [
     ...(user?.role === 'admin' ? [{
-      label: lang === 'pt' ? 'Administração' : 'Administration',
+      label: t('admin'),
       items: [
-        { label: lang === 'pt' ? 'Painel Admin' : 'Admin Panel', path: AppRoute.ADMIN, icon: <Icons.ShieldCheck className="w-5 h-5" /> },
+        { label: t('admin'), path: AppRoute.ADMIN, icon: <Icons.ShieldCheck className="w-5 h-5" /> },
       ]
     }] : []),
     {
-      label: lang === 'pt' ? 'Menu' : 'Menu',
+      label: 'Menu',
       items: [
         { label: t('home'), path: AppRoute.HOJE, icon: <Icons.Home className="w-5 h-5" /> },
-        { label: lang === 'pt' ? 'Jornada' : 'Journey', path: AppRoute.JORNADAS, icon: <Icons.Route className="w-5 h-5" /> },
-        { label: t('temas') || (lang === 'pt' ? 'Temas' : 'Themes'), path: AppRoute.TEMAS, icon: <Icons.Tag className="w-5 h-5" /> },
-        { label: t('bible'), path: AppRoute.BIBLIOTECA, icon: <Icons.Search className="w-5 h-5" /> },
+        { label: t('journeys'), path: AppRoute.JORNADAS, icon: <Icons.Route className="w-5 h-5" /> },
+        { label: t('themes'), path: AppRoute.TEMAS, icon: <Icons.Tag className="w-5 h-5" /> },
+        { label: t('explore'), path: AppRoute.BIBLIOTECA, icon: <Icons.Search className="w-5 h-5" /> },
         { label: t('community'), path: AppRoute.COMMUNITY, icon: <Icons.Users className="w-5 h-5" /> },
         { label: t('profile'), path: AppRoute.PROFILE, icon: <Icons.User className="w-5 h-5" /> },
       ]
     },
     {
-      label: lang === 'pt' ? 'Plataforma' : 'Platform',
+      label: t('digital'),
       items: [
-        { label: lang === 'pt' ? 'Sobre' : 'About', path: AppRoute.ABOUT, icon: <Icons.Creator className="w-5 h-5" /> },
-        { label: lang === 'pt' ? 'Parceiros' : 'Partners', path: AppRoute.PARTNERS, icon: <Icons.Handshake className="w-5 h-5" /> },
+        { label: t('about') || 'Sobre', path: AppRoute.ABOUT, icon: <Icons.Creator className="w-5 h-5" /> },
+        { label: t('partners') || 'Parceiros', path: AppRoute.PARTNERS, icon: <Icons.Handshake className="w-5 h-5" /> },
       ]
     }
   ];
@@ -71,9 +69,8 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
           </div>
         </div>
 
-
         <nav className="flex-1 space-y-8 overflow-y-auto pb-10">
-          {sections.map((section) => (
+          {sections.map((section) => (section.items.length > 0 && (
             <div key={section.label}>
               <h3 className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-4 px-4">{section.label}</h3>
               <ul className="space-y-1">
@@ -97,7 +94,7 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
                 ))}
               </ul>
             </div>
-          ))}
+          )))}
         </nav>
 
         {/* Ctrl+K hint */}
@@ -167,12 +164,11 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
             </button>
           ) : (
             <button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all">
-              Acessar Conta
+              {t('enter')}
             </button>
           )}
         </div>
       </aside>
-
     </>
   );
 });
