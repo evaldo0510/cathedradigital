@@ -17,6 +17,8 @@ import { useAuth } from '@/hooks/useAuth';
 import { useCatechismParagraph, usePrefetchCatechismParagraph } from '@/hooks/useCatechismParagraph';
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import CatechismPopover from './CatechismPopover';
+import AudioButton from './AudioButton';
+
 
 
 const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr: string, chapter: number) => void }> = ({ paragraph, onNavigateToBible }) => {
@@ -274,15 +276,21 @@ const Catechism: React.FC = () => {
 
         {/* Content */}
         <div className="bg-card border border-border rounded-3xl p-8 md:p-12 space-y-6">
-          <div className="text-center space-y-2 pb-6 border-b border-border">
-            <span className="text-3xl font-serif font-bold text-primary">§{currentParagraph}</span>
-            <button
-              onClick={() => toggleFavorite({ type: 'catechism', title: `CIC §${currentParagraph}`, content: `Catecismo da Igreja Católica, parágrafo §${currentParagraph}` })}
-              className="ml-3 inline-flex align-middle"
-              title={isFavorite('catechism', `CIC §${currentParagraph}`) ? 'Remover dos favoritos' : 'Salvar nos favoritos'}
-            >
-              <Icons.Heart className={`w-5 h-5 transition-all ${isFavorite('catechism', `CIC §${currentParagraph}`) ? 'fill-primary text-primary' : 'text-muted-foreground hover:text-primary'}`} />
-            </button>
+          <div className="text-center space-y-4 pb-6 border-b border-border">
+            <div className="flex flex-col items-center gap-3">
+              <span className="text-3xl font-serif font-bold text-primary">§{currentParagraph}</span>
+              <div className="flex items-center gap-2">
+                <AudioButton variant="solid" className="px-6" />
+                <button
+                  onClick={() => toggleFavorite({ type: 'catechism', title: `CIC §${currentParagraph}`, content: `Catecismo da Igreja Católica, parágrafo §${currentParagraph}` })}
+                  className="p-2.5 rounded-xl bg-card border border-border text-muted-foreground hover:text-primary transition-all active:scale-95"
+                  title={isFavorite('catechism', `CIC §${currentParagraph}`) ? 'Remover dos favoritos' : 'Salvar nos favoritos'}
+                >
+                  <Icons.Heart className={`w-5 h-5 transition-all ${isFavorite('catechism', `CIC §${currentParagraph}`) ? 'fill-primary text-primary' : 'text-muted-foreground'}`} />
+                </button>
+              </div>
+            </div>
+
             <ShareButton
               title={`Catecismo §${currentParagraph}`}
               text={`Leia o Catecismo da Igreja Católica, §${currentParagraph} — Cathedra Digital`}
