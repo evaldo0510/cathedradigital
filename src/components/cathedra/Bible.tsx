@@ -392,8 +392,19 @@ const Bible: React.FC = () => {
 
 
         {/* Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          <div className={`lg:col-span-${showCrossRefs && crossRefs.length > 0 ? '8' : '12'} space-y-6`}>
+        <div className="flex flex-col lg:grid lg:grid-cols-12 gap-6 items-start">
+          {/* Cross References Panel - Top on mobile, Side on desktop */}
+          {showCrossRefs && crossRefs.length > 0 && (
+            <div className="w-full lg:col-span-4 lg:sticky lg:top-24 order-1 lg:order-2">
+              <CrossReferencePanel 
+                type="bible"
+                cicParagraphs={crossRefs} 
+                onNavigateToCIC={handleNavigateToCIC}
+              />
+            </div>
+          )}
+
+          <div className={`${showCrossRefs && crossRefs.length > 0 ? 'lg:col-span-8' : 'lg:col-span-12'} w-full space-y-6 order-2 lg:order-1`}>
             <Card className="border-border/40 shadow-sm overflow-hidden bg-card/50 backdrop-blur-sm">
               <CardContent className="p-6 md:p-8">
                 {isLoading ? (
