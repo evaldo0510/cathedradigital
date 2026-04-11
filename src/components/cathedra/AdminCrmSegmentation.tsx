@@ -44,15 +44,13 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
   const [sortAsc, setSortAsc] = useState(false);
 
   const segmentedUsers = useMemo(() => {
-    const inactive = users.filter(u => hoursSince(u.last_visit) >= 48);
-    const others = users.filter(u => hoursSince(u.last_visit) < 48);
-    
     return {
       all: users,
-      inactive,
-      deep: others.filter(u => (u.reflections_count || 0) > 10),
-      new: others.filter(u => (u.reflections_count || 0) <= 1),
-      active: others.filter(u => (u.reflections_count || 0) > 1 && (u.reflections_count || 0) <= 10),
+      new: users.filter(u => u.depth_level === 'Novo'),
+      active: users.filter(u => u.depth_level === 'Ativo'),
+      engaged: users.filter(u => u.depth_level === 'Engajado'),
+      deep: users.filter(u => u.depth_level === 'Profundo'),
+      inactive: users.filter(u => u.depth_level === 'Inativo'),
     };
   }, [users]);
 
