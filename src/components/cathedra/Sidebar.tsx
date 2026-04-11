@@ -27,27 +27,27 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
 
   const sections = [
     ...(user?.role === 'admin' ? [{
-      label: 'Administração',
+      label: lang === 'pt' ? 'Administração' : 'Administration',
       items: [
-        { label: 'Painel Admin', path: AppRoute.ADMIN, icon: <Icons.ShieldCheck className="w-5 h-5" /> },
+        { label: lang === 'pt' ? 'Painel Admin' : 'Admin Panel', path: AppRoute.ADMIN, icon: <Icons.ShieldCheck className="w-5 h-5" /> },
       ]
     }] : []),
     {
-      label: 'Menu',
+      label: lang === 'pt' ? 'Menu' : 'Menu',
       items: [
-        { label: 'Início', path: AppRoute.HOJE, icon: <Icons.Home className="w-5 h-5" /> },
-        { label: 'Jornada', path: AppRoute.JORNADAS, icon: <Icons.Route className="w-5 h-5" /> },
-        { label: 'Temas', path: AppRoute.TEMAS, icon: <Icons.Tag className="w-5 h-5" /> },
-        { label: 'Explorar', path: AppRoute.BIBLIOTECA, icon: <Icons.Search className="w-5 h-5" /> },
-        { label: 'Comunidade', path: AppRoute.COMMUNITY, icon: <Icons.Users className="w-5 h-5" /> },
-        { label: 'Perfil', path: AppRoute.PROFILE, icon: <Icons.User className="w-5 h-5" /> },
+        { label: t('home'), path: AppRoute.HOJE, icon: <Icons.Home className="w-5 h-5" /> },
+        { label: lang === 'pt' ? 'Jornada' : 'Journey', path: AppRoute.JORNADAS, icon: <Icons.Route className="w-5 h-5" /> },
+        { label: t('temas') || (lang === 'pt' ? 'Temas' : 'Themes'), path: AppRoute.TEMAS, icon: <Icons.Tag className="w-5 h-5" /> },
+        { label: t('bible'), path: AppRoute.BIBLIOTECA, icon: <Icons.Search className="w-5 h-5" /> },
+        { label: t('community'), path: AppRoute.COMMUNITY, icon: <Icons.Users className="w-5 h-5" /> },
+        { label: t('profile'), path: AppRoute.PROFILE, icon: <Icons.User className="w-5 h-5" /> },
       ]
     },
     {
-      label: 'Plataforma',
+      label: lang === 'pt' ? 'Plataforma' : 'Platform',
       items: [
-        { label: 'Criador', path: AppRoute.ABOUT, icon: <Icons.Creator className="w-5 h-5" /> },
-        { label: 'Parceiros', path: AppRoute.PARTNERS, icon: <Icons.Handshake className="w-5 h-5" /> },
+        { label: lang === 'pt' ? 'Sobre' : 'About', path: AppRoute.ABOUT, icon: <Icons.Creator className="w-5 h-5" /> },
+        { label: lang === 'pt' ? 'Parceiros' : 'Partners', path: AppRoute.PARTNERS, icon: <Icons.Handshake className="w-5 h-5" /> },
       ]
     }
   ];
@@ -133,7 +133,7 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
             </div>
 
             <div className="flex flex-wrap gap-1 mt-1">
-              {(['pt', 'en', 'es', 'la'] as const).map((l) => (
+              {(['pt', 'en', 'es', 'la', 'it', 'fr', 'de'] as const).map((l) => (
                 <button
                   key={l}
                   onClick={() => (window as any).dispatchEvent(new CustomEvent('change-lang', { detail: l }))}
