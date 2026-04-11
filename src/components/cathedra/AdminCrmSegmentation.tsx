@@ -77,10 +77,11 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
   };
 
   const getStatusBadge = (u: UserProfile) => {
-    if (hoursSince(u.last_visit) >= 48) return <Badge className="bg-destructive/15 text-destructive border-destructive/30 text-[10px]">Inativo</Badge>;
-    if (hoursSince(u.last_visit) >= 48) return <Badge className="bg-destructive/15 text-destructive border-destructive/30 text-[10px]">Inativo</Badge>;
-    if ((u.reflections_count || 0) > 10) return <Badge className="bg-primary/15 text-primary border-primary/30 text-[10px]">Profundo</Badge>;
-    if ((u.reflections_count || 0) <= 1) return <Badge className="bg-primary/15 text-primary border-primary/30 text-[10px]">Novo</Badge>;
+    const status = u.depth_level || 'Inativo';
+    if (status === 'Inativo') return <Badge className="bg-destructive/15 text-destructive border-destructive/30 text-[10px]">Inativo</Badge>;
+    if (status === 'Profundo') return <Badge className="bg-primary/15 text-primary border-primary/30 text-[10px]">Profundo</Badge>;
+    if (status === 'Engajado') return <Badge className="bg-orange-500/15 text-orange-500 border-orange-500/30 text-[10px]">Engajado</Badge>;
+    if (status === 'Novo') return <Badge className="bg-primary/15 text-primary border-primary/30 text-[10px]">Novo</Badge>;
     return <Badge className="bg-primary/15 text-primary border-primary/30 text-[10px]">Ativo</Badge>;
   };
 
