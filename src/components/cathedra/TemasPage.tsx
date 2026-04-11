@@ -2,13 +2,11 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Book, Bookmark, FileText, Search, Tag, Loader2, ChevronRight, Hash } from 'lucide-react';
+import { Book, Bookmark, FileText, Tag, Loader2, ChevronRight, Hash } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface Theme {
   id: string;
@@ -27,7 +25,6 @@ interface ThemeContent {
 
 const TemasPage = () => {
   const [selectedTheme, setSelectedTheme] = useState<Theme | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
 
   const { data: themes, isLoading: loadingThemes } = useQuery({
     queryKey: ['themes'],
@@ -66,7 +63,7 @@ const TemasPage = () => {
           Navegação por Temas
         </h1>
         <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-          Explore conexões sagradas entre as Escrituras, a Tradição da Igreja e o Magistério através de conceitos fundamentais da fé.
+          Explore conexões sagradas entre as Escrituras, a Tradição e o Magistério através de conceitos fundamentais da fé.
         </p>
       </header>
 
@@ -120,7 +117,7 @@ const TemasPage = () => {
               <div className="w-20 h-20 rounded-full bg-primary/5 flex items-center justify-center mb-6 border border-primary/10 shadow-inner">
                 <Tag className="h-10 w-10 text-primary/30" />
               </div>
-              <h3 className="text-2xl font-semibold mb-3">Descubra os tesouros da Fé</h3>
+              <h3 className="text-2xl font-semibold mb-3 text-foreground">Descubra os tesouros da Fé</h3>
               <p className="text-muted-foreground max-w-md">
                 Selecione uma das "bolhas" acima para navegar pelos conteúdos da Bíblia, Catecismo e Magistério relacionados ao tema.
               </p>
@@ -145,7 +142,7 @@ const TemasPage = () => {
                         Estudo de Tema
                       </Badge>
                     </div>
-                    <h2 className="text-5xl font-black mb-4 tracking-tight leading-tight">{selectedTheme.name}</h2>
+                    <h2 className="text-5xl font-black mb-4 tracking-tight leading-tight text-foreground">{selectedTheme.name}</h2>
                   </div>
                   <Button variant="outline" className="rounded-2xl border-primary/20 hover:bg-primary/5 hover:border-primary/40 group/btn h-14 px-6">
                     <Bookmark className="mr-2 h-5 w-5 transition-transform group-hover/btn:scale-110" />
@@ -176,22 +173,21 @@ const TemasPage = () => {
                 ) : (
                   <div className="px-1">
                     <TabsContent value="all" className="mt-0 space-y-10 focus-visible:outline-none">
-                      <ContentSection title="Sagrada Escritura" icon={<Book className="h-6 w-6 text-blue-500" />} items={bibleVerses} color="blue" />
-                      <ContentSection title="Catecismo da Igreja" icon={<Bookmark className="h-6 w-6 text-amber-500" />} items={catechism} color="amber" />
-                      <ContentSection title="Documentos Pontifícios" icon={<FileText className="h-6 w-6 text-emerald-500" />} items={magisterium} color="emerald" />
+                      <ContentSection title="Sagrada Escritura" icon={<Book className="h-6 w-6" />} items={bibleVerses} color="blue" />
+                      <ContentSection title="Catecismo da Igreja" icon={<Bookmark className="h-6 w-6" />} items={catechism} color="amber" />
+                      <ContentSection title="Documentos Pontifícios" icon={<FileText className="h-6 w-6" />} items={magisterium} color="emerald" />
                     </TabsContent>
 
-
                     <TabsContent value="bible" className="mt-0 focus-visible:outline-none">
-                      <ContentSection title="Bíblia Sagrada" icon={<Book className="h-6 w-6 text-blue-500" />} items={bibleVerses} showEmpty color="blue" />
+                      <ContentSection title="Bíblia Sagrada" icon={<Book className="h-6 w-6" />} items={bibleVerses} showEmpty color="blue" />
                     </TabsContent>
 
                     <TabsContent value="catechism" className="mt-0 focus-visible:outline-none">
-                      <ContentSection title="Catecismo da Igreja Católica" icon={<Bookmark className="h-6 w-6 text-amber-500" />} items={catechism} showEmpty color="amber" />
+                      <ContentSection title="Catecismo da Igreja Católica" icon={<Bookmark className="h-6 w-6" />} items={catechism} showEmpty color="amber" />
                     </TabsContent>
 
                     <TabsContent value="magisterium" className="mt-0 focus-visible:outline-none">
-                      <ContentSection title="Magistério da Igreja" icon={<FileText className="h-6 w-6 text-emerald-500" />} items={magisterium} showEmpty color="emerald" />
+                      <ContentSection title="Magistério da Igreja" icon={<FileText className="h-6 w-6" />} items={magisterium} showEmpty color="emerald" />
                     </TabsContent>
                   </div>
                 )}
@@ -215,22 +211,21 @@ interface ContentSectionProps {
 const ContentSection = ({ title, icon, items, showEmpty = false, color = 'primary' }: ContentSectionProps) => {
   if (items.length === 0 && !showEmpty) return null;
 
-  const colorClasses = {
-    blue: 'bg-blue-500/10',
-    amber: 'bg-amber-500/10',
-    emerald: 'bg-emerald-500/10',
-    primary: 'bg-primary/10'
+  const colorStyles = {
+    blue: { bg: 'bg-blue-500/10', text: 'text-blue-500' },
+    amber: { bg: 'bg-amber-500/10', text: 'text-amber-500' },
+    emerald: { bg: 'bg-emerald-500/10', text: 'text-emerald-500' },
+    primary: { bg: 'bg-primary/10', text: 'text-primary' }
   }[color];
 
   return (
     <section className="space-y-6 animate-in fade-in duration-700">
       <div className="flex items-center justify-between border-b pb-4 border-border/40">
         <div className="flex items-center gap-4">
-          <div className={`p-3 rounded-2xl ${colorClasses} shadow-sm`}>
+          <div className={`p-3 rounded-2xl ${colorStyles.bg} shadow-sm ${colorStyles.text}`}>
             {icon}
           </div>
-
-          <h3 className="font-bold text-2xl tracking-tight">{title}</h3>
+          <h3 className="font-bold text-2xl tracking-tight text-foreground">{title}</h3>
         </div>
         <Badge variant="outline" className="rounded-full px-4 py-1 font-mono text-sm bg-muted/50 border-border/60">
           {items.length} itens
@@ -256,7 +251,7 @@ const ContentSection = ({ title, icon, items, showEmpty = false, color = 'primar
                 <CardHeader className="pb-4 pt-7 px-7">
                   <div className="flex justify-between items-start gap-4">
                     <div className="space-y-1">
-                      <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors leading-snug">
+                      <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors leading-snug text-foreground">
                         {item.title || item.reference}
                       </CardTitle>
                       <div className="flex items-center gap-2">
