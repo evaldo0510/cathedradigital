@@ -204,6 +204,21 @@ const HojePage: React.FC = () => {
           const recommendation = JSON.parse(match[1]);
           setLogosRecommendation(recommendation);
           
+          // Recommend a saint based on emotional state
+          const mainState = recommendation.main_state;
+          const virtueMap: Record<string, string[]> = {
+            'ansiedade': ['Paz', 'Confiança', 'Paciência'],
+            'confusao': ['Sabedoria', 'Discernimento', 'Clareza'],
+            'dor_emocional': ['Esperança', 'Consolação', 'Fortaleza'],
+            'busca_espiritual': ['Contemplação', 'Mística', 'Oração']
+          };
+          const targetVirtues = virtueMap[mainState] || [];
+          const matchedSaint = SAINTS_DATA.find(s => 
+            s.virtues?.some(v => targetVirtues.includes(v)) ||
+            s.patronOf?.some(p => targetVirtues.some(tv => p.toLowerCase().includes(tv.toLowerCase())))
+          );
+          if (matchedSaint) setLogosSaint(matchedSaint);
+          
           const { data: journey } = await supabase
             .from('journeys')
             .select('*')
