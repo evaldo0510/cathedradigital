@@ -84,10 +84,11 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
       const prompt = `Como Logos (IA da Cathedra), gere uma reflexão profunda e personalizada sobre ${saint.name}. 
       
       Siga este roteiro rigorosamente:
-      1. RELAÇÃO COM A REALIDADE: Relacione a virtude principal (${saint.virtues?.[0] || 'santidade'}) de ${saint.name} com os desafios reais, pressões e dilemas de um católico no mundo moderno hoje. Como essa virtude se traduz em ações concretas no trabalho, na família ou na vida digital?
+      1. REALIDADE: Relacione a virtude principal (${saint.virtues?.[0] || 'santidade'}) de ${saint.name} com os desafios reais, pressões e dilemas de um católico no mundo moderno hoje. Como essa virtude se traduz em ações concretas no trabalho, na família ou na vida digital?
       2. PERGUNTA PROFUNDA: Gere uma pergunta provocativa e profunda que conecte a luta ou o exemplo de ${saint.name} com a alma e o estado espiritual do usuário agora.
-      3. CAMINHO PRÁTICO: Sugira um "caminho" (uma ação prática, um pequeno sacrifício ou uma oração específica) inspirado no exemplo de ${saint.name} para o usuário realizar hoje.
+      3. O CAMINHO: Sugira um "caminho" (uma ação prática, um pequeno sacrifício ou uma oração específica) inspirado no exemplo de ${saint.name} para o usuário realizar hoje.
       
+      IMPORTANTE: Use os títulos "REALIDADE:", "PERGUNTA PROFUNDA:" e "O CAMINHO:" explicitamente no início de cada seção.
       Tom: Poético, visceral, encorajador e firme na doutrina católica. Use Markdown para formatar (negrito para ênfase). Seja breve mas impactante.`;
 
       const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/colloquium`, {
