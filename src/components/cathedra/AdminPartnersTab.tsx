@@ -96,11 +96,11 @@ const AdminPartnersTab: React.FC = () => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'approved':
-        return <Badge className="bg-green-500/10 text-green-500 border-green-500/20 gap-1.5"><CheckCircle2 className="w-3.5 h-3.5" /> Aprovado</Badge>;
+        return <Badge className="bg-success/10 text-success border-success/20 gap-1.5"><CheckCircle2 className="w-3.5 h-3.5" /> Aprovado</Badge>;
       case 'rejected':
         return <Badge variant="destructive" className="gap-1.5"><XCircle className="w-3.5 h-3.5" /> Rejeitado</Badge>;
       default:
-        return <Badge variant="secondary" className="gap-1.5 bg-yellow-500/10 text-yellow-600 border-yellow-500/20"><Clock className="w-3.5 h-3.5" /> Pendente</Badge>;
+        return <Badge variant="secondary" className="gap-1.5 bg-warning/10 text-warning border-warning/20"><Clock className="w-3.5 h-3.5" /> Pendente</Badge>;
     }
   };
 
