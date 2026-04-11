@@ -346,10 +346,31 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
                     <span className="text-[10px] font-black uppercase tracking-[0.2em] text-background/40">Logos está guiando sua reflexão...</span>
                   </div>
                   
-                  <div className="">
-                    <p className="text-lg md:text-xl font-serif italic leading-relaxed text-background/90 whitespace-pre-wrap">
-                      {logosReflection || (isGenerating && "Conectando virtudes à sua vida...")}
-                    </p>
+                  <div className="space-y-6">
+                    {logosReflection ? (
+                      logosReflection.split(/(?=REALIDADE:|PERGUNTA PROFUNDA:|O CAMINHO:)/).map((section, idx) => {
+                        const isReality = section.includes('REALIDADE:');
+                        const isQuestion = section.includes('PERGUNTA PROFUNDA:');
+                        const isPath = section.includes('O CAMINHO:');
+                        
+                        let content = section.replace(/REALIDADE:|PERGUNTA PROFUNDA:|O CAMINHO:/, '').trim();
+                        
+                        return (
+                          <div key={idx} className={`p-6 rounded-2xl ${isReality ? 'bg-primary/5 border border-primary/10' : isQuestion ? 'bg-secondary/30 border border-border' : isPath ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20' : ''}`}>
+                            {isReality && <h4 className="text-[10px] font-black uppercase tracking-widest text-primary mb-2">Realidade Moderna</h4>}
+                            {isQuestion && <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2">Para sua Alma</h4>}
+                            {isPath && <h4 className="text-[10px] font-black uppercase tracking-widest text-primary-foreground/60 mb-2">O Caminho Prático</h4>}
+                            <p className={`text-lg font-serif italic leading-relaxed ${isPath ? 'text-primary-foreground' : 'text-background/90'}`}>
+                              {content}
+                            </p>
+                          </div>
+                        );
+                      })
+                    ) : (
+                      <p className="text-lg md:text-xl font-serif italic leading-relaxed text-background/90 whitespace-pre-wrap">
+                        {isGenerating && "Conectando virtudes à sua vida..."}
+                      </p>
+                    )}
                   </div>
 
                   {!isGenerating && (
