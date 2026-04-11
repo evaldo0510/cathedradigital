@@ -13,8 +13,14 @@ import { ptBR } from 'date-fns/locale';
 const Saints: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedSaint, setSelectedSaint] = useState<Saint | null>(null);
+  const [autoReflect, setAutoReflect] = useState(false);
   const [search, setSearch] = useState('');
   const [viewMode, setViewMode] = useState<'daily' | 'search'>('daily');
+
+  const handleOpenSaint = (saint: Saint, shouldReflect: boolean = false) => {
+    setAutoReflect(shouldReflect);
+    setSelectedSaint(saint);
+  };
 
   const saintsForSelectedDate = useMemo(() => {
     const day = selectedDate.getDate();
