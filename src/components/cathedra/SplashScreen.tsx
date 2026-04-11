@@ -66,10 +66,7 @@ const SplashScreen: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="relative z-10"
         >
-          <Logo 
-            variant="gold"
-            className="w-24 h-24 md:w-32 md:h-32 drop-shadow-[0_0_30px_hsl(43,72%,53%,0.4)]" 
-          />
+          {/* Logo removed */}
         </motion.div>
 
         {/* Text */}

@@ -62,10 +62,7 @@ const HeroContent = ({ heroOpacity, heroScale, heroY, onStart, onAbout }: HeroCo
       transition={{ duration: 1, delay: 0.5, ease: EASE }}
       className="flex justify-center"
     >
-      <Logo 
-        variant="gold" 
-        className="w-20 h-20 md:w-28 md:h-28" 
-      />
+      {/* Logo removed */}
     </motion.div>
 
     {/* Title */}

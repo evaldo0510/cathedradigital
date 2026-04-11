@@ -256,7 +256,7 @@ const OnboardingPage: React.FC = () => {
       <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4">
         <div className="w-full max-w-lg lg:max-w-4xl space-y-6 lg:space-y-10 text-center">
           <div className="flex justify-center mb-6">
-            <Logo variant="gold" className="w-12 h-12" />
+            {/* Logo removed */}
           </div>
           
           <div className="space-y-2 mb-8">
@@ -307,7 +307,7 @@ const OnboardingPage: React.FC = () => {
     <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4">
       <div className="w-full max-w-lg lg:max-w-5xl space-y-6 lg:space-y-10">
         <div className="flex justify-center">
-          <Logo variant="gold" className="w-10 h-10 lg:w-16 lg:h-16" />
+          {/* Logo removed */}
         </div>
 
         <AnimatePresence mode="wait">
