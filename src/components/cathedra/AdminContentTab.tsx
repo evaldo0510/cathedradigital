@@ -182,15 +182,15 @@ const AdminContentTab: React.FC = () => {
                   <p className="text-xs text-muted-foreground whitespace-pre-wrap line-clamp-3">{post.content}</p>
                 </CardContent>
                 <CardFooter className="bg-muted/10 border-t border-border/10 py-1.5 px-3 flex justify-end gap-1.5">
-                  <Button variant="ghost" size="xs" onClick={() => handleDelete(post.id)} className="text-destructive h-7 text-[10px] font-bold uppercase tracking-widest">
+                  <Button variant="ghost" size="sm" onClick={() => handleDelete(post.id)} className="text-destructive h-7 text-[10px] font-bold uppercase tracking-widest px-2">
                     <Trash2 className="w-3 h-3 mr-1" /> Excluir
                   </Button>
                   {post.status === 'pending' && (
                     <>
-                      <Button variant="outline" size="xs" onClick={() => handleUpdateStatus(post.id, 'rejected')} className="h-7 text-[10px] font-bold uppercase tracking-widest">
+                      <Button variant="outline" size="sm" onClick={() => handleUpdateStatus(post.id, 'rejected')} className="h-7 text-[10px] font-bold uppercase tracking-widest px-2">
                         <X className="w-3 h-3 mr-1" /> Rejeitar
                       </Button>
-                      <Button size="xs" onClick={() => handleUpdateStatus(post.id, 'approved')} className="h-7 text-[10px] font-bold uppercase tracking-widest bg-emerald-600 hover:bg-emerald-700">
+                      <Button size="sm" onClick={() => handleUpdateStatus(post.id, 'approved')} className="h-7 text-[10px] font-bold uppercase tracking-widest px-2 bg-emerald-600 hover:bg-emerald-700 text-white">
                         <Check className="w-3 h-3 mr-1" /> Aprovar
                       </Button>
                     </>
