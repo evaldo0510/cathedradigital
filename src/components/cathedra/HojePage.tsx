@@ -209,6 +209,8 @@ const HojePage: React.FC = () => {
     setLogosResponse('');
     setLogosRecommendation(null);
     setRecommendedLogosJourney(null);
+    setLogosThemeContents([]);
+    setLogosThemeName('');
 
     try {
       const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/colloquium`, {
