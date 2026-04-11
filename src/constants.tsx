@@ -123,100 +123,23 @@ export const COLORS = {
   accent: '#C8A96A',
 };
 
+import cathedraLogo from './assets/cathedra-logo.png';
+
 export const Logo = forwardRef<HTMLDivElement, { className?: string, variant?: 'gold' | 'light' | 'dark' }>(({ 
   className = "w-12 h-12", 
   variant = 'gold' 
 }, ref) => {
-  const colors = {
-    gold: '#D4AF37', // Refined Metallic Gold
-    light: '#FFFFFF',
-    dark: '#1A1A1A'
-  };
-
-  const currentColor = colors[variant];
-  const strokeColor = variant === 'gold' ? "url(#logoGradient)" : currentColor;
-  const fillColor = variant === 'gold' ? "url(#logoGradient)" : currentColor;
-
   return (
     <div ref={ref} className={cn("relative flex items-center justify-center group", className)}>
-      <svg 
-        viewBox="0 0 100 100" 
-        fill="none" 
-        xmlns="http://www.w3.org/2000/svg"
-        className="w-full h-full transition-all duration-700 group-hover:scale-105"
-      >
-        <defs>
-          <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#D4AF37" />
-            <stop offset="50%" stopColor="#F9E076" />
-            <stop offset="100%" stopColor="#AF8A2A" />
-          </linearGradient>
-          <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="2" result="blur" />
-            <feComposite in="SourceGraphic" in2="blur" operator="over" />
-          </filter>
-        </defs>
-
-        {/* Main Vertical Staff - Foundation of Faith */}
-        <path 
-          d="M50 12V88" 
-          stroke={strokeColor} 
-          strokeWidth="3.5" 
-          strokeLinecap="round" 
-          className="transition-all duration-700"
-        />
-        
-        {/* Mandorla - The Sanctuary of the Soul */}
-        <path 
-          d="M50 30C32 30 28 41 28 50C28 59 32 70 50 70" 
-          stroke={strokeColor} 
-          strokeWidth="3" 
-          strokeLinecap="round" 
-          strokeLinejoin="round"
-          className="transition-all duration-700"
-        />
-        <path 
-          d="M50 30C68 30 72 41 72 50C72 59 68 70 50 70" 
-          stroke={strokeColor} 
-          strokeWidth="3" 
-          strokeLinecap="round" 
-          strokeLinejoin="round"
-          className="transition-all duration-700"
-        />
-        
-        {/* Top Jewel - The Divine Wisdom */}
-        <path 
-          d="M50 4L59 15L50 26L41 15L50 4Z" 
-          fill={fillColor}
-          filter={variant === 'gold' ? "url(#glow)" : undefined}
-          className="transition-all duration-700"
-        />
-        
-        {/* Horizontal Balance - Harmony of Spirit */}
-        <path 
-          d="M42 43H58" 
-          stroke={strokeColor} 
-          strokeWidth="2.5" 
-          strokeLinecap="round" 
-          className="transition-all duration-700"
-        />
-        <path 
-          d="M42 57H58" 
-          stroke={strokeColor} 
-          strokeWidth="2.5" 
-          strokeLinecap="round" 
-          className="transition-all duration-700"
-        />
-        
-        {/* Base Support - Firm in Tradition */}
-        <path 
-          d="M35 88H65" 
-          stroke={strokeColor} 
-          strokeWidth="3.5" 
-          strokeLinecap="round" 
-          className="transition-all duration-700"
-        />
-      </svg>
+      <img 
+        src={cathedraLogo} 
+        alt="Cathedra" 
+        className={cn(
+          "w-full h-full object-contain transition-all duration-700 group-hover:scale-105",
+          variant === 'light' && "brightness-0 invert",
+          variant === 'dark' && "brightness-0"
+        )}
+      />
       {variant === 'gold' && (
         <div className="absolute inset-0 bg-secondary/10 blur-2xl rounded-full -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
       )}
