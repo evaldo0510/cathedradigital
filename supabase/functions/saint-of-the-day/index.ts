@@ -27,10 +27,10 @@ serve(async (req) => {
 
     const html = await response.text();
     
-    // Extract a chunk of HTML that likely contains the saint info to save tokens
-    const startIdx = html.indexOf('section--isStatic') !== -1 ? html.indexOf('section--isStatic') : html.indexOf('section--evidence');
-    const endIdx = html.indexOf('banner-donazioni') !== -1 ? html.indexOf('banner-donazioni') : html.length;
-    const relevantHtml = html.substring(Math.max(0, startIdx - 500), Math.min(html.length, endIdx + 500));
+    // Even smaller chunk
+    const startIdx = Math.max(0, html.indexOf('section--evidence') - 200);
+    const endIdx = Math.min(html.length, html.indexOf('social-utility', startIdx) + 500);
+    const relevantHtml = html.substring(startIdx, endIdx);
 
     // Use AI to extract the data
     const aiResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
@@ -40,35 +40,36 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.0-flash",
+        model: "openai/gpt-4o-mini",
         messages: [
           {
             role: "system",
-            content: "Você é um extrator de dados estruturados. Extraia o nome do santo, uma breve descrição e a URL da imagem principal do HTML fornecido. Retorne apenas JSON."
+            content: "Você é um extrator de dados. Extraia o nome do santo, resumo e URL da imagem (resolva caminhos relativos para https://www.vaticannews.va). Retorne APENAS um JSON válido."
           },
           {
             role: "user",
-            content: `Extraia o Santo do Dia deste HTML da Vatican News. 
-            Retorne um JSON com os campos: "name" (nome do santo), "description" (resumo da vida), "image" (URL da imagem, resolva caminhos relativos para https://www.vaticannews.va), "url" (link 'leia tudo').
-            
-            HTML: ${relevantHtml}`
+            content: `HTML: ${relevantHtml}`
           }
         ],
-        response_format: { type: "json_object" }
+        temperature: 0
       }),
     });
 
     if (!aiResponse.ok) {
+      const err = await aiResponse.text();
+      console.error('AI Error:', err);
       throw new Error(`AI Gateway error: ${aiResponse.status}`);
     }
 
     const aiData = await aiResponse.json();
-    const result = JSON.parse(aiData.choices[0].message.content);
+    const content = aiData.choices[0].message.content.replace(/```json|```/g, '').trim();
+    const result = JSON.parse(content);
 
     return new Response(
       JSON.stringify({
         ...result,
         source: "Vatican News",
+        url: vaticanUrl,
         fetched_at: new Date().toISOString()
       }),
       {
