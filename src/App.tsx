@@ -326,17 +326,21 @@ const AppLayout: React.FC = () => {
           )}
         </AnimatePresence>
 
-        <main id="main-content" className="flex-1 overflow-y-auto flex flex-col relative custom-scrollbar overscroll-auto touch-pan-y scroll-smooth">
-          {!isChromeless && (
-            <AppHeader
-              user={appUser}
-              isDark={isDark}
-              onToggleDark={() => setIsDark(!isDark)}
-              onOpenSidebar={() => setIsSidebarOpen(true)}
-              onSignOut={signOut}
-            />
-          )}
-          <div className={isChromeless ? "flex-1 pb-24 lg:pb-0" : "flex-1 pb-32 lg:pb-12 w-full max-w-[1200px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 pt-4 md:pt-6 lg:pt-8"}>
+        <main id="main-content" className="flex-1 overflow-y-auto flex flex-col relative custom-scrollbar overscroll-auto touch-pan-y scroll-smooth bg-background">
+          <div className="w-full flex-1 flex flex-col items-center">
+            {!isChromeless && (
+              <div className="w-full sticky top-0 z-[140] bg-background/90 backdrop-blur-xl border-b border-border">
+                <AppHeader
+                  user={appUser}
+                  isDark={isDark}
+                  onToggleDark={() => setIsDark(!isDark)}
+                  onOpenSidebar={() => setIsSidebarOpen(true)}
+                  onSignOut={signOut}
+                />
+              </div>
+            )}
+            
+            <div className={isChromeless ? "w-full flex-1 pb-24 lg:pb-0" : "w-full max-w-[1200px] flex-1 pb-32 lg:pb-12 px-4 sm:px-6 md:px-8 lg:px-12 pt-4 md:pt-6 lg:pt-8"}>
 
             <Suspense fallback={<LoadingFallback />}>
               <AnimatePresence mode="wait" initial={false}>
