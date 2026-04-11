@@ -131,9 +131,9 @@ export interface StudyResult {
   saintsQuotes: any[];
 }
 
-export interface SavedItem {
+export interface SavedItem extends Partial<DeepContent> {
   id: string;
-  type: 'verse' | 'catechism' | 'dogma' | 'study' | 'liturgy' | 'prayer' | 'aquinas';
+  type: 'verse' | 'catechism' | 'dogma' | 'study' | 'liturgy' | 'prayer' | 'aquinas' | 'apparition';
   title: string;
   content: string;
   timestamp: string;
