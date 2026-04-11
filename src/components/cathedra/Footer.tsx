@@ -164,8 +164,7 @@ const Footer: React.FC = React.memo(() => {
     <footer className="mt-auto w-full border-t border-primary/10 pt-6 lg:pt-12 pb-24 lg:pb-16 px-4 sm:px-6 md:px-12 bg-foreground/[0.03] backdrop-blur-sm relative overflow-hidden contain-layout" style={{ contentVisibility: 'auto', containIntrinsicSize: '0 420px' }}>
       <div className="absolute inset-0 pointer-events-none opacity-[0.02]" />
       
-      <div className="max-w-7xl mx-auto relative z-10">
-
+      <div className="max-w-[1200px] mx-auto relative z-10">
         {/* ─── Desktop Footer ─── */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16 mb-12">
           

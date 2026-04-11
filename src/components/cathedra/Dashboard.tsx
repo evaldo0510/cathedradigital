@@ -133,7 +133,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   }, [user]);
 
   return (
-    <div className="w-full mx-auto space-y-12 md:space-y-16 py-6 md:py-10">
+    <div className="content-section py-6 md:py-10">
 
       {/* ═══ HEADER ═══ */}
       <FadeUp>
@@ -188,7 +188,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
 
       {/* ═══ 4 MAIN DOORS ═══ */}
       <FadeUp delay={0.1}>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+        <div className="responsive-grid">
           {MAIN_DOORS.map((door) => {
             const Icon = door.icon;
             return (
@@ -214,7 +214,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       </FadeUp>
 
       {/* ═══ STATS & JOURNEYS GRID ═══ */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 items-start">
         {/* ═══ WEEKLY SUMMARY ═══ */}
         <FadeUp delay={0.12}>
           <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4 h-full">
