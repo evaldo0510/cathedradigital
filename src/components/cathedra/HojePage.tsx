@@ -39,6 +39,8 @@ const HojePage: React.FC = () => {
   const [logosRecommendation, setLogosRecommendation] = useState<any>(null);
   const [recommendedLogosJourney, setRecommendedLogosJourney] = useState<any>(null);
   const [recommendedLogosStep, setRecommendedLogosStep] = useState<any>(null);
+  const [logosThemeContents, setLogosThemeContents] = useState<any[]>([]);
+  const [logosThemeName, setLogosThemeName] = useState<string>('');
   const [officialSaint, setOfficialSaint] = useState<any>(null);
 
   useEffect(() => {
