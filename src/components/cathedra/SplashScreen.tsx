@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import logosAvatar from '@/assets/logos-avatar.png';
+import cathedraLogo from '@/assets/cathedra-logo-new.png';
 
 const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }>(({ onComplete }, ref) => {
   const [phase, setPhase] = useState<'logo' | 'text' | 'exit'>('logo');
