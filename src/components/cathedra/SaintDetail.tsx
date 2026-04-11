@@ -21,11 +21,17 @@ const CATEGORY_LABELS: Record<string, string> = {
   mystic: 'Místico(a)',
 };
 
-const SaintDetail: React.FC<{ saint: Saint; onClose: () => void }> = ({ saint, onClose }) => {
+const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: boolean }> = ({ saint, onClose, autoReflect = false }) => {
   const [viewingDoc, setViewingDoc] = useState<{ url: string; title: string } | null>(null);
   const [logosReflection, setLogosReflection] = useState<string>('');
   const [isGenerating, setIsGenerating] = useState(false);
-  const [showLogos, setShowLogos] = useState(false);
+  const [showLogos, setShowLogos] = useState(autoReflect);
+
+  React.useEffect(() => {
+    if (autoReflect) {
+      generateLogosReflection();
+    }
+  }, [autoReflect]);
 
   const generateLogosReflection = async () => {
     setIsGenerating(true);
