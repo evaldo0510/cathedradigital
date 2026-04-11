@@ -13,17 +13,17 @@ import ProConversionBanner from './ProConversionBanner';
 import { Icons } from '@/constants';
 
 const SECTION_CONFIG = [
-  { key: 'pch', label: 'Reflexão Profunda (PCH)', icon: <Sparkles className="w-4 h-4" /> },
-  { key: 'interpretation', label: 'Interpretação', icon: <BookOpen className="w-4 h-4" /> },
-  { key: 'practical_direction', label: 'Direção Prática', icon: <Hand className="w-4 h-4" /> },
-  { key: 'guided_exercise', label: 'Exercício Guiado', icon: <PenLine className="w-4 h-4" /> },
+  { key: 'intro', label: 'Acesso Inicial', icon: <BookOpen className="w-4 h-4" />, isPremium: false },
+  { key: 'interpretation', label: 'Introdução', icon: <Icons.Bible className="w-4 h-4" />, isPremium: false },
+  { key: 'pch', label: 'Aprofundamento', icon: <Sparkles className="w-4 h-4" />, isPremium: true },
+  { key: 'practical_direction', label: 'Continuidade', icon: <Hand className="w-4 h-4" />, isPremium: true },
+  { key: 'guided_exercise', label: 'Conteúdos Avançados', icon: <PenLine className="w-4 h-4" />, isPremium: true },
   
-  // Legacy mappings for existing content
-  { key: 'intro', label: 'Interpretação', icon: <BookOpen className="w-4 h-4" /> },
-  { key: 'reflection', label: 'Reflexão', icon: <PenLine className="w-4 h-4" /> },
-  { key: 'practice', label: 'Prática', icon: <Hand className="w-4 h-4" /> },
-  { key: 'prayer', label: 'Exercício', icon: <Sparkles className="w-4 h-4" /> },
-  { key: 'lectio', label: 'Leitura Orante', icon: <BookOpen className="w-4 h-4" /> },
+  // Legacy mappings for backward compatibility
+  { key: 'reflection', label: 'Aprofundamento', icon: <PenLine className="w-4 h-4" />, isPremium: true },
+  { key: 'practice', label: 'Continuidade', icon: <Hand className="w-4 h-4" />, isPremium: true },
+  { key: 'prayer', label: 'Conteúdos Avançados', icon: <Sparkles className="w-4 h-4" />, isPremium: true },
+  { key: 'lectio', label: 'Acesso Inicial', icon: <BookOpen className="w-4 h-4" />, isPremium: false },
 ];
 
 type UserLevelClass = 'iniciante' | 'intermediário' | 'avançado';
