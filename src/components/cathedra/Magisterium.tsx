@@ -31,7 +31,10 @@ const DOCS_LIST = [
   { id: 'civ', title: 'Caritas in Veritate', type: 'Encíclica', author: 'Bento XVI', year: 2009, theme: ['Social', 'Desenvolvimento'], summary: 'Sobre o desenvolvimento humano integral na caridade e na verdade.' },
   { id: 'lf', title: 'Lumen Fidei', type: 'Encíclica', author: 'Francisco', year: 2013, theme: ['Fé'], summary: 'Sobre a luz da fé.' },
   { id: 'ev', title: 'Evangelium Vitae', type: 'Encíclica', author: 'João Paulo II', year: 1995, theme: ['Vida'], summary: 'Sobre o valor e a inviolabilidade da vida humana.' },
-  
+  { id: 'ge', title: 'Gaudete et Exsultate', type: 'Exortação Apostólica', author: 'Francisco', year: 2018, theme: ['Santidade'], summary: 'Sobre o chamado à santidade no mundo atual.' },
+  { id: 'al', title: 'Amoris Laetitia', type: 'Exortação Apostólica', author: 'Francisco', year: 2016, theme: ['Família', 'Amor'], summary: 'Sobre o amor na família.' },
+  { id: 'cv', title: 'Christus Vivit', type: 'Exortação Apostólica', author: 'Francisco', year: 2019, theme: ['Jovens', 'Vocação'], summary: 'Exortação aos jovens e a todo o Povo de Deus.' },
+
   // Constituições
   { id: 'lg', title: 'Lumen Gentium', type: 'Constituição', author: 'Concílio Vaticano II', year: 1964, theme: ['Eclesiologia'], summary: 'Constituição Dogmática sobre a Igreja.' },
   { id: 'dv', title: 'Dei Verbum', type: 'Constituição', author: 'Concílio Vaticano II', year: 1965, theme: ['Revelação', 'Bíblia'], summary: 'Constituição Dogmática sobre a Revelação Divina.' },
