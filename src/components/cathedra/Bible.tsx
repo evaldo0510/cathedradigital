@@ -238,6 +238,22 @@ const Bible: React.FC = () => {
     if (!selectedBook || !selectedChapter) return [];
     return getBibleCrossRefs(selectedBook.abbr, selectedChapter);
   }, [selectedBook, selectedChapter]);
+  
+  const verseToCic = useMemo(() => {
+    if (!selectedBook || !selectedChapter) return {};
+    const map: Record<number, number[]> = {};
+    // Extract verse-specific references from the CIC_TO_BIBLE map
+    Object.entries(CIC_TO_BIBLE).forEach(([paragraph, refs]) => {
+      refs.forEach(ref => {
+        if (ref.abbr === selectedBook.abbr && ref.chapter === selectedChapter && ref.verse) {
+          const p = parseInt(paragraph);
+          if (!map[ref.verse]) map[ref.verse] = [];
+          map[ref.verse].push(p);
+        }
+      });
+    });
+    return map;
+  }, [selectedBook, selectedChapter]);
 
   const selectBook = (book: typeof filteredBooks[0]) => {
     setSelectedBook(book);
