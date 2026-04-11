@@ -13,6 +13,7 @@ const HowItWorksSection = lazy(() => import("./landing/HowItWorksSection"));
 const AcolhimentoSection = lazy(() => import("./landing/AcolhimentoSection"));
 const BenefitsSection = lazy(() => import("./landing/BenefitsSection"));
 const TestimonialsSection = lazy(() => import("./landing/TestimonialsSection"));
+const AboutCreatorSection = lazy(() => import("./landing/AboutCreatorSection"));
 const FaqSection = lazy(() => import("./landing/FaqSection"));
 const CtaBannerSection = lazy(() => import("./landing/CtaBannerSection"));
 const FeedbackWidget = lazy(() => import("@/components/landing/FeedbackWidget"));
