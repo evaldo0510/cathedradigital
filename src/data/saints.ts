@@ -153,6 +153,15 @@ export const SAINTS_DATA: Saint[] = [
     interpretacaoProfunda: 'São Francisco via a santidade como um caminho de humildade onde nunca nos sentimos "prontos". Cada dia é uma nova oportunidade de conversão radical.',
     aplicacaoPratica: 'Não desanime por suas quedas de ontem. Hoje, recomece seu serviço a Deus com a alegria de um iniciante.',
     reflexaoFinal: 'O que posso "recomeçar" hoje na minha vida espiritual?',
+    bibleRefs: [
+      { ref: 'Mt 10,7-10', label: 'A missão dos doze' },
+      { ref: 'Mt 19,21', label: 'Vende tudo o que tens' }
+    ],
+    catechismRefs: [301, 344, 125, 1438, 2444],
+    churchDocRefs: [
+      { title: 'Laudato Si (Papa Francisco)', url: 'https://www.vatican.va/content/francesco/pt/encyclicals/documents/papa-francesco_20150524_enciclica-laudato-si.html' },
+      { title: 'Fratelli Tutti (Papa Francisco)', url: 'https://www.vatican.va/content/francesco/pt/encyclicals/documents/papa-francesco_20201003_enciclica-fratelli-tutti.html' }
+    ],
   },
   {
     id: 'judas-tadeu',
