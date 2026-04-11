@@ -7,8 +7,8 @@ import DocumentViewer from './DocumentViewer';
 import DeepContentSection from './DeepContentSection';
 import { type Saint } from '@/data/saints';
 import { Sparkles, BookOpen, Quote, Shield, Info, Heart, Lightbulb, MessageSquare, Loader2, Sparkle } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
-import { Button } from '../ui/button';
+import { supabase } from '@/integrations/supabase/client';
+import { Button } from '@/components/ui/button';
 
 const CATEGORY_LABELS: Record<string, string> = {
   apostle: 'Apóstolo',
