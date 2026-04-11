@@ -95,12 +95,12 @@ const AdminDashboard: React.FC = () => {
       try {
         setLoading(true);
 
-        const thirtyDaysAgo = new Date();
-        thirtyDaysAgo.setDate(new Date().getDate() - 30);
-        const iso30 = thirtyDaysAgo.toISOString();
+        const thirtyDaysAgoStart = new Date();
+        thirtyDaysAgoStart.setDate(new Date().getDate() - 30);
+        const iso30 = thirtyDaysAgoStart.toISOString();
 
         const [statsRes, metricsRes, transactionsRes, journalRes, journeysStartedRes, journeysCompletedRes, crmRes] = await Promise.all([
-          supabase.from('profiles').select('id, is_premium, created_at, last_visit, role, diocese, estado, movimento_pastoral, name, xp'),
+          supabase.from('profiles').select('id, is_premium, created_at, last_visit, role, diocese, estado, movimento_pastoral, name, xp, level, streak'),
           supabase.from('app_metrics').select('metric_type, created_at').gte('created_at', iso30),
           supabase.from('transactions').select('*').order('created_at', { ascending: false }).limit(100),
           supabase.from('spiritual_journal').select('user_id', { count: 'exact', head: true }),
