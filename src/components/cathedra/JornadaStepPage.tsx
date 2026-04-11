@@ -10,6 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { saveUserPsychology } from '@/lib/psychologicalProfile';
 import ProConversionBanner from './ProConversionBanner';
+import { Icons } from '@/constants';
 
 const SECTION_CONFIG = [
   { key: 'pch', label: 'Reflexão Profunda (PCH)', icon: <Sparkles className="w-4 h-4" /> },
