@@ -194,6 +194,7 @@ export type Database = {
           id: string
           likes_count: number
           parent_id: string | null
+          status: string | null
           title: string | null
           updated_at: string
           user_id: string
@@ -205,6 +206,7 @@ export type Database = {
           id?: string
           likes_count?: number
           parent_id?: string | null
+          status?: string | null
           title?: string | null
           updated_at?: string
           user_id: string
@@ -216,6 +218,7 @@ export type Database = {
           id?: string
           likes_count?: number
           parent_id?: string | null
+          status?: string | null
           title?: string | null
           updated_at?: string
           user_id?: string
