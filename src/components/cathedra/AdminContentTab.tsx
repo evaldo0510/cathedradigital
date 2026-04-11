@@ -165,31 +165,33 @@ const AdminContentTab: React.FC = () => {
             </Card>
           ) : (
             filteredPosts.map((post) => (
-              <Card key={post.id} className="overflow-hidden">
-                <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <Card key={post.id} className="overflow-hidden shadow-none border-border/40">
+                <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3">
                   <div className="flex items-center gap-2">
-                    <User className="w-4 h-4 text-muted-foreground" />
-                    <span className="font-medium">{post.profiles?.name || 'Usuário'}</span>
-                    <span className="text-xs text-muted-foreground">• {new Date(post.created_at).toLocaleString('pt-BR')}</span>
-                    {post.category && <Badge variant="outline" className="text-[10px] uppercase">{post.category}</Badge>}
+                    <User className="w-3.5 h-3.5 text-muted-foreground" />
+                    <span className="text-xs font-bold">{post.profiles?.name || 'Usuário'}</span>
+                    <span className="text-[10px] text-muted-foreground">• {new Date(post.created_at).toLocaleDateString('pt-BR')}</span>
+                    {post.category && <Badge variant="outline" className="text-[9px] uppercase h-4 px-1">{post.category}</Badge>}
                   </div>
-                  {getStatusBadge(post.status)}
+                  <div className="scale-90 origin-right">
+                    {getStatusBadge(post.status)}
+                  </div>
                 </CardHeader>
-                <CardContent>
-                  {post.title && <h3 className="font-bold mb-1">{post.title}</h3>}
-                  <p className="text-sm whitespace-pre-wrap">{post.content}</p>
+                <CardContent className="px-3 pb-2 pt-1">
+                  {post.title && <h3 className="text-sm font-bold mb-0.5">{post.title}</h3>}
+                  <p className="text-xs text-muted-foreground whitespace-pre-wrap line-clamp-3">{post.content}</p>
                 </CardContent>
-                <CardFooter className="bg-muted/30 border-t py-2 flex justify-end gap-2">
-                  <Button variant="ghost" size="sm" onClick={() => handleDelete(post.id)} className="text-destructive">
-                    <Trash2 className="w-4 h-4 mr-1" /> Excluir
+                <CardFooter className="bg-muted/10 border-t border-border/10 py-1.5 px-3 flex justify-end gap-1.5">
+                  <Button variant="ghost" size="xs" onClick={() => handleDelete(post.id)} className="text-destructive h-7 text-[10px] font-bold uppercase tracking-widest">
+                    <Trash2 className="w-3 h-3 mr-1" /> Excluir
                   </Button>
                   {post.status === 'pending' && (
                     <>
-                      <Button variant="outline" size="sm" onClick={() => handleUpdateStatus(post.id, 'rejected')}>
-                        <X className="w-4 h-4 mr-1" /> Rejeitar
+                      <Button variant="outline" size="xs" onClick={() => handleUpdateStatus(post.id, 'rejected')} className="h-7 text-[10px] font-bold uppercase tracking-widest">
+                        <X className="w-3 h-3 mr-1" /> Rejeitar
                       </Button>
-                      <Button size="sm" onClick={() => handleUpdateStatus(post.id, 'approved')} className="bg-emerald-600 hover:bg-emerald-700">
-                        <Check className="w-4 h-4 mr-1" /> Aprovar
+                      <Button size="xs" onClick={() => handleUpdateStatus(post.id, 'approved')} className="h-7 text-[10px] font-bold uppercase tracking-widest bg-emerald-600 hover:bg-emerald-700">
+                        <Check className="w-3 h-3 mr-1" /> Aprovar
                       </Button>
                     </>
                   )}
