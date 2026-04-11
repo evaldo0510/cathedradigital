@@ -218,6 +218,8 @@ const AdminDashboard: React.FC = () => {
     };
 
     fetchStats();
+    const interval = setInterval(fetchStats, 60000); // Atualiza a cada 60 segundos
+    return () => clearInterval(interval);
   }, []);
 
   const handleTogglePremium = async (userId: string, currentStatus: boolean) => {
