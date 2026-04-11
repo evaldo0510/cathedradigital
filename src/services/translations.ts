@@ -81,7 +81,11 @@ export const UI_TRANSLATIONS: Record<Language, any> = {
     view_all: "Ver todas",
     pax_et_bonum: "Pax et Bonum",
     salve: "Salve",
-    digital: "Digital"
+    digital: "Digital",
+    about: "Sobre",
+    partners: "Parceiros",
+    privacy: "Privacidade",
+    terms: "Termos"
   },
   en: {
     home: "Home (Narthex)",
