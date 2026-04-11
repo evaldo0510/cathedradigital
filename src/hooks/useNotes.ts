@@ -39,20 +39,46 @@ export function useNotes(contentType: string, contentId?: string) {
 
   const addNote = useCallback(async (cId: string, text: string, color = 'yellow') => {
     if (!user || !text.trim()) return null;
-    const { data, error } = await supabase
-      .from('user_notes')
-      .insert({ user_id: user.id, content_type: contentType, content_id: cId, note_text: text.trim(), highlight_color: color })
-      .select()
-      .single();
-    if (!error && data) {
-      setNotes(prev => [data as UserNote, ...prev]);
-      
-      // Save psychological profile
-      saveUserPsychology(user.id, text.trim(), `note_${contentType}`);
-      
-      return data as UserNote;
+    
+    // Create temporary item for optimistic UI
+    const tempId = crypto.randomUUID();
+    const tempNote: UserNote = {
+      id: tempId,
+      content_type: contentType,
+      content_id: cId,
+      note_text: text.trim(),
+      highlight_color: color,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+    
+    // Optimistic update
+    setNotes(prev => [tempNote, ...prev]);
+
+    try {
+      const { data, error } = await supabase
+        .from('user_notes')
+        .insert({ user_id: user.id, content_type: contentType, content_id: cId, note_text: text.trim(), highlight_color: color })
+        .select()
+        .single();
+        
+      if (!error && data) {
+        // Replace temp note with real data from server
+        setNotes(prev => prev.map(n => n.id === tempId ? (data as UserNote) : n));
+        
+        // Save psychological profile (backgrounded)
+        saveUserPsychology(user.id, text.trim(), `note_${contentType}`);
+        
+        return data as UserNote;
+      } else {
+        throw error || new Error('Failed to save note');
+      }
+    } catch (err) {
+      console.error('Error adding note:', err);
+      // Rollback optimistic update
+      setNotes(prev => prev.filter(n => n.id !== tempId));
+      return null;
     }
-    return null;
   }, [user, contentType]);
 
   const updateNote = useCallback(async (noteId: string, text: string) => {
