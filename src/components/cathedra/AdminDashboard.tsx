@@ -591,6 +591,13 @@ const AdminDashboard: React.FC = () => {
           </Suspense>
         </TabsContent>
 
+        {/* Themes Tab */}
+        <TabsContent value="themes">
+          <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
+            <AdminThemesTab />
+          </Suspense>
+        </TabsContent>
+
         {/* Retention Tab */}
         <TabsContent value="retention">
           <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
