@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import ShareButton from './ShareButton';
 import { createPortal } from 'react-dom';
 import { Icons } from '../../constants';
+import DeepContentSection from './DeepContentSection';
 import { 
   Heart, 
   ArrowLeft, 
