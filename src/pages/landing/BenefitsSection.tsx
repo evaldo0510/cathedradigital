@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button";
 import { fadeUp, cardHover, buttonHover } from "./animations";
 
 const registerBenefits = [
-  { title: "Progresso Salvo", description: "Sincronize sua leitura da Bíblia e do Catecismo entre todos os seus dispositivos.", icon: <Bookmark className="h-5 w-5 text-primary" /> },
-  { title: "Favoritos e Notas", description: "Crie sua biblioteca pessoal de versículos, parágrafos e orações prediletas.", icon: <Star className="h-5 w-5 text-primary" /> },
-  { title: "Gamificação", description: "Ganhe XP, insígnias e mantenha sua 'streak' de oração e estudo ativa.", icon: <Trophy className="h-5 w-5 text-primary" /> },
-  { title: "Acesso Completo", description: "Desbloqueie ferramentas exclusivas de análise e o assistente de estudo inteligente.", icon: <ShieldCheck className="h-5 w-5 text-primary" /> },
+  { title: "Progresso Salvo", description: "Sincronize sua leitura da Bíblia e do Catecismo entre todos os seus dispositivos.", icon: <Bookmark className="h-4 w-4 text-primary" /> },
+  { title: "Favoritos e Notas", description: "Crie sua biblioteca pessoal de versículos, parágrafos e orações prediletas.", icon: <Star className="h-4 w-4 text-primary" /> },
+  { title: "Gamificação", description: "Ganhe XP, insígnias e mantenha sua 'streak' de oração e estudo ativa.", icon: <Trophy className="h-4 w-4 text-primary" /> },
+  { title: "Acesso Completo", description: "Desbloqueie ferramentas exclusivas de análise e o assistente de estudo inteligente.", icon: <ShieldCheck className="h-4 w-4 text-primary" /> },
 ];
 
 interface BenefitsSectionProps {
@@ -46,7 +46,7 @@ const BenefitsSection = ({ onLogin }: BenefitsSectionProps) => {
             {registerBenefits.map((benefit, i) => (
               <motion.div key={benefit.title} variants={cardHover} initial="rest" whileHover="hover" whileTap="tap">
                 <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} className="space-y-3 p-6 rounded-3xl bg-white/5 border border-white/10 cursor-pointer h-full">
-                  <motion.div whileHover={{ rotate: 15, scale: 1.15 }} transition={{ type: "spring", stiffness: 400 }} className="w-10 h-10 rounded-2xl bg-primary/20 flex items-center justify-center">
+                  <motion.div whileHover={{ rotate: 15, scale: 1.15 }} transition={{ type: "spring", stiffness: 400 }} className="w-8 h-8 rounded-xl bg-primary/20 flex items-center justify-center">
                     {benefit.icon}
                   </motion.div>
                   <h3 className="font-bold text-lg">{benefit.title}</h3>

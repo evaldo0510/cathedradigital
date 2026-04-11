@@ -3,9 +3,9 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { Sparkles, Cross, Flame } from "lucide-react";
 
 const steps = [
-  { num: "01", title: "Crie sua conta", desc: "Registro rápido e gratuito para começar sua jornada espiritual.", icon: <Sparkles className="h-6 w-6" /> },
-  { num: "02", title: "Escolha seu caminho", desc: "Bíblia, Catecismo, Santos ou orações — comece por onde o coração pedir.", icon: <Cross className="h-6 w-6" /> },
-  { num: "03", title: "Aprofunde-se diariamente", desc: "Mantenha sua streak, ganhe badges e cresça na fé com constância.", icon: <Flame className="h-6 w-6" /> },
+  { num: "01", title: "Crie sua conta", desc: "Registro rápido e gratuito para começar sua jornada espiritual.", icon: <Sparkles className="h-5 w-5" /> },
+  { num: "02", title: "Escolha seu caminho", desc: "Bíblia, Catecismo, Santos ou orações — comece por onde o coração pedir.", icon: <Cross className="h-5 w-5" /> },
+  { num: "03", title: "Aprofunde-se diariamente", desc: "Mantenha sua streak, ganhe badges e cresça na fé com constância.", icon: <Flame className="h-5 w-5" /> },
 ];
 
 const HowItWorksSection = () => {
@@ -64,7 +64,7 @@ const HowItWorksSection = () => {
               <motion.div
                 whileHover={{ scale: 1.15, rotate: -8 }}
                 transition={{ type: "spring", stiffness: 300 }}
-                className="w-24 h-24 mx-auto rounded-[2rem] bg-primary/10 border-2 border-primary/20 flex items-center justify-center text-primary relative z-10 backdrop-blur-sm"
+                className="w-16 h-16 mx-auto rounded-[1.5rem] bg-primary/10 border-2 border-primary/20 flex items-center justify-center text-primary relative z-10 backdrop-blur-sm"
               >
                 {step.icon}
                 {/* Step number badge */}
