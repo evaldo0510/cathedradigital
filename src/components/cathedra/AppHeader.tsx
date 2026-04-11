@@ -44,12 +44,12 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
   return (
     <header className="border-b border-border bg-background/90 backdrop-blur-xl sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)]">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-3 sm:py-4 flex items-center justify-between min-h-[56px] sm:min-h-[64px]">
-        <div className="flex items-center gap-2 sm:gap-10">
-        <div className="flex items-center gap-2 sm:gap-4 cursor-pointer group" onClick={() => navigate(AppRoute.DASHBOARD)}>
-          <img src={cathedraLogo} alt="Cathedra" className="w-8 h-8 sm:w-10 sm:h-10 object-contain" />
-          <div className="flex flex-col">
-            <span className="text-base sm:text-xl font-display font-black uppercase tracking-[0.2em] sm:tracking-[0.25em] text-primary leading-none">Cathedra</span>
-            <span className="text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-secondary opacity-80 mt-0.5 sm:mt-1">{t('digital')}</span>
+        <div className="flex items-center gap-2 sm:gap-10 min-w-0">
+        <div className="flex items-center gap-2 sm:gap-4 cursor-pointer group min-w-0" onClick={() => navigate(AppRoute.DASHBOARD)}>
+          <img src={cathedraLogo} alt="Cathedra" className="w-8 h-8 sm:w-10 sm:h-10 object-contain flex-shrink-0" />
+          <div className="flex flex-col min-w-0">
+            <span className="text-sm sm:text-xl font-display font-black uppercase tracking-[0.1em] sm:tracking-[0.25em] text-primary leading-none truncate">Cathedra</span>
+            <span className="text-[7px] sm:text-[10px] font-bold uppercase tracking-[0.1em] sm:tracking-[0.3em] text-secondary opacity-80 mt-0.5 sm:mt-1 truncate">{t('digital')}</span>
           </div>
         </div>
         
@@ -147,7 +147,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
         )}
 
         {user ? (
-          <button onClick={onSignOut} className="px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-all">
+          <button onClick={onSignOut} className="hidden sm:block px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-all">
             {t('exit_session')}
           </button>
         ) : (
@@ -156,7 +156,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           </button>
         )}
 
-        <div className="flex items-center gap-1.5 sm:gap-2">
+        <div className="hidden sm:flex items-center gap-1.5 sm:gap-2">
           <select 
             value={lang} 
             onChange={(e) => onChangeLang(e.target.value as Language)}
@@ -174,14 +174,18 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
 
         <button 
           onClick={onToggleSpeak} 
-          className={`p-2.5 sm:p-3 rounded-xl sm:rounded-2xl border border-border transition-all active:scale-95 shadow-sm ${isSpeaking ? 'bg-primary text-white animate-pulse' : 'bg-muted text-primary hover:bg-primary hover:text-white'}`}
+          className={`hidden sm:flex p-2.5 sm:p-3 rounded-xl sm:rounded-2xl border border-border transition-all active:scale-95 shadow-sm items-center justify-center ${isSpeaking ? 'bg-primary text-white animate-pulse' : 'bg-muted text-primary hover:bg-primary hover:text-white'}`}
           title={isSpeaking ? t('audio_stop') : t('audio_read')}
         >
           {isSpeaking ? <Icons.Stop className="w-4.5 h-4.5 sm:w-5 sm:h-5" /> : <Icons.Volume2 className="w-4.5 h-4.5 sm:w-5 sm:h-5" />}
         </button>
 
-        <button onClick={onToggleDark} className="p-2.5 sm:p-3 bg-muted text-primary hover:bg-primary hover:text-white rounded-xl sm:rounded-2xl border border-border transition-all active:scale-95 shadow-sm">
+        <button onClick={onToggleDark} className="hidden sm:flex p-2.5 sm:p-3 bg-muted text-primary hover:bg-primary hover:text-white rounded-xl sm:rounded-2xl border border-border transition-all active:scale-95 shadow-sm items-center justify-center">
           {isDark ? <Icons.Sun className="w-4.5 h-4.5 sm:w-5 sm:h-5" /> : <Icons.Moon className="w-4.5 h-4.5 sm:w-5 sm:h-5" />}
+        </button>
+
+        <button onClick={onOpenSidebar} className="sm:hidden p-2.5 bg-muted text-primary hover:bg-primary hover:text-white rounded-xl border border-border transition-all active:scale-95 shadow-sm flex items-center justify-center">
+          <Icons.Menu className="w-4.5 h-4.5" />
         </button>
 
       </div>
