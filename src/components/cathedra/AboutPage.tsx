@@ -58,9 +58,59 @@ const AboutPage: React.FC = () => (
         </div>
       </div>
 
-      <div className="bg-muted rounded-2xl p-8 text-center space-y-3">
-        <p className="font-bold text-foreground not-italic text-xl">Ad Maiorem Dei Gloriam</p>
-        <p className="text-muted-foreground italic text-sm">Para a maior glória de Deus.</p>
+      <div className="bg-muted rounded-2xl p-8 text-center space-y-3 relative overflow-hidden group">
+        <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+        <p className="font-bold text-foreground not-italic text-xl relative z-10">Ad Maiorem Dei Gloriam</p>
+        <p className="text-muted-foreground italic text-sm relative z-10">Para a maior glória de Deus.</p>
+      </div>
+
+      <div className="pt-20 pb-12 border-t border-border/40">
+        <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16">
+          <div className="shrink-0">
+            <div className="w-40 h-40 md:w-56 md:h-56 rounded-full border-2 border-border p-2 relative bg-background shadow-lg overflow-hidden group">
+              <div className="w-full h-full rounded-full bg-muted flex items-center justify-center overflow-hidden border border-border group-hover:scale-105 transition-transform duration-700">
+                <Icons.User className="w-20 h-20 text-muted-foreground/30" />
+                {/* Optional Creator Photo:
+                <img src="/creator-photo.jpg" alt="eevaldo.os" className="w-full h-full object-cover" />
+                */}
+              </div>
+              <div className="absolute -bottom-1 -right-1 bg-primary text-white p-2.5 rounded-full shadow-lg border-4 border-background">
+                <Icons.Feather className="w-4 h-4" />
+              </div>
+            </div>
+          </div>
+          
+          <div className="space-y-6 flex-1 text-center md:text-left">
+            <div className="space-y-2">
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground">Sobre o Criador</h2>
+              <p className="text-lg font-medium text-primary">eevaldo.os</p>
+            </div>
+            
+            <div className="space-y-4 text-muted-foreground text-base leading-relaxed">
+              <p>
+                O Cathedra Digital foi concebido e desenvolvido por <span className="text-foreground font-semibold">eevaldo.os</span> como uma resposta pessoal ao chamado de evangelização no mundo digital. Unindo a paixão pela tecnologia de ponta com a veneração pela Tradição Católica de dois mil anos.
+              </p>
+              <p>
+                Nossa missão é fornecer as ferramentas mais avançadas para que cada católico possa aprofundar sua fé, estudar as escrituras e viver a liturgia com clareza, beleza e profundidade, onde quer que esteja.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 text-sm text-muted-foreground pt-2">
+              <div className="flex items-center gap-1.5">
+                <div className="w-1.5 h-1.5 bg-primary rounded-full" />
+                <span>Espiritualidade</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <div className="w-1.5 h-1.5 bg-primary rounded-full" />
+                <span>Reflexão</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <div className="w-1.5 h-1.5 bg-primary rounded-full" />
+                <span>Tecnologia</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
