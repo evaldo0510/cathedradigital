@@ -1,10 +1,12 @@
+import { DeepContent } from '@/types';
+
 export interface SaintWork {
   title: string;
   url?: string;
   year?: string;
 }
 
-export interface Saint {
+export interface Saint extends Partial<DeepContent> {
   id: string;
   name: string;
   title: string;
