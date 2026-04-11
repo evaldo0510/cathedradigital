@@ -118,16 +118,16 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
                 {isDark ? <Icons.Sun className="w-4 h-4 text-primary" /> : <Icons.Moon className="w-4 h-4" />}
                 <span className="text-[10px] font-black uppercase tracking-widest">{isDark ? 'Claro' : 'Escuro'}</span>
               </button>
-              
-              {user && (
-                <button 
-                  onClick={onSignOut} 
-                  className="flex-1 p-3 bg-muted text-muted-foreground hover:text-destructive rounded-xl border border-border flex items-center justify-center gap-2 transition-all active:scale-95"
-                >
-                  <Icons.LogOut className="w-4 h-4" />
-                  <span className="text-[10px] font-black uppercase tracking-widest">Sair</span>
-                </button>
-              )}
+
+              <button 
+                onClick={onToggleSpeak} 
+                className={`flex-1 p-3 rounded-xl border border-border flex items-center justify-center gap-2 transition-all active:scale-95 ${
+                  isSpeaking ? 'bg-primary text-white' : 'bg-muted text-muted-foreground hover:text-primary'
+                }`}
+              >
+                {isSpeaking ? <Icons.Message className="w-4 h-4 animate-pulse" /> : <Icons.Volume2 className="w-4 h-4" />}
+                <span className="text-[10px] font-black uppercase tracking-widest">{isSpeaking ? 'Parar' : 'Ouvir'}</span>
+              </button>
             </div>
 
             <div className="flex flex-wrap gap-1 mt-1">
