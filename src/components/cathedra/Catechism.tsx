@@ -384,6 +384,27 @@ const Catechism: React.FC = () => {
         </div>
       </motion.div>
 
+      {/* Suggestion Card */}
+      {nextUnreadParagraph && (
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+          <div 
+            onClick={() => navigateToParagraph(nextUnreadParagraph)}
+            className="max-w-md mx-auto p-4 rounded-2xl border border-primary/20 bg-primary/5 cursor-pointer hover:border-primary/40 transition-all flex items-center justify-between group"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/20 transition-colors">
+                <Icons.Sparkles className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-widest text-primary">Continuar Formação</p>
+                <h3 className="text-sm font-bold text-foreground">Sugerido: §{nextUnreadParagraph}</h3>
+              </div>
+            </div>
+            <Icons.ChevronRight className="w-5 h-5 text-primary group-hover:translate-x-1 transition-transform" />
+          </div>
+        </motion.div>
+      )}
+
       {/* Search by paragraph */}
       <div className="max-w-md mx-auto">
         <div className="relative">
