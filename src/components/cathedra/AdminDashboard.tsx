@@ -47,6 +47,9 @@ interface Stats {
   recentTransactions: any[];
   userGrowth: any[];
   revenueData: any[];
+  diocesesStats: { name: string; count: number }[];
+  statesStats: { name: string; count: number }[];
+  movementsStats: { name: string; count: number }[];
 }
 
 
@@ -170,6 +173,29 @@ const AdminDashboard: React.FC = () => {
           return { name: `Sem ${4 - weeksAgo}`, amount };
         });
 
+        // Geographic & Pastoral Stats
+        const dioceseMap = new Map<string, number>();
+        const stateMap = new Map<string, number>();
+        const movementMap = new Map<string, number>();
+
+        allProfiles.forEach(p => {
+          if (p.diocese) dioceseMap.set(p.diocese, (dioceseMap.get(p.diocese) || 0) + 1);
+          if (p.estado) stateMap.set(p.estado, (stateMap.get(p.estado) || 0) + 1);
+          if (p.movimento_pastoral) movementMap.set(p.movimento_pastoral, (movementMap.get(p.movimento_pastoral) || 0) + 1);
+        });
+
+        const diocesesStats = Array.from(dioceseMap.entries())
+          .map(([name, count]) => ({ name, count }))
+          .sort((a, b) => b.count - a.count);
+        
+        const statesStats = Array.from(stateMap.entries())
+          .map(([name, count]) => ({ name, count }))
+          .sort((a, b) => b.count - a.count);
+
+        const movementsStats = Array.from(movementMap.entries())
+          .map(([name, count]) => ({ name, count }))
+          .sort((a, b) => b.count - a.count);
+
         setStats({
           totalUsers: allProfiles.length,
           premiumUsers: premiumCount,
@@ -190,6 +216,9 @@ const AdminDashboard: React.FC = () => {
           recentTransactions: transactions.slice(0, 10),
           userGrowth,
           revenueData,
+          diocesesStats,
+          statesStats,
+          movementsStats
         });
 
 
@@ -388,6 +417,9 @@ const AdminDashboard: React.FC = () => {
           </TabsTrigger>
           <TabsTrigger value="themes" className="gap-1.5 text-xs sm:text-sm">
             <Tag className="w-3.5 h-3.5 hidden sm:block" /> Temas
+          </TabsTrigger>
+          <TabsTrigger value="geography" className="gap-1.5 text-xs sm:text-sm">
+            <MapIcon className="w-3.5 h-3.5 hidden sm:block" /> Geografia
           </TabsTrigger>
         </TabsList>
 
@@ -781,6 +813,77 @@ const AdminDashboard: React.FC = () => {
               </p>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* Geography Tab */}
+        <TabsContent value="geography" className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Distribuição por Estado</CardTitle>
+                <CardDescription>Estados com mais usuários ativos.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {stats?.statesStats.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">Nenhum dado disponível.</p>
+                  ) : (
+                    stats?.statesStats.map(s => (
+                      <div key={s.name} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Badge variant="outline">{s.name}</Badge>
+                          <span className="text-sm font-medium">{s.name}</span>
+                        </div>
+                        <span className="text-sm font-bold">{s.count}</span>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Distribuição por Diocese</CardTitle>
+                <CardDescription>Principais dioceses da comunidade.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                  {stats?.diocesesStats.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">Nenhum dado disponível.</p>
+                  ) : (
+                    stats?.diocesesStats.map(d => (
+                      <div key={d.name} className="flex items-center justify-between group">
+                        <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">{d.name}</span>
+                        <span className="text-sm font-bold">{d.count}</span>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Movimentos & Pastorais</CardTitle>
+                <CardDescription>Engajamento por grupo eclesial.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                  {stats?.movementsStats.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">Nenhum dado disponível.</p>
+                  ) : (
+                    stats?.movementsStats.map(m => (
+                      <div key={m.name} className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">{m.name}</span>
+                        <span className="text-sm font-bold">{m.count}</span>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
       </Tabs>
     </div>
