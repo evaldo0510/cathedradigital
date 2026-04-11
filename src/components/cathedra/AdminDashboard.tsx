@@ -5,7 +5,8 @@ import {
   Users, TrendingUp, Download, DollarSign, ArrowUpRight,
   BarChart3, Calendar, AlertCircle, Crown, Shield, Search,
   ChevronDown, ChevronUp, UserCog, ArrowLeft, Home, Smartphone, MonitorSmartphone,
-  Target, Activity, Bell, LayoutGrid, UserCheck, Handshake, Heart, Wallet
+  Target, Activity, Bell, LayoutGrid, UserCheck, Handshake, Heart, Wallet,
+  MessageSquare, Map as MapIcon
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -22,6 +23,8 @@ const AdminCrmRetention = lazy(() => import('./AdminCrmRetention'));
 const AdminCrmUserProfile = lazy(() => import('./AdminCrmUserProfile'));
 const AdminCrmAutomations = lazy(() => import('./AdminCrmAutomations'));
 const AdminPartnersTab = lazy(() => import('./AdminPartnersTab'));
+const AdminContentTab = lazy(() => import('./AdminContentTab'));
+const AdminJourneysTab = lazy(() => import('./AdminJourneysTab'));
 
 interface Stats {
   totalUsers: number;
@@ -353,14 +356,8 @@ const AdminDashboard: React.FC = () => {
           <TabsTrigger value="overview" className="gap-1.5 text-xs sm:text-sm">
             <LayoutGrid className="w-3.5 h-3.5 hidden sm:block" /> Visão Geral
           </TabsTrigger>
-          <TabsTrigger value="segmentation" className="gap-1.5 text-xs sm:text-sm">
-            <Target className="w-3.5 h-3.5 hidden sm:block" /> Gestão de Usuários
-          </TabsTrigger>
-          <TabsTrigger value="retention" className="gap-1.5 text-xs sm:text-sm">
-            <Activity className="w-3.5 h-3.5 hidden sm:block" /> Retenção
-          </TabsTrigger>
-          <TabsTrigger value="automations" className="gap-1.5 text-xs sm:text-sm">
-            <Bell className="w-3.5 h-3.5 hidden sm:block" /> Automações
+          <TabsTrigger value="users" className="gap-1.5 text-xs sm:text-sm">
+            <Users className="w-3.5 h-3.5 hidden sm:block" /> Usuários
           </TabsTrigger>
           <TabsTrigger value="transactions" className="gap-1.5 text-xs sm:text-sm">
             <DollarSign className="w-3.5 h-3.5 hidden sm:block" /> Financeiro
@@ -368,8 +365,14 @@ const AdminDashboard: React.FC = () => {
           <TabsTrigger value="partners" className="gap-1.5 text-xs sm:text-sm">
             <Handshake className="w-3.5 h-3.5 hidden sm:block" /> Parceiros
           </TabsTrigger>
-          <TabsTrigger value="users" className="gap-1.5 text-xs sm:text-sm">
-            <Users className="w-3.5 h-3.5 hidden sm:block" /> Usuários
+          <TabsTrigger value="content" className="gap-1.5 text-xs sm:text-sm">
+            <MessageSquare className="w-3.5 h-3.5 hidden sm:block" /> Conteúdo
+          </TabsTrigger>
+          <TabsTrigger value="journeys" className="gap-1.5 text-xs sm:text-sm">
+            <MapIcon className="w-3.5 h-3.5 hidden sm:block" /> Jornadas
+          </TabsTrigger>
+          <TabsTrigger value="segmentation" className="gap-1.5 text-xs sm:text-sm">
+            <Target className="w-3.5 h-3.5 hidden sm:block" /> CRM
           </TabsTrigger>
         </TabsList>
 
@@ -549,6 +552,20 @@ const AdminDashboard: React.FC = () => {
         <TabsContent value="partners" className="space-y-4">
           <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
             <AdminPartnersTab />
+          </Suspense>
+        </TabsContent>
+
+        {/* Content Tab */}
+        <TabsContent value="content" className="space-y-4">
+          <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
+            <AdminContentTab />
+          </Suspense>
+        </TabsContent>
+
+        {/* Journeys Tab */}
+        <TabsContent value="journeys" className="space-y-4">
+          <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
+            <AdminJourneysTab />
           </Suspense>
         </TabsContent>
 
