@@ -306,38 +306,102 @@ const HojePage: React.FC = () => {
 
   return (
     <div className="space-y-6 max-w-2xl lg:max-w-4xl mx-auto">
-      {/* Greeting */}
+      {/* Logos IA Highlight */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex items-center gap-3"
       >
-        {greeting.icon}
-        <div>
-          <h1 className="text-2xl font-bold font-serif text-foreground">
-            {greeting.text}, {userName}
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            {streak > 0 ? (
-              <span className="flex items-center gap-1">
-                <Icons.Flame className="w-4 h-4 text-secondary" /> {streak} dias consecutivos
-              </span>
-            ) : 'Comece seu dia com Deus'}
-          </p>
-        </div>
+        <Card className="border-primary/40 bg-gradient-to-br from-primary/20 via-primary/5 to-background overflow-hidden relative shadow-xl border-2">
+          <div className="absolute top-0 right-0 p-6 opacity-20 group-hover:opacity-40 transition-opacity">
+            <Icons.Sparkles className="w-24 h-24 text-primary animate-pulse" />
+          </div>
+          <CardHeader className="pb-2">
+            <div className="flex items-center gap-2 mb-1">
+              <div className="px-2 py-0.5 rounded-full bg-primary/20 text-primary text-[10px] font-black uppercase tracking-widest border border-primary/30">
+                Logos Inteligência Artificial
+              </div>
+            </div>
+            <CardTitle className="text-2xl font-serif text-foreground">
+              Sua jornada espiritual guiada pela Sabedoria.
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-sm text-muted-foreground leading-relaxed max-w-md">
+              Compartilhe suas angústias, dúvidas ou orações. O Logos analisa seu estado de alma e sugere o caminho ideal para sua conversão hoje.
+            </p>
+            <Button 
+              size="lg" 
+              className="w-full sm:w-auto h-12 px-8 bg-primary hover:bg-primary/90 text-primary-foreground font-bold uppercase tracking-widest shadow-lg shadow-primary/20 group"
+              onClick={() => {
+                const journalElement = document.getElementById('spiritual-journal');
+                journalElement?.scrollIntoView({ behavior: 'smooth' });
+                // Focus the textarea
+                const textarea = document.querySelector('textarea');
+                textarea?.focus();
+              }}
+            >
+              <Icons.PenLine className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
+              Começar reflexão
+            </Button>
+          </CardContent>
+        </Card>
       </motion.div>
 
-      {/* Daily Quote */}
+      {/* Greeting & Quick Access */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="flex items-center gap-3"
+        >
+          {greeting.icon}
+          <div>
+            <h1 className="text-xl font-bold font-serif text-foreground">
+              {greeting.text}, {userName}
+            </h1>
+            <p className="text-xs text-muted-foreground">
+              {streak > 0 ? (
+                <span className="flex items-center gap-1">
+                  <Icons.Flame className="w-3 h-3 text-secondary" /> {streak} dias consecutivos
+                </span>
+              ) : 'Que Deus abençoe seu dia'}
+            </p>
+          </div>
+        </motion.div>
+
+        {activeJourney && (
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+          >
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="h-9 border-primary/30 text-primary font-bold text-[10px] uppercase tracking-widest"
+              onClick={() => {
+                if (journeyStep) {
+                  navigate(`/jornadas/${activeJourney.id}/step?step=${journeyStep.id}`);
+                } else {
+                  navigate(`/jornadas/${activeJourney.id}/complete`);
+                }
+              }}
+            >
+              <Icons.RotateCcw className="w-3.5 h-3.5 mr-2" />
+              Continuar: {activeJourney.title.length > 20 ? activeJourney.title.substring(0, 17) + '...' : activeJourney.title}
+            </Button>
+          </motion.div>
+        )}
+      </div>
+
+      {/* Daily Quote (Smaller) */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
       >
-        <Card className="border-primary/20 bg-primary/5">
-          <CardContent className="p-4">
-            <p className="text-sm italic text-foreground/80 font-serif">{todayQuote}</p>
-          </CardContent>
-        </Card>
+        <div className="p-3 rounded-xl border border-primary/10 bg-primary/5 text-center">
+          <p className="text-xs italic text-foreground/70 font-serif leading-relaxed">{todayQuote}</p>
+        </div>
       </motion.div>
 
       {/* Deep Insight Card */}
