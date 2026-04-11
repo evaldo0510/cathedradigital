@@ -459,22 +459,14 @@ const CommunityPage: React.FC = () => {
             placeholder={newCategory === 'testemunho' ? 'Título do testemunho...' : newCategory === 'partilha' ? 'O que deseja partilhar?' : 'Título da discussão...'}
             className="w-full px-4 py-2.5 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
           />
-            className="w-full px-4 py-2.5 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
-          />
           <textarea
             value={newContent}
             onChange={e => setNewContent(e.target.value)}
-            placeholder="Descreva sua pergunta ou reflexão..."
+            placeholder={newCategory === 'testemunho' ? 'Conte seu testemunho de fé...' : newCategory === 'partilha' ? 'Partilhe sua reflexão ou experiência...' : 'Descreva sua pergunta ou reflexão...'}
             rows={4}
             className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary/50"
           />
           <div className="flex items-center gap-3">
-            <select value={newCategory} onChange={e => setNewCategory(e.target.value)}
-              className="px-3 py-2 rounded-xl border border-border bg-background text-foreground text-sm">
-              {CATEGORIES.filter(c => c.id !== 'geral').map(c => (
-                <option key={c.id} value={c.id}>{c.label}</option>
-              ))}
-            </select>
             <div className="flex-1" />
             <button onClick={() => setShowNewPost(false)} className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground">Cancelar</button>
             <button onClick={createPost} disabled={submitting || !newTitle.trim() || !newContent.trim()}
