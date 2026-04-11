@@ -191,22 +191,51 @@ const Rosary: React.FC = () => {
 
         <YouTubePlayer videoId={YOUTUBE_IDS[selectedSet]} title={set.name} />
 
-        <div className="grid gap-4">
-          <h3 className="text-xl font-serif font-bold px-2">Mistérios e Meditações</h3>
-          {set.mysteries.map((m, i) => (
-            <div key={i} className="p-6 md:p-8 rounded-3xl bg-card border border-border shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex items-start gap-6">
-                <div className="w-12 h-12 rounded-2xl bg-primary/5 text-primary flex items-center justify-center font-black text-lg shrink-0 border border-primary/10">{i + 1}</div>
-                <div className="space-y-3">
-                  <div className="space-y-1">
-                    <p className="font-serif font-bold text-xl text-foreground">{m.title}</p>
-                    <p className="text-[10px] text-primary font-bold uppercase tracking-widest">{m.scripture}</p>
+        <div className="grid md:grid-cols-3 gap-8">
+          <div className="md:col-span-2 grid gap-4">
+            <h3 className="text-xl font-serif font-bold px-2">Mistérios e Meditações</h3>
+            {set.mysteries.map((m, i) => (
+              <div key={i} className="p-6 md:p-8 rounded-3xl bg-card border border-border shadow-sm hover:shadow-md transition-shadow">
+                <div className="flex items-start gap-6">
+                  <div className="w-12 h-12 rounded-2xl bg-primary/5 text-primary flex items-center justify-center font-black text-lg shrink-0 border border-primary/10">{i + 1}</div>
+                  <div className="space-y-3">
+                    <div className="space-y-1">
+                      <p className="font-serif font-bold text-xl text-foreground">{m.title}</p>
+                      <p className="text-[10px] text-primary font-bold uppercase tracking-widest">{m.scripture}</p>
+                    </div>
+                    <p className="text-base text-muted-foreground leading-relaxed font-serif italic">"{m.meditation}"</p>
                   </div>
-                  <p className="text-base text-muted-foreground leading-relaxed font-serif italic">"{m.meditation}"</p>
                 </div>
               </div>
+            ))}
+          </div>
+          
+          <div className="space-y-6">
+            <div className="p-8 rounded-[2rem] bg-card border border-border shadow-sm space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                  <Activity className="w-5 h-5" />
+                </div>
+                <h3 className="text-lg font-serif font-bold">Suas Intenções</h3>
+              </div>
+              <p className="text-xs text-muted-foreground font-serif italic leading-relaxed">
+                Escreva por quem ou pelo que você oferece este terço. Sua intenção guiará sua meditação.
+              </p>
+              <textarea
+                value={intention}
+                onChange={e => setIntention(e.target.value)}
+                placeholder="Ex: Pela minha família, pela paz no mundo..."
+                className="w-full px-5 py-4 rounded-2xl bg-muted/50 border border-border text-sm font-serif text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none h-32"
+              />
             </div>
-          ))}
+            
+            <div className="p-8 rounded-[2rem] bg-primary text-primary-foreground shadow-xl shadow-primary/20 space-y-4">
+              <p className="text-sm font-serif italic opacity-90 leading-relaxed">
+                "O Rosário é a minha oração predileta. Oração maravilhosa! Maravilhosa na sua simplicidade e na sua profundidade."
+              </p>
+              <p className="text-[10px] font-black uppercase tracking-widest opacity-60">— São João Paulo II</p>
+            </div>
+          </div>
         </div>
       </div>
     );
