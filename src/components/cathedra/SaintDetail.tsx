@@ -210,21 +210,79 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void }> = ({ saint, o
           </div>
         </div>
 
-        {/* Deep Reflection */}
         <section className="space-y-4 pt-4">
-          <div className="flex items-center gap-2 text-primary">
-            <Sparkles className="w-4 h-4" />
-            <h3 className="text-[11px] font-black uppercase tracking-[0.2em]">Reflexão Profunda</h3>
-          </div>
-          <div className="bg-foreground text-background p-10 rounded-[3rem] shadow-2xl relative overflow-hidden group">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-background/5 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-1000" />
-            <div className="relative z-10 space-y-6">
-              <p className="text-xl md:text-2xl font-serif italic leading-snug text-background/90">
-                {saint.interpretacaoProfunda || saint.reflexaoFinal || "A vida dos santos nos recorda que a santidade não é uma perfeição distante, mas uma amizade próxima e constante com Jesus Cristo."}
-              </p>
-              <div className="h-px w-20 bg-background/20" />
-              <p className="text-xs uppercase tracking-[0.3em] font-black text-background/50">Meditação Diária</p>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-primary">
+              <Sparkles className="w-4 h-4" />
+              <h3 className="text-[11px] font-black uppercase tracking-[0.2em]">Reflexão Profunda</h3>
             </div>
+            {!showLogos && (
+              <Button 
+                onClick={generateLogosReflection}
+                className="bg-primary/10 hover:bg-primary/20 text-primary border-none text-[10px] font-black uppercase tracking-widest h-8 px-4 rounded-full flex items-center gap-2 group transition-all"
+              >
+                <Icons.Sparkles className="w-3 h-3 group-hover:rotate-12 transition-transform" />
+                Refletir com Logos
+              </Button>
+            )}
+          </div>
+
+          <div className="bg-foreground text-background p-10 rounded-[3rem] shadow-2xl relative overflow-hidden group min-h-[200px] flex flex-col justify-center transition-all duration-700">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-background/5 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-1000" />
+            
+            <AnimatePresence mode="wait">
+              {!showLogos ? (
+                <motion.div 
+                  key="static"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="relative z-10 space-y-6"
+                >
+                  <p className="text-xl md:text-2xl font-serif italic leading-snug text-background/90">
+                    {saint.interpretacaoProfunda || saint.reflexaoFinal || "A vida dos santos nos recorda que a santidade não é uma perfeição distante, mas uma amizade próxima e constante com Jesus Cristo."}
+                  </p>
+                  <div className="h-px w-20 bg-background/20" />
+                  <p className="text-xs uppercase tracking-[0.3em] font-black text-background/50">Meditação Diária</p>
+                </motion.div>
+              ) : (
+                <motion.div 
+                  key="logos"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="relative z-10 space-y-6"
+                >
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+                      {isGenerating ? <Loader2 className="w-3 h-3 text-primary animate-spin" /> : <Icons.Sparkles className="w-3 h-3 text-primary" />}
+                    </div>
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-background/40">Logos está guiando sua reflexão...</span>
+                  </div>
+                  
+                  <div className="prose prose-invert prose-sm max-w-none">
+                    <p className="text-lg md:text-xl font-serif italic leading-relaxed text-background/90 whitespace-pre-wrap">
+                      {logosReflection || (isGenerating && "Conectando virtudes à sua vida...")}
+                    </p>
+                  </div>
+
+                  {!isGenerating && (
+                    <motion.div 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.5 }}
+                      className="pt-6 border-t border-background/10"
+                    >
+                      <button 
+                        onClick={() => setShowLogos(false)}
+                        className="text-[9px] font-black uppercase tracking-widest text-background/40 hover:text-background/60 transition-colors"
+                      >
+                        ← Voltar para meditação padrão
+                      </button>
+                    </motion.div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </section>
 
