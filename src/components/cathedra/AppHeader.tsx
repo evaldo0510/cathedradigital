@@ -10,12 +10,14 @@ interface AppHeaderProps {
   user: any;
   isDark: boolean;
   onToggleDark: () => void;
+  isSpeaking?: boolean;
+  onToggleSpeak?: () => void;
   onSignOut: () => void;
   onOpenSidebar: () => void;
 }
 
 const AppHeader: React.FC<AppHeaderProps> = React.memo(({
-  user, isDark, onToggleDark, onSignOut, onOpenSidebar
+  user, isDark, onToggleDark, isSpeaking, onToggleSpeak, onSignOut, onOpenSidebar
 }) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
