@@ -207,6 +207,13 @@ const Catechism: React.FC = () => {
     else if (viewMode === 'sections') { setViewMode('parts'); setSelectedPart(null); }
   };
 
+  const nextUnreadParagraph = useMemo(() => {
+    for (let i = 1; i <= 2865; i++) {
+      if (!paragraphsRead.has(i)) return i;
+    }
+    return null;
+  }, [paragraphsRead]);
+
   // Reading view
   if (viewMode === 'reading' && selectedSection && selectedPart) {
     const [start, end] = selectedSection.paragraphs;
