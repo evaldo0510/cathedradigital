@@ -375,6 +375,7 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.TRILHAS} element={<PageTransition><AuthGuard><TrilhasPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.ABOUT} element={<PageTransition><AboutPage /></PageTransition>} />
                   <Route path={AppRoute.DOGMAS} element={<PageTransition><AuthGuard><DogmasPage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.PARTNERS} element={<PageTransition><PartnersPage /></PageTransition>} />
                   <Route path={AppRoute.LECTIO_DIVINA} element={<PageTransition><AuthGuard><LectioDivina /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.BREVIARY} element={<PageTransition><AuthGuard><BreviaryPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.LITANIES} element={<PageTransition><AuthGuard><LitaniesPage /></AuthGuard></PageTransition>} />
