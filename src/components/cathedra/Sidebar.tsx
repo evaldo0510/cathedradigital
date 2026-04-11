@@ -18,7 +18,7 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
-  const [modal, setModal] = useState<'bible' | 'catechism' | 'docs' | null>(null);
+  
 
   const sections = [
     ...(user?.role === 'admin' ? [{
@@ -133,10 +133,6 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
         </div>
       </aside>
 
-      {/* Quick modals */}
-      <BibleModal isOpen={modal === 'bible'} onClose={() => setModal(null)} />
-      <CatechismModal isOpen={modal === 'catechism'} onClose={() => setModal(null)} />
-      <DocumentsModal isOpen={modal === 'docs'} onClose={() => setModal(null)} />
     </>
   );
 });
