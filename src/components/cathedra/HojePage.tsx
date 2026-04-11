@@ -38,11 +38,34 @@ const HojePage: React.FC = () => {
   const [logosRecommendation, setLogosRecommendation] = useState<any>(null);
   const [recommendedLogosJourney, setRecommendedLogosJourney] = useState<any>(null);
   const [recommendedLogosStep, setRecommendedLogosStep] = useState<any>(null);
-  const saintsToday = useMemo(() => {
+  const allSaintsToday = useMemo(() => {
     const day = new Date().getDate();
     const month = new Date().getMonth() + 1;
     return SAINTS_DATA.filter(s => s.feastMonth === month && s.feastDayNum === day);
   }, []);
+
+  const featuredSaint = useMemo(() => {
+    if (allSaintsToday.length === 0) return null;
+    if (allSaintsToday.length === 1) return allSaintsToday[0];
+    
+    // Priority based on active journey category
+    if (activeJourney) {
+      const categoryMap: Record<string, string[]> = {
+        'fundamentos': ['apostle', 'martyr'],
+        'formacao': ['doctor'],
+        'mistico': ['mystic', 'virgin'],
+        'rotina': ['confessor', 'founder']
+      };
+      
+      const preferredCategories = categoryMap[activeJourney.category] || [];
+      const match = allSaintsToday.find(s => preferredCategories.includes(s.category));
+      if (match) return match;
+    }
+    
+    return allSaintsToday[0];
+  }, [allSaintsToday, activeJourney]);
+
+  const [logosSaint, setLogosSaint] = useState<any>(null);
 
   useEffect(() => {
     if (!user) return;
