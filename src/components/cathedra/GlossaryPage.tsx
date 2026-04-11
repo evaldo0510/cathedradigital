@@ -10,6 +10,7 @@ interface GlossaryTerm {
   term: string;
   definition: string;
   category: string;
+  journey_id?: string;
 }
 
 /* ── PCH enrichment for featured terms ── */
