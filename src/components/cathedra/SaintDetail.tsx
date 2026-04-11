@@ -24,6 +24,24 @@ const CATEGORY_LABELS: Record<string, string> = {
   mystic: 'Místico(a)',
 };
 
+const VIRTUE_TO_JOURNEY: Record<string, { id: string, name: string }> = {
+  'paciência': { id: '0b8ddab7-b106-4873-bc4d-3987421d265d', name: 'Rotina de Transformação' },
+  'fé': { id: 'b25b02f4-0533-483f-9a7b-c2e866e6f25d', name: 'Mística' },
+  'identidade': { id: '150f78d3-019b-40c0-962e-a83576309ea5', name: 'Coração' },
+  'dor': { id: 'f0f35259-85b3-44fa-99c1-4f9ec87c9f4d', name: 'Cura' },
+  'perseverança': { id: '0b8ddab7-b106-4873-bc4d-3987421d265d', name: 'Rotina de Transformação' },
+  'humildade': { id: '0b8ddab7-b106-4873-bc4d-3987421d265d', name: 'Rotina de Transformação' },
+  'contemplação': { id: 'b25b02f4-0533-483f-9a7b-c2e866e6f25d', name: 'Mística' },
+  'oração': { id: 'b25b02f4-0533-483f-9a7b-c2e866e6f25d', name: 'Mística' },
+  'silêncio': { id: 'b25b02f4-0533-483f-9a7b-c2e866e6f25d', name: 'Mística' },
+  'penitência': { id: 'f0f35259-85b3-44fa-99c1-4f9ec87c9f4d', name: 'Cura' },
+  'cura': { id: 'f0f35259-85b3-44fa-99c1-4f9ec87c9f4d', name: 'Cura' },
+  'esperança': { id: '150f78d3-019b-40c0-962e-a83576309ea5', name: 'Coração' },
+  'caridade': { id: '150f78d3-019b-40c0-962e-a83576309ea5', name: 'Coração' },
+  'sabedoria': { id: 'b25b02f4-0533-483f-9a7b-c2e866e6f25d', name: 'Mística' },
+  'fidelidade': { id: '0b8ddab7-b106-4873-bc4d-3987421d265d', name: 'Rotina de Transformação' },
+};
+
 const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: boolean }> = ({ saint, onClose, autoReflect = false }) => {
   const { isPremium } = useAuth();
   const navigate = useNavigate();
@@ -31,6 +49,22 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
   const [logosReflection, setLogosReflection] = useState<string>('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [showLogos, setShowLogos] = useState(autoReflect);
+
+  const suggestedJourney = React.useMemo(() => {
+    const mainVirtue = saint.virtues?.[0]?.toLowerCase() || 'santidade';
+    
+    // Direct match
+    if (VIRTUE_TO_JOURNEY[mainVirtue]) return VIRTUE_TO_JOURNEY[mainVirtue];
+    
+    // Keyword match
+    for (const v of (saint.virtues || [])) {
+      const lv = v.toLowerCase();
+      const foundKey = Object.keys(VIRTUE_TO_JOURNEY).find(key => lv.includes(key));
+      if (foundKey) return VIRTUE_TO_JOURNEY[foundKey];
+    }
+    
+    return VIRTUE_TO_JOURNEY['paciência']; // Default
+  }, [saint.virtues]);
 
   React.useEffect(() => {
     if (autoReflect) {
@@ -231,6 +265,36 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
             </div>
           </div>
         </div>
+
+        {/* Suggested Journey */}
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="bg-primary/5 rounded-[2rem] p-6 md:p-8 border border-primary/10 flex flex-col md:flex-row items-center justify-between gap-6 group hover:bg-primary/10 transition-all shadow-sm"
+        >
+          <div className="flex items-center gap-5">
+            <div className="w-14 h-14 rounded-2xl bg-primary/20 flex items-center justify-center text-primary group-hover:scale-110 transition-transform shadow-inner">
+              <Icons.Route className="w-7 h-7" />
+            </div>
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-widest text-primary/60 mb-1">Transformar Inspiração em Prática</p>
+              <h4 className="text-lg font-bold text-foreground font-serif leading-tight">Jornada {suggestedJourney.name}</h4>
+              <p className="text-xs text-muted-foreground font-serif italic max-w-sm">
+                O Logos recomenda que você cultive a virtude de <span className="text-primary font-bold not-italic">{saint.virtues?.[0] || 'Santidade'}</span> através desta trilha guiada.
+              </p>
+            </div>
+          </div>
+          <Button 
+            onClick={() => {
+              onClose();
+              navigate(`/jornadas/${suggestedJourney.id}`);
+            }}
+            className="w-full md:w-auto bg-primary text-primary-foreground font-black text-[10px] uppercase tracking-widest px-8 h-14 rounded-2xl shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all group-hover:bg-primary/90"
+          >
+            Viver isso na jornada <Icons.ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+          </Button>
+        </motion.div>
 
         <section className="space-y-4 pt-4">
           <div className="flex items-center justify-between">
