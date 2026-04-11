@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpen, Heart, Users, Zap, ChevronRight, ChevronLeft, Compass, Sun, Hand, Sparkles, Church } from 'lucide-react';
 import { AppRoute } from '@/types';
-import { Logo } from '@/constants';
+// Logo import removed
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import onboardingBible from '@/assets/onboarding-bible.jpg';

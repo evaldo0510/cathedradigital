@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Icons, Logo } from '../../constants';
+import { Icons } from '../../constants';
 import { AppRoute } from '../../types';
 
 const DIOCESES_BR = [

@@ -1,5 +1,5 @@
 import { motion, MotionValue } from "framer-motion";
-import { Icons, Logo } from "@/constants";
+import { Icons } from "@/constants";
 import { Button } from "@/components/ui/button";
 import { buttonHover } from "../animations";
 

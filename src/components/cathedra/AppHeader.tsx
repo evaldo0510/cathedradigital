@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
-import { Icons, Logo } from '@/constants';
+import { Icons } from '@/constants';
 import { useNotifications } from '@/hooks/useNotifications';
 
 

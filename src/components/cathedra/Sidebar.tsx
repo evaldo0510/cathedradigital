@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { prefetchRoute } from '@/lib/prefetch';
-import { Logo, Icons } from '../../constants';
+import { Icons } from '../../constants';
 import { AppRoute, User } from '../../types';
 import { BibleModal, CatechismModal, DocumentsModal } from './QuickModals';
 
