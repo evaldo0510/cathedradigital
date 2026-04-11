@@ -83,22 +83,23 @@ const AdminDashboard: React.FC = () => {
       try {
         setLoading(true);
 
-        const [profilesRes, sensitiveRes, metricsRes, transactionsRes, journalRes, journeysRes] = await Promise.all([
+        const [statsRes, metricsRes, transactionsRes, journalRes, journeysRes, crmRes] = await Promise.all([
           supabase.from('profiles').select('*'),
-          (supabase as any).from('user_sensitive_data').select('user_id, email, diagnosis_result'),
           supabase.from('app_metrics').select('*'),
           supabase.from('transactions').select('*').order('created_at', { ascending: false }),
           supabase.from('spiritual_journal').select('user_id'),
-          supabase.from('journey_progress').select('user_id, journey_id, journeys(title)').order('completed_at', { ascending: false })
+          supabase.from('journey_progress').select('user_id, journey_id, journeys(title)').order('completed_at', { ascending: false }),
+          supabase.from('user_management_stats').select('*')
         ]);
 
-        if (profilesRes.error) throw profilesRes.error;
+        if (statsRes.error) throw statsRes.error;
         if (metricsRes.error) throw metricsRes.error;
         if (transactionsRes.error) throw transactionsRes.error;
 
-        const allProfiles = profilesRes.data || [];
+        const allProfiles = statsRes.data || [];
         const metrics = metricsRes.data || [];
         const transactions = transactionsRes.data || [];
+        const crmUsers = crmRes.data || [];
 
         const premiumCount = allProfiles.filter(p => p.is_premium).length;
         const visitsCount = metrics.filter(m => m.metric_type === 'visit').length;
