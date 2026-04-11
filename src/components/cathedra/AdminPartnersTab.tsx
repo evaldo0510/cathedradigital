@@ -172,7 +172,7 @@ const AdminPartnersTab: React.FC = () => {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => handleUpdateStatus(partner.id, 'approved')} className="text-green-500">
+                    <DropdownMenuItem onClick={() => handleUpdateStatus(partner.id, 'approved')} className="text-success">
                       <CheckCircle2 className="w-4 h-4 mr-2" /> Aprovar
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => handleUpdateStatus(partner.id, 'rejected')} className="text-destructive">
