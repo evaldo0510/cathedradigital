@@ -319,6 +319,7 @@ const Saints: React.FC = () => {
             <SaintDetail 
               saint={selectedSaint} 
               onClose={() => setSelectedSaint(null)} 
+              autoReflect={autoReflect}
             />
           )}
         </AnimatePresence>
