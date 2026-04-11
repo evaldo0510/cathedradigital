@@ -24,6 +24,9 @@ export interface Saint extends Partial<DeepContent> {
   image?: string;
   prayer?: string;
   virtues?: string[];
+  bibleRefs?: { ref: string; label: string }[];
+  catechismRefs?: number[];
+  churchDocRefs?: { title: string; url: string }[];
 }
 
 export const SAINTS_DATA: Saint[] = [
