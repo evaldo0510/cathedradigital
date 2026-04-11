@@ -104,25 +104,27 @@ const JornadaStepPage: React.FC = () => {
     if (!user || !journeyId || !stepId) return;
     setSaving(true);
     try {
-      await supabase.from('journey_progress').upsert({
+      // 1. Core progress update - must be awaited to show completion
+      const { error } = await supabase.from('journey_progress').upsert({
         user_id: user.id,
         journey_id: journeyId,
         step_id: stepId,
         reflection: reflection.trim() || null,
       }, { onConflict: 'user_id,step_id' });
 
-      // Also save to spiritual journal if there's a journal prompt response
+      if (error) throw error;
+
+      // 2. Secondary saves are backgrounded to improve perceived speed
       if (reflection.trim()) {
-        await Promise.all([
-          supabase.from('spiritual_journal').insert([{
-            user_id: user.id,
-            content: reflection.trim(),
-            journey_id: journeyId,
-            step_id: stepId,
-            entry_date: new Date().toISOString().split('T')[0],
-          }]),
-          saveUserPsychology(user.id, reflection.trim(), `journey_${journeyId}`)
-        ]);
+        supabase.from('spiritual_journal').insert([{
+          user_id: user.id,
+          content: reflection.trim(),
+          journey_id: journeyId,
+          step_id: stepId,
+          entry_date: new Date().toISOString().split('T')[0],
+        }]).then(({ error }) => { if (error) console.error('BG Journal save failed:', error); });
+        
+        saveUserPsychology(user.id, reflection.trim(), `journey_${journeyId}`);
       }
 
       setCompleted(true);
@@ -133,7 +135,7 @@ const JornadaStepPage: React.FC = () => {
         colors: ['#d4af37', '#e8c547', '#b8860b', '#8B5CF6', '#4ECDC4'],
       });
     } catch (err) {
-      console.error(err);
+      console.error('Failed to complete step:', err);
     } finally {
       setSaving(false);
     }
