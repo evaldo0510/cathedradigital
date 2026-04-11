@@ -1,5 +1,81 @@
 import React, { useState } from 'react';
 import { Icons } from '../../constants';
+import { useNavigate } from 'react-router-dom';
+import { AppRoute } from '@/types';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const AQUINO_CONCEPTS = [
+  {
+    id: 1,
+    title: "Existência de Deus",
+    aquino: "Deus pode ser conhecido pela razão",
+    pch: "“Nem tudo que é invisível… é inexistente.”",
+    pergunta: "O que você exige ver antes de confiar?"
+  },
+  {
+    id: 2,
+    title: "Fé e Razão",
+    aquino: "Não se contradizem",
+    pch: "“A fé não anula a lógica… ela a completa.”",
+    pergunta: "Onde você separou pensar de acreditar?"
+  },
+  {
+    id: 3,
+    title: "Lei Natural",
+    aquino: "O bem está inscrito no ser humano",
+    pch: "“Você já sabia… antes de justificar.”",
+    pergunta: "Onde você ignorou o que já sentia ser certo?"
+  },
+  {
+    id: 4,
+    title: "Virtude",
+    aquino: "Hábitos que constroem o bem",
+    pch: "“Você não se torna… você repete.”",
+    pergunta: "O que você tem repetido sem perceber?"
+  },
+  {
+    id: 5,
+    title: "Livre-Arbítrio",
+    aquino: "O homem escolhe",
+    pch: "“Você não está preso… está condicionado.”",
+    pergunta: "O que você ainda pode decidir hoje?"
+  },
+  {
+    id: 6,
+    title: "Felicidade",
+    aquino: "O fim último é Deus",
+    pch: "“Nada finito preenche um vazio infinito.”",
+    pergunta: "O que você espera que te complete… mas nunca completa?"
+  },
+  {
+    id: 7,
+    title: "Mal",
+    aquino: "É ausência do bem",
+    pch: "“Nem tudo que dói… é presença do mal. Às vezes é falta de luz.”",
+    pergunta: "Onde falta clareza na sua vida?"
+  },
+  {
+    id: 8,
+    title: "Ordem",
+    aquino: "Tudo tem propósito",
+    pch: "“O caos, muitas vezes… é ordem que você ainda não entendeu.”",
+    pergunta: "O que parece confuso… mas pode ter sentido?"
+  },
+  {
+    id: 9,
+    title: "Consciência",
+    aquino: "Julga o certo e o errado",
+    pch: "“Você sempre soube… só tentou não ouvir.”",
+    pergunta: "O que você está evitando reconhecer?"
+  },
+  {
+    id: 10,
+    title: "Verdade",
+    aquino: "Adequação entre mente e realidade",
+    pch: "“A verdade não muda… só a nossa coragem de aceitá-la.”",
+    pergunta: "O que você já sabe… mas não assume?"
+  }
+];
 
 interface Question {
   id: number;
@@ -105,22 +181,170 @@ const SUMA_DATA: SumaSection[] = [
 ];
 
 const AquinasOpera: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<'concepts' | 'suma'>('concepts');
   const [expandedPart, setExpandedPart] = useState<string | null>('Ia');
   const [expandedQuestion, setExpandedQuestion] = useState<number | null>(null);
   const [expandedArticle, setExpandedArticle] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  const handleStartAquinasChat = () => {
+    navigate(AppRoute.STUDY_MODE, { state: { mode: 'aquinas' } });
+  };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
-      <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
-          <Icons.Book className="w-4 h-4 text-primary" />
-          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Summa Theologiæ</span>
+    <div className="max-w-4xl mx-auto space-y-10 pb-20">
+      <div className="text-center space-y-6">
+        <div className="space-y-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
+            <Icons.Brain className="w-4 h-4 text-primary" />
+            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Motor de Autoridade</span>
+          </div>
+          <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground">S. Tomás de Aquino</h1>
+          <p className="text-muted-foreground font-serif italic max-w-lg mx-auto">
+            Não apenas conteúdo… domínio intelectual aplicado à alma.
+          </p>
         </div>
-        <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Suma Teológica</h1>
-        <p className="text-muted-foreground font-serif italic max-w-lg mx-auto">A obra-prima de São Tomás de Aquino — a síntese mais completa da teologia católica.</p>
+
+        <div className="flex items-center justify-center gap-2 p-1 bg-muted rounded-2xl w-fit mx-auto">
+          <button
+            onClick={() => setActiveTab('concepts')}
+            className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'concepts' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+          >
+            10 Conceitos
+          </button>
+          <button
+            onClick={() => setActiveTab('suma')}
+            className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'suma' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+          >
+            Suma Teológica
+          </button>
+        </div>
       </div>
 
-      <div className="space-y-4">
+      <AnimatePresence mode="wait">
+        {activeTab === 'concepts' ? (
+          <motion.div
+            key="concepts"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="space-y-8"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {AQUINO_CONCEPTS.map((concept, idx) => (
+                <div key={concept.id} className="group bg-card border border-border rounded-3xl p-6 hover:border-primary/50 transition-all hover:shadow-xl hover:shadow-primary/5">
+                  <div className="flex items-start justify-between mb-4">
+                    <span className="text-4xl font-serif text-primary/10 group-hover:text-primary/20 transition-colors">0{idx + 1}</span>
+                    <div className="p-2 bg-primary/5 rounded-xl text-primary">
+                      <Icons.Scroll className="w-4 h-4" />
+                    </div>
+                  </div>
+                  <h3 className="text-xl font-serif font-bold text-foreground mb-4">{concept.title}</h3>
+                  <div className="space-y-4">
+                    <div className="p-4 bg-muted/50 rounded-2xl">
+                      <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-1">Aquino ensina:</p>
+                      <p className="text-sm font-serif italic text-foreground/80">{concept.aquino}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Reflexão PCH:</p>
+                      <p className="text-lg font-serif font-medium text-foreground">{concept.pch}</p>
+                    </div>
+                    <div className="pt-4 border-t border-border">
+                      <p className="text-sm font-serif font-bold text-primary">👉 {concept.pergunta}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Premium CTA */}
+            <div className="relative overflow-hidden bg-foreground text-background rounded-[2.5rem] p-8 md:p-12">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl -mr-32 -mt-32" />
+              <div className="relative z-10 space-y-6">
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-background/10 rounded-full border border-background/20">
+                  <Icons.Star className="w-4 h-4 text-primary" />
+                  <span className="text-[9px] font-black uppercase tracking-[0.2em]">Conteúdo Premium</span>
+                </div>
+                <div className="space-y-2">
+                  <h2 className="text-3xl md:text-5xl font-serif font-bold leading-tight">Clareza Interior com Aquino</h2>
+                  <p className="text-lg text-background/70 font-serif italic">A trilha completa para quem busca clareza mental e direção de vida.</p>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm font-serif">
+                  <div className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                    <span>Trilha completa guiada</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                    <span>Reflexões profundas personalizadas</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                    <span>IA IARA explicando decisões</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                    <span>Aplicação prática no cotidiano</span>
+                  </div>
+                </div>
+                <button 
+                  onClick={() => navigate(AppRoute.CHECKOUT)}
+                  className="w-full md:w-auto px-10 py-4 bg-primary text-primary-foreground rounded-2xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all"
+                >
+                  Garantir acesso ao PRO
+                </button>
+              </div>
+            </div>
+
+            {/* Viral Content Section */}
+            <div className="bg-card border border-border rounded-3xl p-8 space-y-6">
+              <div className="flex items-center gap-2">
+                <Icons.Sparkles className="w-5 h-5 text-secondary" />
+                <h3 className="text-xl font-serif font-bold text-foreground">Pílulas de Sabedoria (Viral)</h3>
+              </div>
+              <p className="text-sm text-muted-foreground font-serif italic">Use estes ganchos para impactar sua audiência e posicionar sua autoridade.</p>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="p-5 bg-muted/50 rounded-2xl border border-border hover:border-primary/30 transition-all">
+                  <p className="text-xs font-black uppercase tracking-widest text-primary mb-2">Exemplo 1</p>
+                  <p className="text-sm font-serif">“Você acha que precisa ver para acreditar… Mas Aquino diria: você já acredita em coisas que nunca viu.”</p>
+                </div>
+                <div className="p-5 bg-muted/50 rounded-2xl border border-border hover:border-primary/30 transition-all">
+                  <p className="text-xs font-black uppercase tracking-widest text-primary mb-2">Exemplo 2</p>
+                  <p className="text-sm font-serif">“Você não está perdido… Só está tentando preencher o infinito com coisas finitas.”</p>
+                </div>
+                <div className="p-5 bg-muted/50 rounded-2xl border border-border hover:border-primary/30 transition-all">
+                  <p className="text-xs font-black uppercase tracking-widest text-primary mb-2">Exemplo 3</p>
+                  <p className="text-sm font-serif">“O problema não é falta de resposta… é ignorar o que você já sabe.”</p>
+                </div>
+                <div className="p-5 bg-primary/5 rounded-2xl border border-primary/20 flex flex-col justify-center items-center text-center">
+                  <Icons.Video className="w-6 h-6 text-primary mb-2" />
+                  <p className="text-[10px] font-black uppercase tracking-widest text-primary">30 Dias de Trilha</p>
+                  <p className="text-[10px] text-muted-foreground mt-1">Gere 2 vídeos/dia</p>
+                </div>
+              </div>
+            </div>
+
+            {/* AI Interaction Button */}
+            <div className="text-center space-y-4">
+              <p className="text-muted-foreground font-serif italic">Dúvidas sobre o domínio intelectual?</p>
+              <button
+                onClick={handleStartAquinasChat}
+                className="inline-flex items-center gap-3 px-8 py-4 bg-primary text-primary-foreground rounded-2xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all group shadow-lg shadow-primary/20"
+              >
+                <Icons.Brain className="w-5 h-5" />
+                Interagir com IARA (Modo Aquino)
+              </button>
+            </div>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="suma"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="space-y-4"
+          >
         {SUMA_DATA.map(section => (
           <div key={section.part} className="bg-card border border-border rounded-2xl overflow-hidden">
             <button
@@ -174,10 +398,13 @@ const AquinasOpera: React.FC = () => {
             )}
           </div>
         ))}
-      </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      <div className="bg-muted rounded-2xl p-6 text-center space-y-2">
-        <p className="text-sm text-muted-foreground font-serif italic">A Suma Teológica contém 512 questões e 2.669 artigos. O conteúdo completo está sendo adicionado progressivamente.</p>
+      <div className="bg-muted rounded-2xl p-8 text-center space-y-4">
+        <Icons.History className="w-8 h-8 text-primary/30 mx-auto" />
+        <p className="text-sm text-muted-foreground font-serif italic max-w-sm mx-auto">A Suma Teológica contém 512 questões e 2.669 artigos. O conteúdo completo está sendo adicionado progressivamente.</p>
       </div>
     </div>
   );

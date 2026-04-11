@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
 import { Icons } from '../../constants';
 import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
-import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -85,7 +85,11 @@ const StudyMode: React.FC = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuth();
+  
+  const initialMode = (location.state as any)?.mode || null;
+  const [currentMode, setCurrentMode] = useState<string | null>(initialMode);
 
   // Scroll to bottom on new messages
   useEffect(() => {
@@ -214,7 +218,7 @@ const StudyMode: React.FC = () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
-        body: JSON.stringify({ messages: allMessages }),
+        body: JSON.stringify({ messages: allMessages, mode: currentMode }),
       });
 
       if (!resp.ok) {
@@ -329,10 +333,18 @@ const StudyMode: React.FC = () => {
           )}
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
             <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Colloquium IA</span>
+            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">
+              {currentMode === 'aquinas' ? 'IARA — Modo Aquino' : 'Colloquium IA'}
+            </span>
           </div>
-          <h1 className="text-3xl md:text-4xl font-serif font-bold text-foreground">Inteligência Exegética</h1>
-          <p className="text-muted-foreground font-serif italic">Conecte séculos de sabedoria católica em segundos.</p>
+          <h1 className="text-3xl md:text-4xl font-serif font-bold text-foreground">
+            {currentMode === 'aquinas' ? 'Domínio Intelectual' : 'Inteligência Exegética'}
+          </h1>
+          <p className="text-muted-foreground font-serif italic">
+            {currentMode === 'aquinas' 
+              ? 'Razão, lógica e fé aplicadas à sua alma.' 
+              : 'Conecte séculos de sabedoria católica em segundos.'}
+          </p>
         </div>
 
         {/* Messages */}
