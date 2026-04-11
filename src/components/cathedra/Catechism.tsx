@@ -304,10 +304,13 @@ const Catechism: React.FC = () => {
         <div className="flex flex-wrap gap-1 justify-center">
           {Array.from({ length: Math.min(20, end - start + 1) }, (_, i) => start + i).map(p => (
             <button key={p} onClick={() => setCurrentParagraph(p)}
-              className={`w-10 h-10 rounded-lg text-xs font-bold transition-all ${
-                currentParagraph === p ? 'bg-primary text-primary-foreground' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
+              className={`w-10 h-10 rounded-lg text-xs font-bold transition-all relative ${
+                currentParagraph === p ? 'bg-primary text-primary-foreground' : 
+                paragraphsRead.has(p) ? 'bg-primary/10 border-primary/30 text-primary' :
+                'bg-card border border-border text-muted-foreground hover:text-foreground'
               }`}>
               {p}
+              {paragraphsRead.has(p) && <Icons.Check className="w-2 h-2 absolute top-1 right-1" />}
             </button>
           ))}
           {end - start + 1 > 20 && <span className="self-center text-muted-foreground text-sm">...</span>}
@@ -366,6 +369,19 @@ const Catechism: React.FC = () => {
         </div>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Catecismo da Igreja Católica</h1>
         <p className="text-muted-foreground font-serif italic">2.865 parágrafos organizados em 4 partes fundamentais.</p>
+        <div className="max-w-xs mx-auto pt-4">
+          <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-primary/60 mb-2">
+            <span>Seu Progresso</span>
+            <span>{Math.round((paragraphsRead.size / 2865) * 100)}%</span>
+          </div>
+          <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+            <motion.div 
+              initial={{ width: 0 }}
+              animate={{ width: `${(paragraphsRead.size / 2865) * 100}%` }}
+              className="h-full bg-primary"
+            />
+          </div>
+        </div>
       </motion.div>
 
       {/* Search by paragraph */}
