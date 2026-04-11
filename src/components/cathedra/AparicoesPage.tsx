@@ -64,10 +64,11 @@ const AparicoesPage: React.FC = () => {
             { id: 'historia' as const, label: 'A Aparição', icon: <Icons.Book className="w-3.5 h-3.5" /> },
             { id: 'vidente' as const, label: 'O Vidente', icon: <Icons.Users className="w-3.5 h-3.5" /> },
             { id: 'mensagem' as const, label: 'A Mensagem', icon: <Icons.Heart className="w-3.5 h-3.5" /> },
+            { id: 'profundidade' as const, label: 'Profundidade', icon: <Icons.Star className="w-3.5 h-3.5" /> },
           ].map(tab => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => setActiveTab(tab.id as any)}
               className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-xs font-bold transition-all ${
                 activeTab === tab.id ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
               }`}
