@@ -7,6 +7,8 @@ import { Icons } from '@/constants';
 import { Sun, Cloud, RotateCcw, ChevronLeft, ChevronRight, CalendarDays, ChevronDown, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import AudioButton from './AudioButton';
+
 
 interface Celebration {
   title: string;
@@ -259,7 +261,11 @@ const DailyLiturgy: React.FC = () => {
         ) : (
           <div className="space-y-10">
             <div className="text-center space-y-4 pb-10 border-b border-border">
-              <h2 className="text-3xl md:text-5xl font-display font-black text-primary tracking-tight leading-tight">{readings?.liturgia || 'Liturgia do Dia'}</h2>
+              <div className="flex flex-col items-center gap-4">
+                <AudioButton variant="solid" className="px-8" />
+                <h2 className="text-3xl md:text-5xl font-display font-black text-primary tracking-tight leading-tight">{readings?.liturgia || 'Liturgia do Dia'}</h2>
+              </div>
+
               <div className="flex flex-col items-center gap-3">
                 <p className="text-sm text-muted-foreground font-serif italic">{readings?.data || liturgy?.date}</p>
                 {readings?.cor && <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-muted border border-border"><div className={`w-3 h-3 rounded-full ${COLOUR_MAP[readings.cor.toLowerCase()] || 'bg-muted'}`} /><span className="text-[10px] font-black uppercase tracking-widest text-primary">{readings.cor}</span></div>}
