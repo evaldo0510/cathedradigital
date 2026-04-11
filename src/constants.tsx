@@ -125,19 +125,24 @@ export const COLORS = {
 
 import cathedraLogo from './assets/cathedra-logo.png';
 
-export const Logo = forwardRef<HTMLDivElement, { className?: string, variant?: 'gold' | 'light' | 'dark' }>(({ 
+export const Logo = forwardRef<HTMLDivElement, { className?: string, variant?: 'gold' | 'light' | 'dark' | 'blue' }>(({ 
   className = "w-12 h-12", 
   variant = 'gold' 
 }, ref) => {
   return (
-    <div ref={ref} className={cn("relative flex items-center justify-center group", className)}>
+    <div ref={ref} className={cn(
+      "relative flex items-center justify-center group overflow-hidden", 
+      variant === 'blue' && "bg-primary rounded-xl p-2 shadow-lg border border-primary/20",
+      className
+    )}>
       <img 
         src={cathedraLogo} 
         alt="Cathedra" 
         className={cn(
           "w-full h-full object-contain transition-all duration-700 group-hover:scale-105",
           variant === 'light' && "brightness-0 invert",
-          variant === 'dark' && "brightness-0"
+          variant === 'dark' && "brightness-0",
+          variant === 'blue' && "brightness-0 invert"
         )}
       />
       {variant === 'gold' && (
