@@ -53,17 +53,41 @@ const HeroContent = ({ heroOpacity, heroScale, heroY, onStart, onAbout }: HeroCo
       className="flex justify-center"
     >
       <div className="relative group">
-        <div className="absolute inset-0 bg-secondary/20 blur-3xl rounded-full group-hover:bg-secondary/30 transition-colors duration-700 animate-pulse-slow" />
+        {/* Breathing halo glow */}
         <motion.div
-          animate={{ y: [0, -6, 0] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          animate={{ opacity: [0.15, 0.3, 0.15], scale: [1, 1.15, 1] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute inset-0 bg-secondary/20 blur-3xl rounded-full"
+        />
+        {/* Gentle floating */}
+        <motion.div
+          animate={{ y: [0, -8, 0] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
           className="relative"
         >
+          {/* Avatar container */}
           <div className="relative w-28 h-28 sm:w-36 sm:h-36 rounded-full overflow-hidden border-[3px] border-secondary/40 shadow-2xl group-hover:border-secondary/60 transition-all duration-500 bg-card/60 backdrop-blur-xl">
             <img src={logosAvatar} alt="Logos — Mestre Contemplativo" className="w-full h-full object-cover" />
+            {/* Soft breathing overlay — simulates liveliness */}
+            <motion.div
+              animate={{ opacity: [0, 0.06, 0] }}
+              transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute inset-0 bg-secondary/30 rounded-full"
+            />
           </div>
-          {/* Subtle halo glow */}
-          <div className="absolute -inset-3 rounded-full bg-gradient-to-b from-secondary/15 via-transparent to-transparent -z-10 blur-md" />
+          {/* Rotating subtle halo ring */}
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            className="absolute -inset-4 rounded-full border border-secondary/10 -z-10"
+            style={{ borderStyle: 'dashed' }}
+          />
+          {/* Pulsing inner halo */}
+          <motion.div
+            animate={{ opacity: [0.1, 0.25, 0.1], scale: [0.95, 1.05, 0.95] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute -inset-3 rounded-full bg-gradient-to-b from-secondary/20 via-transparent to-transparent -z-10 blur-md"
+          />
         </motion.div>
         <motion.div 
           initial={{ opacity: 0, y: 10 }}
