@@ -67,6 +67,7 @@ const Index = () => {
           <AcolhimentoSection />
           <BenefitsSection onLogin={() => navigate(AppRoute.LOGIN)} />
           <TestimonialsSection />
+          <AboutCreatorSection />
           <FaqSection />
           <CtaBannerSection onStart={handleStart} />
           <FeedbackWidget />
