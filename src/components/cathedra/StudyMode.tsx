@@ -270,10 +270,10 @@ const StudyMode: React.FC = () => {
         }
       }
 
-      // Save to DB
+      // Background save to DB to keep UI responsive
       if (convId && user) {
         const finalMessages = [...allMessages, { role: 'assistant' as const, content: assistantContent }];
-        await saveMessages(convId, finalMessages);
+        saveMessages(convId, finalMessages).catch(e => console.error('BG Save failed:', e));
       }
     } catch (e: any) {
       setMessages(prev => [...prev, { role: 'assistant', content: `⚠️ ${e.message || 'Erro ao consultar a IA. Tente novamente.'}` }]);
