@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../constants';
 import { AppRoute } from '../../types';
+import cathedraLogo from '@/assets/cathedra-logo.png';
 
 const DIOCESES_BR = [
   // Arquidioceses de SP
@@ -170,11 +171,12 @@ const Footer: React.FC = React.memo(() => {
           
           {/* Brand Column */}
           <div className="flex flex-col gap-6">
-            <div className="flex items-center gap-4">
-              <div>
-                <h3 className="text-xl font-serif font-bold text-foreground tracking-tight">CATHEDRA</h3>
-                <p className="text-[9px] font-black uppercase text-primary tracking-[0.3em]">Digital Sanctuarium</p>
-              </div>
+             <div className="flex items-center gap-4">
+               <img src={cathedraLogo} alt="Cathedra" className="w-10 h-10 object-contain" />
+               <div>
+                 <h3 className="text-xl font-serif font-bold text-foreground tracking-tight">CATHEDRA</h3>
+                 <p className="text-[9px] font-black uppercase text-primary tracking-[0.3em]">Digital Sanctuarium</p>
+               </div>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
               Uma plataforma dedicada ao estudo, oração e vivência da fé católica, 
