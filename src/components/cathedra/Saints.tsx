@@ -278,7 +278,7 @@ const Saints: React.FC = () => {
                     {filteredSaints.map(saint => (
                       <button
                         key={saint.id}
-                        onClick={() => setSelectedSaint(saint)}
+                        onClick={() => handleOpenSaint(saint, false)}
                         className="group p-8 bg-card border border-border rounded-[2rem] hover:border-primary/50 hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 text-left flex flex-col h-full"
                       >
                         <div className="flex-1">
