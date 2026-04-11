@@ -104,7 +104,7 @@ export const SAINTS_DATA: Saint[] = [
     ],
     category: 'doctor',
     image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Saint_Augustine_by_Philippe_de_Champaigne.jpg/440px-Saint_Augustine_by_Philippe_de_Champaigne.jpg',
-    virtues: ['Contrição', 'Busca pela Verdade', 'Caridade', 'Perseverança'],
+    virtues: ['Contrição', 'Busca pela Verdade', 'Caridade', 'Perseverança', 'Identidade'],
     prayer: 'Tarde te amei, ó Beleza tão antiga e tão nova! Estavas dentro de mim e eu procurava-Te fora. Chamaste, gritaste, e rompeste a minha surdez.',
     textoBase: 'Fizeste-nos para Ti, Senhor, e o nosso coração está inquieto enquanto não descansar em Ti.',
     explicacao: 'O desejo de Deus está inscrito no coração humano. Nascemos com um vazio que só o Infinito pode preencher.',
