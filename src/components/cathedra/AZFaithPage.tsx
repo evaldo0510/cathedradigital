@@ -332,32 +332,33 @@ const AZFaithPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-wrap justify-center gap-1.5 max-w-4xl mx-auto px-2">
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-wrap justify-center gap-2 max-w-4xl mx-auto px-4 overflow-x-auto no-scrollbar pb-2">
               <Button
-                variant="ghost"
+                variant={!selectedCategory && !selectedLetter && !searchQuery ? 'default' : 'ghost'}
                 size="sm"
                 onClick={() => handleCategoryClick(null)}
-                className={`rounded-full px-4 h-9 text-[10px] font-black uppercase tracking-widest ${!selectedCategory && !selectedLetter && !searchQuery ? 'bg-primary text-primary-foreground' : ''}`}
+                className="rounded-full px-6 h-10 text-[10px] font-black uppercase tracking-widest shadow-sm transition-all whitespace-nowrap"
               >
                 Tudo
               </Button>
-              {categories.slice(0, 10).map(cat => (
+              {categories.map(cat => (
                 <Button
                   key={cat}
-                  variant="ghost"
+                  variant={selectedCategory === cat ? 'default' : 'ghost'}
                   size="sm"
                   onClick={() => handleCategoryClick(cat)}
-                  className={`rounded-full px-4 h-9 text-[10px] font-black uppercase tracking-widest ${selectedCategory === cat ? 'bg-primary text-primary-foreground' : 'bg-muted/30 text-muted-foreground'}`}
+                  className={`rounded-full px-6 h-10 text-[10px] font-black uppercase tracking-widest shadow-sm transition-all whitespace-nowrap
+                    ${selectedCategory === cat ? '' : 'bg-card/40 border border-border/40 text-muted-foreground hover:text-primary hover:border-primary/20'}`}
                 >
                   {cat}
                 </Button>
               ))}
             </div>
 
-            <div className="relative group">
+            <div className="relative group px-4">
               <div className="absolute -inset-1 bg-gradient-to-r from-primary/5 to-transparent blur opacity-50 transition duration-1000" />
-              <div className="relative flex flex-wrap justify-center gap-1.5 p-2 bg-card/30 backdrop-blur-sm rounded-3xl border border-border/40 max-w-4xl mx-auto overflow-hidden">
+              <div className="relative flex flex-wrap justify-center gap-2 p-3 bg-card/30 backdrop-blur-md rounded-[2.5rem] border border-border/40 max-w-4xl mx-auto">
                 {alphabet.map(letter => {
                   const hasTerms = letterStatus[letter];
                   const isSelected = selectedLetter === letter;
