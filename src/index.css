@@ -93,8 +93,6 @@
 
   body {
     @apply bg-background text-foreground;
-    background-color: #FFFFFF !important;
-    color: #1A1A1A !important;
     width: 100% !important;
     min-height: 100vh !important;
     display: block !important;
@@ -103,6 +101,7 @@
     line-height: 1.6;
     opacity: 1 !important;
     visibility: visible !important;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   #root {
@@ -111,7 +110,6 @@
     display: block !important;
     opacity: 1 !important;
     visibility: visible !important;
-    background-color: #FFFFFF !important;
   }
 
   h1, h2, h3, h4, h5, h6 {
