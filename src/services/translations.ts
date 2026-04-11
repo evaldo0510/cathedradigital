@@ -151,7 +151,11 @@ export const UI_TRANSLATIONS: Record<Language, any> = {
     view_all: "View all",
     pax_et_bonum: "Pax et Bonum",
     salve: "Hail",
-    digital: "Digital"
+    digital: "Digital",
+    about: "About",
+    partners: "Partners",
+    privacy: "Privacy",
+    terms: "Terms"
   },
   es: {
     home: "Inicio (Nártex)",
