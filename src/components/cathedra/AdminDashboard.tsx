@@ -386,6 +386,9 @@ const AdminDashboard: React.FC = () => {
           <TabsTrigger value="segmentation" className="gap-1.5 text-xs sm:text-sm">
             <Target className="w-3.5 h-3.5 hidden sm:block" /> CRM
           </TabsTrigger>
+          <TabsTrigger value="themes" className="gap-1.5 text-xs sm:text-sm">
+            <Tag className="w-3.5 h-3.5 hidden sm:block" /> Temas
+          </TabsTrigger>
         </TabsList>
 
         {/* Overview Tab */}
