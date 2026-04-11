@@ -434,16 +434,34 @@ const AZFaithPage: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                className="h-[300px] flex flex-col items-center justify-center text-center p-12 bg-muted/20 rounded-[3rem] border border-dashed border-border/60"
+                className="min-h-[400px] flex flex-col items-center justify-center text-center p-8 bg-muted/10 rounded-[3rem] border border-dashed border-border/40 relative overflow-hidden"
               >
-                <div className="w-24 h-24 rounded-full bg-primary/5 flex items-center justify-center mb-8 border border-primary/10 shadow-inner relative">
-                  <Tag className="h-10 w-10 text-primary/30" />
-                  <div className="absolute inset-0 bg-primary/5 rounded-full animate-ping opacity-20" />
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-50" />
+                <div className="relative z-10 space-y-8">
+                  <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center mx-auto border border-primary/20 shadow-xl animate-bounce duration-3000">
+                    <Sparkles className="h-10 w-10 text-primary" />
+                  </div>
+                  <div className="space-y-4">
+                    <h3 className="text-3xl font-black text-foreground tracking-tight">Tesouros da Fé</h3>
+                    <p className="text-muted-foreground max-w-sm mx-auto text-lg">
+                      Selecione um termo para mergulhar em sua profundidade teológica.
+                    </p>
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => {
+                      const random = FAITH_TERMS[Math.floor(Math.random() * FAITH_TERMS.length)];
+                      setSelectedTerm(random);
+                      if (window.innerWidth < 768) {
+                        document.getElementById('term-content')?.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    }}
+                    className="rounded-full border-primary/20 hover:bg-primary/10 px-8 h-12 gap-3"
+                  >
+                    <Zap className="w-5 h-5 text-primary" />
+                    <span>Descobrir termo aleatório</span>
+                  </Button>
                 </div>
-                <h3 className="text-2xl font-bold mb-3 text-foreground tracking-tight">Explore os Tesouros da Fé</h3>
-                <p className="text-muted-foreground max-w-md text-lg">
-                  Selecione uma das "bolhas" acima para abrir o hub de conteúdos e navegar pelas conexões teológicas.
-                </p>
               </motion.div>
             ) : (
               <motion.div
