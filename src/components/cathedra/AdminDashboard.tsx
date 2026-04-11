@@ -114,7 +114,8 @@ const AdminDashboard: React.FC = () => {
         const downloadsCount = metrics.filter(m => m.metric_type === 'download').length;
         const pwaInstalls = metrics.filter(m => m.metric_type === 'pwa_install').length;
         const pwaOpens = metrics.filter(m => m.metric_type === 'pwa_open').length;
-        const totalRevenue = transactions.reduce((acc, curr) => acc + Number(curr.amount), 0);
+        const totalRevenue = transactions.filter(t => t.status === 'approved').reduce((acc, curr) => acc + Number(curr.amount), 0);
+        const pendingRevenue = transactions.filter(t => t.status === 'pending').reduce((acc, curr) => acc + Number(curr.amount), 0);
 
         // New CRM specific stats
         const now = new Date();
