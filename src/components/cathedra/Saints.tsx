@@ -19,12 +19,6 @@ const Saints: React.FC = () => {
   const [viewMode, setViewMode] = useState<'daily' | 'search'>('daily');
   const [searchParams] = useSearchParams();
 
-  useEffect(() => {
-    const action = searchParams.get('action');
-    if (action === 'reflect' && saintsForSelectedDate.length > 0) {
-      handleOpenSaint(saintsForSelectedDate[0], true);
-    }
-  }, [searchParams, saintsForSelectedDate]);
 
   const handleOpenSaint = (saint: Saint, shouldReflect: boolean = false) => {
     setAutoReflect(shouldReflect);
@@ -36,6 +30,13 @@ const Saints: React.FC = () => {
     const month = selectedDate.getMonth() + 1;
     return SAINTS_DATA.filter(s => s.feastMonth === month && s.feastDayNum === day);
   }, [selectedDate]);
+
+  useEffect(() => {
+    const action = searchParams.get('action');
+    if (action === 'reflect' && saintsForSelectedDate.length > 0) {
+      handleOpenSaint(saintsForSelectedDate[0], true);
+    }
+  }, [searchParams, saintsForSelectedDate]);
 
   const filteredSaints = useMemo(() => {
     if (!search.trim()) return [];
