@@ -6,7 +6,7 @@ import {
   BarChart3, Calendar, AlertCircle, Crown, Shield, Search,
   ChevronDown, ChevronUp, UserCog, ArrowLeft, Home, Smartphone, MonitorSmartphone,
   Target, Activity, Bell, LayoutGrid, UserCheck, Handshake, Heart, Wallet,
-  MessageSquare, Map as MapIcon, Clock
+  MessageSquare, Map as MapIcon, Clock, Tag
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -25,6 +25,7 @@ const AdminCrmAutomations = lazy(() => import('./AdminCrmAutomations'));
 const AdminPartnersTab = lazy(() => import('./AdminPartnersTab'));
 const AdminContentTab = lazy(() => import('./AdminContentTab'));
 const AdminJourneysTab = lazy(() => import('./AdminJourneysTab'));
+const AdminThemesTab = lazy(() => import('./AdminThemesTab'));
 
 interface Stats {
   totalUsers: number;
@@ -385,6 +386,9 @@ const AdminDashboard: React.FC = () => {
           <TabsTrigger value="segmentation" className="gap-1.5 text-xs sm:text-sm">
             <Target className="w-3.5 h-3.5 hidden sm:block" /> CRM
           </TabsTrigger>
+          <TabsTrigger value="themes" className="gap-1.5 text-xs sm:text-sm">
+            <Tag className="w-3.5 h-3.5 hidden sm:block" /> Temas
+          </TabsTrigger>
         </TabsList>
 
         {/* Overview Tab */}
@@ -584,6 +588,13 @@ const AdminDashboard: React.FC = () => {
         <TabsContent value="segmentation">
           <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
             <AdminCrmSegmentation users={users} onSelectUser={setSelectedUser} />
+          </Suspense>
+        </TabsContent>
+
+        {/* Themes Tab */}
+        <TabsContent value="themes">
+          <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
+            <AdminThemesTab />
           </Suspense>
         </TabsContent>
 
