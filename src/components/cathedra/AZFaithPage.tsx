@@ -332,30 +332,54 @@ const AZFaithPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="relative group">
-            <div className="absolute -inset-1 bg-gradient-to-r from-primary/5 to-transparent blur opacity-50 transition duration-1000" />
-            <div className="relative flex flex-wrap justify-center gap-2 p-2 bg-card/30 backdrop-blur-sm rounded-[2rem] border border-border/40 max-w-4xl mx-auto overflow-hidden">
-              {alphabet.map(letter => {
-                const hasTerms = FAITH_TERMS.some(t => t.term.toUpperCase().startsWith(letter));
-                const isSelected = selectedLetter === letter;
-                return (
-                  <motion.button
-                    key={letter}
-                    whileHover={hasTerms ? { scale: 1.1, y: -2 } : {}}
-                    whileTap={hasTerms ? { scale: 0.9 } : {}}
-                    onClick={() => hasTerms && handleLetterClick(letter)}
-                    disabled={!hasTerms}
-                    className={`w-10 h-10 flex items-center justify-center rounded-full text-xs font-black transition-all duration-300 border shadow-sm
-                      ${isSelected 
-                        ? 'bg-primary text-primary-foreground border-primary shadow-primary/30 ring-4 ring-primary/10' 
-                        : hasTerms 
-                          ? 'bg-card/50 text-foreground border-border/80 hover:border-primary/40 hover:text-primary hover:bg-white dark:hover:bg-slate-900' 
-                          : 'opacity-20 grayscale cursor-not-allowed border-transparent'}`}
-                  >
-                    {letter}
-                  </motion.button>
-                );
-              })}
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-wrap justify-center gap-1.5 max-w-4xl mx-auto px-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => handleCategoryClick(null)}
+                className={`rounded-full px-4 h-9 text-[10px] font-black uppercase tracking-widest ${!selectedCategory && !selectedLetter && !searchQuery ? 'bg-primary text-primary-foreground' : ''}`}
+              >
+                Tudo
+              </Button>
+              {categories.slice(0, 10).map(cat => (
+                <Button
+                  key={cat}
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleCategoryClick(cat)}
+                  className={`rounded-full px-4 h-9 text-[10px] font-black uppercase tracking-widest ${selectedCategory === cat ? 'bg-primary text-primary-foreground' : 'bg-muted/30 text-muted-foreground'}`}
+                >
+                  {cat}
+                </Button>
+              ))}
+            </div>
+
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-primary/5 to-transparent blur opacity-50 transition duration-1000" />
+              <div className="relative flex flex-wrap justify-center gap-1.5 p-2 bg-card/30 backdrop-blur-sm rounded-3xl border border-border/40 max-w-4xl mx-auto overflow-hidden">
+                {alphabet.map(letter => {
+                  const hasTerms = letterStatus[letter];
+                  const isSelected = selectedLetter === letter;
+                  return (
+                    <motion.button
+                      key={letter}
+                      whileHover={hasTerms ? { scale: 1.1, y: -2 } : {}}
+                      whileTap={hasTerms ? { scale: 0.9 } : {}}
+                      onClick={() => hasTerms && handleLetterClick(letter)}
+                      disabled={!hasTerms}
+                      className={`w-9 h-9 flex items-center justify-center rounded-xl text-xs font-black transition-all duration-300 border
+                        ${isSelected 
+                          ? 'bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/20 ring-2 ring-primary/10' 
+                          : hasTerms 
+                            ? 'bg-card/50 text-foreground border-border/80 hover:border-primary/40 hover:text-primary hover:bg-white dark:hover:bg-slate-900 shadow-sm' 
+                            : 'opacity-10 grayscale cursor-not-allowed border-transparent'}`}
+                    >
+                      {letter}
+                    </motion.button>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
