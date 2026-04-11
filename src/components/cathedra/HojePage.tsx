@@ -717,6 +717,7 @@ const HojePage: React.FC = () => {
           </motion.div>
         )}
 
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
