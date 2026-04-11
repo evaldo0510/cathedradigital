@@ -68,7 +68,8 @@ const FAITH_TERMS: FaithTerm[] = [
     practicalApplication: 'Honrar nosso batismo significa viver como verdadeiros filhos de Deus no mundo.',
     bibleVerses: ['Jo 3,5 (Nascimento da água e Espírito)', 'Mt 28,19 (Mandato missionário)', 'Rm 6,3-4 (Morte e Ressurreição com Cristo)'],
     catechismReferences: ['§1213-1284 (O Sacramento do Batismo)'],
-    magisteriumReferences: ['Ad Gentes n. 14 (Iniciação Cristã)']
+    magisteriumReferences: ['Ad Gentes n. 14 (Iniciação Cristã)'],
+    journey_id: 'b1b1b1b1-0001-4000-8000-000000000001'
   },
   { term: 'Batista', definition: 'Aquele que batiza, título dado a João, o precursor de Jesus.', reference: 'Mt 3,1', category: 'Personagens Bíblicos' },
   { term: 'Babilônia', definition: 'Símbolo do exílio de Israel e do poder mundano oposto a Deus.', reference: 'Sl 137', category: 'Geografia Bíblica' },
@@ -138,7 +139,8 @@ const FAITH_TERMS: FaithTerm[] = [
     practicalApplication: 'Ser Igreja hoje é viver em comunhão com o Papa e os Bispos, participando ativamente da paróquia.',
     bibleVerses: ['Mt 16,18 (Fundação)', 'Ef 1,22-23 (Corpo de Cristo)', '1Tm 3,15 (Coluna da verdade)'],
     catechismReferences: ['§748-959 (A Igreja no plano de Deus)'],
-    magisteriumReferences: ['Lumen Gentium (Vaticano II)']
+    magisteriumReferences: ['Lumen Gentium (Vaticano II)'],
+    journey_id: 'b1b1b1b1-0002-4000-8000-000000000001'
   },
   { term: 'Imaculada Conceição', definition: 'O dogma de que Maria foi preservada do pecado original desde o primeiro instante de sua existência.', reference: 'Dogma', category: 'Mariologia' },
   { term: 'Isabel', definition: 'Mãe de João Batista e parente de Maria.', reference: 'Lc 1,5', category: 'Personagens Bíblicos' },
@@ -152,7 +154,8 @@ const FAITH_TERMS: FaithTerm[] = [
     practicalApplication: 'Seguir a Jesus significa imitá-lo no amor, no serviço e na obediência ao Pai.',
     bibleVerses: ['Jo 1,1-14 (O Verbo encarnado)', 'Mt 16,16 (Confissão de Pedro)', 'Fl 2,5-11 (O hino cristológico)'],
     catechismReferences: ['§422-682 (Creio em Jesus Cristo)'],
-    magisteriumReferences: ['Dignitatis Humanae n. 11']
+    magisteriumReferences: ['Dignitatis Humanae n. 11'],
+    journey_id: 'b1b1b1b1-0004-4000-8000-000000000001'
   },
   { term: 'Job', definition: 'O homem justo que sofreu provações imensas mas manteve sua fé em Deus.', reference: 'Jó 1', category: 'Personagens Bíblicos' },
   { term: 'Kerygma', definition: 'O anúncio fundamental da mensagem cristã: a morte e ressurreição de Jesus.', reference: 'At 2,22-24', category: 'Teologia' },
@@ -168,7 +171,8 @@ const FAITH_TERMS: FaithTerm[] = [
     practicalApplication: 'Consagrar-se a Maria é permitir que ela nos leve a Jesus.',
     bibleVerses: ['Lc 1,26-38 (Anunciação)', 'Jo 19,25-27 (Aos pés da cruz)', 'Ap 12,1 (A Mulher vestida de sol)'],
     catechismReferences: ['§484-511 (Maria, Mãe de Cristo)', '§963-975 (Maria, Mãe da Igreja)'],
-    magisteriumReferences: ['Marialis Cultus (Paulo VI)', 'Redemptoris Mater (João Paulo II)']
+    magisteriumReferences: ['Marialis Cultus (Paulo VI)', 'Redemptoris Mater (João Paulo II)'],
+    journey_id: 'b1b1b1b1-0003-4000-8000-000000000001'
   },
   { term: 'Missa', definition: 'A celebração do sacrifício eucarístico da Igreja.', reference: '1Cor 11,23-26', category: 'Liturgia' },
   { term: 'Misticismo', definition: 'A busca pela união íntima e direta com o divino através da oração e contemplação.', reference: 'Espiritualidade', category: 'Espiritualidade' },
