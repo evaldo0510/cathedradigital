@@ -7,9 +7,11 @@ import StaggeredList from './StaggeredList';
 import SacredImage from './SacredImage';
 import SaintDetail, { CATEGORY_LABELS } from './SaintDetail';
 import { SAINTS_DATA, type Saint } from '@/data/saints';
+import { supabase } from '@/integrations/supabase/client';
 import { Search, X, Calendar as CalendarIcon, ChevronLeft, ChevronRight, Sparkles, BookOpen, Quote, Shield } from 'lucide-react';
 import { format, addDays, subDays, isSameDay, startOfMonth, endOfMonth, eachDayOfInterval } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+
 
 const Saints: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
