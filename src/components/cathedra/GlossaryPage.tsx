@@ -4,6 +4,8 @@ import SEOHead from '@/components/SEOHead';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
 import { AppRoute } from '@/types';
+import { Button } from '@/components/ui/button';
+import { Compass, Heart, ArrowDown, Search, Sparkles, Book, BookOpen } from 'lucide-react';
 
 interface GlossaryTerm {
   id: string;
