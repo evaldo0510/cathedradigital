@@ -12,6 +12,9 @@ import { Sparkles, BookOpen, Quote, Shield, Info, Heart, Lightbulb, MessageSquar
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
+import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
+import BibleVersePopover from './BibleVersePopover';
+import CatechismPopover from './CatechismPopover';
 
 const CATEGORY_LABELS: Record<string, string> = {
   apostle: 'Apóstolo',
@@ -226,11 +229,23 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           </div>
           <div className="prose prose-sm dark:prose-invert max-w-none">
             <p className="text-lg font-serif italic text-foreground/90 leading-relaxed border-l-4 border-primary/20 pl-6 py-1">
-              {saint.bio}
+              {parseTheologicalReferences(saint.bio).map((seg, i) => {
+                if (seg.type === 'bibleRef') return <BibleVersePopover key={i} abbr={seg.abbr!} chapter={seg.chapter!} verse={seg.verse} label={seg.value} />;
+                if (seg.type === 'catechismRef') return <CatechismPopover key={i} paragraph={seg.paragraph!} />;
+                return <span key={i}>{seg.value}</span>;
+              })}
             </p>
             {saint.fullBio && (
               <div className="mt-6 text-muted-foreground leading-relaxed text-sm space-y-4">
-                {saint.fullBio.split('\n\n').map((p, i) => <p key={i}>{p}</p>)}
+                {saint.fullBio.split('\n\n').map((paragraph, pIdx) => (
+                  <p key={pIdx}>
+                    {parseTheologicalReferences(paragraph).map((seg, sIdx) => {
+                      if (seg.type === 'bibleRef') return <BibleVersePopover key={sIdx} abbr={seg.abbr!} chapter={seg.chapter!} verse={seg.verse} label={seg.value} />;
+                      if (seg.type === 'catechismRef') return <CatechismPopover key={sIdx} paragraph={seg.paragraph!} />;
+                      return <span key={sIdx}>{seg.value}</span>;
+                    })}
+                  </p>
+                ))}
               </div>
             )}
           </div>
@@ -258,7 +273,11 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
             <div className="bg-secondary/30 p-8 rounded-[2rem] border border-border relative group hover:border-primary/20 transition-all">
               <Quote className="absolute top-4 right-4 w-12 h-12 text-primary/5 group-hover:text-primary/10 transition-colors" />
               <p className="text-xl font-serif italic text-foreground relative z-10 leading-relaxed">
-                {saint.quotes[0] || "Tudo para a maior glória de Deus."}
+                {parseTheologicalReferences(saint.quotes[0] || "Tudo para a maior glória de Deus.").map((seg, i) => {
+                  if (seg.type === 'bibleRef') return <BibleVersePopover key={i} abbr={seg.abbr!} chapter={seg.chapter!} verse={seg.verse} label={seg.value} />;
+                  if (seg.type === 'catechismRef') return <CatechismPopover key={i} paragraph={seg.paragraph!} />;
+                  return <span key={i}>{seg.value}</span>;
+                })}
               </p>
             </div>
           </div>
@@ -272,7 +291,11 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
             <div className="bg-primary/5 p-8 rounded-[2rem] border border-primary/10 relative group hover:bg-primary/10 transition-all">
               <Lightbulb className="absolute top-4 right-4 w-12 h-12 text-primary/10 group-hover:scale-110 transition-all" />
               <p className="text-sm font-medium text-foreground relative z-10 leading-relaxed italic">
-                {saint.aplicacaoPratica || "Hoje, procure imitar a humildade deste santo em suas tarefas ordinárias, oferecendo cada pequeno gesto ao Senhor com amor."}
+                {parseTheologicalReferences(saint.aplicacaoPratica || "Hoje, procure imitar a humildade deste santo em suas tarefas ordinárias, oferecendo cada pequeno gesto ao Senhor com amor.").map((seg, i) => {
+                  if (seg.type === 'bibleRef') return <BibleVersePopover key={i} abbr={seg.abbr!} chapter={seg.chapter!} verse={seg.verse} label={seg.value} />;
+                  if (seg.type === 'catechismRef') return <CatechismPopover key={i} paragraph={seg.paragraph!} />;
+                  return <span key={i}>{seg.value}</span>;
+                })}
               </p>
             </div>
           </div>

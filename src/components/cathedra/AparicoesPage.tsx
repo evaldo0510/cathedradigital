@@ -4,6 +4,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { APPARITIONS, Apparition } from '@/data/apparitions';
 import { useFavorites } from '@/hooks/useFavorites';
 import DeepContentSection from './DeepContentSection';
+import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
+import BibleVersePopover from './BibleVersePopover';
+import CatechismPopover from './CatechismPopover';
 
 const AparicoesPage: React.FC = () => {
   const [selectedApparition, setSelectedApparition] = useState<Apparition | null>(null);
@@ -92,7 +95,13 @@ const AparicoesPage: React.FC = () => {
             {activeTab === 'historia' && (
               <div className="space-y-4">
                 <h2 className="text-lg font-serif font-bold text-foreground">A História da Aparição</h2>
-                <p className="font-serif text-foreground/90 leading-[1.9] text-base">{selectedApparition.fullStory}</p>
+                <p className="font-serif text-foreground/90 leading-[1.9] text-base">
+                  {parseTheologicalReferences(selectedApparition.fullStory).map((seg, i) => {
+                    if (seg.type === 'bibleRef') return <BibleVersePopover key={i} abbr={seg.abbr!} chapter={seg.chapter!} verse={seg.verse} label={seg.value} />;
+                    if (seg.type === 'catechismRef') return <CatechismPopover key={i} paragraph={seg.paragraph!} />;
+                    return <span key={i}>{seg.value}</span>;
+                  })}
+                </p>
               </div>
             )}
             {activeTab === 'vidente' && (
@@ -100,14 +109,26 @@ const AparicoesPage: React.FC = () => {
                 <h2 className="text-lg font-serif font-bold text-foreground">
                   {selectedApparition.seer}
                 </h2>
-                <p className="font-serif text-foreground/90 leading-[1.9] text-base">{selectedApparition.seerStory}</p>
+                <p className="font-serif text-foreground/90 leading-[1.9] text-base">
+                  {parseTheologicalReferences(selectedApparition.seerStory).map((seg, i) => {
+                    if (seg.type === 'bibleRef') return <BibleVersePopover key={i} abbr={seg.abbr!} chapter={seg.chapter!} verse={seg.verse} label={seg.value} />;
+                    if (seg.type === 'catechismRef') return <CatechismPopover key={i} paragraph={seg.paragraph!} />;
+                    return <span key={i}>{seg.value}</span>;
+                  })}
+                </p>
               </div>
             )}
             {activeTab === 'mensagem' && (
               <div className="space-y-6">
                 <h2 className="text-lg font-serif font-bold text-foreground">A Mensagem de Maria</h2>
                 <blockquote className="border-l-4 border-primary pl-4 py-2">
-                  <p className="font-serif italic text-foreground/90 leading-[1.9] text-base">{selectedApparition.message}</p>
+                  <p className="font-serif italic text-foreground/90 leading-[1.9] text-base">
+                    {parseTheologicalReferences(selectedApparition.message).map((seg, i) => {
+                      if (seg.type === 'bibleRef') return <BibleVersePopover key={i} abbr={seg.abbr!} chapter={seg.chapter!} verse={seg.verse} label={seg.value} />;
+                      if (seg.type === 'catechismRef') return <CatechismPopover key={i} paragraph={seg.paragraph!} />;
+                      return <span key={i}>{seg.value}</span>;
+                    })}
+                  </p>
                 </blockquote>
               </div>
             )}
