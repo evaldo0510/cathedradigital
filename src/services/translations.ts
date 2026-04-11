@@ -13,6 +13,7 @@ export const UI_TRANSLATIONS: Record<Language, any> = {
     study: "Estudo (Symphonia)",
     study_sub: "Conexão Teológica IA",
     liturgy: "Liturgia Diária",
+    az_faith: "A–Z da Fé",
     glossary: "Glossário Teológico",
     old_testament: "Antigo Testamento",
     new_testament: "Novo Testamento",
