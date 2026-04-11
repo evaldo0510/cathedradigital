@@ -209,7 +209,7 @@ const AdminPartnersTab: React.FC = () => {
                       <Button variant="outline" size="sm" className="h-8 border-destructive/30 text-destructive hover:bg-destructive/5" onClick={() => handleUpdateStatus(partner.id, 'rejected')}>
                         Rejeitar
                       </Button>
-                      <Button size="sm" className="h-8 bg-green-600 hover:bg-green-700 text-white" onClick={() => handleUpdateStatus(partner.id, 'approved')}>
+                      <Button size="sm" className="h-8 bg-success hover:bg-success/90 text-success-foreground" onClick={() => handleUpdateStatus(partner.id, 'approved')}>
                         Aprovar
                       </Button>
                     </>
