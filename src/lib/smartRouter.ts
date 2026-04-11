@@ -27,7 +27,7 @@ const CONFUSAO_KEYWORDS = [
 const DOR_EMOCIONAL_KEYWORDS = [
   'dor', 'sofrimento', 'tristeza', 'triste', 'angústia', 'angustia', 'culpa', 'culpado',
   'culpada', 'medo', 'temor', 'vazio', 'solidão', 'solidao', 'ferida', 'ferido',
-  'ferida', 'abandono', 'abandonado', 'rejeição', 'rejeitado', 'desespero',
+  'ferida', 'abandono', 'abandonado', 'rejeição', 'rejeitado', 'desespero', 'sofrer',
 ];
 
 const BUSCA_ESPIRITUAL_KEYWORDS = [
@@ -35,6 +35,12 @@ const BUSCA_ESPIRITUAL_KEYWORDS = [
   'profunda', 'propósito', 'proposito', 'Deus', 'Jesus', 'Espírito', 'espirito',
   'oração', 'oracao', 'alma', 'interior', 'transcendência', 'transcendencia',
   'busca', 'buscando', 'encontrar', 'verdade',
+];
+
+const VIRTUDES_E_MISSAO_KEYWORDS = [
+  'fé', 'fe', 'esperança', 'esperanca', 'caridade', 'virtude', 'santidade', 'santo', 'santa',
+  'humildade', 'humilde', 'missão', 'missao', 'vocação', 'vocacao', 'chamado', 'perdão',
+  'perdao', 'misericórdia', 'misericordia', 'amor', 'caridade',
 ];
 
 function countMatches(text: string, keywords: string[]): number {
