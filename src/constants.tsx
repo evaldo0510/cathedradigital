@@ -303,6 +303,7 @@ export const Icons = {
   Glossary: createIcon(Type),
   History: createIcon(History),
   Bookmark: createIcon(Bookmark),
+  Tag: createIcon(Tag),
   Swords: createIcon(Swords),
   
   // Spiritual Life
