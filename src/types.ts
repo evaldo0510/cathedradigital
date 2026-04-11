@@ -50,7 +50,8 @@ export enum AppRoute {
   BIBLIOTECA = '/biblioteca',
   PARTNERS = '/partners',
   UPGRADE = '/upgrade',
-  TEMAS = '/temas'
+  TEMAS = '/temas',
+  AZ_FAITH = '/az-faith'
 }
 
 export interface TrackStep {
