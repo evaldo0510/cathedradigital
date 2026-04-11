@@ -379,53 +379,60 @@ const AdminDashboard: React.FC = () => {
   }
 
   return (
-    <div className="space-y-8 pb-10">
-      <div className="flex items-center justify-between gap-4">
+    <div className="space-y-6 sm:space-y-8 pb-20 sm:pb-10 px-0 sm:px-0">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 px-4 sm:px-0">
         <div className="flex flex-col gap-1">
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Painel Administrativo</h1>
-          <p className="text-sm text-muted-foreground">CRM & Gestão completa da plataforma.</p>
+          <h1 className="text-xl sm:text-3xl font-display font-black uppercase tracking-tight text-primary">Painel Administrativo</h1>
+          <p className="text-xs sm:text-sm text-muted-foreground font-medium uppercase tracking-wider opacity-70">CRM & Gestão completa da plataforma.</p>
         </div>
         <Button
           variant="outline"
           size="sm"
           onClick={() => navigate('/hoje')}
-          className="flex items-center gap-2 shrink-0"
+          className="flex items-center gap-2 shrink-0 bg-muted/50 border-border/50 hover:bg-primary hover:text-white transition-all rounded-xl h-10 px-4"
         >
           <Home className="w-4 h-4" />
-          <span className="hidden sm:inline">Voltar ao App</span>
+          <span className="text-[10px] font-black uppercase tracking-widest">Voltar ao App</span>
         </Button>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="flex w-full overflow-x-auto">
-          <TabsTrigger value="overview" className="gap-1.5 text-xs sm:text-sm">
-            <LayoutGrid className="w-3.5 h-3.5 hidden sm:block" /> Visão Geral
-          </TabsTrigger>
-          <TabsTrigger value="users" className="gap-1.5 text-xs sm:text-sm">
-            <Users className="w-3.5 h-3.5 hidden sm:block" /> Usuários
-          </TabsTrigger>
-          <TabsTrigger value="transactions" className="gap-1.5 text-xs sm:text-sm">
-            <DollarSign className="w-3.5 h-3.5 hidden sm:block" /> Financeiro
-          </TabsTrigger>
-          <TabsTrigger value="partners" className="gap-1.5 text-xs sm:text-sm">
-            <Handshake className="w-3.5 h-3.5 hidden sm:block" /> Parceiros
-          </TabsTrigger>
-          <TabsTrigger value="content" className="gap-1.5 text-xs sm:text-sm">
-            <MessageSquare className="w-3.5 h-3.5 hidden sm:block" /> Conteúdo
-          </TabsTrigger>
-          <TabsTrigger value="journeys" className="gap-1.5 text-xs sm:text-sm">
-            <MapIcon className="w-3.5 h-3.5 hidden sm:block" /> Jornadas
-          </TabsTrigger>
-          <TabsTrigger value="segmentation" className="gap-1.5 text-xs sm:text-sm">
-            <Target className="w-3.5 h-3.5 hidden sm:block" /> CRM
-          </TabsTrigger>
-          <TabsTrigger value="themes" className="gap-1.5 text-xs sm:text-sm">
-            <Tag className="w-3.5 h-3.5 hidden sm:block" /> Temas
-          </TabsTrigger>
-          <TabsTrigger value="geography" className="gap-1.5 text-xs sm:text-sm">
-            <MapIcon className="w-3.5 h-3.5 hidden sm:block" /> Geografia
-          </TabsTrigger>
-        </TabsList>
+        <div className="px-4 sm:px-0 -mx-4 sm:mx-0">
+          <TabsList className="flex w-full overflow-x-auto justify-start h-auto p-1 bg-muted/30 border border-border/10 rounded-xl no-scrollbar scroll-smooth snap-x">
+            <TabsTrigger value="overview" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+              <LayoutGrid className="w-3.5 h-3.5" /> Visão Geral
+            </TabsTrigger>
+            <TabsTrigger value="users" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+              <Users className="w-3.5 h-3.5" /> Usuários
+            </TabsTrigger>
+            <TabsTrigger value="transactions" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+              <DollarSign className="w-3.5 h-3.5" /> Financeiro
+            </TabsTrigger>
+            <TabsTrigger value="partners" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+              <Handshake className="w-3.5 h-3.5" /> Parceiros
+            </TabsTrigger>
+            <TabsTrigger value="content" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+              <MessageSquare className="w-3.5 h-3.5" /> Conteúdo
+            </TabsTrigger>
+            <TabsTrigger value="journeys" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+              <MapIcon className="w-3.5 h-3.5" /> Jornadas
+            </TabsTrigger>
+            <TabsTrigger value="segmentation" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+              <Target className="w-3.5 h-3.5" /> CRM
+            </TabsTrigger>
+            <TabsTrigger value="themes" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+              <Tag className="w-3.5 h-3.5" /> Temas
+            </TabsTrigger>
+            <TabsTrigger value="geography" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+              <MapIcon className="w-3.5 h-3.5" /> Geografia
+            </TabsTrigger>
+          </TabsList>
+        </div>
+
+        {/* Overview Tab */}
+        <TabsContent value="overview" className="space-y-6 px-4 sm:px-0">
+          {/* Stats Overview */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 
         {/* Overview Tab */}
         <TabsContent value="overview" className="space-y-6">
