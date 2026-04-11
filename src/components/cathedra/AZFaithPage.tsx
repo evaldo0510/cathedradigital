@@ -450,15 +450,27 @@ const AZFaithPage: React.FC = () => {
                         <p className="text-[10px] font-black uppercase tracking-widest text-blue-600">📖 Bíblia</p>
                       </div>
                       <div className="flex flex-wrap gap-2">
-                        {selectedTerm.bibleVerses ? selectedTerm.bibleVerses.map(v => (
-                          <Badge key={v} variant="outline" className="bg-blue-500/5 text-blue-700 dark:text-blue-400 border-blue-500/20 rounded-full text-xs font-semibold">
-                            {v}
-                          </Badge>
-                        )) : (
-                          <Badge variant="outline" className="bg-blue-500/5 text-blue-700 dark:text-blue-400 border-blue-500/20 rounded-full text-xs font-semibold">
-                            {selectedTerm.reference}
-                          </Badge>
-                        )}
+                        {(selectedTerm.bibleVerses || [selectedTerm.reference!]).map((v, idx) => {
+                          const segments = parseBibleReferences(v);
+                          const bibleSeg = segments.find(s => s.type === 'bibleRef');
+                          if (bibleSeg && bibleSeg.abbr) {
+                            return (
+                              <BibleVersePopover
+                                key={idx}
+                                abbr={bibleSeg.abbr}
+                                chapter={bibleSeg.chapter!}
+                                verse={bibleSeg.verse}
+                                label={v}
+                                onNavigate={(abbr, chapter) => navigate(`${AppRoute.BIBLE}?book=${abbr}&chapter=${chapter}`)}
+                              />
+                            );
+                          }
+                          return (
+                            <Badge key={idx} variant="outline" className="bg-blue-500/5 text-blue-700 dark:text-blue-400 border-blue-500/20 rounded-full text-xs font-semibold">
+                              {v}
+                            </Badge>
+                          );
+                        })}
                       </div>
                     </div>
                   )}
