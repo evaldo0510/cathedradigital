@@ -58,9 +58,11 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
               { label: 'Início', route: AppRoute.HOJE },
               { label: 'Jornada', route: AppRoute.JORNADAS },
               { label: 'Explorar', route: AppRoute.BIBLIOTECA },
+              { label: 'Temas', route: AppRoute.TEMAS },
               { label: 'Comunidade', route: AppRoute.COMMUNITY },
               { label: 'Perfil', route: AppRoute.PROFILE },
             ].map(item => (
+
               <button 
                 key={item.label} 
                 onClick={() => navigate(item.route)}
