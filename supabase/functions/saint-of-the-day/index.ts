@@ -14,7 +14,8 @@ serve(async (req) => {
     const vaticanUrl = "https://www.vaticannews.va/pt/santo-do-dia.html";
     const response = await fetch(vaticanUrl, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        'Accept-Language': 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7'
       }
     });
     
@@ -24,50 +25,44 @@ serve(async (req) => {
 
     const html = await response.text();
     
-    // Robust extraction using string manipulation for Vatican News
-    // Find the saint section
-    const sectionStart = html.indexOf('section--isStatic');
-    const content = sectionStart !== -1 ? html.substring(sectionStart) : html;
+    // Find the main section for the saint
+    // Usually <section class="section section--evidence section--isStatic">
+    const sectionMatch = html.match(/<section[^>]*class="[^"]*section--isStatic[^"]*"[\s\S]*?<\/section>/i) ||
+                        html.match(/<section[^>]*class="[^"]*section--evidence[^"]*"[\s\S]*?<\/section>/i);
     
-    // Extract Name
-    const h2Start = content.indexOf('<h2');
-    const h2End = content.indexOf('</h2>', h2Start);
-    let name = "Santo do Dia";
-    if (h2Start !== -1 && h2End !== -1) {
-      name = content.substring(content.indexOf('>', h2Start) + 1, h2End).replace(/<[^>]*>/g, '').trim();
-    }
+    const sectionHtml = sectionMatch ? sectionMatch[0] : html;
+
+    // Extract Name from H2
+    const nameMatch = sectionHtml.match(/<h2[^>]*>([\s\S]*?)<\/h2>/i);
+    let name = nameMatch ? nameMatch[1].replace(/<[^>]*>/g, '').trim() : "Santo do Dia";
     
     // Extract Image
     let imageUrl = null;
-    const imgTagStart = content.indexOf('<img', h2End);
-    if (imgTagStart !== -1) {
-      const imgTagEnd = content.indexOf('>', imgTagStart);
-      const imgTag = content.substring(imgTagStart, imgTagEnd);
-      
-      const srcMatch = imgTag.match(/data-original="([^"]*)"/) || imgTag.match(/src="([^"]*)"/);
-      if (srcMatch && !srcMatch[1].includes('data:image')) {
-        const src = srcMatch[1];
+    const imgMatch = sectionHtml.match(/<img[^>]*data-original="([^"]*)"/i) || 
+                   sectionHtml.match(/<img[^>]*src="([^"]*)"/i);
+    
+    if (imgMatch) {
+      const src = imgMatch[1];
+      if (src && !src.includes('data:image')) {
         imageUrl = src.startsWith('http') ? src : `https://www.vaticannews.va${src}`;
       }
     }
     
     // Extract Description
-    let description = "";
-    const pStart = content.indexOf('<p', h2End);
-    if (pStart !== -1) {
-      const pEnd = content.indexOf('</p>', pStart);
-      description = content.substring(content.indexOf('>', pStart) + 1, pEnd).replace(/<[^>]*>/g, '').trim();
-    }
+    const pMatch = sectionHtml.match(/<p>([\s\S]*?)<\/p>/i);
+    const description = pMatch ? pMatch[1].replace(/<[^>]*>/g, '').trim() : "";
     
     // Extract Read More Link
+    const linkMatch = sectionHtml.match(/<a[^>]*href="([^"]*)"[^>]*class="[^"]*saintReadMore[^"]*"/i) ||
+                     sectionHtml.match(/<a[^>]*href="([^"]*)"[^>]*title="[^"]*Leia tudo[^"]*"/i);
     let moreLink = vaticanUrl;
-    const linkStart = content.indexOf('saintReadMore', h2End);
-    if (linkStart !== -1) {
-      const hrefStart = content.lastIndexOf('href="', linkStart) + 6;
-      const hrefEnd = content.indexOf('"', hrefStart);
-      const href = content.substring(hrefStart, hrefEnd);
+    if (linkMatch) {
+      const href = linkMatch[1];
       moreLink = href.startsWith('http') ? href : `https://www.vaticannews.va${href}`;
     }
+
+    // Clean up name if it contains whitespace or newlines
+    name = name.split('\n')[0].trim();
 
     return new Response(
       JSON.stringify({
