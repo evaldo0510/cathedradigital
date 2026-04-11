@@ -368,12 +368,5 @@ const SPIRITUAL_GUIDANCE = [
   },
 ];
 
-// Re-adding the missing getDocName and other stuff if needed, but I integrated it.
-// Wait, I missed the 'al' doc in DOCS_LIST, let me add it.
-// And 'ge' (Gaudete et Exsultate) and 'cv' (Christus Vivit).
-
-// Let's fix DOCS_LIST to include all used in SPIRITUAL_GUIDANCE
-
-// ... keep existing code
 export default Magisterium;
 
