@@ -99,13 +99,9 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
             label={item.label}
             icon={item.icon}
             route={item.route}
-            isActive={item.route !== '__sidebar__' && (currentPath === item.route || (item.route === AppRoute.BIBLIOTECA && [AppRoute.BIBLE, AppRoute.CATECHISM, AppRoute.MAGISTERIUM, AppRoute.SAINTS].includes(currentPath as AppRoute)))}
+            isActive={currentPath === item.route || (item.route === AppRoute.BIBLIOTECA && [AppRoute.BIBLE, AppRoute.CATECHISM, AppRoute.MAGISTERIUM, AppRoute.SAINTS, AppRoute.LITURGIA, AppRoute.AQUINAS_OPERA, AppRoute.GLOSSARY].includes(currentPath as AppRoute))}
             onClick={() => {
-              if (item.route === '__sidebar__') {
-                onOpenSidebar();
-              } else {
-                navigate(item.route);
-              }
+              navigate(item.route);
             }}
             onRipple={triggerRipple}
           />
