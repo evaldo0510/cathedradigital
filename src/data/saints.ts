@@ -66,6 +66,15 @@ export const SAINTS_DATA: Saint[] = [
     aplicacaoPratica: 'Hoje, não tente ser uma pessoa "diferente" de quem você é para agradar a Deus. Em vez disso, convide a graça de Deus para entrar nas suas atividades normais: seu trabalho, seu estudo, suas conversas. Deixe que o amor de Deus refine seu jeito de ser.',
     reflexaoFinal: 'Quais partes da minha natureza eu estou escondendo de Deus, achando que elas não podem ser santificadas?',
     exercicio: 'Escreva em um papel um talento seu e uma limitação sua. Reze entregando ambos a Deus, pedindo que a Sua graça os aperfeiçoe hoje.',
+    bibleRefs: [
+      { ref: 'Jo 1,1', label: 'No princípio era o Verbo' },
+      { ref: 'Rm 1,20', label: 'Conhecimento de Deus pela razão' }
+    ],
+    catechismRefs: [36, 156, 159, 2500],
+    churchDocRefs: [
+      { title: 'Aeterni Patris (Leão XIII)', url: 'https://www.vatican.va/content/leo-xiii/pt/encyclicals/documents/hf_l-xiii_enc_04081879_aeterni-patris.html' },
+      { title: 'Fides et Ratio (João Paulo II)', url: 'https://www.vatican.va/content/john-paul-ii/pt/encyclicals/documents/hf_jp-ii_enc_14091998_fides-et-ratio.html' }
+    ],
   },
   {
     id: 'agostinho',
