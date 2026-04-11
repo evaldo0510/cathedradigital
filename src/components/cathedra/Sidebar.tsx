@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { prefetchRoute } from '@/lib/prefetch';
 import { Icons } from '../../constants';
 import { AppRoute, User } from '../../types';
-import { BibleModal, CatechismModal, DocumentsModal } from './QuickModals';
+
 
 
 interface SidebarProps {
@@ -18,7 +18,7 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
-  const [modal, setModal] = useState<'bible' | 'catechism' | 'docs' | null>(null);
+  
 
   const sections = [
     ...(user?.role === 'admin' ? [{
@@ -28,37 +28,13 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
       ]
     }] : []),
     {
-      label: 'Principal',
+      label: 'Menu',
       items: [
-        { label: 'Hoje', path: AppRoute.HOJE, icon: <Icons.Sun className="w-5 h-5" /> },
-        { label: 'Jornadas', path: AppRoute.JORNADAS, icon: <Icons.Route className="w-5 h-5" /> },
-        { label: 'Diagnóstico', path: AppRoute.DIAGNOSTICO, icon: <Icons.Stethoscope className="w-5 h-5" /> },
-        { label: 'Biblioteca', path: AppRoute.BIBLIOTECA, icon: <Icons.Library className="w-5 h-5" /> },
-        { label: 'Favoritos', path: AppRoute.FAVORITES, icon: <Icons.Bookmark className="w-5 h-5" /> },
-      ]
-    },
-    {
-      label: 'Vida Interior',
-      items: [
-        { label: 'Oração e Devoção', path: AppRoute.ORACAO, icon: <Icons.PrayingHands className="w-5 h-5" /> },
-        { label: 'Liturgia', path: AppRoute.LITURGIA, icon: <Icons.Chalice className="w-5 h-5" /> },
-        { label: 'Santo Rosário', path: AppRoute.ROSARY, icon: <Icons.Rosary className="w-5 h-5" /> },
-        { label: 'Via Crucis', path: AppRoute.VIA_CRUCIS, icon: <Icons.ViaCrucis className="w-5 h-5" /> },
-        { label: 'Breviário', path: AppRoute.BREVIARY, icon: <Icons.HolyBible className="w-5 h-5" /> },
-        { label: 'Confissão (Exame)', path: AppRoute.POENITENTIA, icon: <Icons.Check className="w-5 h-5" /> },
-        { label: 'Lectio Divina', path: AppRoute.LECTIO_DIVINA, icon: <Icons.Feather className="w-5 h-5" /> },
-        { label: 'Litanias', path: AppRoute.LITANIES, icon: <Icons.Scroll className="w-5 h-5" /> },
-        { label: 'Aparições Marianas', path: AppRoute.APARICOES, icon: <Icons.SaintHalo className="w-5 h-5" /> },
-      ]
-    },
-    {
-      label: 'Recursos Pro',
-      items: [
-        { label: 'Colloquium IA', path: AppRoute.STUDY_MODE, icon: <Icons.Dove className="w-5 h-5" />, pro: true },
-        { label: 'Suma Teológica', path: AppRoute.AQUINAS_OPERA, icon: <Icons.Scroll className="w-5 h-5" /> },
-        { label: 'Certamen (Quiz)', path: AppRoute.CERTAMEN, icon: <Icons.Trophy className="w-5 h-5" /> },
-        { label: 'Assinatura PRO', path: AppRoute.CHECKOUT, icon: <Icons.Zap className="w-5 h-5" />, pro: true },
-        { label: 'Comunidade', path: AppRoute.COMMUNITY, icon: <Icons.Message className="w-5 h-5" /> },
+        { label: 'Início', path: AppRoute.HOJE, icon: <Icons.Home className="w-5 h-5" /> },
+        { label: 'Jornada', path: AppRoute.JORNADAS, icon: <Icons.Route className="w-5 h-5" /> },
+        { label: 'Explorar', path: AppRoute.BIBLIOTECA, icon: <Icons.Search className="w-5 h-5" /> },
+        { label: 'Comunidade', path: AppRoute.COMMUNITY, icon: <Icons.Users className="w-5 h-5" /> },
+        { label: 'Perfil', path: AppRoute.PROFILE, icon: <Icons.User className="w-5 h-5" /> },
       ]
     }
   ];
@@ -81,23 +57,6 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
           </div>
         </div>
 
-        {/* Quick access modals */}
-        <div className="flex gap-2 mb-8 px-2">
-          {[
-            { id: 'bible', label: 'Bíblia', icon: <Icons.HolyBible className="w-4 h-4" />, color: 'bg-primary/5 text-primary border-primary/10' },
-            { id: 'catechism', label: 'CIC', icon: <Icons.CatechismShield className="w-4 h-4" />, color: 'bg-secondary/10 text-primary border-secondary/20' },
-            { id: 'docs', label: 'Docs', icon: <Icons.Scroll className="w-4 h-4" />, color: 'bg-primary/5 text-primary border-primary/10' }
-          ].map(item => (
-            <button 
-              key={item.id}
-              onClick={() => setModal(item.id as any)} 
-              className={`flex-1 flex flex-col items-center gap-1.5 p-3 rounded-2xl border ${item.color} hover:scale-105 transition-all shadow-sm active:scale-95`}
-            >
-              <div className="opacity-80">{item.icon}</div>
-              <span className="text-[8px] font-black uppercase tracking-widest">{item.label}</span>
-            </button>
-          ))}
-        </div>
 
         <nav className="flex-1 space-y-8 overflow-y-auto pb-10">
           {sections.map((section) => (
@@ -174,10 +133,6 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
         </div>
       </aside>
 
-      {/* Quick modals */}
-      <BibleModal isOpen={modal === 'bible'} onClose={() => setModal(null)} />
-      <CatechismModal isOpen={modal === 'catechism'} onClose={() => setModal(null)} />
-      <DocumentsModal isOpen={modal === 'docs'} onClose={() => setModal(null)} />
     </>
   );
 });

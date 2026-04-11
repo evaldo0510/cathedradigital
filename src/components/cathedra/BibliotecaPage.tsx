@@ -17,11 +17,25 @@ const sections = [
     color: 'bg-primary/10 text-primary',
   },
   {
+    title: 'Orações',
+    description: 'Orações e Devoções para todos os momentos',
+    icon: <Icons.PrayingHands className="w-6 h-6" />,
+    route: AppRoute.ORACAO,
+    color: 'bg-primary/10 text-primary',
+  },
+  {
     title: 'Liturgia',
-    description: 'Liturgia das Horas, Missal e Orações',
+    description: 'Liturgia do dia, Missal e Orações',
     icon: <Icons.Liturgy className="w-6 h-6" />,
     route: AppRoute.LITURGIA,
     color: 'bg-accent/10 text-accent',
+  },
+  {
+    title: 'Santo Rosário',
+    description: 'Reze o terço com áudio e meditações',
+    icon: <Icons.Rosary className="w-6 h-6" />,
+    route: AppRoute.ROSARY,
+    color: 'bg-primary/10 text-primary',
   },
   {
     title: 'Catecismo',
@@ -45,17 +59,88 @@ const sections = [
     color: 'bg-primary/10 text-primary',
   },
   {
-    title: 'Aquinas (Suma)',
+    title: 'Colloquium IA',
+    description: 'Estudo inteligente com auxílio de Inteligência Artificial',
+    icon: <Icons.Dove className="w-6 h-6" />,
+    route: AppRoute.STUDY_MODE,
+    color: 'bg-accent/10 text-accent',
+    pro: true,
+  },
+  {
+    title: 'Suma Teológica',
     description: 'A obra-prima de Santo Tomás de Aquino',
     icon: <Icons.Aquinas className="w-6 h-6" />,
     route: AppRoute.AQUINAS_OPERA,
     color: 'bg-accent/10 text-accent',
   },
   {
+    title: 'Via Crucis',
+    description: 'Meditações da Paixão de Cristo',
+    icon: <Icons.ViaCrucis className="w-6 h-6" />,
+    route: AppRoute.VIA_CRUCIS,
+    color: 'bg-primary/10 text-primary',
+  },
+  {
+    title: 'Breviário',
+    description: 'Liturgia das Horas para o clero e leigos',
+    icon: <Icons.HolyBible className="w-6 h-6" />,
+    route: AppRoute.BREVIARY,
+    color: 'bg-accent/10 text-accent',
+  },
+  {
+    title: 'Confissão',
+    description: 'Exame de consciência e preparação',
+    icon: <Icons.Check className="w-6 h-6" />,
+    route: AppRoute.POENITENTIA,
+    color: 'bg-primary/10 text-primary',
+  },
+  {
+    title: 'Lectio Divina',
+    description: 'Leitura espiritual e meditação das Escrituras',
+    icon: <Icons.Feather className="w-6 h-6" />,
+    route: AppRoute.LECTIO_DIVINA,
+    color: 'bg-accent/10 text-accent',
+  },
+  {
+    title: 'Litanias',
+    description: 'Ladainhas e orações responsivas',
+    icon: <Icons.Scroll className="w-6 h-6" />,
+    route: AppRoute.LITANIES,
+    color: 'bg-primary/10 text-primary',
+  },
+  {
+    title: 'Aparições',
+    description: 'Estudo sobre as aparições marianas',
+    icon: <Icons.SaintHalo className="w-6 h-6" />,
+    route: AppRoute.APARICOES,
+    color: 'bg-accent/10 text-accent',
+  },
+  {
+    title: 'Certamen',
+    description: 'Quiz de conhecimentos católicos',
+    icon: <Icons.Trophy className="w-6 h-6" />,
+    route: AppRoute.CERTAMEN,
+    color: 'bg-primary/10 text-primary',
+  },
+  {
     title: 'Glossário',
     description: 'Termos e conceitos da teologia católica',
     icon: <Icons.Glossary className="w-6 h-6" />,
     route: AppRoute.GLOSSARY,
+    color: 'bg-primary/10 text-primary',
+  },
+  {
+    title: 'Favoritos',
+    description: 'Seus itens e orações salvas',
+    icon: <Icons.Bookmark className="w-6 h-6" />,
+    route: AppRoute.FAVORITES,
+    color: 'bg-accent/10 text-accent',
+  },
+  {
+    title: 'Diagnóstico',
+    description: 'Avaliação da sua saúde espiritual',
+    icon: <Icons.Stethoscope className="w-6 h-6" />,
+    route: AppRoute.DIAGNOSTICO,
     color: 'bg-primary/10 text-primary',
   },
 ];
@@ -115,7 +200,10 @@ const BibliotecaPage: React.FC = () => {
                       {section.icon}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-foreground">{section.title}</h3>
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-semibold text-foreground">{section.title}</h3>
+                        {(section as any).pro && <span className="text-[8px] font-black uppercase tracking-widest text-primary bg-primary/10 px-1.5 py-0.5 rounded">PRO</span>}
+                      </div>
                       <p className="text-xs text-muted-foreground mt-0.5">{section.description}</p>
                     </div>
                     <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
