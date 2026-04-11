@@ -208,8 +208,38 @@ const AppLayout: React.FC = () => {
   useEffect(() => {
     if (isDark) document.documentElement.classList.add('dark');
     else document.documentElement.classList.remove('dark');
+    localStorage.setItem('cathedra_dark', isDark ? 'true' : 'false');
   }, [isDark]);
   
+  useEffect(() => {
+    const handleLangChange = (e: CustomEvent) => {
+      const newLang = e.detail as Language;
+      setLangState(newLang);
+      localStorage.setItem('cathedra_lang', newLang);
+    };
+    (window as any).currentLang = lang;
+    window.addEventListener('change-lang' as any, handleLangChange);
+    return () => window.removeEventListener('change-lang' as any, handleLangChange);
+  }, [lang]);
+
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const toggleSpeak = useCallback(() => {
+    if (window.speechSynthesis.speaking) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+      return;
+    }
+
+    const content = document.getElementById('main-content')?.innerText || '';
+    if (!content) return;
+
+    const utterance = new SpeechSynthesisUtterance(content.substring(0, 5000));
+    utterance.lang = lang === 'pt' ? 'pt-BR' : lang === 'la' ? 'it-IT' : lang;
+    utterance.onend = () => setIsSpeaking(false);
+    window.speechSynthesis.speak(utterance);
+    setIsSpeaking(true);
+  }, [lang]);
+
   useEffect(() => {
     if (location.pathname !== AppRoute.LOGIN || loading || !user) return;
     navigate(getPostAuthRoute(), { replace: true });
@@ -294,6 +324,8 @@ const AppLayout: React.FC = () => {
                 user={appUser} 
                 isDark={isDark}
                 onToggleDark={() => setIsDark(!isDark)}
+                isSpeaking={isSpeaking}
+                onToggleSpeak={toggleSpeak}
                 onSignOut={signOut}
               />
             </div>
@@ -319,12 +351,14 @@ const AppLayout: React.FC = () => {
                 className="relative h-full w-72"
               >
                 <CathedralSidebar 
-                  onClose={() => setIsSidebarOpen(false)} 
-                  user={appUser} 
-                  isDark={isDark}
-                  onToggleDark={() => setIsDark(!isDark)}
-                  onSignOut={signOut}
-                />
+                onClose={() => setIsSidebarOpen(false)} 
+                user={appUser} 
+                isDark={isDark}
+                onToggleDark={() => setIsDark(!isDark)}
+                isSpeaking={isSpeaking}
+                onToggleSpeak={toggleSpeak}
+                onSignOut={signOut}
+              />
               </motion.div>
             </motion.div>
           )}
@@ -338,6 +372,8 @@ const AppLayout: React.FC = () => {
                   user={appUser}
                   isDark={isDark}
                   onToggleDark={() => setIsDark(!isDark)}
+                  isSpeaking={isSpeaking}
+                  onToggleSpeak={toggleSpeak}
                   onOpenSidebar={() => setIsSidebarOpen(true)}
                   onSignOut={signOut}
                 />

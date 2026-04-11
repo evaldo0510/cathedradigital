@@ -41,7 +41,9 @@ export const UI_TRANSLATIONS: Record<Language, any> = {
     empty_state: "Este mistério ainda não foi catalogado.",
     save: "Guardar",
     copy: "Copiar",
-    share: "Partilhar"
+    share: "Partilhar",
+    audio_read: "Ouvir",
+    audio_stop: "Parar"
   },
   en: {
     home: "Home (Narthex)",
@@ -83,7 +85,9 @@ export const UI_TRANSLATIONS: Record<Language, any> = {
     empty_state: "This mystery has not been cataloged yet.",
     save: "Save",
     copy: "Copy",
-    share: "Share"
+    share: "Share",
+    audio_read: "Listen",
+    audio_stop: "Stop"
   },
   es: { home: "Inicio", bible: "Biblia", catechism: "Catecismo", saints: "Santos", glossary: "Glosario Teológico" },
   la: { home: "Narthex", bible: "Scriptuarium", catechism: "Codex Fidei", saints: "Sanctorum", glossary: "Lexicon Theologicum" },

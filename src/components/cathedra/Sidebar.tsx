@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { prefetchRoute } from '@/lib/prefetch';
 import { Icons } from '../../constants';
 import { AppRoute, User } from '../../types';
+import { LangContext } from '@/contexts/LangContext';
 import cathedraLogo from '@/assets/cathedra-logo.png';
 
 
@@ -12,13 +13,16 @@ interface SidebarProps {
   user: User | null;
   isDark?: boolean;
   onToggleDark?: () => void;
+  isSpeaking?: boolean;
+  onToggleSpeak?: () => void;
   onSignOut?: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onToggleDark, onSignOut }) => {
+const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onToggleDark, isSpeaking, onToggleSpeak, onSignOut }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
+  const { lang, t } = useContext(LangContext);
   
 
   const sections = [
@@ -107,24 +111,42 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
         </div>
 
         <div className="pt-4 pb-20 lg:pb-0 border-t border-border space-y-3">
-          <div className="flex gap-2 mb-2 px-1">
-            <button 
-              onClick={onToggleDark} 
-              className="flex-1 p-3 bg-muted text-muted-foreground hover:text-primary rounded-xl border border-border flex items-center justify-center gap-2 transition-all active:scale-95"
-            >
-              {isDark ? <Icons.Sun className="w-4 h-4 text-primary" /> : <Icons.Moon className="w-4 h-4" />}
-              <span className="text-[10px] font-black uppercase tracking-widest">{isDark ? 'Claro' : 'Escuro'}</span>
-            </button>
-            
-            {user && (
+          <div className="flex flex-col gap-2 mb-2 px-1">
+            <div className="flex gap-2">
               <button 
-                onClick={onSignOut} 
-                className="flex-1 p-3 bg-muted text-muted-foreground hover:text-destructive rounded-xl border border-border flex items-center justify-center gap-2 transition-all active:scale-95"
+                onClick={onToggleDark} 
+                className="flex-1 p-3 bg-muted text-muted-foreground hover:text-primary rounded-xl border border-border flex items-center justify-center gap-2 transition-all active:scale-95"
               >
-                <Icons.LogOut className="w-4 h-4" />
-                <span className="text-[10px] font-black uppercase tracking-widest">Sair</span>
+                {isDark ? <Icons.Sun className="w-4 h-4 text-primary" /> : <Icons.Moon className="w-4 h-4" />}
+                <span className="text-[10px] font-black uppercase tracking-widest">{isDark ? (lang === 'pt' ? 'Claro' : 'Light') : (lang === 'pt' ? 'Escuro' : 'Dark')}</span>
               </button>
-            )}
+
+              <button 
+                onClick={onToggleSpeak} 
+                className={`flex-1 p-3 rounded-xl border border-border flex items-center justify-center gap-2 transition-all active:scale-95 ${
+                  isSpeaking ? 'bg-primary text-white' : 'bg-muted text-muted-foreground hover:text-primary'
+                }`}
+              >
+                {isSpeaking ? <Icons.Message className="w-4 h-4 animate-pulse" /> : <Icons.Volume2 className="w-4 h-4" />}
+                <span className="text-[10px] font-black uppercase tracking-widest">{isSpeaking ? t('audio_stop') : t('audio_read')}</span>
+              </button>
+            </div>
+
+            <div className="flex flex-wrap gap-1 mt-1">
+              {(['pt', 'en', 'es', 'la'] as const).map((l) => (
+                <button
+                  key={l}
+                  onClick={() => (window as any).dispatchEvent(new CustomEvent('change-lang', { detail: l }))}
+                  className={`px-2 py-1 text-[8px] font-black uppercase rounded-lg border transition-all ${
+                    lang === l 
+                      ? 'bg-primary text-white border-primary' 
+                      : 'bg-muted text-muted-foreground border-border hover:border-primary/50'
+                  }`}
+                >
+                  {l}
+                </button>
+              ))}
+            </div>
           </div>
 
           {user ? (
