@@ -355,14 +355,8 @@ const AdminDashboard: React.FC = () => {
           <TabsTrigger value="overview" className="gap-1.5 text-xs sm:text-sm">
             <LayoutGrid className="w-3.5 h-3.5 hidden sm:block" /> Visão Geral
           </TabsTrigger>
-          <TabsTrigger value="segmentation" className="gap-1.5 text-xs sm:text-sm">
-            <Target className="w-3.5 h-3.5 hidden sm:block" /> Gestão de Usuários
-          </TabsTrigger>
-          <TabsTrigger value="retention" className="gap-1.5 text-xs sm:text-sm">
-            <Activity className="w-3.5 h-3.5 hidden sm:block" /> Retenção
-          </TabsTrigger>
-          <TabsTrigger value="automations" className="gap-1.5 text-xs sm:text-sm">
-            <Bell className="w-3.5 h-3.5 hidden sm:block" /> Automações
+          <TabsTrigger value="users" className="gap-1.5 text-xs sm:text-sm">
+            <Users className="w-3.5 h-3.5 hidden sm:block" /> Usuários
           </TabsTrigger>
           <TabsTrigger value="transactions" className="gap-1.5 text-xs sm:text-sm">
             <DollarSign className="w-3.5 h-3.5 hidden sm:block" /> Financeiro
@@ -370,8 +364,14 @@ const AdminDashboard: React.FC = () => {
           <TabsTrigger value="partners" className="gap-1.5 text-xs sm:text-sm">
             <Handshake className="w-3.5 h-3.5 hidden sm:block" /> Parceiros
           </TabsTrigger>
-          <TabsTrigger value="users" className="gap-1.5 text-xs sm:text-sm">
-            <Users className="w-3.5 h-3.5 hidden sm:block" /> Usuários
+          <TabsTrigger value="content" className="gap-1.5 text-xs sm:text-sm">
+            <MessageSquare className="w-3.5 h-3.5 hidden sm:block" /> Conteúdo
+          </TabsTrigger>
+          <TabsTrigger value="journeys" className="gap-1.5 text-xs sm:text-sm">
+            <Map className="w-3.5 h-3.5 hidden sm:block" /> Jornadas
+          </TabsTrigger>
+          <TabsTrigger value="segmentation" className="gap-1.5 text-xs sm:text-sm">
+            <Target className="w-3.5 h-3.5 hidden sm:block" /> CRM
           </TabsTrigger>
         </TabsList>
 
