@@ -1,5 +1,6 @@
 import React, { forwardRef } from 'react';
 import { 
+  Book,
   BookOpen, 
   Cross, 
   Map, 
@@ -38,6 +39,7 @@ import {
   Brain,
   Sparkles,
   User,
+  Crown,
   ArrowDown,
   ArrowLeft,
   Music,
@@ -228,7 +230,7 @@ interface IconProps extends React.SVGProps<SVGSVGElement> {
 }
 
 const createIcon = (IconComponent: any) => 
-  forwardRef<SVGSVGElement, IconProps>(({ className, strokeWidth = 1.8, size = 20, ...props }, ref) => (
+  forwardRef<SVGSVGElement, IconProps>(({ className, strokeWidth = 1.6, size = 20, ...props }, ref) => (
     <IconComponent 
       ref={ref} 
       strokeWidth={strokeWidth} 
@@ -248,6 +250,7 @@ export const Icons = {
   Search: createIcon(Search),
   Settings: createIcon(Settings),
   User: createIcon(User),
+  Creator: createIcon(Crown),
   UserCog: createIcon(UserCog),
   LogOut: createIcon(LogOut),
   Notifications: createIcon(Bell),
@@ -274,9 +277,9 @@ export const Icons = {
   PartyPopper: createIcon(PartyPopper),
   
   // Library & Study
-  Bible: createIcon(BookOpen),
-  HolyBible: createIcon(BookOpen),
-  Book: createIcon(BookOpen),
+  Bible: createIcon(Book),
+  HolyBible: createIcon(Book),
+  Book: createIcon(Book),
   BookOpen: createIcon(BookOpen),
   Library: createIcon(Library),
   Catechism: createIcon(FileText),
