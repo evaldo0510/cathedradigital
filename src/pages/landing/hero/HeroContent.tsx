@@ -42,43 +42,43 @@ interface HeroContentProps {
 const HeroContent = ({ heroOpacity, heroScale, heroY, onStart, onAbout }: HeroContentProps) => (
   <motion.div
     style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
-    className="relative z-10 max-w-5xl text-center space-y-10"
+    className="relative z-10 max-w-5xl text-center space-y-12"
   >
-    {/* Badge */}
-    <motion.div
-      initial={{ opacity: 0, y: 20, scale: 0.9 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.6, delay: 0.3, ease: EASE }}
-      className="inline-flex items-center gap-2.5 px-6 py-2.5 bg-primary/10 border border-primary/20 rounded-full text-primary backdrop-blur-sm"
-    >
-      <Icons.Sparkles className="w-4 h-4" />
-      <span className="text-xs font-black uppercase tracking-[0.25em]">O Santuário Digital da Fé</span>
-    </motion.div>
-
-    {/* Logo */}
+    {/* Logos Visual Highlight */}
     <motion.div
       initial={{ opacity: 0, scale: 0.5, rotate: -10 }}
       animate={{ opacity: 1, scale: 1, rotate: 0 }}
       transition={{ duration: 1, delay: 0.5, ease: EASE }}
       className="flex justify-center"
     >
-      {/* Logo removed */}
+      <div className="relative group">
+        <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full group-hover:bg-primary/30 transition-colors duration-700 animate-pulse-slow" />
+        <div className="relative p-8 rounded-[2.5rem] bg-card/40 backdrop-blur-2xl border border-primary/20 shadow-2xl group-hover:border-primary/40 transition-all duration-500">
+          <Icons.Sparkles className="w-16 h-16 sm:w-20 sm:h-20 text-primary" />
+        </div>
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.2 }}
+          className="absolute -bottom-5 left-1/2 -translate-x-1/2 px-6 py-2 rounded-full bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-[0.3em] whitespace-nowrap border-[6px] border-background shadow-2xl"
+        >
+          Logos Inteligência Artificial
+        </motion.div>
+      </div>
     </motion.div>
 
     {/* Title */}
-    <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-bold tracking-tight text-foreground leading-[1.15]">
-      <AnimatedTitle text="Aprofunde sua fé" />
+    <div className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold tracking-tight text-foreground leading-[1.1] pt-4">
+      <AnimatedTitle text="Como está a sua alma" />
       <br className="hidden sm:block" />
       <span className="inline sm:hidden">{" "}</span>
-      <AnimatedTitle text="e" />
-      {" "}
       <motion.span
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 1.6, ease: EASE }}
-        className="text-primary italic font-light drop-shadow-sm inline-block font-serif text-[0.85em]"
+        className="text-primary italic font-light drop-shadow-sm inline-block font-serif text-[0.9em]"
       >
-        Sinta-se em Casa.
+        hoje?
       </motion.span>
     </div>
 
@@ -87,19 +87,19 @@ const HeroContent = ({ heroOpacity, heroScale, heroY, onStart, onAbout }: HeroCo
       initial={{ scaleX: 0 }}
       animate={{ scaleX: 1 }}
       transition={{ duration: 0.8, delay: 2 }}
-      className="w-24 h-0.5 bg-gradient-to-r from-transparent via-primary/60 to-transparent mx-auto"
+      className="w-32 h-0.5 bg-gradient-to-r from-transparent via-primary/60 to-transparent mx-auto"
     />
 
-    {/* Quote */}
+    {/* Description */}
     <motion.p
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 2.2 }}
-      className="max-w-2xl mx-auto text-xl md:text-2xl text-muted-foreground font-serif italic"
+      className="max-w-2xl mx-auto text-xl md:text-2xl text-muted-foreground font-serif italic leading-relaxed"
     >
-      "A oração é a elevação da alma a Deus." <br />
-      <span className="text-base md:text-lg not-italic opacity-80">
-        Explore a Bíblia, o Catecismo e a tradição católica em uma plataforma unificada e acolhedora.
+      "A oração é o respirar da alma." <br />
+      <span className="text-base md:text-lg not-italic opacity-80 block mt-2">
+        Compartilhe suas reflexões com o Logos e receba uma orientação espiritual personalizada baseada na Sagrada Tradição.
       </span>
     </motion.p>
 
@@ -108,34 +108,37 @@ const HeroContent = ({ heroOpacity, heroScale, heroY, onStart, onAbout }: HeroCo
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 2.5 }}
-      className="flex flex-col sm:flex-row items-center justify-center gap-5 pt-6"
+      className="flex flex-col items-center justify-center gap-6 pt-4"
     >
-      <div className="flex flex-col items-center gap-3">
+      <div className="flex flex-col items-center gap-4">
         <motion.div variants={buttonHover} initial="rest" whileHover="hover" whileTap="tap">
           <Button
             size="lg"
-            className="h-16 px-12 rounded-2xl bg-primary text-primary-foreground font-black uppercase tracking-widest shadow-2xl shadow-primary/30 text-base relative overflow-hidden group"
+            className="h-20 px-16 rounded-[2rem] bg-primary text-primary-foreground font-black uppercase tracking-[0.2em] shadow-[0_20px_50px_rgba(11,31,58,0.3)] text-lg relative overflow-hidden group border border-primary-foreground/10"
             onClick={onStart}
           >
-            <span className="relative z-10 flex items-center">
-              Começar Jornada <Icons.ChevronRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            <span className="relative z-10 flex items-center gap-3">
+              Escreva sua reflexão <Icons.PenTool className="w-6 h-6 group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" />
             </span>
-            <motion.div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/80 to-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+            <motion.div className="absolute inset-0 bg-gradient-to-r from-primary via-secondary/20 to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           </Button>
         </motion.div>
-        <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest opacity-60">
-          Acesso gratuito · Sem cartão
-        </p>
+        <div className="flex items-center gap-2 opacity-60">
+          <span className="w-8 h-px bg-muted-foreground/30" />
+          <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em]">
+            Comece sua jornada interior
+          </p>
+          <span className="w-8 h-px bg-muted-foreground/30" />
+        </div>
       </div>
 
       <motion.div variants={buttonHover} initial="rest" whileHover="hover" whileTap="tap">
         <Button
-          size="lg"
-          variant="outline"
-          className="h-16 px-12 rounded-2xl border-primary/20 bg-card/50 backdrop-blur-md font-black uppercase tracking-widest text-base hover:border-primary/40 hover:bg-primary/5 transition-all"
+          variant="ghost"
+          className="text-muted-foreground hover:text-primary transition-colors font-medium text-sm tracking-wide"
           onClick={onAbout}
         >
-          Conhecer o Projeto
+          Saiba como o Logos funciona
         </Button>
       </motion.div>
     </motion.div>
