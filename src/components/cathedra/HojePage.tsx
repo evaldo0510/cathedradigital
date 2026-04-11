@@ -13,6 +13,7 @@ import { LangContext } from '@/contexts/LangContext';
 import ProConversionBanner from './ProConversionBanner';
 import { SAINTS_DATA } from '@/data/saints';
 import SacredImage from './SacredImage';
+import AudioContentPlayer from './AudioContentPlayer';
 
 const LITURGICAL_QUOTES = [
   '"Sede misericordiosos como vosso Pai é misericordioso." — Lc 6,36',
@@ -525,11 +526,18 @@ const HojePage: React.FC = () => {
               <div className="absolute top-0 right-0 p-6 opacity-10">
                 <Icons.Sparkles className="w-16 h-16 text-primary" />
               </div>
-              <CardHeader className="pb-2">
+              <CardHeader className="pb-2 flex flex-row items-center justify-between">
                 <CardTitle className="text-lg flex items-center gap-2 text-primary font-serif italic">
                   <Icons.Sparkles className="w-5 h-5" />
                   Logos
                 </CardTitle>
+                {logosResponse && !isAnalyzing && (
+                  <AudioContentPlayer 
+                    text={logosResponse} 
+                    title="Ouvir reflexão" 
+                    showTitle={false}
+                  />
+                )}
               </CardHeader>
               <CardContent className="space-y-6">
                 {isAnalyzing && !logosResponse ? (
