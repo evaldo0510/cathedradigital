@@ -147,26 +147,36 @@ const ProfilePage: React.FC = () => {
     if (!user) return;
     setSaving(true);
     
-    if (pushEnabled) {
-      await subscribe();
-    } else {
-      await unsubscribe();
-    }
+    // Background push notification updates (they take long and aren't critical for initial feedback)
+    const handlePush = async () => {
+      try {
+        if (pushEnabled) await subscribe();
+        else await unsubscribe();
+      } catch (err) { console.error('BG Push update failed:', err); }
+    };
+    handlePush();
 
-    const { error } = await supabase.from('profiles').update({ 
-      name, 
-      bio, 
-      whatsapp_number: whatsappNumber,
-      whatsapp_enabled: whatsappEnabled,
-      push_enabled: pushEnabled,
-      estado: estado || null,
-      diocese: diocese || null,
-      paroquia: paroquia || null,
-      movimento_pastoral: movimentoPastoral || null,
-    } as any).eq('id', user.id);
-    setSaving(false);
-    if (error) toast.error('Erro ao salvar perfil');
-    else toast.success('Perfil atualizado!');
+    try {
+      const { error } = await supabase.from('profiles').update({ 
+        name, 
+        bio, 
+        whatsapp_number: whatsappNumber,
+        whatsapp_enabled: whatsappEnabled,
+        push_enabled: pushEnabled,
+        estado: estado || null,
+        diocese: diocese || null,
+        paroquia: paroquia || null,
+        movimento_pastoral: movimentoPastoral || null,
+      } as any).eq('id', user.id);
+      
+      if (error) throw error;
+      toast.success('Perfil atualizado!');
+    } catch (err) {
+      console.error('Failed to save profile:', err);
+      toast.error('Erro ao salvar perfil');
+    } finally {
+      setSaving(false);
+    }
   };
 
   if (loading) return (
