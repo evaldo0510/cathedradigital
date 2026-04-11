@@ -7,6 +7,9 @@ import { useAuth } from '@/hooks/useAuth';
 import SacredImage from './SacredImage';
 import DeepContentSection from './DeepContentSection';
 import { toast } from 'sonner';
+import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
+import BibleVersePopover from './BibleVersePopover';
+import CatechismPopover from './CatechismPopover';
 
 const DOCS = {
   'ge': { name: 'Gaudete et Exsultate', type: 'Exortação Apostólica', year: 2018 },
