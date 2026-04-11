@@ -57,23 +57,6 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
           </div>
         </div>
 
-        {/* Quick access modals */}
-        <div className="flex gap-2 mb-8 px-2">
-          {[
-            { id: 'bible', label: 'Bíblia', icon: <Icons.HolyBible className="w-4 h-4" />, color: 'bg-primary/5 text-primary border-primary/10' },
-            { id: 'catechism', label: 'CIC', icon: <Icons.CatechismShield className="w-4 h-4" />, color: 'bg-secondary/10 text-primary border-secondary/20' },
-            { id: 'docs', label: 'Docs', icon: <Icons.Scroll className="w-4 h-4" />, color: 'bg-primary/5 text-primary border-primary/10' }
-          ].map(item => (
-            <button 
-              key={item.id}
-              onClick={() => setModal(item.id as any)} 
-              className={`flex-1 flex flex-col items-center gap-1.5 p-3 rounded-2xl border ${item.color} hover:scale-105 transition-all shadow-sm active:scale-95`}
-            >
-              <div className="opacity-80">{item.icon}</div>
-              <span className="text-[8px] font-black uppercase tracking-widest">{item.label}</span>
-            </button>
-          ))}
-        </div>
 
         <nav className="flex-1 space-y-8 overflow-y-auto pb-10">
           {sections.map((section) => (
