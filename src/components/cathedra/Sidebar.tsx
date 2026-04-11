@@ -41,6 +41,7 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
       label: 'Plataforma',
       items: [
         { label: 'Sobre', path: AppRoute.ABOUT, icon: <Icons.Info className="w-5 h-5" /> },
+        { label: 'Parceiros', path: AppRoute.PARTNERS, icon: <Icons.Handshake className="w-5 h-5" /> },
       ]
     }
   ];
