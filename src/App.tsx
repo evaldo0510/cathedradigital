@@ -88,6 +88,7 @@ const TemasPage = lazy(() => import('./components/cathedra/TemasPage'));
 const CheckoutPage = lazy(() => import('./components/cathedra/CheckoutPage'));
 const DiagnosticsPage = lazy(() => import('./components/cathedra/DiagnosticsPage'));
 const UpgradePage = lazy(() => import('./components/cathedra/UpgradePage'));
+const AZFaithPage = lazy(() => import('./components/cathedra/AZFaithPage'));
 
 const PartnersPage = lazy(() => import('./components/cathedra/PartnersPage'));
 
