@@ -5,6 +5,7 @@ import SEOHead from '@/components/SEOHead';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import SacredImage from './SacredImage';
+import DeepContentSection from './DeepContentSection';
 import { toast } from 'sonner';
 
 const DOCS = {
@@ -31,6 +32,12 @@ const SPIRITUAL_GUIDANCE = [
     question: 'O que a Igreja diz sobre a ansiedade?',
     magisteriumAnswer: 'A confiança em Deus é o caminho da paz interior. "Não andeis ansiosos" não é um comando vazio — é um convite a entregar o peso ao único que pode carregá-lo.',
     sourceDoc: 'Gaudete et Exsultate §112',
+    textoBase: 'Lançai sobre Ele todas as vossas preocupações, porque Ele cuida de vós. (1 Pe 5,7)',
+    explicacao: 'A Igreja nos ensina que a ansiedade muitas vezes nasce da ilusão de que temos o controle total sobre nossas vidas. Confiar em Deus não é passividade, mas a sabedoria de fazer a nossa parte e deixar o resultado nas mãos de quem nos ama infinitamente.',
+    interpretacaoProfunda: 'No Magistério, a paz não é apenas ausência de problemas, mas a presença de uma Certeza. O Papa Francisco em Gaudete et Exsultate nos lembra que a alegria cristã é acompanhada pelo senso de humor e pela confiança absoluta na Providência Divina.',
+    aplicacaoPratica: 'Quando a ansiedade bater, pare por 30 segundos. Respire fundo e diga: "Jesus, eu confio em Vós". Repita isso até que seu coração sinta que o peso não é mais só seu.',
+    reflexaoFinal: 'O que aconteceria se eu realmente acreditasse que Deus cuida de mim mais do que eu mesmo?',
+    exercicio: 'Escreva em um papel tudo o que te preocupa hoje. Dobre o papel e coloque-o sob um crucifixo ou uma imagem de Maria, simbolizando que você entregou essas questões a Deus.',
     pch: '"Ansiedade é tentar prever…\no que só pode ser vivido."',
     innerQuestion: 'O que você está tentando resolver sem confiar?',
     relatedDocs: ['ge', 'ss', 'vat2-gs'],
