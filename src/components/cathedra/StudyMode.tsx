@@ -276,8 +276,17 @@ const StudyMode: React.FC = () => {
         const finalMessages = [...allMessages, { role: 'assistant' as const, content: assistantContent }];
         saveMessages(convId, finalMessages).catch(e => console.error('BG Save failed:', e));
       }
+      }
     } catch (e: any) {
       setMessages(prev => [...prev, { role: 'assistant', content: `⚠️ ${e.message || 'Erro ao consultar a IA. Tente novamente.'}` }]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(input); }
+  };
   // Handle initial topic from URL or state
   useEffect(() => {
     if (initialTopicProcessed.current) return;
