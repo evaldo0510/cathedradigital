@@ -7,6 +7,7 @@ import ShareButton from './ShareButton';
 import DocumentViewer from './DocumentViewer';
 import DeepContentSection from './DeepContentSection';
 import { type Saint } from '@/data/saints';
+import { AppRoute } from '@/types';
 import { Sparkles, BookOpen, Quote, Shield, Info, Heart, Lightbulb, MessageSquare, Loader2, Sparkle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
