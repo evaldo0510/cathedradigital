@@ -72,9 +72,9 @@ const BibliotecaPage: React.FC = () => {
   return (
     <div className="space-y-6 max-w-2xl mx-auto pb-24">
       <div className="text-center space-y-2">
-        <Library className="w-10 h-10 mx-auto text-primary" />
-        <h1 className="text-2xl font-bold font-serif text-foreground">Biblioteca</h1>
-        <p className="text-sm text-muted-foreground">Todo o acervo da fé católica ao seu alcance.</p>
+        <Icons.Compass className="w-10 h-10 mx-auto text-primary" />
+        <h1 className="text-2xl font-bold font-serif text-foreground">Explorar</h1>
+        <p className="text-sm text-muted-foreground">Mergulhe na profundidade da tradição católica.</p>
       </div>
 
       <div className="relative">
