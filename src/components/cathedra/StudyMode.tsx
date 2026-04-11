@@ -13,6 +13,8 @@ import { Copy, Check, Plus, MessageSquare, Trash2, ChevronLeft, Compass, Sparkle
 import ProConversionBanner from './ProConversionBanner';
 import { toast } from 'sonner';
 import logosAvatarImg from '@/assets/logos-avatar.png';
+import logosAquinasImg from '@/assets/logos-aquinas.png';
+import logosColloquiumImg from '@/assets/logos-colloquium.png';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -369,7 +371,7 @@ const StudyMode: React.FC = () => {
             <div key={i} className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
               {msg.role === 'assistant' && (
                 <div className="shrink-0 w-8 h-8 rounded-full overflow-hidden border border-secondary/30 shadow-md mt-1">
-                  <img src={logosAvatarImg} alt="Logos" className="w-full h-full object-cover" loading="lazy" />
+                  <img src={currentMode === 'aquinas' ? logosAquinasImg : logosColloquiumImg} alt="Logos" className="w-full h-full object-cover" loading="lazy" />
                 </div>
               )}
               <div className={`max-w-[80%] rounded-2xl px-5 py-4 ${
@@ -405,12 +407,23 @@ const StudyMode: React.FC = () => {
           )}
 
           {isLoading && messages[messages.length - 1]?.role !== 'assistant' && (
-            <div className="flex justify-start">
+            <div className="flex justify-start gap-3">
+              {/* Pulsing Logos avatar */}
+              <motion.div
+                animate={{ scale: [1, 1.1, 1], opacity: [0.7, 1, 0.7] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                className="shrink-0 w-8 h-8 rounded-full overflow-hidden border border-secondary/30 shadow-md mt-1"
+              >
+                <img src={currentMode === 'aquinas' ? logosAquinasImg : logosColloquiumImg} alt="Logos pensando..." className="w-full h-full object-cover" />
+              </motion.div>
               <div className="bg-card border border-border rounded-2xl rounded-bl-md px-5 py-4">
-                <div className="flex gap-1.5">
-                  <div className="w-2 h-2 bg-primary/40 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                  <div className="w-2 h-2 bg-primary/40 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                  <div className="w-2 h-2 bg-primary/40 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                <div className="flex items-center gap-2">
+                  <div className="flex gap-1.5">
+                    <div className="w-2 h-2 bg-primary/40 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                    <div className="w-2 h-2 bg-primary/40 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                    <div className="w-2 h-2 bg-primary/40 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                  </div>
+                  <span className="text-[10px] text-muted-foreground italic ml-1">Logos meditando...</span>
                 </div>
               </div>
             </div>
