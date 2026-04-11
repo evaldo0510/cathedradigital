@@ -38,6 +38,11 @@ const HojePage: React.FC = () => {
   const [logosRecommendation, setLogosRecommendation] = useState<any>(null);
   const [recommendedLogosJourney, setRecommendedLogosJourney] = useState<any>(null);
   const [recommendedLogosStep, setRecommendedLogosStep] = useState<any>(null);
+  const saintsToday = useMemo(() => {
+    const day = new Date().getDate();
+    const month = new Date().getMonth() + 1;
+    return SAINTS_DATA.filter(s => s.feastMonth === month && s.feastDayNum === day);
+  }, []);
 
   useEffect(() => {
     if (!user) return;
