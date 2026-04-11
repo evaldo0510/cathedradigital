@@ -9,6 +9,8 @@ import { toast } from 'sonner';
 
 const CATEGORIES = [
   { id: 'geral', label: 'Geral' },
+  { id: 'testemunho', label: '✝ Testemunho' },
+  { id: 'partilha', label: '💬 Partilha' },
   { id: 'teologia', label: 'Teologia' },
   { id: 'biblia', label: 'Bíblia' },
   { id: 'liturgia', label: 'Liturgia' },
