@@ -6,9 +6,9 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
   const [phase, setPhase] = useState<'logo' | 'text' | 'exit'>('logo');
 
   useEffect(() => {
-    const t1 = setTimeout(() => setPhase('text'), 800);
-    const t2 = setTimeout(() => setPhase('exit'), 2200);
-    const t3 = setTimeout(onComplete, 2800);
+    const t1 = setTimeout(() => setPhase('text'), 600);
+    const t2 = setTimeout(() => setPhase('exit'), 1800);
+    const t3 = setTimeout(onComplete, 2200);
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
   }, [onComplete]);
 
@@ -22,7 +22,6 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
         transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
         className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[hsl(var(--primary))] overflow-hidden"
       >
-        {/* Radial glow behind logo */}
         <motion.div
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 0.15, scale: 1.5 }}
@@ -33,7 +32,6 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
           }}
         />
 
-        {/* Rotating light rays */}
         <motion.div
           initial={{ opacity: 0, rotate: 0 }}
           animate={{ opacity: 0.08, rotate: 360 }}
@@ -44,7 +42,6 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
           }}
         />
 
-        {/* Particles */}
         {[...Array(12)].map((_, i) => (
           <motion.div
             key={i}
@@ -59,7 +56,6 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
           />
         ))}
 
-        {/* Logo */}
         <motion.div
           initial={{ opacity: 0, scale: 0.3, rotateY: -90 }}
           animate={{ opacity: 1, scale: 1, rotateY: 0 }}
@@ -71,7 +67,6 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
           </div>
         </motion.div>
 
-        {/* Text */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: phase === 'text' || phase === 'logo' ? 1 : 0, y: 0 }}
@@ -96,12 +91,11 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
           </motion.p>
         </motion.div>
 
-        {/* Bottom loading bar */}
         <motion.div className="absolute bottom-12 w-32 h-0.5 bg-white/5 rounded-full overflow-hidden">
           <motion.div
             initial={{ width: '0%' }}
             animate={{ width: '100%' }}
-            transition={{ duration: 2.2, ease: [0.4, 0, 0.2, 1] }}
+            transition={{ duration: 2, ease: [0.4, 0, 0.2, 1] }}
             className="h-full bg-gradient-to-r from-primary/60 via-primary to-primary/60 rounded-full"
           />
         </motion.div>
