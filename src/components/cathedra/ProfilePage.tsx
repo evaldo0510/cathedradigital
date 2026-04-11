@@ -483,7 +483,7 @@ const ProfilePage: React.FC = () => {
           </div>
         </div>
 
-
+        <button
           onClick={handleSave}
           disabled={saving}
           className="w-full py-4 bg-primary text-primary-foreground rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:opacity-90 transition-all disabled:opacity-50"
