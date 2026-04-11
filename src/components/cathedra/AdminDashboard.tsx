@@ -38,11 +38,15 @@ interface Stats {
   activeLast30Days: number;
   inactiveUsers: number;
   journeysInProgress: number;
+  totalReflections: number;
+  totalJourneysStarted: number;
+  totalJourneysCompleted: number;
   returnRate: number;
   recentTransactions: any[];
   userGrowth: any[];
   revenueData: any[];
 }
+
 
 interface UserProfile {
   id: string;
