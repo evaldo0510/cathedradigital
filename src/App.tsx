@@ -86,6 +86,7 @@ const JornadasPage = lazy(() => import('./components/cathedra/JornadasPage'));
 const Index = lazy(() => import('./pages/Index'));
 const CheckoutPage = lazy(() => import('./components/cathedra/CheckoutPage'));
 const DiagnosticsPage = lazy(() => import('./components/cathedra/DiagnosticsPage'));
+const UpgradePage = lazy(() => import('./components/cathedra/UpgradePage'));
 
 const PartnersPage = lazy(() => import('./components/cathedra/PartnersPage'));
 
@@ -396,6 +397,7 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.TERMS} element={<PageTransition><TermsPage /></PageTransition>} />
                   <Route path={AppRoute.PRIVACY} element={<PageTransition><PrivacyPage /></PageTransition>} />
                   <Route path={AppRoute.PRICING} element={<PageTransition><PricingPage /></PageTransition>} />
+                  <Route path={AppRoute.UPGRADE} element={<PageTransition><UpgradePage /></PageTransition>} />
                   <Route path={AppRoute.DIAGNOSTICO} element={<PageTransition><AuthGuard><DiagnosticoPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.HOJE} element={<PageTransition><AuthGuard><HojePage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.JORNADAS} element={<PageTransition><AuthGuard><JornadasPage /></AuthGuard></PageTransition>} />

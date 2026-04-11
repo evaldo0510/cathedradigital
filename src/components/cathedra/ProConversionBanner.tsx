@@ -114,7 +114,7 @@ const ProConversionBanner: React.FC<ProConversionBannerProps> = ({ context, forc
 
           {/* CTA */}
           <button
-            onClick={() => navigate(AppRoute.PRICING)}
+            onClick={() => navigate(AppRoute.UPGRADE)}
             className="flex items-center gap-2 px-5 py-3 bg-primary text-primary-foreground rounded-2xl text-[10px] font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-md whitespace-nowrap flex-shrink-0"
           >
             Desbloquear experiência completa <ArrowRight className="w-3.5 h-3.5" />

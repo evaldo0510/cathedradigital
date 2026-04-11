@@ -130,6 +130,14 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
               <div className="flex-1 min-w-0 text-left">
                 <p className="text-xs font-bold truncate text-foreground">{user.name}</p>
                 <p className="text-[8px] uppercase text-primary font-black tracking-widest">{user.isPremium ? 'PRO' : 'Gratuito'}</p>
+                {!user.isPremium && (
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); handleNav(AppRoute.UPGRADE); }}
+                    className="mt-1 flex items-center gap-1 text-[7px] font-black uppercase tracking-widest bg-primary/10 text-primary px-1.5 py-0.5 rounded-full hover:bg-primary hover:text-white transition-colors animate-pulse"
+                  >
+                    Upgrade <Icons.ArrowRight className="w-2 h-2" />
+                  </button>
+                )}
               </div>
             </button>
           ) : (
