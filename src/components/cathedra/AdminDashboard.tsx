@@ -178,38 +178,20 @@ const AdminDashboard: React.FC = () => {
           revenueData,
         });
 
-        const sensitiveMap = new Map<string, {email: string, depth?: string}>();
-        (sensitiveRes.data as SensitiveRow[] || []).forEach((s: SensitiveRow) => {
-          let depth = 'Iniciante';
-          const diag = s.diagnosis_result;
-          if (diag && typeof diag === 'object') {
-            const values = Object.values(diag);
-            const highValues = values.filter(v => Number(v) > 7).length;
-            if (highValues > 5) depth = 'Profundo';
-            else if (highValues > 2) depth = 'Engajado';
-          }
-          sensitiveMap.set(s.user_id, { email: s.email, depth });
-        });
-        
-        const journalMap = new Map<string, number>();
-        (journalRes.data || []).forEach((j: any) => {
-          journalMap.set(j.user_id, (journalMap.get(j.user_id) || 0) + 1);
-        });
+        const crmMap = new Map<string, any>();
+        crmUsers.forEach(u => crmMap.set(u.id, u));
 
-        const journeyMap = new Map<string, string>();
-        (journeysRes.data || []).forEach((j: any) => {
-          if (!journeyMap.has(j.user_id)) {
-            journeyMap.set(j.user_id, j.journeys?.title || 'Jornada');
-          }
-        });
-        
-        setUsers(allProfiles.map(p => ({
-          ...p,
-          email: sensitiveMap.get(p.id)?.email || '',
-          depth_level: sensitiveMap.get(p.id)?.depth || 'Iniciante',
-          reflections_count: journalMap.get(p.id) || 0,
-          current_journey: journeyMap.get(p.id) || 'Nenhuma',
-        })) as UserProfile[]);
+        setUsers(allProfiles.map(p => {
+          const crm = crmMap.get(p.id) || {};
+          return {
+            ...p,
+            email: crm.email || '',
+            depth_level: crm.classification || 'Novo',
+            reflections_count: crm.reflections_count || 0,
+            current_journey: crm.current_journey || 'Nenhuma',
+            last_activity: crm.last_activity
+          };
+        }) as UserProfile[]);
       } catch (err: any) {
         console.error('Error fetching admin stats:', err);
         setError(err.message);
