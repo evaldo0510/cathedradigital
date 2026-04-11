@@ -5,7 +5,7 @@ import {
   Users, TrendingUp, Download, DollarSign, ArrowUpRight,
   BarChart3, Calendar, AlertCircle, Crown, Shield, Search,
   ChevronDown, ChevronUp, UserCog, ArrowLeft, Home, Smartphone, MonitorSmartphone,
-  Target, Activity, Bell, LayoutGrid, UserCheck
+  Target, Activity, Bell, LayoutGrid, UserCheck, Handshake
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -21,6 +21,7 @@ const AdminCrmSegmentation = lazy(() => import('./AdminCrmSegmentation'));
 const AdminCrmRetention = lazy(() => import('./AdminCrmRetention'));
 const AdminCrmUserProfile = lazy(() => import('./AdminCrmUserProfile'));
 const AdminCrmAutomations = lazy(() => import('./AdminCrmAutomations'));
+const AdminPartnersTab = lazy(() => import('./AdminPartnersTab'));
 
 interface Stats {
   totalUsers: number;
@@ -369,6 +370,9 @@ const AdminDashboard: React.FC = () => {
           <TabsTrigger value="transactions" className="gap-1.5 text-xs sm:text-sm">
             <DollarSign className="w-3.5 h-3.5 hidden sm:block" /> Financeiro
           </TabsTrigger>
+          <TabsTrigger value="partners" className="gap-1.5 text-xs sm:text-sm">
+            <Handshake className="w-3.5 h-3.5 hidden sm:block" /> Parceiros
+          </TabsTrigger>
           <TabsTrigger value="users" className="gap-1.5 text-xs sm:text-sm">
             <Users className="w-3.5 h-3.5 hidden sm:block" /> Usuários
           </TabsTrigger>
@@ -518,6 +522,13 @@ const AdminDashboard: React.FC = () => {
         <TabsContent value="transactions">
           <Suspense fallback={<Skeleton className="h-[300px] rounded-xl" />}>
             <AdminTransactionsTab transactions={stats?.recentTransactions || []} />
+          </Suspense>
+        </TabsContent>
+
+        {/* Partners Tab */}
+        <TabsContent value="partners" className="space-y-4">
+          <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
+            <AdminPartnersTab />
           </Suspense>
         </TabsContent>
 
