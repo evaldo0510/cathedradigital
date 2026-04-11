@@ -279,8 +279,8 @@ const Footer: React.FC = React.memo(() => {
 
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-foreground/10 dark:border-foreground/15 flex flex-col md:flex-row items-center justify-between gap-6">
-          <p className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 dark:text-muted-foreground/70">
-            © {new Date().getFullYear()} CATHEDRA • OMNIA AD MAIOREM DEI GLORIAM •{' '}
+          <p className="text-[11px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 dark:text-muted-foreground/70">
+            © {new Date().getFullYear()} CATHEDRA • OMNIA AD MAIOREM DEI GLORIAM • CRIADO POR {' '}
             <button 
               onClick={() => navigate(AppRoute.ADMIN)} 
               className="cursor-pointer select-none opacity-20 hover:opacity-60 transition-opacity"
