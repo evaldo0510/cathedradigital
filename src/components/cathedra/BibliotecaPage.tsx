@@ -200,7 +200,10 @@ const BibliotecaPage: React.FC = () => {
                       {section.icon}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-foreground">{section.title}</h3>
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-semibold text-foreground">{section.title}</h3>
+                        {(section as any).pro && <span className="text-[8px] font-black uppercase tracking-widest text-primary bg-primary/10 px-1.5 py-0.5 rounded">PRO</span>}
+                      </div>
                       <p className="text-xs text-muted-foreground mt-0.5">{section.description}</p>
                     </div>
                     <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
