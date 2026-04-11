@@ -291,7 +291,11 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
             <div className="bg-primary/5 p-8 rounded-[2rem] border border-primary/10 relative group hover:bg-primary/10 transition-all">
               <Lightbulb className="absolute top-4 right-4 w-12 h-12 text-primary/10 group-hover:scale-110 transition-all" />
               <p className="text-sm font-medium text-foreground relative z-10 leading-relaxed italic">
-                {saint.aplicacaoPratica || "Hoje, procure imitar a humildade deste santo em suas tarefas ordinárias, oferecendo cada pequeno gesto ao Senhor com amor."}
+                {parseTheologicalReferences(saint.aplicacaoPratica || "Hoje, procure imitar a humildade deste santo em suas tarefas ordinárias, oferecendo cada pequeno gesto ao Senhor com amor.").map((seg, i) => {
+                  if (seg.type === 'bibleRef') return <BibleVersePopover key={i} abbr={seg.abbr!} chapter={seg.chapter!} verse={seg.verse} label={seg.value} />;
+                  if (seg.type === 'catechismRef') return <CatechismPopover key={i} paragraph={seg.paragraph!} />;
+                  return <span key={i}>{seg.value}</span>;
+                })}
               </p>
             </div>
           </div>
