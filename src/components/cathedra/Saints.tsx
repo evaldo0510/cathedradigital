@@ -17,6 +17,14 @@ const Saints: React.FC = () => {
   const [autoReflect, setAutoReflect] = useState(false);
   const [search, setSearch] = useState('');
   const [viewMode, setViewMode] = useState<'daily' | 'search'>('daily');
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    const action = searchParams.get('action');
+    if (action === 'reflect' && saintsForSelectedDate.length > 0) {
+      handleOpenSaint(saintsForSelectedDate[0], true);
+    }
+  }, [searchParams, saintsForSelectedDate]);
 
   const handleOpenSaint = (saint: Saint, shouldReflect: boolean = false) => {
     setAutoReflect(shouldReflect);
