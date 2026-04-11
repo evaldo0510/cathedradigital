@@ -298,10 +298,10 @@ const JornadaStepPage: React.FC = () => {
               <h3 className="text-sm font-bold text-foreground">Diário Espiritual</h3>
             </div>
 
-            {getVariantContent('journal_prompt', content) && (
+            {(getVariantContent('journal_prompt', content) || getVariantContent('question', content)) && (
               <div className="bg-primary/5 border border-primary/10 rounded-xl p-4">
                 <p className="text-sm text-foreground/80 italic font-serif">
-                  {getVariantContent('journal_prompt', content)}
+                  {getVariantContent('journal_prompt', content) || getVariantContent('question', content)}
                 </p>
               </div>
             )}
