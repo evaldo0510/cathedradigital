@@ -10,28 +10,113 @@ interface FaithTerm {
   definition: string;
   reference?: string;
   category?: string;
+  deepInterpretation?: string;
+  practicalApplication?: string;
+  bibleVerses?: string[];
+  catechismReferences?: string[];
+  magisteriumReferences?: string[];
 }
 
 const FAITH_TERMS: FaithTerm[] = [
   { term: 'Abraão', definition: 'O pai da fé, chamado por Deus para sair de sua terra e ir para uma nova pátria.', reference: 'Gn 12,1-4', category: 'Patriarcas' },
   { term: 'Adão', definition: 'O primeiro homem criado por Deus, cuja queda trouxe o pecado ao mundo.', reference: 'Gn 2,7; 3,1-24', category: 'Criação' },
-  { term: 'Aliança', definition: 'Compromisso solene entre Deus e o seu povo, renovado plenamente em Jesus Cristo.', reference: 'Jr 31,31-34', category: 'Teologia' },
+  { 
+    term: 'Aliança', 
+    definition: 'Compromisso solene entre Deus e o seu povo, renovado plenamente em Jesus Cristo.', 
+    reference: 'Jr 31,31-34', 
+    category: 'Teologia',
+    deepInterpretation: 'A Aliança não é apenas um contrato legal, mas uma relação de amor esponsal. No Antigo Testamento, Deus estabelece alianças com Noé, Abraão, Moisés e Davi, cada uma expandindo o círculo da família de Deus. A Nova e Eterna Aliança é selada no Sangue de Cristo, unindo Deus e a humanidade de forma inseparável.',
+    practicalApplication: 'Viver a aliança hoje significa renovar diariamente nossa fidelidade a Deus através da oração e do cumprimento dos mandamentos, não por obrigação, mas por amor àquele que nos amou primeiro.',
+    bibleVerses: ['Gn 9,8-17 (Noé)', 'Gn 15 (Abraão)', 'Êx 19-24 (Moisés)', 'Lc 22,20 (Jesus)'],
+    catechismReferences: ['§54-64 (As etapas da Revelação)', '§762 (A preparação da Igreja na AT)'],
+    magisteriumReferences: ['Dei Verbum n. 2-4 (Revelação)', 'Lumen Gentium n. 9 (O Povo de Deus)']
+  },
   { term: 'Anjo', definition: 'Mensageiro espiritual de Deus que atua na história da salvação.', reference: 'Hb 1,14', category: 'Seres Celestiais' },
   { term: 'Apocalipse', definition: 'Último livro da Bíblia, que revela a vitória final de Deus sobre o mal.', reference: 'Ap 1,1', category: 'Escatologia' },
   { term: 'Arca da Aliança', definition: 'Símbolo da presença de Deus entre o povo de Israel no deserto.', reference: 'Êx 25,10-22', category: 'Objetos Sagrados' },
-  { term: 'Batismo', definition: 'Sacramento do novo nascimento pela água e pelo Espírito Santo.', reference: 'Mt 28,19; Jo 3,5', category: 'Sacramentos' },
+  { 
+    term: 'Batismo', 
+    definition: 'Sacramento do novo nascimento pela água e pelo Espírito Santo.', 
+    reference: 'Mt 28,19; Jo 3,5', 
+    category: 'Sacramentos',
+    deepInterpretation: 'Pelo Batismo, somos libertos do pecado e regenerados como filhos de Deus, tornando-nos membros de Cristo e incorporados à Igreja. É a porta da vida espiritual e o fundamento de toda a vida cristã, imprimindo na alma um caráter espiritual indelével.',
+    practicalApplication: 'Honrar nosso batismo significa viver como verdadeiros filhos de Deus no mundo, sendo sal da terra e luz do mundo, e participando ativamente da missão evangelizadora da Igreja.',
+    bibleVerses: ['Jo 3,5 (Nascimento da água e Espírito)', 'Mt 28,19 (Mandato missionário)', 'Rm 6,3-4 (Morte e Ressurreição com Cristo)'],
+    catechismReferences: ['§1213-1284 (O Sacramento do Batismo)', '§1267 (Membros do Corpo de Cristo)'],
+    magisteriumReferences: ['Ad Gentes n. 14 (Iniciação Cristã)', 'Lumen Gentium n. 11 (O exercício do sacerdócio comum)']
+  },
   { term: 'Bem-aventuranças', definition: 'O cerne da pregação de Jesus, descrevendo a felicidade do Reino de Deus.', reference: 'Mt 5,3-12', category: 'Ensinamentos' },
   { term: 'Céu', definition: 'A morada eterna de Deus e dos que morrem na sua amizade.', reference: 'Ap 21,1-4', category: 'Escatologia' },
   { term: 'Cristo', definition: 'Título de Jesus que significa "Ungido", o Messias prometido.', reference: 'Mt 16,16', category: 'Cristologia' },
   { term: 'Deus', definition: 'O Criador e Senhor de todas as coisas, Pai de todos os homens.', reference: 'Gn 1,1; 1Jo 4,8', category: 'Teologia' },
-  { term: 'Eucaristia', definition: 'O sacramento do Corpo e Sangue de Cristo, fonte e ápice da vida cristã.', reference: 'Lc 22,19-20', category: 'Sacramentos' },
+  { 
+    term: 'Eucaristia', 
+    definition: 'O sacramento do Corpo e Sangue de Cristo, fonte e ápice da vida cristã.', 
+    reference: 'Lc 22,19-20', 
+    category: 'Sacramentos',
+    deepInterpretation: 'A Eucaristia é o próprio sacrifício do Corpo e do Sangue do Senhor Jesus, que Ele instituiu para perpetuar o sacrifício da cruz ao longo dos séculos. É o memorial de sua Morte e Ressurreição, o sinal da unidade e o vínculo da caridade.',
+    practicalApplication: 'A participação frequente na Missa e a adoração eucarística nos transformam naquilo que recebemos, dando-nos força para amar e servir aos irmãos, especialmente os mais pobres.',
+    bibleVerses: ['Jo 6,51-58 (O Pão da Vida)', '1Cor 11,23-26 (A Instituição)', 'Lc 24,30-35 (Emaús)'],
+    catechismReferences: ['§1322-1419 (O Sacramento da Eucaristia)', '§1324 (Fonte e Ápice)'],
+    magisteriumReferences: ['Sacrosanctum Concilium n. 47-48 (O Mistério Eucarístico)', 'Ecclesia de Eucharistia (João Paulo II)']
+  },
   { term: 'Espírito Santo', definition: 'A terceira pessoa da Santíssima Trindade, o Paráclito prometido por Jesus.', reference: 'Jo 14,26', category: 'Teologia' },
-  { term: 'Fé', definition: 'A virtude teologal pela qual cremos em Deus e em tudo o que Ele revelou.', reference: 'Hb 11,1', category: 'Virtudes' },
+  { 
+    term: 'Fé', 
+    definition: 'A virtude teologal pela qual cremos em Deus e em tudo o que Ele revelou.', 
+    reference: 'Hb 11,1', 
+    category: 'Virtudes',
+    deepInterpretation: 'A fé é, antes de tudo, uma adesão pessoal do homem a Deus; é, ao mesmo tempo e inseparavelmente, o assentimento livre a toda a verdade que Deus revelou. É um dom sobrenatural de Deus, que exige a cooperação livre da vontade humana.',
+    practicalApplication: 'Cultivar a fé através do estudo da Palavra, da oração constante e da prática da caridade, confiando em Deus mesmo nos momentos de escuridão e provação.',
+    bibleVerses: ['Hb 11 (Os heróis da fé)', 'Rm 1,17 (O justo viverá pela fé)', 'Tg 2,14-26 (Fé e Obras)'],
+    catechismReferences: ['§142-184 (A Resposta do homem a Deus)', '§1814-1816 (A virtude da Fé)'],
+    magisteriumReferences: ['Lumen Fidei (Papa Francisco)', 'Fides et Ratio (João Paulo II)']
+  },
   { term: 'Graça', definition: 'O dom gratuito de Deus que nos torna participantes da sua vida divina.', reference: 'Ef 2,8', category: 'Teologia' },
-  { term: 'Igreja', definition: 'O Povo de Deus reunido em Cristo, Corpo Místico de Cristo.', reference: 'Mt 16,18', category: 'Eclesiologia' },
-  { term: 'Jesus', definition: 'O Filho de Deus feito homem para a nossa salvação.', reference: 'Mt 1,21', category: 'Cristologia' },
-  { term: 'Maria', definition: 'A mãe de Jesus e mãe da Igreja, cheia de graça.', reference: 'Lc 1,26-38', category: 'Mariologia' },
-  { term: 'Oração', definition: 'O diálogo de amor entre o homem e Deus.', reference: 'Mt 6,5-15', category: 'Espiritualidade' },
+  { 
+    term: 'Igreja', 
+    definition: 'O Povo de Deus reunido em Cristo, Corpo Místico de Cristo.', 
+    reference: 'Mt 16,18', 
+    category: 'Eclesiologia',
+    deepInterpretation: 'A Igreja é o mistério da união dos homens com Deus e da unidade de todo o gênero humano. Ela é una, santa, católica e apostólica. É visível em sua estrutura hierárquica e invisível em sua comunhão espiritual com Cristo, sua Cabeça.',
+    practicalApplication: 'Ser Igreja hoje é viver em comunhão com o Papa e os Bispos, participando ativamente da paróquia e testemunhando a alegria do Evangelho em todos os ambientes.',
+    bibleVerses: ['Mt 16,18 (Fundação)', 'Ef 1,22-23 (Corpo de Cristo)', '1Tm 3,15 (Coluna da verdade)'],
+    catechismReferences: ['§748-959 (A Igreja no plano de Deus)', '§811-870 (As notas da Igreja)'],
+    magisteriumReferences: ['Lumen Gentium (Vaticano II)', 'Dominus Iesus (Congregação para a Doutrina da Fé)']
+  },
+  { 
+    term: 'Jesus', 
+    definition: 'O Filho de Deus feito homem para a nossa salvação.', 
+    reference: 'Mt 1,21', 
+    category: 'Cristologia',
+    deepInterpretation: 'Jesus Cristo é verdadeiro Deus e verdadeiro homem, na unidade de sua Pessoa divina. Ele é o único Mediador entre Deus e os homens. Sua vida, morte e ressurreição constituem o evento central da história humana e o fundamento da esperança cristã.',
+    practicalApplication: 'Seguir a Jesus significa imitá-lo no amor, no serviço e na obediência ao Pai, buscando ter os mesmos sentimentos que Ele teve.',
+    bibleVerses: ['Jo 1,1-14 (O Verbo encarnado)', 'Mt 16,16 (Confissão de Pedro)', 'Fl 2,5-11 (O hino cristológico)'],
+    catechismReferences: ['§422-682 (Creio em Jesus Cristo)', '§464-469 (Verdadeiro Deus e verdadeiro Homem)'],
+    magisteriumReferences: ['Dignitatis Humanae n. 11 (O exemplo de Cristo)', 'Jesus Christ the Bearer of the Water of Life']
+  },
+  { 
+    term: 'Maria', 
+    definition: 'A mãe de Jesus e mãe da Igreja, cheia de graça.', 
+    reference: 'Lc 1,26-38', 
+    category: 'Mariologia',
+    deepInterpretation: 'Maria é a Mãe de Deus (Theotokos) por ter concebido pelo Espírito Santo o Filho de Deus feito homem. Ela é a primeira discípula, aquela que acreditou e colaborou plenamente com o plano da salvação. Sua Assunção aos céus é sinal de esperança para toda a Igreja.',
+    practicalApplication: 'Consagrar-se a Maria é permitir que ela nos leve a Jesus, seguindo seu conselho nas Bodas de Caná: "Fazei tudo o que Ele vos disser".',
+    bibleVerses: ['Lc 1,26-38 (Anunciação)', 'Jo 19,25-27 (Aos pés da cruz)', 'Ap 12,1 (A Mulher vestida de sol)'],
+    catechismReferences: ['§484-511 (Maria, Mãe de Cristo)', '§963-975 (Maria, Mãe da Igreja)'],
+    magisteriumReferences: ['Marialis Cultus (Paulo VI)', 'Redemptoris Mater (João Paulo II)']
+  },
+  { 
+    term: 'Oração', 
+    definition: 'O diálogo de amor entre o homem e Deus.', 
+    reference: 'Mt 6,5-15', 
+    category: 'Espiritualidade',
+    deepInterpretation: 'A oração é a elevação da alma a Deus ou o pedido a Deus de bens convenientes. É um dom da graça e uma resposta decidida da nossa parte. Sempre pressupõe um esforço: a oração é um combate contra nós mesmos e contra as astúcias do Tentador.',
+    practicalApplication: 'Estabelecer momentos fixos de oração diária, como o oferecimento do dia, o Rosário ou a Lectio Divina, cultivando a presença de Deus em meio às tarefas cotidianas.',
+    bibleVerses: ['Mt 6,5-15 (O Pai Nosso)', 'Lc 18,1 (Orar sem cessar)', '1Ts 5,17 (Rezai sem interrupção)'],
+    catechismReferences: ['§2558-2865 (A Oração Cristã)', '§2626-2643 (As formas de oração)'],
+    magisteriumReferences: ['Novo Millennio Ineunte n. 32-34 (A arte da oração)', 'Verbum Domini (Bento XVI)']
+  },
   { term: 'Pecado', definition: 'Uma ofensa a Deus, uma falta contra a razão, a verdade e a consciência reta.', reference: 'Rm 3,23', category: 'Moral' },
   { term: 'Reino de Deus', definition: 'A soberania de Deus que se manifesta na justiça, paz e alegria.', reference: 'Mc 1,15', category: 'Ensinamentos' },
   { term: 'Salvação', definition: 'A libertação do pecado e a vida eterna oferecidas por Cristo.', reference: 'At 4,12', category: 'Soteriologia' },
@@ -241,7 +326,12 @@ const AZFaithPage: React.FC = () => {
                           className="w-full text-left p-4 flex items-center justify-between gap-4"
                         >
                           <div className="flex-1 min-w-0">
-                            <h3 className="text-sm font-bold text-foreground">{t.term}</h3>
+                            <div className="flex items-center gap-2">
+                              <h3 className="text-sm font-bold text-foreground">{t.term}</h3>
+                              {(t.deepInterpretation || t.practicalApplication) && (
+                                <span className="flex h-1.5 w-1.5 rounded-full bg-primary animate-pulse" title="Hub de conteúdo disponível" />
+                              )}
+                            </div>
                             {t.category && (
                               <span className="text-[8px] uppercase tracking-widest text-primary/70 font-black">{t.category}</span>
                             )}
@@ -257,17 +347,113 @@ const AZFaithPage: React.FC = () => {
                               exit={{ height: 0, opacity: 0 }}
                               className="overflow-hidden"
                             >
-                              <div className="px-4 pb-4 space-y-3 border-t border-border pt-3">
-                                <p className="text-sm text-muted-foreground leading-relaxed font-serif">
-                                  {t.definition}
-                                </p>
-                                {t.reference && (
-                                  <div className="flex items-center gap-2 text-[10px] text-primary bg-primary/5 px-2 py-1.5 rounded-lg w-fit">
-                                    <Icons.Book className="w-3 h-3" />
-                                    <span className="font-bold">{t.reference}</span>
+                                <div className="px-4 pb-6 space-y-6 border-t border-border pt-4">
+                                  {/* Explicação Simples */}
+                                  <div className="space-y-2">
+                                    <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/60 flex items-center gap-2">
+                                      <Icons.Info className="w-3 h-3" />
+                                      Explicação Simples
+                                    </h4>
+                                    <p className="text-sm text-foreground leading-relaxed font-serif">
+                                      {t.definition}
+                                    </p>
                                   </div>
-                                )}
-                              </div>
+
+                                  {/* Interpretação Profunda */}
+                                  {t.deepInterpretation && (
+                                    <div className="space-y-2 p-3 bg-primary/5 rounded-xl border border-primary/10">
+                                      <h4 className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-2">
+                                        <Icons.Sparkles className="w-3 h-3" />
+                                        Interpretação Profunda
+                                      </h4>
+                                      <p className="text-xs text-muted-foreground leading-relaxed italic">
+                                        {t.deepInterpretation}
+                                      </p>
+                                    </div>
+                                  )}
+
+                                  {/* Aplicação Prática */}
+                                  {t.practicalApplication && (
+                                    <div className="space-y-2">
+                                      <h4 className="text-[10px] font-black uppercase tracking-widest text-secondary flex items-center gap-2">
+                                        <Icons.Target className="w-3 h-3" />
+                                        Aplicação Prática
+                                      </h4>
+                                      <p className="text-xs text-foreground/80 leading-relaxed">
+                                        {t.practicalApplication}
+                                      </p>
+                                    </div>
+                                  )}
+
+                                  {/* Conexões */}
+                                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+                                    {/* Bíblia */}
+                                    {(t.reference || (t.bibleVerses && t.bibleVerses.length > 0)) && (
+                                      <div className="space-y-2">
+                                        <h5 className="text-[9px] font-bold uppercase text-muted-foreground flex items-center gap-1.5">
+                                          <Icons.Bible className="w-2.5 h-2.5" />
+                                          Escrituras
+                                        </h5>
+                                        <div className="flex flex-wrap gap-1.5">
+                                          {t.bibleVerses ? t.bibleVerses.map(v => (
+                                            <span key={v} className="text-[9px] bg-muted/50 px-2 py-0.5 rounded-full border border-border/50 text-foreground/70">
+                                              {v}
+                                            </span>
+                                          )) : t.reference && (
+                                            <span className="text-[9px] bg-muted/50 px-2 py-0.5 rounded-full border border-border/50 text-foreground/70">
+                                              {t.reference}
+                                            </span>
+                                          )}
+                                        </div>
+                                      </div>
+                                    )}
+
+                                    {/* Catecismo */}
+                                    {t.catechismReferences && t.catechismReferences.length > 0 && (
+                                      <div className="space-y-2">
+                                        <h5 className="text-[9px] font-bold uppercase text-muted-foreground flex items-center gap-1.5">
+                                          <Icons.FileText className="w-2.5 h-2.5" />
+                                          Catecismo
+                                        </h5>
+                                        <div className="flex flex-wrap gap-1.5">
+                                          {t.catechismReferences.map(r => (
+                                            <span key={r} className="text-[9px] bg-primary/5 px-2 py-0.5 rounded-full border border-primary/10 text-primary/80">
+                                              {r}
+                                            </span>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    )}
+
+                                    {/* Magistério */}
+                                    {t.magisteriumReferences && t.magisteriumReferences.length > 0 && (
+                                      <div className="space-y-2">
+                                        <h5 className="text-[9px] font-bold uppercase text-muted-foreground flex items-center gap-1.5">
+                                          <Icons.Globe className="w-2.5 h-2.5" />
+                                          Magistério
+                                        </h5>
+                                        <div className="flex flex-wrap gap-1.5">
+                                          {t.magisteriumReferences.map(m => (
+                                            <span key={m} className="text-[9px] bg-secondary/5 px-2 py-0.5 rounded-full border border-secondary/10 text-secondary-foreground/80">
+                                              {m}
+                                            </span>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    )}
+                                  </div>
+                                  
+                                  <button 
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      navigate(`${AppRoute.STUDY_MODE}?topic=${encodeURIComponent(t.term)}`);
+                                    }}
+                                    className="w-full py-2 bg-primary text-primary-foreground rounded-xl text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors mt-4"
+                                  >
+                                    <Icons.Brain className="w-3.5 h-3.5" />
+                                    Aprofundar com Colloquium IA
+                                  </button>
+                                </div>
                             </motion.div>
                           )}
                         </AnimatePresence>
