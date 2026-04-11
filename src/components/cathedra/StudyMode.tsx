@@ -365,8 +365,13 @@ const StudyMode: React.FC = () => {
           )}
 
           {messages.map((msg, i) => (
-            <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-              <div className={`max-w-[85%] rounded-2xl px-5 py-4 ${
+            <div key={i} className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+              {msg.role === 'assistant' && (
+                <div className="shrink-0 w-8 h-8 rounded-full overflow-hidden border border-secondary/30 shadow-md mt-1">
+                  <img src={logosAvatarImg} alt="Logos" className="w-full h-full object-cover" loading="lazy" />
+                </div>
+              )}
+              <div className={`max-w-[80%] rounded-2xl px-5 py-4 ${
                 msg.role === 'user'
                   ? 'bg-foreground text-background rounded-br-md'
                   : 'bg-card border border-border rounded-bl-md'
