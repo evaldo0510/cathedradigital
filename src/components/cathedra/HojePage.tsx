@@ -381,7 +381,9 @@ const HojePage: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-12 max-w-2xl mx-auto pt-6 md:pt-12">
+    <div className="desktop-layout pt-6 md:pt-12">
+      {/* ═══ MAIN COLUMN ═══ */}
+      <div className="desktop-main space-y-12 max-w-2xl mx-auto lg:max-w-none lg:mx-0">
       {/* Logos IA Highlight - Centralized */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -767,6 +769,79 @@ const HojePage: React.FC = () => {
           </button>
         </div>
       </div>
+
+      </div>{/* end desktop-main */}
+
+      {/* ═══ DESKTOP RIGHT PANEL ═══ */}
+      <aside className="desktop-aside">
+        {/* Acesso Rápido - Sidebar version */}
+        <div className="desktop-card space-y-4">
+          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground">Acesso Rápido</h3>
+          <div className="space-y-2">
+            {dailySections.map((section) => (
+              <button
+                key={section.title}
+                onClick={() => navigate(section.route)}
+                className="w-full flex items-center gap-3 p-3 rounded-xl border border-border hover:border-primary/30 hover:bg-primary/5 transition-all text-left group"
+              >
+                <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${section.color} group-hover:scale-110 transition-transform`}>
+                  {section.icon}
+                </div>
+                <span className="text-sm font-semibold text-foreground">{section.title}</span>
+                <Icons.ChevronRight className="w-4 h-4 text-muted-foreground ml-auto group-hover:translate-x-0.5 transition-transform" />
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Streak & Stats Card */}
+        <div className="desktop-card space-y-4">
+          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground">Sua Semana</h3>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
+              <p className="text-2xl font-bold text-foreground">{profile?.streak || 0}</p>
+              <p className="text-[9px] text-muted-foreground font-medium mt-1">
+                <Icons.Flame className="w-3 h-3 inline mr-1" />{t('streak')}
+              </p>
+            </div>
+            <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
+              <p className="text-2xl font-bold text-foreground">{profile?.xp || 0}</p>
+              <p className="text-[9px] text-muted-foreground font-medium mt-1">
+                <Icons.Star className="w-3 h-3 inline mr-1" />XP
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Daily Quote */}
+        <div className="desktop-card space-y-3">
+          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground">Palavra do Dia</h3>
+          <p className="text-sm font-serif italic text-foreground leading-relaxed">
+            "{todayQuote}"
+          </p>
+        </div>
+
+        {/* Quick Navigation */}
+        <div className="desktop-card space-y-3">
+          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground">Explorar</h3>
+          <div className="space-y-1.5">
+            {[
+              { label: 'A-Z da Fé', route: AppRoute.AZ_FAITH, icon: <Icons.BookOpen className="w-4 h-4" /> },
+              { label: 'Jornadas', route: AppRoute.JORNADAS, icon: <Icons.Route className="w-4 h-4" /> },
+              { label: 'Comunidade', route: AppRoute.COMMUNITY, icon: <Icons.Users className="w-4 h-4" /> },
+            ].map((item) => (
+              <button
+                key={item.label}
+                onClick={() => navigate(item.route)}
+                className="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-muted/50 transition-all text-left group"
+              >
+                <span className="text-muted-foreground group-hover:text-primary transition-colors">{item.icon}</span>
+                <span className="text-sm font-medium text-foreground">{item.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </aside>
     </div>
   );
 };

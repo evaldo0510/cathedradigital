@@ -443,7 +443,7 @@ const AppLayout: React.FC = () => {
               </div>
             )}
             
-            <div className={isChromeless ? "w-full flex-1 pb-24 lg:pb-0" : "w-full max-w-[1200px] flex-1 pb-32 lg:pb-12 px-4 sm:px-6 md:px-8 lg:px-12 pt-4 md:pt-6 lg:pt-8"}>
+            <div className={isChromeless ? "w-full flex-1 pb-24 lg:pb-0" : "w-full max-w-[1200px] mx-auto flex-1 pb-32 lg:pb-12 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 pt-4 md:pt-6 lg:pt-10"}>
 
             <Suspense fallback={<LoadingFallback />}>
               <AnimatePresence mode="wait" initial={false}>
