@@ -209,19 +209,27 @@ interface ContentSectionProps {
   icon: React.ReactNode;
   items: ThemeContent[];
   showEmpty?: boolean;
-  color?: string;
+  color?: 'blue' | 'amber' | 'emerald' | 'primary';
 }
 
 const ContentSection = ({ title, icon, items, showEmpty = false, color = 'primary' }: ContentSectionProps) => {
   if (items.length === 0 && !showEmpty) return null;
 
+  const colorClasses = {
+    blue: 'bg-blue-500/10',
+    amber: 'bg-amber-500/10',
+    emerald: 'bg-emerald-500/10',
+    primary: 'bg-primary/10'
+  }[color];
+
   return (
     <section className="space-y-6 animate-in fade-in duration-700">
       <div className="flex items-center justify-between border-b pb-4 border-border/40">
         <div className="flex items-center gap-4">
-          <div className={`p-3 rounded-2xl bg-${color}-500/10 shadow-sm`}>
+          <div className={`p-3 rounded-2xl ${colorClasses} shadow-sm`}>
             {icon}
           </div>
+
           <h3 className="font-bold text-2xl tracking-tight">{title}</h3>
         </div>
         <Badge variant="outline" className="rounded-full px-4 py-1 font-mono text-sm bg-muted/50 border-border/60">
