@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import logosAvatar from '@/assets/logos-avatar.png';
 
-const SplashScreen: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
+const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }>(({ onComplete }, ref) => {
   const [phase, setPhase] = useState<'logo' | 'text' | 'exit'>('logo');
 
   useEffect(() => {
@@ -14,8 +14,8 @@ const SplashScreen: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
 
   return (
     <AnimatePresence>
-      {phase !== 'exit' ? null : null}
       <motion.div
+        ref={ref}
         key="splash"
         initial={{ opacity: 1 }}
         animate={{ opacity: phase === 'exit' ? 0 : 1 }}
@@ -108,6 +108,8 @@ const SplashScreen: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
       </motion.div>
     </AnimatePresence>
   );
-};
+});
+
+SplashScreen.displayName = 'SplashScreen';
 
 export default SplashScreen;

@@ -11,7 +11,7 @@ interface SacredImageProps {
   dominantColor?: string;
 }
 
-const SacredImage: React.FC<SacredImageProps> = ({ src, alt, className, priority = false, liturgicalColor, dominantColor }) => {
+const SacredImage = React.forwardRef<HTMLDivElement, SacredImageProps>(({ src, alt, className, priority = false, liturgicalColor, dominantColor }, ref) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState(false);
 
@@ -31,7 +31,7 @@ const SacredImage: React.FC<SacredImageProps> = ({ src, alt, className, priority
   }, [mainSrc]);
 
   return (
-    <div className={`relative bg-[#0c0a09] overflow-hidden ${className}`}>
+    <div ref={ref} className={`relative bg-[#0c0a09] overflow-hidden ${className}`}>
       {/* Gradient background — always visible as base layer / fallback */}
       <div
         className={`absolute inset-0 z-0 transition-opacity duration-1000 ${isLoaded && !error ? 'opacity-0' : 'opacity-100'}`}
@@ -73,6 +73,8 @@ const SacredImage: React.FC<SacredImageProps> = ({ src, alt, className, priority
       <div className="absolute inset-0 z-[3] pointer-events-none bg-gradient-to-b from-black/20 via-transparent to-black/60 opacity-50" />
     </div>
   );
-};
+});
+
+SacredImage.displayName = 'SacredImage';
 
 export default SacredImage;
