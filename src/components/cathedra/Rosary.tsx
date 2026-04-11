@@ -252,6 +252,13 @@ const Rosary: React.FC = () => {
             <h3 className="text-2xl font-serif font-bold text-secondary">Orações Iniciais</h3>
             <p className="text-xs text-secondary/40 font-serif italic">Sinal da Cruz + Credo + 3 Ave-Marias + Glória</p>
           </div>
+          
+          {intention && (
+            <div className="mx-auto p-5 bg-secondary/5 border border-secondary/10 rounded-2xl text-center max-w-sm animate-in fade-in slide-in-from-top-2 duration-700">
+              <p className="text-[10px] font-black uppercase tracking-widest text-secondary/50 mb-1">Intenção</p>
+              <p className="text-base font-serif text-secondary/70 italic leading-relaxed">"{intention}"</p>
+            </div>
+          )}
           <div className="space-y-3">
             {['signOfCross', 'creed', 'ourFather'].map(k => (
               <div key={k} className="group bg-white/[0.04] rounded-2xl p-6 cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setShowPrayer(showPrayer === k ? null : k)}>
