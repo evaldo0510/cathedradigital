@@ -11,13 +11,13 @@ interface Props {
 }
 
 const AdminChartsRecharts: React.FC<Props> = ({ userGrowth, revenueData }) => (
-  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <Card className="border-border/50 shadow-sm overflow-hidden bg-card/50 backdrop-blur-sm">
-      <CardHeader>
-        <CardTitle className="text-lg font-display font-black uppercase tracking-tight text-primary">Crescimento de Usuários</CardTitle>
-        <CardDescription className="text-xs uppercase tracking-widest opacity-60">Novos registros por mês</CardDescription>
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+    <Card className="border-border/40 shadow-none overflow-hidden bg-card/50 backdrop-blur-sm">
+      <CardHeader className="pb-2 pt-4 px-4">
+        <CardTitle className="text-sm font-black uppercase tracking-tight text-primary">Crescimento de Usuários</CardTitle>
+        <CardDescription className="text-[10px] uppercase tracking-widest opacity-60">Novos registros por mês</CardDescription>
       </CardHeader>
-      <CardContent className="h-[300px] w-full p-0 sm:p-6">
+      <CardContent className="h-[240px] w-full p-2 sm:p-4">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={userGrowth} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
             <defs>
@@ -63,12 +63,12 @@ const AdminChartsRecharts: React.FC<Props> = ({ userGrowth, revenueData }) => (
       </CardContent>
     </Card>
 
-    <Card className="border-border/50 shadow-sm overflow-hidden bg-card/50 backdrop-blur-sm">
-      <CardHeader>
-        <CardTitle className="text-lg font-display font-black uppercase tracking-tight text-primary">Fluxo Financeiro</CardTitle>
-        <CardDescription className="text-xs uppercase tracking-widest opacity-60">Receita semanal acumulada</CardDescription>
+    <Card className="border-border/40 shadow-none overflow-hidden bg-card/50 backdrop-blur-sm">
+      <CardHeader className="pb-2 pt-4 px-4">
+        <CardTitle className="text-sm font-black uppercase tracking-tight text-primary">Fluxo Financeiro</CardTitle>
+        <CardDescription className="text-[10px] uppercase tracking-widest opacity-60">Receita semanal acumulada</CardDescription>
       </CardHeader>
-      <CardContent className="h-[300px] w-full p-0 sm:p-6">
+      <CardContent className="h-[240px] w-full p-2 sm:p-4">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={revenueData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--muted-foreground) / 0.1)" />
