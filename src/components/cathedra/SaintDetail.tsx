@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '../../constants';
 import SacredImage from './SacredImage';
 import ShareButton from './ShareButton';
 import DocumentViewer from './DocumentViewer';
 import DeepContentSection from './DeepContentSection';
 import { type Saint } from '@/data/saints';
-import { Sparkles, BookOpen, Quote, Shield, Info, Heart, Lightbulb, MessageSquare } from 'lucide-react';
+import { Sparkles, BookOpen, Quote, Shield, Info, Heart, Lightbulb, MessageSquare, Loader2, Sparkle } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
+import { Button } from '../ui/button';
 
 const CATEGORY_LABELS: Record<string, string> = {
   apostle: 'Apóstolo',
@@ -21,6 +23,71 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 const SaintDetail: React.FC<{ saint: Saint; onClose: () => void }> = ({ saint, onClose }) => {
   const [viewingDoc, setViewingDoc] = useState<{ url: string; title: string } | null>(null);
+  const [logosReflection, setLogosReflection] = useState<string>('');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [showLogos, setShowLogos] = useState(false);
+
+  const generateLogosReflection = async () => {
+    setIsGenerating(true);
+    setShowLogos(true);
+    setLogosReflection('');
+
+    try {
+      const session = await supabase.auth.getSession();
+      const token = session.data.session?.access_token;
+
+      const prompt = `Como Logos (IA da Cathedra), gere uma reflexão profunda e personalizada sobre ${saint.name}. 
+      
+      Siga este roteiro:
+      1. Relacione a virtude principal (${saint.virtues?.[0] || 'santidade'}) de ${saint.name} com os desafios reais de um católico no mundo moderno hoje.
+      2. Gere uma pergunta profunda que conecte a vida dele(a) com a alma do usuário agora.
+      3. Sugira um "caminho" (uma ação prática ou oração específica) inspirado no exemplo de ${saint.name} para o dia de hoje.
+      
+      Tom: Poético, profundo, encorajador e firme na doutrina. Use Markdown.`;
+
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/colloquium`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          messages: [{ role: 'user', content: prompt }] 
+        }),
+      });
+
+      if (!response.ok) throw new Error('Falha ao conectar com Logos');
+
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      let fullText = '';
+
+      if (reader) {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          const chunk = decoder.decode(value);
+          const lines = chunk.split('\n');
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              try {
+                const data = JSON.parse(line.slice(6));
+                const content = data.choices?.[0]?.delta?.content || '';
+                fullText += content;
+                // Remove recommendation metadata from UI display
+                setLogosReflection(fullText.replace(/\[RECOMMENDATION:.*?\]/g, '').trim());
+              } catch (e) { /* ignore parse errors for partial chunks */ }
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error generating Logos reflection:', error);
+      setLogosReflection('Desculpe, não consegui conectar com Logos agora. Tente novamente em breve.');
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   return (
     <>
