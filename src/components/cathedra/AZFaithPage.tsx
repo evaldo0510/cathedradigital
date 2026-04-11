@@ -210,6 +210,22 @@ const AZFaithPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedLetter, setSelectedLetter] = useState<string | null>('A');
+  const [selectedTerm, setSelectedTerm] = useState<FaithTerm | null>(null);
+
+  const categories = useMemo(() => {
+    const cats = new Set(FAITH_TERMS.map(t => t.category).filter(Boolean) as string[]);
+    return Array.from(cats).sort();
+  }, []);
+
+  const letterStatus = useMemo(() => {
+    const status: Record<string, boolean> = {};
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(l => {
+      status[l] = FAITH_TERMS.some(t => t.term.toUpperCase().startsWith(l));
+    });
+    return status;
+  }, []);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -217,10 +233,9 @@ const AZFaithPage: React.FC = () => {
     if (q) {
       setSearchQuery(q);
       setSelectedLetter(null);
+      setSelectedCategory(null);
     }
   }, [location.search]);
-  const [selectedLetter, setSelectedLetter] = useState<string | null>('A');
-  const [selectedTerm, setSelectedTerm] = useState<FaithTerm | null>(null);
   
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -235,22 +250,31 @@ const AZFaithPage: React.FC = () => {
         t.definition.toLowerCase().includes(q) ||
         t.category?.toLowerCase().includes(q)
       );
+    } else if (selectedCategory) {
+      result = result.filter(t => t.category === selectedCategory);
     } else if (selectedLetter) {
       result = result.filter(t => t.term.toUpperCase().startsWith(selectedLetter));
     }
     
     return result.sort((a, b) => a.term.localeCompare(b.term));
-  }, [searchQuery, selectedLetter]);
+  }, [searchQuery, selectedLetter, selectedCategory]);
 
   const handleLetterClick = (letter: string) => {
     setSelectedLetter(letter);
     setSearchQuery('');
+    setSelectedCategory(null);
+    setSelectedTerm(null);
+  };
+
+  const handleCategoryClick = (category: string | null) => {
+    setSelectedCategory(category);
+    setSearchQuery('');
+    setSelectedLetter(null);
     setSelectedTerm(null);
   };
 
   const handleTermClick = (term: FaithTerm) => {
     setSelectedTerm(selectedTerm?.term === term.term ? null : term);
-    // Smooth scroll to content area if on mobile
     if (window.innerWidth < 768) {
       setTimeout(() => {
         document.getElementById('term-content')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
