@@ -252,11 +252,11 @@ const JornadaStepPage: React.FC = () => {
           </motion.div>
 
           {/* Content Sections */}
-          {SECTION_CONFIG.map(({ key, label, icon }, i) => {
+          {SECTION_CONFIG.map(({ key, label, icon, isPremium: sectionIsPremium }, i) => {
             const sectionContent = getVariantContent(key, content);
             if (!sectionContent) return null;
             const isExpanded = expandedSection === key;
-
+            const isLocked = sectionIsPremium && !isUserPremium;
 
             return (
               <motion.div
@@ -269,18 +269,25 @@ const JornadaStepPage: React.FC = () => {
                   onClick={() => toggleSection(key)}
                   className={`w-full flex items-center gap-3 p-4 rounded-t-2xl transition-all text-left ${
                     isExpanded
-                      ? 'bg-card border border-b-0 border-border'
+                      ? 'bg-card border border-b-0 border-border shadow-sm'
                       : 'bg-card border border-border rounded-b-2xl hover:border-primary/30'
-                  }`}
+                  } ${isLocked ? 'opacity-70' : ''}`}
                 >
                   <span className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                    isExpanded ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
+                    isExpanded ? 'bg-primary text-primary-foreground shadow-md' : 'bg-muted text-muted-foreground'
                   }`}>
-                    {icon}
+                    {isLocked ? <Lock className="w-4 h-4" /> : icon}
                   </span>
-                  <span className={`flex-1 text-sm font-bold ${isExpanded ? 'text-foreground' : 'text-muted-foreground'}`}>
-                    {label}
-                  </span>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className={`text-sm font-bold ${isExpanded ? 'text-foreground' : 'text-muted-foreground'}`}>
+                        {label}
+                      </span>
+                      {sectionIsPremium && (
+                        <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 text-[8px] uppercase font-black px-1.5 py-0">PRO</Badge>
+                      )}
+                    </div>
+                  </div>
                   <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
                 </button>
 
@@ -293,10 +300,36 @@ const JornadaStepPage: React.FC = () => {
                       transition={{ duration: 0.3 }}
                       className="overflow-hidden"
                     >
-                      <div className="bg-card border border-t-0 border-border rounded-b-2xl p-5">
-                        <p className={`text-sm text-foreground/90 leading-relaxed whitespace-pre-line font-serif ${key === 'pch' ? 'text-lg italic text-primary text-center' : ''}`}>
-                          {sectionContent}
-                        </p>
+                      <div className="bg-card border border-t-0 border-border rounded-b-2xl p-5 relative min-h-[140px]">
+                        {isLocked ? (
+                          <div className="space-y-4 py-4 text-center">
+                            <div className="blur-[6px] select-none pointer-events-none opacity-40">
+                              <p className="text-sm font-serif line-clamp-4">
+                                {sectionContent}
+                              </p>
+                            </div>
+                            <div className="absolute inset-0 flex flex-col items-center justify-center bg-card/40 backdrop-blur-[2px] p-6 space-y-4 rounded-b-2xl">
+                              <Sparkles className="w-8 h-8 text-primary animate-pulse" />
+                              <p className="text-sm font-bold text-foreground max-w-[180px] leading-relaxed">
+                                Continue aprofundando essa experiência
+                              </p>
+                              <Button 
+                                size="sm" 
+                                className="font-bold text-[10px] uppercase tracking-widest bg-primary hover:bg-primary/90 shadow-lg"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  navigate(AppRoute.PRICING);
+                                }}
+                              >
+                                Desbloquear PRO
+                              </Button>
+                            </div>
+                          </div>
+                        ) : (
+                          <p className={`text-sm text-foreground/90 leading-relaxed whitespace-pre-line font-serif ${key === 'pch' ? 'text-lg italic text-primary text-center' : ''}`}>
+                            {sectionContent}
+                          </p>
+                        )}
                       </div>
                     </motion.div>
                   )}
