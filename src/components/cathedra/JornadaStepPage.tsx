@@ -41,6 +41,7 @@ const JornadaStepPage: React.FC = () => {
   const [reflection, setReflection] = useState('');
   const [completed, setCompleted] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [nextStep, setNextStep] = useState<any>(null);
   const [expandedSection, setExpandedSection] = useState<string | null>('intro');
 
 
@@ -60,6 +61,20 @@ const JornadaStepPage: React.FC = () => {
       if (stepRes.data) setStep(stepRes.data);
       if (journeyRes.data) setJourneyTitle(journeyRes.data.title);
       setTotalSteps(countRes.count || 0);
+
+      // Load next step
+      const { data: allSteps } = await supabase
+        .from('journey_steps')
+        .select('*')
+        .eq('journey_id', journeyId!)
+        .order('step_order', { ascending: true });
+      
+      if (allSteps && stepRes.data) {
+        const currentIndex = allSteps.findIndex(s => s.id === stepId);
+        if (currentIndex !== -1 && currentIndex < allSteps.length - 1) {
+          setNextStep(allSteps[currentIndex + 1]);
+        }
+      }
 
       if (user && stepRes.data) {
         const { data: progress } = await supabase
@@ -341,6 +356,21 @@ const JornadaStepPage: React.FC = () => {
                 <p className="text-sm font-bold text-primary">✓ Etapa concluída!</p>
               </div>
               <ProConversionBanner context="jornada" />
+              {nextStep ? (
+                <button
+                  onClick={() => navigate(`/jornadas/${journeyId}/step?step=${nextStep.id}`)}
+                  className="w-full py-4 bg-primary text-primary-foreground rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
+                >
+                  Próxima Etapa <ChevronDown className="w-4 h-4 -rotate-90" />
+                </button>
+              ) : (
+                <button
+                  onClick={() => navigate(`/jornadas/${journeyId}/complete`)}
+                  className="w-full py-4 bg-primary text-primary-foreground rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
+                >
+                  Concluir Jornada <Icons.Award className="w-4 h-4" />
+                </button>
+              )}
               <button
                 onClick={() => navigate(`/jornadas/${journeyId}`)}
                 className="w-full py-4 bg-muted text-foreground rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-2"

@@ -124,11 +124,46 @@ const Catechism: React.FC = () => {
   const [selectedPart, setSelectedPart] = useState<typeof CIC_SECTIONS[0] | null>(null);
   const [selectedSection, setSelectedSection] = useState<typeof CIC_SECTIONS[0]['sections'][0] | null>(null);
   const [currentParagraph, setCurrentParagraph] = useState(1);
+  const [paragraphsRead, setParagraphsRead] = useState<Set<number>>(new Set());
   const [searchQuery, setSearchQuery] = useState('');
   const [showCrossRefs, setShowCrossRefs] = useState(true);
   const { toggleFavorite, isFavorite } = useFavorites();
+  const { user } = useAuth();
 
   const crossRefs = getCatechismCrossRefs(currentParagraph);
+
+  // Track progress
+  useEffect(() => {
+    if (!user) return;
+    const loadProgress = async () => {
+      const { data } = await supabase
+        .from('catechism_paragraphs_read')
+        .select('paragraph')
+        .eq('user_id', user.id);
+      if (data) {
+        setParagraphsRead(new Set(data.map(p => p.paragraph)));
+      }
+    };
+    loadProgress();
+  }, [user]);
+
+  const markParagraphRead = useCallback(async (p: number) => {
+    if (!user) return;
+    try {
+      await supabase
+        .from('catechism_paragraphs_read')
+        .upsert({ user_id: user.id, paragraph: p }, { onConflict: 'user_id,paragraph' });
+      setParagraphsRead(prev => new Set([...prev, p]));
+    } catch (err) {
+      console.error('Failed to mark paragraph read:', err);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (viewMode === 'reading' && currentParagraph) {
+      markParagraphRead(currentParagraph);
+    }
+  }, [viewMode, currentParagraph, markParagraphRead]);
 
   // Handle deep-link from Bible cross-references (?p=1324)
   useEffect(() => {
