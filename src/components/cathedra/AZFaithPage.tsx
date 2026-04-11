@@ -39,6 +39,7 @@ interface FaithTerm {
   bibleVerses?: string[];
   catechismReferences?: string[];
   magisteriumReferences?: string[];
+  journey_id?: string;
 }
 
 const FAITH_TERMS: FaithTerm[] = [
