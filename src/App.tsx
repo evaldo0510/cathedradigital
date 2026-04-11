@@ -87,6 +87,8 @@ const Index = lazy(() => import('./pages/Index'));
 const CheckoutPage = lazy(() => import('./components/cathedra/CheckoutPage'));
 const DiagnosticsPage = lazy(() => import('./components/cathedra/DiagnosticsPage'));
 
+const PartnersPage = lazy(() => import('./components/cathedra/PartnersPage'));
+
 const SkeletonBar = ({ w = 'w-full', h = 'h-4', className = '' }: { w?: string; h?: string; className?: string }) => (
   <div className={`${w} ${h} rounded-lg bg-muted/60 animate-pulse ${className}`} />
 );
