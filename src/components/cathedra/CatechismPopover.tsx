@@ -10,6 +10,7 @@ import { Icons } from '../../constants';
 interface CatechismPopoverProps {
   paragraph: number;
   onNavigate?: (paragraph: number) => void;
+  variant?: 'default' | 'mini';
 }
 
 const CatechismPopover: React.FC<CatechismPopoverProps> = ({
