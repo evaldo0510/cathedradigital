@@ -361,7 +361,21 @@ const LiturgiaPage: React.FC = () => {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} className="bg-muted/30 border border-border rounded-[2rem] p-8 flex flex-col items-center text-center space-y-4">
             <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-secondary p-1 shadow-lg shadow-secondary/10"><img src={saintOfDay.image} alt={saintOfDay.name} className="w-full h-full object-cover rounded-full" /></div>
             <div className="space-y-1"><p className="text-[9px] font-black uppercase tracking-[0.3em] text-secondary">Santo do Dia</p><h3 className="text-xl font-display font-black text-primary">{saintOfDay.name}</h3></div>
-            <Button variant="ghost" className="text-[10px] font-black uppercase tracking-widest text-primary hover:bg-primary/5" onClick={() => navigate(AppRoute.SAINTS)}>Conhecer História <Icons.ChevronRight className="w-4 h-4 ml-2" /></Button>
+            <div className="flex flex-col gap-2 w-full">
+              <Button 
+                variant="ghost" 
+                className="text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:bg-primary/5 h-10" 
+                onClick={() => navigate(AppRoute.SAINTS)}
+              >
+                Conhecer História <Icons.ChevronRight className="w-4 h-4 ml-2" />
+              </Button>
+              <Button 
+                className="text-[10px] font-black uppercase tracking-widest bg-primary text-primary-foreground hover:bg-primary/90 h-11 rounded-xl shadow-lg shadow-primary/10" 
+                onClick={() => navigate(`${AppRoute.SAINTS}?action=reflect`)}
+              >
+                Refletir com Logos <Icons.Sparkles className="w-3.5 h-3.5 ml-2" />
+              </Button>
+            </div>
           </motion.div>
         )}
       </div>
