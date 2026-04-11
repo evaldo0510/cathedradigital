@@ -279,11 +279,12 @@ const Footer: React.FC = React.memo(() => {
 
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-foreground/10 dark:border-foreground/15 flex flex-col md:flex-row items-center justify-between gap-6">
-          <p className="text-[11px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 dark:text-muted-foreground/70">
-            © {new Date().getFullYear()} CATHEDRA • OMNIA AD MAIOREM DEI GLORIAM • CRIADO POR {' '}
+          <p className="text-[12px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 dark:text-muted-foreground/70">
+            © {new Date().getFullYear()} CATHEDRA • OMNIA AD MAIOREM DEI GLORIAM • 
+            <span className="ml-2">CRIADO POR</span>{' '}
             <button 
               onClick={() => navigate(AppRoute.ADMIN)} 
-              className="cursor-pointer select-none opacity-20 hover:opacity-60 transition-opacity"
+              className="cursor-pointer select-none opacity-50 hover:opacity-100 transition-opacity text-primary hover:underline decoration-2 underline-offset-4"
             >
               evaldo.os
             </button>
