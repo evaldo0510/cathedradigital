@@ -140,25 +140,36 @@ const Bible: React.FC = () => {
 
   const markChapterRead = useCallback(async (bookAbbr: string, chapter: number, totalChapters: number) => {
     if (!user) return;
-    await supabase
-      .from('bible_chapters_read' as any)
-      .upsert({ user_id: user.id, book_abbr: bookAbbr, chapter } as any, { onConflict: 'user_id,book_abbr,chapter' });
     
+    // Optimistic update for immediate UI feedback
     setChaptersRead(prev => {
       const next = { ...prev };
       if (!next[bookAbbr]) next[bookAbbr] = new Set();
       next[bookAbbr] = new Set(next[bookAbbr]).add(chapter);
+      return next;
+    });
+
+    try {
+      // Async save to database
+      supabase
+        .from('bible_chapters_read' as any)
+        .upsert({ user_id: user.id, book_abbr: bookAbbr, chapter } as any, { onConflict: 'user_id,book_abbr,chapter' })
+        .then(({ error }) => {
+          if (error) console.error('Error saving chapter read:', error);
+        });
       
-      // Auto-mark book as completed if all chapters read
-      if (next[bookAbbr].size >= totalChapters && !completedBooks.has(bookAbbr)) {
+      // Complete book logic (must use the updated set)
+      const currentRead = chaptersRead[bookAbbr] || new Set();
+      const nextRead = new Set(currentRead).add(chapter);
+
+      if (nextRead.size >= totalChapters && !completedBooks.has(bookAbbr)) {
         const newCompleted = [...(profile?.completed_books || []), bookAbbr];
         const newCompletedSet = new Set(newCompleted);
         
-        // Check for new badges
         const currentBadges = profile?.badges || [];
         const newBadgeIds = checkNewBadges(currentBadges, {
           completedBooks: newCompletedSet,
-          chaptersRead: next,
+          chaptersRead: { ...chaptersRead, [bookAbbr]: nextRead },
           totalMinutesRead: profile?.total_minutes_read || 0,
           streak: profile?.streak || 0,
           completedJourneys: 0,
@@ -171,21 +182,18 @@ const Bible: React.FC = () => {
           .eq('id', user.id)
           .then(() => {
             if (newBadgeIds.length > 0) {
-              // Fire confetti
               confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 }, colors: ['#FFD700', '#FF6B35', '#4ECDC4', '#8B5CF6'] });
-              // Show toasts
               newBadgeIds.forEach(id => {
                 const badge = getBadgeById(id);
-                if (badge) {
-                  toast.success(`Nova conquista: ${badge.name}`, { description: badge.description, duration: 5000 });
-                }
+                if (badge) toast.success(`Nova conquista: ${badge.name}`, { description: badge.description, duration: 5000 });
               });
             }
           });
       }
-      return next;
-    });
-  }, [user, profile, completedBooks]);
+    } catch (err) {
+      console.error('Failed to process chapter read:', err);
+    }
+  }, [user, profile, completedBooks, chaptersRead]);
 
   // All books flat for counting
   const allBooks = useMemo(() => [
