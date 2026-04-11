@@ -79,11 +79,11 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
   const getStatusBadge = (u: UserProfile) => {
     const status = u.depth_level || 'Inativo';
     switch (status) {
-      case 'Profundo': return <Badge variant="default" className="bg-primary/20 text-primary border-primary/30 text-[10px]">Profundo</Badge>;
-      case 'Engajado': return <Badge variant="secondary" className="bg-orange-500/20 text-orange-600 border-orange-500/30 text-[10px]">Engajado</Badge>;
-      case 'Ativo': return <Badge variant="outline" className="bg-green-500/10 text-green-600 border-green-500/30 text-[10px]">Ativo</Badge>;
-      case 'Novo': return <Badge variant="outline" className="bg-blue-500/10 text-blue-600 border-blue-500/30 text-[10px]">Novo</Badge>;
-      default: return <Badge variant="destructive" className="bg-destructive/10 text-destructive border-destructive/30 text-[10px]">Inativo</Badge>;
+      case 'Profundo': return <Badge variant="default" className="text-[10px]">Profundo</Badge>;
+      case 'Engajado': return <Badge variant="secondary" className="text-[10px]">Engajado</Badge>;
+      case 'Ativo': return <Badge variant="outline" className="border-primary/30 text-primary text-[10px]">Ativo</Badge>;
+      case 'Novo': return <Badge variant="outline" className="border-secondary/30 text-secondary text-[10px]">Novo</Badge>;
+      default: return <Badge variant="destructive" className="text-[10px]">Inativo</Badge>;
     }
   };
 
