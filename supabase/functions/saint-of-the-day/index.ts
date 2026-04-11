@@ -24,27 +24,44 @@ serve(async (req) => {
 
     const html = await response.text();
     
-    // Regex based extraction
-    // Find the saint's name inside the first <h2> after "intro--saint"
-    const nameMatch = html.match(/section--evidence section--isStatic">[\s\S]*?<h2[^>]*>([\s\S]*?)<\/h2>/i) ||
-                     html.match(/<h2[^>]*>([\s\S]*?)<\/h2>/i);
-    let name = nameMatch ? nameMatch[1].replace(/<[^>]*>/g, '').trim() : "Santo do Dia";
-    
-    // Image
-    const imgMatch = html.match(/section--isStatic">[\s\S]*?data-original="([^"]*)"/i) ||
-                    html.match(/section--isStatic">[\s\S]*?src="([^"]*)"/i);
-    let imageUrl = null;
-    if (imgMatch) {
-      const src = imgMatch[1];
-      if (src && !src.includes('data:image')) {
-        imageUrl = src.startsWith('http') ? src : `https://www.vaticannews.va${src}`;
+    // String split approach is often more reliable than regex for complex HTML
+    let sectionHtml = "";
+    if (html.includes('section--isStatic')) {
+      sectionHtml = html.split('section--isStatic')[1].split('</section>')[0];
+    } else if (html.includes('section--evidence')) {
+      sectionHtml = html.split('section--evidence')[1].split('</section>')[0];
+    } else {
+      sectionHtml = html;
+    }
+
+    let name = "Santo do Dia";
+    if (sectionHtml.includes('<h2')) {
+      const parts = sectionHtml.split('<h2');
+      for (const p of parts) {
+        const text = p.split('</h2>')[0].split('>')[1]?.replace(/<[^>]*>/g, '').trim();
+        if (text && text.length > 5 && !text.includes('Menu') && !text.includes('Newsletter')) {
+          name = text;
+          break;
+        }
       }
     }
+
+    let imageUrl = null;
+    if (sectionHtml.includes('data-original="')) {
+      imageUrl = sectionHtml.split('data-original="')[1].split('"')[0];
+    } else if (sectionHtml.includes('src="')) {
+      imageUrl = sectionHtml.split('src="')[1].split('"')[0];
+    }
     
-    // Description
-    const pMatch = html.match(/section--isStatic">[\s\S]*?<p>([\s\S]*?)<\/p>/i);
-    const description = pMatch ? pMatch[1].replace(/<[^>]*>/g, '').trim() : "";
-    
+    if (imageUrl && !imageUrl.startsWith('http') && !imageUrl.includes('data:image')) {
+      imageUrl = `https://www.vaticannews.va${imageUrl}`;
+    }
+
+    let description = "";
+    if (sectionHtml.includes('<p>')) {
+      description = sectionHtml.split('<p>')[1].split('</p>')[0].replace(/<[^>]*>/g, '').trim();
+    }
+
     return new Response(
       JSON.stringify({
         name,
