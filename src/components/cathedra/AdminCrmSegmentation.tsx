@@ -183,18 +183,18 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
                         </div>
                       </div>
                     </td>
+                    <td className="p-3 text-center">
+                      <Badge variant={u.is_premium ? "default" : "outline"} className="text-[10px]">
+                        {u.is_premium ? 'PRO' : 'Free'}
+                      </Badge>
+                    </td>
                     <td className="p-3 text-center">{getStatusBadge(u)}</td>
                     <td className="p-3 text-center hidden md:table-cell">
                       <span className="text-xs font-medium">{u.reflections_count || 0}</span>
                     </td>
                     <td className="p-3 text-center hidden lg:table-cell">
-                      <span className="text-[10px] text-muted-foreground truncate max-w-[100px] block">
+                      <span className="text-[10px] text-muted-foreground truncate max-w-[150px] block mx-auto">
                         {u.current_journey || 'Nenhuma'}
-                      </span>
-                    </td>
-                    <td className="p-3 text-center hidden lg:table-cell">
-                      <span className="flex items-center justify-center gap-1 text-xs">
-                        <Flame className={`w-3 h-3 ${u.streak ? 'text-orange-500' : 'text-muted-foreground'}`} /> {u.streak || 0}
                       </span>
                     </td>
                     <td className="p-3 text-center hidden md:table-cell text-xs text-muted-foreground">
