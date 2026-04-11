@@ -283,13 +283,13 @@ const Footer: React.FC = React.memo(() => {
             <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 dark:text-muted-foreground/70">
               © {new Date().getFullYear()} CATHEDRA • OMNIA AD MAIOREM DEI GLORIAM
             </p>
-            <p className="text-[11px] font-bold text-muted-foreground/80 dark:text-muted-foreground/90 flex items-center gap-1.5 uppercase tracking-widest">
+            <p className="text-[12px] font-bold text-muted-foreground/80 dark:text-muted-foreground/90 flex items-center gap-1.5 tracking-widest">
               Criado por 
               <button 
                 onClick={() => navigate(AppRoute.ADMIN)} 
                 className="cursor-pointer select-none text-primary hover:text-primary/80 transition-colors font-black"
               >
-                evaldo.os
+                Evaldo.os
               </button>
             </p>
           </div>
