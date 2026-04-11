@@ -3,6 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { prefetchRoute } from '@/lib/prefetch';
 import { Icons } from '../../constants';
 import { AppRoute, User } from '../../types';
+import cathedraLogo from '@/assets/cathedra-logo.png';
+import { AppRoute, User } from '../../types';
 
 
 
