@@ -37,7 +37,7 @@ const FeatureCard = React.forwardRef<HTMLDivElement, { feature: typeof features[
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
       >
         <Card
-          className="group h-full border-none bg-card shadow-xl hover:shadow-2xl transition-all duration-500 rounded-[2.5rem] overflow-hidden flex flex-col cursor-pointer relative"
+          className="group h-full border-none bg-card shadow-xl hover:shadow-2xl transition-all duration-500 rounded-[2.5rem] overflow-hidden flex flex-col cursor-pointer relative lg:rounded-[2rem]"
           onClick={() => onNavigate(feature.route)}
         >
           {/* Hover glow effect */}
@@ -118,7 +118,7 @@ const FeaturesSection = ({ onNavigate }: FeaturesSectionProps) => {
         />
       </motion.div>
 
-      <div className="grid gap-8 md:grid-cols-2 relative z-10">
+      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4 relative z-10">
         {features.map((feature, idx) => (
           <FeatureCard key={feature.title} feature={feature} index={idx} onNavigate={onNavigate} />
         ))}

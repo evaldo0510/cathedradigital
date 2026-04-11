@@ -5,7 +5,7 @@ import { fadeUp } from "./animations";
 const AcolhimentoSection = () => {
   return (
     <section className="w-full py-24 px-6 bg-primary/5">
-      <div className="max-w-5xl mx-auto space-y-16">
+      <div className="max-w-7xl mx-auto space-y-16">
         <motion.div 
           variants={fadeUp} 
           initial="hidden" 
