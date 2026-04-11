@@ -125,6 +125,7 @@ const Rosary: React.FC = () => {
   const [step, setStep] = useState<PrayerStep>('intro');
   const [showPrayer, setShowPrayer] = useState<string | null>(null);
   const [aveCount, setAveCount] = useState(0);
+  const [intention, setIntention] = useState('');
 
   if (!selectedSet) {
     return (
