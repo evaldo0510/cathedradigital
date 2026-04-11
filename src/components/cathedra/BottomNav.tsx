@@ -115,5 +115,3 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
 };
 
 export default BottomNav;
-
-export default BottomNav;
