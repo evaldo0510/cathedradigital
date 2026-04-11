@@ -207,10 +207,10 @@ const HojePage: React.FC = () => {
           // Recommend a saint based on emotional state
           const mainState = recommendation.main_state;
           const virtueMap: Record<string, string[]> = {
-            'ansiedade': ['Paz', 'Confiança', 'Paciência'],
-            'confusao': ['Sabedoria', 'Discernimento', 'Clareza'],
-            'dor_emocional': ['Esperança', 'Consolação', 'Fortaleza'],
-            'busca_espiritual': ['Contemplação', 'Mística', 'Oração']
+            'ansiedade': ['Paz', 'Confiança', 'Paciência', 'Abandono a Deus'],
+            'confusao': ['Sabedoria', 'Discernimento', 'Clareza', 'Busca pela Verdade'],
+            'dor_emocional': ['Esperança', 'Consolação', 'Fortaleza', 'Cura'],
+            'busca_espiritual': ['Contemplação', 'Mística', 'Oração', 'Silêncio']
           };
           const targetVirtues = virtueMap[mainState] || [];
           const matchedSaint = SAINTS_DATA.find(s => 
