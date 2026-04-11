@@ -47,8 +47,8 @@ const AboutCreatorSection = () => {
               <span className="text-[10px] font-bold uppercase tracking-widest text-primary/70">O Fundador</span>
             </div>
             
-            <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground">
-              eevaldo.os
+            <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground">
+              Evaldo.os
             </h2>
             
             <div className="space-y-4 text-muted-foreground text-lg leading-relaxed">

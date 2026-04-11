@@ -83,12 +83,12 @@ const AboutPage: React.FC = () => (
           <div className="space-y-6 flex-1 text-center md:text-left">
             <div className="space-y-2">
               <h2 className="text-2xl md:text-3xl font-bold text-foreground">Sobre o Criador</h2>
-              <p className="text-lg font-medium text-primary">eevaldo.os</p>
+              <p className="text-xl font-bold text-primary">Evaldo.os</p>
             </div>
             
             <div className="space-y-4 text-muted-foreground text-base leading-relaxed">
               <p>
-                O Cathedra Digital foi concebido e desenvolvido por <span className="text-foreground font-semibold">eevaldo.os</span> como uma resposta pessoal ao chamado de evangelização no mundo digital. Unindo a paixão pela tecnologia de ponta com a veneração pela Tradição Católica de dois mil anos.
+                O Cathedra Digital foi concebido e desenvolvido por <span className="text-foreground font-semibold">Evaldo.os</span> como uma resposta pessoal ao chamado de evangelização no mundo digital. Unindo a paixão pela tecnologia de ponta com a veneração pela Tradição Católica de dois mil anos.
               </p>
               <p>
                 Nossa missão é fornecer as ferramentas mais avançadas para que cada católico possa aprofundar sua fé, estudar as escrituras e viver a liturgia com clareza, beleza e profundidade, onde quer que esteja.
