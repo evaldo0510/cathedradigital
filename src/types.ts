@@ -140,7 +140,7 @@ export interface SavedItem {
   metadata?: any;
 }
 
-export interface Prayer {
+export interface Prayer extends Partial<DeepContent> {
   id: string;
   title: string;
   latin?: string;
