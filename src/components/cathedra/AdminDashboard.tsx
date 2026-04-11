@@ -431,184 +431,184 @@ const AdminDashboard: React.FC = () => {
 
         <TabsContent value="overview" className="space-y-6">
           {/* Stats Overview */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <CardTitle className="text-sm font-medium">Total de Usuários</CardTitle>
-                <Users className="h-4 w-4 text-muted-foreground" />
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            <Card className="shadow-none border-border/40">
+              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
+                <CardTitle className="text-[10px] font-black uppercase tracking-widest opacity-60">Total Usuários</CardTitle>
+                <Users className="h-3.5 w-3.5 text-muted-foreground" />
               </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stats?.totalUsers}</div>
-                <p className="text-xs text-muted-foreground mt-1">Usuários cadastrados</p>
+              <CardContent className="px-3 pb-3">
+                <div className="text-xl font-black tabular-nums">{stats?.totalUsers}</div>
+                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Cadastrados</p>
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <CardTitle className="text-sm font-medium">Usuários Ativos</CardTitle>
-                <UserCheck className="h-4 w-4 text-primary" />
+            <Card className="shadow-none border-border/40">
+              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
+                <CardTitle className="text-[10px] font-black uppercase tracking-widest opacity-60">Ativos</CardTitle>
+                <UserCheck className="h-3.5 w-3.5 text-primary" />
               </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-primary">{stats?.activeLast30Days}</div>
-                <p className="text-xs text-muted-foreground mt-1">Ativos nos últimos 30 dias</p>
+              <CardContent className="px-3 pb-3">
+                <div className="text-xl font-black text-primary tabular-nums">{stats?.activeLast30Days}</div>
+                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Últimos 30 dias</p>
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <CardTitle className="text-sm font-medium">Usuários PRO</CardTitle>
-                <Crown className="h-4 w-4 text-secondary" />
+            <Card className="shadow-none border-border/40">
+              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
+                <CardTitle className="text-[10px] font-black uppercase tracking-widest opacity-60">Usuários PRO</CardTitle>
+                <Crown className="h-3.5 w-3.5 text-secondary" />
               </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-secondary">{stats?.premiumUsers}</div>
-                <p className="text-xs text-muted-foreground mt-1">Assinantes ativos</p>
+              <CardContent className="px-3 pb-3">
+                <div className="text-xl font-black text-secondary tabular-nums">{stats?.premiumUsers}</div>
+                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Assinantes</p>
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <CardTitle className="text-sm font-medium">Taxa de Retenção</CardTitle>
-                <TrendingUp className="h-4 w-4 text-primary" />
+            <Card className="shadow-none border-border/40">
+              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
+                <CardTitle className="text-[10px] font-black uppercase tracking-widest opacity-60">Retenção</CardTitle>
+                <TrendingUp className="h-3.5 w-3.5 text-primary" />
               </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-primary">{stats?.returnRate.toFixed(1)}%</div>
-                <p className="text-xs text-muted-foreground mt-1">Usuários recorrentes</p>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Card className="bg-primary/5 border-primary/20">
-              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <CardTitle className="text-sm font-medium">Receita Aprovada</CardTitle>
-                <DollarSign className="h-4 w-4 text-primary" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-primary">
-                  {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(stats?.totalRevenue || 0)}
-                </div>
-                <p className="text-xs text-muted-foreground mt-1">Pagamentos confirmados</p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-amber-500/5 border-amber-500/20">
-              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <CardTitle className="text-sm font-medium">Aguardando Pagto</CardTitle>
-                <Clock className="h-4 w-4 text-amber-500" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-amber-500">
-                  {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(stats?.pendingRevenue || 0)}
-                </div>
-                <p className="text-xs text-muted-foreground mt-1">Transações pendentes</p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-destructive/5 border-destructive/20">
-              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <CardTitle className="text-sm font-medium">Doação (50%)</CardTitle>
-                <Heart className="h-4 w-4 text-destructive" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-destructive">
-                  {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format((stats?.totalRevenue || 0) * 0.5)}
-                </div>
-                <p className="text-xs text-muted-foreground mt-1">Destinado à caridade</p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-primary/5 border-primary/20">
-              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <CardTitle className="text-sm font-medium">Valor Restante</CardTitle>
-                <Wallet className="h-4 w-4 text-primary" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-primary">
-                  {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format((stats?.totalRevenue || 0) * 0.5)}
-                </div>
-                <p className="text-xs text-muted-foreground mt-1">Manutenção e operação</p>
+              <CardContent className="px-3 pb-3">
+                <div className="text-xl font-black text-primary tabular-nums">{stats?.returnRate.toFixed(1)}%</div>
+                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Recorrência</p>
               </CardContent>
             </Card>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card className="bg-secondary/5 border-secondary/20">
-              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <CardTitle className="text-sm font-medium">Reflexões Criadas</CardTitle>
-                <Heart className="h-4 w-4 text-secondary" />
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            <Card className="bg-primary/5 border-primary/20 shadow-none">
+              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
+                <CardTitle className="text-[10px] font-black uppercase tracking-widest text-primary opacity-80">Receita</CardTitle>
+                <DollarSign className="h-3.5 w-3.5 text-primary" />
               </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-secondary">{stats?.totalReflections}</div>
-                <p className="text-xs text-muted-foreground mt-1">Impacto espiritual</p>
+              <CardContent className="px-3 pb-3">
+                <div className="text-xl font-black text-primary tabular-nums">
+                  {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(stats?.totalRevenue || 0)}
+                </div>
+                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Aprovada</p>
               </CardContent>
             </Card>
 
-            <Card className="bg-primary/5 border-primary/20">
-              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <CardTitle className="text-sm font-medium">Jornadas Iniciadas</CardTitle>
-                <MapIcon className="h-4 w-4 text-primary" />
+            <Card className="bg-amber-500/5 border-amber-500/20 shadow-none">
+              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
+                <CardTitle className="text-[10px] font-black uppercase tracking-widest text-amber-500 opacity-80">Pendente</CardTitle>
+                <Clock className="h-3.5 w-3.5 text-amber-500" />
               </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-primary">{stats?.totalJourneysStarted}</div>
-                <p className="text-xs text-muted-foreground mt-1">Engajamento em trilhas</p>
+              <CardContent className="px-3 pb-3">
+                <div className="text-xl font-black text-amber-500 tabular-nums">
+                  {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(stats?.pendingRevenue || 0)}
+                </div>
+                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Em espera</p>
               </CardContent>
             </Card>
 
-            <Card className="bg-primary/5 border-primary/20">
-              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <CardTitle className="text-sm font-medium">Jornadas Concluídas</CardTitle>
-                <Activity className="h-4 w-4 text-primary" />
+            <Card className="bg-destructive/5 border-destructive/20 shadow-none">
+              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
+                <CardTitle className="text-[10px] font-black uppercase tracking-widest text-destructive opacity-80">Doação</CardTitle>
+                <Heart className="h-3.5 w-3.5 text-destructive" />
               </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-primary">{stats?.totalJourneysCompleted}</div>
-                <p className="text-xs text-muted-foreground mt-1">Sucesso formativo</p>
+              <CardContent className="px-3 pb-3">
+                <div className="text-xl font-black text-destructive tabular-nums">
+                  {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format((stats?.totalRevenue || 0) * 0.5)}
+                </div>
+                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">50% Social</p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-primary/5 border-primary/20 shadow-none">
+              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
+                <CardTitle className="text-[10px] font-black uppercase tracking-widest text-primary opacity-80">Op (50%)</CardTitle>
+                <Wallet className="h-3.5 w-3.5 text-primary" />
+              </CardHeader>
+              <CardContent className="px-3 pb-3">
+                <div className="text-xl font-black text-primary tabular-nums">
+                  {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format((stats?.totalRevenue || 0) * 0.5)}
+                </div>
+                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Operação</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <Card className="bg-secondary/5 border-secondary/20 shadow-none">
+              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
+                <CardTitle className="text-[10px] font-black uppercase tracking-widest text-secondary opacity-80">Reflexões</CardTitle>
+                <Heart className="h-3.5 w-3.5 text-secondary" />
+              </CardHeader>
+              <CardContent className="px-3 pb-3">
+                <div className="text-xl font-black text-secondary tabular-nums">{stats?.totalReflections}</div>
+                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Impacto Espiritual</p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-primary/5 border-primary/20 shadow-none">
+              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
+                <CardTitle className="text-[10px] font-black uppercase tracking-widest text-primary opacity-80">Iniciadas</CardTitle>
+                <MapIcon className="h-3.5 w-3.5 text-primary" />
+              </CardHeader>
+              <CardContent className="px-3 pb-3">
+                <div className="text-xl font-black text-primary tabular-nums">{stats?.totalJourneysStarted}</div>
+                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Jornadas Totais</p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-primary/5 border-primary/20 shadow-none">
+              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
+                <CardTitle className="text-[10px] font-black uppercase tracking-widest text-primary opacity-80">Concluídas</CardTitle>
+                <Activity className="h-3.5 w-3.5 text-primary" />
+              </CardHeader>
+              <CardContent className="px-3 pb-3">
+                <div className="text-xl font-black text-primary tabular-nums">{stats?.totalJourneysCompleted}</div>
+                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Sucesso de Retenção</p>
               </CardContent>
             </Card>
           </div>
 
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <CardTitle className="text-sm font-medium">Ativos Hoje</CardTitle>
-                <UserCheck className="h-4 w-4 text-muted-foreground" />
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            <Card className="shadow-none border-border/40">
+              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
+                <CardTitle className="text-[10px] font-black uppercase tracking-widest opacity-60">Hoje</CardTitle>
+                <UserCheck className="h-3.5 w-3.5 text-muted-foreground" />
               </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stats?.activeToday}</div>
-                <p className="text-xs text-muted-foreground mt-1">Visitantes hoje</p>
+              <CardContent className="px-3 pb-3">
+                <div className="text-xl font-black tabular-nums">{stats?.activeToday}</div>
+                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Visitantes</p>
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <CardTitle className="text-sm font-medium">Inativos</CardTitle>
-                <AlertCircle className="h-4 w-4 text-muted-foreground" />
+            <Card className="shadow-none border-border/40">
+              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
+                <CardTitle className="text-[10px] font-black uppercase tracking-widest opacity-60">Inativos</CardTitle>
+                <AlertCircle className="h-3.5 w-3.5 text-muted-foreground" />
               </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stats?.inactiveUsers}</div>
-                <p className="text-xs text-muted-foreground mt-1">{'>'} 48h sem acesso</p>
+              <CardContent className="px-3 pb-3">
+                <div className="text-xl font-black tabular-nums">{stats?.inactiveUsers}</div>
+                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">{'>'} 48h sem acesso</p>
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <CardTitle className="text-sm font-medium">Instalações PWA</CardTitle>
-                <Smartphone className="h-4 w-4 text-muted-foreground" />
+            <Card className="shadow-none border-border/40">
+              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
+                <CardTitle className="text-[10px] font-black uppercase tracking-widest opacity-60">Instalações</CardTitle>
+                <Smartphone className="h-3.5 w-3.5 text-muted-foreground" />
               </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stats?.pwaInstalls}</div>
-                <p className="text-xs text-muted-foreground mt-1">Total instalados</p>
+              <CardContent className="px-3 pb-3">
+                <div className="text-xl font-black tabular-nums">{stats?.pwaInstalls}</div>
+                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">PWA Total</p>
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <CardTitle className="text-sm font-medium">Jornadas</CardTitle>
-                <Target className="h-4 w-4 text-muted-foreground" />
+            <Card className="shadow-none border-border/40">
+              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
+                <CardTitle className="text-[10px] font-black uppercase tracking-widest opacity-60">No Flow</CardTitle>
+                <Target className="h-3.5 w-3.5 text-muted-foreground" />
               </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stats?.journeysInProgress}</div>
-                <p className="text-xs text-muted-foreground mt-1">Em andamento</p>
+              <CardContent className="px-3 pb-3">
+                <div className="text-xl font-black tabular-nums">{stats?.journeysInProgress}</div>
+                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Em andamento</p>
               </CardContent>
             </Card>
           </div>
