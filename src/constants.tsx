@@ -105,7 +105,8 @@ import {
   Wine,
   Play,
   Target,
-  Link
+  Link,
+  Video
 } from 'lucide-react';
 import { cn } from './lib/utils';
 
@@ -356,6 +357,7 @@ export const Icons = {
   
   // Arrows & Direction
   ChevronLeft: createIcon(ChevronLeft),
+  Video: createIcon(Video),
   ChevronRight: createIcon(ChevronRight),
   ChevronDown: createIcon(ChevronDown),
   ChevronUp: createIcon(ChevronUp),
