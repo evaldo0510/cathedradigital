@@ -9,6 +9,7 @@ import { supabase } from '@/integrations/supabase/client';
 import CrossReferencePanel from './CrossReferencePanel';
 import NotesPanel from './NotesPanel';
 import BibleVersePopover from './BibleVersePopover';
+import DeepContentSection from './DeepContentSection';
 import { getCatechismCrossRefs } from '@/data/cross-references';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useFavorites } from '@/hooks/useFavorites';
