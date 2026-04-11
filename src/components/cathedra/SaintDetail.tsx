@@ -229,11 +229,23 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           </div>
           <div className="prose prose-sm dark:prose-invert max-w-none">
             <p className="text-lg font-serif italic text-foreground/90 leading-relaxed border-l-4 border-primary/20 pl-6 py-1">
-              {saint.bio}
+              {parseTheologicalReferences(saint.bio).map((seg, i) => {
+                if (seg.type === 'bibleRef') return <BibleVersePopover key={i} abbr={seg.abbr!} chapter={seg.chapter!} verse={seg.verse} label={seg.value} />;
+                if (seg.type === 'catechismRef') return <CatechismPopover key={i} paragraph={seg.paragraph!} />;
+                return <span key={i}>{seg.value}</span>;
+              })}
             </p>
             {saint.fullBio && (
               <div className="mt-6 text-muted-foreground leading-relaxed text-sm space-y-4">
-                {saint.fullBio.split('\n\n').map((p, i) => <p key={i}>{p}</p>)}
+                {saint.fullBio.split('\n\n').map((paragraph, pIdx) => (
+                  <p key={pIdx}>
+                    {parseTheologicalReferences(paragraph).map((seg, sIdx) => {
+                      if (seg.type === 'bibleRef') return <BibleVersePopover key={sIdx} abbr={seg.abbr!} chapter={seg.chapter!} verse={seg.verse} label={seg.value} />;
+                      if (seg.type === 'catechismRef') return <CatechismPopover key={sIdx} paragraph={seg.paragraph!} />;
+                      return <span key={sIdx}>{seg.value}</span>;
+                    })}
+                  </p>
+                ))}
               </div>
             )}
           </div>
