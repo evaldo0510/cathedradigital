@@ -95,20 +95,6 @@ const StudyMode: React.FC = () => {
   const [currentMode, setCurrentMode] = useState<string | null>(initialMode);
   const initialTopicProcessed = useRef(false);
 
-  // Handle initial topic from URL or state
-  useEffect(() => {
-    if (initialTopicProcessed.current) return;
-    
-    const searchParams = new URLSearchParams(location.search);
-    const topic = searchParams.get('topic') || (location.state as any)?.topic;
-    
-    if (topic && !messages.length && !isLoading) {
-      initialTopicProcessed.current = true;
-      const initialPrompt = `Gostaria de aprofundar meu estudo sobre o tema: "${topic}". Poderia me dar uma explicação teológica detalhada, conexões bíblicas e como aplicar isso na minha vida de fé?`;
-      sendMessage(initialPrompt);
-    }
-  }, [location.search, location.state, messages.length, isLoading]);
-
   // Scroll to bottom on new messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -292,14 +278,19 @@ const StudyMode: React.FC = () => {
       }
     } catch (e: any) {
       setMessages(prev => [...prev, { role: 'assistant', content: `⚠️ ${e.message || 'Erro ao consultar a IA. Tente novamente.'}` }]);
-    } finally {
-      setIsLoading(false);
+  // Handle initial topic from URL or state
+  useEffect(() => {
+    if (initialTopicProcessed.current) return;
+    
+    const searchParams = new URLSearchParams(location.search);
+    const topic = searchParams.get('topic') || (location.state as any)?.topic;
+    
+    if (topic && !messages.length && !isLoading) {
+      initialTopicProcessed.current = true;
+      const initialPrompt = `Gostaria de aprofundar meu estudo sobre o tema: "${topic}". Poderia me dar uma explicação teológica detalhada, conexões bíblicas e como aplicar isso na minha vida de fé?`;
+      sendMessage(initialPrompt);
     }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(input); }
-  };
+  }, [location.search, location.state, messages.length, isLoading]);
 
   return (
     <div className="flex h-[calc(100vh-12rem)] max-w-5xl mx-auto gap-0">
