@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Icons, Logo } from '../../constants';
+import { Icons } from '../../constants';
 import { AppRoute } from '../../types';
 
 const DIOCESES_BR = [
@@ -171,7 +171,6 @@ const Footer: React.FC = React.memo(() => {
           {/* Brand Column */}
           <div className="flex flex-col gap-6">
             <div className="flex items-center gap-4">
-              <Logo variant="gold" className="w-12 h-12 border border-primary/20 p-2 rounded-xl bg-primary/5" />
               <div>
                 <h3 className="text-xl font-serif font-bold text-foreground tracking-tight">CATHEDRA</h3>
                 <p className="text-[9px] font-black uppercase text-primary tracking-[0.3em]">Digital Sanctuarium</p>

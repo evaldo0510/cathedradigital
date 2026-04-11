@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { prefetchRoute } from '@/lib/prefetch';
-import { Logo, Icons } from '../../constants';
+import { Icons } from '../../constants';
 import { AppRoute, User } from '../../types';
 import { BibleModal, CatechismModal, DocumentsModal } from './QuickModals';
 
@@ -72,9 +72,6 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
     <>
       <aside className="h-full w-72 bg-card border-r border-border flex flex-col p-5 overflow-hidden">
         <div className="mb-6 px-2 flex items-center gap-3 cursor-pointer group hover:opacity-90 transition-opacity" onClick={() => handleNav(AppRoute.DASHBOARD)}>
-          <div className="transition-all group-hover:rotate-3">
-            <Logo variant="gold" className="w-12 h-12" />
-          </div>
           <div>
             <h1 className="text-lg font-black tracking-[0.2em] text-foreground leading-none uppercase font-serif">CATHEDRA</h1>
             <p className="text-[9px] font-black uppercase text-primary/70 tracking-[0.3em] mt-1.5 flex items-center gap-1.5">
