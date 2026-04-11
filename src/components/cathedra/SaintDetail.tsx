@@ -103,6 +103,20 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void }> = ({ saint, o
           </div>
         </section>
 
+        {/* Deep Content */}
+        {saint.textoBase && (
+          <section className="pt-4">
+            <DeepContentSection content={{
+              textoBase: saint.textoBase,
+              explicacao: saint.explicacao || '',
+              interpretacaoProfunda: saint.interpretacaoProfunda || '',
+              aplicacaoPratica: saint.aplicacaoPratica || '',
+              reflexaoFinal: saint.reflexaoFinal || '',
+              exercicio: saint.exercicio || ''
+            }} title="Experiência de Santidade" />
+          </section>
+        )}
+
         {/* Works */}
         {saint.works.length > 0 && (
           <section>
