@@ -416,8 +416,82 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           ))}
         </div>
       </FadeUp>
+
+      </div>{/* end desktop-main */}
+
+      {/* ═══ DESKTOP RIGHT PANEL ═══ */}
+      <aside className="desktop-aside">
+        {/* Weekly Stats */}
+        <div className="desktop-card space-y-4">
+          <div className="flex items-center gap-2">
+            <Icons.Activity className="w-4 h-4 text-primary" />
+            <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground">{t('weekly_summary')}</h3>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
+              <p className="text-2xl font-bold text-foreground">{weeklyStats.chaptersRead}</p>
+              <p className="text-[9px] text-muted-foreground font-medium mt-1">{t('bible')}</p>
+            </div>
+            <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
+              <p className="text-2xl font-bold text-foreground">{streak}</p>
+              <p className="text-[9px] text-muted-foreground font-medium mt-1">{t('streak')}</p>
+            </div>
+            <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
+              <p className="text-2xl font-bold text-foreground">{weeklyStats.catechismParagraphs}</p>
+              <p className="text-[9px] text-muted-foreground font-medium mt-1">CIC</p>
+            </div>
+            <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
+              <p className="text-2xl font-bold text-foreground">{weeklyStats.journeySteps}</p>
+              <p className="text-[9px] text-muted-foreground font-medium mt-1">{t('journeys')}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Active Journeys */}
+        {activeJourneys.length > 0 && (
+          <div className="desktop-card space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground">{t('your_journeys')}</h3>
+              <button onClick={() => goTo(AppRoute.JORNADAS)} className="text-xs text-primary hover:underline flex items-center gap-1">
+                {t('view_all')} <Icons.ChevronRight className="w-3 h-3" />
+              </button>
+            </div>
+            <div className="space-y-2.5">
+              {activeJourneys.slice(0, 3).map((j) => {
+                const pct = j.totalSteps > 0 ? Math.round((j.completedSteps / j.totalSteps) * 100) : 0;
+                return (
+                  <button
+                    key={j.id}
+                    onClick={() => goTo(`/jornadas/${j.id}`)}
+                    className="w-full flex items-center gap-3 p-3 rounded-xl bg-primary/[0.03] border border-primary/10 hover:border-primary/30 transition-colors text-left"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-background flex items-center justify-center text-primary shadow-sm">
+                      <Icons.Compass className="w-4 h-4" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-bold text-foreground truncate">{j.title}</p>
+                      <div className="mt-1.5 h-1 w-full bg-muted rounded-full overflow-hidden">
+                        <div className="h-full bg-primary transition-all" style={{ width: `${pct}%` }} />
+                      </div>
+                    </div>
+                    <div className="text-[10px] font-black text-primary">{pct}%</div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Daily Quote */}
+        <div className="desktop-card space-y-3">
+          <p className="text-sm font-serif italic text-foreground leading-relaxed">
+            {dailyQuote.text}
+          </p>
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary">
+            — {dailyQuote.author}
+          </p>
+        </div>
+      </aside>
     </div>
-  );
-};
 
 export default Dashboard;
