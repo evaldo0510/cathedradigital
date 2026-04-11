@@ -5,16 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { 
-  Handshake, 
-  ExternalLink, 
-  Plus, 
-  Info, 
-  CheckCircle2, 
-  Loader2,
-  Trophy,
-  Users
-} from 'lucide-react';
+import { Icons } from '@/constants';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
