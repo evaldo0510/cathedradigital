@@ -12,6 +12,9 @@ import { Sparkles, BookOpen, Quote, Shield, Info, Heart, Lightbulb, MessageSquar
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
+import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
+import BibleVersePopover from './BibleVersePopover';
+import CatechismPopover from './CatechismPopover';
 
 const CATEGORY_LABELS: Record<string, string> = {
   apostle: 'Apóstolo',
