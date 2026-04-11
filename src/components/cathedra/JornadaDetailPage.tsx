@@ -181,7 +181,12 @@ const JornadaDetailPage: React.FC = () => {
 
                   {/* Content */}
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-sm text-foreground truncate">{step.title}</h3>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-semibold text-sm text-foreground truncate">{step.title}</h3>
+                      {isStepLocked && (
+                        <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 text-[8px] uppercase font-black px-1.5 py-0">PRO</Badge>
+                      )}
+                    </div>
                     <div className="flex items-center gap-2 text-xs text-muted-foreground mt-0.5">
                       {STEP_ICONS[step.step_type] || STEP_ICONS.reading}
                       <span className="capitalize">{step.step_type === 'reading' ? 'Leitura' : step.step_type === 'prayer' ? 'Oração' : step.step_type === 'reflection' ? 'Reflexão' : 'Quiz'}</span>
