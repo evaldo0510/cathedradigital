@@ -38,11 +38,15 @@ interface Stats {
   activeLast30Days: number;
   inactiveUsers: number;
   journeysInProgress: number;
+  totalReflections: number;
+  totalJourneysStarted: number;
+  totalJourneysCompleted: number;
   returnRate: number;
   recentTransactions: any[];
   userGrowth: any[];
   revenueData: any[];
 }
+
 
 interface UserProfile {
   id: string;
@@ -86,12 +90,13 @@ const AdminDashboard: React.FC = () => {
       try {
         setLoading(true);
 
-        const [statsRes, metricsRes, transactionsRes, journalRes, journeysRes, crmRes] = await Promise.all([
+        const [statsRes, metricsRes, transactionsRes, journalRes, journeysStartedRes, journeysCompletedRes, crmRes] = await Promise.all([
           supabase.from('profiles').select('*'),
           supabase.from('app_metrics').select('*'),
           supabase.from('transactions').select('*').order('created_at', { ascending: false }),
-          supabase.from('spiritual_journal').select('user_id'),
-          supabase.from('journey_progress').select('user_id, journey_id, journeys(title)').order('completed_at', { ascending: false }),
+          supabase.from('spiritual_journal').select('user_id', { count: 'exact', head: true }),
+          supabase.from('journey_progress').select('user_id', { count: 'exact', head: true }),
+          supabase.from('journey_progress').select('user_id', { count: 'exact', head: true }).not('completed_at', 'is', null),
           supabase.from('user_management_stats').select('*')
         ]);
 
@@ -133,7 +138,6 @@ const AdminDashboard: React.FC = () => {
           return diff >= 48;
         }).length;
 
-        const journeysInProgress = (journeysRes.data || []).length;
         const returnRate = allProfiles.length > 0 ? ((allProfiles.length - inactiveUsers) / allProfiles.length) * 100 : 0;
 
         const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
@@ -173,13 +177,17 @@ const AdminDashboard: React.FC = () => {
           activeToday,
           activeLast30Days,
           inactiveUsers,
-          journeysInProgress,
+          journeysInProgress: journeysStartedRes.count || 0,
+          totalReflections: journalRes.count || 0,
+          totalJourneysStarted: journeysStartedRes.count || 0,
+          totalJourneysCompleted: journeysCompletedRes.count || 0,
           returnRate,
           totalRevenue,
           recentTransactions: transactions.slice(0, 10),
           userGrowth,
           revenueData,
         });
+
 
         const crmMap = new Map<string, any>();
         crmUsers.forEach(u => crmMap.set(u.id, u));
@@ -425,7 +433,7 @@ const AdminDashboard: React.FC = () => {
             </Card>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <Card className="bg-primary/5 border-primary/20">
               <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                 <CardTitle className="text-sm font-medium">Receita Total</CardTitle>
@@ -465,6 +473,42 @@ const AdminDashboard: React.FC = () => {
               </CardContent>
             </Card>
           </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card className="bg-secondary/5 border-secondary/20">
+              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                <CardTitle className="text-sm font-medium">Reflexões Criadas</CardTitle>
+                <Heart className="h-4 w-4 text-secondary" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-secondary">{stats?.totalReflections}</div>
+                <p className="text-xs text-muted-foreground mt-1">Impacto espiritual</p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-primary/5 border-primary/20">
+              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                <CardTitle className="text-sm font-medium">Jornadas Iniciadas</CardTitle>
+                <MapIcon className="h-4 w-4 text-primary" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-primary">{stats?.totalJourneysStarted}</div>
+                <p className="text-xs text-muted-foreground mt-1">Engajamento em trilhas</p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-primary/5 border-primary/20">
+              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                <CardTitle className="text-sm font-medium">Jornadas Concluídas</CardTitle>
+                <Activity className="h-4 w-4 text-primary" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-primary">{stats?.totalJourneysCompleted}</div>
+                <p className="text-xs text-muted-foreground mt-1">Sucesso formativo</p>
+              </CardContent>
+            </Card>
+          </div>
+
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <Card>
