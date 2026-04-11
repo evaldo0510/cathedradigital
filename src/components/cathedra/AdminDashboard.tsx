@@ -189,7 +189,7 @@ const AdminDashboard: React.FC = () => {
             depth_level: crm.classification || 'Novo',
             reflections_count: crm.reflections_count || 0,
             current_journey: crm.current_journey || 'Nenhuma',
-            last_activity: crm.last_activity
+            last_visit: crm.last_activity // Map view's activity to last_visit for UI consistency
           };
         }) as UserProfile[]);
       } catch (err: any) {
