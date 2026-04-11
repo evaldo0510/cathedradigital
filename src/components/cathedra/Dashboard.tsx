@@ -211,7 +211,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               Cathedra Digital
             </p>
             <h1 className="text-4xl md:text-6xl font-display font-black text-primary leading-tight tracking-tight">
-              Pax et Bonum
+              {profile?.name ? `Salve, ${profile.name.split(' ')[0]}!` : 'Pax et Bonum'}
             </h1>
           </div>
 

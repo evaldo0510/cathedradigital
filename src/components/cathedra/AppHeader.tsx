@@ -28,7 +28,9 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
     AppRoute.JORNADAS,
     AppRoute.BIBLIOTECA,
     AppRoute.PROFILE,
-    AppRoute.LITURGIA
+    AppRoute.LITURGIA,
+    AppRoute.TEMAS,
+    AppRoute.COMMUNITY
   ].includes(pathname as AppRoute);
   const isDashboard = isMainPage;
   const { notifications, unreadCount, markAsRead, markAllRead } = useNotifications();
