@@ -6,7 +6,8 @@ import { supabase } from '@/integrations/supabase/client';
 import StaggeredList from './StaggeredList';
 import CrossReferencePanel from './CrossReferencePanel';
 import DeepContentSection from './DeepContentSection';
-import { getBibleCrossRefs } from '@/data/cross-references';
+import { getBibleCrossRefs, CIC_TO_BIBLE } from '@/data/cross-references';
+import CatechismPopover from './CatechismPopover';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useFavorites } from '@/hooks/useFavorites';
 import BibleSearch from './BibleSearch';
@@ -237,6 +238,22 @@ const Bible: React.FC = () => {
     if (!selectedBook || !selectedChapter) return [];
     return getBibleCrossRefs(selectedBook.abbr, selectedChapter);
   }, [selectedBook, selectedChapter]);
+  
+  const verseToCic = useMemo(() => {
+    if (!selectedBook || !selectedChapter) return {};
+    const map: Record<number, number[]> = {};
+    // Extract verse-specific references from the CIC_TO_BIBLE map
+    Object.entries(CIC_TO_BIBLE).forEach(([paragraph, refs]) => {
+      refs.forEach(ref => {
+        if (ref.abbr === selectedBook.abbr && ref.chapter === selectedChapter && ref.verse) {
+          const p = parseInt(paragraph);
+          if (!map[ref.verse]) map[ref.verse] = [];
+          map[ref.verse].push(p);
+        }
+      });
+    });
+    return map;
+  }, [selectedBook, selectedChapter]);
 
   const selectBook = (book: typeof filteredBooks[0]) => {
     setSelectedBook(book);
@@ -335,7 +352,7 @@ const Bible: React.FC = () => {
     const fs = FONT_SIZES[fontSizeIdx];
     const fromDashboard = searchParams.get('from') === 'dashboard';
     return (
-      <div className="max-w-3xl mx-auto space-y-6">
+      <div className={`mx-auto space-y-6 transition-all duration-500 ${showCrossRefs && crossRefs.length > 0 ? 'max-w-3xl lg:max-w-6xl' : 'max-w-3xl'}`}>
         {/* Back to Dashboard */}
         {fromDashboard && (
           <button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-xs text-primary hover:underline">
@@ -375,10 +392,14 @@ const Bible: React.FC = () => {
                 </button>
               ))}
             </div>
-            <button onClick={() => setShowCrossRefs(!showCrossRefs)}
-              className={`p-2 rounded-xl border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}>
-              <Icons.Columns className="w-5 h-5" />
-            </button>
+            {crossRefs.length > 0 && (
+              <button onClick={() => setShowCrossRefs(!showCrossRefs)}
+                className={`flex items-center gap-2 px-3 py-2 rounded-xl border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}
+                title="Nexus Theologicus (Catecismo)">
+                <Icons.Cross className="w-4 h-4" />
+                <span className="text-xs font-bold">{crossRefs.length}</span>
+              </button>
+            )}
             <ShareButton 
               title={selectedBook.name} 
               text={`Lendo ${selectedBook.name} na Cathedra: Digital Sanctuarium`} 
@@ -388,8 +409,19 @@ const Bible: React.FC = () => {
 
 
         {/* Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          <div className={`lg:col-span-${showCrossRefs && crossRefs.length > 0 ? '8' : '12'} space-y-6`}>
+        <div className="flex flex-col lg:grid lg:grid-cols-12 gap-6 items-start">
+          {/* Cross References Panel - Top on mobile, Side on desktop */}
+          {showCrossRefs && crossRefs.length > 0 && (
+            <div className="w-full lg:col-span-4 lg:sticky lg:top-24 order-1 lg:order-2">
+              <CrossReferencePanel 
+                type="bible"
+                cicParagraphs={crossRefs} 
+                onNavigateToCIC={handleNavigateToCIC}
+              />
+            </div>
+          )}
+
+          <div className={`${showCrossRefs && crossRefs.length > 0 ? 'lg:col-span-8' : 'lg:col-span-12'} w-full space-y-6 order-2 lg:order-1`}>
             <Card className="border-border/40 shadow-sm overflow-hidden bg-card/50 backdrop-blur-sm">
               <CardContent className="p-6 md:p-8">
                 {isLoading ? (
@@ -405,16 +437,26 @@ const Bible: React.FC = () => {
                   </div>
                 ) : (
                   <div className={`font-serif ${fs.size} ${fs.leading} text-foreground/90 transition-all duration-300`}>
-                    {verses.map(v => (
-                      <span key={v.number} 
-                        id={`v${v.number}`}
-                        onClick={() => setHighlightedVerse(v.number === highlightedVerse ? null : v.number)}
-                        className={`inline transition-colors duration-300 cursor-pointer rounded px-0.5
-                          ${highlightedVerse === v.number ? 'bg-primary/20 ring-1 ring-primary/30' : 'hover:bg-muted/50'}`}>
-                        <sup className="text-[0.6em] font-bold text-primary mr-1 select-none">{v.number}</sup>
-                        {v.text}{' '}
-                      </span>
-                    ))}
+                    {verses.map(v => {
+                      const relatedP = verseToCic[v.number];
+                      return (
+                        <span key={v.number} 
+                          id={`v${v.number}`}
+                          onClick={() => setHighlightedVerse(v.number === highlightedVerse ? null : v.number)}
+                          className={`inline transition-colors duration-300 cursor-pointer rounded px-0.5
+                            ${highlightedVerse === v.number ? 'bg-primary/20 ring-1 ring-primary/30' : 'hover:bg-muted/50'}`}>
+                          <sup className="text-[0.6em] font-bold text-primary mr-1 select-none">{v.number}</sup>
+                          {v.text}{' '}
+                          {relatedP && (
+                            <span className="inline-flex gap-0.5">
+                              {relatedP.map(p => (
+                                <CatechismPopover key={p} paragraph={p} onNavigate={handleNavigateToCIC} variant="mini" />
+                              ))}
+                            </span>
+                          )}
+                        </span>
+                      );
+                    })}
                   </div>
                 )}
               </CardContent>
@@ -478,16 +520,6 @@ const Bible: React.FC = () => {
             )}
           </div>
 
-          {/* Cross References Panel */}
-          {showCrossRefs && crossRefs.length > 0 && (
-            <div className="lg:col-span-4 sticky top-24">
-              <CrossReferencePanel 
-                type="bible"
-                cicParagraphs={crossRefs} 
-                onNavigateToCIC={handleNavigateToCIC}
-              />
-            </div>
-          )}
         </div>
       </div>
     );
