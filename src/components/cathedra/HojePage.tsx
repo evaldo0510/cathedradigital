@@ -39,6 +39,22 @@ const HojePage: React.FC = () => {
   const [logosRecommendation, setLogosRecommendation] = useState<any>(null);
   const [recommendedLogosJourney, setRecommendedLogosJourney] = useState<any>(null);
   const [recommendedLogosStep, setRecommendedLogosStep] = useState<any>(null);
+  const [officialSaint, setOfficialSaint] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchOfficialSaint = async () => {
+      try {
+        const response = await supabase.functions.invoke('saint-of-the-day');
+        if (response.data && !response.error) {
+          setOfficialSaint(response.data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch official saint:', err);
+      }
+    };
+    fetchOfficialSaint();
+  }, []);
+
   const allSaintsToday = useMemo(() => {
     const day = new Date().getDate();
     const month = new Date().getMonth() + 1;
@@ -46,6 +62,33 @@ const HojePage: React.FC = () => {
   }, []);
 
   const featuredSaint = useMemo(() => {
+    // Priority: Official Saint from Edge Function if it has a name and isn't a fallback
+    if (officialSaint && officialSaint.name !== "Santo do Dia" && officialSaint.name !== "Menu") {
+      // Find matching local saint if possible to get more data
+      const match = allSaintsToday.find(s => 
+        officialSaint.name.toLowerCase().includes(s.name.toLowerCase()) ||
+        s.name.toLowerCase().includes(officialSaint.name.toLowerCase())
+      );
+      if (match) return { ...match, ...officialSaint };
+      return { 
+        id: 'official-today',
+        name: officialSaint.name,
+        title: 'Santo do Dia',
+        bio: officialSaint.description,
+        image: officialSaint.image,
+        url: officialSaint.url,
+        category: 'confessor' as const,
+        works: [],
+        quotes: [],
+        feastDay: '',
+        feastMonth: 0,
+        feastDayNum: 0,
+        born: '',
+        died: '',
+        patronOf: []
+      };
+    }
+
     if (allSaintsToday.length === 0) return null;
     if (allSaintsToday.length === 1) return allSaintsToday[0];
     
@@ -64,9 +107,10 @@ const HojePage: React.FC = () => {
     }
     
     return allSaintsToday[0];
-  }, [allSaintsToday, activeJourney]);
+  }, [allSaintsToday, activeJourney, officialSaint]);
 
   const [logosSaint, setLogosSaint] = useState<any>(null);
+
 
   useEffect(() => {
     if (!user) return;

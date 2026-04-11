@@ -7,9 +7,11 @@ import StaggeredList from './StaggeredList';
 import SacredImage from './SacredImage';
 import SaintDetail, { CATEGORY_LABELS } from './SaintDetail';
 import { SAINTS_DATA, type Saint } from '@/data/saints';
+import { supabase } from '@/integrations/supabase/client';
 import { Search, X, Calendar as CalendarIcon, ChevronLeft, ChevronRight, Sparkles, BookOpen, Quote, Shield } from 'lucide-react';
 import { format, addDays, subDays, isSameDay, startOfMonth, endOfMonth, eachDayOfInterval } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+
 
 const Saints: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -17,8 +19,22 @@ const Saints: React.FC = () => {
   const [autoReflect, setAutoReflect] = useState(false);
   const [search, setSearch] = useState('');
   const [viewMode, setViewMode] = useState<'daily' | 'search'>('daily');
+  const [officialSaint, setOfficialSaint] = useState<any>(null);
   const [searchParams] = useSearchParams();
 
+  useEffect(() => {
+    const fetchOfficialSaint = async () => {
+      try {
+        const response = await supabase.functions.invoke('saint-of-the-day');
+        if (response.data && !response.error) {
+          setOfficialSaint(response.data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch official saint:', err);
+      }
+    };
+    fetchOfficialSaint();
+  }, []);
 
   const handleOpenSaint = (saint: Saint, shouldReflect: boolean = false) => {
     setAutoReflect(shouldReflect);
@@ -28,8 +44,44 @@ const Saints: React.FC = () => {
   const saintsForSelectedDate = useMemo(() => {
     const day = selectedDate.getDate();
     const month = selectedDate.getMonth() + 1;
-    return SAINTS_DATA.filter(s => s.feastMonth === month && s.feastDayNum === day);
-  }, [selectedDate]);
+    const localSaints = SAINTS_DATA.filter(s => s.feastMonth === month && s.feastDayNum === day);
+    
+    // Merge official saint if it's today
+    if (officialSaint && isSameDay(selectedDate, new Date()) && officialSaint.name !== "Menu" && officialSaint.name !== "Santo do Dia") {
+      const match = localSaints.find(s => 
+        officialSaint.name.toLowerCase().includes(s.name.toLowerCase()) ||
+        s.name.toLowerCase().includes(officialSaint.name.toLowerCase())
+      );
+      
+      if (match) {
+        return localSaints.map(s => s.id === match.id ? { ...s, ...officialSaint } : s);
+      } else {
+        return [
+          {
+            id: 'official-today',
+            name: officialSaint.name,
+            title: 'Santo do Dia',
+            bio: officialSaint.description,
+            image: officialSaint.image,
+            url: officialSaint.url,
+            category: 'confessor' as const,
+            works: [],
+            quotes: [],
+            feastDay: '',
+            feastMonth: 0,
+            feastDayNum: 0,
+            born: '',
+            died: '',
+            patronOf: []
+          },
+          ...localSaints
+        ];
+      }
+    }
+    
+    return localSaints;
+  }, [selectedDate, officialSaint]);
+
 
   useEffect(() => {
     const action = searchParams.get('action');
