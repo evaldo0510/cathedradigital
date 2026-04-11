@@ -58,7 +58,7 @@ export const SAINTS_DATA: Saint[] = [
     ],
     category: 'doctor',
     image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/St-thomas-aquinas.jpg/440px-St-thomas-aquinas.jpg',
-    virtues: ['Sabedoria', 'Humildade', 'Pureza', 'Contemplação'],
+    virtues: ['Sabedoria', 'Humildade', 'Pureza', 'Contemplação', 'Fé'],
     prayer: 'Concedei-me, Senhor, uma vontade que vos queira, uma mente que vos conheça, uma diligência que vos busque, uma sabedoria que vos encontre, uma vida que vos agrade, uma perseverança que vos espere e uma confiança que finalmente vos abrace.',
     textoBase: 'A graça não destrói a natureza, mas a aperfeiçoa.',
     explicacao: 'Deus não quer mudar quem você é, mas levar sua natureza à perfeição. Sua personalidade, seus talentos e até suas fraquezas são o terreno onde a graça divina trabalha para te fazer plenamente humano e santo.',
