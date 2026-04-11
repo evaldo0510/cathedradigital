@@ -244,12 +244,24 @@ const StudyMode: React.FC = () => {
       let buffer = '';
 
       const upsertAssistant = (content: string) => {
+        // Look for metadata line: [RECOMMENDATION:{"category":...}]
+        const metadataMatch = content.match(/\[RECOMMENDATION:({.*})\]$/);
+        let displayContent = content;
+        if (metadataMatch) {
+          try {
+            const meta = JSON.parse(metadataMatch[1]);
+            setLastMetadata(meta);
+            // Remove metadata from display content if it's the last line
+            displayContent = content.replace(/\[RECOMMENDATION:({.*})\]$/, '').trim();
+          } catch (e) { console.error('Meta parse error:', e); }
+        }
+
         setMessages(prev => {
           const last = prev[prev.length - 1];
           if (last?.role === 'assistant') {
-            return prev.map((m, i) => i === prev.length - 1 ? { ...m, content } : m);
+            return prev.map((m, i) => i === prev.length - 1 ? { ...m, content: displayContent } : m);
           }
-          return [...prev, { role: 'assistant', content }];
+          return [...prev, { role: 'assistant', content: displayContent }];
         });
       };
 
