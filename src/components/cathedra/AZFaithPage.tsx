@@ -401,7 +401,7 @@ const AZFaithPage: React.FC = () => {
                                   <button 
                                     onClick={(e) => {
                                       e.stopPropagation();
-                                      navigate(`${AppRoute.STUDY}?topic=${encodeURIComponent(t.term)}`);
+                                      navigate(`${AppRoute.STUDY_MODE}?topic=${encodeURIComponent(t.term)}`);
                                     }}
                                     className="w-full py-2 bg-primary text-primary-foreground rounded-xl text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors mt-4"
                                   >
