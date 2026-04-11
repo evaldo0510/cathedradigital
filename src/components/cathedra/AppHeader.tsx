@@ -149,6 +149,10 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           </button>
         )}
 
+        <button onClick={onToggleSpeak} className={`p-2.5 sm:p-3 rounded-xl sm:rounded-2xl border border-border transition-all active:scale-95 shadow-sm ${isSpeaking ? 'bg-primary text-white animate-pulse' : 'bg-muted text-primary hover:bg-primary hover:text-white'}`}>
+          <Icons.Volume2 className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
+        </button>
+
         <button onClick={onToggleDark} className="p-2.5 sm:p-3 bg-muted text-primary hover:bg-primary hover:text-white rounded-xl sm:rounded-2xl border border-border transition-all active:scale-95 shadow-sm">
           {isDark ? <Icons.Sun className="w-4.5 h-4.5 sm:w-5 sm:h-5" /> : <Icons.Moon className="w-4.5 h-4.5 sm:w-5 sm:h-5" />}
         </button>
