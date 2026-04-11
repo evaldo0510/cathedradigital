@@ -149,26 +149,57 @@ const JornadasPage: React.FC = () => {
     <SEOHead title="Jornadas Espirituais" description="Percorra jornadas de transformação espiritual com conteúdos guiados de formação católica. Cresça na fé passo a passo." path="/jornadas" keywords="jornada espiritual, formação católica, crescimento espiritual, retiro online" breadcrumbs={[{ name: "Início", path: "/" }, { name: "Jornadas", path: "/jornadas" }]} />
     <div className="space-y-6 max-w-2xl mx-auto">
       {/* Header */}
-      <div className="text-center space-y-3">
+      <div className="text-center space-y-3 pt-4">
         <Icons.Compass className="w-10 h-10 mx-auto text-primary" />
-        <h1 className="text-2xl md:text-3xl font-bold font-serif text-foreground">Jornadas de Transformação</h1>
-        <p className="text-muted-foreground font-serif italic max-w-md mx-auto">
+        <h1 className="text-2xl md:text-3xl font-bold font-serif text-foreground">Jornadas Espirituais</h1>
+        <p className="text-muted-foreground font-serif italic max-w-md mx-auto text-sm">
           "Não é sobre assistir… é sobre atravessar."
         </p>
       </div>
 
-      {/* CTA Diagnóstico */}
-      <Card className="border-primary/20 bg-primary/5">
-        <CardContent className="p-4 flex items-center gap-4">
-          <div className="flex-1">
-            <p className="text-sm font-semibold text-foreground">Não sabe por onde começar?</p>
-            <p className="text-xs text-muted-foreground">Faça nosso diagnóstico espiritual e descubra a jornada ideal.</p>
+      {/* Active Journey Highlight (if exists) */}
+      {Object.keys(progressMap).length > 0 && (
+        <div className="space-y-3">
+          <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary/60">
+            <Icons.Flame className="w-3 h-3" /> Continuar Jornada
           </div>
-          <Button size="sm" variant="outline" onClick={() => navigate(AppRoute.DIAGNOSTICO)}>
-            Diagnóstico <Icons.ArrowRight className="w-4 h-4 ml-1" />
-          </Button>
-        </CardContent>
-      </Card>
+          {journeys.filter(j => progressMap[j.id] > 0 && progressMap[j.id] < (stepsCountMap[j.id] || 0)).slice(0, 1).map(journey => (
+            <Card key={`active-${journey.id}`} className="border-primary/40 bg-gradient-to-br from-primary/10 to-transparent border-2 overflow-hidden">
+               <CardContent className="p-5 flex items-center justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-bold text-foreground text-lg mb-1">{journey.title}</h3>
+                    <div className="flex items-center gap-3">
+                      <Progress value={(progressMap[journey.id] / (stepsCountMap[journey.id] || 1)) * 100} className="h-1.5 flex-1 max-w-[120px]" />
+                      <span className="text-[10px] font-bold text-muted-foreground">{progressMap[journey.id]}/{stepsCountMap[journey.id]} etapas</span>
+                    </div>
+                  </div>
+                  <Button 
+                    size="sm" 
+                    className="bg-primary hover:bg-primary/90 text-white font-bold text-[10px] uppercase tracking-widest"
+                    onClick={() => navigate(`/jornadas/${journey.id}`)}
+                  >
+                    Continuar
+                  </Button>
+               </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
+
+      {/* CTA Diagnóstico */}
+      {!Object.keys(progressMap).length && (
+        <Card className="border-primary/20 bg-primary/5">
+          <CardContent className="p-4 flex items-center gap-4">
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-foreground">Inicie sua caminhada</p>
+              <p className="text-xs text-muted-foreground">O Logos pode recomendar a melhor jornada para sua alma.</p>
+            </div>
+            <Button size="sm" variant="outline" onClick={() => navigate(AppRoute.DIAGNOSTICO)}>
+              Diagnóstico <Icons.ArrowRight className="w-4 h-4 ml-1" />
+            </Button>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Filters */}
       <div className="space-y-3">
