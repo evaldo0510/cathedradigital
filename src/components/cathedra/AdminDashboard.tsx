@@ -90,12 +90,13 @@ const AdminDashboard: React.FC = () => {
       try {
         setLoading(true);
 
-        const [statsRes, metricsRes, transactionsRes, journalRes, journeysRes, crmRes] = await Promise.all([
+        const [statsRes, metricsRes, transactionsRes, journalRes, journeysStartedRes, journeysCompletedRes, crmRes] = await Promise.all([
           supabase.from('profiles').select('*'),
           supabase.from('app_metrics').select('*'),
           supabase.from('transactions').select('*').order('created_at', { ascending: false }),
-          supabase.from('spiritual_journal').select('user_id'),
-          supabase.from('journey_progress').select('user_id, journey_id, journeys(title)').order('completed_at', { ascending: false }),
+          supabase.from('spiritual_journal').select('user_id', { count: 'exact', head: true }),
+          supabase.from('journey_progress').select('user_id', { count: 'exact', head: true }),
+          supabase.from('journey_progress').select('user_id', { count: 'exact', head: true }).not('completed_at', 'is', null),
           supabase.from('user_management_stats').select('*')
         ]);
 
@@ -137,7 +138,6 @@ const AdminDashboard: React.FC = () => {
           return diff >= 48;
         }).length;
 
-        const journeysInProgress = (journeysRes.data || []).length;
         const returnRate = allProfiles.length > 0 ? ((allProfiles.length - inactiveUsers) / allProfiles.length) * 100 : 0;
 
         const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
@@ -177,13 +177,17 @@ const AdminDashboard: React.FC = () => {
           activeToday,
           activeLast30Days,
           inactiveUsers,
-          journeysInProgress,
+          journeysInProgress: journeysStartedRes.count || 0,
+          totalReflections: journalRes.count || 0,
+          totalJourneysStarted: journeysStartedRes.count || 0,
+          totalJourneysCompleted: journeysCompletedRes.count || 0,
           returnRate,
           totalRevenue,
           recentTransactions: transactions.slice(0, 10),
           userGrowth,
           revenueData,
         });
+
 
         const crmMap = new Map<string, any>();
         crmUsers.forEach(u => crmMap.set(u.id, u));
