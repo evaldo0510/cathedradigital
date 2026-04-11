@@ -31,7 +31,7 @@ interface Props {
   onSelectUser: (user: UserProfile) => void;
 }
 
-type Segment = 'all' | 'new' | 'active' | 'deep' | 'inactive';
+type Segment = 'all' | 'new' | 'active' | 'engaged' | 'deep' | 'inactive';
 
 const hoursSince = (date: string | null) => {
   if (!date) return 9999;
