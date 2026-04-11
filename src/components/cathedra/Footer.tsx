@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../constants';
 import { AppRoute } from '../../types';
-import cathedraLogo from '@/assets/cathedra-logo.png';
+
 import { useLang } from '@/hooks/useLang';
 
 const DIOCESES_BR = [

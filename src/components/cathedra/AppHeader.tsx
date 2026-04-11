@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AppRoute, Language } from '@/types';
 import { Icons } from '@/constants';
-import cathedraLogo from '@/assets/cathedra-logo.png';
+
 import { useNotifications } from '@/hooks/useNotifications';
 import { useLang } from '@/hooks/useLang';
 
