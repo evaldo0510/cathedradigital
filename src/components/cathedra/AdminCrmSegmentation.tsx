@@ -78,11 +78,13 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
 
   const getStatusBadge = (u: UserProfile) => {
     const status = u.depth_level || 'Inativo';
-    if (status === 'Inativo') return <Badge className="bg-destructive/15 text-destructive border-destructive/30 text-[10px]">Inativo</Badge>;
-    if (status === 'Profundo') return <Badge className="bg-primary/15 text-primary border-primary/30 text-[10px]">Profundo</Badge>;
-    if (status === 'Engajado') return <Badge className="bg-orange-500/15 text-orange-500 border-orange-500/30 text-[10px]">Engajado</Badge>;
-    if (status === 'Novo') return <Badge className="bg-primary/15 text-primary border-primary/30 text-[10px]">Novo</Badge>;
-    return <Badge className="bg-primary/15 text-primary border-primary/30 text-[10px]">Ativo</Badge>;
+    switch (status) {
+      case 'Profundo': return <Badge variant="default" className="bg-primary/20 text-primary border-primary/30 text-[10px]">Profundo</Badge>;
+      case 'Engajado': return <Badge variant="secondary" className="bg-orange-500/20 text-orange-600 border-orange-500/30 text-[10px]">Engajado</Badge>;
+      case 'Ativo': return <Badge variant="outline" className="bg-green-500/10 text-green-600 border-green-500/30 text-[10px]">Ativo</Badge>;
+      case 'Novo': return <Badge variant="outline" className="bg-blue-500/10 text-blue-600 border-blue-500/30 text-[10px]">Novo</Badge>;
+      default: return <Badge variant="destructive" className="bg-destructive/10 text-destructive border-destructive/30 text-[10px]">Inativo</Badge>;
+    }
   };
 
   const exportCsv = useCallback(() => {
