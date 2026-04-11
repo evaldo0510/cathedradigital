@@ -7,7 +7,7 @@ import DeepContentSection from './DeepContentSection';
 
 const AparicoesPage: React.FC = () => {
   const [selectedApparition, setSelectedApparition] = useState<Apparition | null>(null);
-  const [activeTab, setActiveTab] = useState<'historia' | 'vidente' | 'mensagem'>('historia');
+  const [activeTab, setActiveTab] = useState<'historia' | 'vidente' | 'mensagem' | 'profundidade'>('historia');
   const { isFavorite, toggleFavorite } = useFavorites();
 
   const handleToggleFavorite = (apparition: Apparition, e?: React.MouseEvent) => {
