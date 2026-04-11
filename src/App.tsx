@@ -225,6 +225,12 @@ const AppLayout: React.FC = () => {
   }, [lang]);
 
   const [isSpeaking, setIsSpeaking] = useState(false);
+  
+  // Pre-load voices for better voice selection
+  useEffect(() => {
+    window.speechSynthesis.getVoices();
+  }, []);
+
   const toggleSpeak = useCallback(() => {
     if (window.speechSynthesis.speaking) {
       window.speechSynthesis.cancel();
@@ -235,25 +241,38 @@ const AppLayout: React.FC = () => {
     const content = document.getElementById('main-content')?.innerText || '';
     if (!content) return;
 
-    // Clean up content: remove navigation text or other noise if possible
-    // For now, just take a reasonable chunk
     const textToRead = content.substring(0, 8000); 
-
     const utterance = new SpeechSynthesisUtterance(textToRead);
     
-    // Mapping internal lang to BCP 47
     const langMap: Record<string, string> = {
       'pt': 'pt-BR',
       'en': 'en-US',
       'es': 'es-ES',
-      'la': 'it-IT', // Ecclesiastical Latin sounds best with Italian voices
+      'la': 'it-IT',
       'it': 'it-IT',
       'fr': 'fr-FR',
       'de': 'de-DE'
     };
     
-    utterance.lang = langMap[lang] || lang;
-    utterance.rate = 0.95; // Slightly slower for better clarity
+    const targetLang = langMap[lang] || lang;
+    utterance.lang = targetLang;
+    
+    // Try to find a higher quality voice on the system
+    const voices = window.speechSynthesis.getVoices();
+    const betterVoice = voices.filter(v => v.lang.startsWith(targetLang.split('-')[0]))
+      .sort((a, b) => {
+        const aName = a.name.toLowerCase();
+        const bName = b.name.toLowerCase();
+        const aScore = (aName.includes('google') ? 10 : 0) + (aName.includes('premium') ? 20 : 0) + (aName.includes('natural') ? 30 : 0) + (aName.includes('enhanced') ? 15 : 0);
+        const bScore = (bName.includes('google') ? 10 : 0) + (bName.includes('premium') ? 20 : 0) + (bName.includes('natural') ? 30 : 0) + (bName.includes('enhanced') ? 15 : 0);
+        return bScore - aScore;
+      })[0];
+      
+    if (betterVoice) {
+      utterance.voice = betterVoice;
+    }
+    
+    utterance.rate = 1.0; // Slightly faster to sound more natural on modern engines
     utterance.pitch = 1.0;
     
     utterance.onstart = () => setIsSpeaking(true);
