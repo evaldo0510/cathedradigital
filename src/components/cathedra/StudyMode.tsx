@@ -423,6 +423,49 @@ const StudyMode: React.FC = () => {
             </div>
           ))}
 
+          {/* New A-Z / Theme Suggestion */}
+          {!isLoading && lastMetadata && lastMetadata.theme && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-primary/5 border border-primary/10 rounded-2xl p-6 space-y-4"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 bg-primary/10 rounded-lg">
+                    <BookOpen className="w-4 h-4 text-primary" />
+                  </div>
+                  <h3 className="text-sm font-bold text-primary tracking-tight">Explorar tema: {lastMetadata.theme}</h3>
+                </div>
+                <Badge variant="outline" className="bg-background/50 text-[9px] uppercase tracking-widest px-2 py-0.5 border-primary/20">A–Z da Fé</Badge>
+              </div>
+
+              {lastMetadata.az_terms && lastMetadata.az_terms.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {lastMetadata.az_terms.map((term: string, idx: number) => (
+                    <button
+                      key={idx}
+                      onClick={() => navigate(`${AppRoute.AZ_FAITH}?q=${encodeURIComponent(term)}`)}
+                      className="px-3 py-1.5 bg-card hover:bg-primary/10 border border-border hover:border-primary/30 rounded-xl text-xs font-medium transition-all flex items-center gap-1.5 group"
+                    >
+                      {term}
+                      <ArrowRight className="w-3 h-3 text-muted-foreground group-hover:text-primary transition-colors" />
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              <Button
+                variant="default"
+                size="sm"
+                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase text-[10px] tracking-[0.2em] h-10 rounded-xl flex items-center justify-center gap-2"
+                onClick={() => navigate(AppRoute.AZ_FAITH)}
+              >
+                Ver glossário completo <ArrowRight className="w-3.5 h-3.5" />
+              </Button>
+            </motion.div>
+          )}
+
           {/* Natural conversion: Logos deep response */}
           {!isLoading && messages.length > 0 && messages[messages.length - 1].role === 'assistant' && (
             messages[messages.length - 1].content.length > 400 || messages.filter(m => m.role === 'assistant').length >= 2
