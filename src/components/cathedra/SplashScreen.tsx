@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import logosAvatar from '@/assets/logos-avatar.png';
+import cathedraLogo from '@/assets/cathedra-logo-new.png';
 
 const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }>(({ onComplete }, ref) => {
   const [phase, setPhase] = useState<'logo' | 'text' | 'exit'>('logo');
@@ -67,7 +67,7 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
           className="relative z-10"
         >
           <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-[3px] border-secondary/50 shadow-2xl">
-            <img src={logosAvatar} alt="Logos" className="w-full h-full object-cover" />
+            <img src={cathedraLogo} alt="Cathedra" className="w-full h-full object-contain" />
           </div>
         </motion.div>
 
