@@ -375,10 +375,14 @@ const Bible: React.FC = () => {
                 </button>
               ))}
             </div>
-            <button onClick={() => setShowCrossRefs(!showCrossRefs)}
-              className={`p-2 rounded-xl border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}>
-              <Icons.Columns className="w-5 h-5" />
-            </button>
+            {crossRefs.length > 0 && (
+              <button onClick={() => setShowCrossRefs(!showCrossRefs)}
+                className={`flex items-center gap-2 px-3 py-2 rounded-xl border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}
+                title="Nexus Theologicus (Catecismo)">
+                <Icons.Cross className="w-4 h-4" />
+                <span className="text-xs font-bold">{crossRefs.length}</span>
+              </button>
+            )}
             <ShareButton 
               title={selectedBook.name} 
               text={`Lendo ${selectedBook.name} na Cathedra: Digital Sanctuarium`} 
