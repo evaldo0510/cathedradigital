@@ -16,6 +16,7 @@ interface CatechismPopoverProps {
 const CatechismPopover: React.FC<CatechismPopoverProps> = ({
   paragraph,
   onNavigate,
+  variant = 'default',
 }) => {
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(false);
