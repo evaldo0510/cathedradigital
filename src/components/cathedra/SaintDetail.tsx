@@ -220,12 +220,26 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
             />
           </div>
 
-          <ShareButton
-            title={saint.name}
-            text={`${saint.name} — ${saint.title}. ${saint.quotes[0] || ''}`}
-            variant="button"
-            className="!px-4 !py-2.5 !text-[11px] !rounded-2xl !bg-foreground !text-background !font-black !uppercase !tracking-widest"
-          />
+          <div className="flex-1 flex justify-end items-center gap-2">
+            {(saint as any).url && (
+              <Button 
+                onClick={() => window.open((saint as any).url, '_blank')}
+                variant="outline"
+                className="bg-foreground/5 hover:bg-foreground/10 text-foreground border-border/20 text-[9px] font-black uppercase tracking-widest h-9 px-4 rounded-xl flex items-center gap-2 transition-all"
+              >
+                <Icons.Globe className="w-3 h-3" />
+                Fonte Oficial
+              </Button>
+            )}
+            
+            <ShareButton
+              title={saint.name}
+              text={`${saint.name} — ${saint.title}. ${saint.quotes[0] || ''}`}
+              variant="button"
+              className="!px-4 !py-2.5 !text-[11px] !rounded-2xl !bg-foreground !text-background !font-black !uppercase !tracking-widest"
+            />
+          </div>
+
         </div>
 
         {/* Short Biography */}
