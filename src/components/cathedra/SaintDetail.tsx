@@ -50,6 +50,22 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
   const [isGenerating, setIsGenerating] = useState(false);
   const [showLogos, setShowLogos] = useState(autoReflect);
 
+  const suggestedJourney = React.useMemo(() => {
+    const mainVirtue = saint.virtues?.[0]?.toLowerCase() || 'santidade';
+    
+    // Direct match
+    if (VIRTUE_TO_JOURNEY[mainVirtue]) return VIRTUE_TO_JOURNEY[mainVirtue];
+    
+    // Keyword match
+    for (const v of (saint.virtues || [])) {
+      const lv = v.toLowerCase();
+      const foundKey = Object.keys(VIRTUE_TO_JOURNEY).find(key => lv.includes(key));
+      if (foundKey) return VIRTUE_TO_JOURNEY[foundKey];
+    }
+    
+    return VIRTUE_TO_JOURNEY['paciência']; // Default
+  }, [saint.virtues]);
+
   React.useEffect(() => {
     if (autoReflect) {
       generateLogosReflection();
