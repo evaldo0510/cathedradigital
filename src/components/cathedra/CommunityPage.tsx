@@ -146,11 +146,15 @@ const CommunityPage: React.FC = () => {
         likedPostIds = new Set(likes?.map(l => l.post_id) || []);
       }
 
-      setPosts(data.map(p => ({
+      const enriched = data.map(p => ({
         ...p,
         author_name: profileMap.get(p.user_id) || 'Anônimo',
         user_liked: likedPostIds.has(p.id),
-      })));
+      }));
+      // Show approved posts to everyone; pending/rejected only to author
+      setPosts(enriched.filter(p => 
+        p.status === 'approved' || p.user_id === user?.id
+      ));
     }
     setLoading(false);
   }, [category, user]);
