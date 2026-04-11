@@ -369,10 +369,13 @@ const AquinasOpera: React.FC = () => {
             )}
           </div>
         ))}
-      </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      <div className="bg-muted rounded-2xl p-6 text-center space-y-2">
-        <p className="text-sm text-muted-foreground font-serif italic">A Suma Teológica contém 512 questões e 2.669 artigos. O conteúdo completo está sendo adicionado progressivamente.</p>
+      <div className="bg-muted rounded-2xl p-8 text-center space-y-4">
+        <Icons.History className="w-8 h-8 text-primary/30 mx-auto" />
+        <p className="text-sm text-muted-foreground font-serif italic max-w-sm mx-auto">A Suma Teológica contém 512 questões e 2.669 artigos. O conteúdo completo está sendo adicionado progressivamente.</p>
       </div>
     </div>
   );
