@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
+import MagisteriumPopover from './MagisteriumPopover';
 import { parseBibleReferences } from '@/lib/bibleRefParser';
 
 interface FaithTerm {
@@ -512,11 +513,17 @@ const AZFaithPage: React.FC = () => {
                         <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600">📜 Magistério</p>
                       </div>
                       <div className="flex flex-wrap gap-2">
-                        {selectedTerm.magisteriumReferences.map(m => (
-                          <Badge key={m} variant="outline" className="bg-emerald-500/5 text-emerald-700 dark:text-emerald-400 border-emerald-500/20 rounded-full text-xs font-semibold">
-                            {m}
-                          </Badge>
-                        ))}
+                        {selectedTerm.magisteriumReferences.map((m, idx) => {
+                          const docName = m.replace(/\s*\(.*?\)\s*$/, '').replace(/\s*n\.\s*\d.*$/, '').trim();
+                          return (
+                            <MagisteriumPopover
+                              key={idx}
+                              documentName={docName}
+                              label={m}
+                              onNavigate={(search) => navigate(`${AppRoute.MAGISTERIUM}?search=${encodeURIComponent(search)}`)}
+                            />
+                          );
+                        })}
                       </div>
                     </div>
                   )}
