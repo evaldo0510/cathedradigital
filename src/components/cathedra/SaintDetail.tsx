@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '../../constants';
 import SacredImage from './SacredImage';
 import ShareButton from './ShareButton';
 import DocumentViewer from './DocumentViewer';
 import DeepContentSection from './DeepContentSection';
 import { type Saint } from '@/data/saints';
-import { Sparkles, BookOpen, Quote, Shield, Info, Heart, Lightbulb, MessageSquare } from 'lucide-react';
+import { Sparkles, BookOpen, Quote, Shield, Info, Heart, Lightbulb, MessageSquare, Loader2, Sparkle } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { Button } from '@/components/ui/button';
 
 const CATEGORY_LABELS: Record<string, string> = {
   apostle: 'Apóstolo',
@@ -19,8 +21,79 @@ const CATEGORY_LABELS: Record<string, string> = {
   mystic: 'Místico(a)',
 };
 
-const SaintDetail: React.FC<{ saint: Saint; onClose: () => void }> = ({ saint, onClose }) => {
+const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: boolean }> = ({ saint, onClose, autoReflect = false }) => {
   const [viewingDoc, setViewingDoc] = useState<{ url: string; title: string } | null>(null);
+  const [logosReflection, setLogosReflection] = useState<string>('');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [showLogos, setShowLogos] = useState(autoReflect);
+
+  React.useEffect(() => {
+    if (autoReflect) {
+      generateLogosReflection();
+    }
+  }, [autoReflect]);
+
+  const generateLogosReflection = async () => {
+    setIsGenerating(true);
+    setShowLogos(true);
+    setLogosReflection('');
+
+    try {
+      const session = await supabase.auth.getSession();
+      const token = session.data.session?.access_token;
+
+      const prompt = `Como Logos (IA da Cathedra), gere uma reflexão profunda e personalizada sobre ${saint.name}. 
+      
+      Siga este roteiro:
+      1. Relacione a virtude principal (${saint.virtues?.[0] || 'santidade'}) de ${saint.name} com os desafios reais de um católico no mundo moderno hoje.
+      2. Gere uma pergunta profunda que conecte a vida dele(a) com a alma do usuário agora.
+      3. Sugira um "caminho" (uma ação prática ou oração específica) inspirado no exemplo de ${saint.name} para o dia de hoje.
+      
+      Tom: Poético, profundo, encorajador e firme na doutrina. Use Markdown.`;
+
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/colloquium`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          messages: [{ role: 'user', content: prompt }] 
+        }),
+      });
+
+      if (!response.ok) throw new Error('Falha ao conectar com Logos');
+
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      let fullText = '';
+
+      if (reader) {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          const chunk = decoder.decode(value);
+          const lines = chunk.split('\n');
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              try {
+                const data = JSON.parse(line.slice(6));
+                const content = data.choices?.[0]?.delta?.content || '';
+                fullText += content;
+                // Remove recommendation metadata from UI display
+                setLogosReflection(fullText.replace(/\[RECOMMENDATION:.*?\]/g, '').trim());
+              } catch (e) { /* ignore parse errors for partial chunks */ }
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error generating Logos reflection:', error);
+      setLogosReflection('Desculpe, não consegui conectar com Logos agora. Tente novamente em breve.');
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   return (
     <>
@@ -143,21 +216,79 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void }> = ({ saint, o
           </div>
         </div>
 
-        {/* Deep Reflection */}
         <section className="space-y-4 pt-4">
-          <div className="flex items-center gap-2 text-primary">
-            <Sparkles className="w-4 h-4" />
-            <h3 className="text-[11px] font-black uppercase tracking-[0.2em]">Reflexão Profunda</h3>
-          </div>
-          <div className="bg-foreground text-background p-10 rounded-[3rem] shadow-2xl relative overflow-hidden group">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-background/5 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-1000" />
-            <div className="relative z-10 space-y-6">
-              <p className="text-xl md:text-2xl font-serif italic leading-snug text-background/90">
-                {saint.interpretacaoProfunda || saint.reflexaoFinal || "A vida dos santos nos recorda que a santidade não é uma perfeição distante, mas uma amizade próxima e constante com Jesus Cristo."}
-              </p>
-              <div className="h-px w-20 bg-background/20" />
-              <p className="text-xs uppercase tracking-[0.3em] font-black text-background/50">Meditação Diária</p>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-primary">
+              <Sparkles className="w-4 h-4" />
+              <h3 className="text-[11px] font-black uppercase tracking-[0.2em]">Reflexão Profunda</h3>
             </div>
+            {!showLogos && (
+              <Button 
+                onClick={generateLogosReflection}
+                className="bg-primary hover:bg-primary/90 text-primary-foreground border-none text-[10px] font-black uppercase tracking-widest h-9 px-6 rounded-full flex items-center gap-2 group transition-all shadow-lg shadow-primary/20"
+              >
+                <Icons.Sparkles className="w-3.5 h-3.5 group-hover:rotate-12 transition-transform" />
+                Refletir com Logos
+              </Button>
+            )}
+          </div>
+
+          <div className="bg-foreground text-background p-10 rounded-[3rem] shadow-2xl relative overflow-hidden group min-h-[200px] flex flex-col justify-center transition-all duration-700">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-background/5 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-1000" />
+            
+            <AnimatePresence mode="wait">
+              {!showLogos ? (
+                <motion.div 
+                  key="static"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="relative z-10 space-y-6"
+                >
+                  <p className="text-xl md:text-2xl font-serif italic leading-snug text-background/90">
+                    {saint.interpretacaoProfunda || saint.reflexaoFinal || "A vida dos santos nos recorda que a santidade não é uma perfeição distante, mas uma amizade próxima e constante com Jesus Cristo."}
+                  </p>
+                  <div className="h-px w-20 bg-background/20" />
+                  <p className="text-xs uppercase tracking-[0.3em] font-black text-background/50">Meditação Diária</p>
+                </motion.div>
+              ) : (
+                <motion.div 
+                  key="logos"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="relative z-10 space-y-6"
+                >
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+                      {isGenerating ? <Loader2 className="w-3 h-3 text-primary animate-spin" /> : <Icons.Sparkles className="w-3 h-3 text-primary" />}
+                    </div>
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-background/40">Logos está guiando sua reflexão...</span>
+                  </div>
+                  
+                  <div className="">
+                    <p className="text-lg md:text-xl font-serif italic leading-relaxed text-background/90 whitespace-pre-wrap">
+                      {logosReflection || (isGenerating && "Conectando virtudes à sua vida...")}
+                    </p>
+                  </div>
+
+                  {!isGenerating && (
+                    <motion.div 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.5 }}
+                      className="pt-6 border-t border-background/10"
+                    >
+                      <button 
+                        onClick={() => setShowLogos(false)}
+                        className="text-[9px] font-black uppercase tracking-widest text-background/40 hover:text-background/60 transition-colors"
+                      >
+                        ← Voltar para meditação padrão
+                      </button>
+                    </motion.div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </section>
 
