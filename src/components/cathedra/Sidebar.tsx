@@ -58,7 +58,7 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
   return (
     <>
       <aside className="h-full w-72 bg-card border-r border-border flex flex-col p-5 overflow-hidden">
-        <div className="mb-6 px-2 flex items-center gap-3 cursor-pointer group hover:opacity-90 transition-opacity" onClick={() => handleNav(AppRoute.DASHBOARD)}>
+        <div className="mb-4 px-2 flex items-center gap-3 cursor-pointer group hover:opacity-90 transition-opacity" onClick={() => handleNav(AppRoute.DASHBOARD)}>
           <img src={cathedraLogo} alt="Cathedra" className="w-8 h-8 object-contain" />
           <div>
             <h1 className="text-lg font-black tracking-[0.2em] text-foreground leading-none uppercase font-serif">CATHEDRA</h1>
@@ -69,7 +69,7 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
           </div>
         </div>
 
-        <nav className="flex-1 space-y-8 overflow-y-auto pb-10">
+        <nav className="flex-1 space-y-6 overflow-y-auto pb-4">
           {sections.map((section) => (section.items.length > 0 && (
             <div key={section.label}>
               <h3 className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-4 px-4">{section.label}</h3>
