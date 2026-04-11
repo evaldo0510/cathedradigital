@@ -6,6 +6,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import SacredImage from './SacredImage';
 import { Icons } from '@/constants';
+import { useLang } from '@/hooks/useLang';
 
 interface DashboardProps {
   user: User | null;
@@ -32,52 +33,53 @@ const QUOTES = [
   { text: '"Tudo posso naquele que me fortalece."', author: 'Filipenses 4,13' },
 ];
 
-const MAIN_DOORS = [
-  {
-    label: 'Bíblia',
-    description: 'Sagrada Escritura',
-    icon: Icons.Bible,
-    route: AppRoute.BIBLE,
-    gradient: 'from-primary/5 to-transparent',
-    iconColor: 'text-primary',
-    borderColor: 'border-border hover:border-secondary/50',
-  },
-  {
-    label: 'Liturgia',
-    description: 'Leituras do dia',
-    icon: Icons.Liturgy,
-    route: AppRoute.LITURGIA,
-    gradient: 'from-primary/5 to-transparent',
-    iconColor: 'text-primary',
-    borderColor: 'border-border hover:border-secondary/50',
-  },
-  {
-    label: 'Jornadas',
-    description: 'Trilhas de formação',
-    icon: Icons.Journeys,
-    route: AppRoute.JORNADAS,
-    gradient: 'from-primary/5 to-transparent',
-    iconColor: 'text-primary',
-    borderColor: 'border-border hover:border-secondary/50',
-  },
-  {
-    label: 'Comunidade',
-    description: 'Caminhe junto',
-    icon: Icons.Community,
-    route: AppRoute.COMMUNITY,
-    gradient: 'from-primary/5 to-transparent',
-    iconColor: 'text-primary',
-    borderColor: 'border-border hover:border-secondary/50',
-  },
-];
-
 const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   const navigate = useNavigate();
   const { profile } = useAuth();
+  const { t } = useLang();
   const goTo = useCallback((route: string) => navigate(route), [navigate]);
 
   const streak = profile?.streak || 0;
   const dailyQuote = QUOTES[Math.floor((Date.now() / 86400000)) % QUOTES.length];
+
+  const MAIN_DOORS = [
+    {
+      label: t('bible'),
+      description: t('bible_sub'),
+      icon: Icons.Bible,
+      route: AppRoute.BIBLE,
+      gradient: 'from-primary/5 to-transparent',
+      iconColor: 'text-primary',
+      borderColor: 'border-border hover:border-secondary/50',
+    },
+    {
+      label: t('liturgy'),
+      description: t('liturgy_sub') || 'Leituras do dia',
+      icon: Icons.Liturgy,
+      route: AppRoute.LITURGIA,
+      gradient: 'from-primary/5 to-transparent',
+      iconColor: 'text-primary',
+      borderColor: 'border-border hover:border-secondary/50',
+    },
+    {
+      label: t('journeys'),
+      description: t('journeys_sub') || 'Trilhas de formação',
+      icon: Icons.Journeys,
+      route: AppRoute.JORNADAS,
+      gradient: 'from-primary/5 to-transparent',
+      iconColor: 'text-primary',
+      borderColor: 'border-border hover:border-secondary/50',
+    },
+    {
+      label: t('community'),
+      description: t('community_sub'),
+      icon: Icons.Community,
+      route: AppRoute.COMMUNITY,
+      gradient: 'from-primary/5 to-transparent',
+      iconColor: 'text-primary',
+      borderColor: 'border-border hover:border-secondary/50',
+    },
+  ];
 
   // Active journeys
   const [activeJourneys, setActiveJourneys] = useState<{ id: string; title: string; icon: string; totalSteps: number; completedSteps: number }[]>([]);
@@ -208,10 +210,10 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           </motion.div>
           <div className="space-y-2">
             <p className="text-[10px] font-black uppercase tracking-[0.4em] text-secondary opacity-80">
-              Cathedra Digital
+              Cathedra {t('digital')}
             </p>
             <h1 className="text-4xl md:text-6xl font-display font-black text-primary leading-tight tracking-tight">
-              {profile?.name ? `Salve, ${profile.name.split(' ')[0]}!` : 'Pax et Bonum'}
+              {profile?.name ? `${t('salve')}, ${profile.name.split(' ')[0]}!` : t('pax_et_bonum')}
             </h1>
           </div>
 
@@ -220,7 +222,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             {streak > 0 && (
               <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-secondary/10 border border-secondary/20 shadow-sm">
                 <Icons.Zap className="w-4 h-4 text-secondary" />
-                <span className="text-xs font-black text-primary uppercase tracking-wider">{streak} {streak === 1 ? 'dia' : 'dias'}</span>
+                <span className="text-xs font-black text-primary uppercase tracking-wider">{streak} {streak === 1 ? t('day') : t('days')}</span>
               </div>
             )}
             <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-primary/5 border border-border shadow-sm">
@@ -282,10 +284,10 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <p className="text-[10px] font-black uppercase tracking-widest text-primary">WhatsApp Liberado</p>
-                <div className="px-1.5 py-0.5 rounded-full bg-primary text-primary-foreground text-[8px] font-black uppercase tracking-wider">Novo</div>
+                <p className="text-[10px] font-black uppercase tracking-widest text-primary">{t('whatsapp_released')}</p>
+                <div className="px-1.5 py-0.5 rounded-full bg-primary text-primary-foreground text-[8px] font-black uppercase tracking-wider">{t('new')}</div>
               </div>
-              <h3 className="text-sm font-bold text-foreground leading-tight">Receba meditações diárias no seu celular</h3>
+              <h3 className="text-sm font-bold text-foreground leading-tight">{t('whatsapp_sub')}</h3>
             </div>
           </div>
           <Icons.ChevronRight className="w-4 h-4 text-primary group-hover:translate-x-1 transition-transform" />
@@ -324,13 +326,13 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4 h-full">
             <div className="flex items-center gap-2">
               <Icons.Activity className="w-4 h-4 text-primary" />
-              <h2 className="text-sm font-bold text-foreground uppercase tracking-wide">Resumo da Semana</h2>
+              <h2 className="text-sm font-bold text-foreground uppercase tracking-wide">{t('weekly_summary')}</h2>
             </div>
             <div className="grid grid-cols-4 gap-2">
               <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
                 <p className="text-xl md:text-2xl font-bold text-foreground">{weeklyStats.chaptersRead}</p>
                 <p className="text-[9px] text-muted-foreground font-medium mt-1 flex flex-col items-center">
-                  <Icons.Bookmark className="w-3 h-3 mb-1" /> Bíblia
+                  <Icons.Bookmark className="w-3 h-3 mb-1" /> {t('bible')}
                 </p>
               </div>
               <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
@@ -342,13 +344,13 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
                 <p className="text-xl md:text-2xl font-bold text-foreground">{streak}</p>
                 <p className="text-[9px] text-muted-foreground font-medium mt-1 flex flex-col items-center">
-                  <Icons.Flame className="w-3 h-3 mb-1" /> Streak
+                  <Icons.Flame className="w-3 h-3 mb-1" /> {t('streak')}
                 </p>
               </div>
               <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
                 <p className="text-xl md:text-2xl font-bold text-foreground">{weeklyStats.journeySteps}</p>
                 <p className="text-[9px] text-muted-foreground font-medium mt-1 flex flex-col items-center">
-                  <Icons.Calendar className="w-3 h-3 mb-1" /> Trilhas
+                  <Icons.Calendar className="w-3 h-3 mb-1" /> {t('journeys')}
                 </p>
               </div>
             </div>
@@ -360,9 +362,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           <FadeUp delay={0.15}>
             <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4 h-full">
               <div className="flex items-center justify-between">
-                <h2 className="text-sm font-bold text-foreground uppercase tracking-wide">Suas Jornadas</h2>
+                <h2 className="text-sm font-bold text-foreground uppercase tracking-wide">{t('your_journeys')}</h2>
                 <button onClick={() => goTo(AppRoute.JORNADAS)} className="text-xs text-primary hover:underline flex items-center gap-1">
-                  Ver todas <Icons.ChevronRight className="w-3 h-3" />
+                  {t('view_all')} <Icons.ChevronRight className="w-3 h-3" />
                 </button>
               </div>
               <div className="space-y-3">
@@ -374,23 +376,16 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
                       onClick={() => goTo(`/jornadas/${j.id}`)}
                       className="w-full flex items-center gap-4 p-4 rounded-xl bg-primary/[0.03] border border-primary/10 hover:border-primary/30 transition-colors text-left"
                     >
-                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                        {j.icon === 'compass' ? <Icons.Compass className="w-5 h-5 text-primary" /> : 
-                         j.icon === 'cross' ? <Icons.Cross className="w-5 h-5 text-primary" /> : 
-                         j.icon === 'book-open' ? <Icons.BookOpen className="w-5 h-5 text-primary" /> : 
-                         <Icons.Sparkles className="w-5 h-5 text-primary" />}
+                      <div className="w-10 h-10 rounded-lg bg-background flex items-center justify-center text-primary shadow-sm">
+                        <Icons.Compass className="w-5 h-5" />
                       </div>
-                      <div className="flex-1 min-w-0 space-y-2">
-                        <p className="text-sm font-semibold text-foreground truncate">{j.title}</p>
-                        <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
-                          <motion.div 
-                            initial={{ width: 0 }}
-                            animate={{ width: `${pct}%` }}
-                            className="h-full bg-primary rounded-full transition-all" 
-                          />
+                      <div className="flex-1">
+                        <p className="text-xs font-bold text-foreground">{j.title}</p>
+                        <div className="mt-2 h-1.5 w-full bg-muted rounded-full overflow-hidden">
+                          <div className="h-full bg-primary transition-all" style={{ width: `${pct}%` }} />
                         </div>
                       </div>
-                      <span className="text-xs font-bold text-primary shrink-0">{pct}%</span>
+                      <div className="text-[10px] font-black text-primary">{pct}%</div>
                     </button>
                   );
                 })}
@@ -400,73 +395,26 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         )}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
-        {/* ═══ SANTOS DO DIA ═══ */}
-        {saintsToday.length > 0 && (
-          <FadeUp delay={0.2}>
-            <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm h-full group hover:shadow-md transition-all">
-              <div className="flex h-full items-stretch">
-                <div className="w-28 md:w-32 lg:w-40 flex-shrink-0 relative overflow-hidden bg-muted">
-                  <SacredImage src={saintsToday[0].image || ''} alt={saintsToday[0].name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent" />
-                </div>
-                <div className="flex-1 p-5 md:p-6 flex flex-col justify-center space-y-2">
-                  <p className="text-[9px] font-black uppercase tracking-widest text-primary flex items-center gap-1.5">
-                    <Icons.Star className="w-3.5 h-3.5 fill-primary/10" /> {saintsToday.length > 1 ? 'Santos do Dia' : 'Santo do Dia'}
-                  </p>
-                  <h3 className="text-base md:text-xl font-serif font-bold text-foreground leading-tight">
-                    {saintsToday.map(s => s.name).join(' e ')}
-                  </h3>
-                  <p className="text-xs md:text-sm text-muted-foreground font-serif italic line-clamp-2 leading-relaxed">
-                    "{saintsToday[0].quotes?.[0] || saintsToday[0].bio}"
-                  </p>
-                  <div className="flex gap-4 pt-4">
-                    <button
-                      onClick={() => goTo(`${AppRoute.SAINTS}`)}
-                      className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      História <Icons.ChevronRight className="w-3 h-3" />
-                    </button>
-                    <button
-                      onClick={() => goTo(`${AppRoute.SAINTS}?action=reflect`)}
-                      className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-primary hover:scale-[1.02] active:scale-[0.98] transition-all bg-primary/5 px-3 py-1.5 rounded-lg border border-primary/10"
-                    >
-                      Refletir com Logos <Icons.Sparkles className="w-3 h-3" />
-                    </button>
-                  </div>
-                </div>
+      {/* ═══ SAINTS ═══ */}
+      <FadeUp delay={0.2}>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {saintsToday.slice(0, 3).map((saint, i) => (
+            <div key={i} className="group relative overflow-hidden rounded-2xl aspect-[4/5] bg-card border border-border shadow-sm">
+              <SacredImage 
+                src={saint.image} 
+                alt={saint.name} 
+                className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+              <div className="absolute bottom-0 left-0 p-5 w-full">
+                <p className="text-[10px] font-black uppercase tracking-widest text-primary/80 mb-1">{saint.title}</p>
+                <h3 className="text-lg font-bold text-white leading-tight">{saint.name}</h3>
+                <p className="text-[10px] text-white/60 mt-2 line-clamp-2 leading-relaxed">{saint.description}</p>
               </div>
             </div>
-          </FadeUp>
-        )}
-
-        {/* ═══ PRO BANNER ═══ */}
-        {!profile?.is_premium && (
-          <FadeUp delay={0.25}>
-            <button
-              onClick={() => goTo(AppRoute.CHECKOUT)}
-              className="w-full h-full group relative overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 via-primary/[0.02] to-transparent p-6 md:p-8 text-left transition-all hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5 flex flex-col justify-center"
-            >
-              <div className="flex items-center gap-6">
-                <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500 shadow-inner">
-                  <Icons.Zap className="w-7 h-7 text-primary group-hover:text-primary-foreground transition-colors" />
-                </div>
-                <div className="flex-1 min-w-0 space-y-1.5">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-black text-foreground text-base md:text-lg uppercase tracking-wider">Cathedra PRO</h3>
-                    <span className="bg-primary text-primary-foreground text-[8px] font-black px-2 py-0.5 rounded-full uppercase tracking-tighter">Premium</span>
-                  </div>
-                  <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                    IA Teológica, trilhas exclusivas e modo offline para seu estudo diário.{' '}
-                    <span className="text-primary font-bold whitespace-nowrap">R$ 15,92/mês</span>
-                  </p>
-                </div>
-                <Icons.ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-all group-hover:translate-x-1 shrink-0" />
-              </div>
-            </button>
-          </FadeUp>
-        )}
-      </div>
+          ))}
+        </div>
+      </FadeUp>
     </div>
   );
 };
