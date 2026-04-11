@@ -9,6 +9,8 @@ import { toast } from 'sonner';
 
 const CATEGORIES = [
   { id: 'geral', label: 'Geral' },
+  { id: 'testemunho', label: '✝ Testemunho' },
+  { id: 'partilha', label: '💬 Partilha' },
   { id: 'teologia', label: 'Teologia' },
   { id: 'biblia', label: 'Bíblia' },
   { id: 'liturgia', label: 'Liturgia' },
@@ -25,6 +27,7 @@ interface Post {
   category: string;
   likes_count: number;
   created_at: string;
+  status: string | null;
   author_name?: string;
   replies_count?: number;
   user_liked?: boolean;
@@ -143,11 +146,15 @@ const CommunityPage: React.FC = () => {
         likedPostIds = new Set(likes?.map(l => l.post_id) || []);
       }
 
-      setPosts(data.map(p => ({
+      const enriched = data.map(p => ({
         ...p,
         author_name: profileMap.get(p.user_id) || 'Anônimo',
         user_liked: likedPostIds.has(p.id),
-      })));
+      }));
+      // Show approved posts to everyone; pending/rejected only to author
+      setPosts(enriched.filter(p => 
+        p.status === 'approved' || p.user_id === user?.id
+      ));
     }
     setLoading(false);
   }, [category, user]);
@@ -323,7 +330,8 @@ const CommunityPage: React.FC = () => {
           <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Communitas Fidelium</span>
         </div>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Comunidade</h1>
-        <p className="text-muted-foreground font-serif italic">Discussões e perguntas teológicas entre irmãos na fé.</p>
+        <p className="text-muted-foreground font-serif italic">Discussões, testemunhos e partilhas entre irmãos na fé.</p>
+        <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Todas as publicações são moderadas antes de aparecer para a comunidade</p>
       </div>
 
       {/* Tabs */}
@@ -432,26 +440,34 @@ const CommunityPage: React.FC = () => {
       {showNewPost && (
         <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
           <h3 className="text-sm font-bold text-foreground">Nova Discussão</h3>
+          <div className="flex gap-2 flex-wrap mb-2">
+            {[
+              { id: 'teologia', label: '📖 Discussão' },
+              { id: 'testemunho', label: '✝ Testemunho' },
+              { id: 'partilha', label: '💬 Partilha' },
+            ].map(t => (
+              <button key={t.id} type="button" onClick={() => setNewCategory(t.id)}
+                className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                  newCategory === t.id ? 'bg-foreground text-background' : 'bg-muted text-muted-foreground hover:text-foreground'
+                }`}>
+                {t.label}
+              </button>
+            ))}
+          </div>
           <input
             value={newTitle}
             onChange={e => setNewTitle(e.target.value)}
-            placeholder="Título da discussão..."
+            placeholder={newCategory === 'testemunho' ? 'Título do testemunho...' : newCategory === 'partilha' ? 'O que deseja partilhar?' : 'Título da discussão...'}
             className="w-full px-4 py-2.5 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
           />
           <textarea
             value={newContent}
             onChange={e => setNewContent(e.target.value)}
-            placeholder="Descreva sua pergunta ou reflexão..."
+            placeholder={newCategory === 'testemunho' ? 'Conte seu testemunho de fé...' : newCategory === 'partilha' ? 'Partilhe sua reflexão ou experiência...' : 'Descreva sua pergunta ou reflexão...'}
             rows={4}
             className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary/50"
           />
           <div className="flex items-center gap-3">
-            <select value={newCategory} onChange={e => setNewCategory(e.target.value)}
-              className="px-3 py-2 rounded-xl border border-border bg-background text-foreground text-sm">
-              {CATEGORIES.filter(c => c.id !== 'geral').map(c => (
-                <option key={c.id} value={c.id}>{c.label}</option>
-              ))}
-            </select>
             <div className="flex-1" />
             <button onClick={() => setShowNewPost(false)} className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground">Cancelar</button>
             <button onClick={createPost} disabled={submitting || !newTitle.trim() || !newContent.trim()}
@@ -478,18 +494,34 @@ const CommunityPage: React.FC = () => {
         <div className="space-y-3">
           {posts.map(post => (
             <button key={post.id} onClick={() => openPost(post)}
-              className="w-full text-left bg-card border border-border rounded-2xl p-5 hover:border-primary/30 hover:bg-primary/5 transition-all group">
+              className={`w-full text-left border rounded-2xl p-5 hover:border-primary/30 transition-all group ${
+                post.category === 'testemunho' ? 'bg-primary/5 border-primary/20' :
+                post.category === 'partilha' ? 'bg-secondary/5 border-secondary/20' :
+                'bg-card border-border hover:bg-primary/5'
+              }`}>
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-xl bg-foreground text-background flex items-center justify-center font-black text-sm shrink-0">
-                  {(post.author_name || 'A').charAt(0).toUpperCase()}
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm shrink-0 ${
+                  post.category === 'testemunho' ? 'bg-primary text-primary-foreground' : 'bg-foreground text-background'
+                }`}>
+                  {post.category === 'testemunho' ? '✝' : (post.author_name || 'A').charAt(0).toUpperCase()}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
+                  <div className="flex items-center gap-2 mb-1 flex-wrap">
                     <span className="text-xs font-bold text-foreground">{post.author_name}</span>
                     <span className="text-[10px] text-muted-foreground">{timeAgo(post.created_at)}</span>
                     <span className="text-[8px] font-black uppercase tracking-widest text-primary bg-primary/10 px-1.5 py-0.5 rounded-full">
                       {CATEGORIES.find(c => c.id === post.category)?.label || post.category}
                     </span>
+                    {post.status === 'pending' && post.user_id === user?.id && (
+                      <span className="text-[8px] font-black uppercase tracking-widest text-amber-600 bg-amber-500/10 px-1.5 py-0.5 rounded-full">
+                        ⏳ Em moderação
+                      </span>
+                    )}
+                    {post.status === 'rejected' && post.user_id === user?.id && (
+                      <span className="text-[8px] font-black uppercase tracking-widest text-destructive bg-destructive/10 px-1.5 py-0.5 rounded-full">
+                        ✕ Rejeitado
+                      </span>
+                    )}
                   </div>
                   <h3 className="text-sm font-bold text-foreground group-hover:text-primary transition-colors truncate">{post.title}</h3>
                   <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{post.content}</p>
