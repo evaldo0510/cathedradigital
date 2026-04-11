@@ -78,8 +78,8 @@ interface SensitiveRow {
 
 const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
-  const [stats, setStats] = useState<Stats | null>(null);
-  const [users, setUsers] = useState<UserProfile[]>([]);
+  const [stats, setStats] = useState<any>(null);
+  const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -87,7 +87,7 @@ const AdminDashboard: React.FC = () => {
   const [manualLoading, setManualLoading] = useState(false);
   const [sortField, setSortField] = useState<'name' | 'created_at' | 'xp'>('created_at');
   const [sortAsc, setSortAsc] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
+  const [selectedUser, setSelectedUser] = useState<any | null>(null);
   const [activeTab, setActiveTab] = useState('overview');
 
   useEffect(() => {
