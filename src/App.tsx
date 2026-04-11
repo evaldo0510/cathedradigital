@@ -324,6 +324,8 @@ const AppLayout: React.FC = () => {
                 user={appUser} 
                 isDark={isDark}
                 onToggleDark={() => setIsDark(!isDark)}
+                isSpeaking={isSpeaking}
+                onToggleSpeak={toggleSpeak}
                 onSignOut={signOut}
               />
             </div>
