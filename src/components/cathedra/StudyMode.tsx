@@ -12,6 +12,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { Copy, Check, Plus, MessageSquare, Trash2, ChevronLeft, Compass, Sparkles } from 'lucide-react';
 import ProConversionBanner from './ProConversionBanner';
 import { toast } from 'sonner';
+import logosAvatarImg from '@/assets/logos-avatar.png';
 
 interface Message {
   role: 'user' | 'assistant';
