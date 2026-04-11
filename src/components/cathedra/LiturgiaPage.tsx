@@ -333,7 +333,7 @@ const LiturgiaPage: React.FC = () => {
             </div>
             <div className="text-right">
               <p className="text-[9px] font-medium text-muted-foreground uppercase tracking-widest">Estado</p>
-              <p className="text-xs font-bold text-primary">{(profile as any).estado}</p>
+              <p className="text-xs font-bold text-primary">{profile.estado}</p>
             </div>
           </motion.div>
         )}
