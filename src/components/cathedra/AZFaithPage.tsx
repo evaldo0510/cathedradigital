@@ -35,7 +35,8 @@ const FAITH_TERMS: FaithTerm[] = [
     practicalApplication: 'Viver a aliança hoje significa renovar diariamente nossa fidelidade a Deus através da oração e do cumprimento dos mandamentos, não por obrigação, mas por amor àquele que nos amou primeiro.',
     bibleVerses: ['Gn 9,8-17 (Noé)', 'Gn 15 (Abraão)', 'Êx 19-24 (Moisés)', 'Lc 22,20 (Jesus)'],
     catechismReferences: ['§54-64 (As etapas da Revelação)', '§762 (A preparação da Igreja na AT)'],
-    magisteriumReferences: ['Dei Verbum n. 2-4 (Revelação)', 'Lumen Gentium n. 9 (O Povo de Deus)']
+    magisteriumReferences: ['Dei Verbum n. 2-4 (Revelação)', 'Lumen Gentium n. 9 (O Povo de Deus)'],
+    journey_id: 'a0a0a0a0-0005-4000-8000-000000000001'
   },
   { term: 'Amém', definition: 'Palavra hebraica que significa "assim seja" ou "verdadeiramente".', reference: 'Ap 3,14', category: 'Liturgia' },
   { term: 'Amor', definition: 'Doação de si segundo Deus. A caridade que se dá sem esperar retorno, raiz de todas as virtudes.', reference: '1Cor 13', category: 'Virtudes',
@@ -43,7 +44,8 @@ const FAITH_TERMS: FaithTerm[] = [
     practicalApplication: 'Pratique um ato de caridade anônimo hoje. Perdoe alguém que o magoou. Doe seu tempo a quem precisa.',
     bibleVerses: ['1Cor 13,4-7 (Hino do Amor)', '1Jo 4,7-8 (Deus é Amor)', 'Jo 15,12-13 (Mandamento novo)'],
     catechismReferences: ['§1822-1829 (A Caridade)', '§1604 (O Amor conjugal)'],
-    magisteriumReferences: ['Deus Caritas Est (Bento XVI)', 'Amoris Laetitia (Papa Francisco)']
+    magisteriumReferences: ['Deus Caritas Est (Bento XVI)', 'Amoris Laetitia (Papa Francisco)'],
+    journey_id: 'a0a0a0a0-0001-4000-8000-000000000001'
   },
   { term: 'Anjo', definition: 'Mensageiro espiritual de Deus que atua na história da salvação.', reference: 'Hb 1,14', category: 'Seres Celestiais' },
   { term: 'Apocalipse', definition: 'Último livro da Bíblia, que revela a vitória final de Deus sobre o mal.', reference: 'Ap 1,1', category: 'Escatologia' },
@@ -54,7 +56,8 @@ const FAITH_TERMS: FaithTerm[] = [
     practicalApplication: 'Faça um exame de consciência hoje. Identifique uma área da sua vida que precisa de conversão.',
     bibleVerses: ['Lc 15,11-32 (O Filho Pródigo)', 'Sl 51 (Miserere)', 'At 3,19 (Conversão)'],
     catechismReferences: ['§1430-1433 (A penitência interior)', '§1451 (A contrição)'],
-    magisteriumReferences: ['Reconciliatio et Paenitentia (João Paulo II)']
+    magisteriumReferences: ['Reconciliatio et Paenitentia (João Paulo II)'],
+    journey_id: 'a0a0a0a0-0004-4000-8000-000000000001'
   },
   { 
     term: 'Batismo', 
@@ -105,7 +108,8 @@ const FAITH_TERMS: FaithTerm[] = [
     practicalApplication: 'Cultivar a fé através do estudo da Palavra, da oração constante e da prática da caridade.',
     bibleVerses: ['Hb 11 (Os heróis da fé)', 'Rm 1,17 (O justo viverá pela fé)', 'Tg 2,14-26 (Fé e Obras)'],
     catechismReferences: ['§142-184 (A Resposta do homem a Deus)', '§1814-1816 (A virtude da Fé)'],
-    magisteriumReferences: ['Lumen Fidei (Papa Francisco)', 'Fides et Ratio (João Paulo II)']
+    magisteriumReferences: ['Lumen Fidei (Papa Francisco)', 'Fides et Ratio (João Paulo II)'],
+    journey_id: 'a0a0a0a0-0002-4000-8000-000000000001'
   },
   { term: 'Franciscano', definition: 'Relativo à ordem religiosa fundada por São Francisco de Assis.', reference: 'Tradição', category: 'Ordens Religiosas' },
   { term: 'Gênesis', definition: 'Primeiro livro da Bíblia, que narra as origens do mundo e da humanidade.', reference: 'Gn 1,1', category: 'Livros Bíblicos' },
@@ -193,7 +197,8 @@ const FAITH_TERMS: FaithTerm[] = [
     practicalApplication: 'Pense em alguém que o magoou. Reze por essa pessoa hoje. Peça a graça de perdoar.',
     bibleVerses: ['Mt 18,21-22 (Setenta vezes sete)', 'Lc 23,34 (Pai, perdoai-lhes)', 'Cl 3,13 (Perdoai-vos mutuamente)'],
     catechismReferences: ['§2838-2845 (Perdoai-nos as nossas ofensas)'],
-    magisteriumReferences: ['Dives in Misericordia (João Paulo II)']
+    magisteriumReferences: ['Dives in Misericordia (João Paulo II)'],
+    journey_id: 'a0a0a0a0-0003-4000-8000-000000000001'
   },
   { term: 'Profeta', definition: 'Aquele que fala em nome de Deus para o povo.', reference: 'Is 1,1', category: 'Ministérios' },
   { term: 'Purgatório', definition: 'Estado de purificação final dos que morrem na amizade de Deus.', reference: '2Mc 12,45', category: 'Escatologia' },
