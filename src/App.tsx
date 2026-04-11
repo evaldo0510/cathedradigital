@@ -235,11 +235,32 @@ const AppLayout: React.FC = () => {
     const content = document.getElementById('main-content')?.innerText || '';
     if (!content) return;
 
-    const utterance = new SpeechSynthesisUtterance(content.substring(0, 5000));
-    utterance.lang = lang === 'pt' ? 'pt-BR' : lang === 'la' ? 'it-IT' : lang;
+    // Clean up content: remove navigation text or other noise if possible
+    // For now, just take a reasonable chunk
+    const textToRead = content.substring(0, 8000); 
+
+    const utterance = new SpeechSynthesisUtterance(textToRead);
+    
+    // Mapping internal lang to BCP 47
+    const langMap: Record<string, string> = {
+      'pt': 'pt-BR',
+      'en': 'en-US',
+      'es': 'es-ES',
+      'la': 'it-IT', // Ecclesiastical Latin sounds best with Italian voices
+      'it': 'it-IT',
+      'fr': 'fr-FR',
+      'de': 'de-DE'
+    };
+    
+    utterance.lang = langMap[lang] || lang;
+    utterance.rate = 0.95; // Slightly slower for better clarity
+    utterance.pitch = 1.0;
+    
+    utterance.onstart = () => setIsSpeaking(true);
     utterance.onend = () => setIsSpeaking(false);
+    utterance.onerror = () => setIsSpeaking(false);
+    
     window.speechSynthesis.speak(utterance);
-    setIsSpeaking(true);
   }, [lang]);
 
   useEffect(() => {
