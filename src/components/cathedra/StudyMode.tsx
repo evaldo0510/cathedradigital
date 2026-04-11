@@ -86,6 +86,7 @@ const StudyMode: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
+  const [lastMetadata, setLastMetadata] = useState<any>(null);
   const [showSidebar, setShowSidebar] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
