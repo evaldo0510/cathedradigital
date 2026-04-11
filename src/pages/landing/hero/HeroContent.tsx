@@ -42,7 +42,7 @@ interface HeroContentProps {
 const HeroContent = ({ heroOpacity, heroScale, heroY, onStart, onAbout }: HeroContentProps) => (
   <motion.div
     style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
-    className="relative z-10 max-w-5xl text-center space-y-12"
+    className="relative z-10 max-w-5xl text-center space-y-8 sm:space-y-12 px-4"
   >
     {/* Logos Visual Highlight */}
     <motion.div
@@ -68,7 +68,7 @@ const HeroContent = ({ heroOpacity, heroScale, heroY, onStart, onAbout }: HeroCo
     </motion.div>
 
     {/* Title */}
-    <div className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold tracking-tight text-foreground leading-[1.1] pt-4">
+    <div className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold tracking-tight text-foreground leading-[1.2] sm:leading-[1.1] pt-2 sm:pt-4">
       <AnimatedTitle text="Como está a sua alma" />
       <br className="hidden sm:block" />
       <span className="inline sm:hidden">{" "}</span>
@@ -76,7 +76,7 @@ const HeroContent = ({ heroOpacity, heroScale, heroY, onStart, onAbout }: HeroCo
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 1.6, ease: EASE }}
-        className="text-primary italic font-light drop-shadow-sm inline-block font-serif text-[0.9em]"
+        className="text-primary italic font-light drop-shadow-sm inline-block font-serif text-[1.1em] sm:text-[0.9em]"
       >
         hoje?
       </motion.span>
@@ -114,7 +114,7 @@ const HeroContent = ({ heroOpacity, heroScale, heroY, onStart, onAbout }: HeroCo
         <motion.div variants={buttonHover} initial="rest" whileHover="hover" whileTap="tap">
           <Button
             size="lg"
-            className="h-20 px-16 rounded-[2rem] bg-primary text-primary-foreground font-black uppercase tracking-[0.2em] shadow-[0_20px_50px_rgba(11,31,58,0.3)] text-lg relative overflow-hidden group border border-primary-foreground/10"
+            className="h-16 sm:h-20 px-8 sm:px-16 rounded-[1.5rem] sm:rounded-[2rem] bg-primary text-primary-foreground font-black uppercase tracking-[0.2em] shadow-[0_20px_50px_rgba(11,31,58,0.3)] text-base sm:text-lg relative overflow-hidden group border border-primary-foreground/10"
             onClick={onStart}
           >
             <span className="relative z-10 flex items-center gap-3">

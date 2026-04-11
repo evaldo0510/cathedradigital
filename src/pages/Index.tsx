@@ -58,16 +58,18 @@ const Index = () => {
       />
       <HeroSection onStart={handleStart} onAbout={() => navigate(AppRoute.ABOUT)} />
       <Suspense fallback={null}>
-        <InstitutionalVideoSection />
-        <StatsSection />
-        <FeaturesSection onNavigate={handleNavigate} />
-        <HowItWorksSection />
-        <AcolhimentoSection />
-        <BenefitsSection onLogin={() => navigate(AppRoute.LOGIN)} />
-        <TestimonialsSection />
-        <FaqSection />
-        <CtaBannerSection onStart={handleStart} />
-        <FeedbackWidget />
+        <div className="w-full" style={{ contentVisibility: 'auto' }}>
+          <InstitutionalVideoSection />
+          <StatsSection />
+          <FeaturesSection onNavigate={handleNavigate} />
+          <HowItWorksSection />
+          <AcolhimentoSection />
+          <BenefitsSection onLogin={() => navigate(AppRoute.LOGIN)} />
+          <TestimonialsSection />
+          <FaqSection />
+          <CtaBannerSection onStart={handleStart} />
+          <FeedbackWidget />
+        </div>
       </Suspense>
     </div>
   );
