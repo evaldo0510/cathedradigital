@@ -152,13 +152,34 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           </button>
         )}
 
-        <button onClick={onToggleSpeak} className={`p-2.5 sm:p-3 rounded-xl sm:rounded-2xl border border-border transition-all active:scale-95 shadow-sm ${isSpeaking ? 'bg-primary text-white animate-pulse' : 'bg-muted text-primary hover:bg-primary hover:text-white'}`}>
-          <Icons.Volume2 className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <select 
+            value={lang} 
+            onChange={(e) => onChangeLang(e.target.value as Language)}
+            className="appearance-none bg-muted text-primary border border-border rounded-xl px-2 py-1.5 text-[10px] font-black uppercase tracking-widest cursor-pointer hover:bg-primary hover:text-white transition-all outline-none"
+          >
+            <option value="pt">PT</option>
+            <option value="en">EN</option>
+            <option value="es">ES</option>
+            <option value="la">LA</option>
+            <option value="it">IT</option>
+            <option value="fr">FR</option>
+            <option value="de">DE</option>
+          </select>
+        </div>
+
+        <button 
+          onClick={onToggleSpeak} 
+          className={`p-2.5 sm:p-3 rounded-xl sm:rounded-2xl border border-border transition-all active:scale-95 shadow-sm ${isSpeaking ? 'bg-primary text-white animate-pulse' : 'bg-muted text-primary hover:bg-primary hover:text-white'}`}
+          title={isSpeaking ? "Parar leitura" : "Ouvir conteúdo"}
+        >
+          {isSpeaking ? <Icons.VolumeX className="w-4.5 h-4.5 sm:w-5 sm:h-5" /> : <Icons.Volume2 className="w-4.5 h-4.5 sm:w-5 sm:h-5" />}
         </button>
 
         <button onClick={onToggleDark} className="p-2.5 sm:p-3 bg-muted text-primary hover:bg-primary hover:text-white rounded-xl sm:rounded-2xl border border-border transition-all active:scale-95 shadow-sm">
           {isDark ? <Icons.Sun className="w-4.5 h-4.5 sm:w-5 sm:h-5" /> : <Icons.Moon className="w-4.5 h-4.5 sm:w-5 sm:h-5" />}
         </button>
+
       </div>
       </div>
     </header>
