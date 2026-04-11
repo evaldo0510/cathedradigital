@@ -24,6 +24,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: boolean }> = ({ saint, onClose, autoReflect = false }) => {
   const { isPremium } = useAuth();
+  const navigate = useNavigate();
   const [viewingDoc, setViewingDoc] = useState<{ url: string; title: string } | null>(null);
   const [logosReflection, setLogosReflection] = useState<string>('');
   const [isGenerating, setIsGenerating] = useState(false);
