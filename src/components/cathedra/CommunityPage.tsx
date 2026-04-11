@@ -27,6 +27,7 @@ interface Post {
   category: string;
   likes_count: number;
   created_at: string;
+  status: string | null;
   author_name?: string;
   replies_count?: number;
   user_liked?: boolean;
