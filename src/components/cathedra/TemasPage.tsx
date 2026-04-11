@@ -208,7 +208,7 @@ interface ContentSectionProps {
   color?: 'blue' | 'amber' | 'emerald' | 'primary';
 }
 
-const ContentSection = ({ title, icon, items, showEmpty = false, color = 'primary' }: ContentSectionProps) => {
+const ContentSection = React.forwardRef<HTMLDivElement, ContentSectionProps>(({ title, icon, items, showEmpty = false, color = 'primary' }, ref) => {
   if (items.length === 0 && !showEmpty) return null;
 
   const colorStyles = {
@@ -284,6 +284,6 @@ const ContentSection = ({ title, icon, items, showEmpty = false, color = 'primar
       </div>
     </section>
   );
-};
+});
 
 export default TemasPage;
