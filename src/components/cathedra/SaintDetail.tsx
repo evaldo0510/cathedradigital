@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import BibleVersePopover from './BibleVersePopover';
+import CatechismPopover from './CatechismPopover';
 import AudioContentPlayer from './AudioContentPlayer';
 
 const CATEGORY_LABELS: Record<string, string> = {
