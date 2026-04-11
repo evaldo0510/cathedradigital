@@ -12,13 +12,6 @@ import { AppRoute } from '@/types';
 import { LangContext } from '@/contexts/LangContext';
 import ProConversionBanner from './ProConversionBanner';
 
-const getGreeting = () => {
-  const h = new Date().getHours();
-  if (h < 12) return { text: 'Bom dia', icon: <Icons.Sun className="w-6 h-6 text-primary" />, period: 'manhã' };
-  if (h < 18) return { text: 'Boa tarde', icon: <Icons.Sun className="w-6 h-6 text-primary" />, period: 'tarde' };
-  return { text: 'Boa noite', icon: <Icons.Moon className="w-6 h-6 text-primary" />, period: 'noite' };
-};
-
 const LITURGICAL_QUOTES = [
   '"Sede misericordiosos como vosso Pai é misericordioso." — Lc 6,36',
   '"Eu sou o caminho, a verdade e a vida." — Jo 14,6',
@@ -27,46 +20,10 @@ const LITURGICAL_QUOTES = [
   '"Amai-vos uns aos outros como eu vos amei." — Jo 15,12',
 ];
 
-const DEEP_INSIGHTS: Record<string, {
-  theme: string;
-  quote: string;
-  interpretation: string;
-  direction: string;
-  exercise: string;
-  question: string;
-}> = {
-  iniciante: {
-    theme: 'O Silêncio de Deus',
-    quote: '“O silêncio é a primeira linguagem de Deus.”',
-    interpretation: 'No silêncio, conseguimos ouvir a voz de Deus em nosso coração, que fala sem palavras mas com clareza.',
-    direction: 'Hoje não tente preencher todos os vazios… deixe um tempo para o Senhor falar no silêncio.',
-    exercise: 'Pare por 2 minutos. Feche os olhos e apenas respire, oferecendo este tempo a Deus em silêncio.',
-    question: '👉 Como você se sentiu nesse pequeno tempo de silêncio?'
-  },
-  intermediário: {
-    theme: 'A pressa como fuga',
-    quote: '“A pressa não nasce do tempo… nasce do desconforto de permanecer.”',
-    interpretation: 'Você não está com pressa do mundo… você está com pressa de não sentir algo que está dentro.',
-    direction: 'Hoje não tente acelerar… tente perceber o que você evita quando desacelera.',
-    exercise: 'Pare por 5 minutos. Observe um momento em que você quis correr. Escreva o que estava por trás disso.',
-    question: '👉 O que em você não suporta silêncio?'
-  },
-  avançado: {
-    theme: 'A pressa como idolatria do "eu"',
-    quote: '“A pressa é o ruído da alma que foge de si mesma.”',
-    interpretation: 'Sua agitação não é falta de tempo, é medo do que o silêncio revelará sobre sua dependência das criaturas em vez do Criador.',
-    direction: 'Identifique em qual atividade você usa a pressa para evitar o exame de consciência e a confrontação com sua própria fragilidade.',
-    exercise: 'Durante uma tarefa mecânica, não use fones nem distrações. Enfrente o fluxo de pensamentos e sentimentos sem fugir pelo ruído.',
-    question: '👉 Do que exatamente você está tentando fugir quando se mantém ocupado?'
-  }
-};
-
 const HojePage: React.FC = () => {
   const navigate = useNavigate();
   const { user, profile, userLevel } = useAuth();
   const { t } = useContext(LangContext);
-  const DEEP_INSIGHT = DEEP_INSIGHTS[userLevel];
-  const greeting = getGreeting();
   const [journalText, setJournalText] = useState('');
   const [journalSaved, setJournalSaved] = useState(false);
   const [todayQuote] = useState(() => LITURGICAL_QUOTES[new Date().getDate() % LITURGICAL_QUOTES.length]);
@@ -79,8 +36,6 @@ const HojePage: React.FC = () => {
   const [logosRecommendation, setLogosRecommendation] = useState<any>(null);
   const [recommendedLogosJourney, setRecommendedLogosJourney] = useState<any>(null);
   const [recommendedLogosStep, setRecommendedLogosStep] = useState<any>(null);
-  const [showDeepInsight, setShowDeepInsight] = useState(true);
-
 
   useEffect(() => {
     if (!user) return;
@@ -231,7 +186,6 @@ const HojePage: React.FC = () => {
           if (journey) {
             setRecommendedLogosJourney(journey);
             
-            // Fetch next step for this journey
             const [completedRes, stepsRes] = await Promise.all([
               supabase
                 .from('journey_progress')
@@ -249,7 +203,6 @@ const HojePage: React.FC = () => {
             const next = (stepsRes.data || []).find(s => !completedIds.includes(s.id));
             setRecommendedLogosStep(next || null);
           }
-
         } catch (e) {
           console.error('Failed to parse recommendation:', e);
         }
@@ -277,258 +230,80 @@ const HojePage: React.FC = () => {
     }
   };
 
-  const streak = (profile as any)?.streak || 0;
-  const userName = (profile as any)?.name || user?.email?.split('@')[0] || '';
-
   const dailySections = [
     {
-      title: 'Liturgia do Dia',
-      description: 'Leituras e reflexão da liturgia diária',
+      title: 'Liturgia',
       icon: <Icons.Calendar className="w-5 h-5" />,
       route: `${AppRoute.LITURGIA}?tab=liturgia`,
       color: 'bg-primary/10 text-primary',
     },
     {
       title: 'Oração',
-      description: 'Rosário, Liturgia das Horas e orações',
       icon: <Icons.Hand className="w-5 h-5" />,
       route: AppRoute.ORACAO,
       color: 'bg-accent/10 text-accent',
     },
     {
-      title: 'Lectio Divina',
-      description: 'Leitura orante da Palavra de Deus',
+      title: 'Escritura',
       icon: <Icons.BookOpen className="w-5 h-5" />,
-      route: AppRoute.LECTIO_DIVINA,
+      route: AppRoute.BIBLE,
       color: 'bg-primary/10 text-primary',
     },
   ];
 
   return (
-    <div className="space-y-6 max-w-2xl lg:max-w-4xl mx-auto">
-      {/* Logos IA Highlight */}
+    <div className="space-y-12 max-w-2xl mx-auto pt-6 md:pt-12">
+      {/* Logos IA Highlight - Centralized */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
+        className="text-center space-y-8"
       >
-        <Card className="border-primary/40 bg-gradient-to-br from-primary/20 via-primary/5 to-background overflow-hidden relative shadow-xl border-2">
-          <div className="absolute top-0 right-0 p-6 opacity-20 group-hover:opacity-40 transition-opacity">
-            <Icons.Sparkles className="w-24 h-24 text-primary animate-pulse" />
-          </div>
-          <CardHeader className="pb-2">
-            <div className="flex items-center gap-2 mb-1">
-              <div className="px-2 py-0.5 rounded-full bg-primary/20 text-primary text-[10px] font-black uppercase tracking-widest border border-primary/30">
-                Logos Inteligência Artificial
-              </div>
-            </div>
-            <CardTitle className="text-2xl font-serif text-foreground">
-              Sua jornada espiritual guiada pela Sabedoria.
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <p className="text-sm text-muted-foreground leading-relaxed max-w-md">
-              Compartilhe suas angústias, dúvidas ou orações. O Logos analisa seu estado de alma e sugere o caminho ideal para sua conversão hoje.
-            </p>
-            <Button 
-              size="lg" 
-              className="w-full sm:w-auto h-12 px-8 bg-primary hover:bg-primary/90 text-primary-foreground font-bold uppercase tracking-widest shadow-lg shadow-primary/20 group"
-              onClick={() => {
-                const journalElement = document.getElementById('spiritual-journal');
-                journalElement?.scrollIntoView({ behavior: 'smooth' });
-                // Focus the textarea
-                const textarea = document.querySelector('textarea');
-                textarea?.focus();
-              }}
-            >
-              <Icons.PenLine className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
-              Começar reflexão
-            </Button>
-          </CardContent>
-        </Card>
-      </motion.div>
-
-      {/* Greeting & Quick Access */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="flex items-center gap-3"
-        >
-          {greeting.icon}
-          <div>
-            <h1 className="text-xl font-bold font-serif text-foreground">
-              {greeting.text}, {userName}
-            </h1>
-            <p className="text-xs text-muted-foreground">
-              {streak > 0 ? (
-                <span className="flex items-center gap-1">
-                  <Icons.Flame className="w-3 h-3 text-secondary" /> {streak} dias consecutivos
-                </span>
-              ) : 'Que Deus abençoe seu dia'}
-            </p>
-          </div>
-        </motion.div>
-
-        {activeJourney && (
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-          >
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="h-9 border-primary/30 text-primary font-bold text-[10px] uppercase tracking-widest"
-              onClick={() => {
-                if (journeyStep) {
-                  navigate(`/jornadas/${activeJourney.id}/step?step=${journeyStep.id}`);
-                } else {
-                  navigate(`/jornadas/${activeJourney.id}/complete`);
-                }
-              }}
-            >
-              <Icons.RotateCcw className="w-3.5 h-3.5 mr-2" />
-              Continuar: {activeJourney.title.length > 20 ? activeJourney.title.substring(0, 17) + '...' : activeJourney.title}
-            </Button>
-          </motion.div>
-        )}
-      </div>
-
-      {/* Daily Quote (Smaller) */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-      >
-        <div className="p-3 rounded-xl border border-primary/10 bg-primary/5 text-center">
-          <p className="text-xs italic text-foreground/70 font-serif leading-relaxed">{todayQuote}</p>
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-black uppercase tracking-[0.2em] border border-primary/20">
+          <Icons.Sparkles className="w-3 h-3" />
+          Logos Inteligência Artificial
         </div>
+        
+        <div className="space-y-4">
+          <h1 className="text-4xl md:text-5xl font-serif text-foreground leading-tight">
+            Sua jornada espiritual <br />
+            <span className="text-primary italic">guiada pela Sabedoria.</span>
+          </h1>
+          
+          <p className="text-sm md:text-base text-muted-foreground leading-relaxed max-w-lg mx-auto italic font-serif">
+            "O que Deus colocou no seu coração hoje? Compartilhe suas dúvidas ou orações e receba uma direção espiritual personalizada."
+          </p>
+        </div>
+
+        <Button 
+          size="lg" 
+          className="h-16 px-12 bg-primary hover:bg-primary/90 text-primary-foreground font-bold uppercase tracking-widest shadow-2xl shadow-primary/20 group rounded-full text-base transition-all hover:scale-105 active:scale-95 border-b-4 border-primary-foreground/20"
+          onClick={() => {
+            const journalElement = document.getElementById('spiritual-journal');
+            journalElement?.scrollIntoView({ behavior: 'smooth' });
+            const textarea = document.querySelector('textarea');
+            textarea?.focus();
+          }}
+        >
+          <Icons.PenLine className="w-5 h-5 mr-3 group-hover:rotate-12 transition-transform" />
+          Escreva sua reflexão
+        </Button>
       </motion.div>
 
-      {/* Deep Insight Card */}
-      {showDeepInsight && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.15 }}
-        >
-          <Card className="border-primary/40 bg-gradient-to-br from-primary/10 via-background to-background relative overflow-hidden shadow-lg">
-            <div className="absolute top-0 right-0 p-4 opacity-5">
-              <Icons.Sparkles className="w-16 h-16 text-primary" />
-            </div>
-            <CardHeader className="pb-2 flex flex-row items-center justify-between">
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/70">
-                    Reflexão {userLevel === 'iniciante' ? 'Guiada' : userLevel === 'intermediário' ? 'Profunda' : 'Intensiva'}
-                  </p>
-                  <span className="px-1 py-0.5 rounded-full text-[8px] font-black uppercase bg-primary/10 text-primary border border-primary/20">
-                    {userLevel}
-                  </span>
-                </div>
-                <CardTitle className="text-lg font-serif italic text-foreground">
-                  {DEEP_INSIGHT.theme}
-                </CardTitle>
-              </div>
-              <Icons.Sparkles className="w-5 h-5 text-primary/40" />
-            </CardHeader>
-            <CardContent className="space-y-6 pt-2">
-              <div className="space-y-3">
-                <p className="text-xl font-serif italic leading-relaxed text-foreground">
-                  {DEEP_INSIGHT.quote}
-                </p>
-                <div className="h-px w-12 bg-primary/20" />
-                <p className="text-sm text-foreground/80 leading-relaxed italic">
-                  {DEEP_INSIGHT.interpretation}
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 gap-4 pt-2">
-                <div className="bg-primary/5 rounded-xl p-4 border border-primary/10 space-y-2">
-                  <div className="flex items-center gap-2 text-primary">
-                    <Icons.Compass className="w-4 h-4" />
-                    <span className="text-[10px] font-black uppercase tracking-widest">Direção</span>
-                  </div>
-                  <p className="text-sm text-foreground/90 font-medium">
-                    {DEEP_INSIGHT.direction}
-                  </p>
-                </div>
-
-                <div className="bg-accent/5 rounded-xl p-4 border border-accent/10 space-y-2">
-                  <div className="flex items-center gap-2 text-accent">
-                    <Icons.PenLine className="w-4 h-4" />
-                    <span className="text-[10px] font-black uppercase tracking-widest">Exercício</span>
-                  </div>
-                  <p className="text-sm text-foreground/90 font-medium">
-                    {DEEP_INSIGHT.exercise}
-                  </p>
-                </div>
-              </div>
-
-              <div className="pt-4 border-t border-primary/10">
-                <p className="text-base font-serif italic text-primary font-semibold">
-                  {DEEP_INSIGHT.question}
-                </p>
-              </div>
-
-              <div className="flex gap-2 pt-2">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="w-full text-[10px] font-black uppercase tracking-widest h-10"
-                  onClick={() => {
-                    setJournalText(prev => prev ? prev + '\n\n' + DEEP_INSIGHT.question : DEEP_INSIGHT.question);
-                    // Scroll to journal area
-                    const journalElement = document.getElementById('spiritual-journal');
-                    journalElement?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                >
-                  <Icons.PenLine className="w-3 h-3 mr-2" /> Responder no Diário
-                </Button>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="w-full text-[10px] font-black uppercase tracking-widest h-10 text-muted-foreground"
-                  onClick={() => setShowDeepInsight(false)}
-                >
-                  Ocultar
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-      )}
-
-      {/* Active Journey with Progress */}
-      {activeJourney && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15 }}
-        >
-          <Card className="border-primary/30 overflow-hidden bg-gradient-to-br from-primary/5 to-transparent">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base flex items-center gap-2">
-                <Icons.Flame className="w-4 h-4 text-primary" />
-                Sua Jornada: {activeJourney.title}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {journeyProgress.total > 0 && (
-                <div className="space-y-1.5">
-                  <Progress value={journeyProgress.total > 0 ? (journeyProgress.completed / journeyProgress.total) * 100 : 0} className="h-2" />
-                  <p className="text-[10px] text-muted-foreground">
-                    {journeyProgress.completed}/{journeyProgress.total} etapas concluídas
-                    {journeyProgress.completed >= journeyProgress.total && ' ✓ Concluída!'}
-                  </p>
-                </div>
-              )}
-              {journeyStep ? (
-                <p className="text-sm text-muted-foreground">Próxima etapa: <strong className="text-foreground">{journeyStep.title}</strong></p>
-              ) : (
-                <p className="text-sm text-primary font-semibold"><Icons.PartyPopper className="w-4 h-4 inline mr-2" /> Parabéns! Jornada concluída!</p>
-              )}
-              <Button
-                size="sm"
+      {/* Main Content Sections */}
+      <div className="pt-8 space-y-10">
+        {/* Continuar Jornada */}
+        {(activeJourney || recommendedJourney) && (
+          <section className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
+            <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 flex items-center gap-3">
+              <div className="h-px w-6 bg-muted-foreground/30" />
+              Continuar Jornada
+            </h2>
+            
+            {activeJourney ? (
+              <motion.div
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
                 onClick={() => {
                   if (journeyStep) {
                     navigate(`/jornadas/${activeJourney.id}/step?step=${journeyStep.id}`);
@@ -536,235 +311,172 @@ const HojePage: React.FC = () => {
                     navigate(`/jornadas/${activeJourney.id}/complete`);
                   }
                 }}
-                className="w-full"
+                className="group cursor-pointer p-6 rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/5 via-transparent to-transparent hover:border-primary/40 transition-all shadow-sm hover:shadow-md"
               >
-                {journeyStep ? 'Continuar Jornada' : 'Ver Certificado'} <Icons.ChevronRight className="w-4 h-4 ml-1" />
-              </Button>
-            </CardContent>
-          </Card>
-        </motion.div>
-      )}
-
-      {/* Recommended Journey (no active journey) */}
-      {!activeJourney && recommendedJourney && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15 }}
-        >
-          <Card className="border-primary/20 bg-primary/5">
-            <CardContent className="p-4 space-y-3">
-              <div className="flex items-center gap-2">
-                <Icons.Compass className="w-5 h-5 text-primary" />
-                <h3 className="font-semibold text-sm text-foreground">Jornada Recomendada</h3>
-              </div>
-              <p className="text-sm text-foreground font-bold">{recommendedJourney.title}</p>
-              <p className="text-xs text-muted-foreground">{recommendedJourney.description}</p>
-              <Button
-                size="sm"
-                onClick={() => navigate(`/jornadas/${recommendedJourney.id}`)}
-                className="w-full"
-              >
-                Começar Jornada <Icons.ChevronRight className="w-4 h-4 ml-1" />
-              </Button>
-            </CardContent>
-          </Card>
-        </motion.div>
-      )}
-
-      <div className="space-y-4">
-        <h2 className="text-lg font-semibold text-foreground">Experiência Diária</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {dailySections.map((section, i) => (
-            <motion.div
-              key={section.title}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 + i * 0.1 }}
-            >
-              <Card
-                className="h-full cursor-pointer hover:border-primary/40 transition-all"
-                onClick={() => navigate(section.route)}
-              >
-                <CardContent className="p-4 flex flex-col gap-4 h-full">
-                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${section.color}`}>
-                    {section.icon}
+                <div className="flex items-center gap-5">
+                  <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/20 transition-colors">
+                    <Icons.Flame className="w-7 h-7" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-semibold text-sm text-foreground">{section.title}</h3>
-                    <p className="text-xs text-muted-foreground">{section.description}</p>
-                  </div>
-                  <Icons.ChevronRight className="w-4 h-4 text-muted-foreground self-end" />
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-
-      {/* Spiritual Journal */}
-      <motion.div
-        id="spiritual-journal"
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
-      >
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base flex items-center gap-2">
-              <Icons.PenLine className="w-4 h-4 text-primary" />
-              Diário Espiritual
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <Textarea
-              placeholder="O que Deus colocou no seu coração hoje?"
-              value={journalText}
-              onChange={(e) => setJournalText(e.target.value)}
-              className="min-h-[80px] resize-none text-sm"
-            />
-            <div className="flex items-center justify-between">
-              <p className="text-xs text-muted-foreground">
-                {journalSaved ? '✓ Salvo com sucesso!' : 'Suas reflexões são privadas.'}
-              </p>
-              <Button size="sm" onClick={saveJournal} disabled={!journalText.trim() || isAnalyzing}>
-                {isAnalyzing ? <Icons.Loader className="w-4 h-4 animate-spin" /> : 'Salvar'}
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
-
-      {/* Logos Analysis Response */}
-      {(isAnalyzing || logosResponse) && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="space-y-4 pb-4"
-        >
-          <Card className="border-primary/40 bg-gradient-to-br from-primary/10 via-background to-background relative overflow-hidden shadow-xl">
-            <div className="absolute top-0 right-0 p-4 opacity-10">
-              <Icons.Sparkles className="w-12 h-12 text-primary" />
-            </div>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base flex items-center gap-2 text-primary font-serif">
-                <Icons.Sparkles className="w-4 h-4" />
-                Logos
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {isAnalyzing && !logosResponse ? (
-                <div className="flex items-center gap-3 py-6">
-                  <Icons.Loader className="w-6 h-6 text-secondary animate-spin" />
-                  <p className="text-sm text-muted-foreground animate-pulse font-medium">Logos está refletindo sobre sua partilha...</p>
-                </div>
-              ) : (
-                <div className="prose prose-sm dark:prose-invert max-w-none text-foreground leading-relaxed whitespace-pre-wrap font-serif text-base italic">
-                  {logosResponse.replace(/\[RECOMMENDATION:.*?\]/g, '').trim()}
-                </div>
-              )}
-              
-              {!isAnalyzing && logosRecommendation?.scores && (
-                <div className="mt-6 pt-6 border-t border-primary/20 space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-700">
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">Análise da Reflexão</h3>
-                      <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold border border-primary/20">
-                        Estado Principal: {logosRecommendation.main_state}
+                    <h3 className="text-base font-bold text-foreground">{activeJourney.title}</h3>
+                    <div className="mt-3 flex items-center gap-4">
+                      <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-primary transition-all duration-1000 ease-out" 
+                          style={{ width: `${journeyProgress.total > 0 ? (journeyProgress.completed / journeyProgress.total) * 100 : 0}%` }} 
+                        />
+                      </div>
+                      <span className="text-[11px] font-black text-primary uppercase tabular-nums">
+                        {journeyProgress.completed}/{journeyProgress.total}
                       </span>
                     </div>
-                    
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {[
-                        { key: 'ansiedade', label: 'Ansiedade', color: 'bg-secondary', icon: <Icons.Flame className="w-3 h-3" /> },
-                        { key: 'confusao', label: 'Confusão', color: 'bg-primary', icon: <Icons.Compass className="w-3 h-3" /> },
-                        { key: 'dor_emocional', label: 'Dor Emocional', color: 'bg-primary/80', icon: <Icons.Moon className="w-3 h-3" /> },
-                        { key: 'busca_espiritual', label: 'Busca Espiritual', color: 'bg-primary', icon: <Icons.Sparkles className="w-3 h-3" /> },
-                      ].map((state) => (
-                        <div key={state.key} className="space-y-1.5">
-                          <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                            <span className="flex items-center gap-1">{state.icon} {state.label}</span>
-                            <span>{(logosRecommendation.scores[state.key] || 0) * 10}%</span>
-                          </div>
-                          <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
-                            <motion.div 
-                              initial={{ width: 0 }}
-                              animate={{ width: `${(logosRecommendation.scores[state.key] || 0) * 10}%` }}
-                              className={`h-full ${state.color} rounded-full`}
-                            />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
                   </div>
-
-                  {recommendedLogosJourney && (
-                    <div className="space-y-4 pt-4 border-t border-primary/10">
-                      <div className="flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-wider">
-                        <Icons.Compass className="w-4 h-4" />
-                        Jornada Sugerida: {recommendedLogosJourney.title}
-                      </div>
-                      <p className="text-sm text-muted-foreground leading-relaxed italic">
-                        "{logosRecommendation?.reason || "Esta jornada foi selecionada especialmente para o seu momento atual."}"
-                      </p>
-                      <Button 
-                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground h-12 text-base font-semibold shadow-lg shadow-primary/20 group"
-                        onClick={() => {
-                          if (recommendedLogosStep) {
-                            navigate(`/jornadas/${recommendedLogosJourney.id}/step?step=${recommendedLogosStep.id}`);
-                          } else {
-                            navigate(`/jornadas/${recommendedLogosJourney.id}/complete`);
-                          }
-                        }}
-                      >
-                        Continuar por aqui <Icons.ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                      </Button>
-                    </div>
-                  )}
+                  <Icons.ChevronRight className="w-6 h-6 text-muted-foreground group-hover:translate-x-1 transition-transform" />
                 </div>
-              )}
-
-              {!isAnalyzing && !logosRecommendation?.scores && recommendedLogosJourney && (
-                <div className="mt-6 pt-6 border-t border-primary/20 space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-700">
-                  <div className="flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-wider">
-                    <Icons.Compass className="w-4 h-4" />
-                    Jornada Sugerida: {recommendedLogosJourney.title}
+              </motion.div>
+            ) : (
+              <motion.div
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
+                onClick={() => navigate(`/jornadas/${recommendedJourney.id}`)}
+                className="group cursor-pointer p-6 rounded-3xl border border-border bg-muted/20 hover:border-primary/20 transition-all shadow-sm"
+              >
+                <div className="flex items-center gap-5">
+                  <div className="w-14 h-14 rounded-2xl bg-muted flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors">
+                    <Icons.Compass className="w-7 h-7" />
                   </div>
-                  <p className="text-sm text-muted-foreground">
-                    {logosRecommendation?.reason || "Esta jornada foi selecionada especialmente para o seu momento atual."}
-                  </p>
-                  <Button 
-                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground h-12 text-base font-semibold shadow-lg shadow-primary/20 group"
-                    onClick={() => {
-                      if (recommendedLogosStep) {
-                        navigate(`/jornadas/${recommendedLogosJourney.id}/step?step=${recommendedLogosStep.id}`);
-                      } else {
-                        navigate(`/jornadas/${recommendedLogosJourney.id}/complete`);
-                      }
-                    }}
-                  >
-                    Continuar por aqui <Icons.ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                  </Button>
+                  <div className="flex-1">
+                    <h3 className="text-base font-bold text-foreground">{recommendedJourney.title}</h3>
+                    <p className="text-xs text-muted-foreground mt-1 font-medium">Sugerido especialmente para seu perfil</p>
+                  </div>
+                  <Icons.ChevronRight className="w-6 h-6 text-muted-foreground group-hover:translate-x-1 transition-transform" />
                 </div>
-              )}
-              {!isAnalyzing && logosResponse && (
-                <div className="pt-4 mt-4 border-t border-primary/10">
-                  <ProConversionBanner context="logos" />
+              </motion.div>
+            )}
+          </section>
+        )}
+
+        {/* Acesso Rápido */}
+        <section className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
+          <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 flex items-center gap-3">
+            <div className="h-px w-6 bg-muted-foreground/30" />
+            Acesso Rápido
+          </h2>
+          
+          <div className="grid grid-cols-3 gap-4">
+            {dailySections.map((section, i) => (
+              <motion.div
+                key={section.title}
+                whileHover={{ y: -4 }}
+                whileTap={{ scale: 0.96 }}
+                onClick={() => navigate(section.route)}
+                className="group cursor-pointer p-4 rounded-2xl border border-border bg-background hover:border-primary/30 hover:bg-primary/5 transition-all text-center space-y-3"
+              >
+                <div className={`mx-auto w-12 h-12 rounded-xl flex items-center justify-center ${section.color} group-hover:scale-110 transition-transform`}>
+                  {section.icon}
                 </div>
-              )}
-            </CardContent>
-          </Card>
+                <h3 className="font-bold text-[11px] text-foreground leading-tight uppercase tracking-wider">{section.title}</h3>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+      </div>
+
+      {/* Spiritual Journal Area */}
+      <div id="spiritual-journal" className="pt-12 scroll-mt-24 space-y-6">
+        {(isAnalyzing || logosResponse) && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="space-y-6"
+          >
+            <Card className="border-primary/30 bg-gradient-to-br from-primary/10 via-background to-background relative overflow-hidden shadow-2xl rounded-3xl">
+              <div className="absolute top-0 right-0 p-6 opacity-10">
+                <Icons.Sparkles className="w-16 h-16 text-primary" />
+              </div>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-lg flex items-center gap-2 text-primary font-serif italic">
+                  <Icons.Sparkles className="w-5 h-5" />
+                  Logos
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {isAnalyzing && !logosResponse ? (
+                  <div className="flex flex-col items-center gap-4 py-12 text-center">
+                    <Icons.Loader className="w-8 h-8 text-primary animate-spin" />
+                    <p className="text-sm text-muted-foreground animate-pulse font-serif italic">Logos está refletindo sobre sua partilha...</p>
+                  </div>
+                ) : (
+                  <div className="prose prose-sm dark:prose-invert max-w-none text-foreground leading-relaxed whitespace-pre-wrap font-serif text-lg italic border-l-2 border-primary/20 pl-6 py-2">
+                    {logosResponse.replace(/\[RECOMMENDATION:.*?\]/g, '').trim()}
+                  </div>
+                )}
+                
+                {!isAnalyzing && recommendedLogosJourney && (
+                  <div className="pt-6 border-t border-primary/10 space-y-4">
+                    <p className="text-xs text-muted-foreground font-serif italic">
+                      "{logosRecommendation?.reason || "Esta jornada foi selecionada especialmente para o seu momento atual."}"
+                    </p>
+                    <Button 
+                      className="w-full bg-primary hover:bg-primary/90 text-primary-foreground h-12 text-sm font-bold uppercase tracking-widest shadow-lg shadow-primary/20 group rounded-xl"
+                      onClick={() => {
+                        if (recommendedLogosStep) {
+                          navigate(`/jornadas/${recommendedLogosJourney.id}/step?step=${recommendedLogosStep.id}`);
+                        } else {
+                          navigate(`/jornadas/${recommendedLogosJourney.id}/complete`);
+                        }
+                      }}
+                    >
+                      Seguir para esta Jornada <Icons.ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+          className="relative"
+        >
+          <Textarea
+            placeholder="O que Deus colocou no seu coração hoje?"
+            value={journalText}
+            onChange={(e) => setJournalText(e.target.value)}
+            className="min-h-[160px] md:min-h-[200px] p-6 rounded-3xl border-border bg-muted/20 focus:bg-background transition-all text-base font-serif italic resize-none shadow-inner"
+          />
+          <div className="absolute bottom-4 right-4 flex items-center gap-4">
+            {journalSaved && (
+              <span className="text-[10px] font-black uppercase text-green-600 animate-in fade-in zoom-in">✓ Salvo</span>
+            )}
+            <Button 
+              size="sm" 
+              onClick={saveJournal} 
+              disabled={!journalText.trim() || isAnalyzing}
+              className="rounded-full px-6 font-black uppercase text-[10px] tracking-widest h-9"
+            >
+              {isAnalyzing ? <Icons.Loader className="w-4 h-4 animate-spin" /> : 'Refletir com Logos'}
+            </Button>
+          </div>
         </motion.div>
-      )}
+      </div>
 
-      {/* Quick Links */}
-      <div className="grid grid-cols-2 gap-3 pt-4">
-        <Button variant="outline" size="sm" onClick={() => navigate(AppRoute.DIAGNOSTICO)} className="text-xs h-9">
-          Refazer Diagnóstico
-        </Button>
-        <Button variant="outline" size="sm" onClick={() => navigate(AppRoute.JORNADAS)} className="text-xs h-9">
-          Ver Jornadas
-        </Button>
+      {/* Simplified Footer Info */}
+      <div className="pt-12 border-t border-border/50 text-center pb-24 space-y-6">
+        <p className="text-[11px] text-muted-foreground font-serif italic leading-relaxed px-12 max-w-md mx-auto">
+          "{todayQuote}"
+        </p>
+        <div className="flex justify-center gap-6">
+          <button onClick={() => navigate(AppRoute.DIAGNOSTICO)} className="text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors">
+            Diagnóstico
+          </button>
+          <button onClick={() => navigate(AppRoute.JORNADAS)} className="text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors">
+            Ver Tudo
+          </button>
+        </div>
       </div>
     </div>
   );
