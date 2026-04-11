@@ -433,7 +433,7 @@ const AdminDashboard: React.FC = () => {
             </Card>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <Card className="bg-primary/5 border-primary/20">
               <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                 <CardTitle className="text-sm font-medium">Receita Total</CardTitle>
@@ -447,6 +447,34 @@ const AdminDashboard: React.FC = () => {
               </CardContent>
             </Card>
 
+            <Card className="bg-destructive/5 border-destructive/20">
+              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                <CardTitle className="text-sm font-medium">Doação (50%)</CardTitle>
+                <Heart className="h-4 w-4 text-destructive" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-destructive">
+                  {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format((stats?.totalRevenue || 0) * 0.5)}
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">Destinado à caridade</p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-primary/5 border-primary/20">
+              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                <CardTitle className="text-sm font-medium">Valor Restante</CardTitle>
+                <Wallet className="h-4 w-4 text-primary" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-primary">
+                  {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format((stats?.totalRevenue || 0) * 0.5)}
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">Manutenção e operação</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Card className="bg-secondary/5 border-secondary/20">
               <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                 <CardTitle className="text-sm font-medium">Reflexões Criadas</CardTitle>
@@ -481,32 +509,6 @@ const AdminDashboard: React.FC = () => {
             </Card>
           </div>
 
-            <Card className="bg-destructive/5 border-destructive/20">
-              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <CardTitle className="text-sm font-medium">Doação (50%)</CardTitle>
-                <Heart className="h-4 w-4 text-destructive" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-destructive">
-                  {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format((stats?.totalRevenue || 0) * 0.5)}
-                </div>
-                <p className="text-xs text-muted-foreground mt-1">Destinado à caridade</p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-primary/5 border-primary/20">
-              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <CardTitle className="text-sm font-medium">Valor Restante</CardTitle>
-                <Wallet className="h-4 w-4 text-primary" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-primary">
-                  {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format((stats?.totalRevenue || 0) * 0.5)}
-                </div>
-                <p className="text-xs text-muted-foreground mt-1">Manutenção e operação</p>
-              </CardContent>
-            </Card>
-          </div>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <Card>
