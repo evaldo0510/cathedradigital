@@ -493,5 +493,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         </div>
       </aside>
     </div>
+  );
+};
 
 export default Dashboard;
