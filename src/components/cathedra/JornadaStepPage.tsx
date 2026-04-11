@@ -222,6 +222,11 @@ const JornadaStepPage: React.FC = () => {
             {step.subtitle && (
               <p className="text-sm text-muted-foreground italic">{step.subtitle}</p>
             )}
+            {content.bible_ref && (
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 text-[10px] font-black uppercase tracking-wider mx-auto">
+                <BookOpen className="w-3 h-3" /> {content.bible_ref}
+              </div>
+            )}
           </motion.div>
 
           {/* Content Sections */}
