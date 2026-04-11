@@ -57,6 +57,12 @@ export const SAINTS_DATA: Saint[] = [
     image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/St-thomas-aquinas.jpg/440px-St-thomas-aquinas.jpg',
     virtues: ['Sabedoria', 'Humildade', 'Pureza', 'Contemplação'],
     prayer: 'Concedei-me, Senhor, uma vontade que vos queira, uma mente que vos conheça, uma diligência que vos busque, uma sabedoria que vos encontre, uma vida que vos agrade, uma perseverança que vos espere e uma confiança que finalmente vos abrace.',
+    textoBase: 'A graça não destrói a natureza, mas a aperfeiçoa.',
+    explicacao: 'Deus não quer mudar quem você é, mas levar sua natureza à perfeição. Sua personalidade, seus talentos e até suas fraquezas são o terreno onde a graça divina trabalha para te fazer plenamente humano e santo.',
+    interpretacaoProfunda: 'A "natureza" aqui se refere ao ser humano como ele é, com sua razão e capacidades naturais. A "graça" é a vida divina comunicada por Deus. São Tomás ensina que ser santo não é deixar de ser humano, mas tornar-se o humano que Deus sonhou — onde a inteligência é iluminada pela fé e a vontade é fortalecida pela caridade.',
+    aplicacaoPratica: 'Hoje, não tente ser uma pessoa "diferente" de quem você é para agradar a Deus. Em vez disso, convide a graça de Deus para entrar nas suas atividades normais: seu trabalho, seu estudo, suas conversas. Deixe que o amor de Deus refine seu jeito de ser.',
+    reflexaoFinal: 'Quais partes da minha natureza eu estou escondendo de Deus, achando que elas não podem ser santificadas?',
+    exercicio: 'Escreva em um papel um talento seu e uma limitação sua. Reze entregando ambos a Deus, pedindo que a Sua graça os aperfeiçoe hoje.',
   },
   {
     id: 'agostinho',
