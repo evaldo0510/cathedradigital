@@ -543,6 +543,26 @@ const AZFaithPage: React.FC = () => {
                         </div>
                       )}
 
+                      {/* Journey Practical CTA */}
+                      {selectedTerm.journey_id && (
+                        <div className="bg-primary/10 border border-primary/20 rounded-[2rem] p-6 space-y-4 group/journey cursor-pointer hover:bg-primary/20 transition-all"
+                             onClick={() => navigate(`/jornadas/${selectedTerm.journey_id}`)}>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2 text-primary">
+                              <Compass className="h-5 w-5 animate-spin-slow" />
+                              <h4 className="text-xs font-black uppercase tracking-widest">Jornada Prática</h4>
+                            </div>
+                            <ArrowRight className="h-4 w-4 text-primary group-hover/journey:translate-x-1 transition-transform" />
+                          </div>
+                          <p className="text-foreground/80 leading-relaxed font-medium text-sm">
+                            Transforme este conhecimento em prática com uma jornada guiada de 3 dias.
+                          </p>
+                          <Button className="w-full bg-primary text-white rounded-full font-bold uppercase text-[10px] tracking-widest h-10">
+                            Iniciar Agora
+                          </Button>
+                        </div>
+                      )}
+
                       <div className="grid grid-cols-1 gap-4">
                         <div className="flex flex-col gap-3">
                           <div className="flex items-center gap-2 text-muted-foreground">
