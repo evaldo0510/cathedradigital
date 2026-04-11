@@ -14,6 +14,7 @@ import { saveUserPsychology } from '@/lib/psychologicalProfile';
 import { AppRoute } from '@/types';
 import ProConversionBanner from './ProConversionBanner';
 import { Icons } from '@/constants';
+import AudioContentPlayer from './AudioContentPlayer';
 
 const SECTION_CONFIG = [
   { key: 'intro', label: 'Acesso Inicial', icon: <BookOpen className="w-4 h-4" />, isPremium: false },
@@ -249,6 +250,13 @@ const JornadaStepPage: React.FC = () => {
                 <BookOpen className="w-3 h-3" /> {content.bible_ref}
               </div>
             )}
+            
+            <div className="flex justify-center pt-2">
+              <AudioContentPlayer 
+                text={`${step.title}. ${step.subtitle || ''}. ${SECTION_CONFIG.map(s => getVariantContent(s.key, content)).filter(Boolean).join('. ')}`}
+                title="Ouvir conteúdo"
+              />
+            </div>
           </motion.div>
 
           {/* Content Sections */}
