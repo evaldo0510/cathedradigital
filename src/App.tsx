@@ -351,12 +351,14 @@ const AppLayout: React.FC = () => {
                 className="relative h-full w-72"
               >
                 <CathedralSidebar 
-                  onClose={() => setIsSidebarOpen(false)} 
-                  user={appUser} 
-                  isDark={isDark}
-                  onToggleDark={() => setIsDark(!isDark)}
-                  onSignOut={signOut}
-                />
+                onClose={() => setIsSidebarOpen(false)} 
+                user={appUser} 
+                isDark={isDark}
+                onToggleDark={() => setIsDark(!isDark)}
+                isSpeaking={isSpeaking}
+                onToggleSpeak={toggleSpeak}
+                onSignOut={signOut}
+              />
               </motion.div>
             </motion.div>
           )}
