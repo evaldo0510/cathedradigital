@@ -22,6 +22,8 @@ const AdminCrmRetention = lazy(() => import('./AdminCrmRetention'));
 const AdminCrmUserProfile = lazy(() => import('./AdminCrmUserProfile'));
 const AdminCrmAutomations = lazy(() => import('./AdminCrmAutomations'));
 const AdminPartnersTab = lazy(() => import('./AdminPartnersTab'));
+const AdminContentTab = lazy(() => import('./AdminContentTab'));
+const AdminJourneysTab = lazy(() => import('./AdminJourneysTab'));
 
 interface Stats {
   totalUsers: number;
