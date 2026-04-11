@@ -209,13 +209,23 @@ const Saints: React.FC = () => {
                             </div>
                           </div>
 
-                          <button
-                            onClick={() => setSelectedSaint(saint)}
-                            className="w-full py-4 bg-foreground text-background rounded-2xl text-xs font-black uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg shadow-foreground/10"
-                          >
-                            <BookOpen className="w-4 h-4" />
-                            Explorar Vida e Reflexão
-                          </button>
+                          <div className="flex flex-col gap-3">
+                            <button
+                              onClick={() => handleOpenSaint(saint, false)}
+                              className="w-full py-4 bg-secondary text-secondary-foreground rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                            >
+                              <BookOpen className="w-4 h-4" />
+                              Conhecer História
+                            </button>
+
+                            <button
+                              onClick={() => handleOpenSaint(saint, true)}
+                              className="w-full py-4 bg-primary text-primary-foreground rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20 group"
+                            >
+                              <Sparkles className="w-4 h-4 group-hover:rotate-12 transition-transform" />
+                              Refletir com Logos
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </motion.div>
