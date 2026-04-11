@@ -369,7 +369,7 @@ const AdminDashboard: React.FC = () => {
             <MessageSquare className="w-3.5 h-3.5 hidden sm:block" /> Conteúdo
           </TabsTrigger>
           <TabsTrigger value="journeys" className="gap-1.5 text-xs sm:text-sm">
-            <Map className="w-3.5 h-3.5 hidden sm:block" /> Jornadas
+            <MapIcon className="w-3.5 h-3.5 hidden sm:block" /> Jornadas
           </TabsTrigger>
           <TabsTrigger value="segmentation" className="gap-1.5 text-xs sm:text-sm">
             <Target className="w-3.5 h-3.5 hidden sm:block" /> CRM
