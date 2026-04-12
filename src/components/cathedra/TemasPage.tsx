@@ -189,7 +189,10 @@ const TemasPage = () => {
 
         <div className="relative group">
           <div className="absolute -inset-1 bg-gradient-to-r from-primary/10 to-transparent blur opacity-50 transition duration-1000 group-hover:opacity-100" />
-          <div className="relative flex flex-wrap justify-center gap-2.5 p-4 sm:p-6 bg-card/30 backdrop-blur-sm rounded-[2.5rem] border border-border/40 shadow-inner overflow-hidden">
+          <motion.div 
+            layout 
+            className="relative flex flex-wrap justify-center gap-2.5 p-4 sm:p-6 bg-card/30 backdrop-blur-sm rounded-[2.5rem] border border-border/40 shadow-inner overflow-hidden"
+          >
             {loadingTags ? (
               <div className="flex items-center gap-3 py-6 px-8 w-full justify-center">
                 <Loader2 className="h-5 w-5 animate-spin text-primary/50" />
