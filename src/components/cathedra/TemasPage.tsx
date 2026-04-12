@@ -3,7 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Book, Bookmark, FileText, Tag as TagIcon, Loader2, ChevronRight, Hash, Sparkles, Compass } from 'lucide-react';
+import { Loader2, ChevronRight, Hash, Sparkles, Tag as TagIcon } from 'lucide-react';
+import { Icons } from '@/constants';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -204,7 +205,7 @@ const TemasPage = () => {
                     <h2 className="text-3xl sm:text-5xl font-black mb-4 tracking-tight leading-tight text-foreground">{selectedTag.emoji} {selectedTag.label}</h2>
                   </div>
                   <Button variant="outline" className="rounded-2xl border-primary/20 hover:bg-primary/5 hover:border-primary/40 group/btn h-12 sm:h-14 px-4 sm:px-6">
-                    <Bookmark className="mr-2 h-4 w-4 sm:h-5 sm:w-5 transition-transform group-hover/btn:scale-110" />
+                    <Icons.Bookmark className="mr-2 h-4 w-4 sm:h-5 sm:w-5 transition-transform group-hover/btn:scale-110" />
                     Salvar Estudo
                   </Button>
                 </div>
@@ -256,12 +257,12 @@ const TemasPage = () => {
 
               <Tabs defaultValue="all" className="w-full">
                 <div className="flex justify-center mb-10 overflow-x-auto pb-2">
-                  <TabsList className="flex bg-muted/40 p-1.5 rounded-[2rem] border border-border/40 gap-1 min-w-max">
-                    <TabsTrigger value="all" className="rounded-full px-6 sm:px-8 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-semibold">Geral</TabsTrigger>
-                    <TabsTrigger value="bible" className="rounded-full px-6 sm:px-8 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-semibold flex gap-2"><Book className="h-4 w-4" /> Bíblia</TabsTrigger>
-                    <TabsTrigger value="catechism" className="rounded-full px-6 sm:px-8 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-semibold flex gap-2"><Bookmark className="h-4 w-4" /> Catecismo</TabsTrigger>
-                    <TabsTrigger value="magisterium" className="rounded-full px-6 sm:px-8 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-semibold flex gap-2"><FileText className="h-4 w-4" /> Documentos</TabsTrigger>
-                    <TabsTrigger value="journey" className="rounded-full px-6 sm:px-8 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-semibold flex gap-2"><Compass className="h-4 w-4" /> Jornadas</TabsTrigger>
+                  <TabsList className="flex bg-muted/40 p-1.5 rounded-[2rem] border border-border/40 gap-1 min-w-max h-auto">
+                    <TabsTrigger value="all" className="rounded-full px-6 sm:px-8 py-3 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-bold">Geral</TabsTrigger>
+                    <TabsTrigger value="bible" className="rounded-full px-6 sm:px-8 py-3 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-bold flex flex-col sm:flex-row items-center gap-2"><Icons.Bible className="h-4 w-4" /> Bíblia</TabsTrigger>
+                    <TabsTrigger value="catechism" className="rounded-full px-6 sm:px-8 py-3 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-bold flex flex-col sm:flex-row items-center gap-2"><Icons.Catechism className="h-4 w-4" /> Catecismo</TabsTrigger>
+                    <TabsTrigger value="magisterium" className="rounded-full px-6 sm:px-8 py-3 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-bold flex flex-col sm:flex-row items-center gap-2"><Icons.Magisterium className="h-4 w-4" /> Documentos</TabsTrigger>
+                    <TabsTrigger value="journey" className="rounded-full px-6 sm:px-8 py-3 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-bold flex flex-col sm:flex-row items-center gap-2"><Icons.Compass className="h-4 w-4" /> Jornadas</TabsTrigger>
                   </TabsList>
                 </div>
 
@@ -273,26 +274,26 @@ const TemasPage = () => {
                 ) : (
                   <div className="px-1">
                     <TabsContent value="all" className="mt-0 space-y-10 focus-visible:outline-none">
-                      <ContentSection title="Bíblia" icon={<Book className="h-6 w-6" />} items={bibleVerses} color="blue" />
-                      <ContentSection title="Catecismo" icon={<Bookmark className="h-6 w-6" />} items={catechism} color="amber" />
-                      <ContentSection title="Documentos" icon={<FileText className="h-6 w-6" />} items={magisterium} color="emerald" />
-                      <ContentSection title="Jornadas" icon={<Compass className="h-6 w-6" />} items={journeyItems} color="primary" />
+                      <ContentSection title="Bíblia" icon={<Icons.Bible className="h-6 w-6" />} items={bibleVerses} color="blue" />
+                      <ContentSection title="Catecismo" icon={<Icons.Catechism className="h-6 w-6" />} items={catechism} color="amber" />
+                      <ContentSection title="Documentos" icon={<Icons.Magisterium className="h-6 w-6" />} items={magisterium} color="emerald" />
+                      <ContentSection title="Jornadas" icon={<Icons.Compass className="h-6 w-6" />} items={journeyItems} color="primary" />
                     </TabsContent>
 
                     <TabsContent value="bible" className="mt-0 focus-visible:outline-none">
-                      <ContentSection title="Bíblia" icon={<Book className="h-6 w-6" />} items={bibleVerses} showEmpty color="blue" />
+                      <ContentSection title="Bíblia" icon={<Icons.Bible className="h-6 w-6" />} items={bibleVerses} showEmpty color="blue" />
                     </TabsContent>
 
                     <TabsContent value="catechism" className="mt-0 focus-visible:outline-none">
-                      <ContentSection title="Catecismo" icon={<Bookmark className="h-6 w-6" />} items={catechism} showEmpty color="amber" />
+                      <ContentSection title="Catecismo" icon={<Icons.Catechism className="h-6 w-6" />} items={catechism} showEmpty color="amber" />
                     </TabsContent>
 
                     <TabsContent value="magisterium" className="mt-0 focus-visible:outline-none">
-                      <ContentSection title="Documentos" icon={<FileText className="h-6 w-6" />} items={magisterium} showEmpty color="emerald" />
+                      <ContentSection title="Documentos" icon={<Icons.Magisterium className="h-6 w-6" />} items={magisterium} showEmpty color="emerald" />
                     </TabsContent>
 
                     <TabsContent value="journey" className="mt-0 focus-visible:outline-none">
-                      <ContentSection title="Jornadas" icon={<Compass className="h-6 w-6" />} items={journeyItems} showEmpty color="primary" />
+                      <ContentSection title="Jornadas" icon={<Icons.Compass className="h-6 w-6" />} items={journeyItems} showEmpty color="primary" />
                     </TabsContent>
                   </div>
                 )}
