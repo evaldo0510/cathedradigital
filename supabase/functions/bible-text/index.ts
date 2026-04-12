@@ -139,9 +139,17 @@ serve(async (req) => {
       );
     }
 
-    const englishName = BOOK_NAME_MAP[abbrev] || abbrev.toLowerCase();
-    const ptName = BOOK_PT_MAP[abbrev] || abbrev;
-    const bookId = BOLLS_BOOK_ID[abbrev];
+    // Case-insensitive lookup for BOOK_NAME_MAP and BOOK_PT_MAP
+    const findCaseInsensitive = (map: Record<string, any>, key: string) => {
+      if (map[key]) return map[key];
+      const lowerKey = key.toLowerCase();
+      const match = Object.keys(map).find(k => k.toLowerCase() === lowerKey);
+      return match ? map[match] : null;
+    };
+
+    const englishName = findCaseInsensitive(BOOK_NAME_MAP, abbrev) || abbrev.toLowerCase();
+    const ptName = findCaseInsensitive(BOOK_PT_MAP, abbrev) || abbrev;
+    const bookId = findCaseInsensitive(BOLLS_BOOK_ID, abbrev);
 
     // Race both APIs in parallel — use whichever responds first with valid data
     const bibleApiPromise = fetchFromBibleApi(englishName, chapter)
