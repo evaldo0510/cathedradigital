@@ -33,6 +33,8 @@ const TemasPage = () => {
   const [selectedTag, setSelectedTag] = useState<Tag | null>(null);
   const [logosInsight, setLogosInsight] = useState<string | null>(null);
   const [loadingLogos, setLoadingLogos] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeCategory, setActiveCategory] = useState<string>('all');
 
   const { data: tags, isLoading: loadingTags } = useQuery({
     queryKey: ['tags'],
@@ -45,6 +47,21 @@ const TemasPage = () => {
       return data as Tag[];
     },
   });
+
+  const categories = useMemo(() => {
+    if (!tags) return ['all'];
+    const distinct = Array.from(new Set(tags.map(t => t.category)));
+    return ['all', ...distinct];
+  }, [tags]);
+
+  const filteredTags = useMemo(() => {
+    if (!tags) return [];
+    return tags.filter(tag => {
+      const matchesSearch = tag.label.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesCategory = activeCategory === 'all' || tag.category === activeCategory;
+      return matchesSearch && matchesCategory;
+    });
+  }, [tags, searchQuery, activeCategory]);
 
   // Auto-select tag from URL param ?tema=slug
   useEffect(() => {
