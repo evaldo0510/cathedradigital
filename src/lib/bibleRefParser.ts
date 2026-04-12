@@ -92,49 +92,77 @@ export interface ParsedSegment {
   verse?: number;
 }
 
-let _pattern: RegExp | null = null;
+// Full reference pattern: (Book) (Chapter)[, (Verse)[-(EndVerse)]]
+const FULL_REF_PATTERN = (bookNames: string[]) => 
+  new RegExp(`(?:cf\\.?\\s*)?(${bookNames.join('|')})\\s+(\\d{1,3})(?:[,.:]\\s*(\\d{1,3})(?:\\s*[-–]\\s*\\d{1,3})?)?`, 'g');
 
-function getPattern(): RegExp {
-  if (!_pattern) {
-    const bookNames = Object.keys(BIBLE_BOOK_MAP)
-      .sort((a, b) => b.length - a.length)
-      .map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
-    _pattern = new RegExp(
-      `(?:cf\\.?\\s*)?\\b(${bookNames.join('|')})\\s+(\\d{1,3})(?:[,.:]\\s*(\\d{1,3})(?:\\s*[-–]\\s*\\d{1,3})?)?`,
-      'g'
-    );
-  }
-  // Reset lastIndex for reuse
-  _pattern.lastIndex = 0;
-  return _pattern;
-}
+// Short reference pattern (only numbers): (Chapter)[, (Verse)[-(EndVerse)]]
+const SHORT_REF_PATTERN = new RegExp(`(\\d{1,3})(?:[,.:]\\s*(\\d{1,3})(?:\\s*[-–]\\s*\\d{1,3})?)?`, 'g');
 
 export function parseBibleReferences(text: string): ParsedSegment[] {
-  const pattern = getPattern();
+  const bookNames = Object.keys(BIBLE_BOOK_MAP)
+    .sort((a, b) => b.length - a.length)
+    .map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+  
+  const fullRefPattern = FULL_REF_PATTERN(bookNames);
   const segments: ParsedSegment[] = [];
-  let lastIndex = 0;
-
-  let match: RegExpExecArray | null;
-  while ((match = pattern.exec(text)) !== null) {
-    if (match.index > lastIndex) {
-      segments.push({ type: 'text', value: text.slice(lastIndex, match.index) });
+  
+  // First, split by likely delimiters to process parts
+  const parts = text.split(/([;]|\band\b|\be\b)/g);
+  
+  let currentBookAbbr: string | null = null;
+  
+  parts.forEach(part => {
+    if (part === ';' || part === 'and' || part === 'e') {
+      segments.push({ type: 'text', value: part });
+      return;
     }
-    const bookRaw = match[1];
-    const chapter = parseInt(match[2]);
-    const verse = match[3] ? parseInt(match[3]) : undefined;
-    const abbr = lookupAbbr(bookRaw);
 
-    if (abbr) {
-      segments.push({ type: 'bibleRef', value: match[0], abbr, chapter, verse });
-    } else {
-      segments.push({ type: 'text', value: match[0] });
+    let lastIndex = 0;
+    let match: RegExpExecArray | null;
+    
+    // Try full reference match first in this part
+    fullRefPattern.lastIndex = 0;
+    while ((match = fullRefPattern.exec(part)) !== null) {
+      if (match.index > lastIndex) {
+        segments.push({ type: 'text', value: part.slice(lastIndex, match.index) });
+      }
+      
+      const bookRaw = match[1];
+      const chapter = parseInt(match[2]);
+      const verse = match[3] ? parseInt(match[3]) : undefined;
+      const abbr = lookupAbbr(bookRaw);
+
+      if (abbr) {
+        currentBookAbbr = abbr;
+        segments.push({ type: 'bibleRef', value: match[0], abbr, chapter, verse });
+      } else {
+        segments.push({ type: 'text', value: match[0] });
+      }
+      lastIndex = match.index + match[0].length;
     }
-    lastIndex = match.index + match[0].length;
-  }
+    
+    // If no full match found but we have a current book, try short match
+    if (lastIndex === 0 && currentBookAbbr) {
+      const shortPattern = SHORT_REF_PATTERN;
+      shortPattern.lastIndex = 0;
+      while ((match = shortPattern.exec(part)) !== null) {
+        if (match.index > lastIndex) {
+          segments.push({ type: 'text', value: part.slice(lastIndex, match.index) });
+        }
+        
+        const chapter = parseInt(match[1]);
+        const verse = match[2] ? parseInt(match[2]) : undefined;
+        
+        segments.push({ type: 'bibleRef', value: match[0], abbr: currentBookAbbr, chapter, verse });
+        lastIndex = match.index + match[0].length;
+      }
+    }
 
-  if (lastIndex < text.length) {
-    segments.push({ type: 'text', value: text.slice(lastIndex) });
-  }
+    if (lastIndex < part.length) {
+      segments.push({ type: 'text', value: part.slice(lastIndex) });
+    }
+  });
 
   return segments.length > 0 ? segments : [{ type: 'text', value: text }];
 }
