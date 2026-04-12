@@ -291,6 +291,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       {/* ═══ MAIN DOORS 🚪 ═══ */}
       <FadeUp delay={0.05}>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {MAIN_DOORS.map((door, idx) => (
             <motion.div
               key={idx}
               whileHover={{ y: -4, scale: 1.02 }}
@@ -314,6 +315,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
                 <Icons.ChevronRight className="w-4 h-4 text-primary/40" />
               </div>
             </motion.div>
+          ))}
         </div>
       </FadeUp>
 
