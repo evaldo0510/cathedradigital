@@ -89,6 +89,18 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
         </div>
 
         <div className="flex items-center gap-1.5 sm:gap-4 flex-shrink-0">
+          <button 
+            className="p-2.5 sm:p-3 bg-muted text-primary rounded-xl sm:rounded-2xl border border-border hover:bg-primary hover:text-white transition-all shadow-sm active:scale-95 flex items-center gap-2" 
+            onClick={() => {
+              localStorage.removeItem('cathedra_onboarding_done');
+              navigate(AppRoute.ONBOARDING);
+            }}
+            title="Guia do Ecossistema"
+          >
+            <Icons.Compass className="w-4 h-4" />
+            <span className="hidden md:inline text-[9px] font-black uppercase tracking-widest">Guia</span>
+          </button>
+
           <button className="p-2.5 sm:p-3 bg-muted text-primary rounded-xl sm:rounded-2xl border border-border hover:bg-primary hover:text-white transition-all shadow-sm active:scale-95" onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}>
             <Icons.Search className="w-4 h-4" />
           </button>
