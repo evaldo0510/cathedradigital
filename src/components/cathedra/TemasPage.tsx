@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Book, Bookmark, FileText, Tag, Loader2, ChevronRight, Hash, Sparkles, Compass } from 'lucide-react';
+import { Book, Bookmark, FileText, Tag as TagIcon, Loader2, ChevronRight, Hash, Sparkles, Compass } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-interface Theme {
+interface Tag {
   id: string;
-  name: string;
+  label: string;
   slug: string;
-  description: string;
+  emoji: string;
+  category: string;
 }
 
 interface ThemeContent {
@@ -22,90 +23,90 @@ interface ThemeContent {
   reference: string;
   title: string;
   text_content: string;
+  tags: string[];
 }
 
 const TemasPage = () => {
-  const [searchParams] = useSearchParams();
-  const [selectedTheme, setSelectedTheme] = useState<Theme | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const [selectedTag, setSelectedTag] = useState<Tag | null>(null);
   const [logosInsight, setLogosInsight] = useState<string | null>(null);
   const [loadingLogos, setLoadingLogos] = useState(false);
 
-  const { data: themes, isLoading: loadingThemes } = useQuery({
-    queryKey: ['themes'],
+  const { data: tags, isLoading: loadingTags } = useQuery({
+    queryKey: ['tags'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('themes')
+        .from('tags')
         .select('*')
-        .order('name');
+        .order('label');
       if (error) throw error;
-      return data as Theme[];
+      return data as Tag[];
     },
   });
 
-  // Auto-select theme from URL param ?tema=slug
+  // Auto-select tag from URL param ?tema=slug
   useEffect(() => {
     const temaSlug = searchParams.get('tema');
-    if (temaSlug && themes && !selectedTheme) {
-      const match = themes.find(t => t.slug === temaSlug);
-      if (match) setSelectedTheme(match);
+    if (temaSlug && tags && (!selectedTag || selectedTag.slug !== temaSlug)) {
+      const match = tags.find(t => t.slug === temaSlug);
+      if (match) setSelectedTag(match);
     }
-  }, [themes, searchParams, selectedTheme]);
+  }, [tags, searchParams]);
 
-  // Fetch Logos Insight when theme changes
+  const handleTagSelect = (tag: Tag) => {
+    setSelectedTag(tag);
+    setSearchParams({ tema: tag.slug });
+  };
+
+  // Fetch Logos Insight when tag changes
   useEffect(() => {
-    if (selectedTheme) {
+    if (selectedTag) {
       setLogosInsight(null);
       setLoadingLogos(true);
       supabase.functions.invoke('logos-spiritual-insight', {
-        body: { query: selectedTheme.name }
+        body: { query: selectedTag.label }
       }).then(({ data, error }) => {
         if (!error && data?.insight) setLogosInsight(data.insight);
         setLoadingLogos(false);
       });
     }
-  }, [selectedTheme]);
+  }, [selectedTag]);
 
   const { data: contents, isLoading: loadingContents } = useQuery({
-    queryKey: ['theme-contents', selectedTheme?.id],
+    queryKey: ['tag-contents', selectedTag?.id],
     queryFn: async () => {
-      if (!selectedTheme) return [];
+      if (!selectedTag) return [];
       
-      const { data: themeContents, error: themeError } = await supabase
-        .from('theme_contents')
-        .select('*')
-        .eq('theme_id', selectedTheme.id);
+      // Query spiritual_contents through content_tags junction table
+      const { data: tagContents, error: contentError } = await supabase
+        .from('content_tags')
+        .select(`
+          spiritual_contents (
+            id,
+            title,
+            content_text,
+            type,
+            reference_id,
+            tags
+          )
+        `)
+        .eq('tag_id', selectedTag.id);
       
-      const { data: journeys, error: journeyError } = await supabase
-        .from('journeys')
-        .select('id, title, description')
-        .or(`title.ilike.%${selectedTheme.name}%,description.ilike.%${selectedTheme.name}%`)
-        .limit(3);
+      if (contentError) throw contentError;
 
-      if (themeError) throw themeError;
-
-      const results: ThemeContent[] = (themeContents || []).map(c => ({
-        id: c.id,
-        content_type: c.content_type as any,
-        reference: c.reference,
-        title: c.title,
-        text_content: c.text_content
+      const results: ThemeContent[] = (tagContents || []).map((c: any) => ({
+        id: c.spiritual_contents.id,
+        content_type: c.spiritual_contents.type,
+        reference: c.spiritual_contents.reference_id || 'Referência',
+        title: c.spiritual_contents.title,
+        text_content: c.spiritual_contents.content_text,
+        tags: c.spiritual_contents.tags || []
       }));
-
-      if (journeys) {
-        journeys.forEach(j => {
-          results.push({
-            id: j.id,
-            content_type: 'journey',
-            reference: 'Jornada Espiritual',
-            title: j.title,
-            text_content: j.description || ''
-          });
-        });
-      }
 
       return results;
     },
-    enabled: !!selectedTheme,
+    enabled: !!selectedTag,
   });
 
   const bibleVerses = contents?.filter(c => c.content_type === 'bible') || [];
@@ -128,20 +129,20 @@ const TemasPage = () => {
       <div className="relative group">
         <div className="absolute -inset-1 bg-gradient-to-r from-primary/10 to-transparent blur opacity-50 transition duration-1000 group-hover:opacity-100" />
         <div className="relative flex flex-wrap justify-center gap-3 p-4 bg-card/30 backdrop-blur-sm rounded-3xl border border-border/40 shadow-sm">
-          {loadingThemes ? (
+          {loadingTags ? (
             <div className="flex items-center gap-3 py-6 px-8">
               <Loader2 className="h-5 w-5 animate-spin text-primary/50" />
               <span className="text-sm font-medium text-muted-foreground">Carregando temas teológicos...</span>
             </div>
           ) : (
-            themes?.map((theme) => {
-              const isSelected = selectedTheme?.id === theme.id;
+            tags?.map((tag) => {
+              const isSelected = selectedTag?.id === tag.id;
               return (
                 <motion.button
-                  key={theme.id}
+                  key={tag.id}
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => setSelectedTheme(theme)}
+                  onClick={() => handleTagSelect(tag)}
                   className={`
                     px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300
                     flex items-center gap-2 border shadow-sm
@@ -151,8 +152,8 @@ const TemasPage = () => {
                     }
                   `}
                 >
-                  <Hash className={`h-3.5 w-3.5 ${isSelected ? 'text-primary-foreground' : 'text-primary/40'}`} />
-                  {theme.name}
+                  <span className="text-sm">{tag.emoji}</span>
+                  {tag.label}
                 </motion.button>
               );
             })
@@ -163,7 +164,7 @@ const TemasPage = () => {
       {/* Content Area */}
       <main className="min-h-[400px]">
         <AnimatePresence mode="wait">
-          {!selectedTheme ? (
+          {!selectedTag ? (
             <motion.div
               key="empty"
               initial={{ opacity: 0, y: 10 }}
@@ -172,7 +173,7 @@ const TemasPage = () => {
               className="h-[300px] flex flex-col items-center justify-center text-center p-12 bg-muted/20 rounded-3xl border border-dashed border-border/60"
             >
               <div className="w-20 h-20 rounded-full bg-primary/5 flex items-center justify-center mb-6 border border-primary/10 shadow-inner">
-                <Tag className="h-10 w-10 text-primary/30" />
+                <TagIcon className="h-10 w-10 text-primary/30" />
               </div>
               <h3 className="text-2xl font-semibold mb-3 text-foreground">Descubra os tesouros da Fé</h3>
               <p className="text-muted-foreground max-w-md">
@@ -181,7 +182,7 @@ const TemasPage = () => {
             </motion.div>
           ) : (
             <motion.div
-              key={selectedTheme.id}
+              key={selectedTag.id}
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.98 }}
@@ -200,7 +201,7 @@ const TemasPage = () => {
                         Estudo de Tema
                       </Badge>
                     </div>
-                    <h2 className="text-3xl sm:text-5xl font-black mb-4 tracking-tight leading-tight text-foreground">{selectedTheme.name}</h2>
+                    <h2 className="text-3xl sm:text-5xl font-black mb-4 tracking-tight leading-tight text-foreground">{selectedTag.emoji} {selectedTag.label}</h2>
                   </div>
                   <Button variant="outline" className="rounded-2xl border-primary/20 hover:bg-primary/5 hover:border-primary/40 group/btn h-12 sm:h-14 px-4 sm:px-6">
                     <Bookmark className="mr-2 h-4 w-4 sm:h-5 sm:w-5 transition-transform group-hover/btn:scale-110" />
@@ -209,7 +210,7 @@ const TemasPage = () => {
                 </div>
 
                 <p className="text-xl text-muted-foreground/90 leading-relaxed max-w-3xl font-medium">
-                  {selectedTheme.description}
+                  Explorando aprofundamentos teológicos sobre {selectedTag.label} em todas as fontes da Tradição.
                 </p>
               </div>
 
@@ -259,7 +260,7 @@ const TemasPage = () => {
                     <TabsTrigger value="all" className="rounded-full px-6 sm:px-8 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-semibold">Geral</TabsTrigger>
                     <TabsTrigger value="bible" className="rounded-full px-6 sm:px-8 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-semibold flex gap-2"><Book className="h-4 w-4" /> Bíblia</TabsTrigger>
                     <TabsTrigger value="catechism" className="rounded-full px-6 sm:px-8 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-semibold flex gap-2"><Bookmark className="h-4 w-4" /> Catecismo</TabsTrigger>
-                    <TabsTrigger value="magisterium" className="rounded-full px-6 sm:px-8 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-semibold flex gap-2"><FileText className="h-4 w-4" /> Magistério</TabsTrigger>
+                    <TabsTrigger value="magisterium" className="rounded-full px-6 sm:px-8 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-semibold flex gap-2"><FileText className="h-4 w-4" /> Documentos</TabsTrigger>
                     <TabsTrigger value="journey" className="rounded-full px-6 sm:px-8 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-semibold flex gap-2"><Compass className="h-4 w-4" /> Jornadas</TabsTrigger>
                   </TabsList>
                 </div>
@@ -272,26 +273,26 @@ const TemasPage = () => {
                 ) : (
                   <div className="px-1">
                     <TabsContent value="all" className="mt-0 space-y-10 focus-visible:outline-none">
-                      <ContentSection title="Sagrada Escritura" icon={<Book className="h-6 w-6" />} items={bibleVerses} color="blue" />
-                      <ContentSection title="Catecismo da Igreja" icon={<Bookmark className="h-6 w-6" />} items={catechism} color="amber" />
-                      <ContentSection title="Documentos Pontifícios" icon={<FileText className="h-6 w-6" />} items={magisterium} color="emerald" />
-                      <ContentSection title="Jornadas de Fé" icon={<Compass className="h-6 w-6" />} items={journeyItems} color="primary" />
+                      <ContentSection title="Bíblia" icon={<Book className="h-6 w-6" />} items={bibleVerses} color="blue" />
+                      <ContentSection title="Catecismo" icon={<Bookmark className="h-6 w-6" />} items={catechism} color="amber" />
+                      <ContentSection title="Documentos" icon={<FileText className="h-6 w-6" />} items={magisterium} color="emerald" />
+                      <ContentSection title="Jornadas" icon={<Compass className="h-6 w-6" />} items={journeyItems} color="primary" />
                     </TabsContent>
 
                     <TabsContent value="bible" className="mt-0 focus-visible:outline-none">
-                      <ContentSection title="Bíblia Sagrada" icon={<Book className="h-6 w-6" />} items={bibleVerses} showEmpty color="blue" />
+                      <ContentSection title="Bíblia" icon={<Book className="h-6 w-6" />} items={bibleVerses} showEmpty color="blue" />
                     </TabsContent>
 
                     <TabsContent value="catechism" className="mt-0 focus-visible:outline-none">
-                      <ContentSection title="Catecismo da Igreja Católica" icon={<Bookmark className="h-6 w-6" />} items={catechism} showEmpty color="amber" />
+                      <ContentSection title="Catecismo" icon={<Bookmark className="h-6 w-6" />} items={catechism} showEmpty color="amber" />
                     </TabsContent>
 
                     <TabsContent value="magisterium" className="mt-0 focus-visible:outline-none">
-                      <ContentSection title="Magistério da Igreja" icon={<FileText className="h-6 w-6" />} items={magisterium} showEmpty color="emerald" />
+                      <ContentSection title="Documentos" icon={<FileText className="h-6 w-6" />} items={magisterium} showEmpty color="emerald" />
                     </TabsContent>
 
                     <TabsContent value="journey" className="mt-0 focus-visible:outline-none">
-                      <ContentSection title="Trilhas e Jornadas" icon={<Compass className="h-6 w-6" />} items={journeyItems} showEmpty color="primary" />
+                      <ContentSection title="Jornadas" icon={<Compass className="h-6 w-6" />} items={journeyItems} showEmpty color="primary" />
                     </TabsContent>
                   </div>
                 )}
@@ -356,13 +357,22 @@ const ContentSection = React.forwardRef<HTMLDivElement, ContentSectionProps>(({ 
                   <div className="flex justify-between items-start gap-4">
                     <div className="space-y-1">
                       <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors leading-snug text-foreground">
-                        {item.title || item.reference}
+                        {item.title}
                       </CardTitle>
                       <div className="flex items-center gap-2">
                         <span className="w-2 h-2 rounded-full bg-primary/40 animate-pulse" />
                         <CardDescription className="font-bold text-primary/70 tracking-wide text-sm">{item.reference}</CardDescription>
                       </div>
                     </div>
+                    {item.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-1">
+                        {item.tags.map(tag => (
+                          <Badge key={tag} variant="outline" className="text-[9px] px-1.5 py-0">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </CardHeader>
                 <CardContent className="px-7 pb-7">
@@ -380,6 +390,10 @@ const ContentSection = React.forwardRef<HTMLDivElement, ContentSectionProps>(({ 
                       onClick={() => {
                         if (item.content_type === 'journey') {
                           window.location.href = `/jornadas/${item.id}`;
+                        } else if (item.content_type === 'bible') {
+                          window.location.href = `/bible?ref=${item.reference}`;
+                        } else if (item.content_type === 'catechism') {
+                          window.location.href = `/catechism?para=${item.reference.replace('Catecismo ', '')}`;
                         }
                       }}
                       size="sm" 
