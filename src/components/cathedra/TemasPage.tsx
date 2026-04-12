@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Loader2, ChevronRight, Hash, Sparkles, Tag as TagIcon } from 'lucide-react';
+import { Loader2, ChevronRight, Hash, Sparkles, Tag as TagIcon, X, Search } from 'lucide-react';
 import { Icons } from '@/constants';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
