@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from '@/components/ui/hover-card';
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import { Icons } from '../../constants';
 
 interface BibleVersePopoverProps {
