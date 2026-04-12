@@ -208,8 +208,8 @@ export const Icons = {
   PartyPopper: createIcon(PartyPopper),
   
   // Library & Study
-  Bible: createIcon(Book),
-  HolyBible: createIcon(Book),
+  Bible: createIcon(BookText),
+  HolyBible: createIcon(BookText),
   Book: createIcon(Book),
   BookOpen: createIcon(BookOpen),
   Library: createIcon(Library),
