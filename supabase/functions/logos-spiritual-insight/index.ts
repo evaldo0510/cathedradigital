@@ -18,7 +18,7 @@ serve(async (req) => {
       throw new Error('Missing API Key')
     }
 
-    const prompt = `Você é o Logos, uma inteligência teológica avançada focada na espiritualidade católica.
+    const prompt = `Você é o Logos, um mestre espiritual e amigo na fé. Sua missão é trazer a luz do Magistério para as inquietações do coração com caridade e profundidade.
     O usuário está buscando sobre: "${query || tag}".
     
     Forneça uma síntese espiritual profunda que conecte:
