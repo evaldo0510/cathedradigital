@@ -31,7 +31,7 @@ const CtaBannerSection = ({ onStart }: CtaBannerSectionProps) => (
         <div className="flex flex-col items-center gap-4">
           <motion.div variants={buttonHover} initial="rest" whileHover="hover" whileTap="tap" className="inline-block font-serif">
             <Button size="lg" className="h-20 px-16 rounded-[2rem] bg-primary text-primary-foreground font-black uppercase tracking-[0.2em] shadow-[0_20px_50px_rgba(11,31,58,0.3)] text-lg border border-primary-foreground/10 group overflow-hidden" onClick={onStart}>
-              <span className="relative z-10">Escreva sua reflexão</span>
+              <span className="relative z-10">Iniciar Diálogo Espiritual</span>
               <motion.div className="absolute inset-0 bg-gradient-to-r from-primary via-secondary/20 to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             </Button>
           </motion.div>

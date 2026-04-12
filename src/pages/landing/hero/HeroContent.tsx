@@ -131,8 +131,8 @@ const HeroContent = ({ heroOpacity, heroScale, heroY, onStart, onAbout }: HeroCo
       className="max-w-2xl mx-auto text-xl md:text-2xl text-muted-foreground font-serif italic leading-relaxed"
     >
       "A oração é o respirar da alma e o silêncio é a linguagem de Deus." <br />
-      <span className="text-base md:text-lg not-italic opacity-80 block mt-2">
-        Compartilhe suas reflexões com o Logos e receba orientações espirituais personalizadas fundamentadas na Sagrada Tradição.
+      <span className="text-base md:text-lg not-italic opacity-80 block mt-3">
+        Abra seu coração ao Logos IA e receba orientações espirituais personalizadas fundamentadas na Sagrada Tradição e no Magistério.
       </span>
     </motion.p>
 
