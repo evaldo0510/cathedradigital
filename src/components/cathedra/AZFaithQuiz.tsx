@@ -1,8 +1,10 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Check, X, Trophy, RotateCcw, Sparkles, ArrowRight, BookOpen, Brain } from 'lucide-react';
+import { Check, X, Trophy, RotateCcw, Sparkles, ArrowRight, BookOpen, Brain, TrendingUp, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import confetti from 'canvas-confetti';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
 
 interface FaithTerm {
   term: string;
@@ -25,6 +27,14 @@ interface QuizQuestion {
   explanation: string;
 }
 
+interface QuizResult {
+  id: string;
+  score: number;
+  total: number;
+  percentage: number;
+  created_at: string;
+}
+
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
@@ -41,7 +51,6 @@ function generateQuestions(terms: FaithTerm[], count = 10): QuizQuestion[] {
   const selected = shuffle(enriched).slice(0, Math.min(count, enriched.length));
   
   return selected.map(term => {
-    // Pick 3 wrong answers from other terms
     const others = shuffle(enriched.filter(t => t.term !== term.term)).slice(0, 3);
     const options = shuffle([
       { text: term.definition, correct: true },
@@ -65,15 +74,43 @@ interface AZFaithQuizProps {
 }
 
 const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
+  const { user } = useAuth();
   const questions = useMemo(() => generateQuestions(terms), [terms]);
   const [currentQ, setCurrentQ] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [score, setScore] = useState(0);
   const [answered, setAnswered] = useState(false);
   const [finished, setFinished] = useState(false);
+  const [history, setHistory] = useState<QuizResult[]>([]);
+  const [showHistory, setShowHistory] = useState(false);
 
   const question = questions[currentQ];
   const total = questions.length;
+
+  // Load history
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from('quiz_results')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(10)
+      .then(({ data }) => {
+        if (data) setHistory(data as QuizResult[]);
+      });
+  }, [user, finished]);
+
+  const saveResult = useCallback(async (finalScore: number) => {
+    if (!user) return;
+    const pct = Math.round((finalScore / total) * 100);
+    await supabase.from('quiz_results').insert({
+      user_id: user.id,
+      score: finalScore,
+      total,
+      percentage: pct,
+    });
+  }, [user, total]);
 
   const handleSelect = useCallback((idx: number) => {
     if (answered) return;
@@ -86,7 +123,11 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
 
   const handleNext = useCallback(() => {
     if (currentQ + 1 >= total) {
+      const finalScore = selected === question.correctIndex ? score + 1 : score;
+      // score already updated via setScore but we need the final value
+      const actualScore = selected === question.correctIndex ? score : score; // score was already incremented in handleSelect
       setFinished(true);
+      void saveResult(score);
       if (score / total >= 0.7) {
         confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
       }
@@ -95,7 +136,7 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
       setSelected(null);
       setAnswered(false);
     }
-  }, [currentQ, total, score]);
+  }, [currentQ, total, score, saveResult, selected, question]);
 
   const handleRestart = useCallback(() => {
     setCurrentQ(0);
@@ -112,6 +153,61 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
         <p className="text-muted-foreground">Não há termos suficientes para gerar o quiz.</p>
         <Button variant="outline" onClick={onClose}>Voltar</Button>
       </div>
+    );
+  }
+
+  // History view
+  if (showHistory) {
+    const bestScore = history.length > 0 ? Math.max(...history.map(h => h.percentage)) : 0;
+    const avgScore = history.length > 0 ? Math.round(history.reduce((a, h) => a + h.percentage, 0) / history.length) : 0;
+
+    return (
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-md mx-auto space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-bold text-foreground">Histórico de Quizzes</h2>
+          <Button variant="ghost" size="sm" onClick={() => setShowHistory(false)} className="text-xs">Voltar</Button>
+        </div>
+
+        {history.length > 0 && (
+          <div className="grid grid-cols-2 gap-3">
+            <div className="bg-primary/5 border border-primary/10 rounded-2xl p-4 text-center">
+              <TrendingUp className="w-5 h-5 text-primary mx-auto mb-1" />
+              <p className="text-2xl font-black text-primary">{bestScore}%</p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Melhor</p>
+            </div>
+            <div className="bg-accent/50 border border-border rounded-2xl p-4 text-center">
+              <Brain className="w-5 h-5 text-foreground/60 mx-auto mb-1" />
+              <p className="text-2xl font-black text-foreground">{avgScore}%</p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Média</p>
+            </div>
+          </div>
+        )}
+
+        <div className="space-y-2">
+          {history.length === 0 ? (
+            <p className="text-center text-muted-foreground text-sm py-8">Nenhum quiz realizado ainda.</p>
+          ) : (
+            history.map((r) => (
+              <div key={r.id} className="flex items-center justify-between bg-card border border-border rounded-xl px-4 py-3">
+                <div className="flex items-center gap-3">
+                  <Calendar className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">
+                    {new Date(r.created_at).toLocaleDateString('pt-BR')}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-bold text-foreground">{r.score}/{r.total}</span>
+                  <span className={`text-xs font-black px-2 py-0.5 rounded-full ${
+                    r.percentage >= 70 ? 'bg-emerald-500/10 text-emerald-600' : 'bg-amber-500/10 text-amber-600'
+                  }`}>
+                    {r.percentage}%
+                  </span>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </motion.div>
     );
   }
 
@@ -132,9 +228,9 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
           <p className="text-muted-foreground text-sm">
             Você acertou <span className="font-bold text-primary">{score}</span> de <span className="font-bold">{total}</span> ({pct}%)
           </p>
+          {user && <p className="text-[10px] text-muted-foreground mt-1">✓ Resultado salvo</p>}
         </div>
 
-        {/* Progress ring */}
         <div className="relative w-32 h-32 mx-auto">
           <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
             <circle cx="50" cy="50" r="42" fill="none" strokeWidth="8" className="stroke-muted/30" />
@@ -148,13 +244,20 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
           <span className="absolute inset-0 flex items-center justify-center text-2xl font-black text-primary">{pct}%</span>
         </div>
 
-        <div className="flex gap-3 justify-center">
-          <Button variant="outline" onClick={onClose} className="rounded-2xl gap-2">
-            <BookOpen className="w-4 h-4" /> Voltar ao A-Z
-          </Button>
-          <Button onClick={handleRestart} className="rounded-2xl gap-2 bg-primary text-primary-foreground">
-            <RotateCcw className="w-4 h-4" /> Jogar Novamente
-          </Button>
+        <div className="flex flex-col gap-3">
+          <div className="flex gap-3 justify-center">
+            <Button variant="outline" onClick={onClose} className="rounded-2xl gap-2">
+              <BookOpen className="w-4 h-4" /> Voltar ao A-Z
+            </Button>
+            <Button onClick={handleRestart} className="rounded-2xl gap-2 bg-primary text-primary-foreground">
+              <RotateCcw className="w-4 h-4" /> Jogar Novamente
+            </Button>
+          </div>
+          {user && (
+            <Button variant="ghost" onClick={() => setShowHistory(true)} className="text-xs gap-1 text-muted-foreground">
+              <TrendingUp className="w-3 h-3" /> Ver Histórico
+            </Button>
+          )}
         </div>
       </motion.div>
     );
@@ -162,10 +265,17 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
 
   return (
     <div className="max-w-lg mx-auto space-y-6">
-      {/* Progress */}
-      <div className="flex items-center justify-between text-xs text-muted-foreground">
-        <span className="font-bold">{currentQ + 1} / {total}</span>
-        <span className="font-bold text-primary">{score} acertos</span>
+      {/* Header with history button */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4 text-xs text-muted-foreground">
+          <span className="font-bold">{currentQ + 1} / {total}</span>
+          <span className="font-bold text-primary">{score} acertos</span>
+        </div>
+        {user && history.length > 0 && (
+          <Button variant="ghost" size="sm" onClick={() => setShowHistory(true)} className="text-[10px] gap-1 h-7">
+            <TrendingUp className="w-3 h-3" /> Histórico
+          </Button>
+        )}
       </div>
       <div className="h-1.5 bg-muted rounded-full overflow-hidden">
         <motion.div
@@ -176,7 +286,6 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
         />
       </div>
 
-      {/* Question */}
       <AnimatePresence mode="wait">
         <motion.div
           key={currentQ}
@@ -195,7 +304,6 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
             </h3>
           </div>
 
-          {/* Options */}
           <div className="space-y-3">
             {question.options.map((opt, idx) => {
               const isCorrect = idx === question.correctIndex;
@@ -222,7 +330,6 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
             })}
           </div>
 
-          {/* Explanation + Next */}
           {answered && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
