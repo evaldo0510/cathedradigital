@@ -112,6 +112,8 @@ const CommandCenter: React.FC = () => {
           });
         });
       }
+    } catch {}
+
     try {
       // Themes/Tags search
       const { data: themeData } = await supabase
@@ -134,7 +136,7 @@ const CommandCenter: React.FC = () => {
 
     setGlobalResults(results);
     setGlobalLoading(false);
-  }, []);
+  }, [runGlobalSearch]);
 
   useEffect(() => {
     if (searchMode === 'global' && query.length >= 3) {
