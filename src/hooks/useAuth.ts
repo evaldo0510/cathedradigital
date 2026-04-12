@@ -220,19 +220,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       void syncAuthState(session?.user ?? null);
     });
 
-    const initSession = async () => {
+    const initSession = async (retryCount = 0) => {
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
         if (!active) return;
 
         if (error) {
+          if (error.name === 'AbortError' && retryCount < 3) {
+            console.warn('Session init aborted (lock stolen), retrying...');
+            setTimeout(() => initSession(retryCount + 1), 500);
+            return;
+          }
           console.error('Error getting session:', error);
         }
 
         await syncAuthState(session?.user ?? null);
-      } catch (error) {
+      } catch (error: any) {
         if (!active) return;
-        console.error('Session init error:', error);
+        
+        if (error?.name === 'AbortError' && retryCount < 3) {
+          console.warn('Session init aborted (lock stolen), retrying...');
+          setTimeout(() => initSession(retryCount + 1), 500);
+          return;
+        }
+
+        if (error?.name !== 'AbortError') {
+          console.error('Session init error:', error);
+        }
+        
         setUser(null);
         setProfile(null);
         setLoading(false);
