@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import SEOHead from '@/components/SEOHead';
@@ -9,9 +9,8 @@ import SaintDetail, { CATEGORY_LABELS } from './SaintDetail';
 import { SAINTS_DATA, type Saint } from '@/data/saints';
 import { supabase } from '@/integrations/supabase/client';
 import { Search, X, Calendar as CalendarIcon, ChevronLeft, ChevronRight, Sparkles, BookOpen, Quote, Shield } from 'lucide-react';
-import { format, addDays, subDays, isSameDay, startOfMonth, endOfMonth, eachDayOfInterval } from 'date-fns';
+import { format, addDays, subDays, isSameDay } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-
 
 const Saints: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -54,7 +53,7 @@ const Saints: React.FC = () => {
       );
       
       if (match) {
-        return localSaints.map(s => s.id === match.id ? { ...s, ...officialSaint } : s);
+        return localSaints.map(s => s.id === match.id ? { ...s, ...officialSaint, fullBio: officialSaint.fullBio || s.fullBio, works: (officialSaint.writings || []).length > 0 ? (officialSaint.writings || []).map((w: string) => ({ title: w })) : s.works } : s);
       } else {
         return [
           {
@@ -62,14 +61,15 @@ const Saints: React.FC = () => {
             name: officialSaint.name,
             title: 'Santo do Dia',
             bio: officialSaint.description,
+            fullBio: officialSaint.fullBio || officialSaint.description,
             image: officialSaint.image,
             url: officialSaint.url,
             category: 'confessor' as const,
-            works: [],
-            quotes: [],
-            feastDay: '',
-            feastMonth: 0,
-            feastDayNum: 0,
+            works: (officialSaint.writings || []).map((w: string) => ({ title: w })),
+            quotes: officialSaint.writings || [],
+            feastDay: format(selectedDate, "dd 'de' MMMM"),
+            feastMonth: selectedDate.getMonth() + 1,
+            feastDayNum: selectedDate.getDate(),
             born: '',
             died: '',
             patronOf: []
@@ -81,7 +81,6 @@ const Saints: React.FC = () => {
     
     return localSaints;
   }, [selectedDate, officialSaint]);
-
 
   useEffect(() => {
     const action = searchParams.get('action');
@@ -361,31 +360,26 @@ const Saints: React.FC = () => {
                     ))}
                   </StaggeredList>
                 ) : (
-                  <div className="text-center py-20 text-muted-foreground/60 italic font-serif">
-                    <Search className="w-12 h-12 mx-auto mb-4 opacity-20" />
-                    <p>Comece a digitar para encontrar um santo específico...</p>
+                  <div className="text-center py-20 bg-muted/20 rounded-[2.5rem] border border-dashed border-border space-y-4">
+                    <Icons.Search className="w-12 h-12 text-muted-foreground/30 mx-auto" />
+                    <p className="text-lg font-serif italic text-muted-foreground">Busque por um santo, virtuoso ou doutor.</p>
                   </div>
-                )}
-
-                {search.trim() && filteredSaints.length === 0 && (
-                  <p className="text-center text-muted-foreground py-20 italic font-serif">Nenhum santo encontrado para sua busca.</p>
                 )}
               </div>
             </motion.div>
           )}
         </AnimatePresence>
-
-        {/* Detail Modal */}
-        <AnimatePresence>
-          {selectedSaint && (
-            <SaintDetail 
-              saint={selectedSaint} 
-              onClose={() => setSelectedSaint(null)} 
-              autoReflect={autoReflect}
-            />
-          )}
-        </AnimatePresence>
       </div>
+
+      <AnimatePresence>
+        {selectedSaint && (
+          <SaintDetail 
+            saint={selectedSaint} 
+            onClose={() => setSelectedSaint(null)} 
+            autoReflect={autoReflect}
+          />
+        )}
+      </AnimatePresence>
     </>
   );
 };
