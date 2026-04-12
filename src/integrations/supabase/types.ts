@@ -669,6 +669,33 @@ export type Database = {
         }
         Relationships: []
       }
+      quiz_results: {
+        Row: {
+          created_at: string
+          id: string
+          percentage: number
+          score: number
+          total: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          percentage: number
+          score: number
+          total: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          percentage?: number
+          score?: number
+          total?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       spiritual_journal: {
         Row: {
           content: string
