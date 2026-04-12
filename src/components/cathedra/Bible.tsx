@@ -277,7 +277,12 @@ const Bible: React.FC = () => {
     if (!selectedBook || !selectedChapter) return [];
     return getBibleCrossRefs(selectedBook.abbr, selectedChapter);
   }, [selectedBook, selectedChapter]);
-  
+
+  const docsRefs = useMemo(() => {
+    if (!selectedBook || !selectedChapter) return [];
+    return getBibleDocs(selectedBook.abbr, selectedChapter);
+  }, [selectedBook, selectedChapter]);
+
   const verseToCic = useMemo(() => {
     if (!selectedBook || !selectedChapter) return {};
     const map: Record<number, number[]> = {};
