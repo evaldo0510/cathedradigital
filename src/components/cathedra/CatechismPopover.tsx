@@ -1,9 +1,9 @@
 import React from 'react';
 import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from '@/components/ui/hover-card';
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import { Icons } from '../../constants';
 import { useCatechismParagraph } from '@/hooks/useCatechismParagraph';
 
@@ -23,8 +23,8 @@ const CatechismPopover: React.FC<CatechismPopoverProps> = ({
   const content = data?.content || '';
 
   return (
-    <HoverCard openDelay={100} closeDelay={200}>
-      <HoverCardTrigger asChild>
+    <Popover>
+      <PopoverTrigger asChild>
         <button
           onClick={(e) => {
             e.preventDefault();
@@ -39,8 +39,8 @@ const CatechismPopover: React.FC<CatechismPopoverProps> = ({
         >
           {variant === 'mini' ? '§' : `§${paragraph}`}
         </button>
-      </HoverCardTrigger>
-      <HoverCardContent
+      </PopoverTrigger>
+      <PopoverContent
         side="top"
         align="start"
         className="w-80 max-h-64 overflow-y-auto p-0 rounded-2xl border-primary/20"
@@ -79,8 +79,8 @@ const CatechismPopover: React.FC<CatechismPopoverProps> = ({
             <p className="text-xs text-muted-foreground italic">Texto não disponível.</p>
           )}
         </div>
-      </HoverCardContent>
-    </HoverCard>
+      </PopoverContent>
+    </Popover>
   );
 };
 

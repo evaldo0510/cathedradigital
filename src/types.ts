@@ -51,7 +51,8 @@ export enum AppRoute {
   PARTNERS = '/partners',
   UPGRADE = '/upgrade',
   TEMAS = '/temas',
-  AZ_FAITH = '/az-faith'
+  AZ_FAITH = '/az-faith',
+  MODULES_GUIDE = '/guia-modulos'
 }
 
 export interface TrackStep {

@@ -261,6 +261,25 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         </div>
       </FadeUp>
 
+      {/* ═══ GUIDE LINK ═══ */}
+      <FadeUp delay={0.02}>
+        <div 
+          onClick={() => goTo(AppRoute.MODULES_GUIDE)}
+          className="mb-6 p-4 rounded-2xl bg-primary/5 border border-primary/10 flex items-center justify-between cursor-pointer hover:bg-primary/10 transition-colors group"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+              <Icons.HelpCircle className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="text-xs font-bold text-foreground leading-tight">Guia dos Módulos</p>
+              <p className="text-[10px] text-muted-foreground mt-0.5">Entenda como navegar e usar a plataforma</p>
+            </div>
+          </div>
+          <Icons.ChevronRight className="w-4 h-4 text-primary group-hover:translate-x-1 transition-transform" />
+        </div>
+      </FadeUp>
+
       {/* ═══ MAIN DOORS 🚪 ═══ */}
       <FadeUp delay={0.05}>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
