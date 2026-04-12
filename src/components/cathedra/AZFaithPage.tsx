@@ -13,6 +13,7 @@ import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
 import MagisteriumPopover from './MagisteriumPopover';
 import { parseBibleReferences } from '@/lib/bibleRefParser';
+import AZFaithQuiz from './AZFaithQuiz';
 
 interface FaithTerm {
   term: string;
@@ -418,6 +419,7 @@ const AZFaithPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLetter, setSelectedLetter] = useState<string | null>('A');
   const [selectedTerm, setSelectedTerm] = useState<FaithTerm | null>(null);
+  const [quizMode, setQuizMode] = useState(false);
 
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
@@ -479,8 +481,20 @@ const AZFaithPage: React.FC = () => {
             <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Índice Alfabético</span>
           </div>
           <h1 className="text-3xl md:text-4xl font-black tracking-tight text-foreground">A–Z da Fé</h1>
+          <Button
+            variant={quizMode ? 'default' : 'outline'}
+            onClick={() => setQuizMode(!quizMode)}
+            className="rounded-2xl gap-2 font-bold text-xs uppercase tracking-widest mt-2"
+          >
+            <Brain className="w-4 h-4" />
+            {quizMode ? 'Voltar ao Índice' : '🧠 Testar Conhecimento'}
+          </Button>
         </header>
 
+        {quizMode ? (
+          <AZFaithQuiz terms={FAITH_TERMS} onClose={() => setQuizMode(false)} />
+        ) : (
+        <>
         {/* Search */}
         <div className="relative max-w-lg mx-auto mb-6">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -763,6 +777,8 @@ const AZFaithPage: React.FC = () => {
             </AnimatePresence>
           </div>
         </div>
+        </>
+        )}
       </div>
     </>
   );
