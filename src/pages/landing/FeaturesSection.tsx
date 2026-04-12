@@ -6,10 +6,34 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AppRoute } from "@/types";
 
 const features = [
-  { title: "Logos IA", description: "Assistente teológico treinado com o Magistério da Igreja para guiar suas reflexões e dúvidas de fé.", benefit: "Receba orientações espirituais personalizadas e fundamentadas na sã doutrina.", icon: <Sparkles className="h-6 w-6" />, route: AppRoute.DASHBOARD },
-  { title: "Bíblia Sagrada", description: "Acesso completo às Escrituras com ferramentas de estudo, anotações e busca avançada.", benefit: "Fortaleça seu conhecimento bíblico e guarde suas passagens favoritas.", icon: <BookOpen className="h-6 w-6" />, route: AppRoute.BIBLE },
-  { title: "Liturgia do Dia", description: "Acompanhe as leituras da Santa Missa, o santo do dia e meditações diárias.", benefit: "Viva o tempo litúrgico em comunhão com toda a Igreja no mundo.", icon: <Clock className="h-6 w-6" />, route: AppRoute.LITURGIA },
-  { title: "Jornadas de Fé", description: "Trilhas guiadas de formação espiritual que transformam seu conhecimento em vivência.", benefit: "Um caminho claro, passo a passo, para crescer na fé com profundidade.", icon: <Star className="h-6 w-6" />, route: AppRoute.JORNADAS },
+  { 
+    title: "Logos IA", 
+    description: "Um assistente contemplativo treinado com o Magistério da Igreja para iluminar suas reflexões e dúvidas de fé.", 
+    benefit: "Receba orientações espirituais profundas e fundamentadas na sã doutrina.", 
+    icon: <Sparkles className="h-6 w-6" />, 
+    route: AppRoute.DASHBOARD 
+  },
+  { 
+    title: "Bíblia Sagrada", 
+    description: "Acesse as Escrituras com ferramentas de estudo avançadas, anotações pessoais e busca inteligente por temas.", 
+    benefit: "Mergulhe na Palavra de Deus e guarde os versículos que transformam sua vida.", 
+    icon: <BookOpen className="h-6 w-6" />, 
+    route: AppRoute.BIBLE 
+  },
+  { 
+    title: "Liturgia Diária", 
+    description: "Siga as leituras da Santa Missa, conheça o santo do dia e medite com orações próprias de cada tempo.", 
+    benefit: "Viva o ritmo espiritual da Igreja em comunhão com fiéis do mundo inteiro.", 
+    icon: <Clock className="h-6 w-6" />, 
+    route: AppRoute.LITURGIA 
+  },
+  { 
+    title: "Jornadas de Fé", 
+    description: "Trilhas de formação espiritual desenhadas para converter seu conhecimento em vivência cristã autêntica.", 
+    benefit: "Um caminho seguro de maturidade espiritual através do estudo e da oração.", 
+    icon: <Star className="h-6 w-6" />, 
+    route: AppRoute.JORNADAS 
+  },
 ];
 
 interface FeaturesSectionProps {
@@ -60,7 +84,7 @@ const FeatureCard = React.forwardRef<HTMLDivElement, { feature: typeof features[
           <CardContent className="space-y-6 flex-1 flex flex-col relative z-10">
             <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
             <div className="p-4 bg-muted/30 rounded-2xl border border-primary/5 italic text-sm text-primary/80">
-              <strong>Ganho:</strong> {feature.benefit}
+              <strong>Impacto:</strong> {feature.benefit}
             </div>
             <Button variant="ghost" className="w-full mt-auto justify-between group/btn text-xs font-black uppercase tracking-[0.2em]">
               Acessar Agora
@@ -105,9 +129,9 @@ const FeaturesSection = ({ onNavigate }: FeaturesSectionProps) => {
           transition={{ duration: 1, delay: 0.2 }}
           className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/60 block"
         >
-          Recursos
+          Experiência
         </motion.span>
-        <h2 className="text-4xl md:text-6xl font-display font-bold">Ferramentas para sua Edificação</h2>
+        <h2 className="text-4xl md:text-6xl font-display font-bold">Aprofunde sua Vida Interior</h2>
         <p className="text-lg text-muted-foreground italic">"Conhecereis a verdade, e a verdade vos libertará" (Jo 8,32)</p>
         <motion.div
           initial={{ scaleX: 0 }}
