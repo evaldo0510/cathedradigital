@@ -8,6 +8,7 @@ import SacredImage from './SacredImage';
 import { Icons } from '@/constants';
 import { useLang } from '@/hooks/useLang';
 import RitualDoDia from './RitualDoDia';
+import NexusBubbles from './NexusBubbles';
 
 interface DashboardProps {
   user: User | null;
@@ -250,6 +251,11 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       {/* ═══ RITUAL DO DIA ═══ */}
       <FadeUp delay={0.1}>
         <RitualDoDia />
+      </FadeUp>
+
+      {/* ═══ NEXUS BUBBLES ═══ */}
+      <FadeUp delay={0.1}>
+        <NexusBubbles />
       </FadeUp>
 
       {/* ═══ 4 MAIN DOORS ═══ */}
