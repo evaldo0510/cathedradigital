@@ -230,9 +230,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
 
         await syncAuthState(session?.user ?? null);
-      } catch (error) {
+      } catch (error: any) {
         if (!active) return;
-        console.error('Session init error:', error);
+        // Specifically ignore AbortErrors related to storage lock stealing (common with multiple tabs)
+        if (error?.name === 'AbortError' || error?.message?.includes('Lock broken')) {
+          console.warn('Session init aborted (lock stolen). Retrying or waiting for next event.');
+        } else {
+          console.error('Session init error:', error);
+        }
         setUser(null);
         setProfile(null);
         setLoading(false);
