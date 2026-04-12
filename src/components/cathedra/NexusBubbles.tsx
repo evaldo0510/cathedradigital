@@ -43,11 +43,13 @@ const TagBubble: React.FC<{ tag: Tag; index: number }> = ({ tag, index }) => {
             id,
             content_text,
             type,
-            reference_id
+            title,
+            metadata
           )
         `)
         .eq('tag_id', tag.id)
         .limit(2);
+
 
       if (!error && data) {
         const formatted = (data as any[]).map(d => d.spiritual_contents);
