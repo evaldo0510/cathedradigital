@@ -479,6 +479,7 @@ export type Database = {
           is_premium: boolean
           sort_order: number
           subtitle: string | null
+          tags: string[] | null
           title: string
           updated_at: string
         }
@@ -495,6 +496,7 @@ export type Database = {
           is_premium?: boolean
           sort_order?: number
           subtitle?: string | null
+          tags?: string[] | null
           title: string
           updated_at?: string
         }
@@ -511,6 +513,7 @@ export type Database = {
           is_premium?: boolean
           sort_order?: number
           subtitle?: string | null
+          tags?: string[] | null
           title?: string
           updated_at?: string
         }
@@ -733,6 +736,7 @@ export type Database = {
           id: string
           metadata: Json | null
           reference_id: string | null
+          tags: string[] | null
           title: string
           type: string
         }
@@ -742,6 +746,7 @@ export type Database = {
           id?: string
           metadata?: Json | null
           reference_id?: string | null
+          tags?: string[] | null
           title: string
           type: string
         }
@@ -751,6 +756,7 @@ export type Database = {
           id?: string
           metadata?: Json | null
           reference_id?: string | null
+          tags?: string[] | null
           title?: string
           type?: string
         }
