@@ -147,7 +147,7 @@ const TemasPage = () => {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-center gap-4 bg-card/40 backdrop-blur-md p-4 rounded-[2rem] border border-border/50 shadow-sm sticky top-0 z-10 transition-all duration-300">
           <div className="relative flex-1 w-full">
-            <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <input 
               type="text" 
               placeholder="Buscar tema teológico (ex: Amor, Graça, Pecado...)"
