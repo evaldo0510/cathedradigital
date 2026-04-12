@@ -9,6 +9,7 @@ import { Icons } from '@/constants';
 import { useLang } from '@/hooks/useLang';
 import RitualDoDia from './RitualDoDia';
 import NexusBubbles from './NexusBubbles';
+import SpiritualQuiz from './SpiritualQuiz';
 
 interface DashboardProps {
   user: User | null;
@@ -283,6 +284,11 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             );
           })}
         </div>
+      </FadeUp>
+
+      {/* ═══ SPIRITUAL QUIZ ═══ */}
+      <FadeUp delay={0.102}>
+        <SpiritualQuiz />
       </FadeUp>
 
       {/* ═══ WHATSAPP RELEASE ═══ */}
