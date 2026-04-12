@@ -209,20 +209,22 @@ const TemasPage = () => {
                   <motion.button
                     key={tag.id}
                     layoutId={`tag-${tag.id}`}
-                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileHover={{ scale: 1.1, y: -4 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => handleTagSelect(tag)}
                     className={`
-                      px-4 py-2 rounded-full text-xs font-bold transition-all duration-300
-                      flex items-center gap-2 border shadow-sm
+                      px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-wider transition-all duration-300
+                      flex items-center gap-2 border shadow-sm relative overflow-hidden group
                       ${isSelected 
-                        ? 'bg-primary text-primary-foreground border-primary shadow-primary/30 ring-2 ring-primary/20' 
-                        : 'bg-card/50 text-muted-foreground border-border/80 hover:border-primary/40 hover:text-primary hover:bg-white dark:hover:bg-slate-900'
+                        ? 'bg-primary text-primary-foreground border-primary shadow-lg ring-4 ring-primary/20' 
+                        : 'bg-card/40 backdrop-blur-md text-muted-foreground border-border/60 hover:border-primary/50 hover:text-primary hover:bg-white dark:hover:bg-slate-900'
                       }
                     `}
                   >
-                    <span className="text-base">{tag.emoji}</span>
-                    {tag.label}
+                    <div className="flex items-center gap-2 relative z-10">
+                      <span className="text-lg group-hover:scale-125 transition-transform duration-300">{tag.emoji}</span>
+                      {tag.label}
+                    </div>
                   </motion.button>
                 );
               })
