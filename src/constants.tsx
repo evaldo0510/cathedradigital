@@ -3,6 +3,7 @@ import {
   Home,
   Book,
   BookOpen, 
+  BookText,
   Cross, 
   Map, 
   Users, 
@@ -111,7 +112,9 @@ import {
   Target,
   Link,
   Video,
-  Tag
+  Tag,
+  Orbit,
+  Disc
 } from 'lucide-react';
 import { cn } from './lib/utils';
 
