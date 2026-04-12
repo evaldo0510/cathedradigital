@@ -71,6 +71,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       gradient: 'from-primary/5 to-transparent',
       iconColor: 'text-primary',
       borderColor: 'border-border hover:border-secondary/50',
+      suggested: spiritualProfile === 'ferido_em_busca' || spiritualProfile === 'sedento_de_sentido',
     },
     {
       label: t('liturgy'),
@@ -80,6 +81,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       gradient: 'from-primary/5 to-transparent',
       iconColor: 'text-primary',
       borderColor: 'border-border hover:border-secondary/50',
+      suggested: spiritualProfile === 'ansioso_buscador',
     },
     {
       label: t('journeys'),
@@ -89,6 +91,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       gradient: 'from-primary/5 to-transparent',
       iconColor: 'text-primary',
       borderColor: 'border-border hover:border-secondary/50',
+      suggested: spiritualProfile === 'firme_aprofundando',
     },
     {
       label: t('community'),
@@ -98,6 +101,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       gradient: 'from-primary/5 to-transparent',
       iconColor: 'text-primary',
       borderColor: 'border-border hover:border-secondary/50',
+      suggested: spiritualProfile === 'ardente_missionario',
     },
   ];
 
@@ -254,6 +258,32 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               <span className="text-xs font-black text-primary uppercase tracking-wider">{profile?.xp || 0} XP</span>
             </div>
           </div>
+        </div>
+      </FadeUp>
+
+      {/* ═══ MAIN DOORS 🚪 ═══ */}
+      <FadeUp delay={0.05}>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {MAIN_DOORS.map((door, idx) => (
+            <div
+              key={idx}
+              onClick={() => goTo(door.route)}
+              className={`relative overflow-hidden p-5 rounded-3xl border ${door.borderColor} bg-gradient-to-br ${door.gradient} cursor-pointer transition-all shadow-sm hover:shadow-md group`}
+            >
+              {door.suggested && (
+                <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground text-[8px] font-black uppercase tracking-tighter animate-pulse">
+                  <Icons.Star className="w-2 h-2 fill-current" /> Sugerido
+                </div>
+              )}
+              <div className={`w-10 h-10 rounded-xl bg-background flex items-center justify-center ${door.iconColor} group-hover:scale-110 transition-transform mb-3 shadow-sm`}>
+                <door.icon className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-xs font-bold text-foreground leading-tight">{door.label}</h3>
+                <p className="text-[10px] text-muted-foreground mt-1 line-clamp-1">{door.description}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </FadeUp>
 

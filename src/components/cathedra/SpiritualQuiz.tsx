@@ -134,6 +134,17 @@ const QUESTIONS: QuizQuestion[] = [
     ],
   },
   {
+    id: 'conhecimento',
+    intro: 'A fé e a razão caminham juntas.\nConhecer a verdade nos liberta.',
+    question: 'Como você avalia seu conhecimento sobre a Fé?',
+    options: [
+      { label: 'Estou começando agora', value: 'iniciante', icon: <BookOpen className="w-5 h-5" />, weight: { ferido_em_busca: 3, ansioso_buscador: 3, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Conheço o básico, mas quero mais', value: 'medio', icon: <Brain className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 1, sedento_de_sentido: 3, firme_aprofundando: 1, ardente_missionario: 0 } },
+      { label: 'Tenho uma boa base doutrinária', value: 'avancado', icon: <Shield className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 1, firme_aprofundando: 4, ardente_missionario: 1 } },
+      { label: 'Estudo profundamente há anos', value: 'mestre', icon: <Sparkles className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 1, ardente_missionario: 4 } },
+    ],
+  },
+  {
     id: 'oracao',
     intro: 'A oração é o termômetro da alma.\nEla revela onde você está — sem julgamento.',
     question: 'Qual a sua relação com a oração?',
@@ -145,6 +156,17 @@ const QUESTIONS: QuizQuestion[] = [
     ],
   },
   {
+    id: 'tempo',
+    intro: 'Deus habita no agora.\nO tempo que damos a Ele é sagrado.',
+    question: 'Quanto tempo você dedica a Deus por dia?',
+    options: [
+      { label: 'Menos de 15 minutos', value: 'pouco', icon: <Clock className="w-5 h-5" />, weight: { ferido_em_busca: 3, ansioso_buscador: 3, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Entre 15 e 30 minutos', value: 'medio', icon: <Clock className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 1, sedento_de_sentido: 3, firme_aprofundando: 2, ardente_missionario: 0 } },
+      { label: 'Mais de 30 minutos', value: 'muito', icon: <Clock className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 1, firme_aprofundando: 3, ardente_missionario: 2 } },
+      { label: 'Vivo em constante oração', value: 'contemplativo', icon: <Flame className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 1, ardente_missionario: 4 } },
+    ],
+  },
+  {
     id: 'sacramento',
     intro: 'Os sacramentos são o toque de Deus\nna concretude da sua vida.',
     question: 'Como você vive os Sacramentos?',
@@ -153,6 +175,17 @@ const QUESTIONS: QuizQuestion[] = [
       { label: 'Vou à Missa quando posso', value: 'eventual', icon: <Church className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 1, sedento_de_sentido: 3, firme_aprofundando: 1, ardente_missionario: 0 } },
       { label: 'Missa semanal e confissão regular', value: 'regular', icon: <Sparkles className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 3, ardente_missionario: 1 } },
       { label: 'Vida sacramental intensa e diária', value: 'intensa', icon: <Flame className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 1, ardente_missionario: 3 } },
+    ],
+  },
+  {
+    id: 'obstaculo',
+    intro: 'Identificar o obstáculo\né o primeiro passo para a superação.',
+    question: 'O que mais te impede de crescer hoje?',
+    options: [
+      { label: 'Cansaço ou esgotamento mental', value: 'cansaco', icon: <Wind className="w-5 h-5" />, weight: { ferido_em_busca: 4, ansioso_buscador: 1, sedento_de_sentido: 0, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Falta de tempo e correria', value: 'tempo', icon: <Clock className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 4, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Falta de foco ou preguiça', value: 'foco', icon: <Brain className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 2, firme_aprofundando: 3, ardente_missionario: 0 } },
+      { label: 'Sentir-se sozinho na caminhada', value: 'solidao', icon: <Users className="w-5 h-5" />, weight: { ferido_em_busca: 1, ansioso_buscador: 0, sedento_de_sentido: 2, firme_aprofundando: 0, ardente_missionario: 3 } },
     ],
   },
   {
@@ -214,6 +247,7 @@ const SpiritualQuiz: React.FC = () => {
   const [result, setResult] = useState<ProfileId | null>(null);
   const [done, setDone] = useState(false);
   const [existing, setExisting] = useState<ProfileId | null>(null);
+  const [existingData, setExistingData] = useState<any>(null);
 
   useEffect(() => {
     if (!user) return;
@@ -223,10 +257,12 @@ const SpiritualQuiz: React.FC = () => {
       .eq('user_id', user.id)
       .maybeSingle()
       .then(({ data }: any) => {
-        const sp = data?.diagnosis_result?.spiritual_profile;
+        const res = data?.diagnosis_result;
+        const sp = res?.spiritual_profile;
         if (sp && PROFILES[sp as ProfileId]) {
           setDone(true);
           setExisting(sp);
+          setExistingData(res);
         }
       });
   }, [user]);
@@ -238,26 +274,33 @@ const SpiritualQuiz: React.FC = () => {
     if (step < QUESTIONS.length - 1) {
       setTimeout(() => setStep(s => s + 1), 350);
     } else {
-      const profile = computeProfile(next);
-      setResult(profile);
+      const profileId = computeProfile(next);
+      setResult(profileId);
       setPhase('result');
       confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 }, colors: ['#FFD700', '#8B5CF6', '#F43F5E'] });
-      saveResult(profile, next);
+      saveResult(profileId, next);
     }
   }, [step, answers]);
 
-  const saveResult = async (profile: ProfileId, allAnswers: Record<string, string>) => {
+  const saveResult = async (profileId: ProfileId, allAnswers: Record<string, string>) => {
     if (!user) return;
     try {
-      const p = PROFILES[profile];
+      const p = PROFILES[profileId];
+      
+      const painQ = QUESTIONS.find(q => q.id === 'dor');
+      const painOpt = painQ?.options.find(o => o.value === allAnswers['dor']);
+      
+      const dirQ = QUESTIONS.find(q => q.id === 'desejo');
+      const dirOpt = dirQ?.options.find(o => o.value === allAnswers['desejo']);
+
       await (supabase as any)
         .from('user_sensitive_data')
         .update({
           diagnosis_result: {
             ...allAnswers,
-            spiritual_profile: profile,
-            pain: p.pain.id,
-            direction: p.direction.id,
+            spiritual_profile: profileId,
+            pain: painOpt?.label || p.pain.label,
+            direction: dirOpt?.label || p.direction.label,
             theme: p.theme,
             journeyName: p.journeyName,
           },
@@ -274,6 +317,9 @@ const SpiritualQuiz: React.FC = () => {
   // ── Compact result (already done) ──
   if (done && existing && PROFILES[existing]) {
     const p = PROFILES[existing];
+    const painLabel = existingData?.pain || p.pain.label;
+    const dirLabel = existingData?.direction || p.direction.label;
+    
     return (
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="rounded-3xl border border-border bg-card p-5 space-y-3">
         <div className="flex items-center justify-between">
@@ -284,7 +330,7 @@ const SpiritualQuiz: React.FC = () => {
           <span className="text-3xl">{p.emoji}</span>
           <div className="flex-1 min-w-0">
             <h3 className={`text-base font-bold ${p.color}`}>{p.title}</h3>
-            <p className="text-[11px] text-muted-foreground mt-0.5">💔 {p.pain.label} · 🔥 {p.direction.label}</p>
+            <p className="text-[11px] text-muted-foreground mt-0.5">💔 {painLabel} · 🔥 {dirLabel}</p>
           </div>
         </div>
         <div className="flex gap-2">
@@ -302,6 +348,14 @@ const SpiritualQuiz: React.FC = () => {
   // ── Result ──
   if (phase === 'result' && result) {
     const p = PROFILES[result];
+    const painQ = QUESTIONS.find(q => q.id === 'dor');
+    const painOpt = painQ?.options.find(o => o.value === answers['dor']);
+    const painLabel = painOpt?.label || p.pain.label;
+
+    const dirQ = QUESTIONS.find(q => q.id === 'desejo');
+    const dirOpt = dirQ?.options.find(o => o.value === answers['desejo']);
+    const dirLabel = dirOpt?.label || p.direction.label;
+
     return (
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
@@ -320,11 +374,11 @@ const SpiritualQuiz: React.FC = () => {
         <div className="grid grid-cols-2 gap-3">
           <div className="p-3 rounded-2xl bg-background/60 border border-border space-y-1 text-center">
             <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">💔 O que te trava</p>
-            <p className="text-sm font-bold text-foreground">{p.pain.label}</p>
+            <p className="text-sm font-bold text-foreground">{painLabel}</p>
           </div>
           <div className="p-3 rounded-2xl bg-background/60 border border-border space-y-1 text-center">
             <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">🔥 Seu caminho</p>
-            <p className="text-sm font-bold text-foreground">{p.direction.label}</p>
+            <p className="text-sm font-bold text-foreground">{dirLabel}</p>
           </div>
         </div>
 

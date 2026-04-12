@@ -94,6 +94,42 @@ const StudyMode: React.FC = () => {
   const location = useLocation();
   const { user } = useAuth();
   
+  const [diagnosis, setDiagnosis] = useState<any>(null);
+  useEffect(() => {
+    if (!user) return;
+    (supabase as any)
+      .from('user_sensitive_data')
+      .select('diagnosis_result')
+      .eq('user_id', user.id)
+      .maybeSingle()
+      .then(({ data }: any) => {
+        if (data?.diagnosis_result) setDiagnosis(data.diagnosis_result);
+      });
+  }, [user]);
+
+  const profile = diagnosis?.spiritual_profile;
+
+  const dynamicSuggestions = useMemo(() => {
+    const base = [...SUGGESTIONS];
+    if (profile === 'ferido_em_busca') {
+      base.unshift("Como encontrar paz em meio à ansiedade?");
+      base.unshift("O que a Bíblia diz sobre o descanso da alma?");
+    } else if (profile === 'ansioso_buscador') {
+      base.unshift("Como o perdão de Deus pode me libertar da culpa?");
+      base.unshift("Explique a misericórdia divina para quem falhou.");
+    } else if (profile === 'sedento_de_sentido') {
+      base.unshift("Qual o propósito da vida segundo Santo Agostinho?");
+      base.unshift("Como descobrir minha vocação e missão?");
+    } else if (profile === 'firme_aprofundando') {
+      base.unshift("Explique a oração contemplativa de Santa Teresa.");
+      base.unshift("Quais são as etapas da vida espiritual (vias)?");
+    } else if (profile === 'ardente_missionario') {
+      base.unshift("Como manter o fervor apostólico no deserto?");
+      base.unshift("Explique o papel do Espírito Santo na missão.");
+    }
+    return base.slice(0, 4);
+  }, [profile]);
+
   const initialMode = (location.state as any)?.mode || null;
   const [currentMode, setCurrentMode] = useState<string | null>(initialMode);
   const initialTopicProcessed = useRef(false);
@@ -385,9 +421,11 @@ const StudyMode: React.FC = () => {
           {messages.length === 0 && (
             <div className="flex flex-col items-center justify-center h-full space-y-8">
               <Icons.Feather className="w-16 h-16 text-primary/30" />
-              <p className="text-muted-foreground font-serif italic text-center">O que sua alma busca hoje?</p>
+              <p className="text-muted-foreground font-serif italic text-center">
+                {diagnosis?.spiritual_profile ? "O Logos preparou algumas reflexões para o seu momento:" : "O que sua alma busca hoje?"}
+              </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl w-full">
-                {SUGGESTIONS.map((s, i) => (
+                {dynamicSuggestions.map((s, i) => (
                   <button key={i} onClick={() => sendMessage(s)}
                     className="text-left p-4 rounded-2xl border border-border bg-card hover:bg-primary/5 hover:border-primary/30 transition-all text-sm text-foreground">
                     {s}
