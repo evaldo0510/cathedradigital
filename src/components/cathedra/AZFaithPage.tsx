@@ -13,6 +13,7 @@ import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
 import MagisteriumPopover from './MagisteriumPopover';
 import { parseBibleReferences } from '@/lib/bibleRefParser';
+import AZFaithQuiz from './AZFaithQuiz';
 
 interface FaithTerm {
   term: string;
