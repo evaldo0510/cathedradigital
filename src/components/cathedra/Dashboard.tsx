@@ -47,6 +47,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
 
   // Spiritual profile from quiz
   const [spiritualProfile, setSpiritualProfile] = useState<ProfileId | null>(null);
+  const [lastBible, setLastBible] = useState<{ book_abbr: string; chapter: number } | null>(null);
+
   useEffect(() => {
     if (!user) return;
     (supabase as any)
@@ -61,8 +63,6 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   }, [user]);
 
   const spProfile = spiritualProfile ? PROFILES[spiritualProfile] : null;
-
-  const [lastBible, setLastBible] = useState<{ book_abbr: string; chapter: number } | null>(null);
 
   const MAIN_DOORS = useMemo(() => [
     {
@@ -107,7 +107,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       borderColor: 'border-border hover:border-secondary/50',
       suggested: spiritualProfile === 'ardente_missionario',
     },
-  ];
+  ], [lastBible, t, spiritualProfile]);
 
   // Active journeys
   const [activeJourneys, setActiveJourneys] = useState<{ id: string; title: string; icon: string; totalSteps: number; completedSteps: number }[]>([]);
