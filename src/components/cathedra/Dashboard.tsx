@@ -9,9 +9,8 @@ import { Icons } from '@/constants';
 import { useLang } from '@/hooks/useLang';
 import RitualDoDia from './RitualDoDia';
 import NexusBubbles from './NexusBubbles';
-import SpiritualQuiz from './SpiritualQuiz';
+import SpiritualQuiz, { PROFILES, type ProfileId } from './SpiritualQuiz';
 import ProShowcase from './ProShowcase';
-
 interface DashboardProps {
   user: User | null;
 }
@@ -45,6 +44,23 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
 
   const streak = profile?.streak || 0;
   const dailyQuote = QUOTES[Math.floor((Date.now() / 86400000)) % QUOTES.length];
+
+  // Spiritual profile from quiz
+  const [spiritualProfile, setSpiritualProfile] = useState<ProfileId | null>(null);
+  useEffect(() => {
+    if (!user) return;
+    (supabase as any)
+      .from('user_sensitive_data')
+      .select('diagnosis_result')
+      .eq('user_id', user.id)
+      .maybeSingle()
+      .then(({ data }: any) => {
+        const sp = data?.diagnosis_result?.spiritual_profile;
+        if (sp && PROFILES[sp as ProfileId]) setSpiritualProfile(sp as ProfileId);
+      });
+  }, [user]);
+
+  const spProfile = spiritualProfile ? PROFILES[spiritualProfile] : null;
 
   const MAIN_DOORS = [
     {
@@ -220,6 +236,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             <h1 className="text-4xl md:text-6xl font-display font-black text-primary leading-tight tracking-tight">
               {profile?.name ? `${t('salve')}, ${profile.name.split(' ')[0]}!` : t('pax_et_bonum')}
             </h1>
+            {spProfile && (
+              <p className="text-sm text-muted-foreground italic font-serif mt-1">{spProfile.greeting}</p>
+            )}
           </div>
 
           {/* Streak & XP */}
@@ -314,7 +333,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         <NexusBubbles />
       </FadeUp>
 
-      {/* ═══ 5. LOGOS (IA) ═══ */}
+      {/* ═══ 5. LOGOS (IA) — personalizado pelo quiz ═══ */}
       <FadeUp delay={0.16}>
         <div
           onClick={() => goTo('/study')}
@@ -330,9 +349,11 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary">Colloquium · IA Teológica</p>
               </div>
               <h3 className="text-base font-bold text-foreground leading-tight group-hover:text-secondary transition-colors">
-                Pergunte qualquer coisa sobre a Fé
+                {spProfile ? `Reflita sobre: ${spProfile.theme}` : 'Pergunte qualquer coisa sobre a Fé'}
               </h3>
-              <p className="text-[11px] text-muted-foreground mt-1">Respostas fundamentadas no Magistério, Bíblia e Tradição</p>
+              <p className="text-[11px] text-muted-foreground mt-1">
+                {spProfile ? spProfile.direction.label : 'Respostas fundamentadas no Magistério, Bíblia e Tradição'}
+              </p>
             </div>
             <div className="w-10 h-10 rounded-full border border-secondary/20 flex items-center justify-center text-secondary group-hover:bg-secondary group-hover:text-white transition-all shrink-0">
               <Icons.ChevronRight className="w-5 h-5" />
