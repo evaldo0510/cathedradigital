@@ -31,7 +31,7 @@ const SLIDES = [
     icon: <Zap className="w-10 h-10" />,
     title: 'Estudo Inteligente',
     subtitle: 'IA a serviço da Tradição',
-    description: 'Use o Colloquium, nossa IA treinada no Magistério, para aprofundar seus estudos teológicos com respostas fundamentadas.',
+    description: 'Use o Logos IA, nossa inteligência contemplativa treinada no Magistério, para aprofundar seus estudos teológicos com respostas fundamentadas.',
     image: onboardingStudy,
   },
   {
