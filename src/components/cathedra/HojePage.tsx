@@ -15,6 +15,7 @@ import { SAINTS_DATA } from '@/data/saints';
 import SacredImage from './SacredImage';
 import AudioContentPlayer from './AudioContentPlayer';
 import { toast } from 'sonner';
+import SEOHead from '@/components/SEOHead';
 
 const LITURGICAL_QUOTES = [
   '"Sede misericordiosos como vosso Pai é misericordioso." — Lc 6,36',
@@ -78,11 +79,12 @@ const HojePage: React.FC = () => {
         name: officialSaint.name,
         title: 'Santo do Dia',
         bio: officialSaint.description,
+        fullBio: officialSaint.fullBio || officialSaint.description,
         image: officialSaint.image,
         url: officialSaint.url,
         category: 'confessor' as const,
-        works: [],
-        quotes: [],
+        works: (officialSaint.writings || []).map((w: string) => ({ title: w })),
+        quotes: officialSaint.writings || [],
         feastDay: '',
         feastMonth: 0,
         feastDayNum: 0,
@@ -382,6 +384,11 @@ const HojePage: React.FC = () => {
 
   return (
     <div className="desktop-layout pt-6 md:pt-12">
+      <SEOHead 
+        title="Hoje - Sua Jornada Espiritual" 
+        description="Acompanhe sua caminhada de fé diária com a liturgia, vida dos santos e direção espiritual personalizada."
+        path="/hoje"
+      />
       {/* ═══ MAIN COLUMN ═══ */}
       <div className="desktop-main space-y-12 max-w-2xl mx-auto lg:max-w-none lg:mx-0">
       {/* Logos IA Highlight - Centralized */}
@@ -406,19 +413,31 @@ const HojePage: React.FC = () => {
           </p>
         </div>
 
-        <Button 
-          size="lg" 
-          className="h-16 px-12 bg-primary hover:bg-primary/90 text-primary-foreground font-bold uppercase tracking-widest shadow-2xl shadow-primary/20 group rounded-full text-base transition-all hover:scale-105 active:scale-95 border-b-4 border-primary-foreground/20"
-          onClick={() => {
-            const journalElement = document.getElementById('spiritual-journal');
-            journalElement?.scrollIntoView({ behavior: 'smooth' });
-            const textarea = document.querySelector('textarea');
-            textarea?.focus();
-          }}
-        >
-          <Icons.PenLine className="w-5 h-5 mr-3 group-hover:rotate-12 transition-transform" />
-          Escreva sua reflexão
-        </Button>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Button 
+            size="lg" 
+            className="h-16 px-12 bg-primary hover:bg-primary/90 text-primary-foreground font-bold uppercase tracking-widest shadow-2xl shadow-primary/20 group rounded-full text-base transition-all hover:scale-105 active:scale-95 border-b-4 border-primary-foreground/20"
+            onClick={() => {
+              const journalElement = document.getElementById('spiritual-journal');
+              journalElement?.scrollIntoView({ behavior: 'smooth' });
+              const textarea = document.querySelector('textarea');
+              textarea?.focus();
+            }}
+          >
+            <Icons.PenLine className="w-5 h-5 mr-3 group-hover:rotate-12 transition-transform" />
+            Escreva sua reflexão
+          </Button>
+
+          <Button 
+            size="lg" 
+            variant="outline"
+            className="h-16 px-12 rounded-full text-base font-bold uppercase tracking-widest border-2 hover:bg-secondary/50 transition-all"
+            onClick={() => navigate(AppRoute.CERTAMEN)}
+          >
+            <Icons.Trophy className="w-5 h-5 mr-3" />
+            Quiz da Fé
+          </Button>
+        </div>
       </motion.div>
 
       {/* Main Content Sections */}

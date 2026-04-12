@@ -24,7 +24,7 @@ serve(async (req) => {
 
     const html = await response.text();
     
-    // String split approach is often more reliable than regex for complex HTML
+    // Extract section containing the saint
     let sectionHtml = "";
     if (html.includes('section--isStatic')) {
       sectionHtml = html.split('section--isStatic')[1].split('</section>')[0];
@@ -57,17 +57,65 @@ serve(async (req) => {
       imageUrl = `https://www.vaticannews.va${imageUrl}`;
     }
 
+    // Try to get a longer description or full story
     let description = "";
+    let fullHistory = "";
+    let writings = [];
+
+    // Basic description
     if (sectionHtml.includes('<p>')) {
       description = sectionHtml.split('<p>')[1].split('</p>')[0].replace(/<[^>]*>/g, '').trim();
+    }
+
+    // Try to find the full story link
+    let detailLink = "";
+    if (sectionHtml.includes('href="')) {
+      const links = sectionHtml.split('href="');
+      for (let i = 1; i < links.length; i++) {
+        const link = links[i].split('"')[0];
+        if (link.includes('/santo-do-dia/santos/') && !link.includes('html')) {
+          detailLink = `https://www.vaticannews.va${link}`;
+          break;
+        }
+      }
+    }
+
+    // If we have a detail link, try to fetch more data
+    if (detailLink) {
+      try {
+        const detailRes = await fetch(detailLink, {
+          headers: {
+            'User-Agent': 'Mozilla/5.0'
+          }
+        });
+        if (detailRes.ok) {
+          const detailHtml = await detailRes.text();
+          
+          // Extract history (often in a specific div)
+          if (detailHtml.includes('section--content')) {
+            const content = detailHtml.split('section--content')[1].split('</section>')[0];
+            fullHistory = content.replace(/<p>/g, '\n\n').replace(/<[^>]*>/g, '').trim();
+            
+            // Try to find writings/quotes
+            if (detailHtml.includes('citazione')) {
+              const quote = detailHtml.split('citazione')[1].split('</span>')[0].replace(/<[^>]*>/g, '').trim();
+              if (quote) writings.push(quote);
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching detail link:', err);
+      }
     }
 
     return new Response(
       JSON.stringify({
         name,
         image: imageUrl,
-        description,
-        url: vaticanUrl,
+        description: description || fullHistory.substring(0, 200) + "...",
+        fullBio: fullHistory,
+        writings: writings,
+        url: detailLink || vaticanUrl,
         source: "Vatican News"
       }),
       {

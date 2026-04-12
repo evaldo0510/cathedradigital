@@ -1,5 +1,7 @@
 import React, { useState, useMemo } from 'react';
+import { motion } from 'framer-motion';
 import { Icons } from '../../constants';
+import { Share2, Trophy, BookOpen, Heart, RotateCcw } from 'lucide-react';
 
 interface QuizQuestion {
   question: string;
@@ -83,13 +85,11 @@ const Certamen: React.FC = () => {
 
   const filtered = useMemo(() => {
     const pool = category === 'Todos' ? [...QUIZ_BANK] : QUIZ_BANK.filter(q => q.category === category);
-    // Shuffle with a stable seed per category selection
     for (let i = pool.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [pool[i], pool[j]] = [pool[j], pool[i]];
     }
     return pool;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category, showResult]);
 
   const question = filtered[currentIndex];
@@ -118,22 +118,45 @@ const Certamen: React.FC = () => {
     setShowResult(false);
   };
 
+  const shareResult = () => {
+    const pct = Math.round((score / (answered || 1)) * 100);
+    const date = new Date().toLocaleDateString('pt-BR');
+    const text = `Meu resultado no Certamen Fidei (Quiz da Fé):\nScore: ${score}/${answered} (${pct}%)\nData: ${date}\n\n"Pois quem busca, encontra." (Mt 7,8)`;
+    if (navigator.share) {
+      navigator.share({ title: 'Meu Resultado no Quiz da Fé', text });
+    } else {
+      navigator.clipboard.writeText(text);
+      alert('Resultado copiado para a área de transferência!');
+    }
+  };
+
   if (showResult) {
-    const pct = Math.round((score / answered) * 100);
+    const pct = Math.round((score / (answered || 1)) * 100);
     return (
-      <div className="max-w-2xl mx-auto space-y-8">
-        <div className="bg-card border border-border rounded-3xl p-10 text-center space-y-6">
+      <div className="max-w-2xl mx-auto space-y-8 p-4">
+        <div className="bg-card border border-border rounded-3xl p-10 text-center space-y-6 shadow-xl">
           <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto text-primary">
-            {pct >= 80 ? <Icons.Trophy className="w-10 h-10" /> : pct >= 50 ? <Icons.BookOpen className="w-10 h-10" /> : <Icons.Heart className="w-10 h-10" />}
+            {pct >= 80 ? <Trophy className="w-10 h-10" /> : pct >= 50 ? <BookOpen className="w-10 h-10" /> : <Heart className="w-10 h-10" />}
           </div>
-          <h2 className="text-3xl font-serif font-bold text-foreground">Resultado</h2>
+          <h2 className="text-3xl font-serif font-bold text-foreground">Resultado do Aprendizado</h2>
           <p className="text-5xl font-black text-primary">{score}/{answered}</p>
-          <p className="text-lg text-muted-foreground font-serif italic">
-            {pct >= 80 ? 'Excelente! Conhecimento sólido da fé!' : pct >= 50 ? 'Bom progresso. Continue estudando!' : 'Continue sua formação. A fé se aprofunda com o estudo.'}
-          </p>
-          <button onClick={restart} className="px-8 py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-primary hover:text-primary-foreground transition-all">
-            Jogar Novamente
-          </button>
+          <div className="space-y-2">
+            <p className="text-lg text-muted-foreground font-serif italic">
+              {pct >= 80 ? 'Excelente! Conhecimento sólido da fé!' : pct >= 50 ? 'Bom progresso. Continue estudando!' : 'Continue sua formação. A fé se aprofunda com o estudo.'}
+            </p>
+            <p className="text-xs text-muted-foreground">Avaliação realizada em {new Date().toLocaleDateString('pt-BR')}</p>
+          </div>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+            <button onClick={restart} className="px-8 py-4 bg-secondary text-secondary-foreground rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-secondary/80 transition-all flex items-center justify-center gap-2">
+              <RotateCcw className="w-4 h-4" />
+              Tentar Novamente
+            </button>
+            <button onClick={shareResult} className="px-8 py-4 bg-primary text-primary-foreground rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20">
+              <Share2 className="w-4 h-4" />
+              Compartilhar Resultado
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -142,66 +165,78 @@ const Certamen: React.FC = () => {
   if (!question) return null;
 
   return (
-    <div className="max-w-3xl mx-auto space-y-8">
+    <div className="max-w-3xl mx-auto space-y-8 p-4">
       <div className="text-center space-y-3">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
           <Icons.Star className="w-4 h-4 text-primary" />
           <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Certamen Fidei</span>
         </div>
-        <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Certamen</h1>
-        <p className="text-muted-foreground font-serif italic">Teste seus conhecimentos teológicos.</p>
+        <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Quiz da Fé</h1>
+        <p className="text-muted-foreground font-serif italic">Teste seus conhecimentos teológicos e compartilhe com sua comunidade.</p>
       </div>
 
-      {/* Category filter */}
       <div className="flex flex-wrap gap-2 justify-center">
         {CATEGORIES.map(cat => (
           <button key={cat} onClick={() => { setCategory(cat); restart(); }}
-            className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${cat === category ? 'bg-foreground text-background' : 'bg-card border border-border text-foreground hover:bg-primary/5'}`}>
+            className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${cat === category ? 'bg-foreground text-background shadow-md scale-105' : 'bg-card border border-border text-foreground hover:bg-primary/5'}`}>
             {cat}
           </button>
         ))}
       </div>
 
-      {/* Score bar */}
-      <div className="flex items-center justify-between text-sm">
+      <div className="flex items-center justify-between text-sm px-2">
         <span className="text-muted-foreground font-bold">Pergunta {currentIndex + 1}/{filtered.length}</span>
-        <span className="text-primary font-black">{score} pontos</span>
+        <div className="h-2 flex-1 mx-4 bg-muted rounded-full overflow-hidden">
+          <motion.div 
+            initial={{ width: 0 }}
+            animate={{ width: `${((currentIndex + 1) / filtered.length) * 100}%` }}
+            className="h-full bg-primary"
+          />
+        </div>
+        <span className="text-primary font-black">{score} acertos</span>
       </div>
 
-      {/* Question card */}
-      <div className="bg-card border border-border rounded-3xl p-8 space-y-6">
-        <span className="text-[10px] font-black uppercase tracking-widest text-primary">{question.category}</span>
-        <h2 className="text-xl md:text-2xl font-serif font-bold text-foreground">{question.question}</h2>
+      <div className="bg-card border border-border rounded-3xl p-8 space-y-6 shadow-sm">
+        <span className="text-[10px] font-black uppercase tracking-widest text-primary bg-primary/10 px-2 py-1 rounded">{question.category}</span>
+        <h2 className="text-xl md:text-2xl font-serif font-bold text-foreground leading-tight">{question.question}</h2>
 
         <div className="space-y-3">
           {question.options.map((opt, idx) => {
             let cls = 'bg-muted border-border hover:border-primary/50 hover:bg-primary/5';
             if (selected !== null) {
-              if (idx === question.correct) cls = 'bg-primary/10 border-primary/50 text-primary font-bold';
-              else if (idx === selected) cls = 'bg-secondary/10 border-secondary/50 text-secondary font-bold';
+              if (idx === question.correct) cls = 'bg-emerald-500/10 border-emerald-500/50 text-emerald-700 font-bold';
+              else if (idx === selected) cls = 'bg-destructive/10 border-destructive/50 text-destructive font-bold';
               else cls = 'opacity-50 bg-muted border-border';
             }
             return (
               <button key={idx} onClick={() => handleAnswer(idx)}
-                className={`w-full text-left p-4 rounded-xl border font-bold text-sm transition-all ${cls}`}>
-                <span className="mr-3 text-muted-foreground">{String.fromCharCode(65 + idx)}.</span>
-                {opt}
+                className={`w-full text-left p-4 rounded-xl border font-bold text-sm transition-all flex items-center gap-4 ${cls}`}>
+                <span className="w-8 h-8 rounded-full bg-background flex items-center justify-center text-muted-foreground text-xs">{String.fromCharCode(65 + idx)}</span>
+                <span className="flex-1">{opt}</span>
               </button>
             );
           })}
         </div>
 
         {selected !== null && (
-          <div className="bg-muted rounded-xl p-5 space-y-2">
-            <p className="text-sm font-bold text-foreground">{selected === question.correct ? '✅ Correto!' : '❌ Incorreto'}</p>
-            <p className="text-sm text-muted-foreground font-serif leading-relaxed">{question.explanation}</p>
-          </div>
-        )}
-
-        {selected !== null && (
-          <button onClick={nextQuestion} className="w-full py-3 bg-foreground text-background rounded-xl font-bold text-sm hover:bg-primary hover:text-primary-foreground transition-all">
-            {currentIndex < filtered.length - 1 ? 'Próxima Pergunta →' : 'Ver Resultado'}
-          </button>
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-muted rounded-2xl p-6 space-y-3 border border-border"
+          >
+            <p className="text-sm font-bold text-foreground flex items-center gap-2">
+              {selected === question.correct ? '✅ Resposta Correta!' : '❌ Ops, não foi dessa vez.'}
+            </p>
+            <p className="text-sm text-muted-foreground font-serif leading-relaxed italic">{question.explanation}</p>
+            
+            <button 
+              onClick={nextQuestion}
+              className="w-full mt-4 py-4 bg-primary text-primary-foreground rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
+            >
+              {currentIndex >= filtered.length - 1 ? 'Ver Resultado Final' : 'Próxima Pergunta'}
+              <Icons.ArrowRight className="w-4 h-4" />
+            </button>
+          </motion.div>
         )}
       </div>
     </div>
