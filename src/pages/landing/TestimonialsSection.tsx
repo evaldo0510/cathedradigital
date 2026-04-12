@@ -6,7 +6,7 @@ import { useState, useEffect, useCallback } from "react";
 
 const testimonials = [
   { name: "Maria Fernanda", role: "Catequista", text: "O Cathedra transformou minha preparação para as aulas de catequese. Ter tudo num só lugar é uma bênção.", avatar: "MF", stars: 5 },
-  { name: "Pe. Ricardo", role: "Pároco", text: "Recomendo aos meus paroquianos. A ferramenta de Lectio Divina e o Colloquium são excepcionais.", avatar: "PR", stars: 5 },
+  { name: "Pe. Ricardo", role: "Pároco", text: "Recomendo aos meus paroquianos. A ferramenta de Lectio Divina e o Logos IA são excepcionais.", avatar: "PR", stars: 5 },
   { name: "João Paulo", role: "Seminarista", text: "Uso diariamente para estudar os documentos do Magistério. A busca inteligente economiza muito tempo.", avatar: "JP", stars: 5 },
   { name: "Ana Clara", role: "Professora de Teologia", text: "A profundidade do conteúdo é impressionante. É como ter uma biblioteca patrística inteira no bolso.", avatar: "AC", stars: 5 },
   { name: "Diác. Marcos", role: "Diácono Permanente", text: "O Breviário e o Missal integrados facilitaram muito minha preparação para as celebrações litúrgicas.", avatar: "DM", stars: 5 },
