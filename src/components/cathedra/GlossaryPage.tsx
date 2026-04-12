@@ -116,7 +116,19 @@ const GlossaryPage: React.FC = () => {
     fetchTerms();
   }, []);
 
+  useEffect(() => {
+    if (expandedId) {
+      const el = document.getElementById(`term-${expandedId}`);
+      if (el) {
+        setTimeout(() => {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+      }
+    }
+  }, [expandedId]);
+
   const categories = useMemo(() => {
+
     const cats = new Set(terms.map(t => t.category).filter(Boolean));
     return ['Todos', ...Array.from(cats)];
   }, [terms]);
