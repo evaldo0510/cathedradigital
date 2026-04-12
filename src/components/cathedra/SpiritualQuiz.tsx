@@ -317,6 +317,9 @@ const SpiritualQuiz: React.FC = () => {
   // ── Compact result (already done) ──
   if (done && existing && PROFILES[existing]) {
     const p = PROFILES[existing];
+    const painLabel = existingData?.pain || p.pain.label;
+    const dirLabel = existingData?.direction || p.direction.label;
+    
     return (
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="rounded-3xl border border-border bg-card p-5 space-y-3">
         <div className="flex items-center justify-between">
@@ -327,7 +330,7 @@ const SpiritualQuiz: React.FC = () => {
           <span className="text-3xl">{p.emoji}</span>
           <div className="flex-1 min-w-0">
             <h3 className={`text-base font-bold ${p.color}`}>{p.title}</h3>
-            <p className="text-[11px] text-muted-foreground mt-0.5">💔 {p.pain.label} · 🔥 {p.direction.label}</p>
+            <p className="text-[11px] text-muted-foreground mt-0.5">💔 {painLabel} · 🔥 {dirLabel}</p>
           </div>
         </div>
         <div className="flex gap-2">
