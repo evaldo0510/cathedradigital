@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { motion } from 'framer-motion';
 import { Icons } from '../../constants';
 import { Share2, Trophy, BookOpen, Heart, RotateCcw } from 'lucide-react';
 
