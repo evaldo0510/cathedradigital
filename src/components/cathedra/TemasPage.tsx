@@ -25,6 +25,7 @@ interface ThemeContent {
 }
 
 const TemasPage = () => {
+  const [searchParams] = useSearchParams();
   const [selectedTheme, setSelectedTheme] = useState<Theme | null>(null);
 
   const { data: themes, isLoading: loadingThemes } = useQuery({
