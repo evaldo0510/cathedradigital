@@ -35,6 +35,7 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
       items: [
         { label: t('home'), path: AppRoute.HOJE, icon: <Icons.Home className="w-5 h-5" /> },
         { label: t('journeys'), path: AppRoute.JORNADAS, icon: <Icons.Journeys className="w-5 h-5" /> },
+        { label: 'Quiz da Fé', path: AppRoute.CERTAMEN, icon: <Icons.Trophy className="w-5 h-5" />, pro: false },
         { label: t('themes'), path: AppRoute.TEMAS, icon: <Icons.Themes className="w-5 h-5" /> },
         { label: t('az_faith') || 'A–Z da Fé', path: AppRoute.AZ_FAITH, icon: <Icons.AZ className="w-5 h-5" /> },
         { label: t('explore'), path: AppRoute.BIBLIOTECA, icon: <Icons.Search className="w-5 h-5" /> },
@@ -81,7 +82,7 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
           </div>
         </div>
 
-        <nav className="flex-1 space-y-6 overflow-y-auto pb-4">
+        <nav className="flex-1 space-y-6 overflow-y-auto pb-4 no-scrollbar">
           {sections.map((section) => (section.items.length > 0 && (
             <div key={section.label}>
               <h3 className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-4 px-4">{section.label}</h3>
