@@ -120,8 +120,8 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = ({
             <p className="text-xs text-muted-foreground italic">Texto não disponível.</p>
           )}
         </div>
-      </HoverCardContent>
-    </HoverCard>
+      </PopoverContent>
+    </Popover>
   );
 };
 
