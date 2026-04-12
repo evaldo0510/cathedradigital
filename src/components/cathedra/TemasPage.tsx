@@ -40,6 +40,15 @@ const TemasPage = () => {
     },
   });
 
+  // Auto-select theme from URL param ?tema=slug
+  useEffect(() => {
+    const temaSlug = searchParams.get('tema');
+    if (temaSlug && themes && !selectedTheme) {
+      const match = themes.find(t => t.slug === temaSlug);
+      if (match) setSelectedTheme(match);
+    }
+  }, [themes, searchParams, selectedTheme]);
+
   const { data: contents, isLoading: loadingContents } = useQuery({
     queryKey: ['theme-contents', selectedTheme?.id],
     queryFn: async () => {
