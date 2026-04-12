@@ -159,8 +159,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         .limit(1)
         .maybeSingle();
 
-      if (lastBibleData) setLastBible(lastBibleData as any);
-      const lastBible = lastBibleData as any;
+      if (lastBibleData) {
+        setLastBible(lastBibleData as any);
+      }
 
       // Get last Catechism paragraph read
       const { data: lastCatechism } = await supabase
