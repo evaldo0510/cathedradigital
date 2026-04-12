@@ -419,6 +419,7 @@ const AZFaithPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLetter, setSelectedLetter] = useState<string | null>('A');
   const [selectedTerm, setSelectedTerm] = useState<FaithTerm | null>(null);
+  const [quizMode, setQuizMode] = useState(false);
 
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
