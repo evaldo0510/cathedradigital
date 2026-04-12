@@ -15,8 +15,10 @@ interface CrossReferencePanelProps {
   type: 'bible' | 'catechism';
   cicParagraphs?: number[];
   bibleRefs?: BibleRef[];
+  documents?: { id: string; name: string; label: string }[];
   onNavigateToCIC?: (paragraph: number) => void;
   onNavigateToBible?: (abbr: string, chapter: number) => void;
+  onNavigateToDoc?: (docId: string) => void;
 }
 
 const CrossReferencePanel: React.FC<CrossReferencePanelProps> = ({
