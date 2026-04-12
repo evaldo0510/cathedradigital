@@ -130,9 +130,9 @@ const HeroContent = ({ heroOpacity, heroScale, heroY, onStart, onAbout }: HeroCo
       transition={{ duration: 0.6, delay: 2.2 }}
       className="max-w-2xl mx-auto text-xl md:text-2xl text-muted-foreground font-serif italic leading-relaxed"
     >
-      "A oração é o respirar da alma." <br />
+      "A oração é o respirar da alma e o silêncio é a linguagem de Deus." <br />
       <span className="text-base md:text-lg not-italic opacity-80 block mt-2">
-        Compartilhe suas reflexões com o Logos e receba uma orientação espiritual personalizada baseada na Sagrada Tradição.
+        Compartilhe suas reflexões com o Logos e receba orientações espirituais personalizadas fundamentadas na Sagrada Tradição.
       </span>
     </motion.p>
 
@@ -151,7 +151,7 @@ const HeroContent = ({ heroOpacity, heroScale, heroY, onStart, onAbout }: HeroCo
             onClick={onStart}
           >
             <span className="relative z-10 flex items-center gap-3">
-              Escreva sua reflexão <Icons.PenTool className="w-6 h-6 group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" />
+              Iniciar Diálogo Espiritual <Icons.PenTool className="w-6 h-6 group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" />
             </span>
             <motion.div className="absolute inset-0 bg-gradient-to-r from-primary via-secondary/20 to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           </Button>
