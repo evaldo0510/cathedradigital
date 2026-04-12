@@ -601,7 +601,7 @@ const AZFaithPage: React.FC = () => {
           </div>
 
           {/* Detail Panel */}
-          <div className="md:col-span-8">
+          <div className="md:col-span-8" ref={detailRef}>
             <AnimatePresence mode="wait">
               {!selectedTerm ? (
                 <motion.div
