@@ -75,6 +75,22 @@
     touch-action: manipulation;
   }
 
+  /* Refine all Lucide icons for a more professional, premium appearance */
+  svg.lucide {
+    stroke-width: 1.75; /* Slightly thinner than default 2 for a modern, elegant look */
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.2s ease, stroke-width 0.2s ease;
+  }
+
+  /* Professional hover state for icons within interactive elements */
+  button:hover svg.lucide, 
+  a:hover svg.lucide,
+  .hover-icon-effect:hover svg.lucide {
+    transform: translateY(-1px);
+    stroke-width: 2; /* Slightly thicker on hover to feel more "active" */
+  }
+
   html, body {
     @apply h-full overflow-x-hidden;
     font-size: 14px;
