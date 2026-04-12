@@ -662,7 +662,7 @@ const AZFaithPage: React.FC = () => {
                           if (bibleSeg && bibleSeg.abbr) {
                             return (
                               <BibleVersePopover
-                                key={idx}
+                                 key={`${v}-${idx}`}
                                 abbr={bibleSeg.abbr}
                                 chapter={bibleSeg.chapter!}
                                 verse={bibleSeg.verse}
@@ -694,7 +694,7 @@ const AZFaithPage: React.FC = () => {
                           if (paraMatch) {
                             return (
                               <CatechismPopover
-                                key={idx}
+                                key={`${r}-${idx}`}
                                 paragraph={parseInt(paraMatch[1])}
                                 onNavigate={(p) => navigate(`${AppRoute.CATECHISM}?p=${p}`)}
                               />
@@ -722,7 +722,7 @@ const AZFaithPage: React.FC = () => {
                           const docName = m.replace(/\s*\(.*?\)\s*$/, '').replace(/\s*n\.\s*\d.*$/, '').trim();
                           return (
                             <MagisteriumPopover
-                              key={idx}
+                              key={`${m}-${idx}`}
                               documentName={docName}
                               label={m}
                               onNavigate={(search) => navigate(`${AppRoute.MAGISTERIUM}?search=${encodeURIComponent(search)}`)}
