@@ -138,7 +138,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           {user && user.role === 'admin' && (
             <button 
               onClick={() => navigate(AppRoute.ADMIN)} 
-              className="hidden sm:flex px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-primary hover:bg-primary hover:text-white transition-all items-center gap-2 bg-secondary/20 rounded-xl border border-secondary/30 shadow-sm"
+              className="hidden sm:flex lg:hidden px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-primary hover:bg-primary hover:text-white transition-all items-center gap-2 bg-secondary/20 rounded-xl border border-secondary/30 shadow-sm"
             >
               <Icons.Star className="w-4 h-4" />
               <span>{t('admin')}</span>
