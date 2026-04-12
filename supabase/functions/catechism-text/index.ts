@@ -215,6 +215,7 @@ async function generateWithAI(paragraph: number, supabaseUrl: string, serviceKey
           role: 'user',
           content: `Reproduza fielmente o texto do parágrafo §${paragraph} do Catecismo da Igreja Católica em português. INCLUA todas as referências bíblicas e notas de rodapé originais do parágrafo entre parênteses, no formato padrão (ex: Jo 6,51; Mt 28,19-20; Gl 4,4-5; Sl 105,3; cf. Hb 9,26). Não omita nenhuma citação bíblica. Não acrescente comentários ou explicações próprias — apenas o texto oficial com suas referências.`
         }],
+        system_prompt: "Você é um transcritor fiel do Catecismo da Igreja Católica. Sua única tarefa é fornecer o texto exato do parágrafo solicitado, mantendo as referências originais e sem adicionar qualquer comentário, saudação ou explicação.",
         stream: true,
         model: 'google/gemini-2.5-flash'
       }),
