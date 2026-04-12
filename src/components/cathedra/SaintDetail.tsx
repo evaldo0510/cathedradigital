@@ -327,6 +327,41 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           </div>
         </div>
 
+        {/* Writings Section */}
+        {saint.works && saint.works.length > 0 && (
+          <section className="space-y-4">
+            <div className="flex items-center gap-2 text-primary">
+              <BookOpen className="w-4 h-4" />
+              <h3 className="text-[11px] font-black uppercase tracking-[0.2em]">Escritos e Obras</h3>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {saint.works.map((work, idx) => (
+                <div key={idx} className="p-4 bg-card border border-border rounded-2xl flex items-center justify-between group hover:border-primary/30 transition-all">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                      <Icons.Book className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-foreground">{work.title}</p>
+                      {work.year && <p className="text-[10px] text-muted-foreground uppercase">{work.year}</p>}
+                    </div>
+                  </div>
+                  {work.url && (
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => setViewingDoc({ url: work.url!, title: work.title })}
+                      className="text-primary hover:bg-primary/10"
+                    >
+                      Ler <Icons.ArrowRight className="w-3 h-3 ml-1" />
+                    </Button>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
         {/* Suggested Journey */}
         <motion.div 
           initial={{ opacity: 0, y: 10 }}
