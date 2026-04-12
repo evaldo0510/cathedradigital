@@ -247,6 +247,17 @@ export const getBibleDocs = (bookAbbr: string, chapter: number) => {
   return BIBLE_TO_DOCS[`${bookAbbr}:${chapter}`] || [];
 };
 
+// Catechism → Documents (paragraph → Documents)
+export const CIC_TO_DOCS: Record<number, { id: string; name: string; label: string }[]> = {
+  1324: [{ id: 'sc', name: 'Sacrosanctum Concilium', label: 'Sacrosanctum Concilium' }, { id: 'lg', name: 'Lumen Gentium', label: 'Lumen Gentium' }],
+  2052: [{ id: 'vs', name: 'Veritatis Splendor', label: 'Veritatis Splendor' }],
+  1691: [{ id: 'ge', name: 'Gaudete et Exsultate', label: 'Gaudete et Exsultate' }],
+};
+
+export const getCatechismDocs = (paragraph: number) => {
+  return CIC_TO_DOCS[paragraph] || [];
+};
+
 // Catechism → Bible (CIC paragraph → Bible references)
 export const CIC_TO_BIBLE: Record<number, { abbr: string; chapter: number; verse?: number; label: string }[]> = {
   1: [{ abbr: 'Ef', chapter: 1, label: 'Ef 1' }],
