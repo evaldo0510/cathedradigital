@@ -348,6 +348,14 @@ const SpiritualQuiz: React.FC = () => {
   // ── Result ──
   if (phase === 'result' && result) {
     const p = PROFILES[result];
+    const painQ = QUESTIONS.find(q => q.id === 'dor');
+    const painOpt = painQ?.options.find(o => o.value === answers['dor']);
+    const painLabel = painOpt?.label || p.pain.label;
+
+    const dirQ = QUESTIONS.find(q => q.id === 'desejo');
+    const dirOpt = dirQ?.options.find(o => o.value === answers['desejo']);
+    const dirLabel = dirOpt?.label || p.direction.label;
+
     return (
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
@@ -366,11 +374,11 @@ const SpiritualQuiz: React.FC = () => {
         <div className="grid grid-cols-2 gap-3">
           <div className="p-3 rounded-2xl bg-background/60 border border-border space-y-1 text-center">
             <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">💔 O que te trava</p>
-            <p className="text-sm font-bold text-foreground">{p.pain.label}</p>
+            <p className="text-sm font-bold text-foreground">{painLabel}</p>
           </div>
           <div className="p-3 rounded-2xl bg-background/60 border border-border space-y-1 text-center">
             <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">🔥 Seu caminho</p>
-            <p className="text-sm font-bold text-foreground">{p.direction.label}</p>
+            <p className="text-sm font-bold text-foreground">{dirLabel}</p>
           </div>
         </div>
 
