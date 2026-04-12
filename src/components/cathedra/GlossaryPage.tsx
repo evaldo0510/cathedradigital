@@ -116,7 +116,19 @@ const GlossaryPage: React.FC = () => {
     fetchTerms();
   }, []);
 
+  useEffect(() => {
+    if (expandedId) {
+      const el = document.getElementById(`term-${expandedId}`);
+      if (el) {
+        setTimeout(() => {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+      }
+    }
+  }, [expandedId]);
+
   const categories = useMemo(() => {
+
     const cats = new Set(terms.map(t => t.category).filter(Boolean));
     return ['Todos', ...Array.from(cats)];
   }, [terms]);
@@ -208,7 +220,7 @@ const GlossaryPage: React.FC = () => {
             const isExpanded = expandedId === term.id;
 
             return (
-              <div key={term.id}
+              <div key={term.id} id={`term-${term.id}`}
                 className={`bg-card border rounded-2xl overflow-hidden transition-all ${
                   isExpanded ? 'border-primary/40 shadow-lg' : 'border-border hover:border-primary/30'
                 }`}>

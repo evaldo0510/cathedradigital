@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
 import { AppRoute } from '@/types';
@@ -421,7 +421,18 @@ const AZFaithPage: React.FC = () => {
   const [selectedTerm, setSelectedTerm] = useState<FaithTerm | null>(null);
   const [quizMode, setQuizMode] = useState(false);
 
+  const detailRef = useRef<HTMLDivElement>(null);
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  
+  useEffect(() => {
+    if (selectedTerm && window.innerWidth < 768) {
+      setTimeout(() => {
+        detailRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  }, [selectedTerm]);
+
+
 
   const letterStatus = useMemo(() => {
     const status: Record<string, boolean> = {};
@@ -437,8 +448,14 @@ const AZFaithPage: React.FC = () => {
     if (q) {
       setSearchQuery(q);
       setSelectedLetter(null);
+      
+      const exactMatch = FAITH_TERMS.find(t => t.term.toLowerCase() === q.toLowerCase());
+      if (exactMatch) {
+        setSelectedTerm(exactMatch);
+      }
     }
   }, [location.search]);
+
 
   const filteredTerms = useMemo(() => {
     let result = FAITH_TERMS;
@@ -590,7 +607,7 @@ const AZFaithPage: React.FC = () => {
           </div>
 
           {/* Detail Panel */}
-          <div className="md:col-span-8">
+          <div className="md:col-span-8" ref={detailRef}>
             <AnimatePresence mode="wait">
               {!selectedTerm ? (
                 <motion.div
