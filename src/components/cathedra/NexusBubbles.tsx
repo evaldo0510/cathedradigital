@@ -19,8 +19,10 @@ interface TagContent {
   id: string;
   type: string;
   content_text: string;
-  reference_id: string;
+  title: string;
+  metadata: any;
 }
+
 
 const TagBubble: React.FC<{ tag: Tag; index: number }> = ({ tag, index }) => {
   const navigate = useNavigate();
