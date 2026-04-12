@@ -85,7 +85,7 @@ const TemasPage = () => {
 
       const results: ThemeContent[] = (themeContents || []).map(c => ({
         id: c.id,
-        content_type: c.content_type,
+        content_type: c.content_type as any,
         reference: c.reference,
         title: c.title,
         text_content: c.text_content
