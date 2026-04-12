@@ -72,7 +72,7 @@ const MODULES = [
   },
   {
     title: 'Nexus Theologicus',
-    icon: <Icons.Hash className="w-8 h-8" />,
+    icon: <Icons.Tag className="w-8 h-8" />,
     description: 'Navegação por temas e conceitos sagrados.',
     details: [
       'Mapa de "bolhas" que conectam conceitos fundamentais.',
