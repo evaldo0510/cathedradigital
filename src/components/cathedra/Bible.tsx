@@ -325,6 +325,8 @@ const Bible: React.FC = () => {
 
   const handleNavigateToCIC = useCallback((paragraph: number) => {
     navigate(`/catechism?p=${paragraph}`);
+  }, [navigate]);
+
   const handleNavigateToDoc = useCallback((docId: string) => {
     navigate(`/magisterium?doc=${docId}`);
   }, [navigate]);
