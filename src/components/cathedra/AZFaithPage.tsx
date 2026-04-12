@@ -694,35 +694,13 @@ const AZFaithPage: React.FC = () => {
                           if (paraMatch) {
                             return (
                               <CatechismPopover
-                                key={idx}
+                                key={`${r}-${idx}`}
                                 paragraph={parseInt(paraMatch[1])}
                                 onNavigate={(p) => navigate(`${AppRoute.CATECHISM}?p=${p}`)}
                               />
-                            );
-                          }
-                          return (
-                            <Badge key={idx} variant="outline" className="bg-amber-500/5 text-amber-700 dark:text-amber-400 border-amber-500/20 rounded-full text-xs font-semibold">
-                              {r}
-                            </Badge>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Magisterium */}
-                  {selectedTerm.magisteriumReferences && (
-                    <div className="bg-emerald-500/5 border border-emerald-500/10 rounded-2xl p-4 space-y-2">
-                      <div className="flex items-center gap-2">
-                        <Globe className="w-4 h-4 text-emerald-600" />
-                        <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600">📜 Magistério</p>
-                      </div>
-                      <div className="flex flex-wrap gap-2">
-                        {selectedTerm.magisteriumReferences.map((m, idx) => {
-                          const docName = m.replace(/\s*\(.*?\)\s*$/, '').replace(/\s*n\.\s*\d.*$/, '').trim();
-                          return (
+...
                             <MagisteriumPopover
-                              key={idx}
+                              key={`${m}-${idx}`}
                               documentName={docName}
                               label={m}
                               onNavigate={(search) => navigate(`${AppRoute.MAGISTERIUM}?search=${encodeURIComponent(search)}`)}
