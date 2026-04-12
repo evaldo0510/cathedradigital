@@ -62,6 +62,13 @@ const SLIDES = [
     description: 'Navegue pelo menu inferior para alternar entre as áreas. Marque leituras como concluídas para ganhar XP e acompanhar sua evolução.',
     image: onboardingPrayer,
   },
+  {
+    icon: <Compass className="w-10 h-10" />,
+    title: 'Pronto para Começar?',
+    subtitle: 'Seu Diagnóstico Espiritual',
+    description: 'A seguir, faremos algumas perguntas para personalizar sua experiência e recomendar a jornada ideal para o seu momento.',
+    image: onboardingStudy,
+  },
 ];
 
 /* ── Diagnosis questions ── */
