@@ -7,6 +7,7 @@ import { supabase } from '@/integrations/supabase/client';
 import SacredImage from './SacredImage';
 import { Icons } from '@/constants';
 import { useLang } from '@/hooks/useLang';
+import RitualDoDia from './RitualDoDia';
 
 interface DashboardProps {
   user: User | null;
