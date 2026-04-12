@@ -274,26 +274,26 @@ const TemasPage = () => {
                 ) : (
                   <div className="px-1">
                     <TabsContent value="all" className="mt-0 space-y-10 focus-visible:outline-none">
-                      <ContentSection title="Bíblia" icon={<Book className="h-6 w-6" />} items={bibleVerses} color="blue" />
-                      <ContentSection title="Catecismo" icon={<Bookmark className="h-6 w-6" />} items={catechism} color="amber" />
-                      <ContentSection title="Documentos" icon={<FileText className="h-6 w-6" />} items={magisterium} color="emerald" />
-                      <ContentSection title="Jornadas" icon={<Compass className="h-6 w-6" />} items={journeyItems} color="primary" />
+                      <ContentSection title="Bíblia" icon={<Icons.Bible className="h-6 w-6" />} items={bibleVerses} color="blue" />
+                      <ContentSection title="Catecismo" icon={<Icons.Catechism className="h-6 w-6" />} items={catechism} color="amber" />
+                      <ContentSection title="Documentos" icon={<Icons.Magisterium className="h-6 w-6" />} items={magisterium} color="emerald" />
+                      <ContentSection title="Jornadas" icon={<Icons.Compass className="h-6 w-6" />} items={journeyItems} color="primary" />
                     </TabsContent>
 
                     <TabsContent value="bible" className="mt-0 focus-visible:outline-none">
-                      <ContentSection title="Bíblia" icon={<Book className="h-6 w-6" />} items={bibleVerses} showEmpty color="blue" />
+                      <ContentSection title="Bíblia" icon={<Icons.Bible className="h-6 w-6" />} items={bibleVerses} showEmpty color="blue" />
                     </TabsContent>
 
                     <TabsContent value="catechism" className="mt-0 focus-visible:outline-none">
-                      <ContentSection title="Catecismo" icon={<Bookmark className="h-6 w-6" />} items={catechism} showEmpty color="amber" />
+                      <ContentSection title="Catecismo" icon={<Icons.Catechism className="h-6 w-6" />} items={catechism} showEmpty color="amber" />
                     </TabsContent>
 
                     <TabsContent value="magisterium" className="mt-0 focus-visible:outline-none">
-                      <ContentSection title="Documentos" icon={<FileText className="h-6 w-6" />} items={magisterium} showEmpty color="emerald" />
+                      <ContentSection title="Documentos" icon={<Icons.Magisterium className="h-6 w-6" />} items={magisterium} showEmpty color="emerald" />
                     </TabsContent>
 
                     <TabsContent value="journey" className="mt-0 focus-visible:outline-none">
-                      <ContentSection title="Jornadas" icon={<Compass className="h-6 w-6" />} items={journeyItems} showEmpty color="primary" />
+                      <ContentSection title="Jornadas" icon={<Icons.Compass className="h-6 w-6" />} items={journeyItems} showEmpty color="primary" />
                     </TabsContent>
                   </div>
                 )}
