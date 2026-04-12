@@ -155,7 +155,7 @@ const InstitutionalVideoSection = () => {
           {[
             { title: "Tradição Viva", desc: "O conteúdo milenar da Igreja Católica acessível de forma inteligente e organizada." },
             { title: "Comunidade Digital", desc: "Uma rede de oração e estudo que conecta fiéis ao redor do mundo em um só espírito." },
-            { title: "Fé Aumentada", desc: "Use o Logos IA para aprofundar seu conhecimento teológico e meditar nas Escrituras Sagradas." },
+            { title: "Sua Fé com Companhia", desc: "Mergulhe nas Escrituras e no Magistério com um guia que ajuda a traduzir a teoria em vida interior." },
           ].map((card) => (
             <div key={card.title} className="p-6 rounded-2xl bg-card/40 border border-border/50 hover:border-primary/30 hover:bg-card/60 transition-all duration-300">
               <h4 className="text-primary font-bold mb-2">{card.title}</h4>
