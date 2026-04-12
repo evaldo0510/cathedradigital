@@ -242,45 +242,13 @@ const Catechism: React.FC = () => {
             <h1 className="text-xl font-serif font-bold text-foreground truncate">{selectedSection.title}</h1>
             <p className="text-sm text-muted-foreground">§{start} — §{end}</p>
           </div>
-          {crossRefs.length > 0 && (
+          {(crossRefs.length > 0 || docsRefs.length > 0) && (
             <button onClick={() => setShowCrossRefs(!showCrossRefs)}
               className={`p-2 rounded-xl border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}
-              title="Nexus Theologicus">
+              title="Catecismo & Documentos">
               <Icons.Cross className="w-4 h-4" />
             </button>
           )}
-        </div>
-
-        {/* Paragraph navigator */}
-        <div className="flex items-center gap-3 justify-center">
-          <button disabled={currentParagraph <= start} onClick={() => setCurrentParagraph(currentParagraph - 1)}
-            className="px-3 py-2 rounded-xl bg-card border border-border text-sm font-bold disabled:opacity-30 hover:bg-primary/10 transition-all">
-            ← Anterior
-          </button>
-          <div className="flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-xl">
-            <span className="text-[10px] font-black text-primary">§</span>
-            <input
-              type="number" min={start} max={end} value={currentParagraph}
-              onChange={e => { const v = parseInt(e.target.value); if (v >= start && v <= end) setCurrentParagraph(v); }}
-              className="w-16 text-center bg-transparent text-foreground font-bold text-sm focus:outline-none"
-            />
-          </div>
-          <button disabled={currentParagraph >= end} onClick={() => setCurrentParagraph(currentParagraph + 1)}
-            className="px-3 py-2 rounded-xl bg-card border border-border text-sm font-bold disabled:opacity-30 hover:bg-primary/10 transition-all">
-            Próximo →
-          </button>
-        </div>
-
-        {/* Cross references */}
-        {showCrossRefs && (crossRefs.length > 0 || docsRefs.length > 0) && (
-          <CrossReferencePanel
-            type="catechism"
-            bibleRefs={crossRefs}
-            documents={docsRefs}
-            onNavigateToBible={handleNavigateToBible}
-            onNavigateToDoc={handleNavigateToDoc}
-          />
-        )}
 
         {/* Content */}
         <div className="bg-card border border-border rounded-3xl p-8 md:p-12 space-y-6">
