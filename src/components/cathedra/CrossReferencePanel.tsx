@@ -62,6 +62,22 @@ const CrossReferencePanel: React.FC<CrossReferencePanelProps> = ({
         </div>
       )}
 
+      {type === 'bible' && documents.length > 0 && (
+        <div className="space-y-1">
+          <p className="text-xs text-muted-foreground">Documentos do Magistério relacionados:</p>
+          <div className="flex flex-wrap gap-1.5">
+            {documents.map((doc, i) => (
+              <MagisteriumPopover
+                key={i}
+                documentName={doc.name}
+                label={doc.label}
+                onNavigate={() => onNavigateToDoc?.(doc.id)}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
       {type === 'catechism' && bibleRefs.length > 0 && (
         <div className="space-y-1">
           <p className="text-xs text-muted-foreground">Referências bíblicas:</p>
