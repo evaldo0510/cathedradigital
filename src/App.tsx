@@ -319,7 +319,7 @@ const AppLayout: React.FC = () => {
       if (path.includes('biblia')) pageTitle = 'Sagrada Escritura';
       else if (path.includes('catecismo')) pageTitle = 'Catecismo da Igreja';
       else if (path.includes('hoje')) pageTitle = 'Liturgia do Dia';
-      else if (path.includes('estudo')) pageTitle = 'Colloquium IA';
+      else if (path.includes('estudo')) pageTitle = 'Logos IA';
       else if (path.includes('jornada')) pageTitle = 'Jornada Espiritual';
       else if (path.includes('santos')) pageTitle = 'Vida dos Santos';
       else if (path.includes('oracao')) pageTitle = 'Momento de Oração';
