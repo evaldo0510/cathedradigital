@@ -10,6 +10,7 @@ import { useLang } from '@/hooks/useLang';
 import RitualDoDia from './RitualDoDia';
 import NexusBubbles from './NexusBubbles';
 import SpiritualQuiz from './SpiritualQuiz';
+import ProShowcase from './ProShowcase';
 
 interface DashboardProps {
   user: User | null;
@@ -413,6 +414,11 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           </FadeUp>
         )}
       </div>
+
+      {/* ═══ PRO SHOWCASE ═══ */}
+      <FadeUp delay={0.18}>
+        <ProShowcase />
+      </FadeUp>
 
       {/* ═══ SAINTS ═══ */}
       <FadeUp delay={0.2}>
