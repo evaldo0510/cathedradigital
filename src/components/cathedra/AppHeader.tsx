@@ -138,7 +138,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           {user && user.role === 'admin' && (
             <button 
               onClick={() => navigate(AppRoute.ADMIN)} 
-              className="hidden sm:flex px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-primary hover:bg-primary hover:text-white transition-all items-center gap-2 bg-secondary/20 rounded-xl border border-secondary/30 shadow-sm"
+              className="hidden sm:flex lg:hidden px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-primary hover:bg-primary hover:text-white transition-all items-center gap-2 bg-secondary/20 rounded-xl border border-secondary/30 shadow-sm"
             >
               <Icons.Star className="w-4 h-4" />
               <span>{t('admin')}</span>
@@ -146,7 +146,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           )}
 
           {user ? (
-            <button onClick={onSignOut} className="hidden sm:block px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-all">
+            <button onClick={onSignOut} className="hidden sm:block lg:hidden px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-all">
               {t('exit_session')}
             </button>
           ) : (
@@ -155,7 +155,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             </button>
           )}
 
-          <div className="hidden sm:flex items-center gap-1.5 sm:gap-2">
+          <div className="hidden sm:flex lg:hidden items-center gap-1.5 sm:gap-2">
             <select 
               value={lang} 
               onChange={(e) => onChangeLang(e.target.value as Language)}
@@ -173,13 +173,13 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
 
           <button 
             onClick={onToggleSpeak} 
-            className={`hidden sm:flex p-2.5 sm:p-3 rounded-xl sm:rounded-2xl border border-border transition-all active:scale-95 shadow-sm items-center justify-center ${isSpeaking ? 'bg-primary text-white animate-pulse' : 'bg-muted text-primary hover:bg-primary hover:text-white'}`}
+            className={`hidden sm:flex lg:hidden p-2.5 sm:p-3 rounded-xl sm:rounded-2xl border border-border transition-all active:scale-95 shadow-sm items-center justify-center ${isSpeaking ? 'bg-primary text-white animate-pulse' : 'bg-muted text-primary hover:bg-primary hover:text-white'}`}
             title={isSpeaking ? t('audio_stop') : t('audio_read')}
           >
             {isSpeaking ? <Icons.Stop className="w-4 h-4" /> : <Icons.Volume2 className="w-4 h-4" />}
           </button>
 
-          <button onClick={onToggleDark} className="hidden sm:flex p-2.5 sm:p-3 bg-muted text-primary hover:bg-primary hover:text-white rounded-xl sm:rounded-2xl border border-border transition-all active:scale-95 shadow-sm items-center justify-center">
+          <button onClick={onToggleDark} className="hidden sm:flex lg:hidden p-2.5 sm:p-3 bg-muted text-primary hover:bg-primary hover:text-white rounded-xl sm:rounded-2xl border border-border transition-all active:scale-95 shadow-sm items-center justify-center">
             {isDark ? <Icons.Sun className="w-4 h-4" /> : <Icons.Moon className="w-4 h-4" />}
           </button>
 
