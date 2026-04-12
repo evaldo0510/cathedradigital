@@ -40,9 +40,15 @@ class AppErrorBoundary extends Component<Props, State> {
               Tentar Novamente
             </button>
             <button
-              onClick={() => {
+              onClick={async () => {
                 localStorage.clear();
                 sessionStorage.clear();
+                try {
+                  const regs = await navigator.serviceWorker.getRegistrations();
+                  for (const reg of regs) {
+                    await reg.unregister();
+                  }
+                } catch (e) {}
                 window.location.href = '/';
               }}
               className="px-8 py-3 bg-muted text-primary rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-muted/80 transition-all border border-border"
