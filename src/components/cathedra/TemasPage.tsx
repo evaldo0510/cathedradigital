@@ -257,12 +257,12 @@ const TemasPage = () => {
 
               <Tabs defaultValue="all" className="w-full">
                 <div className="flex justify-center mb-10 overflow-x-auto pb-2">
-                  <TabsList className="flex bg-muted/40 p-1.5 rounded-[2rem] border border-border/40 gap-1 min-w-max">
-                    <TabsTrigger value="all" className="rounded-full px-6 sm:px-8 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-semibold">Geral</TabsTrigger>
-                    <TabsTrigger value="bible" className="rounded-full px-6 sm:px-8 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-semibold flex gap-2"><Book className="h-4 w-4" /> Bíblia</TabsTrigger>
-                    <TabsTrigger value="catechism" className="rounded-full px-6 sm:px-8 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-semibold flex gap-2"><Bookmark className="h-4 w-4" /> Catecismo</TabsTrigger>
-                    <TabsTrigger value="magisterium" className="rounded-full px-6 sm:px-8 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-semibold flex gap-2"><FileText className="h-4 w-4" /> Documentos</TabsTrigger>
-                    <TabsTrigger value="journey" className="rounded-full px-6 sm:px-8 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-semibold flex gap-2"><Compass className="h-4 w-4" /> Jornadas</TabsTrigger>
+                  <TabsList className="flex bg-muted/40 p-1.5 rounded-[2rem] border border-border/40 gap-1 min-w-max h-auto">
+                    <TabsTrigger value="all" className="rounded-full px-6 sm:px-8 py-3 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-bold">Geral</TabsTrigger>
+                    <TabsTrigger value="bible" className="rounded-full px-6 sm:px-8 py-3 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-bold flex flex-col sm:flex-row items-center gap-2"><Icons.Bible className="h-4 w-4" /> Bíblia</TabsTrigger>
+                    <TabsTrigger value="catechism" className="rounded-full px-6 sm:px-8 py-3 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-bold flex flex-col sm:flex-row items-center gap-2"><Icons.Catechism className="h-4 w-4" /> Catecismo</TabsTrigger>
+                    <TabsTrigger value="magisterium" className="rounded-full px-6 sm:px-8 py-3 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-bold flex flex-col sm:flex-row items-center gap-2"><Icons.Magisterium className="h-4 w-4" /> Documentos</TabsTrigger>
+                    <TabsTrigger value="journey" className="rounded-full px-6 sm:px-8 py-3 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-bold flex flex-col sm:flex-row items-center gap-2"><Icons.Compass className="h-4 w-4" /> Jornadas</TabsTrigger>
                   </TabsList>
                 </div>
 
