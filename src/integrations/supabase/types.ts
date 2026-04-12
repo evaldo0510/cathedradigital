@@ -233,6 +233,36 @@ export type Database = {
           },
         ]
       }
+      content_tags: {
+        Row: {
+          content_id: string
+          tag_id: string
+        }
+        Insert: {
+          content_id: string
+          tag_id: string
+        }
+        Update: {
+          content_id?: string
+          tag_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_tags_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "spiritual_contents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_tags_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       coupons: {
         Row: {
           code: string
@@ -696,6 +726,36 @@ export type Database = {
         }
         Relationships: []
       }
+      spiritual_contents: {
+        Row: {
+          content_text: string
+          created_at: string | null
+          id: string
+          metadata: Json | null
+          reference_id: string | null
+          title: string
+          type: string
+        }
+        Insert: {
+          content_text: string
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          reference_id?: string | null
+          title: string
+          type: string
+        }
+        Update: {
+          content_text?: string
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          reference_id?: string | null
+          title?: string
+          type?: string
+        }
+        Relationships: []
+      }
       spiritual_journal: {
         Row: {
           content: string
@@ -746,6 +806,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      tags: {
+        Row: {
+          category: string | null
+          created_at: string | null
+          emoji: string | null
+          id: string
+          label: string
+          slug: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string | null
+          emoji?: string | null
+          id?: string
+          label: string
+          slug: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string | null
+          emoji?: string | null
+          id?: string
+          label?: string
+          slug?: string
+        }
+        Relationships: []
       }
       theme_contents: {
         Row: {
