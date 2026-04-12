@@ -1,10 +1,11 @@
-// Bible ↔ Catechism cross-reference map
-// Maps Bible book abbreviation + chapter to relevant CIC paragraphs
+// Bible ↔ Catechism ↔ Documents cross-reference map
+// Maps Bible book abbreviation + chapter to relevant CIC paragraphs and Documents
 // and CIC paragraphs to relevant Bible references
 
 export interface CrossRef {
   cicParagraphs?: number[];
   bibleRefs?: { abbr: string; chapter: number; verse?: number; label: string }[];
+  documents?: { id: string; name: string; label: string }[];
 }
 
 // Bible → Catechism (book:chapter → CIC paragraphs)
@@ -227,6 +228,23 @@ export const BIBLE_TO_CIC: Record<string, number[]> = {
   'Ap:19': [1602],
   'Ap:21': [677, 1044, 1045],
   'Ap:22': [1130, 2853],
+};
+
+// Bible → Documents (book:chapter → Documents)
+export const BIBLE_TO_DOCS: Record<string, { id: string; name: string; label: string }[]> = {
+  'Gn:1': [{ id: 'dv', name: 'Dei Verbum', label: 'Dei Verbum' }],
+  'Gn:2': [{ id: 'gs', name: 'Gaudium et Spes', label: 'Gaudium et Spes' }],
+  'Gn:3': [{ id: 'gs', name: 'Gaudium et Spes', label: 'Gaudium et Spes' }],
+  'Jo:1': [{ id: 'dv', name: 'Dei Verbum', label: 'Dei Verbum' }],
+  'Mt:5': [{ id: 'ge', name: 'Gaudete et Exsultate', label: 'Gaudete et Exsultate' }],
+  'Mt:6': [{ id: 'ge', name: 'Gaudete et Exsultate', label: 'Gaudete et Exsultate' }],
+  'Lc:1': [{ id: 'dv', name: 'Dei Verbum', label: 'Dei Verbum' }],
+  'Rm:8': [{ id: 'ss', name: 'Spe Salvi', label: 'Spe Salvi' }],
+  '1Cor:13': [{ id: 'dce', name: 'Deus Caritas Est', label: 'Deus Caritas Est' }],
+};
+
+export const getBibleDocs = (bookAbbr: string, chapter: number) => {
+  return BIBLE_TO_DOCS[`${bookAbbr}:${chapter}`] || [];
 };
 
 // Catechism → Bible (CIC paragraph → Bible references)
