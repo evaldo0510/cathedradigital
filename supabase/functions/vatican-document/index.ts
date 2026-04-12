@@ -57,12 +57,24 @@ Deno.serve(async (req) => {
 
     console.log('Fetching Vatican document:', url);
 
-    const response = await fetch(url, {
+    let response = await fetch(url, {
       headers: {
         'User-Agent': 'CathedraDigital/1.0 (Catholic study platform)',
         'Accept': 'text/html',
       },
     });
+
+    // Handle common Vatican.va URL suffix issue (_pt.html vs _po.html for Portuguese)
+    if (response.status === 404 && url.endsWith('_pt.html')) {
+      const fallbackUrl = url.replace('_pt.html', '_po.html');
+      console.log('Retrying with fallback URL:', fallbackUrl);
+      response = await fetch(fallbackUrl, {
+        headers: {
+          'User-Agent': 'CathedraDigital/1.0 (Catholic study platform)',
+          'Accept': 'text/html',
+        },
+      });
+    }
 
     if (!response.ok) {
       return new Response(
