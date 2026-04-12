@@ -784,7 +784,10 @@ const AZFaithPage: React.FC = () => {
                       </Button>
                     ) : (
                       <Button
-                        onClick={() => navigate(`${AppRoute.LECTIO_DIVINA}`)}
+                        onClick={() => {
+                          const ref = selectedTerm.reference?.split(';')[0].trim();
+                          navigate(`${AppRoute.LECTIO_DIVINA}${ref ? `?ref=${encodeURIComponent(ref)}` : ''}`);
+                        }}
                         variant="outline"
                         className="w-full rounded-2xl h-12 gap-2 font-bold text-xs uppercase tracking-widest border-border text-foreground/70 hover:bg-muted/50"
                       >
