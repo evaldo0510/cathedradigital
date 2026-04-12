@@ -247,6 +247,11 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         </div>
       </FadeUp>
 
+      {/* ═══ RITUAL DO DIA ═══ */}
+      <FadeUp delay={0.1}>
+        <RitualDoDia />
+      </FadeUp>
+
       {/* ═══ 4 MAIN DOORS ═══ */}
       <FadeUp delay={0.1}>
         <div className="responsive-grid">
