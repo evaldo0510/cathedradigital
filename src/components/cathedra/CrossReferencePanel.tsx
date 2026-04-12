@@ -30,10 +30,7 @@ const CrossReferencePanel: React.FC<CrossReferencePanelProps> = ({
   onNavigateToBible,
   onNavigateToDoc,
 }) => {
-  const hasRefs = type === 'bible' 
-    ? (cicParagraphs.length > 0 || documents.length > 0)
-    : bibleRefs.length > 0;
-  
+  const hasRefs = (cicParagraphs.length > 0 || bibleRefs.length > 0 || documents.length > 0);
   if (!hasRefs) return null;
 
   return (
@@ -63,6 +60,22 @@ const CrossReferencePanel: React.FC<CrossReferencePanelProps> = ({
       )}
 
       {type === 'bible' && documents.length > 0 && (
+        <div className="space-y-1">
+          <p className="text-xs text-muted-foreground">Documentos do Magistério relacionados:</p>
+          <div className="flex flex-wrap gap-1.5">
+            {documents.map((doc, i) => (
+              <MagisteriumPopover
+                key={i}
+                documentName={doc.name}
+                label={doc.label}
+                onNavigate={() => onNavigateToDoc?.(doc.id)}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {type === 'catechism' && documents.length > 0 && (
         <div className="space-y-1">
           <p className="text-xs text-muted-foreground">Documentos do Magistério relacionados:</p>
           <div className="flex flex-wrap gap-1.5">
