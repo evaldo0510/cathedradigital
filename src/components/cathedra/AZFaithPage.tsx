@@ -491,6 +491,10 @@ const AZFaithPage: React.FC = () => {
           </Button>
         </header>
 
+        {quizMode ? (
+          <AZFaithQuiz terms={FAITH_TERMS} onClose={() => setQuizMode(false)} />
+        ) : (
+        <>
         {/* Search */}
         <div className="relative max-w-lg mx-auto mb-6">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
