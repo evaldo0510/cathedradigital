@@ -62,12 +62,16 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
 
   const spProfile = spiritualProfile ? PROFILES[spiritualProfile] : null;
 
-  const MAIN_DOORS = [
+  const [lastBible, setLastBible] = useState<{ book_abbr: string; chapter: number } | null>(null);
+
+  const MAIN_DOORS = useMemo(() => [
     {
       label: t('bible'),
       description: t('bible_sub'),
       icon: Icons.Bible,
-      route: AppRoute.BIBLE,
+      route: lastBible 
+        ? `${AppRoute.BIBLE}?book=${lastBible.book_abbr}&ch=${lastBible.chapter}` 
+        : AppRoute.BIBLE,
       gradient: 'from-primary/5 to-transparent',
       iconColor: 'text-primary',
       borderColor: 'border-border hover:border-secondary/50',
