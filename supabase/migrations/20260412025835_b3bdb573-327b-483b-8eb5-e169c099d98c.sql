@@ -1,0 +1,1 @@
+ALTER FUNCTION public.sync_content_tags_to_array() SET search_path = public;
