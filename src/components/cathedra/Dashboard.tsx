@@ -238,85 +238,14 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         </div>
       </FadeUp>
 
-      {/* ═══ DAILY QUOTE ═══ */}
-      <FadeUp delay={0.1}>
-        <div className="text-center py-8 border-y border-border/60 space-y-3">
-          <p className="text-lg md:text-xl font-serif italic text-primary leading-relaxed max-w-lg mx-auto">
-            {dailyQuote.text}
-          </p>
-          <p className="text-[11px] font-black uppercase tracking-[0.3em] text-secondary opacity-80">
-            — {dailyQuote.author}
-          </p>
-        </div>
-      </FadeUp>
-
-      {/* ═══ RITUAL DO DIA ═══ */}
+      {/* ═══ 1. RITUAL DO DIA ⭐ ═══ */}
       <FadeUp delay={0.1}>
         <RitualDoDia />
       </FadeUp>
 
-      {/* ═══ NEXUS BUBBLES ═══ */}
-      <FadeUp delay={0.1}>
-        <NexusBubbles />
-      </FadeUp>
-
-      {/* ═══ 4 MAIN DOORS ═══ */}
-      <FadeUp delay={0.1}>
-        <div className="responsive-grid">
-          {MAIN_DOORS.map((door) => {
-            const Icon = door.icon;
-            return (
-              <button
-                key={door.label}
-                onClick={() => goTo(door.route)}
-                className={`group relative overflow-hidden rounded-2xl border bg-gradient-to-br ${door.gradient} ${door.borderColor} p-5 md:p-6 text-left transition-all hover:shadow-lg active:scale-[0.98]`}
-              >
-                <div className="space-y-3">
-                  <div className="w-10 h-10 rounded-xl bg-background/80 backdrop-blur-sm flex items-center justify-center shadow-sm">
-                    <Icon className={`w-5 h-5 ${door.iconColor}`} />
-                  </div>
-                  <div>
-                    <h3 className="text-base font-bold text-foreground">{door.label}</h3>
-                    <p className="text-[11px] text-muted-foreground leading-snug mt-0.5">{door.description}</p>
-                  </div>
-                </div>
-                <Icons.ChevronRight className="absolute top-5 right-4 w-4 h-4 text-muted-foreground/40 group-hover:text-foreground/60 transition-colors" />
-              </button>
-            );
-          })}
-        </div>
-      </FadeUp>
-
-      {/* ═══ SPIRITUAL QUIZ ═══ */}
-      <FadeUp delay={0.102}>
-        <SpiritualQuiz />
-      </FadeUp>
-
-      {/* ═══ WHATSAPP RELEASE ═══ */}
-      <FadeUp delay={0.105}>
-        <div 
-          onClick={() => navigate(AppRoute.PROFILE)}
-          className="p-4 rounded-3xl border border-primary/30 bg-primary/5 cursor-pointer hover:bg-primary/10 transition-all flex items-center justify-between group"
-        >
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-              <Icons.Whatsapp className="w-6 h-6" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <p className="text-[10px] font-black uppercase tracking-widest text-primary">{t('whatsapp_released')}</p>
-                <div className="px-1.5 py-0.5 rounded-full bg-primary text-primary-foreground text-[8px] font-black uppercase tracking-wider">{t('new')}</div>
-              </div>
-              <h3 className="text-sm font-bold text-foreground leading-tight">{t('whatsapp_sub')}</h3>
-            </div>
-          </div>
-          <Icons.ChevronRight className="w-4 h-4 text-primary group-hover:translate-x-1 transition-transform" />
-        </div>
-      </FadeUp>
-
-      {/* ═══ NEXT UP ═══ */}
+      {/* ═══ 2. CONTINUAR JORNADA ═══ */}
       {nextUp && (
-        <FadeUp delay={0.11}>
+        <FadeUp delay={0.12}>
           <div 
             onClick={() => goTo(nextUp.route)}
             className="p-5 rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 via-background to-background cursor-pointer hover:border-primary/40 transition-all shadow-sm hover:shadow-md flex items-center justify-between group"
@@ -339,105 +268,117 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         </FadeUp>
       )}
 
-      {/* ═══ STATS & JOURNEYS GRID ═══ */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 items-start">
-        {/* ═══ WEEKLY SUMMARY ═══ */}
-        <FadeUp delay={0.12}>
-          <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4 h-full">
-            <div className="flex items-center gap-2">
-              <Icons.Activity className="w-4 h-4 text-primary" />
-              <h2 className="text-sm font-bold text-foreground uppercase tracking-wide">{t('weekly_summary')}</h2>
+      {activeJourneys.length > 0 && (
+        <FadeUp delay={0.13}>
+          <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-sm font-bold text-foreground uppercase tracking-wide">{t('your_journeys')}</h2>
+              <button onClick={() => goTo(AppRoute.JORNADAS)} className="text-xs text-primary hover:underline flex items-center gap-1">
+                {t('view_all')} <Icons.ChevronRight className="w-3 h-3" />
+              </button>
             </div>
-            <div className="grid grid-cols-4 gap-2">
-              <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
-                <p className="text-xl md:text-2xl font-bold text-foreground">{weeklyStats.chaptersRead}</p>
-                <p className="text-[9px] text-muted-foreground font-medium mt-1 flex flex-col items-center">
-                  <Icons.Bookmark className="w-3 h-3 mb-1" /> {t('bible')}
-                </p>
-              </div>
-              <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
-                <p className="text-xl md:text-2xl font-bold text-foreground">{weeklyStats.catechismParagraphs}</p>
-                <p className="text-[9px] text-muted-foreground font-medium mt-1 flex flex-col items-center">
-                  <Icons.Cross className="w-3 h-3 mb-1" /> CIC
-                </p>
-              </div>
-              <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
-                <p className="text-xl md:text-2xl font-bold text-foreground">{streak}</p>
-                <p className="text-[9px] text-muted-foreground font-medium mt-1 flex flex-col items-center">
-                  <Icons.Flame className="w-3 h-3 mb-1" /> {t('streak')}
-                </p>
-              </div>
-              <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
-                <p className="text-xl md:text-2xl font-bold text-foreground">{weeklyStats.journeySteps}</p>
-                <p className="text-[9px] text-muted-foreground font-medium mt-1 flex flex-col items-center">
-                  <Icons.Calendar className="w-3 h-3 mb-1" /> {t('journeys')}
-                </p>
-              </div>
+            <div className="space-y-3">
+              {activeJourneys.slice(0, 2).map((j) => {
+                const pct = j.totalSteps > 0 ? Math.round((j.completedSteps / j.totalSteps) * 100) : 0;
+                return (
+                  <button
+                    key={j.id}
+                    onClick={() => goTo(`/jornadas/${j.id}`)}
+                    className="w-full flex items-center gap-4 p-4 rounded-xl bg-primary/[0.03] border border-primary/10 hover:border-primary/30 transition-colors text-left"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-background flex items-center justify-center text-primary shadow-sm">
+                      <Icons.Compass className="w-5 h-5" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-xs font-bold text-foreground">{j.title}</p>
+                      <div className="mt-2 h-1.5 w-full bg-muted rounded-full overflow-hidden">
+                        <div className="h-full bg-primary transition-all" style={{ width: `${pct}%` }} />
+                      </div>
+                    </div>
+                    <div className="text-[10px] font-black text-primary">{pct}%</div>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </FadeUp>
+      )}
 
-        {/* ═══ ACTIVE JOURNEYS ═══ */}
-        {activeJourneys.length > 0 && (
-          <FadeUp delay={0.15}>
-            <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4 h-full">
-              <div className="flex items-center justify-between">
-                <h2 className="text-sm font-bold text-foreground uppercase tracking-wide">{t('your_journeys')}</h2>
-                <button onClick={() => goTo(AppRoute.JORNADAS)} className="text-xs text-primary hover:underline flex items-center gap-1">
-                  {t('view_all')} <Icons.ChevronRight className="w-3 h-3" />
-                </button>
-              </div>
-              <div className="space-y-3">
-                {activeJourneys.slice(0, 2).map((j) => {
-                  const pct = j.totalSteps > 0 ? Math.round((j.completedSteps / j.totalSteps) * 100) : 0;
-                  return (
-                    <button
-                      key={j.id}
-                      onClick={() => goTo(`/jornadas/${j.id}`)}
-                      className="w-full flex items-center gap-4 p-4 rounded-xl bg-primary/[0.03] border border-primary/10 hover:border-primary/30 transition-colors text-left"
-                    >
-                      <div className="w-10 h-10 rounded-lg bg-background flex items-center justify-center text-primary shadow-sm">
-                        <Icons.Compass className="w-5 h-5" />
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-xs font-bold text-foreground">{j.title}</p>
-                        <div className="mt-2 h-1.5 w-full bg-muted rounded-full overflow-hidden">
-                          <div className="h-full bg-primary transition-all" style={{ width: `${pct}%` }} />
-                        </div>
-                      </div>
-                      <div className="text-[10px] font-black text-primary">{pct}%</div>
-                    </button>
-                  );
-                })}
-              </div>
+      {/* ═══ 3. QUIZ ESPIRITUAL 🧠 ═══ */}
+      <FadeUp delay={0.14}>
+        <SpiritualQuiz />
+      </FadeUp>
+
+      {/* ═══ 4. TEMAS (BOLHAS) ═══ */}
+      <FadeUp delay={0.15}>
+        <NexusBubbles />
+      </FadeUp>
+
+      {/* ═══ 5. LOGOS (IA) ═══ */}
+      <FadeUp delay={0.16}>
+        <div
+          onClick={() => goTo('/study')}
+          className="relative overflow-hidden rounded-3xl border border-secondary/20 bg-gradient-to-br from-secondary/5 via-card to-primary/5 p-6 cursor-pointer hover:border-secondary/40 transition-all shadow-sm hover:shadow-lg group"
+        >
+          <div className="absolute -top-16 -right-16 w-48 h-48 bg-secondary/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="relative z-10 flex items-center gap-5">
+            <div className="w-14 h-14 rounded-2xl bg-secondary/15 flex items-center justify-center text-secondary group-hover:scale-110 transition-transform">
+              <Icons.Brain className="w-7 h-7" />
             </div>
-          </FadeUp>
-        )}
-      </div>
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-0.5">
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary">Colloquium · IA Teológica</p>
+              </div>
+              <h3 className="text-base font-bold text-foreground leading-tight group-hover:text-secondary transition-colors">
+                Pergunte qualquer coisa sobre a Fé
+              </h3>
+              <p className="text-[11px] text-muted-foreground mt-1">Respostas fundamentadas no Magistério, Bíblia e Tradição</p>
+            </div>
+            <div className="w-10 h-10 rounded-full border border-secondary/20 flex items-center justify-center text-secondary group-hover:bg-secondary group-hover:text-white transition-all shrink-0">
+              <Icons.ChevronRight className="w-5 h-5" />
+            </div>
+          </div>
+        </div>
+      </FadeUp>
 
-      {/* ═══ PRO SHOWCASE ═══ */}
+      {/* ═══ 6. PRO 🔒 ═══ */}
       <FadeUp delay={0.18}>
         <ProShowcase />
       </FadeUp>
 
-      {/* ═══ SAINTS ═══ */}
+      {/* ═══ WEEKLY STATS ═══ */}
       <FadeUp delay={0.2}>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {saintsToday.slice(0, 3).map((saint, i) => (
-            <div key={i} className="group relative overflow-hidden rounded-2xl aspect-[4/5] bg-card border border-border shadow-sm">
-              <SacredImage 
-                src={saint.image} 
-                alt={saint.name} 
-                className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-              <div className="absolute bottom-0 left-0 p-5 w-full">
-                <p className="text-[10px] font-black uppercase tracking-widest text-primary/80 mb-1">{saint.title}</p>
-                <h3 className="text-lg font-bold text-white leading-tight">{saint.name}</h3>
-                <p className="text-[10px] text-white/60 mt-2 line-clamp-2 leading-relaxed">{saint.description}</p>
-              </div>
+        <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4">
+          <div className="flex items-center gap-2">
+            <Icons.Activity className="w-4 h-4 text-primary" />
+            <h2 className="text-sm font-bold text-foreground uppercase tracking-wide">{t('weekly_summary')}</h2>
+          </div>
+          <div className="grid grid-cols-4 gap-2">
+            <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
+              <p className="text-xl md:text-2xl font-bold text-foreground">{weeklyStats.chaptersRead}</p>
+              <p className="text-[9px] text-muted-foreground font-medium mt-1 flex flex-col items-center">
+                <Icons.Bookmark className="w-3 h-3 mb-1" /> {t('bible')}
+              </p>
             </div>
-          ))}
+            <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
+              <p className="text-xl md:text-2xl font-bold text-foreground">{weeklyStats.catechismParagraphs}</p>
+              <p className="text-[9px] text-muted-foreground font-medium mt-1 flex flex-col items-center">
+                <Icons.Cross className="w-3 h-3 mb-1" /> CIC
+              </p>
+            </div>
+            <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
+              <p className="text-xl md:text-2xl font-bold text-foreground">{streak}</p>
+              <p className="text-[9px] text-muted-foreground font-medium mt-1 flex flex-col items-center">
+                <Icons.Flame className="w-3 h-3 mb-1" /> {t('streak')}
+              </p>
+            </div>
+            <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
+              <p className="text-xl md:text-2xl font-bold text-foreground">{weeklyStats.journeySteps}</p>
+              <p className="text-[9px] text-muted-foreground font-medium mt-1 flex flex-col items-center">
+                <Icons.Calendar className="w-3 h-3 mb-1" /> {t('journeys')}
+              </p>
+            </div>
+          </div>
         </div>
       </FadeUp>
 
