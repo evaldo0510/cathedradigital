@@ -129,14 +129,33 @@ const TagBubble: React.FC<{ tag: Tag; index: number }> = ({ tag, index }) => {
               {content.length > 0 ? (
                 <div className="space-y-3">
                   <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60">Versículos & Fontes</span>
-                  {content.map((c, i) => (
-                    <div key={c.id || i} className="space-y-1 group">
-                      <p className="text-[11px] leading-relaxed text-foreground/90 line-clamp-3">
-                        {c.content_text}
-                      </p>
-                      <span className="text-[9px] font-bold text-primary/70">{c.reference_id}</span>
-                    </div>
-                  ))}
+                  {content.map((c, i) => {
+                    const isBible = c.type === 'bible';
+                    const reference = c.title || 'Referência';
+                    const bibleLink = isBible && c.metadata?.book && c.metadata?.chapter 
+                      ? `/bible?book=${c.metadata.book}&ch=${c.metadata.chapter}` 
+                      : null;
+
+                    return (
+                      <div key={c.id || i} className="space-y-1 group">
+                        <p className="text-[11px] leading-relaxed text-foreground/90 line-clamp-3">
+                          {c.content_text}
+                        </p>
+                        {bibleLink ? (
+                          <button 
+                            onClick={() => navigate(bibleLink)}
+                            className="text-[9px] font-bold text-primary hover:underline flex items-center gap-1"
+                          >
+                            {reference}
+                            <ExternalLink className="w-2 h-2" />
+                          </button>
+                        ) : (
+                          <span className="text-[9px] font-bold text-primary/70">{reference}</span>
+                        )}
+                      </div>
+                    );
+                  })}
+
                 </div>
               ) : !logosInsight && (
                 <p className="text-[10px] text-muted-foreground italic text-center py-4">Nenhum conteúdo vinculado no momento.</p>
