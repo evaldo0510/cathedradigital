@@ -468,12 +468,14 @@ const Bible: React.FC = () => {
         {/* Content */}
         <div className="flex flex-col lg:grid lg:grid-cols-12 gap-6 items-start">
           {/* Cross References Panel - Top on mobile, Side on desktop */}
-          {showCrossRefs && crossRefs.length > 0 && (
+          {showCrossRefs && (crossRefs.length > 0 || docsRefs.length > 0) && (
             <div className="w-full lg:col-span-4 lg:sticky lg:top-24 order-1 lg:order-2">
               <CrossReferencePanel 
                 type="bible"
                 cicParagraphs={crossRefs} 
+                documents={docsRefs}
                 onNavigateToCIC={handleNavigateToCIC}
+                onNavigateToDoc={handleNavigateToDoc}
               />
             </div>
           )}
