@@ -333,7 +333,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         <NexusBubbles />
       </FadeUp>
 
-      {/* ═══ 5. LOGOS (IA) ═══ */}
+      {/* ═══ 5. LOGOS (IA) — personalizado pelo quiz ═══ */}
       <FadeUp delay={0.16}>
         <div
           onClick={() => goTo('/study')}
@@ -349,9 +349,11 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary">Colloquium · IA Teológica</p>
               </div>
               <h3 className="text-base font-bold text-foreground leading-tight group-hover:text-secondary transition-colors">
-                Pergunte qualquer coisa sobre a Fé
+                {spProfile ? `Reflita sobre: ${spProfile.theme}` : 'Pergunte qualquer coisa sobre a Fé'}
               </h3>
-              <p className="text-[11px] text-muted-foreground mt-1">Respostas fundamentadas no Magistério, Bíblia e Tradição</p>
+              <p className="text-[11px] text-muted-foreground mt-1">
+                {spProfile ? spProfile.direction.label : 'Respostas fundamentadas no Magistério, Bíblia e Tradição'}
+              </p>
             </div>
             <div className="w-10 h-10 rounded-full border border-secondary/20 flex items-center justify-center text-secondary group-hover:bg-secondary group-hover:text-white transition-all shrink-0">
               <Icons.ChevronRight className="w-5 h-5" />
