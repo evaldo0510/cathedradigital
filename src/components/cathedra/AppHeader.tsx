@@ -146,7 +146,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           )}
 
           {user ? (
-            <button onClick={onSignOut} className="hidden sm:block px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-all">
+            <button onClick={onSignOut} className="hidden sm:block lg:hidden px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-all">
               {t('exit_session')}
             </button>
           ) : (
