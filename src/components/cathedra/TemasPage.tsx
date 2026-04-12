@@ -98,7 +98,7 @@ const TemasPage = () => {
       const results: ThemeContent[] = (tagContents || []).map((c: any) => ({
         id: c.spiritual_contents.id,
         content_type: c.spiritual_contents.type,
-        reference: c.spiritual_contents.reference_id || 'Referência',
+        reference: c.spiritual_contents.reference_id || c.spiritual_contents.title || 'Referência',
         title: c.spiritual_contents.title,
         text_content: c.spiritual_contents.content_text,
         tags: c.spiritual_contents.tags || []

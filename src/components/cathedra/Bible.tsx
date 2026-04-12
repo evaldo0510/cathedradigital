@@ -204,13 +204,41 @@ const Bible: React.FC = () => {
   ], []);
   const totalBooksRead = useMemo(() => allBooks.filter(b => completedBooks.has(b.abbr)).length, [allBooks, completedBooks]);
   const overallProgress = Math.round((totalBooksRead / 73) * 100);
-  // Handle deep-link from Catechism cross-references (?book=Gn&ch=1)
+  // Handle deep-link from Catechism cross-references or Theme Page
   useEffect(() => {
     const bookParam = searchParams.get('book');
     const chParam = searchParams.get('ch');
+    const refParam = searchParams.get('ref');
+
+    if (refParam) {
+      // Handle "Book Chapter,Verse" or "Book Chapter" format
+      const match = refParam.match(/^([a-zA-ZáéíóúÁÉÍÓÚ123\s]+)\s+(\d+)(?:[,.:]\s*(\d+))?$/);
+      if (match) {
+        const bookNameOrAbbr = match[1].trim();
+        const ch = parseInt(match[2]);
+        const vs = match[3] ? parseInt(match[3]) : null;
+
+        const allBooksList = [...getAllBooks('Antigo Testamento'), ...getAllBooks('Novo Testamento')];
+        const found = allBooksList.find(b => 
+          b.abbr.toLowerCase() === bookNameOrAbbr.toLowerCase() || 
+          b.name.toLowerCase() === bookNameOrAbbr.toLowerCase()
+        );
+
+        if (found) {
+          const isNT = getAllBooks('Novo Testamento').some(b => b.abbr === found.abbr);
+          setTestament(isNT ? 'Novo Testamento' : 'Antigo Testamento');
+          setSelectedBook(found);
+          setSelectedChapter(ch);
+          if (vs) setHighlightedVerse(vs);
+          setViewMode('reading');
+          return;
+        }
+      }
+    }
+
     if (bookParam) {
-      const allBooks = [...getAllBooks('Antigo Testamento'), ...getAllBooks('Novo Testamento')];
-      const found = allBooks.find(b => b.abbr === bookParam);
+      const allBooksList = [...getAllBooks('Antigo Testamento'), ...getAllBooks('Novo Testamento')];
+      const found = allBooksList.find(b => b.abbr === bookParam);
       if (found) {
         const isNT = getAllBooks('Novo Testamento').some(b => b.abbr === bookParam);
         setTestament(isNT ? 'Novo Testamento' : 'Antigo Testamento');
@@ -228,7 +256,7 @@ const Bible: React.FC = () => {
         }
       }
     }
-  }, [searchParams]);
+  }, [searchParams, allBooks]);
 
   const filteredCategories = useMemo(() => {
     const categories = BIBLE_CATEGORIES[testament];
