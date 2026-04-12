@@ -16,17 +16,15 @@ interface Theme {
   description: string;
 }
 
-interface ThemeContent {
-  id: string;
-  content_type: 'bible' | 'catechism' | 'magisterium';
-  reference: string;
-  title: string;
-  text_content: string;
+interface LogosInsight {
+  insight: string;
 }
 
 const TemasPage = () => {
   const [searchParams] = useSearchParams();
   const [selectedTheme, setSelectedTheme] = useState<Theme | null>(null);
+  const [logosInsight, setLogosInsight] = useState<string | null>(null);
+  const [loadingLogos, setLoadingLogos] = useState(false);
 
   const { data: themes, isLoading: loadingThemes } = useQuery({
     queryKey: ['themes'],
@@ -49,23 +47,69 @@ const TemasPage = () => {
     }
   }, [themes, searchParams, selectedTheme]);
 
+  // Fetch Logos Insight when theme changes
+  useEffect(() => {
+    if (selectedTheme) {
+      setLogosInsight(null);
+      setLoadingLogos(true);
+      supabase.functions.invoke('logos-spiritual-insight', {
+        body: { query: selectedTheme.name }
+      }).then(({ data, error }) => {
+        if (!error && data?.insight) setLogosInsight(data.insight);
+        setLoadingLogos(false);
+      });
+    }
+  }, [selectedTheme]);
+
   const { data: contents, isLoading: loadingContents } = useQuery({
     queryKey: ['theme-contents', selectedTheme?.id],
     queryFn: async () => {
       if (!selectedTheme) return [];
-      const { data, error } = await supabase
+      
+      // Fetch contents from theme_contents
+      const { data: themeContents, error: themeError } = await supabase
         .from('theme_contents')
         .select('*')
         .eq('theme_id', selectedTheme.id);
-      if (error) throw error;
-      return data as ThemeContent[];
+      
+      // Fetch related Journeys (Searching journeys with the theme name in title/description)
+      const { data: journeys, error: journeyError } = await supabase
+        .from('journeys')
+        .select('id, title, description')
+        .or(`title.ilike.%${selectedTheme.name}%,description.ilike.%${selectedTheme.name}%`)
+        .limit(3);
+
+      if (themeError) throw themeError;
+
+      const results: ThemeContent[] = (themeContents || []).map(c => ({
+        id: c.id,
+        content_type: c.content_type,
+        reference: c.reference,
+        title: c.title,
+        text_content: c.text_content
+      }));
+
+      if (journeys) {
+        journeys.forEach(j => {
+          results.push({
+            id: j.id,
+            content_type: 'journey' as any,
+            reference: 'Jornada Espiritual',
+            title: j.title,
+            text_content: j.description || ''
+          });
+        });
+      }
+
+      return results;
     },
     enabled: !!selectedTheme,
   });
 
   const bibleVerses = contents?.filter(c => c.content_type === 'bible') || [];
-  const catechism = contents?.filter(c => c.content_type === 'catechism') || [];
-  const magisterium = contents?.filter(c => c.content_type === 'magisterium') || [];
+  const catechism = contents?.filter(c => (c.content_type as string) === 'catechism') || [];
+  const magisterium = contents?.filter(c => (c.content_type as string) === 'magisterium') || [];
+  const journeys = contents?.filter(c => (c.content_type as string) === 'journey') || [];
 
   return (
     <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-5xl mx-auto pb-12">
