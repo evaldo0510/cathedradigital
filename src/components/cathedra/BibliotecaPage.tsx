@@ -40,14 +40,14 @@ const sections = [
   {
     title: 'Magistério',
     description: 'Encíclicas, exortações e documentos pontifícios',
-    icon: <Icons.Magisterium className="w-5 h-5" />,
+    icon: <Icons.ScrollText className="w-5 h-5" />,
     route: AppRoute.MAGISTERIUM,
     color: 'bg-primary/10 text-primary',
   },
   {
     title: 'Santos',
     description: 'Vidas, escritos e ensinamentos dos santos',
-    icon: <Icons.Saints className="w-5 h-5" />,
+    icon: <Icons.SaintHalo className="w-5 h-5" />,
     route: AppRoute.SAINTS,
     color: 'bg-accent/10 text-accent',
   },
