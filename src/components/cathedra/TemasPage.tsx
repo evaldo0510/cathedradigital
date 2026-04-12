@@ -170,7 +170,7 @@ const TemasPage = () => {
                   }
                 `}
               >
-                {cat === 'all' ? 'Todos' : cat}
+                {cat === 'all' ? 'Todos' : cat.charAt(0).toUpperCase() + cat.slice(1)}
               </button>
             ))}
           </div>
