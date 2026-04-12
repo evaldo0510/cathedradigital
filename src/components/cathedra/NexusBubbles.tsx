@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AppRoute } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, ExternalLink, Sparkles } from 'lucide-react';
+import { Loader2, ExternalLink, Sparkles, Search, X, Heart } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
+import { type ProfileId, PROFILES } from './SpiritualQuiz';
 
 interface Tag {
   id: string;
@@ -23,8 +24,11 @@ interface TagContent {
   metadata: any;
 }
 
+interface NexusBubblesProps {
+  profileId?: ProfileId | null;
+}
 
-const TagBubble: React.FC<{ tag: Tag; index: number }> = ({ tag, index }) => {
+const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean }> = ({ tag, index, isSuggested }) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -35,7 +39,6 @@ const TagBubble: React.FC<{ tag: Tag; index: number }> = ({ tag, index }) => {
     if (content.length > 0 || loading) return;
     setLoading(true);
     try {
-      // 1. Fetch content
       const { data, error } = await supabase
         .from('content_tags')
         .select(`
@@ -48,15 +51,13 @@ const TagBubble: React.FC<{ tag: Tag; index: number }> = ({ tag, index }) => {
           )
         `)
         .eq('tag_id', tag.id)
-        .limit(2);
-
+        .limit(3);
 
       if (!error && data) {
-        const formatted = (data as any[]).map(d => d.spiritual_contents);
+        const formatted = (data as any[]).map(d => d.spiritual_contents).filter(Boolean);
         setContent(formatted);
       }
 
-      // 2. Fetch AI Insight
       const { data: insightData, error: insightError } = await supabase.functions.invoke('logos-spiritual-insight', {
         body: { query: tag.label }
       });
@@ -79,56 +80,97 @@ const TagBubble: React.FC<{ tag: Tag; index: number }> = ({ tag, index }) => {
           key={tag.slug}
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: index * 0.02, type: 'spring', damping: 20 }}
-          whileHover={{ scale: 1.08 }}
+          transition={{ 
+            delay: index * 0.015, 
+            type: 'spring', 
+            damping: 15,
+            stiffness: 100
+          }}
+          whileHover={{ 
+            scale: 1.1,
+            y: -2,
+            transition: { duration: 0.2 }
+          }}
           whileTap={{ scale: 0.95 }}
-          className={`px-3 py-1.5 rounded-full border border-border bg-card transition-all shadow-sm flex items-center gap-1 group/tag ${open ? 'border-primary/40 bg-primary/5 ring-1 ring-primary/20' : 'hover:border-primary/40 hover:bg-primary/5 hover:shadow-md'}`}
+          className={`
+            relative px-3.5 py-2 rounded-full border transition-all shadow-sm flex items-center gap-1.5 group/tag
+            ${open 
+              ? 'border-primary/50 bg-primary/10 ring-2 ring-primary/10' 
+              : isSuggested
+                ? 'border-secondary/40 bg-secondary/5 hover:border-secondary/60 hover:bg-secondary/10'
+                : 'border-border bg-card/50 hover:border-primary/40 hover:bg-primary/5 hover:shadow-md'
+            }
+          `}
         >
-          <span className="text-xs">{tag.emoji}</span>
-          <span className={`text-[11px] font-bold transition-colors ${open ? 'text-primary' : 'text-foreground/80 group-hover/tag:text-primary'}`}>
+          {isSuggested && (
+            <div className="absolute -top-1 -right-1">
+              <Sparkles className="w-2.5 h-2.5 text-secondary animate-pulse" />
+            </div>
+          )}
+          <span className="text-sm group-hover/tag:scale-110 transition-transform">{tag.emoji}</span>
+          <span className={`
+            text-[11px] font-bold transition-colors tracking-tight
+            ${open ? 'text-primary' : isSuggested ? 'text-secondary' : 'text-foreground/80 group-hover/tag:text-primary'}
+          `}>
             {tag.label}
           </span>
         </motion.button>
       </PopoverTrigger>
-      <PopoverContent className="w-[320px] p-0 rounded-2xl border-primary/20 overflow-hidden shadow-2xl z-[100]">
-        <div className="bg-primary/5 p-3 border-b border-border flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-sm">{tag.emoji}</span>
-            <span className="text-xs font-black uppercase tracking-wider text-primary">{tag.label}</span>
+      <PopoverContent className="w-[320px] p-0 rounded-[2rem] border-primary/20 overflow-hidden shadow-2xl z-[100] backdrop-blur-xl">
+        <div className="bg-gradient-to-r from-primary/10 to-transparent p-4 border-b border-border/50 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-full bg-white/50 flex items-center justify-center shadow-inner">
+              <span className="text-lg">{tag.emoji}</span>
+            </div>
+            <span className="text-xs font-black uppercase tracking-widest text-primary">{tag.label}</span>
           </div>
           <button 
             onClick={() => navigate(`${AppRoute.TEMAS}?tema=${tag.slug}`)}
-            className="text-[10px] font-bold text-primary hover:underline flex items-center gap-1"
+            className="p-1.5 rounded-full bg-primary/5 hover:bg-primary/20 text-primary transition-colors group"
+            title="Estudo Completo"
           >
-            Estudo Completo
-            <ExternalLink className="w-2.5 h-2.5" />
+            <ExternalLink className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
           </button>
         </div>
         
-        <div className="p-4 space-y-4 max-h-[300px] overflow-y-auto scrollbar-none">
+        <div className="p-5 space-y-5 max-h-[350px] overflow-y-auto scrollbar-none">
           {loading ? (
-            <div className="space-y-3 py-2">
-              <div className="h-3 bg-muted rounded animate-pulse w-full" />
-              <div className="h-3 bg-muted rounded animate-pulse w-3/4" />
-              <div className="h-24 bg-muted/30 rounded-xl animate-pulse w-full" />
+            <div className="space-y-4 py-2">
+              <div className="flex gap-2">
+                <div className="w-8 h-8 rounded-full bg-muted animate-pulse" />
+                <div className="flex-1 space-y-2">
+                  <div className="h-3 bg-muted rounded animate-pulse w-full" />
+                  <div className="h-3 bg-muted rounded animate-pulse w-2/3" />
+                </div>
+              </div>
+              <div className="h-32 bg-muted/20 rounded-2xl animate-pulse w-full" />
             </div>
           ) : (
             <>
               {logosInsight && (
-                <div className="bg-secondary/5 rounded-xl p-3 border border-secondary/10">
-                  <div className="flex items-center gap-1.5 mb-1.5">
-                    <Sparkles className="w-3 h-3 text-secondary" />
-                    <span className="text-[9px] font-black uppercase tracking-widest text-secondary">Logos Insight</span>
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="bg-secondary/5 rounded-2xl p-4 border border-secondary/10 relative overflow-hidden group"
+                >
+                  <div className="absolute top-0 right-0 w-16 h-16 bg-secondary/5 rounded-full blur-2xl -mr-6 -mt-6" />
+                  <div className="flex items-center gap-2 mb-2">
+                    <Sparkles className="w-3.5 h-3.5 text-secondary" />
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary">Logos Insight</span>
                   </div>
-                  <p className="text-[11px] text-foreground/80 leading-relaxed italic line-clamp-4">
+                  <p className="text-[12px] text-foreground/90 leading-relaxed italic font-serif">
                     "{logosInsight}"
                   </p>
-                </div>
+                </motion.div>
               )}
               
               {content.length > 0 ? (
-                <div className="space-y-3">
-                  <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60">Versículos & Fontes</span>
+                <div className="space-y-4">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/50 flex items-center gap-2">
+                    <div className="h-[1px] flex-1 bg-border/40" />
+                    Versículos & Fontes
+                    <div className="h-[1px] flex-1 bg-border/40" />
+                  </span>
                   {content.map((c, i) => {
                     const isBible = c.type === 'bible';
                     const reference = c.title || 'Referência';
@@ -137,41 +179,51 @@ const TagBubble: React.FC<{ tag: Tag; index: number }> = ({ tag, index }) => {
                       : null;
 
                     return (
-                      <div key={c.id || i} className="space-y-1 group">
-                        <p className="text-[11px] leading-relaxed text-foreground/90 line-clamp-3">
+                      <motion.div 
+                        key={c.id || i} 
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: i * 0.1 }}
+                        className="space-y-1.5 group/content"
+                      >
+                        <p className="text-[11px] leading-relaxed text-foreground/80 line-clamp-3 group-hover/content:text-foreground transition-colors">
                           {c.content_text}
                         </p>
                         {bibleLink ? (
                           <button 
                             onClick={() => navigate(bibleLink)}
-                            className="text-[9px] font-bold text-primary hover:underline flex items-center gap-1"
+                            className="text-[10px] font-bold text-primary hover:underline flex items-center gap-1.5 bg-primary/5 px-2 py-0.5 rounded-full w-fit"
                           >
                             {reference}
-                            <ExternalLink className="w-2 h-2" />
+                            <ExternalLink className="w-2.5 h-2.5" />
                           </button>
                         ) : (
-                          <span className="text-[9px] font-bold text-primary/70">{reference}</span>
+                          <span className="text-[10px] font-bold text-primary/60">{reference}</span>
                         )}
-                      </div>
+                      </motion.div>
                     );
                   })}
-
                 </div>
               ) : !logosInsight && (
-                <p className="text-[10px] text-muted-foreground italic text-center py-4">Nenhum conteúdo vinculado no momento.</p>
+                <div className="flex flex-col items-center justify-center py-6 text-center space-y-2">
+                  <div className="w-10 h-10 rounded-full bg-muted/30 flex items-center justify-center">
+                    <ExternalLink className="w-5 h-5 text-muted-foreground/30" />
+                  </div>
+                  <p className="text-[11px] text-muted-foreground italic">Conteúdo em aprofundamento...</p>
+                </div>
               )}
             </>
           )}
         </div>
         
-        <div className="p-2 bg-muted/30 border-t border-border flex justify-center">
+        <div className="p-3 bg-muted/20 border-t border-border/40 flex justify-center">
           <Button 
             variant="ghost" 
             size="sm" 
-            className="w-full rounded-xl text-[10px] font-bold h-8 hover:bg-primary/10 hover:text-primary"
+            className="w-full rounded-xl text-[10px] font-black uppercase tracking-widest h-9 hover:bg-primary/10 hover:text-primary transition-all active:scale-95"
             onClick={() => navigate(`${AppRoute.TEMAS}?tema=${tag.slug}`)}
           >
-            Abrir no Nexus Theologicus
+            Navegação Completa
           </Button>
         </div>
       </PopoverContent>
@@ -180,11 +232,12 @@ const TagBubble: React.FC<{ tag: Tag; index: number }> = ({ tag, index }) => {
 };
 
 
-const NexusBubbles: React.FC = () => {
+const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
   const navigate = useNavigate();
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [tags, setTags] = useState<Tag[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchTags = async () => {
@@ -208,6 +261,24 @@ const NexusBubbles: React.FC = () => {
     vida: { label: 'Vida Prática', emoji: '🌱' },
   };
 
+  const profileSuggestedTags = useMemo(() => {
+    if (!profileId || !tags.length) return [];
+    const profile = PROFILES[profileId];
+    if (!profile) return [];
+
+    // Filter tags by profile theme or related pains
+    const relevantLabels = [profile.theme, profile.pain.label, 'Oração', 'Jesus', 'Fé'];
+    return tags.filter(t => relevantLabels.some(l => t.label.toLowerCase().includes(l.toLowerCase()))).slice(0, 8);
+  }, [profileId, tags]);
+
+  const filteredTags = useMemo(() => {
+    if (!searchQuery) return null;
+    return tags.filter(t => 
+      t.label.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      t.category.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [tags, searchQuery]);
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-10">
@@ -217,58 +288,134 @@ const NexusBubbles: React.FC = () => {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
+    <div className="space-y-6">
+      <div className="flex items-center justify-between gap-4">
         <div className="flex flex-col">
-          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">
+          <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/70">
             Nexus Theologicus
           </span>
-          <span className="text-[9px] text-muted-foreground/60 font-medium">Clique para ver versículos</span>
+          <span className="text-[9px] text-muted-foreground/60 font-medium italic mt-0.5">Clique nas bolhas para insights do Logos</span>
         </div>
-        <button
-          onClick={() => navigate(AppRoute.TEMAS)}
-          className="text-[10px] font-bold text-primary hover:underline"
-        >
-          Ver todos →
-        </button>
+        
+        <div className="relative group/search max-w-[140px] md:max-w-[200px]">
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground/60 transition-colors group-focus-within/search:text-primary" />
+          <input 
+            type="text"
+            placeholder="Buscar tema..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full h-8 pl-8 pr-8 bg-card/50 border border-border/50 rounded-full text-[10px] focus:outline-none focus:ring-2 focus:ring-primary/10 transition-all"
+          />
+          {searchQuery && (
+            <button 
+              onClick={() => setSearchQuery('')}
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 hover:bg-muted rounded-full"
+            >
+              <X className="w-2.5 h-2.5 text-muted-foreground" />
+            </button>
+          )}
+        </div>
       </div>
 
-      <div className="space-y-3">
-        {Object.entries(categories).map(([key, category]) => {
-          const categoryTags = tags.filter(t => t.category === key);
-          if (categoryTags.length === 0) return null;
-
-          return (
-            <div key={key}>
-              <button
-                onClick={() => setExpandedCategory(expandedCategory === key ? null : key)}
-                className="flex items-center gap-1.5 mb-1.5 group"
-              >
-                <span className="text-sm">{category.emoji}</span>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground group-hover:text-primary transition-colors">
-                  {category.label}
-                </span>
-                <span className="text-[10px] text-muted-foreground/50">
-                  {expandedCategory === key ? '▾' : '▸'}
-                </span>
-              </button>
-
+      <div className="space-y-6">
+        <AnimatePresence mode="wait">
+          {searchQuery ? (
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="space-y-3"
+            >
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Resultado da Busca</p>
               <div className="flex flex-wrap gap-1.5">
-                {(expandedCategory === key ? categoryTags : categoryTags.slice(0, 5)).map((tag, i) => (
+                {filteredTags?.length ? filteredTags.map((tag, i) => (
                   <TagBubble key={tag.slug} tag={tag} index={i} />
-                ))}
-                {expandedCategory !== key && categoryTags.length > 5 && (
-                  <button
-                    onClick={() => setExpandedCategory(key)}
-                    className="px-3 py-1.5 rounded-full border border-dashed border-border text-[11px] font-bold text-muted-foreground hover:text-primary hover:border-primary/40 transition-all"
-                  >
-                    +{categoryTags.length - 5}
-                  </button>
+                )) : (
+                  <p className="text-[10px] text-muted-foreground italic">Nenhum tema encontrado.</p>
                 )}
               </div>
-            </div>
-          );
-        })}
+            </motion.div>
+          ) : (
+            <>
+              {/* Profile Suggestions */}
+              {profileId && profileSuggestedTags.length > 0 && (
+                <motion.div 
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  className="space-y-2.5 p-4 rounded-[2rem] bg-gradient-to-br from-secondary/10 via-card to-primary/5 border border-secondary/20 shadow-sm relative overflow-hidden"
+                >
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-secondary/5 rounded-full blur-2xl -mr-8 -mt-8" />
+                  <div className="flex items-center gap-2">
+                    <div className="w-5 h-5 rounded-full bg-secondary/20 flex items-center justify-center">
+                      <Heart className="w-3 h-3 text-secondary" />
+                    </div>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-secondary">
+                      Sugeridos para sua Jornada
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {profileSuggestedTags.map((tag, i) => (
+                      <TagBubble key={tag.slug} tag={tag} index={i} isSuggested />
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Categorized Tags */}
+              <div className="grid grid-cols-1 gap-5">
+                {Object.entries(categories).map(([key, category]) => {
+                  const categoryTags = tags.filter(t => t.category === key);
+                  if (categoryTags.length === 0) return null;
+
+                  return (
+                    <motion.div key={key} layout className="space-y-2.5">
+                      <button
+                        onClick={() => setExpandedCategory(expandedCategory === key ? null : key)}
+                        className="flex items-center gap-1.5 group w-full"
+                      >
+                        <div className={`w-6 h-6 rounded-lg flex items-center justify-center transition-all ${expandedCategory === key ? 'bg-primary/10' : 'bg-muted/50'}`}>
+                          <span className="text-xs">{category.emoji}</span>
+                        </div>
+                        <span className="text-[10px] font-black uppercase tracking-wider text-muted-foreground/80 group-hover:text-primary transition-colors">
+                          {category.label}
+                        </span>
+                        <div className="h-[1px] flex-1 bg-gradient-to-r from-border/50 to-transparent" />
+                        <span className="text-[10px] text-muted-foreground/50 group-hover:text-primary">
+                          {expandedCategory === key ? 'Ocultar' : `Ver ${categoryTags.length}`}
+                        </span>
+                      </button>
+
+                      <div className="flex flex-wrap gap-1.5">
+                        {(expandedCategory === key ? categoryTags : categoryTags.slice(0, 6)).map((tag, i) => (
+                          <TagBubble key={tag.slug} tag={tag} index={i} />
+                        ))}
+                        {expandedCategory !== key && categoryTags.length > 6 && (
+                          <button
+                            onClick={() => setExpandedCategory(key)}
+                            className="px-3 py-1.5 rounded-full border border-dashed border-border text-[11px] font-bold text-muted-foreground hover:text-primary hover:border-primary/40 transition-all flex items-center gap-1"
+                          >
+                            <span>+{categoryTags.length - 6}</span>
+                          </button>
+                        )}
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </>
+          )}
+        </AnimatePresence>
+      </div>
+
+      <div className="flex justify-center pt-2">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="rounded-full text-[10px] font-black uppercase tracking-[0.2em] text-primary/60 hover:text-primary hover:bg-primary/5 px-6"
+          onClick={() => navigate(AppRoute.TEMAS)}
+        >
+          Explorar todos os temas →
+        </Button>
       </div>
     </div>
   );
