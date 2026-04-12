@@ -1,9 +1,9 @@
 import React from 'react';
 import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from '@/components/ui/hover-card';
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import { Icons } from '../../constants';
 import { useCatechismParagraph } from '@/hooks/useCatechismParagraph';
 
