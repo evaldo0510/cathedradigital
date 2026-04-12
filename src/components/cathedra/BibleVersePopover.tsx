@@ -53,8 +53,8 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = ({
   };
 
   return (
-    <HoverCard openDelay={100} closeDelay={200}>
-      <HoverCardTrigger asChild>
+    <Popover>
+      <PopoverTrigger asChild>
         <button
           onClick={(e) => {
             e.preventDefault();
@@ -70,8 +70,8 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = ({
         >
           {label}
         </button>
-      </HoverCardTrigger>
-      <HoverCardContent
+      </PopoverTrigger>
+      <PopoverContent
         side="top"
         align="start"
         className="w-80 max-h-64 overflow-y-auto p-0 rounded-2xl border-primary/20"
