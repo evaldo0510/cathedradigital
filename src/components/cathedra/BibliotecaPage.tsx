@@ -19,7 +19,7 @@ const sections = [
   {
     title: 'Temas',
     description: 'Navegação inteligente por conexões teológicas',
-    icon: <Icons.Tag className="w-5 h-5" />,
+    icon: <Icons.Themes className="w-5 h-5" />,
     route: AppRoute.TEMAS,
     color: 'bg-accent/10 text-accent',
   },
