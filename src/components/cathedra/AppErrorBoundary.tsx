@@ -32,12 +32,24 @@ class AppErrorBoundary extends Component<Props, State> {
             Pedimos desculpas, mas algo deu errado ao carregar o aplicativo. 
             Nossa equipe técnica já foi notificada.
           </p>
-          <button
-            onClick={() => window.location.reload()}
-            className="px-8 py-3 bg-primary text-primary-foreground rounded-2xl text-xs font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-xl"
-          >
-            Tentar Novamente
-          </button>
+          <div className="flex flex-col gap-3 w-full max-w-xs">
+            <button
+              onClick={() => window.location.reload()}
+              className="px-8 py-3 bg-primary text-primary-foreground rounded-2xl text-xs font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-xl"
+            >
+              Tentar Novamente
+            </button>
+            <button
+              onClick={() => {
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.href = '/';
+              }}
+              className="px-8 py-3 bg-muted text-primary rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-muted/80 transition-all border border-border"
+            >
+              Limpar Dados e Reiniciar
+            </button>
+          </div>
         </div>
       );
     }
