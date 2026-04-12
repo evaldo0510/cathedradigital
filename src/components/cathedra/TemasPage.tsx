@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Book, Bookmark, FileText, Tag, Loader2, ChevronRight, Hash } from 'lucide-react';
@@ -24,6 +25,7 @@ interface ThemeContent {
 }
 
 const TemasPage = () => {
+  const [searchParams] = useSearchParams();
   const [selectedTheme, setSelectedTheme] = useState<Theme | null>(null);
 
   const { data: themes, isLoading: loadingThemes } = useQuery({
@@ -37,6 +39,15 @@ const TemasPage = () => {
       return data as Theme[];
     },
   });
+
+  // Auto-select theme from URL param ?tema=slug
+  useEffect(() => {
+    const temaSlug = searchParams.get('tema');
+    if (temaSlug && themes && !selectedTheme) {
+      const match = themes.find(t => t.slug === temaSlug);
+      if (match) setSelectedTheme(match);
+    }
+  }, [themes, searchParams, selectedTheme]);
 
   const { data: contents, isLoading: loadingContents } = useQuery({
     queryKey: ['theme-contents', selectedTheme?.id],
