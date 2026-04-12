@@ -125,6 +125,9 @@ Deno.serve(async (req) => {
       .replace(/<nav[\s\S]*?<\/nav>/gi, '')
       .replace(/<header[\s\S]*?<\/header>/gi, '')
       .replace(/<footer[\s\S]*?<\/footer>/gi, '')
+      // Remove archive table navigation (usually at the top)
+      .replace(/<table[^>]*>[\s\S]*?logo-vatican\.png[\s\S]*?<\/table>/gi, '')
+      .replace(/<table[^>]*>[\s\S]*?top\.png[\s\S]*?<\/table>/gi, '')
       // Remove translation links div
       .replace(/<div\s+class="translation-field">[\s\S]*?<\/div>\s*<\/div>/gi, '')
       .replace(/<div\s+class="abstract[^"]*">[\s\S]*?<\/div>/gi, '')
