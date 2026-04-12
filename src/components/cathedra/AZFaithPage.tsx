@@ -662,7 +662,7 @@ const AZFaithPage: React.FC = () => {
                           if (bibleSeg && bibleSeg.abbr) {
                             return (
                               <BibleVersePopover
-                                key={idx}
+                                 key={`${v}-${idx}`}
                                 abbr={bibleSeg.abbr}
                                 chapter={bibleSeg.chapter!}
                                 verse={bibleSeg.verse}
