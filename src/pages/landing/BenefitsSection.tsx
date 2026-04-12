@@ -5,10 +5,26 @@ import { Button } from "@/components/ui/button";
 import { fadeUp, cardHover, buttonHover } from "./animations";
 
 const registerBenefits = [
-  { title: "Progresso Salvo", description: "Sincronize sua leitura da Bíblia e do Catecismo entre todos os seus dispositivos.", icon: <Bookmark className="h-4 w-4 text-primary" /> },
-  { title: "Favoritos e Notas", description: "Crie sua biblioteca pessoal de versículos, parágrafos e orações prediletas.", icon: <Star className="h-4 w-4 text-primary" /> },
-  { title: "Gamificação", description: "Ganhe XP, insígnias e mantenha sua 'streak' de oração e estudo ativa.", icon: <Trophy className="h-4 w-4 text-primary" /> },
-  { title: "Acesso Completo", description: "Desbloqueie ferramentas exclusivas de análise e o assistente de estudo inteligente.", icon: <ShieldCheck className="h-4 w-4 text-primary" /> },
+  { 
+    title: "Vida de Oração", 
+    description: "Sincronize seu plano de leitura bíblica e estudos teológicos em todos os seus dispositivos.", 
+    icon: <Bookmark className="h-4 w-4 text-primary" /> 
+  },
+  { 
+    title: "Tesouros Pessoais", 
+    description: "Guarde versículos, orações e meditações que tocam seu coração para consultas rápidas.", 
+    icon: <Star className="h-4 w-4 text-primary" /> 
+  },
+  { 
+    title: "Constância", 
+    description: "Acompanhe sua jornada com metas de estudo, insígnias e lembretes para manter o hábito espiritual.", 
+    icon: <Trophy className="h-4 w-4 text-primary" /> 
+  },
+  { 
+    title: "Estudo Guiado", 
+    description: "Desbloqueie o acesso completo ao Logos IA para diálogos teológicos sem limites.", 
+    icon: <ShieldCheck className="h-4 w-4 text-primary" /> 
+  },
 ];
 
 interface BenefitsSectionProps {
@@ -35,10 +51,10 @@ const BenefitsSection = ({ onLogin }: BenefitsSectionProps) => {
         <div className="space-y-10">
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="space-y-6">
             <h2 className="text-4xl md:text-5xl font-display font-bold leading-tight">
-              Por que criar sua conta no <span className="text-primary italic font-serif">Cathedra?</span>
+              Sua morada espiritual no <span className="text-primary italic font-serif">Cathedra</span>
             </h2>
             <p className="text-lg opacity-70 leading-relaxed max-w-xl">
-              O acesso completo permite uma experiência personalizada e contínua, guardando sua história com a Palavra de Deus e a Tradição.
+              Criar sua conta permite uma experiência única de crescimento, guardando sua história viva com a Palavra de Deus e o Magistério.
             </p>
           </motion.div>
 
