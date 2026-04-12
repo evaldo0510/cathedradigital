@@ -8,8 +8,8 @@ import { AppRoute } from "@/types";
 const features = [
   { 
     title: "Logos IA", 
-    description: "Um assistente contemplativo treinado com o Magistério da Igreja para iluminar suas reflexões e dúvidas de fé.", 
-    benefit: "Receba orientações espirituais profundas e fundamentadas na sã doutrina.", 
+    description: "Um mentor espiritual para os tempos modernos, pronto para caminhar ao seu lado no estudo do Magistério e na oração.", 
+    benefit: "Encontre respostas que aquecem o coração e iluminam a inteligência com a sabedoria da Igreja.", 
     icon: <Sparkles className="h-6 w-6" />, 
     route: AppRoute.DASHBOARD 
   },
