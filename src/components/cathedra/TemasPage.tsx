@@ -389,15 +389,16 @@ const ContentSection = React.forwardRef<HTMLDivElement, ContentSectionProps>(({ 
                     <Button 
                       onClick={() => {
                         if (item.content_type === 'journey') {
-                          window.location.href = `/jornadas/${item.id}`;
+                          navigate(`/jornadas/${item.id}`);
                         } else if (item.content_type === 'bible') {
-                          window.location.href = `/bible?ref=${item.reference}`;
+                          navigate(`/bible?ref=${item.reference}`);
                         } else if (item.content_type === 'catechism') {
-                          window.location.href = `/catechism?para=${item.reference.replace('Catecismo ', '')}`;
+                          navigate(`/catechism?para=${item.reference.replace('Catecismo ', '')}`);
                         }
                       }}
                       size="sm" 
                       className="rounded-full gap-2 px-6 shadow-md hover:shadow-lg transition-all group-hover:scale-[1.02]"
+
                     >
                       Explorar no Texto <ChevronRight className="h-4 w-4" />
                     </Button>
