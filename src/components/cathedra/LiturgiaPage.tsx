@@ -1,5 +1,5 @@
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useMemo, useCallback, useEffect, lazy, Suspense } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 
@@ -15,6 +15,9 @@ import { SAINTS_DATA } from '@/data/saints';
 import ReactMarkdown from 'react-markdown';
 import { toast } from 'sonner';
 import { getCachedLiturgy, cacheLiturgy } from '@/lib/offlineCache';
+
+const MissalPage = lazy(() => import('./MissalPage'));
+const LiturgicalCalendarPage = lazy(() => import('./LiturgicalCalendarPage'));
 
 function usePrefetchLiturgyCache() {
   useEffect(() => {
@@ -135,6 +138,9 @@ const ReadingCard: React.FC<{
 
 const LiturgiaPage: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'liturgia';
+
   const { user, profile } = useAuth();
   const [selectedDate, setSelectedDate] = useState(() => new Date());
   const today = selectedDate;
@@ -290,126 +296,157 @@ const LiturgiaPage: React.FC = () => {
     <>
       <SEOHead title="Liturgia do Dia" description="Leituras do dia." path="/liturgia" keywords="liturgia" />
 
-      <div className="max-w-2xl mx-auto px-4 py-6 space-y-10">
-        <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} className="space-y-4 text-center">
-          <button onClick={() => navigate(-1)} className="flex items-center gap-1.5 text-muted-foreground hover:text-primary transition-colors text-sm mx-auto sm:mx-0">
-            <Icons.ChevronLeft className="w-4 h-4" />
-            <span className="text-xs font-black uppercase tracking-widest">Voltar</span>
-          </button>
-          <h1 className="text-3xl md:text-5xl font-display font-black text-primary tracking-tight">Liturgia do Dia</h1>
-          <div className="flex items-center justify-center gap-4">
-            <button onClick={goToPrevDay} className="p-3 rounded-2xl bg-muted hover:bg-primary hover:text-white transition-all text-primary">
-              <Icons.ChevronLeft className="w-5 h-5" />
-            </button>
-            <p className="text-sm font-bold text-primary capitalize min-w-[200px]">
-              {formatDate()}
-              {isToday && <span className="ml-2 text-secondary">(Hoje)</span>}
-            </p>
-            <button onClick={goToNextDay} disabled={isToday} className="p-3 rounded-2xl bg-muted hover:bg-primary hover:text-white transition-all text-primary disabled:opacity-20">
-              <Icons.ChevronRight className="w-5 h-5" />
-            </button>
-          </div>
-          {isOfflineData && (
-            <div className="flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground bg-muted/50 rounded-full px-4 py-2 mt-4 mx-auto w-fit">
-              <Icons.WifiOff className="w-3.5 h-3.5" /> <span>Modo Offline</span>
-            </div>
-          )}
-        </motion.div>
-
-        {profile?.diocese && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-secondary/5 border border-secondary/20 rounded-2xl p-4 flex items-center justify-between group"
-          >
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-secondary/10 text-secondary">
-                <Icons.Church className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="text-[10px] font-black uppercase tracking-widest text-secondary/60">Sua Diocese</p>
-                <h3 className="text-sm font-bold text-primary">{profile.diocese}</h3>
-              </div>
-            </div>
-            <div className="text-right">
-              <p className="text-[9px] font-medium text-muted-foreground uppercase tracking-widest">Estado</p>
-              <p className="text-xs font-bold text-primary">{profile.estado}</p>
-            </div>
-          </motion.div>
-        )}
-
-        {isLoading && <div className="flex justify-center py-20"><Icons.Loader2 className="w-10 h-10 text-secondary animate-spin" /></div>}
-
-        {readings && (
-          <div className="space-y-8">
-            {readings.primeiraLeitura && (
-              <ReadingCard label="Primeira Leitura" icon={<Icons.Bible className="w-5 h-5" />} reference={readings.primeiraLeitura.referencia} text={readings.primeiraLeitura.texto} onContext={() => navigate(parseRefToRoute(readings.primeiraLeitura.referencia))} onReflect={() => navigateToLectio(readings.primeiraLeitura.referencia)} delay={0.1} />
-            )}
-            {readings.salmo && (
-              <ReadingCard label="Salmo Responsorial" icon={<Icons.Music className="w-5 h-5" />} reference={readings.salmo.referencia} text={readings.salmo.texto} refrain={readings.salmo.refrao} onContext={() => navigate(parseRefToRoute(readings.salmo.referencia))} onReflect={() => navigateToLectio(readings.salmo.referencia)} delay={0.2} />
-            )}
-            {readings.segundaLeitura && typeof readings.segundaLeitura === 'object' && (
-              <ReadingCard label="Segunda Leitura" icon={<Icons.BookOpen className="w-5 h-5" />} reference={(readings.segundaLeitura as Reading).referencia} text={(readings.segundaLeitura as Reading).texto} onContext={() => navigate(parseRefToRoute((readings.segundaLeitura as Reading).referencia))} onReflect={() => navigateToLectio((readings.segundaLeitura as Reading).referencia)} delay={0.25} />
-            )}
-            {readings.evangelho && (
-              <ReadingCard label="Evangelho" icon={<Icons.Lectio className="w-5 h-5" />} reference={readings.evangelho.referencia} text={readings.evangelho.texto} onContext={() => navigate(parseRefToRoute(readings.evangelho.referencia))} onReflect={() => navigateToLectio(readings.evangelho.referencia)} delay={0.3} />
-            )}
-          </div>
-        )}
-
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="bg-primary text-white rounded-[2rem] p-10 text-center space-y-6 shadow-2xl">
-          <Icons.Brain className="w-8 h-8 text-secondary mx-auto" />
-          <p className="text-[10px] font-black uppercase tracking-[0.4em] opacity-60">Reflexão do Dia</p>
-          <p className="text-xl md:text-2xl font-serif italic leading-relaxed">"{pchReflection}"</p>
-        </motion.div>
-
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }} className="bg-card border border-border rounded-[2rem] p-8 space-y-6 shadow-sm">
-          <div className="text-center space-y-2">
-            <Icons.Sparkles className="w-6 h-6 text-secondary mx-auto" />
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">Meditação com IARA</p>
-          </div>
-          {!meditation && !isMeditationLoading && (
-            <Button onClick={fetchMeditation} className="w-full h-14 rounded-2xl bg-primary text-white font-black uppercase tracking-widest hover:scale-[1.02] transition-transform">Gerar Meditação Personalizada</Button>
-          )}
-          {isMeditationLoading && <div className="flex flex-col items-center gap-3 py-6"><Icons.Loader2 className="w-8 h-8 text-secondary animate-spin" /><p className="text-xs font-bold text-muted-foreground animate-pulse">Sintonizando frequências espirituais...</p></div>}
-          {meditation && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-              <div className="prose prose-sm dark:prose-invert font-serif leading-relaxed text-primary max-w-none"><ReactMarkdown>{meditation}</ReactMarkdown></div>
-              <div className="flex gap-2"><Button variant="outline" className="flex-1 h-12 rounded-xl text-[10px] font-black uppercase tracking-widest border-secondary/20" onClick={() => shareMeditation('whatsapp')}>WhatsApp</Button><Button variant="outline" className="flex-1 h-12 rounded-xl text-[10px] font-black uppercase tracking-widest" onClick={() => shareMeditation('copy')}>{copiedMeditation ? 'Copiado!' : 'Copiar'}</Button></div>
-            </div>
-          )}
-        </motion.div>
-
-        {saintsToday.length > 0 && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} className="bg-muted/30 border border-border rounded-[2rem] p-8 flex flex-col items-center text-center space-y-4">
-            <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-secondary p-1 shadow-lg shadow-secondary/10">
-              <img src={saintsToday[0].image} alt={saintsToday[0].name} className="w-full h-full object-cover rounded-full" />
-            </div>
-            <div className="space-y-1">
-              <p className="text-[9px] font-black uppercase tracking-[0.3em] text-secondary">
-                {saintsToday.length > 1 ? 'Santos do Dia' : 'Santo do Dia'}
-              </p>
-              <h3 className="text-xl font-display font-black text-primary">
-                {saintsToday.map(s => s.name).join(' e ')}
-              </h3>
-            </div>
-            <div className="flex flex-col gap-2 w-full">
-              <Button 
-                variant="ghost" 
-                className="text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:bg-primary/5 h-10" 
-                onClick={() => navigate(AppRoute.SAINTS)}
+      <div className="max-w-4xl mx-auto px-4 py-6 space-y-10">
+        {/* Navigation Tabs */}
+        <div className="flex justify-center mb-8">
+          <div className="bg-muted/40 p-1.5 rounded-[2rem] border border-border/40 flex gap-1 overflow-x-auto max-w-full">
+            {[
+              { id: 'liturgia', label: 'Liturgia', icon: <Icons.Liturgy className="w-4 h-4" /> },
+              { id: 'missal', label: 'Missal', icon: <Icons.Cross className="w-4 h-4" /> },
+              { id: 'calendario', label: 'Calendário', icon: <Icons.Calendar className="w-4 h-4" /> }
+            ].map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setSearchParams({ tab: tab.id })}
+                className={`flex items-center gap-2 px-8 py-2.5 rounded-full text-sm font-semibold transition-all ${
+                  activeTab === tab.id 
+                    ? 'bg-background shadow-lg text-primary' 
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
+                }`}
               >
-                Conhecer História <Icons.ChevronRight className="w-4 h-4 ml-2" />
-              </Button>
-              <Button 
-                className="text-[10px] font-black uppercase tracking-widest bg-primary text-primary-foreground hover:bg-primary/90 h-11 rounded-xl shadow-lg shadow-primary/10" 
-                onClick={() => navigate(`${AppRoute.SAINTS}?action=reflect`)}
-              >
-                Refletir com Logos <Icons.Sparkles className="w-3.5 h-3.5 ml-2" />
-              </Button>
+                {tab.icon} {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <Suspense fallback={<div className="flex justify-center py-20"><Icons.Loader2 className="w-10 h-10 text-secondary animate-spin" /></div>}>
+          {activeTab === 'liturgia' && (
+            <div className="max-w-2xl mx-auto space-y-10 animate-in fade-in duration-500">
+              <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} className="space-y-4 text-center">
+                <button onClick={() => navigate(-1)} className="flex items-center gap-1.5 text-muted-foreground hover:text-primary transition-colors text-sm mx-auto sm:mx-0">
+                  <Icons.ChevronLeft className="w-4 h-4" />
+                  <span className="text-xs font-black uppercase tracking-widest">Voltar</span>
+                </button>
+                <h1 className="text-3xl md:text-5xl font-display font-black text-primary tracking-tight">Liturgia do Dia</h1>
+                <div className="flex items-center justify-center gap-4">
+                  <button onClick={goToPrevDay} className="p-3 rounded-2xl bg-muted hover:bg-primary hover:text-white transition-all text-primary">
+                    <Icons.ChevronLeft className="w-5 h-5" />
+                  </button>
+                  <p className="text-sm font-bold text-primary capitalize min-w-[200px]">
+                    {formatDate()}
+                    {isToday && <span className="ml-2 text-secondary">(Hoje)</span>}
+                  </p>
+                  <button onClick={goToNextDay} disabled={isToday} className="p-3 rounded-2xl bg-muted hover:bg-primary hover:text-white transition-all text-primary disabled:opacity-20">
+                    <Icons.ChevronRight className="w-5 h-5" />
+                  </button>
+                </div>
+                {isOfflineData && (
+                  <div className="flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground bg-muted/50 rounded-full px-4 py-2 mt-4 mx-auto w-fit">
+                    <Icons.WifiOff className="w-3.5 h-3.5" /> <span>Modo Offline</span>
+                  </div>
+                )}
+              </motion.div>
+
+              {profile?.diocese && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="bg-secondary/5 border border-secondary/20 rounded-2xl p-4 flex items-center justify-between group"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-xl bg-secondary/10 text-secondary">
+                      <Icons.Church className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-secondary/60">Sua Diocese</p>
+                      <h3 className="text-sm font-bold text-primary">{profile.diocese}</h3>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[9px] font-medium text-muted-foreground uppercase tracking-widest">Estado</p>
+                    <p className="text-xs font-bold text-primary">{profile.estado}</p>
+                  </div>
+                </motion.div>
+              )}
+
+              {isLoading && <div className="flex justify-center py-20"><Icons.Loader2 className="w-10 h-10 text-secondary animate-spin" /></div>}
+
+              {readings && (
+                <div className="space-y-8">
+                  {readings.primeiraLeitura && (
+                    <ReadingCard label="Primeira Leitura" icon={<Icons.Bible className="w-5 h-5" />} reference={readings.primeiraLeitura.referencia} text={readings.primeiraLeitura.texto} onContext={() => navigate(parseRefToRoute(readings.primeiraLeitura.referencia))} onReflect={() => navigateToLectio(readings.primeiraLeitura.referencia)} delay={0.1} />
+                  )}
+                  {readings.salmo && (
+                    <ReadingCard label="Salmo Responsorial" icon={<Icons.Music className="w-5 h-5" />} reference={readings.salmo.referencia} text={readings.salmo.texto} refrain={readings.salmo.refrao} onContext={() => navigate(parseRefToRoute(readings.salmo.referencia))} onReflect={() => navigateToLectio(readings.salmo.referencia)} delay={0.2} />
+                  )}
+                  {readings.segundaLeitura && typeof readings.segundaLeitura === 'object' && (
+                    <ReadingCard label="Segunda Leitura" icon={<Icons.BookOpen className="w-5 h-5" />} reference={(readings.segundaLeitura as Reading).referencia} text={(readings.segundaLeitura as Reading).texto} onContext={() => navigate(parseRefToRoute((readings.segundaLeitura as Reading).referencia))} onReflect={() => navigateToLectio((readings.segundaLeitura as Reading).referencia)} delay={0.25} />
+                  )}
+                  {readings.evangelho && (
+                    <ReadingCard label="Evangelho" icon={<Icons.Lectio className="w-5 h-5" />} reference={readings.evangelho.referencia} text={readings.evangelho.texto} onContext={() => navigate(parseRefToRoute(readings.evangelho.referencia))} onReflect={() => navigateToLectio(readings.evangelho.referencia)} delay={0.3} />
+                  )}
+                </div>
+              )}
+
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="bg-primary text-white rounded-[2rem] p-10 text-center space-y-6 shadow-2xl">
+                <Icons.Brain className="w-8 h-8 text-secondary mx-auto" />
+                <p className="text-[10px] font-black uppercase tracking-[0.4em] opacity-60">Reflexão do Dia</p>
+                <p className="text-xl md:text-2xl font-serif italic leading-relaxed">"{pchReflection}"</p>
+              </motion.div>
+
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }} className="bg-card border border-border rounded-[2rem] p-8 space-y-6 shadow-sm">
+                <div className="text-center space-y-2">
+                  <Icons.Sparkles className="w-6 h-6 text-secondary mx-auto" />
+                  <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">Meditação com IARA</p>
+                </div>
+                {!meditation && !isMeditationLoading && (
+                  <Button onClick={fetchMeditation} className="w-full h-14 rounded-2xl bg-primary text-white font-black uppercase tracking-widest hover:scale-[1.02] transition-transform">Gerar Meditação Personalizada</Button>
+                )}
+                {isMeditationLoading && <div className="flex flex-col items-center gap-3 py-6"><Icons.Loader2 className="w-8 h-8 text-secondary animate-spin" /><p className="text-xs font-bold text-muted-foreground animate-pulse">Sintonizando frequências espirituais...</p></div>}
+                {meditation && (
+                  <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+                    <div className="prose prose-sm dark:prose-invert font-serif leading-relaxed text-primary max-w-none"><ReactMarkdown>{meditation}</ReactMarkdown></div>
+                    <div className="flex gap-2"><Button variant="outline" className="flex-1 h-12 rounded-xl text-[10px] font-black uppercase tracking-widest border-secondary/20" onClick={() => shareMeditation('whatsapp')}>WhatsApp</Button><Button variant="outline" className="flex-1 h-12 rounded-xl text-[10px] font-black uppercase tracking-widest" onClick={() => shareMeditation('copy')}>{copiedMeditation ? 'Copiado!' : 'Copiar'}</Button></div>
+                  </div>
+                )}
+              </motion.div>
+
+              {saintsToday.length > 0 && (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} className="bg-muted/30 border border-border rounded-[2rem] p-8 flex flex-col items-center text-center space-y-4">
+                  <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-secondary p-1 shadow-lg shadow-secondary/10">
+                    <img src={saintsToday[0].image} alt={saintsToday[0].name} className="w-full h-full object-cover rounded-full" />
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-[9px] font-black uppercase tracking-[0.3em] text-secondary">
+                      {saintsToday.length > 1 ? 'Santos do Dia' : 'Santo do Dia'}
+                    </p>
+                    <h3 className="text-xl font-display font-black text-primary">
+                      {saintsToday.map(s => s.name).join(' e ')}
+                    </h3>
+                  </div>
+                  <div className="flex flex-col gap-2 w-full">
+                    <Button 
+                      variant="ghost" 
+                      className="text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:bg-primary/5 h-10" 
+                      onClick={() => navigate(AppRoute.SAINTS)}
+                    >
+                      Conhecer História <Icons.ChevronRight className="w-4 h-4 ml-2" />
+                    </Button>
+                    <Button 
+                      className="text-[10px] font-black uppercase tracking-widest bg-primary text-primary-foreground hover:bg-primary/90 h-11 rounded-xl shadow-lg shadow-primary/10" 
+                      onClick={() => navigate(`${AppRoute.SAINTS}?action=reflect`)}
+                    >
+                      Refletir com Logos <Icons.Sparkles className="w-3.5 h-3.5 ml-2" />
+                    </Button>
+                  </div>
+                </motion.div>
+              )}
             </div>
-          </motion.div>
-        )}
+          )}
+          {activeTab === 'missal' && <div className="animate-in fade-in slide-in-from-bottom-4 duration-500"><MissalPage /></div>}
+          {activeTab === 'calendario' && <div className="animate-in fade-in slide-in-from-bottom-4 duration-500"><LiturgicalCalendarPage /></div>}
+        </Suspense>
       </div>
     </>
   );

@@ -189,6 +189,7 @@ export const TAG_CATEGORIES = {
       { slug: 'constancia', label: 'Constância', emoji: '🏔️' },
       { slug: 'rotina', label: 'Rotina', emoji: '⏰' },
       { slug: 'sabedoria', label: 'Sabedoria', emoji: '📖' },
+      { slug: 'humildade', label: 'Humildade', emoji: '🌾' },
     ],
   },
 } as const;
