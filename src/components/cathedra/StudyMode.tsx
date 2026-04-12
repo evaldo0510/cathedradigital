@@ -94,6 +94,42 @@ const StudyMode: React.FC = () => {
   const location = useLocation();
   const { user } = useAuth();
   
+  const [diagnosis, setDiagnosis] = useState<any>(null);
+  useEffect(() => {
+    if (!user) return;
+    (supabase as any)
+      .from('user_sensitive_data')
+      .select('diagnosis_result')
+      .eq('user_id', user.id)
+      .maybeSingle()
+      .then(({ data }: any) => {
+        if (data?.diagnosis_result) setDiagnosis(data.diagnosis_result);
+      });
+  }, [user]);
+
+  const profile = diagnosis?.spiritual_profile;
+
+  const dynamicSuggestions = useMemo(() => {
+    const base = [...SUGGESTIONS];
+    if (profile === 'ferido_em_busca') {
+      base.unshift("Como encontrar paz em meio à ansiedade?");
+      base.unshift("O que a Bíblia diz sobre o descanso da alma?");
+    } else if (profile === 'ansioso_buscador') {
+      base.unshift("Como o perdão de Deus pode me libertar da culpa?");
+      base.unshift("Explique a misericórdia divina para quem falhou.");
+    } else if (profile === 'sedento_de_sentido') {
+      base.unshift("Qual o propósito da vida segundo Santo Agostinho?");
+      base.unshift("Como descobrir minha vocação e missão?");
+    } else if (profile === 'firme_aprofundando') {
+      base.unshift("Explique a oração contemplativa de Santa Teresa.");
+      base.unshift("Quais são as etapas da vida espiritual (vias)?");
+    } else if (profile === 'ardente_missionario') {
+      base.unshift("Como manter o fervor apostólico no deserto?");
+      base.unshift("Explique o papel do Espírito Santo na missão.");
+    }
+    return base.slice(0, 4);
+  }, [profile]);
+
   const initialMode = (location.state as any)?.mode || null;
   const [currentMode, setCurrentMode] = useState<string | null>(initialMode);
   const initialTopicProcessed = useRef(false);
