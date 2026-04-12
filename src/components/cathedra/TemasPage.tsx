@@ -227,7 +227,7 @@ const TemasPage = () => {
                 );
               })
             )}
-          </div>
+          </motion.div>
         </div>
       </div>
 
