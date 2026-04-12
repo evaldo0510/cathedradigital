@@ -58,7 +58,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon, route, isAct
       {React.cloneElement(icon as React.ReactElement, { 
         className: `w-5 h-5 sm:w-5 sm:h-5 ${isActive ? 'drop-shadow-[0_0_8px_hsl(var(--primary)/0.4)]' : ''}`,
         size: undefined,
-        strokeWidth: 2
+        strokeWidth: 1.75
       })}
     </div>
     <span className={`text-[8px] sm:text-[10px] font-bold uppercase tracking-tight sm:tracking-widest leading-none ${
