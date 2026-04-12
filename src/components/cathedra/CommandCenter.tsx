@@ -136,7 +136,7 @@ const CommandCenter: React.FC = () => {
 
     setGlobalResults(results);
     setGlobalLoading(false);
-  }, [runGlobalSearch]);
+  }, []);
 
   useEffect(() => {
     if (searchMode === 'global' && query.length >= 3) {
