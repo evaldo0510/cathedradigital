@@ -826,7 +826,7 @@ const HojePage: React.FC = () => {
           <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground">Explorar</h3>
           <div className="space-y-1.5">
             {[
-              { label: 'A-Z da Fé', route: AppRoute.AZ_FAITH, icon: <Icons.BookOpen className="w-4 h-4" /> },
+              { label: 'A-Z da Fé', route: AppRoute.AZ_FAITH, icon: <Icons.AZ className="w-4 h-4" /> },
               { label: 'Jornadas', route: AppRoute.JORNADAS, icon: <Icons.Route className="w-4 h-4" /> },
               { label: 'Comunidade', route: AppRoute.COMMUNITY, icon: <Icons.Users className="w-4 h-4" /> },
             ].map((item) => (

@@ -114,7 +114,10 @@ import {
   Video,
   Tag,
   Orbit,
-  Disc
+  Disc,
+  Layers,
+  Languages,
+  BookMarked
 } from 'lucide-react';
 import { cn } from './lib/utils';
 
@@ -232,10 +235,12 @@ export const Icons = {
   ScrollText: createIcon(ScrollText),
   Quote: createIcon(Quote),
   Type: createIcon(Type),
-  Glossary: createIcon(Type),
+  Glossary: createIcon(BookMarked),
+  AZ: createIcon(Languages),
   History: createIcon(History),
   Bookmark: createIcon(Bookmark),
   Tag: createIcon(Tag),
+  Themes: createIcon(Orbit),
   Swords: createIcon(Swords),
   
   // Spiritual Life
@@ -267,6 +272,7 @@ export const Icons = {
   Flag: createIcon(Award),
   Activity: createIcon(Activity),
   Stethoscope: createIcon(Stethoscope),
+  Certamen: createIcon(Trophy),
   
   // Community & Interaction
   Community: createIcon(Users),
