@@ -2,6 +2,7 @@ import React from 'react';
 import { Icons } from '../../constants';
 import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
+import MagisteriumPopover from './MagisteriumPopover';
 
 interface BibleRef {
   abbr: string;
