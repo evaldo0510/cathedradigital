@@ -57,12 +57,24 @@ Deno.serve(async (req) => {
 
     console.log('Fetching Vatican document:', url);
 
-    const response = await fetch(url, {
+    let response = await fetch(url, {
       headers: {
         'User-Agent': 'CathedraDigital/1.0 (Catholic study platform)',
         'Accept': 'text/html',
       },
     });
+
+    // Handle common Vatican.va URL suffix issue (_pt.html vs _po.html for Portuguese)
+    if (response.status === 404 && url.endsWith('_pt.html')) {
+      const fallbackUrl = url.replace('_pt.html', '_po.html');
+      console.log('Retrying with fallback URL:', fallbackUrl);
+      response = await fetch(fallbackUrl, {
+        headers: {
+          'User-Agent': 'CathedraDigital/1.0 (Catholic study platform)',
+          'Accept': 'text/html',
+        },
+      });
+    }
 
     if (!response.ok) {
       return new Response(
@@ -125,6 +137,9 @@ Deno.serve(async (req) => {
       .replace(/<nav[\s\S]*?<\/nav>/gi, '')
       .replace(/<header[\s\S]*?<\/header>/gi, '')
       .replace(/<footer[\s\S]*?<\/footer>/gi, '')
+      // Remove archive table navigation (usually at the top)
+      .replace(/<table[^>]*>[\s\S]*?logo-vatican\.png[\s\S]*?<\/table>/gi, '')
+      .replace(/<table[^>]*>[\s\S]*?top\.png[\s\S]*?<\/table>/gi, '')
       // Remove translation links div
       .replace(/<div\s+class="translation-field">[\s\S]*?<\/div>\s*<\/div>/gi, '')
       .replace(/<div\s+class="abstract[^"]*">[\s\S]*?<\/div>/gi, '')
