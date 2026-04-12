@@ -53,19 +53,9 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = ({
   };
 
   return (
-    <Popover>
+    <Popover onOpenChange={(open) => open && fetchVerses()}>
       <PopoverTrigger asChild>
         <button
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            if (onNavigate) {
-              onNavigate(abbr, chapter);
-            } else {
-              fetchVerses();
-            }
-          }}
-          onMouseEnter={fetchVerses}
           className="px-2.5 py-1 rounded-lg bg-card border border-border text-xs font-bold text-primary hover:bg-primary hover:text-primary-foreground transition-all"
         >
           {label}
