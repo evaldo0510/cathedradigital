@@ -59,9 +59,10 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
     }
   ];
 
-  const handleNav = (item: { path: string; onClick?: () => void }) => {
-    if (item.onClick) item.onClick();
-    navigate(item.path);
+  const handleNav = (item: string | { path: string; onClick?: () => void }) => {
+    const path = typeof item === 'string' ? item : item.path;
+    if (typeof item !== 'string' && item.onClick) item.onClick();
+    navigate(path);
     onClose?.();
   };
 
