@@ -194,7 +194,8 @@ export const TAG_CATEGORIES = {
 } as const;
 
 /** Flat list of all tags */
-export const ALL_TAGS = Object.values(TAG_CATEGORIES).flatMap(c => c.tags);
+export const ALL_TAGS: { slug: string; label: string; emoji: string }[] =
+  Object.values(TAG_CATEGORIES).flatMap(c => [...c.tags]);
 
 /** Get tag info by slug */
 export function getTagBySlug(slug: string) {
