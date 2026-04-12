@@ -134,6 +134,17 @@ const QUESTIONS: QuizQuestion[] = [
     ],
   },
   {
+    id: 'conhecimento',
+    intro: 'A fé e a razão caminham juntas.\nConhecer a verdade nos liberta.',
+    question: 'Como você avalia seu conhecimento sobre a Fé?',
+    options: [
+      { label: 'Estou começando agora', value: 'iniciante', icon: <BookOpen className="w-5 h-5" />, weight: { ferido_em_busca: 3, ansioso_buscador: 3, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Conheço o básico, mas quero mais', value: 'medio', icon: <Brain className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 1, sedento_de_sentido: 3, firme_aprofundando: 1, ardente_missionario: 0 } },
+      { label: 'Tenho uma boa base doutrinária', value: 'avancado', icon: <Shield className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 1, firme_aprofundando: 4, ardente_missionario: 1 } },
+      { label: 'Estudo profundamente há anos', value: 'mestre', icon: <Sparkles className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 1, ardente_missionario: 4 } },
+    ],
+  },
+  {
     id: 'oracao',
     intro: 'A oração é o termômetro da alma.\nEla revela onde você está — sem julgamento.',
     question: 'Qual a sua relação com a oração?',
@@ -145,6 +156,17 @@ const QUESTIONS: QuizQuestion[] = [
     ],
   },
   {
+    id: 'tempo',
+    intro: 'Deus habita no agora.\nO tempo que damos a Ele é sagrado.',
+    question: 'Quanto tempo você dedica a Deus por dia?',
+    options: [
+      { label: 'Menos de 15 minutos', value: 'pouco', icon: <Clock className="w-5 h-5" />, weight: { ferido_em_busca: 3, ansioso_buscador: 3, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Entre 15 e 30 minutos', value: 'medio', icon: <Clock className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 1, sedento_de_sentido: 3, firme_aprofundando: 2, ardente_missionario: 0 } },
+      { label: 'Mais de 30 minutos', value: 'muito', icon: <Clock className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 1, firme_aprofundando: 3, ardente_missionario: 2 } },
+      { label: 'Vivo em constante oração', value: 'contemplativo', icon: <Flame className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 1, ardente_missionario: 4 } },
+    ],
+  },
+  {
     id: 'sacramento',
     intro: 'Os sacramentos são o toque de Deus\nna concretude da sua vida.',
     question: 'Como você vive os Sacramentos?',
@@ -153,6 +175,17 @@ const QUESTIONS: QuizQuestion[] = [
       { label: 'Vou à Missa quando posso', value: 'eventual', icon: <Church className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 1, sedento_de_sentido: 3, firme_aprofundando: 1, ardente_missionario: 0 } },
       { label: 'Missa semanal e confissão regular', value: 'regular', icon: <Sparkles className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 3, ardente_missionario: 1 } },
       { label: 'Vida sacramental intensa e diária', value: 'intensa', icon: <Flame className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 1, ardente_missionario: 3 } },
+    ],
+  },
+  {
+    id: 'obstaculo',
+    intro: 'Identificar o obstáculo\né o primeiro passo para a superação.',
+    question: 'O que mais te impede de crescer hoje?',
+    options: [
+      { label: 'Cansaço ou esgotamento mental', value: 'cansaco', icon: <Wind className="w-5 h-5" />, weight: { ferido_em_busca: 4, ansioso_buscador: 1, sedento_de_sentido: 0, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Falta de tempo e correria', value: 'tempo', icon: <Clock className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 4, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Falta de foco ou preguiça', value: 'foco', icon: <Brain className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 2, firme_aprofundando: 3, ardente_missionario: 0 } },
+      { label: 'Sentir-se sozinho na caminhada', value: 'solidao', icon: <Users className="w-5 h-5" />, weight: { ferido_em_busca: 1, ansioso_buscador: 0, sedento_de_sentido: 2, firme_aprofundando: 0, ardente_missionario: 3 } },
     ],
   },
   {
