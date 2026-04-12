@@ -449,36 +449,14 @@ const Bible: React.FC = () => {
                 </button>
               ))}
             </div>
-            {crossRefs.length > 0 && (
+            {(crossRefs.length > 0 || docsRefs.length > 0) && (
               <button onClick={() => setShowCrossRefs(!showCrossRefs)}
                 className={`flex items-center gap-2 px-3 py-2 rounded-xl border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}
-                title="Nexus Theologicus (Catecismo)">
+                title="Catecismo & Documentos">
                 <Icons.Cross className="w-4 h-4" />
-                <span className="text-xs font-bold">{crossRefs.length}</span>
+                <span className="text-xs font-bold">{crossRefs.length + docsRefs.length}</span>
               </button>
             )}
-            <ShareButton 
-              title={selectedBook.name} 
-              text={`Lendo ${selectedBook.name} na Cathedra: Digital Sanctuarium`} 
-            />
-          </div>
-        </div>
-
-
-        {/* Content */}
-        <div className="flex flex-col lg:grid lg:grid-cols-12 gap-6 items-start">
-          {/* Cross References Panel - Top on mobile, Side on desktop */}
-          {showCrossRefs && (crossRefs.length > 0 || docsRefs.length > 0) && (
-            <div className="w-full lg:col-span-4 lg:sticky lg:top-24 order-1 lg:order-2">
-              <CrossReferencePanel 
-                type="bible"
-                cicParagraphs={crossRefs} 
-                documents={docsRefs}
-                onNavigateToCIC={handleNavigateToCIC}
-                onNavigateToDoc={handleNavigateToDoc}
-              />
-            </div>
-          )}
 
           <div className={`${showCrossRefs && crossRefs.length > 0 ? 'lg:col-span-8' : 'lg:col-span-12'} w-full space-y-6 order-2 lg:order-1`}>
             <Card className="border-border/40 shadow-sm overflow-hidden bg-card/50 backdrop-blur-sm">
