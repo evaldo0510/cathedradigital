@@ -421,9 +421,11 @@ const StudyMode: React.FC = () => {
           {messages.length === 0 && (
             <div className="flex flex-col items-center justify-center h-full space-y-8">
               <Icons.Feather className="w-16 h-16 text-primary/30" />
-              <p className="text-muted-foreground font-serif italic text-center">O que sua alma busca hoje?</p>
+              <p className="text-muted-foreground font-serif italic text-center">
+                {diagnosis?.spiritual_profile ? "O Logos preparou algumas reflexões para o seu momento:" : "O que sua alma busca hoje?"}
+              </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl w-full">
-                {SUGGESTIONS.map((s, i) => (
+                {dynamicSuggestions.map((s, i) => (
                   <button key={i} onClick={() => sendMessage(s)}
                     className="text-left p-4 rounded-2xl border border-border bg-card hover:bg-primary/5 hover:border-primary/30 transition-all text-sm text-foreground">
                     {s}
