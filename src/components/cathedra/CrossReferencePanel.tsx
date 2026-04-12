@@ -25,10 +25,15 @@ const CrossReferencePanel: React.FC<CrossReferencePanelProps> = ({
   type,
   cicParagraphs = [],
   bibleRefs = [],
+  documents = [],
   onNavigateToCIC,
   onNavigateToBible,
+  onNavigateToDoc,
 }) => {
-  const hasRefs = type === 'bible' ? cicParagraphs.length > 0 : bibleRefs.length > 0;
+  const hasRefs = type === 'bible' 
+    ? (cicParagraphs.length > 0 || documents.length > 0)
+    : bibleRefs.length > 0;
+  
   if (!hasRefs) return null;
 
   return (
