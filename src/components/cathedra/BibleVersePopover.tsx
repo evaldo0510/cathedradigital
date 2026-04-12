@@ -56,7 +56,15 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = ({
     <HoverCard openDelay={100} closeDelay={200}>
       <HoverCardTrigger asChild>
         <button
-          onClick={fetchVerses}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (onNavigate) {
+              onNavigate(abbr, chapter);
+            } else {
+              fetchVerses();
+            }
+          }}
           onMouseEnter={fetchVerses}
           className="px-2.5 py-1 rounded-lg bg-card border border-border text-xs font-bold text-primary hover:bg-primary hover:text-primary-foreground transition-all"
         >

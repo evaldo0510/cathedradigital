@@ -395,7 +395,7 @@ const ContentSection = React.forwardRef<HTMLDivElement, ContentSectionProps>(({ 
                         } else if (item.content_type === 'bible') {
                           navigate(`/bible?ref=${item.reference}`);
                         } else if (item.content_type === 'catechism') {
-                          navigate(`/catechism?para=${item.reference.replace('Catecismo ', '')}`);
+                          navigate(`/catechism?p=${item.reference.replace('Catecismo ', '')}`);
                         }
                       }}
                       size="sm" 

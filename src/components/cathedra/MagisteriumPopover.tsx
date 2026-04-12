@@ -74,7 +74,15 @@ const MagisteriumPopover: React.FC<MagisteriumPopoverProps> = ({
     <HoverCard openDelay={100} closeDelay={200}>
       <HoverCardTrigger asChild>
         <button
-          onClick={fetchExcerpt}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (onNavigate) {
+              onNavigate(documentName);
+            } else {
+              fetchExcerpt();
+            }
+          }}
           onMouseEnter={fetchExcerpt}
           className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-xs font-bold text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800 dark:hover:bg-emerald-900/50 transition-all"
         >
