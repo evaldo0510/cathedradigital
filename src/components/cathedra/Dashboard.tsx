@@ -9,6 +9,7 @@ import { Icons } from '@/constants';
 import { useLang } from '@/hooks/useLang';
 import RitualDoDia from './RitualDoDia';
 import NexusBubbles from './NexusBubbles';
+import SpiritualQuiz from './SpiritualQuiz';
 
 interface DashboardProps {
   user: User | null;
