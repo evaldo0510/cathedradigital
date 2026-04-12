@@ -448,8 +448,14 @@ const AZFaithPage: React.FC = () => {
     if (q) {
       setSearchQuery(q);
       setSelectedLetter(null);
+      
+      const exactMatch = FAITH_TERMS.find(t => t.term.toLowerCase() === q.toLowerCase());
+      if (exactMatch) {
+        setSelectedTerm(exactMatch);
+      }
     }
   }, [location.search]);
+
 
   const filteredTerms = useMemo(() => {
     let result = FAITH_TERMS;
