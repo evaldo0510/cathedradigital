@@ -400,7 +400,7 @@ const Bible: React.FC = () => {
     const fs = FONT_SIZES[fontSizeIdx];
     const fromDashboard = searchParams.get('from') === 'dashboard';
     return (
-      <div className={`mx-auto space-y-6 transition-all duration-500 ${showCrossRefs && crossRefs.length > 0 ? 'max-w-3xl lg:max-w-6xl' : 'max-w-3xl'}`}>
+      <div className={`mx-auto space-y-6 transition-all duration-500 ${showCrossRefs && (crossRefs.length > 0 || docsRefs.length > 0) ? 'max-w-3xl lg:max-w-6xl' : 'max-w-3xl'}`}>
         {/* Back to Dashboard */}
         {fromDashboard && (
           <button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-xs text-primary hover:underline">
@@ -457,8 +457,30 @@ const Bible: React.FC = () => {
                 <span className="text-xs font-bold">{crossRefs.length + docsRefs.length}</span>
               </button>
             )}
+            <ShareButton 
+              title={selectedBook.name} 
+              text={`Lendo ${selectedBook.name} na Cathedra: Digital Sanctuarium`} 
+            />
+          </div>
+        </div>
 
-          <div className={`${showCrossRefs && crossRefs.length > 0 ? 'lg:col-span-8' : 'lg:col-span-12'} w-full space-y-6 order-2 lg:order-1`}>
+
+        {/* Content */}
+        <div className="flex flex-col lg:grid lg:grid-cols-12 gap-6 items-start">
+          {/* Cross References Panel - Top on mobile, Side on desktop */}
+          {showCrossRefs && (crossRefs.length > 0 || docsRefs.length > 0) && (
+            <div className="w-full lg:col-span-4 lg:sticky lg:top-24 order-1 lg:order-2">
+              <CrossReferencePanel 
+                type="bible"
+                cicParagraphs={crossRefs} 
+                documents={docsRefs}
+                onNavigateToCIC={handleNavigateToCIC}
+                onNavigateToDoc={handleNavigateToDoc}
+              />
+            </div>
+          )}
+
+          <div className={`${showCrossRefs && (crossRefs.length > 0 || docsRefs.length > 0) ? 'lg:col-span-8' : 'lg:col-span-12'} w-full space-y-6 order-2 lg:order-1`}>
             <Card className="border-border/40 shadow-sm overflow-hidden bg-card/50 backdrop-blur-sm">
               <CardContent className="p-6 md:p-8">
                 {isLoading ? (
@@ -556,7 +578,6 @@ const Bible: React.FC = () => {
               </motion.div>
             )}
           </div>
-
         </div>
       </div>
     );
