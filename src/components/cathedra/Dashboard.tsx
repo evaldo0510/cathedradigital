@@ -71,6 +71,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       gradient: 'from-primary/5 to-transparent',
       iconColor: 'text-primary',
       borderColor: 'border-border hover:border-secondary/50',
+      suggested: spiritualProfile === 'ferido_em_busca' || spiritualProfile === 'sedento_de_sentido',
     },
     {
       label: t('liturgy'),
@@ -80,6 +81,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       gradient: 'from-primary/5 to-transparent',
       iconColor: 'text-primary',
       borderColor: 'border-border hover:border-secondary/50',
+      suggested: spiritualProfile === 'ansioso_buscador',
     },
     {
       label: t('journeys'),
@@ -89,6 +91,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       gradient: 'from-primary/5 to-transparent',
       iconColor: 'text-primary',
       borderColor: 'border-border hover:border-secondary/50',
+      suggested: spiritualProfile === 'firme_aprofundando',
     },
     {
       label: t('community'),
@@ -98,6 +101,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       gradient: 'from-primary/5 to-transparent',
       iconColor: 'text-primary',
       borderColor: 'border-border hover:border-secondary/50',
+      suggested: spiritualProfile === 'ardente_missionario',
     },
   ];
 
