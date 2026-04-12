@@ -166,9 +166,12 @@ const TemasPage = () => {
           </div>
           
           <div className="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0 scrollbar-none">
-            {categories.map((cat) => (
-              <button
+            {categories.map((cat, idx) => (
+              <motion.button
                 key={cat}
+                initial={{ opacity: 0, x: 10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: idx * 0.05 }}
                 onClick={() => setActiveCategory(cat)}
                 className={`
                   whitespace-nowrap px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all
@@ -179,7 +182,7 @@ const TemasPage = () => {
                 `}
               >
                 {cat === 'all' ? 'Todos' : cat.charAt(0).toUpperCase() + cat.slice(1)}
-              </button>
+              </motion.button>
             ))}
           </div>
         </div>
