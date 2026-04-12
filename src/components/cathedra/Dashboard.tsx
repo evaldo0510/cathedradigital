@@ -386,63 +386,98 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
 
       {/* ═══ DESKTOP RIGHT PANEL ═══ */}
       <aside className="desktop-aside">
-        {/* Weekly Stats */}
+        {/* Progress / Stats */}
         <div className="desktop-card space-y-4">
           <div className="flex items-center gap-2">
             <Icons.Activity className="w-4 h-4 text-primary" />
-            <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground">{t('weekly_summary')}</h3>
+            <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground">Progresso</h3>
           </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
-              <p className="text-2xl font-bold text-foreground">{weeklyStats.chaptersRead}</p>
-              <p className="text-[9px] text-muted-foreground font-medium mt-1">{t('bible')}</p>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Icons.Flame className="w-4 h-4 text-secondary" />
+              <span className="text-xs font-bold text-foreground">{t('streak')}</span>
             </div>
-            <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
-              <p className="text-2xl font-bold text-foreground">{streak}</p>
-              <p className="text-[9px] text-muted-foreground font-medium mt-1">{t('streak')}</p>
+            <span className="text-lg font-black text-primary">{streak} {streak === 1 ? t('day') : t('days')}</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Icons.Star className="w-4 h-4 text-secondary" />
+              <span className="text-xs font-bold text-foreground">XP</span>
             </div>
-            <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
-              <p className="text-2xl font-bold text-foreground">{weeklyStats.catechismParagraphs}</p>
-              <p className="text-[9px] text-muted-foreground font-medium mt-1">CIC</p>
+            <span className="text-lg font-black text-primary">{profile?.xp || 0}</span>
+          </div>
+          <div className="h-px bg-border" />
+          <div className="grid grid-cols-3 gap-2 text-center">
+            <div className="p-2 rounded-lg bg-primary/[0.04]">
+              <p className="text-lg font-bold text-foreground">{weeklyStats.chaptersRead}</p>
+              <p className="text-[8px] text-muted-foreground font-medium">{t('bible')}</p>
             </div>
-            <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
-              <p className="text-2xl font-bold text-foreground">{weeklyStats.journeySteps}</p>
-              <p className="text-[9px] text-muted-foreground font-medium mt-1">{t('journeys')}</p>
+            <div className="p-2 rounded-lg bg-primary/[0.04]">
+              <p className="text-lg font-bold text-foreground">{weeklyStats.catechismParagraphs}</p>
+              <p className="text-[8px] text-muted-foreground font-medium">CIC</p>
+            </div>
+            <div className="p-2 rounded-lg bg-primary/[0.04]">
+              <p className="text-lg font-bold text-foreground">{weeklyStats.journeySteps}</p>
+              <p className="text-[8px] text-muted-foreground font-medium">{t('journeys')}</p>
             </div>
           </div>
+          {activeJourneys.length > 0 && (
+            <>
+              <div className="h-px bg-border" />
+              <div className="space-y-2">
+                {activeJourneys.slice(0, 2).map((j) => {
+                  const pct = j.totalSteps > 0 ? Math.round((j.completedSteps / j.totalSteps) * 100) : 0;
+                  return (
+                    <button
+                      key={j.id}
+                      onClick={() => goTo(`/jornadas/${j.id}`)}
+                      className="w-full flex items-center gap-3 p-2.5 rounded-xl bg-primary/[0.03] border border-primary/10 hover:border-primary/30 transition-colors text-left"
+                    >
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[11px] font-bold text-foreground truncate">{j.title}</p>
+                        <div className="mt-1.5 h-1 w-full bg-muted rounded-full overflow-hidden">
+                          <div className="h-full bg-primary transition-all" style={{ width: `${pct}%` }} />
+                        </div>
+                      </div>
+                      <span className="text-[10px] font-black text-primary">{pct}%</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </>
+          )}
         </div>
 
-        {/* Active Journeys */}
-        {activeJourneys.length > 0 && (
-          <div className="desktop-card space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground">{t('your_journeys')}</h3>
-              <button onClick={() => goTo(AppRoute.JORNADAS)} className="text-xs text-primary hover:underline flex items-center gap-1">
-                {t('view_all')} <Icons.ChevronRight className="w-3 h-3" />
-              </button>
+        {/* Logos (IA) Suggestion */}
+        <div
+          onClick={() => goTo('/study')}
+          className="desktop-card cursor-pointer hover:border-secondary/40 transition-all group space-y-3"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-secondary/15 flex items-center justify-center text-secondary group-hover:scale-110 transition-transform">
+              <Icons.Brain className="w-5 h-5" />
             </div>
-            <div className="space-y-2.5">
-              {activeJourneys.slice(0, 3).map((j) => {
-                const pct = j.totalSteps > 0 ? Math.round((j.completedSteps / j.totalSteps) * 100) : 0;
-                return (
-                  <button
-                    key={j.id}
-                    onClick={() => goTo(`/jornadas/${j.id}`)}
-                    className="w-full flex items-center gap-3 p-3 rounded-xl bg-primary/[0.03] border border-primary/10 hover:border-primary/30 transition-colors text-left"
-                  >
-                    <div className="w-8 h-8 rounded-lg bg-background flex items-center justify-center text-primary shadow-sm">
-                      <Icons.Compass className="w-4 h-4" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-bold text-foreground truncate">{j.title}</p>
-                      <div className="mt-1.5 h-1 w-full bg-muted rounded-full overflow-hidden">
-                        <div className="h-full bg-primary transition-all" style={{ width: `${pct}%` }} />
-                      </div>
-                    </div>
-                    <div className="text-[10px] font-black text-primary">{pct}%</div>
-                  </button>
-                );
-              })}
+            <div>
+              <p className="text-[9px] font-black uppercase tracking-[0.2em] text-secondary">Colloquium</p>
+              <p className="text-xs font-bold text-foreground group-hover:text-secondary transition-colors">IA Teológica</p>
+            </div>
+          </div>
+          <p className="text-[11px] text-muted-foreground leading-relaxed">Pergunte qualquer coisa sobre a Fé católica</p>
+        </div>
+
+        {/* PRO */}
+        {!profile?.is_premium && (
+          <div
+            onClick={() => goTo(AppRoute.PRICING)}
+            className="desktop-card cursor-pointer border-secondary/30 hover:border-secondary/50 bg-gradient-to-br from-secondary/5 via-card to-primary/5 transition-all group space-y-3"
+          >
+            <div className="flex items-center gap-2">
+              <Icons.Lock className="w-4 h-4 text-secondary" />
+              <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-secondary">Cathedra PRO</h3>
+            </div>
+            <p className="text-[11px] text-muted-foreground leading-relaxed">Desbloqueie jornadas, IA Logos, reflexões profundas e muito mais.</p>
+            <div className="flex items-center gap-1 text-xs font-bold text-secondary group-hover:underline">
+              Conhecer <Icons.ChevronRight className="w-3 h-3" />
             </div>
           </div>
         )}
