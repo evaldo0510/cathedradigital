@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Heart, BookOpen, Sun, ArrowRight, ArrowLeft, Flame, Brain, Clock, Shield, Eye, Wind, Anchor, Mountain } from 'lucide-react';
+import { Sparkles, Heart, BookOpen, Sun, ArrowRight, ArrowLeft, Flame, Brain, Clock, Shield, Eye, Wind, Anchor, Mountain, Users, Church } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -9,11 +9,11 @@ import { AppRoute } from '@/types';
 import confetti from 'canvas-confetti';
 
 /* ── Types ── */
-type ProfileId = 'ferido_em_busca' | 'ansioso_buscador' | 'sedento_de_sentido' | 'firme_aprofundando' | 'ardente_missionario';
-type PainId = 'ansiedade' | 'culpa' | 'vazio' | 'distancia' | 'solidao';
-type DirectionId = 'silencio' | 'perdao' | 'proposito' | 'oracao' | 'servico';
+export type ProfileId = 'ferido_em_busca' | 'ansioso_buscador' | 'sedento_de_sentido' | 'firme_aprofundando' | 'ardente_missionario';
+export type PainId = 'ansiedade' | 'culpa' | 'vazio' | 'distancia' | 'solidao';
+export type DirectionId = 'silencio' | 'perdao' | 'proposito' | 'oracao' | 'servico';
 
-interface ProfileResult {
+export interface ProfileResult {
   title: string;
   emoji: string;
   message: string;
@@ -23,9 +23,11 @@ interface ProfileResult {
   theme: string;
   color: string;
   bgGradient: string;
+  logosPrompt: string;
+  greeting: string;
 }
 
-const PROFILES: Record<ProfileId, ProfileResult> = {
+export const PROFILES: Record<ProfileId, ProfileResult> = {
   ferido_em_busca: {
     title: 'Ferido em Busca',
     emoji: '💔',
@@ -36,6 +38,8 @@ const PROFILES: Record<ProfileId, ProfileResult> = {
     theme: 'Paz',
     color: 'text-rose-500',
     bgGradient: 'from-rose-500/5 via-card to-amber-500/5',
+    logosPrompt: 'Estou ansioso e ferido. Preciso encontrar paz interior. Me ajude com uma reflexão acolhedora.',
+    greeting: 'Que a paz de Cristo alcance o seu coração hoje.',
   },
   ansioso_buscador: {
     title: 'Ansioso Buscador',
@@ -47,6 +51,8 @@ const PROFILES: Record<ProfileId, ProfileResult> = {
     theme: 'Perdão',
     color: 'text-sky-500',
     bgGradient: 'from-sky-500/5 via-card to-violet-500/5',
+    logosPrompt: 'Sinto culpa e peso interior. Preciso entender o perdão de Deus. Me ajude a me libertar.',
+    greeting: 'Deus já perdoou. Agora é a sua vez de se libertar.',
   },
   sedento_de_sentido: {
     title: 'Sedento de Sentido',
@@ -58,6 +64,8 @@ const PROFILES: Record<ProfileId, ProfileResult> = {
     theme: 'Fé',
     color: 'text-amber-500',
     bgGradient: 'from-amber-500/5 via-card to-emerald-500/5',
+    logosPrompt: 'Sinto vazio existencial e busco propósito. Me ajude a encontrar sentido na fé.',
+    greeting: 'Quem busca de coração, encontra. Continue caminhando.',
   },
   firme_aprofundando: {
     title: 'Firme e Aprofundando',
@@ -69,6 +77,8 @@ const PROFILES: Record<ProfileId, ProfileResult> = {
     theme: 'Oração',
     color: 'text-primary',
     bgGradient: 'from-primary/5 via-card to-secondary/5',
+    logosPrompt: 'Quero aprofundar minha fé e vida de oração. Me guie na contemplação e no estudo teológico.',
+    greeting: 'Persevere na santidade. Cada dia é um passo.',
   },
   ardente_missionario: {
     title: 'Ardente Missionário',
@@ -80,10 +90,12 @@ const PROFILES: Record<ProfileId, ProfileResult> = {
     theme: 'Propósito',
     color: 'text-red-500',
     bgGradient: 'from-red-500/5 via-card to-orange-500/5',
+    logosPrompt: 'Sou missionário e quero servir melhor. Me ajude a aprofundar a missão com raízes espirituais.',
+    greeting: 'O Espírito arde em você. Vá e incendeie o mundo.',
   },
 };
 
-/* ── Questions ── */
+/* ── Questions (7 perguntas) ── */
 interface QuizOption {
   label: string;
   value: string;
@@ -104,10 +116,10 @@ const QUESTIONS: QuizQuestion[] = [
     intro: 'Respire fundo.\nEsta primeira pergunta é sobre onde você está agora.',
     question: 'Como está o seu interior neste momento?',
     options: [
-      { label: 'Pesado, cansado por dentro', value: 'pesado', icon: <Heart className="w-5 h-5" />, weight: { ferido_em_busca: 3, ansioso_buscador: 2, sedento_de_sentido: 0, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Inquieto, procurando algo', value: 'inquieto', icon: <Wind className="w-5 h-5" />, weight: { ferido_em_busca: 1, ansioso_buscador: 1, sedento_de_sentido: 3, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Estável, mas querendo mais', value: 'estavel', icon: <Anchor className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 1, firme_aprofundando: 3, ardente_missionario: 1 } },
-      { label: 'Aceso, pronto para agir', value: 'aceso', icon: <Flame className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 1, ardente_missionario: 3 } },
+      { label: 'Pesado, cansado por dentro', value: 'pesado', icon: <Heart className="w-5 h-5" />, weight: { ferido_em_busca: 4, ansioso_buscador: 2, sedento_de_sentido: 0, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Inquieto, procurando algo', value: 'inquieto', icon: <Wind className="w-5 h-5" />, weight: { ferido_em_busca: 1, ansioso_buscador: 1, sedento_de_sentido: 4, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Estável, mas querendo mais', value: 'estavel', icon: <Anchor className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 1, firme_aprofundando: 4, ardente_missionario: 1 } },
+      { label: 'Aceso, pronto para agir', value: 'aceso', icon: <Flame className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 1, ardente_missionario: 4 } },
     ],
   },
   {
@@ -115,10 +127,10 @@ const QUESTIONS: QuizQuestion[] = [
     intro: 'Não tenha medo de olhar para dentro.\nDeus já conhece essa dor — e quer curá-la.',
     question: 'O que mais pesa no seu coração?',
     options: [
-      { label: 'Ansiedade ou medo do futuro', value: 'ansiedade', icon: <Wind className="w-5 h-5" />, weight: { ferido_em_busca: 3, ansioso_buscador: 2, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Culpa, remorso ou mágoas', value: 'culpa', icon: <Heart className="w-5 h-5" />, weight: { ferido_em_busca: 1, ansioso_buscador: 3, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Vazio, falta de propósito', value: 'vazio', icon: <Eye className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 1, sedento_de_sentido: 3, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Desejo de fazer mais por Deus', value: 'chamado', icon: <Flame className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 2, ardente_missionario: 3 } },
+      { label: 'Ansiedade ou medo do futuro', value: 'ansiedade', icon: <Wind className="w-5 h-5" />, weight: { ferido_em_busca: 4, ansioso_buscador: 2, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Culpa, remorso ou mágoas', value: 'culpa', icon: <Heart className="w-5 h-5" />, weight: { ferido_em_busca: 1, ansioso_buscador: 4, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Vazio, falta de propósito', value: 'vazio', icon: <Eye className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 1, sedento_de_sentido: 4, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Desejo de fazer mais por Deus', value: 'chamado', icon: <Flame className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 2, ardente_missionario: 4 } },
     ],
   },
   {
@@ -133,14 +145,36 @@ const QUESTIONS: QuizQuestion[] = [
     ],
   },
   {
+    id: 'sacramento',
+    intro: 'Os sacramentos são o toque de Deus\nna concretude da sua vida.',
+    question: 'Como você vive os Sacramentos?',
+    options: [
+      { label: 'Fui batizado mas não pratico', value: 'batizado', icon: <Church className="w-5 h-5" />, weight: { ferido_em_busca: 3, ansioso_buscador: 2, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Vou à Missa quando posso', value: 'eventual', icon: <Church className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 1, sedento_de_sentido: 3, firme_aprofundando: 1, ardente_missionario: 0 } },
+      { label: 'Missa semanal e confissão regular', value: 'regular', icon: <Sparkles className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 3, ardente_missionario: 1 } },
+      { label: 'Vida sacramental intensa e diária', value: 'intensa', icon: <Flame className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 1, ardente_missionario: 3 } },
+    ],
+  },
+  {
+    id: 'comunidade',
+    intro: 'Ninguém caminha sozinho.\nA fé se fortalece na comunhão.',
+    question: 'Como é a sua relação com a comunidade?',
+    options: [
+      { label: 'Não participo de nenhum grupo', value: 'sozinho', icon: <Sun className="w-5 h-5" />, weight: { ferido_em_busca: 3, ansioso_buscador: 2, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Gostaria, mas não sei como', value: 'desejo', icon: <Heart className="w-5 h-5" />, weight: { ferido_em_busca: 1, ansioso_buscador: 2, sedento_de_sentido: 3, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Participo de um grupo ou pastoral', value: 'ativo', icon: <Users className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 3, ardente_missionario: 1 } },
+      { label: 'Lidero ou sirvo ativamente', value: 'lider', icon: <Flame className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 0, ardente_missionario: 3 } },
+    ],
+  },
+  {
     id: 'desejo',
     intro: 'O desejo mais profundo do coração\nrevela a direção que Deus traçou para você.',
     question: 'O que o seu coração mais pede agora?',
     options: [
-      { label: 'Paz, silêncio interior', value: 'paz', icon: <Mountain className="w-5 h-5" />, weight: { ferido_em_busca: 3, ansioso_buscador: 1, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Cura, libertação de algo', value: 'cura', icon: <Heart className="w-5 h-5" />, weight: { ferido_em_busca: 1, ansioso_buscador: 3, sedento_de_sentido: 0, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Sentido, propósito claro', value: 'sentido', icon: <Eye className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 1, sedento_de_sentido: 3, firme_aprofundando: 1, ardente_missionario: 0 } },
-      { label: 'Servir, fazer diferença', value: 'servir', icon: <Flame className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 1, ardente_missionario: 3 } },
+      { label: 'Paz, silêncio interior', value: 'paz', icon: <Mountain className="w-5 h-5" />, weight: { ferido_em_busca: 4, ansioso_buscador: 1, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Cura, libertação de algo', value: 'cura', icon: <Heart className="w-5 h-5" />, weight: { ferido_em_busca: 1, ansioso_buscador: 4, sedento_de_sentido: 0, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Sentido, propósito claro', value: 'sentido', icon: <Eye className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 1, sedento_de_sentido: 4, firme_aprofundando: 1, ardente_missionario: 0 } },
+      { label: 'Servir, fazer diferença', value: 'servir', icon: <Flame className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 1, ardente_missionario: 4 } },
     ],
   },
   {
@@ -148,10 +182,10 @@ const QUESTIONS: QuizQuestion[] = [
     intro: 'Esta é a última pergunta.\nResponda com sinceridade — não para acertar,\nmas para se encontrar.',
     question: 'Qual seria o próximo passo ideal para você?',
     options: [
-      { label: 'Parar, respirar e acolher a dor', value: 'parar', icon: <Mountain className="w-5 h-5" />, weight: { ferido_em_busca: 3, ansioso_buscador: 2, sedento_de_sentido: 0, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Entender melhor a fé católica', value: 'entender', icon: <BookOpen className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 1, sedento_de_sentido: 3, firme_aprofundando: 1, ardente_missionario: 0 } },
-      { label: 'Aprofundar na vida espiritual', value: 'aprofundar', icon: <Sparkles className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 1, firme_aprofundando: 3, ardente_missionario: 1 } },
-      { label: 'Evangelizar e servir na missão', value: 'missao', icon: <Flame className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 0, ardente_missionario: 3 } },
+      { label: 'Parar, respirar e acolher a dor', value: 'parar', icon: <Mountain className="w-5 h-5" />, weight: { ferido_em_busca: 4, ansioso_buscador: 2, sedento_de_sentido: 0, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Entender melhor a fé católica', value: 'entender', icon: <BookOpen className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 1, sedento_de_sentido: 4, firme_aprofundando: 1, ardente_missionario: 0 } },
+      { label: 'Aprofundar na vida espiritual', value: 'aprofundar', icon: <Sparkles className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 1, firme_aprofundando: 4, ardente_missionario: 1 } },
+      { label: 'Evangelizar e servir na missão', value: 'missao', icon: <Flame className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 0, ardente_missionario: 4 } },
     ],
   },
 ];
@@ -215,14 +249,17 @@ const SpiritualQuiz: React.FC = () => {
   const saveResult = async (profile: ProfileId, allAnswers: Record<string, string>) => {
     if (!user) return;
     try {
+      const p = PROFILES[profile];
       await (supabase as any)
         .from('user_sensitive_data')
         .update({
           diagnosis_result: {
             ...allAnswers,
             spiritual_profile: profile,
-            pain: PROFILES[profile].pain.id,
-            direction: PROFILES[profile].direction.id,
+            pain: p.pain.id,
+            direction: p.direction.id,
+            theme: p.theme,
+            journeyName: p.journeyName,
           },
         })
         .eq('user_id', user.id);
@@ -232,7 +269,6 @@ const SpiritualQuiz: React.FC = () => {
   };
 
   const reset = () => { setPhase('intro'); setStep(0); setAnswers({}); setResult(null); setDone(false); setExisting(null); };
-
   const progress = ((step + 1) / QUESTIONS.length) * 100;
 
   // ── Compact result (already done) ──
@@ -272,11 +308,8 @@ const SpiritualQuiz: React.FC = () => {
         animate={{ opacity: 1, scale: 1 }}
         className={`rounded-3xl border border-secondary/20 bg-gradient-to-br ${p.bgGradient} p-6 md:p-8 space-y-6 shadow-lg`}
       >
-        {/* Profile */}
         <div className="text-center space-y-3">
-          <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', delay: 0.2 }} className="text-5xl block">
-            {p.emoji}
-          </motion.span>
+          <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', delay: 0.2 }} className="text-5xl block">{p.emoji}</motion.span>
           <p className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary">✨ Seu momento atual</p>
           <h2 className={`text-2xl font-black ${p.color}`}>{p.title}</h2>
           <p className="text-sm text-foreground/80 leading-relaxed max-w-sm mx-auto italic font-serif">"{p.message}"</p>
@@ -284,7 +317,6 @@ const SpiritualQuiz: React.FC = () => {
 
         <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
-        {/* Pain & Direction */}
         <div className="grid grid-cols-2 gap-3">
           <div className="p-3 rounded-2xl bg-background/60 border border-border space-y-1 text-center">
             <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">💔 O que te trava</p>
@@ -298,7 +330,6 @@ const SpiritualQuiz: React.FC = () => {
 
         <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
-        {/* Recommendations */}
         <div className="space-y-2">
           <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground text-center">Recomendado para você</p>
           <div className="space-y-2 text-sm">
@@ -344,12 +375,12 @@ const SpiritualQuiz: React.FC = () => {
           <span className="text-4xl block">🧠</span>
           <h2 className="text-xl font-black text-foreground leading-tight">Descubra seu momento espiritual</h2>
           <p className="text-sm text-muted-foreground leading-relaxed max-w-xs mx-auto">
-            Responda 5 perguntas rápidas e receba um caminho personalizado
+            Responda {QUESTIONS.length} perguntas rápidas e receba um caminho personalizado
           </p>
         </div>
         <div className="flex items-center justify-center gap-1 text-muted-foreground">
           <Clock className="w-3.5 h-3.5" />
-          <span className="text-[11px] font-medium">Leva menos de 1 minuto</span>
+          <span className="text-[11px] font-medium">Leva menos de 2 minutos</span>
         </div>
         <Button
           onClick={() => setPhase('quiz')}
@@ -370,7 +401,6 @@ const SpiritualQuiz: React.FC = () => {
       animate={{ opacity: 1, y: 0 }}
       className="rounded-3xl border border-secondary/20 bg-gradient-to-br from-card to-secondary/5 p-6 space-y-5 shadow-sm"
     >
-      {/* Progress */}
       <div className="space-y-1">
         <div className="flex items-center justify-between">
           <p className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary">Quiz Espiritual</p>
@@ -390,13 +420,8 @@ const SpiritualQuiz: React.FC = () => {
           transition={{ duration: 0.3 }}
           className="space-y-4"
         >
-          {/* Intro phrase */}
           <p className="text-xs text-muted-foreground text-center italic leading-relaxed whitespace-pre-line font-serif">{q.intro}</p>
-
-          {/* Question */}
           <h3 className="text-base font-bold text-foreground text-center leading-snug">{q.question}</h3>
-
-          {/* Options */}
           <div className="space-y-2.5">
             {q.options.map((opt) => (
               <motion.button
