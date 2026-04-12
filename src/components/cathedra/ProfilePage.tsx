@@ -325,6 +325,28 @@ const ProfilePage: React.FC = () => {
 
       <div className="bg-card border border-border rounded-2xl p-6 space-y-6">
         <div className="flex items-center justify-between">
+          <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Ecossistema & Experiência</h2>
+        </div>
+        <div className="space-y-4">
+          <p className="text-xs text-muted-foreground leading-relaxed italic">
+            "Deseja rever como funciona o ecossistema Cathedra ou refazer seu diagnóstico espiritual?"
+          </p>
+          <Button 
+            variant="outline" 
+            className="w-full h-12 rounded-xl border-primary/20 hover:bg-primary/5 text-primary gap-2 font-bold uppercase tracking-widest text-[10px]"
+            onClick={() => {
+              localStorage.removeItem('cathedra_onboarding_done');
+              navigate(AppRoute.ONBOARDING);
+            }}
+          >
+            <Icons.Compass className="w-4 h-4" />
+            Recalibrar Minha Jornada
+          </Button>
+        </div>
+      </div>
+
+      <div className="bg-card border border-border rounded-2xl p-6 space-y-6">
+        <div className="flex items-center justify-between">
           <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Notificações</h2>
         </div>
 
