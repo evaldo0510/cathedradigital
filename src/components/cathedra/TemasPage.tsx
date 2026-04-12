@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Book, Bookmark, FileText, Tag, Loader2, ChevronRight, Hash } from 'lucide-react';
+import { Book, Bookmark, FileText, Tag, Loader2, ChevronRight, Hash, Sparkles, Compass } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -16,8 +16,12 @@ interface Theme {
   description: string;
 }
 
-interface LogosInsight {
-  insight: string;
+interface ThemeContent {
+  id: string;
+  content_type: 'bible' | 'catechism' | 'magisterium' | 'journey';
+  reference: string;
+  title: string;
+  text_content: string;
 }
 
 const TemasPage = () => {
@@ -66,13 +70,11 @@ const TemasPage = () => {
     queryFn: async () => {
       if (!selectedTheme) return [];
       
-      // Fetch contents from theme_contents
       const { data: themeContents, error: themeError } = await supabase
         .from('theme_contents')
         .select('*')
         .eq('theme_id', selectedTheme.id);
       
-      // Fetch related Journeys (Searching journeys with the theme name in title/description)
       const { data: journeys, error: journeyError } = await supabase
         .from('journeys')
         .select('id, title, description')
@@ -93,7 +95,7 @@ const TemasPage = () => {
         journeys.forEach(j => {
           results.push({
             id: j.id,
-            content_type: 'journey' as any,
+            content_type: 'journey',
             reference: 'Jornada Espiritual',
             title: j.title,
             text_content: j.description || ''
@@ -107,9 +109,9 @@ const TemasPage = () => {
   });
 
   const bibleVerses = contents?.filter(c => c.content_type === 'bible') || [];
-  const catechism = contents?.filter(c => (c.content_type as string) === 'catechism') || [];
-  const magisterium = contents?.filter(c => (c.content_type as string) === 'magisterium') || [];
-  const journeys = contents?.filter(c => (c.content_type as string) === 'journey') || [];
+  const catechism = contents?.filter(c => c.content_type === 'catechism') || [];
+  const magisterium = contents?.filter(c => c.content_type === 'magisterium') || [];
+  const journeyItems = contents?.filter(c => c.content_type === 'journey') || [];
 
   return (
     <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-5xl mx-auto pb-12">
@@ -186,6 +188,7 @@ const TemasPage = () => {
               transition={{ duration: 0.3 }}
               className="space-y-8"
             >
+              {/* Theme Hero Section */}
               <div className="bg-gradient-to-br from-card to-muted/20 border border-border/60 rounded-3xl sm:rounded-[2.5rem] p-6 sm:p-10 shadow-xl relative overflow-hidden group">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -mr-10 -mt-10 group-hover:bg-primary/10 transition-colors" />
                 
@@ -210,13 +213,54 @@ const TemasPage = () => {
                 </p>
               </div>
 
+              {/* Logos AI Synthesis Section */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="relative overflow-hidden rounded-3xl border border-secondary/20 bg-gradient-to-br from-secondary/5 via-card to-primary/5 p-6 sm:p-8 shadow-lg group"
+              >
+                <div className="absolute -top-16 -right-16 w-48 h-48 bg-secondary/10 rounded-full blur-3xl pointer-events-none" />
+                <div className="flex items-start gap-5">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-secondary/15 flex items-center justify-center text-secondary shrink-0 group-hover:scale-110 transition-transform">
+                    <Sparkles className="w-6 h-6 sm:w-8 sm:h-8" />
+                  </div>
+                  <div className="flex-1 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-0.5">
+                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary">Logos · Síntese Espiritual</p>
+                        <h3 className="text-lg font-bold text-foreground">Visão Teológica por IA</h3>
+                      </div>
+                      {loadingLogos && <Loader2 className="h-5 w-5 animate-spin text-secondary/50" />}
+                    </div>
+                    
+                    <div className="prose prose-sm prose-secondary dark:prose-invert max-w-none">
+                      {loadingLogos ? (
+                        <div className="space-y-2 py-2">
+                          <div className="h-4 bg-secondary/5 rounded animate-pulse w-full" />
+                          <div className="h-4 bg-secondary/5 rounded animate-pulse w-3/4" />
+                          <div className="h-4 bg-secondary/5 rounded animate-pulse w-5/6" />
+                        </div>
+                      ) : logosInsight ? (
+                        <p className="text-foreground/90 italic leading-relaxed whitespace-pre-wrap">
+                          {logosInsight}
+                        </p>
+                      ) : (
+                        <p className="text-muted-foreground italic">Selecione um tema para receber uma síntese teológica profunda.</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
               <Tabs defaultValue="all" className="w-full">
-                <div className="flex justify-center mb-10">
-                  <TabsList className="flex bg-muted/40 p-1.5 rounded-[2rem] border border-border/40 gap-1 overflow-x-auto max-w-full">
-                    <TabsTrigger value="all" className="rounded-full px-8 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-semibold">Geral</TabsTrigger>
-                    <TabsTrigger value="bible" className="rounded-full px-8 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-semibold flex gap-2"><Book className="h-4 w-4" /> Bíblia</TabsTrigger>
-                    <TabsTrigger value="catechism" className="rounded-full px-8 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-semibold flex gap-2"><Bookmark className="h-4 w-4" /> Catecismo</TabsTrigger>
-                    <TabsTrigger value="magisterium" className="rounded-full px-8 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-semibold flex gap-2"><FileText className="h-4 w-4" /> Magistério</TabsTrigger>
+                <div className="flex justify-center mb-10 overflow-x-auto pb-2">
+                  <TabsList className="flex bg-muted/40 p-1.5 rounded-[2rem] border border-border/40 gap-1 min-w-max">
+                    <TabsTrigger value="all" className="rounded-full px-6 sm:px-8 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-semibold">Geral</TabsTrigger>
+                    <TabsTrigger value="bible" className="rounded-full px-6 sm:px-8 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-semibold flex gap-2"><Book className="h-4 w-4" /> Bíblia</TabsTrigger>
+                    <TabsTrigger value="catechism" className="rounded-full px-6 sm:px-8 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-semibold flex gap-2"><Bookmark className="h-4 w-4" /> Catecismo</TabsTrigger>
+                    <TabsTrigger value="magisterium" className="rounded-full px-6 sm:px-8 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-semibold flex gap-2"><FileText className="h-4 w-4" /> Magistério</TabsTrigger>
+                    <TabsTrigger value="journey" className="rounded-full px-6 sm:px-8 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-semibold flex gap-2"><Compass className="h-4 w-4" /> Jornadas</TabsTrigger>
                   </TabsList>
                 </div>
 
@@ -231,6 +275,7 @@ const TemasPage = () => {
                       <ContentSection title="Sagrada Escritura" icon={<Book className="h-6 w-6" />} items={bibleVerses} color="blue" />
                       <ContentSection title="Catecismo da Igreja" icon={<Bookmark className="h-6 w-6" />} items={catechism} color="amber" />
                       <ContentSection title="Documentos Pontifícios" icon={<FileText className="h-6 w-6" />} items={magisterium} color="emerald" />
+                      <ContentSection title="Jornadas de Fé" icon={<Compass className="h-6 w-6" />} items={journeyItems} color="primary" />
                     </TabsContent>
 
                     <TabsContent value="bible" className="mt-0 focus-visible:outline-none">
@@ -243,6 +288,10 @@ const TemasPage = () => {
 
                     <TabsContent value="magisterium" className="mt-0 focus-visible:outline-none">
                       <ContentSection title="Magistério da Igreja" icon={<FileText className="h-6 w-6" />} items={magisterium} showEmpty color="emerald" />
+                    </TabsContent>
+
+                    <TabsContent value="journey" className="mt-0 focus-visible:outline-none">
+                      <ContentSection title="Trilhas e Jornadas" icon={<Compass className="h-6 w-6" />} items={journeyItems} showEmpty color="primary" />
                     </TabsContent>
                   </div>
                 )}
@@ -327,7 +376,15 @@ const ContentSection = React.forwardRef<HTMLDivElement, ContentSectionProps>(({ 
                     <Button variant="ghost" size="sm" className="rounded-full text-muted-foreground hover:text-primary hover:bg-primary/5">
                       Copiar
                     </Button>
-                    <Button size="sm" className="rounded-full gap-2 px-6 shadow-md hover:shadow-lg transition-all group-hover:scale-[1.02]">
+                    <Button 
+                      onClick={() => {
+                        if (item.content_type === 'journey') {
+                          window.location.href = `/jornadas/${item.id}`;
+                        }
+                      }}
+                      size="sm" 
+                      className="rounded-full gap-2 px-6 shadow-md hover:shadow-lg transition-all group-hover:scale-[1.02]"
+                    >
                       Explorar no Texto <ChevronRight className="h-4 w-4" />
                     </Button>
                   </div>
