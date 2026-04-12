@@ -3,6 +3,7 @@ import {
   Home,
   Book,
   BookOpen, 
+  BookText,
   Cross, 
   Map, 
   Users, 
@@ -111,7 +112,9 @@ import {
   Target,
   Link,
   Video,
-  Tag
+  Tag,
+  Orbit,
+  Disc
 } from 'lucide-react';
 import { cn } from './lib/utils';
 
@@ -160,7 +163,7 @@ interface IconProps extends React.SVGProps<SVGSVGElement> {
 }
 
 const createIcon = (IconComponent: any) => 
-  forwardRef<SVGSVGElement, IconProps>(({ className, strokeWidth = 2, size = 20, ...props }, ref) => (
+  forwardRef<SVGSVGElement, IconProps>(({ className, strokeWidth = 1.75, size = 20, ...props }, ref) => (
     <IconComponent 
       ref={ref} 
       strokeWidth={strokeWidth} 
@@ -208,8 +211,8 @@ export const Icons = {
   PartyPopper: createIcon(PartyPopper),
   
   // Library & Study
-  Bible: createIcon(Book),
-  HolyBible: createIcon(Book),
+  Bible: createIcon(BookText),
+  HolyBible: createIcon(BookText),
   Book: createIcon(Book),
   BookOpen: createIcon(BookOpen),
   Library: createIcon(Library),
@@ -248,7 +251,7 @@ export const Icons = {
   Sparkles: createIcon(Sparkles),
   PrayingHands: createIcon(Hand),
   Hand: createIcon(Hand),
-  Rosary: createIcon(Activity),
+  Rosary: createIcon(Orbit),
   ViaCrucis: createIcon(Cross),
   Church: createIcon(Church),
   Dove: createIcon(Sparkles),
