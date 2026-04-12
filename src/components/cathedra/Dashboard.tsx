@@ -291,26 +291,29 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       {/* ═══ MAIN DOORS 🚪 ═══ */}
       <FadeUp delay={0.05}>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {MAIN_DOORS.map((door, idx) => (
-            <div
+            <motion.div
               key={idx}
+              whileHover={{ y: -4, scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               onClick={() => goTo(door.route)}
-              className={`relative overflow-hidden p-5 rounded-3xl border ${door.borderColor} bg-gradient-to-br ${door.gradient} cursor-pointer transition-all shadow-sm hover:shadow-md group`}
+              className={`relative overflow-hidden p-5 rounded-3xl border ${door.borderColor} bg-gradient-to-br ${door.gradient} backdrop-blur-sm cursor-pointer transition-all shadow-sm hover:shadow-xl group`}
             >
               {door.suggested && (
-                <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground text-[8px] font-black uppercase tracking-tighter animate-pulse">
+                <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-1 rounded-full bg-secondary text-secondary-foreground text-[8px] font-black uppercase tracking-tighter shadow-sm animate-pulse">
                   <Icons.Star className="w-2 h-2 fill-current" /> Sugerido
                 </div>
               )}
-              <div className={`w-10 h-10 rounded-xl bg-background flex items-center justify-center ${door.iconColor} group-hover:scale-110 transition-transform mb-3 shadow-sm`}>
-                <door.icon className="w-5 h-5" />
+              <div className={`w-12 h-12 rounded-2xl bg-background flex items-center justify-center ${door.iconColor} group-hover:scale-110 transition-transform mb-4 shadow-md border border-border/50`}>
+                <door.icon className="w-6 h-6" />
               </div>
-              <div>
-                <h3 className="text-xs font-bold text-foreground leading-tight">{door.label}</h3>
-                <p className="text-[10px] text-muted-foreground mt-1 line-clamp-1">{door.description}</p>
+              <div className="space-y-1">
+                <h3 className="text-sm font-bold text-foreground leading-tight group-hover:text-primary transition-colors">{door.label}</h3>
+                <p className="text-[10px] text-muted-foreground line-clamp-2 leading-tight opacity-80">{door.description}</p>
               </div>
-            </div>
-          ))}
+              <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                <Icons.ChevronRight className="w-4 h-4 text-primary/40" />
+              </div>
+            </motion.div>
         </div>
       </FadeUp>
 
