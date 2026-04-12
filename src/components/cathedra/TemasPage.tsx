@@ -127,38 +127,76 @@ const TemasPage = () => {
       </header>
 
       {/* Bubble Navigation System */}
-      <div className="relative group">
-        <div className="absolute -inset-1 bg-gradient-to-r from-primary/10 to-transparent blur opacity-50 transition duration-1000 group-hover:opacity-100" />
-        <div className="relative flex flex-wrap justify-center gap-3 p-4 bg-card/30 backdrop-blur-sm rounded-3xl border border-border/40 shadow-sm">
-          {loadingTags ? (
-            <div className="flex items-center gap-3 py-6 px-8">
-              <Loader2 className="h-5 w-5 animate-spin text-primary/50" />
-              <span className="text-sm font-medium text-muted-foreground">Carregando temas teológicos...</span>
-            </div>
-          ) : (
-            tags?.map((tag) => {
-              const isSelected = selectedTag?.id === tag.id;
-              return (
-                <motion.button
-                  key={tag.id}
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => handleTagSelect(tag)}
-                  className={`
-                    px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300
-                    flex items-center gap-2 border shadow-sm
-                    ${isSelected 
-                      ? 'bg-primary text-primary-foreground border-primary shadow-primary/30 ring-2 ring-primary/20' 
-                      : 'bg-card/50 text-muted-foreground border-border/80 hover:border-primary/40 hover:text-primary hover:bg-white dark:hover:bg-slate-900'
-                    }
-                  `}
-                >
-                  <span className="text-sm">{tag.emoji}</span>
-                  {tag.label}
-                </motion.button>
-              );
-            })
-          )}
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-center gap-4 bg-card/40 backdrop-blur-md p-4 rounded-[2rem] border border-border/50 shadow-sm sticky top-0 z-10 transition-all duration-300">
+          <div className="relative flex-1 w-full">
+            <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <input 
+              type="text" 
+              placeholder="Buscar tema teológico (ex: Amor, Graça, Pecado...)"
+              className="w-full bg-background/50 border-none h-12 pl-12 pr-4 rounded-2xl text-sm focus:ring-2 focus:ring-primary/20 transition-all"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          
+          <div className="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0 scrollbar-none">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`
+                  whitespace-nowrap px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all
+                  ${activeCategory === cat 
+                    ? 'bg-primary text-primary-foreground shadow-md' 
+                    : 'bg-muted/50 text-muted-foreground hover:bg-muted'
+                  }
+                `}
+              >
+                {cat === 'all' ? 'Todos' : cat}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="relative group">
+          <div className="absolute -inset-1 bg-gradient-to-r from-primary/10 to-transparent blur opacity-50 transition duration-1000 group-hover:opacity-100" />
+          <div className="relative flex flex-wrap justify-center gap-2.5 p-4 sm:p-6 bg-card/30 backdrop-blur-sm rounded-[2.5rem] border border-border/40 shadow-inner overflow-hidden">
+            {loadingTags ? (
+              <div className="flex items-center gap-3 py-6 px-8 w-full justify-center">
+                <Loader2 className="h-5 w-5 animate-spin text-primary/50" />
+                <span className="text-sm font-medium text-muted-foreground">Carregando temas teológicos...</span>
+              </div>
+            ) : filteredTags.length === 0 ? (
+              <div className="py-12 px-8 text-center w-full">
+                <p className="text-sm text-muted-foreground italic font-medium">Nenhum tema encontrado para sua busca.</p>
+              </div>
+            ) : (
+              filteredTags.map((tag) => {
+                const isSelected = selectedTag?.id === tag.id;
+                return (
+                  <motion.button
+                    key={tag.id}
+                    layoutId={`tag-${tag.id}`}
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => handleTagSelect(tag)}
+                    className={`
+                      px-4 py-2 rounded-full text-xs font-bold transition-all duration-300
+                      flex items-center gap-2 border shadow-sm
+                      ${isSelected 
+                        ? 'bg-primary text-primary-foreground border-primary shadow-primary/30 ring-2 ring-primary/20' 
+                        : 'bg-card/50 text-muted-foreground border-border/80 hover:border-primary/40 hover:text-primary hover:bg-white dark:hover:bg-slate-900'
+                      }
+                    `}
+                  >
+                    <span className="text-base">{tag.emoji}</span>
+                    {tag.label}
+                  </motion.button>
+                );
+              })
+            )}
+          </div>
         </div>
       </div>
 
