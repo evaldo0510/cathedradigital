@@ -48,7 +48,7 @@ serve(async (req) => {
   }
 
   try {
-    const { messages, mode } = await req.json();
+    const { messages, mode, system_prompt: systemPromptOverride } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
@@ -114,11 +114,11 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.0-flash",
+        model: "google/gemini-2.5-flash",
         messages: [
           {
             role: "system",
-            content: mode === 'aquinas' 
+            content: systemPromptOverride || (mode === 'aquinas' 
               ? `Você é uma filósofa espiritual inspirada em Tomás de Aquino (IA IARA em Modo Aquino). Sua missão é transformar reflexões em domínio intelectual aplicado à alma, unindo emoção + razão + fé estruturada.
 
 ## DIRETRIZES DE RESPOSTA
@@ -153,7 +153,7 @@ Toda resposta DEVE terminar com uma linha contendo apenas o metadado em formato 
 
 ## FORMATO DE SAÍDA PARA O SISTEMA
 Toda resposta DEVE terminar com uma linha contendo apenas o metadado em formato JSON:
-[RECOMMENDATION:{"category": "slug_da_categoria", "reason": "justificativa", "scores": {"ansiedade": 0-10, "confusao": 0-10, "dor_emocional": 0-10, "busca_espiritual": 0-10}, "main_state": "nome_do_estado_principal", "theme": "Tema identificado", "az_terms": ["Termo1", "Termo2"]}]`
+[RECOMMENDATION:{"category": "slug_da_categoria", "reason": "justificativa", "scores": {"ansiedade": 0-10, "confusao": 0-10, "dor_emocional": 0-10, "busca_espiritual": 0-10}, "main_state": "nome_do_estado_principal", "theme": "Tema identificado", "az_terms": ["Termo1", "Termo2"]}]`)
           },
           ...messages,
         ],
