@@ -541,16 +541,28 @@ const AZFaithPage: React.FC = () => {
             return (
               <motion.button
                 key={name}
-                whileHover={{ scale: 1.05 }}
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                whileHover={{ 
+                  scale: 1.08,
+                  boxShadow: '0 10px 25px -5px rgba(var(--primary), 0.2)',
+                  transition: { duration: 0.2 }
+                }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleTermClick(term)}
-                className={`px-5 py-2 rounded-full text-sm font-bold border transition-all
+                className={`px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-wider border transition-all relative overflow-hidden group
                   ${isActive
-                    ? 'bg-primary text-primary-foreground border-primary shadow-lg'
-                    : 'bg-primary/5 text-primary border-primary/20 hover:bg-primary/10'
+                    ? 'bg-primary text-primary-foreground border-primary shadow-lg ring-4 ring-primary/10'
+                    : 'bg-card/40 backdrop-blur-sm text-primary border-primary/20 hover:border-primary/50 hover:bg-white dark:hover:bg-slate-900'
                   }`}
               >
-                🫧 {name}
+                <div className="flex items-center gap-2 relative z-10">
+                  <span className="group-hover:rotate-12 transition-transform duration-300">🫧</span>
+                  {name}
+                </div>
+                {!isActive && (
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                )}
               </motion.button>
             );
           })}
