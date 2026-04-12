@@ -45,6 +45,23 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   const streak = profile?.streak || 0;
   const dailyQuote = QUOTES[Math.floor((Date.now() / 86400000)) % QUOTES.length];
 
+  // Spiritual profile from quiz
+  const [spiritualProfile, setSpiritualProfile] = useState<ProfileId | null>(null);
+  useEffect(() => {
+    if (!user) return;
+    (supabase as any)
+      .from('user_sensitive_data')
+      .select('diagnosis_result')
+      .eq('user_id', user.id)
+      .maybeSingle()
+      .then(({ data }: any) => {
+        const sp = data?.diagnosis_result?.spiritual_profile;
+        if (sp && PROFILES[sp as ProfileId]) setSpiritualProfile(sp as ProfileId);
+      });
+  }, [user]);
+
+  const spProfile = spiritualProfile ? PROFILES[spiritualProfile] : null;
+
   const MAIN_DOORS = [
     {
       label: t('bible'),
