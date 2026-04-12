@@ -151,13 +151,16 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
     if (!user) return;
     const loadNextUp = async () => {
       // Get last Bible chapter read
-      const { data: lastBible } = await supabase
-        .from('bible_chapters_read')
+      const { data: lastBibleData } = await supabase
+        .from('bible_chapters_read' as any)
         .select('book_abbr, chapter')
         .eq('user_id', user.id)
         .order('read_at', { ascending: false })
         .limit(1)
         .maybeSingle();
+
+      if (lastBibleData) setLastBible(lastBibleData);
+      const lastBible = lastBibleData;
 
       // Get last Catechism paragraph read
       const { data: lastCatechism } = await supabase
