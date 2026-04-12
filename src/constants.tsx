@@ -176,8 +176,10 @@ const createIcon = (IconComponent: any) =>
     />
   ));
 
+// Semantic Groups for better organization
 export const Icons = {
   Logo: Logo,
+  
   // Navigation & Core
   Home: createIcon(Home),
   Dashboard: createIcon(LayoutGrid),
@@ -213,16 +215,17 @@ export const Icons = {
   ShieldQuestion: createIcon(ShieldQuestion),
   PartyPopper: createIcon(PartyPopper),
   
-  // Library & Study
-  Bible: createIcon(BookText),
+  // Library & Study (Organized by source type)
+  Bible: createIcon(BookOpen),
   HolyBible: createIcon(BookText),
   Book: createIcon(Book),
   BookOpen: createIcon(BookOpen),
   Library: createIcon(Library),
-  Catechism: createIcon(FileText),
+  Catechism: createIcon(ShieldCheck),
   CatechismShield: createIcon(ShieldCheck),
   FileText: createIcon(FileText),
-  Magisterium: createIcon(Globe),
+  Magisterium: createIcon(ScrollText),
+  MagisteriumGlobe: createIcon(Globe),
   Saints: createIcon(Users),
   SaintHalo: createIcon(Sparkles),
   Aquinas: createIcon(Columns),
@@ -263,7 +266,7 @@ export const Icons = {
   LiturgicalCalendar: createIcon(Map),
   
   // Pathways & Journeys
-  Journeys: createIcon(Route),
+  Journeys: createIcon(Compass),
   JourneysMap: createIcon(Map),
   Route: createIcon(Route),
   Map: createIcon(Map),
