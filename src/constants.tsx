@@ -251,7 +251,7 @@ export const Icons = {
   Sparkles: createIcon(Sparkles),
   PrayingHands: createIcon(Hand),
   Hand: createIcon(Hand),
-  Rosary: createIcon(Activity),
+  Rosary: createIcon(Orbit),
   ViaCrucis: createIcon(Cross),
   Church: createIcon(Church),
   Dove: createIcon(Sparkles),
