@@ -1,5 +1,4 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.7.1"
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -13,10 +12,10 @@ serve(async (req) => {
 
   try {
     const { query, tag } = await req.json()
-    const openAiKey = Deno.env.get('OPENAI_API_KEY')
+    const apiKey = Deno.env.get('LOVABLE_API_KEY')
 
-    if (!openAiKey) {
-      throw new Error('Missing OpenAI Key')
+    if (!apiKey) {
+      throw new Error('Missing API Key')
     }
 
     const prompt = `Você é o Logos, uma inteligência teológica avançada focada na espiritualidade católica.
@@ -29,18 +28,34 @@ serve(async (req) => {
     
     Seja conciso, profundo e fiel ao Magistério da Igreja Católica. Use um tom sereno e sábio.`
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${openAiKey}`,
+        'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: 'google/gemini-3-flash-preview',
         messages: [{ role: 'system', content: prompt }],
         temperature: 0.7,
       }),
     })
+
+    if (!response.ok) {
+      const t = await response.text()
+      console.error('AI gateway error:', response.status, t)
+      if (response.status === 429) {
+        return new Response(JSON.stringify({ error: 'Rate limit exceeded. Tente novamente em instantes.' }), {
+          status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        })
+      }
+      if (response.status === 402) {
+        return new Response(JSON.stringify({ error: 'Créditos insuficientes.' }), {
+          status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        })
+      }
+      throw new Error('AI gateway error')
+    }
 
     const data = await response.json()
     const insight = data.choices[0].message.content
