@@ -10,7 +10,8 @@ import CrossReferencePanel from './CrossReferencePanel';
 import NotesPanel from './NotesPanel';
 import BibleVersePopover from './BibleVersePopover';
 import DeepContentSection from './DeepContentSection';
-import { getCatechismCrossRefs } from '@/data/cross-references';
+import MagisteriumPopover from './MagisteriumPopover';
+import { getCatechismCrossRefs, getCatechismDocs } from '@/data/cross-references';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useAuth } from '@/hooks/useAuth';
@@ -134,6 +135,7 @@ const Catechism: React.FC = () => {
   const { user } = useAuth();
 
   const crossRefs = getCatechismCrossRefs(currentParagraph);
+  const docsRefs = getCatechismDocs(currentParagraph);
 
   // Track progress
   useEffect(() => {
@@ -204,6 +206,10 @@ const Catechism: React.FC = () => {
     navigate(`/bible?book=${abbr}&ch=${chapter}`);
   }, [navigate]);
 
+  const handleNavigateToDoc = useCallback((docId: string) => {
+    navigate(`/magisterium?doc=${docId}`);
+  }, [navigate]);
+
   const goBack = () => {
     if (viewMode === 'reading') { setViewMode('sections'); setSelectedSection(null); }
     else if (viewMode === 'sections') { setViewMode('parts'); setSelectedPart(null); }
@@ -236,10 +242,10 @@ const Catechism: React.FC = () => {
             <h1 className="text-xl font-serif font-bold text-foreground truncate">{selectedSection.title}</h1>
             <p className="text-sm text-muted-foreground">§{start} — §{end}</p>
           </div>
-          {crossRefs.length > 0 && (
+          {(crossRefs.length > 0 || docsRefs.length > 0) && (
             <button onClick={() => setShowCrossRefs(!showCrossRefs)}
               className={`p-2 rounded-xl border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}
-              title="Nexus Theologicus">
+              title="Catecismo & Documentos">
               <Icons.Cross className="w-4 h-4" />
             </button>
           )}
@@ -266,11 +272,13 @@ const Catechism: React.FC = () => {
         </div>
 
         {/* Cross references */}
-        {showCrossRefs && crossRefs.length > 0 && (
+        {showCrossRefs && (crossRefs.length > 0 || docsRefs.length > 0) && (
           <CrossReferencePanel
             type="catechism"
             bibleRefs={crossRefs}
+            documents={docsRefs}
             onNavigateToBible={handleNavigateToBible}
+            onNavigateToDoc={handleNavigateToDoc}
           />
         )}
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { Icons } from '../../constants';
 import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
+import MagisteriumPopover from './MagisteriumPopover';
 
 interface BibleRef {
   abbr: string;
@@ -14,18 +15,22 @@ interface CrossReferencePanelProps {
   type: 'bible' | 'catechism';
   cicParagraphs?: number[];
   bibleRefs?: BibleRef[];
+  documents?: { id: string; name: string; label: string }[];
   onNavigateToCIC?: (paragraph: number) => void;
   onNavigateToBible?: (abbr: string, chapter: number) => void;
+  onNavigateToDoc?: (docId: string) => void;
 }
 
 const CrossReferencePanel: React.FC<CrossReferencePanelProps> = ({
   type,
   cicParagraphs = [],
   bibleRefs = [],
+  documents = [],
   onNavigateToCIC,
   onNavigateToBible,
+  onNavigateToDoc,
 }) => {
-  const hasRefs = type === 'bible' ? cicParagraphs.length > 0 : bibleRefs.length > 0;
+  const hasRefs = (cicParagraphs.length > 0 || bibleRefs.length > 0 || documents.length > 0);
   if (!hasRefs) return null;
 
   return (
@@ -48,6 +53,38 @@ const CrossReferencePanel: React.FC<CrossReferencePanelProps> = ({
                 key={p}
                 paragraph={p}
                 onNavigate={onNavigateToCIC}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {type === 'bible' && documents.length > 0 && (
+        <div className="space-y-1">
+          <p className="text-xs text-muted-foreground">Documentos do Magistério relacionados:</p>
+          <div className="flex flex-wrap gap-1.5">
+            {documents.map((doc, i) => (
+              <MagisteriumPopover
+                key={i}
+                documentName={doc.name}
+                label={doc.label}
+                onNavigate={() => onNavigateToDoc?.(doc.id)}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {type === 'catechism' && documents.length > 0 && (
+        <div className="space-y-1">
+          <p className="text-xs text-muted-foreground">Documentos do Magistério relacionados:</p>
+          <div className="flex flex-wrap gap-1.5">
+            {documents.map((doc, i) => (
+              <MagisteriumPopover
+                key={i}
+                documentName={doc.name}
+                label={doc.label}
+                onNavigate={() => onNavigateToDoc?.(doc.id)}
               />
             ))}
           </div>
