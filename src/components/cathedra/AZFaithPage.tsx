@@ -656,23 +656,25 @@ const AZFaithPage: React.FC = () => {
                         <p className="text-[10px] font-black uppercase tracking-widest text-blue-600">📖 Bíblia</p>
                       </div>
                       <div className="flex flex-wrap gap-2">
-                        {(selectedTerm.bibleVerses || [selectedTerm.reference!]).map((v, idx) => {
+                        {(selectedTerm.bibleVerses || [selectedTerm.reference!]).flatMap((v, vIdx) => {
                           const segments = parseBibleReferences(v);
-                          const bibleSeg = segments.find(s => s.type === 'bibleRef');
-                          if (bibleSeg && bibleSeg.abbr) {
-                            return (
+                          const bibleRefs = segments.filter(s => s.type === 'bibleRef' && s.abbr);
+                          
+                          if (bibleRefs.length > 0) {
+                            return bibleRefs.map((bibleSeg, bIdx) => (
                               <BibleVersePopover
-                                 key={`${v}-${idx}`}
-                                abbr={bibleSeg.abbr}
+                                key={`${vIdx}-${bIdx}`}
+                                abbr={bibleSeg.abbr!}
                                 chapter={bibleSeg.chapter!}
                                 verse={bibleSeg.verse}
-                                label={v}
+                                label={bibleSeg.value}
                                 onNavigate={(abbr, chapter) => navigate(`${AppRoute.BIBLE}?book=${abbr}&chapter=${chapter}`)}
                               />
-                            );
+                            ));
                           }
+                          
                           return (
-                            <Badge key={idx} variant="outline" className="bg-blue-500/5 text-blue-700 dark:text-blue-400 border-blue-500/20 rounded-full text-xs font-semibold">
+                            <Badge key={vIdx} variant="outline" className="bg-blue-500/5 text-blue-700 dark:text-blue-400 border-blue-500/20 rounded-full text-xs font-semibold">
                               {v}
                             </Badge>
                           );
