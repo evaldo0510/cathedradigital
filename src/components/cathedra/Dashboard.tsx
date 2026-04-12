@@ -387,7 +387,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
 
       {/* ═══ 4. TEMAS (BOLHAS) ═══ */}
       <FadeUp delay={0.15}>
-        <NexusBubbles />
+        <NexusBubbles profileId={spiritualProfile} />
       </FadeUp>
 
       {/* ═══ 5. LOGOS (IA) — personalizado pelo quiz ═══ */}
