@@ -314,6 +314,8 @@ interface ContentSectionProps {
 }
 
 const ContentSection = React.forwardRef<HTMLDivElement, ContentSectionProps>(({ title, icon, items, showEmpty = false, color = 'primary' }, ref) => {
+  const navigate = useNavigate();
+
   if (items.length === 0 && !showEmpty) return null;
 
   const colorStyles = {
