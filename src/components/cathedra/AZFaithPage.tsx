@@ -422,6 +422,7 @@ const AZFaithPage: React.FC = () => {
   const [quizMode, setQuizMode] = useState(false);
 
   const detailRef = useRef<HTMLDivElement>(null);
+  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
   
   useEffect(() => {
     if (selectedTerm && window.innerWidth < 768) {
@@ -430,6 +431,7 @@ const AZFaithPage: React.FC = () => {
       }, 100);
     }
   }, [selectedTerm]);
+
 
 
   const letterStatus = useMemo(() => {
