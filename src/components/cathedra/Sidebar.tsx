@@ -153,6 +153,13 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
                   </button>
                 )}
               </div>
+              <button 
+                onClick={(e) => { e.stopPropagation(); onSignOut?.(); }}
+                className="p-2 text-muted-foreground hover:text-destructive transition-colors"
+                title={t('exit_session')}
+              >
+                <Icons.LogOut className="w-4 h-4" />
+              </button>
             </button>
           ) : (
             <button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all">
