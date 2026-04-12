@@ -286,6 +286,11 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         </div>
       </FadeUp>
 
+      {/* ═══ SPIRITUAL QUIZ ═══ */}
+      <FadeUp delay={0.102}>
+        <SpiritualQuiz />
+      </FadeUp>
+
       {/* ═══ WHATSAPP RELEASE ═══ */}
       <FadeUp delay={0.105}>
         <div 
