@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../constants';
 import { AppRoute } from '../../types';
@@ -55,19 +55,49 @@ const CommandCenter: React.FC = () => {
   const [searchMode, setSearchMode] = useState<'pages' | 'global'>('pages');
   const [globalResults, setGlobalResults] = useState<UnifiedResult[]>([]);
   const [globalLoading, setGlobalLoading] = useState(false);
+  const [lastBible, setLastBible] = useState<{ book_abbr: string; chapter: number } | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const searchTimer = useRef<ReturnType<typeof setTimeout>>();
   const navigate = useNavigate();
 
+  // Load last read chapter on mount
+  useEffect(() => {
+    const loadLastRead = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const { data } = await (supabase as any)
+        .from('bible_chapters_read')
+        .select('book_abbr, chapter')
+        .eq('user_id', user.id)
+        .order('read_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (data) setLastBible(data);
+    };
+    loadLastRead();
+  }, []);
+
   // Page filter (instant)
-  const filteredPages = query
-    ? PAGE_COMMANDS.filter(c => {
-        const q = query.toLowerCase();
-        return c.label.toLowerCase().includes(q) ||
-          c.description.toLowerCase().includes(q) ||
-          c.keywords.some(k => k.includes(q));
-      })
-    : PAGE_COMMANDS;
+  const filteredPages = useMemo(() => {
+    const commands = PAGE_COMMANDS.map(c => {
+      if (c.path === AppRoute.BIBLE && lastBible) {
+        return {
+          ...c,
+          path: `${AppRoute.BIBLE}?book=${lastBible.book_abbr}&ch=${lastBible.chapter}`,
+          description: `Continuar em ${lastBible.book_abbr} ${lastBible.chapter}`,
+        };
+      }
+      return c;
+    });
+    
+    if (!query) return commands;
+    const q = query.toLowerCase();
+    return commands.filter(c => 
+      c.label.toLowerCase().includes(q) ||
+      c.description.toLowerCase().includes(q) ||
+      c.keywords.some(k => k.includes(q))
+    );
+  }, [query, lastBible]);
 
   // Global search (debounced)
   const runGlobalSearch = useCallback(async (q: string) => {

@@ -47,6 +47,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
 
   // Spiritual profile from quiz
   const [spiritualProfile, setSpiritualProfile] = useState<ProfileId | null>(null);
+  const [lastBible, setLastBible] = useState<{ book_abbr: string; chapter: number } | null>(null);
+
   useEffect(() => {
     if (!user) return;
     (supabase as any)
@@ -62,12 +64,14 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
 
   const spProfile = spiritualProfile ? PROFILES[spiritualProfile] : null;
 
-  const MAIN_DOORS = [
+  const MAIN_DOORS = useMemo(() => [
     {
       label: t('bible'),
       description: t('bible_sub'),
       icon: Icons.Bible,
-      route: AppRoute.BIBLE,
+      route: lastBible 
+        ? `${AppRoute.BIBLE}?book=${lastBible.book_abbr}&ch=${lastBible.chapter}` 
+        : AppRoute.BIBLE,
       gradient: 'from-primary/5 to-transparent',
       iconColor: 'text-primary',
       borderColor: 'border-border hover:border-secondary/50',
@@ -103,7 +107,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       borderColor: 'border-border hover:border-secondary/50',
       suggested: spiritualProfile === 'ardente_missionario',
     },
-  ];
+  ], [lastBible, t, spiritualProfile]);
 
   // Active journeys
   const [activeJourneys, setActiveJourneys] = useState<{ id: string; title: string; icon: string; totalSteps: number; completedSteps: number }[]>([]);
@@ -147,13 +151,17 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
     if (!user) return;
     const loadNextUp = async () => {
       // Get last Bible chapter read
-      const { data: lastBible } = await supabase
+      const { data: lastBibleData } = await (supabase as any)
         .from('bible_chapters_read')
         .select('book_abbr, chapter')
         .eq('user_id', user.id)
         .order('read_at', { ascending: false })
         .limit(1)
         .maybeSingle();
+
+      if (lastBibleData) {
+        setLastBible(lastBibleData as any);
+      }
 
       // Get last Catechism paragraph read
       const { data: lastCatechism } = await supabase
