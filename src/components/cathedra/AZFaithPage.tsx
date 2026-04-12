@@ -481,6 +481,14 @@ const AZFaithPage: React.FC = () => {
             <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Índice Alfabético</span>
           </div>
           <h1 className="text-3xl md:text-4xl font-black tracking-tight text-foreground">A–Z da Fé</h1>
+          <Button
+            variant={quizMode ? 'default' : 'outline'}
+            onClick={() => setQuizMode(!quizMode)}
+            className="rounded-2xl gap-2 font-bold text-xs uppercase tracking-widest mt-2"
+          >
+            <Brain className="w-4 h-4" />
+            {quizMode ? 'Voltar ao Índice' : '🧠 Testar Conhecimento'}
+          </Button>
         </header>
 
         {/* Search */}
