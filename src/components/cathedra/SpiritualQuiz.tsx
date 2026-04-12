@@ -247,6 +247,7 @@ const SpiritualQuiz: React.FC = () => {
   const [result, setResult] = useState<ProfileId | null>(null);
   const [done, setDone] = useState(false);
   const [existing, setExisting] = useState<ProfileId | null>(null);
+  const [existingData, setExistingData] = useState<any>(null);
 
   useEffect(() => {
     if (!user) return;
@@ -256,10 +257,12 @@ const SpiritualQuiz: React.FC = () => {
       .eq('user_id', user.id)
       .maybeSingle()
       .then(({ data }: any) => {
-        const sp = data?.diagnosis_result?.spiritual_profile;
+        const res = data?.diagnosis_result;
+        const sp = res?.spiritual_profile;
         if (sp && PROFILES[sp as ProfileId]) {
           setDone(true);
           setExisting(sp);
+          setExistingData(res);
         }
       });
   }, [user]);
@@ -271,26 +274,33 @@ const SpiritualQuiz: React.FC = () => {
     if (step < QUESTIONS.length - 1) {
       setTimeout(() => setStep(s => s + 1), 350);
     } else {
-      const profile = computeProfile(next);
-      setResult(profile);
+      const profileId = computeProfile(next);
+      setResult(profileId);
       setPhase('result');
       confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 }, colors: ['#FFD700', '#8B5CF6', '#F43F5E'] });
-      saveResult(profile, next);
+      saveResult(profileId, next);
     }
   }, [step, answers]);
 
-  const saveResult = async (profile: ProfileId, allAnswers: Record<string, string>) => {
+  const saveResult = async (profileId: ProfileId, allAnswers: Record<string, string>) => {
     if (!user) return;
     try {
-      const p = PROFILES[profile];
+      const p = PROFILES[profileId];
+      
+      const painQ = QUESTIONS.find(q => q.id === 'dor');
+      const painOpt = painQ?.options.find(o => o.value === allAnswers['dor']);
+      
+      const dirQ = QUESTIONS.find(q => q.id === 'desejo');
+      const dirOpt = dirQ?.options.find(o => o.value === allAnswers['desejo']);
+
       await (supabase as any)
         .from('user_sensitive_data')
         .update({
           diagnosis_result: {
             ...allAnswers,
-            spiritual_profile: profile,
-            pain: p.pain.id,
-            direction: p.direction.id,
+            spiritual_profile: profileId,
+            pain: painOpt?.label || p.pain.label,
+            direction: dirOpt?.label || p.direction.label,
             theme: p.theme,
             journeyName: p.journeyName,
           },
