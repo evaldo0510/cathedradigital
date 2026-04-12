@@ -421,7 +421,16 @@ const AZFaithPage: React.FC = () => {
   const [selectedTerm, setSelectedTerm] = useState<FaithTerm | null>(null);
   const [quizMode, setQuizMode] = useState(false);
 
-  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  const detailRef = useRef<HTMLDivElement>(null);
+  
+  useEffect(() => {
+    if (selectedTerm && window.innerWidth < 768) {
+      setTimeout(() => {
+        detailRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  }, [selectedTerm]);
+
 
   const letterStatus = useMemo(() => {
     const status: Record<string, boolean> = {};
