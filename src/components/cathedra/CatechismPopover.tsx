@@ -26,13 +26,6 @@ const CatechismPopover: React.FC<CatechismPopoverProps> = ({
     <Popover>
       <PopoverTrigger asChild>
         <button
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            if (onNavigate) {
-              onNavigate(paragraph);
-            }
-          }}
           className={variant === 'mini' 
             ? "ml-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-primary/10 text-[8px] font-black text-primary border border-primary/20 hover:bg-primary hover:text-primary-foreground transition-all align-middle"
             : "px-2.5 py-1 rounded-lg bg-card border border-border text-xs font-bold text-primary hover:bg-primary hover:text-primary-foreground transition-all"}
