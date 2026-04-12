@@ -212,7 +212,7 @@ const Bible: React.FC = () => {
 
     if (refParam) {
       // Handle "Book Chapter,Verse" or "Book Chapter" format
-      const match = refParam.match(/^([a-zA-ZáéíóúÁÉÍÓÚ123\s]+)\s+(\d+)(?:[,.:]\s*(\d+))?$/);
+      const match = refParam.match(/^([a-zA-ZáéíóúÁÉÍÓÚ123\s]+)\s+(\d+)(?:[,.:]\s*(\d+)(?:[-–]\d+)?)?$/);
       if (match) {
         const bookNameOrAbbr = match[1].trim();
         const ch = parseInt(match[2]);
