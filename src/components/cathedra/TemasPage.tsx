@@ -151,10 +151,18 @@ const TemasPage = () => {
             <input 
               type="text" 
               placeholder="Buscar tema teológico (ex: Amor, Graça, Pecado...)"
-              className="w-full bg-background/50 border-none h-12 pl-12 pr-4 rounded-2xl text-sm focus:ring-2 focus:ring-primary/20 transition-all"
+              className="w-full bg-background/50 border-none h-12 pl-12 pr-12 rounded-2xl text-sm focus:ring-2 focus:ring-primary/20 transition-all"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
+            {searchQuery && (
+              <button 
+                onClick={() => setSearchQuery('')}
+                className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-muted rounded-full transition-colors"
+              >
+                <X className="w-3 h-3 text-muted-foreground" />
+              </button>
+            )}
           </div>
           
           <div className="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0 scrollbar-none">
