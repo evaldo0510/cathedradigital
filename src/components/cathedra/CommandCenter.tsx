@@ -114,6 +114,26 @@ const CommandCenter: React.FC = () => {
       }
     } catch {}
 
+    try {
+      // Themes/Tags search
+      const { data: themeData } = await supabase
+        .from('themes')
+        .select('id, name, slug, description')
+        .or(`name.ilike.%${q}%,description.ilike.%${q}%`)
+        .limit(5);
+      if (themeData) {
+        themeData.forEach(t => {
+          results.push({
+            type: 'page' as any, // Using page type to trigger navigation
+            label: `Tema: ${t.name}`,
+            description: t.description?.substring(0, 80) + '...',
+            path: `${AppRoute.TEMAS}?tema=${t.slug}`,
+            icon: <Icons.Star className="w-4 h-4 text-primary" />,
+          });
+        });
+      }
+    } catch {}
+
     setGlobalResults(results);
     setGlobalLoading(false);
   }, []);
