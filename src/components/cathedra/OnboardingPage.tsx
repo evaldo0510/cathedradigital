@@ -190,13 +190,22 @@ const OnboardingPage: React.FC = () => {
     const category = getRecommendedCategory(result);
     setRecommendedCategory(category);
 
+    // Map moment to spiritual profile for dashboard personalization
+    const spiritualProfileMap: Record<string, string> = {
+      beginning: 'sedento_de_sentido',
+      deepening: 'firme_aprofundando',
+      struggling: 'ferido_em_busca',
+      serving: 'ardente_missionario'
+    };
+    const spiritualProfile = spiritualProfileMap[result.moment] || 'sedento_de_sentido';
+
     try {
       if (user) {
         await (supabase as any)
           .from('user_sensitive_data')
           .upsert({ 
             user_id: user.id, 
-            diagnosis_result: result,
+            diagnosis_result: { ...result, spiritual_profile: spiritualProfile },
             email: user.email || ''
           }, { onConflict: 'user_id' });
       }
