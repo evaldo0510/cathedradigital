@@ -62,7 +62,15 @@ const JornadaStepPage: React.FC = () => {
         supabase.from('journey_steps').select('*', { count: 'exact', head: true }).eq('journey_id', journeyId!),
       ]);
 
-      if (stepRes.data) setStep(stepRes.data);
+      if (stepRes.data) {
+        setStep(stepRes.data);
+        const content = stepRes.data.content as Record<string, any>;
+        const firstWithContent = SECTION_CONFIG.find(s => {
+          const val = content[s.key] || content[`${s.key}_iniciante`];
+          return !!val;
+        });
+        if (firstWithContent) setExpandedSection(firstWithContent.key);
+      }
       if (journeyRes.data) setJourneyTitle(journeyRes.data.title);
       setTotalSteps(countRes.count || 0);
 
