@@ -103,6 +103,45 @@ const AdminJourneysTab: React.FC = () => {
       fetchSteps(journeyId);
     }
   };
+  
+  const handleEditStep = (step: Step) => {
+    setEditingStep(step);
+    setStepContentString(JSON.stringify(step.content, null, 2));
+    setIsEditStepDialogOpen(true);
+  };
+  
+  const handleSaveStep = async () => {
+    if (!editingStep) return;
+    
+    try {
+      let parsedContent = editingStep.content;
+      try {
+        parsedContent = JSON.parse(stepContentString);
+      } catch (e) {
+        toast.error('JSON inválido no conteúdo do passo.');
+        return;
+      }
+      
+      const { error } = await supabase
+        .from('journey_steps')
+        .update({
+          title: editingStep.title,
+          subtitle: editingStep.subtitle,
+          step_order: editingStep.step_order,
+          step_type: editingStep.step_type,
+          content: parsedContent
+        })
+        .eq('id', editingStep.id);
+        
+      if (error) throw error;
+      
+      setSteps(prev => prev.map(s => s.id === editingStep.id ? { ...editingStep, content: parsedContent } : s));
+      toast.success('Passo atualizado com sucesso.');
+      setIsEditStepDialogOpen(false);
+    } catch (error: any) {
+      toast.error('Erro ao salvar passo: ' + error.message);
+    }
+  };
 
   const handleSaveJourney = async () => {
     if (!editingJourney) return;
