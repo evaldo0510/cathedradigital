@@ -143,7 +143,7 @@ function getRecommendedCategory(answers: Record<string, string>): string {
 /* ── Component ── */
 type Phase = 'slides' | 'diagnosis' | 'result';
 
-const OnboardingPage: React.FC = () => {
+const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
   const [phase, setPhase] = useState<Phase>('slides');
   const [currentSlide, setCurrentSlide] = useState(0);
   const [diagStep, setDiagStep] = useState(0);
@@ -249,7 +249,7 @@ const OnboardingPage: React.FC = () => {
     const title = categoryNames[recommendedCategory] || 'Formação Integral';
 
     return (
-      <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4">
+      <div ref={ref} className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -290,7 +290,7 @@ const OnboardingPage: React.FC = () => {
     const diagProgress = ((diagStep) / QUESTIONS.length) * 100;
 
     return (
-      <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4">
+      <div ref={ref} className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4">
         <div className="w-full max-w-lg lg:max-w-4xl space-y-6 lg:space-y-10 text-center">
           <div className="flex justify-center mb-6">
             {/* Logo removed */}
@@ -341,7 +341,7 @@ const OnboardingPage: React.FC = () => {
   const slide = SLIDES[currentSlide];
 
   return (
-    <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4">
+    <div ref={ref} className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4">
       <div className="w-full max-w-lg lg:max-w-5xl space-y-6 lg:space-y-10">
         <div className="flex justify-center">
           {/* Logo removed */}
@@ -401,6 +401,8 @@ const OnboardingPage: React.FC = () => {
       </div>
     </div>
   );
-};
+});
+
+OnboardingPage.displayName = 'OnboardingPage';
 
 export default OnboardingPage;
