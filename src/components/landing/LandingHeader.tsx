@@ -2,16 +2,24 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Icons } from "@/constants";
 import { Button } from "@/components/ui/button";
-import { AppRoute } from "@/types";
+import { AppRoute, Language } from "@/types";
 import { useNavigate } from "react-router-dom";
-import { Menu, X, ChevronRight } from "lucide-react";
+import { Menu, X, ChevronRight, Globe } from "lucide-react";
+import { useLang } from "@/hooks/useLang";
 
 const LandingHeader = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showLangMenu, setShowLangMenu] = useState(false);
   const navigate = useNavigate();
+  const { lang, setLang } = useLang();
 
-  useEffect(() => {
+  const languages: { code: Language; label: string; flag: string }[] = [
+    { code: 'pt', label: 'Português', flag: '🇧🇷' },
+    { code: 'en', label: 'English', flag: '🇺🇸' },
+    { code: 'es', label: 'Español', flag: '🇪🇸' },
+    { code: 'la', label: 'Latina', flag: '🇻atican' },
+  ];
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
@@ -60,7 +68,7 @@ const LandingHeader = () => {
         </div>
 
         {/* Desktop Nav */}
-        <nav className="hidden lg:flex items-center gap-8">
+        <nav className="hidden lg:flex items-center gap-6">
           {navLinks.map((link) => (
             <button
               key={link.name}
@@ -71,9 +79,40 @@ const LandingHeader = () => {
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full" />
             </button>
           ))}
+          
+          <div className="relative">
+            <button 
+              onClick={() => setShowLangMenu(!showLangMenu)}
+              className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+            >
+              <Globe className="w-4 h-4" />
+              <span className="uppercase">{lang}</span>
+            </button>
+            <AnimatePresence>
+              {showLangMenu && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  className="absolute right-0 mt-2 w-40 bg-background border border-border rounded-xl shadow-xl overflow-hidden"
+                >
+                  {languages.map((l) => (
+                    <button
+                      key={l.code}
+                      onClick={() => { setLang(l.code); setShowLangMenu(false); }}
+                      className={`w-full px-4 py-2.5 text-left text-sm hover:bg-muted transition-colors flex items-center justify-between ${lang === l.code ? 'text-primary font-bold' : 'text-muted-foreground'}`}
+                    >
+                      <span>{l.label}</span>
+                      <span>{l.flag}</span>
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </nav>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <Button
             variant="ghost"
             className="hidden sm:flex text-sm font-bold uppercase tracking-widest px-6"
