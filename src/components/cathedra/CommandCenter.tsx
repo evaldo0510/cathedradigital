@@ -144,7 +144,7 @@ const CommandCenter: React.FC = () => {
     setGlobalLoading(true);
     const results: UnifiedResult[] = [];
 
-    const promises = [
+    const promises: Promise<void>[] = [
       // Bible search
       supabase.functions.invoke('bible-search', { body: { query: q } })
         .then(({ data }) => {
@@ -162,11 +162,12 @@ const CommandCenter: React.FC = () => {
         }).catch(() => {}),
 
       // Catechism search
-      supabase.from('catechism_cache')
-        .select('paragraph, content')
-        .ilike('content', `%${q}%`)
-        .limit(4)
-        .then(({ data }) => {
+      Promise.resolve(
+        supabase.from('catechism_cache')
+          .select('paragraph, content')
+          .ilike('content', `%${q}%`)
+          .limit(4)
+      ).then(({ data }) => {
           data?.forEach(p => {
             results.push({
               type: 'catechism',
@@ -179,12 +180,13 @@ const CommandCenter: React.FC = () => {
         }).catch(() => {}),
 
       // Journeys search
-      supabase.from('journeys')
-        .select('id, title, description, category')
-        .or(`title.ilike.%${q}%,description.ilike.%${q}%`)
-        .eq('is_active', true)
-        .limit(4)
-        .then(({ data }) => {
+      Promise.resolve(
+        supabase.from('journeys')
+          .select('id, title, description, category')
+          .or(`title.ilike.%${q}%,description.ilike.%${q}%`)
+          .eq('is_active', true)
+          .limit(4)
+      ).then(({ data }) => {
           data?.forEach(j => {
             results.push({
               type: 'journey',
@@ -197,11 +199,12 @@ const CommandCenter: React.FC = () => {
         }).catch(() => {}),
 
       // Glossary search
-      supabase.from('glossary')
-        .select('term, definition, category')
-        .or(`term.ilike.%${q}%,definition.ilike.%${q}%`)
-        .limit(4)
-        .then(({ data }) => {
+      Promise.resolve(
+        supabase.from('glossary')
+          .select('term, definition, category')
+          .or(`term.ilike.%${q}%,definition.ilike.%${q}%`)
+          .limit(4)
+      ).then(({ data }) => {
           data?.forEach(g => {
             results.push({
               type: 'glossary',
@@ -214,11 +217,12 @@ const CommandCenter: React.FC = () => {
         }).catch(() => {}),
 
       // Themes search
-      supabase.from('themes')
-        .select('id, name, slug, description')
-        .or(`name.ilike.%${q}%,description.ilike.%${q}%`)
-        .limit(4)
-        .then(({ data }) => {
+      Promise.resolve(
+        supabase.from('themes')
+          .select('id, name, slug, description')
+          .or(`name.ilike.%${q}%,description.ilike.%${q}%`)
+          .limit(4)
+      ).then(({ data }) => {
           data?.forEach(t => {
             results.push({
               type: 'theme',
@@ -231,12 +235,13 @@ const CommandCenter: React.FC = () => {
         }).catch(() => {}),
 
       // Community search
-      supabase.from('community_posts')
-        .select('id, title, content, category')
-        .is('parent_id', null)
-        .or(`title.ilike.%${q}%,content.ilike.%${q}%`)
-        .limit(3)
-        .then(({ data }) => {
+      Promise.resolve(
+        supabase.from('community_posts')
+          .select('id, title, content, category')
+          .is('parent_id', null)
+          .or(`title.ilike.%${q}%,content.ilike.%${q}%`)
+          .limit(3)
+      ).then(({ data }) => {
           data?.forEach(p => {
             results.push({
               type: 'community',
