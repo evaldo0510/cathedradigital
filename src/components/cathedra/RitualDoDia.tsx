@@ -54,6 +54,16 @@ const DAILY_REFLECTIONS = [
   'A oração transforma mais o coração de quem reza do que a realidade ao redor. Comece por dentro.',
   'A gratidão é a memória do coração. Hoje, recorde três bênçãos que recebeu sem merecer.',
   'A paz de Cristo não é ausência de problemas, mas presença d\'Ele no meio da tempestade.',
+  'A alegria cristã nasce da certeza de ser amado por Deus. Não deixe que as circunstâncias roubem sua paz.',
+  'O silêncio é o solo onde a semente da Palavra de Deus germina. Cultive momentos de quietude hoje.',
+  'Servir ao próximo é a forma mais concreta de amar a Deus. Procure uma oportunidade de ser útil hoje.',
+  'A santidade consiste em fazer a vontade de Deus com um sorriso, no lugar onde Ele nos colocou.',
+  'Não se preocupe com o amanhã; o Pai cuida das aves do céu e muito mais de você. Confie.',
+  'A humildade é a verdade sobre quem somos diante de Deus. Reconheça suas fraquezas e a força Dele.',
+  'Cada dia é uma nova oportunidade de começar de novo. A misericórdia de Deus se renova a cada manhã.',
+  'A fé sem obras é morta. Que suas ações hoje falem mais alto que suas palavras sobre o que você crê.',
+  'O segredo da felicidade está em buscar primeiro o Reino de Deus. O resto será acrescentado.',
+  'A cruz que você carrega hoje é o seu caminho de glória amanhã. Una seus sofrimentos aos de Jesus.',
 ];
 
 const RitualDoDia: React.FC = () => {
