@@ -39,6 +39,7 @@ interface Step {
   subtitle: string | null;
   step_order: number;
   step_type: string;
+  content: any;
 }
 
 const AdminJourneysTab: React.FC = () => {
@@ -50,6 +51,9 @@ const AdminJourneysTab: React.FC = () => {
   const [selectedJourneyId, setSelectedJourneyId] = useState<string | null>(null);
   const [steps, setSteps] = useState<Step[]>([]);
   const [stepsLoading, setStepsLoading] = useState(false);
+  const [editingStep, setEditingStep] = useState<Step | null>(null);
+  const [isEditStepDialogOpen, setIsEditStepDialogOpen] = useState(false);
+  const [stepContentString, setStepContentString] = useState('');
 
   useEffect(() => {
     fetchJourneys();
@@ -97,6 +101,63 @@ const AdminJourneysTab: React.FC = () => {
     } else {
       setSelectedJourneyId(journeyId);
       fetchSteps(journeyId);
+    }
+  };
+  
+  const handleEditStep = (step: Step) => {
+    setEditingStep(step);
+    setStepContentString(JSON.stringify(step.content, null, 2));
+    setIsEditStepDialogOpen(true);
+  };
+  
+  const handleSaveStep = async () => {
+    if (!editingStep) return;
+    
+    try {
+      let parsedContent = editingStep.content;
+      try {
+        parsedContent = JSON.parse(stepContentString);
+      } catch (e) {
+        toast.error('JSON inválido no conteúdo do passo.');
+        return;
+      }
+      
+      const { error } = await supabase
+        .from('journey_steps')
+        .update({
+          title: editingStep.title,
+          subtitle: editingStep.subtitle,
+          step_order: editingStep.step_order,
+          step_type: editingStep.step_type,
+          content: parsedContent
+        })
+        .eq('id', editingStep.id);
+        
+      if (error) throw error;
+      
+      setSteps(prev => prev.map(s => s.id === editingStep.id ? { ...editingStep, content: parsedContent } : s));
+      toast.success('Passo atualizado com sucesso.');
+      setIsEditStepDialogOpen(false);
+    } catch (error: any) {
+      toast.error('Erro ao salvar passo: ' + error.message);
+    }
+  };
+  
+  const handleDeleteStep = async (stepId: string) => {
+    if (!window.confirm('Tem certeza que deseja excluir este passo?')) return;
+    
+    try {
+      const { error } = await supabase
+        .from('journey_steps')
+        .delete()
+        .eq('id', stepId);
+        
+      if (error) throw error;
+      
+      setSteps(prev => prev.filter(s => s.id !== stepId));
+      toast.success('Passo excluído com sucesso.');
+    } catch (error: any) {
+      toast.error('Erro ao excluir passo: ' + error.message);
     }
   };
 
@@ -219,8 +280,8 @@ const AdminJourneysTab: React.FC = () => {
                           </div>
                         </div>
                         <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Button variant="ghost" size="icon" className="h-7 w-7"><Edit className="w-3.5 h-3.5" /></Button>
-                          <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive"><Trash2 className="w-3.5 h-3.5" /></Button>
+                          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => handleEditStep(step)}><Edit className="w-3.5 h-3.5" /></Button>
+                          <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive" onClick={() => handleDeleteStep(step.id)}><Trash2 className="w-3.5 h-3.5" /></Button>
                         </div>
                       </div>
                     ))}
@@ -283,6 +344,66 @@ const AdminJourneysTab: React.FC = () => {
             <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>Cancelar</Button>
             <Button onClick={handleSaveJourney} className="gap-2">
               <Save className="w-4 h-4" /> Salvar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isEditStepDialogOpen} onOpenChange={setIsEditStepDialogOpen}>
+        <DialogContent className="sm:max-w-[700px] max-h-[90vh] flex flex-col">
+          <DialogHeader>
+            <DialogTitle>Editar Passo da Jornada</DialogTitle>
+          </DialogHeader>
+          {editingStep && (
+            <div className="flex-1 overflow-y-auto pr-2 space-y-4 py-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Título</Label>
+                  <Input value={editingStep.title} onChange={e => setEditingStep({...editingStep, title: e.target.value})} />
+                </div>
+                <div className="space-y-2">
+                  <Label>Subtítulo</Label>
+                  <Input value={editingStep.subtitle || ''} onChange={e => setEditingStep({...editingStep, subtitle: e.target.value})} />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Tipo de Passo</Label>
+                  <Input value={editingStep.step_type} onChange={e => setEditingStep({...editingStep, step_type: e.target.value})} />
+                </div>
+                <div className="space-y-2">
+                  <Label>Ordem</Label>
+                  <Input type="number" value={editingStep.step_order} onChange={e => setEditingStep({...editingStep, step_order: parseInt(e.target.value)})} />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Conteúdo (JSON)</Label>
+                <div className="relative group">
+                   <Textarea 
+                     className="font-mono text-xs h-[300px]" 
+                     value={stepContentString} 
+                     onChange={e => setStepContentString(e.target.value)} 
+                   />
+                   <div className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                     <Button variant="outline" size="sm" className="h-7 text-[9px] uppercase tracking-tighter" onClick={() => {
+                       try {
+                         const parsed = JSON.parse(stepContentString);
+                         setStepContentString(JSON.stringify(parsed, null, 2));
+                         toast.success('JSON formatado.');
+                       } catch (e) {
+                         toast.error('Erro ao formatar JSON.');
+                       }
+                     }}>Formatar</Button>
+                   </div>
+                </div>
+                <p className="text-[10px] text-muted-foreground italic">Dica: use chaves como 'intro', 'reflection', 'practice', 'prayer' para que o conteúdo apareça no app.</p>
+              </div>
+            </div>
+          )}
+          <DialogFooter className="pt-4 border-t">
+            <Button variant="outline" onClick={() => setIsEditStepDialogOpen(false)}>Cancelar</Button>
+            <Button onClick={handleSaveStep} className="gap-2">
+              <Save className="w-4 h-4" /> Salvar Passo
             </Button>
           </DialogFooter>
         </DialogContent>
