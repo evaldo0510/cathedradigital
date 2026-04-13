@@ -141,6 +141,25 @@ const AdminJourneysTab: React.FC = () => {
     } catch (error: any) {
       toast.error('Erro ao salvar passo: ' + error.message);
     }
+    }
+  };
+  
+  const handleDeleteStep = async (stepId: string) => {
+    if (!window.confirm('Tem certeza que deseja excluir este passo?')) return;
+    
+    try {
+      const { error } = await supabase
+        .from('journey_steps')
+        .delete()
+        .eq('id', stepId);
+        
+      if (error) throw error;
+      
+      setSteps(prev => prev.filter(s => s.id !== stepId));
+      toast.success('Passo excluído com sucesso.');
+    } catch (error: any) {
+      toast.error('Erro ao excluir passo: ' + error.message);
+    }
   };
 
   const handleSaveJourney = async () => {
@@ -263,7 +282,7 @@ const AdminJourneysTab: React.FC = () => {
                         </div>
                         <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                           <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => handleEditStep(step)}><Edit className="w-3.5 h-3.5" /></Button>
-                          <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive"><Trash2 className="w-3.5 h-3.5" /></Button>
+                          <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive" onClick={() => handleDeleteStep(step.id)}><Trash2 className="w-3.5 h-3.5" /></Button>
                         </div>
                       </div>
                     ))}
