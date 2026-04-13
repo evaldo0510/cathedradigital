@@ -93,9 +93,13 @@ const ModulesGuidePage = lazy(() => import('./components/cathedra/ModulesGuidePa
 
 const PartnersPage = lazy(() => import('./components/cathedra/PartnersPage'));
 
-const SkeletonBar = ({ w = 'w-full', h = 'h-4', className = '' }: { w?: string; h?: string; className?: string }) => (
-  <div className={`${w} ${h} rounded-lg bg-muted/60 animate-pulse ${className}`} />
+const SkeletonBar = React.forwardRef<HTMLDivElement, { w?: string; h?: string; className?: string }>(
+  ({ w = 'w-full', h = 'h-4', className = '' }, ref) => (
+    <div ref={ref} className={`${w} ${h} rounded-lg bg-muted/60 animate-pulse ${className}`} />
+  )
 );
+
+SkeletonBar.displayName = 'SkeletonBar';
 
 const LoadingFallback = () => (
   <div className="flex flex-col items-center justify-center min-h-[60dvh] w-full p-6 animate-in fade-in duration-500">
