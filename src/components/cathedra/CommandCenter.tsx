@@ -126,27 +126,35 @@ const CommandCenter: React.FC = () => {
   const filteredSaints = useMemo(() => {
     if (query.length < 2) return [];
     const q = query.toLowerCase();
-    return SAINTS_DATA
-      .filter(s => 
-        s.name.toLowerCase().includes(q) || 
-        s.title.toLowerCase().includes(q) ||
-        s.bio.toLowerCase().includes(q) ||
-        s.patronOf?.some(p => p.toLowerCase().includes(q)) ||
-        s.quotes?.some(quote => quote.toLowerCase().includes(q)) ||
-        s.virtues?.some(v => v.toLowerCase().includes(q))
-      )
-      .slice(0, 8)
-      .map(s => ({
-        type: 'saint' as const,
-        label: s.name,
-        description: s.title + (s.patronOf && s.patronOf.length > 0 ? ` • Protetor de ${s.patronOf.slice(0, 2).join(', ')}` : ''),
-        path: `${AppRoute.SAINTS}?saint=${s.id}`,
-        icon: s.image ? (
-          <img src={s.image} alt={s.name} className="w-4 h-4 rounded-full object-cover" />
-        ) : (
-          <Icons.SaintHalo className="w-4 h-4" />
-        ),
-      }));
+    
+    const results: UnifiedResult[] = [];
+    
+    SAINTS_DATA.forEach(s => {
+      const nameMatch = s.name.toLowerCase().includes(q);
+      const titleMatch = s.title.toLowerCase().includes(q);
+      const bioMatch = s.bio.toLowerCase().includes(q);
+      const patronMatch = s.patronOf?.some(p => p.toLowerCase().includes(q));
+      const virtueMatch = s.virtues?.some(v => v.toLowerCase().includes(q));
+      const quoteMatch = s.quotes?.find(quote => quote.toLowerCase().includes(q));
+      
+      if (nameMatch || titleMatch || bioMatch || patronMatch || virtueMatch || quoteMatch) {
+        results.push({
+          type: 'saint' as const,
+          label: s.name,
+          description: quoteMatch 
+            ? `"${quoteMatch.length > 60 ? quoteMatch.substring(0, 60) + '...' : quoteMatch}"`
+            : s.title + (s.patronOf && s.patronOf.length > 0 ? ` • Protetor de ${s.patronOf.slice(0, 2).join(', ')}` : ''),
+          path: `${AppRoute.SAINTS}?saint=${s.id}`,
+          icon: s.image ? (
+            <img src={s.image} alt={s.name} className="w-4 h-4 rounded-full object-cover" />
+          ) : (
+            <Icons.SaintHalo className="w-4 h-4" />
+          ),
+        });
+      }
+    });
+
+    return results.slice(0, 8);
   }, [query]);
 
   // Global search (debounced DB queries)
