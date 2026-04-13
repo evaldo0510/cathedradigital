@@ -127,12 +127,18 @@ const CommandCenter: React.FC = () => {
     if (query.length < 2) return [];
     const q = query.toLowerCase();
     return SAINTS_DATA
-      .filter(s => s.name.toLowerCase().includes(q) || s.title.toLowerCase().includes(q))
-      .slice(0, 4)
+      .filter(s => 
+        s.name.toLowerCase().includes(q) || 
+        s.title.toLowerCase().includes(q) ||
+        s.bio.toLowerCase().includes(q) ||
+        s.patronOf.some(p => p.toLowerCase().includes(q)) ||
+        s.quotes?.some(quote => quote.toLowerCase().includes(q))
+      )
+      .slice(0, 6)
       .map(s => ({
         type: 'saint' as const,
         label: s.name,
-        description: s.title,
+        description: s.title + (s.patronOf.length > 0 ? ` • Protetor de ${s.patronOf.slice(0, 2).join(', ')}` : ''),
         path: `${AppRoute.SAINTS}?saint=${s.id}`,
         icon: <Icons.SaintHalo className="w-4 h-4" />,
       }));
