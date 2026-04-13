@@ -4,6 +4,7 @@ import SEOHead from "@/components/SEOHead";
 import { AppRoute } from "@/types";
 import { useAuth } from "@/hooks/useAuth";
 import HeroSection from "./landing/HeroSection";
+import LandingHeader from "@/components/landing/LandingHeader";
 
 // Lazy-load below-the-fold sections
 const InstitutionalVideoSection = lazy(() => import("./landing/InstitutionalVideoSection"));
@@ -42,6 +43,7 @@ const Index = () => {
 
   return (
     <div className="flex min-h-screen flex-col items-center bg-background text-foreground overflow-x-hidden">
+      <LandingHeader />
       <SEOHead
         title="Bíblia, Catecismo e Tradição Católica"
         description="Aprofunde sua fé católica com o Logos IA, Bíblia Sagrada, Catecismo da Igreja, vidas dos santos e liturgia diária. Tudo gratuito."
@@ -60,13 +62,13 @@ const Index = () => {
       <HeroSection onStart={handleStart} onAbout={() => navigate(AppRoute.ABOUT)} />
       <Suspense fallback={null}>
         <div className="w-full" style={{ contentVisibility: 'auto' }}>
-          <InstitutionalVideoSection />
-          <StatsSection />
-          <FeaturesSection onNavigate={handleNavigate} />
-          <HowItWorksSection />
+          <div id="video"><InstitutionalVideoSection /></div>
+          <div id="stats"><StatsSection /></div>
+          <div id="features"><FeaturesSection onNavigate={handleNavigate} /></div>
+          <div id="how-it-works"><HowItWorksSection /></div>
           <AcolhimentoSection />
           <BenefitsSection onLogin={() => navigate(AppRoute.LOGIN)} />
-          <TestimonialsSection />
+          <div id="testimonials"><TestimonialsSection /></div>
           <AboutCreatorSection />
           <FaqSection />
           <CtaBannerSection onStart={handleStart} />

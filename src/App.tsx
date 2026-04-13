@@ -146,7 +146,7 @@ const AppLayout: React.FC = () => {
   const location = useLocation();
 
   // Pages that should NOT show header, footer, sidebar, or bottom nav
-  const chromelessPages: string[] = [AppRoute.HOME, AppRoute.ONBOARDING, AppRoute.LOGIN, '/reset-password', AppRoute.ABOUT, AppRoute.TERMS, AppRoute.PRIVACY, AppRoute.PRICING, AppRoute.PARTNERS];
+  const chromelessPages: string[] = [AppRoute.ONBOARDING, AppRoute.LOGIN, '/reset-password', AppRoute.ABOUT, AppRoute.TERMS, AppRoute.PRIVACY, AppRoute.PRICING, AppRoute.PARTNERS];
   const isChromeless = chromelessPages.includes(location.pathname);
 
   // Main pages where "Back" button shouldn't show (root pages)
