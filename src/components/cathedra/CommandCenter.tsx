@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../constants';
 import { AppRoute } from '../../types';
 import { supabase } from '@/integrations/supabase/client';
+import { SAINTS_DATA } from '@/data/saints';
 
 interface CommandItem {
   label: string;
@@ -10,7 +11,7 @@ interface CommandItem {
   path?: string;
   icon: React.ReactNode;
   keywords: string[];
-  type: 'page' | 'bible' | 'community';
+  type: 'page' | 'bible' | 'community' | 'saint' | 'catechism' | 'journey' | 'glossary' | 'theme';
 }
 
 const PAGE_COMMANDS: CommandItem[] = [
@@ -33,6 +34,7 @@ const PAGE_COMMANDS: CommandItem[] = [
   { label: 'Trilhas de Estudo', description: 'Formação estruturada', path: AppRoute.TRILHAS, icon: <Icons.Layout className="w-4 h-4" />, keywords: ['trilha', 'estudo', 'formação', 'curso'], type: 'page' },
   { label: 'Logos IA', description: 'Sua dúvida iluminada pela fé', path: AppRoute.STUDY_MODE, icon: <Icons.Search className="w-4 h-4" />, keywords: ['ia', 'logos', 'perguntar', 'ajuda', 'estudo'], type: 'page' },
   { label: 'Favoritos', description: 'Itens salvos', path: AppRoute.FAVORITES, icon: <Icons.Heart className="w-4 h-4" />, keywords: ['favoritos', 'salvos', 'bookmark'], type: 'page' },
+  { label: 'Jornadas', description: 'Jornadas espirituais guiadas', path: AppRoute.JORNADAS, icon: <Icons.Compass className="w-4 h-4" />, keywords: ['jornadas', 'jornada', 'espiritual', 'caminhada'], type: 'page' },
   { label: 'Sobre', description: 'Sobre o Cathedra', path: AppRoute.ABOUT, icon: <Icons.Globe className="w-4 h-4" />, keywords: ['sobre', 'manifesto', 'about'], type: 'page' },
   { label: 'Login', description: 'Acessar conta', path: AppRoute.LOGIN, icon: <Icons.Users className="w-4 h-4" />, keywords: ['login', 'conta', 'entrar', 'cadastro'], type: 'page' },
   { label: 'Litanias', description: 'Orações de invocação', path: AppRoute.LITANIES, icon: <Icons.Heart className="w-4 h-4" />, keywords: ['litania', 'invocação', 'sagrado coração', 'nossa senhora'], type: 'page' },
@@ -41,26 +43,47 @@ const PAGE_COMMANDS: CommandItem[] = [
 ];
 
 interface UnifiedResult {
-  type: 'page' | 'bible' | 'community';
+  type: 'page' | 'bible' | 'community' | 'saint' | 'catechism' | 'journey' | 'glossary' | 'theme';
   label: string;
   description: string;
   path?: string;
   icon: React.ReactNode;
 }
 
+const TYPE_LABELS: Record<string, string> = {
+  bible: 'Bíblia',
+  community: 'Comunidade',
+  saint: 'Santo',
+  catechism: 'Catecismo',
+  journey: 'Jornada',
+  glossary: 'Glossário',
+  theme: 'Tema',
+  page: 'Página',
+};
+
+const TYPE_STYLES: Record<string, string> = {
+  bible: 'bg-blue-500/10 text-blue-600 dark:text-blue-400',
+  community: 'bg-rose-500/10 text-rose-600 dark:text-rose-400',
+  saint: 'bg-amber-500/10 text-amber-600 dark:text-amber-400',
+  catechism: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
+  journey: 'bg-purple-500/10 text-purple-600 dark:text-purple-400',
+  glossary: 'bg-cyan-500/10 text-cyan-600 dark:text-cyan-400',
+  theme: 'bg-primary/10 text-primary',
+  page: 'bg-muted text-muted-foreground',
+};
+
 const CommandCenter: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [searchMode, setSearchMode] = useState<'pages' | 'global'>('pages');
   const [globalResults, setGlobalResults] = useState<UnifiedResult[]>([]);
   const [globalLoading, setGlobalLoading] = useState(false);
   const [lastBible, setLastBible] = useState<{ book_abbr: string; chapter: number } | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const searchTimer = useRef<ReturnType<typeof setTimeout>>();
+  const listRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
-  // Load last read chapter on mount
   useEffect(() => {
     const loadLastRead = async () => {
       const { data: { user } } = await supabase.auth.getUser();
@@ -99,84 +122,152 @@ const CommandCenter: React.FC = () => {
     );
   }, [query, lastBible]);
 
-  // Global search (debounced)
+  // Local saints search (instant, no DB needed)
+  const filteredSaints = useMemo(() => {
+    if (query.length < 2) return [];
+    const q = query.toLowerCase();
+    return SAINTS_DATA
+      .filter(s => s.name.toLowerCase().includes(q) || s.title.toLowerCase().includes(q))
+      .slice(0, 4)
+      .map(s => ({
+        type: 'saint' as const,
+        label: s.name,
+        description: s.title,
+        path: `${AppRoute.SAINTS}?saint=${s.id}`,
+        icon: <Icons.SaintHalo className="w-4 h-4" />,
+      }));
+  }, [query]);
+
+  // Global search (debounced DB queries)
   const runGlobalSearch = useCallback(async (q: string) => {
     if (q.length < 3) { setGlobalResults([]); return; }
     setGlobalLoading(true);
     const results: UnifiedResult[] = [];
 
-    try {
+    const promises: Promise<void>[] = [
       // Bible search
-      const { data: bibleData } = await supabase.functions.invoke('bible-search', {
-        body: { query: q },
-      });
-      if (bibleData?.results) {
-        bibleData.results.slice(0, 5).forEach((v: any) => {
-          results.push({
-            type: 'bible',
-            label: `${v.bookAbbrev} ${v.chapter},${v.verse}`,
-            description: v.text.substring(0, 80) + '...',
-            path: `/bible?book=${v.bookAbbrev}&ch=${v.chapter}`,
-            icon: <Icons.Book className="w-4 h-4" />,
-          });
-        });
-      }
-    } catch {}
+      supabase.functions.invoke('bible-search', { body: { query: q } })
+        .then(({ data }) => {
+          if (data?.results) {
+            data.results.slice(0, 4).forEach((v: any) => {
+              results.push({
+                type: 'bible',
+                label: `${v.bookAbbrev} ${v.chapter},${v.verse}`,
+                description: v.text?.substring(0, 80) + '...',
+                path: `/bible?book=${v.bookAbbrev}&ch=${v.chapter}`,
+                icon: <Icons.Book className="w-4 h-4" />,
+              });
+            });
+          }
+        }).catch(() => {}),
 
-    try {
+      // Catechism search
+      Promise.resolve(
+        supabase.from('catechism_cache')
+          .select('paragraph, content')
+          .ilike('content', `%${q}%`)
+          .limit(4)
+      ).then(({ data }) => {
+          data?.forEach(p => {
+            results.push({
+              type: 'catechism',
+              label: `§${p.paragraph}`,
+              description: p.content.substring(0, 80) + '...',
+              path: `${AppRoute.CATECHISM}?p=${p.paragraph}`,
+              icon: <Icons.Catechism className="w-4 h-4" />,
+            });
+          });
+        }).catch(() => {}),
+
+      // Journeys search
+      Promise.resolve(
+        supabase.from('journeys')
+          .select('id, title, description, category')
+          .or(`title.ilike.%${q}%,description.ilike.%${q}%`)
+          .eq('is_active', true)
+          .limit(4)
+      ).then(({ data }) => {
+          data?.forEach(j => {
+            results.push({
+              type: 'journey',
+              label: j.title,
+              description: j.description?.substring(0, 80) + '...',
+              path: `/jornadas/${j.id}`,
+              icon: <Icons.Compass className="w-4 h-4" />,
+            });
+          });
+        }).catch(() => {}),
+
+      // Glossary search
+      Promise.resolve(
+        supabase.from('glossary')
+          .select('term, definition, category')
+          .or(`term.ilike.%${q}%,definition.ilike.%${q}%`)
+          .limit(4)
+      ).then(({ data }) => {
+          data?.forEach(g => {
+            results.push({
+              type: 'glossary',
+              label: g.term,
+              description: g.definition.substring(0, 80) + '...',
+              path: `${AppRoute.GLOSSARY}?q=${encodeURIComponent(g.term)}`,
+              icon: <Icons.Glossary className="w-4 h-4" />,
+            });
+          });
+        }).catch(() => {}),
+
+      // Themes search
+      Promise.resolve(
+        supabase.from('themes')
+          .select('id, name, slug, description')
+          .or(`name.ilike.%${q}%,description.ilike.%${q}%`)
+          .limit(4)
+      ).then(({ data }) => {
+          data?.forEach(t => {
+            results.push({
+              type: 'theme',
+              label: t.name,
+              description: t.description?.substring(0, 80) + '...',
+              path: `${AppRoute.TEMAS}?tema=${t.slug}`,
+              icon: <Icons.Tag className="w-4 h-4" />,
+            });
+          });
+        }).catch(() => {}),
+
       // Community search
-      const { data: communityData } = await supabase
-        .from('community_posts')
-        .select('id, title, content, category')
-        .is('parent_id', null)
-        .or(`title.ilike.%${q}%,content.ilike.%${q}%`)
-        .limit(5);
-      if (communityData) {
-        communityData.forEach(p => {
-          results.push({
-            type: 'community',
-            label: p.title || 'Discussão',
-            description: p.content.substring(0, 80) + '...',
-            path: AppRoute.COMMUNITY,
-            icon: <Icons.Message className="w-4 h-4" />,
+      Promise.resolve(
+        supabase.from('community_posts')
+          .select('id, title, content, category')
+          .is('parent_id', null)
+          .or(`title.ilike.%${q}%,content.ilike.%${q}%`)
+          .limit(3)
+      ).then(({ data }) => {
+          data?.forEach(p => {
+            results.push({
+              type: 'community',
+              label: p.title || 'Discussão',
+              description: p.content.substring(0, 80) + '...',
+              path: AppRoute.COMMUNITY,
+              icon: <Icons.Message className="w-4 h-4" />,
+            });
           });
-        });
-      }
-    } catch {}
+        }).catch(() => {}),
+    ];
 
-    try {
-      // Themes/Tags search
-      const { data: themeData } = await supabase
-        .from('themes')
-        .select('id, name, slug, description')
-        .or(`name.ilike.%${q}%,description.ilike.%${q}%`)
-        .limit(5);
-      if (themeData) {
-        themeData.forEach(t => {
-          results.push({
-            type: 'page' as any, // Using page type to trigger navigation
-            label: `Tema: ${t.name}`,
-            description: t.description?.substring(0, 80) + '...',
-            path: `${AppRoute.TEMAS}?tema=${t.slug}`,
-            icon: <Icons.Star className="w-4 h-4 text-primary" />,
-          });
-        });
-      }
-    } catch {}
-
+    await Promise.allSettled(promises);
     setGlobalResults(results);
     setGlobalLoading(false);
   }, []);
 
   useEffect(() => {
-    if (searchMode === 'global' && query.length >= 3) {
+    if (query.length >= 3) {
       clearTimeout(searchTimer.current);
       searchTimer.current = setTimeout(() => runGlobalSearch(query), 400);
     } else {
       setGlobalResults([]);
     }
     return () => clearTimeout(searchTimer.current);
-  }, [query, searchMode, runGlobalSearch]);
+  }, [query, runGlobalSearch]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -188,7 +279,6 @@ const CommandCenter: React.FC = () => {
     };
 
     const openHandler = () => setIsOpen(true);
-
     window.addEventListener('keydown', handler);
     window.addEventListener('open-command-center', openHandler);
     return () => {
@@ -201,18 +291,22 @@ const CommandCenter: React.FC = () => {
     if (isOpen) {
       setQuery('');
       setSelectedIndex(0);
-      setSearchMode('pages');
       setGlobalResults([]);
       setTimeout(() => inputRef.current?.focus(), 50);
     }
   }, [isOpen]);
 
-  useEffect(() => { setSelectedIndex(0); }, [query, searchMode]);
+  useEffect(() => { setSelectedIndex(0); }, [query]);
 
-  const allItems = searchMode === 'pages' ? filteredPages : [
-    ...filteredPages.slice(0, 3),
-    ...globalResults,
-  ];
+  // Unified results: pages first, then saints (local), then DB results
+  const allItems = useMemo(() => {
+    if (query.length < 2) return filteredPages;
+    return [
+      ...filteredPages.slice(0, 5),
+      ...filteredSaints,
+      ...globalResults,
+    ];
+  }, [filteredPages, filteredSaints, globalResults, query]);
 
   const go = useCallback((path?: string) => {
     if (path) navigate(path);
@@ -223,99 +317,124 @@ const CommandCenter: React.FC = () => {
     if (e.key === 'ArrowDown') { e.preventDefault(); setSelectedIndex(i => Math.min(i + 1, allItems.length - 1)); }
     else if (e.key === 'ArrowUp') { e.preventDefault(); setSelectedIndex(i => Math.max(i - 1, 0)); }
     else if (e.key === 'Enter' && allItems[selectedIndex]) { go(allItems[selectedIndex].path); }
-    else if (e.key === 'Tab') { e.preventDefault(); setSearchMode(m => m === 'pages' ? 'global' : 'pages'); }
   };
+
+  // Scroll selected into view
+  useEffect(() => {
+    const el = listRef.current?.children[selectedIndex] as HTMLElement | undefined;
+    el?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }, [selectedIndex]);
 
   if (!isOpen) return null;
 
-  const typeLabel = (type: string) => {
-    switch (type) {
-      case 'bible': return 'Bíblia';
-      case 'community': return 'Comunidade';
-      default: return 'Página';
-    }
-  };
+  const resultCount = allItems.length;
+  const hasGlobalResults = globalResults.length > 0;
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-start justify-center pt-[15vh]" onClick={() => setIsOpen(false)}>
+    <div className="fixed inset-0 z-[200] flex items-start justify-center pt-[12vh]" onClick={() => setIsOpen(false)}>
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
       <div
-        className="relative w-full max-w-lg bg-card border border-border rounded-2xl shadow-2xl overflow-hidden"
+        className="relative w-full max-w-xl bg-card border border-border rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-4 duration-200"
         onClick={e => e.stopPropagation()}
       >
-        {/* Mode tabs */}
-        <div className="flex border-b border-border">
-          <button onClick={() => setSearchMode('pages')}
-            className={`flex-1 py-2 text-[10px] font-black uppercase tracking-widest transition-colors ${
-              searchMode === 'pages' ? 'text-primary border-b-2 border-primary' : 'text-muted-foreground hover:text-foreground'
-            }`}>
-            Páginas
-          </button>
-          <button onClick={() => setSearchMode('global')}
-            className={`flex-1 py-2 text-[10px] font-black uppercase tracking-widest transition-colors ${
-              searchMode === 'global' ? 'text-primary border-b-2 border-primary' : 'text-muted-foreground hover:text-foreground'
-            }`}>
-            Busca Global
-          </button>
-        </div>
-
         {/* Search input */}
-        <div className="flex items-center gap-3 px-4 py-3 border-b border-border">
-          <Icons.Search className="w-5 h-5 text-muted-foreground shrink-0" />
+        <div className="flex items-center gap-3 px-5 py-4 border-b border-border">
+          <Icons.Search className="w-5 h-5 text-primary shrink-0" />
           <input
             ref={inputRef}
             value={query}
             onChange={e => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder={searchMode === 'pages' ? 'Buscar seção ou página...' : 'Buscar em Bíblia, Comunidade...'}
+            placeholder="Buscar em tudo: Bíblia, Catecismo, Santos, Jornadas..."
             className="flex-1 bg-transparent text-foreground text-sm placeholder:text-muted-foreground focus:outline-none"
           />
-          <kbd className="hidden sm:inline-flex items-center px-2 py-0.5 rounded bg-muted text-muted-foreground text-[10px] font-mono font-bold">TAB</kbd>
+          {query && (
+            <button onClick={() => setQuery('')} className="text-muted-foreground hover:text-foreground transition-colors">
+              <Icons.X className="w-4 h-4" />
+            </button>
+          )}
           <kbd className="hidden sm:inline-flex items-center px-2 py-0.5 rounded bg-muted text-muted-foreground text-[10px] font-mono font-bold">ESC</kbd>
         </div>
 
+        {/* Loading indicator */}
+        {globalLoading && (
+          <div className="h-0.5 w-full bg-muted overflow-hidden">
+            <div className="h-full w-1/3 bg-primary animate-[shimmer_1s_ease-in-out_infinite] rounded-full" 
+                 style={{ animation: 'shimmer 1s ease-in-out infinite', animationName: 'none' }} />
+            <div className="h-full bg-primary/60 animate-pulse rounded-full" />
+          </div>
+        )}
+
         {/* Results */}
-        <div className="max-h-[50vh] overflow-y-auto py-2">
-          {globalLoading && (
-            <div className="flex items-center justify-center py-6">
-              <div className="w-5 h-5 border-2 border-secondary border-t-transparent rounded-full animate-spin" />
-              <span className="ml-2 text-xs text-muted-foreground">Buscando...</span>
+        <div ref={listRef} className="max-h-[55vh] overflow-y-auto py-1">
+          {query.length >= 2 && !globalLoading && resultCount > 0 && (
+            <div className="px-5 py-2 text-[9px] font-black uppercase tracking-widest text-muted-foreground">
+              {resultCount} resultado{resultCount !== 1 ? 's' : ''} encontrado{resultCount !== 1 ? 's' : ''}
             </div>
           )}
-          {!globalLoading && allItems.length === 0 && (
-            <p className="text-center text-sm text-muted-foreground py-8 italic">
-              {searchMode === 'global' && query.length < 3
-                ? 'Digite ao menos 3 caracteres para buscar...'
+
+          {allItems.length === 0 && !globalLoading && (
+            <p className="text-center text-sm text-muted-foreground py-10 italic">
+              {query.length < 2
+                ? 'Digite para buscar em todos os módulos...'
                 : 'Nenhum resultado encontrado.'}
             </p>
           )}
-          {!globalLoading && allItems.map((item, i) => (
-            <button
-              key={`${item.type}-${item.label}-${i}`}
-              onClick={() => go(item.path)}
-              onMouseEnter={() => setSelectedIndex(i)}
-              className={`w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors ${
-                i === selectedIndex ? 'bg-primary/10 text-primary' : 'text-foreground hover:bg-muted'
-              }`}
-            >
-              <span className="opacity-60">{item.icon}</span>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold truncate">{item.label}</p>
-                <p className="text-[10px] text-muted-foreground truncate">{item.description}</p>
-              </div>
-              <span className={`text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-full ${
-                item.type === 'bible' ? 'bg-primary/10 text-primary' : item.type === 'community' ? 'bg-accent/20 text-accent-foreground' : 'bg-muted text-muted-foreground'
-              }`}>
-                {typeLabel(item.type)}
-              </span>
-            </button>
-          ))}
+
+          {allItems.map((item, i) => {
+            // Group header
+            const prevType = i > 0 ? allItems[i - 1].type : null;
+            const showGroupHeader = item.type !== prevType && query.length >= 2;
+
+            return (
+              <React.Fragment key={`${item.type}-${item.label}-${i}`}>
+                {showGroupHeader && (
+                  <div className="px-5 pt-3 pb-1 text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-2">
+                    <div className="w-4 h-px bg-border" />
+                    {TYPE_LABELS[item.type] || item.type}
+                  </div>
+                )}
+                <button
+                  onClick={() => go(item.path)}
+                  onMouseEnter={() => setSelectedIndex(i)}
+                  className={`w-full flex items-center gap-3 px-5 py-2.5 text-left transition-all ${
+                    i === selectedIndex 
+                      ? 'bg-primary/10 text-primary' 
+                      : 'text-foreground hover:bg-muted/50'
+                  }`}
+                >
+                  <span className={`p-1.5 rounded-lg ${i === selectedIndex ? 'bg-primary/20' : 'bg-muted'}`}>
+                    {item.icon}
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold truncate">{item.label}</p>
+                    <p className="text-[10px] text-muted-foreground truncate">{item.description}</p>
+                  </div>
+                  <span className={`text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${
+                    TYPE_STYLES[item.type] || 'bg-muted text-muted-foreground'
+                  }`}>
+                    {TYPE_LABELS[item.type] || item.type}
+                  </span>
+                </button>
+              </React.Fragment>
+            );
+          })}
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between px-4 py-2 border-t border-border bg-muted/50">
-          <span className="text-[9px] text-muted-foreground">↑↓ navegar · Enter abrir · Tab alternar modo</span>
-          <span className="text-[9px] text-muted-foreground font-mono">⌘K</span>
+        <div className="flex items-center justify-between px-5 py-2.5 border-t border-border bg-muted/30">
+          <div className="flex items-center gap-3">
+            <span className="text-[9px] text-muted-foreground">↑↓ navegar</span>
+            <span className="text-[9px] text-muted-foreground">↵ abrir</span>
+          </div>
+          <div className="flex items-center gap-2">
+            {hasGlobalResults && (
+              <span className="text-[9px] text-primary font-medium">
+                Buscando em {new Set(globalResults.map(r => r.type)).size} módulos
+              </span>
+            )}
+            <span className="text-[9px] text-muted-foreground font-mono">⌘K</span>
+          </div>
         </div>
       </div>
     </div>
