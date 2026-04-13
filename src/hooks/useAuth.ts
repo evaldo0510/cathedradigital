@@ -165,28 +165,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const syncAuthState = useCallback(async (currentUser: SupabaseUser | null) => {
     const requestId = ++authRequestId.current;
     console.log('Syncing auth state, request ID:', requestId, 'User:', currentUser?.id);
-    
-    // MOCK USER FOR TESTING
-    if (!currentUser) {
-      const mockUser = {
-        id: '671c8724-50e7-439a-b834-3643d7e71b27', // ID of teste@cathedra.app
-        email: 'teste@cathedra.app',
-      } as any;
-      setUser(mockUser);
-      setProfile({
-        id: mockUser.id,
-        name: 'Usuário Teste',
-        is_premium: true,
-        role: 'user',
-        avatar_url: null,
-        _sensitive: { email: mockUser.email, diagnosis_result: null }
-      });
-      setLoading(false);
-      return;
-    }
     setUser(currentUser);
     setLoading(true);
 
+    if (!currentUser) {
+      console.log('No user, setting loading to false');
+      setProfile(null);
+      setLoading(false);
+      return;
+    }
 
     try {
       console.log('Fetching profile for:', currentUser.id);
