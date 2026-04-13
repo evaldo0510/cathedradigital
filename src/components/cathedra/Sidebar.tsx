@@ -151,18 +151,27 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
           </div>
 
           {user ? (
-            <button onClick={() => handleNav(AppRoute.PROFILE)} className="w-full flex items-center gap-3 p-3 bg-muted rounded-2xl hover:border-primary border border-transparent transition-all">
-              <div className="w-10 h-10 rounded-xl bg-foreground flex items-center justify-center text-background font-black shadow-sm">{user.name.charAt(0).toUpperCase()}</div>
+            <div 
+              onClick={() => handleNav(AppRoute.PROFILE)} 
+              className="w-full flex items-center gap-3 p-3 bg-muted rounded-2xl hover:border-primary border border-transparent transition-all cursor-pointer"
+            >
+              <div className="w-10 h-10 rounded-xl bg-foreground flex items-center justify-center text-background font-black shadow-sm">
+                {user.avatar ? (
+                  <img src={user.avatar} alt={user.name} className="w-full h-full object-cover rounded-xl" />
+                ) : (
+                  user.name.charAt(0).toUpperCase()
+                )}
+              </div>
               <div className="flex-1 min-w-0 text-left">
                 <p className="text-xs font-bold truncate text-foreground">{user.name}</p>
                 <p className="text-[8px] uppercase text-primary font-black tracking-widest">{user.isPremium ? 'PRO' : 'Gratuito'}</p>
                 {!user.isPremium && (
-                  <button 
+                  <div 
                     onClick={(e) => { e.stopPropagation(); handleNav(AppRoute.UPGRADE); }}
-                    className="mt-1 flex items-center gap-1 text-[7px] font-black uppercase tracking-widest bg-primary/10 text-primary px-1.5 py-0.5 rounded-full hover:bg-primary hover:text-white transition-colors animate-pulse"
+                    className="mt-1 inline-flex items-center gap-1 text-[7px] font-black uppercase tracking-widest bg-primary/10 text-primary px-1.5 py-0.5 rounded-full hover:bg-primary hover:text-white transition-colors animate-pulse"
                   >
                     Upgrade <Icons.ArrowRight className="w-2 h-2" />
-                  </button>
+                  </div>
                 )}
               </div>
               <button 
@@ -172,7 +181,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
               >
                 <Icons.LogOut className="w-4 h-4" />
               </button>
-            </button>
+            </div>
           ) : (
             <button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all">
               {t('enter')}
