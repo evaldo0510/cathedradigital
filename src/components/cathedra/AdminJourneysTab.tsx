@@ -262,7 +262,7 @@ const AdminJourneysTab: React.FC = () => {
                           </div>
                         </div>
                         <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Button variant="ghost" size="icon" className="h-7 w-7"><Edit className="w-3.5 h-3.5" /></Button>
+                          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => handleEditStep(step)}><Edit className="w-3.5 h-3.5" /></Button>
                           <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive"><Trash2 className="w-3.5 h-3.5" /></Button>
                         </div>
                       </div>
@@ -326,6 +326,66 @@ const AdminJourneysTab: React.FC = () => {
             <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>Cancelar</Button>
             <Button onClick={handleSaveJourney} className="gap-2">
               <Save className="w-4 h-4" /> Salvar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isEditStepDialogOpen} onOpenChange={setIsEditStepDialogOpen}>
+        <DialogContent className="sm:max-w-[700px] max-h-[90vh] flex flex-col">
+          <DialogHeader>
+            <DialogTitle>Editar Passo da Jornada</DialogTitle>
+          </DialogHeader>
+          {editingStep && (
+            <div className="flex-1 overflow-y-auto pr-2 space-y-4 py-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Título</Label>
+                  <Input value={editingStep.title} onChange={e => setEditingStep({...editingStep, title: e.target.value})} />
+                </div>
+                <div className="space-y-2">
+                  <Label>Subtítulo</Label>
+                  <Input value={editingStep.subtitle || ''} onChange={e => setEditingStep({...editingStep, subtitle: e.target.value})} />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Tipo de Passo</Label>
+                  <Input value={editingStep.step_type} onChange={e => setEditingStep({...editingStep, step_type: e.target.value})} />
+                </div>
+                <div className="space-y-2">
+                  <Label>Ordem</Label>
+                  <Input type="number" value={editingStep.step_order} onChange={e => setEditingStep({...editingStep, step_order: parseInt(e.target.value)})} />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Conteúdo (JSON)</Label>
+                <div className="relative group">
+                   <Textarea 
+                     className="font-mono text-xs h-[300px]" 
+                     value={stepContentString} 
+                     onChange={e => setStepContentString(e.target.value)} 
+                   />
+                   <div className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                     <Button variant="outline" size="xs" className="h-7 text-[9px] uppercase tracking-tighter" onClick={() => {
+                       try {
+                         const parsed = JSON.parse(stepContentString);
+                         setStepContentString(JSON.stringify(parsed, null, 2));
+                         toast.success('JSON formatado.');
+                       } catch (e) {
+                         toast.error('Erro ao formatar JSON.');
+                       }
+                     }}>Formatar</Button>
+                   </div>
+                </div>
+                <p className="text-[10px] text-muted-foreground italic">Dica: use chaves como 'intro', 'reflection', 'practice', 'prayer' para que o conteúdo apareça no app.</p>
+              </div>
+            </div>
+          )}
+          <DialogFooter className="pt-4 border-t">
+            <Button variant="outline" onClick={() => setIsEditStepDialogOpen(false)}>Cancelar</Button>
+            <Button onClick={handleSaveStep} className="gap-2">
+              <Save className="w-4 h-4" /> Salvar Passo
             </Button>
           </DialogFooter>
         </DialogContent>
