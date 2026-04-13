@@ -131,16 +131,21 @@ const CommandCenter: React.FC = () => {
         s.name.toLowerCase().includes(q) || 
         s.title.toLowerCase().includes(q) ||
         s.bio.toLowerCase().includes(q) ||
-        s.patronOf.some(p => p.toLowerCase().includes(q)) ||
-        s.quotes?.some(quote => quote.toLowerCase().includes(q))
+        s.patronOf?.some(p => p.toLowerCase().includes(q)) ||
+        s.quotes?.some(quote => quote.toLowerCase().includes(q)) ||
+        s.virtues?.some(v => v.toLowerCase().includes(q))
       )
-      .slice(0, 6)
+      .slice(0, 8)
       .map(s => ({
         type: 'saint' as const,
         label: s.name,
-        description: s.title + (s.patronOf.length > 0 ? ` • Protetor de ${s.patronOf.slice(0, 2).join(', ')}` : ''),
+        description: s.title + (s.patronOf && s.patronOf.length > 0 ? ` • Protetor de ${s.patronOf.slice(0, 2).join(', ')}` : ''),
         path: `${AppRoute.SAINTS}?saint=${s.id}`,
-        icon: <Icons.SaintHalo className="w-4 h-4" />,
+        icon: s.image ? (
+          <img src={s.image} alt={s.name} className="w-4 h-4 rounded-full object-cover" />
+        ) : (
+          <Icons.SaintHalo className="w-4 h-4" />
+        ),
       }));
   }, [query]);
 
