@@ -24,35 +24,42 @@ const AcolhimentoSection = () => {
         </motion.div>
 
         <div className="grid md:grid-cols-3 gap-8">
-          <div className="space-y-4 p-8 bg-card rounded-[2.5rem] border border-border/50 shadow-sm hover:shadow-md transition-shadow">
-            <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
-              <Home className="w-5 h-5" />
-            </div>
-            <h3 className="text-xl font-bold font-serif">Ambiente Familiar</h3>
-            <p className="text-muted-foreground text-sm leading-relaxed">
-              Desenvolvemos cada detalhe para que sua experiência de oração e estudo seja tranquila e sem distrações. Aqui, o foco é o seu encontro com Deus.
-            </p>
-          </div>
-
-          <div className="space-y-4 p-8 bg-card rounded-[2.5rem] border border-border/50 shadow-sm hover:shadow-md transition-shadow">
-            <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
-              <Coffee className="w-5 h-5" />
-            </div>
-            <h3 className="text-xl font-bold font-serif">Acolhimento e Suporte</h3>
-            <p className="text-muted-foreground text-sm leading-relaxed">
-              Dúvidas sobre a fé ou sobre o app? Nossa equipe e comunidade estão prontas para caminhar com você. Não é apenas um app, é uma irmandade.
-            </p>
-          </div>
-
-          <div className="space-y-4 p-8 bg-card rounded-[2.5rem] border border-border/50 shadow-sm hover:shadow-md transition-shadow">
-            <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
-              <Users className="w-5 h-5" />
-            </div>
-            <h3 className="text-xl font-bold font-serif">Construído Juntos</h3>
-            <p className="text-muted-foreground text-sm leading-relaxed">
-              O Cathedra cresce com o seu feedback. Cada sugestão sua ajuda a tornar este santuário digital mais completo para todos os católicos.
-            </p>
-          </div>
+          {[
+            { 
+              title: "Ambiente Familiar", 
+              icon: <Home className="w-5 h-5" />, 
+              desc: "Desenvolvemos cada detalhe para que sua experiência de oração e estudo seja tranquila e sem distrações. Aqui, o foco é o seu encontro com Deus." 
+            },
+            { 
+              title: "Acolhimento e Suporte", 
+              icon: <Coffee className="w-5 h-5" />, 
+              desc: "Dúvidas sobre a fé ou sobre o app? Nossa equipe e comunidade estão prontas para caminhar com você. Não é apenas um app, é uma irmandade." 
+            },
+            { 
+              title: "Construído Juntos", 
+              icon: <Users className="w-5 h-5" />, 
+              desc: "O Cathedra cresce com o seu feedback. Cada sugestão sua ajuda a tornar este santuário digital mais completo para todos os católicos." 
+            }
+          ].map((item, i) => (
+            <motion.div 
+              key={item.title}
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              custom={i + 1}
+              whileHover={{ y: -5, scale: 1.02 }}
+              className="space-y-4 p-8 bg-card rounded-[2.5rem] border border-border/50 shadow-sm hover:shadow-xl hover:border-primary/20 transition-all duration-300"
+            >
+              <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
+                {item.icon}
+              </div>
+              <h3 className="text-xl font-bold font-serif">{item.title}</h3>
+              <p className="text-muted-foreground text-sm leading-relaxed">
+                {item.desc}
+              </p>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>
