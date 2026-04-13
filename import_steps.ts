@@ -1,4 +1,3 @@
-
 import { createClient } from '@supabase/supabase-js';
 import fs from 'fs';
 
@@ -7,20 +6,8 @@ const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function importSteps() {
-  const content = fs.readFileSync('all_steps.json', 'utf8');
-  const lines = content.split('\n');
-  
-  let dataLines = [];
-  for (const line of lines) {
-    if (line.trim() && !line.includes('json_agg') && !line.startsWith('---')) {
-        let cleaned = line.trim();
-        if (cleaned.endsWith('+')) cleaned = cleaned.slice(0, -1).trim();
-        dataLines.push(cleaned);
-    }
-  }
-  
-  const fullContent = dataLines.join('');
-  let steps = JSON.parse(fullContent);
+  const content = fs.readFileSync('cleaned_steps.json', 'utf8');
+  const steps = JSON.parse(content);
   
   console.log(`Parsed ${steps.length} steps.`);
   
