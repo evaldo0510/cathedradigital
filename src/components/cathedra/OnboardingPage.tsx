@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpen, Heart, Users, Zap, ChevronRight, ChevronLeft, Compass, Sun, Hand, Sparkles, Church } from 'lucide-react';
 import { AppRoute } from '@/types';
-// Logo import removed
+import { Icons } from '@/constants';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import onboardingBible from '@/assets/onboarding-bible.jpg';
@@ -293,7 +293,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
       <div ref={ref} className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4">
         <div className="w-full max-w-lg lg:max-w-4xl space-y-6 lg:space-y-10 text-center">
           <div className="flex justify-center mb-6">
-            {/* Logo removed */}
+            <Icons.Logo className="w-16 h-16" variant="blue" />
           </div>
           
           <div className="space-y-2 mb-8">
@@ -344,7 +344,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
     <div ref={ref} className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4">
       <div className="w-full max-w-lg lg:max-w-5xl space-y-6 lg:space-y-10">
         <div className="flex justify-center">
-          {/* Logo removed */}
+          <Icons.Logo className="w-20 h-20" variant="blue" />
         </div>
 
         <AnimatePresence mode="wait">

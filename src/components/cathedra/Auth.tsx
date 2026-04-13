@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
 import { lovable } from '@/integrations/lovable/index';
+import { useNavigate } from 'react-router-dom';
+import { AppRoute } from '@/types';
+import { ArrowLeft } from 'lucide-react';
 
 interface AuthProps {
   onSuccess: () => void;
@@ -9,6 +12,7 @@ interface AuthProps {
 }
 
 const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
+  const navigate = useNavigate();
   const [mode, setMode] = useState<'login' | 'signup' | 'forgot'>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -76,7 +80,15 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
   };
 
   return (
-    <div className="max-w-md mx-auto space-y-8">
+    <div className="max-w-md mx-auto space-y-8 relative">
+      <button 
+        onClick={() => navigate(AppRoute.HOME)}
+        className="absolute -top-12 left-0 flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors group"
+      >
+        <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+        <span className="text-[10px] font-black uppercase tracking-widest">Voltar para Início</span>
+      </button>
+
       <div className="text-center space-y-4">
         <div className="flex justify-center">
           <Icons.Logo variant="blue" className="w-16 h-16" />
