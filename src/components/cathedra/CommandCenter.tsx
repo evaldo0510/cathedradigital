@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../constants';
 import { AppRoute } from '../../types';
 import { supabase } from '@/integrations/supabase/client';
-import { saints } from '@/data/saints';
+import { SAINTS_DATA } from '@/data/saints';
 
 interface CommandItem {
   label: string;
@@ -126,7 +126,7 @@ const CommandCenter: React.FC = () => {
   const filteredSaints = useMemo(() => {
     if (query.length < 2) return [];
     const q = query.toLowerCase();
-    return saints
+    return SAINTS_DATA
       .filter(s => s.name.toLowerCase().includes(q) || s.title.toLowerCase().includes(q))
       .slice(0, 4)
       .map(s => ({

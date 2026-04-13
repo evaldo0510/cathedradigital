@@ -67,7 +67,7 @@ const cardVariants = {
   hidden: { opacity: 0, y: 20, scale: 0.97 },
   visible: { 
     opacity: 1, y: 0, scale: 1,
-    transition: { type: 'spring', stiffness: 300, damping: 30 }
+    transition: { type: 'spring' as const, stiffness: 300, damping: 30 }
   },
   exit: { opacity: 0, y: -10, scale: 0.97 }
 };
@@ -486,7 +486,7 @@ const JornadasPage: React.FC = () => {
                           {DIFFICULTY_LABELS[journey.difficulty] || journey.difficulty}
                         </span>
                         <span className="flex items-center gap-1">
-                          <Icons.Layers className="w-3.5 h-3.5" /> {totalSteps} etapas
+                          <Icons.Layout className="w-3.5 h-3.5" /> {totalSteps} etapas
                         </span>
                       </div>
 
