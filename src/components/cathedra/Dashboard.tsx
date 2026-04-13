@@ -58,7 +58,19 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       .maybeSingle()
       .then(({ data }: any) => {
         const sp = data?.diagnosis_result?.spiritual_profile;
-        if (sp && PROFILES[sp as ProfileId]) setSpiritualProfile(sp as ProfileId);
+        if (sp && PROFILES[sp as ProfileId]) {
+          setSpiritualProfile(sp as ProfileId);
+        } else if (data?.diagnosis_result?.moment) {
+          // Fallback for older users who don't have the profile in JSON
+          const spiritualProfileMap: Record<string, string> = {
+            beginning: 'sedento_de_sentido',
+            deepening: 'firme_aprofundando',
+            struggling: 'ferido_em_busca',
+            serving: 'ardente_missionario'
+          };
+          const fallback = spiritualProfileMap[data.diagnosis_result.moment] as ProfileId;
+          if (fallback && PROFILES[fallback]) setSpiritualProfile(fallback);
+        }
       });
   }, [user]);
 
