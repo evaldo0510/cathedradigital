@@ -15,7 +15,7 @@ async function importSteps() {
     if (line.trim() && !line.includes('json_agg') && !line.startsWith('---')) {
         let cleaned = line.trim();
         if (cleaned.endsWith('+')) cleaned = cleaned.slice(0, -1).trim();
-        dataLines.append(cleaned);
+        dataLines.push(cleaned);
     }
   }
   

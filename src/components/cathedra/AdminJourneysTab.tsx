@@ -39,6 +39,7 @@ interface Step {
   subtitle: string | null;
   step_order: number;
   step_type: string;
+  content: any;
 }
 
 const AdminJourneysTab: React.FC = () => {
@@ -50,6 +51,9 @@ const AdminJourneysTab: React.FC = () => {
   const [selectedJourneyId, setSelectedJourneyId] = useState<string | null>(null);
   const [steps, setSteps] = useState<Step[]>([]);
   const [stepsLoading, setStepsLoading] = useState(false);
+  const [editingStep, setEditingStep] = useState<Step | null>(null);
+  const [isEditStepDialogOpen, setIsEditStepDialogOpen] = useState(false);
+  const [stepContentString, setStepContentString] = useState('');
 
   useEffect(() => {
     fetchJourneys();
