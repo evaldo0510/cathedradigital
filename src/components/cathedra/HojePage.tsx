@@ -750,26 +750,47 @@ const HojePage: React.FC = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="relative"
+          className="relative space-y-4"
         >
-          <Textarea
-            placeholder="O que Deus colocou no seu coração hoje?"
-            value={journalText}
-            onChange={(e) => setJournalText(e.target.value)}
-            className="min-h-[160px] md:min-h-[200px] p-6 rounded-3xl border-border bg-muted/20 focus:bg-background transition-all text-base font-serif italic resize-none shadow-inner"
-          />
-          <div className="absolute bottom-4 right-4 flex items-center gap-4">
-            {journalSaved && (
-              <span className="text-[10px] font-black uppercase text-green-600 animate-in fade-in zoom-in">✓ Salvo</span>
-            )}
-            <Button 
-              size="sm" 
-              onClick={saveJournal} 
-              disabled={!journalText.trim() || isAnalyzing}
-              className="rounded-full px-6 font-black uppercase text-[10px] tracking-widest h-9"
-            >
-              {isAnalyzing ? <Icons.Loader className="w-4 h-4 animate-spin" /> : 'Refletir com Logos'}
-            </Button>
+          <div className="flex flex-wrap gap-2 mb-2">
+            {[
+              { label: 'Gratidão', icon: '🙏', text: 'Hoje sou grato por...' },
+              { label: 'Pedido', icon: '🤲', text: 'Peço a Deus por...' },
+              { label: 'Dúvida', icon: '🤔', text: 'Tenho uma dúvida sobre...' },
+              { label: 'Reflexão', icon: '📖', text: 'Refletindo sobre a liturgia de hoje...' }
+            ].map((prompt) => (
+              <Button
+                key={prompt.label}
+                variant="outline"
+                size="sm"
+                className="rounded-full text-[10px] font-bold uppercase tracking-widest h-8 border-primary/20 hover:bg-primary/5 hover:border-primary/40 transition-all"
+                onClick={() => setJournalText(prev => prev ? `${prev}\n\n${prompt.text}` : prompt.text)}
+              >
+                <span className="mr-1.5">{prompt.icon}</span> {prompt.label}
+              </Button>
+            ))}
+          </div>
+
+          <div className="relative">
+            <Textarea
+              placeholder="O que Deus colocou no seu coração hoje?"
+              value={journalText}
+              onChange={(e) => setJournalText(e.target.value)}
+              className="min-h-[160px] md:min-h-[200px] p-6 rounded-3xl border-border bg-muted/20 focus:bg-background transition-all text-base font-serif italic resize-none shadow-inner"
+            />
+            <div className="absolute bottom-4 right-4 flex items-center gap-4">
+              {journalSaved && (
+                <span className="text-[10px] font-black uppercase text-green-600 animate-in fade-in zoom-in">✓ Salvo</span>
+              )}
+              <Button 
+                size="sm" 
+                onClick={saveJournal} 
+                disabled={!journalText.trim() || isAnalyzing}
+                className="rounded-full px-6 font-black uppercase text-[10px] tracking-widest h-9"
+              >
+                {isAnalyzing ? <Icons.Loader className="w-4 h-4 animate-spin" /> : 'Refletir com Logos'}
+              </Button>
+            </div>
           </div>
         </motion.div>
       </div>

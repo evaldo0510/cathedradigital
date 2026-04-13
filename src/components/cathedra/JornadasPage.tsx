@@ -164,21 +164,27 @@ const JornadasPage: React.FC = () => {
             <Icons.Flame className="w-3 h-3" /> Continuar Jornada
           </div>
           {journeys.filter(j => progressMap[j.id] > 0 && progressMap[j.id] < (stepsCountMap[j.id] || 0)).slice(0, 1).map(journey => (
-            <Card key={`active-${journey.id}`} className="border-primary/40 bg-gradient-to-br from-primary/10 to-transparent border-2 overflow-hidden">
-               <CardContent className="p-5 flex items-center justify-between gap-4">
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-foreground text-lg mb-1">{journey.title}</h3>
-                    <div className="flex items-center gap-3">
-                      <Progress value={(progressMap[journey.id] / (stepsCountMap[journey.id] || 1)) * 100} className="h-1.5 flex-1 max-w-[120px]" />
-                      <span className="text-[10px] font-bold text-muted-foreground">{progressMap[journey.id]}/{stepsCountMap[journey.id]} etapas</span>
+            <Card key={`active-${journey.id}`} className="border-primary/40 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border-2 overflow-hidden shadow-xl shadow-primary/5 relative">
+               <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
+                 <Icons.Flame className="w-12 h-12 text-primary" />
+               </div>
+               <CardContent className="p-6 flex items-center justify-between gap-4">
+                  <div className="flex-1 min-w-0 space-y-2">
+                    <h3 className="font-bold text-foreground text-xl mb-1">{journey.title}</h3>
+                    <div className="flex items-center gap-4">
+                      <div className="flex-1 max-w-[160px]">
+                        <Progress value={(progressMap[journey.id] / (stepsCountMap[journey.id] || 1)) * 100} className="h-2" />
+                      </div>
+                      <span className="text-[11px] font-black text-primary/80 uppercase tracking-widest">{Math.round((progressMap[journey.id] / (stepsCountMap[journey.id] || 1)) * 100)}%</span>
                     </div>
+                    <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">{progressMap[journey.id]} de {stepsCountMap[journey.id]} etapas concluídas</p>
                   </div>
                   <Button 
-                    size="sm" 
-                    className="bg-primary hover:bg-primary/90 text-white font-bold text-[10px] uppercase tracking-widest"
+                    size="lg" 
+                    className="bg-primary hover:bg-primary/90 text-white font-black text-[10px] uppercase tracking-[0.2em] px-8 h-12 rounded-xl shadow-lg shadow-primary/20 group"
                     onClick={() => navigate(`/jornadas/${journey.id}`)}
                   >
-                    Continuar
+                    Continuar <Icons.ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                   </Button>
                </CardContent>
             </Card>
