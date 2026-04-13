@@ -41,6 +41,15 @@ const DAILY_VERSES = [
   { text: 'Os que esperam no Senhor renovarão as suas forças.', ref: 'Is 40,31' },
   { text: 'Sede, pois, imitadores de Deus, como filhos amados.', ref: 'Ef 5,1' },
   { text: 'Grandes coisas fez o Senhor por nós.', ref: 'Sl 126,3' },
+  { text: 'Onde está o teu tesouro, aí estará também o teu coração.', ref: 'Mt 6,21' },
+  { text: 'Se Deus é por nós, quem será contra nós?', ref: 'Rm 8,31' },
+  { text: 'A palavra de Deus é viva e eficaz.', ref: 'Hb 4,12' },
+  { text: 'Deus é amor.', ref: '1Jo 4,8' },
+  { text: 'A verdade vos libertará.', ref: 'Jo 8,32' },
+  { text: 'O que pedirdes ao Pai em meu nome, Ele vo-lo dará.', ref: 'Jo 16,23' },
+  { text: 'Antes que te formasse no ventre, eu te conheci.', ref: 'Jr 1,5' },
+  { text: 'Tu és o meu Deus, em Ti confio.', ref: 'Sl 31,14' },
+  { text: 'Quem nos separará do amor de Cristo?', ref: 'Rm 8,35' },
 ];
 
 const DAILY_REFLECTIONS = [
