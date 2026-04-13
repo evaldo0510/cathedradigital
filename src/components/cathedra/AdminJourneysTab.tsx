@@ -141,7 +141,6 @@ const AdminJourneysTab: React.FC = () => {
     } catch (error: any) {
       toast.error('Erro ao salvar passo: ' + error.message);
     }
-    }
   };
   
   const handleDeleteStep = async (stepId: string) => {
