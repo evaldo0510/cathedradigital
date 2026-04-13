@@ -265,7 +265,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               Cathedra {t('digital')}
             </p>
             <h1 className="text-4xl md:text-6xl font-display font-black text-primary leading-tight tracking-tight">
-              {profile?.name ? `${t('salve')}, ${profile.name.split(' ')[0]}!` : t('pax_et_bonum')}
+              {profile?.name ? `${greeting}, ${profile.name.split(' ')[0]}!` : t('pax_et_bonum')}
             </h1>
             {spProfile && (
               <p className="text-sm text-muted-foreground italic font-serif mt-1">{spProfile.greeting}</p>
