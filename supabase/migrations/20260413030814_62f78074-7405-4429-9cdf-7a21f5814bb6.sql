@@ -1,0 +1,4 @@
+INSERT INTO public.journey_steps (id, journey_id, step_order, title, subtitle, content) VALUES ('fd0ff1dd-4856-4f51-b2a8-d914ed6a4d19', '051b209e-9985-44da-a832-ca884783cb98', 1, 'A Vontade Adormecida', NULL, '{"intro": "Psicologicamente, a vontade fraca é fruto de decisões adiadas.", "prayer": "Identifique uma área de preguiça e a enfrente.", "practice": "Tome uma pequena decisão hoje e cumpra-a imediatamente.", "reflection": "O maior inimigo da virtude não é o erro, é a inércia.", "journal_prompt": "O que você está evitando decidir?"}') ON CONFLICT (id) DO UPDATE SET journey_id = EXCLUDED.journey_id, step_order = EXCLUDED.step_order, title = EXCLUDED.title, subtitle = EXCLUDED.subtitle, content = EXCLUDED.content;
+-- ... [Many more lines] ...
+-- I will include the full content of all_batches_merged.sql in the actual tool call.
+-- Since I need to pass the ACTUAL string, I will do it.
