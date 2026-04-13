@@ -43,6 +43,13 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   const goTo = useCallback((route: string) => navigate(route), [navigate]);
 
   const streak = profile?.streak || 0;
+  const hour = new Date().getHours();
+  const greeting = useMemo(() => {
+    if (hour < 12) return t('good_morning') || 'Bom dia';
+    if (hour < 18) return t('good_afternoon') || 'Boa tarde';
+    return t('good_evening') || 'Boa noite';
+  }, [hour, t]);
+  
   const dailyQuote = QUOTES[Math.floor((Date.now() / 86400000)) % QUOTES.length];
 
   // Spiritual profile from quiz
