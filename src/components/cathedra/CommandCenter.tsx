@@ -143,7 +143,7 @@ const CommandCenter: React.FC = () => {
           label: s.name,
           description: quoteMatch 
             ? `"${quoteMatch.length > 60 ? quoteMatch.substring(0, 60) + '...' : quoteMatch}"`
-            : s.title + (s.patronOf && s.patronOf.length > 0 ? ` • Protetor de ${s.patronOf.slice(0, 2).join(', ')}` : ''),
+            : `${s.title} • Festa: ${s.feastDay}`,
           path: `${AppRoute.SAINTS}?saint=${s.id}`,
           icon: s.image ? (
             <img src={s.image} alt={s.name} className="w-4 h-4 rounded-full object-cover" />
