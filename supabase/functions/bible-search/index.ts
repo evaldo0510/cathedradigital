@@ -95,6 +95,9 @@ serve(async (req) => {
       60: { abbrev: '1Pd', name: '1 Pedro' }, 61: { abbrev: '2Pd', name: '2 Pedro' },
       62: { abbrev: '1Jo', name: '1 João' }, 63: { abbrev: '2Jo', name: '2 João' }, 64: { abbrev: '3Jo', name: '3 João' },
       65: { abbrev: 'Jd', name: 'Judas' }, 66: { abbrev: 'Ap', name: 'Apocalipse' },
+      67: { abbrev: 'Tb', name: 'Tobias' }, 68: { abbrev: 'Jt', name: 'Judite' }, 69: { abbrev: '1Mc', name: '1 Macabeus' },
+      70: { abbrev: '2Mc', name: '2 Macabeus' }, 71: { abbrev: 'Sb', name: 'Sabedoria' }, 72: { abbrev: 'Eclo', name: 'Eclesiástico' },
+      73: { abbrev: 'Br', name: 'Baruc' },
     };
 
     const results = Array.isArray(data)

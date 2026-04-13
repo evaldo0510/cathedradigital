@@ -49,7 +49,7 @@ const BOOK_PT_MAP: Record<string, string> = {
   'Jd': 'Judas', 'Ap': 'Apocalipse',
 };
 
-// bolls.life uses standard Protestant book IDs (1-66) 
+// bolls.life uses standard Protestant book IDs (1-66) and common Catholic ones (67-73)
 const BOLLS_BOOK_ID: Record<string, number> = {
   'Gn': 1, 'Ex': 2, 'Lv': 3, 'Nm': 4, 'Dt': 5,
   'Js': 6, 'Jz': 7, 'Rt': 8, '1Sm': 9, '2Sm': 10,
@@ -67,6 +67,7 @@ const BOLLS_BOOK_ID: Record<string, number> = {
   'Tt': 56, 'Fm': 57, 'Hb': 58, 'Tg': 59,
   '1Pd': 60, '2Pd': 61, '1Jo': 62, '2Jo': 63, '3Jo': 64,
   'Jd': 65, 'Ap': 66,
+  'Tb': 67, 'Jt': 68, '1Mc': 69, '2Mc': 70, 'Sb': 71, 'Eclo': 72, 'Br': 73
 };
 
 /** Try bible-api.com first (Almeida translation) */
