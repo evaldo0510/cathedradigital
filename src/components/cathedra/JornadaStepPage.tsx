@@ -17,17 +17,16 @@ import { Icons } from '@/constants';
 import AudioContentPlayer from './AudioContentPlayer';
 
 const SECTION_CONFIG = [
-  { key: 'intro', label: 'Acesso Inicial', icon: <BookOpen className="w-4 h-4" />, isPremium: false },
-  { key: 'interpretation', label: 'Introdução', icon: <Icons.Bible className="w-4 h-4" />, isPremium: false },
-  { key: 'pch', label: 'Aprofundamento', icon: <Sparkles className="w-4 h-4" />, isPremium: true },
-  { key: 'practical_direction', label: 'Continuidade', icon: <Hand className="w-4 h-4" />, isPremium: true },
-  { key: 'guided_exercise', label: 'Conteúdos Avançados', icon: <PenLine className="w-4 h-4" />, isPremium: true },
+  { key: 'pch', label: 'A Palavra', icon: <Sparkles className="w-4 h-4" />, isPremium: false },
+  { key: 'interpretation', label: 'Reflexão', icon: <Icons.Bible className="w-4 h-4" />, isPremium: false },
+  { key: 'practical_direction', label: 'Prática do Dia', icon: <Hand className="w-4 h-4" />, isPremium: true },
+  { key: 'guided_exercise', label: 'Exercício Espiritual', icon: <PenLine className="w-4 h-4" />, isPremium: true },
   
-  // Legacy mappings for backward compatibility
+  // Legacy / Hybrid mappings
+  { key: 'intro', label: 'Acesso Inicial', icon: <BookOpen className="w-4 h-4" />, isPremium: false },
   { key: 'reflection', label: 'Aprofundamento', icon: <PenLine className="w-4 h-4" />, isPremium: true },
   { key: 'practice', label: 'Continuidade', icon: <Hand className="w-4 h-4" />, isPremium: true },
   { key: 'prayer', label: 'Conteúdos Avançados', icon: <Sparkles className="w-4 h-4" />, isPremium: true },
-  { key: 'lectio', label: 'Acesso Inicial', icon: <BookOpen className="w-4 h-4" />, isPremium: false },
 ];
 
 type UserLevelClass = 'iniciante' | 'intermediário' | 'avançado';
@@ -47,7 +46,7 @@ const JornadaStepPage: React.FC = () => {
   const [completed, setCompleted] = useState(false);
   const [saving, setSaving] = useState(false);
   const [nextStep, setNextStep] = useState<any>(null);
-  const [expandedSection, setExpandedSection] = useState<string | null>('intro');
+  const [expandedSection, setExpandedSection] = useState<string | null>(null);
 
 
   useEffect(() => {
@@ -63,7 +62,15 @@ const JornadaStepPage: React.FC = () => {
         supabase.from('journey_steps').select('*', { count: 'exact', head: true }).eq('journey_id', journeyId!),
       ]);
 
-      if (stepRes.data) setStep(stepRes.data);
+      if (stepRes.data) {
+        setStep(stepRes.data);
+        const content = stepRes.data.content as Record<string, any>;
+        const firstWithContent = SECTION_CONFIG.find(s => {
+          const val = content[s.key] || content[`${s.key}_iniciante`];
+          return !!val;
+        });
+        if (firstWithContent) setExpandedSection(firstWithContent.key);
+      }
       if (journeyRes.data) setJourneyTitle(journeyRes.data.title);
       setTotalSteps(countRes.count || 0);
 
