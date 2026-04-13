@@ -86,7 +86,12 @@ export const UI_TRANSLATIONS: Record<Language, any> = {
     about: "Sobre",
     partners: "Parceiros",
     privacy: "Privacidade",
-    terms: "Termos"
+    terms: "Termos",
+    good_morning: "Bom dia",
+    good_afternoon: "Boa tarde",
+    good_evening: "Boa noite",
+    liturgy_sub: "Leituras e orações do dia",
+    journeys_sub: "Trilhas de formação espiritual"
   },
   en: {
     home: "Home (Narthex)",
@@ -156,7 +161,12 @@ export const UI_TRANSLATIONS: Record<Language, any> = {
     about: "About",
     partners: "Partners",
     privacy: "Privacy",
-    terms: "Terms"
+    terms: "Terms",
+    good_morning: "Good morning",
+    good_afternoon: "Good afternoon",
+    good_evening: "Good evening",
+    liturgy_sub: "Daily readings and prayers",
+    journeys_sub: "Spiritual formation paths"
   },
   es: {
     home: "Inicio (Nártex)",

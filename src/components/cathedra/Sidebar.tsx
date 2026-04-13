@@ -17,7 +17,7 @@ interface SidebarProps {
   onSignOut?: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onToggleDark, isSpeaking, onToggleSpeak, onSignOut }) => {
+const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClose, user, isDark, onToggleDark, isSpeaking, onToggleSpeak, onSignOut }, ref) => {
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
@@ -70,7 +70,7 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
 
   return (
     <>
-      <aside className="h-full w-72 bg-card border-r border-border flex flex-col p-5 overflow-hidden">
+      <aside ref={ref} className="h-full w-72 bg-card border-r border-border flex flex-col p-5 overflow-hidden">
         <div className="mb-4 px-2 flex items-center gap-3 cursor-pointer group hover:opacity-90 transition-opacity" onClick={() => handleNav(AppRoute.DASHBOARD)}>
           <Icons.Logo className="w-8 h-8 flex-shrink-0" variant="blue" />
           <div>
@@ -182,7 +182,7 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ onClose, user, isDark, onT
       </aside>
     </>
   );
-});
+}));
 
 Sidebar.displayName = 'Sidebar';
 
