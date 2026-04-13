@@ -128,7 +128,12 @@ const AudioContentPlayer: React.FC<AudioContentPlayerProps> = ({
         {isLoading ? (
           <Loader2 className="w-4 h-4 animate-spin" />
         ) : isPlaying ? (
-          <Pause className="w-4 h-4" />
+          <div className="flex items-end gap-[1px] h-3 mb-0.5">
+            <div className="w-[2px] h-2 bg-primary animate-[bounce_0.6s_infinite_ease-in-out]" />
+            <div className="w-[2px] h-3 bg-primary animate-[bounce_0.8s_infinite_ease-in-out]" />
+            <div className="w-[2px] h-1.5 bg-primary animate-[bounce_0.5s_infinite_ease-in-out]" />
+            <div className="w-[2px] h-2.5 bg-primary animate-[bounce_0.7s_infinite_ease-in-out]" />
+          </div>
         ) : (
           <Headphones className="w-4 h-4" />
         )}
