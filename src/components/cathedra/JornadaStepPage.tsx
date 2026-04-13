@@ -46,7 +46,7 @@ const JornadaStepPage: React.FC = () => {
   const [completed, setCompleted] = useState(false);
   const [saving, setSaving] = useState(false);
   const [nextStep, setNextStep] = useState<any>(null);
-  const [expandedSection, setExpandedSection] = useState<string | null>('intro');
+  const [expandedSection, setExpandedSection] = useState<string | null>(null);
 
 
   useEffect(() => {
