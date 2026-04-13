@@ -23,10 +23,10 @@ const SECTION_CONFIG = [
   { key: 'guided_exercise', label: 'Exercício Espiritual', icon: <PenLine className="w-4 h-4" />, isPremium: true },
   
   // Legacy / Hybrid mappings
-  { key: 'intro', label: 'Acesso Inicial', icon: <BookOpen className="w-4 h-4" />, isPremium: false },
-  { key: 'reflection', label: 'Aprofundamento', icon: <PenLine className="w-4 h-4" />, isPremium: true },
-  { key: 'practice', label: 'Continuidade', icon: <Hand className="w-4 h-4" />, isPremium: true },
-  { key: 'prayer', label: 'Conteúdos Avançados', icon: <Sparkles className="w-4 h-4" />, isPremium: true },
+  { key: 'intro', label: 'Introdução', icon: <BookOpen className="w-4 h-4" />, isPremium: false },
+  { key: 'reflection', label: 'Reflexão', icon: <PenLine className="w-4 h-4" />, isPremium: true },
+  { key: 'practice', label: 'Prática', icon: <Hand className="w-4 h-4" />, isPremium: true },
+  { key: 'prayer', label: 'Oração', icon: <Sparkles className="w-4 h-4" />, isPremium: true },
 ];
 
 type UserLevelClass = 'iniciante' | 'intermediário' | 'avançado';
