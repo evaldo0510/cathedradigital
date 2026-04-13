@@ -20,6 +20,7 @@ const LandingHeader = () => {
     { code: 'es', label: 'Español', flag: '🇪🇸' },
     { code: 'la', label: 'Latina', flag: '🇻atican' },
   ];
+  useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
