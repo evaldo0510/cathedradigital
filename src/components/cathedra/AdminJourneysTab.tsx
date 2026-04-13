@@ -367,7 +367,7 @@ const AdminJourneysTab: React.FC = () => {
                      onChange={e => setStepContentString(e.target.value)} 
                    />
                    <div className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                     <Button variant="outline" size="xs" className="h-7 text-[9px] uppercase tracking-tighter" onClick={() => {
+                     <Button variant="outline" size="sm" className="h-7 text-[9px] uppercase tracking-tighter" onClick={() => {
                        try {
                          const parsed = JSON.parse(stepContentString);
                          setStepContentString(JSON.stringify(parsed, null, 2));
