@@ -182,7 +182,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
       </aside>
     </>
   );
-});
+}));
 
 Sidebar.displayName = 'Sidebar';
 
