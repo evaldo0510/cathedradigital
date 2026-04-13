@@ -17,7 +17,7 @@ interface SidebarProps {
   onSignOut?: () => void;
 }
 
-const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(React.memo(({ onClose, user, isDark, onToggleDark, isSpeaking, onToggleSpeak, onSignOut }, ref) => {
+const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClose, user, isDark, onToggleDark, isSpeaking, onToggleSpeak, onSignOut }, ref) => {
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
