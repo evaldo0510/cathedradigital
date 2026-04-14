@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
 import { supabase } from '@/integrations/supabase/client';
-import { SAINTS_DATA } from '@/data/saints';
+import { ALL_SAINTS } from '@/data/saints';
 import SacredImage from './SacredImage';
 import AudioContentPlayer from './AudioContentPlayer';
 import { AppRoute } from '@/types';
