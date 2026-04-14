@@ -12,9 +12,9 @@ const ReadingModeToggle: React.FC = () => {
       title={isNight ? 'Modo diurno' : 'Modo leitura noturna'}
     >
       {isNight ? (
-        <Sun className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
+        <Icons.Sun className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
       ) : (
-        <Moon className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:scale-110 transition-all" />
+        <Icons.Moon className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:scale-110 transition-all" />
       )}
     </button>
   );
