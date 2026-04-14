@@ -24,61 +24,87 @@ serve(async (req) => {
 
     const html = await response.text();
     
-    // Extract section containing the saint
-    let sectionHtml = "";
-    if (html.includes('section--isStatic')) {
-      sectionHtml = html.split('section--isStatic')[1].split('</section>')[0];
-    } else if (html.includes('section--evidence')) {
-      sectionHtml = html.split('section--evidence')[1].split('</section>')[0];
-    } else {
-      sectionHtml = html;
-    }
-
+    // Look for sections with class section--isStatic which contain individual saints
+    const sections = html.split('<section class="section section--evidence section--isStatic">').slice(1);
+    
     let name = "Santo do Dia";
-    if (sectionHtml.includes('<h2')) {
-      const parts = sectionHtml.split('<h2');
-      for (const p of parts) {
-        const text = p.split('</h2>')[0].split('>')[1]?.replace(/<[^>]*>/g, '').trim();
-        if (text && text.length > 5 && !text.includes('Menu') && !text.includes('Newsletter')) {
-          name = text;
-          break;
+    let imageUrl = null;
+    let description = "";
+    let detailLink = "";
+
+    if (sections.length > 0) {
+      // Pick the first saint section
+      const firstSection = sections[0].split('</section>')[0];
+      
+      // Extract Name
+      if (firstSection.includes('<h2>')) {
+        name = firstSection.split('<h2>')[1].split('</h2>')[0].replace(/<[^>]*>/g, '').trim();
+      } else if (firstSection.includes('<h2')) {
+        name = firstSection.split('<h2')[1].split('>')[1].split('</h2>')[0].replace(/<[^>]*>/g, '').trim();
+      }
+
+      // Extract Image - Look for data-original first (lazy loading)
+      if (firstSection.includes('data-original="')) {
+        imageUrl = firstSection.split('data-original="')[1].split('"')[0];
+      } else if (firstSection.includes('src="')) {
+        const src = firstSection.split('src="')[1].split('"')[0];
+        // Ignore data-uris or very small images
+        if (!src.startsWith('data:') && !src.includes('clear.gif')) {
+          imageUrl = src;
         }
       }
-    }
 
-    let imageUrl = null;
-    if (sectionHtml.includes('data-original="')) {
-      imageUrl = sectionHtml.split('data-original="')[1].split('"')[0];
-    } else if (sectionHtml.includes('src="')) {
-      imageUrl = sectionHtml.split('src="')[1].split('"')[0];
+      // Extract Description
+      if (firstSection.includes('<p>')) {
+        description = firstSection.split('<p>')[1].split('</p>')[0].replace(/<[^>]*>/g, '').trim();
+      }
+
+      // Extract Detail Link
+      if (firstSection.includes('href="')) {
+        const links = firstSection.split('href="');
+        for (let i = 1; i < links.length; i++) {
+          const link = links[i].split('"')[0];
+          if (link.includes('/santo-do-dia/santos/') && !link.includes('html')) {
+            detailLink = `https://www.vaticannews.va${link}`;
+            break;
+          }
+        }
+      }
+
+      // If no image in first section, try second section
+      if (!imageUrl && sections.length > 1) {
+        const secondSection = sections[1].split('</section>')[0];
+        if (secondSection.includes('data-original="')) {
+          imageUrl = secondSection.split('data-original="')[1].split('"')[0];
+        } else if (secondSection.includes('src="')) {
+          const src = secondSection.split('src="')[1].split('"')[0];
+          if (!src.startsWith('data:') && !src.includes('clear.gif')) {
+            imageUrl = src;
+          }
+        }
+      }
+    } else {
+      // Fallback for different structure
+      if (html.includes('<h2')) {
+        name = html.split('<h2')[1].split('>')[1].split('</h2>')[0].replace(/<[^>]*>/g, '').trim();
+      }
+      if (html.includes('data-original="')) {
+        imageUrl = html.split('data-original="')[1].split('"')[0];
+      }
     }
     
+    // Fix image URL if it's relative
     if (imageUrl && !imageUrl.startsWith('http') && !imageUrl.includes('data:image')) {
       imageUrl = `https://www.vaticannews.va${imageUrl}`;
     }
 
-    // Try to get a longer description or full story
-    let description = "";
+    // Default image if still null (from the Vatican News banner maybe?)
+    if (!imageUrl && html.includes('banner santi.jpg')) {
+      // No, let's not use a banner. Maybe use a fallback.
+    }
+
     let fullHistory = "";
     let writings = [];
-
-    // Basic description
-    if (sectionHtml.includes('<p>')) {
-      description = sectionHtml.split('<p>')[1].split('</p>')[0].replace(/<[^>]*>/g, '').trim();
-    }
-
-    // Try to find the full story link
-    let detailLink = "";
-    if (sectionHtml.includes('href="')) {
-      const links = sectionHtml.split('href="');
-      for (let i = 1; i < links.length; i++) {
-        const link = links[i].split('"')[0];
-        if (link.includes('/santo-do-dia/santos/') && !link.includes('html')) {
-          detailLink = `https://www.vaticannews.va${link}`;
-          break;
-        }
-      }
-    }
 
     // If we have a detail link, try to fetch more data
     if (detailLink) {
@@ -91,12 +117,10 @@ serve(async (req) => {
         if (detailRes.ok) {
           const detailHtml = await detailRes.text();
           
-          // Extract history (often in a specific div)
           if (detailHtml.includes('section--content')) {
             const content = detailHtml.split('section--content')[1].split('</section>')[0];
             fullHistory = content.replace(/<p>/g, '\n\n').replace(/<[^>]*>/g, '').trim();
             
-            // Try to find writings/quotes
             if (detailHtml.includes('citazione')) {
               const quote = detailHtml.split('citazione')[1].split('</span>')[0].replace(/<[^>]*>/g, '').trim();
               if (quote) writings.push(quote);
@@ -112,7 +136,7 @@ serve(async (req) => {
       JSON.stringify({
         name,
         image: imageUrl,
-        description: description || fullHistory.substring(0, 200) + "...",
+        description: description || (fullHistory ? fullHistory.substring(0, 200) + "..." : ""),
         fullBio: fullHistory,
         writings: writings,
         url: detailLink || vaticanUrl,
