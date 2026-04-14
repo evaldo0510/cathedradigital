@@ -147,6 +147,7 @@ const Catechism: React.FC = () => {
   const [paragraphsRead, setParagraphsRead] = useState<Set<number>>(new Set());
   const [searchQuery, setSearchQuery] = useState('');
   const [showCrossRefs, setShowCrossRefs] = useState(true);
+  const isAutoScrolling = React.useRef(false);
   const { toggleFavorite, isFavorite } = useFavorites();
   const { user } = useAuth();
 
@@ -174,6 +175,8 @@ const Catechism: React.FC = () => {
 
     const observer = new IntersectionObserver(
       (entries) => {
+        if (isAutoScrolling.current) return;
+        
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const p = parseInt(entry.target.id.replace('p', ''));
@@ -183,7 +186,7 @@ const Catechism: React.FC = () => {
           }
         });
       },
-      { threshold: 0.5, rootMargin: '-10% 0px -40% 0px' }
+      { threshold: 0.3, rootMargin: '-10% 0px -40% 0px' }
     );
 
     const elements = document.querySelectorAll('[id^="p"]');
@@ -207,14 +210,20 @@ const Catechism: React.FC = () => {
   useEffect(() => {
     if (viewMode === 'reading' && currentParagraph) {
       markParagraphRead(currentParagraph);
-      
-      // Auto-scroll to the paragraph if it's not in view
-      const element = document.getElementById(`p${currentParagraph}`);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
     }
   }, [viewMode, currentParagraph, markParagraphRead]);
+
+  const jumpToParagraph = useCallback((p: number) => {
+    setCurrentParagraph(p);
+    isAutoScrolling.current = true;
+    const element = document.getElementById(`p${p}`);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(() => {
+        isAutoScrolling.current = false;
+      }, 1000);
+    }
+  }, []);
 
   // Handle deep-link from Bible cross-references (?p=1324)
   useEffect(() => {
