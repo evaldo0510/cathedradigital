@@ -100,14 +100,15 @@ const AdminDashboard: React.FC = () => {
         thirtyDaysAgoStart.setDate(new Date().getDate() - 30);
         const iso30 = thirtyDaysAgoStart.toISOString();
 
-        const [statsRes, metricsRes, transactionsRes, journalRes, journeysStartedRes, journeysCompletedRes, crmRes] = await Promise.all([
+        const [statsRes, metricsRes, transactionsRes, journalRes, journeysStartedRes, journeysCompletedRes, crmRes, recentJournalRes] = await Promise.all([
           supabase.from('profiles').select('id, is_premium, created_at, last_visit, role, diocese, estado, movimento_pastoral, name, xp, level, streak'),
           supabase.from('app_metrics').select('metric_type, created_at').gte('created_at', iso30),
           supabase.from('transactions').select('*').order('created_at', { ascending: false }).limit(100),
           supabase.from('spiritual_journal').select('user_id', { count: 'exact', head: true }),
           supabase.from('journey_progress').select('user_id', { count: 'exact', head: true }),
           supabase.from('journey_progress').select('user_id', { count: 'exact', head: true }).not('completed_at', 'is', null),
-          supabase.from('user_management_stats').select('*').limit(1000)
+          supabase.from('user_management_stats').select('*').limit(1000),
+          supabase.from('spiritual_journal').select('*, profiles(name)').order('created_at', { ascending: false }).limit(5)
         ]);
 
         if (statsRes.error) throw statsRes.error;
