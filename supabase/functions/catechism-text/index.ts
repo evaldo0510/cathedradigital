@@ -64,63 +64,61 @@ serve(async (req: Request) => {
       }
     }
 
-    // 3. AI Generation ONLY if explicitly requested (action: 'generate')
-    if (body.action === 'generate') {
-      try {
-        const resp = await fetch(`${supabaseUrl}/functions/v1/colloquium`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${serviceKey}`,
-          },
-          body: JSON.stringify({
-            messages: [{
-              role: 'user',
-              content: `Reproduza fielmente o texto do parágrafo §${paragraph} do Catecismo da Igreja Católica em português. INCLUA todas as referências bíblicas. Não acrescente comentários — apenas o texto oficial.`
-            }],
-            system_prompt: "Você é um transcritor fiel do Catecismo da Igreja Católica. Forneça apenas o texto exato do parágrafo solicitado.",
-            stream: false,
-            model: 'google/gemini-2.5-flash'
-          }),
-        });
+    // 3. AI Generation (automatically if missing)
+    try {
+      const resp = await fetch(`${supabaseUrl}/functions/v1/colloquium`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${serviceKey}`,
+        },
+        body: JSON.stringify({
+          messages: [{
+            role: 'user',
+            content: `Reproduza fielmente o texto do parágrafo §${paragraph} do Catecismo da Igreja Católica em português. INCLUA todas as referências bíblicas. Não acrescente comentários — apenas o texto oficial.`
+          }],
+          system_prompt: "Você é um transcritor fiel do Catecismo da Igreja Católica. Forneça apenas o texto exato do parágrafo solicitado.",
+          stream: false,
+          model: 'google/gemini-2.5-flash'
+        }),
+      });
 
-        if (resp.ok) {
-          const data = await resp.json();
-          const content = (data.choices?.[0]?.message?.content || '')
-            .trim()
-            .replace(/\[RECOMMENDATION:.*\]/s, '')
-            .replace(/^(Compreendo|Compreendido|Com certeza|Aqui está|Segue o texto|Claro|Com prazer|Olá)[^:]*[.:]\s*/i, '')
-            .replace(/^(###|##|\*\*)\s*§?\d+\s*[-–]?\s*/i, '')
-            .trim();
+      if (resp.ok) {
+        const data = await resp.json();
+        const content = (data.choices?.[0]?.message?.content || '')
+          .trim()
+          .replace(/\[RECOMMENDATION:.*\]/s, '')
+          .replace(/^(Compreendo|Compreendido|Com certeza|Aqui está|Segue o texto|Claro|Com prazer|Olá)[^:]*[.:]\s*/i, '')
+          .replace(/^(###|##|\*\*)\s*§?\d+\s*[-–]?\s*/i, '')
+          .trim();
 
-          if (content && content.length > 20) {
-            // Cache for future requests
-            fetch(`${supabaseUrl}/rest/v1/catechism_cache`, {
-              method: 'POST',
-              headers: {
-                'apikey': serviceKey,
-                'Authorization': `Bearer ${serviceKey}`,
-                'Content-Type': 'application/json',
-                'Prefer': 'resolution=merge-duplicates',
-              },
-              body: JSON.stringify({ paragraph, content }),
-            }).catch(() => {});
+        if (content && content.length > 20) {
+          // Cache for future requests
+          fetch(`${supabaseUrl}/rest/v1/catechism_cache`, {
+            method: 'POST',
+            headers: {
+              'apikey': serviceKey,
+              'Authorization': `Bearer ${serviceKey}`,
+              'Content-Type': 'application/json',
+              'Prefer': 'resolution=merge-duplicates',
+            },
+            body: JSON.stringify({ paragraph, content }),
+          }).catch(() => {});
 
-            return new Response(JSON.stringify({ paragraph, content }), {
-              headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=86400' },
-            });
-          }
+          return new Response(JSON.stringify({ paragraph, content }), {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=86400' },
+          });
         }
-      } catch (e) {
-        console.error(`AI generation failed for §${paragraph}:`, e);
       }
+    } catch (e) {
+      console.error(`AI generation failed for §${paragraph}:`, e);
     }
 
-    // 4. Return "not cached" status - no AI generation on regular requests
+    // 4. Return fallback if everything fails
     return new Response(JSON.stringify({
       paragraph,
-      content: `§${paragraph} — Conteúdo ainda não disponível no cache. Toque em "Carregar" para buscar este parágrafo.`,
-      status: 'not_cached',
+      content: `§${paragraph} — Conteúdo temporariamente indisponível. Por favor, tente novamente em instantes.`,
+      status: 'error',
     }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 
   } catch (error) {
