@@ -3,8 +3,50 @@ import { useQuery } from '@tanstack/react-query';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Loader2, ChevronRight, Hash, Sparkles, Tag as TagIcon, X, Search } from 'lucide-react';
+import { Loader2, ChevronRight, Hash, Sparkles, Tag as TagIcon, X, Search, Heart, Cross, BookOpen, Flame, Shield, Crown, Hand, Star, Globe, Eye, Users, Compass, Church, Wine, Orbit } from 'lucide-react';
 import { Icons } from '@/constants';
+
+// Maps tag slugs/emojis to Lucide icons for a cleaner, more cohesive look
+const tagIconMap: Record<string, React.ReactNode> = {
+  // By common emoji
+  '❤️': <Heart className="w-5 h-5" />,
+  '💖': <Heart className="w-5 h-5" />,
+  '💔': <Heart className="w-5 h-5" />,
+  '✝️': <Cross className="w-5 h-5" />,
+  '⛪': <Church className="w-5 h-5" />,
+  '🙏': <Hand className="w-5 h-5" />,
+  '🕊️': <Sparkles className="w-5 h-5" />,
+  '🔥': <Flame className="w-5 h-5" />,
+  '📖': <BookOpen className="w-5 h-5" />,
+  '📕': <BookOpen className="w-5 h-5" />,
+  '👑': <Crown className="w-5 h-5" />,
+  '🛡️': <Shield className="w-5 h-5" />,
+  '⭐': <Star className="w-5 h-5" />,
+  '🌍': <Globe className="w-5 h-5" />,
+  '🌎': <Globe className="w-5 h-5" />,
+  '👁️': <Eye className="w-5 h-5" />,
+  '👥': <Users className="w-5 h-5" />,
+  '🧭': <Compass className="w-5 h-5" />,
+  '🍷': <Wine className="w-5 h-5" />,
+  '💫': <Sparkles className="w-5 h-5" />,
+  '✨': <Sparkles className="w-5 h-5" />,
+  '🌹': <Heart className="w-5 h-5" />,
+  '🌱': <Flame className="w-5 h-5" />,
+  '💡': <Star className="w-5 h-5" />,
+  '🕯️': <Flame className="w-5 h-5" />,
+  '⚔️': <Shield className="w-5 h-5" />,
+  '🏛️': <Church className="w-5 h-5" />,
+  '🤝': <Users className="w-5 h-5" />,
+  '😢': <Heart className="w-5 h-5" />,
+  '💀': <Cross className="w-5 h-5" />,
+  '🎭': <Eye className="w-5 h-5" />,
+  '☀️': <Star className="w-5 h-5" />,
+  '🌙': <Orbit className="w-5 h-5" />,
+};
+
+const getTagIcon = (emoji: string) => {
+  return tagIconMap[emoji] || <Hash className="w-5 h-5" />;
+};
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -237,7 +279,7 @@ const TemasPage = () => {
                       }
                     `}
                   >
-                    <span className="text-xl group-hover:scale-125 transition-transform duration-300 transform-gpu">{tag.emoji}</span>
+                    <span className="group-hover:scale-125 transition-transform duration-300 transform-gpu opacity-70 group-hover:opacity-100">{getTagIcon(tag.emoji)}</span>
                     <span className="relative">
                       {tag.label}
                       {isSelected && (
@@ -302,7 +344,7 @@ const TemasPage = () => {
                       animate={{ opacity: 1, x: 0 }}
                       className="text-4xl sm:text-6xl font-black tracking-tighter leading-none text-foreground flex items-center gap-4 flex-wrap"
                     >
-                      <span className="text-5xl sm:text-7xl group-hover:scale-110 transition-transform duration-500 drop-shadow-sm">{selectedTag.emoji}</span>
+                      <span className="text-primary/60 group-hover:scale-110 transition-transform duration-500 drop-shadow-sm">{getTagIcon(selectedTag.emoji)}</span>
                       {selectedTag.label}
                     </motion.h2>
                     <p className="text-lg sm:text-xl text-muted-foreground/80 leading-relaxed max-w-2xl font-medium font-serif italic">
