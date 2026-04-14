@@ -254,6 +254,45 @@ const DailyLiturgy: React.FC = () => {
       </div>
 
       <div className="bg-card border border-border rounded-[2.5rem] p-8 md:p-16 space-y-12 shadow-sm relative overflow-hidden">
+        {/* Reading toolbar - same style as Bible */}
+        {!isLoading && !error && readings && (
+          <div className="flex items-center justify-between gap-3 flex-wrap bg-muted/50 backdrop-blur-md p-2 rounded-2xl border border-border shadow-sm">
+            <div className="flex items-center gap-2">
+              <AudioButton variant="solid" className="px-6" />
+              <ShareButton
+                title={readings.liturgia || 'Liturgia do Dia'}
+                text={`Leituras do dia: ${readings.liturgia}`}
+                size="sm"
+                variant="button"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              {/* Font size */}
+              <div className="flex items-center bg-card border border-border rounded-xl overflow-hidden">
+                {(['P', 'M', 'G'] as FontSize[]).map(f => (
+                  <button key={f} onClick={() => setFontSize(f)}
+                    className={`px-2.5 py-1.5 text-xs font-bold transition-all ${fontSize === f ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}>
+                    {f}
+                  </button>
+                ))}
+              </div>
+              {/* Line spacing */}
+              <div className="flex items-center bg-card border border-border rounded-xl overflow-hidden">
+                {([
+                  { key: 'compact' as LineSpacingType, label: '≡' },
+                  { key: 'normal' as LineSpacingType, label: '☰' },
+                  { key: 'relaxed' as LineSpacingType, label: '⋮' },
+                ]).map(s => (
+                  <button key={s.key} onClick={() => setLineSpacing(s.key)}
+                    className={`px-2.5 py-1.5 text-xs font-bold transition-all ${lineSpacing === s.key ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}>
+                    {s.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
         {isLoading ? (
           <div className="flex justify-center py-20"><Loader2 className="w-10 h-10 text-secondary animate-spin" /></div>
         ) : error ? (
@@ -262,7 +301,6 @@ const DailyLiturgy: React.FC = () => {
           <div className="space-y-10">
             <div className="text-center space-y-4 pb-10 border-b border-border">
               <div className="flex flex-col items-center gap-4">
-                <AudioButton variant="solid" className="px-8" />
                 <h2 className="text-3xl md:text-5xl font-display font-black text-primary tracking-tight leading-tight">{readings?.liturgia || 'Liturgia do Dia'}</h2>
               </div>
 
