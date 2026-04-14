@@ -21,45 +21,6 @@ const PT_PARAGRAPHS: Record<number, string> = {
   2865: 'Com o «Amém» final, exprimimos o nosso «fiat» relativamente a estas sete petições: «Assim seja».',
 };
 
-async function generateWithAI(paragraph: number, supabaseUrl: string, serviceKey: string): Promise<string> {
-  try {
-    const resp = await fetch(`${supabaseUrl}/functions/v1/colloquium`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${serviceKey}`,
-      },
-      body: JSON.stringify({
-        messages: [{
-          role: 'user',
-          content: `Reproduza fielmente o texto do parágrafo §${paragraph} do Catecismo da Igreja Católica em português. INCLUA todas as referências bíblicas e notas de rodapé originais do parágrafo entre parênteses. Não acrescente comentários — apenas o texto oficial.`
-        }],
-        system_prompt: "Você é um transcritor fiel do Catecismo da Igreja Católica. Forneça apenas o texto exato do parágrafo solicitado.",
-        stream: false,
-        model: 'google/gemini-2.5-flash'
-      }),
-    });
-
-    if (!resp.ok) {
-      console.error(`AI call failed: ${resp.status}`);
-      return '';
-    }
-
-    const data = await resp.json();
-    const content = data.choices?.[0]?.message?.content || '';
-
-    return content
-      .trim()
-      .replace(/\[RECOMMENDATION:.*\]/s, '')
-      .replace(/^(Compreendo|Compreendido|Com certeza|Aqui está|Segue o texto|Claro|Com prazer|Olá)[^:]*[.:]\s*/i, '')
-      .replace(/^(###|##|\*\*)\s*§?\d+\s*[-–]?\s*/i, '')
-      .trim();
-  } catch (e) {
-    console.error(`AI generation failed for §${paragraph}:`, e);
-    return '';
-  }
-}
-
 serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -83,7 +44,7 @@ serve(async (req: Request) => {
       });
     }
 
-    // 2. Database check
+    // 2. Database cache check
     const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
     const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
 
@@ -103,31 +64,63 @@ serve(async (req: Request) => {
       }
     }
 
-    // 3. AI Generation
-    const aiText = await generateWithAI(paragraph, supabaseUrl, serviceKey);
-    if (aiText && aiText.length > 20) {
-      // Save to cache (fire and forget)
-      fetch(`${supabaseUrl}/rest/v1/catechism_cache`, {
-        method: 'POST',
-        headers: {
-          'apikey': serviceKey,
-          'Authorization': `Bearer ${serviceKey}`,
-          'Content-Type': 'application/json',
-          'Prefer': 'resolution=merge-duplicates',
-        },
-        body: JSON.stringify({ paragraph, content: aiText }),
-      }).catch(() => {});
+    // 3. AI Generation ONLY if explicitly requested (action: 'generate')
+    if (body.action === 'generate') {
+      try {
+        const resp = await fetch(`${supabaseUrl}/functions/v1/colloquium`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${serviceKey}`,
+          },
+          body: JSON.stringify({
+            messages: [{
+              role: 'user',
+              content: `Reproduza fielmente o texto do parágrafo §${paragraph} do Catecismo da Igreja Católica em português. INCLUA todas as referências bíblicas. Não acrescente comentários — apenas o texto oficial.`
+            }],
+            system_prompt: "Você é um transcritor fiel do Catecismo da Igreja Católica. Forneça apenas o texto exato do parágrafo solicitado.",
+            stream: false,
+            model: 'google/gemini-2.5-flash'
+          }),
+        });
 
-      return new Response(JSON.stringify({ paragraph, content: aiText }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=86400' },
-      });
+        if (resp.ok) {
+          const data = await resp.json();
+          const content = (data.choices?.[0]?.message?.content || '')
+            .trim()
+            .replace(/\[RECOMMENDATION:.*\]/s, '')
+            .replace(/^(Compreendo|Compreendido|Com certeza|Aqui está|Segue o texto|Claro|Com prazer|Olá)[^:]*[.:]\s*/i, '')
+            .replace(/^(###|##|\*\*)\s*§?\d+\s*[-–]?\s*/i, '')
+            .trim();
+
+          if (content && content.length > 20) {
+            // Cache for future requests
+            fetch(`${supabaseUrl}/rest/v1/catechism_cache`, {
+              method: 'POST',
+              headers: {
+                'apikey': serviceKey,
+                'Authorization': `Bearer ${serviceKey}`,
+                'Content-Type': 'application/json',
+                'Prefer': 'resolution=merge-duplicates',
+              },
+              body: JSON.stringify({ paragraph, content }),
+            }).catch(() => {});
+
+            return new Response(JSON.stringify({ paragraph, content }), {
+              headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=86400' },
+            });
+          }
+        }
+      } catch (e) {
+        console.error(`AI generation failed for §${paragraph}:`, e);
+      }
     }
 
-    // 4. Fallback
+    // 4. Return "not cached" status - no AI generation on regular requests
     return new Response(JSON.stringify({
       paragraph,
-      content: `§${paragraph} — Este parágrafo do Catecismo está sendo carregado. Tente novamente em alguns instantes.`,
-      status: 'loading',
+      content: `§${paragraph} — Conteúdo ainda não disponível no cache. Toque em "Carregar" para buscar este parágrafo.`,
+      status: 'not_cached',
     }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 
   } catch (error) {
