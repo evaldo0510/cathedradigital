@@ -197,6 +197,16 @@ const JornadaStepPage: React.FC = () => {
   const content = step.content as Record<string, any>;
   const stepProgress = totalSteps > 0 ? (step.step_order / totalSteps) * 100 : 0;
 
+  const saintImage = useMemo(() => {
+    if (!step?.subtitle) return null;
+    const sub = step.subtitle.toLowerCase();
+    const match = ALL_SAINTS.find(s => 
+      sub.includes(s.name.toLowerCase()) || 
+      s.name.toLowerCase().includes(sub)
+    );
+    return match?.image;
+  }, [step?.subtitle]);
+
 
   return createPortal(
     <motion.div
