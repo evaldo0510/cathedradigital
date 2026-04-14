@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Loader2, ChevronRight, Hash, Sparkles, Tag as TagIcon, X, Search, Heart, Cross, BookOpen, Flame, Shield, Crown, Hand, Star, Globe, Eye, Users, Compass, Church, Wine, Orbit, Mountain, RefreshCw, Frown, Bird, Droplets, Wheat, Target, Clock, Megaphone, Skull } from 'lucide-react';
+import { Loader2, ChevronRight, ChevronLeft, Hash, Sparkles, Tag as TagIcon, X, Search, Heart, Cross, BookOpen, Flame, Shield, Crown, Hand, Star, Globe, Eye, Users, Compass, Church, Wine, Orbit, Mountain, RefreshCw, Frown, Bird, Droplets, Wheat, Target, Clock, Megaphone, Skull } from 'lucide-react';
 import { Icons } from '@/constants';
 
 const tagIconMap: Record<string, React.ReactNode> = {
@@ -270,41 +270,63 @@ const TemasPage = () => {
                 <p className="text-sm text-muted-foreground/60 italic font-medium tracking-wide">Nenhum tema encontrado para sua busca teológica.</p>
               </div>
             ) : (
-              <div className="overflow-x-auto scrollbar-none py-4 px-3">
-                <div className="flex gap-2 w-max">
-                  {filteredTags.map((tag, idx) => {
-                    const isSelected = selectedTag?.id === tag.id;
-                    return (
-                      <motion.button
-                        key={tag.id}
-                        layoutId={`tag-${tag.id}`}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: idx * 0.01 }}
-                        whileHover={{ 
-                          scale: 1.08, 
-                          y: -2,
-                          transition: { type: "spring", stiffness: 400, damping: 10 }
-                        }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => handleTagSelect(tag)}
-                        className={`
-                          px-3 py-2 rounded-full text-[9px] font-bold uppercase tracking-wider transition-all duration-300
-                          flex items-center gap-1.5 border shrink-0 relative group
-                          ${isSelected 
-                            ? 'bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/20 z-10' 
-                            : 'bg-card/60 backdrop-blur-md text-foreground/80 border-border/60 hover:border-primary/40 hover:text-primary hover:shadow-md'
-                          }
-                        `}
-                      >
-                        <span className="group-hover:scale-110 transition-transform duration-200 opacity-70 group-hover:opacity-100">{getTagIcon(tag.emoji)}</span>
-                        <span className="relative whitespace-nowrap">
-                          {tag.label}
-                        </span>
-                      </motion.button>
-                    );
-                  })}
+              <div className="relative group/carousel">
+                <button
+                  onClick={() => {
+                    const el = document.getElementById('tags-carousel');
+                    if (el) el.scrollBy({ left: -200, behavior: 'smooth' });
+                  }}
+                  className="absolute left-0 top-0 bottom-0 z-10 w-10 flex items-center justify-center bg-gradient-to-r from-card/90 to-transparent opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-300 hover:from-card"
+                  aria-label="Scroll left"
+                >
+                  <ChevronLeft className="w-5 h-5 text-foreground/70" />
+                </button>
+                <div id="tags-carousel" className="overflow-x-auto scrollbar-none py-4 px-8 scroll-smooth">
+                  <div className="flex gap-2 w-max">
+                    {filteredTags.map((tag, idx) => {
+                      const isSelected = selectedTag?.id === tag.id;
+                      return (
+                        <motion.button
+                          key={tag.id}
+                          layoutId={`tag-${tag.id}`}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: idx * 0.01 }}
+                          whileHover={{ 
+                            scale: 1.08, 
+                            y: -2,
+                            transition: { type: "spring", stiffness: 400, damping: 10 }
+                          }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => handleTagSelect(tag)}
+                          className={`
+                            px-3 py-2 rounded-full text-[9px] font-bold uppercase tracking-wider transition-all duration-300
+                            flex items-center gap-1.5 border shrink-0 relative group
+                            ${isSelected 
+                              ? 'bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/20 z-10' 
+                              : 'bg-card/60 backdrop-blur-md text-foreground/80 border-border/60 hover:border-primary/40 hover:text-primary hover:shadow-md'
+                            }
+                          `}
+                        >
+                          <span className="group-hover:scale-110 transition-transform duration-200 opacity-70 group-hover:opacity-100">{getTagIcon(tag.emoji)}</span>
+                          <span className="relative whitespace-nowrap">
+                            {tag.label}
+                          </span>
+                        </motion.button>
+                      );
+                    })}
+                  </div>
                 </div>
+                <button
+                  onClick={() => {
+                    const el = document.getElementById('tags-carousel');
+                    if (el) el.scrollBy({ left: 200, behavior: 'smooth' });
+                  }}
+                  className="absolute right-0 top-0 bottom-0 z-10 w-10 flex items-center justify-center bg-gradient-to-l from-card/90 to-transparent opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-300 hover:from-card"
+                  aria-label="Scroll right"
+                >
+                  <ChevronRight className="w-5 h-5 text-foreground/70" />
+                </button>
               </div>
             )}
           </div>
