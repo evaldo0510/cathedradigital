@@ -24,26 +24,7 @@ import AudioButton from './AudioButton';
 
 const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr: string, chapter: number) => void; isVisible?: boolean }> = ({ paragraph, onNavigateToBible, isVisible = true }) => {
   const { data, isLoading, isError } = useCatechismParagraph(paragraph, isVisible);
-  const generateParagraph = useGenerateCatechismParagraph();
-  const [isGenerating, setIsGenerating] = React.useState(false);
   const prefetch = usePrefetchCatechismParagraph();
-
-  useEffect(() => {
-    if (isVisible && paragraph < 2865) prefetch(paragraph + 1);
-  }, [paragraph, prefetch, isVisible]);
-
-  const segments = useMemo(() => {
-    if (!data?.content || data.status === 'not_cached') return [];
-    return parseTheologicalReferences(data.content);
-  }, [data?.content, data?.status]);
-
-  const handleGenerate = async () => {
-    setIsGenerating(true);
-    try {
-      await generateParagraph(paragraph);
-    } catch {}
-    setIsGenerating(false);
-  };
 
   if (!isVisible) {
     return (
