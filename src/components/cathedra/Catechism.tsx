@@ -242,13 +242,14 @@ const Catechism: React.FC = () => {
         if (num >= sec.paragraphs[0] && num <= sec.paragraphs[1]) {
           setSelectedPart(part);
           setSelectedSection(sec);
-          setCurrentParagraph(num);
           setViewMode('reading');
+          // Wait for render
+          setTimeout(() => jumpToParagraph(num), 100);
           return;
         }
       }
     }
-  }, []);
+  }, [jumpToParagraph]);
 
   const handleSearch = () => {
     const num = parseInt(searchQuery);
