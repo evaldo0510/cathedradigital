@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
+import BackToThemeBanner from './BackToThemeBanner';
 import SEOHead from '@/components/SEOHead';
 import ShareButton from './ShareButton';
 import { Icons } from '../../constants';
@@ -345,6 +346,7 @@ const Catechism: React.FC = () => {
     const fromDashboard = searchParams.get('from') === 'dashboard';
     return (
       <div className="max-w-3xl mx-auto space-y-6">
+        <BackToThemeBanner />
         {fromDashboard && (
           <button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-xs text-primary hover:underline">
             <ArrowLeft className="w-3.5 h-3.5" /> Voltar ao Dashboard

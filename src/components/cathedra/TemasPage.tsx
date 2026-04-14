@@ -518,26 +518,26 @@ const TemasPage = () => {
                 ) : (
                   <div className="px-1">
                     <TabsContent value="all" className="mt-0 space-y-12 focus-visible:outline-none">
-                      <ContentSection title="Bíblia" icon={<Icons.Bible className="h-6 w-6" />} items={bibleVerses} color="blue" />
-                      <ContentSection title="Catecismo" icon={<Icons.Catechism className="h-6 w-6" />} items={catechism} color="amber" />
-                      <ContentSection title="Documentos" icon={<Icons.Magisterium className="h-6 w-6" />} items={magisterium} color="emerald" />
-                      <ContentSection title="Jornadas" icon={<Icons.Compass className="h-6 w-6" />} items={journeyItems} color="primary" />
+                      <ContentSection title="Bíblia" icon={<Icons.Bible className="h-6 w-6" />} items={bibleVerses} color="blue" temaSlug={selectedTag.slug} />
+                      <ContentSection title="Catecismo" icon={<Icons.Catechism className="h-6 w-6" />} items={catechism} color="amber" temaSlug={selectedTag.slug} />
+                      <ContentSection title="Documentos" icon={<Icons.Magisterium className="h-6 w-6" />} items={magisterium} color="emerald" temaSlug={selectedTag.slug} />
+                      <ContentSection title="Jornadas" icon={<Icons.Compass className="h-6 w-6" />} items={journeyItems} color="primary" temaSlug={selectedTag.slug} />
                     </TabsContent>
 
                     <TabsContent value="bible" className="mt-0 focus-visible:outline-none">
-                      <ContentSection title="Bíblia" icon={<Icons.Bible className="h-6 w-6" />} items={bibleVerses} showEmpty color="blue" />
+                      <ContentSection title="Bíblia" icon={<Icons.Bible className="h-6 w-6" />} items={bibleVerses} showEmpty color="blue" temaSlug={selectedTag.slug} />
                     </TabsContent>
 
                     <TabsContent value="catechism" className="mt-0 focus-visible:outline-none">
-                      <ContentSection title="Catecismo" icon={<Icons.Catechism className="h-6 w-6" />} items={catechism} showEmpty color="amber" />
+                      <ContentSection title="Catecismo" icon={<Icons.Catechism className="h-6 w-6" />} items={catechism} showEmpty color="amber" temaSlug={selectedTag.slug} />
                     </TabsContent>
 
                     <TabsContent value="magisterium" className="mt-0 focus-visible:outline-none">
-                      <ContentSection title="Documentos" icon={<Icons.Magisterium className="h-6 w-6" />} items={magisterium} showEmpty color="emerald" />
+                      <ContentSection title="Documentos" icon={<Icons.Magisterium className="h-6 w-6" />} items={magisterium} showEmpty color="emerald" temaSlug={selectedTag.slug} />
                     </TabsContent>
 
                     <TabsContent value="journey" className="mt-0 focus-visible:outline-none">
-                      <ContentSection title="Jornadas" icon={<Icons.Compass className="h-6 w-6" />} items={journeyItems} showEmpty color="primary" />
+                      <ContentSection title="Jornadas" icon={<Icons.Compass className="h-6 w-6" />} items={journeyItems} showEmpty color="primary" temaSlug={selectedTag.slug} />
                     </TabsContent>
                   </div>
                 )}
@@ -556,9 +556,10 @@ interface ContentSectionProps {
   items: ThemeContent[];
   showEmpty?: boolean;
   color?: 'blue' | 'amber' | 'emerald' | 'primary';
+  temaSlug?: string;
 }
 
-const ContentSection = React.forwardRef<HTMLDivElement, ContentSectionProps>(({ title, icon, items, showEmpty = false, color = 'primary' }, ref) => {
+const ContentSection = React.forwardRef<HTMLDivElement, ContentSectionProps>(({ title, icon, items, showEmpty = false, color = 'primary', temaSlug }, ref) => {
   const navigate = useNavigate();
 
   if (items.length === 0 && !showEmpty) return null;
@@ -649,16 +650,17 @@ const ContentSection = React.forwardRef<HTMLDivElement, ContentSectionProps>(({ 
                     </Button>
                     <Button 
                       onClick={() => {
+                        const fromParam = temaSlug ? `&from=temas&tema=${temaSlug}` : '';
                         if (item.content_type === 'journey') {
-                          navigate(`/jornadas/${item.id}`);
+                          navigate(`/jornadas/${item.id}${temaSlug ? `?from=temas&tema=${temaSlug}` : ''}`);
                         } else if (item.content_type === 'bible') {
                           const ref = item.reference || item.title;
-                          navigate(`/bible?ref=${encodeURIComponent(ref)}`);
+                          navigate(`/bible?ref=${encodeURIComponent(ref)}${fromParam}`);
                         } else if (item.content_type === 'catechism') {
                           const paragraph = (item.reference || item.title || '').replace(/\D/g, '');
-                          navigate(`/catechism?p=${paragraph}`);
+                          navigate(`/catechism?p=${paragraph}${fromParam}`);
                         } else if (item.content_type === 'magisterium') {
-                          navigate(`/magisterium?doc=${encodeURIComponent(item.reference || item.title)}`);
+                          navigate(`/magisterium?doc=${encodeURIComponent(item.reference || item.title)}${fromParam}`);
                         }
                       }}
                       size="lg" 
