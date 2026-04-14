@@ -347,6 +347,18 @@ const TemasPage = () => {
                   <ChevronRight className="w-5 h-5 text-foreground/70" />
                 </button>
               </div>
+              {/* Progress indicator */}
+              <div className="flex items-center justify-center gap-3 px-8 pb-3 pt-1">
+                <span className="text-[10px] font-bold text-muted-foreground/50 tabular-nums">
+                  {filteredTags.length} temas
+                </span>
+                <div className="flex-1 max-w-[200px] h-1 bg-muted/30 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-primary/40 rounded-full transition-all duration-150"
+                    style={{ width: `${Math.max(10, scrollProgress * 100)}%` }}
+                  />
+                </div>
+              </div>
             )}
           </div>
         </div>
