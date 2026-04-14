@@ -24,44 +24,62 @@ serve(async (req) => {
 
     const html = await response.text();
     
-    // Look for sections with class section--isStatic which contain individual saints
-    const sections = html.split('<section class="section section--evidence section--isStatic">').slice(1);
+    // Extract all saint sections
+    // They are usually within <section class="section ... section--isStatic">
+    const sections = [];
+    const sectionStart = '<section';
+    const sectionEnd = '</section>';
+    let pos = 0;
     
-    let name = "Santo do Dia";
-    let imageUrl = null;
-    let description = "";
-    let detailLink = "";
+    while ((pos = html.indexOf(sectionStart, pos)) !== -1) {
+      const endPos = html.indexOf(sectionEnd, pos);
+      if (endPos === -1) break;
+      const sectionHtml = html.substring(pos, endPos + sectionEnd.length);
+      if (sectionHtml.includes('section--isStatic') || sectionHtml.includes('section--evidence')) {
+        sections.push(sectionHtml);
+      }
+      pos = endPos + sectionEnd.length;
+    }
 
-    if (sections.length > 0) {
-      // Pick the first saint section
-      const firstSection = sections[0].split('</section>')[0];
-      
-      // Extract Name
-      if (firstSection.includes('<h2>')) {
-        name = firstSection.split('<h2>')[1].split('</h2>')[0].replace(/<[^>]*>/g, '').trim();
-      } else if (firstSection.includes('<h2')) {
-        name = firstSection.split('<h2')[1].split('>')[1].split('</h2>')[0].replace(/<[^>]*>/g, '').trim();
+    let saintData = {
+      name: "Santo do Dia",
+      image: null,
+      description: "",
+      url: vaticanUrl
+    };
+
+    for (const section of sections) {
+      // Skip sections that are just intro
+      if (section.includes('intro--saint')) continue;
+
+      let name = "";
+      if (section.includes('<h2>')) {
+        name = section.split('<h2>')[1].split('</h2>')[0].replace(/<[^>]*>/g, '').trim();
+      } else if (section.includes('<h2')) {
+        name = section.split('<h2')[1].split('>')[1].split('</h2>')[0].replace(/<[^>]*>/g, '').trim();
       }
 
-      // Extract Image - Look for data-original first (lazy loading)
-      if (firstSection.includes('data-original="')) {
-        imageUrl = firstSection.split('data-original="')[1].split('"')[0];
-      } else if (firstSection.includes('src="')) {
-        const src = firstSection.split('src="')[1].split('"')[0];
-        // Ignore data-uris or very small images
-        if (!src.startsWith('data:') && !src.includes('clear.gif')) {
-          imageUrl = src;
+      // Skip if name is too short or common nav words
+      if (!name || name.length < 3 || name === "Menu" || name === "Santo do Dia") continue;
+
+      let image = null;
+      if (section.includes('data-original="')) {
+        image = section.split('data-original="')[1].split('"')[0];
+      } else if (section.includes('src="')) {
+        const src = section.split('src="')[1].split('"')[0];
+        if (!src.startsWith('data:') && !src.includes('clear.gif') && !src.includes('banner')) {
+          image = src;
         }
       }
 
-      // Extract Description
-      if (firstSection.includes('<p>')) {
-        description = firstSection.split('<p>')[1].split('</p>')[0].replace(/<[^>]*>/g, '').trim();
+      let desc = "";
+      if (section.includes('<p>')) {
+        desc = section.split('<p>')[1].split('</p>')[0].replace(/<[^>]*>/g, '').trim();
       }
 
-      // Extract Detail Link
-      if (firstSection.includes('href="')) {
-        const links = firstSection.split('href="');
+      let detailLink = "";
+      if (section.includes('href="')) {
+        const links = section.split('href="');
         for (let i = 1; i < links.length; i++) {
           const link = links[i].split('"')[0];
           if (link.includes('/santo-do-dia/santos/') && !link.includes('html')) {
@@ -71,45 +89,34 @@ serve(async (req) => {
         }
       }
 
-      // If no image in first section, try second section
-      if (!imageUrl && sections.length > 1) {
-        const secondSection = sections[1].split('</section>')[0];
-        if (secondSection.includes('data-original="')) {
-          imageUrl = secondSection.split('data-original="')[1].split('"')[0];
-        } else if (secondSection.includes('src="')) {
-          const src = secondSection.split('src="')[1].split('"')[0];
-          if (!src.startsWith('data:') && !src.includes('clear.gif')) {
-            imageUrl = src;
-          }
-        }
+      // If we already have a saint name and this section has an image, maybe it's the same saint or a better one
+      if (!saintData.image && image) {
+        saintData.image = image;
       }
-    } else {
-      // Fallback for different structure
-      if (html.includes('<h2')) {
-        name = html.split('<h2')[1].split('>')[1].split('</h2>')[0].replace(/<[^>]*>/g, '').trim();
+
+      if (saintData.name === "Santo do Dia" && name) {
+        saintData.name = name;
+        saintData.description = desc;
+        if (detailLink) saintData.url = detailLink;
       }
-      if (html.includes('data-original="')) {
-        imageUrl = html.split('data-original="')[1].split('"')[0];
-      }
-    }
-    
-    // Fix image URL if it's relative
-    if (imageUrl && !imageUrl.startsWith('http') && !imageUrl.includes('data:image')) {
-      imageUrl = `https://www.vaticannews.va${imageUrl}`;
+      
+      // If we found both name and image, we can stop or keep looking for the "main" one
+      // Usually the first section is the main one.
+      if (saintData.name !== "Santo do Dia" && saintData.image) break;
     }
 
-    // Default image if still null (from the Vatican News banner maybe?)
-    if (!imageUrl && html.includes('banner santi.jpg')) {
-      // No, let's not use a banner. Maybe use a fallback.
+    // Fix image URL if it's relative
+    if (saintData.image && !saintData.image.startsWith('http') && !saintData.image.includes('data:image')) {
+      saintData.image = `https://www.vaticannews.va${saintData.image}`;
     }
 
     let fullHistory = "";
     let writings = [];
 
     // If we have a detail link, try to fetch more data
-    if (detailLink) {
+    if (saintData.url && saintData.url.includes('/santos/')) {
       try {
-        const detailRes = await fetch(detailLink, {
+        const detailRes = await fetch(saintData.url, {
           headers: {
             'User-Agent': 'Mozilla/5.0'
           }
@@ -125,6 +132,21 @@ serve(async (req) => {
               const quote = detailHtml.split('citazione')[1].split('</span>')[0].replace(/<[^>]*>/g, '').trim();
               if (quote) writings.push(quote);
             }
+
+            // If still no image, try to find one in the detail page
+            if (!saintData.image) {
+              if (detailHtml.includes('data-original="')) {
+                saintData.image = detailHtml.split('data-original="')[1].split('"')[0];
+              } else if (detailHtml.includes('src="')) {
+                const src = detailHtml.split('src="')[1].split('"')[0];
+                if (!src.startsWith('data:') && !src.includes('clear.gif') && !src.includes('banner')) {
+                  saintData.image = src;
+                }
+              }
+              if (saintData.image && !saintData.image.startsWith('http')) {
+                saintData.image = `https://www.vaticannews.va${saintData.image}`;
+              }
+            }
           }
         }
       } catch (err) {
@@ -134,12 +156,12 @@ serve(async (req) => {
 
     return new Response(
       JSON.stringify({
-        name,
-        image: imageUrl,
-        description: description || (fullHistory ? fullHistory.substring(0, 200) + "..." : ""),
+        name: saintData.name,
+        image: saintData.image,
+        description: saintData.description || (fullHistory ? fullHistory.substring(0, 200) + "..." : ""),
         fullBio: fullHistory,
         writings: writings,
-        url: detailLink || vaticanUrl,
+        url: saintData.url,
         source: "Vatican News"
       }),
       {
