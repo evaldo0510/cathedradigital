@@ -263,23 +263,36 @@ const Catechism: React.FC = () => {
           )}
         </div>
 
-        {/* Paragraph navigator */}
+        {/* Section navigator */}
         <div className="flex items-center gap-3 justify-center">
-          <button disabled={currentParagraph <= start} onClick={() => setCurrentParagraph(currentParagraph - 1)}
-            className="px-3 py-2 rounded-xl bg-card border border-border text-sm font-bold disabled:opacity-30 hover:bg-primary/10 transition-all">
-            ← Anterior
+          <button 
+            disabled={selectedSection.id <= 1} 
+            onClick={() => {
+              const prevSec = selectedPart.sections.find(s => s.id === selectedSection.id - 1);
+              if (prevSec) {
+                setSelectedSection(prevSec);
+                setCurrentParagraph(prevSec.paragraphs[0]);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }
+            }}
+            className="px-3 py-2 rounded-xl bg-card border border-border text-xs font-bold disabled:opacity-30 hover:bg-primary/10 transition-all flex items-center gap-1">
+            <Icons.ArrowDown className="w-3.5 h-3.5 rotate-90" /> Seção Anterior
           </button>
-          <div className="flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-xl">
-            <span className="text-[10px] font-black text-primary">§</span>
-            <input
-              type="number" min={start} max={end} value={currentParagraph}
-              onChange={e => { const v = parseInt(e.target.value); if (v >= start && v <= end) setCurrentParagraph(v); }}
-              className="w-16 text-center bg-transparent text-foreground font-bold text-sm focus:outline-none"
-            />
+          <div className="px-4 py-2 bg-primary/5 border border-primary/20 rounded-xl text-xs font-black uppercase tracking-widest text-primary">
+            Lendo Seção {selectedSection.id}
           </div>
-          <button disabled={currentParagraph >= end} onClick={() => setCurrentParagraph(currentParagraph + 1)}
-            className="px-3 py-2 rounded-xl bg-card border border-border text-sm font-bold disabled:opacity-30 hover:bg-primary/10 transition-all">
-            Próximo →
+          <button 
+            disabled={selectedSection.id >= 10} 
+            onClick={() => {
+              const nextSec = selectedPart.sections.find(s => s.id === selectedSection.id + 1);
+              if (nextSec) {
+                setSelectedSection(nextSec);
+                setCurrentParagraph(nextSec.paragraphs[0]);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }
+            }}
+            className="px-3 py-2 rounded-xl bg-card border border-border text-xs font-bold disabled:opacity-30 hover:bg-primary/10 transition-all flex items-center gap-1">
+            Próxima Seção <Icons.ArrowDown className="w-3.5 h-3.5 -rotate-90" />
           </button>
         </div>
 
