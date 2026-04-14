@@ -320,17 +320,33 @@ const JornadasPage: React.FC = () => {
         </motion.div>
       )}
 
-      {/* Filters */}
+      {/* Search & Filters */}
       <motion.div 
-        className="space-y-3"
+        className="space-y-4"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
       >
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Icons.Filter className="w-4 h-4" />
-          <span className="font-medium">Filtrar</span>
+        <div className="relative group">
+          <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+            <Icons.Search className="w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+          </div>
+          <input
+            type="text"
+            placeholder="Buscar jornadas..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full bg-muted/50 border border-border/50 rounded-2xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
+          />
         </div>
+
+        <div className="space-y-3">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Icons.Filter className="w-4 h-4" />
+            <span className="font-medium">Filtrar</span>
+          </div>
+>>>>
+
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => setFilterCategory('all')}
