@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { BookOpen, Star, Clock, Users, ChevronRight, Sparkles } from "lucide-react";
+import { BookOpen, Star, Clock, Users, ChevronRight, Sparkles, Hash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AppRoute } from "@/types";
