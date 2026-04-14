@@ -15,6 +15,7 @@ export interface TheologicalSegment {
 }
 
 export function parseTheologicalReferences(text: string): TheologicalSegment[] {
+  if (!text) return [{ type: 'text', value: '' }];
   // First pass: parse catechism references
   const catechismSegments = parseCatechismReferences(text);
   
