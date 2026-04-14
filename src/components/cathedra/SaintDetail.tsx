@@ -196,6 +196,30 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
             </div>
           </div>
 
+          {saint.born && (
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-secondary/30 flex items-center justify-center text-primary">
+                <Icons.User className="w-5 h-5" />
+              </div>
+              <div>
+                <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground block">Nascimento</span>
+                <span className="text-sm font-bold text-foreground truncate max-w-[150px] inline-block">{saint.born}</span>
+              </div>
+            </div>
+          )}
+
+          {saint.died && (
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-destructive/10 flex items-center justify-center text-destructive">
+                <Icons.XCircle className="w-5 h-5" />
+              </div>
+              <div>
+                <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground block">Falecimento</span>
+                <span className="text-sm font-bold text-foreground truncate max-w-[150px] inline-block">{saint.died}</span>
+              </div>
+            </div>
+          )}
+
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-secondary-foreground">
               <Shield className="w-5 h-5" />
@@ -287,6 +311,12 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
             </div>
           )}
         </section>
+
+        {/* Deep Content - Textos e Livros */}
+        <DeepContentSection 
+          content={saint as any} 
+          title="Meditação e Aprofundamento" 
+        />
 
         {/* Quote & Practical Application & Reflection */}
         <div className="grid md:grid-cols-2 gap-8">
@@ -496,17 +526,9 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           </div>
         </section>
 
-        {/* Secondary Info Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {/* Patronage */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="p-5 bg-secondary/50 rounded-2xl border border-border">
-            <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground block mb-1">Nascimento</span>
-            <span className="text-xs font-bold text-foreground font-serif">{saint.born}</span>
-          </div>
-          <div className="p-5 bg-secondary/50 rounded-2xl border border-border">
-            <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground block mb-1">Falecimento</span>
-            <span className="text-xs font-bold text-foreground font-serif">{saint.died}</span>
-          </div>
-          <div className="p-5 bg-secondary/50 rounded-2xl border border-border col-span-2">
             <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground block mb-1">Padroeiro(a) de</span>
             <div className="flex flex-wrap gap-1.5 mt-2">
               {saint.patronOf.map(p => (
@@ -514,38 +536,9 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
               ))}
             </div>
           </div>
+          {/* You can add more secondary info here */}
         </div>
 
-        {/* Works */}
-        {saint.works.length > 0 && (
-          <section className="space-y-4">
-            <div className="flex items-center gap-2 text-primary">
-              <BookOpen className="w-4 h-4" />
-              <h3 className="text-[11px] font-black uppercase tracking-[0.2em]">Obras Principais</h3>
-            </div>
-            <div className="grid sm:grid-cols-2 gap-3">
-              {saint.works.map((w, i) => (
-                <div key={i} className="flex items-center gap-4 p-4 bg-card border border-border rounded-2xl group hover:border-primary/40 hover:bg-primary/5 transition-all">
-                  <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary transition-colors">
-                    <Icons.Book className="w-5 h-5" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h4 className="text-sm font-bold text-foreground truncate group-hover:text-primary transition-colors">{w.title}</h4>
-                    {w.year && <span className="text-[10px] text-muted-foreground">{w.year}</span>}
-                  </div>
-                  {w.url && (
-                    <button 
-                      onClick={() => setViewingDoc({ url: w.url!, title: w.title })} 
-                      className="p-2 text-primary hover:bg-primary/20 rounded-lg transition-colors"
-                    >
-                      <Icons.ArrowDown className="w-4 h-4 -rotate-90" />
-                    </button>
-                  )}
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
 
         {/* Deep Connections - PRO ONLY */}
         {(saint.bibleRefs || saint.catechismRefs || saint.churchDocRefs) && (
