@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import BackToThemeBanner from './BackToThemeBanner';
 import { motion, AnimatePresence } from 'framer-motion';
 import SEOHead from '@/components/SEOHead';
 import { Icons } from '../../constants';
@@ -401,6 +402,8 @@ const Bible: React.FC = () => {
     const fromDashboard = searchParams.get('from') === 'dashboard';
     return (
       <div className={`mx-auto space-y-6 transition-all duration-500 ${showCrossRefs && (crossRefs.length > 0 || docsRefs.length > 0) ? 'max-w-3xl lg:max-w-6xl' : 'max-w-3xl'}`}>
+        {/* Back to Theme */}
+        <BackToThemeBanner />
         {/* Back to Dashboard */}
         {fromDashboard && (
           <button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-xs text-primary hover:underline">
