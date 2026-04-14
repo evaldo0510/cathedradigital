@@ -263,7 +263,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
             
             <ShareButton
               title={saint.name}
-              text={`${saint.name} — ${saint.title}. ${saint.quotes[0] || ''}`}
+              text={`${saint.name} — ${saint.title}. ${saint.quotes?.[0] || ''}`}
               variant="button"
               className="!px-4 !py-2.5 !text-[11px] !rounded-2xl !bg-foreground !text-background !font-black !uppercase !tracking-widest"
             />
@@ -329,7 +329,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
             <div className="bg-secondary/30 p-8 rounded-[2rem] border border-border relative group hover:border-primary/20 transition-all">
               <Quote className="absolute top-4 right-4 w-12 h-12 text-primary/5 group-hover:text-primary/10 transition-colors" />
               <p className="text-xl font-serif italic text-foreground relative z-10 leading-relaxed">
-                {parseTheologicalReferences(saint.quotes[0] || "Tudo para a maior glória de Deus.").map((seg, i) => {
+                {parseTheologicalReferences(saint.quotes?.[0] || "Tudo para a maior glória de Deus.").map((seg, i) => {
                   if (seg.type === 'bibleRef') return <BibleVersePopover key={i} abbr={seg.abbr!} chapter={seg.chapter!} verse={seg.verse} label={seg.value} />;
                   if (seg.type === 'catechismRef') return <CatechismPopover key={i} paragraph={seg.paragraph!} />;
                   return <span key={i}>{seg.value}</span>;
