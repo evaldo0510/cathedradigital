@@ -14,6 +14,13 @@ const features = [
     route: AppRoute.DASHBOARD 
   },
   { 
+    title: "Navegação por Temas", 
+    description: "Explore conexões sagradas entre Bíblia, Catecismo e Magistério através de uma interface intuitiva de bolhas teológicas.", 
+    benefit: "Aprofunde-se em conceitos fundamentais da fé com uma visão 360 graus da Tradição.", 
+    icon: <Hash className="h-6 w-6" />, 
+    route: AppRoute.TEMAS 
+  },
+  { 
     title: "Bíblia Sagrada", 
     description: "Acesse as Escrituras com ferramentas de estudo avançadas, anotações pessoais e busca inteligente por temas.", 
     benefit: "Mergulhe na Palavra de Deus e guarde os versículos que transformam sua vida.", 
