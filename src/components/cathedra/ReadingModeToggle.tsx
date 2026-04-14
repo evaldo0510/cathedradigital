@@ -1,5 +1,5 @@
 import React from 'react';
-import { Moon, Sun } from 'lucide-react';
+import { Icons } from '@/constants';
 import { useReadingMode } from '@/hooks/useReadingMode';
 
 const ReadingModeToggle: React.FC = () => {
