@@ -97,6 +97,16 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       suggested: spiritualProfile === 'ferido_em_busca' || spiritualProfile === 'sedento_de_sentido',
     },
     {
+      label: 'Santos',
+      description: 'Vidas e ensinamentos dos heróis da fé',
+      icon: Icons.Saints,
+      route: AppRoute.SAINTS,
+      gradient: 'from-secondary/5 to-transparent',
+      iconColor: 'text-secondary',
+      borderColor: 'border-border hover:border-secondary/50',
+      suggested: true,
+    },
+    {
       label: t('liturgy'),
       description: t('liturgy_sub') || 'Leituras do dia',
       icon: Icons.Liturgy,
@@ -115,16 +125,6 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       iconColor: 'text-primary',
       borderColor: 'border-border hover:border-secondary/50',
       suggested: spiritualProfile === 'firme_aprofundando',
-    },
-    {
-      label: t('community'),
-      description: t('community_sub'),
-      icon: Icons.Community,
-      route: AppRoute.COMMUNITY,
-      gradient: 'from-primary/5 to-transparent',
-      iconColor: 'text-primary',
-      borderColor: 'border-border hover:border-secondary/50',
-      suggested: spiritualProfile === 'ardente_missionario',
     },
   ], [lastBible, t, spiritualProfile]);
 
