@@ -290,6 +290,7 @@ const TemasPage = () => {
             )}
           </div>
         </div>
+      </div>
 
       <main className="min-h-[500px]">
         <AnimatePresence mode="wait">
