@@ -80,6 +80,7 @@ const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
   const [stats, setStats] = useState<any>(null);
   const [users, setUsers] = useState<any[]>([]);
+  const [recentJournal, setRecentJournal] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -99,14 +100,15 @@ const AdminDashboard: React.FC = () => {
         thirtyDaysAgoStart.setDate(new Date().getDate() - 30);
         const iso30 = thirtyDaysAgoStart.toISOString();
 
-        const [statsRes, metricsRes, transactionsRes, journalRes, journeysStartedRes, journeysCompletedRes, crmRes] = await Promise.all([
+        const [statsRes, metricsRes, transactionsRes, journalRes, journeysStartedRes, journeysCompletedRes, crmRes, recentJournalRes] = await Promise.all([
           supabase.from('profiles').select('id, is_premium, created_at, last_visit, role, diocese, estado, movimento_pastoral, name, xp, level, streak'),
           supabase.from('app_metrics').select('metric_type, created_at').gte('created_at', iso30),
           supabase.from('transactions').select('*').order('created_at', { ascending: false }).limit(100),
           supabase.from('spiritual_journal').select('user_id', { count: 'exact', head: true }),
           supabase.from('journey_progress').select('user_id', { count: 'exact', head: true }),
           supabase.from('journey_progress').select('user_id', { count: 'exact', head: true }).not('completed_at', 'is', null),
-          supabase.from('user_management_stats').select('*').limit(1000)
+          supabase.from('user_management_stats').select('*').limit(1000),
+          supabase.from('spiritual_journal').select('*, profiles(name)').order('created_at', { ascending: false }).limit(5)
         ]);
 
         if (statsRes.error) throw statsRes.error;
@@ -224,6 +226,8 @@ const AdminDashboard: React.FC = () => {
           statesStats,
           movementsStats
         });
+
+        setRecentJournal(recentJournalRes.data || []);
 
 
         const crmMap = new Map<string, any>();
@@ -622,7 +626,7 @@ const AdminDashboard: React.FC = () => {
               <CardContent className="px-3 pb-3 pt-1">
                 <div className="space-y-2.5">
                   {[
-                    { label: 'Profundos (PRO)', count: users.filter(u => u.depth_level === 'Profundo').length, color: 'bg-primary' },
+                    { label: 'Profundos (Mestres)', count: users.filter(u => u.depth_level === 'Profundo').length, color: 'bg-primary' },
                     { label: 'Engajados (High XP)', count: users.filter(u => u.depth_level === 'Engajado').length, color: 'bg-orange-500' },
                     { label: 'Ativos (Frequentes)', count: users.filter(u => u.depth_level === 'Ativo').length, color: 'bg-primary/60' },
                     { label: 'Novos / Inativos', count: users.filter(u => !u.depth_level || u.depth_level === 'Inativo' || u.depth_level === 'Novo').length, color: 'bg-muted' },
@@ -667,10 +671,44 @@ const AdminDashboard: React.FC = () => {
             </Card>
           </div>
 
-          {/* Charts */}
-          <Suspense fallback={<Skeleton className="h-[350px] rounded-xl" />}>
-            <AdminChartsTab userGrowth={stats?.userGrowth || []} revenueData={stats?.revenueData || []} />
-          </Suspense>
+          {/* Recent Activity Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2">
+              <Suspense fallback={<Skeleton className="h-[350px] rounded-xl" />}>
+                <AdminChartsTab userGrowth={stats?.userGrowth || []} revenueData={stats?.revenueData || []} />
+              </Suspense>
+            </div>
+            
+            <Card className="border-border/40 shadow-none bg-card/50 backdrop-blur-sm">
+              <CardHeader className="pb-3 pt-3 px-3">
+                <CardTitle className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-2">
+                  <MessageSquare className="w-3.5 h-3.5" /> Últimas Reflexões
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="px-3 pb-3 pt-1 space-y-3">
+                {recentJournal.length > 0 ? (
+                  recentJournal.map((entry) => (
+                    <div key={entry.id} className="p-2.5 rounded-lg bg-muted/20 border border-border/10 space-y-1.5 hover:bg-muted/30 transition-colors">
+                      <div className="flex items-center justify-between text-[10px] font-bold">
+                        <span className="text-primary truncate max-w-[120px]">{entry.profiles?.name || 'Anônimo'}</span>
+                        <span className="text-muted-foreground opacity-60">{new Date(entry.created_at).toLocaleDateString('pt-BR')}</span>
+                      </div>
+                      <p className="text-[11px] leading-relaxed line-clamp-2 italic opacity-80">"{entry.content}"</p>
+                      {entry.mood && (
+                        <Badge variant="outline" className="text-[8px] font-black h-4 px-1 uppercase tracking-tighter bg-primary/5 border-primary/20 text-primary">
+                          {entry.mood}
+                        </Badge>
+                      )}
+                    </div>
+                  ))
+                ) : (
+                  <div className="py-8 text-center text-[10px] text-muted-foreground uppercase font-black tracking-widest opacity-40">
+                    Nenhuma reflexão recente.
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
 
         {/* Segmentation Tab */}
