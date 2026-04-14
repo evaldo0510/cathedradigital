@@ -131,8 +131,50 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
   );
 };
 
+const LazyParagraph: React.FC<{ paragraph: number; currentParagraph: number; paragraphsRead: Set<number>; isFavorite: (type: string, title: string) => boolean; toggleFavorite: (item: any) => void; handleNavigateToBible: (abbr: string, chapter: number) => void }> = ({ paragraph: p, currentParagraph, paragraphsRead, isFavorite, toggleFavorite, handleNavigateToBible }) => {
+  const ref = React.useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
 
-const CIC_SECTIONS = [
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setIsVisible(true); observer.disconnect(); } },
+      { rootMargin: '300px 0px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div ref={ref} id={`p${p}`} className={`scroll-mt-28 transition-all duration-700 pb-10 border-b border-border/40 last:border-0 last:pb-0 ${currentParagraph === p ? 'relative' : 'opacity-80 hover:opacity-100'}`}>
+      {currentParagraph === p && <div className="absolute -left-4 top-0 bottom-0 w-1 bg-primary rounded-full hidden md:block" />}
+      <div className="flex items-center gap-4 mb-6">
+        <div className="flex items-center gap-2">
+          <span className="text-3xl font-serif font-bold text-primary">§{p}</span>
+          <div className="flex items-center gap-1">
+            <button onClick={() => toggleFavorite({ type: 'catechism', title: `CIC §${p}`, content: `Catecismo da Igreja Católica, parágrafo §${p}` })} className="p-2 rounded-xl hover:bg-primary/10 transition-all active:scale-95">
+              <Icons.Heart className={`w-4 h-4 transition-all ${isFavorite('catechism', `CIC §${p}`) ? 'fill-primary text-primary' : 'text-muted-foreground'}`} />
+            </button>
+            <ShareButton title={`Catecismo §${p}`} text={`Leia o Catecismo da Igreja Católica, §${p} — Cathedra Digital`} url={`${window.location.origin}/catechism?p=${p}`} className="p-2 h-auto w-auto border-0 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all" />
+          </div>
+        </div>
+        <div className="h-px flex-1 bg-gradient-to-r from-border/60 via-border/20 to-transparent" />
+      </div>
+      <CatechismContent paragraph={p} onNavigateToBible={handleNavigateToBible} isVisible={isVisible} />
+      {p === 1324 && (
+        <div className="mt-8 pt-8 border-t border-border/30">
+          <DeepContentSection content={{ textoBase: "A Eucaristia é «fonte e cume de toda a vida cristã».", explicacao: "Isso significa que tudo o que a Igreja faz nasce da Eucaristia e para ela caminha.", interpretacaoProfunda: "A santíssima Eucaristia contém todo o tesouro espiritual da Igreja, isto é, o próprio Cristo.", aplicacaoPratica: "Coloque a Eucaristia no centro de sua vida espiritual.", reflexaoFinal: "Como está sua relação com Jesus Eucarístico?", exercicio: "Faça uma visita ao Santíssimo Sacramento hoje." }} title="Reflexão Doutrinária" />
+        </div>
+      )}
+      <div className="mt-4 opacity-0 group-hover:opacity-100 transition-opacity">
+        <NotesPanel contentType="catechism" contentId={`${p}`} contentLabel={`§${p}`} />
+      </div>
+    </div>
+  );
+};
+
+
   {
     part: 'Parte I',
     title: 'A Profissão de Fé',
