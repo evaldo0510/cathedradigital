@@ -166,7 +166,7 @@ interface IconProps extends React.SVGProps<SVGSVGElement> {
 }
 
 const createIcon = (IconComponent: any) => 
-  forwardRef<SVGSVGElement, IconProps>(({ className, strokeWidth = 1.75, size = 20, ...props }, ref) => (
+  forwardRef<SVGSVGElement, IconProps>(({ className, strokeWidth = 2, size = 20, ...props }, ref) => (
     <IconComponent 
       ref={ref} 
       strokeWidth={strokeWidth} 
@@ -181,7 +181,7 @@ export const Icons = {
   Logo: Logo,
   
   // Navigation & Core
-  Home: createIcon(Home),
+  Home: createIcon(Church),
   Dashboard: createIcon(LayoutGrid),
   LayoutGrid: createIcon(LayoutGrid),
   Layout: createIcon(Layout),
@@ -216,7 +216,7 @@ export const Icons = {
   PartyPopper: createIcon(PartyPopper),
   
   // Library & Study (Organized by source type)
-  Bible: createIcon(BookOpen),
+  Bible: createIcon(BookText),
   HolyBible: createIcon(BookText),
   Book: createIcon(Book),
   BookOpen: createIcon(BookOpen),
@@ -226,7 +226,7 @@ export const Icons = {
   FileText: createIcon(FileText),
   Magisterium: createIcon(ScrollText),
   MagisteriumGlobe: createIcon(Globe),
-  Saints: createIcon(Users),
+  Saints: createIcon(Sparkles),
   SaintHalo: createIcon(Sparkles),
   Aquinas: createIcon(Columns),
   Columns: createIcon(Columns),
@@ -243,7 +243,7 @@ export const Icons = {
   History: createIcon(History),
   Bookmark: createIcon(Bookmark),
   Tag: createIcon(Tag),
-  Themes: createIcon(Orbit),
+  Themes: createIcon(Library),
   Swords: createIcon(Swords),
   
   // Spiritual Life
