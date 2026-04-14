@@ -13,6 +13,7 @@ export interface CatechismSegment {
 const CIC_BLOCK_PATTERN = /(?:CIC\s*§§?\s*|§§?\s*)(\d{1,4})(?:\s*[-–]\s*\d{1,4})?(?:\s*[,;]\s*§?\s*(\d{1,4})(?:\s*[-–]\s*\d{1,4})?)*/g;
 
 export function parseCatechismReferences(text: string): CatechismSegment[] {
+  if (!text) return [];
   CIC_BLOCK_PATTERN.lastIndex = 0;
   const segments: CatechismSegment[] = [];
   let lastIndex = 0;

@@ -45,22 +45,31 @@ const Saints: React.FC = () => {
     const month = selectedDate.getMonth() + 1;
     const localSaints = ALL_SAINTS.filter(s => s.feastMonth === month && s.feastDayNum === day);
     
-    if (officialSaint && isSameDay(selectedDate, new Date()) && officialSaint.name !== "Menu" && officialSaint.name !== "Santo do Dia") {
+    // Safely check if we have a valid official saint with a name
+    if (officialSaint && officialSaint.name && isSameDay(selectedDate, new Date()) && 
+        officialSaint.name !== "Menu" && officialSaint.name !== "Santo do Dia") {
+      
+      const officialName = officialSaint.name.toLowerCase();
       const match = localSaints.find(s => 
-        officialSaint.name.toLowerCase().includes(s.name.toLowerCase()) ||
-        s.name.toLowerCase().includes(officialSaint.name.toLowerCase())
+        officialName.includes(s.name.toLowerCase()) ||
+        s.name.toLowerCase().includes(officialName)
       );
       
       if (match) {
-        return localSaints.map(s => s.id === match.id ? { ...s, ...officialSaint, fullBio: officialSaint.fullBio || s.fullBio, works: (officialSaint.writings || []).length > 0 ? (officialSaint.writings || []).map((w: string) => ({ title: w })) : s.works } : s);
+        return localSaints.map(s => s.id === match.id ? { 
+          ...s, 
+          ...officialSaint, 
+          fullBio: officialSaint.fullBio || s.fullBio, 
+          works: (officialSaint.writings || []).length > 0 ? (officialSaint.writings || []).map((w: string) => ({ title: w })) : s.works 
+        } : s);
       } else {
         return [
           {
             id: 'official-today',
             name: officialSaint.name,
             title: 'Santo do Dia',
-            bio: officialSaint.description,
-            fullBio: officialSaint.fullBio || officialSaint.description,
+            bio: officialSaint.description || '',
+            fullBio: officialSaint.fullBio || officialSaint.description || '',
             image: officialSaint.image,
             url: officialSaint.url,
             category: 'confessor' as const,
@@ -71,7 +80,8 @@ const Saints: React.FC = () => {
             feastDayNum: selectedDate.getDate(),
             born: officialSaint.born || '',
             died: officialSaint.died || '',
-            patronOf: []
+            patronOf: [],
+            virtues: []
           },
           ...localSaints
         ];

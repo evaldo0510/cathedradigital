@@ -100,6 +100,7 @@ const FULL_REF_PATTERN = (bookNames: string[]) =>
 const SHORT_REF_PATTERN = new RegExp(`(\\d{1,3})(?:[,.:]\\s*(\\d{1,3})(?:\\s*[-–]\\s*\\d{1,3})?)?`, 'g');
 
 export function parseBibleReferences(text: string): ParsedSegment[] {
+  if (!text) return [];
   const bookNames = Object.keys(BIBLE_BOOK_MAP)
     .sort((a, b) => b.length - a.length)
     .map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
