@@ -157,7 +157,7 @@ Toda resposta DEVE terminar com uma linha contendo apenas o metadado em formato 
           },
           ...messages,
         ],
-        stream: true,
+        stream: stream,
       }),
     });
 
