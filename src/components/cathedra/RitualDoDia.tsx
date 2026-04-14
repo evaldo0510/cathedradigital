@@ -123,7 +123,7 @@ const RitualDoDia: React.FC = () => {
       officialSaint.name !== 'Santo do Dia' && officialSaint.name !== 'Menu' && officialSaint.name.length > 3;
 
     if (hasValidName) {
-      const localMatch = SAINTS_DATA.find(s =>
+      const localMatch = ALL_SAINTS.find(s =>
         s.feastMonth === month && s.feastDayNum === day &&
         (officialSaint.name.toLowerCase().includes(s.name.toLowerCase()) || s.name.toLowerCase().includes(officialSaint.name.toLowerCase()))
       );
@@ -137,7 +137,7 @@ const RitualDoDia: React.FC = () => {
 
     // Even if name is generic, if we have image from API, use it with local data
     if (officialSaint && officialSaint.image) {
-      const localSaint = SAINTS_DATA.find(s => s.feastMonth === month && s.feastDayNum === day);
+      const localSaint = ALL_SAINTS.find(s => s.feastMonth === month && s.feastDayNum === day);
       if (localSaint) {
         return { 
           name: localSaint.name, 
@@ -148,12 +148,12 @@ const RitualDoDia: React.FC = () => {
       }
     }
 
-    const localSaint = SAINTS_DATA.find(s => s.feastMonth === month && s.feastDayNum === day);
+    const localSaint = ALL_SAINTS.find(s => s.feastMonth === month && s.feastDayNum === day);
     if (localSaint) {
       return { name: localSaint.name, image: localSaint.image, bio: localSaint.bio, title: localSaint.title };
     }
 
-    const fallback = SAINTS_DATA[dayOfYear % SAINTS_DATA.length];
+    const fallback = ALL_SAINTS[dayOfYear % ALL_SAINTS.length];
     return { name: fallback.name, image: fallback.image, bio: fallback.bio, title: fallback.title };
   }, [officialSaint, dayOfYear]);
 
