@@ -96,6 +96,22 @@ const TemasPage = () => {
   const [loadingLogos, setLoadingLogos] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<string>('all');
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  const handleCarouselScroll = useCallback(() => {
+    const el = document.getElementById('tags-carousel');
+    if (!el) return;
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    setScrollProgress(maxScroll > 0 ? el.scrollLeft / maxScroll : 0);
+  }, []);
+
+  useEffect(() => {
+    const el = document.getElementById('tags-carousel');
+    if (!el) return;
+    el.addEventListener('scroll', handleCarouselScroll, { passive: true });
+    handleCarouselScroll();
+    return () => el.removeEventListener('scroll', handleCarouselScroll);
+  }, [handleCarouselScroll, filteredTags]);
 
   const { data: tags, isLoading: loadingTags } = useQuery({
     queryKey: ['tags'],
