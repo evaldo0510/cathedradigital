@@ -6,7 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import StaggeredList from './StaggeredList';
 import CrossReferencePanel from './CrossReferencePanel';
 import DeepContentSection from './DeepContentSection';
-import { getBibleCrossRefs, CIC_TO_BIBLE, getBibleDocs } from '@/data/cross-references';
+import { getBibleCrossRefs, CIC_TO_BIBLE, BIBLE_TO_CIC, getBibleDocs } from '@/data/cross-references';
 import CatechismPopover from './CatechismPopover';
 import MagisteriumPopover from './MagisteriumPopover';
 import { useNavigate, useSearchParams } from 'react-router-dom';
