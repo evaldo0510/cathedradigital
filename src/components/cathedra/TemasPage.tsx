@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -96,6 +96,16 @@ const TemasPage = () => {
   const [loadingLogos, setLoadingLogos] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<string>('all');
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  const handleCarouselScroll = useCallback(() => {
+    const el = document.getElementById('tags-carousel');
+    if (!el) return;
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    setScrollProgress(maxScroll > 0 ? el.scrollLeft / maxScroll : 0);
+  }, []);
+
+  // moved below filteredTags
 
   const { data: tags, isLoading: loadingTags } = useQuery({
     queryKey: ['tags'],
@@ -115,6 +125,7 @@ const TemasPage = () => {
     return ['all', ...distinct];
   }, [tags]);
 
+
   const filteredTags = useMemo(() => {
     if (!tags) return [];
     return tags.filter(tag => {
@@ -123,6 +134,14 @@ const TemasPage = () => {
       return matchesSearch && matchesCategory;
     });
   }, [tags, searchQuery, activeCategory]);
+
+  useEffect(() => {
+    const el = document.getElementById('tags-carousel');
+    if (!el) return;
+    el.addEventListener('scroll', handleCarouselScroll, { passive: true });
+    handleCarouselScroll();
+    return () => el.removeEventListener('scroll', handleCarouselScroll);
+  }, [handleCarouselScroll, filteredTags]);
 
   useEffect(() => {
     const temaSlug = searchParams.get('tema');
@@ -327,6 +346,18 @@ const TemasPage = () => {
                 >
                   <ChevronRight className="w-5 h-5 text-foreground/70" />
                 </button>
+              </div>
+              {/* Progress indicator */}
+              <div className="flex items-center justify-center gap-3 px-8 pb-3 pt-1">
+                <span className="text-[10px] font-bold text-muted-foreground/50 tabular-nums">
+                  {filteredTags.length} temas
+                </span>
+                <div className="flex-1 max-w-[200px] h-1 bg-muted/30 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-primary/40 rounded-full transition-all duration-150"
+                    style={{ width: `${Math.max(10, scrollProgress * 100)}%` }}
+                  />
+                </div>
               </div>
             )}
           </div>
