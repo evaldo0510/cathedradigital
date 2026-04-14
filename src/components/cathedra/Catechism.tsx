@@ -15,26 +15,43 @@ import { getCatechismCrossRefs, getCatechismDocs } from '@/data/cross-references
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useAuth } from '@/hooks/useAuth';
-import { useCatechismParagraph, usePrefetchCatechismParagraph } from '@/hooks/useCatechismParagraph';
+import { useCatechismParagraph, usePrefetchCatechismParagraph, useGenerateCatechismParagraph } from '@/hooks/useCatechismParagraph';
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import CatechismPopover from './CatechismPopover';
 import AudioButton from './AudioButton';
 
 
 
-const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr: string, chapter: number) => void }> = ({ paragraph, onNavigateToBible }) => {
-  const { data, isLoading, isError } = useCatechismParagraph(paragraph);
+const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr: string, chapter: number) => void; isVisible?: boolean }> = ({ paragraph, onNavigateToBible, isVisible = true }) => {
+  const { data, isLoading, isError } = useCatechismParagraph(paragraph, isVisible);
+  const generateParagraph = useGenerateCatechismParagraph();
+  const [isGenerating, setIsGenerating] = React.useState(false);
   const prefetch = usePrefetchCatechismParagraph();
 
   useEffect(() => {
-    if (paragraph < 2865) prefetch(paragraph + 1);
-    if (paragraph > 1) prefetch(paragraph - 1);
-  }, [paragraph, prefetch]);
+    if (isVisible && paragraph < 2865) prefetch(paragraph + 1);
+  }, [paragraph, prefetch, isVisible]);
 
   const segments = useMemo(() => {
-    if (!data?.content) return [];
+    if (!data?.content || data.status === 'not_cached') return [];
     return parseTheologicalReferences(data.content);
-  }, [data?.content]);
+  }, [data?.content, data?.status]);
+
+  const handleGenerate = async () => {
+    setIsGenerating(true);
+    try {
+      await generateParagraph(paragraph);
+    } catch {}
+    setIsGenerating(false);
+  };
+
+  if (!isVisible) {
+    return (
+      <div className="reader-text text-foreground/30 leading-[2] text-lg py-4 h-24 flex items-center">
+        <span className="text-sm text-muted-foreground italic">Rolar para carregar §{paragraph}...</span>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (
@@ -57,14 +74,31 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
            <Icons.Cross className="w-4 h-4" />
            Ops! Problema ao carregar o parágrafo §{paragraph}.
         </div>
-        <p className="opacity-80">
-          O conteúdo está sendo recuperado da base de dados. Por favor, tente recarregar a página ou aguarde um momento. 
-        </p>
         <button 
           onClick={() => window.location.reload()}
           className="px-3 py-1.5 bg-destructive/10 text-destructive rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-destructive/20 transition-all"
         >
           Tentar novamente
+        </button>
+      </div>
+    );
+  }
+
+  // Not cached - show generate button
+  if (data?.status === 'not_cached') {
+    return (
+      <div className="reader-text py-4 space-y-3">
+        <p className="text-sm text-muted-foreground italic">Conteúdo do §{paragraph} ainda não disponível no cache.</p>
+        <button
+          onClick={handleGenerate}
+          disabled={isGenerating}
+          className="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-xl text-xs font-black uppercase tracking-widest transition-all disabled:opacity-50 flex items-center gap-2"
+        >
+          {isGenerating ? (
+            <><Icons.Loader className="w-3 h-3 animate-spin" /> Gerando via IA...</>
+          ) : (
+            <><Icons.Sparkles className="w-3 h-3" /> Carregar conteúdo</>
+          )}
         </button>
       </div>
     );
@@ -97,6 +131,48 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
   );
 };
 
+const LazyParagraph: React.FC<{ paragraph: number; currentParagraph: number; paragraphsRead: Set<number>; isFavorite: (type: string, title: string) => boolean; toggleFavorite: (item: any) => void; handleNavigateToBible: (abbr: string, chapter: number) => void }> = ({ paragraph: p, currentParagraph, paragraphsRead, isFavorite, toggleFavorite, handleNavigateToBible }) => {
+  const ref = React.useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setIsVisible(true); observer.disconnect(); } },
+      { rootMargin: '300px 0px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div ref={ref} id={`p${p}`} className={`scroll-mt-28 transition-all duration-700 pb-10 border-b border-border/40 last:border-0 last:pb-0 ${currentParagraph === p ? 'relative' : 'opacity-80 hover:opacity-100'}`}>
+      {currentParagraph === p && <div className="absolute -left-4 top-0 bottom-0 w-1 bg-primary rounded-full hidden md:block" />}
+      <div className="flex items-center gap-4 mb-6">
+        <div className="flex items-center gap-2">
+          <span className="text-3xl font-serif font-bold text-primary">§{p}</span>
+          <div className="flex items-center gap-1">
+            <button onClick={() => toggleFavorite({ type: 'catechism', title: `CIC §${p}`, content: `Catecismo da Igreja Católica, parágrafo §${p}` })} className="p-2 rounded-xl hover:bg-primary/10 transition-all active:scale-95">
+              <Icons.Heart className={`w-4 h-4 transition-all ${isFavorite('catechism', `CIC §${p}`) ? 'fill-primary text-primary' : 'text-muted-foreground'}`} />
+            </button>
+            <ShareButton title={`Catecismo §${p}`} text={`Leia o Catecismo da Igreja Católica, §${p} — Cathedra Digital`} url={`${window.location.origin}/catechism?p=${p}`} className="p-2 h-auto w-auto border-0 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all" />
+          </div>
+        </div>
+        <div className="h-px flex-1 bg-gradient-to-r from-border/60 via-border/20 to-transparent" />
+      </div>
+      <CatechismContent paragraph={p} onNavigateToBible={handleNavigateToBible} isVisible={isVisible} />
+      {p === 1324 && (
+        <div className="mt-8 pt-8 border-t border-border/30">
+          <DeepContentSection content={{ textoBase: "A Eucaristia é «fonte e cume de toda a vida cristã».", explicacao: "Isso significa que tudo o que a Igreja faz nasce da Eucaristia e para ela caminha.", interpretacaoProfunda: "A santíssima Eucaristia contém todo o tesouro espiritual da Igreja, isto é, o próprio Cristo.", aplicacaoPratica: "Coloque a Eucaristia no centro de sua vida espiritual.", reflexaoFinal: "Como está sua relação com Jesus Eucarístico?", exercicio: "Faça uma visita ao Santíssimo Sacramento hoje." }} title="Reflexão Doutrinária" />
+        </div>
+      )}
+      <div className="mt-4 opacity-0 group-hover:opacity-100 transition-opacity">
+        <NotesPanel contentType="catechism" contentId={`${p}`} contentLabel={`§${p}`} />
+      </div>
+    </div>
+  );
+};
 
 const CIC_SECTIONS = [
   {
@@ -354,61 +430,7 @@ const Catechism: React.FC = () => {
         <div className="bg-card border border-border rounded-3xl p-6 md:p-10 space-y-12">
           <div className="flex flex-col gap-10">
             {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(p => (
-              <div 
-                key={p} 
-                id={`p${p}`} 
-                className={`scroll-mt-28 transition-all duration-700 pb-10 border-b border-border/40 last:border-0 last:pb-0 ${
-                  currentParagraph === p ? 'relative' : 'opacity-80 hover:opacity-100'
-                }`}
-              >
-                {currentParagraph === p && (
-                  <div className="absolute -left-4 top-0 bottom-0 w-1 bg-primary rounded-full hidden md:block" />
-                )}
-                
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="flex items-center gap-2">
-                    <span className="text-3xl font-serif font-bold text-primary">§{p}</span>
-                    <div className="flex items-center gap-1">
-                      <button
-                        onClick={() => toggleFavorite({ type: 'catechism', title: `CIC §${p}`, content: `Catecismo da Igreja Católica, parágrafo §${p}` })}
-                        className="p-2 rounded-xl hover:bg-primary/10 transition-all active:scale-95"
-                        title={isFavorite('catechism', `CIC §${p}`) ? 'Remover dos favoritos' : 'Salvar nos favoritos'}
-                      >
-                        <Icons.Heart className={`w-4 h-4 transition-all ${isFavorite('catechism', `CIC §${p}`) ? 'fill-primary text-primary' : 'text-muted-foreground'}`} />
-                      </button>
-                      <ShareButton
-                        title={`Catecismo §${p}`}
-                        text={`Leia o Catecismo da Igreja Católica, §${p} — Cathedra Digital`}
-                        url={`${window.location.origin}/catechism?p=${p}`}
-                        className="p-2 h-auto w-auto border-0 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all"
-                      />
-                    </div>
-                  </div>
-                  <div className="h-px flex-1 bg-gradient-to-r from-border/60 via-border/20 to-transparent" />
-                </div>
-
-                <CatechismContent 
-                  paragraph={p} 
-                  onNavigateToBible={handleNavigateToBible} 
-                />
-
-                {p === 1324 && (
-                  <div className="mt-8 pt-8 border-t border-border/30">
-                    <DeepContentSection content={{
-                      textoBase: "A Eucaristia é «fonte e cume de toda a vida cristã».",
-                      explicacao: "Isso significa que tudo o que a Igreja faz nasce da Eucaristia e para ela caminha.",
-                      interpretacaoProfunda: "A santíssima Eucaristia contém todo o tesouro espiritual da Igreja, isto é, o próprio Cristo.",
-                      aplicacaoPratica: "Coloque a Eucaristia no centro de sua vida espiritual.",
-                      reflexaoFinal: "Como está sua relação com Jesus Eucarístico?",
-                      exercicio: "Faça uma visita ao Santíssimo Sacramento hoje."
-                    }} title="Reflexão Doutrinária" />
-                  </div>
-                )}
-                
-                <div className="mt-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <NotesPanel contentType="catechism" contentId={`${p}`} contentLabel={`§${p}`} />
-                </div>
-              </div>
+              <LazyParagraph key={p} paragraph={p} currentParagraph={currentParagraph} paragraphsRead={paragraphsRead} isFavorite={isFavorite} toggleFavorite={toggleFavorite} handleNavigateToBible={handleNavigateToBible} />
             ))}
           </div>
         </div>
