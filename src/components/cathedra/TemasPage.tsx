@@ -649,16 +649,17 @@ const ContentSection = React.forwardRef<HTMLDivElement, ContentSectionProps>(({ 
                     </Button>
                     <Button 
                       onClick={() => {
+                        const fromParam = `&from=temas&tema=${selectedTag.slug}`;
                         if (item.content_type === 'journey') {
-                          navigate(`/jornadas/${item.id}`);
+                          navigate(`/jornadas/${item.id}?from=temas&tema=${selectedTag.slug}`);
                         } else if (item.content_type === 'bible') {
                           const ref = item.reference || item.title;
-                          navigate(`/bible?ref=${encodeURIComponent(ref)}`);
+                          navigate(`/bible?ref=${encodeURIComponent(ref)}${fromParam}`);
                         } else if (item.content_type === 'catechism') {
                           const paragraph = (item.reference || item.title || '').replace(/\D/g, '');
-                          navigate(`/catechism?p=${paragraph}`);
+                          navigate(`/catechism?p=${paragraph}${fromParam}`);
                         } else if (item.content_type === 'magisterium') {
-                          navigate(`/magisterium?doc=${encodeURIComponent(item.reference || item.title)}`);
+                          navigate(`/magisterium?doc=${encodeURIComponent(item.reference || item.title)}${fromParam}`);
                         }
                       }}
                       size="lg" 
