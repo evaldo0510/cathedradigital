@@ -7,21 +7,21 @@ const DailyRoutineSection = () => {
     {
       time: "Manhã",
       title: "Despertar com a Liturgia",
-      icon: <Sun className="w-6 h-6 text-orange-400" />,
+      icon: <Sun className="w-6 h-6 text-primary" />,
       desc: "Comece seu dia com as leituras da Santa Missa e o Santo do Dia. Consagre suas primeiras horas ao Senhor.",
       items: ["Liturgia Diária", "Santo do Dia", "Oferecimento da Manhã"]
     },
     {
       time: "Tarde",
       title: "Nutrição do Intelecto",
-      icon: <Coffee className="w-6 h-6 text-brown-400" />,
+      icon: <Coffee className="w-6 h-6 text-primary" />,
       desc: "Aproveite pequenos intervalos para mergulhar no Catecismo ou tirar dúvidas teológicas com o Logos IA.",
       items: ["Parágrafo do CIC", "Consulta ao Logos IA", "Anotações de Estudo"]
     },
     {
       time: "Noite",
       title: "Repouso na Graça",
-      icon: <Moon className="h-6 w-6 text-indigo-400" />,
+      icon: <Moon className="h-6 w-6 text-primary" />,
       desc: "Finalize a jornada com o exame de consciência e o diário espiritual. Transforme seu dia em uma oferta de amor.",
       items: ["Exame de Consciência", "Diário Espiritual", "Oração de Completas"]
     }
