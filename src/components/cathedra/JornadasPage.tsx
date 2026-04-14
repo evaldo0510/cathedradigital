@@ -109,11 +109,15 @@ const JornadasPage: React.FC = () => {
 
   const filteredJourneys = useMemo(() => {
     return journeys.filter(j => {
+      const matchesSearch = !searchQuery || 
+        j.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (j.subtitle && j.subtitle.toLowerCase().includes(searchQuery.toLowerCase()));
+      if (!matchesSearch) return false;
       if (filterCategory !== 'all' && j.category !== filterCategory) return false;
       if (filterDifficulty !== 'all' && !difficultyMatches(j.difficulty, filterDifficulty)) return false;
       return true;
     });
-  }, [journeys, filterCategory, filterDifficulty]);
+  }, [journeys, filterCategory, filterDifficulty, searchQuery]);
 
   // Stats
   const stats = useMemo(() => {
