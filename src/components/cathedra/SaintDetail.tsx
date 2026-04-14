@@ -606,16 +606,9 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
                       <Icons.Cross className="w-3.5 h-3.5" /> Catecismo
                     </h4>
                     <div className="flex flex-wrap gap-2">
-                      {saint.catechismRefs.map(ref => {
-                        const num = typeof ref === 'string' ? parseInt(ref.replace(/\D/g, ''), 10) : ref;
-                        return num && !isNaN(num) ? (
-                          <CatechismPopover key={ref} paragraph={num} onNavigate={() => { onClose(); navigate('/catechism'); }} />
-                        ) : (
-                          <div key={ref} className="px-3 py-1.5 bg-primary/5 text-primary text-[10px] font-bold rounded-lg border border-primary/10">
-                            CIC {ref}
-                          </div>
-                        );
-                      })}
+                      {saint.catechismRefs.map(ref => (
+                        <CatechismPopover key={ref} paragraph={ref} onNavigate={() => { onClose(); navigate('/catechism'); }} />
+                      ))}
                     </div>
                   </div>
                 )}
