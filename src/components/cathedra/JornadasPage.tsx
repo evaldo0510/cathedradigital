@@ -345,9 +345,8 @@ const JornadasPage: React.FC = () => {
             <Icons.Filter className="w-4 h-4" />
             <span className="font-medium">Filtrar</span>
           </div>
->>>>
 
-        <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2">
           <button
             onClick={() => setFilterCategory('all')}
             className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${
