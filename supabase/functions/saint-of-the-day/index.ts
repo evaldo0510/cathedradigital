@@ -11,67 +11,74 @@ serve(async (req) => {
   }
 
   try {
-    const vaticanUrl = "https://www.vaticannews.va/pt/santo-do-dia.html";
+    const now = new Date();
+    // Offset for Brazil/Portugal if needed, but Vatican is GMT+1/2
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    
+    // Try current date URL
+    const vaticanUrl = `https://www.vaticannews.va/pt/santo-do-dia/${month}/${day}.html`;
+    console.log("Fetching:", vaticanUrl);
+
     const response = await fetch(vaticanUrl, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
       }
     });
     
-    if (!response.ok) throw new Error(`Status ${response.status}`);
+    if (!response.ok) throw new Error(`Status ${response.status} for ${vaticanUrl}`);
     const html = await response.text();
 
-    // Debug: look for a known saint name from today
-    const searchName = "Hermenegildo";
-    const pos = html.indexOf(searchName);
-    
-    if (pos === -1) {
-       // Search for another one
-       const pos2 = html.indexOf("Martinho");
-       if (pos2 === -1) {
-         return new Response(JSON.stringify({ 
-           error: "Saint names not found in HTML",
-           debug: { htmlLength: html.length, preview: html.substring(0, 1000) }
-         }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
-       }
-    }
-
-    // If we reach here, we found a name.
-    // Let's find the H2 around it.
-    let name = "Santo do Dia";
+    let saintName = "Santo do Dia";
     let imageUrl = null;
     let description = "";
 
+    // The title in <h1> is usually "Santo do Dia"
+    // The actual saint names are in <h2>
     const h2s = html.match(/<h2[^>]*>(.*?)<\/h2>/gis) || [];
+    const possibleSaints = [];
+
     for (const h2 of h2s) {
       const cleanH2 = h2.replace(/<[^>]*>/g, '').trim();
-      if (cleanH2.includes("Hermenegildo") || cleanH2.includes("Martinho")) {
-        name = cleanH2;
-        
+      if (cleanH2.length > 3 && !['Menu', 'Busca', 'Newsletter', 'Redes', 'Siga-nos', 'Destaque'].some(w => cleanH2.includes(w))) {
         // Find image after this H2
         const posH2 = html.indexOf(h2);
         const afterH2 = html.substring(posH2, posH2 + 2000);
         
         const imgMatch = afterH2.match(/data-original="([^"]+)"/) || afterH2.match(/src="([^"]+)"/);
+        let img = null;
         if (imgMatch) {
-          imageUrl = imgMatch[1];
-          if (!imageUrl.startsWith('http')) imageUrl = `https://www.vaticannews.va${imageUrl}`;
+          img = imgMatch[1];
+          if (!img.startsWith('http')) img = `https://www.vaticannews.va${img}`;
         }
         
         const pMatch = afterH2.match(/<p>(.*?)<\/p>/is);
-        if (pMatch) description = pMatch[1].replace(/<[^>]*>/g, '').trim();
+        let desc = "";
+        if (pMatch) desc = pMatch[1].replace(/<[^>]*>/g, '').trim();
         
-        break;
+        possibleSaints.push({ name: cleanH2, image: img, description: desc });
       }
+    }
+
+    // Pick first saint with image, or just the first one
+    const bestSaint = possibleSaints.find(s => s.image) || possibleSaints[0];
+
+    if (!bestSaint) {
+       // Fallback to searching the whole page if specific date URL failed to yield saints
+       return new Response(JSON.stringify({ 
+         name: "Santo do Dia", 
+         source: "Vatican News",
+         debug: { h2Count: h2s.length, h2s: h2s.slice(0, 5) }
+       }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
     return new Response(
       JSON.stringify({
-        name,
-        image: imageUrl,
-        description: description,
-        source: "Vatican News",
-        debug: { h2Count: h2s.length, first5H2s: h2s.slice(0, 5) }
+        name: bestSaint.name,
+        image: bestSaint.image,
+        description: bestSaint.description,
+        url: vaticanUrl,
+        source: "Vatican News"
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
