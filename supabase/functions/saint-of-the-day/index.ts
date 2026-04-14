@@ -12,92 +12,90 @@ serve(async (req) => {
 
   try {
     const now = new Date();
-    // Use Brazil/Portugal timezone (UTC-3 to UTC+1)
-    // For now let's just use current UTC date
-    const day = String(now.getDate()).padStart(2, '0');
-    const month = String(now.getMonth() + 1).padStart(2, '0');
+    // Use GMT+2 for Vatican/Portugal/etc
+    const vaticanTime = new Date(now.getTime() + (2 * 60 * 60 * 1000));
+    const day = String(vaticanTime.getUTCDate()).padStart(2, '0');
+    const month = String(vaticanTime.getUTCMonth() + 1).padStart(2, '0');
     
+    // PRIMARY SOURCE: A12 (Better images, Portuguese)
     const a12Url = `https://www.a12.com/reze-no-santuario/santo-do-dia?day=${day}&month=${month}`;
-    const response = await fetch(a12Url, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-      }
+    const a12Response = await fetch(a12Url, {
+      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36' }
     });
     
-    if (!response.ok) throw new Error(`A12 status ${response.status}`);
-    const html = await response.text();
-
     let saintName = "Santo do Dia";
     let imageUrl = null;
     let description = "";
+    let source = "Portal A12";
+    let finalUrl = a12Url;
 
-    // Extract Name (usually in <h1>)
-    const h1Match = html.match(/<h1[^>]*>(.*?)<\/h1>/is);
-    if (h1Match) {
-      saintName = h1Match[1].replace(/<[^>]*>/g, '').trim();
-    }
+    if (a12Response.ok) {
+      const html = await a12Response.text();
+      
+      // Name
+      const h1Match = html.match(/<h1[^>]*>(.*?)<\/h1>/is);
+      if (h1Match) saintName = h1Match[1].replace(/<[^>]*>/g, '').trim();
 
-    // Extract Image
-    // A12 has a specific structure for the saint image
-    const imgMatches = html.match(/<img[^>]*src="([^"]+)"[^>]*>/gis) || [];
-    for (const imgTag of imgMatches) {
-      const srcMatch = imgTag.match(/src="([^"]+)"/i);
-      if (srcMatch) {
-        const src = srcMatch[1];
-        // The saint image on A12 usually has 'originals' and the date/name
-        if (src.includes('/originals/') && !src.includes('Topo_-_Santo_do_Dia')) {
-          imageUrl = src;
-          break;
-        }
-      }
-    }
-
-    // Extract Description (paragraphs after h1)
-    const parts = html.split(/<h1[^>]*>/i);
-    if (parts.length > 1) {
-      const afterH1 = parts[1];
-      const pMatches = afterH1.match(/<p>(.*?)<\/p>/gis) || [];
-      for (const p of pMatches) {
-        const cleanP = p.replace(/<[^>]*>/g, '').trim();
-        if (cleanP.length > 50 && !cleanP.includes('Ouvir:') && !cleanP.includes('Localização:')) {
-          description = cleanP;
-          break;
-        }
-      }
-    }
-
-    // Fallback to Vatican News if A12 fails to get a name
-    if (saintName === "Santo do Dia" || !saintName) {
-      const vaticanUrl = `https://www.vaticannews.va/pt/santo-do-dia/${month}/${day}.html`;
-      const vaticanResponse = await fetch(vaticanUrl, {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-        }
-      });
-      if (vaticanResponse.ok) {
-        const vHtml = await vaticanResponse.text();
-        const h2s = vHtml.match(/<h2[^>]*>(.*?)<\/h2>/gis) || [];
-        for (const h2 of h2s) {
-          const cleanH2 = h2.replace(/<[^>]*>/g, '').trim();
-          if (cleanH2.length > 3 && !['Menu', 'Busca', 'Newsletter', 'Redes', 'Siga-nos', 'Destaque'].some(w => cleanH2.includes(w))) {
-            saintName = cleanH2;
-            const posH2 = vHtml.indexOf(h2);
-            const afterH2 = vHtml.substring(posH2, posH2 + 3000);
-            const imgMatches = afterH2.match(/(data-original|src)="([^"]+)"/g) || [];
-            for (const match of imgMatches) {
-              const url = match.split('"')[1];
-              if (url.includes('banner') || url.includes('logo') || url.includes('support-comunicazione') || url.includes('data:image')) continue;
-              if (url.includes('/santi/') || url.includes('/content/dam/vaticannews/')) {
-                imageUrl = url.startsWith('http') ? url : `https://www.vaticannews.va${url}`;
-                break;
-              }
-            }
-            const pMatch = afterH2.match(/<p>(.*?)<\/p>/is);
-            if (pMatch) description = pMatch[1].replace(/<[^>]*>/g, '').trim();
+      // Image
+      const portraitMatch = html.match(/class="feature__portrait"[^>]*src="([^"]+)"/i) || 
+                           html.match(/src="([^"]+)"[^>]*class="feature__portrait"/i);
+      if (portraitMatch) {
+        imageUrl = portraitMatch[1];
+      } else {
+        // Fallback image search in A12
+        const imgMatches = html.match(/src="([^"]+\.jpg)"/gi) || [];
+        for (const match of imgMatches) {
+          const src = match.split('"')[1];
+          if (src.includes('/originals/') && !src.includes('Topo')) {
+            imageUrl = src;
             break;
           }
         }
       }
+
+      // Description
+      const descMatch = html.match(/<div class="wg-text">(.*?)<\/div>/is);
+      if (descMatch) {
+        const firstP = descMatch[1].match(/<p>(.*?)<\/p>/is);
+        if (firstP) description = firstP[1].replace(/<[^>]*>/g, '').trim();
+      }
+    }
+
+    // Fix relative image URL
+    if (imageUrl && !imageUrl.startsWith('http')) {
+      imageUrl = `https://www.a12.com${imageUrl}`;
+    }
+
+    // SECONDARY SOURCE: Vatican News (if A12 failed to get a good saint or image)
+    if (!imageUrl || saintName === "Santo do Dia") {
+       const vaticanUrl = `https://www.vaticannews.va/pt/santo-do-dia/${month}/${day}.html`;
+       try {
+         const vResponse = await fetch(vaticanUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } });
+         if (vResponse.ok) {
+           const vHtml = await vResponse.text();
+           const vH2s = vHtml.match(/<h2[^>]*>(.*?)<\/h2>/gis) || [];
+           for (const h2 of vH2s) {
+             const name = h2.replace(/<[^>]*>/g, '').trim();
+             if (name.length > 5 && !['Menu', 'Busca', 'Newsletter'].some(w => name.includes(w))) {
+               if (saintName === "Santo do Dia") {
+                 saintName = name;
+                 source = "Vatican News";
+                 finalUrl = vaticanUrl;
+                 const pMatch = vHtml.substring(vHtml.indexOf(h2)).match(/<p>(.*?)<\/p>/is);
+                 if (pMatch) description = pMatch[1].replace(/<[^>]*>/g, '').trim();
+               }
+               // Check for image
+               const afterH2 = vHtml.substring(vHtml.indexOf(h2), vHtml.indexOf(h2) + 2000);
+               const vImgMatch = afterH2.match(/data-original="([^"]+)"/) || afterH2.match(/src="([^"]+)"/);
+               if (vImgMatch && !vImgMatch[1].includes('banner')) {
+                 const vImg = vImgMatch[1].startsWith('http') ? vImgMatch[1] : `https://www.vaticannews.va${vImgMatch[1]}`;
+                 if (!imageUrl) imageUrl = vImg;
+                 break;
+               }
+             }
+           }
+         }
+       } catch (e) { console.error(e); }
     }
 
     return new Response(
@@ -105,8 +103,8 @@ serve(async (req) => {
         name: saintName,
         image: imageUrl,
         description: description,
-        url: a12Url,
-        source: "Portal A12"
+        url: finalUrl,
+        source: source
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
