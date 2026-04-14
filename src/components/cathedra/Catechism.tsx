@@ -39,6 +39,10 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
   if (isLoading) {
     return (
       <div className="reader-text text-foreground/90 leading-[2] text-lg md:text-xl space-y-3 py-8">
+        <div className="flex items-center gap-2 mb-4 animate-pulse">
+          <div className="w-2 h-2 rounded-full bg-primary" />
+          <span className="text-xs font-bold uppercase tracking-widest text-primary">Processando parágrafo...</span>
+        </div>
         {Array.from({ length: 4 }).map((_, i) => (
           <div key={i} className="h-4 bg-muted rounded animate-pulse" style={{ width: `${60 + Math.random() * 40}%` }} />
         ))}
@@ -48,8 +52,21 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
 
   if (isError) {
     return (
-      <div className="reader-text text-destructive font-serif text-base py-8">
-        Erro ao carregar o parágrafo §{paragraph}. Verifique sua conexão.
+      <div className="reader-text bg-destructive/10 border border-destructive/20 rounded-2xl p-6 text-destructive font-serif text-base py-8 space-y-4">
+        <div className="font-bold flex items-center gap-2 text-red-600 dark:text-red-400">
+           <Icons.Cross className="w-4 h-4" />
+           Ops! Tivemos um problema ao carregar o parágrafo §{paragraph}.
+        </div>
+        <p className="text-sm opacity-80 text-foreground/80">
+          O parágrafo está sendo processado por nossa IA ou houve um erro de conexão. 
+          Isso pode acontecer na primeira vez que ele é acessado. 
+        </p>
+        <button 
+          onClick={() => window.location.reload()}
+          className="px-4 py-2 bg-primary text-primary-foreground rounded-xl text-xs font-bold hover:opacity-90 transition-all shadow-sm shadow-primary/20"
+        >
+          Tentar novamente
+        </button>
       </div>
     );
   }
@@ -251,23 +268,36 @@ const Catechism: React.FC = () => {
           )}
         </div>
 
-        {/* Paragraph navigator */}
+        {/* Section navigator */}
         <div className="flex items-center gap-3 justify-center">
-          <button disabled={currentParagraph <= start} onClick={() => setCurrentParagraph(currentParagraph - 1)}
-            className="px-3 py-2 rounded-xl bg-card border border-border text-sm font-bold disabled:opacity-30 hover:bg-primary/10 transition-all">
-            ← Anterior
+          <button 
+            disabled={selectedSection.id <= 1} 
+            onClick={() => {
+              const prevSec = selectedPart.sections.find(s => s.id === selectedSection.id - 1);
+              if (prevSec) {
+                setSelectedSection(prevSec);
+                setCurrentParagraph(prevSec.paragraphs[0]);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }
+            }}
+            className="px-3 py-2 rounded-xl bg-card border border-border text-xs font-bold disabled:opacity-30 hover:bg-primary/10 transition-all flex items-center gap-1">
+            <Icons.ArrowDown className="w-3.5 h-3.5 rotate-90" /> Seção Anterior
           </button>
-          <div className="flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-xl">
-            <span className="text-[10px] font-black text-primary">§</span>
-            <input
-              type="number" min={start} max={end} value={currentParagraph}
-              onChange={e => { const v = parseInt(e.target.value); if (v >= start && v <= end) setCurrentParagraph(v); }}
-              className="w-16 text-center bg-transparent text-foreground font-bold text-sm focus:outline-none"
-            />
+          <div className="px-4 py-2 bg-primary/5 border border-primary/20 rounded-xl text-xs font-black uppercase tracking-widest text-primary">
+            Lendo Seção {selectedSection.id}
           </div>
-          <button disabled={currentParagraph >= end} onClick={() => setCurrentParagraph(currentParagraph + 1)}
-            className="px-3 py-2 rounded-xl bg-card border border-border text-sm font-bold disabled:opacity-30 hover:bg-primary/10 transition-all">
-            Próximo →
+          <button 
+            disabled={selectedSection.id >= 10} 
+            onClick={() => {
+              const nextSec = selectedPart.sections.find(s => s.id === selectedSection.id + 1);
+              if (nextSec) {
+                setSelectedSection(nextSec);
+                setCurrentParagraph(nextSec.paragraphs[0]);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }
+            }}
+            className="px-3 py-2 rounded-xl bg-card border border-border text-xs font-bold disabled:opacity-30 hover:bg-primary/10 transition-all flex items-center gap-1">
+            Próxima Seção <Icons.ArrowDown className="w-3.5 h-3.5 -rotate-90" />
           </button>
         </div>
 
@@ -323,20 +353,24 @@ const Catechism: React.FC = () => {
           )}
         </div>
 
-        {/* Quick nav */}
-        <div className="flex flex-wrap gap-1 justify-center">
-          {Array.from({ length: Math.min(20, end - start + 1) }, (_, i) => start + i).map(p => (
-            <button key={p} onClick={() => setCurrentParagraph(p)}
-              className={`w-10 h-10 rounded-lg text-xs font-bold transition-all relative ${
-                currentParagraph === p ? 'bg-primary text-primary-foreground' : 
+        {/* Quick nav - Anchor links to jump between paragraphs */}
+        <div className="flex flex-wrap gap-2 justify-center py-6 border-t border-border mt-8">
+          <span className="w-full text-center text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2">Saltar para Parágrafo</span>
+          {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(p => (
+            <button key={p} 
+              onClick={() => {
+                setCurrentParagraph(p);
+                document.getElementById(`p${p}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              }}
+              className={`w-10 h-10 rounded-xl text-xs font-bold transition-all relative ${
+                currentParagraph === p ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-110 z-10' : 
                 paragraphsRead.has(p) ? 'bg-primary/10 border-primary/30 text-primary' :
-                'bg-card border border-border text-muted-foreground hover:text-foreground'
+                'bg-card border border-border text-muted-foreground hover:border-primary/50 hover:text-primary'
               }`}>
               {p}
               {paragraphsRead.has(p) && <Icons.Check className="w-2 h-2 absolute top-1 right-1" />}
             </button>
           ))}
-          {end - start + 1 > 20 && <span className="self-center text-muted-foreground text-sm">...</span>}
         </div>
       </div>
     );

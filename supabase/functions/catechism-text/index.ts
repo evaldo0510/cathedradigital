@@ -35,7 +35,7 @@ async function generateWithAI(paragraph: number, supabaseUrl: string, serviceKey
         }],
         system_prompt: "Você é um transcritor fiel do Catecismo da Igreja Católica. Sua única tarefa é fornecer o texto exato do parágrafo solicitado, mantendo as referências originais e sem adicionar qualquer comentário, saudação ou explicação.",
         stream: true,
-        model: 'google/gemini-2.5-flash'
+        model: 'google/gemini-1.5-flash'
       }),
     });
     
@@ -70,7 +70,7 @@ async function generateWithAI(paragraph: number, supabaseUrl: string, serviceKey
 
 // Rate limiter: 30 requests per minute per IP
 const rateLimitMap = new Map<string, number[]>();
-const RATE_LIMIT = 30;
+const RATE_LIMIT = 500;
 const RATE_WINDOW_MS = 60_000;
 
 function isRateLimited(key: string): boolean {
