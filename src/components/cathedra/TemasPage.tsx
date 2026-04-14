@@ -234,10 +234,7 @@ const TemasPage = () => {
         <div className="relative">
           <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent blur-3xl opacity-30 pointer-events-none" />
           
-          <motion.div 
-            layout 
-            className="relative flex flex-wrap justify-center gap-3 p-6 sm:p-10 bg-card/20 backdrop-blur-sm rounded-[3rem] border border-border/30 shadow-inner overflow-hidden min-h-[140px]"
-          >
+          <div className="relative overflow-hidden rounded-2xl border border-border/30 bg-card/20 backdrop-blur-sm">
             {loadingTags ? (
               <div className="flex flex-col items-center gap-4 py-12 w-full justify-center">
                 <div className="relative">
@@ -254,47 +251,44 @@ const TemasPage = () => {
                 <p className="text-sm text-muted-foreground/60 italic font-medium tracking-wide">Nenhum tema encontrado para sua busca teológica.</p>
               </div>
             ) : (
-              filteredTags.map((tag, idx) => {
-                const isSelected = selectedTag?.id === tag.id;
-                return (
-                  <motion.button
-                    key={tag.id}
-                    layoutId={`tag-${tag.id}`}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: idx * 0.01 }}
-                    whileHover={{ 
-                      scale: 1.1, 
-                      y: -4,
-                      transition: { type: "spring", stiffness: 400, damping: 10 }
-                    }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => handleTagSelect(tag)}
-                    className={`
-                      px-6 py-3.5 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all duration-500
-                      flex items-center gap-3 border shadow-sm relative group
-                      ${isSelected 
-                        ? 'bg-primary text-primary-foreground border-primary shadow-xl shadow-primary/20 z-10 scale-105' 
-                        : 'bg-card/60 backdrop-blur-md text-foreground/80 border-border/60 hover:border-primary/40 hover:text-primary hover:bg-white dark:hover:bg-slate-900 hover:shadow-lg'
-                      }
-                    `}
-                  >
-                    <span className="group-hover:scale-125 transition-transform duration-300 transform-gpu opacity-70 group-hover:opacity-100">{getTagIcon(tag.emoji)}</span>
-                    <span className="relative">
-                      {tag.label}
-                      {isSelected && (
-                        <motion.span 
-                          layoutId="active-tag-indicator"
-                          className="absolute -bottom-1 left-0 right-0 h-0.5 bg-white/40 rounded-full" 
-                        />
-                      )}
-                    </span>
-                    <div className="absolute inset-0 rounded-full bg-primary/0 group-hover:bg-primary/5 transition-colors pointer-events-none" />
-                  </motion.button>
-                );
-              })
+              <div className="overflow-x-auto scrollbar-none py-4 px-3">
+                <div className="flex gap-2 w-max">
+                  {filteredTags.map((tag, idx) => {
+                    const isSelected = selectedTag?.id === tag.id;
+                    return (
+                      <motion.button
+                        key={tag.id}
+                        layoutId={`tag-${tag.id}`}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: idx * 0.01 }}
+                        whileHover={{ 
+                          scale: 1.08, 
+                          y: -2,
+                          transition: { type: "spring", stiffness: 400, damping: 10 }
+                        }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => handleTagSelect(tag)}
+                        className={`
+                          px-3 py-2 rounded-full text-[9px] font-bold uppercase tracking-wider transition-all duration-300
+                          flex items-center gap-1.5 border shrink-0 relative group
+                          ${isSelected 
+                            ? 'bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/20 z-10' 
+                            : 'bg-card/60 backdrop-blur-md text-foreground/80 border-border/60 hover:border-primary/40 hover:text-primary hover:shadow-md'
+                          }
+                        `}
+                      >
+                        <span className="group-hover:scale-110 transition-transform duration-200 opacity-70 group-hover:opacity-100">{getTagIcon(tag.emoji)}</span>
+                        <span className="relative whitespace-nowrap">
+                          {tag.label}
+                        </span>
+                      </motion.button>
+                    );
+                  })}
+                </div>
+              </div>
             )}
-          </motion.div>
+          </div>
         </div>
       </div>
 
