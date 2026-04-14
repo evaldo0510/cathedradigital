@@ -613,6 +613,60 @@ const AdminDashboard: React.FC = () => {
             </Card>
           </div>
 
+          {/* CRM Segment Summary */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <Card className="border-border/40 shadow-none bg-card/50 backdrop-blur-sm">
+              <CardHeader className="pb-2 pt-3 px-3">
+                <CardTitle className="text-[10px] font-black uppercase tracking-widest text-primary">Engajamento por Segmento</CardTitle>
+              </CardHeader>
+              <CardContent className="px-3 pb-3 pt-1">
+                <div className="space-y-2.5">
+                  {[
+                    { label: 'Profundos (PRO)', count: users.filter(u => u.depth_level === 'Profundo').length, color: 'bg-primary' },
+                    { label: 'Engajados (High XP)', count: users.filter(u => u.depth_level === 'Engajado').length, color: 'bg-orange-500' },
+                    { label: 'Ativos (Frequentes)', count: users.filter(u => u.depth_level === 'Ativo').length, color: 'bg-primary/60' },
+                    { label: 'Novos / Inativos', count: users.filter(u => !u.depth_level || u.depth_level === 'Inativo' || u.depth_level === 'Novo').length, color: 'bg-muted' },
+                  ].map(s => (
+                    <div key={s.label} className="space-y-1">
+                      <div className="flex items-center justify-between text-[9px] font-bold uppercase tracking-wider">
+                        <span className="opacity-70">{s.label}</span>
+                        <span className="tabular-nums">{s.count}</span>
+                      </div>
+                      <div className="h-1 w-full bg-muted/30 rounded-full overflow-hidden">
+                        <div 
+                          className={`h-full ${s.color} transition-all duration-1000`} 
+                          style={{ width: `${users.length > 0 ? (s.count / users.length) * 100 : 0}%` }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-border/40 shadow-none bg-card/50 backdrop-blur-sm">
+              <CardHeader className="pb-1 pt-3 px-3 flex flex-row items-center justify-between">
+                <CardTitle className="text-[10px] font-black uppercase tracking-widest text-primary">Conversão PRO</CardTitle>
+                <div className="text-xl font-black text-primary tabular-nums">
+                  {users.length > 0 ? ((users.filter(u => u.is_premium).length / users.length) * 100).toFixed(1) : 0}%
+                </div>
+              </CardHeader>
+              <CardContent className="px-3 pb-3 pt-1">
+                <div className="mt-2 grid grid-cols-2 gap-4 w-full">
+                  <div className="text-center p-2 rounded-lg bg-primary/5 border border-primary/10">
+                    <div className="text-lg font-black">{users.filter(u => u.is_premium).length}</div>
+                    <div className="text-[8px] font-black uppercase tracking-widest opacity-50">Assinantes</div>
+                  </div>
+                  <div className="text-center p-2 rounded-lg bg-muted/20 border border-border/10">
+                    <div className="text-lg font-black opacity-60">{users.length - users.filter(u => u.is_premium).length}</div>
+                    <div className="text-[8px] font-black uppercase tracking-widest opacity-50">Gratuitos</div>
+                  </div>
+                </div>
+                <p className="text-[8px] text-muted-foreground text-center mt-3 uppercase tracking-tighter italic">Base total: {users.length} usuários</p>
+              </CardContent>
+            </Card>
+          </div>
+
           {/* Charts */}
           <Suspense fallback={<Skeleton className="h-[350px] rounded-xl" />}>
             <AdminChartsTab userGrowth={stats?.userGrowth || []} revenueData={stats?.revenueData || []} />
