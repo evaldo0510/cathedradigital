@@ -39,6 +39,10 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
   if (isLoading) {
     return (
       <div className="reader-text text-foreground/90 leading-[2] text-lg md:text-xl space-y-3 py-8">
+        <div className="flex items-center gap-2 mb-4 animate-pulse">
+          <div className="w-2 h-2 rounded-full bg-primary" />
+          <span className="text-xs font-bold uppercase tracking-widest text-primary">Processando parágrafo...</span>
+        </div>
         {Array.from({ length: 4 }).map((_, i) => (
           <div key={i} className="h-4 bg-muted rounded animate-pulse" style={{ width: `${60 + Math.random() * 40}%` }} />
         ))}
@@ -48,8 +52,16 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
 
   if (isError) {
     return (
-      <div className="reader-text text-destructive font-serif text-base py-8">
-        Erro ao carregar o parágrafo §{paragraph}. Verifique sua conexão.
+      <div className="reader-text bg-destructive/10 border border-destructive/20 rounded-2xl p-6 text-destructive font-serif text-base py-8 space-y-4">
+        <div className="font-bold flex items-center gap-2">
+           <Icons.Cross className="w-4 h-4" />
+           Ops! Tivemos um problema ao carregar o parágrafo §{paragraph}.
+        </div>
+        <p className="text-sm opacity-80">
+          O parágrafo está sendo processado ou houve um erro de conexão. 
+          Isso pode acontecer na primeira vez que ele é acessado. 
+          Tente atualizar a página em alguns instantes.
+        </p>
       </div>
     );
   }
