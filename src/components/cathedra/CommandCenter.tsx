@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../constants';
 import { AppRoute } from '../../types';
 import { supabase } from '@/integrations/supabase/client';
-import { SAINTS_DATA } from '@/data/saints';
+import { ALL_SAINTS, SAINTS_DATA } from '@/data/saints';
 
 interface CommandItem {
   label: string;
@@ -129,7 +129,7 @@ const CommandCenter: React.FC = () => {
     
     const results: UnifiedResult[] = [];
     
-    SAINTS_DATA.forEach(s => {
+    ALL_SAINTS.forEach(s => {
       const nameMatch = s.name.toLowerCase().includes(q);
       const titleMatch = s.title.toLowerCase().includes(q);
       const bioMatch = s.bio.toLowerCase().includes(q);

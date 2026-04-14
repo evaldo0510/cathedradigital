@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
 import { supabase } from '@/integrations/supabase/client';
-import { SAINTS_DATA } from '@/data/saints';
+import { ALL_SAINTS } from '@/data/saints';
 import SacredImage from './SacredImage';
 import AudioContentPlayer from './AudioContentPlayer';
 import { AppRoute } from '@/types';
@@ -94,7 +94,18 @@ const RitualDoDia: React.FC = () => {
       try {
         const response = await supabase.functions.invoke('saint-of-the-day');
         if (response.data && !response.error) {
-          setOfficialSaint(response.data);
+          // If image URL exists, verify it loads before setting
+          if (response.data.image) {
+            const img = new Image();
+            img.onload = () => setOfficialSaint(response.data);
+            img.onerror = () => {
+              // Image failed to load (hotlink protection), use data without image
+              setOfficialSaint({ ...response.data, image: null });
+            };
+            img.src = response.data.image;
+          } else {
+            setOfficialSaint(response.data);
+          }
         }
       } catch {
         // Fallback to local data
@@ -112,7 +123,7 @@ const RitualDoDia: React.FC = () => {
       officialSaint.name !== 'Santo do Dia' && officialSaint.name !== 'Menu' && officialSaint.name.length > 3;
 
     if (hasValidName) {
-      const localMatch = SAINTS_DATA.find(s =>
+      const localMatch = ALL_SAINTS.find(s =>
         s.feastMonth === month && s.feastDayNum === day &&
         (officialSaint.name.toLowerCase().includes(s.name.toLowerCase()) || s.name.toLowerCase().includes(officialSaint.name.toLowerCase()))
       );
@@ -126,7 +137,7 @@ const RitualDoDia: React.FC = () => {
 
     // Even if name is generic, if we have image from API, use it with local data
     if (officialSaint && officialSaint.image) {
-      const localSaint = SAINTS_DATA.find(s => s.feastMonth === month && s.feastDayNum === day);
+      const localSaint = ALL_SAINTS.find(s => s.feastMonth === month && s.feastDayNum === day);
       if (localSaint) {
         return { 
           name: localSaint.name, 
@@ -137,12 +148,12 @@ const RitualDoDia: React.FC = () => {
       }
     }
 
-    const localSaint = SAINTS_DATA.find(s => s.feastMonth === month && s.feastDayNum === day);
+    const localSaint = ALL_SAINTS.find(s => s.feastMonth === month && s.feastDayNum === day);
     if (localSaint) {
       return { name: localSaint.name, image: localSaint.image, bio: localSaint.bio, title: localSaint.title };
     }
 
-    const fallback = SAINTS_DATA[dayOfYear % SAINTS_DATA.length];
+    const fallback = ALL_SAINTS[dayOfYear % ALL_SAINTS.length];
     return { name: fallback.name, image: fallback.image, bio: fallback.bio, title: fallback.title };
   }, [officialSaint, dayOfYear]);
 
