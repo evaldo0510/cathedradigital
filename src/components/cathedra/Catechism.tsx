@@ -22,19 +22,36 @@ import AudioButton from './AudioButton';
 
 
 
-const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr: string, chapter: number) => void }> = ({ paragraph, onNavigateToBible }) => {
-  const { data, isLoading, isError } = useCatechismParagraph(paragraph);
+const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr: string, chapter: number) => void; isVisible?: boolean }> = ({ paragraph, onNavigateToBible, isVisible = true }) => {
+  const { data, isLoading, isError } = useCatechismParagraph(paragraph, isVisible);
+  const generateParagraph = useGenerateCatechismParagraph();
+  const [isGenerating, setIsGenerating] = React.useState(false);
   const prefetch = usePrefetchCatechismParagraph();
 
   useEffect(() => {
-    if (paragraph < 2865) prefetch(paragraph + 1);
-    if (paragraph > 1) prefetch(paragraph - 1);
-  }, [paragraph, prefetch]);
+    if (isVisible && paragraph < 2865) prefetch(paragraph + 1);
+  }, [paragraph, prefetch, isVisible]);
 
   const segments = useMemo(() => {
-    if (!data?.content) return [];
+    if (!data?.content || data.status === 'not_cached') return [];
     return parseTheologicalReferences(data.content);
-  }, [data?.content]);
+  }, [data?.content, data?.status]);
+
+  const handleGenerate = async () => {
+    setIsGenerating(true);
+    try {
+      await generateParagraph(paragraph);
+    } catch {}
+    setIsGenerating(false);
+  };
+
+  if (!isVisible) {
+    return (
+      <div className="reader-text text-foreground/30 leading-[2] text-lg py-4 h-24 flex items-center">
+        <span className="text-sm text-muted-foreground italic">Rolar para carregar §{paragraph}...</span>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (
@@ -57,14 +74,31 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
            <Icons.Cross className="w-4 h-4" />
            Ops! Problema ao carregar o parágrafo §{paragraph}.
         </div>
-        <p className="opacity-80">
-          O conteúdo está sendo recuperado da base de dados. Por favor, tente recarregar a página ou aguarde um momento. 
-        </p>
         <button 
           onClick={() => window.location.reload()}
           className="px-3 py-1.5 bg-destructive/10 text-destructive rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-destructive/20 transition-all"
         >
           Tentar novamente
+        </button>
+      </div>
+    );
+  }
+
+  // Not cached - show generate button
+  if (data?.status === 'not_cached') {
+    return (
+      <div className="reader-text py-4 space-y-3">
+        <p className="text-sm text-muted-foreground italic">Conteúdo do §{paragraph} ainda não disponível no cache.</p>
+        <button
+          onClick={handleGenerate}
+          disabled={isGenerating}
+          className="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-xl text-xs font-black uppercase tracking-widest transition-all disabled:opacity-50 flex items-center gap-2"
+        >
+          {isGenerating ? (
+            <><Icons.Loader className="w-3 h-3 animate-spin" /> Gerando via IA...</>
+          ) : (
+            <><Icons.Sparkles className="w-3 h-3" /> Carregar conteúdo</>
+          )}
         </button>
       </div>
     );
