@@ -18,47 +18,89 @@ async function fetchFromA12(day: string, month: string) {
     let image = null;
     let description = "";
 
-    // Name - try multiple patterns
-    const nameMatch = html.match(/<h1[^>]*>(.*?)<\/h1>/is) || 
-                     html.match(/<h2[^>]*class="feature__name"[^>]*>(.*?)<\/h2>/is) ||
-                     html.match(/class="feature__name"[^>]*>(.*?)<\//is);
+    // Name - PRIORITY: use feature__name class (the actual saint name)
+    const featureNameMatch = html.match(/class="feature__name"[^>]*>(.*?)<\/h1>/is) ||
+                            html.match(/class="feature__name"[^>]*>(.*?)<\/h2>/is) ||
+                            html.match(/class="feature__name"[^>]*>(.*?)<\//is);
     
-    if (nameMatch) name = nameMatch[1].replace(/<[^>]*>/g, '').trim();
+    if (featureNameMatch) {
+      name = featureNameMatch[1].replace(/<[^>]*>/g, '').trim();
+    }
 
-    // Image
-    const portraitMatch = html.match(/class="feature__portrait"[^>]*src="([^"]+)"/i) || 
-                         html.match(/src="([^"]+)"[^>]*class="feature__portrait"/i) ||
-                         html.match(/<img[^>]*src="([^"]+)"[^>]*class="feature__portrait"/i);
-    if (portraitMatch) {
-      image = portraitMatch[1];
-    } else {
-      const allImgs = html.match(/src="([^"]+\.jpg)"/gi) || [];
-      for (const m of allImgs) {
-        const src = m.split('"')[1];
-        if (src.includes('/originals/') && !src.includes('Topo')) {
-          image = src;
-          break;
+    // Fallback: try marquee text which has format "Santo do Dia - Name"
+    if (!name || name === "Santo do Dia") {
+      const marqueeMatch = html.match(/data-title-article[^>]*>(.*?)<\/marquee>/is);
+      if (marqueeMatch) {
+        const marqueeText = marqueeMatch[1].replace(/<[^>]*>/g, '').trim();
+        // Format is "Santo do Dia - Santa Liduína (Lidvina)"
+        if (marqueeText.includes(' - ')) {
+          name = marqueeText.split(' - ').slice(1).join(' - ').trim();
+        } else {
+          name = marqueeText;
         }
       }
     }
 
-    // Description
-    const wgTextMatch = html.match(/<div class="wg-text">(.*?)<\/div>/is);
-    if (wgTextMatch) {
-      const pMatches = wgTextMatch[1].match(/<p>(.*?)<\/p>/is);
-      if (pMatches) description = pMatches[1].replace(/<[^>]*>/g, '').trim();
+    // Fallback: report error title which has "Santo do Dia - Name"
+    if (!name || name === "Santo do Dia") {
+      const reportMatch = html.match(/wg-report-body__title[^>]*>(.*?)<\/h3>/is);
+      if (reportMatch) {
+        const reportText = reportMatch[1].replace(/<[^>]*>/g, '').trim();
+        if (reportText.includes(' - ')) {
+          name = reportText.split(' - ').slice(1).join(' - ').trim();
+        }
+      }
     }
 
-    if (name && image) {
+    // Image - look for originals images (saint photos)
+    const allImgs = html.match(/src="([^"]+\.jpg)"/gi) || [];
+    for (const m of allImgs) {
+      const src = m.split('"')[1];
+      if (src.includes('/originals/') && !src.includes('Topo') && !src.includes('Meta_image')) {
+        image = src;
+        break;
+      }
+    }
+
+    // Description - get first paragraph from wg-text
+    const wgTextMatch = html.match(/<div class="wg-text">(.*?)<\/div>/is);
+    if (wgTextMatch) {
+      const pMatches = wgTextMatch[1].match(/<p[^>]*>(.*?)<\/p>/gis);
+      if (pMatches) {
+        for (const p of pMatches) {
+          const cleanP = p.replace(/<[^>]*>/g, '').trim();
+          if (cleanP.length > 50 && !cleanP.startsWith('Reflexão:') && !cleanP.startsWith('Oração:')) {
+            description = cleanP.substring(0, 300);
+            break;
+          }
+        }
+      }
+    }
+
+    // Get full bio (all paragraphs before "Reflexão:")
+    let fullBio = "";
+    if (wgTextMatch) {
+      const allP = wgTextMatch[1].match(/<p[^>]*>(.*?)<\/p>/gis) || [];
+      const bioP = [];
+      for (const p of allP) {
+        const cleanP = p.replace(/<[^>]*>/g, '').trim();
+        if (cleanP.startsWith('Reflexão:') || cleanP.startsWith('Oração:')) break;
+        if (cleanP.length > 20) bioP.push(cleanP);
+      }
+      fullBio = bioP.join('\n\n');
+    }
+
+    if (name && name !== "Santo do Dia") {
       return {
         name,
-        image: image.startsWith('http') ? image : `https://www.a12.com${image}`,
-        description: description,
+        image: image ? (image.startsWith('http') ? image : `https://www.a12.com${image}`) : null,
+        description,
+        fullBio,
         url,
         source: "Portal A12"
       };
     }
-  } catch (e) { console.error(e); }
+  } catch (e) { console.error('A12 error:', e); }
   return null;
 }
 
@@ -89,7 +131,7 @@ async function fetchFromVatican(day: string, month: string) {
         return { name, image, description, url, source: "Vatican News" };
       }
     }
-  } catch (e) { console.error(e); }
+  } catch (e) { console.error('Vatican error:', e); }
   return null;
 }
 
@@ -98,7 +140,6 @@ serve(async (req) => {
 
   try {
     const now = new Date();
-    // Use Brazil/Portugal offset
     const offsetTime = new Date(now.getTime() + (2 * 60 * 60 * 1000));
     const day = String(offsetTime.getUTCDate()).padStart(2, '0');
     const month = String(offsetTime.getUTCMonth() + 1).padStart(2, '0');
