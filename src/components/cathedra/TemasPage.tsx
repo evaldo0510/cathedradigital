@@ -650,9 +650,9 @@ const ContentSection = React.forwardRef<HTMLDivElement, ContentSectionProps>(({ 
                     </Button>
                     <Button 
                       onClick={() => {
-                        const fromParam = `&from=temas&tema=${selectedTag.slug}`;
+                        const fromParam = temaSlug ? `&from=temas&tema=${temaSlug}` : '';
                         if (item.content_type === 'journey') {
-                          navigate(`/jornadas/${item.id}?from=temas&tema=${selectedTag.slug}`);
+                          navigate(`/jornadas/${item.id}${temaSlug ? `?from=temas&tema=${temaSlug}` : ''}`);
                         } else if (item.content_type === 'bible') {
                           const ref = item.reference || item.title;
                           navigate(`/bible?ref=${encodeURIComponent(ref)}${fromParam}`);
