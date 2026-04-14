@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AppRoute } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, ExternalLink, Sparkles, Search, X, Heart } from 'lucide-react';
+import { Loader2, ExternalLink, Sparkles, Search, X, Heart, Church, Flame } from 'lucide-react';
+import { Icons } from '@/constants';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { type ProfileId, PROFILES } from './SpiritualQuiz';
@@ -255,10 +256,10 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
   }, []);
 
   const categories = {
-    fundamentos: { label: 'Fundamentos da Fé', emoji: '⛪' },
-    dores: { label: 'Dores e Busca', emoji: '💔' },
-    divino: { label: 'Mistério Divino', emoji: '👑' },
-    vida: { label: 'Vida Prática', emoji: '🌱' },
+    fundamentos: { label: 'Fundamentos da Fé', icon: <Icons.Church className="w-3.5 h-3.5" /> },
+    dores: { label: 'Dores e Busca', icon: <Icons.Heart className="w-3.5 h-3.5 text-destructive" /> },
+    divino: { label: 'Mistério Divino', icon: <Icons.Sparkles className="w-3.5 h-3.5 text-secondary" /> },
+    vida: { label: 'Vida Prática', icon: <Icons.Flame className="w-3.5 h-3.5 text-orange-500" /> },
   };
 
   const profileSuggestedTags = useMemo(() => {
@@ -374,7 +375,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
                         className="flex items-center gap-1.5 group w-full"
                       >
                         <div className={`w-6 h-6 rounded-lg flex items-center justify-center transition-all ${expandedCategory === key ? 'bg-primary/10' : 'bg-muted/50'}`}>
-                          <span className="text-xs">{category.emoji}</span>
+                          {category.icon}
                         </div>
                         <span className="text-[10px] font-black uppercase tracking-wider text-muted-foreground/80 group-hover:text-primary transition-colors">
                           {category.label}
