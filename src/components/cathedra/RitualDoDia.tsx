@@ -108,17 +108,33 @@ const RitualDoDia: React.FC = () => {
     const month = now.getMonth() + 1;
     const day = now.getDate();
 
-    if (officialSaint && officialSaint.name && officialSaint.name !== 'Santo do Dia' && officialSaint.name !== 'Menu') {
+    const hasValidName = officialSaint && officialSaint.name && 
+      officialSaint.name !== 'Santo do Dia' && officialSaint.name !== 'Menu' && officialSaint.name.length > 3;
+
+    if (hasValidName) {
       const localMatch = SAINTS_DATA.find(s =>
         s.feastMonth === month && s.feastDayNum === day &&
         (officialSaint.name.toLowerCase().includes(s.name.toLowerCase()) || s.name.toLowerCase().includes(officialSaint.name.toLowerCase()))
       );
       return {
         name: officialSaint.name,
-        image: localMatch?.image || officialSaint.image,
-        bio: officialSaint.description || localMatch?.bio || '',
+        image: officialSaint.image || localMatch?.image,
+        bio: officialSaint.fullBio || officialSaint.description || localMatch?.bio || '',
         title: localMatch?.title || 'Santo do Dia',
       };
+    }
+
+    // Even if name is generic, if we have image from API, use it with local data
+    if (officialSaint && officialSaint.image) {
+      const localSaint = SAINTS_DATA.find(s => s.feastMonth === month && s.feastDayNum === day);
+      if (localSaint) {
+        return { 
+          name: localSaint.name, 
+          image: officialSaint.image || localSaint.image, 
+          bio: officialSaint.description || localSaint.bio, 
+          title: localSaint.title 
+        };
+      }
     }
 
     const localSaint = SAINTS_DATA.find(s => s.feastMonth === month && s.feastDayNum === day);
