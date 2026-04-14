@@ -645,9 +645,13 @@ const ContentSection = React.forwardRef<HTMLDivElement, ContentSectionProps>(({ 
                         if (item.content_type === 'journey') {
                           navigate(`/jornadas/${item.id}`);
                         } else if (item.content_type === 'bible') {
-                          navigate(`/bible?ref=${item.reference}`);
+                          const ref = item.reference || item.title;
+                          navigate(`/bible?ref=${encodeURIComponent(ref)}`);
                         } else if (item.content_type === 'catechism') {
-                          navigate(`/catechism?p=${item.reference.replace('Catecismo ', '')}`);
+                          const paragraph = (item.reference || item.title || '').replace(/\D/g, '');
+                          navigate(`/catechism?p=${paragraph}`);
+                        } else if (item.content_type === 'magisterium') {
+                          navigate(`/magisterium?doc=${encodeURIComponent(item.reference || item.title)}`);
                         }
                       }}
                       size="lg" 
