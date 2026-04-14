@@ -12,7 +12,7 @@ const BackToThemeBanner: React.FC = () => {
   if (from !== 'temas' || !tema) return null;
 
   return (
-    <div className="flex items-center gap-2 mb-3 sm:mb-4 animate-in fade-in slide-in-from-top-2 duration-300">
+    <div className="sticky top-0 z-40 -mx-4 px-4 py-2 bg-background/95 backdrop-blur-sm border-b border-border/50 mb-3 sm:mb-4 animate-in fade-in slide-in-from-top-2 duration-300">
       <Button
         variant="ghost"
         size="sm"
