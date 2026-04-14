@@ -45,7 +45,6 @@ const Saints: React.FC = () => {
     const month = selectedDate.getMonth() + 1;
     const localSaints = SAINTS_DATA.filter(s => s.feastMonth === month && s.feastDayNum === day);
     
-    // Merge official saint if it's today
     if (officialSaint && isSameDay(selectedDate, new Date()) && officialSaint.name !== "Menu" && officialSaint.name !== "Santo do Dia") {
       const match = localSaints.find(s => 
         officialSaint.name.toLowerCase().includes(s.name.toLowerCase()) ||
@@ -107,7 +106,6 @@ const Saints: React.FC = () => {
     return SAINTS_DATA.filter(s => (s.works && s.works.length > 0) || s.category === 'doctor').sort((a, b) => a.name.localeCompare(b.name));
   }, []);
 
-  // Date strip logic
   const dateStrip = useMemo(() => {
     return Array.from({ length: 7 }).map((_, i) => addDays(subDays(selectedDate, 3), i));
   }, [selectedDate]);
@@ -123,7 +121,6 @@ const Saints: React.FC = () => {
       />
 
       <div className="space-y-10 pb-20">
-        {/* Header */}
         <header className="text-center space-y-4">
           <motion.div
             initial={{ opacity: 0, y: -10 }}
@@ -139,7 +136,6 @@ const Saints: React.FC = () => {
           </p>
         </header>
 
-        {/* View Toggle */}
         <div className="flex justify-center overflow-x-auto pb-4 no-scrollbar">
           <div className="bg-secondary/50 p-1 rounded-2xl flex gap-1 min-w-max">
             <button
@@ -186,7 +182,6 @@ const Saints: React.FC = () => {
               exit={{ opacity: 0, y: -20 }}
               className="space-y-8"
             >
-              {/* Date Navigator */}
               <div className="flex flex-col items-center gap-6">
                 <div className="flex items-center gap-4 md:gap-8">
                   <button 
@@ -213,7 +208,6 @@ const Saints: React.FC = () => {
                   </button>
                 </div>
 
-                {/* Date Strip */}
                 <div className="flex gap-2 overflow-x-auto pb-2 px-4 max-w-full no-scrollbar">
                   {dateStrip.map((date, i) => (
                     <button
@@ -243,7 +237,6 @@ const Saints: React.FC = () => {
                 )}
               </div>
 
-              {/* Saint Content */}
               <div className="max-w-4xl mx-auto space-y-6">
                 {saintsForSelectedDate.length > 0 ? (
                   saintsForSelectedDate.map(saint => (
@@ -254,7 +247,6 @@ const Saints: React.FC = () => {
                       className="group relative bg-card border border-border rounded-[2.5rem] overflow-hidden hover:border-primary/30 transition-all shadow-xl"
                     >
                       <div className="flex flex-col md:flex-row h-full">
-                        {/* Image Section */}
                         <div className="w-full md:w-1/3 h-64 md:h-auto relative">
                           <SacredImage 
                             src={saint.image} 
@@ -270,7 +262,6 @@ const Saints: React.FC = () => {
                           </div>
                         </div>
 
-                        {/* Summary Content */}
                         <div className="flex-1 p-8 space-y-6">
                           <div>
                             <p className="text-lg text-primary font-serif italic mb-4">"{saint.title}"</p>
@@ -328,6 +319,44 @@ const Saints: React.FC = () => {
                 )}
               </div>
             </motion.div>
+          ) : viewMode === 'all' ? (
+            <motion.div
+              key="all"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="space-y-8"
+            >
+              <div className="max-w-5xl mx-auto px-4">
+                <StaggeredList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {allSaintsSorted.map(saint => (
+                    <SaintCard key={saint.id} saint={saint} onClick={() => handleOpenSaint(saint, false)} />
+                  ))}
+                </StaggeredList>
+              </div>
+            </motion.div>
+          ) : viewMode === 'writers' ? (
+            <motion.div
+              key="writers"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="space-y-8"
+            >
+              <div className="text-center space-y-4 max-w-2xl mx-auto px-4">
+                <h2 className="text-2xl font-serif font-bold">Doutores e Escritores</h2>
+                <p className="text-sm text-muted-foreground italic">
+                  "A pena é a língua da alma; se as palavras são as de um santo, elas se tornam degraus para o Céu."
+                </p>
+              </div>
+              <div className="max-w-5xl mx-auto px-4">
+                <StaggeredList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {writersSaints.map(saint => (
+                    <SaintCard key={saint.id} saint={saint} onClick={() => handleOpenSaint(saint, false)} />
+                  ))}
+                </StaggeredList>
+              </div>
+            </motion.div>
           ) : (
             <motion.div
               key="search"
@@ -336,9 +365,8 @@ const Saints: React.FC = () => {
               exit={{ opacity: 0, y: -20 }}
               className="space-y-8"
             >
-              {/* Search Bar */}
-              <div className="max-w-2xl mx-auto relative">
-                <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+              <div className="max-w-2xl mx-auto relative px-4">
+                <Search className="absolute left-10 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <input
                   type="text"
                   value={search}
@@ -349,63 +377,77 @@ const Saints: React.FC = () => {
                 {search && (
                   <button 
                     onClick={() => setSearch('')} 
-                    className="absolute right-6 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                    className="absolute right-10 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                   >
                     <X className="w-5 h-5" />
                   </button>
                 )}
               </div>
 
-              {/* Search Results */}
-              <div className="max-w-5xl mx-auto">
+              <div className="max-w-5xl mx-auto px-4">
                 {search.trim() ? (
-                  <StaggeredList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {filteredSaints.map(saint => (
-                      <button
-                        key={saint.id}
-                        onClick={() => handleOpenSaint(saint, false)}
-                        className="group p-8 bg-card border border-border rounded-[2rem] hover:border-primary/50 hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 text-left flex flex-col h-full"
-                      >
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-4">
-                            <span className="text-[10px] font-black uppercase tracking-widest text-primary">{saint.feastDay}</span>
-                            <span className="text-[9px] px-2 py-0.5 bg-secondary text-secondary-foreground rounded-md font-bold uppercase">{CATEGORY_LABELS[saint.category]}</span>
-                          </div>
-                          <h3 className="text-2xl font-serif font-bold text-foreground group-hover:text-primary transition-colors mb-2">{saint.name}</h3>
-                          <p className="text-sm text-muted-foreground font-serif italic mb-4 line-clamp-1">{saint.title}</p>
-                          <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed mb-4">{saint.bio}</p>
-                        </div>
-                        <div className="flex flex-wrap gap-2 mt-4">
-                          {saint.virtues?.slice(0, 3).map(v => (
-                            <span key={v} className="px-2 py-1 bg-secondary text-[9px] font-black uppercase tracking-widest text-muted-foreground rounded-lg">{v}</span>
-                          ))}
-                        </div>
-                      </button>
-                    ))}
-                  </StaggeredList>
+                  filteredSaints.length > 0 ? (
+                    <StaggeredList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {filteredSaints.map(saint => (
+                        <SaintCard key={saint.id} saint={saint} onClick={() => handleOpenSaint(saint, false)} />
+                      ))}
+                    </StaggeredList>
+                  ) : (
+                    <div className="text-center py-20 text-muted-foreground font-serif italic">
+                      Nenhum santo encontrado para sua busca.
+                    </div>
+                  )
                 ) : (
-                  <div className="text-center py-20 bg-muted/20 rounded-[2.5rem] border border-dashed border-border space-y-4">
-                    <Icons.Search className="w-12 h-12 text-muted-foreground/30 mx-auto" />
-                    <p className="text-lg font-serif italic text-muted-foreground">Busque por um santo, virtuoso ou doutor.</p>
+                  <div className="text-center py-20 text-muted-foreground font-serif italic">
+                    Digite o nome de um santo para buscar em nossa base.
                   </div>
                 )}
               </div>
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
 
-      <AnimatePresence>
-        {selectedSaint && (
-          <SaintDetail 
-            saint={selectedSaint} 
-            onClose={() => setSelectedSaint(null)} 
-            autoReflect={autoReflect}
-          />
-        )}
-      </AnimatePresence>
+        <AnimatePresence>
+          {selectedSaint && (
+            <SaintDetail 
+              saint={selectedSaint} 
+              onClose={() => setSelectedSaint(null)} 
+              autoReflect={autoReflect}
+            />
+          )}
+        </AnimatePresence>
+      </div>
     </>
   );
 };
+
+const SaintCard: React.FC<{ saint: Saint; onClick: () => void }> = ({ saint, onClick }) => (
+  <button
+    onClick={onClick}
+    className="group p-8 bg-card border border-border rounded-[2rem] hover:border-primary/50 hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 text-left flex flex-col h-full"
+  >
+    <div className="flex-1">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] font-black uppercase tracking-widest text-primary">{saint.feastDay}</span>
+          <span className="text-[9px] px-2 py-0.5 bg-secondary text-secondary-foreground rounded-md font-bold uppercase">{CATEGORY_LABELS[saint.category] || saint.category}</span>
+        </div>
+        {saint.works && saint.works.length > 0 && (
+          <div className="p-1.5 bg-primary/5 rounded-lg text-primary" title="Possui obras escritas">
+            <BookOpen className="w-3.5 h-3.5" />
+          </div>
+        )}
+      </div>
+      <h3 className="text-2xl font-serif font-bold text-foreground group-hover:text-primary transition-colors mb-2">{saint.name}</h3>
+      <p className="text-sm text-muted-foreground font-serif italic mb-4 line-clamp-1">{saint.title}</p>
+      <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed mb-4">{saint.bio}</p>
+    </div>
+    <div className="flex flex-wrap gap-2 mt-4">
+      {saint.virtues?.slice(0, 2).map(v => (
+        <span key={v} className="px-2 py-1 bg-primary/5 text-primary text-[9px] font-black uppercase rounded-lg border border-primary/10">{v}</span>
+      ))}
+    </div>
+  </button>
+);
 
 export default Saints;
