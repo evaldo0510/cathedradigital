@@ -55,6 +55,18 @@ const AdminJourneysTab: React.FC = () => {
   const [isEditStepDialogOpen, setIsEditStepDialogOpen] = useState(false);
   const [stepContentString, setStepContentString] = useState('');
 
+  const [isAddJourneyDialogOpen, setIsAddJourneyDialogOpen] = useState(false);
+  const [newJourney, setNewJourney] = useState({
+    title: '',
+    subtitle: '',
+    description: '',
+    category: 'Formação',
+    difficulty: 'Iniciante',
+    is_active: true,
+    is_premium: false,
+    estimated_days: 7
+  });
+
   useEffect(() => {
     fetchJourneys();
   }, []);
@@ -189,6 +201,61 @@ const AdminJourneysTab: React.FC = () => {
     }
   };
 
+  const handleCreateJourney = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('journeys')
+        .insert([newJourney])
+        .select()
+        .single();
+
+      if (error) throw error;
+      
+      setJourneys([data, ...journeys]);
+      toast.success('Jornada criada com sucesso.');
+      setIsAddJourneyDialogOpen(false);
+      setNewJourney({
+        title: '',
+        subtitle: '',
+        description: '',
+        category: 'Formação',
+        difficulty: 'Iniciante',
+        is_active: true,
+        is_premium: false,
+        estimated_days: 7
+      });
+    } catch (error: any) {
+      toast.error('Erro ao criar jornada: ' + error.message);
+    }
+  };
+
+  const handleCreateStep = async (journeyId: string) => {
+    try {
+      const nextOrder = steps.length > 0 ? Math.max(...steps.map(s => s.step_order)) + 1 : 1;
+      const newStep = {
+        journey_id: journeyId,
+        title: 'Novo Passo',
+        step_order: nextOrder,
+        step_type: 'reflexão',
+        content: { intro: '', reflection: '', practice: '', prayer: '' }
+      };
+
+      const { data, error } = await supabase
+        .from('journey_steps')
+        .insert([newStep])
+        .select()
+        .single();
+
+      if (error) throw error;
+      
+      setSteps([...steps, data]);
+      handleEditStep(data);
+      toast.success('Passo adicionado.');
+    } catch (error: any) {
+      toast.error('Erro ao adicionar passo: ' + error.message);
+    }
+  };
+
   const filteredJourneys = journeys.filter(j => 
     j.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
     j.category?.toLowerCase().includes(searchQuery.toLowerCase())
@@ -217,7 +284,7 @@ const AdminJourneysTab: React.FC = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button className="gap-2">
+          <Button className="gap-2" onClick={() => setIsAddJourneyDialogOpen(true)}>
             <Plus className="w-4 h-4" /> Nova Jornada
           </Button>
         </div>
@@ -258,7 +325,7 @@ const AdminJourneysTab: React.FC = () => {
               <div className="bg-muted/30 border-t p-4 space-y-3">
                 <div className="flex items-center justify-between mb-2">
                   <h4 className="text-sm font-semibold flex items-center gap-2"><Layers className="w-4 h-4" /> Passos da Jornada</h4>
-                  <Button variant="outline" size="sm" className="h-8 text-xs gap-1">
+                  <Button variant="outline" size="sm" className="h-8 text-xs gap-1" onClick={() => handleCreateStep(journey.id)}>
                     <Plus className="w-3.5 h-3.5" /> Adicionar Passo
                   </Button>
                 </div>
@@ -405,6 +472,59 @@ const AdminJourneysTab: React.FC = () => {
             <Button onClick={handleSaveStep} className="gap-2">
               <Save className="w-4 h-4" /> Salvar Passo
             </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isAddJourneyDialogOpen} onOpenChange={setIsAddJourneyDialogOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Nova Jornada</DialogTitle>
+            <DialogDescription>Crie uma nova trilha espiritual para os usuários.</DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Título</Label>
+                <Input placeholder="Ex: Caminho de Santidade" value={newJourney.title} onChange={e => setNewJourney({...newJourney, title: e.target.value})} />
+              </div>
+              <div className="space-y-2">
+                <Label>Subtítulo</Label>
+                <Input placeholder="Ex: 7 dias de reflexão" value={newJourney.subtitle} onChange={e => setNewJourney({...newJourney, subtitle: e.target.value})} />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label>Descrição</Label>
+              <Textarea placeholder="Descreva o propósito desta jornada..." value={newJourney.description} onChange={e => setNewJourney({...newJourney, description: e.target.value})} />
+            </div>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <Label>Categoria</Label>
+                <Input value={newJourney.category} onChange={e => setNewJourney({...newJourney, category: e.target.value})} />
+              </div>
+              <div className="space-y-2">
+                <Label>Dificuldade</Label>
+                <Input value={newJourney.difficulty} onChange={e => setNewJourney({...newJourney, difficulty: e.target.value})} />
+              </div>
+              <div className="space-y-2">
+                <Label>Dias Estimados</Label>
+                <Input type="number" value={newJourney.estimated_days} onChange={e => setNewJourney({...newJourney, estimated_days: parseInt(e.target.value)})} />
+              </div>
+            </div>
+            <div className="flex gap-4">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" checked={newJourney.is_active} onChange={e => setNewJourney({...newJourney, is_active: e.target.checked})} className="rounded border-gray-300" />
+                <span className="text-sm font-medium">Ativa</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" checked={newJourney.is_premium} onChange={e => setNewJourney({...newJourney, is_premium: e.target.checked})} className="rounded border-gray-300" />
+                <span className="text-sm font-medium">Premium (PRO)</span>
+              </label>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsAddJourneyDialogOpen(false)}>Cancelar</Button>
+            <Button onClick={handleCreateJourney} disabled={!newJourney.title}>Criar Jornada</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
