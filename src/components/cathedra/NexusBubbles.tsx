@@ -3,8 +3,47 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AppRoute } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, ExternalLink, Sparkles, Search, X, Heart, Church, Flame } from 'lucide-react';
+import { Loader2, ExternalLink, Sparkles, Search, X, Heart, Church, Flame, Cross, BookOpen, Shield, Crown, Hand, Star, Globe, Eye, Users, Compass, Wine, Orbit, Hash } from 'lucide-react';
 import { Icons } from '@/constants';
+
+// Maps tag emojis to Lucide icons
+const tagIconMap: Record<string, React.ReactNode> = {
+  '❤️': <Heart className="w-3.5 h-3.5" />,
+  '💖': <Heart className="w-3.5 h-3.5" />,
+  '💔': <Heart className="w-3.5 h-3.5" />,
+  '✝️': <Cross className="w-3.5 h-3.5" />,
+  '⛪': <Church className="w-3.5 h-3.5" />,
+  '🙏': <Hand className="w-3.5 h-3.5" />,
+  '🕊️': <Sparkles className="w-3.5 h-3.5" />,
+  '🔥': <Flame className="w-3.5 h-3.5" />,
+  '📖': <BookOpen className="w-3.5 h-3.5" />,
+  '📕': <BookOpen className="w-3.5 h-3.5" />,
+  '👑': <Crown className="w-3.5 h-3.5" />,
+  '🛡️': <Shield className="w-3.5 h-3.5" />,
+  '⭐': <Star className="w-3.5 h-3.5" />,
+  '🌍': <Globe className="w-3.5 h-3.5" />,
+  '🌎': <Globe className="w-3.5 h-3.5" />,
+  '👁️': <Eye className="w-3.5 h-3.5" />,
+  '👥': <Users className="w-3.5 h-3.5" />,
+  '🧭': <Compass className="w-3.5 h-3.5" />,
+  '🍷': <Wine className="w-3.5 h-3.5" />,
+  '💫': <Sparkles className="w-3.5 h-3.5" />,
+  '✨': <Sparkles className="w-3.5 h-3.5" />,
+  '🌹': <Heart className="w-3.5 h-3.5" />,
+  '🌱': <Flame className="w-3.5 h-3.5" />,
+  '💡': <Star className="w-3.5 h-3.5" />,
+  '🕯️': <Flame className="w-3.5 h-3.5" />,
+  '⚔️': <Shield className="w-3.5 h-3.5" />,
+  '🏛️': <Church className="w-3.5 h-3.5" />,
+  '🤝': <Users className="w-3.5 h-3.5" />,
+  '😢': <Heart className="w-3.5 h-3.5" />,
+  '💀': <Cross className="w-3.5 h-3.5" />,
+  '🎭': <Eye className="w-3.5 h-3.5" />,
+  '☀️': <Star className="w-3.5 h-3.5" />,
+  '🌙': <Orbit className="w-3.5 h-3.5" />,
+};
+
+const getTagIcon = (emoji: string) => tagIconMap[emoji] || <Hash className="w-3.5 h-3.5" />;
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { type ProfileId, PROFILES } from './SpiritualQuiz';
@@ -108,7 +147,7 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean }> = 
               <Sparkles className="w-2.5 h-2.5 text-secondary animate-pulse" />
             </div>
           )}
-          <span className="text-sm group-hover/tag:scale-110 transition-transform">{tag.emoji}</span>
+          <span className="text-sm group-hover/tag:scale-110 transition-transform text-primary/70">{getTagIcon(tag.emoji)}</span>
           <span className={`
             text-[11px] font-bold transition-colors tracking-tight
             ${open ? 'text-primary' : isSuggested ? 'text-secondary' : 'text-foreground/80 group-hover/tag:text-primary'}
@@ -120,8 +159,8 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean }> = 
       <PopoverContent className="w-[320px] p-0 rounded-[2rem] border-primary/20 overflow-hidden shadow-2xl z-[100] backdrop-blur-xl">
         <div className="bg-gradient-to-r from-primary/10 to-transparent p-4 border-b border-border/50 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-full bg-white/50 flex items-center justify-center shadow-inner">
-              <span className="text-lg">{tag.emoji}</span>
+            <div className="w-8 h-8 rounded-full bg-white/50 flex items-center justify-center shadow-inner text-primary">
+              {getTagIcon(tag.emoji)}
             </div>
             <span className="text-xs font-black uppercase tracking-widest text-primary">{tag.label}</span>
           </div>
