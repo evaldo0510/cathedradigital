@@ -70,7 +70,7 @@ async function generateWithAI(paragraph: number, supabaseUrl: string, serviceKey
 
 // Rate limiter: 30 requests per minute per IP
 const rateLimitMap = new Map<string, number[]>();
-const RATE_LIMIT = 100;
+const RATE_LIMIT = 500;
 const RATE_WINDOW_MS = 60_000;
 
 function isRateLimited(key: string): boolean {
