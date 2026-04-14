@@ -335,20 +335,24 @@ const Catechism: React.FC = () => {
           )}
         </div>
 
-        {/* Quick nav */}
-        <div className="flex flex-wrap gap-1 justify-center">
-          {Array.from({ length: Math.min(20, end - start + 1) }, (_, i) => start + i).map(p => (
-            <button key={p} onClick={() => setCurrentParagraph(p)}
-              className={`w-10 h-10 rounded-lg text-xs font-bold transition-all relative ${
-                currentParagraph === p ? 'bg-primary text-primary-foreground' : 
+        {/* Quick nav - Anchor links to jump between paragraphs */}
+        <div className="flex flex-wrap gap-2 justify-center py-6 border-t border-border mt-8">
+          <span className="w-full text-center text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2">Saltar para Parágrafo</span>
+          {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(p => (
+            <button key={p} 
+              onClick={() => {
+                setCurrentParagraph(p);
+                document.getElementById(`p${p}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              }}
+              className={`w-10 h-10 rounded-xl text-xs font-bold transition-all relative ${
+                currentParagraph === p ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-110 z-10' : 
                 paragraphsRead.has(p) ? 'bg-primary/10 border-primary/30 text-primary' :
-                'bg-card border border-border text-muted-foreground hover:text-foreground'
+                'bg-card border border-border text-muted-foreground hover:border-primary/50 hover:text-primary'
               }`}>
               {p}
               {paragraphsRead.has(p) && <Icons.Check className="w-2 h-2 absolute top-1 right-1" />}
             </button>
           ))}
-          {end - start + 1 > 20 && <span className="self-center text-muted-foreground text-sm">...</span>}
         </div>
       </div>
     );
