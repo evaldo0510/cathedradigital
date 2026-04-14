@@ -15,6 +15,8 @@ import { AppRoute } from '@/types';
 import ProConversionBanner from './ProConversionBanner';
 import { Icons } from '@/constants';
 import AudioContentPlayer from './AudioContentPlayer';
+import { ALL_SAINTS } from '@/data/saints';
+import SacredImage from './SacredImage';
 
 const SECTION_CONFIG = [
   { key: 'pch', label: 'A Palavra', icon: <Sparkles className="w-4 h-4" />, isPremium: false },
