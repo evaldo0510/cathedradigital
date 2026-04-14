@@ -174,7 +174,7 @@ const LazyParagraph: React.FC<{ paragraph: number; currentParagraph: number; par
   );
 };
 
-
+const CIC_SECTIONS = [
   {
     part: 'Parte I',
     title: 'A Profissão de Fé',
