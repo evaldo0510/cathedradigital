@@ -418,10 +418,7 @@ const Catechism: React.FC = () => {
           <span className="w-full text-center text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2">Saltar para Parágrafo</span>
           {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(p => (
             <button key={p} 
-              onClick={() => {
-                setCurrentParagraph(p);
-                document.getElementById(`p${p}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              }}
+              onClick={() => jumpToParagraph(p)}
               className={`w-10 h-10 rounded-xl text-xs font-bold transition-all relative ${
                 currentParagraph === p ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-110 z-10' : 
                 paragraphsRead.has(p) ? 'bg-primary/10 border-primary/30 text-primary' :
