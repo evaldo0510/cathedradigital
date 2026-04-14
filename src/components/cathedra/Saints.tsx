@@ -17,9 +17,9 @@ const Saints: React.FC = () => {
   const [selectedSaint, setSelectedSaint] = useState<Saint | null>(null);
   const [autoReflect, setAutoReflect] = useState(false);
   const [search, setSearch] = useState('');
-  const [viewMode, setViewMode] = useState<'daily' | 'search'>('daily');
+  const [viewMode, setViewMode] = useState<'daily' | 'search' | 'all' | 'writers'>('daily');
   const [officialSaint, setOfficialSaint] = useState<any>(null);
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     const fetchOfficialSaint = async () => {
@@ -99,6 +99,14 @@ const Saints: React.FC = () => {
     );
   }, [search]);
 
+  const allSaintsSorted = useMemo(() => {
+    return [...SAINTS_DATA].sort((a, b) => a.name.localeCompare(b.name));
+  }, []);
+
+  const writersSaints = useMemo(() => {
+    return SAINTS_DATA.filter(s => (s.works && s.works.length > 0) || s.category === 'doctor').sort((a, b) => a.name.localeCompare(b.name));
+  }, []);
+
   // Date strip logic
   const dateStrip = useMemo(() => {
     return Array.from({ length: 7 }).map((_, i) => addDays(subDays(selectedDate, 3), i));
@@ -132,23 +140,39 @@ const Saints: React.FC = () => {
         </header>
 
         {/* View Toggle */}
-        <div className="flex justify-center">
-          <div className="bg-secondary/50 p-1 rounded-2xl flex gap-1">
+        <div className="flex justify-center overflow-x-auto pb-4 no-scrollbar">
+          <div className="bg-secondary/50 p-1 rounded-2xl flex gap-1 min-w-max">
             <button
               onClick={() => setViewMode('daily')}
-              className={`px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
+              className={`px-4 md:px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
                 viewMode === 'daily' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
               }`}
             >
-              Santo do Dia
+              Hoje
+            </button>
+            <button
+              onClick={() => setViewMode('all')}
+              className={`px-4 md:px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                viewMode === 'all' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              Todos
+            </button>
+            <button
+              onClick={() => setViewMode('writers')}
+              className={`px-4 md:px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                viewMode === 'writers' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              Escritores
             </button>
             <button
               onClick={() => setViewMode('search')}
-              className={`px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
+              className={`px-4 md:px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
                 viewMode === 'search' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
               }`}
             >
-              Buscar Santo
+              Buscar
             </button>
           </div>
         </div>
