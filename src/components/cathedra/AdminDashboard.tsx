@@ -622,7 +622,7 @@ const AdminDashboard: React.FC = () => {
               <CardContent className="px-3 pb-3 pt-1">
                 <div className="space-y-2.5">
                   {[
-                    { label: 'Profundos (PRO)', count: users.filter(u => u.depth_level === 'Profundo').length, color: 'bg-primary' },
+                    { label: 'Profundos (Mestres)', count: users.filter(u => u.depth_level === 'Profundo').length, color: 'bg-primary' },
                     { label: 'Engajados (High XP)', count: users.filter(u => u.depth_level === 'Engajado').length, color: 'bg-orange-500' },
                     { label: 'Ativos (Frequentes)', count: users.filter(u => u.depth_level === 'Ativo').length, color: 'bg-primary/60' },
                     { label: 'Novos / Inativos', count: users.filter(u => !u.depth_level || u.depth_level === 'Inativo' || u.depth_level === 'Novo').length, color: 'bg-muted' },
