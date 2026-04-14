@@ -50,6 +50,19 @@ const JornadaStepPage: React.FC = () => {
   const [nextStep, setNextStep] = useState<any>(null);
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
 
+  const content = useMemo(() => (step?.content as Record<string, any>) || {}, [step]);
+  const stepProgress = useMemo(() => totalSteps > 0 ? (step?.step_order / totalSteps) * 100 : 0, [step, totalSteps]);
+
+  const saintImage = useMemo(() => {
+    if (!step?.subtitle) return null;
+    const sub = step.subtitle.toLowerCase();
+    const match = ALL_SAINTS.find(s => 
+      sub.includes(s.name.toLowerCase()) || 
+      s.name.toLowerCase().includes(sub)
+    );
+    return match?.image;
+  }, [step?.subtitle]);
+
 
   useEffect(() => {
     if (stepId && journeyId) loadData();
