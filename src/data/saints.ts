@@ -968,6 +968,12 @@ export const SAINTS_DATA: Saint[] = [
     image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Guido_Reni_031.jpg/440px-Guido_Reni_031.jpg',
     virtues: ['Fidelidade', 'Humildade', 'Fortaleza', 'Justiça'],
     prayer: 'São Miguel Arcanjo, defendei-nos no combate, sede nosso refúgio contra a maldade e as ciladas do demônio.',
+    textoBase: 'Quis ut Deus? — Quem como Deus?',
+    explicacao: 'A humildade e a fidelidade absoluta a Deus são as maiores armas espirituais contra a soberba e as ciladas do inimigo.',
+    interpretacaoProfunda: 'São Miguel é o guardião da verdade divina e o protetor da Igreja militante, recordando-nos que a vigilância e a oração são essenciais.',
+    aplicacaoPratica: 'Diante de qualquer pensamento de orgulho ou de inveja hoje, repita pausadamente: "Quem como Deus?" para reordenar sua alma.',
+    reflexaoFinal: 'Em quais áreas da minha vida eu tenho tentado agir sem Deus, como se eu fosse o senhor absoluto do meu destino?',
+    exercicio: 'Reze a oração de São Miguel Arcanjo pedindo proteção espiritual para o seu lar e para a sua paróquia hoje.',
   },
   {
     id: 'carlo-acutis',
@@ -992,6 +998,12 @@ export const SAINTS_DATA: Saint[] = [
     image: 'https://upload.wikimedia.org/wikipedia/pt/2/2e/Beato_Carlo_Acutis.jpg',
     virtues: ['Pureza', 'Alegria', 'Piedade eucarística'],
     prayer: 'Beato Carlo Acutis, ajudai-nos a usar as novas tecnologias para a glória de Deus e a sermos originais no amor.',
+    textoBase: 'Todos nascem originais, mas muitos morrem como fotocópias.',
+    explicacao: 'A santidade é uma meta possível para os jovens de hoje, exigindo apenas que coloquemos Jesus e a Eucaristia no centro da nossa vida.',
+    interpretacaoProfunda: 'Carlo ensina que a internet e as novas tecnologias não são obstáculos, mas podem ser instrumentos poderosos de evangelização e caridade.',
+    aplicacaoPratica: 'Use as suas redes sociais ou um aplicativo de mensagens hoje para enviar uma palavra de esperança ou uma citação bíblica a alguém.',
+    reflexaoFinal: 'Eu tenho buscado ser o "original" que Deus sonhou que eu fosse, ou estou apenas imitando os comportamentos vazios do mundo digital?',
+    exercicio: 'Reze pedindo a intercessão do Beato Carlo Acutis por todos os jovens que lutam contra o vício em jogos ou pornografia digital.',
   },
   {
     id: 'lucia-santos',
@@ -1016,6 +1028,12 @@ export const SAINTS_DATA: Saint[] = [
     image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Sister_Lucia_of_Fatima.jpg/440px-Sister_Lucia_of_Fatima.jpg',
     virtues: ['Obediência', 'Silêncio', 'Fidelidade', 'Oração'],
     prayer: 'Irmã Lúcia, fiel mensageira da Virgem Maria, intercedei por nós para que saibamos acolher os apelos de Fátima e viver a consagração ao Imaculado Coração.',
+    textoBase: 'O meu Imaculado Coração será o teu refúgio e o caminho para Deus.',
+    explicacao: 'A devoção ao Coração de Maria é um auxílio seguro que nos protege dos perigos do mundo e nos conduz à união plena com Jesus.',
+    interpretacaoProfunda: 'Lúcia foi a guardiã dos segredos de Fátima, ensinando que a oração do Terço e a penitência são necessárias para a paz do mundo e a salvação das almas.',
+    aplicacaoPratica: 'Reze pelo menos uma dezena do Rosário hoje na intenção do Santo Padre e pedindo pela conversão de todos os pecadores.',
+    reflexaoFinal: 'Como eu tenho respondido aos apelos de oração e conversão que Nossa Senhora fez em Fátima através da Irmã Lúcia?',
+    exercicio: 'Faça um pequeno ato de reparação ao Imaculado Coração de Maria hoje, oferecendo um sacrifício silencioso por amor a Jesus.',
   },
 ];
 
