@@ -159,15 +159,20 @@ const TemasPage = () => {
   useEffect(() => {
     if (selectedTag) {
       setLogosInsight(null);
-      setLoadingLogos(true);
-      supabase.functions.invoke('logos-spiritual-insight', {
-        body: { query: selectedTag.label }
-      }).then(({ data, error }) => {
-        if (!error && data?.insight) setLogosInsight(data.insight);
-        setLoadingLogos(false);
-      });
+      setLoadingLogos(false);
     }
   }, [selectedTag]);
+
+  const handleLoadInsight = () => {
+    if (!selectedTag || loadingLogos) return;
+    setLoadingLogos(true);
+    supabase.functions.invoke('logos-spiritual-insight', {
+      body: { query: selectedTag.label }
+    }).then(({ data, error }) => {
+      if (!error && data?.insight) setLogosInsight(data.insight);
+      setLoadingLogos(false);
+    });
+  };
 
   const { data: contents, isLoading: loadingContents } = useQuery({
     queryKey: ['tag-contents', selectedTag?.id],
