@@ -843,5 +843,29 @@ export const SAINTS_DATA: Saint[] = [
     virtues: ['Pureza', 'Alegria', 'Piedade eucarística'],
     prayer: 'Beato Carlo Acutis, ajudai-nos a usar as novas tecnologias para a glória de Deus e a sermos originais no amor.',
   },
+  {
+    id: 'lucia-santos',
+    name: 'Irmã Lúcia dos Santos',
+    title: 'Vidente de Fátima',
+    feastDay: '13 de Fevereiro',
+    feastMonth: 2,
+    feastDayNum: 13,
+    born: '1907, Aljustrel, Portugal',
+    died: '2005, Coimbra, Portugal',
+    patronOf: ['Mensageiros de Fátima', 'Portugal'],
+    bio: 'A mais velha dos três pastorzinhos de Fátima. Dedicou sua vida à oração e à propagação da mensagem da Virgem Maria.',
+    fullBio: 'Lúcia de Jesus dos Santos foi a principal vidente das aparições de Nossa Senhora em Fátima em 1917. Enquanto seus primos Francisco e Jacinta morreram cedo, Lúcia viveu até os 97 anos como religiosa carmelita. Ela foi a depositária dos Segredos de Fátima e dedicou sua longa vida a cumprir a missão que a Virgem lhe confiou: estabelecer no mundo a devoção ao Imaculado Coração de Maria.',
+    works: [
+      { title: 'Memórias da Irmã Lúcia', year: '1935–1941' },
+      { title: 'Apelos da Mensagem de Fátima', year: '2000' },
+    ],
+    quotes: [
+      '"O meu Imaculado Coração será o teu refúgio e o caminho que te conduzirá a Deus."',
+    ],
+    category: 'mystic',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Sister_Lucia_of_Fatima.jpg/440px-Sister_Lucia_of_Fatima.jpg',
+    virtues: ['Obediência', 'Silêncio', 'Fidelidade', 'Oração'],
+    prayer: 'Irmã Lúcia, fiel mensageira da Virgem Maria, intercedei por nós para que saibamos acolher os apelos de Fátima e viver a consagração ao Imaculado Coração.',
+  },
 ];
 
