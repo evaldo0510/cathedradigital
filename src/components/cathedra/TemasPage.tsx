@@ -215,30 +215,30 @@ const TemasPage = () => {
   const journeyItems = contents?.filter(c => c.content_type === 'journey') || [];
 
   return (
-    <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-6xl mx-auto pb-20 px-4">
-      <header className="space-y-4 text-center mb-12">
-        <div className="flex justify-center mb-4">
-          <div className="w-16 h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent rounded-full" />
+    <div className="space-y-6 sm:space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-6xl mx-auto pb-20 px-2 sm:px-4">
+      <header className="space-y-2 sm:space-y-4 text-center mb-6 sm:mb-12">
+        <div className="flex justify-center mb-2 sm:mb-4">
+          <div className="w-12 sm:w-16 h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent rounded-full" />
         </div>
-        <h1 className="text-5xl font-black tracking-tighter bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent sm:text-7xl">
+        <h1 className="text-3xl sm:text-5xl md:text-7xl font-black tracking-tighter bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent">
           Navegação por Temas
         </h1>
-        <p className="text-muted-foreground text-xl max-w-3xl mx-auto font-serif italic">
+        <p className="text-muted-foreground text-sm sm:text-xl max-w-3xl mx-auto font-serif italic">
           "Fides quaerens intellectum" — Explore conexões sagradas entre as Escrituras e a Tradição.
         </p>
       </header>
 
       {/* Bubble Navigation System */}
-      <div className="space-y-8">
-        <div className="flex flex-col sm:flex-row items-center gap-4 bg-card/60 backdrop-blur-xl p-2 sm:p-3 rounded-[2.5rem] border border-border/40 shadow-xl sticky top-4 z-20 transition-all duration-500 hover:shadow-2xl hover:border-primary/20 group/nav">
+      <div className="space-y-4 sm:space-y-8">
+        <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 bg-card/60 backdrop-blur-xl p-2 sm:p-3 rounded-2xl sm:rounded-[2.5rem] border border-border/40 shadow-xl sticky top-2 sm:top-4 z-20 transition-all duration-500 hover:shadow-2xl hover:border-primary/20 group/nav">
           <div className="relative flex-1 w-full">
-            <div className="absolute left-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center transition-colors group-focus-within/nav:bg-primary/10">
-              <Search className="w-4 h-4 text-primary/60" />
+            <div className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-7 sm:w-8 h-7 sm:h-8 rounded-full bg-primary/5 flex items-center justify-center transition-colors group-focus-within/nav:bg-primary/10">
+              <Search className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-primary/60" />
             </div>
             <input 
               type="text" 
-              placeholder="Buscar tema teológico (ex: Amor, Graça, Pecado...)"
-              className="w-full bg-transparent border-none h-14 pl-14 pr-12 rounded-2xl text-sm font-medium focus:ring-0 placeholder:text-muted-foreground/50 transition-all"
+              placeholder="Buscar tema (ex: Amor, Graça...)"
+              className="w-full bg-transparent border-none h-10 sm:h-14 pl-12 sm:pl-14 pr-10 sm:pr-12 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-medium focus:ring-0 placeholder:text-muted-foreground/50 transition-all"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -261,7 +261,7 @@ const TemasPage = () => {
                 transition={{ delay: idx * 0.03 }}
                 onClick={() => setActiveCategory(cat)}
                 className={`
-                  whitespace-nowrap px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300
+                  whitespace-nowrap px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] transition-all duration-300
                   ${activeCategory === cat 
                     ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-105' 
                     : 'bg-muted/40 text-muted-foreground/70 hover:bg-muted hover:text-foreground hover:scale-102 border border-transparent hover:border-border/50'
@@ -396,15 +396,15 @@ const TemasPage = () => {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.98 }}
               transition={{ duration: 0.5, type: "spring", damping: 25 }}
-              className="space-y-12"
+              className="space-y-6 sm:space-y-12"
             >
               {/* Theme Hero Section */}
-              <div className="bg-gradient-to-br from-card via-card/90 to-muted/20 border border-border/40 rounded-[3rem] p-8 sm:p-12 shadow-2xl relative overflow-hidden group">
+              <div className="bg-gradient-to-br from-card via-card/90 to-muted/20 border border-border/40 rounded-2xl sm:rounded-[3rem] p-5 sm:p-12 shadow-2xl relative overflow-hidden group">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[100px] -mr-20 -mt-20 group-hover:bg-primary/10 transition-all duration-1000" />
                 <div className="absolute bottom-0 left-0 w-32 h-32 bg-secondary/5 rounded-full blur-[80px] -ml-10 -mb-10" />
                 
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-8 mb-10 relative z-10">
-                  <div className="space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-8 mb-4 sm:mb-10 relative z-10">
+                  <div className="space-y-2 sm:space-y-4">
                     <div className="flex items-center gap-3">
                       <div className="h-0.5 w-12 bg-primary/60 rounded-full" />
                       <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/60">
@@ -414,12 +414,12 @@ const TemasPage = () => {
                     <motion.h2 
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
-                      className="text-4xl sm:text-6xl font-black tracking-tighter leading-none text-foreground flex items-center gap-4 flex-wrap"
+                      className="text-2xl sm:text-4xl md:text-6xl font-black tracking-tighter leading-none text-foreground flex items-center gap-2 sm:gap-4 flex-wrap"
                     >
                       <span className="text-primary/60 group-hover:scale-110 transition-transform duration-500 drop-shadow-sm">{getTagIcon(selectedTag.emoji)}</span>
                       {selectedTag.label}
                     </motion.h2>
-                    <p className="text-lg sm:text-xl text-muted-foreground/80 leading-relaxed max-w-2xl font-medium font-serif italic">
+                    <p className="text-sm sm:text-lg md:text-xl text-muted-foreground/80 leading-relaxed max-w-2xl font-medium font-serif italic">
                       "A fé procura a inteligência." — Explorando a profundidade de {selectedTag.label} nas fontes da Tradição.
                     </p>
                   </div>
@@ -428,7 +428,7 @@ const TemasPage = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    <Button variant="outline" className="rounded-2xl border-primary/20 bg-primary/5 hover:bg-primary/10 hover:border-primary/40 group/btn h-14 sm:h-16 px-8 shadow-sm">
+                    <Button variant="outline" className="rounded-xl sm:rounded-2xl border-primary/20 bg-primary/5 hover:bg-primary/10 hover:border-primary/40 group/btn h-10 sm:h-16 px-4 sm:px-8 shadow-sm w-full sm:w-auto">
                       <Icons.Bookmark className="mr-3 h-5 w-5 transition-transform group-hover/btn:scale-110 text-primary" />
                       <span className="font-bold text-xs uppercase tracking-widest">Salvar Estudo</span>
                     </Button>
@@ -441,23 +441,23 @@ const TemasPage = () => {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, type: "spring", damping: 20 }}
-                className="relative overflow-hidden rounded-[2.5rem] border border-secondary/20 bg-gradient-to-br from-secondary/10 via-card/50 to-primary/5 p-8 sm:p-12 shadow-xl group"
+                className="relative overflow-hidden rounded-2xl sm:rounded-[2.5rem] border border-secondary/20 bg-gradient-to-br from-secondary/10 via-card/50 to-primary/5 p-5 sm:p-12 shadow-xl group"
               >
                 <div className="absolute top-0 right-0 w-96 h-96 bg-secondary/10 rounded-full blur-[120px] pointer-events-none -mr-48 -mt-48 animate-pulse" />
                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/5 rounded-full blur-[100px] pointer-events-none -ml-32 -mb-32" />
                 
-                <div className="flex flex-col md:flex-row items-start gap-8 relative z-10">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-gradient-to-br from-secondary/20 to-secondary/5 flex items-center justify-center text-secondary shrink-0 shadow-lg group-hover:scale-110 transition-transform duration-500 border border-secondary/20">
-                    <Sparkles className="w-8 h-8 sm:w-10 sm:h-10 animate-pulse" />
+                <div className="flex flex-col md:flex-row items-start gap-4 sm:gap-8 relative z-10">
+                  <div className="w-12 h-12 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-secondary/20 to-secondary/5 flex items-center justify-center text-secondary shrink-0 shadow-lg group-hover:scale-110 transition-transform duration-500 border border-secondary/20">
+                    <Sparkles className="w-6 h-6 sm:w-10 sm:h-10 animate-pulse" />
                   </div>
-                  <div className="flex-1 space-y-6">
+                  <div className="flex-1 space-y-3 sm:space-y-6">
                     <div className="flex items-center justify-between">
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
                           <span className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
                           <p className="text-[11px] font-black uppercase tracking-[0.3em] text-secondary">Logos · Síntese Espiritual</p>
                         </div>
-                        <h3 className="text-2xl font-black text-foreground tracking-tight">Iluminação Teológica</h3>
+                        <h3 className="text-lg sm:text-2xl font-black text-foreground tracking-tight">Iluminação Teológica</h3>
                       </div>
                       {loadingLogos && <Loader2 className="h-6 w-6 animate-spin text-secondary/50" />}
                     </div>
@@ -472,12 +472,12 @@ const TemasPage = () => {
                             <div className="h-5 bg-secondary/10 rounded-full animate-pulse w-4/5" />
                           </div>
                         ) : logosInsight ? (
-                          <p className="text-foreground/90 italic leading-relaxed whitespace-pre-wrap font-serif text-xl sm:text-2xl tracking-tight">
+                          <p className="text-foreground/90 italic leading-relaxed whitespace-pre-wrap font-serif text-base sm:text-xl md:text-2xl tracking-tight">
                             "{logosInsight}"
                           </p>
                         ) : (
                           <div className="flex flex-col items-center gap-4 py-4">
-                            <p className="text-muted-foreground/60 italic text-lg font-serif">
+                            <p className="text-muted-foreground/60 italic text-sm sm:text-lg font-serif">
                               Receba uma reflexão teológica sobre <strong>{selectedTag.label}</strong> à luz da Tradição.
                             </p>
                             <Button 
@@ -497,13 +497,13 @@ const TemasPage = () => {
               </motion.div>
 
               <Tabs defaultValue="all" className="w-full">
-                <div className="flex justify-center mb-12 overflow-x-auto pb-4 px-2">
-                  <TabsList className="flex bg-muted/40 p-2 rounded-[3rem] border border-border/40 gap-1.5 min-w-max h-auto shadow-inner backdrop-blur-md">
-                    <TabsTrigger value="all" className="rounded-full px-8 py-4 data-[state=active]:bg-background data-[state=active]:shadow-2xl data-[state=active]:scale-105 transition-all font-black uppercase tracking-widest text-[10px]">Geral</TabsTrigger>
-                    <TabsTrigger value="bible" className="rounded-full px-8 py-4 data-[state=active]:bg-background data-[state=active]:shadow-2xl data-[state=active]:scale-105 transition-all font-black uppercase tracking-widest text-[10px] flex items-center gap-2.5"><Icons.Bible className="h-4 w-4" /> Bíblia</TabsTrigger>
-                    <TabsTrigger value="catechism" className="rounded-full px-8 py-4 data-[state=active]:bg-background data-[state=active]:shadow-2xl data-[state=active]:scale-105 transition-all font-black uppercase tracking-widest text-[10px] flex items-center gap-2.5"><Icons.Catechism className="h-4 w-4" /> Catecismo</TabsTrigger>
-                    <TabsTrigger value="magisterium" className="rounded-full px-8 py-4 data-[state=active]:bg-background data-[state=active]:shadow-2xl data-[state=active]:scale-105 transition-all font-black uppercase tracking-widest text-[10px] flex items-center gap-2.5"><Icons.Magisterium className="h-4 w-4" /> Documentos</TabsTrigger>
-                    <TabsTrigger value="journey" className="rounded-full px-8 py-4 data-[state=active]:bg-background data-[state=active]:shadow-2xl data-[state=active]:scale-105 transition-all font-black uppercase tracking-widest text-[10px] flex items-center gap-2.5"><Icons.Compass className="h-4 w-4" /> Jornadas</TabsTrigger>
+                <div className="flex justify-center mb-6 sm:mb-12 overflow-x-auto pb-2 sm:pb-4 px-1 sm:px-2">
+                  <TabsList className="flex bg-muted/40 p-1 sm:p-2 rounded-2xl sm:rounded-[3rem] border border-border/40 gap-1 sm:gap-1.5 min-w-max h-auto shadow-inner backdrop-blur-md">
+                    <TabsTrigger value="all" className="rounded-full px-4 sm:px-8 py-2.5 sm:py-4 data-[state=active]:bg-background data-[state=active]:shadow-2xl data-[state=active]:scale-105 transition-all font-black uppercase tracking-widest text-[8px] sm:text-[10px]">Geral</TabsTrigger>
+                    <TabsTrigger value="bible" className="rounded-full px-4 sm:px-8 py-2.5 sm:py-4 data-[state=active]:bg-background data-[state=active]:shadow-2xl data-[state=active]:scale-105 transition-all font-black uppercase tracking-widest text-[8px] sm:text-[10px] flex items-center gap-1.5 sm:gap-2.5"><Icons.Bible className="h-3 w-3 sm:h-4 sm:w-4" /> Bíblia</TabsTrigger>
+                    <TabsTrigger value="catechism" className="rounded-full px-4 sm:px-8 py-2.5 sm:py-4 data-[state=active]:bg-background data-[state=active]:shadow-2xl data-[state=active]:scale-105 transition-all font-black uppercase tracking-widest text-[8px] sm:text-[10px] flex items-center gap-1.5 sm:gap-2.5"><Icons.Catechism className="h-3 w-3 sm:h-4 sm:w-4" /> CIC</TabsTrigger>
+                    <TabsTrigger value="magisterium" className="rounded-full px-4 sm:px-8 py-2.5 sm:py-4 data-[state=active]:bg-background data-[state=active]:shadow-2xl data-[state=active]:scale-105 transition-all font-black uppercase tracking-widest text-[8px] sm:text-[10px] flex items-center gap-1.5 sm:gap-2.5"><Icons.Magisterium className="h-3 w-3 sm:h-4 sm:w-4" /> Docs</TabsTrigger>
+                    <TabsTrigger value="journey" className="rounded-full px-4 sm:px-8 py-2.5 sm:py-4 data-[state=active]:bg-background data-[state=active]:shadow-2xl data-[state=active]:scale-105 transition-all font-black uppercase tracking-widest text-[8px] sm:text-[10px] flex items-center gap-1.5 sm:gap-2.5"><Icons.Compass className="h-3 w-3 sm:h-4 sm:w-4" /> Jornadas</TabsTrigger>
                   </TabsList>
                 </div>
 
@@ -571,25 +571,25 @@ const ContentSection = React.forwardRef<HTMLDivElement, ContentSectionProps>(({ 
   }[color];
 
   return (
-    <section className="space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-      <div className="flex items-center justify-between border-b pb-6 border-border/40">
-        <div className="flex items-center gap-5">
-          <div className={`p-4 rounded-[1.5rem] ${colorStyles.bg} ${colorStyles.glow} shadow-xl ${colorStyles.text} transition-all duration-500 hover:scale-110`}>
+    <section className="space-y-6 sm:space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+      <div className="flex items-center justify-between border-b pb-4 sm:pb-6 border-border/40">
+        <div className="flex items-center gap-3 sm:gap-5">
+          <div className={`p-2.5 sm:p-4 rounded-xl sm:rounded-[1.5rem] ${colorStyles.bg} ${colorStyles.glow} shadow-xl ${colorStyles.text} transition-all duration-500 hover:scale-110`}>
             {icon}
           </div>
-          <div className="space-y-1">
-            <h3 className="font-black text-3xl tracking-tighter text-foreground">{title}</h3>
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/50">Fontes Sagradas</p>
+          <div className="space-y-0.5 sm:space-y-1">
+            <h3 className="font-black text-xl sm:text-3xl tracking-tighter text-foreground">{title}</h3>
+            <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/50">Fontes Sagradas</p>
           </div>
         </div>
-        <Badge variant="outline" className="rounded-full px-6 py-2 font-black text-[10px] uppercase tracking-widest bg-muted/30 border-border/40 text-muted-foreground shadow-sm">
+        <Badge variant="outline" className="rounded-full px-3 sm:px-6 py-1.5 sm:py-2 font-black text-[9px] sm:text-[10px] uppercase tracking-widest bg-muted/30 border-border/40 text-muted-foreground shadow-sm">
           {items.length} {items.length === 1 ? 'item' : 'itens'}
         </Badge>
       </div>
       
-      <div className="grid grid-cols-1 gap-8">
+      <div className="grid grid-cols-1 gap-4 sm:gap-8">
         {items.length === 0 ? (
-          <div className="text-center py-20 px-10 bg-muted/5 rounded-[2.5rem] border border-dashed border-border/30 relative overflow-hidden group">
+          <div className="text-center py-12 sm:py-20 px-6 sm:px-10 bg-muted/5 rounded-2xl sm:rounded-[2.5rem] border border-dashed border-border/30 relative overflow-hidden group">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
             <p className="text-muted-foreground/60 font-medium italic text-lg relative z-10">
               Nenhum conteúdo vinculado a este tema nesta categoria no momento.
@@ -603,17 +603,17 @@ const ContentSection = React.forwardRef<HTMLDivElement, ContentSectionProps>(({ 
               transition={{ delay: idx * 0.08, type: "spring", damping: 20 }}
               key={item.id}
             >
-              <Card className="overflow-hidden border-border/40 hover:border-primary/40 transition-all duration-500 bg-card/40 backdrop-blur-xl shadow-lg hover:shadow-2xl hover:shadow-primary/5 group rounded-[2.5rem] relative">
+              <Card className="overflow-hidden border-border/40 hover:border-primary/40 transition-all duration-500 bg-card/40 backdrop-blur-xl shadow-lg hover:shadow-2xl hover:shadow-primary/5 group rounded-2xl sm:rounded-[2.5rem] relative">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-primary/10 transition-all duration-700" />
                 
-                <CardHeader className="pb-4 pt-10 px-10">
-                  <div className="flex justify-between items-start gap-6">
+                <CardHeader className="pb-3 sm:pb-4 pt-5 sm:pt-10 px-4 sm:px-10">
+                  <div className="flex flex-col sm:flex-row justify-between items-start gap-3 sm:gap-6">
                     <div className="space-y-2">
                       <div className="flex items-center gap-3">
                         <span className={`w-2 h-2 rounded-full ${colorStyles.bg} ${colorStyles.text} animate-pulse`} />
                         <CardDescription className={`font-black uppercase tracking-[0.2em] text-[10px] ${colorStyles.text}`}>{item.reference}</CardDescription>
                       </div>
-                      <CardTitle className="text-2xl font-black group-hover:text-primary transition-colors leading-tight tracking-tight text-foreground">
+                      <CardTitle className="text-lg sm:text-2xl font-black group-hover:text-primary transition-colors leading-tight tracking-tight text-foreground">
                         {item.title}
                       </CardTitle>
                     </div>
@@ -628,16 +628,16 @@ const ContentSection = React.forwardRef<HTMLDivElement, ContentSectionProps>(({ 
                     )}
                   </div>
                 </CardHeader>
-                <CardContent className="px-10 pb-10 space-y-10">
+                <CardContent className="px-4 sm:px-10 pb-5 sm:pb-10 space-y-5 sm:space-y-10">
                   <div className="relative">
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-primary/40 via-primary/10 to-transparent rounded-full -ml-4" />
-                    <p className="text-foreground/90 leading-relaxed italic text-xl sm:text-2xl font-serif pl-4 py-2 tracking-tight">
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-primary/40 via-primary/10 to-transparent rounded-full -ml-2 sm:-ml-4" />
+                    <p className="text-foreground/90 leading-relaxed italic text-base sm:text-xl md:text-2xl font-serif pl-2 sm:pl-4 py-2 tracking-tight">
                       "{item.text_content}"
                     </p>
                   </div>
                   
-                  <div className="flex flex-col sm:flex-row items-center justify-end gap-4 pt-4">
-                    <Button variant="ghost" size="lg" className="rounded-2xl text-muted-foreground hover:text-primary hover:bg-primary/5 font-black uppercase tracking-widest text-[10px] w-full sm:w-auto h-12">
+                  <div className="flex flex-col sm:flex-row items-center justify-end gap-2 sm:gap-4 pt-2 sm:pt-4">
+                    <Button variant="ghost" size="lg" className="rounded-xl sm:rounded-2xl text-muted-foreground hover:text-primary hover:bg-primary/5 font-black uppercase tracking-widest text-[9px] sm:text-[10px] w-full sm:w-auto h-10 sm:h-12">
                       Copiar Citação
                     </Button>
                     <Button 
@@ -651,7 +651,7 @@ const ContentSection = React.forwardRef<HTMLDivElement, ContentSectionProps>(({ 
                         }
                       }}
                       size="lg" 
-                      className="rounded-2xl gap-3 px-10 shadow-xl hover:shadow-primary/20 transition-all group-hover:scale-[1.03] font-black uppercase tracking-widest text-[10px] w-full sm:w-auto h-12"
+                      className="rounded-xl sm:rounded-2xl gap-2 sm:gap-3 px-6 sm:px-10 shadow-xl hover:shadow-primary/20 transition-all group-hover:scale-[1.03] font-black uppercase tracking-widest text-[9px] sm:text-[10px] w-full sm:w-auto h-10 sm:h-12"
                     >
                       Aprofundar Estudo <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                     </Button>
