@@ -424,28 +424,43 @@ const Saints: React.FC = () => {
 const SaintCard: React.FC<{ saint: Saint; onClick: () => void }> = ({ saint, onClick }) => (
   <button
     onClick={onClick}
-    className="group p-8 bg-card border border-border rounded-[2rem] hover:border-primary/50 hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 text-left flex flex-col h-full"
+    className="group bg-card border border-border rounded-[2rem] overflow-hidden hover:border-primary/50 hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 text-left flex flex-col h-full"
   >
-    <div className="flex-1">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] font-black uppercase tracking-widest text-primary">{saint.feastDay}</span>
-          <span className="text-[9px] px-2 py-0.5 bg-secondary text-secondary-foreground rounded-md font-bold uppercase">{CATEGORY_LABELS[saint.category] || saint.category}</span>
-        </div>
-        {saint.works && saint.works.length > 0 && (
-          <div className="p-1.5 bg-primary/5 rounded-lg text-primary" title="Possui obras escritas">
-            <BookOpen className="w-3.5 h-3.5" />
-          </div>
-        )}
+    <div className="relative h-48 overflow-hidden">
+      <SacredImage 
+        src={saint.image} 
+        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+        alt={saint.name} 
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+      <div className="absolute bottom-4 left-6">
+        <span className="text-[10px] font-black uppercase tracking-widest text-white/90 bg-primary/80 px-2 py-0.5 rounded-md backdrop-blur-sm">
+          {CATEGORY_LABELS[saint.category] || saint.category}
+        </span>
       </div>
-      <h3 className="text-2xl font-serif font-bold text-foreground group-hover:text-primary transition-colors mb-2">{saint.name}</h3>
-      <p className="text-sm text-muted-foreground font-serif italic mb-4 line-clamp-1">{saint.title}</p>
-      <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed mb-4">{saint.bio}</p>
     </div>
-    <div className="flex flex-wrap gap-2 mt-4">
-      {saint.virtues?.slice(0, 2).map(v => (
-        <span key={v} className="px-2 py-1 bg-primary/5 text-primary text-[9px] font-black uppercase rounded-lg border border-primary/10">{v}</span>
-      ))}
+    
+    <div className="flex-1 p-6 space-y-4">
+      <div>
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-[10px] font-black uppercase tracking-widest text-primary">{saint.feastDay}</span>
+          {saint.works && saint.works.length > 0 && (
+            <div className="p-1 bg-primary/5 rounded-lg text-primary" title="Possui obras escritas">
+              <BookOpen className="w-3 h-3" />
+            </div>
+          )}
+        </div>
+        <h3 className="text-xl font-serif font-bold text-foreground group-hover:text-primary transition-colors line-clamp-1">{saint.name}</h3>
+        <p className="text-xs text-muted-foreground font-serif italic line-clamp-1">{saint.title}</p>
+      </div>
+      
+      <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">{saint.bio}</p>
+      
+      <div className="flex flex-wrap gap-1 mt-auto">
+        {saint.virtues?.slice(0, 2).map(v => (
+          <span key={v} className="px-2 py-0.5 bg-primary/5 text-primary text-[8px] font-black uppercase rounded-lg border border-primary/10">{v}</span>
+        ))}
+      </div>
     </div>
   </button>
 );
