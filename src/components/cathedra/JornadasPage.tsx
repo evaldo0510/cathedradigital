@@ -81,6 +81,7 @@ const JornadasPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [filterCategory, setFilterCategory] = useState<string>('all');
   const [filterDifficulty, setFilterDifficulty] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const categories = useMemo(() => {
     const cats = [...new Set(journeys.map(j => j.category))];
