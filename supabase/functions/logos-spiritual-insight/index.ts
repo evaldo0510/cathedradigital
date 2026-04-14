@@ -35,7 +35,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-flash-lite', // Trying the lite model
+        model: 'openai/gpt-5-nano', // Trying the nano model
         messages: [{ role: 'system', content: prompt }],
         temperature: 0.7,
       }),
