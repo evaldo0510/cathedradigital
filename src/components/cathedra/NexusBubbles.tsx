@@ -255,10 +255,10 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
   }, []);
 
   const categories = {
-    fundamentos: { label: 'Fundamentos da Fé', emoji: '⛪' },
-    dores: { label: 'Dores e Busca', emoji: '💔' },
-    divino: { label: 'Mistério Divino', emoji: '👑' },
-    vida: { label: 'Vida Prática', emoji: '🌱' },
+    fundamentos: { label: 'Fundamentos da Fé', icon: <Icons.Church className="w-3.5 h-3.5" /> },
+    dores: { label: 'Dores e Busca', icon: <Icons.Heart className="w-3.5 h-3.5 text-destructive" /> },
+    divino: { label: 'Mistério Divino', icon: <Icons.Sparkles className="w-3.5 h-3.5 text-secondary" /> },
+    vida: { label: 'Vida Prática', icon: <Icons.Flame className="w-3.5 h-3.5 text-orange-500" /> },
   };
 
   const profileSuggestedTags = useMemo(() => {
