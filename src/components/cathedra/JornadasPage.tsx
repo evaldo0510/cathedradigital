@@ -389,7 +389,8 @@ const JornadasPage: React.FC = () => {
             </button>
           ))}
         </div>
-      </motion.div>
+      </div>
+    </motion.div>
 
       {/* Journey Cards */}
       <motion.div 
