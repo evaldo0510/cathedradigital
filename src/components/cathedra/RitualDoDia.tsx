@@ -94,7 +94,18 @@ const RitualDoDia: React.FC = () => {
       try {
         const response = await supabase.functions.invoke('saint-of-the-day');
         if (response.data && !response.error) {
-          setOfficialSaint(response.data);
+          // If image URL exists, verify it loads before setting
+          if (response.data.image) {
+            const img = new Image();
+            img.onload = () => setOfficialSaint(response.data);
+            img.onerror = () => {
+              // Image failed to load (hotlink protection), use data without image
+              setOfficialSaint({ ...response.data, image: null });
+            };
+            img.src = response.data.image;
+          } else {
+            setOfficialSaint(response.data);
+          }
         }
       } catch {
         // Fallback to local data
