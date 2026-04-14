@@ -35,7 +35,7 @@ const PricingSection = () => {
       ],
       button: "Ser Premium",
       popular: true,
-      icon: <Sparkles className="w-5 h-5 text-amber-500" />
+      icon: <Sparkles className="w-5 h-5 text-primary" />
     },
     {
       name: "Benfeitor Anual",
@@ -51,7 +51,7 @@ const PricingSection = () => {
       ],
       button: "Apoiar a Missão",
       popular: false,
-      icon: <Zap className="w-5 h-5 text-indigo-500" />
+      icon: <Zap className="w-5 h-5 text-primary" />
     }
   ];
 
