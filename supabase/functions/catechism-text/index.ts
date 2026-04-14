@@ -47,7 +47,7 @@ const PT_PARAGRAPHS: Record<number, string> = {
   33: 'O homem: Com a sua abertura à verdade e à beleza, com o seu sentido do bem moral, com a sua liberdade e a voz da sua consciência, com a sua ânsia de infinito e de felicidade, o homem interroga-se sobre a existência de Deus.',
   34: 'O mundo e o homem atestam que não têm em si mesmos, nem o seu primeiro princípio, nem o seu fim último, mas que participam do Ser-em-si, sem princípio nem fim.',
   35: 'As faculdades do homem tornam-no capaz de conhecer a existência de um Deus pessoal. Mas, para que o homem possa entrar na sua intimidade, Deus quis revelar-Se ao homem.',
-  36: '«A Santa Igreja, nossa Mãe, atesta e ensina que Deus, princípio e fim de todas as coisas, pode ser conhecido, com certeza, pela luz natural da razão humana, a partir das coisas criadas».',
+  36: '«A Santa Igreja, nossa Mãe, atesta e ensina que Deus, princípio e fim de todas as coisas, pode ser conhecido, com certeza, pela luz natural da razão humana, a partir das coisas criadas» (Concílio Vaticano I, Dei Filius).',
   37: 'Nas condições históricas em que se encontra, porém, o homem experimenta muitas dificuldades para chegar ao conhecimento de Deus pela simples luz da razão.',
   38: 'É por isso que o homem precisa de ser iluminado pela revelação de Deus, não somente sobre o que ultrapassa o seu entendimento, mas também sobre as verdades religiosas e morais.',
   39: 'Ao defender a capacidade da razão humana para conhecer Deus, a Igreja exprime a sua confiança na possibilidade de falar de Deus a todos os homens e com todos os homens.',
@@ -92,6 +92,25 @@ const PT_PARAGRAPHS: Record<number, string> = {
   78: 'Esta transmissão viva, realizada no Espírito Santo, é chamada a Tradição, distinta da Sagrada Escritura, embora intimamente ligada a ela.',
   79: 'A Tradição sagrada e a Sagrada Escritura estão intimamente ligadas e comunicam uma com a outra. Derivando ambas da mesma fonte divina, formam de certo modo uma só coisa e tendem ao mesmo fim.',
   80: 'Tradição sagrada e Sagrada Escritura formam um só depósito sagrado da Palavra de Deus, confiado à Igreja.',
+  81: '«A Sagrada Escritura é a Palavra de Deus enquanto foi posta por escrito sob a inspiração do Espírito divino»; «e a Sagrada Tradição transmite integralmente aos sucessores dos Apóstolos a Palavra de Deus confiada por Cristo Senhor e pelo Espírito Santo aos Apóstolos, para que, sob a luz do Espírito de verdade, eles fielmente a guardem, exponham e difundam na sua pregação».',
+  82: 'Assim, «não é através da Sagrada Escritura sozinha que a Igreja haure a sua certeza acerca de tudo o que foi revelado», e que os fiéis «devem aceitar e venerar com igual espírito de piedade e reverência» tanto a Tradição como a Escritura.',
+  83: 'A Tradição apostólica é «a Tradição que vem dos Apóstolos» e que transmite o que estes receberam do ensinamento e do exemplo de Jesus e o que aprenderam pelo Espírito Santo.',
+  84: 'O depósito sagrado da fé (depositum fidei), contido na Sagrada Tradição e na Sagrada Escritura, foi confiado pelo Senhor Jesus, através dos Apóstolos, à totalidade da Igreja.',
+  85: 'O ofício de interpretar autenticamente a Palavra de Deus escrita ou transmitida foi confiado unicamente ao Magistério vivo da Igreja, cuja autoridade se exerce em nome de Jesus Cristo. Este Magistério não está acima da Palavra de Deus, mas ao seu serviço.',
+  86: '«Enviado pelo mandato divino e assistido pelo Espírito Santo, o Magistério ouve piamente a Palavra de Deus, santamente a guarda e fielmente a expõe. E deste único depósito da fé tira tudo aquilo que propõe para se crer como divinamente revelado».',
+  87: 'Os fiéis, recordando a Palavra de Cristo aos Apóstolos: «Quem vos ouve, ouve-me a Mim» (Lc 10,16), recebem docilmente os ensinamentos e as diretrizes que os seus pastores lhes dão sob diferentes formas.',
+  88: 'O Magistério da Igreja exerce plenamente a autoridade que recebeu de Cristo quando define dogmas, isto é, quando propõe verdades contidas na Revelação divina, ou verdades que com estas têm uma conexão necessária.',
+  89: 'Existe uma conexão orgânica entre a nossa vida espiritual e os dogmas. Os dogmas são luzes no caminho da nossa fé: iluminam-no e tornam-no seguro.',
+  90: 'A mútua conexão e a coerência dos dogmas podem ser descobertas no conjunto da Revelação do mistério de Cristo.',
+  91: 'Todos os fiéis participam na compreensão e na transmissão da verdade revelada. Receberam a unção do Espírito Santo que os instrui e os conduz «à verdade total» (Jo 16,13).',
+  92: '«A totalidade dos fiéis... não pode enganar-se na fé, e manifesta esta sua propriedade peculiar através do sentido sobrenatural da fé do povo todo, quando, "desde os bispos até ao último dos fiéis leigos", exprime o seu consentimento universal em matéria de fé e costumes».',
+  93: '«Por este sentido da fé, que é suscitado e sustentado pelo Espírito de verdade, o povo de Deus, sob a direção do sagrado Magistério, adere indefectivelmente à fé transmitida aos santos de uma vez por todas».',
+  94: 'Graças à assistência do Espírito Santo, a inteligência tanto das realidades como das palavras do depósito da fé pode crescer na vida da Igreja.',
+  95: '«É claro, portanto, que a Sagrada Tradição, a Sagrada Escritura e o Magistério da Igreja, segundo o sapientíssimo desígnio de Deus, estão de tal maneira entrelaçados e unidos, que nenhum deles tem consistência sem os outros».',
+  96: 'O que Cristo confiou aos Apóstolos, estes, por sua vez, o transmitiram pela pregação e por escrito, sob a inspiração do Espírito Santo, a todas as gerações, até à vinda gloriosa de Cristo.',
+  97: '«A Sagrada Tradição e a Sagrada Escritura constituem um só depósito sagrado da Palavra de Deus», no qual, como num espelho, a Igreja peregrina contempla Deus, fonte de todas as suas riquezas.',
+  98: '«A Igreja, na sua doutrina, na sua vida e no seu culto, perpetua e transmite a todas as gerações tudo o que ela é e tudo o que acredita».',
+  99: 'Graças ao seu sentido sobrenatural da fé, todo o povo de Deus não cessa de acolher o dom da Revelação divina, de o penetrar mais profundamente e de o viver mais plenamente.',
   100: 'A função de interpretar autenticamente a Palavra de Deus escrita ou transmitida foi confiada só ao Magistério vivo da Igreja, cuja autoridade é exercida em nome de Jesus Cristo.',
   101: 'Para redigir os livros sagrados, Deus escolheu homens de quem se serviu, usando das suas faculdades e forças, para que, agindo Ele mesmo neles e por eles, pusessem por escrito, como verdadeiros autores, tudo o que Ele queria e só isso.',
   102: 'Todos os livros da Escritura, tanto do Antigo como do Novo Testamento, com todas as suas partes, são sagrados e canónicos, porque escritos sob a inspiração do Espírito Santo.',
@@ -99,7 +118,7 @@ const PT_PARAGRAPHS: Record<number, string> = {
   104: 'A Igreja encerra nos Livros Sagrados e na Tradição viva a revelação que lhe foi confiada.',
   105: 'Deus é o autor da Sagrada Escritura. A verdade divinamente revelada, que os livros da Sagrada Escritura contêm e exprimem, foi posta por escrito sob a inspiração do Espírito Santo.',
   106: 'Deus inspirou os autores humanos dos livros sagrados. Para compor os Livros Sagrados, Deus escolheu certos homens que, usando de todas as suas faculdades e forças, Ele utilizou para que, agindo Ele mesmo neles e por eles, pusessem por escrito como verdadeiros autores tudo o que Ele queria e só isso.',
-  107: 'Os livros inspirados ensinam a verdade. Uma vez que tudo o que os autores inspirados afirmam deve ser tido como afirmado pelo Espírito Santo, devemos professsar que os livros da Escritura ensinam solidamente, com fidelidade e sem erro, a verdade que Deus fez consignar nos livros sagrados para nossa salvação.',
+  107: 'Os livros inspirados ensinam a verdade. Uma vez que tudo o que os autores inspirados afirmam deve ser tido como afirmado pelo Espírito Santo, devemos professar que os livros da Escritura ensinam solidamente, com fidelidade e sem erro, a verdade que Deus fez consignar nos livros sagrados para nossa salvação.',
   108: 'A fé cristã, contudo, não é uma «religião do Livro». O Cristianismo é a religião da «Palavra» de Deus, não de uma palavra escrita e muda, mas do Verbo encarnado e vivo.',
   109: 'Na Sagrada Escritura, Deus fala ao homem à maneira humana. Para interpretar bem a Escritura, é portanto necessário estar atento ao que os autores humanos queriam verdadeiramente afirmar e ao que Deus quis manifestar através das suas palavras.',
   110: 'Para descobrir a intenção dos autores sagrados, é necessário ter em conta as condições do seu tempo e da sua cultura, os géneros literários em uso nessa época, as maneiras de sentir, de dizer e de narrar então correntes.',
@@ -123,23 +142,68 @@ const PT_PARAGRAPHS: Record<number, string> = {
   128: 'A Igreja mantém com firmeza e com toda a constância que os quatro Evangelhos, cuja historicidade afirma sem hesitar, transmitem fielmente o que Jesus, Filho de Deus, durante a sua vida entre os homens, realmente fez e ensinou para a sua eterna salvação.',
   129: 'As Escrituras judaicas (Antigo Testamento) e os escritos cristãos (Novo Testamento) estão em relação íntima. O Novo Testamento está oculto no Antigo, e o Antigo está à luz do Novo.',
   130: 'O Antigo Testamento é a preparação e o anúncio da Nova Aliança. Contém a história da criação, da queda e da promessa de redenção.',
-  131: '«Que todos ganhem amor muito grande pela Sagrada Escritura, porque a ignorância das Escrituras é ignorância de Cristo».',
+  131: '«Que todos ganhem amor muito grande pela Sagrada Escritura, porque a ignorância das Escrituras é ignorância de Cristo» (São Jerónimo).',
   132: 'A Igreja exorta e fortemente recomenda a todos os fiéis que aprendam a «sublime ciência de Jesus Cristo» (Fl 3,8) pela leitura frequente das divinas Escrituras.',
   133: '«A Sagrada Escritura é o alimento da alma, a fonte pura e perene da vida espiritual».',
   134: 'Todo o conjunto da Sagrada Escritura é uma só Livro, e esse único Livro é Cristo.',
   135: 'A Sagrada Escritura contém a Palavra de Deus e, por ser inspirada, é verdadeiramente Palavra de Deus.',
+  136: 'A Sagrada Escritura deve ser lida e interpretada com o auxílio do Espírito Santo e sob a vigilância do Magistério da Igreja, segundo três critérios: atenção ao conteúdo e à unidade de toda a Escritura; leitura dentro da Tradição viva; analogia da fé.',
+  137: 'O papel dos exegetas, teólogos e fiéis é interpretar a Escritura sob a direção do Magistério.',
+  138: 'A Igreja acolhe e venera como inspirados os 46 livros do Antigo Testamento e os 27 do Novo.',
+  139: 'Os quatro Evangelhos ocupam um lugar central na Escritura porque o seu centro é Cristo Jesus.',
+  140: 'A unidade dos dois Testamentos decorre da unidade do desígnio de Deus e da sua Revelação.',
+  141: 'A Igreja sempre venerou as divinas Escrituras como venerou o Corpo do Senhor, nutrindo os fiéis com a mesa da Palavra de Deus e do Corpo de Cristo.',
   142: 'Pela sua Revelação, «Deus invisível, na riqueza do seu amor, fala aos homens como a amigos e convive com eles, para os convidar e admitir à comunhão consigo».',
   143: 'Pela fé, o homem submete completamente a sua inteligência e a sua vontade a Deus. Com todo o seu ser, o homem dá o seu assentimento a Deus revelador. A Sagrada Escritura chama «obediência da fé» a esta resposta do homem a Deus que revela.',
   144: 'A obediência da fé é confiar-se, totalmente livre, a Deus. Abraão, nosso pai na fé, é o primeiro modelo desta obediência.',
-  145: 'A Carta aos Hebreus, no famoso «elogio da fé», exalta a fé de Abraão: «Pela fé, Abraão obedeceu ao chamamento de partir para uma terra que havia de receber como herança, e saiu sem saber para onde ia».',
-  146: 'A Virgem Maria realiza de modo mais perfeito a obediência da fé. Na fé, Maria acolheu o anúncio e a promessa trazidos pelo anjo Gabriel, acreditando que «para Deus nada é impossível».',
+  145: 'A Carta aos Hebreus, no famoso «elogio da fé», exalta a fé de Abraão: «Pela fé, Abraão obedeceu ao chamamento de partir para uma terra que havia de receber como herança, e saiu sem saber para onde ia» (Hb 11,8).',
+  146: 'A Virgem Maria realiza de modo mais perfeito a obediência da fé. Na fé, Maria acolheu o anúncio e a promessa trazidos pelo anjo Gabriel, acreditando que «para Deus nada é impossível» (Lc 1,37).',
   147: 'O Novo Testamento apresenta Maria como o modelo mais perfeito de fé tanto no Antigo como no Novo Testamento.',
   148: 'A fé é um ato humano. O assentimento dado por fé não é um movimento cego da razão. É um assentimento inteligente e livre ao qual todo o crente é chamado.',
   149: 'A fé é um dom gratuito de Deus. Para dar a resposta da fé, o homem precisa do auxílio e da graça interior do Espírito Santo.',
   150: 'A fé é, antes de mais, uma adesão pessoal do homem a Deus; ao mesmo tempo e inseparavelmente, é o assentimento livre a toda a verdade que Deus revelou.',
+  151: 'Para o cristão, crer em Deus é inseparavelmente crer n\'Aquele que Ele enviou, «o seu Filho muito amado», em quem Ele pôs toda a sua complacência. Deus disse-nos que O escutemos (cf. Mc 1,11).',
+  152: 'Não se pode crer em Jesus Cristo sem participar do seu Espírito. É o Espírito Santo que revela aos homens quem é Jesus.',
+  153: 'Quando São Pedro confessa que Jesus é o Cristo, Filho do Deus vivo, Jesus declara-lhe que esta revelação não lhe veio da carne e do sangue, mas de seu Pai que está nos Céus (cf. Mt 16,17).',
+  154: 'A fé é possível somente pela graça e pelos auxílios interiores do Espírito Santo. No entanto, é verdade que crer é um ato autenticamente humano.',
+  155: 'No ato de fé, a inteligência e a vontade humanas cooperam com a graça divina: «Crer é um ato do entendimento que assente à verdade divina, por império da vontade movida por Deus mediante a graça» (São Tomás de Aquino).',
+  156: 'O motivo de crer não é o facto de as verdades reveladas aparecerem como verdadeiras e inteligíveis à luz da nossa razão natural. Cremos «por causa da autoridade de Deus mesmo que revela».',
+  157: 'A fé é certa, mais certa que todo o conhecimento humano, porque se funda na própria Palavra de Deus, que não pode mentir.',
+  158: '«A fé procura compreender» (fides quaerens intellectum): é intrínseco à fé que o crente deseje conhecer melhor Aquele em quem pôs a sua fé e compreender melhor o que Ele revelou.',
+  159: 'Fé e ciência. Embora a fé esteja acima da razão, nunca poderá haver verdadeira divergência entre a fé e a razão, dado que o mesmo Deus que revela os mistérios e comunica a fé é o que concedeu ao espírito humano a luz da razão.',
+  160: 'Para ser humano, «a resposta da fé dada pelo homem a Deus deve ser voluntária; ninguém, portanto, pode ser constrangido a abraçar a fé contra a sua vontade. Com efeito, o ato de fé é, por sua própria natureza, voluntário».',
+  161: 'Crer em Jesus Cristo e n\'Aquele que O enviou para nossa salvação é necessário para alcançar esta salvação.',
+  162: 'A fé é um dom gratuito que Deus faz ao homem. Este dom inestimável podemos perdê-lo.',
+  163: 'A fé faz-nos saborear, como que antecipadamente, a alegria e a luz da visão beatífica, meta da nossa caminhada nesta terra.',
+  164: 'Neste mundo, porém, «caminhamos na fé e não na visão» (2 Cor 5,7), e conhecemos Deus «como num espelho, de maneira confusa... imperfeita» (1 Cor 13,12).',
+  165: 'Vivemos, portanto, na fé. Embora a fé seja luminosa por Aquele em quem cremos, é vivida muitas vezes na obscuridade.',
+  166: 'A fé é um ato pessoal: é a resposta livre do homem à iniciativa de Deus que Se revela. Mas a fé não é um ato isolado.',
+  167: '«Creio»: é a fé da Igreja, professada pessoalmente por cada crente, sobretudo por ocasião do Batismo. «Cremos»: é a fé da Igreja, confessada pelos bispos reunidos em concílio, ou mais geralmente pela assembleia litúrgica dos crentes.',
+  168: 'É em primeiro lugar a Igreja que crê, e que assim sustenta, alimenta e nutre a minha fé. É em primeiro lugar a Igreja que, em todo o lugar, confessa o Senhor.',
+  169: 'A salvação vem só de Deus; mas porque recebemos a vida da fé através da Igreja, esta é nossa mãe.',
+  170: 'Não cremos em fórmulas, mas nas realidades que elas exprimem e que a fé nos permite «tocar». O ato de fé do crente não termina no enunciado, mas na realidade enunciada.',
+  171: 'A Igreja, que é «coluna e sustentáculo da verdade» (1 Tm 3,15), guarda fielmente «a fé transmitida aos santos de uma vez por todas» (Jd 3). É ela que guarda a memória das palavras de Cristo.',
+  172: 'Desde séculos e através dos séculos, e em tantas línguas, culturas, povos e nações, a Igreja não cessa de professar a sua fé única, recebida de um só Senhor.',
+  173: '«Com efeito, a Igreja, dispersa pelo mundo inteiro até aos confins da terra, recebeu dos Apóstolos e dos seus discípulos a fé» no único Deus (Santo Ireneu).',
+  174: '«Assim como o sol, criatura de Deus, é um e o mesmo no mundo inteiro, assim a luz, a pregação da verdade, brilha em toda a parte e ilumina todos os homens» (Santo Ireneu).',
+  175: '«A mensagem da Igreja é verídica e sólida, pois nela aparece um só e mesmo caminho de salvação no mundo inteiro» (Santo Ireneu).',
+  176: 'A fé da Igreja é recebida, é guardada e transmitida. Transmissão da fé é profissão de fé.',
   185: 'Quem diz «Creio» diz «Eu adiro àquilo que nós cremos». A comunhão na fé precisa duma linguagem comum da fé, normativa para todos e que una na mesma confissão de fé.',
+  186: 'Desde a origem, a Igreja apostólica exprimiu e transmitiu a sua própria fé em fórmulas breves e normativas para todos. Mas muito cedo a Igreja quis também reunir o essencial da sua fé em resumos orgânicos e articulados, destinados sobretudo aos candidatos ao Batismo.',
+  187: 'A estes resumos da fé chamamos «profissões de fé», porque resumem a fé professada pelos cristãos. Chamamos-lhes «Credo», em razão da sua primeira palavra: «Creio».',
+  188: 'Chamamos-lhes também «Símbolos da fé».',
+  189: 'O primeiro «Símbolo da fé» é feito no ato do Batismo. O «símbolo da fé» é em primeiro lugar o símbolo batismal.',
+  190: 'O Símbolo dos Apóstolos é assim chamado por ser considerado o resumo fiel da fé dos Apóstolos. É o antigo Símbolo batismal da Igreja de Roma.',
+  191: 'O Símbolo de Niceia-Constantinopla deve a sua grande autoridade ao facto de ter resultado dos dois primeiros Concílios Ecuménicos (325 e 381).',
+  192: 'Ao longo dos séculos apareceram numerosas profissões ou símbolos da fé, em resposta às necessidades das diferentes épocas.',
+  193: 'Nenhum dos símbolos das diferentes etapas da vida da Igreja pode ser considerado ultrapassado ou inútil. Todos nos ajudam a atingir e a aprofundar a fé de sempre.',
+  194: 'O Símbolo dos Apóstolos, assim chamado por ser considerado o resumo fiel da fé dos Apóstolos, é o antigo Símbolo batismal da Igreja de Roma. A sua grande autoridade advém do facto de ser «o Símbolo guardado pela Igreja Romana, aquela onde teve a sua sede Pedro, o primeiro dos Apóstolos, e para a qual ele trouxe a fé comum».',
+  195: 'O Símbolo chamado de Niceia-Constantinopla deve a sua grande autoridade ao facto de ser fruto dos dois primeiros concílios ecuménicos (325 e 381). Continua a ser comum a todas as grandes Igrejas do Oriente e do Ocidente.',
+  196: 'O Catecismo, seguindo uma longa tradição, apresenta a fé segundo os artigos do Credo.',
+  197: 'O Símbolo da fé, como acontece com o Batismo, inicia-se com a expressão: «Creio em Deus».',
   198: 'A nossa profissão de fé começa por Deus, porque Deus é o «Primeiro e o Último» (Is 44,6), o Princípio e o Fim de tudo.',
   199: 'O Símbolo dos Apóstolos começa por Deus-Pai, porque o Pai é a primeira Pessoa divina da Santíssima Trindade.',
+  200: '«Creio em Deus»: esta primeira afirmação da profissão de fé é também a mais fundamental. Todo o Símbolo fala de Deus, e se fala também do homem e do mundo, fá-lo em relação a Deus.',
   232: 'Os cristãos são batizados «em nome do Pai e do Filho e do Espírito Santo» (Mt 28,19). Antes disso, respondem «Creio» à tríplice pergunta que os convida a confessar a sua fé no Pai, no Filho e no Espírito Santo. A fé de todos os cristãos assenta sobre a Trindade.',
   234: 'O mistério da Santíssima Trindade é o mistério central da fé e da vida cristã. É o mistério de Deus em Si mesmo. É, portanto, a fonte de todos os outros mistérios da fé e a luz que os ilumina.',
   268: 'De todos os atributos divinos, só a omnipotência de Deus é mencionada no Símbolo. Confessá-la tem grande importância para a nossa vida.',
@@ -183,12 +247,12 @@ const PT_PARAGRAPHS: Record<number, string> = {
   1996: 'A nossa justificação vem da graça de Deus. A graça é o favor, o socorro gratuito que Deus nos dá para responder ao seu chamamento.',
   2052: '«Mestre, que devo fazer de bom para ter a vida eterna?» Ao jovem que lhe faz esta pergunta, Jesus responde, primeiro, invocando a necessidade de reconhecer Deus como «o único Bom».',
   2083: 'Jesus resumiu os deveres do homem para com Deus nesta palavra: «Amarás o Senhor teu Deus com todo o teu coração, com toda a tua alma e com todo o teu espírito» (Mt 22,37).',
-  2196: 'Em resposta à pergunta sobre qual é o primeiro mandamento, Jesus disse: «O primeiro é: Ouve, Israel: o Senhor nosso Deus é o único Senhor. Amarás o Senhor teu Deus com todo o teu coração...»',
+  2196: 'Em resposta à pergunta sobre qual é o primeiro mandamento, Jesus disse: «O primeiro é: Ouve, Israel: o Senhor nosso Deus é o único Senhor. Amarás o Senhor teu Deus com todo o teu coração...» (Mc 12,29-30).',
   2258: 'A vida humana é sagrada porque, desde a sua origem, ela supõe a ação criadora de Deus e permanece para sempre numa relação especial com o Criador, seu único fim.',
   2331: 'Deus é amor e vive em Si mesmo um mistério de comunhão pessoal de amor. Ao criar a humanidade do homem e da mulher à sua imagem, Deus inscreveu nela a vocação, e consequentemente a capacidade e a responsabilidade, para o amor e a comunhão.',
   2401: 'O sétimo mandamento proíbe tomar ou reter injustamente o bem alheio e causar prejuízo ao próximo nos seus bens, seja de que modo for.',
   2464: 'O oitavo mandamento proíbe falsear a verdade nas relações com outrem.',
-  2514: 'São João distingue três espécies de cobiça ou concupiscência: a concupiscência da carne, a dos olhos e a soberba da vida.',
+  2514: 'São João distingue três espécies de cobiça ou concupiscência: a concupiscência da carne, a dos olhos e a soberba da vida (cf. 1 Jo 2,16).',
   2558: '«Grande é o mistério da fé». A Igreja professa-o no Símbolo dos Apóstolos e celebra-o na liturgia sacramental, para que a vida dos fiéis se conforme com Cristo no Espírito Santo.',
   2559: '«A oração é a elevação da alma a Deus ou o pedido a Deus dos bens convenientes». De onde é que nós falamos, quando rezamos? Da altura do nosso orgulho e da nossa vontade própria ou «das profundezas» (Sl 130,1) de um coração humilde e contrito?',
   2590: 'A oração é a elevação da alma a Deus ou o pedido a Deus dos bens convenientes.',
@@ -239,11 +303,10 @@ async function generateWithAI(paragraph: number, supabaseUrl: string, serviceKey
     
     const cleaned = generated
       .trim()
-      .replace(/\[RECOMMENDATION:.*\]/s, '') // Remove metadata
-      .replace(/^(Compreendo|Compreendido|Com certeza|Aqui está|Segue o texto|Claro|Com prazer|Olá)[^:]*[.:]\s*/i, '') // Remove preambles
-      .replace(/^(###|##|\*\*)\s*§?\d+\s*[-\–]?\s*/i, '') // Remove paragraph headers
+      .replace(/\[RECOMMENDATION:.*\]/s, '')
+      .replace(/^(Compreendo|Compreendido|Com certeza|Aqui está|Segue o texto|Claro|Com prazer|Olá)[^:]*[.:]\s*/i, '')
+      .replace(/^(###|##|\*\*)\s*§?\d+\s*[-\–]?\s*/i, '')
       .trim();
-    return cleaned;
     return cleaned;
   } catch (e) {
     console.error(`AI generation failed for §${paragraph}:`, e);
@@ -279,7 +342,32 @@ serve(async (req) => {
   }
 
   try {
-    const { paragraph } = await req.json();
+    const body = await req.json();
+    const paragraph = body.paragraph;
+    
+    // Batch mode: pre-populate cache
+    if (body.action === 'batch' && body.paragraphs && Array.isArray(body.paragraphs)) {
+      const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
+      const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
+      const supabase = createClient(supabaseUrl, serviceKey);
+      const results: Record<number, string> = {};
+      
+      for (const p of body.paragraphs.slice(0, 10)) {
+        if (PT_PARAGRAPHS[p]) { results[p] = 'static'; continue; }
+        const { data: cached } = await supabase.from('catechism_cache').select('content').eq('paragraph', p).single();
+        if (cached?.content) { results[p] = 'cached'; continue; }
+        
+        const aiText = await generateWithAI(p, supabaseUrl, serviceKey);
+        if (aiText && aiText.length > 20) {
+          await supabase.from('catechism_cache').insert({ paragraph: p, content: aiText });
+          results[p] = 'generated';
+        } else {
+          results[p] = 'failed';
+        }
+      }
+      return new Response(JSON.stringify({ results }), { headers: corsHeaders });
+    }
+    
     if (!paragraph || paragraph < 1 || paragraph > 2865) {
       return new Response(JSON.stringify({ error: 'Parágrafo inválido' }), { status: 400, headers: corsHeaders });
     }
@@ -291,7 +379,14 @@ serve(async (req) => {
       });
     }
 
-    // 2. Database check (fast)
+    // 2. In-memory cache check
+    if (aiCache[paragraph]) {
+      return new Response(JSON.stringify({ paragraph, content: aiCache[paragraph] }), {
+        headers: { ...corsHeaders, 'Cache-Control': 'public, max-age=86400' }
+      });
+    }
+
+    // 3. Database check (fast)
     const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
     const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
     const supabase = createClient(supabaseUrl, serviceKey);
@@ -302,25 +397,29 @@ serve(async (req) => {
       .eq('paragraph', paragraph)
       .single();
 
-    if (cached) {
+    if (cached?.content && cached.content.length > 20 && !cached.content.includes('processamento')) {
+      aiCache[paragraph] = cached.content;
       return new Response(JSON.stringify({ paragraph, content: cached.content }), { 
         headers: { ...corsHeaders, 'Cache-Control': 'public, max-age=86400, s-maxage=86400' } 
       });
     }
 
-    // 3. AI Generation (slowest, but only once)
+    // 4. AI Generation (slowest, but only once)
     const aiText = await generateWithAI(paragraph, supabaseUrl, serviceKey);
     if (aiText && aiText.length > 20) {
-      // Save to cache
-      await supabase.from('catechism_cache').insert({ paragraph, content: aiText });
+      aiCache[paragraph] = aiText;
+      // Save to cache (upsert to handle stale entries)
+      await supabase.from('catechism_cache').upsert({ paragraph, content: aiText }, { onConflict: 'paragraph' });
       return new Response(JSON.stringify({ paragraph, content: aiText }), { 
         headers: { ...corsHeaders, 'Cache-Control': 'public, max-age=86400, s-maxage=86400' } 
       });
     }
 
+    // 5. Final fallback - never show "em processamento", give a meaningful message
     return new Response(JSON.stringify({ 
       paragraph, 
-      content: `Parágrafo §${paragraph} — Catecismo da Igreja Católica. Conteúdo em processamento.` 
+      content: `§${paragraph} — Este parágrafo do Catecismo da Igreja Católica está sendo carregado. Por favor, tente novamente em alguns instantes.`,
+      status: 'loading'
     }), { headers: corsHeaders });
 
   } catch (error) {
