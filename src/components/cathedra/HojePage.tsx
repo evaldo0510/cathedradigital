@@ -73,7 +73,16 @@ const HojePage: React.FC = () => {
         officialSaint.name.toLowerCase().includes(s.name.toLowerCase()) ||
         s.name.toLowerCase().includes(officialSaint.name.toLowerCase())
       );
-      if (match) return { ...match, ...officialSaint };
+      if (match) {
+        return { 
+          ...match, 
+          ...officialSaint,
+          // Prioritize local fullBio if official is missing or too short
+          fullBio: (officialSaint.fullBio && officialSaint.fullBio.length > 50) ? 
+                   officialSaint.fullBio : 
+                   (match.fullBio || match.bio || officialSaint.description || officialSaint.fullBio)
+        };
+      }
       return { 
         id: 'official-today',
         name: officialSaint.name,

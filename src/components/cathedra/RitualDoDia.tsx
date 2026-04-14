@@ -130,7 +130,9 @@ const RitualDoDia: React.FC = () => {
       return {
         name: officialSaint.name,
         image: officialSaint.image || localMatch?.image,
-        bio: officialSaint.fullBio || officialSaint.description || localMatch?.bio || '',
+        bio: (officialSaint.fullBio && officialSaint.fullBio.length > 50) ? 
+             officialSaint.fullBio : 
+             (localMatch?.fullBio || localMatch?.bio || officialSaint.description || ''),
         title: localMatch?.title || 'Santo do Dia',
       };
     }
