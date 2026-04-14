@@ -451,6 +451,71 @@ const HojePage: React.FC = () => {
 
       {/* Main Content Sections */}
       <div className="pt-8 space-y-10">
+        
+        {/* Santo do Dia - Highlight */}
+        {featuredSaint && (
+          <motion.section 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="space-y-4"
+          >
+            <div className="flex items-center gap-3">
+              <div className="h-px w-6 bg-primary/30" />
+              <h3 className="text-[11px] font-black uppercase tracking-[0.3em] text-primary flex items-center gap-2">
+                <Icons.Saints className="w-3.5 h-3.5" />
+                Santo do Dia
+              </h3>
+            </div>
+            
+            <div 
+              onClick={() => navigate(`${AppRoute.SAINTS}?action=reflect`)}
+              className="group cursor-pointer bg-card border border-border rounded-[2.5rem] overflow-hidden hover:border-primary/30 transition-all shadow-xl"
+            >
+              <div className="flex flex-col md:flex-row h-full">
+                <div className="w-full md:w-1/3 h-64 md:h-auto relative">
+                  <SacredImage 
+                    src={featuredSaint.image} 
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                    alt={featuredSaint.name} 
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="absolute bottom-6 left-6 right-6 text-white">
+                    <span className="text-[10px] font-black uppercase tracking-widest bg-primary px-2 py-1 rounded-md mb-2 inline-block">
+                      Hoje
+                    </span>
+                    <h3 className="text-2xl font-serif font-bold leading-tight">{featuredSaint.name}</h3>
+                  </div>
+                </div>
+
+                <div className="flex-1 p-8 space-y-6">
+                  <div>
+                    <p className="text-lg text-primary font-serif italic mb-4">"{featuredSaint.title}"</p>
+                    <p className="text-muted-foreground leading-relaxed line-clamp-3 font-serif italic text-sm">
+                      {featuredSaint.bio}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-2 border-t border-border/50">
+                    <div className="flex gap-1">
+                      {featuredSaint.virtues?.slice(0, 2).map(v => (
+                        <span key={v} className="px-2 py-1 bg-primary/10 text-primary text-[9px] font-black uppercase rounded-lg">{v}</span>
+                      ))}
+                    </div>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="text-primary hover:bg-primary/5 text-[10px] font-black uppercase tracking-widest gap-2"
+                    >
+                      Ver História <Icons.ChevronRight className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.section>
+        )}
+
         {/* Continuar Jornada */}
         {(activeJourney || recommendedJourney) && (
           <section className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
