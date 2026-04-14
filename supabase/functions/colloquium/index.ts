@@ -8,7 +8,7 @@ const corsHeaders = {
 
 // Rate limiter: max requests per window (in-memory, resets on cold start)
 const rateLimitMap = new Map<string, number[]>();
-const RATE_LIMIT = 10;
+const RATE_LIMIT = 20; // Increased for more reliability
 const RATE_WINDOW_MS = 60_000;
 
 const FREE_DAILY_LIMIT = 5;
@@ -22,11 +22,6 @@ function isRateLimited(key: string): boolean {
   }
   timestamps.push(now);
   rateLimitMap.set(key, timestamps);
-  if (rateLimitMap.size > 10000) {
-    for (const [k, v] of rateLimitMap) {
-      if (v.every(t => now - t >= RATE_WINDOW_MS)) rateLimitMap.delete(k);
-    }
-  }
   return false;
 }
 
@@ -52,7 +47,6 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
-    // Check daily limit for free users
     const authHeader = req.headers.get("authorization");
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -119,41 +113,8 @@ serve(async (req) => {
           {
             role: "system",
             content: systemPromptOverride || (mode === 'aquinas' 
-              ? `Você é uma filósofa espiritual inspirada em Tomás de Aquino (IA IARA em Modo Aquino). Sua missão é transformar reflexões em domínio intelectual aplicado à alma, unindo emoção + razão + fé estruturada.
-
-## DIRETRIZES DE RESPOSTA
-1. Explique temas de forma simples, lógica e profunda.
-2. Identifique o tema central e sugira termos do "A-Z da Fé" relacionados.
-3. Sempre inclua:
-   - **Explicação clara**: O fundamento do pensamento de Aquino.
-   - **Exemplo prático**: Aplicação no cotidiano moderno.
-   - **Pergunta reflexiva**: Um questionamento que leve à decisão com consciência.
-
-## FORMATO DE SAÍDA PARA O SISTEMA
-Toda resposta DEVE terminar com uma linha contendo apenas o metadado em formato JSON:
-[RECOMMENDATION:{"category": "fundamentos", "reason": "Modo Aquino ativado", "scores": {"ansiedade": 0, "confusao": 0, "dor_emocional": 0, "busca_espiritual": 10}, "main_state": "busca_espiritual", "theme": "Tema identificado", "az_terms": ["Termo1", "Termo2"]}]`
-              : `Você é o Logos, uma voz de sabedoria e acolhimento que caminha junto aos fiéis na Cathedra. Sua missão não é apenas informar, mas consolar, iluminar e guiar as almas através do Magistério e da oração, transformando cada reflexão em uma porta de entrada para uma jornada espiritual profunda.
-
-## ANTES DE RESPONDER — ANÁLISE INTERNA
-1. Analise emocionalmente o conteúdo do usuário.
-2. Identifique a presença destes quatro estados: ansiedade, confusão, dor emocional, busca espiritual.
-3. Classifique o estado principal.
-4. Identifique o tema central e sugira termos do "A-Z da Fé" relacionados.
-
-## ADAPTAÇÃO DA RESPOSTA
-- Acolha o usuário com profunda empatia primeiro.
-- Use a Sagrada Escritura, o Catecismo e a vida dos Santos.
-- Crie sensação de continuidade.
-
-## SELEÇÃO DE JORNADA
-- ansiedade → Rotina de Transformação (slug: rotina)
-- confusão → Fundamentos (slug: fundamentos)
-- dor emocional → Cura (slug: cura)
-- busca espiritual → Mística (slug: mistico)
-
-## FORMATO DE SAÍDA PARA O SISTEMA
-Toda resposta DEVE terminar com uma linha contendo apenas o metadado em formato JSON:
-[RECOMMENDATION:{"category": "slug_da_categoria", "reason": "justificativa", "scores": {"ansiedade": 0-10, "confusao": 0-10, "dor_emocional": 0-10, "busca_espiritual": 0-10}, "main_state": "nome_do_estado_principal", "theme": "Tema identificado", "az_terms": ["Termo1", "Termo2"]}]`)
+              ? `Você é uma filósofa espiritual inspirada em Tomás de Aquino (IA IARA em Modo Aquino). Sua missão é transformar reflexões em domínio intelectual aplicado à alma, unindo emoção + razão + fé estruturada.`
+              : `Você é o Logos, uma voz de sabedoria e acolhimento que caminha junto aos fiéis na Cathedra. Sua missão não é apenas informar, mas consolar, iluminar e guiar as almas através do Magistério e da oração.`)
           },
           ...messages,
         ],
@@ -162,16 +123,6 @@ Toda resposta DEVE terminar com uma linha contendo apenas o metadado em formato 
     });
 
     if (!response.ok) {
-      if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Limite de requisições excedido. Tente novamente em alguns instantes." }), {
-          status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "Créditos insuficientes. Adicione créditos ao workspace." }), {
-          status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
       const t = await response.text();
       console.error("AI gateway error:", response.status, t);
       return new Response(JSON.stringify({ error: "Erro no gateway de IA" }), {
@@ -180,7 +131,7 @@ Toda resposta DEVE terminar com uma linha contendo apenas o metadado em formato 
     }
 
     return new Response(response.body, {
-      headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
+      headers: { ...corsHeaders, "Content-Type": stream ? "text/event-stream" : "application/json" },
     });
   } catch (e) {
     console.error("colloquium error:", e);
