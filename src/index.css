@@ -77,7 +77,7 @@
 
   /* Refine all Lucide icons for a more professional, premium appearance */
   svg.lucide {
-    stroke-width: 1.75; /* Slightly thinner than default 2 for a modern, elegant look */
+    stroke-width: 2.25; /* Made thicker for a more "solid" and traditional religious feel */
     stroke-linecap: round;
     stroke-linejoin: round;
     transition: transform 0.2s ease, stroke-width 0.2s ease;
@@ -88,7 +88,7 @@
   a:hover svg.lucide,
   .hover-icon-effect:hover svg.lucide {
     transform: translateY(-1px);
-    stroke-width: 2; /* Slightly thicker on hover to feel more "active" */
+    stroke-width: 2.5; /* Slightly thicker on hover to feel more "active" */
   }
 
   html, body {
