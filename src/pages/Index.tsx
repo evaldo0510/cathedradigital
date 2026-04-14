@@ -15,6 +15,9 @@ const AcolhimentoSection = lazy(() => import("./landing/AcolhimentoSection"));
 const BenefitsSection = lazy(() => import("./landing/BenefitsSection"));
 const TestimonialsSection = lazy(() => import("./landing/TestimonialsSection"));
 const AboutCreatorSection = lazy(() => import("./landing/AboutCreatorSection"));
+const CommunitySection = lazy(() => import("./landing/CommunitySection"));
+const DailyRoutineSection = lazy(() => import("./landing/DailyRoutineSection"));
+const PricingSection = lazy(() => import("./landing/PricingSection"));
 const FaqSection = lazy(() => import("./landing/FaqSection"));
 const CtaBannerSection = lazy(() => import("./landing/CtaBannerSection"));
 const FeedbackWidget = lazy(() => import("@/components/landing/FeedbackWidget"));
@@ -66,9 +69,12 @@ const Index = () => {
           <div id="stats"><StatsSection /></div>
           <div id="features"><FeaturesSection onNavigate={handleNavigate} /></div>
           <div id="how-it-works"><HowItWorksSection /></div>
+          <DailyRoutineSection />
           <AcolhimentoSection />
+          <CommunitySection />
           <BenefitsSection onLogin={() => navigate(AppRoute.LOGIN)} />
           <div id="testimonials"><TestimonialsSection /></div>
+          <PricingSection />
           <AboutCreatorSection />
           <FaqSection />
           <CtaBannerSection onStart={handleStart} />
