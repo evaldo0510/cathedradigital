@@ -597,6 +597,7 @@ const Bible: React.FC = () => {
         <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-2">
           {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map(ch => {
             const isRead = chaptersRead[selectedBook.abbr]?.has(ch);
+            const hasCicRef = !!BIBLE_TO_CIC[`${selectedBook.abbr}:${ch}`];
             return (
               <button 
                 key={ch} 
@@ -608,6 +609,9 @@ const Bible: React.FC = () => {
               >
                 {ch}
                 {isRead && <Icons.CheckCircle2 className="w-2 h-2 absolute top-0.5 right-0.5" />}
+                {hasCicRef && (
+                  <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-secondary" title="Referência no Catecismo" />
+                )}
               </button>
             );
           })}
