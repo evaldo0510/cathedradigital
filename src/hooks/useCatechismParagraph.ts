@@ -12,7 +12,11 @@ export interface CatechismParagraph extends Partial<DeepContent> {
 export const fetchCatechismParagraph = async (paragraph: number): Promise<CatechismParagraph> => {
   // 1) Check IndexedDB cache first
   const cached = await getCachedCatechismParagraph(paragraph);
-  const isStale = cached?.content && (cached.content.includes('processamento') || cached.content.length < 20);
+  const isStale = cached?.content && (
+    cached.content.includes('processamento') || 
+    cached.content.includes('sendo carregado') ||
+    cached.content.length < 20
+  );
   
   if (cached?.content && !isStale) {
     return cached as CatechismParagraph;
@@ -28,6 +32,11 @@ export const fetchCatechismParagraph = async (paragraph: number): Promise<Catech
   }
 
   const parsed = typeof data === 'string' ? JSON.parse(data) : data;
+
+  // If server returned a "loading" status, throw to trigger retry
+  if (parsed.status === 'loading') {
+    throw new Error(`Parágrafo §${paragraph} ainda sendo processado`);
+  }
 
   const result: CatechismParagraph = {
     paragraph: parsed.paragraph || paragraph,
