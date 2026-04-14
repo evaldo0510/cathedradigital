@@ -582,12 +582,20 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
                       <Icons.Book className="w-3.5 h-3.5" /> Escritura
                     </h4>
                     <div className="space-y-2">
-                      {saint.bibleRefs.map((ref, i) => (
-                        <div key={i} className="p-3 bg-secondary/30 rounded-xl border border-border/50 hover:border-primary/30 transition-colors">
-                          <p className="text-xs font-bold text-foreground">{ref.ref}</p>
-                          <p className="text-[10px] text-muted-foreground italic mt-0.5">{ref.label}</p>
-                        </div>
-                      ))}
+                      {saint.bibleRefs.map((ref, i) => {
+                        const parsed = parseTheologicalReferences(ref.ref);
+                        const bibleSeg = parsed.find(s => s.type === 'bibleRef');
+                        return (
+                          <div key={i} className="p-3 bg-secondary/30 rounded-xl border border-border/50 hover:border-primary/30 transition-colors space-y-1">
+                            {bibleSeg ? (
+                              <BibleVersePopover abbr={bibleSeg.abbr!} chapter={bibleSeg.chapter!} verse={bibleSeg.verse} label={ref.ref} />
+                            ) : (
+                              <p className="text-xs font-bold text-foreground">{ref.ref}</p>
+                            )}
+                            <p className="text-[10px] text-muted-foreground italic mt-0.5">{ref.label}</p>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 )}
@@ -598,11 +606,16 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
                       <Icons.Cross className="w-3.5 h-3.5" /> Catecismo
                     </h4>
                     <div className="flex flex-wrap gap-2">
-                      {saint.catechismRefs.map(ref => (
-                        <div key={ref} className="px-3 py-1.5 bg-primary/5 text-primary text-[10px] font-bold rounded-lg border border-primary/10">
-                          CIC {ref}
-                        </div>
-                      ))}
+                      {saint.catechismRefs.map(ref => {
+                        const num = typeof ref === 'string' ? parseInt(ref.replace(/\D/g, ''), 10) : ref;
+                        return num && !isNaN(num) ? (
+                          <CatechismPopover key={ref} paragraph={num} onNavigate={() => { onClose(); navigate('/catechism'); }} />
+                        ) : (
+                          <div key={ref} className="px-3 py-1.5 bg-primary/5 text-primary text-[10px] font-bold rounded-lg border border-primary/10">
+                            CIC {ref}
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 )}
@@ -617,7 +630,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
                         <div key={i} className="flex items-center justify-between p-3 bg-card border border-border rounded-xl group hover:border-primary/40 transition-all">
                           <span className="text-[10px] font-bold text-foreground truncate pr-2">{doc.title}</span>
                           <button 
-                            onClick={() => window.open(doc.url, '_blank')}
+                            onClick={() => setViewingDoc({ url: doc.url, title: doc.title })}
                             className="p-1.5 text-primary hover:bg-primary/10 rounded-md transition-colors"
                           >
                             <Icons.ExternalLink className="w-3.5 h-3.5" />
