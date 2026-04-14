@@ -539,36 +539,6 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           {/* You can add more secondary info here */}
         </div>
 
-        {/* Works */}
-        {saint.works.length > 0 && (
-          <section className="space-y-4">
-            <div className="flex items-center gap-2 text-primary">
-              <BookOpen className="w-4 h-4" />
-              <h3 className="text-[11px] font-black uppercase tracking-[0.2em]">Obras Principais</h3>
-            </div>
-            <div className="grid sm:grid-cols-2 gap-3">
-              {saint.works.map((w, i) => (
-                <div key={i} className="flex items-center gap-4 p-4 bg-card border border-border rounded-2xl group hover:border-primary/40 hover:bg-primary/5 transition-all">
-                  <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary transition-colors">
-                    <Icons.Book className="w-5 h-5" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h4 className="text-sm font-bold text-foreground truncate group-hover:text-primary transition-colors">{w.title}</h4>
-                    {w.year && <span className="text-[10px] text-muted-foreground">{w.year}</span>}
-                  </div>
-                  {w.url && (
-                    <button 
-                      onClick={() => setViewingDoc({ url: w.url!, title: w.title })} 
-                      className="p-2 text-primary hover:bg-primary/20 rounded-lg transition-colors"
-                    >
-                      <Icons.ArrowDown className="w-4 h-4 -rotate-90" />
-                    </button>
-                  )}
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
 
         {/* Deep Connections - PRO ONLY */}
         {(saint.bibleRefs || saint.catechismRefs || saint.churchDocRefs) && (
