@@ -105,13 +105,7 @@ const TemasPage = () => {
     setScrollProgress(maxScroll > 0 ? el.scrollLeft / maxScroll : 0);
   }, []);
 
-  useEffect(() => {
-    const el = document.getElementById('tags-carousel');
-    if (!el) return;
-    el.addEventListener('scroll', handleCarouselScroll, { passive: true });
-    handleCarouselScroll();
-    return () => el.removeEventListener('scroll', handleCarouselScroll);
-  }, [handleCarouselScroll, filteredTags]);
+  // moved below filteredTags
 
   const { data: tags, isLoading: loadingTags } = useQuery({
     queryKey: ['tags'],
