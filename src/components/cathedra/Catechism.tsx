@@ -430,7 +430,7 @@ const Catechism: React.FC = () => {
         <div className="bg-card border border-border rounded-3xl p-6 md:p-10 space-y-12">
           <div className="flex flex-col gap-10">
             {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(p => (
-              <LazyParagraph key={p} paragraph={p} currentParagraph={currentParagraph} paragraphsRead={paragraphsRead} isFavorite={isFavorite} toggleFavorite={toggleFavorite} handleNavigateToBible={handleNavigateToBible} jumpToParagraph={jumpToParagraph} />
+              <LazyParagraph key={p} paragraph={p} currentParagraph={currentParagraph} paragraphsRead={paragraphsRead} isFavorite={isFavorite} toggleFavorite={toggleFavorite} handleNavigateToBible={handleNavigateToBible} />
             ))}
           </div>
         </div>
