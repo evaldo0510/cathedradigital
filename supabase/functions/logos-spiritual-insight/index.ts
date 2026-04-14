@@ -35,7 +35,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'openai/gpt-5-mini', // Trying the mini model
+        model: 'google/gemini-2.5-flash-lite', // Trying the lite model
         messages: [{ role: 'system', content: prompt }],
         temperature: 0.7,
       }),
