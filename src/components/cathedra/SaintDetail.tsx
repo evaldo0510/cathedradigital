@@ -243,7 +243,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
             )}
             
             <AudioContentPlayer 
-              text={`${saint.name}. ${saint.title}. ${saint.bio}. ${saint.fullBio || ''}. ${saint.quotes[0] || ''}.`}
+              text={`${saint.name}. ${saint.title}. ${saint.bio}. ${saint.fullBio || ''}. ${saint.quotes?.[0] || ''}.`}
               title="Ouvir conteúdo"
               className="h-9"
             />
