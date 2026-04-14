@@ -73,7 +73,7 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
           />
         ) : (
           <ReactMarkdown key={i} components={{
-            p: ({ children }) => <span>{children}</span>,
+            p: (props) => <span>{props.children}</span>,
           }}>{seg.value}</ReactMarkdown>
         )
       )}
