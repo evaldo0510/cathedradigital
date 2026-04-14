@@ -153,7 +153,7 @@ const Catechism: React.FC = () => {
   const crossRefs = getCatechismCrossRefs(currentParagraph);
   const docsRefs = getCatechismDocs(currentParagraph);
 
-  // Track progress
+  // Track progress and IntersectionObserver for current paragraph
   useEffect(() => {
     if (!user) return;
     const loadProgress = async () => {
@@ -167,6 +167,30 @@ const Catechism: React.FC = () => {
     };
     loadProgress();
   }, [user]);
+
+  // Observer to track which paragraph is currently in view
+  useEffect(() => {
+    if (viewMode !== 'reading') return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const p = parseInt(entry.target.id.replace('p', ''));
+            if (!isNaN(p)) {
+              setCurrentParagraph(p);
+            }
+          }
+        });
+      },
+      { threshold: 0.5, rootMargin: '-10% 0px -40% 0px' }
+    );
+
+    const elements = document.querySelectorAll('[id^="p"]');
+    elements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, [viewMode]);
 
   const markParagraphRead = useCallback(async (p: number) => {
     if (!user) return;
