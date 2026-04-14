@@ -637,7 +637,14 @@ const ContentSection = React.forwardRef<HTMLDivElement, ContentSectionProps>(({ 
                   </div>
                   
                   <div className="flex flex-col sm:flex-row items-center justify-end gap-2 sm:gap-4 pt-2 sm:pt-4">
-                    <Button variant="ghost" size="lg" className="rounded-xl sm:rounded-2xl text-muted-foreground hover:text-primary hover:bg-primary/5 font-black uppercase tracking-widest text-[9px] sm:text-[10px] w-full sm:w-auto h-10 sm:h-12">
+                    <Button 
+                      variant="ghost" 
+                      size="lg" 
+                      onClick={() => {
+                        const text = `"${item.text_content}" — ${item.reference}`;
+                        navigator.clipboard.writeText(text);
+                      }}
+                      className="rounded-xl sm:rounded-2xl text-muted-foreground hover:text-primary hover:bg-primary/5 font-black uppercase tracking-widest text-[9px] sm:text-[10px] w-full sm:w-auto h-10 sm:h-12">
                       Copiar Citação
                     </Button>
                     <Button 
@@ -657,7 +664,7 @@ const ContentSection = React.forwardRef<HTMLDivElement, ContentSectionProps>(({ 
                       size="lg" 
                       className="rounded-xl sm:rounded-2xl gap-2 sm:gap-3 px-6 sm:px-10 shadow-xl hover:shadow-primary/20 transition-all group-hover:scale-[1.03] font-black uppercase tracking-widest text-[9px] sm:text-[10px] w-full sm:w-auto h-10 sm:h-12"
                     >
-                      Aprofundar Estudo <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                      {item.content_type === 'bible' ? 'Ler na Bíblia' : item.content_type === 'catechism' ? 'Ver no Catecismo' : item.content_type === 'magisterium' ? 'Ver Documento' : 'Abrir Jornada'} <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                     </Button>
                   </div>
                 </CardContent>
