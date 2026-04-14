@@ -53,15 +53,20 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
   if (isError) {
     return (
       <div className="reader-text bg-destructive/10 border border-destructive/20 rounded-2xl p-6 text-destructive font-serif text-base py-8 space-y-4">
-        <div className="font-bold flex items-center gap-2">
+        <div className="font-bold flex items-center gap-2 text-red-600 dark:text-red-400">
            <Icons.Cross className="w-4 h-4" />
            Ops! Tivemos um problema ao carregar o parágrafo §{paragraph}.
         </div>
-        <p className="text-sm opacity-80">
-          O parágrafo está sendo processado ou houve um erro de conexão. 
+        <p className="text-sm opacity-80 text-foreground/80">
+          O parágrafo está sendo processado por nossa IA ou houve um erro de conexão. 
           Isso pode acontecer na primeira vez que ele é acessado. 
-          Tente atualizar a página em alguns instantes.
         </p>
+        <button 
+          onClick={() => window.location.reload()}
+          className="px-4 py-2 bg-primary text-primary-foreground rounded-xl text-xs font-bold hover:opacity-90 transition-all shadow-sm shadow-primary/20"
+        >
+          Tentar novamente
+        </button>
       </div>
     );
   }
