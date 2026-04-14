@@ -571,25 +571,25 @@ const ContentSection = React.forwardRef<HTMLDivElement, ContentSectionProps>(({ 
   }[color];
 
   return (
-    <section className="space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-      <div className="flex items-center justify-between border-b pb-6 border-border/40">
-        <div className="flex items-center gap-5">
-          <div className={`p-4 rounded-[1.5rem] ${colorStyles.bg} ${colorStyles.glow} shadow-xl ${colorStyles.text} transition-all duration-500 hover:scale-110`}>
+    <section className="space-y-6 sm:space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+      <div className="flex items-center justify-between border-b pb-4 sm:pb-6 border-border/40">
+        <div className="flex items-center gap-3 sm:gap-5">
+          <div className={`p-2.5 sm:p-4 rounded-xl sm:rounded-[1.5rem] ${colorStyles.bg} ${colorStyles.glow} shadow-xl ${colorStyles.text} transition-all duration-500 hover:scale-110`}>
             {icon}
           </div>
-          <div className="space-y-1">
-            <h3 className="font-black text-3xl tracking-tighter text-foreground">{title}</h3>
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/50">Fontes Sagradas</p>
+          <div className="space-y-0.5 sm:space-y-1">
+            <h3 className="font-black text-xl sm:text-3xl tracking-tighter text-foreground">{title}</h3>
+            <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/50">Fontes Sagradas</p>
           </div>
         </div>
-        <Badge variant="outline" className="rounded-full px-6 py-2 font-black text-[10px] uppercase tracking-widest bg-muted/30 border-border/40 text-muted-foreground shadow-sm">
+        <Badge variant="outline" className="rounded-full px-3 sm:px-6 py-1.5 sm:py-2 font-black text-[9px] sm:text-[10px] uppercase tracking-widest bg-muted/30 border-border/40 text-muted-foreground shadow-sm">
           {items.length} {items.length === 1 ? 'item' : 'itens'}
         </Badge>
       </div>
       
-      <div className="grid grid-cols-1 gap-8">
+      <div className="grid grid-cols-1 gap-4 sm:gap-8">
         {items.length === 0 ? (
-          <div className="text-center py-20 px-10 bg-muted/5 rounded-[2.5rem] border border-dashed border-border/30 relative overflow-hidden group">
+          <div className="text-center py-12 sm:py-20 px-6 sm:px-10 bg-muted/5 rounded-2xl sm:rounded-[2.5rem] border border-dashed border-border/30 relative overflow-hidden group">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
             <p className="text-muted-foreground/60 font-medium italic text-lg relative z-10">
               Nenhum conteúdo vinculado a este tema nesta categoria no momento.
@@ -603,17 +603,17 @@ const ContentSection = React.forwardRef<HTMLDivElement, ContentSectionProps>(({ 
               transition={{ delay: idx * 0.08, type: "spring", damping: 20 }}
               key={item.id}
             >
-              <Card className="overflow-hidden border-border/40 hover:border-primary/40 transition-all duration-500 bg-card/40 backdrop-blur-xl shadow-lg hover:shadow-2xl hover:shadow-primary/5 group rounded-[2.5rem] relative">
+              <Card className="overflow-hidden border-border/40 hover:border-primary/40 transition-all duration-500 bg-card/40 backdrop-blur-xl shadow-lg hover:shadow-2xl hover:shadow-primary/5 group rounded-2xl sm:rounded-[2.5rem] relative">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-primary/10 transition-all duration-700" />
                 
-                <CardHeader className="pb-4 pt-10 px-10">
-                  <div className="flex justify-between items-start gap-6">
+                <CardHeader className="pb-3 sm:pb-4 pt-5 sm:pt-10 px-4 sm:px-10">
+                  <div className="flex flex-col sm:flex-row justify-between items-start gap-3 sm:gap-6">
                     <div className="space-y-2">
                       <div className="flex items-center gap-3">
                         <span className={`w-2 h-2 rounded-full ${colorStyles.bg} ${colorStyles.text} animate-pulse`} />
                         <CardDescription className={`font-black uppercase tracking-[0.2em] text-[10px] ${colorStyles.text}`}>{item.reference}</CardDescription>
                       </div>
-                      <CardTitle className="text-2xl font-black group-hover:text-primary transition-colors leading-tight tracking-tight text-foreground">
+                      <CardTitle className="text-lg sm:text-2xl font-black group-hover:text-primary transition-colors leading-tight tracking-tight text-foreground">
                         {item.title}
                       </CardTitle>
                     </div>
@@ -628,16 +628,16 @@ const ContentSection = React.forwardRef<HTMLDivElement, ContentSectionProps>(({ 
                     )}
                   </div>
                 </CardHeader>
-                <CardContent className="px-10 pb-10 space-y-10">
+                <CardContent className="px-4 sm:px-10 pb-5 sm:pb-10 space-y-5 sm:space-y-10">
                   <div className="relative">
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-primary/40 via-primary/10 to-transparent rounded-full -ml-4" />
-                    <p className="text-foreground/90 leading-relaxed italic text-xl sm:text-2xl font-serif pl-4 py-2 tracking-tight">
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-primary/40 via-primary/10 to-transparent rounded-full -ml-2 sm:-ml-4" />
+                    <p className="text-foreground/90 leading-relaxed italic text-base sm:text-xl md:text-2xl font-serif pl-2 sm:pl-4 py-2 tracking-tight">
                       "{item.text_content}"
                     </p>
                   </div>
                   
-                  <div className="flex flex-col sm:flex-row items-center justify-end gap-4 pt-4">
-                    <Button variant="ghost" size="lg" className="rounded-2xl text-muted-foreground hover:text-primary hover:bg-primary/5 font-black uppercase tracking-widest text-[10px] w-full sm:w-auto h-12">
+                  <div className="flex flex-col sm:flex-row items-center justify-end gap-2 sm:gap-4 pt-2 sm:pt-4">
+                    <Button variant="ghost" size="lg" className="rounded-xl sm:rounded-2xl text-muted-foreground hover:text-primary hover:bg-primary/5 font-black uppercase tracking-widest text-[9px] sm:text-[10px] w-full sm:w-auto h-10 sm:h-12">
                       Copiar Citação
                     </Button>
                     <Button 
@@ -651,7 +651,7 @@ const ContentSection = React.forwardRef<HTMLDivElement, ContentSectionProps>(({ 
                         }
                       }}
                       size="lg" 
-                      className="rounded-2xl gap-3 px-10 shadow-xl hover:shadow-primary/20 transition-all group-hover:scale-[1.03] font-black uppercase tracking-widest text-[10px] w-full sm:w-auto h-12"
+                      className="rounded-xl sm:rounded-2xl gap-2 sm:gap-3 px-6 sm:px-10 shadow-xl hover:shadow-primary/20 transition-all group-hover:scale-[1.03] font-black uppercase tracking-widest text-[9px] sm:text-[10px] w-full sm:w-auto h-10 sm:h-12"
                     >
                       Aprofundar Estudo <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                     </Button>
