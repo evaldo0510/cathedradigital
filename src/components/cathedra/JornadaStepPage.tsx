@@ -63,7 +63,6 @@ const JornadaStepPage: React.FC = () => {
     return match?.image;
   }, [step?.subtitle]);
 
-
   useEffect(() => {
     if (stepId && journeyId) loadData();
   }, [stepId, journeyId]);
@@ -79,9 +78,9 @@ const JornadaStepPage: React.FC = () => {
 
       if (stepRes.data) {
         setStep(stepRes.data);
-        const content = stepRes.data.content as Record<string, any>;
+        const dataContent = stepRes.data.content as Record<string, any>;
         const firstWithContent = SECTION_CONFIG.find(s => {
-          const val = content[s.key] || content[`${s.key}_iniciante`];
+          const val = dataContent[s.key] || dataContent[`${s.key}_iniciante`];
           return !!val;
         });
         if (firstWithContent) setExpandedSection(firstWithContent.key);
@@ -207,9 +206,6 @@ const JornadaStepPage: React.FC = () => {
     );
   }
 
-  // Content is already calculated at the top
-
-
   return createPortal(
     <motion.div
       initial={{ opacity: 0 }}
@@ -264,6 +260,15 @@ const JornadaStepPage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center space-y-2"
           >
+            {saintImage && (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="w-24 h-24 mx-auto mb-4 rounded-2xl overflow-hidden border-2 border-primary/20 shadow-xl"
+              >
+                <SacredImage src={saintImage} alt={step.subtitle || ''} className="w-full h-full object-cover" />
+              </motion.div>
+            )}
             <h1 className="text-2xl md:text-3xl font-bold font-serif text-foreground">{step.title}</h1>
             {step.subtitle && (
               <p className="text-sm text-muted-foreground italic">{step.subtitle}</p>
@@ -408,43 +413,38 @@ const JornadaStepPage: React.FC = () => {
             <button
               onClick={completeStep}
               disabled={saving}
-              className="w-full py-4 bg-foreground text-background rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-primary hover:text-primary-foreground transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+              className="w-full h-14 bg-primary text-primary-foreground rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-3"
             >
               {saving ? (
-                <>Salvando...</>
+                <>
+                  <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                  Salvando...
+                </>
               ) : (
                 <>
-                  Concluir Etapa <Check className="w-4 h-4" />
+                  <Check className="w-5 h-5" />
+                  Concluir Etapa
                 </>
               )}
             </button>
           ) : (
-            <div className="space-y-3">
-              <div className="text-center">
-                <p className="text-sm font-bold text-primary">✓ Etapa concluída!</p>
-              </div>
-              <ProConversionBanner context="jornada" />
-              {nextStep ? (
-                <button
-                  onClick={() => navigate(`/jornadas/${journeyId}/step?step=${nextStep.id}`)}
-                  className="w-full py-4 bg-primary text-primary-foreground rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
-                >
-                  Próxima Etapa <ChevronDown className="w-4 h-4 -rotate-90" />
-                </button>
-              ) : (
-                <button
-                  onClick={() => navigate(`/jornadas/${journeyId}/complete`)}
-                  className="w-full py-4 bg-primary text-primary-foreground rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
-                >
-                  Concluir Jornada <Icons.Award className="w-4 h-4" />
-                </button>
-              )}
+            <div className="flex gap-3">
               <button
                 onClick={() => navigate(`/jornadas/${journeyId}`)}
-                className="w-full py-4 bg-muted text-foreground rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-2"
+                className="flex-1 h-14 bg-secondary text-secondary-foreground rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-secondary/80 transition-all flex items-center justify-center gap-2"
               >
-                <ArrowLeft className="w-4 h-4" /> Voltar à Jornada
+                <ArrowLeft className="w-4 h-4" />
+                Voltar à Jornada
               </button>
+              {nextStep && (
+                <button
+                  onClick={() => navigate(`/jornadas/${journeyId}/step?step=${nextStep.id}`)}
+                  className="flex-1 h-14 bg-primary text-primary-foreground rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                >
+                  Próxima Etapa
+                  <Icons.ChevronRight className="w-4 h-4" />
+                </button>
+              )}
             </div>
           )}
         </div>
