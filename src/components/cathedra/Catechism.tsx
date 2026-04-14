@@ -184,6 +184,12 @@ const Catechism: React.FC = () => {
   useEffect(() => {
     if (viewMode === 'reading' && currentParagraph) {
       markParagraphRead(currentParagraph);
+      
+      // Auto-scroll to the paragraph if it's not in view
+      const element = document.getElementById(`p${currentParagraph}`);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
   }, [viewMode, currentParagraph, markParagraphRead]);
 
