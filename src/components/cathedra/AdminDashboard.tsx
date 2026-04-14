@@ -671,10 +671,44 @@ const AdminDashboard: React.FC = () => {
             </Card>
           </div>
 
-          {/* Charts */}
-          <Suspense fallback={<Skeleton className="h-[350px] rounded-xl" />}>
-            <AdminChartsTab userGrowth={stats?.userGrowth || []} revenueData={stats?.revenueData || []} />
-          </Suspense>
+          {/* Recent Activity Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2">
+              <Suspense fallback={<Skeleton className="h-[350px] rounded-xl" />}>
+                <AdminChartsTab userGrowth={stats?.userGrowth || []} revenueData={stats?.revenueData || []} />
+              </Suspense>
+            </div>
+            
+            <Card className="border-border/40 shadow-none bg-card/50 backdrop-blur-sm">
+              <CardHeader className="pb-3 pt-3 px-3">
+                <CardTitle className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-2">
+                  <MessageSquare className="w-3.5 h-3.5" /> Últimas Reflexões
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="px-3 pb-3 pt-1 space-y-3">
+                {recentJournal.length > 0 ? (
+                  recentJournal.map((entry) => (
+                    <div key={entry.id} className="p-2.5 rounded-lg bg-muted/20 border border-border/10 space-y-1.5 hover:bg-muted/30 transition-colors">
+                      <div className="flex items-center justify-between text-[10px] font-bold">
+                        <span className="text-primary truncate max-w-[120px]">{entry.profiles?.name || 'Anônimo'}</span>
+                        <span className="text-muted-foreground opacity-60">{new Date(entry.created_at).toLocaleDateString('pt-BR')}</span>
+                      </div>
+                      <p className="text-[11px] leading-relaxed line-clamp-2 italic opacity-80">"{entry.content}"</p>
+                      {entry.mood && (
+                        <Badge variant="outline" className="text-[8px] font-black h-4 px-1 uppercase tracking-tighter bg-primary/5 border-primary/20 text-primary">
+                          {entry.mood}
+                        </Badge>
+                      )}
+                    </div>
+                  ))
+                ) : (
+                  <div className="py-8 text-center text-[10px] text-muted-foreground uppercase font-black tracking-widest opacity-40">
+                    Nenhuma reflexão recente.
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
 
         {/* Segmentation Tab */}
