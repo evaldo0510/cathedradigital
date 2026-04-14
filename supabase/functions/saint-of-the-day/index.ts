@@ -21,75 +21,60 @@ serve(async (req) => {
     if (!response.ok) throw new Error(`Status ${response.status}`);
     const html = await response.text();
 
-    const saints = [];
-    const h2Start = '<h2';
-    const h2End = '</h2>';
-    let pos = 0;
+    // Debug: look for a known saint name from today
+    const searchName = "Hermenegildo";
+    const pos = html.indexOf(searchName);
+    
+    if (pos === -1) {
+       // Search for another one
+       const pos2 = html.indexOf("Martinho");
+       if (pos2 === -1) {
+         return new Response(JSON.stringify({ 
+           error: "Saint names not found in HTML",
+           debug: { htmlLength: html.length, preview: html.substring(0, 1000) }
+         }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+       }
+    }
 
-    while ((pos = html.indexOf(h2Start, pos)) !== -1) {
-      const tagEnd = html.indexOf('>', pos);
-      if (tagEnd === -1) break;
-      const endPos = html.indexOf(h2End, tagEnd);
-      if (endPos === -1) break;
+    // If we reach here, we found a name.
+    // Let's find the H2 around it.
+    let name = "Santo do Dia";
+    let imageUrl = null;
+    let description = "";
 
-      const name = html.substring(tagEnd + 1, endPos).replace(/<[^>]*>/g, '').trim();
-      
-      // Look for content until next H2 or end of section
-      const nextH2 = html.indexOf(h2Start, endPos + h2End.length);
-      const nextSection = html.indexOf('</section>', endPos + h2End.length);
-      const limit = (nextH2 !== -1 && nextSection !== -1) ? Math.min(nextH2, nextSection) : (nextH2 !== -1 ? nextH2 : nextSection);
-      const content = limit !== -1 ? html.substring(endPos + h2End.length, limit) : html.substring(endPos + h2End.length);
-
-      let image = null;
-      if (content.includes('data-original="')) {
-        image = content.split('data-original="')[1].split('"')[0];
-      } else if (content.includes('src="')) {
-        const srcMatches = content.match(/src="([^"]+)"/g);
-        if (srcMatches) {
-          for (const m of srcMatches) {
-            const url = m.split('"')[1];
-            if (url.includes('/santi/')) { image = url; break; }
-          }
+    const h2s = html.match(/<h2[^>]*>(.*?)<\/h2>/gis) || [];
+    for (const h2 of h2s) {
+      const cleanH2 = h2.replace(/<[^>]*>/g, '').trim();
+      if (cleanH2.includes("Hermenegildo") || cleanH2.includes("Martinho")) {
+        name = cleanH2;
+        
+        // Find image after this H2
+        const posH2 = html.indexOf(h2);
+        const afterH2 = html.substring(posH2, posH2 + 2000);
+        
+        const imgMatch = afterH2.match(/data-original="([^"]+)"/) || afterH2.match(/src="([^"]+)"/);
+        if (imgMatch) {
+          imageUrl = imgMatch[1];
+          if (!imageUrl.startsWith('http')) imageUrl = `https://www.vaticannews.va${imageUrl}`;
         }
+        
+        const pMatch = afterH2.match(/<p>(.*?)<\/p>/is);
+        if (pMatch) description = pMatch[1].replace(/<[^>]*>/g, '').trim();
+        
+        break;
       }
-
-      let desc = "";
-      if (content.includes('<p>')) {
-        desc = content.split('<p>')[1].split('</p>')[0].replace(/<[^>]*>/g, '').trim();
-      }
-
-      let detailLink = "";
-      if (content.includes('href="')) {
-         const links = content.split('href="');
-         for (let i = 1; i < links.length; i++) {
-            const l = links[i].split('"')[0];
-            if (l.includes('/santo-do-dia/santos/')) { detailLink = l; break; }
-         }
-      }
-
-      if (name.length > 5 && !['Menu', 'Busca', 'Newsletter', 'Redes', 'Siga-nos'].some(w => name.includes(w))) {
-        saints.push({ name, image, desc, detailLink });
-      }
-      
-      pos = endPos + h2End.length;
     }
 
-    // Try to find any saint that HAS an image
-    let bestSaint = saints.find(s => s.image) || saints[0];
-
-    if (!bestSaint) {
-      return new Response(JSON.stringify({ name: "Santo do Dia", source: "Vatican News" }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
-    }
-
-    const result = {
-      name: bestSaint.name,
-      image: bestSaint.image ? (bestSaint.image.startsWith('http') ? bestSaint.image : `https://www.vaticannews.va${bestSaint.image}`) : null,
-      description: bestSaint.desc,
-      url: bestSaint.detailLink ? `https://www.vaticannews.va${bestSaint.detailLink}` : vaticanUrl,
-      source: "Vatican News"
-    };
-
-    return new Response(JSON.stringify(result), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    return new Response(
+      JSON.stringify({
+        name,
+        image: imageUrl,
+        description: description,
+        source: "Vatican News",
+        debug: { h2Count: h2s.length, first5H2s: h2s.slice(0, 5) }
+      }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
   } catch (error) {
     return new Response(JSON.stringify({ error: error.message }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
   }
