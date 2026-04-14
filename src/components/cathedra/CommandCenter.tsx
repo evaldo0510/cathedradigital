@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../constants';
 import { AppRoute } from '../../types';
 import { supabase } from '@/integrations/supabase/client';
-import { SAINTS_DATA } from '@/data/saints';
+import { ALL_SAINTS, SAINTS_DATA } from '@/data/saints';
 
 interface CommandItem {
   label: string;

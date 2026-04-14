@@ -11,7 +11,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 import { routeUser, type RouteRecommendation } from '@/lib/smartRouter';
 import { saveUserPsychology } from '@/lib/psychologicalProfile';
-import { SAINTS_DATA } from '@/data/saints';
+import { ALL_SAINTS, SAINTS_DATA } from '@/data/saints';
 import ReactMarkdown from 'react-markdown';
 import { toast } from 'sonner';
 import { getCachedLiturgy, cacheLiturgy } from '@/lib/offlineCache';
@@ -209,7 +209,7 @@ const LiturgiaPage: React.FC = () => {
   const saintsToday = useMemo(() => {
     const m = today.getMonth() + 1;
     const d = today.getDate();
-    const matched = SAINTS_DATA.filter(s => s.feastMonth === m && s.feastDayNum === d);
+    const matched = ALL_SAINTS.filter(s => s.feastMonth === m && s.feastDayNum === d);
     return matched.length > 0 ? matched : [SAINTS_DATA[0]];
   }, [today]);
 

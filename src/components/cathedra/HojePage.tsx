@@ -11,7 +11,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 import { LangContext } from '@/contexts/LangContext';
 import ProConversionBanner from './ProConversionBanner';
-import { SAINTS_DATA } from '@/data/saints';
+import { ALL_SAINTS, SAINTS_DATA } from '@/data/saints';
 import SacredImage from './SacredImage';
 import AudioContentPlayer from './AudioContentPlayer';
 import { toast } from 'sonner';
@@ -62,7 +62,7 @@ const HojePage: React.FC = () => {
   const allSaintsToday = useMemo(() => {
     const day = new Date().getDate();
     const month = new Date().getMonth() + 1;
-    return SAINTS_DATA.filter(s => s.feastMonth === month && s.feastDayNum === day);
+    return ALL_SAINTS.filter(s => s.feastMonth === month && s.feastDayNum === day);
   }, []);
 
   const featuredSaint = useMemo(() => {

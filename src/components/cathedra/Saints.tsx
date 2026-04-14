@@ -6,7 +6,7 @@ import { Icons } from '../../constants';
 import StaggeredList from './StaggeredList';
 import SacredImage from './SacredImage';
 import SaintDetail, { CATEGORY_LABELS } from './SaintDetail';
-import { SAINTS_DATA, type Saint } from '@/data/saints';
+import { ALL_SAINTS, SAINTS_DATA, type Saint } from '@/data/saints';
 import { supabase } from '@/integrations/supabase/client';
 import { Search, X, Calendar as CalendarIcon, ChevronLeft, ChevronRight, Sparkles, BookOpen, Quote, Shield } from 'lucide-react';
 import { format, addDays, subDays, isSameDay } from 'date-fns';
@@ -43,7 +43,7 @@ const Saints: React.FC = () => {
   const saintsForSelectedDate = useMemo(() => {
     const day = selectedDate.getDate();
     const month = selectedDate.getMonth() + 1;
-    const localSaints = SAINTS_DATA.filter(s => s.feastMonth === month && s.feastDayNum === day);
+    const localSaints = ALL_SAINTS.filter(s => s.feastMonth === month && s.feastDayNum === day);
     
     if (officialSaint && isSameDay(selectedDate, new Date()) && officialSaint.name !== "Menu" && officialSaint.name !== "Santo do Dia") {
       const match = localSaints.find(s => 

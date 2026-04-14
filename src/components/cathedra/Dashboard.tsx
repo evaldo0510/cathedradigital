@@ -157,8 +157,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   useEffect(() => {
     import('@/data/saints').then(m => {
       const today = new Date();
-      const matched = m.SAINTS_DATA.filter(s => s.feastMonth === today.getMonth() + 1 && s.feastDayNum === today.getDate());
-      setSaintsToday(matched.length > 0 ? matched : [m.SAINTS_DATA[0]]);
+      const matched = m.ALL_SAINTS.filter(s => s.feastMonth === today.getMonth() + 1 && s.feastDayNum === today.getDate());
+      setSaintsToday(matched.length > 0 ? matched : [m.ALL_SAINTS[0]]);
     });
   }, []);
 

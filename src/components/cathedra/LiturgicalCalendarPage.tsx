@@ -215,7 +215,7 @@ const LiturgicalCalendarPage: React.FC = () => {
   const [saintsData, setSaintsData] = useState<Saint[]>([]);
 
   React.useEffect(() => {
-    import('@/data/saints').then(m => setSaintsData(m.SAINTS_DATA));
+    import('@/data/saints').then(m => setSaintsData(m.ALL_SAINTS));
   }, []);
 
   const { data: apiData = {}, isLoading: isLoadingApi } = useQuery({
