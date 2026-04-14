@@ -204,11 +204,9 @@ const PT_PARAGRAPHS: Record<number, string> = {
   198: 'A nossa profissão de fé começa por Deus, porque Deus é o «Primeiro e o Último» (Is 44,6), o Princípio e o Fim de tudo.',
   199: 'O Símbolo dos Apóstolos começa por Deus-Pai, porque o Pai é a primeira Pessoa divina da Santíssima Trindade.',
   200: '«Creio em Deus»: esta primeira afirmação da profissão de fé é também a mais fundamental. Todo o Símbolo fala de Deus, e se fala também do homem e do mundo, fá-lo em relação a Deus.',
-  232: 'Os cristãos são batizados «em nome do Pai e do Filho e do Espírito Santo» (Mt 28,19). Antes disso, respondem «Creio» à tríplice pergunta que os convida a confessar a sua fé no Pai, no Filho e no Espírito Santo. A fé de todos os cristãos assenta sobre a Trindade.',
-  234: 'O mistério da Santíssima Trindade é o mistério central da fé e da vida cristã. É o mistério de Deus em Si mesmo. É, portanto, a fonte de todos os outros mistérios da fé e a luz que os ilumina.',
-  268: 'De todos os atributos divinos, só a omnipotência de Deus é mencionada no Símbolo. Confessá-la tem grande importância para a nossa vida.',
-  290: '«No princípio, Deus criou o céu e a terra» (Gn 1, 1). Três coisas são afirmadas nestas primeiras palavras da Escritura: o Deus eterno pôs um princípio a tudo o que existe fora d\'Ele. Só Ele é Criador. A totalidade do que existe depende d\'Aquele que lhe dá o ser.',
+  300: 'Pelo facto de a criação ter a sua origem na bondade de Deus, participa dessa mesma bondade («E Deus viu que tudo era bom... muito bom»: Gn 1, 4. 10. 12. 18. 21. 25. 31). Porque a criação é querida por Deus como um dom feito ao homem, como uma herança que lhe é destinada e confiada. A Igreja teve de, repetidas vezes, defender a bondade da criação, inclusive do mundo material.',
   355: '«Deus criou o ser humano à sua imagem, à imagem de Deus o criou; homem e mulher os criou» (Gn 1,27). O homem ocupa um lugar único na criação: é «à imagem de Deus».',
+
   385: 'Deus é infinitamente bom e todas as suas obras são boas. Todavia, ninguém escapa à experiência do sofrimento, dos males na natureza – que aparecem como ligados aos limites próprios das criaturas – e sobretudo ao problema do mal moral.',
   422: '«Quando chegou a plenitude dos tempos, Deus enviou o seu Filho, nascido de uma mulher, nascido sujeito à Lei, para resgatar os que estavam sujeitos à Lei, a fim de recebermos a adoção de filhos» (Gl 4,4-5).',
   456: 'Com o Credo Niceno-Constantinopolitano, respondemos, confessando: «E por nós, homens, e para nossa salvação, desceu dos Céus e, pelo Espírito Santo, Se encarnou no seio da Virgem Maria e Se fez homem».',
