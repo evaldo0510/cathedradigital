@@ -669,3 +669,11 @@ export const SAINTS_DATA: Saint[] = [
     exercicio: 'Reze pedindo a intercessão de Santa Paulina por todos aqueles que sofrem de doenças crônicas e pelos cuidadores.',
   },
 ];
+
+// Merge with expanded saints data
+import { SAINTS_EXPANDED } from './saints-expanded';
+
+// Combine: main data takes priority (by feastMonth+feastDayNum), expanded fills gaps
+const mainDays = new Set(SAINTS_DATA.map(s => `${s.feastMonth}-${s.feastDayNum}`));
+const expandedUnique = SAINTS_EXPANDED.filter(s => !mainDays.has(`${s.feastMonth}-${s.feastDayNum}`));
+export const ALL_SAINTS = [...SAINTS_DATA, ...expandedUnique];
