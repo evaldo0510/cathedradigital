@@ -19,71 +19,77 @@ serve(async (req) => {
     });
     
     if (!response.ok) throw new Error(`Status ${response.status}`);
-
     const html = await response.text();
-    const allH2s = [];
-    const h2Matches = html.match(/<h2[^>]*>(.*?)<\/h2>/gis);
-    if (h2Matches) {
-      for (const m of h2Matches) {
-        allH2s.push(m.replace(/<[^>]*>/g, '').trim());
-      }
-    }
 
-    let saintName = "Santo do Dia";
-    let imageUrl = null;
-    let description = "";
-    let detailLink = "";
+    const saints = [];
+    const h2Start = '<h2';
+    const h2End = '</h2>';
+    let pos = 0;
 
-    // Find the first saint name
-    for (const h2 of allH2s) {
-      if (h2.length > 5 && !['Menu', 'Newsletter', 'Redes Sociais', 'Siga-nos', 'Destaque'].some(word => h2.includes(word))) {
-        saintName = h2;
-        break;
-      }
-    }
+    while ((pos = html.indexOf(h2Start, pos)) !== -1) {
+      const tagEnd = html.indexOf('>', pos);
+      if (tagEnd === -1) break;
+      const endPos = html.indexOf(h2End, tagEnd);
+      if (endPos === -1) break;
 
-    // Try to find image
-    const imageMatches = html.match(/data-original="([^"]+\.(jpg|jpeg|png|webp))"/g) || html.match(/src="([^"]+\.(jpg|jpeg|png|webp))"/g) || [];
-    for (const imgAttr of imageMatches) {
-      const url = imgAttr.split('"')[1];
-      if (url.includes('/santi/') || (url.includes('/content/') && !url.includes('banner') && !url.includes('logo'))) {
-        imageUrl = url.startsWith('http') ? url : `https://www.vaticannews.va${url}`;
-        break;
-      }
-    }
+      const name = html.substring(tagEnd + 1, endPos).replace(/<[^>]*>/g, '').trim();
+      
+      // Look for content until next H2 or end of section
+      const nextH2 = html.indexOf(h2Start, endPos + h2End.length);
+      const nextSection = html.indexOf('</section>', endPos + h2End.length);
+      const limit = (nextH2 !== -1 && nextSection !== -1) ? Math.min(nextH2, nextSection) : (nextH2 !== -1 ? nextH2 : nextSection);
+      const content = limit !== -1 ? html.substring(endPos + h2End.length, limit) : html.substring(endPos + h2End.length);
 
-    // If still no image, look for ANY image that is NOT a banner
-    if (!imageUrl) {
-      for (const imgAttr of imageMatches) {
-        const url = imgAttr.split('"')[1];
-        if (!url.includes('banner') && !url.includes('logo') && !url.includes('icon') && !url.includes('radio')) {
-           imageUrl = url.startsWith('http') ? url : `https://www.vaticannews.va${url}`;
-           break;
+      let image = null;
+      if (content.includes('data-original="')) {
+        image = content.split('data-original="')[1].split('"')[0];
+      } else if (content.includes('src="')) {
+        const srcMatches = content.match(/src="([^"]+)"/g);
+        if (srcMatches) {
+          for (const m of srcMatches) {
+            const url = m.split('"')[1];
+            if (url.includes('/santi/')) { image = url; break; }
+          }
         }
       }
+
+      let desc = "";
+      if (content.includes('<p>')) {
+        desc = content.split('<p>')[1].split('</p>')[0].replace(/<[^>]*>/g, '').trim();
+      }
+
+      let detailLink = "";
+      if (content.includes('href="')) {
+         const links = content.split('href="');
+         for (let i = 1; i < links.length; i++) {
+            const l = links[i].split('"')[0];
+            if (l.includes('/santo-do-dia/santos/')) { detailLink = l; break; }
+         }
+      }
+
+      if (name.length > 5 && !['Menu', 'Busca', 'Newsletter', 'Redes', 'Siga-nos'].some(w => name.includes(w))) {
+        saints.push({ name, image, desc, detailLink });
+      }
+      
+      pos = endPos + h2End.length;
     }
 
-    // Find description
-    if (saintName !== "Santo do Dia") {
-       const parts = html.split(saintName);
-       if (parts.length > 1) {
-         const afterName = parts[1];
-         const pMatch = afterName.match(/<p>(.*?)<\/p>/is);
-         if (pMatch) description = pMatch[1].replace(/<[^>]*>/g, '').trim();
-       }
+    // Try to find any saint that HAS an image
+    let bestSaint = saints.find(s => s.image) || saints[0];
+
+    if (!bestSaint) {
+      return new Response(JSON.stringify({ name: "Santo do Dia", source: "Vatican News" }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
-    return new Response(
-      JSON.stringify({
-        name: saintName,
-        image: imageUrl,
-        description: description,
-        url: vaticanUrl,
-        source: "Vatican News",
-        debug: { h2s: allH2s.slice(0, 10) }
-      }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+    const result = {
+      name: bestSaint.name,
+      image: bestSaint.image ? (bestSaint.image.startsWith('http') ? bestSaint.image : `https://www.vaticannews.va${bestSaint.image}`) : null,
+      description: bestSaint.desc,
+      url: bestSaint.detailLink ? `https://www.vaticannews.va${bestSaint.detailLink}` : vaticanUrl,
+      source: "Vatican News"
+    };
+
+    return new Response(JSON.stringify(result), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
   } catch (error) {
     return new Response(JSON.stringify({ error: error.message }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
   }
