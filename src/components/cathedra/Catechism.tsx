@@ -26,6 +26,15 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
   const { data, isLoading, isError } = useCatechismParagraph(paragraph, isVisible);
   const prefetch = usePrefetchCatechismParagraph();
 
+  useEffect(() => {
+    if (isVisible && paragraph < 2865) prefetch(paragraph + 1);
+  }, [paragraph, prefetch, isVisible]);
+
+  const segments = useMemo(() => {
+    if (!data?.content || data.status === 'not_cached') return [];
+    return parseTheologicalReferences(data.content);
+  }, [data?.content, data?.status]);
+
   if (!isVisible) {
     return (
       <div className="reader-text text-foreground/30 leading-[2] text-lg py-4 h-24 flex items-center">
