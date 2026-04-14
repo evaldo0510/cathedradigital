@@ -262,85 +262,109 @@ const TemasPage = () => {
               className="space-y-8"
             >
               {/* Theme Hero Section */}
-              <div className="bg-gradient-to-br from-card to-muted/20 border border-border/60 rounded-3xl sm:rounded-[2.5rem] p-6 sm:p-10 shadow-xl relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -mr-10 -mt-10 group-hover:bg-primary/10 transition-colors" />
+              <div className="bg-gradient-to-br from-card via-card/90 to-muted/20 border border-border/40 rounded-[3rem] p-8 sm:p-12 shadow-2xl relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[100px] -mr-20 -mt-20 group-hover:bg-primary/10 transition-all duration-1000" />
+                <div className="absolute bottom-0 left-0 w-32 h-32 bg-secondary/5 rounded-full blur-[80px] -ml-10 -mb-10" />
                 
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8">
-                  <div>
-                    <div className="flex items-center gap-3 mb-4">
-                      <span className="h-1.5 w-8 sm:w-12 bg-primary rounded-full" />
-                      <Badge variant="secondary" className="bg-primary/10 text-primary hover:bg-primary/20 border-none px-3 sm:px-4 py-1 text-[10px] sm:text-xs uppercase tracking-widest font-bold">
-                        Estudo de Tema
-                      </Badge>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-8 mb-10 relative z-10">
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3">
+                      <div className="h-0.5 w-12 bg-primary/60 rounded-full" />
+                      <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/60">
+                        Navegação Teológica
+                      </span>
                     </div>
-                    <h2 className="text-3xl sm:text-5xl font-black mb-4 tracking-tight leading-tight text-foreground">{selectedTag.emoji} {selectedTag.label}</h2>
+                    <motion.h2 
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      className="text-4xl sm:text-6xl font-black tracking-tighter leading-none text-foreground flex items-center gap-4 flex-wrap"
+                    >
+                      <span className="text-5xl sm:text-7xl group-hover:scale-110 transition-transform duration-500 drop-shadow-sm">{selectedTag.emoji}</span>
+                      {selectedTag.label}
+                    </motion.h2>
+                    <p className="text-lg sm:text-xl text-muted-foreground/80 leading-relaxed max-w-2xl font-medium font-serif italic">
+                      "A fé procura a inteligência." — Explorando a profundidade de {selectedTag.label} nas fontes da Tradição.
+                    </p>
                   </div>
-                  <Button variant="outline" className="rounded-2xl border-primary/20 hover:bg-primary/5 hover:border-primary/40 group/btn h-12 sm:h-14 px-4 sm:px-6">
-                    <Icons.Bookmark className="mr-2 h-4 w-4 sm:h-5 sm:w-5 transition-transform group-hover/btn:scale-110" />
-                    Salvar Estudo
-                  </Button>
+                  
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <Button variant="outline" className="rounded-2xl border-primary/20 bg-primary/5 hover:bg-primary/10 hover:border-primary/40 group/btn h-14 sm:h-16 px-8 shadow-sm">
+                      <Icons.Bookmark className="mr-3 h-5 w-5 transition-transform group-hover/btn:scale-110 text-primary" />
+                      <span className="font-bold text-xs uppercase tracking-widest">Salvar Estudo</span>
+                    </Button>
+                  </motion.div>
                 </div>
-
-                <p className="text-xl text-muted-foreground/90 leading-relaxed max-w-3xl font-medium">
-                  Explorando aprofundamentos teológicos sobre {selectedTag.label} em todas as fontes da Tradição.
-                </p>
               </div>
 
               {/* Logos AI Synthesis Section */}
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="relative overflow-hidden rounded-3xl border border-secondary/20 bg-gradient-to-br from-secondary/5 via-card to-primary/5 p-6 sm:p-8 shadow-lg group"
+                transition={{ delay: 0.2, type: "spring", damping: 20 }}
+                className="relative overflow-hidden rounded-[2.5rem] border border-secondary/20 bg-gradient-to-br from-secondary/10 via-card/50 to-primary/5 p-8 sm:p-12 shadow-xl group"
               >
-                <div className="absolute -top-16 -right-16 w-48 h-48 bg-secondary/10 rounded-full blur-3xl pointer-events-none" />
-                <div className="flex items-start gap-5">
-                  <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-secondary/15 flex items-center justify-center text-secondary shrink-0 group-hover:scale-110 transition-transform">
-                    <Sparkles className="w-6 h-6 sm:w-8 sm:h-8" />
+                <div className="absolute top-0 right-0 w-96 h-96 bg-secondary/10 rounded-full blur-[120px] pointer-events-none -mr-48 -mt-48 animate-pulse" />
+                <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/5 rounded-full blur-[100px] pointer-events-none -ml-32 -mb-32" />
+                
+                <div className="flex flex-col md:flex-row items-start gap-8 relative z-10">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-gradient-to-br from-secondary/20 to-secondary/5 flex items-center justify-center text-secondary shrink-0 shadow-lg group-hover:scale-110 transition-transform duration-500 border border-secondary/20">
+                    <Sparkles className="w-8 h-8 sm:w-10 sm:h-10 animate-pulse" />
                   </div>
-                  <div className="flex-1 space-y-4">
+                  <div className="flex-1 space-y-6">
                     <div className="flex items-center justify-between">
-                      <div className="space-y-0.5">
-                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary">Logos · Síntese Espiritual</p>
-                        <h3 className="text-lg font-bold text-foreground">Visão Teológica por IA</h3>
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
+                          <p className="text-[11px] font-black uppercase tracking-[0.3em] text-secondary">Logos · Síntese Espiritual</p>
+                        </div>
+                        <h3 className="text-2xl font-black text-foreground tracking-tight">Iluminação Teológica</h3>
                       </div>
-                      {loadingLogos && <Loader2 className="h-5 w-5 animate-spin text-secondary/50" />}
+                      {loadingLogos && <Loader2 className="h-6 w-6 animate-spin text-secondary/50" />}
                     </div>
                     
-                    <div className="prose prose-sm prose-secondary dark:prose-invert max-w-none">
-                      {loadingLogos ? (
-                        <div className="space-y-2 py-2">
-                          <div className="h-4 bg-secondary/5 rounded animate-pulse w-full" />
-                          <div className="h-4 bg-secondary/5 rounded animate-pulse w-3/4" />
-                          <div className="h-4 bg-secondary/5 rounded animate-pulse w-5/6" />
-                        </div>
-                      ) : logosInsight ? (
-                        <p className="text-foreground/90 italic leading-relaxed whitespace-pre-wrap">
-                          {logosInsight}
-                        </p>
-                      ) : (
-                        <p className="text-muted-foreground italic">Selecione um tema para receber uma síntese teológica profunda.</p>
-                      )}
+                    <div className="relative">
+                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-secondary/40 via-secondary/10 to-transparent rounded-full -ml-4" />
+                      <div className="prose prose-lg prose-secondary dark:prose-invert max-w-none">
+                        {loadingLogos ? (
+                          <div className="space-y-3 py-2">
+                            <div className="h-5 bg-secondary/10 rounded-full animate-pulse w-full" />
+                            <div className="h-5 bg-secondary/10 rounded-full animate-pulse w-5/6" />
+                            <div className="h-5 bg-secondary/10 rounded-full animate-pulse w-4/5" />
+                          </div>
+                        ) : logosInsight ? (
+                          <p className="text-foreground/90 italic leading-relaxed whitespace-pre-wrap font-serif text-xl sm:text-2xl tracking-tight">
+                            "{logosInsight}"
+                          </p>
+                        ) : (
+                          <p className="text-muted-foreground/60 italic text-lg">Selecione um tema sagrado para receber uma síntese teológica profunda do Logos.</p>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
               </motion.div>
 
               <Tabs defaultValue="all" className="w-full">
-                <div className="flex justify-center mb-10 overflow-x-auto pb-2">
-                  <TabsList className="flex bg-muted/40 p-1.5 rounded-[2rem] border border-border/40 gap-1 min-w-max h-auto">
-                    <TabsTrigger value="all" className="rounded-full px-6 sm:px-8 py-3 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-bold">Geral</TabsTrigger>
-                    <TabsTrigger value="bible" className="rounded-full px-6 sm:px-8 py-3 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-bold flex flex-col sm:flex-row items-center gap-2"><Icons.Bible className="h-4 w-4" /> Bíblia</TabsTrigger>
-                    <TabsTrigger value="catechism" className="rounded-full px-6 sm:px-8 py-3 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-bold flex flex-col sm:flex-row items-center gap-2"><Icons.Catechism className="h-4 w-4" /> Catecismo</TabsTrigger>
-                    <TabsTrigger value="magisterium" className="rounded-full px-6 sm:px-8 py-3 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-bold flex flex-col sm:flex-row items-center gap-2"><Icons.Magisterium className="h-4 w-4" /> Documentos</TabsTrigger>
-                    <TabsTrigger value="journey" className="rounded-full px-6 sm:px-8 py-3 data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all font-bold flex flex-col sm:flex-row items-center gap-2"><Icons.Compass className="h-4 w-4" /> Jornadas</TabsTrigger>
+                <div className="flex justify-center mb-12 overflow-x-auto pb-4 px-2">
+                  <TabsList className="flex bg-muted/40 p-2 rounded-[3rem] border border-border/40 gap-1.5 min-w-max h-auto shadow-inner backdrop-blur-md">
+                    <TabsTrigger value="all" className="rounded-full px-8 py-4 data-[state=active]:bg-background data-[state=active]:shadow-2xl data-[state=active]:scale-105 transition-all font-black uppercase tracking-widest text-[10px]">Geral</TabsTrigger>
+                    <TabsTrigger value="bible" className="rounded-full px-8 py-4 data-[state=active]:bg-background data-[state=active]:shadow-2xl data-[state=active]:scale-105 transition-all font-black uppercase tracking-widest text-[10px] flex items-center gap-2.5"><Icons.Bible className="h-4 w-4" /> Bíblia</TabsTrigger>
+                    <TabsTrigger value="catechism" className="rounded-full px-8 py-4 data-[state=active]:bg-background data-[state=active]:shadow-2xl data-[state=active]:scale-105 transition-all font-black uppercase tracking-widest text-[10px] flex items-center gap-2.5"><Icons.Catechism className="h-4 w-4" /> Catecismo</TabsTrigger>
+                    <TabsTrigger value="magisterium" className="rounded-full px-8 py-4 data-[state=active]:bg-background data-[state=active]:shadow-2xl data-[state=active]:scale-105 transition-all font-black uppercase tracking-widest text-[10px] flex items-center gap-2.5"><Icons.Magisterium className="h-4 w-4" /> Documentos</TabsTrigger>
+                    <TabsTrigger value="journey" className="rounded-full px-8 py-4 data-[state=active]:bg-background data-[state=active]:shadow-2xl data-[state=active]:scale-105 transition-all font-black uppercase tracking-widest text-[10px] flex items-center gap-2.5"><Icons.Compass className="h-4 w-4" /> Jornadas</TabsTrigger>
                   </TabsList>
                 </div>
 
                 {loadingContents ? (
-                  <div className="flex flex-col items-center justify-center py-24 gap-4">
-                    <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
-                    <p className="text-muted-foreground font-medium">Consultando fontes sagradas...</p>
+                  <div className="flex flex-col items-center justify-center py-32 gap-6">
+                    <div className="relative">
+                      <div className="w-16 h-16 border-4 border-primary/10 border-t-primary rounded-full animate-spin" />
+                      <div className="absolute inset-0 bg-primary/20 blur-2xl animate-pulse rounded-full" />
+                    </div>
+                    <p className="text-muted-foreground font-black uppercase tracking-[0.3em] text-xs">Consultando fontes sagradas...</p>
                   </div>
                 ) : (
                   <div className="px-1">
