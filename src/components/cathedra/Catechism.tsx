@@ -312,45 +312,66 @@ const Catechism: React.FC = () => {
           />
         )}
 
-        {/* Content */}
-        <div className="bg-card border border-border rounded-3xl p-8 md:p-12 space-y-6">
-          <div className="text-center space-y-4 pb-6 border-b border-border">
-            <div className="flex flex-col items-center gap-3">
-              <span className="text-3xl font-serif font-bold text-primary">§{currentParagraph}</span>
-              <div className="flex items-center gap-2">
-                <AudioButton variant="solid" className="px-6" />
-                <button
-                  onClick={() => toggleFavorite({ type: 'catechism', title: `CIC §${currentParagraph}`, content: `Catecismo da Igreja Católica, parágrafo §${currentParagraph}` })}
-                  className="p-2.5 rounded-xl bg-card border border-border text-muted-foreground hover:text-primary transition-all active:scale-95"
-                  title={isFavorite('catechism', `CIC §${currentParagraph}`) ? 'Remover dos favoritos' : 'Salvar nos favoritos'}
-                >
-                  <Icons.Heart className={`w-5 h-5 transition-all ${isFavorite('catechism', `CIC §${currentParagraph}`) ? 'fill-primary text-primary' : 'text-muted-foreground'}`} />
-                </button>
-              </div>
-            </div>
+        <div className="bg-card border border-border rounded-3xl p-6 md:p-10 space-y-12">
+          <div className="flex flex-col gap-10">
+            {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(p => (
+              <div 
+                key={p} 
+                id={`p${p}`} 
+                className={`scroll-mt-28 transition-all duration-700 pb-10 border-b border-border/40 last:border-0 last:pb-0 ${
+                  currentParagraph === p ? 'relative' : 'opacity-80 hover:opacity-100'
+                }`}
+              >
+                {currentParagraph === p && (
+                  <div className="absolute -left-4 top-0 bottom-0 w-1 bg-primary rounded-full hidden md:block" />
+                )}
+                
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="flex items-center gap-2">
+                    <span className="text-3xl font-serif font-bold text-primary">§{p}</span>
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={() => toggleFavorite({ type: 'catechism', title: `CIC §${p}`, content: `Catecismo da Igreja Católica, parágrafo §${p}` })}
+                        className="p-2 rounded-xl hover:bg-primary/10 transition-all active:scale-95"
+                        title={isFavorite('catechism', `CIC §${p}`) ? 'Remover dos favoritos' : 'Salvar nos favoritos'}
+                      >
+                        <Icons.Heart className={`w-4 h-4 transition-all ${isFavorite('catechism', `CIC §${p}`) ? 'fill-primary text-primary' : 'text-muted-foreground'}`} />
+                      </button>
+                      <ShareButton
+                        title={`Catecismo §${p}`}
+                        text={`Leia o Catecismo da Igreja Católica, §${p} — Cathedra Digital`}
+                        url={`${window.location.origin}/catechism?p=${p}`}
+                        className="p-2 h-auto w-auto border-0 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all"
+                      />
+                    </div>
+                  </div>
+                  <div className="h-px flex-1 bg-gradient-to-r from-border/60 via-border/20 to-transparent" />
+                </div>
 
-            <ShareButton
-              title={`Catecismo §${currentParagraph}`}
-              text={`Leia o Catecismo da Igreja Católica, §${currentParagraph} — Cathedra Digital`}
-              url={`${window.location.origin}/catechism?p=${currentParagraph}`}
-              className="border-0 p-0 hover:bg-transparent"
-            />
-            <NotesPanel contentType="catechism" contentId={`${currentParagraph}`} contentLabel={`§${currentParagraph}`} />
+                <CatechismContent 
+                  paragraph={p} 
+                  onNavigateToBible={handleNavigateToBible} 
+                />
+
+                {p === 1324 && (
+                  <div className="mt-8 pt-8 border-t border-border/30">
+                    <DeepContentSection content={{
+                      textoBase: "A Eucaristia é «fonte e cume de toda a vida cristã».",
+                      explicacao: "Isso significa que tudo o que a Igreja faz nasce da Eucaristia e para ela caminha.",
+                      interpretacaoProfunda: "A santíssima Eucaristia contém todo o tesouro espiritual da Igreja, isto é, o próprio Cristo.",
+                      aplicacaoPratica: "Coloque a Eucaristia no centro de sua vida espiritual.",
+                      reflexaoFinal: "Como está sua relação com Jesus Eucarístico?",
+                      exercicio: "Faça uma visita ao Santíssimo Sacramento hoje."
+                    }} title="Reflexão Doutrinária" />
+                  </div>
+                )}
+                
+                <div className="mt-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <NotesPanel contentType="catechism" contentId={`${p}`} contentLabel={`§${p}`} />
+                </div>
+              </div>
+            ))}
           </div>
-          <CatechismContent paragraph={currentParagraph} onNavigateToBible={handleNavigateToBible} />
-          {/* Deep content section for Catechism */}
-          {currentParagraph === 1324 && (
-            <div className="mt-8 pt-8 border-t border-border">
-              <DeepContentSection content={{
-                textoBase: "A Eucaristia é «fonte e cume de toda a vida cristã».",
-                explicacao: "Isso significa que tudo o que a Igreja faz nasce da Eucaristia e para ela caminha. Não é apenas mais um rito, mas o centro gravitacional de nossa fé.",
-                interpretacaoProfunda: "São João Paulo II dizia que a Eucaristia contém todo o bem espiritual da Igreja, ou seja, o próprio Cristo. Ser 'fonte' significa que dela jorra a graça; ser 'cume' significa que não há nada mais alto ou importante a ser alcançado nesta terra.",
-                aplicacaoPratica: "Tente colocar a Missa e a Adoração como os pontos centrais da sua semana, não como algo que você encaixa se sobrar tempo, mas como o compromisso do qual tudo o mais depende.",
-                reflexaoFinal: "Se a Eucaristia é o sol da minha vida, o que está girando em torno dela hoje?",
-                exercicio: "Faça uma visita de 5 minutos ao Santíssimo Sacramento hoje, apenas para reconhecer que Ele é a fonte de tudo o que você tem."
-              }} title="Reflexão Doutrinária" />
-            </div>
-          )}
         </div>
 
         {/* Quick nav - Anchor links to jump between paragraphs */}
