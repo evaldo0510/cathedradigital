@@ -276,7 +276,7 @@ const TemasPage = () => {
                     const el = document.getElementById('tags-carousel');
                     if (el) el.scrollBy({ left: -200, behavior: 'smooth' });
                   }}
-                  className="absolute left-0 top-0 bottom-0 z-10 w-10 flex items-center justify-center bg-gradient-to-r from-card/90 to-transparent opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-300 hover:from-card"
+                  className="absolute left-0 top-0 bottom-0 z-10 w-10 flex items-center justify-center bg-gradient-to-r from-card/90 to-transparent opacity-100 sm:opacity-0 sm:group-hover/carousel:opacity-100 transition-opacity duration-300 hover:from-card"
                   aria-label="Scroll left"
                 >
                   <ChevronLeft className="w-5 h-5 text-foreground/70" />
@@ -322,7 +322,7 @@ const TemasPage = () => {
                     const el = document.getElementById('tags-carousel');
                     if (el) el.scrollBy({ left: 200, behavior: 'smooth' });
                   }}
-                  className="absolute right-0 top-0 bottom-0 z-10 w-10 flex items-center justify-center bg-gradient-to-l from-card/90 to-transparent opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-300 hover:from-card"
+                  className="absolute right-0 top-0 bottom-0 z-10 w-10 flex items-center justify-center bg-gradient-to-l from-card/90 to-transparent opacity-100 sm:opacity-0 sm:group-hover/carousel:opacity-100 transition-opacity duration-300 hover:from-card"
                   aria-label="Scroll right"
                 >
                   <ChevronRight className="w-5 h-5 text-foreground/70" />
