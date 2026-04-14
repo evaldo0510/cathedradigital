@@ -196,6 +196,30 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
             </div>
           </div>
 
+          {saint.born && (
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-secondary/30 flex items-center justify-center text-primary">
+                <Icons.User className="w-5 h-5" />
+              </div>
+              <div>
+                <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground block">Nascimento</span>
+                <span className="text-sm font-bold text-foreground truncate max-w-[150px] inline-block">{saint.born}</span>
+              </div>
+            </div>
+          )}
+
+          {saint.died && (
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-destructive/10 flex items-center justify-center text-destructive">
+                <Icons.XCircle className="w-5 h-5" />
+              </div>
+              <div>
+                <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground block">Falecimento</span>
+                <span className="text-sm font-bold text-foreground truncate max-w-[150px] inline-block">{saint.died}</span>
+              </div>
+            </div>
+          )}
+
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-secondary-foreground">
               <Shield className="w-5 h-5" />
@@ -287,6 +311,12 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
             </div>
           )}
         </section>
+
+        {/* Deep Content - Textos e Livros */}
+        <DeepContentSection 
+          content={saint as any} 
+          title="Meditação e Aprofundamento" 
+        />
 
         {/* Quote & Practical Application & Reflection */}
         <div className="grid md:grid-cols-2 gap-8">
@@ -496,17 +526,9 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           </div>
         </section>
 
-        {/* Secondary Info Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {/* Patronage */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="p-5 bg-secondary/50 rounded-2xl border border-border">
-            <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground block mb-1">Nascimento</span>
-            <span className="text-xs font-bold text-foreground font-serif">{saint.born}</span>
-          </div>
-          <div className="p-5 bg-secondary/50 rounded-2xl border border-border">
-            <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground block mb-1">Falecimento</span>
-            <span className="text-xs font-bold text-foreground font-serif">{saint.died}</span>
-          </div>
-          <div className="p-5 bg-secondary/50 rounded-2xl border border-border col-span-2">
             <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground block mb-1">Padroeiro(a) de</span>
             <div className="flex flex-wrap gap-1.5 mt-2">
               {saint.patronOf.map(p => (
@@ -514,6 +536,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
               ))}
             </div>
           </div>
+          {/* You can add more secondary info here */}
         </div>
 
         {/* Works */}

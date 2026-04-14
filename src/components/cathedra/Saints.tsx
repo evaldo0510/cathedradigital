@@ -69,8 +69,8 @@ const Saints: React.FC = () => {
             feastDay: format(selectedDate, "dd 'de' MMMM"),
             feastMonth: selectedDate.getMonth() + 1,
             feastDayNum: selectedDate.getDate(),
-            born: '',
-            died: '',
+            born: officialSaint.born || '',
+            died: officialSaint.died || '',
             patronOf: []
           },
           ...localSaints
