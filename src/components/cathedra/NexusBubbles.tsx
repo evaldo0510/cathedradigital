@@ -375,7 +375,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
                         className="flex items-center gap-1.5 group w-full"
                       >
                         <div className={`w-6 h-6 rounded-lg flex items-center justify-center transition-all ${expandedCategory === key ? 'bg-primary/10' : 'bg-muted/50'}`}>
-                          <span className="text-xs">{category.emoji}</span>
+                          {category.icon}
                         </div>
                         <span className="text-[10px] font-black uppercase tracking-wider text-muted-foreground/80 group-hover:text-primary transition-colors">
                           {category.label}
