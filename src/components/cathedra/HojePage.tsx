@@ -265,7 +265,7 @@ const HojePage: React.FC = () => {
             'busca_espiritual': ['Contemplação', 'Mística', 'Oração', 'Silêncio']
           };
           const targetVirtues = virtueMap[mainState] || [];
-          const matchedSaint = SAINTS_DATA.find(s => 
+          const matchedSaint = ALL_SAINTS.find(s => 
             s.virtues?.some(v => targetVirtues.includes(v)) ||
             s.patronOf?.some(p => targetVirtues.some(tv => p.toLowerCase().includes(tv.toLowerCase())))
           );

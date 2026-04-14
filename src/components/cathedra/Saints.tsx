@@ -91,7 +91,7 @@ const Saints: React.FC = () => {
   const filteredSaints = useMemo(() => {
     if (!search.trim()) return [];
     const q = search.toLowerCase().trim();
-    return SAINTS_DATA.filter(s =>
+    return ALL_SAINTS.filter(s =>
       s.name.toLowerCase().includes(q) ||
       s.title.toLowerCase().includes(q) ||
       s.patronOf.some(p => p.toLowerCase().includes(q))
@@ -99,11 +99,11 @@ const Saints: React.FC = () => {
   }, [search]);
 
   const allSaintsSorted = useMemo(() => {
-    return [...SAINTS_DATA].sort((a, b) => a.name.localeCompare(b.name));
+    return [...ALL_SAINTS].sort((a, b) => a.name.localeCompare(b.name));
   }, []);
 
   const writersSaints = useMemo(() => {
-    return SAINTS_DATA.filter(s => (s.works && s.works.length > 0) || s.category === 'doctor').sort((a, b) => a.name.localeCompare(b.name));
+    return ALL_SAINTS.filter(s => (s.works && s.works.length > 0) || s.category === 'doctor').sort((a, b) => a.name.localeCompare(b.name));
   }, []);
 
   const dateStrip = useMemo(() => {

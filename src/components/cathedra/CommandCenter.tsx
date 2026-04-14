@@ -129,7 +129,7 @@ const CommandCenter: React.FC = () => {
     
     const results: UnifiedResult[] = [];
     
-    SAINTS_DATA.forEach(s => {
+    ALL_SAINTS.forEach(s => {
       const nameMatch = s.name.toLowerCase().includes(q);
       const titleMatch = s.title.toLowerCase().includes(q);
       const bioMatch = s.bio.toLowerCase().includes(q);

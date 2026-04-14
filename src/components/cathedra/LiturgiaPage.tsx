@@ -210,7 +210,7 @@ const LiturgiaPage: React.FC = () => {
     const m = today.getMonth() + 1;
     const d = today.getDate();
     const matched = ALL_SAINTS.filter(s => s.feastMonth === m && s.feastDayNum === d);
-    return matched.length > 0 ? matched : [SAINTS_DATA[0]];
+    return matched.length > 0 ? matched : [ALL_SAINTS[0]];
   }, [today]);
 
   const navigateToLectio = (ref?: string) => {
