@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { BookOpen, Star, Clock, Users, ChevronRight, Sparkles } from "lucide-react";
+import { BookOpen, Star, Clock, Users, ChevronRight, Sparkles, Hash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AppRoute } from "@/types";
@@ -12,6 +12,13 @@ const features = [
     benefit: "Encontre respostas que aquecem o coração e iluminam a inteligência com a sabedoria da Igreja.", 
     icon: <Sparkles className="h-6 w-6" />, 
     route: AppRoute.DASHBOARD 
+  },
+  { 
+    title: "Navegação por Temas", 
+    description: "Explore conexões sagradas entre Bíblia, Catecismo e Magistério através de uma interface intuitiva de bolhas teológicas.", 
+    benefit: "Aprofunde-se em conceitos fundamentais da fé com uma visão 360 graus da Tradição.", 
+    icon: <Hash className="h-6 w-6" />, 
+    route: AppRoute.TEMAS 
   },
   { 
     title: "Bíblia Sagrada", 
