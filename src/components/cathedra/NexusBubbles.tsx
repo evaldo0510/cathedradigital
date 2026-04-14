@@ -3,18 +3,21 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AppRoute } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, ExternalLink, Sparkles, Search, X, Heart, Church, Flame, Cross, BookOpen, Shield, Crown, Hand, Star, Globe, Eye, Users, Compass, Wine, Orbit, Hash } from 'lucide-react';
+import { Loader2, ExternalLink, Sparkles, Search, X, Heart, Church, Flame, Cross, BookOpen, Shield, Crown, Hand, Star, Globe, Eye, Users, Compass, Wine, Orbit, Hash, Mountain, RefreshCw, Frown, Bird, Droplets, Wheat, Target, Clock, Megaphone, Skull } from 'lucide-react';
 import { Icons } from '@/constants';
 
-// Maps tag emojis to Lucide icons
 const tagIconMap: Record<string, React.ReactNode> = {
   '❤️': <Heart className="w-3.5 h-3.5" />,
   '💖': <Heart className="w-3.5 h-3.5" />,
   '💔': <Heart className="w-3.5 h-3.5" />,
+  '💜': <Heart className="w-3.5 h-3.5" />,
+  '🤍': <Heart className="w-3.5 h-3.5" />,
+  '🫶': <Heart className="w-3.5 h-3.5" />,
   '✝️': <Cross className="w-3.5 h-3.5" />,
   '⛪': <Church className="w-3.5 h-3.5" />,
   '🙏': <Hand className="w-3.5 h-3.5" />,
-  '🕊️': <Sparkles className="w-3.5 h-3.5" />,
+  '🤲': <Hand className="w-3.5 h-3.5" />,
+  '🕊️': <Bird className="w-3.5 h-3.5" />,
   '🔥': <Flame className="w-3.5 h-3.5" />,
   '📖': <BookOpen className="w-3.5 h-3.5" />,
   '📕': <BookOpen className="w-3.5 h-3.5" />,
@@ -25,6 +28,7 @@ const tagIconMap: Record<string, React.ReactNode> = {
   '🌎': <Globe className="w-3.5 h-3.5" />,
   '👁️': <Eye className="w-3.5 h-3.5" />,
   '👥': <Users className="w-3.5 h-3.5" />,
+  '👨‍👩‍👧‍👦': <Users className="w-3.5 h-3.5" />,
   '🧭': <Compass className="w-3.5 h-3.5" />,
   '🍷': <Wine className="w-3.5 h-3.5" />,
   '💫': <Sparkles className="w-3.5 h-3.5" />,
@@ -36,11 +40,27 @@ const tagIconMap: Record<string, React.ReactNode> = {
   '⚔️': <Shield className="w-3.5 h-3.5" />,
   '🏛️': <Church className="w-3.5 h-3.5" />,
   '🤝': <Users className="w-3.5 h-3.5" />,
-  '😢': <Heart className="w-3.5 h-3.5" />,
-  '💀': <Cross className="w-3.5 h-3.5" />,
+  '😢': <Frown className="w-3.5 h-3.5" />,
+  '😰': <Frown className="w-3.5 h-3.5" />,
+  '😔': <Frown className="w-3.5 h-3.5" />,
+  '😞': <Frown className="w-3.5 h-3.5" />,
+  '😨': <Frown className="w-3.5 h-3.5" />,
+  '💀': <Skull className="w-3.5 h-3.5" />,
   '🎭': <Eye className="w-3.5 h-3.5" />,
   '☀️': <Star className="w-3.5 h-3.5" />,
   '🌙': <Orbit className="w-3.5 h-3.5" />,
+  '🏔️': <Mountain className="w-3.5 h-3.5" />,
+  '🔄': <RefreshCw className="w-3.5 h-3.5" />,
+  '📏': <Target className="w-3.5 h-3.5" />,
+  '💧': <Droplets className="w-3.5 h-3.5" />,
+  '🌾': <Wheat className="w-3.5 h-3.5" />,
+  '🦅': <Bird className="w-3.5 h-3.5" />,
+  '🥀': <Heart className="w-3.5 h-3.5" />,
+  '🌑': <Orbit className="w-3.5 h-3.5" />,
+  '🕳️': <Orbit className="w-3.5 h-3.5" />,
+  '⏰': <Clock className="w-3.5 h-3.5" />,
+  '🎯': <Target className="w-3.5 h-3.5" />,
+  '📢': <Megaphone className="w-3.5 h-3.5" />,
 };
 
 const getTagIcon = (emoji: string) => tagIconMap[emoji] || <Hash className="w-3.5 h-3.5" />;

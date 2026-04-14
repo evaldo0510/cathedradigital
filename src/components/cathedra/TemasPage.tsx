@@ -3,19 +3,21 @@ import { useQuery } from '@tanstack/react-query';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Loader2, ChevronRight, Hash, Sparkles, Tag as TagIcon, X, Search, Heart, Cross, BookOpen, Flame, Shield, Crown, Hand, Star, Globe, Eye, Users, Compass, Church, Wine, Orbit } from 'lucide-react';
+import { Loader2, ChevronRight, Hash, Sparkles, Tag as TagIcon, X, Search, Heart, Cross, BookOpen, Flame, Shield, Crown, Hand, Star, Globe, Eye, Users, Compass, Church, Wine, Orbit, Mountain, RefreshCw, Frown, Bird, Droplets, Wheat, Target, Clock, Megaphone, Skull } from 'lucide-react';
 import { Icons } from '@/constants';
 
-// Maps tag slugs/emojis to Lucide icons for a cleaner, more cohesive look
 const tagIconMap: Record<string, React.ReactNode> = {
-  // By common emoji
   '❤️': <Heart className="w-5 h-5" />,
   '💖': <Heart className="w-5 h-5" />,
   '💔': <Heart className="w-5 h-5" />,
+  '💜': <Heart className="w-5 h-5" />,
+  '🤍': <Heart className="w-5 h-5" />,
+  '🫶': <Heart className="w-5 h-5" />,
   '✝️': <Cross className="w-5 h-5" />,
   '⛪': <Church className="w-5 h-5" />,
   '🙏': <Hand className="w-5 h-5" />,
-  '🕊️': <Sparkles className="w-5 h-5" />,
+  '🤲': <Hand className="w-5 h-5" />,
+  '🕊️': <Bird className="w-5 h-5" />,
   '🔥': <Flame className="w-5 h-5" />,
   '📖': <BookOpen className="w-5 h-5" />,
   '📕': <BookOpen className="w-5 h-5" />,
@@ -26,6 +28,7 @@ const tagIconMap: Record<string, React.ReactNode> = {
   '🌎': <Globe className="w-5 h-5" />,
   '👁️': <Eye className="w-5 h-5" />,
   '👥': <Users className="w-5 h-5" />,
+  '👨‍👩‍👧‍👦': <Users className="w-5 h-5" />,
   '🧭': <Compass className="w-5 h-5" />,
   '🍷': <Wine className="w-5 h-5" />,
   '💫': <Sparkles className="w-5 h-5" />,
@@ -37,11 +40,27 @@ const tagIconMap: Record<string, React.ReactNode> = {
   '⚔️': <Shield className="w-5 h-5" />,
   '🏛️': <Church className="w-5 h-5" />,
   '🤝': <Users className="w-5 h-5" />,
-  '😢': <Heart className="w-5 h-5" />,
-  '💀': <Cross className="w-5 h-5" />,
+  '😢': <Frown className="w-5 h-5" />,
+  '😰': <Frown className="w-5 h-5" />,
+  '😔': <Frown className="w-5 h-5" />,
+  '😞': <Frown className="w-5 h-5" />,
+  '😨': <Frown className="w-5 h-5" />,
+  '💀': <Skull className="w-5 h-5" />,
   '🎭': <Eye className="w-5 h-5" />,
   '☀️': <Star className="w-5 h-5" />,
   '🌙': <Orbit className="w-5 h-5" />,
+  '🏔️': <Mountain className="w-5 h-5" />,
+  '🔄': <RefreshCw className="w-5 h-5" />,
+  '📏': <Target className="w-5 h-5" />,
+  '💧': <Droplets className="w-5 h-5" />,
+  '🌾': <Wheat className="w-5 h-5" />,
+  '🦅': <Bird className="w-5 h-5" />,
+  '🥀': <Heart className="w-5 h-5" />,
+  '🌑': <Orbit className="w-5 h-5" />,
+  '🕳️': <Orbit className="w-5 h-5" />,
+  '⏰': <Clock className="w-5 h-5" />,
+  '🎯': <Target className="w-5 h-5" />,
+  '📢': <Megaphone className="w-5 h-5" />,
 };
 
 const getTagIcon = (emoji: string) => {
