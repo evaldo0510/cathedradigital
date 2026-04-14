@@ -227,6 +227,8 @@ const AdminDashboard: React.FC = () => {
           movementsStats
         });
 
+        setRecentJournal(recentJournalRes.data || []);
+
 
         const crmMap = new Map<string, any>();
         crmUsers.forEach(u => crmMap.set(u.id, u));
