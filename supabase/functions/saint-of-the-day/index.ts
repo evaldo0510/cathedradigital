@@ -18,75 +18,59 @@ serve(async (req) => {
       }
     });
     
-    if (!response.ok) {
-      throw new Error(`Failed to fetch Vatican News: ${response.status}`);
-    }
+    if (!response.ok) throw new Error(`Status ${response.status}`);
 
     const html = await response.text();
+    const allH2s = [];
+    const h2Matches = html.match(/<h2[^>]*>(.*?)<\/h2>/gis);
+    if (h2Matches) {
+      for (const m of h2Matches) {
+        allH2s.push(m.replace(/<[^>]*>/g, '').trim());
+      }
+    }
 
     let saintName = "Santo do Dia";
     let imageUrl = null;
     let description = "";
     let detailLink = "";
 
-    // Log HTML first 500 chars in the response temporarily for debugging
-    const htmlPreview = html.substring(0, 500);
-
-    const h2Parts = html.split(/<h2[^>]*>/i);
-    for (let i = 1; i < h2Parts.length; i++) {
-      const part = h2Parts[i];
-      const text = part.split('</h2>')[0].replace(/<[^>]*>/g, '').trim();
-      
-      if (text && text.length > 5 && !['Menu', 'Newsletter', 'Redes Sociais', 'Siga-nos', 'Destaque'].some(word => text.includes(word))) {
-        saintName = text;
-        const nextContent = part + (h2Parts[i+1] || "");
-        
-        if (nextContent.includes('data-original="')) {
-          imageUrl = nextContent.split('data-original="')[1].split('"')[0];
-        } else if (nextContent.includes('src="')) {
-          const srcMatches = nextContent.match(/src="([^"]+)"/g);
-          if (srcMatches) {
-            for (const match of srcMatches) {
-              const src = match.split('"')[1];
-              if (src.includes('/santi/') || (src.includes('/content/') && !src.includes('banner') && !src.includes('logo'))) {
-                imageUrl = src;
-                break;
-              }
-            }
-          }
-        }
-
-        if (part.includes('<p>')) {
-          description = part.split('<p>')[1].split('</p>')[0].replace(/<[^>]*>/g, '').trim();
-        }
-
-        if (part.includes('href="')) {
-          const links = part.split('href="');
-          for (let j = 1; j < links.length; j++) {
-            const link = links[j].split('"')[0];
-            if (link.includes('/santo-do-dia/santos/') && !link.includes('html')) {
-              detailLink = `https://www.vaticannews.va${link}`;
-              break;
-            }
-          }
-        }
+    // Find the first saint name
+    for (const h2 of allH2s) {
+      if (h2.length > 5 && !['Menu', 'Newsletter', 'Redes Sociais', 'Siga-nos', 'Destaque'].some(word => h2.includes(word))) {
+        saintName = h2;
         break;
       }
     }
 
+    // Try to find image
+    const imageMatches = html.match(/data-original="([^"]+\.(jpg|jpeg|png|webp))"/g) || html.match(/src="([^"]+\.(jpg|jpeg|png|webp))"/g) || [];
+    for (const imgAttr of imageMatches) {
+      const url = imgAttr.split('"')[1];
+      if (url.includes('/santi/') || (url.includes('/content/') && !url.includes('banner') && !url.includes('logo'))) {
+        imageUrl = url.startsWith('http') ? url : `https://www.vaticannews.va${url}`;
+        break;
+      }
+    }
+
+    // If still no image, look for ANY image that is NOT a banner
     if (!imageUrl) {
-      const allImages = html.match(/data-original="([^"]+)"/g) || html.match(/src="([^"]+)"/g) || [];
-      for (const imgAttr of allImages) {
+      for (const imgAttr of imageMatches) {
         const url = imgAttr.split('"')[1];
-        if (url.includes('/santi/')) {
-          imageUrl = url;
-          break;
+        if (!url.includes('banner') && !url.includes('logo') && !url.includes('icon') && !url.includes('radio')) {
+           imageUrl = url.startsWith('http') ? url : `https://www.vaticannews.va${url}`;
+           break;
         }
       }
     }
 
-    if (imageUrl && !imageUrl.startsWith('http') && !imageUrl.includes('data:image')) {
-      imageUrl = `https://www.vaticannews.va${imageUrl}`;
+    // Find description
+    if (saintName !== "Santo do Dia") {
+       const parts = html.split(saintName);
+       if (parts.length > 1) {
+         const afterName = parts[1];
+         const pMatch = afterName.match(/<p>(.*?)<\/p>/is);
+         if (pMatch) description = pMatch[1].replace(/<[^>]*>/g, '').trim();
+       }
     }
 
     return new Response(
@@ -94,9 +78,9 @@ serve(async (req) => {
         name: saintName,
         image: imageUrl,
         description: description,
-        url: detailLink || vaticanUrl,
+        url: vaticanUrl,
         source: "Vatican News",
-        debug: { htmlLength: html.length, preview: htmlPreview }
+        debug: { h2s: allH2s.slice(0, 10) }
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
