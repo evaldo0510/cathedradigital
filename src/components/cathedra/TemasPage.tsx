@@ -126,14 +126,6 @@ const TemasPage = () => {
   }, [tags]);
 
 
-  useEffect(() => {
-    const el = document.getElementById('tags-carousel');
-    if (!el) return;
-    el.addEventListener('scroll', handleCarouselScroll, { passive: true });
-    handleCarouselScroll();
-    return () => el.removeEventListener('scroll', handleCarouselScroll);
-  }, [handleCarouselScroll, filteredTags]);
-
   const filteredTags = useMemo(() => {
     if (!tags) return [];
     return tags.filter(tag => {
@@ -142,6 +134,14 @@ const TemasPage = () => {
       return matchesSearch && matchesCategory;
     });
   }, [tags, searchQuery, activeCategory]);
+
+  useEffect(() => {
+    const el = document.getElementById('tags-carousel');
+    if (!el) return;
+    el.addEventListener('scroll', handleCarouselScroll, { passive: true });
+    handleCarouselScroll();
+    return () => el.removeEventListener('scroll', handleCarouselScroll);
+  }, [handleCarouselScroll, filteredTags]);
 
   useEffect(() => {
     const temaSlug = searchParams.get('tema');
