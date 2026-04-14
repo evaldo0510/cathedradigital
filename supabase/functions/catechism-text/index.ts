@@ -35,7 +35,7 @@ async function generateWithAI(paragraph: number, supabaseUrl: string, serviceKey
         }],
         system_prompt: "Você é um transcritor fiel do Catecismo da Igreja Católica. Sua única tarefa é fornecer o texto exato do parágrafo solicitado, mantendo as referências originais e sem adicionar qualquer comentário, saudação ou explicação.",
         stream: true,
-        model: 'gpt-4o-mini'
+        model: 'google/gemini-2.5-flash'
       }),
     });
     
