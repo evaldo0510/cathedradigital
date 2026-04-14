@@ -84,21 +84,16 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
     );
   }
 
-  // Not cached - show generate button
+  // Not cached - this shouldn't happen with the new auto-generate function, but we keep a generic fallback
   if (data?.status === 'not_cached') {
     return (
       <div className="reader-text py-4 space-y-3">
-        <p className="text-sm text-muted-foreground italic">Conteúdo do §{paragraph} ainda não disponível no cache.</p>
+        <p className="text-sm text-muted-foreground italic">Conteúdo do §{paragraph} ainda não disponível.</p>
         <button
-          onClick={handleGenerate}
-          disabled={isGenerating}
-          className="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-xl text-xs font-black uppercase tracking-widest transition-all disabled:opacity-50 flex items-center gap-2"
+          onClick={() => window.location.reload()}
+          className="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2"
         >
-          {isGenerating ? (
-            <><Icons.Loader className="w-3 h-3 animate-spin" /> Gerando via IA...</>
-          ) : (
-            <><Icons.Sparkles className="w-3 h-3" /> Carregar conteúdo</>
-          )}
+          <Icons.Loader className="w-3 h-3" /> Tentar carregar novamente
         </button>
       </div>
     );
