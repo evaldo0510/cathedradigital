@@ -159,15 +159,20 @@ const TemasPage = () => {
   useEffect(() => {
     if (selectedTag) {
       setLogosInsight(null);
-      setLoadingLogos(true);
-      supabase.functions.invoke('logos-spiritual-insight', {
-        body: { query: selectedTag.label }
-      }).then(({ data, error }) => {
-        if (!error && data?.insight) setLogosInsight(data.insight);
-        setLoadingLogos(false);
-      });
+      setLoadingLogos(false);
     }
   }, [selectedTag]);
+
+  const handleLoadInsight = () => {
+    if (!selectedTag || loadingLogos) return;
+    setLoadingLogos(true);
+    supabase.functions.invoke('logos-spiritual-insight', {
+      body: { query: selectedTag.label }
+    }).then(({ data, error }) => {
+      if (!error && data?.insight) setLogosInsight(data.insight);
+      setLoadingLogos(false);
+    });
+  };
 
   const { data: contents, isLoading: loadingContents } = useQuery({
     queryKey: ['tag-contents', selectedTag?.id],
@@ -471,7 +476,19 @@ const TemasPage = () => {
                             "{logosInsight}"
                           </p>
                         ) : (
-                          <p className="text-muted-foreground/60 italic text-lg">Selecione um tema sagrado para receber uma síntese teológica profunda do Logos.</p>
+                          <div className="flex flex-col items-center gap-4 py-4">
+                            <p className="text-muted-foreground/60 italic text-lg font-serif">
+                              Receba uma reflexão teológica sobre <strong>{selectedTag.label}</strong> à luz da Tradição.
+                            </p>
+                            <Button 
+                              onClick={handleLoadInsight}
+                              variant="outline" 
+                              className="rounded-2xl border-secondary/30 bg-secondary/5 hover:bg-secondary/10 hover:border-secondary/40 h-12 px-6"
+                            >
+                              <Sparkles className="mr-2 h-4 w-4 text-secondary" />
+                              <span className="font-bold text-xs uppercase tracking-widest">Carregar reflexão</span>
+                            </Button>
+                          </div>
                         )}
                       </div>
                     </div>
