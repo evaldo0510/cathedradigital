@@ -51,7 +51,7 @@ const Index = () => {
         title="Bíblia, Catecismo e Tradição Católica"
         description="Aprofunde sua fé católica com o Logos IA, Bíblia Sagrada, Catecismo da Igreja, vidas dos santos e liturgia diária. Tudo gratuito."
         path="/"
-        keywords="logos ia, liturgia diária online, bíblia digital, catecismo online, santos do dia, app católico gratuito, oração diária, jornada espiritual"
+        keywords="logos ia, liturgia diária online, bíblia digital, catecismo online, santos do dia, enciclopédia católica, app católico gratuito, oração diária, jornada espiritual"
         faqs={[
           { question: "O Cathedra é gratuito?", answer: "Sim! O acesso à Bíblia, Catecismo, Santos, Liturgia e Orações é totalmente gratuito. Recursos avançados como o Logos IA e análises aprofundadas estão disponíveis no plano Premium." },
           { question: "Preciso ser católico para usar?", answer: "Não. Embora o conteúdo seja baseado na tradição católica, qualquer pessoa interessada em estudar a Bíblia, a história dos santos ou a teologia cristã é bem-vinda." },
