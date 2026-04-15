@@ -1,46 +1,76 @@
 
-import { createClient } from '@supabase/supabase-js';
-import fs from 'fs';
-import path from 'path';
+import { ALL_SAINTS } from './src/data/saints';
+import * as fs from 'fs';
 
-const supabaseUrl = process.env.SUPABASE_URL!;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
-
-// Parse SQL values like ('id', 'name', ..., ARRAY['...']::TEXT[], ...)
-function parseSqlValues(content: string) {
-  const saints: any[] = [];
-  // This is a simplified regex, but it should work for the standard format I saw
-  const matches = content.matchAll(/\(([^)]+)\)/g);
-  
-  for (const match of matches) {
-    const rawValues = match[1];
-    // Split by comma but respect arrays and single quotes
-    // This is tricky, so let's try a simpler approach if possible
-  }
-  return saints;
+function escapeSql(str: any): string {
+  if (str === null || str === undefined) return 'NULL';
+  if (typeof str === 'number') return str.toString();
+  return `$$${str.toString().replace(/\$\$/g, '$ $')}$$`;
 }
 
-// Since parsing raw SQL with regex is error-prone, let's focus on the hardcoded TS data first
-// and then use the chunks which are easier to handle.
-
-async function importAll() {
-  console.log('Starting massive saint import...');
-  
-  // 1. Import from chunks (they have 20 each)
-  for (let i = 1; i <= 5; i++) {
-    const fileName = `chunk${i}.sql`;
-    if (fs.existsSync(fileName)) {
-       console.log(`Processing ${fileName}...`);
-       // For these files, I'll just use a direct SQL insert via RPC if possible
-       // or just read the file and wrap it in an INSERT.
-    }
-  }
-
-  // Actually, I'll use a better approach: 
-  // I'll use psql to run the already formatted SQL files if I can fix the connection issue.
-  // The connection issue was likely due to the size of the INSERT.
+function formatArray(arr: string[]): string {
+  if (!arr || arr.length === 0) return "'{}'::text[]";
+  const escaped = arr.map(s => `"${s.replace(/"/g, '\\"')}"`).join(',');
+  return `'\{${escaped}\}'::text[]`;
 }
 
-// Wait, I have a better idea. I'll use the already existing import_steps.ts logic
-// to create a clean JSON of all saints and then upsert.
+function formatJson(obj: any): string {
+  return `$$${JSON.stringify(obj).replace(/\$\$/g, '$ $')}$$::jsonb`;
+}
+
+function formatIntArray(arr: number[]): string {
+  if (!arr || arr.length === 0) return "'{}'::integer[]";
+  return `'\{${arr.join(',')}\}'::integer[]`;
+}
+
+const rows = ALL_SAINTS.map(s => {
+  return `(${[
+    escapeSql(s.id),
+    escapeSql(s.name),
+    escapeSql(s.title),
+    escapeSql(s.feastDay),
+    s.feastMonth || 'NULL',
+    s.feastDayNum || 'NULL',
+    escapeSql(s.born || ''),
+    escapeSql(s.died || ''),
+    formatArray(s.patronOf || []),
+    escapeSql(s.bio || ''),
+    escapeSql(s.fullBio || s.bio || ''),
+    formatJson(s.works || []),
+    formatArray(s.quotes || []),
+    escapeSql(s.category),
+    escapeSql(s.image || ''),
+    escapeSql(s.prayer || ''),
+    formatArray(s.virtues || []),
+    formatJson(s.bibleRefs || []),
+    formatIntArray(s.catechismRefs || []),
+    formatJson(s.churchDocRefs || [])
+  ].join(', ')})`;
+}).join(',\n');
+
+const sql = `INSERT INTO public.saints (id, name, title, feast_day, feast_month, feast_day_num, born, died, patron_of, bio, full_bio, works, quotes, category, image, prayer, virtues, bible_refs, catechism_refs, church_doc_refs) 
+VALUES 
+${rows} 
+ON CONFLICT (id) DO UPDATE SET 
+  name = EXCLUDED.name,
+  title = EXCLUDED.title,
+  feast_day = EXCLUDED.feast_day,
+  feast_month = EXCLUDED.feast_month,
+  feast_day_num = EXCLUDED.feast_day_num,
+  born = EXCLUDED.born,
+  died = EXCLUDED.died,
+  patron_of = EXCLUDED.patron_of,
+  bio = EXCLUDED.bio,
+  full_bio = EXCLUDED.full_bio,
+  works = EXCLUDED.works,
+  quotes = EXCLUDED.quotes,
+  category = EXCLUDED.category,
+  image = EXCLUDED.image,
+  prayer = EXCLUDED.prayer,
+  virtues = EXCLUDED.virtues,
+  bible_refs = EXCLUDED.bible_refs,
+  catechism_refs = EXCLUDED.catechism_refs,
+  church_doc_refs = EXCLUDED.church_doc_refs;`;
+
+fs.writeFileSync('all_saints_import.sql', sql);
+console.log(`Generated all_saints_import.sql with ${ALL_SAINTS.length} saints.`);
