@@ -369,6 +369,12 @@ const Saints: React.FC = () => {
               exit={{ opacity: 0, y: -20 }}
               className="space-y-8"
             >
+              <div className="text-center space-y-2 max-w-2xl mx-auto px-4 mb-8">
+                <p className="text-xs text-muted-foreground font-serif italic">
+                  Exibindo os santos do calendário litúrgico e hagiografias principais. 
+                  Para encontrar qualquer santo em 2000 anos de história da Igreja, use a aba "Buscar".
+                </p>
+              </div>
               <div className="max-w-5xl mx-auto px-4">
                 <StaggeredList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {allSaintsSorted.map(saint => (
