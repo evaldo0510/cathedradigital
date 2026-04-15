@@ -1,16 +1,14 @@
-import React, { useMemo, useEffect, useState, useCallback } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { AppRoute, User } from '../../types';
 import { useAuth } from '../../hooks/useAuth';
-import { supabase } from '@/integrations/supabase/client';
-import SacredImage from './SacredImage';
 import { Icons } from '@/constants';
 import { useLang } from '@/hooks/useLang';
 import RitualDoDia from './RitualDoDia';
-import NexusBubbles from './NexusBubbles';
-import SpiritualQuiz, { PROFILES, type ProfileId } from './SpiritualQuiz';
-import ProShowcase from './ProShowcase';
+import { PROFILES, type ProfileId } from './SpiritualQuiz';
+import { useDashboardData } from '@/hooks/useDashboardData';
+
 interface DashboardProps {
   user: User | null;
 }
@@ -42,6 +40,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   const { t } = useLang();
   const goTo = useCallback((route: string) => navigate(route), [navigate]);
 
+  const { spiritualProfile, activeJourneys, nextUp, isLoading } = useDashboardData(user);
+
   const streak = profile?.streak || 0;
   const hour = new Date().getHours();
   const greeting = useMemo(() => {
@@ -51,45 +51,15 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   }, [hour, t]);
   
   const dailyQuote = QUOTES[Math.floor((Date.now() / 86400000)) % QUOTES.length];
-
-  // Spiritual profile from quiz
-  const [spiritualProfile, setSpiritualProfile] = useState<ProfileId | null>(null);
-  const [lastBible, setLastBible] = useState<{ book_abbr: string; chapter: number } | null>(null);
-
-  useEffect(() => {
-    if (!user) return;
-    (supabase as any)
-      .from('user_sensitive_data')
-      .select('diagnosis_result')
-      .eq('user_id', user.id)
-      .maybeSingle()
-      .then(({ data }: any) => {
-        const sp = data?.diagnosis_result?.spiritual_profile;
-        if (sp && PROFILES[sp as ProfileId]) {
-          setSpiritualProfile(sp as ProfileId);
-        } else if (data?.diagnosis_result?.moment) {
-          // Fallback for older users who don't have the profile in JSON
-          const spiritualProfileMap: Record<string, string> = {
-            beginning: 'sedento_de_sentido',
-            deepening: 'firme_aprofundando',
-            struggling: 'ferido_em_busca',
-            serving: 'ardente_missionario'
-          };
-          const fallback = spiritualProfileMap[data.diagnosis_result.moment] as ProfileId;
-          if (fallback && PROFILES[fallback]) setSpiritualProfile(fallback);
-        }
-      });
-  }, [user]);
-
-  const spProfile = spiritualProfile ? PROFILES[spiritualProfile] : null;
+  const spProfile = spiritualProfile ? PROFILES[spiritualProfile as ProfileId] : null;
 
   const MAIN_DOORS = useMemo(() => [
     {
       label: t('bible'),
       description: t('bible_sub'),
       icon: Icons.Bible,
-      route: lastBible 
-        ? `${AppRoute.BIBLE}?book=${lastBible.book_abbr}&ch=${lastBible.chapter}` 
+      route: (nextUp as any)?.lastBible 
+        ? `${AppRoute.BIBLE}?book=${(nextUp as any).lastBible.book_abbr}&ch=${(nextUp as any).lastBible.chapter}` 
         : AppRoute.BIBLE,
       gradient: 'from-primary/5 to-transparent',
       iconColor: 'text-primary',
@@ -126,121 +96,15 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       borderColor: 'border-border hover:border-secondary/50',
       suggested: spiritualProfile === 'firme_aprofundando',
     },
-  ], [lastBible, t, spiritualProfile]);
+  ], [nextUp, t, spiritualProfile]);
 
-  // Active journeys
-  const [activeJourneys, setActiveJourneys] = useState<{ id: string; title: string; icon: string; totalSteps: number; completedSteps: number }[]>([]);
-  useEffect(() => {
-    if (!user) return;
-    const load = async () => {
-      const { data: progress } = await supabase.from('journey_progress').select('journey_id, step_id').eq('user_id', user.id);
-      if (!progress?.length) return;
-      const journeyIds = [...new Set(progress.map(p => p.journey_id))];
-      const { data: journeys } = await supabase.from('journeys').select('id, title, icon').in('id', journeyIds);
-      if (!journeys) return;
-      const { data: steps } = await supabase.from('journey_steps').select('id, journey_id').in('journey_id', journeyIds);
-      const stepsByJourney: Record<string, number> = {};
-      steps?.forEach(s => { stepsByJourney[s.journey_id] = (stepsByJourney[s.journey_id] || 0) + 1; });
-      const completedByJourney: Record<string, number> = {};
-      progress.forEach(p => { completedByJourney[p.journey_id] = (completedByJourney[p.journey_id] || 0) + 1; });
-      setActiveJourneys(journeys.map(j => ({
-        id: j.id, title: j.title, icon: j.icon,
-        totalSteps: stepsByJourney[j.id] || 0,
-        completedSteps: completedByJourney[j.id] || 0,
-      })));
-    };
-    load();
-  }, [user]);
-
-  // Saints of the day
-  const [saintsToday, setSaintsToday] = useState<any[]>([]);
-  useEffect(() => {
-    import('@/data/saints').then(m => {
-      const today = new Date();
-      const matched = m.ALL_SAINTS.filter(s => s.feastMonth === today.getMonth() + 1 && s.feastDayNum === today.getDate());
-      setSaintsToday(matched.length > 0 ? matched : [m.ALL_SAINTS[0]]);
-    });
-  }, []);
-
-  // Weekly stats
-  const [weeklyStats, setWeeklyStats] = useState({ chaptersRead: 0, journeySteps: 0, catechismParagraphs: 0 });
-  const [nextUp, setNextUp] = useState<{ type: 'bible' | 'catechism' | 'journey'; label: string; route: string; subtitle: string } | null>(null);
-
-  useEffect(() => {
-    if (!user) return;
-    const loadNextUp = async () => {
-      // Get last Bible chapter read
-      const { data: lastBibleData } = await (supabase as any)
-        .from('bible_chapters_read')
-        .select('book_abbr, chapter')
-        .eq('user_id', user.id)
-        .order('read_at', { ascending: false })
-        .limit(1)
-        .maybeSingle();
-
-      if (lastBibleData) {
-        setLastBible(lastBibleData as any);
-      }
-
-      // Get last Catechism paragraph read
-      const { data: lastCatechism } = await supabase
-        .from('catechism_paragraphs_read')
-        .select('paragraph')
-        .eq('user_id', user.id)
-        .order('read_at', { ascending: false })
-        .limit(1)
-        .maybeSingle();
-
-      // Get last Journey step completed
-      const { data: lastJourney } = await supabase
-        .from('journey_progress')
-        .select('journey_id, step_id')
-        .eq('user_id', user.id)
-        .order('completed_at', { ascending: false })
-        .limit(1)
-        .maybeSingle();
-
-      if (lastJourney) {
-        const { data: steps } = await supabase.from('journey_steps').select('id, title').eq('journey_id', lastJourney.journey_id).order('step_order', { ascending: true });
-        const currentIndex = steps?.findIndex(s => s.id === lastJourney.step_id) ?? -1;
-        if (steps && currentIndex !== -1 && currentIndex < steps.length - 1) {
-          const next = steps[currentIndex + 1];
-          setNextUp({ type: 'journey', label: next.title, route: `/jornadas/${lastJourney.journey_id}/step?step=${next.id}`, subtitle: 'Próxima Etapa da Jornada' });
-          return;
-        }
-      }
-
-      if (lastBible) {
-        setNextUp({ type: 'bible', label: `${lastBible.book_abbr} ${lastBible.chapter + 1}`, route: `/bible?book=${lastBible.book_abbr}&ch=${lastBible.chapter + 1}`, subtitle: 'Continuar Leitura da Bíblia' });
-        return;
-      }
-
-      if (lastCatechism) {
-        setNextUp({ type: 'catechism', label: `§${lastCatechism.paragraph + 1}`, route: `/catechism?p=${lastCatechism.paragraph + 1}`, subtitle: 'Continuar Estudo do Catecismo' });
-        return;
-      }
-    };
-    loadNextUp();
-  }, [user]);
-
-  useEffect(() => {
-    if (!user) return;
-    const weekAgo = new Date();
-    weekAgo.setDate(weekAgo.getDate() - 7);
-    const iso = weekAgo.toISOString();
-
-    Promise.all([
-      supabase.from('bible_chapters_read').select('id', { count: 'exact', head: true }).eq('user_id', user.id).gte('read_at', iso),
-      supabase.from('journey_progress').select('id', { count: 'exact', head: true }).eq('user_id', user.id).gte('completed_at', iso),
-      supabase.from('catechism_paragraphs_read').select('id', { count: 'exact', head: true }).eq('user_id', user.id).gte('read_at', iso),
-    ]).then(([chapRes, jpRes, catRes]) => {
-      setWeeklyStats({
-        chaptersRead: chapRes.count || 0,
-        journeySteps: jpRes.count || 0,
-        catechismParagraphs: catRes.count || 0,
-      });
-    });
-  }, [user]);
+  if (isLoading && !spiritualProfile && activeJourneys.length === 0) {
+    return (
+      <div className="flex items-center justify-center min-h-[60dvh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="desktop-layout py-6 md:py-10">
