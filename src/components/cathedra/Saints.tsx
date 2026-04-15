@@ -1,13 +1,14 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useQuery } from '@tanstack/react-query';
 import SEOHead from '@/components/SEOHead';
 import { Icons } from '../../constants';
 import StaggeredList from './StaggeredList';
 import SacredImage from './SacredImage';
 import SaintDetail, { CATEGORY_LABELS } from './SaintDetail';
 import { type Saint } from '@/data/saints';
-import { getSaintsByDate, searchSaints, getSaintsByCategory, formatSaint } from '@/services/saintsService';
+import { getSaintsByDate, searchSaints, getSaintsByCategory, getAllSaints, formatSaint } from '@/services/saintsService';
 import { supabase } from '@/integrations/supabase/client';
 import { Search, X, Calendar as CalendarIcon, ChevronLeft, ChevronRight, Sparkles, BookOpen, Quote, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -20,71 +21,56 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
   const [autoReflect, setAutoReflect] = useState(false);
   const [search, setSearch] = useState('');
   const [viewMode, setViewMode] = useState<'daily' | 'search' | 'all' | 'writers' | 'popes'>('daily');
-  const [officialSaint, setOfficialSaint] = useState<any>(null);
   const [isSearchingGlobal, setIsSearchingGlobal] = useState(false);
-  const [localSaints, setLocalSaints] = useState<Saint[]>([]);
   const [globalResults, setGlobalResults] = useState<Saint[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
 
-  useEffect(() => {
-    const fetchOfficialSaint = async () => {
-      try {
-        const cacheKey = `official_saint_${format(new Date(), 'yyyy-MM-dd')}`;
-        const cached = localStorage.getItem(cacheKey);
-        if (cached) {
-          setOfficialSaint(JSON.parse(cached));
-          return;
-        }
+  // ─── Queries ───
+  
+  // Official Saint of the Day (Scraped/Fetched from Edge Function)
+  const { data: officialSaint } = useQuery({
+    queryKey: ['official-saint'],
+    queryFn: async () => {
+      const cacheKey = `official_saint_${format(new Date(), 'yyyy-MM-dd')}`;
+      const cached = localStorage.getItem(cacheKey);
+      if (cached) return JSON.parse(cached);
 
-        const response = await supabase.functions.invoke('saint-of-the-day');
-        if (response.data && !response.error) {
-          setOfficialSaint(response.data);
-          localStorage.setItem(cacheKey, JSON.stringify(response.data));
-        }
-      } catch (err) {
-        console.error('Failed to fetch official saint:', err);
+      const response = await supabase.functions.invoke('saint-of-the-day');
+      if (response.data && !response.error) {
+        localStorage.setItem(cacheKey, JSON.stringify(response.data));
+        return response.data;
       }
-    };
-    fetchOfficialSaint();
-  }, []);
+      return null;
+    },
+    staleTime: 1000 * 60 * 60 * 24, // 24 hours
+  });
 
-  useEffect(() => {
-    const loadDailySaints = async () => {
-      const month = selectedDate.getMonth() + 1;
-      const day = selectedDate.getDate();
-      const saints = await getSaintsByDate(month, day);
-      setLocalSaints(saints);
-    };
-    if (viewMode === 'daily') {
-      loadDailySaints();
-    }
-  }, [selectedDate, viewMode]);
+  // Daily Saints from Database
+  const { data: localSaints = [], isLoading: isLoadingDaily } = useQuery({
+    queryKey: ['saints-date', selectedDate.getMonth() + 1, selectedDate.getDate()],
+    queryFn: () => getSaintsByDate(selectedDate.getMonth() + 1, selectedDate.getDate()),
+    enabled: viewMode === 'daily',
+  });
 
-  useEffect(() => {
-    const loadModeSaints = async () => {
-      if (viewMode === 'writers') {
-        const saints = await getSaintsByCategory('doctor');
-        setLocalSaints(saints);
-      } else if (viewMode === 'popes') {
-        const saints = await getSaintsByCategory('pope');
-        setLocalSaints(saints);
-      } else if (viewMode === 'all') {
-        const { data } = await supabase.from('saints').select('*').order('name').limit(100);
-        setLocalSaints((data || []).map(formatSaint));
-      }
-    };
-    loadModeSaints();
-  }, [viewMode]);
+  // Mode-based Saints (Writers, Popes, All)
+  const { data: modeSaints = [], isLoading: isLoadingMode } = useQuery({
+    queryKey: ['saints-mode', viewMode],
+    queryFn: async () => {
+      if (viewMode === 'writers') return getSaintsByCategory('doctor');
+      if (viewMode === 'popes') return getSaintsByCategory('pope');
+      if (viewMode === 'all') return getAllSaints(100);
+      return [];
+    },
+    enabled: ['writers', 'popes', 'all'].includes(viewMode),
+  });
 
-  useEffect(() => {
-    const timer = setTimeout(async () => {
-      if (viewMode === 'search' && search.trim()) {
-        const results = await searchSaints(search);
-        setLocalSaints(results);
-      }
-    }, 300);
-    return () => clearTimeout(timer);
-  }, [search, viewMode]);
+  // Search results
+  const { data: searchResults = [], isLoading: isSearchingLocal } = useQuery({
+    queryKey: ['saints-search', search],
+    queryFn: () => searchSaints(search),
+    enabled: viewMode === 'search' && search.length >= 2,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
 
   const handleGlobalSearch = async (query: string) => {
     if (!query.trim()) return;
@@ -110,18 +96,18 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
   };
 
   const saintsForSelectedDate = useMemo(() => {
-    // Safely check if we have a valid official saint with a name
+    const dailyList = localSaints;
     if (officialSaint && officialSaint.name && isSameDay(selectedDate, new Date()) && 
         officialSaint.name !== "Menu" && officialSaint.name !== "Santo do Dia") {
       
       const officialName = officialSaint.name.toLowerCase();
-      const match = localSaints.find(s => 
+      const match = dailyList.find(s => 
         officialName.includes(s.name.toLowerCase()) ||
         s.name.toLowerCase().includes(officialName)
       );
       
       if (match) {
-        return localSaints.map(s => s.id === match.id ? { 
+        return dailyList.map(s => s.id === match.id ? { 
           ...s, 
           ...officialSaint, 
           fullBio: officialSaint.fullBio || s.fullBio, 
@@ -148,12 +134,11 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
             patronOf: [],
             virtues: []
           },
-          ...localSaints
+          ...dailyList
         ];
       }
     }
-    
-    return localSaints;
+    return dailyList;
   }, [selectedDate, officialSaint, localSaints]);
 
   useEffect(() => {
@@ -163,14 +148,11 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
     }
   }, [searchParams, saintsForSelectedDate]);
 
-  const filteredSaints = localSaints;
-  const allSaintsSorted = localSaints;
-  const writersSaints = localSaints;
-  const popesSaints = localSaints;
-
   const dateStrip = useMemo(() => {
     return Array.from({ length: 7 }).map((_, i) => addDays(subDays(selectedDate, 3), i));
   }, [selectedDate]);
+
+  const displaySaints = viewMode === 'daily' ? saintsForSelectedDate : modeSaints;
 
   return (
     <>
@@ -200,46 +182,17 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
         <div className="flex justify-center overflow-x-auto pb-4 no-scrollbar">
           <div className="bg-secondary/50 p-1 rounded-2xl flex gap-1 min-w-max">
-            <button
-              onClick={() => setViewMode('daily')}
-              className={`px-4 md:px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
-                viewMode === 'daily' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              Hoje
-            </button>
-            <button
-              onClick={() => setViewMode('all')}
-              className={`px-4 md:px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
-                viewMode === 'all' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              Todos
-            </button>
-            <button
-              onClick={() => setViewMode('writers')}
-              className={`px-4 md:px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
-                viewMode === 'writers' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              Escritores
-            </button>
-            <button
-              onClick={() => setViewMode('popes')}
-              className={`px-4 md:px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
-                viewMode === 'popes' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              Papas
-            </button>
-            <button
-              onClick={() => setViewMode('search')}
-              className={`px-4 md:px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
-                viewMode === 'search' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              Buscar
-            </button>
+            {(['daily', 'all', 'writers', 'popes', 'search'] as const).map(mode => (
+              <button
+                key={mode}
+                onClick={() => setViewMode(mode)}
+                className={`px-4 md:px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                  viewMode === mode ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                {mode === 'daily' ? 'Hoje' : mode === 'all' ? 'Todos' : mode === 'writers' ? 'Escritores' : mode === 'popes' ? 'Papas' : 'Buscar'}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -296,20 +249,13 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     </button>
                   ))}
                 </div>
-
-                {!isSameDay(selectedDate, new Date()) && (
-                  <button 
-                    onClick={() => setSelectedDate(new Date())}
-                    className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline"
-                  >
-                    Voltar para Hoje
-                  </button>
-                )}
               </div>
 
               <div className="max-w-4xl mx-auto space-y-6">
-                {saintsForSelectedDate.length > 0 ? (
-                  saintsForSelectedDate.map(saint => (
+                {isLoadingDaily ? (
+                  <div className="flex justify-center py-20"><Icons.Cross className="w-10 h-10 animate-spin opacity-20" /></div>
+                ) : displaySaints.length > 0 ? (
+                  displaySaints.map(saint => (
                     <motion.div
                       key={saint.id}
                       initial={{ opacity: 0, scale: 0.95 }}
@@ -351,7 +297,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                             </div>
                             <div className="space-y-1 text-right">
                               <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground block">Padroeiro(a)</span>
-                              <p className="text-xs font-bold text-foreground truncate">{saint.patronOf[0] || '—'}</p>
+                              <p className="text-xs font-bold text-foreground truncate">{saint.patronOf?.[0] || '—'}</p>
                             </div>
                           </div>
 
@@ -389,73 +335,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                 )}
               </div>
             </motion.div>
-          ) : viewMode === 'all' ? (
-            <motion.div
-              key="all"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="space-y-8"
-            >
-              <div className="text-center space-y-2 max-w-2xl mx-auto px-4 mb-8">
-                <p className="text-xs text-muted-foreground font-serif italic">
-                  Exibindo os santos do calendário litúrgico e hagiografias principais. 
-                  Para encontrar qualquer santo em 2000 anos de história da Igreja, use a aba "Buscar".
-                </p>
-              </div>
-              <div className="max-w-5xl mx-auto px-4">
-                <StaggeredList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {allSaintsSorted.map(saint => (
-                    <SaintCard key={saint.id} saint={saint} onClick={() => handleOpenSaint(saint, false)} />
-                  ))}
-                </StaggeredList>
-              </div>
-            </motion.div>
-          ) : viewMode === 'writers' ? (
-            <motion.div
-              key="writers"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="space-y-8"
-            >
-              <div className="text-center space-y-4 max-w-2xl mx-auto px-4">
-                <h2 className="text-2xl font-serif font-bold">Doutores e Escritores</h2>
-                <p className="text-sm text-muted-foreground italic">
-                  "A pena é a língua da alma; se as palavras são as de um santo, elas se tornam degraus para o Céu."
-                </p>
-              </div>
-              <div className="max-w-5xl mx-auto px-4">
-                <StaggeredList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {writersSaints.map(saint => (
-                    <SaintCard key={saint.id} saint={saint} onClick={() => handleOpenSaint(saint, false)} />
-                  ))}
-                </StaggeredList>
-              </div>
-            </motion.div>
-          ) : viewMode === 'popes' ? (
-            <motion.div
-              key="popes"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="space-y-8"
-            >
-              <div className="text-center space-y-4 max-w-2xl mx-auto px-4">
-                <h2 className="text-2xl font-serif font-bold">Sucessores de Pedro</h2>
-                <p className="text-sm text-muted-foreground italic">
-                  "Tu és Pedro, e sobre esta pedra edificarei a minha Igreja."
-                </p>
-              </div>
-              <div className="max-w-5xl mx-auto px-4">
-                <StaggeredList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {popesSaints.map(saint => (
-                    <SaintCard key={saint.id} saint={saint} onClick={() => handleOpenSaint(saint, false)} />
-                  ))}
-                </StaggeredList>
-              </div>
-            </motion.div>
-          ) : (
+          ) : viewMode === 'search' ? (
             <motion.div
               key="search"
               initial={{ opacity: 0, y: 20 }}
@@ -483,11 +363,13 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
               </div>
 
               <div className="max-w-5xl mx-auto px-4">
-                {search.trim() ? (
+                {isLoadingDaily || isSearchingLocal ? (
+                  <div className="flex justify-center py-20"><Icons.Cross className="w-10 h-10 animate-spin opacity-20" /></div>
+                ) : search.trim() ? (
                   <>
-                    {(filteredSaints.length > 0 || globalResults.length > 0) ? (
+                    {(searchResults.length > 0 || globalResults.length > 0) ? (
                       <StaggeredList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {filteredSaints.map(saint => (
+                        {searchResults.map(saint => (
                           <SaintCard key={saint.id} saint={saint} onClick={() => handleOpenSaint(saint, false)} />
                         ))}
                         {globalResults.map(saint => (
@@ -496,7 +378,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                       </StaggeredList>
                     ) : null}
 
-                    {filteredSaints.length === 0 && !isSearchingGlobal && globalResults.length === 0 && (
+                    {searchResults.length === 0 && !isSearchingGlobal && globalResults.length === 0 && (
                       <div className="text-center py-20 space-y-6">
                         <p className="text-muted-foreground font-serif italic">
                           Nenhum santo encontrado em nossa base local.
@@ -525,6 +407,34 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                 )}
               </div>
             </motion.div>
+          ) : (
+            <motion.div
+              key={viewMode}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="space-y-8"
+            >
+              <div className="text-center space-y-4 max-w-2xl mx-auto px-4">
+                <h2 className="text-2xl font-serif font-bold">
+                  {viewMode === 'writers' ? 'Doutores e Escritores' : viewMode === 'popes' ? 'Sucessores de Pedro' : 'Base Sanctorum'}
+                </h2>
+                <p className="text-sm text-muted-foreground italic">
+                  {viewMode === 'writers' ? '"A pena é a língua da alma..."' : viewMode === 'popes' ? '"Tu és Pedro..."' : 'Exibindo registros catalogados.'}
+                </p>
+              </div>
+              <div className="max-w-5xl mx-auto px-4">
+                {isLoadingMode ? (
+                  <div className="flex justify-center py-20"><Icons.Cross className="w-10 h-10 animate-spin opacity-20" /></div>
+                ) : (
+                  <StaggeredList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {modeSaints.map(saint => (
+                      <SaintCard key={saint.id} saint={saint} onClick={() => handleOpenSaint(saint, false)} />
+                    ))}
+                  </StaggeredList>
+                )}
+              </div>
+            </motion.div>
           )}
         </AnimatePresence>
 
@@ -544,7 +454,6 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
 Saints.displayName = 'Saints';
 
-
 const SaintCard: React.FC<{ saint: Saint; onClick: () => void }> = ({ saint, onClick }) => (
   <button
     onClick={onClick}
@@ -552,7 +461,7 @@ const SaintCard: React.FC<{ saint: Saint; onClick: () => void }> = ({ saint, onC
   >
     <div className="relative h-48 overflow-hidden">
       <SacredImage 
-        src={saint.image} 
+        src={saint.image || ''} 
         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
         alt={saint.name} 
       />

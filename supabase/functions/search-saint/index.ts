@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.38.4"
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -12,11 +13,28 @@ serve(async (req) => {
 
   try {
     const { name } = await req.json()
-    const apiKey = Deno.env.get('LOVABLE_API_KEY')
+    const supabaseUrl = Deno.env.get('SUPABASE_URL') || ''
+    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || ''
+    const supabase = createClient(supabaseUrl, supabaseKey)
 
-    if (!apiKey) {
-      throw new Error('Missing API Key')
+    // 1. Check if saint already exists in the database
+    const { data: existingSaint } = await supabase
+      .from('saints')
+      .select('*')
+      .ilike('name', `%${name}%`)
+      .limit(1)
+      .maybeSingle()
+
+    if (existingSaint) {
+      console.log(`Found existing saint in database: ${existingSaint.name}`)
+      return new Response(JSON.stringify(existingSaint), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
     }
+
+    // 2. Not found in DB, call AI
+    const apiKey = Deno.env.get('LOVABLE_API_KEY')
+    if (!apiKey) throw new Error('Missing API Key')
 
     const prompt = `Você é uma enciclopédia hagiográfica católica. O usuário está buscando informações sobre o santo: "${name}".
     
@@ -49,29 +67,56 @@ serve(async (req) => {
     Se o santo não for encontrado ou não existir, retorne um objeto com "error": "not_found".
     Responda APENAS o JSON.`
 
-    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+    const aiResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-flash-lite',
+        model: 'google/gemini-2.0-flash',
         messages: [{ role: 'system', content: prompt }],
         temperature: 0.1,
       }),
     })
 
-    if (!response.ok) {
-      throw new Error('AI gateway error')
-    }
+    if (!aiResponse.ok) throw new Error('AI gateway error')
 
-    const data = await response.json()
-    const content = data.choices[0].message.content.trim()
-    
-    // Clean potential markdown code blocks
+    const aiData = await aiResponse.json()
+    const content = aiData.choices[0].message.content.trim()
     const jsonStr = content.replace(/^```json\n?/, '').replace(/\n?```$/, '')
     const saintData = JSON.parse(jsonStr)
+
+    if (saintData.error === "not_found") {
+      return new Response(JSON.stringify(saintData), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
+    }
+
+    // 3. Save result to database for future use
+    const { error: insertError } = await supabase.from('saints').upsert({
+      id: saintData.id,
+      name: saintData.name,
+      title: saintData.title,
+      feast_day: saintData.feastDay,
+      feast_month: saintData.feastMonth,
+      feast_day_num: saintData.feastDayNum,
+      born: saintData.born,
+      died: saintData.died,
+      patron_of: saintData.patronOf,
+      bio: saintData.bio,
+      full_bio: saintData.fullBio,
+      works: saintData.works,
+      quotes: saintData.quotes,
+      category: saintData.category,
+      virtues: saintData.virtues,
+      prayer: saintData.prayer,
+      bible_refs: [],
+      catechism_refs: [],
+      church_doc_refs: []
+    })
+
+    if (insertError) console.error('Error saving saint to DB:', insertError)
 
     return new Response(JSON.stringify(saintData), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
