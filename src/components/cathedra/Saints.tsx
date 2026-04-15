@@ -17,7 +17,7 @@ const Saints: React.FC = () => {
   const [selectedSaint, setSelectedSaint] = useState<Saint | null>(null);
   const [autoReflect, setAutoReflect] = useState(false);
   const [search, setSearch] = useState('');
-  const [viewMode, setViewMode] = useState<'daily' | 'search' | 'all' | 'writers'>('daily');
+  const [viewMode, setViewMode] = useState<'daily' | 'search' | 'all' | 'writers' | 'popes'>('daily');
   const [officialSaint, setOfficialSaint] = useState<any>(null);
   const [searchParams, setSearchParams] = useSearchParams();
 
