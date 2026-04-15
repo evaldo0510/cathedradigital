@@ -3,7 +3,8 @@ import { ALL_SAINTS } from './src/data/saints';
 
 function escapeSql(str: string): string {
   if (!str) return 'NULL';
-  return `'${str.replace(/'/g, "''")}'`;
+  // Use dollar quoting for all text fields to safely handle single quotes and newlines
+  return `$$${str}$$`;
 }
 
 function formatArray(arr: string[]): string {
@@ -13,7 +14,8 @@ function formatArray(arr: string[]): string {
 }
 
 function formatJson(obj: any): string {
-  return `'${JSON.stringify(obj).replace(/'/g, "''")}'::jsonb`;
+  // Dollar quote for JSONB as well
+  return `$$${JSON.stringify(obj)}$$::jsonb`;
 }
 
 function formatIntArray(arr: number[]): string {
@@ -48,7 +50,7 @@ for (let i = 0; i < ALL_SAINTS.length; i++) {
     formatJson(s.churchDocRefs || [])
   ].join(', ');
 
-  console.log(`(${row})${i === ALL_SAINTS.length - 1 ? ';' : ','}`);
+  console.log(`(${row})${i === ALL_SAINTS.length - 1 ? '' : ','}`);
 }
 
 console.log(`ON CONFLICT (id) DO UPDATE SET 
@@ -71,3 +73,4 @@ console.log(`ON CONFLICT (id) DO UPDATE SET
   bible_refs = EXCLUDED.bible_refs,
   catechism_refs = EXCLUDED.catechism_refs,
   church_doc_refs = EXCLUDED.church_doc_refs;`);
+
