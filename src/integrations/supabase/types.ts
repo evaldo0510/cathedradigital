@@ -338,6 +338,13 @@ export type Database = {
             referencedRelation: "journeys"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "glossary_journey_id_fkey"
+            columns: ["journey_id"]
+            isOneToOne: false
+            referencedRelation: "view_journeys_with_stats"
+            referencedColumns: ["id"]
+          },
         ]
       }
       intelligent_notification_logs: {
@@ -407,6 +414,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "journey_progress_journey_id_fkey"
+            columns: ["journey_id"]
+            isOneToOne: false
+            referencedRelation: "view_journeys_with_stats"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "journey_progress_step_id_fkey"
             columns: ["step_id"]
             isOneToOne: false
@@ -461,6 +475,13 @@ export type Database = {
             columns: ["journey_id"]
             isOneToOne: false
             referencedRelation: "journeys"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "journey_steps_journey_id_fkey"
+            columns: ["journey_id"]
+            isOneToOne: false
+            referencedRelation: "view_journeys_with_stats"
             referencedColumns: ["id"]
           },
         ]
@@ -802,6 +823,13 @@ export type Database = {
             columns: ["journey_id"]
             isOneToOne: false
             referencedRelation: "journeys"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "spiritual_journal_journey_id_fkey"
+            columns: ["journey_id"]
+            isOneToOne: false
+            referencedRelation: "view_journeys_with_stats"
             referencedColumns: ["id"]
           },
           {
@@ -1195,6 +1223,27 @@ export type Database = {
           name: string | null
           plan: string | null
           reflections_count: number | null
+        }
+        Relationships: []
+      }
+      view_journeys_with_stats: {
+        Row: {
+          category: string | null
+          cover_url: string | null
+          created_at: string | null
+          description: string | null
+          difficulty: string | null
+          estimated_days: number | null
+          icon: string | null
+          id: string | null
+          is_active: boolean | null
+          is_premium: boolean | null
+          sort_order: number | null
+          steps_count: number | null
+          subtitle: string | null
+          tags: string[] | null
+          title: string | null
+          updated_at: string | null
         }
         Relationships: []
       }
