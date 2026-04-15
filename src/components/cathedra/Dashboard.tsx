@@ -138,7 +138,6 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             )}
           </div>
 
-          {/* Streak & XP */}
           <div className="flex items-center justify-center gap-4 flex-wrap pt-2">
             {streak > 0 && (
               <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-secondary/10 border border-secondary/20 shadow-sm">
@@ -234,147 +233,31 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         </FadeUp>
       )}
 
-      {activeJourneys.length > 0 && (
-        <FadeUp delay={0.13}>
-          <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-sm font-bold text-foreground uppercase tracking-wide">{t('your_journeys')}</h2>
-              <button onClick={() => goTo(AppRoute.JORNADAS)} className="text-xs text-primary hover:underline flex items-center gap-1">
-                {t('view_all')} <Icons.ChevronRight className="w-3 h-3" />
-              </button>
-            </div>
-            <div className="space-y-3">
-              {activeJourneys.slice(0, 2).map((j) => {
-                const pct = j.totalSteps > 0 ? Math.round((j.completedSteps / j.totalSteps) * 100) : 0;
-                return (
-                  <button
-                    key={j.id}
-                    onClick={() => goTo(`/jornadas/${j.id}`)}
-                    className="w-full flex items-center gap-4 p-4 rounded-xl bg-primary/[0.03] border border-primary/10 hover:border-primary/30 transition-colors text-left"
-                  >
-                    <div className="w-10 h-10 rounded-lg bg-background flex items-center justify-center text-primary shadow-sm">
-                      <Icons.Compass className="w-5 h-5" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-xs font-bold text-foreground">{j.title}</p>
-                      <div className="mt-2 h-1.5 w-full bg-muted rounded-full overflow-hidden">
-                        <div className="h-full bg-primary transition-all" style={{ width: `${pct}%` }} />
-                      </div>
-                    </div>
-                    <div className="text-[10px] font-black text-primary">{pct}%</div>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
+      {/* ═══ 3. QUIZ ESPIRITUAL (SE NÃO TIVER PERFIL) ═══ */}
+      {!spiritualProfile && (
+        <FadeUp delay={0.15}>
+          <SpiritualQuiz />
         </FadeUp>
       )}
 
-      {/* ═══ 3. QUIZ ESPIRITUAL 🧠 ═══ */}
-      <FadeUp delay={0.14}>
-        <SpiritualQuiz />
-      </FadeUp>
-
-      {/* ═══ 4. TEMAS (BOLHAS) ═══ */}
-      <FadeUp delay={0.15}>
-        <NexusBubbles profileId={spiritualProfile} />
-      </FadeUp>
-
-      {/* ═══ 5. LOGOS (IA) — personalizado pelo quiz ═══ */}
-      <FadeUp delay={0.16}>
-        <div
-          onClick={() => goTo('/study')}
-          className="relative overflow-hidden rounded-3xl border border-secondary/20 bg-gradient-to-br from-secondary/5 via-card to-primary/5 p-6 cursor-pointer hover:border-secondary/40 transition-all shadow-sm hover:shadow-lg group"
-        >
-          <div className="absolute -top-16 -right-16 w-48 h-48 bg-secondary/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="relative z-10 flex items-center gap-5">
-            <div className="w-14 h-14 rounded-2xl bg-secondary/15 flex items-center justify-center text-secondary group-hover:scale-110 transition-transform">
-              <Icons.Brain className="w-7 h-7" />
-            </div>
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-0.5">
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary">Logos IA · Mestre Contemplativo</p>
-              </div>
-              <h3 className="text-base font-bold text-foreground leading-tight group-hover:text-secondary transition-colors">
-                {spProfile ? `Reflita sobre: ${spProfile.theme}` : 'Pergunte qualquer coisa sobre a Fé'}
-              </h3>
-              <p className="text-[11px] text-muted-foreground mt-1">
-                {spProfile ? spProfile.direction.label : 'Respostas fundamentadas no Magistério, Bíblia e Tradição'}
-              </p>
-            </div>
-            <div className="w-10 h-10 rounded-full border border-secondary/20 flex items-center justify-center text-secondary group-hover:bg-secondary group-hover:text-white transition-all shrink-0">
-              <Icons.ChevronRight className="w-5 h-5" />
-            </div>
-          </div>
-        </div>
-      </FadeUp>
-
-      {/* ═══ 6. PRO 🔒 ═══ */}
-      <FadeUp delay={0.18}>
-        <ProShowcase />
-      </FadeUp>
-
-      {/* ═══ WEEKLY STATS ═══ */}
+      {/* ═══ 4. NEXUS BUBBLES ═══ */}
       <FadeUp delay={0.2}>
-        <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4">
-          <div className="flex items-center gap-2">
-            <Icons.Activity className="w-4 h-4 text-primary" />
-            <h2 className="text-sm font-bold text-foreground uppercase tracking-wide">{t('weekly_summary')}</h2>
-          </div>
-          <div className="grid grid-cols-4 gap-2">
-            <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
-              <p className="text-xl md:text-2xl font-bold text-foreground">{weeklyStats.chaptersRead}</p>
-              <p className="text-[9px] text-muted-foreground font-medium mt-1 flex flex-col items-center">
-                <Icons.Bookmark className="w-3 h-3 mb-1" /> {t('bible')}
-              </p>
-            </div>
-            <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
-              <p className="text-xl md:text-2xl font-bold text-foreground">{weeklyStats.catechismParagraphs}</p>
-              <p className="text-[9px] text-muted-foreground font-medium mt-1 flex flex-col items-center">
-                <Icons.Cross className="w-3 h-3 mb-1" /> CIC
-              </p>
-            </div>
-            <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
-              <p className="text-xl md:text-2xl font-bold text-foreground">{streak}</p>
-              <p className="text-[9px] text-muted-foreground font-medium mt-1 flex flex-col items-center">
-                <Icons.Flame className="w-3 h-3 mb-1" /> {t('streak')}
-              </p>
-            </div>
-            <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
-              <p className="text-xl md:text-2xl font-bold text-foreground">{weeklyStats.journeySteps}</p>
-              <p className="text-[9px] text-muted-foreground font-medium mt-1 flex flex-col items-center">
-                <Icons.Calendar className="w-3 h-3 mb-1" /> {t('journeys')}
-              </p>
-            </div>
-          </div>
-        </div>
+        <NexusBubbles />
       </FadeUp>
 
-      </div>{/* end desktop-main */}
+      {/* ═══ 5. PRO SHOWCASE ═══ */}
+      {!profile?.is_premium && (
+        <FadeUp delay={0.25}>
+          <ProShowcase />
+        </FadeUp>
+      )}
 
-      {/* ═══ DESKTOP RIGHT PANEL ═══ */}
-      <aside className="desktop-aside">
-        {/* Progress / Stats */}
+      </div>
+
+      {/* ═══ SIDEBAR DESKTOP (STATS & INFO) ═══ */}
+      <aside className="desktop-aside space-y-6 hidden xl:block">
         <div className="desktop-card space-y-4">
-          <div className="flex items-center gap-2">
-            <Icons.Activity className="w-4 h-4 text-primary" />
-            <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground">Progresso</h3>
-          </div>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Icons.Flame className="w-4 h-4 text-secondary" />
-              <span className="text-xs font-bold text-foreground">{t('streak')}</span>
-            </div>
-            <span className="text-lg font-black text-primary">{streak} {streak === 1 ? t('day') : t('days')}</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Icons.Star className="w-4 h-4 text-secondary" />
-              <span className="text-xs font-bold text-foreground">XP</span>
-            </div>
-            <span className="text-lg font-black text-primary">{profile?.xp || 0}</span>
-          </div>
-          <div className="h-px bg-border" />
+          <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary opacity-80">Estatísticas Semanais</h3>
           <div className="grid grid-cols-3 gap-2 text-center">
             <div className="p-2 rounded-lg bg-primary/[0.04]">
               <p className="text-lg font-bold text-foreground">{weeklyStats.chaptersRead}</p>
