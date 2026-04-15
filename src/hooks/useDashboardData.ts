@@ -74,8 +74,8 @@ export const useDashboardData = (user: User | null) => {
       }
       
       const today = new Date();
-      const matched = ALL_SAINTS.filter(s => s.feastMonth === today.getMonth() + 1 && s.feastDayNum === today.getDate());
-      return matched.length > 0 ? matched : [ALL_SAINTS[0]];
+      const matched = await getSaintsByDate(today.getMonth() + 1, today.getDate());
+      return matched.length > 0 ? matched : [];
     },
     staleTime: 1000 * 60 * 60, // 1 hour cache
   });
