@@ -86,6 +86,13 @@ const sections = [
     route: AppRoute.GLOSSARY,
     color: 'bg-primary/10 text-primary',
   },
+  {
+    title: 'Guia dos Módulos',
+    description: 'Entenda como navegar e usar a plataforma',
+    icon: <Icons.HelpCircle className="w-5 h-5" />,
+    route: AppRoute.MODULES_GUIDE,
+    color: 'bg-accent/10 text-accent',
+  },
 ];
 
 const BibliotecaPage: React.FC = () => {
