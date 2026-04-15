@@ -256,12 +256,12 @@ const HojePage: React.FC = () => {
             'busca_espiritual': ['Contemplação', 'Mística', 'Oração', 'Silêncio']
           };
           const targetVirtues = virtueMap[mainState] || [];
-          const matchedSaint = ALL_SAINTS.find(s => 
-            s.virtues?.some(v => targetVirtues.includes(v)) ||
-            s.patronOf?.some(p => targetVirtues.some(tv => p.toLowerCase().includes(tv.toLowerCase())))
-          );
-          if (matchedSaint) setLogosSaint(matchedSaint);
-          
+          import('@/services/saintsService').then(m => {
+            m.findSaintByVirtues(targetVirtues).then(s => {
+              if (s) setLogosSaint(s);
+            });
+          });
+
           const { data: journey } = await supabase
             .from('journeys')
             .select('*')
