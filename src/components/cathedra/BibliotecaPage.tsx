@@ -107,6 +107,13 @@ const sections = [
     route: AppRoute.MODULES_GUIDE,
     color: 'bg-accent/10 text-accent',
   },
+  {
+    title: 'Os Papas',
+    description: 'História e ensinamentos dos sucessores de Pedro',
+    icon: <Icons.ShieldCheck className="w-5 h-5" />,
+    route: AppRoute.POPES,
+    color: 'bg-primary/10 text-primary',
+  },
 ];
 
 const BibliotecaPage: React.FC = () => {

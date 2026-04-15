@@ -91,6 +91,7 @@ const UpgradePage = lazy(() => import('./components/cathedra/UpgradePage'));
 const AZFaithPage = lazy(() => import('./components/cathedra/AZFaithPage'));
 const EncyclopediaPage = lazy(() => import('./components/cathedra/EncyclopediaPage'));
 const ModulesGuidePage = lazy(() => import('./components/cathedra/ModulesGuidePage'));
+const PopesPage = lazy(() => import('./components/cathedra/PopesPage'));
 
 const PartnersPage = lazy(() => import('./components/cathedra/PartnersPage'));
 
@@ -515,6 +516,7 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.JORNADA_COMPLETE} element={<PageTransition><AuthGuard><JornadaCompletePage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.BIBLIOTECA} element={<PageTransition><AuthGuard><BibliotecaPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.MODULES_GUIDE} element={<PageTransition><ModulesGuidePage /></PageTransition>} />
+                  <Route path={AppRoute.POPES} element={<PageTransition><AuthGuard><PopesPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.ADMIN} element={
                     <PageTransition>
                       <AdminGuard>

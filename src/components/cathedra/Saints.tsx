@@ -17,7 +17,7 @@ const Saints: React.FC = () => {
   const [selectedSaint, setSelectedSaint] = useState<Saint | null>(null);
   const [autoReflect, setAutoReflect] = useState(false);
   const [search, setSearch] = useState('');
-  const [viewMode, setViewMode] = useState<'daily' | 'search' | 'all' | 'writers'>('daily');
+  const [viewMode, setViewMode] = useState<'daily' | 'search' | 'all' | 'writers' | 'popes'>('daily');
   const [officialSaint, setOfficialSaint] = useState<any>(null);
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -116,6 +116,10 @@ const Saints: React.FC = () => {
     return ALL_SAINTS.filter(s => (s.works && s.works.length > 0) || s.category === 'doctor').sort((a, b) => a.name.localeCompare(b.name));
   }, []);
 
+  const popesSaints = useMemo(() => {
+    return ALL_SAINTS.filter(s => s.category === 'pope').sort((a, b) => a.name.localeCompare(b.name));
+  }, []);
+
   const dateStrip = useMemo(() => {
     return Array.from({ length: 7 }).map((_, i) => addDays(subDays(selectedDate, 3), i));
   }, [selectedDate]);
@@ -171,6 +175,14 @@ const Saints: React.FC = () => {
               }`}
             >
               Escritores
+            </button>
+            <button
+              onClick={() => setViewMode('popes')}
+              className={`px-4 md:px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                viewMode === 'popes' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              Papas
             </button>
             <button
               onClick={() => setViewMode('search')}
@@ -362,6 +374,28 @@ const Saints: React.FC = () => {
               <div className="max-w-5xl mx-auto px-4">
                 <StaggeredList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {writersSaints.map(saint => (
+                    <SaintCard key={saint.id} saint={saint} onClick={() => handleOpenSaint(saint, false)} />
+                  ))}
+                </StaggeredList>
+              </div>
+            </motion.div>
+          ) : viewMode === 'popes' ? (
+            <motion.div
+              key="popes"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="space-y-8"
+            >
+              <div className="text-center space-y-4 max-w-2xl mx-auto px-4">
+                <h2 className="text-2xl font-serif font-bold">Sucessores de Pedro</h2>
+                <p className="text-sm text-muted-foreground italic">
+                  "Tu és Pedro, e sobre esta pedra edificarei a minha Igreja."
+                </p>
+              </div>
+              <div className="max-w-5xl mx-auto px-4">
+                <StaggeredList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {popesSaints.map(saint => (
                     <SaintCard key={saint.id} saint={saint} onClick={() => handleOpenSaint(saint, false)} />
                   ))}
                 </StaggeredList>
