@@ -1,0 +1,26 @@
+INSERT INTO public.saints (id, name, title, feast_day, feast_month, feast_day_num, born, died, patron_of, bio, full_bio, works, quotes, category, image, prayer, virtues, bible_refs, catechism_refs, church_doc_refs) VALUES
+($$sao-narciso$$, $$São Narciso de Jerusalém$$, $$Bispo Centenário$$, $$29 de Outubro$$, 10, 29, NULL, NULL, '{}'::text[], $$Bispo de Jerusalém que viveu até os 116 anos.$$, $$Bispo de Jerusalém que viveu até os 116 anos.$$, $$[]$$::jsonb, '{}'::text[], $$confessor$$, $$https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Fra_Angelico_031.jpg/440px-Fra_Angelico_031.jpg$$, NULL, '{}'::text[], $$[]$$::jsonb, '{}'::integer[], $$[]$$::jsonb),
+($$sao-afonso-rodriguez$$, $$Santo Afonso Rodrigues$$, $$Porteiro Santo$$, $$30 de Outubro$$, 10, 30, NULL, NULL, '{}'::text[], $$Jesuíta espanhol que serviu como porteiro durante 46 anos com heroica humildade.$$, $$Jesuíta espanhol que serviu como porteiro durante 46 anos com heroica humildade.$$, $$[]$$::jsonb, '{}'::text[], $$confessor$$, $$https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Fra_Angelico_031.jpg/440px-Fra_Angelico_031.jpg$$, NULL, '{}'::text[], $$[]$$::jsonb, '{}'::integer[], $$[]$$::jsonb),
+($$sao-volfango$$, $$São Volfango de Ratisbona$$, $$Bispo Reformador$$, $$31 de Outubro$$, 10, 31, NULL, NULL, '{}'::text[], $$Bispo que reformou mosteiros e escolas na Baviera.$$, $$Bispo que reformou mosteiros e escolas na Baviera.$$, $$[]$$::jsonb, '{}'::text[], $$confessor$$, $$https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Fra_Angelico_031.jpg/440px-Fra_Angelico_031.jpg$$, NULL, '{}'::text[], $$[]$$::jsonb, '{}'::integer[], $$[]$$::jsonb),
+($$sao-martinho-porres$$, $$São Martinho de Porres$$, $$O Santo da Vassoura$$, $$3 de Novembro$$, 11, 3, NULL, NULL, '{}'::text[], $$Irmão leigo dominicano peruano, mestiço, dedicado aos pobres e doentes.$$, $$Irmão leigo dominicano peruano, mestiço, dedicado aos pobres e doentes.$$, $$[]$$::jsonb, '{}'::text[], $$confessor$$, $$https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Fra_Angelico_031.jpg/440px-Fra_Angelico_031.jpg$$, NULL, '{}'::text[], $$[]$$::jsonb, '{}'::integer[], $$[]$$::jsonb),
+($$sao-zacarias-nov$$, $$Santos Zacarias e Isabel$$, $$Pais do Precursor$$, $$5 de Novembro$$, 11, 5, NULL, NULL, '{}'::text[], $$Festa dos pais de São João Batista.$$, $$Festa dos pais de São João Batista.$$, $$[]$$::jsonb, '{}'::text[], $$confessor$$, $$https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Fra_Angelico_031.jpg/440px-Fra_Angelico_031.jpg$$, NULL, '{}'::text[], $$[]$$::jsonb, '{}'::integer[], $$[]$$::jsonb)
+ON CONFLICT (id) DO UPDATE SET 
+    name = EXCLUDED.name,
+    title = EXCLUDED.title,
+    feast_day = EXCLUDED.feast_day,
+    feast_month = EXCLUDED.feast_month,
+    feast_day_num = EXCLUDED.feast_day_num,
+    born = EXCLUDED.born,
+    died = EXCLUDED.died,
+    patron_of = EXCLUDED.patron_of,
+    bio = EXCLUDED.bio,
+    full_bio = EXCLUDED.full_bio,
+    works = EXCLUDED.works,
+    quotes = EXCLUDED.quotes,
+    category = EXCLUDED.category,
+    image = EXCLUDED.image,
+    prayer = EXCLUDED.prayer,
+    virtues = EXCLUDED.virtues,
+    bible_refs = EXCLUDED.bible_refs,
+    catechism_refs = EXCLUDED.catechism_refs,
+    church_doc_refs = EXCLUDED.church_doc_refs;
