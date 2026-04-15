@@ -134,22 +134,21 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
   const loadJourneys = async () => {
     setLoading(true);
     try {
-      const { data: journeyData } = await supabase
-        .from('journeys')
+      // Optimized query using the newly created database view
+      const { data: journeyData, error } = await supabase
+        .from('view_journeys_with_stats')
         .select('*')
         .order('sort_order', { ascending: true });
 
+      if (error) throw error;
       if (!journeyData) { setLoading(false); return; }
+      
       setJourneys(journeyData);
 
-      // Optimized count query - selecting only needed fields to reduce payload
-      const { data: countsData } = await supabase
-        .from('journey_steps')
-        .select('journey_id');
-
+      // Reconstruct the steps count map from the view data
       const counts: Record<string, number> = {};
-      countsData?.forEach(s => {
-        counts[s.journey_id] = (counts[s.journey_id] || 0) + 1;
+      journeyData.forEach(j => {
+        counts[j.id] = j.steps_count;
       });
       setStepsCountMap(counts);
 
@@ -168,7 +167,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
         }
       }
     } catch (err) {
-      console.error(err);
+      console.error('Error loading journeys:', err);
     } finally {
       setLoading(false);
     }
