@@ -6,7 +6,9 @@ import { useAuth } from '../../hooks/useAuth';
 import { Icons } from '@/constants';
 import { useLang } from '@/hooks/useLang';
 import RitualDoDia from './RitualDoDia';
-import { PROFILES, type ProfileId } from './SpiritualQuiz';
+import NexusBubbles from './NexusBubbles';
+import SpiritualQuiz, { PROFILES, type ProfileId } from './SpiritualQuiz';
+import ProShowcase from './ProShowcase';
 import { useDashboardData } from '@/hooks/useDashboardData';
 
 interface DashboardProps {
@@ -40,7 +42,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   const { t } = useLang();
   const goTo = useCallback((route: string) => navigate(route), [navigate]);
 
-  const { spiritualProfile, activeJourneys, nextUp, isLoading } = useDashboardData(user);
+  const { spiritualProfile, activeJourneys, nextUp, weeklyStats, isLoading } = useDashboardData(user);
 
   const streak = profile?.streak || 0;
   const hour = new Date().getHours();
