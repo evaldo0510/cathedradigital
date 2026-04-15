@@ -5,7 +5,7 @@ import { AppRoute } from '@/types';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Book, Bookmark, Search, X, BookOpen, Quote, Brain, Globe, Target, Compass, 
-  ArrowRight, Sparkles, Hash, ChevronRight, Heart
+  ArrowRight, Sparkles, Hash, ChevronRight, Heart, Library, Info
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
