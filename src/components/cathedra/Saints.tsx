@@ -9,6 +9,7 @@ import SaintDetail, { CATEGORY_LABELS } from './SaintDetail';
 import { ALL_SAINTS, SAINTS_DATA, type Saint } from '@/data/saints';
 import { supabase } from '@/integrations/supabase/client';
 import { Search, X, Calendar as CalendarIcon, ChevronLeft, ChevronRight, Sparkles, BookOpen, Quote, Shield } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { format, addDays, subDays, isSameDay } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
