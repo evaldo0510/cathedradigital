@@ -19,6 +19,8 @@ const Saints: React.FC = () => {
   const [search, setSearch] = useState('');
   const [viewMode, setViewMode] = useState<'daily' | 'search' | 'all' | 'writers' | 'popes'>('daily');
   const [officialSaint, setOfficialSaint] = useState<any>(null);
+  const [isSearchingGlobal, setIsSearchingGlobal] = useState(false);
+  const [globalResults, setGlobalResults] = useState<Saint[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
@@ -34,6 +36,24 @@ const Saints: React.FC = () => {
     };
     fetchOfficialSaint();
   }, []);
+
+  const handleGlobalSearch = async (query: string) => {
+    if (!query.trim()) return;
+    setIsSearchingGlobal(true);
+    setGlobalResults([]);
+    try {
+      const response = await supabase.functions.invoke('search-saint', {
+        body: { name: query }
+      });
+      if (response.data && !response.data.error) {
+        setGlobalResults([response.data]);
+      }
+    } catch (err) {
+      console.error('Global search error:', err);
+    } finally {
+      setIsSearchingGlobal(false);
+    }
+  };
 
   const handleOpenSaint = (saint: Saint, shouldReflect: boolean = false) => {
     setAutoReflect(shouldReflect);
