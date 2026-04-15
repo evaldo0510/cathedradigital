@@ -18,7 +18,10 @@ const LandingHeader = () => {
     { code: 'pt', label: 'Português', flag: '🇧🇷' },
     { code: 'en', label: 'English', flag: '🇺🇸' },
     { code: 'es', label: 'Español', flag: '🇪🇸' },
-    { code: 'la', label: 'Latina', flag: '🇻atican' },
+    { code: 'la', label: 'Latina', flag: '🇻🇦' },
+    { code: 'it', label: 'Italiano', flag: '🇮🇹' },
+    { code: 'fr', label: 'Français', flag: '🇫🇷' },
+    { code: 'de', label: 'Deutsch', flag: '🇩🇪' },
   ];
   useEffect(() => {
     const handleScroll = () => {
