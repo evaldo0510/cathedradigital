@@ -49,7 +49,7 @@ export const getSaintsByCategory = async (category: string): Promise<Saint[]> =>
   return (data || []).map(formatSaint);
 };
 
-const formatSaint = (dbSaint: any): Saint => {
+export const formatSaint = (dbSaint: any): Saint => {
   return {
     ...dbSaint,
     feastDay: dbSaint.feast_day,

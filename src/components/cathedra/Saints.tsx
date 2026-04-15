@@ -7,7 +7,7 @@ import StaggeredList from './StaggeredList';
 import SacredImage from './SacredImage';
 import SaintDetail, { CATEGORY_LABELS } from './SaintDetail';
 import { type Saint } from '@/data/saints';
-import { getSaintsByDate, searchSaints, getSaintsByCategory } from '@/services/saintsService';
+import { getSaintsByDate, searchSaints, getSaintsByCategory, formatSaint } from '@/services/saintsService';
 import { supabase } from '@/integrations/supabase/client';
 import { Search, X, Calendar as CalendarIcon, ChevronLeft, ChevronRight, Sparkles, BookOpen, Quote, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -62,7 +62,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
         setLocalSaints(saints);
       } else if (viewMode === 'all') {
         const { data } = await supabase.from('saints').select('*').order('name').limit(100);
-        setLocalSaints((data || []).map(s => ({ ...s, feastDay: s.feast_day, feastMonth: s.feast_month, feastDayNum: s.feast_day_num, patronOf: s.patron_of || [] })));
+        setLocalSaints((data || []).map(formatSaint));
       }
     };
     loadModeSaints();
