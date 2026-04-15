@@ -1,8 +1,9 @@
-import { motion, AnimatePresence } from "framer-motion";
-import { Quote, Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { motion } from "framer-motion";
+import { Quote, Star } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { fadeUp } from "./animations";
-import { useState, useEffect, useCallback } from "react";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 
 const testimonials = [
   { name: "Maria Fernanda", role: "Catequista", text: "O Cathedra transformou minha preparação para as aulas de catequese. Ter tudo num só lugar é uma bênção.", avatar: "MF", stars: 5 },
