@@ -5,6 +5,7 @@ import { useFavorites } from '@/hooks/useFavorites';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import type { Saint } from '@/data/saints';
+import { useAllSaintsDB } from '@/hooks/useSaints';
 import SacredImage from './SacredImage';
 import SaintDetail from './SaintDetail';
 import { AnimatePresence } from 'framer-motion';
@@ -212,11 +213,7 @@ const LiturgicalCalendarPage: React.FC = () => {
   const { toggleFavorite, isFavorite } = useFavorites();
   const navigate = useNavigate();
   const [showSaintModal, setShowSaintModal] = useState(false);
-  const [saintsData, setSaintsData] = useState<Saint[]>([]);
-
-  React.useEffect(() => {
-    import('@/data/saints').then(m => setSaintsData(m.ALL_SAINTS));
-  }, []);
+  const { data: saintsData = [] } = useAllSaintsDB(500);
 
   const { data: apiData = {}, isLoading: isLoadingApi } = useQuery({
     queryKey: ['liturgical-month', year, month],
