@@ -98,5 +98,25 @@ INSERT INTO public.saints (id, name, title, feast_day, feast_month, feast_day_nu
 ('imaculada-conceicao', 'Imaculada Conceição', 'Concebida sem Pecado', '8 de Dezembro', 12, 8, '', '', ARRAY['Portugal','Brasil','Estados Unidos']::TEXT[], 'Solenidade que celebra o dogma de que Maria foi concebida sem pecado original', '', '[]'::JSONB, ARRAY['"Eu sou a Imaculada Conceição."']::TEXT[], 'virgin', 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Bartolom%C3%A9_Esteban_Murillo_-_The_Immaculate_Conception_of_the_Venerable_Ones_-_Google_Art_Project.jpg/440px-Bartolom%C3%A9_Esteban_Murillo_-_The_Immaculate_Conception_of_the_Venerable_Ones_-_Google_Art_Project.jpg', '', ARRAY['Pureza','Graça']::TEXT[], '[]'::JSONB, '{}'::INTEGER[], '[]'::JSONB),
 ('nossa-senhora-guadalupe', 'Nossa Senhora de Guadalupe', 'Padroeira das Américas', '12 de Dezembro', 12, 12, '', '', ARRAY['Américas','México']::TEXT[], 'Em 1531', '', '[]'::JSONB, ARRAY['"Não estou eu aqui','que sou tua Mãe?"']::TEXT[], 'virgin', 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Virgen_de_guadalupe1.jpg/440px-Virgen_de_guadalupe1.jpg', '', ARRAY['Maternidade','Evangelização']::TEXT[], '[]'::JSONB, '{}'::INTEGER[], '[]'::JSONB),
 ('joao-cruz', 'São João da Cruz', 'Doutor Místico', '14 de Dezembro', 12, 14, '1542', '1591', ARRAY['Contemplativos','Poetas']::TEXT[], 'Carmelita e místico espanhol', '', '[]'::JSONB, ARRAY['"Onde não há amor','ponha amor e recolherás amor."']::TEXT[], 'doctor', 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/John_of_the_Cross_drawing.png/440px-John_of_the_Cross_drawing.png', '', ARRAY['Contemplação','Purificação']::TEXT[], '[]'::JSONB, '{}'::INTEGER[], '[]'::JSONB),
-('natal', 'Natividade do Senhor', 'O Natal de Jesus Cristo', '25 de Dezembro', 12, 25, '', '', ARRAY['Humanidade']::TEXT[], 'Solenidade máxima que celebra o nascimento de Jesus Cristo em Belém', '', '[]'::JSONB, ARRAY['"Glória a Deus nas alturas e paz na terra aos homens de boa vontade."']::TEXT[], 'confessor', 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Gerard_van_Honthorst_001.jpg/440px-Gerard_van_Honthorst_001.jpg', '', ARRAY['Encarnação','Humildade']::TEXT[], '[]'::JSONB, '{}'::INTEGER[], '[]'::JSONB),
-;
+('natal', 'Natividade do Senhor', 'O Natal de Jesus Cristo', '25 de Dezembro', 12, 25, '', '', ARRAY['Humanidade']::TEXT[], 'Solenidade máxima que celebra o nascimento de Jesus Cristo em Belém', '', '[]'::JSONB, ARRAY['"Glória a Deus nas alturas e paz na terra aos homens de boa vontade."']::TEXT[], 'confessor', 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Gerard_van_Honthorst_001.jpg/440px-Gerard_van_Honthorst_001.jpg', '', ARRAY['Encarnação','Humildade']::TEXT[], '[]'::JSONB, '{}'::INTEGER[], '[]'::JSONB)
+ON CONFLICT (id) DO UPDATE SET 
+  name = EXCLUDED.name,
+  title = EXCLUDED.title,
+  feast_day = EXCLUDED.feast_day,
+  feast_month = EXCLUDED.feast_month,
+  feast_day_num = EXCLUDED.feast_day_num,
+  born = EXCLUDED.born,
+  died = EXCLUDED.died,
+  patron_of = EXCLUDED.patron_of,
+  bio = EXCLUDED.bio,
+  full_bio = EXCLUDED.full_bio,
+  works = EXCLUDED.works,
+  quotes = EXCLUDED.quotes,
+  category = EXCLUDED.category,
+  image = EXCLUDED.image,
+  prayer = EXCLUDED.prayer,
+  virtues = EXCLUDED.virtues,
+  bible_refs = EXCLUDED.bible_refs,
+  catechism_refs = EXCLUDED.catechism_refs,
+  church_doc_refs = EXCLUDED.church_doc_refs,
+  updated_at = now();
