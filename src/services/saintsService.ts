@@ -19,7 +19,6 @@ export const getSaintsByDate = async (month: number, day: number): Promise<Saint
 export const searchSaints = async (query: string): Promise<Saint[]> => {
   if (!query.trim()) return [];
   
-  // Use text search for better performance and relevance
   const { data, error } = await supabase
     .from('saints')
     .select('*')
@@ -27,7 +26,6 @@ export const searchSaints = async (query: string): Promise<Saint[]> => {
     .limit(50);
 
   if (error) {
-    // Fallback to ilike if text search fails or has issues
     const { data: fallbackData, error: fallbackError } = await supabase
       .from('saints')
       .select('*')
@@ -75,7 +73,6 @@ export const getSaintsByVirtue = async (virtue: string): Promise<Saint[]> => {
 };
 
 export const findSaintByVirtues = async (virtues: string[]): Promise<Saint | null> => {
-  // Try to find a saint that has any of these virtues
   for (const virtue of virtues) {
     const saints = await getSaintsByVirtue(virtue);
     if (saints.length > 0) return saints[0];
@@ -83,6 +80,7 @@ export const findSaintByVirtues = async (virtues: string[]): Promise<Saint | nul
   return null;
 };
 
+export const getAllSaints = async (limit: number = 100): Promise<Saint[]> => {
   const { data, error } = await supabase
     .from('saints')
     .select('*')
