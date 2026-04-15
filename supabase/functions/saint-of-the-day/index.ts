@@ -1,9 +1,14 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.38.4";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
+const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function fetchFromA12(day: string, month: string) {
   const url = `https://www.a12.com/reze-no-santuario/santo-do-dia?day=${day}&month=${month}`;
@@ -140,13 +145,36 @@ serve(async (req) => {
 
   try {
     const now = new Date();
-    const offsetTime = new Date(now.getTime() + (2 * 60 * 60 * 1000));
-    const day = String(offsetTime.getUTCDate()).padStart(2, '0');
-    const month = String(offsetTime.getUTCMonth() + 1).padStart(2, '0');
+    // Use GMT-3 (Brazil) or local time logic
+    const day = now.getDate();
+    const month = now.getMonth() + 1;
     
-    let result = await fetchFromA12(day, month);
+    // 1. Try to fetch from internal database first
+    const { data: dbSaint, error: dbError } = await supabase
+      .from('saints')
+      .select('*')
+      .eq('feast_month', month)
+      .eq('feast_day_num', day)
+      .limit(1)
+      .maybeSingle();
+
+    if (dbSaint && !dbError) {
+      return new Response(JSON.stringify({
+        name: dbSaint.name,
+        image: dbSaint.image,
+        description: dbSaint.bio,
+        fullBio: dbSaint.full_bio,
+        source: "Cathedra Database"
+      }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+
+    // 2. Fallback to external scraping
+    const dayStr = String(day).padStart(2, '0');
+    const monthStr = String(month).padStart(2, '0');
+    
+    let result = await fetchFromA12(dayStr, monthStr);
     if (!result || !result.image) {
-      const vResult = await fetchFromVatican(day, month);
+      const vResult = await fetchFromVatican(dayStr, monthStr);
       if (vResult) result = vResult;
     }
     

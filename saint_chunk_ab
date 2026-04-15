@@ -1,0 +1,100 @@
+ON CONFLICT (id) DO UPDATE SET 
+    name = EXCLUDED.name,
+    title = EXCLUDED.title,
+    feast_day = EXCLUDED.feast_day,
+    feast_month = EXCLUDED.feast_month,
+    feast_day_num = EXCLUDED.feast_day_num,
+    born = EXCLUDED.born,
+    died = EXCLUDED.died,
+    patron_of = EXCLUDED.patron_of,
+    bio = EXCLUDED.bio,
+    full_bio = EXCLUDED.full_bio,
+    works = EXCLUDED.works,
+    quotes = EXCLUDED.quotes,
+    category = EXCLUDED.category,
+    image = EXCLUDED.image,
+    prayer = EXCLUDED.prayer,
+    virtues = EXCLUDED.virtues,
+    bible_refs = EXCLUDED.bible_refs,
+    catechism_refs = EXCLUDED.catechism_refs,
+    church_doc_refs = EXCLUDED.church_doc_refs;
+INSERT INTO public.saints (id, name, title, feast_day, feast_month, feast_day_num, born, died, patron_of, bio, full_bio, works, quotes, category, image, prayer, virtues, bible_refs, catechism_refs, church_doc_refs) VALUES
+($$joao-paulo-ii$$, $$São João Paulo II$$, $$O Grande$$, $$22 de Outubro$$, 10, 22, $$1920, Wadowice, Polônia$$, $$2005, Vaticano$$, '{"Jornada Mundial da Juventude","Famílias"}'::text[], $$Papa de 1978 a 2005, o segundo pontificado mais longo da história. Fundamental na queda do comunismo e no diálogo inter-religioso.$$, $$Karol Józef Wojtyła perdeu a mãe aos 8 anos, o irmão aos 12 e o pai aos 20 — sofrimentos que moldaram sua profunda espiritualidade. Durante a ocupação nazista da Polônia, trabalhou em pedreiras e fábricas químicas enquanto estudava clandestinamente no seminário.
+
+Ordenado sacerdote em 1946, doutorou-se em ética e tornou-se professor universitário. Nomeado bispo auxiliar de Cracóvia aos 38 anos, participou ativamente do Concílio Vaticano II. Em 1978, foi eleito Papa — o primeiro não-italiano em 455 anos.
+
+Seu pontificado de 26 anos transformou a Igreja e o mundo. Realizou 104 viagens internacionais, visitando 129 países. Seus encontros com a Jornada Mundial da Juventude atraíram milhões de jovens. Sobreviveu a um atentado em 13 de maio de 1981, atribuindo sua sobrevivência à intercessão de Nossa Senhora de Fátima. Depois visitou seu agressor na prisão e o perdoou.
+
+Foi instrumental na queda do comunismo no Leste Europeu. Promoveu o diálogo inter-religioso, sendo o primeiro Papa a visitar uma sinagoga (1986) e uma mesquita (2001). Canonizou mais santos que todos os seus predecessores juntos. Publicou 14 encíclicas e a Teologia do Corpo, uma revolucionária catequese sobre o significado do corpo humano e da sexualidade.$$, $$[{"title":"Fides et Ratio (Fé e Razão)","url":"https://www.vatican.va/content/john-paul-ii/pt/encyclicals/documents/hf_jp-ii_enc_14091998_fides-et-ratio.html","year":"1998"},{"title":"Veritatis Splendor","url":"https://www.vatican.va/content/john-paul-ii/pt/encyclicals/documents/hf_jp-ii_enc_06081993_veritatis-splendor.html","year":"1993"},{"title":"Redemptor Hominis","url":"https://www.vatican.va/content/john-paul-ii/pt/encyclicals/documents/hf_jp-ii_enc_04031979_redemptor-hominis.html","year":"1979"},{"title":"Evangelium Vitae","url":"https://www.vatican.va/content/john-paul-ii/pt/encyclicals/documents/hf_jp-ii_enc_25031995_evangelium-vitae.html","year":"1995"},{"title":"Teologia do Corpo (catequeses)","url":"https://www.vatican.va/content/john-paul-ii/pt/audiences.index.html","year":"1979–1984"},{"title":"Cruzando o Limiar da Esperança","year":"1994"}]$$::jsonb, '{"\"Não tenhais medo! Abri as portas a Cristo!\"","\"A fé e a razão são como as duas asas com as quais o espírito humano se eleva à contemplação da verdade.\"","\"O futuro começa hoje, não amanhã.\""}'::text[], $$pope$$, $$https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/John_Paul_II_Medal_of_Freedom_2004.jpg/440px-John_Paul_II_Medal_of_Freedom_2004.jpg$$, $$São João Paulo II, que nos ensinastes a não ter medo, intercedei por nós para que vivamos com a mesma coragem e esperança.$$, '{"Coragem","Perdão","Amor pelos jovens","Perseverança"}'::text[], $$[]$$::jsonb, '{}'::integer[], $$[]$$::jsonb),
+($$madre-teresa$$, $$Santa Teresa de Calcutá$$, $$Mãe dos Pobres$$, $$5 de Setembro$$, 9, 5, $$1910, Skopje, Macedônia$$, $$1997, Calcutá, Índia$$, '{"Missionárias da Caridade","Pobres","Doentes"}'::text[], $$Fundadora das Missionárias da Caridade, dedicou sua vida aos mais pobres entre os pobres, servindo Cristo nos moribundos de Calcutá.$$, $$Anjezë Gonxhe Bojaxhiu nasceu numa família albanesa católica em Skopje. Aos 18 anos, ingressou nas Irmãs de Loreto na Irlanda e foi enviada à Índia, onde lecionou por quase 20 anos no colégio de Santa Maria em Calcutá.
+
+Em 10 de setembro de 1946, durante uma viagem de trem para Darjeeling, recebeu o que chamou de "chamado dentro do chamado" — Jesus pedia-lhe que deixasse o convento para servir os mais pobres entre os pobres. Após dois anos de discernimento, recebeu permissão e fundou as Missionárias da Caridade em 1950.
+
+Começou recolhendo moribundos das ruas de Calcutá, dando-lhes dignidade nos últimos momentos. A congregação cresceu exponencialmente, chegando a mais de 4.500 irmãs em 133 países, operando orfanatos, hospícios, centros de AIDS e casas para moribundos.
+
+Recebeu o Prêmio Nobel da Paz em 1979. Quando lhe perguntaram o que o mundo poderia fazer para promover a paz, respondeu: "Vá para casa e ame a sua família."
+
+Após sua morte, a publicação de suas cartas revelou que durante quase 50 anos viveu uma profunda "noite escura da alma" — sentindo a ausência completa de Deus — mas perseverou no serviço com fé heroica.$$, $$[{"title":"Vem, Sê Minha Luz (cartas privadas)","year":"2007 (publicação póstuma)"},{"title":"Caminho Simples","year":"1995"},{"title":"Sede Tenho (meditações)","year":"1998"}]$$::jsonb, '{"\"Se você julga as pessoas, não tem tempo para amá-las.\"","\"Não podemos todos fazer grandes coisas. Mas podemos fazer pequenas coisas com grande amor.\"","\"A paz começa com um sorriso.\"","\"Vá para casa e ame a sua família.\""}'::text[], $$founder$$, $$https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Mother_Teresa_1.jpg/440px-Mother_Teresa_1.jpg$$, $$Santa Teresa de Calcutá, que servistes Cristo nos mais pobres entre os pobres, ajudai-nos a ver o rosto de Jesus em cada pessoa que encontramos.$$, '{"Caridade","Humildade","Serviço","Perseverança na fé"}'::text[], $$[]$$::jsonb, '{}'::integer[], $$[]$$::jsonb),
+($$dulce-pobres$$, $$Santa Dulce dos Pobres$$, $$O Anjo Bom da Bahia$$, $$13 de Agosto$$, 8, 13, $$1914, Salvador, Bahia, Brasil$$, $$1992, Salvador, Bahia, Brasil$$, '{"Pobres","Doentes","Bahia"}'::text[], $$Primeira santa nascida no Brasil. Religiosa das Irmãs Missionárias da Imaculada Conceição da Mãe de Deus, dedicou sua vida ao serviço dos mais necessitados.$$, $$Maria Rita de Sousa Brito Lopes Pontes nasceu numa família de classe média em Salvador. Aos 13 anos, começou a ajudar pobres e doentes nos bairros mais carentes, guiada pelo tio, Frei Hildebrando. Aos 18 anos, ingressou na Congregação das Irmãs Missionárias da Imaculada Conceição da Mãe de Deus, recebendo o nome de Irmã Dulce.
+
+Em 1939, começou a acolher doentes e operários em casas abandonadas e num galinheiro ao lado do convento. Desse gesto nasceram as Obras Sociais Irmã Dulce (OSID), que hoje constituem um dos maiores complexos de saúde e assistência social do Brasil, atendendo milhões de pessoas por ano.
+
+Fundou o Hospital Santo Antônio, centros de acolhimento, escolas e centros profissionalizantes. Saía pelas ruas de Salvador pedindo esmolas para sustentar suas obras, sendo chamada carinhosamente de "O Anjo Bom da Bahia".
+
+Em 1979, foi indicada ao Prêmio Nobel da Paz. O Papa João Paulo II, ao visitá-la em Salvador em 1980, beijou sua mão e disse: "Irmã Dulce, continue fazendo o que faz." Sofreu problemas respiratórios graves nos últimos anos, sendo internada e operada diversas vezes.
+
+Foi beatificada em 2011 e canonizada pelo Papa Francisco em 13 de outubro de 2019, tornando-se a primeira santa nascida no Brasil. Seu corpo repousa no Santuário de Irmã Dulce, em Salvador.$$, $$[{"title":"Obras Sociais Irmã Dulce (OSID)","url":"https://www.irmadulce.org.br/"}]$$::jsonb, '{"\"Não posso ver ninguém sofrer sem sofrer junto.\"","\"Quem ajuda os outros, ajuda a si mesmo.\"","\"O amor é a única revolução capaz de transformar o mundo.\""}'::text[], $$founder$$, $$https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Irm%C3%A3_Dulce.jpg/440px-Irm%C3%A3_Dulce.jpg$$, $$Santa Dulce dos Pobres, Anjo Bom da Bahia, intercedei por nós junto a Deus para que possamos servir os mais necessitados com o mesmo amor que ardia em vosso coração.$$, '{"Caridade","Pobreza","Compaixão","Perseverança"}'::text[], $$[]$$::jsonb, '{}'::integer[], $$[]$$::jsonb),
+($$jose-anchieta$$, $$São José de Anchieta$$, $$Apóstolo do Brasil$$, $$9 de Junho$$, 6, 9, $$1534, San Cristóbal de La Laguna, Tenerife, Espanha$$, $$1597, Reritiba (atual Anchieta), Espírito Santo, Brasil$$, '{"Brasil","Catequistas","Educadores"}'::text[], $$Jesuíta espanhol, missionário no Brasil colonial. Fundador de São Paulo e autor da primeira gramática da língua tupi.$$, $$José de Anchieta nasceu nas Ilhas Canárias e ingressou na Companhia de Jesus aos 17 anos, em Coimbra. Em 1553, com apenas 19 anos, foi enviado ao Brasil, onde dedicaria os 44 anos seguintes de sua vida.
+
+Chegou a São Vicente e logo se destacou pelo dom das línguas, aprendendo rapidamente o tupi. Compôs a primeira gramática da língua tupi ("Arte de Gramática da Língua Mais Usada na Costa do Brasil"), instrumento fundamental para a evangelização e para a preservação da cultura indígena.
+
+Em 25 de janeiro de 1554, junto com o Padre Manuel da Nóbrega, fundou o colégio de São Paulo de Piratininga — núcleo que deu origem à cidade de São Paulo. Dedicou-se intensamente à catequese dos indígenas, aprendendo seus costumes e defendendo-os contra a escravidão.
+
+Em 1563, durante negociações de paz com os tamoios em Iperoig (atual Ubatuba), foi mantido como refém por cinco meses. Durante o cativeiro, compôs na areia da praia o poema épico "De Beata Virgine Dei Matre Maria" — com mais de 5.000 versos em latim, memorizados integralmente.
+
+Anchieta escreveu autos teatrais bilíngues (tupi e português), poemas, catecismos e cartas que são documentos históricos inestimáveis. Foi provincial dos jesuítas no Brasil e fundou diversas aldeias e missões. Morreu em Reritiba, no Espírito Santo.
+
+Foi beatificado por João Paulo II em 1980 e canonizado pelo Papa Francisco em 2014.$$, $$[{"title":"Arte de Gramática da Língua Mais Usada na Costa do Brasil","year":"1595"},{"title":"De Beata Virgine Dei Matre Maria (Poema à Virgem)","year":"1563"},{"title":"Auto de São Lourenço","year":"c. 1583"},{"title":"Cartas, Informações, Fragmentos Históricos e Sermões","url":"https://digital.bbm.usp.br/handle/bbm/4784","year":"1554–1594"},{"title":"Catecismo na Língua Brasílica","year":"c. 1567"}]$$::jsonb, '{"\"Não há melhor maneira de pregar o Evangelho do que pelo exemplo.\"","\"A palavra de Deus deve ser pregada na língua que o povo entende.\""}'::text[], $$confessor$$, $$https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Padre_Jos%C3%A9_de_Anchieta.jpg/440px-Padre_Jos%C3%A9_de_Anchieta.jpg$$, $$São José de Anchieta, apóstolo do Brasil, que trouxestes a luz do Evangelho a esta terra, intercedei por nós para que sejamos evangelizadores corajosos.$$, '{"Zelo missionário","Cultura","Defesa dos indígenas","Pobreza"}'::text[], $$[]$$::jsonb, '{}'::integer[], $$[]$$::jsonb),
+($$roque-gonzalez$$, $$São Roque González de Santa Cruz$$, $$Mártir das Reduções$$, $$17 de Novembro$$, 11, 17, $$1576, Assunção, Paraguai$$, $$1628, Caaró, Rio Grande do Sul, Brasil$$, '{"Rio Grande do Sul","Missionários","Catequistas"}'::text[], $$Padre jesuíta, missionário entre os guaranis, fundador de diversas reduções no sul do Brasil. Martirizado em Caaró.$$, $$Roque González nasceu em Assunção, capital do Paraguai, filho de uma das famílias mais ilustres da cidade. Desde jovem dominava a língua guarani, o que seria fundamental para sua missão. Ordenado sacerdote diocesano aos 23 anos, tornou-se vigário-geral da diocese de Assunção.
+
+Em 1609, aos 33 anos, deixou sua posição privilegiada e ingressou na Companhia de Jesus para dedicar-se inteiramente à evangelização dos povos guaranis. Nos 19 anos seguintes, fundou pelo menos sete reduções (missões) no atual Rio Grande do Sul, entre elas São Nicolau, Candelária e Assunção do Ijuí.
+
+As reduções jesuíticas eram comunidades onde os indígenas viviam em liberdade, protegidos da escravidão imposta pelos colonizadores. Roque González defendia vigorosamente os direitos dos guaranis e denunciava a exploração colonial.
+
+Em 15 de novembro de 1628, enquanto instalava um sino na recém-fundada redução de Todos os Santos de Caaró (atual município de Caaró, RS), foi atacado e morto a golpes de itaicá (machado de pedra) pelo cacique Nheçu, instigado por pajés que viam na evangelização uma ameaça ao seu poder. Junto com ele foram martirizados seus companheiros jesuítas Afonso Rodríguez e Juan del Castillo.
+
+Seu coração foi arrancado do peito e lançado ao fogo, mas não se consumiu — a relíquia é preservada até hoje na capela de Caaró. Foi canonizado por João Paulo II em 1988, junto com seus companheiros mártires.$$, $$[{"title":"Cartas Ânuas das Reduções","year":"1615–1628"}]$$::jsonb, '{"\"Por estes índios darei com gosto a minha vida.\"","\"A cruz é a nossa única esperança.\""}'::text[], $$martyr$$, $$https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Roque_Gonz%C3%A1lez_de_Santa_Cruz.jpg/440px-Roque_Gonz%C3%A1lez_de_Santa_Cruz.jpg$$, $$São Roque González, que destes vossa vida pela evangelização dos povos guaranis, intercedei por nós para que sejamos missionários corajosos do Evangelho.$$, '{"Zelo missionário","Coragem","Defesa dos indígenas","Martírio"}'::text[], $$[]$$::jsonb, '{}'::integer[], $$[]$$::jsonb)
+ON CONFLICT (id) DO UPDATE SET 
+    name = EXCLUDED.name,
+    title = EXCLUDED.title,
+    feast_day = EXCLUDED.feast_day,
+    feast_month = EXCLUDED.feast_month,
+    feast_day_num = EXCLUDED.feast_day_num,
+    born = EXCLUDED.born,
+    died = EXCLUDED.died,
+    patron_of = EXCLUDED.patron_of,
+    bio = EXCLUDED.bio,
+    full_bio = EXCLUDED.full_bio,
+    works = EXCLUDED.works,
+    quotes = EXCLUDED.quotes,
+    category = EXCLUDED.category,
+    image = EXCLUDED.image,
+    prayer = EXCLUDED.prayer,
+    virtues = EXCLUDED.virtues,
+    bible_refs = EXCLUDED.bible_refs,
+    catechism_refs = EXCLUDED.catechism_refs,
+    church_doc_refs = EXCLUDED.church_doc_refs;
+INSERT INTO public.saints (id, name, title, feast_day, feast_month, feast_day_num, born, died, patron_of, bio, full_bio, works, quotes, category, image, prayer, virtues, bible_refs, catechism_refs, church_doc_refs) VALUES
+($$estanislau$$, $$Santo Estanislau de Cracóvia$$, $$Bispo e Mártir$$, $$11 de Abril$$, 4, 11, $$1030, Szczepanów, Polônia$$, $$1079, Cracóvia, Polônia$$, '{"Polônia","Cracóvia","Estudantes morais"}'::text[], $$Bispo de Cracóvia e um dos primeiros santos poloneses. Conhecido por sua coragem ao confrontar a imoralidade do Rei Boleslau II, o que lhe custou a vida.$$, $$Estanislau nasceu em Szczepanów e estudou em Gniezno e Paris antes de ser ordenado sacerdote. Em 1072, foi consagrado Bispo de Cracóvia. Durante seu episcopado, foi um zeloso pastor, conhecido por sua caridade com os pobres e por sua reforma do clero.
+
+O conflito com o Rei Boleslau II começou quando Estanislau denunciou publicamente a vida imoral do monarca e sua conduta tirânica. Quando o rei sequestrou a esposa de um nobre, Estanislau o excomungou. Furioso, o rei tentou fazer com que seus soldados matassem o bispo enquanto ele celebrava a missa na capela de São Miguel, mas eles se recusaram. O próprio rei então entrou na capela e assassinou Estanislau com suas próprias mãos.
+
+O martírio de Estanislau provocou tamanha indignação que o rei foi forçado ao exílio. Estanislau tornou-se o primeiro polonês a ser canonizado (em 1253) e é considerado o símbolo da unidade e da independência da Polônia.$$, $$[]$$::jsonb, '{"\"Prefiro morrer a trair a lei de Deus.\"","\"O dever de um bispo é proteger seu rebanho, mesmo contra reis.\""}'::text[], $$martyr$$, $$https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Stanislaus_of_Szczepanow.jpg/440px-Stanislaus_of_Szczepanow.jpg$$, $$Ó Deus, por cuja honra o glorioso Bispo Estanislau caiu sob as espadas dos ímpios, concedei-nos a graça de sermos fortes na fé e constantes na prática da vossa lei.$$, '{"Coragem","Fidelidade","Zelo Pastoral","Integridade"}'::text[], $$[]$$::jsonb, '{}'::integer[], $$[]$$::jsonb),
+($$rita-cassia$$, $$Santa Rita de Cássia$$, $$Advogada das Causas Impossíveis$$, $$22 de Maio$$, 5, 22, $$1381, Roccaporena, Itália$$, $$1457, Cássia, Itália$$, '{"Causas impossíveis","Casamentos difíceis","Viúvas","Doentes"}'::text[], $$Mística agostiniana conhecida como a "Santa dos Impossíveis". Viveu os estados de esposa, mãe, viúva e religiosa, sempre com profunda paciência e fé.$$, $$Rita nasceu numa família humilde e, embora desejasse ser freira, foi dada em casamento a um homem violento e temperamental. Durante 18 anos, sofreu com paciência as infidelidades e maus-tratos do marido, convertendo-o finalmente pelo amor e pela oração antes de ele ser assassinado num conflito entre famílias.
+
+Após a morte do marido e de seus dois filhos (que morreram de peste antes de poderem vingar a morte do pai), Rita ingressou no Mosteiro Agostiniano em Cássia. Durante sua vida religiosa, destacou-se pela caridade e por sua participação mística na Paixão de Cristo. Em 1441, recebeu um espinho da coroa de Jesus na testa, uma chaga que carregou por 15 anos até sua morte.
+
+É chamada "Santa dos Impossíveis" por ter superado situações humanas desesperadoras com confiança absoluta em Deus. Sua devoção é uma das mais populares no mundo católico, especialmente no Brasil e na Itália.$$, $$[]$$::jsonb, '{"\"Não há nada impossível para Deus.\"","\"A paciência é o caminho para a paz.\""}'::text[], $$mystic$$, $$https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Santa_Rita_da_Cascia_-_Santuario_Roccaporena.jpg/440px-Santa_Rita_da_Cascia_-_Santuario_Roccaporena.jpg$$, $$Ó poderosa e gloriosa Santa Rita, chamada Advogada das Causas Impossíveis, venho a vós com confiança em minhas necessidades. Intercedei por mim junto ao Pai, para que eu possa glorificá-Lo para sempre.$$, '{"Paciência","Perdão","Penitência","Confiança"}'::text[], $$[]$$::jsonb, '{}'::integer[], $$[]$$::jsonb),
+($$nha-chica$$, $$Beata Nhá Chica$$, $$A Mãe dos Pobres de Baependi$$, $$14 de Junho$$, 6, 14, $$1808, São João del-Rei, Minas Gerais, Brasil$$, $$1895, Baependi, Minas Gerais, Brasil$$, '{"Pobres","Baependi","Causas impossíveis"}'::text[], $$Leiga mineira, filha de uma escrava liberta, dedicou sua vida à oração, à caridade e à construção da Igreja de Nossa Senhora da Conceição em Baependi.$$, $$Francisca de Paula de Jesus, conhecida como Nhá Chica, nasceu em São João del-Rei, filha de uma escrava alforriada. Órfã desde jovem, mudou-se com a mãe para Baependi, no sul de Minas Gerais, onde viveria o resto de sua longa vida.
+
+Mestiça e pobre, Nhá Chica nunca frequentou escola e não sabia ler nem escrever, mas possuía uma sabedoria espiritual que atraía pessoas de todas as classes sociais. Vivia em extrema simplicidade numa pequena casa, dedicando-se à oração contemplativa — passava horas ajoelhada em oração — e à caridade com os mais necessitados.
