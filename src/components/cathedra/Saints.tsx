@@ -521,7 +521,10 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
       </div>
     </>
   );
-};
+});
+
+Saints.displayName = 'Saints';
+
 
 const SaintCard: React.FC<{ saint: Saint; onClick: () => void }> = ({ saint, onClick }) => (
   <button
