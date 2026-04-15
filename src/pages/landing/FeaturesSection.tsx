@@ -14,6 +14,13 @@ const features = [
     route: AppRoute.DASHBOARD 
   },
   { 
+    title: "Enciclopédia Católica", 
+    description: "Um Lexicon Theologicum digital completo, navegável de A a Z, com definições profundas e conexões bíblicas.", 
+    benefit: "Acesse o conhecimento da Tradição de forma independente, gratuita e estruturada para todos.", 
+    icon: <BookOpen className="h-6 w-6" />, 
+    route: AppRoute.ENCYCLOPEDIA 
+  },
+  { 
     title: "Navegação por Temas", 
     description: "Explore conexões sagradas entre Bíblia, Catecismo e Magistério através de uma interface intuitiva de bolhas teológicas.", 
     benefit: "Aprofunde-se em conceitos fundamentais da fé com uma visão 360 graus da Tradição.", 
