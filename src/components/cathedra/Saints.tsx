@@ -116,6 +116,10 @@ const Saints: React.FC = () => {
     return ALL_SAINTS.filter(s => (s.works && s.works.length > 0) || s.category === 'doctor').sort((a, b) => a.name.localeCompare(b.name));
   }, []);
 
+  const popesSaints = useMemo(() => {
+    return ALL_SAINTS.filter(s => s.category === 'pope').sort((a, b) => a.name.localeCompare(b.name));
+  }, []);
+
   const dateStrip = useMemo(() => {
     return Array.from({ length: 7 }).map((_, i) => addDays(subDays(selectedDate, 3), i));
   }, [selectedDate]);
