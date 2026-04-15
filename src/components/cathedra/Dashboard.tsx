@@ -1,16 +1,16 @@
-import React, { useMemo, useEffect, useState, useCallback } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { AppRoute, User } from '../../types';
 import { useAuth } from '../../hooks/useAuth';
-import { supabase } from '@/integrations/supabase/client';
-import SacredImage from './SacredImage';
 import { Icons } from '@/constants';
 import { useLang } from '@/hooks/useLang';
 import RitualDoDia from './RitualDoDia';
 import NexusBubbles from './NexusBubbles';
 import SpiritualQuiz, { PROFILES, type ProfileId } from './SpiritualQuiz';
 import ProShowcase from './ProShowcase';
+import { useDashboardData } from '@/hooks/useDashboardData';
+
 interface DashboardProps {
   user: User | null;
 }
@@ -42,6 +42,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   const { t } = useLang();
   const goTo = useCallback((route: string) => navigate(route), [navigate]);
 
+  const { spiritualProfile, activeJourneys, nextUp, weeklyStats, isLoading } = useDashboardData(user);
+
   const streak = profile?.streak || 0;
   const hour = new Date().getHours();
   const greeting = useMemo(() => {
@@ -51,45 +53,15 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   }, [hour, t]);
   
   const dailyQuote = QUOTES[Math.floor((Date.now() / 86400000)) % QUOTES.length];
-
-  // Spiritual profile from quiz
-  const [spiritualProfile, setSpiritualProfile] = useState<ProfileId | null>(null);
-  const [lastBible, setLastBible] = useState<{ book_abbr: string; chapter: number } | null>(null);
-
-  useEffect(() => {
-    if (!user) return;
-    (supabase as any)
-      .from('user_sensitive_data')
-      .select('diagnosis_result')
-      .eq('user_id', user.id)
-      .maybeSingle()
-      .then(({ data }: any) => {
-        const sp = data?.diagnosis_result?.spiritual_profile;
-        if (sp && PROFILES[sp as ProfileId]) {
-          setSpiritualProfile(sp as ProfileId);
-        } else if (data?.diagnosis_result?.moment) {
-          // Fallback for older users who don't have the profile in JSON
-          const spiritualProfileMap: Record<string, string> = {
-            beginning: 'sedento_de_sentido',
-            deepening: 'firme_aprofundando',
-            struggling: 'ferido_em_busca',
-            serving: 'ardente_missionario'
-          };
-          const fallback = spiritualProfileMap[data.diagnosis_result.moment] as ProfileId;
-          if (fallback && PROFILES[fallback]) setSpiritualProfile(fallback);
-        }
-      });
-  }, [user]);
-
-  const spProfile = spiritualProfile ? PROFILES[spiritualProfile] : null;
+  const spProfile = spiritualProfile ? PROFILES[spiritualProfile as ProfileId] : null;
 
   const MAIN_DOORS = useMemo(() => [
     {
       label: t('bible'),
       description: t('bible_sub'),
       icon: Icons.Bible,
-      route: lastBible 
-        ? `${AppRoute.BIBLE}?book=${lastBible.book_abbr}&ch=${lastBible.chapter}` 
+      route: (nextUp as any)?.lastBible 
+        ? `${AppRoute.BIBLE}?book=${(nextUp as any).lastBible.book_abbr}&ch=${(nextUp as any).lastBible.chapter}` 
         : AppRoute.BIBLE,
       gradient: 'from-primary/5 to-transparent',
       iconColor: 'text-primary',
@@ -126,121 +98,15 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       borderColor: 'border-border hover:border-secondary/50',
       suggested: spiritualProfile === 'firme_aprofundando',
     },
-  ], [lastBible, t, spiritualProfile]);
+  ], [nextUp, t, spiritualProfile]);
 
-  // Active journeys
-  const [activeJourneys, setActiveJourneys] = useState<{ id: string; title: string; icon: string; totalSteps: number; completedSteps: number }[]>([]);
-  useEffect(() => {
-    if (!user) return;
-    const load = async () => {
-      const { data: progress } = await supabase.from('journey_progress').select('journey_id, step_id').eq('user_id', user.id);
-      if (!progress?.length) return;
-      const journeyIds = [...new Set(progress.map(p => p.journey_id))];
-      const { data: journeys } = await supabase.from('journeys').select('id, title, icon').in('id', journeyIds);
-      if (!journeys) return;
-      const { data: steps } = await supabase.from('journey_steps').select('id, journey_id').in('journey_id', journeyIds);
-      const stepsByJourney: Record<string, number> = {};
-      steps?.forEach(s => { stepsByJourney[s.journey_id] = (stepsByJourney[s.journey_id] || 0) + 1; });
-      const completedByJourney: Record<string, number> = {};
-      progress.forEach(p => { completedByJourney[p.journey_id] = (completedByJourney[p.journey_id] || 0) + 1; });
-      setActiveJourneys(journeys.map(j => ({
-        id: j.id, title: j.title, icon: j.icon,
-        totalSteps: stepsByJourney[j.id] || 0,
-        completedSteps: completedByJourney[j.id] || 0,
-      })));
-    };
-    load();
-  }, [user]);
-
-  // Saints of the day
-  const [saintsToday, setSaintsToday] = useState<any[]>([]);
-  useEffect(() => {
-    import('@/data/saints').then(m => {
-      const today = new Date();
-      const matched = m.ALL_SAINTS.filter(s => s.feastMonth === today.getMonth() + 1 && s.feastDayNum === today.getDate());
-      setSaintsToday(matched.length > 0 ? matched : [m.ALL_SAINTS[0]]);
-    });
-  }, []);
-
-  // Weekly stats
-  const [weeklyStats, setWeeklyStats] = useState({ chaptersRead: 0, journeySteps: 0, catechismParagraphs: 0 });
-  const [nextUp, setNextUp] = useState<{ type: 'bible' | 'catechism' | 'journey'; label: string; route: string; subtitle: string } | null>(null);
-
-  useEffect(() => {
-    if (!user) return;
-    const loadNextUp = async () => {
-      // Get last Bible chapter read
-      const { data: lastBibleData } = await (supabase as any)
-        .from('bible_chapters_read')
-        .select('book_abbr, chapter')
-        .eq('user_id', user.id)
-        .order('read_at', { ascending: false })
-        .limit(1)
-        .maybeSingle();
-
-      if (lastBibleData) {
-        setLastBible(lastBibleData as any);
-      }
-
-      // Get last Catechism paragraph read
-      const { data: lastCatechism } = await supabase
-        .from('catechism_paragraphs_read')
-        .select('paragraph')
-        .eq('user_id', user.id)
-        .order('read_at', { ascending: false })
-        .limit(1)
-        .maybeSingle();
-
-      // Get last Journey step completed
-      const { data: lastJourney } = await supabase
-        .from('journey_progress')
-        .select('journey_id, step_id')
-        .eq('user_id', user.id)
-        .order('completed_at', { ascending: false })
-        .limit(1)
-        .maybeSingle();
-
-      if (lastJourney) {
-        const { data: steps } = await supabase.from('journey_steps').select('id, title').eq('journey_id', lastJourney.journey_id).order('step_order', { ascending: true });
-        const currentIndex = steps?.findIndex(s => s.id === lastJourney.step_id) ?? -1;
-        if (steps && currentIndex !== -1 && currentIndex < steps.length - 1) {
-          const next = steps[currentIndex + 1];
-          setNextUp({ type: 'journey', label: next.title, route: `/jornadas/${lastJourney.journey_id}/step?step=${next.id}`, subtitle: 'Próxima Etapa da Jornada' });
-          return;
-        }
-      }
-
-      if (lastBible) {
-        setNextUp({ type: 'bible', label: `${lastBible.book_abbr} ${lastBible.chapter + 1}`, route: `/bible?book=${lastBible.book_abbr}&ch=${lastBible.chapter + 1}`, subtitle: 'Continuar Leitura da Bíblia' });
-        return;
-      }
-
-      if (lastCatechism) {
-        setNextUp({ type: 'catechism', label: `§${lastCatechism.paragraph + 1}`, route: `/catechism?p=${lastCatechism.paragraph + 1}`, subtitle: 'Continuar Estudo do Catecismo' });
-        return;
-      }
-    };
-    loadNextUp();
-  }, [user]);
-
-  useEffect(() => {
-    if (!user) return;
-    const weekAgo = new Date();
-    weekAgo.setDate(weekAgo.getDate() - 7);
-    const iso = weekAgo.toISOString();
-
-    Promise.all([
-      supabase.from('bible_chapters_read').select('id', { count: 'exact', head: true }).eq('user_id', user.id).gte('read_at', iso),
-      supabase.from('journey_progress').select('id', { count: 'exact', head: true }).eq('user_id', user.id).gte('completed_at', iso),
-      supabase.from('catechism_paragraphs_read').select('id', { count: 'exact', head: true }).eq('user_id', user.id).gte('read_at', iso),
-    ]).then(([chapRes, jpRes, catRes]) => {
-      setWeeklyStats({
-        chaptersRead: chapRes.count || 0,
-        journeySteps: jpRes.count || 0,
-        catechismParagraphs: catRes.count || 0,
-      });
-    });
-  }, [user]);
+  if (isLoading && !spiritualProfile && activeJourneys.length === 0) {
+    return (
+      <div className="flex items-center justify-center min-h-[60dvh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="desktop-layout py-6 md:py-10">
@@ -272,7 +138,6 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             )}
           </div>
 
-          {/* Streak & XP */}
           <div className="flex items-center justify-center gap-4 flex-wrap pt-2">
             {streak > 0 && (
               <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-secondary/10 border border-secondary/20 shadow-sm">
@@ -368,147 +233,31 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         </FadeUp>
       )}
 
-      {activeJourneys.length > 0 && (
-        <FadeUp delay={0.13}>
-          <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-sm font-bold text-foreground uppercase tracking-wide">{t('your_journeys')}</h2>
-              <button onClick={() => goTo(AppRoute.JORNADAS)} className="text-xs text-primary hover:underline flex items-center gap-1">
-                {t('view_all')} <Icons.ChevronRight className="w-3 h-3" />
-              </button>
-            </div>
-            <div className="space-y-3">
-              {activeJourneys.slice(0, 2).map((j) => {
-                const pct = j.totalSteps > 0 ? Math.round((j.completedSteps / j.totalSteps) * 100) : 0;
-                return (
-                  <button
-                    key={j.id}
-                    onClick={() => goTo(`/jornadas/${j.id}`)}
-                    className="w-full flex items-center gap-4 p-4 rounded-xl bg-primary/[0.03] border border-primary/10 hover:border-primary/30 transition-colors text-left"
-                  >
-                    <div className="w-10 h-10 rounded-lg bg-background flex items-center justify-center text-primary shadow-sm">
-                      <Icons.Compass className="w-5 h-5" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-xs font-bold text-foreground">{j.title}</p>
-                      <div className="mt-2 h-1.5 w-full bg-muted rounded-full overflow-hidden">
-                        <div className="h-full bg-primary transition-all" style={{ width: `${pct}%` }} />
-                      </div>
-                    </div>
-                    <div className="text-[10px] font-black text-primary">{pct}%</div>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
+      {/* ═══ 3. QUIZ ESPIRITUAL (SE NÃO TIVER PERFIL) ═══ */}
+      {!spiritualProfile && (
+        <FadeUp delay={0.15}>
+          <SpiritualQuiz />
         </FadeUp>
       )}
 
-      {/* ═══ 3. QUIZ ESPIRITUAL 🧠 ═══ */}
-      <FadeUp delay={0.14}>
-        <SpiritualQuiz />
-      </FadeUp>
-
-      {/* ═══ 4. TEMAS (BOLHAS) ═══ */}
-      <FadeUp delay={0.15}>
-        <NexusBubbles profileId={spiritualProfile} />
-      </FadeUp>
-
-      {/* ═══ 5. LOGOS (IA) — personalizado pelo quiz ═══ */}
-      <FadeUp delay={0.16}>
-        <div
-          onClick={() => goTo('/study')}
-          className="relative overflow-hidden rounded-3xl border border-secondary/20 bg-gradient-to-br from-secondary/5 via-card to-primary/5 p-6 cursor-pointer hover:border-secondary/40 transition-all shadow-sm hover:shadow-lg group"
-        >
-          <div className="absolute -top-16 -right-16 w-48 h-48 bg-secondary/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="relative z-10 flex items-center gap-5">
-            <div className="w-14 h-14 rounded-2xl bg-secondary/15 flex items-center justify-center text-secondary group-hover:scale-110 transition-transform">
-              <Icons.Brain className="w-7 h-7" />
-            </div>
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-0.5">
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary">Logos IA · Mestre Contemplativo</p>
-              </div>
-              <h3 className="text-base font-bold text-foreground leading-tight group-hover:text-secondary transition-colors">
-                {spProfile ? `Reflita sobre: ${spProfile.theme}` : 'Pergunte qualquer coisa sobre a Fé'}
-              </h3>
-              <p className="text-[11px] text-muted-foreground mt-1">
-                {spProfile ? spProfile.direction.label : 'Respostas fundamentadas no Magistério, Bíblia e Tradição'}
-              </p>
-            </div>
-            <div className="w-10 h-10 rounded-full border border-secondary/20 flex items-center justify-center text-secondary group-hover:bg-secondary group-hover:text-white transition-all shrink-0">
-              <Icons.ChevronRight className="w-5 h-5" />
-            </div>
-          </div>
-        </div>
-      </FadeUp>
-
-      {/* ═══ 6. PRO 🔒 ═══ */}
-      <FadeUp delay={0.18}>
-        <ProShowcase />
-      </FadeUp>
-
-      {/* ═══ WEEKLY STATS ═══ */}
+      {/* ═══ 4. NEXUS BUBBLES ═══ */}
       <FadeUp delay={0.2}>
-        <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4">
-          <div className="flex items-center gap-2">
-            <Icons.Activity className="w-4 h-4 text-primary" />
-            <h2 className="text-sm font-bold text-foreground uppercase tracking-wide">{t('weekly_summary')}</h2>
-          </div>
-          <div className="grid grid-cols-4 gap-2">
-            <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
-              <p className="text-xl md:text-2xl font-bold text-foreground">{weeklyStats.chaptersRead}</p>
-              <p className="text-[9px] text-muted-foreground font-medium mt-1 flex flex-col items-center">
-                <Icons.Bookmark className="w-3 h-3 mb-1" /> {t('bible')}
-              </p>
-            </div>
-            <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
-              <p className="text-xl md:text-2xl font-bold text-foreground">{weeklyStats.catechismParagraphs}</p>
-              <p className="text-[9px] text-muted-foreground font-medium mt-1 flex flex-col items-center">
-                <Icons.Cross className="w-3 h-3 mb-1" /> CIC
-              </p>
-            </div>
-            <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
-              <p className="text-xl md:text-2xl font-bold text-foreground">{streak}</p>
-              <p className="text-[9px] text-muted-foreground font-medium mt-1 flex flex-col items-center">
-                <Icons.Flame className="w-3 h-3 mb-1" /> {t('streak')}
-              </p>
-            </div>
-            <div className="text-center p-3 rounded-xl bg-primary/[0.04] border border-primary/10">
-              <p className="text-xl md:text-2xl font-bold text-foreground">{weeklyStats.journeySteps}</p>
-              <p className="text-[9px] text-muted-foreground font-medium mt-1 flex flex-col items-center">
-                <Icons.Calendar className="w-3 h-3 mb-1" /> {t('journeys')}
-              </p>
-            </div>
-          </div>
-        </div>
+        <NexusBubbles />
       </FadeUp>
 
-      </div>{/* end desktop-main */}
+      {/* ═══ 5. PRO SHOWCASE ═══ */}
+      {!profile?.is_premium && (
+        <FadeUp delay={0.25}>
+          <ProShowcase />
+        </FadeUp>
+      )}
 
-      {/* ═══ DESKTOP RIGHT PANEL ═══ */}
-      <aside className="desktop-aside">
-        {/* Progress / Stats */}
+      </div>
+
+      {/* ═══ SIDEBAR DESKTOP (STATS & INFO) ═══ */}
+      <aside className="desktop-aside space-y-6 hidden xl:block">
         <div className="desktop-card space-y-4">
-          <div className="flex items-center gap-2">
-            <Icons.Activity className="w-4 h-4 text-primary" />
-            <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground">Progresso</h3>
-          </div>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Icons.Flame className="w-4 h-4 text-secondary" />
-              <span className="text-xs font-bold text-foreground">{t('streak')}</span>
-            </div>
-            <span className="text-lg font-black text-primary">{streak} {streak === 1 ? t('day') : t('days')}</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Icons.Star className="w-4 h-4 text-secondary" />
-              <span className="text-xs font-bold text-foreground">XP</span>
-            </div>
-            <span className="text-lg font-black text-primary">{profile?.xp || 0}</span>
-          </div>
-          <div className="h-px bg-border" />
+          <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary opacity-80">Estatísticas Semanais</h3>
           <div className="grid grid-cols-3 gap-2 text-center">
             <div className="p-2 rounded-lg bg-primary/[0.04]">
               <p className="text-lg font-bold text-foreground">{weeklyStats.chaptersRead}</p>
