@@ -6,7 +6,8 @@ import { Icons } from '../../constants';
 import StaggeredList from './StaggeredList';
 import SacredImage from './SacredImage';
 import SaintDetail, { CATEGORY_LABELS } from './SaintDetail';
-import { ALL_SAINTS, SAINTS_DATA, type Saint } from '@/data/saints';
+import { type Saint } from '@/data/saints';
+import { getSaintsByDate, searchSaints, getSaintsByCategory } from '@/services/saintsService';
 import { supabase } from '@/integrations/supabase/client';
 import { Search, X, Calendar as CalendarIcon, ChevronLeft, ChevronRight, Sparkles, BookOpen, Quote, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -21,6 +22,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
   const [viewMode, setViewMode] = useState<'daily' | 'search' | 'all' | 'writers' | 'popes'>('daily');
   const [officialSaint, setOfficialSaint] = useState<any>(null);
   const [isSearchingGlobal, setIsSearchingGlobal] = useState(false);
+  const [localSaints, setLocalSaints] = useState<Saint[]>([]);
   const [globalResults, setGlobalResults] = useState<Saint[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -37,6 +39,44 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
     };
     fetchOfficialSaint();
   }, []);
+
+  useEffect(() => {
+    const loadDailySaints = async () => {
+      const month = selectedDate.getMonth() + 1;
+      const day = selectedDate.getDate();
+      const saints = await getSaintsByDate(month, day);
+      setLocalSaints(saints);
+    };
+    if (viewMode === 'daily') {
+      loadDailySaints();
+    }
+  }, [selectedDate, viewMode]);
+
+  useEffect(() => {
+    const loadModeSaints = async () => {
+      if (viewMode === 'writers') {
+        const saints = await getSaintsByCategory('doctor');
+        setLocalSaints(saints);
+      } else if (viewMode === 'popes') {
+        const saints = await getSaintsByCategory('pope');
+        setLocalSaints(saints);
+      } else if (viewMode === 'all') {
+        const { data } = await supabase.from('saints').select('*').order('name').limit(100);
+        setLocalSaints((data || []).map(s => ({ ...s, feastDay: s.feast_day, feastMonth: s.feast_month, feastDayNum: s.feast_day_num, patronOf: s.patron_of || [] })));
+      }
+    };
+    loadModeSaints();
+  }, [viewMode]);
+
+  useEffect(() => {
+    const timer = setTimeout(async () => {
+      if (viewMode === 'search' && search.trim()) {
+        const results = await searchSaints(search);
+        setLocalSaints(results);
+      }
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [search, viewMode]);
 
   const handleGlobalSearch = async (query: string) => {
     if (!query.trim()) return;
@@ -62,10 +102,6 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
   };
 
   const saintsForSelectedDate = useMemo(() => {
-    const day = selectedDate.getDate();
-    const month = selectedDate.getMonth() + 1;
-    const localSaints = ALL_SAINTS.filter(s => s.feastMonth === month && s.feastDayNum === day);
-    
     // Safely check if we have a valid official saint with a name
     if (officialSaint && officialSaint.name && isSameDay(selectedDate, new Date()) && 
         officialSaint.name !== "Menu" && officialSaint.name !== "Santo do Dia") {
@@ -110,7 +146,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
     }
     
     return localSaints;
-  }, [selectedDate, officialSaint]);
+  }, [selectedDate, officialSaint, localSaints]);
 
   useEffect(() => {
     const action = searchParams.get('action');
@@ -119,35 +155,10 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
     }
   }, [searchParams, saintsForSelectedDate]);
 
-  const filteredSaints = useMemo(() => {
-    if (!search.trim()) return [];
-    const q = search.toLowerCase().trim();
-    // Optimization: limit search results to improve performance with large dataset
-    let count = 0;
-    const results = [];
-    for (const s of ALL_SAINTS) {
-      if (s.name.toLowerCase().includes(q) ||
-          s.title.toLowerCase().includes(q) ||
-          s.patronOf.some(p => p.toLowerCase().includes(q))) {
-        results.push(s);
-        count++;
-        if (count >= 50) break; // Early exit for better performance
-      }
-    }
-    return results;
-  }, [search]);
-
-  const allSaintsSorted = useMemo(() => {
-    return [...ALL_SAINTS].sort((a, b) => a.name.localeCompare(b.name));
-  }, []);
-
-  const writersSaints = useMemo(() => {
-    return ALL_SAINTS.filter(s => (s.works && s.works.length > 0) || s.category === 'doctor').sort((a, b) => a.name.localeCompare(b.name));
-  }, []);
-
-  const popesSaints = useMemo(() => {
-    return ALL_SAINTS.filter(s => s.category === 'pope').sort((a, b) => a.name.localeCompare(b.name));
-  }, []);
+  const filteredSaints = localSaints;
+  const allSaintsSorted = localSaints;
+  const writersSaints = localSaints;
+  const popesSaints = localSaints;
 
   const dateStrip = useMemo(() => {
     return Array.from({ length: 7 }).map((_, i) => addDays(subDays(selectedDate, 3), i));
