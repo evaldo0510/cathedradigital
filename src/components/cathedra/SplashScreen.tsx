@@ -6,9 +6,9 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
   const [phase, setPhase] = useState<'logo' | 'text' | 'exit'>('logo');
 
   useEffect(() => {
-    const t1 = setTimeout(() => setPhase('text'), 600);
-    const t2 = setTimeout(() => setPhase('exit'), 1800);
-    const t3 = setTimeout(onComplete, 2200);
+    const t1 = setTimeout(() => setPhase('text'), 400);
+    const t2 = setTimeout(() => setPhase('exit'), 1200);
+    const t3 = setTimeout(onComplete, 1600);
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
   }, [onComplete]);
 
