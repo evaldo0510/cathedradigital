@@ -64,10 +64,20 @@ export const useDashboardData = (user: User | null) => {
   const saintsTodayQuery = useQuery({
     queryKey: ['saints-today'],
     queryFn: async () => {
+      try {
+        const { data, error } = await supabase.functions.invoke('saint-of-the-day');
+        if (data && !error) {
+          return [data];
+        }
+      } catch (e) {
+        console.error('Error fetching saint of the day:', e);
+      }
+      
       const today = new Date();
       const matched = ALL_SAINTS.filter(s => s.feastMonth === today.getMonth() + 1 && s.feastDayNum === today.getDate());
       return matched.length > 0 ? matched : [ALL_SAINTS[0]];
     },
+    staleTime: 1000 * 60 * 60, // 1 hour cache
   });
 
   // Next Up
