@@ -379,6 +379,28 @@ const Saints: React.FC = () => {
                 </StaggeredList>
               </div>
             </motion.div>
+          ) : viewMode === 'popes' ? (
+            <motion.div
+              key="popes"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="space-y-8"
+            >
+              <div className="text-center space-y-4 max-w-2xl mx-auto px-4">
+                <h2 className="text-2xl font-serif font-bold">Sucessores de Pedro</h2>
+                <p className="text-sm text-muted-foreground italic">
+                  "Tu és Pedro, e sobre esta pedra edificarei a minha Igreja."
+                </p>
+              </div>
+              <div className="max-w-5xl mx-auto px-4">
+                <StaggeredList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {popesSaints.map(saint => (
+                    <SaintCard key={saint.id} saint={saint} onClick={() => handleOpenSaint(saint, false)} />
+                  ))}
+                </StaggeredList>
+              </div>
+            </motion.div>
           ) : (
             <motion.div
               key="search"
