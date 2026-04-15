@@ -17,24 +17,38 @@ const sections = [
     color: 'bg-primary/10 text-primary',
   },
   {
+    title: 'Catecismo',
+    description: 'Doutrina católica organizada por parágrafos',
+    icon: <Icons.Catechism className="w-5 h-5" />,
+    route: AppRoute.CATECHISM,
+    color: 'bg-accent/10 text-accent',
+  },
+  {
     title: 'Temas',
     description: 'Navegação inteligente por conexões teológicas',
     icon: <Icons.Themes className="w-5 h-5" />,
     route: AppRoute.TEMAS,
+    color: 'bg-primary/10 text-primary',
+  },
+  {
+    title: 'Jornadas',
+    description: 'Trilhas de formação e crescimento espiritual',
+    icon: <Icons.Journeys className="w-5 h-5" />,
+    route: AppRoute.JORNADAS,
     color: 'bg-accent/10 text-accent',
+  },
+  {
+    title: 'A-Z da Fé',
+    description: 'Enciclopédia de termos e conceitos da fé católica',
+    icon: <Icons.AZ className="w-5 h-5" />,
+    route: AppRoute.AZ_FAITH,
+    color: 'bg-primary/10 text-primary',
   },
   {
     title: 'Liturgia',
     description: 'Liturgia do dia, Missal e Orações',
     icon: <Icons.Liturgy className="w-5 h-5" />,
     route: AppRoute.LITURGIA,
-    color: 'bg-primary/10 text-primary',
-  },
-  {
-    title: 'Catecismo',
-    description: 'Doutrina católica organizada por parágrafos',
-    icon: <Icons.Catechism className="w-5 h-5" />,
-    route: AppRoute.CATECHISM,
     color: 'bg-accent/10 text-accent',
   },
   {
@@ -59,11 +73,18 @@ const sections = [
     color: 'bg-primary/10 text-primary',
   },
   {
+    title: 'Certamen',
+    description: 'Teste seus conhecimentos sobre a fé e a doutrina',
+    icon: <Icons.Certamen className="w-5 h-5" />,
+    route: AppRoute.CERTAMEN,
+    color: 'bg-accent/10 text-accent',
+  },
+  {
     title: 'Glossário',
     description: 'Termos e conceitos da teologia católica',
     icon: <Icons.Glossary className="w-5 h-5" />,
     route: AppRoute.GLOSSARY,
-    color: 'bg-accent/10 text-accent',
+    color: 'bg-primary/10 text-primary',
   },
 ];
 
