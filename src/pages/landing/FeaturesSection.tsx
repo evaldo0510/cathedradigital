@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { BookOpen, Star, Clock, Users, ChevronRight, Sparkles, Hash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { AppRoute } from "@/types";
 
 const features = [
@@ -58,16 +59,8 @@ const FeatureCard = React.forwardRef<HTMLDivElement, { feature: typeof features[
   const isLeft = index % 2 === 0;
 
   return (
-    <motion.div
+    <div
       ref={ref}
-      initial={{ opacity: 0, x: isLeft ? -60 : 60, rotateY: isLeft ? 8 : -8 }}
-      whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{
-        duration: 0.7,
-        delay: index * 0.1,
-        ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
-      }}
     >
       <motion.div
         whileHover={{ y: -8, scale: 1.02 }}
@@ -107,7 +100,7 @@ const FeatureCard = React.forwardRef<HTMLDivElement, { feature: typeof features[
           </CardContent>
         </Card>
       </motion.div>
-    </motion.div>
+    </div>
   );
 });
 FeatureCard.displayName = 'FeatureCard';
@@ -156,10 +149,33 @@ const FeaturesSection = ({ onNavigate }: FeaturesSectionProps) => {
         />
       </motion.div>
 
-      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4 relative z-10">
-        {features.map((feature, idx) => (
-          <FeatureCard key={feature.title} feature={feature} index={idx} onNavigate={onNavigate} />
-        ))}
+      <div className="relative z-10 px-4 md:px-12">
+        <Carousel
+          opts={{
+            align: "start",
+            loop: true,
+          }}
+          className="w-full"
+        >
+          <CarouselContent className="-ml-4">
+            {features.map((feature, idx) => (
+              <CarouselItem key={feature.title} className="pl-4 md:basis-1/2 lg:basis-1/3 xl:basis-1/4">
+                <div className="p-1 h-full">
+                  <FeatureCard feature={feature} index={idx} onNavigate={onNavigate} />
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <div className="hidden md:block">
+            <CarouselPrevious className="-left-12 bg-card border-border/50 hover:bg-primary/5 hover:text-primary transition-all duration-300" />
+            <CarouselNext className="-right-12 bg-card border-border/50 hover:bg-primary/5 hover:text-primary transition-all duration-300" />
+          </div>
+          {/* Mobile controls */}
+          <div className="flex justify-center gap-4 mt-8 md:hidden">
+            <CarouselPrevious className="static translate-y-0" />
+            <CarouselNext className="static translate-y-0" />
+          </div>
+        </Carousel>
       </div>
     </section>
   );
