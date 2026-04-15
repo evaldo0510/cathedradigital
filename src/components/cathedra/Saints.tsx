@@ -456,20 +456,43 @@ const Saints: React.FC = () => {
 
               <div className="max-w-5xl mx-auto px-4">
                 {search.trim() ? (
-                  filteredSaints.length > 0 ? (
-                    <StaggeredList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {filteredSaints.map(saint => (
-                        <SaintCard key={saint.id} saint={saint} onClick={() => handleOpenSaint(saint, false)} />
-                      ))}
-                    </StaggeredList>
-                  ) : (
-                    <div className="text-center py-20 text-muted-foreground font-serif italic">
-                      Nenhum santo encontrado para sua busca.
-                    </div>
-                  )
+                  <>
+                    {(filteredSaints.length > 0 || globalResults.length > 0) ? (
+                      <StaggeredList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {filteredSaints.map(saint => (
+                          <SaintCard key={saint.id} saint={saint} onClick={() => handleOpenSaint(saint, false)} />
+                        ))}
+                        {globalResults.map(saint => (
+                          <SaintCard key={saint.id} saint={saint} onClick={() => handleOpenSaint(saint, false)} />
+                        ))}
+                      </StaggeredList>
+                    ) : null}
+
+                    {filteredSaints.length === 0 && !isSearchingGlobal && globalResults.length === 0 && (
+                      <div className="text-center py-20 space-y-6">
+                        <p className="text-muted-foreground font-serif italic">
+                          Nenhum santo encontrado em nossa base local.
+                        </p>
+                        <Button 
+                          onClick={() => handleGlobalSearch(search)}
+                          className="bg-primary hover:bg-primary/90 text-primary-foreground font-black text-xs uppercase tracking-widest h-12 px-8 rounded-2xl shadow-lg shadow-primary/20 flex items-center gap-3 mx-auto"
+                        >
+                          <Sparkles className="w-4 h-4" />
+                          Buscar na Biblioteca Universal
+                        </Button>
+                      </div>
+                    )}
+
+                    {isSearchingGlobal && (
+                      <div className="text-center py-20 space-y-4">
+                        <Sparkles className="w-10 h-10 text-primary animate-pulse mx-auto" />
+                        <p className="text-sm text-muted-foreground animate-pulse">Consultando hagiografias históricas...</p>
+                      </div>
+                    )}
+                  </>
                 ) : (
                   <div className="text-center py-20 text-muted-foreground font-serif italic">
-                    Digite o nome de um santo para buscar em nossa base.
+                    Digite o nome de um santo para buscar em nossa base ou na biblioteca universal.
                   </div>
                 )}
               </div>
