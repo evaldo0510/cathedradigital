@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const RechartsCharts = lazy(() => import('./AdminChartsRecharts'));
@@ -9,17 +9,23 @@ interface AdminChartsTabProps {
   revenueData: any[];
 }
 
-const ChartSkeleton = () => (
-  <Card>
-    <CardHeader>
-      <Skeleton className="h-5 w-40" />
-      <Skeleton className="h-4 w-56 mt-1" />
-    </CardHeader>
-    <CardContent className="h-[300px] flex items-center justify-center">
-      <Skeleton className="h-full w-full rounded" />
-    </CardContent>
-  </Card>
-);
+// Fixed ref warning by wrapping with forwardRef (though we don't use the ref here, 
+// some parent component like a motion.div or a Suspense implementation might be trying to pass one)
+const ChartSkeleton = React.forwardRef<HTMLDivElement, any>((props, ref) => (
+  <div ref={ref}>
+    <Card>
+      <CardHeader>
+        <Skeleton className="h-5 w-40" />
+        <Skeleton className="h-4 w-56 mt-1" />
+      </CardHeader>
+      <CardContent className="h-[300px] flex items-center justify-center">
+        <Skeleton className="h-full w-full rounded" />
+      </CardContent>
+    </Card>
+  </div>
+));
+
+ChartSkeleton.displayName = 'ChartSkeleton';
 
 const AdminChartsTab: React.FC<AdminChartsTabProps> = ({ userGrowth, revenueData }) => (
   <Suspense fallback={
