@@ -1,22 +1,21 @@
-import React, { useState, useEffect, useContext, useMemo } from 'react';
+import React, { useState, useEffect, useContext, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
 import { Textarea } from '@/components/ui/textarea';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 import { LangContext } from '@/contexts/LangContext';
 import ProConversionBanner from './ProConversionBanner';
-import { SAINTS_DATA } from '@/data/saints';
 import { useSaintsToday, useOfficialSaint } from '@/hooks/useSaints';
 import SacredImage from './SacredImage';
 import AudioContentPlayer from './AudioContentPlayer';
 import { toast } from 'sonner';
 import SEOHead from '@/components/SEOHead';
+import { useQuery } from '@tanstack/react-query';
 
 const LITURGICAL_QUOTES = [
   '"Sede misericordiosos como vosso Pai é misericordioso." — Lc 6,36',
@@ -26,6 +25,110 @@ const LITURGICAL_QUOTES = [
   '"Amai-vos uns aos outros como eu vos amei." — Jo 15,12',
 ];
 
+/* ═══ Journey Loading Hook ═══ */
+function useActiveJourney(userId: string | undefined) {
+  return useQuery({
+    queryKey: ['active-journey', userId],
+    queryFn: async () => {
+      if (!userId) return null;
+
+      const { data: progress } = await supabase
+        .from('journey_progress')
+        .select('journey_id')
+        .eq('user_id', userId)
+        .order('completed_at', { ascending: false })
+        .limit(1);
+
+      if (!progress?.length) return null;
+      const lastJourneyId = progress[0].journey_id;
+
+      const [journeyRes, completedRes, stepsRes] = await Promise.all([
+        supabase.from('journeys').select('*').eq('id', lastJourneyId).maybeSingle(),
+        supabase.from('journey_progress').select('step_id').eq('user_id', userId).eq('journey_id', lastJourneyId),
+        supabase.from('journey_steps').select('id, step_order, title, subtitle, content').eq('journey_id', lastJourneyId).order('step_order', { ascending: true }),
+      ]);
+
+      if (!journeyRes.data) return null;
+
+      const completedIds = (completedRes.data || []).map(s => s.step_id);
+      const allSteps = stepsRes.data || [];
+      const nextStep = allSteps.find(s => !completedIds.includes(s.id)) || null;
+
+      return {
+        journey: journeyRes.data,
+        progress: { completed: completedIds.length, total: allSteps.length },
+        nextStep,
+      };
+    },
+    enabled: !!userId,
+    staleTime: 1000 * 60 * 5,
+    retry: 1,
+  });
+}
+
+function useRecommendedJourney(userId: string | undefined, profile: any, userLevel: string | undefined, hasActiveJourney: boolean) {
+  return useQuery({
+    queryKey: ['recommended-journey', userId, userLevel],
+    queryFn: async () => {
+      if (!userId) return null;
+      const result = profile?._sensitive?.diagnosis_result as Record<string, string> | undefined;
+      const { moment, prayer, knowledge, goal } = result || {};
+      let category = 'fundamentos';
+
+      if (userLevel === 'iniciante' || moment === 'beginning' || knowledge === 'basic') {
+        category = 'fundamentos';
+      } else if (userLevel === 'avançado' || prayer === 'contemplative' || goal === 'transformation') {
+        category = 'formacao';
+      } else if (moment === 'struggling' || goal === 'peace') {
+        category = 'mistico';
+      } else if (goal === 'routine' || prayer === 'rarely' || prayer === 'sometimes') {
+        category = 'rotina';
+      }
+
+      const { data } = await supabase
+        .from('journeys')
+        .select('*')
+        .eq('category', category)
+        .eq('is_active', true)
+        .order('sort_order', { ascending: true })
+        .limit(1)
+        .maybeSingle();
+
+      return data;
+    },
+    enabled: !!userId && !hasActiveJourney,
+    staleTime: 1000 * 60 * 30,
+    retry: 1,
+  });
+}
+
+/* ═══ Skeleton Components ═══ */
+const SaintSkeleton = () => (
+  <div className="rounded-[2.5rem] border border-border bg-card overflow-hidden animate-pulse">
+    <div className="flex flex-col sm:flex-row">
+      <div className="w-full sm:w-1/3 h-40 bg-muted/40" />
+      <div className="flex-1 p-6 space-y-4">
+        <div className="h-4 w-24 bg-muted/40 rounded" />
+        <div className="h-6 w-48 bg-muted/40 rounded" />
+        <div className="h-3 w-full bg-muted/40 rounded" />
+        <div className="h-3 w-3/4 bg-muted/40 rounded" />
+      </div>
+    </div>
+  </div>
+);
+
+const JourneySkeleton = () => (
+  <div className="p-6 rounded-3xl border border-border bg-card animate-pulse">
+    <div className="flex items-center gap-5">
+      <div className="w-12 h-12 rounded-2xl bg-muted/40" />
+      <div className="flex-1 space-y-2">
+        <div className="h-4 w-40 bg-muted/40 rounded" />
+        <div className="h-2 w-full bg-muted/40 rounded-full" />
+      </div>
+    </div>
+  </div>
+);
+
 const HojePage: React.FC = () => {
   const navigate = useNavigate();
   const { user, profile, userLevel } = useAuth();
@@ -33,10 +136,6 @@ const HojePage: React.FC = () => {
   const [journalText, setJournalText] = useState('');
   const [journalSaved, setJournalSaved] = useState(false);
   const [todayQuote] = useState(() => LITURGICAL_QUOTES[new Date().getDate() % LITURGICAL_QUOTES.length]);
-  const [activeJourney, setActiveJourney] = useState<any>(null);
-  const [journeyStep, setJourneyStep] = useState<any>(null);
-  const [journeyProgress, setJourneyProgress] = useState({ completed: 0, total: 0 });
-  const [recommendedJourney, setRecommendedJourney] = useState<any>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [logosResponse, setLogosResponse] = useState('');
   const [logosRecommendation, setLogosRecommendation] = useState<any>(null);
@@ -44,12 +143,23 @@ const HojePage: React.FC = () => {
   const [recommendedLogosStep, setRecommendedLogosStep] = useState<any>(null);
   const [logosThemeContents, setLogosThemeContents] = useState<any[]>([]);
   const [logosThemeName, setLogosThemeName] = useState<string>('');
+  const [logosSaint, setLogosSaint] = useState<any>(null);
 
-  const { data: officialSaint } = useOfficialSaint();
-  const { data: allSaintsToday = [] } = useSaintsToday();
+  // All data hooks — parallel loading
+  const { data: officialSaint, isLoading: loadingOfficial } = useOfficialSaint();
+  const { data: allSaintsToday = [], isLoading: loadingSaints } = useSaintsToday();
+  const { data: activeJourneyData, isLoading: loadingJourney } = useActiveJourney(user?.id);
+  const activeJourney = activeJourneyData?.journey || null;
+  const journeyStep = activeJourneyData?.nextStep || null;
+  const journeyProgress = activeJourneyData?.progress || { completed: 0, total: 0 };
+  
+  const { data: recommendedJourney } = useRecommendedJourney(
+    user?.id, profile, userLevel, !!activeJourney
+  );
+
+  const saintLoading = loadingOfficial && loadingSaints;
 
   const featuredSaint = useMemo(() => {
-    // Priority: Official Saint from Edge Function if it has a name and isn't a fallback
     if (officialSaint && officialSaint.name !== "Santo do Dia" && officialSaint.name !== "Menu") {
       const match = allSaintsToday.find((s: any) => {
         const officialName = (officialSaint.name || "").toLowerCase();
@@ -60,7 +170,6 @@ const HojePage: React.FC = () => {
         return { 
           ...match, 
           ...officialSaint,
-          // Prioritize local fullBio if official is missing or too short
           fullBio: (officialSaint.fullBio && officialSaint.fullBio.length > 50) ? 
                    officialSaint.fullBio : 
                    (match.fullBio || match.bio || officialSaint.description || officialSaint.fullBio)
@@ -89,7 +198,6 @@ const HojePage: React.FC = () => {
     if (allSaintsToday.length === 0) return null;
     if (allSaintsToday.length === 1) return allSaintsToday[0];
     
-    // Priority based on active journey category
     if (activeJourney) {
       const categoryMap: Record<string, string[]> = {
         'fundamentos': ['apostle', 'martyr'],
@@ -97,7 +205,6 @@ const HojePage: React.FC = () => {
         'mistico': ['mystic', 'virgin'],
         'rotina': ['confessor', 'founder']
       };
-      
       const preferredCategories = categoryMap[activeJourney.category] || [];
       const match = allSaintsToday.find((s: any) => preferredCategories.includes(s.category));
       if (match) return match;
@@ -106,98 +213,7 @@ const HojePage: React.FC = () => {
     return allSaintsToday[0];
   }, [allSaintsToday, activeJourney, officialSaint]);
 
-  const [logosSaint, setLogosSaint] = useState<any>(null);
-
-  useEffect(() => {
-    if (!user) return;
-    loadActiveJourney();
-    loadRecommendedJourney();
-  }, [user]);
-
-  const loadActiveJourney = async () => {
-    if (!user) return;
-    try {
-      const { data: progress } = await supabase
-        .from('journey_progress')
-        .select('journey_id, step_id, completed_at')
-        .eq('user_id', user.id)
-        .order('completed_at', { ascending: false })
-        .limit(1);
-
-      if (progress && progress.length > 0) {
-        const lastJourneyId = progress[0].journey_id;
-        const { data: journey } = await supabase
-          .from('journeys')
-          .select('*')
-          .eq('id', lastJourneyId)
-          .single();
-
-        if (journey) {
-          setActiveJourney(journey);
-          const [completedRes, stepsRes] = await Promise.all([
-            supabase
-              .from('journey_progress')
-              .select('step_id')
-              .eq('user_id', user.id)
-              .eq('journey_id', lastJourneyId),
-            supabase
-              .from('journey_steps')
-              .select('*')
-              .eq('journey_id', lastJourneyId)
-              .order('step_order', { ascending: true })
-          ]);
-
-          const completedSteps = completedRes.data;
-          const allSteps = stepsRes.data;
-
-          if (allSteps) {
-            const completedIds = (completedSteps || []).map(s => s.step_id);
-            setJourneyProgress({ completed: completedIds.length, total: allSteps.length });
-            const next = allSteps.find(s => !completedIds.includes(s.id));
-            setJourneyStep(next || null);
-          }
-        }
-      } else {
-        loadRecommendedJourney();
-      }
-    } catch (err) {
-      console.error('Failed to load active journey:', err);
-    }
-  };
-
-  const loadRecommendedJourney = async () => {
-    if (!user) return;
-    try {
-      const result = profile?._sensitive?.diagnosis_result as Record<string, string> | undefined;
-      const { moment, prayer, knowledge, goal } = result || {};
-      let category = 'fundamentos';
-      
-      if (userLevel === 'iniciante' || moment === 'beginning' || knowledge === 'basic') {
-        category = 'fundamentos';
-      } else if (userLevel === 'avançado' || prayer === 'contemplative' || goal === 'transformation') {
-        category = 'formacao';
-      } else if (moment === 'struggling' || goal === 'peace') {
-        category = 'mistico';
-      } else if (goal === 'routine' || prayer === 'rarely' || prayer === 'sometimes') {
-        category = 'rotina';
-      }
-
-      const { data } = await supabase
-        .from('journeys')
-        .select('*')
-        .eq('category', category)
-        .eq('is_active', true)
-        .order('sort_order', { ascending: true })
-        .limit(1)
-        .maybeSingle();
-
-      if (data) setRecommendedJourney(data);
-    } catch (err) {
-      console.error('Failed to load recommended journey:', err);
-    }
-  };
-
-  const analyzeReflection = async (text: string) => {
+  const analyzeReflection = useCallback(async (text: string) => {
     if (!user || !text.trim()) return;
     setIsAnalyzing(true);
     setLogosResponse('');
@@ -235,7 +251,7 @@ const HojePage: React.FC = () => {
                 const content = data.choices?.[0]?.delta?.content || '';
                 fullText += content;
                 setLogosResponse(fullText);
-              } catch (e) { /* skip */ }
+              } catch { /* skip */ }
             }
           }
         }
@@ -247,7 +263,6 @@ const HojePage: React.FC = () => {
           const recommendation = JSON.parse(match[1]);
           setLogosRecommendation(recommendation);
           
-          // Recommend a saint based on emotional state
           const mainState = recommendation.main_state;
           const virtueMap: Record<string, string[]> = {
             'ansiedade': ['Paz', 'Confiança', 'Paciência', 'Abandono a Deus'],
@@ -262,60 +277,43 @@ const HojePage: React.FC = () => {
             });
           });
 
-          const { data: journey } = await supabase
-            .from('journeys')
-            .select('*')
-            .eq('category', recommendation.category)
-            .eq('is_active', true)
-            .order('sort_order', { ascending: true })
-            .limit(1)
-            .maybeSingle();
+          const [journeyRes, themesRes] = await Promise.all([
+            supabase
+              .from('journeys')
+              .select('*')
+              .eq('category', recommendation.category)
+              .eq('is_active', true)
+              .order('sort_order', { ascending: true })
+              .limit(1)
+              .maybeSingle(),
+            (() => {
+              const stateToThemeSlugs: Record<string, string[]> = {
+                'ansiedade': ['oracao', 'esperanca', 'fe'],
+                'confusao': ['fe', 'sabedoria', 'humildade'],
+                'dor_emocional': ['sofrimento', 'perdao', 'esperanca', 'amor'],
+                'busca_espiritual': ['santidade', 'vocacao', 'fe', 'oracao'],
+                'virtudes_e_missao': ['caridade', 'missao', 'humildade', 'santidade'],
+              };
+              const themeSlugs = stateToThemeSlugs[mainState] || ['fe', 'amor', 'oracao'];
+              return supabase.from('themes').select('id, name, slug').in('slug', themeSlugs).limit(3);
+            })(),
+          ]);
 
-          if (journey) {
-            setRecommendedLogosJourney(journey);
-            
+          if (journeyRes.data) {
+            setRecommendedLogosJourney(journeyRes.data);
             const [completedRes, stepsRes] = await Promise.all([
-              supabase
-                .from('journey_progress')
-                .select('step_id')
-                .eq('user_id', user.id)
-                .eq('journey_id', journey.id),
-              supabase
-                .from('journey_steps')
-                .select('*')
-                .eq('journey_id', journey.id)
-                .order('step_order', { ascending: true })
+              supabase.from('journey_progress').select('step_id').eq('user_id', user.id).eq('journey_id', journeyRes.data.id),
+              supabase.from('journey_steps').select('*').eq('journey_id', journeyRes.data.id).order('step_order', { ascending: true }),
             ]);
-
             const completedIds = (completedRes.data || []).map(s => s.step_id);
             const next = (stepsRes.data || []).find(s => !completedIds.includes(s.id));
             setRecommendedLogosStep(next || null);
           }
 
-          // Fetch theme contents based on main_state
-          const stateToThemeSlugs: Record<string, string[]> = {
-            'ansiedade': ['oracao', 'esperanca', 'fe'],
-            'confusao': ['fe', 'sabedoria', 'humildade'],
-            'dor_emocional': ['sofrimento', 'perdao', 'esperanca', 'amor'],
-            'busca_espiritual': ['santidade', 'vocacao', 'fe', 'oracao'],
-            'virtudes_e_missao': ['caridade', 'missao', 'humildade', 'santidade'],
-          };
-          const themeSlugs = stateToThemeSlugs[mainState] || ['fe', 'amor', 'oracao'];
-          
-          const { data: matchedThemes } = await supabase
-            .from('themes')
-            .select('id, name, slug')
-            .in('slug', themeSlugs)
-            .limit(3);
-
-          if (matchedThemes && matchedThemes.length > 0) {
-            setLogosThemeName(matchedThemes[0].name);
-            const themeIds = matchedThemes.map(t => t.id);
-            const { data: contents } = await supabase
-              .from('theme_contents')
-              .select('*')
-              .in('theme_id', themeIds)
-              .limit(6);
+          if (themesRes.data && themesRes.data.length > 0) {
+            setLogosThemeName(themesRes.data[0].name);
+            const themeIds = themesRes.data.map(t => t.id);
+            const { data: contents } = await supabase.from('theme_contents').select('*').in('theme_id', themeIds).limit(6);
             if (contents) setLogosThemeContents(contents);
           }
         } catch (e) {
@@ -327,32 +325,28 @@ const HojePage: React.FC = () => {
     } finally {
       setIsAnalyzing(false);
     }
-  };
+  }, [user]);
 
-  const saveJournal = async () => {
+  const saveJournal = useCallback(async () => {
     if (!user || !journalText.trim()) return;
     try {
-      // 1. Initial save is awaited to ensure it's in the DB
       await supabase.from('spiritual_journal').insert([{
         user_id: user.id,
         content: journalText.trim(),
         entry_date: new Date().toISOString().split('T')[0],
       }]);
       
-      // 2. Give immediate feedback
       setJournalSaved(true);
       setTimeout(() => setJournalSaved(false), 3000);
       
-      // 3. Analysis is non-blocking (doesn't hold up the "saved" UI state)
       analyzeReflection(journalText).catch(e => console.error('BG Analysis failed:', e));
-      
     } catch (err) {
       console.error('Failed to save journal:', err);
       toast.error('Erro ao salvar diário');
     }
-  };
+  }, [user, journalText, analyzeReflection]);
 
-  const dailySections = [
+  const dailySections = useMemo(() => [
     {
       title: 'Liturgia',
       icon: <Icons.Calendar className="w-5 h-5" />,
@@ -371,7 +365,7 @@ const HojePage: React.FC = () => {
       route: AppRoute.BIBLE,
       color: 'bg-primary/10 text-primary',
     },
-  ];
+  ], []);
 
   return (
     <div className="desktop-layout pt-6 md:pt-12">
@@ -434,150 +428,30 @@ const HojePage: React.FC = () => {
       {/* Main Content Sections */}
       <div className="pt-8 space-y-10">
         
-        {/* Santo do Dia - Highlight */}
-        {featuredSaint && (
-          <motion.section 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="space-y-4"
-          >
-            <div className="flex items-center gap-3">
-              <div className="h-px w-6 bg-primary/30" />
-              <h3 className="text-[11px] font-black uppercase tracking-[0.3em] text-primary flex items-center gap-2">
-                <Icons.Saints className="w-3.5 h-3.5" />
-                Santo do Dia
-              </h3>
-            </div>
-            
-            <div 
-              onClick={() => navigate(`${AppRoute.SAINTS}?action=reflect`)}
-              className="group cursor-pointer bg-card border border-border rounded-[2.5rem] overflow-hidden hover:border-primary/30 transition-all shadow-xl"
-            >
-              <div className="flex flex-col md:flex-row h-full">
-                <div className="w-full md:w-1/3 h-64 md:h-auto relative">
-                  <SacredImage 
-                    src={featuredSaint.image} 
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
-                    alt={featuredSaint.name} 
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                  <div className="absolute bottom-6 left-6 right-6 text-white">
-                    <span className="text-[10px] font-black uppercase tracking-widest bg-primary px-2 py-1 rounded-md mb-2 inline-block">
-                      Hoje
-                    </span>
-                    <h3 className="text-2xl font-serif font-bold leading-tight">{featuredSaint.name}</h3>
-                  </div>
-                </div>
-
-                <div className="flex-1 p-8 space-y-6">
-                  <div>
-                    <p className="text-lg text-primary font-serif italic mb-4">"{featuredSaint.title}"</p>
-                    <p className="text-muted-foreground leading-relaxed line-clamp-3 font-serif italic text-sm">
-                      {featuredSaint.bio}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center justify-between pt-2 border-t border-border/50">
-                    <div className="flex gap-1">
-                      {featuredSaint.virtues?.slice(0, 2).map(v => (
-                        <span key={v} className="px-2 py-1 bg-primary/10 text-primary text-[9px] font-black uppercase rounded-lg">{v}</span>
-                      ))}
-                    </div>
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="text-primary hover:bg-primary/5 text-[10px] font-black uppercase tracking-widest gap-2"
-                    >
-                      Ver História <Icons.ChevronRight className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
+        {/* Santo do Dia */}
+        <motion.section 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="space-y-4"
+        >
+          <div className="flex items-center gap-3">
+            <div className="h-px w-6 bg-primary/30" />
+            <h3 className="text-[11px] font-black uppercase tracking-[0.3em] text-primary flex items-center gap-2">
+              <Icons.Saints className="w-3.5 h-3.5" />
+              Santo do Dia
+            </h3>
+            {activeJourney && (
+              <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[9px] font-bold uppercase tracking-wider border border-primary/20 ml-auto">
+                <Icons.Star className="w-2.5 h-2.5 fill-primary" />
+                Especial para sua jornada
               </div>
-            </div>
-          </motion.section>
-        )}
-
-        {/* Continuar Jornada */}
-        {(activeJourney || recommendedJourney) && (
-          <section className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
-            <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 flex items-center gap-3">
-              <div className="h-px w-6 bg-muted-foreground/30" />
-              Continuar Jornada
-            </h2>
-            
-            {activeJourney ? (
-              <motion.div
-                whileHover={{ scale: 1.01 }}
-                whileTap={{ scale: 0.99 }}
-                onClick={() => {
-                  if (journeyStep) {
-                    navigate(`/jornadas/${activeJourney.id}/step?step=${journeyStep.id}`);
-                  } else {
-                    navigate(`/jornadas/${activeJourney.id}/complete`);
-                  }
-                }}
-                className="group cursor-pointer p-6 rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/5 via-transparent to-transparent hover:border-primary/40 transition-all shadow-sm hover:shadow-md"
-              >
-                <div className="flex items-center gap-5">
-                  <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/20 transition-colors">
-                    <Icons.Flame className="w-6 h-6" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-base font-bold text-foreground">{activeJourney.title}</h3>
-                    <div className="mt-3 flex items-center gap-4">
-                      <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
-                        <div 
-                          className="h-full bg-primary transition-all duration-1000 ease-out" 
-                          style={{ width: `${journeyProgress.total > 0 ? (journeyProgress.completed / journeyProgress.total) * 100 : 0}%` }} 
-                        />
-                      </div>
-                      <span className="text-[11px] font-black text-primary uppercase tabular-nums">
-                        {journeyProgress.completed}/{journeyProgress.total}
-                      </span>
-                    </div>
-                  </div>
-                  <Icons.ChevronRight className="w-6 h-6 text-muted-foreground group-hover:translate-x-1 transition-transform" />
-                </div>
-              </motion.div>
-            ) : (
-              <motion.div
-                whileHover={{ scale: 1.01 }}
-                whileTap={{ scale: 0.99 }}
-                onClick={() => navigate(`/jornadas/${recommendedJourney.id}`)}
-                className="group cursor-pointer p-6 rounded-3xl border border-border bg-muted/20 hover:border-primary/20 transition-all shadow-sm"
-              >
-                <div className="flex items-center gap-5">
-                  <div className="w-14 h-14 rounded-2xl bg-muted flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors">
-                    <Icons.Compass className="w-7 h-7" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-base font-bold text-foreground">{recommendedJourney.title}</h3>
-                    <p className="text-xs text-muted-foreground mt-1 font-medium">Sugerido especialmente para seu perfil</p>
-                  </div>
-                  <Icons.ChevronRight className="w-6 h-6 text-muted-foreground group-hover:translate-x-1 transition-transform" />
-                </div>
-              </motion.div>
             )}
-          </section>
-        )}
+          </div>
 
-        {/* Santo do Dia - Enhanced for Journey */}
-        {featuredSaint && (
-          <section className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-250">
-            <div className="flex items-center justify-between">
-              <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 flex items-center gap-3">
-                <div className="h-px w-6 bg-muted-foreground/30" />
-                Santo do Dia
-              </h2>
-              {activeJourney && (
-                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[9px] font-bold uppercase tracking-wider border border-primary/20">
-                  <Icons.Star className="w-2.5 h-2.5 fill-primary" />
-                  Especial para sua jornada
-                </div>
-              )}
-            </div>
-            
+          {saintLoading ? (
+            <SaintSkeleton />
+          ) : featuredSaint ? (
             <motion.div
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.99 }}
@@ -598,23 +472,118 @@ const HojePage: React.FC = () => {
               </div>
               <div className="flex-1 p-6 space-y-4 flex flex-col justify-center">
                 <div className="space-y-2">
-                  <p className="text-xs text-muted-foreground font-serif italic line-clamp-2 italic">
+                  <p className="text-lg text-primary font-serif italic mb-2">"{featuredSaint.title}"</p>
+                  <p className="text-xs text-muted-foreground font-serif italic line-clamp-3 leading-relaxed">
                     {featuredSaint.quotes?.[0] || featuredSaint.bio}
                   </p>
                 </div>
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between pt-2 border-t border-border/50">
+                  <div className="flex gap-1">
+                    {featuredSaint.virtues?.slice(0, 2).map((v: string) => (
+                      <span key={v} className="px-2 py-1 bg-primary/10 text-primary text-[9px] font-black uppercase rounded-lg">{v}</span>
+                    ))}
+                  </div>
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                       <Icons.Sparkles className="w-4 h-4" />
                     </div>
-                    <span className="text-[10px] font-black uppercase tracking-widest text-primary">Refletir com Logos</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-primary">Refletir</span>
                   </div>
-                  <Icons.ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-all group-hover:translate-x-1" />
                 </div>
               </div>
             </motion.div>
-          </section>
-        )}
+          ) : (
+            <div className="p-8 rounded-3xl border border-border bg-muted/10 text-center">
+              <Icons.Saints className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
+              <p className="text-sm text-muted-foreground font-serif italic">Nenhum santo encontrado para hoje</p>
+              <Button variant="ghost" size="sm" className="mt-3 text-primary" onClick={() => navigate(AppRoute.SAINTS)}>
+                Ver todos os santos
+              </Button>
+            </div>
+          )}
+        </motion.section>
+
+        {/* Continuar Jornada */}
+        <section className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
+          <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 flex items-center gap-3">
+            <div className="h-px w-6 bg-muted-foreground/30" />
+            Continuar Jornada
+          </h2>
+          
+          {loadingJourney ? (
+            <JourneySkeleton />
+          ) : activeJourney ? (
+            <motion.div
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              onClick={() => {
+                if (journeyStep) {
+                  navigate(`/jornadas/${activeJourney.id}/step?step=${journeyStep.id}`);
+                } else {
+                  navigate(`/jornadas/${activeJourney.id}/complete`);
+                }
+              }}
+              className="group cursor-pointer p-6 rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/5 via-transparent to-transparent hover:border-primary/40 transition-all shadow-sm hover:shadow-md"
+            >
+              <div className="flex items-center gap-5">
+                <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/20 transition-colors">
+                  <Icons.Flame className="w-6 h-6" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-base font-bold text-foreground">{activeJourney.title}</h3>
+                  <div className="mt-3 flex items-center gap-4">
+                    <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
+                      <div 
+                        className="h-full bg-primary transition-all duration-1000 ease-out" 
+                        style={{ width: `${journeyProgress.total > 0 ? (journeyProgress.completed / journeyProgress.total) * 100 : 0}%` }} 
+                      />
+                    </div>
+                    <span className="text-[11px] font-black text-primary uppercase tabular-nums">
+                      {journeyProgress.completed}/{journeyProgress.total}
+                    </span>
+                  </div>
+                </div>
+                <Icons.ChevronRight className="w-6 h-6 text-muted-foreground group-hover:translate-x-1 transition-transform" />
+              </div>
+            </motion.div>
+          ) : recommendedJourney ? (
+            <motion.div
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              onClick={() => navigate(`/jornadas/${recommendedJourney.id}`)}
+              className="group cursor-pointer p-6 rounded-3xl border border-border bg-muted/20 hover:border-primary/20 transition-all shadow-sm"
+            >
+              <div className="flex items-center gap-5">
+                <div className="w-14 h-14 rounded-2xl bg-muted flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors">
+                  <Icons.Compass className="w-7 h-7" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-base font-bold text-foreground">{recommendedJourney.title}</h3>
+                  <p className="text-xs text-muted-foreground mt-1 font-medium">Sugerido especialmente para seu perfil</p>
+                </div>
+                <Icons.ChevronRight className="w-6 h-6 text-muted-foreground group-hover:translate-x-1 transition-transform" />
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              onClick={() => navigate(AppRoute.JORNADAS)}
+              className="group cursor-pointer p-6 rounded-3xl border border-border bg-muted/20 hover:border-primary/20 transition-all shadow-sm"
+            >
+              <div className="flex items-center gap-5">
+                <div className="w-14 h-14 rounded-2xl bg-muted flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors">
+                  <Icons.Route className="w-7 h-7" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-base font-bold text-foreground">Iniciar uma Jornada</h3>
+                  <p className="text-xs text-muted-foreground mt-1 font-medium">Descubra o caminho ideal para o seu momento espiritual</p>
+                </div>
+                <Icons.ChevronRight className="w-6 h-6 text-muted-foreground group-hover:translate-x-1 transition-transform" />
+              </div>
+            </motion.div>
+          )}
+        </section>
 
         {/* Recomendação de Santo Baseada no Momento Emocional */}
         {logosSaint && (
@@ -656,7 +625,7 @@ const HojePage: React.FC = () => {
           </h2>
           
           <div className="grid grid-cols-3 gap-4">
-            {dailySections.map((section, i) => (
+            {dailySections.map((section) => (
               <motion.div
                 key={section.title}
                 whileHover={{ y: -4 }}
