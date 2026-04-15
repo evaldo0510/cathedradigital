@@ -516,6 +516,7 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.JORNADA_COMPLETE} element={<PageTransition><AuthGuard><JornadaCompletePage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.BIBLIOTECA} element={<PageTransition><AuthGuard><BibliotecaPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.MODULES_GUIDE} element={<PageTransition><ModulesGuidePage /></PageTransition>} />
+                  <Route path={AppRoute.POPES} element={<PageTransition><AuthGuard><PopesPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.ADMIN} element={
                     <PageTransition>
                       <AdminGuard>
