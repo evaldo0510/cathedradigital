@@ -51,11 +51,11 @@ const HojePage: React.FC = () => {
   const featuredSaint = useMemo(() => {
     // Priority: Official Saint from Edge Function if it has a name and isn't a fallback
     if (officialSaint && officialSaint.name !== "Santo do Dia" && officialSaint.name !== "Menu") {
-      // Find matching local saint if possible to get more data
-      const match = allSaintsToday.find((s: any) => 
-        officialSaint.name.toLowerCase().includes(s.name.toLowerCase()) ||
-        s.name.toLowerCase().includes(officialSaint.name.toLowerCase())
-      );
+      const match = allSaintsToday.find((s: any) => {
+        const officialName = (officialSaint.name || "").toLowerCase();
+        const saintName = (s.name || "").toLowerCase();
+        return officialName.includes(saintName) || saintName.includes(officialName);
+      });
       if (match) {
         return { 
           ...match, 
