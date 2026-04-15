@@ -91,6 +91,7 @@ const UpgradePage = lazy(() => import('./components/cathedra/UpgradePage'));
 const AZFaithPage = lazy(() => import('./components/cathedra/AZFaithPage'));
 const EncyclopediaPage = lazy(() => import('./components/cathedra/EncyclopediaPage'));
 const ModulesGuidePage = lazy(() => import('./components/cathedra/ModulesGuidePage'));
+const PopesPage = lazy(() => import('./components/cathedra/PopesPage'));
 
 const PartnersPage = lazy(() => import('./components/cathedra/PartnersPage'));
 
