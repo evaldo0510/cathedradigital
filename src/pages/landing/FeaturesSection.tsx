@@ -59,16 +59,8 @@ const FeatureCard = React.forwardRef<HTMLDivElement, { feature: typeof features[
   const isLeft = index % 2 === 0;
 
   return (
-    <motion.div
+    <div
       ref={ref}
-      initial={{ opacity: 0, x: isLeft ? -60 : 60, rotateY: isLeft ? 8 : -8 }}
-      whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{
-        duration: 0.7,
-        delay: index * 0.1,
-        ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
-      }}
     >
       <motion.div
         whileHover={{ y: -8, scale: 1.02 }}
