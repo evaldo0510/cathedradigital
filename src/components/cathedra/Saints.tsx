@@ -29,9 +29,17 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
   useEffect(() => {
     const fetchOfficialSaint = async () => {
       try {
+        const cacheKey = `official_saint_${format(new Date(), 'yyyy-MM-dd')}`;
+        const cached = localStorage.getItem(cacheKey);
+        if (cached) {
+          setOfficialSaint(JSON.parse(cached));
+          return;
+        }
+
         const response = await supabase.functions.invoke('saint-of-the-day');
         if (response.data && !response.error) {
           setOfficialSaint(response.data);
+          localStorage.setItem(cacheKey, JSON.stringify(response.data));
         }
       } catch (err) {
         console.error('Failed to fetch official saint:', err);
