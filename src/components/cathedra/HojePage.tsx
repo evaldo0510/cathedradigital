@@ -11,7 +11,8 @@ import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 import { LangContext } from '@/contexts/LangContext';
 import ProConversionBanner from './ProConversionBanner';
-import { ALL_SAINTS, SAINTS_DATA } from '@/data/saints';
+import { SAINTS_DATA } from '@/data/saints';
+import { useSaintsToday, useOfficialSaint } from '@/hooks/useSaints';
 import SacredImage from './SacredImage';
 import AudioContentPlayer from './AudioContentPlayer';
 import { toast } from 'sonner';
@@ -43,33 +44,15 @@ const HojePage: React.FC = () => {
   const [recommendedLogosStep, setRecommendedLogosStep] = useState<any>(null);
   const [logosThemeContents, setLogosThemeContents] = useState<any[]>([]);
   const [logosThemeName, setLogosThemeName] = useState<string>('');
-  const [officialSaint, setOfficialSaint] = useState<any>(null);
 
-  useEffect(() => {
-    const fetchOfficialSaint = async () => {
-      try {
-        const response = await supabase.functions.invoke('saint-of-the-day');
-        if (response.data && !response.error) {
-          setOfficialSaint(response.data);
-        }
-      } catch (err) {
-        console.error('Failed to fetch official saint:', err);
-      }
-    };
-    fetchOfficialSaint();
-  }, []);
-
-  const allSaintsToday = useMemo(() => {
-    const day = new Date().getDate();
-    const month = new Date().getMonth() + 1;
-    return ALL_SAINTS.filter(s => s.feastMonth === month && s.feastDayNum === day);
-  }, []);
+  const { data: officialSaint } = useOfficialSaint();
+  const { data: allSaintsToday = [] } = useSaintsToday();
 
   const featuredSaint = useMemo(() => {
     // Priority: Official Saint from Edge Function if it has a name and isn't a fallback
     if (officialSaint && officialSaint.name !== "Santo do Dia" && officialSaint.name !== "Menu") {
       // Find matching local saint if possible to get more data
-      const match = allSaintsToday.find(s => 
+      const match = allSaintsToday.find((s: any) => 
         officialSaint.name.toLowerCase().includes(s.name.toLowerCase()) ||
         s.name.toLowerCase().includes(officialSaint.name.toLowerCase())
       );
@@ -116,7 +99,7 @@ const HojePage: React.FC = () => {
       };
       
       const preferredCategories = categoryMap[activeJourney.category] || [];
-      const match = allSaintsToday.find(s => preferredCategories.includes(s.category));
+      const match = allSaintsToday.find((s: any) => preferredCategories.includes(s.category));
       if (match) return match;
     }
     
@@ -124,7 +107,6 @@ const HojePage: React.FC = () => {
   }, [allSaintsToday, activeJourney, officialSaint]);
 
   const [logosSaint, setLogosSaint] = useState<any>(null);
-
 
   useEffect(() => {
     if (!user) return;
