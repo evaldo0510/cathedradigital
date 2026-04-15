@@ -73,25 +73,32 @@ const sections = [
     color: 'bg-primary/10 text-primary',
   },
   {
+    title: 'Comunidade',
+    description: 'Espaço para partilha e crescimento mútuo',
+    icon: <Icons.Community className="w-5 h-5" />,
+    route: AppRoute.COMMUNITY,
+    color: 'bg-accent/10 text-accent',
+  },
+  {
     title: 'Certamen',
     description: 'Teste seus conhecimentos sobre a fé e a doutrina',
     icon: <Icons.Certamen className="w-5 h-5" />,
     route: AppRoute.CERTAMEN,
-    color: 'bg-accent/10 text-accent',
+    color: 'bg-primary/10 text-primary',
   },
   {
     title: 'Glossário',
     description: 'Termos e conceitos da teologia católica',
     icon: <Icons.Glossary className="w-5 h-5" />,
     route: AppRoute.GLOSSARY,
-    color: 'bg-primary/10 text-primary',
+    color: 'bg-accent/10 text-accent',
   },
   {
     title: 'Guia dos Módulos',
     description: 'Entenda como navegar e usar a plataforma',
     icon: <Icons.HelpCircle className="w-5 h-5" />,
     route: AppRoute.MODULES_GUIDE,
-    color: 'bg-accent/10 text-accent',
+    color: 'bg-primary/10 text-primary',
   },
 ];
 
