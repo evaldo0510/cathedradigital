@@ -24,7 +24,7 @@ function formatIntArray(arr: number[]): string {
 }
 
 
-const BATCH_SIZE = 20;
+const BATCH_SIZE = 5;
 
 for (let i = 0; i < ALL_SAINTS.length; i += BATCH_SIZE) {
   const batch = ALL_SAINTS.slice(i, i + BATCH_SIZE);
