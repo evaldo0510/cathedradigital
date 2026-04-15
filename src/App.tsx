@@ -89,6 +89,7 @@ const CheckoutPage = lazy(() => import('./components/cathedra/CheckoutPage'));
 const DiagnosticsPage = lazy(() => import('./components/cathedra/DiagnosticsPage'));
 const UpgradePage = lazy(() => import('./components/cathedra/UpgradePage'));
 const AZFaithPage = lazy(() => import('./components/cathedra/AZFaithPage'));
+const EncyclopediaPage = lazy(() => import('./components/cathedra/EncyclopediaPage'));
 const ModulesGuidePage = lazy(() => import('./components/cathedra/ModulesGuidePage'));
 
 const PartnersPage = lazy(() => import('./components/cathedra/PartnersPage'));
@@ -492,6 +493,7 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.POENITENTIA} element={<PageTransition><AuthGuard><PoenitentiaPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.GLOSSARY} element={<PageTransition><AuthGuard><GlossaryPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.AZ_FAITH} element={<PageTransition><AuthGuard><AZFaithPage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.ENCYCLOPEDIA} element={<PageTransition><EncyclopediaPage /></PageTransition>} />
                   <Route path={AppRoute.APARICOES} element={<PageTransition><AuthGuard><AparicoesPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.ORDO_MISSAE} element={<Navigate to={`${AppRoute.LITURGIA}?tab=missal`} replace />} />
                   <Route path={AppRoute.PRAYERS} element={<PageTransition><AuthGuard><PrayerPage /></AuthGuard></PageTransition>} />
