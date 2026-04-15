@@ -177,6 +177,14 @@ const Saints: React.FC = () => {
               Escritores
             </button>
             <button
+              onClick={() => setViewMode('popes')}
+              className={`px-4 md:px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                viewMode === 'popes' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              Papas
+            </button>
+            <button
               onClick={() => setViewMode('search')}
               className={`px-4 md:px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
                 viewMode === 'search' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
