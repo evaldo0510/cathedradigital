@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { ALL_SAINTS } from '@/data/saints';
+import { getSaintsByDate } from '@/services/saintsService';
 import { User } from '@/types';
 import { ProfileId } from '@/components/cathedra/SpiritualQuiz';
 
