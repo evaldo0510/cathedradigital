@@ -59,7 +59,30 @@ export const getSaintsByCategory = async (category: string): Promise<Saint[]> =>
   return (data || []).map(formatSaint);
 };
 
-export const getAllSaints = async (limit: number = 100): Promise<Saint[]> => {
+export const getSaintsByVirtue = async (virtue: string): Promise<Saint[]> => {
+  const { data, error } = await supabase
+    .from('saints')
+    .select('*')
+    .contains('virtues', [virtue])
+    .limit(10);
+
+  if (error) {
+    console.error('Error fetching saints by virtue:', error);
+    return [];
+  }
+
+  return (data || []).map(formatSaint);
+};
+
+export const findSaintByVirtues = async (virtues: string[]): Promise<Saint | null> => {
+  // Try to find a saint that has any of these virtues
+  for (const virtue of virtues) {
+    const saints = await getSaintsByVirtue(virtue);
+    if (saints.length > 0) return saints[0];
+  }
+  return null;
+};
+
   const { data, error } = await supabase
     .from('saints')
     .select('*')
