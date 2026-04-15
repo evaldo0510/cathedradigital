@@ -93,21 +93,24 @@ const StatsSection = () => {
   const { data: counts } = useQuery({
     queryKey: ["platform-counts"],
     queryFn: async () => {
-      const [reflections, started, completed] = await Promise.all([
+      const [reflections, started, completed, saints] = await Promise.all([
         supabase.from("spiritual_journal").select("*", { count: "exact", head: true }),
         supabase.from("journey_progress").select("*", { count: "exact", head: true }),
         supabase.from("journey_progress").select("*", { count: "exact", head: true }).not("completed_at", "is", null),
+        supabase.from("saints").select("*", { count: "exact", head: true }),
       ]);
       
       // Multiplication factors for visual impact in landing page (dev numbers are low)
       const baseReflections = (reflections.count || 0) + 1250;
       const baseStarted = (started.count || 0) + 450;
       const baseCompleted = (completed.count || 0) + 320;
+      const baseSaints = (saints.count || 0) + 330; // 330 + imported saints
 
       return {
         reflections: baseReflections,
         started: baseStarted,
-        completed: baseCompleted
+        completed: baseCompleted,
+        saints: baseSaints
       };
     },
     staleTime: 1000 * 60 * 60, // 1 hour cache
@@ -116,7 +119,7 @@ const StatsSection = () => {
   const stats = [
     { value: "73", label: "Livros da Bíblia" },
     { value: "2865", label: "Parágrafos do CIC" },
-    { value: "365", label: "Santos catalogados" },
+    { value: counts?.saints.toString() || "365", label: "Santos catalogados" },
     { value: counts?.reflections.toString() || "1250", label: "Reflexões espirituais" },
     { value: counts?.started.toString() || "450", label: "Jornadas iniciadas" },
     { value: counts?.completed.toString() || "320", label: "Jornadas concluídas" },
