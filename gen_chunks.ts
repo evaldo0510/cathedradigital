@@ -23,32 +23,35 @@ function formatIntArray(arr: number[]): string {
   return `'\{${arr.join(',')}\}'::integer[]`;
 }
 
-const rows = ALL_SAINTS.map(s => {
-  return `(${[
-    escapeSql(s.id),
-    escapeSql(s.name),
-    escapeSql(s.title),
-    escapeSql(s.feastDay),
-    s.feastMonth || 'NULL',
-    s.feastDayNum || 'NULL',
-    escapeSql(s.born || ''),
-    escapeSql(s.died || ''),
-    formatArray(s.patronOf || []),
-    escapeSql(s.bio || ''),
-    escapeSql(s.fullBio || s.bio || ''),
-    formatJson(s.works || []),
-    formatArray(s.quotes || []),
-    escapeSql(s.category),
-    escapeSql(s.image || ''),
-    escapeSql(s.prayer || ''),
-    formatArray(s.virtues || []),
-    formatJson(s.bibleRefs || []),
-    formatIntArray(s.catechismRefs || []),
-    formatJson(s.churchDocRefs || [])
-  ].join(', ')})`;
-}).join(',\n');
+const chunkSize = 20;
+for (let i = 0; i < ALL_SAINTS.length; i += chunkSize) {
+  const batch = ALL_SAINTS.slice(i, i + chunkSize);
+  const rows = batch.map(s => {
+    return `(${[
+      escapeSql(s.id),
+      escapeSql(s.name),
+      escapeSql(s.title),
+      escapeSql(s.feastDay),
+      s.feastMonth || 'NULL',
+      s.feastDayNum || 'NULL',
+      escapeSql(s.born || ''),
+      escapeSql(s.died || ''),
+      formatArray(s.patronOf || []),
+      escapeSql(s.bio || ''),
+      escapeSql(s.fullBio || s.bio || ''),
+      formatJson(s.works || []),
+      formatArray(s.quotes || []),
+      escapeSql(s.category),
+      escapeSql(s.image || ''),
+      escapeSql(s.prayer || ''),
+      formatArray(s.virtues || []),
+      formatJson(s.bibleRefs || []),
+      formatIntArray(s.catechismRefs || []),
+      formatJson(s.churchDocRefs || [])
+    ].join(', ')})`;
+  }).join(',\n');
 
-const sql = `INSERT INTO public.saints (id, name, title, feast_day, feast_month, feast_day_num, born, died, patron_of, bio, full_bio, works, quotes, category, image, prayer, virtues, bible_refs, catechism_refs, church_doc_refs) 
+  const sql = `INSERT INTO public.saints (id, name, title, feast_day, feast_month, feast_day_num, born, died, patron_of, bio, full_bio, works, quotes, category, image, prayer, virtues, bible_refs, catechism_refs, church_doc_refs) 
 VALUES 
 ${rows} 
 ON CONFLICT (id) DO UPDATE SET 
@@ -72,5 +75,6 @@ ON CONFLICT (id) DO UPDATE SET
   catechism_refs = EXCLUDED.catechism_refs,
   church_doc_refs = EXCLUDED.church_doc_refs;`;
 
-fs.writeFileSync('all_saints_import.sql', sql);
-console.log(`Generated all_saints_import.sql with ${ALL_SAINTS.length} saints.`);
+  fs.writeFileSync(`chunk_${Math.floor(i / chunkSize)}.sql`, sql);
+}
+console.log(`Generated ${Math.ceil(ALL_SAINTS.length / chunkSize)} chunks.`);
