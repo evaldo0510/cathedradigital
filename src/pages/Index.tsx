@@ -21,6 +21,8 @@ const PricingSection = lazy(() => import("./landing/PricingSection"));
 const FaqSection = lazy(() => import("./landing/FaqSection"));
 const CtaBannerSection = lazy(() => import("./landing/CtaBannerSection"));
 const FeedbackWidget = lazy(() => import("@/components/landing/FeedbackWidget"));
+const CookieConsent = lazy(() => import("@/components/cathedra/CookieConsent"));
+const WhatsAppButton = lazy(() => import("@/components/cathedra/WhatsAppButton"));
 
 const Index = () => {
   const navigate = useNavigate();
@@ -79,6 +81,8 @@ const Index = () => {
           <FaqSection />
           <CtaBannerSection onStart={handleStart} />
           <FeedbackWidget />
+          <WhatsAppButton />
+          <CookieConsent />
         </div>
       </Suspense>
     </div>
