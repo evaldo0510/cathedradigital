@@ -157,10 +157,33 @@ const FeaturesSection = ({ onNavigate }: FeaturesSectionProps) => {
         />
       </motion.div>
 
-      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4 relative z-10">
-        {features.map((feature, idx) => (
-          <FeatureCard key={feature.title} feature={feature} index={idx} onNavigate={onNavigate} />
-        ))}
+      <div className="relative z-10 px-4 md:px-12">
+        <Carousel
+          opts={{
+            align: "start",
+            loop: true,
+          }}
+          className="w-full"
+        >
+          <CarouselContent className="-ml-4">
+            {features.map((feature, idx) => (
+              <CarouselItem key={feature.title} className="pl-4 md:basis-1/2 lg:basis-1/3 xl:basis-1/4">
+                <div className="p-1 h-full">
+                  <FeatureCard feature={feature} index={idx} onNavigate={onNavigate} />
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <div className="hidden md:block">
+            <CarouselPrevious className="-left-12 bg-card border-border/50 hover:bg-primary/5 hover:text-primary transition-all duration-300" />
+            <CarouselNext className="-right-12 bg-card border-border/50 hover:bg-primary/5 hover:text-primary transition-all duration-300" />
+          </div>
+          {/* Mobile controls */}
+          <div className="flex justify-center gap-4 mt-8 md:hidden">
+            <CarouselPrevious className="static translate-y-0" />
+            <CarouselNext className="static translate-y-0" />
+          </div>
+        </Carousel>
       </div>
     </section>
   );
