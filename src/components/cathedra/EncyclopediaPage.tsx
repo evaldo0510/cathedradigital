@@ -413,7 +413,7 @@ const FAITH_TERMS: FaithTerm[] = [
 /* Featured terms shown as highlight bubbles */
 const FEATURED_TERMS = ['Amor', 'Fé', 'Graça', 'Eucaristia', 'Trindade', 'Perdão'];
 
-const AZFaithPage: React.FC = () => {
+const EncyclopediaPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
@@ -485,19 +485,22 @@ const AZFaithPage: React.FC = () => {
   return (
     <>
       <SEOHead
-        title="A–Z da Fé | Cathedra"
-        description="Explore o índice alfabético de termos bíblicos e teológicos."
-        path="/az-faith"
+        title="Enciclopédia Católica Digital | Cathedra"
+        description="Explore o conhecimento completo da fé católica de forma navegável e independente. O Lexicon Theologicum digital."
+        path="/encyclopedia"
       />
 
       <div className="max-w-5xl mx-auto pb-24 px-4 md:px-0 animate-in fade-in duration-500">
         {/* Header */}
         <header className="text-center space-y-3 pt-6 mb-8">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/5 rounded-full border border-primary/10">
-            <BookOpen className="w-3.5 h-3.5 text-primary" />
-            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Índice Alfabético</span>
+            <Library className="w-3.5 h-3.5 text-primary" />
+            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Lexicon Theologicum Digital</span>
           </div>
-          <h1 className="text-3xl md:text-4xl font-black tracking-tight text-foreground">A–Z da Fé</h1>
+          <h1 className="text-3xl md:text-5xl font-black tracking-tight text-foreground">Enciclopédia Católica</h1>
+          <p className="text-muted-foreground font-serif italic max-w-xl mx-auto text-sm">
+            "Para conhecer, amar e servir a Deus através da Verdade revelada."
+          </p>
           <Button
             variant={quizMode ? 'default' : 'outline'}
             onClick={() => setQuizMode(!quizMode)}
@@ -820,4 +823,4 @@ const AZFaithPage: React.FC = () => {
   );
 };
 
-export default AZFaithPage;
+export default EncyclopediaPage;
