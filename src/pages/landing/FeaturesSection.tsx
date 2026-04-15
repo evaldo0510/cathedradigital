@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { BookOpen, Star, Clock, Users, ChevronRight, Sparkles, Hash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { AppRoute } from "@/types";
 
 const features = [
