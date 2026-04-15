@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
-import { getSaintsByDate, searchSaints, formatSaint } from '@/services/saintsService';
+import { getSaintsByDate, searchSaints, getAllSaints, formatSaint } from '@/services/saintsService';
 import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
+import { type Saint } from '@/data/saints';
 
 export function useSaintsToday() {
   const day = new Date().getDate();
@@ -56,5 +57,14 @@ export function useSearchSaints(query: string) {
     queryFn: () => searchSaints(query),
     enabled: query.length >= 2,
     staleTime: 1000 * 60 * 5,
+  });
+}
+
+export function useAllSaintsDB(limit = 500) {
+  return useQuery<Saint[]>({
+    queryKey: ['all-saints-db', limit],
+    queryFn: () => getAllSaints(limit),
+    staleTime: 1000 * 60 * 60 * 24, // 24h
+    gcTime: 1000 * 60 * 60 * 24 * 7,
   });
 }

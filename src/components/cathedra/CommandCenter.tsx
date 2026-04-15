@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../constants';
 import { AppRoute } from '../../types';
 import { supabase } from '@/integrations/supabase/client';
-import { ALL_SAINTS, SAINTS_DATA } from '@/data/saints';
+import { useSearchSaints } from '@/hooks/useSaints';
 
 interface CommandItem {
   label: string;
@@ -122,42 +122,26 @@ const CommandCenter: React.FC = () => {
     );
   }, [query, lastBible]);
 
-  // Local saints search (instant, no DB needed)
+  // Saints search via DB hook
+  const { data: dbSaintsResults = [] } = useSearchSaints(query);
+  
   const filteredSaints = useMemo(() => {
-    if (query.length < 2) return [];
-    const q = query.toLowerCase();
+    if (query.length < 2 || !dbSaintsResults.length) return [];
     
-    const results: UnifiedResult[] = [];
-    
-    ALL_SAINTS.forEach(s => {
-      const nameMatch = s.name.toLowerCase().includes(q);
-      const titleMatch = s.title.toLowerCase().includes(q);
-      const bioMatch = s.bio.toLowerCase().includes(q);
-      const patronMatch = s.patronOf?.some(p => p.toLowerCase().includes(q));
-      const virtueMatch = s.virtues?.some(v => v.toLowerCase().includes(q));
-      const quoteMatch = s.quotes?.find(quote => quote.toLowerCase().includes(q));
-      
-      if (nameMatch || titleMatch || bioMatch || patronMatch || virtueMatch || quoteMatch) {
-        results.push({
-          type: 'saint' as const,
-          label: s.name,
-          description: quoteMatch 
-            ? `"${quoteMatch.length > 60 ? quoteMatch.substring(0, 60) + '...' : quoteMatch}"`
-            : (bioMatch && !nameMatch && q.length > 3)
-              ? `${s.bio.substring(0, 80)}...`
-              : `${s.title} • Festa: ${s.feastDay}`,
-          path: `${AppRoute.SAINTS}?saint=${s.id}`,
-          icon: s.image ? (
-            <img src={s.image} alt={s.name} className="w-4 h-4 rounded-full object-cover" />
-          ) : (
-            <Icons.SaintHalo className="w-4 h-4" />
-          ),
-        });
-      }
-    });
+    const results: UnifiedResult[] = dbSaintsResults.slice(0, 8).map(s => ({
+      type: 'saint' as const,
+      label: s.name,
+      description: `${s.title} • Festa: ${s.feastDay}`,
+      path: `${AppRoute.SAINTS}?saint=${s.id}`,
+      icon: s.image ? (
+        <img src={s.image} alt={s.name} className="w-4 h-4 rounded-full object-cover" />
+      ) : (
+        <Icons.SaintHalo className="w-4 h-4" />
+      ),
+    }));
 
-    return results.slice(0, 8);
-  }, [query]);
+    return results;
+  }, [query, dbSaintsResults]);
 
   // Global search (debounced DB queries)
   const runGlobalSearch = useCallback(async (q: string) => {
