@@ -4,7 +4,6 @@ import { Icons } from '../../constants';
 import { AppRoute } from '../../types';
 import { supabase } from '@/integrations/supabase/client';
 import { useSearchSaints } from '@/hooks/useSaints';
-import { Icons } from '../../constants';
 
 interface CommandItem {
   label: string;
