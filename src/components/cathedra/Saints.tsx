@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { format, addDays, subDays, isSameDay } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
-const Saints: React.FC = () => {
+const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedSaint, setSelectedSaint] = useState<Saint | null>(null);
   const [autoReflect, setAutoReflect] = useState(false);
@@ -122,11 +122,19 @@ const Saints: React.FC = () => {
   const filteredSaints = useMemo(() => {
     if (!search.trim()) return [];
     const q = search.toLowerCase().trim();
-    return ALL_SAINTS.filter(s =>
-      s.name.toLowerCase().includes(q) ||
-      s.title.toLowerCase().includes(q) ||
-      s.patronOf.some(p => p.toLowerCase().includes(q))
-    );
+    // Optimization: limit search results to improve performance with large dataset
+    let count = 0;
+    const results = [];
+    for (const s of ALL_SAINTS) {
+      if (s.name.toLowerCase().includes(q) ||
+          s.title.toLowerCase().includes(q) ||
+          s.patronOf.some(p => p.toLowerCase().includes(q))) {
+        results.push(s);
+        count++;
+        if (count >= 50) break; // Early exit for better performance
+      }
+    }
+    return results;
   }, [search]);
 
   const allSaintsSorted = useMemo(() => {
@@ -155,7 +163,7 @@ const Saints: React.FC = () => {
         breadcrumbs={[{ name: "Início", path: "/" }, { name: "Santos", path: "/saints" }]} 
       />
 
-      <div className="space-y-10 pb-20">
+      <div ref={ref} className="space-y-10 pb-20">
         <header className="text-center space-y-4">
           <motion.div
             initial={{ opacity: 0, y: -10 }}

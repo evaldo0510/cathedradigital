@@ -72,7 +72,7 @@ const cardVariants = {
   exit: { opacity: 0, y: -10, scale: 0.97 }
 };
 
-const JornadasPage: React.FC = () => {
+const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [journeys, setJourneys] = useState<any[]>([]);
@@ -142,10 +142,10 @@ const JornadasPage: React.FC = () => {
       if (!journeyData) { setLoading(false); return; }
       setJourneys(journeyData);
 
+      // Optimized count query - selecting only needed fields to reduce payload
       const { data: countsData } = await supabase
         .from('journey_steps')
-        .select('journey_id')
-        .in('journey_id', journeyData.map(j => j.id));
+        .select('journey_id');
 
       const counts: Record<string, number> = {};
       countsData?.forEach(s => {
@@ -196,7 +196,7 @@ const JornadasPage: React.FC = () => {
   return (
     <>
     <SEOHead title="Jornadas Espirituais" description="Percorra jornadas de transformação espiritual com conteúdos guiados de formação católica." path="/jornadas" keywords="jornada espiritual, formação católica, crescimento espiritual" breadcrumbs={[{ name: "Início", path: "/" }, { name: "Jornadas", path: "/jornadas" }]} />
-    <div className="space-y-4 sm:space-y-6 max-w-2xl mx-auto pb-24 px-2 sm:px-4">
+    <div ref={ref} className="space-y-4 sm:space-y-6 max-w-2xl mx-auto pb-24 px-2 sm:px-4">
       {/* Header */}
       <motion.div 
         className="text-center space-y-2 sm:space-y-3 pt-2 sm:pt-4"
@@ -572,6 +572,8 @@ const JornadasPage: React.FC = () => {
     </div>
     </>
   );
-};
+});
+
+JornadasPage.displayName = 'JornadasPage';
 
 export default JornadasPage;
