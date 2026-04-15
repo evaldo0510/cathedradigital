@@ -95,6 +95,18 @@ export const getAllSaints = async (limit: number = 100): Promise<Saint[]> => {
   return (data || []).map(formatSaint);
 };
 
+export const getSaintBySubtitle = async (subtitle: string): Promise<Saint | null> => {
+  if (!subtitle.trim()) return null;
+  const { data, error } = await supabase
+    .from('saints')
+    .select('*')
+    .ilike('name', `%${subtitle}%`)
+    .limit(1);
+
+  if (error || !data?.length) return null;
+  return formatSaint(data[0]);
+};
+
 export const formatSaint = (dbSaint: any): Saint => {
   return {
     ...dbSaint,
