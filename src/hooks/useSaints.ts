@@ -59,3 +59,12 @@ export function useSearchSaints(query: string) {
     staleTime: 1000 * 60 * 5,
   });
 }
+
+export function useAllSaintsDB(limit = 500) {
+  return useQuery<Saint[]>({
+    queryKey: ['all-saints-db', limit],
+    queryFn: () => getAllSaints(limit),
+    staleTime: 1000 * 60 * 60 * 24, // 24h
+    gcTime: 1000 * 60 * 60 * 24 * 7,
+  });
+}
