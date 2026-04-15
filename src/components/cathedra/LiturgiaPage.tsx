@@ -11,7 +11,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 import { routeUser, type RouteRecommendation } from '@/lib/smartRouter';
 import { saveUserPsychology } from '@/lib/psychologicalProfile';
-import { ALL_SAINTS, SAINTS_DATA } from '@/data/saints';
+import { useSaintsToday } from '@/hooks/useSaints';
 import ReactMarkdown from 'react-markdown';
 import { toast } from 'sonner';
 import { getCachedLiturgy, cacheLiturgy } from '@/lib/offlineCache';

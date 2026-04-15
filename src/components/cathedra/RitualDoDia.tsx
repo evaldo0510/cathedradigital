@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
 import { supabase } from '@/integrations/supabase/client';
-import { ALL_SAINTS } from '@/data/saints';
+import { useSaintsToday } from '@/hooks/useSaints';
 import SacredImage from './SacredImage';
 import AudioContentPlayer from './AudioContentPlayer';
 import { AppRoute } from '@/types';
@@ -78,6 +78,7 @@ const DAILY_REFLECTIONS = [
 const RitualDoDia: React.FC = () => {
   const navigate = useNavigate();
   const [officialSaint, setOfficialSaint] = useState<any>(null);
+  const { data: dbSaints = [] } = useSaintsToday();
 
   const dayOfYear = useMemo(() => {
     const now = new Date();
@@ -94,12 +95,10 @@ const RitualDoDia: React.FC = () => {
       try {
         const response = await supabase.functions.invoke('saint-of-the-day');
         if (response.data && !response.error) {
-          // If image URL exists, verify it loads before setting
           if (response.data.image) {
             const img = new Image();
             img.onload = () => setOfficialSaint(response.data);
             img.onerror = () => {
-              // Image failed to load (hotlink protection), use data without image
               setOfficialSaint({ ...response.data, image: null });
             };
             img.src = response.data.image;
@@ -108,24 +107,19 @@ const RitualDoDia: React.FC = () => {
           }
         }
       } catch {
-        // Fallback to local data
+        // Fallback to DB data
       }
     };
     fetchSaint();
   }, []);
 
   const saint = useMemo(() => {
-    const now = new Date();
-    const month = now.getMonth() + 1;
-    const day = now.getDate();
-
     const hasValidName = officialSaint && officialSaint.name && 
       officialSaint.name !== 'Santo do Dia' && officialSaint.name !== 'Menu' && officialSaint.name.length > 3;
 
     if (hasValidName) {
-      const localMatch = ALL_SAINTS.find(s =>
-        s.feastMonth === month && s.feastDayNum === day &&
-        (officialSaint.name.toLowerCase().includes(s.name.toLowerCase()) || s.name.toLowerCase().includes(officialSaint.name.toLowerCase()))
+      const localMatch = dbSaints.find(s =>
+        officialSaint.name.toLowerCase().includes(s.name.toLowerCase()) || s.name.toLowerCase().includes(officialSaint.name.toLowerCase())
       );
       return {
         name: officialSaint.name,
@@ -137,27 +131,23 @@ const RitualDoDia: React.FC = () => {
       };
     }
 
-    // Even if name is generic, if we have image from API, use it with local data
-    if (officialSaint && officialSaint.image) {
-      const localSaint = ALL_SAINTS.find(s => s.feastMonth === month && s.feastDayNum === day);
-      if (localSaint) {
-        return { 
-          name: localSaint.name, 
-          image: officialSaint.image || localSaint.image, 
-          bio: officialSaint.description || localSaint.bio, 
-          title: localSaint.title 
-        };
-      }
+    if (officialSaint && officialSaint.image && dbSaints.length > 0) {
+      const localSaint = dbSaints[0];
+      return { 
+        name: localSaint.name, 
+        image: officialSaint.image || localSaint.image, 
+        bio: officialSaint.description || localSaint.bio, 
+        title: localSaint.title 
+      };
     }
 
-    const localSaint = ALL_SAINTS.find(s => s.feastMonth === month && s.feastDayNum === day);
-    if (localSaint) {
+    if (dbSaints.length > 0) {
+      const localSaint = dbSaints[0];
       return { name: localSaint.name, image: localSaint.image, bio: localSaint.bio, title: localSaint.title };
     }
 
-    const fallback = ALL_SAINTS[dayOfYear % ALL_SAINTS.length];
-    return { name: fallback.name, image: fallback.image, bio: fallback.bio, title: fallback.title };
-  }, [officialSaint, dayOfYear]);
+    return { name: 'Santo do Dia', image: undefined, bio: '', title: 'Santo do Dia' };
+  }, [officialSaint, dbSaints]);
 
   const audioText = `Santo do dia: ${saint.name}. ${saint.bio?.slice(0, 200) || ''}. Versículo: ${verse.text} — ${verse.ref}. Reflexão: ${reflection}`;
 

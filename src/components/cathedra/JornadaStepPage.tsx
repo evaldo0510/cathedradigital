@@ -15,7 +15,7 @@ import { AppRoute } from '@/types';
 import ProConversionBanner from './ProConversionBanner';
 import { Icons } from '@/constants';
 import AudioContentPlayer from './AudioContentPlayer';
-import { ALL_SAINTS } from '@/data/saints';
+import { getSaintBySubtitle } from '@/services/saintsService';
 import SacredImage from './SacredImage';
 
 const SECTION_CONFIG = [
@@ -53,14 +53,13 @@ const JornadaStepPage: React.FC = () => {
   const content = useMemo(() => (step?.content as Record<string, any>) || {}, [step]);
   const stepProgress = useMemo(() => totalSteps > 0 ? (step?.step_order / totalSteps) * 100 : 0, [step, totalSteps]);
 
-  const saintImage = useMemo(() => {
-    if (!step?.subtitle) return null;
-    const sub = step.subtitle.toLowerCase();
-    const match = ALL_SAINTS.find(s => 
-      sub.includes(s.name.toLowerCase()) || 
-      s.name.toLowerCase().includes(sub)
-    );
-    return match?.image;
+  const [saintImage, setSaintImage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!step?.subtitle) return;
+    getSaintBySubtitle(step.subtitle).then(s => {
+      if (s?.image) setSaintImage(s.image);
+    });
   }, [step?.subtitle]);
 
   useEffect(() => {
