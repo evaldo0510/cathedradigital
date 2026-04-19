@@ -23,6 +23,7 @@ import confetti from 'canvas-confetti';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import AudioButton from './AudioButton';
+import { BibleChapterSkeleton } from './SacredSkeleton';
 
 
 type BibleBook = { name: string; abbr: string; chapters: number };
@@ -487,11 +488,7 @@ const Bible: React.FC = () => {
             <Card className="border-border/40 shadow-sm overflow-hidden bg-card/50 backdrop-blur-sm">
               <CardContent className="p-6 md:p-8">
                 {isLoading ? (
-                  <div className="space-y-4 py-8">
-                    {[1, 2, 3, 4, 5].map(i => (
-                      <div key={i} className={`h-4 bg-muted animate-pulse rounded-full ${i % 2 === 0 ? 'w-full' : 'w-3/4'}`} />
-                    ))}
-                  </div>
+                  <BibleChapterSkeleton />
                 ) : bibleError ? (
                   <div className="text-center py-12 space-y-4">
                     <p className="text-muted-foreground">{bibleError}</p>
