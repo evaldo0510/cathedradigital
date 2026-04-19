@@ -6,10 +6,9 @@ import { getLevelInfo } from '@/lib/levels';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { toast } from 'sonner';
-import { useDebounce } from '@/hooks/useDebounce';
-import { combinedSimilarity } from '@/lib/similarity';
+import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import { RelevanceBadge } from './RelevanceBadge';
-import { Loader2, Search as SearchIcon, X } from 'lucide-react';
+import { FuzzySearchInput } from './FuzzySearchInput';
 
 const CATEGORIES = [
   { id: 'geral', label: 'Geral' },
@@ -68,8 +67,19 @@ const CommunityPage: React.FC = () => {
   const [lbLoading, setLbLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Post[] | null>(null);
-  const [isSearching, setIsSearching] = useState(false);
-  const debouncedSearch = useDebounce(searchQuery, 300);
+
+  // Shared hook handles debounce (300ms) + RPC + similarityScore decoration.
+  const {
+    results: rawSearchResults,
+    isPending: isSearchPending,
+    isSearching,
+  } = useFuzzySearch<Post>({
+    rpc: 'search_community_posts_fuzzy',
+    query: searchQuery,
+    primaryField: 'title',
+    secondaryField: 'content',
+    secondaryWeight: 0.6,
+  });
 
   const fetchLeaderboard = useCallback(async () => {
     setLbLoading(true);
@@ -170,30 +180,16 @@ const CommunityPage: React.FC = () => {
 
   useEffect(() => { fetchPosts(); }, [fetchPosts]);
 
-  // Fuzzy search via pg_trgm + unaccent (debounced)
+  // Hydrate fuzzy search results with author + like status. The hook gives
+  // us ranked rows; this effect only adds the auxiliary profile/like data.
   useEffect(() => {
-    const q = debouncedSearch.trim();
-    if (q.length < 2) {
+    if (rawSearchResults === null) {
       setSearchResults(null);
-      setIsSearching(false);
       return;
     }
     let cancelled = false;
-    setIsSearching(true);
     (async () => {
-      const { data, error } = await supabase.rpc('search_community_posts_fuzzy', {
-        search_query: q,
-        result_limit: 50,
-      });
-      if (cancelled) return;
-      if (error) {
-        console.error('Community fuzzy search failed:', error);
-        setSearchResults(null);
-        setIsSearching(false);
-        return;
-      }
-      const rows = (data as Post[]) || [];
-      // Enrich with author name + like status (mirrors fetchPosts behaviour)
+      const rows = rawSearchResults;
       const userIds = [...new Set(rows.map(p => p.user_id))];
       let profileMap = new Map<string, string>();
       if (userIds.length) {
@@ -212,18 +208,17 @@ const CommunityPage: React.FC = () => {
           .in('post_id', rows.map(r => r.id));
         likedPostIds = new Set(likes?.map(l => l.post_id) || []);
       }
-      const enriched = rows.map(p => ({
-        ...p,
-        author_name: profileMap.get(p.user_id) || 'Anônimo',
-        user_liked: likedPostIds.has(p.id),
-        similarityScore: combinedSimilarity(q, p.title || '', p.content || '', 0.6),
-      }));
       if (cancelled) return;
-      setSearchResults(enriched);
-      setIsSearching(false);
+      setSearchResults(
+        rows.map(p => ({
+          ...p,
+          author_name: profileMap.get(p.user_id) || 'Anônimo',
+          user_liked: likedPostIds.has(p.id),
+        })),
+      );
     })();
     return () => { cancelled = true; };
-  }, [debouncedSearch, user]);
+  }, [rawSearchResults, user]);
 
   const createPost = async () => {
     if (!user) { navigate(AppRoute.LOGIN); return; }
@@ -483,30 +478,13 @@ const CommunityPage: React.FC = () => {
 
 
       {/* Search bar (fuzzy, debounced) */}
-      <div className="max-w-xl mx-auto relative">
-        <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-        <input
-          value={searchQuery}
-          onChange={e => setSearchQuery(e.target.value)}
-          placeholder="Buscar discussões por título ou conteúdo…"
-          className="w-full pl-11 pr-10 py-3 rounded-2xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
-        />
-        {searchQuery && (
-          <button
-            onClick={() => setSearchQuery('')}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-            aria-label="Limpar busca"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        )}
-        {searchQuery.trim().length >= 2 && (searchQuery !== debouncedSearch || isSearching) && (
-          <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-            <Loader2 className="w-3 h-3 animate-spin" />
-            Buscando…
-          </div>
-        )}
-      </div>
+      <FuzzySearchInput
+        className="max-w-xl mx-auto"
+        value={searchQuery}
+        onChange={setSearchQuery}
+        placeholder="Buscar discussões por título ou conteúdo…"
+        isSearching={isSearchPending}
+      />
 
       {/* Actions */}
       <div className="flex flex-col sm:flex-row gap-3 items-center justify-between">

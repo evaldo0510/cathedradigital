@@ -3,14 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
-import { useDebounce } from '@/hooks/useDebounce';
+import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import { AppRoute } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Compass, Heart, ArrowDown, Search, Sparkles, Book, BookOpen } from 'lucide-react';
 
-import { combinedSimilarity } from '@/lib/similarity';
 import { RelevanceBadge } from './RelevanceBadge';
-import { Loader2 } from 'lucide-react';
+import { FuzzySearchInput } from './FuzzySearchInput';
 
 interface GlossaryTerm {
   id: string;
@@ -102,10 +101,15 @@ const GlossaryPage: React.FC = () => {
   const [category, setCategory] = useState('Todos');
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedId, setExpandedId] = useState<string | null>(null);
-  const [searchResults, setSearchResults] = useState<GlossaryTerm[] | null>(null);
-  const [isSearching, setIsSearching] = useState(false);
 
-  const debouncedQuery = useDebounce(searchQuery, 300);
+  // Server-side fuzzy search (pg_trgm + unaccent) via shared hook.
+  const { results: searchResults, isPending: isSearchPending } = useFuzzySearch<GlossaryTerm>({
+    rpc: 'search_glossary_fuzzy',
+    query: searchQuery,
+    primaryField: 'term',
+    secondaryField: 'definition',
+    secondaryWeight: 0.5,
+  });
 
   useEffect(() => {
     const fetchTerms = async () => {
@@ -125,39 +129,6 @@ const GlossaryPage: React.FC = () => {
 
     fetchTerms();
   }, []);
-
-  // Run pg_trgm-powered fuzzy search when the (debounced) query is meaningful
-  useEffect(() => {
-    const q = debouncedQuery.trim();
-    if (q.length < 2) {
-      setSearchResults(null);
-      setIsSearching(false);
-      return;
-    }
-    let cancelled = false;
-    setIsSearching(true);
-    (async () => {
-      const { data, error } = await supabase.rpc('search_glossary_fuzzy', {
-        search_query: q,
-        result_limit: 50,
-      });
-      if (cancelled) return;
-      if (error) {
-        console.error('Glossary fuzzy search failed:', error);
-        setSearchResults(null);
-      } else {
-        const ranked = ((data as GlossaryTerm[]) || []).map(t => ({
-          ...t,
-          similarityScore: combinedSimilarity(q, t.term || '', t.definition || '', 0.5),
-        }));
-        setSearchResults(ranked);
-      }
-      setIsSearching(false);
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [debouncedQuery]);
 
   useEffect(() => {
     if (expandedId) {
@@ -202,20 +173,13 @@ const GlossaryPage: React.FC = () => {
       </div>
 
       {/* Search */}
-      <div className="max-w-md mx-auto relative">
-        <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-        <input
-          value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-          placeholder="Digite uma palavra ou sentimento…"
-          className="w-full pl-11 pr-4 py-3 rounded-2xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
-        />
-        {searchQuery.trim().length >= 2 && (searchQuery !== debouncedQuery || isSearching) && (
-          <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-            <Loader2 className="w-3 h-3 animate-spin" />
-            Buscando…
-          </div>
-        )}
-      </div>
+      <FuzzySearchInput
+        className="max-w-md mx-auto"
+        value={searchQuery}
+        onChange={setSearchQuery}
+        placeholder="Digite uma palavra ou sentimento…"
+        isSearching={isSearchPending}
+      />
 
       {/* Category tabs */}
       {!loading && terms.length > 0 && (

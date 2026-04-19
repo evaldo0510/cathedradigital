@@ -248,32 +248,13 @@ const TemasPage = () => {
       {/* Bubble Navigation System */}
       <div className="space-y-4 sm:space-y-8">
         <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 bg-card/60 backdrop-blur-xl p-2 sm:p-3 rounded-2xl sm:rounded-[2.5rem] border border-border/40 shadow-xl sticky top-2 sm:top-4 z-20 transition-all duration-500 hover:shadow-2xl hover:border-primary/20 group/nav">
-          <div className="relative flex-1 w-full">
-            <div className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-7 sm:w-8 h-7 sm:h-8 rounded-full bg-primary/5 flex items-center justify-center transition-colors group-focus-within/nav:bg-primary/10">
-              <Search className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-primary/60" />
-            </div>
-            <input 
-              type="text" 
-              placeholder="Buscar tema (ex: Amor, Graça...)"
-              className="w-full bg-transparent border-none h-10 sm:h-14 pl-12 sm:pl-14 pr-10 sm:pr-12 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-medium focus:ring-0 placeholder:text-muted-foreground/50 transition-all"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            {searchQuery && (
-              <button 
-                onClick={() => setSearchQuery('')}
-                className="absolute right-4 top-1/2 -translate-y-1/2 p-1.5 hover:bg-muted rounded-full transition-colors"
-              >
-                <X className="w-3.5 h-3.5 text-muted-foreground/60" />
-              </button>
-            )}
-            {isSearchActive && isSearchPending && (
-              <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                <Loader2 className="w-3 h-3 animate-spin" />
-                Buscando…
-              </div>
-            )}
-          </div>
+          <FuzzySearchInput
+            className="flex-1 w-full"
+            value={searchQuery}
+            onChange={setSearchQuery}
+            placeholder="Buscar tema (ex: Amor, Graça...)"
+            isSearching={isSearchPending}
+          />
           
           <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto px-2 pb-2 sm:pb-0 scrollbar-none scroll-smooth">
             {categories.map((cat, idx) => (
