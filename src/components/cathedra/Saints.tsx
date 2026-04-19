@@ -6,6 +6,7 @@ import SEOHead from '@/components/SEOHead';
 import { Icons } from '../../constants';
 import StaggeredList from './StaggeredList';
 import SacredImage from './SacredImage';
+import { SaintCardSkeleton, SaintGridSkeleton } from './SacredSkeleton';
 import SaintDetail, { CATEGORY_LABELS } from './SaintDetail';
 import { type Saint } from '@/data/saints';
 import { getSaintsByDate, searchSaints, getSaintsByCategory, getAllSaints, formatSaint } from '@/services/saintsService';
@@ -253,7 +254,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
               <div className="max-w-4xl mx-auto space-y-6">
                 {isLoadingDaily ? (
-                  <div className="flex justify-center py-20"><Icons.Cross className="w-10 h-10 animate-spin opacity-20" /></div>
+                  <SaintCardSkeleton />
                 ) : displaySaints.length > 0 ? (
                   displaySaints.map(saint => (
                     <motion.div
@@ -364,7 +365,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
               <div className="max-w-5xl mx-auto px-4">
                 {isLoadingDaily || isSearchingLocal ? (
-                  <div className="flex justify-center py-20"><Icons.Cross className="w-10 h-10 animate-spin opacity-20" /></div>
+                  <SaintGridSkeleton count={6} />
                 ) : search.trim() ? (
                   <>
                     {(searchResults.length > 0 || globalResults.length > 0) ? (
