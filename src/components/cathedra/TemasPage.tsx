@@ -7,6 +7,7 @@ import { Loader2, ChevronRight, ChevronLeft, Hash, Sparkles, Tag as TagIcon, X, 
 import { Icons } from '@/constants';
 import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import { RelevanceBadge } from './RelevanceBadge';
+import { FuzzySearchInput } from './FuzzySearchInput';
 
 const tagIconMap: Record<string, React.ReactNode> = {
   '❤️': <Heart className="w-5 h-5" />,

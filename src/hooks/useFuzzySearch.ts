@@ -64,7 +64,7 @@ export interface UseFuzzySearchResult<TRow> {
   error: Error | null;
 }
 
-export function useFuzzySearch<TRow extends Record<string, unknown>>(
+export function useFuzzySearch<TRow>(
   options: UseFuzzySearchOptions<TRow>,
 ): UseFuzzySearchResult<TRow> {
   const {
@@ -116,15 +116,18 @@ export function useFuzzySearch<TRow extends Record<string, unknown>>(
         setError(rpcError);
         setResults(null);
       } else {
-        const rows = (data ?? []).map(row => ({
-          ...row,
-          similarityScore: combinedSimilarity(
-            trimmed,
-            String(row[primaryField] ?? ''),
-            secondaryField ? String(row[secondaryField] ?? '') : undefined,
-            secondaryWeight,
-          ),
-        })) as (TRow & FuzzyRow)[];
+        const rows = (data ?? []).map(row => {
+          const r = row as Record<string, unknown>;
+          return {
+            ...row,
+            similarityScore: combinedSimilarity(
+              trimmed,
+              String(r[primaryField as string] ?? ''),
+              secondaryField ? String(r[secondaryField as string] ?? '') : undefined,
+              secondaryWeight,
+            ),
+          };
+        }) as (TRow & FuzzyRow)[];
         setResults(rows);
       }
       setIsSearching(false);
