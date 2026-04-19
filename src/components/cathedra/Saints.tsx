@@ -463,9 +463,11 @@ const SaintCard: React.FC<{ saint: SaintWithScore; onClick: () => void }> = ({ s
   const score = saint.similarityScore;
   const showScore = typeof score === 'number' && score > 0;
   const pct = showScore ? Math.round(Math.min(1, score) * 100) : 0;
+  // Thresholds calibrados para os scores reais retornados pelo pg_trgm
+  // (matches parciais ficam tipicamente em 0.25–0.5)
   const scoreTone =
-    pct >= 70 ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30'
-    : pct >= 40 ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/30'
+    pct >= 50 ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30'
+    : pct >= 25 ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/30'
     : 'bg-muted text-muted-foreground border-border';
 
   return (
