@@ -20,6 +20,7 @@ import { useCatechismParagraph, usePrefetchCatechismParagraph, useGenerateCatech
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import CatechismPopover from './CatechismPopover';
 import AudioButton from './AudioButton';
+import { CatechismParagraphSkeleton } from './SacredSkeleton';
 
 
 
@@ -45,17 +46,7 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
   }
 
   if (isLoading) {
-    return (
-      <div className="reader-text text-foreground/90 leading-[2] text-lg md:text-xl space-y-3 py-4">
-        <div className="flex items-center gap-2 mb-2 animate-pulse">
-          <div className="w-1.5 h-1.5 rounded-full bg-primary/40" />
-          <span className="text-[10px] font-black uppercase tracking-widest text-primary/60">Carregando conteúdo oficial...</span>
-        </div>
-        {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="h-4 bg-muted/40 rounded animate-pulse" style={{ width: `${60 + Math.random() * 40}%` }} />
-        ))}
-      </div>
-    );
+    return <CatechismParagraphSkeleton paragraph={paragraph} />;
   }
 
   if (isError) {
