@@ -6,6 +6,9 @@ import { getLevelInfo } from '@/lib/levels';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { toast } from 'sonner';
+import { useDebounce } from '@/hooks/useDebounce';
+import { combinedSimilarity, scoreToTone } from '@/lib/similarity';
+import { Loader2, Target, Search as SearchIcon, X } from 'lucide-react';
 
 const CATEGORIES = [
   { id: 'geral', label: 'Geral' },
@@ -31,6 +34,7 @@ interface Post {
   author_name?: string;
   replies_count?: number;
   user_liked?: boolean;
+  similarityScore?: number;
 }
 
 interface LeaderboardEntry {
@@ -61,6 +65,10 @@ const CommunityPage: React.FC = () => {
   const [tab, setTab] = useState<'forum' | 'ranking'>('forum');
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [lbLoading, setLbLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<Post[] | null>(null);
+  const [isSearching, setIsSearching] = useState(false);
+  const debouncedSearch = useDebounce(searchQuery, 300);
 
   const fetchLeaderboard = useCallback(async () => {
     setLbLoading(true);
@@ -160,6 +168,61 @@ const CommunityPage: React.FC = () => {
   }, [category, user]);
 
   useEffect(() => { fetchPosts(); }, [fetchPosts]);
+
+  // Fuzzy search via pg_trgm + unaccent (debounced)
+  useEffect(() => {
+    const q = debouncedSearch.trim();
+    if (q.length < 2) {
+      setSearchResults(null);
+      setIsSearching(false);
+      return;
+    }
+    let cancelled = false;
+    setIsSearching(true);
+    (async () => {
+      const { data, error } = await supabase.rpc('search_community_posts_fuzzy', {
+        search_query: q,
+        result_limit: 50,
+      });
+      if (cancelled) return;
+      if (error) {
+        console.error('Community fuzzy search failed:', error);
+        setSearchResults(null);
+        setIsSearching(false);
+        return;
+      }
+      const rows = (data as Post[]) || [];
+      // Enrich with author name + like status (mirrors fetchPosts behaviour)
+      const userIds = [...new Set(rows.map(p => p.user_id))];
+      let profileMap = new Map<string, string>();
+      if (userIds.length) {
+        const { data: profiles } = await supabase
+          .from('public_profiles' as any)
+          .select('id, name')
+          .in('id', userIds) as { data: { id: string; name: string }[] | null };
+        profileMap = new Map(profiles?.map(p => [p.id, p.name]) || []);
+      }
+      let likedPostIds = new Set<string>();
+      if (user && rows.length) {
+        const { data: likes } = await supabase
+          .from('community_likes')
+          .select('post_id')
+          .eq('user_id', user.id)
+          .in('post_id', rows.map(r => r.id));
+        likedPostIds = new Set(likes?.map(l => l.post_id) || []);
+      }
+      const enriched = rows.map(p => ({
+        ...p,
+        author_name: profileMap.get(p.user_id) || 'Anônimo',
+        user_liked: likedPostIds.has(p.id),
+        similarityScore: combinedSimilarity(q, p.title || '', p.content || '', 0.6),
+      }));
+      if (cancelled) return;
+      setSearchResults(enriched);
+      setIsSearching(false);
+    })();
+    return () => { cancelled = true; };
+  }, [debouncedSearch, user]);
 
   const createPost = async () => {
     if (!user) { navigate(AppRoute.LOGIN); return; }
@@ -418,6 +481,32 @@ const CommunityPage: React.FC = () => {
       <>
 
 
+      {/* Search bar (fuzzy, debounced) */}
+      <div className="max-w-xl mx-auto relative">
+        <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+        <input
+          value={searchQuery}
+          onChange={e => setSearchQuery(e.target.value)}
+          placeholder="Buscar discussões por título ou conteúdo…"
+          className="w-full pl-11 pr-10 py-3 rounded-2xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+        />
+        {searchQuery && (
+          <button
+            onClick={() => setSearchQuery('')}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+            aria-label="Limpar busca"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        )}
+        {searchQuery.trim().length >= 2 && (searchQuery !== debouncedSearch || isSearching) && (
+          <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+            <Loader2 className="w-3 h-3 animate-spin" />
+            Buscando…
+          </div>
+        )}
+      </div>
+
       {/* Actions */}
       <div className="flex flex-col sm:flex-row gap-3 items-center justify-between">
         <div className="flex gap-1.5 flex-wrap justify-center">
@@ -478,67 +567,93 @@ const CommunityPage: React.FC = () => {
         </div>
       )}
 
-      {/* Posts list */}
-      {loading ? (
-        <div className="space-y-3">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-24 bg-muted rounded-2xl animate-pulse" />
-          ))}
-        </div>
-      ) : posts.length === 0 ? (
-        <div className="text-center py-16">
-          <Icons.Message className="w-12 h-12 mx-auto text-muted-foreground/30 mb-4" />
-          <p className="text-muted-foreground italic">Nenhuma discussão encontrada. Seja o primeiro!</p>
-        </div>
-      ) : (
-        <div className="space-y-3">
-          {posts.map(post => (
-            <button key={post.id} onClick={() => openPost(post)}
-              className={`w-full text-left border rounded-2xl p-5 hover:border-primary/30 transition-all group ${
-                post.category === 'testemunho' ? 'bg-primary/5 border-primary/20' :
-                post.category === 'partilha' ? 'bg-secondary/5 border-secondary/20' :
-                'bg-card border-border hover:bg-primary/5'
-              }`}>
-              <div className="flex items-start gap-4">
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm shrink-0 ${
-                  post.category === 'testemunho' ? 'bg-primary text-primary-foreground' : 'bg-foreground text-background'
-                }`}>
-                  {post.category === 'testemunho' ? '✝' : (post.author_name || 'A').charAt(0).toUpperCase()}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1 flex-wrap">
-                    <span className="text-xs font-bold text-foreground">{post.author_name}</span>
-                    <span className="text-[10px] text-muted-foreground">{timeAgo(post.created_at)}</span>
-                    <span className="text-[8px] font-black uppercase tracking-widest text-primary bg-primary/10 px-1.5 py-0.5 rounded-full">
-                      {CATEGORIES.find(c => c.id === post.category)?.label || post.category}
-                    </span>
-                    {post.status === 'pending' && post.user_id === user?.id && (
-                      <span className="text-[8px] font-black uppercase tracking-widest text-amber-600 bg-amber-500/10 px-1.5 py-0.5 rounded-full">
-                        ⏳ Em moderação
-                      </span>
-                    )}
-                    {post.status === 'rejected' && post.user_id === user?.id && (
-                      <span className="text-[8px] font-black uppercase tracking-widest text-destructive bg-destructive/10 px-1.5 py-0.5 rounded-full">
-                        ✕ Rejeitado
-                      </span>
-                    )}
+      {/* Posts list (search results override category browse when searching) */}
+      {(() => {
+        const isSearchMode = searchResults !== null;
+        const list = isSearchMode ? searchResults : posts;
+        const isLoadingList = isSearchMode ? isSearching : loading;
+
+        if (isLoadingList) {
+          return (
+            <div className="space-y-3">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="h-24 bg-muted rounded-2xl animate-pulse" />
+              ))}
+            </div>
+          );
+        }
+        if (list.length === 0) {
+          return (
+            <div className="text-center py-16">
+              <Icons.Message className="w-12 h-12 mx-auto text-muted-foreground/30 mb-4" />
+              <p className="text-muted-foreground italic">
+                {isSearchMode ? 'Nenhuma discussão encontrada para sua busca.' : 'Nenhuma discussão encontrada. Seja o primeiro!'}
+              </p>
+            </div>
+          );
+        }
+        return (
+          <div className="space-y-3">
+            {list.map(post => {
+              const tone = scoreToTone(post.similarityScore);
+              return (
+                <button key={post.id} onClick={() => openPost(post)}
+                  className={`w-full text-left border rounded-2xl p-5 hover:border-primary/30 transition-all group ${
+                    post.category === 'testemunho' ? 'bg-primary/5 border-primary/20' :
+                    post.category === 'partilha' ? 'bg-secondary/5 border-secondary/20' :
+                    'bg-card border-border hover:bg-primary/5'
+                  }`}>
+                  <div className="flex items-start gap-4">
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm shrink-0 ${
+                      post.category === 'testemunho' ? 'bg-primary text-primary-foreground' : 'bg-foreground text-background'
+                    }`}>
+                      {post.category === 'testemunho' ? '✝' : (post.author_name || 'A').charAt(0).toUpperCase()}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1 flex-wrap">
+                        <span className="text-xs font-bold text-foreground">{post.author_name}</span>
+                        <span className="text-[10px] text-muted-foreground">{timeAgo(post.created_at)}</span>
+                        <span className="text-[8px] font-black uppercase tracking-widest text-primary bg-primary/10 px-1.5 py-0.5 rounded-full">
+                          {CATEGORIES.find(c => c.id === post.category)?.label || post.category}
+                        </span>
+                        {tone && isSearchMode && (
+                          <span
+                            title={`Relevância: ${tone.pct}%`}
+                            className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full border text-[8px] font-black uppercase tracking-widest ${tone.classes}`}
+                          >
+                            <Target className="w-2.5 h-2.5" />
+                            {tone.pct}%
+                          </span>
+                        )}
+                        {post.status === 'pending' && post.user_id === user?.id && (
+                          <span className="text-[8px] font-black uppercase tracking-widest text-amber-600 bg-amber-500/10 px-1.5 py-0.5 rounded-full">
+                            ⏳ Em moderação
+                          </span>
+                        )}
+                        {post.status === 'rejected' && post.user_id === user?.id && (
+                          <span className="text-[8px] font-black uppercase tracking-widest text-destructive bg-destructive/10 px-1.5 py-0.5 rounded-full">
+                            ✕ Rejeitado
+                          </span>
+                        )}
+                      </div>
+                      <h3 className="text-sm font-bold text-foreground group-hover:text-primary transition-colors truncate">{post.title}</h3>
+                      <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{post.content}</p>
+                      <div className="flex items-center gap-4 mt-2">
+                        <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                          <Icons.Heart className={`w-3 h-3 ${post.user_liked ? 'fill-primary text-primary' : ''}`} /> {post.likes_count}
+                        </span>
+                        <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                          <Icons.Message className="w-3 h-3" /> Responder
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  <h3 className="text-sm font-bold text-foreground group-hover:text-primary transition-colors truncate">{post.title}</h3>
-                  <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{post.content}</p>
-                  <div className="flex items-center gap-4 mt-2">
-                    <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
-                      <Icons.Heart className={`w-3 h-3 ${post.user_liked ? 'fill-primary text-primary' : ''}`} /> {post.likes_count}
-                    </span>
-                    <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
-                      <Icons.Message className="w-3 h-3" /> Responder
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </button>
-          ))}
-        </div>
-      )}
+                </button>
+              );
+            })}
+          </div>
+        );
+      })()}
       </>
       )}
     </div>

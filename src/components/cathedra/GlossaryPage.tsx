@@ -8,6 +8,9 @@ import { AppRoute } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Compass, Heart, ArrowDown, Search, Sparkles, Book, BookOpen, Target } from 'lucide-react';
 
+import { combinedSimilarity, scoreToTone } from '@/lib/similarity';
+import { Loader2 } from 'lucide-react';
+
 interface GlossaryTerm {
   id: string;
   term: string;
@@ -16,27 +19,6 @@ interface GlossaryTerm {
   journey_id?: string;
   similarityScore?: number;
 }
-
-/** Lightweight trigram-style similarity for client-side hint badges. */
-const computeSimilarity = (query: string, target: string): number => {
-  if (!query || !target) return 0;
-  const norm = (s: string) =>
-    s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-  const q = norm(query);
-  const t = norm(target);
-  if (t.includes(q)) return Math.min(1, q.length / Math.max(t.length, 1) + 0.5);
-  const trigrams = (s: string): Set<string> => {
-    const padded = `  ${s} `;
-    const set = new Set<string>();
-    for (let i = 0; i < padded.length - 2; i++) set.add(padded.slice(i, i + 3));
-    return set;
-  };
-  const a = trigrams(q);
-  const b = trigrams(t);
-  let shared = 0;
-  a.forEach(g => { if (b.has(g)) shared++; });
-  return shared / (a.size + b.size - shared || 1);
-};
 
 /* ── PCH enrichment for featured terms ── */
 interface TermEnrichment {
@@ -165,10 +147,7 @@ const GlossaryPage: React.FC = () => {
       } else {
         const ranked = ((data as GlossaryTerm[]) || []).map(t => ({
           ...t,
-          similarityScore: Math.max(
-            computeSimilarity(q, t.term || ''),
-            computeSimilarity(q, t.definition || '') * 0.5,
-          ),
+          similarityScore: combinedSimilarity(q, t.term || '', t.definition || '', 0.5),
         }));
         setSearchResults(ranked);
       }
@@ -229,6 +208,12 @@ const GlossaryPage: React.FC = () => {
           placeholder="Digite uma palavra ou sentimento…"
           className="w-full pl-11 pr-4 py-3 rounded-2xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
         />
+        {searchQuery.trim().length >= 2 && (searchQuery !== debouncedQuery || isSearching) && (
+          <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+            <Loader2 className="w-3 h-3 animate-spin" />
+            Buscando…
+          </div>
+        )}
       </div>
 
       {/* Category tabs */}
@@ -296,20 +281,15 @@ const GlossaryPage: React.FC = () => {
                         </span>
                       )}
                       {(() => {
-                        const score = term.similarityScore;
-                        if (typeof score !== 'number' || score <= 0) return null;
-                        const pct = Math.round(Math.min(1, score) * 100);
-                        const tone =
-                          pct >= 50 ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30'
-                          : pct >= 25 ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/30'
-                          : 'bg-muted text-muted-foreground border-border';
+                        const tone = scoreToTone(term.similarityScore);
+                        if (!tone) return null;
                         return (
                           <span
-                            title={`Relevância: ${pct}%`}
-                            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-[9px] font-black uppercase tracking-widest ${tone}`}
+                            title={`Relevância: ${tone.pct}%`}
+                            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-[9px] font-black uppercase tracking-widest ${tone.classes}`}
                           >
                             <Target className="w-2.5 h-2.5" />
-                            {pct}%
+                            {tone.pct}%
                           </span>
                         );
                       })()}
