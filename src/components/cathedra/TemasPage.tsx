@@ -360,6 +360,9 @@ const TemasPage = () => {
                             <span className="relative whitespace-nowrap">
                               {tag.label}
                             </span>
+                            {isSearchActive && (
+                              <RelevanceBadge score={tag.similarityScore} size="xs" />
+                            )}
                           </motion.button>
                         );
                       })}
