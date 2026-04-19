@@ -1341,6 +1341,39 @@ export type Database = {
         }
         Returns: boolean
       }
+      search_saints_fuzzy: {
+        Args: { result_limit?: number; search_query: string }
+        Returns: {
+          bible_refs: Json | null
+          bio: string | null
+          born: string | null
+          catechism_refs: number[] | null
+          category: string | null
+          church_doc_refs: Json | null
+          created_at: string | null
+          died: string | null
+          feast_day: string | null
+          feast_day_num: number | null
+          feast_month: number | null
+          full_bio: string | null
+          id: string
+          image: string | null
+          name: string
+          patron_of: string[] | null
+          prayer: string | null
+          quotes: string[] | null
+          title: string | null
+          updated_at: string | null
+          virtues: string[] | null
+          works: Json | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "saints"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
