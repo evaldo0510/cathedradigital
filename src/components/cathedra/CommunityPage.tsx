@@ -481,6 +481,32 @@ const CommunityPage: React.FC = () => {
       <>
 
 
+      {/* Search bar (fuzzy, debounced) */}
+      <div className="max-w-xl mx-auto relative">
+        <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+        <input
+          value={searchQuery}
+          onChange={e => setSearchQuery(e.target.value)}
+          placeholder="Buscar discussões por título ou conteúdo…"
+          className="w-full pl-11 pr-10 py-3 rounded-2xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+        />
+        {searchQuery && (
+          <button
+            onClick={() => setSearchQuery('')}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+            aria-label="Limpar busca"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        )}
+        {searchQuery.trim().length >= 2 && (searchQuery !== debouncedSearch || isSearching) && (
+          <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+            <Loader2 className="w-3 h-3 animate-spin" />
+            Buscando…
+          </div>
+        )}
+      </div>
+
       {/* Actions */}
       <div className="flex flex-col sm:flex-row gap-3 items-center justify-between">
         <div className="flex gap-1.5 flex-wrap justify-center">
