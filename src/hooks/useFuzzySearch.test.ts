@@ -7,7 +7,7 @@
  * transitions during the debounce window.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { renderHook, act, waitFor } from '@testing-library/react';
+import { renderHook, act } from '@testing-library/react';
 import { useFuzzySearch } from './useFuzzySearch';
 
 // ── Mock supabase client ─────────────────────────────────────────────
@@ -149,7 +149,7 @@ describe('useFuzzySearch', () => {
     rerender({ query: 'tomas' });
     act(() => { vi.advanceTimersByTime(300); });
 
-    await waitFor(() => {
+    await vi.waitFor(() => {
       expect(result.current.results).not.toBeNull();
       expect(result.current.results).toHaveLength(2);
     });
@@ -181,7 +181,7 @@ describe('useFuzzySearch', () => {
     rerender({ query: 'tomas' });
     act(() => { vi.advanceTimersByTime(300); });
 
-    await waitFor(() => {
+    await vi.waitFor(() => {
       expect(result.current.error).toBe(failure);
     });
     expect(result.current.results).toBeNull();
