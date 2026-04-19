@@ -6,6 +6,9 @@ import { getLevelInfo } from '@/lib/levels';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { toast } from 'sonner';
+import { useDebounce } from '@/hooks/useDebounce';
+import { combinedSimilarity, scoreToTone } from '@/lib/similarity';
+import { Loader2, Target, Search as SearchIcon, X } from 'lucide-react';
 
 const CATEGORIES = [
   { id: 'geral', label: 'Geral' },
@@ -31,6 +34,7 @@ interface Post {
   author_name?: string;
   replies_count?: number;
   user_liked?: boolean;
+  similarityScore?: number;
 }
 
 interface LeaderboardEntry {
@@ -61,6 +65,10 @@ const CommunityPage: React.FC = () => {
   const [tab, setTab] = useState<'forum' | 'ranking'>('forum');
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [lbLoading, setLbLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<Post[] | null>(null);
+  const [isSearching, setIsSearching] = useState(false);
+  const debouncedSearch = useDebounce(searchQuery, 300);
 
   const fetchLeaderboard = useCallback(async () => {
     setLbLoading(true);
