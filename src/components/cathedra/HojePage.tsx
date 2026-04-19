@@ -16,6 +16,7 @@ import AudioContentPlayer from './AudioContentPlayer';
 import { toast } from 'sonner';
 import SEOHead from '@/components/SEOHead';
 import { useQuery } from '@tanstack/react-query';
+import { SaintCardSkeleton } from './SacredSkeleton';
 
 const LITURGICAL_QUOTES = [
   '"Sede misericordiosos como vosso Pai é misericordioso." — Lc 6,36',
@@ -102,28 +103,21 @@ function useRecommendedJourney(userId: string | undefined, profile: any, userLev
   });
 }
 
-/* ═══ Skeleton Components ═══ */
-const SaintSkeleton = () => (
-  <div className="rounded-[2.5rem] border border-border bg-card overflow-hidden animate-pulse">
-    <div className="flex flex-col sm:flex-row">
-      <div className="w-full sm:w-1/3 h-40 bg-muted/40" />
-      <div className="flex-1 p-6 space-y-4">
-        <div className="h-4 w-24 bg-muted/40 rounded" />
-        <div className="h-6 w-48 bg-muted/40 rounded" />
-        <div className="h-3 w-full bg-muted/40 rounded" />
-        <div className="h-3 w-3/4 bg-muted/40 rounded" />
-      </div>
-    </div>
-  </div>
-);
+/* ═══ Skeleton Components — themed Sacred ═══ */
+const SaintSkeleton = SaintCardSkeleton;
+
+const shimmerSkel = "relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-primary/5 before:to-transparent";
 
 const JourneySkeleton = () => (
-  <div className="p-6 rounded-3xl border border-border bg-card animate-pulse">
+  <div className={`p-6 rounded-3xl border border-border bg-card ${shimmerSkel}`}>
     <div className="flex items-center gap-5">
-      <div className="w-12 h-12 rounded-2xl bg-muted/40" />
-      <div className="flex-1 space-y-2">
-        <div className="h-4 w-40 bg-muted/40 rounded" />
-        <div className="h-2 w-full bg-muted/40 rounded-full" />
+      <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
+        <Icons.Compass className="w-6 h-6 text-primary/20" />
+      </div>
+      <div className="flex-1 space-y-3">
+        <div className="h-3 bg-muted/50 rounded-full w-24" />
+        <div className="h-4 bg-muted/60 rounded-full w-2/3" />
+        <div className="h-2 bg-muted/40 rounded-full w-full" />
       </div>
     </div>
   </div>
