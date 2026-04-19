@@ -17,21 +17,23 @@ export const getSaintsByDate = async (month: number, day: number): Promise<Saint
 };
 
 export const searchSaints = async (query: string): Promise<Saint[]> => {
-  if (!query.trim()) return [];
-  
-  const { data, error } = await supabase
-    .from('saints')
-    .select('*')
-    .textSearch('name', query, { config: 'portuguese', type: 'plain' })
-    .limit(50);
+  const trimmed = query.trim();
+  if (!trimmed) return [];
+
+  // Use pg_trgm-powered RPC for fast, relevance-ranked fuzzy search
+  const { data, error } = await supabase.rpc('search_saints_fuzzy', {
+    search_query: trimmed,
+    result_limit: 50,
+  });
 
   if (error) {
+    console.error('Fuzzy search failed, falling back to ILIKE:', error);
     const { data: fallbackData, error: fallbackError } = await supabase
       .from('saints')
       .select('*')
-      .or(`name.ilike.%${query}%,title.ilike.%${query}%`)
+      .or(`name.ilike.%${trimmed}%,title.ilike.%${trimmed}%`)
       .limit(50);
-      
+
     if (fallbackError) {
       console.error('Error searching saints:', fallbackError);
       return [];
