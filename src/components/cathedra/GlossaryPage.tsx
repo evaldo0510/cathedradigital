@@ -8,6 +8,9 @@ import { AppRoute } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Compass, Heart, ArrowDown, Search, Sparkles, Book, BookOpen, Target } from 'lucide-react';
 
+import { combinedSimilarity, scoreToTone } from '@/lib/similarity';
+import { Loader2 } from 'lucide-react';
+
 interface GlossaryTerm {
   id: string;
   term: string;
@@ -16,27 +19,6 @@ interface GlossaryTerm {
   journey_id?: string;
   similarityScore?: number;
 }
-
-/** Lightweight trigram-style similarity for client-side hint badges. */
-const computeSimilarity = (query: string, target: string): number => {
-  if (!query || !target) return 0;
-  const norm = (s: string) =>
-    s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-  const q = norm(query);
-  const t = norm(target);
-  if (t.includes(q)) return Math.min(1, q.length / Math.max(t.length, 1) + 0.5);
-  const trigrams = (s: string): Set<string> => {
-    const padded = `  ${s} `;
-    const set = new Set<string>();
-    for (let i = 0; i < padded.length - 2; i++) set.add(padded.slice(i, i + 3));
-    return set;
-  };
-  const a = trigrams(q);
-  const b = trigrams(t);
-  let shared = 0;
-  a.forEach(g => { if (b.has(g)) shared++; });
-  return shared / (a.size + b.size - shared || 1);
-};
 
 /* ── PCH enrichment for featured terms ── */
 interface TermEnrichment {

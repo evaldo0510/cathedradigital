@@ -12,7 +12,8 @@ import { type Saint } from '@/data/saints';
 import { getSaintsByDate, searchSaints, getSaintsByCategory, getAllSaints, formatSaint, type SaintWithScore } from '@/services/saintsService';
 import { supabase } from '@/integrations/supabase/client';
 import { useDebounce } from '@/hooks/useDebounce';
-import { Search, X, Calendar as CalendarIcon, ChevronLeft, ChevronRight, Sparkles, BookOpen, Quote, Shield, Target } from 'lucide-react';
+import { Search, X, Calendar as CalendarIcon, ChevronLeft, ChevronRight, Sparkles, BookOpen, Quote, Shield, Target, Loader2 } from 'lucide-react';
+import { scoreToTone } from '@/lib/similarity';
 import { Button } from '@/components/ui/button';
 import { format, addDays, subDays, isSameDay } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -365,6 +366,13 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     <X className="w-5 h-5" />
                   </button>
                 )}
+                {/* Subtle indicator while debounce is pending or query is in flight */}
+                {search.trim().length >= 2 && (search !== debouncedSearch || isSearchingLocal) && (
+                  <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                    Buscando…
+                  </div>
+                )}
               </div>
 
               <div className="max-w-5xl mx-auto px-4">
@@ -460,15 +468,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
 Saints.displayName = 'Saints';
 
 const SaintCard: React.FC<{ saint: SaintWithScore; onClick: () => void }> = ({ saint, onClick }) => {
-  const score = saint.similarityScore;
-  const showScore = typeof score === 'number' && score > 0;
-  const pct = showScore ? Math.round(Math.min(1, score) * 100) : 0;
-  // Thresholds calibrados para os scores reais retornados pelo pg_trgm
-  // (matches parciais ficam tipicamente em 0.25–0.5)
-  const scoreTone =
-    pct >= 50 ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30'
-    : pct >= 25 ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/30'
-    : 'bg-muted text-muted-foreground border-border';
+  const tone = scoreToTone(saint.similarityScore);
 
   return (
     <button
@@ -487,13 +487,13 @@ const SaintCard: React.FC<{ saint: SaintWithScore; onClick: () => void }> = ({ s
             {CATEGORY_LABELS[saint.category] || saint.category}
           </span>
         </div>
-        {showScore && (
+        {tone && (
           <div
-            title={`Relevância: ${pct}%`}
-            className={`absolute top-3 right-3 flex items-center gap-1 px-2 py-0.5 rounded-full border text-[9px] font-black uppercase tracking-widest backdrop-blur-sm ${scoreTone}`}
+            title={`Relevância: ${tone.pct}%`}
+            className={`absolute top-3 right-3 flex items-center gap-1 px-2 py-0.5 rounded-full border text-[9px] font-black uppercase tracking-widest backdrop-blur-sm ${tone.classes}`}
           >
             <Target className="w-2.5 h-2.5" />
-            {pct}%
+            {tone.pct}%
           </div>
         )}
       </div>
