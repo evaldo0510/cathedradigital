@@ -12,8 +12,9 @@ import { type Saint } from '@/data/saints';
 import { getSaintsByDate, searchSaints, getSaintsByCategory, getAllSaints, formatSaint, type SaintWithScore } from '@/services/saintsService';
 import { supabase } from '@/integrations/supabase/client';
 import { useDebounce } from '@/hooks/useDebounce';
-import { Search, X, Calendar as CalendarIcon, ChevronLeft, ChevronRight, Sparkles, BookOpen, Quote, Shield, Loader2 } from 'lucide-react';
+import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Sparkles, BookOpen, Quote, Shield } from 'lucide-react';
 import { RelevanceBadge } from './RelevanceBadge';
+import { FuzzySearchInput } from './FuzzySearchInput';
 import { Button } from '@/components/ui/button';
 import { format, addDays, subDays, isSameDay } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -349,31 +350,14 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
               exit={{ opacity: 0, y: -20 }}
               className="space-y-8"
             >
-              <div className="max-w-2xl mx-auto relative px-4">
-                <Search className="absolute left-10 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                <input
-                  type="text"
-                  value={search}
-                  onChange={e => setSearch(e.target.value)}
-                  placeholder="Buscar santo por nome, título ou padroado…"
-                  className="w-full pl-14 pr-14 py-5 bg-card border border-border rounded-full text-base text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all shadow-sm"
-                />
-                {search && (
-                  <button 
-                    onClick={() => setSearch('')} 
-                    className="absolute right-10 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                )}
-                {/* Subtle indicator while debounce is pending or query is in flight */}
-                {search.trim().length >= 2 && (search !== debouncedSearch || isSearchingLocal) && (
-                  <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                    <Loader2 className="w-3 h-3 animate-spin" />
-                    Buscando…
-                  </div>
-                )}
-              </div>
+              <FuzzySearchInput
+                className="max-w-2xl mx-auto px-4"
+                value={search}
+                onChange={setSearch}
+                placeholder="Buscar santo por nome, título ou padroado…"
+                isSearching={search !== debouncedSearch || isSearchingLocal}
+                size="lg"
+              />
 
               <div className="max-w-5xl mx-auto px-4">
                 {isLoadingDaily || isSearchingLocal ? (
