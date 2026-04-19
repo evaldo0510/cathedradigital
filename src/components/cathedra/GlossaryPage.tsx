@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
+import { useDebounce } from '@/hooks/useDebounce';
 import { AppRoute } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Compass, Heart, ArrowDown, Search, Sparkles, Book, BookOpen } from 'lucide-react';
@@ -96,6 +97,10 @@ const GlossaryPage: React.FC = () => {
   const [category, setCategory] = useState('Todos');
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [searchResults, setSearchResults] = useState<GlossaryTerm[] | null>(null);
+  const [isSearching, setIsSearching] = useState(false);
+
+  const debouncedQuery = useDebounce(searchQuery, 300);
 
   useEffect(() => {
     const fetchTerms = async () => {
@@ -116,6 +121,35 @@ const GlossaryPage: React.FC = () => {
     fetchTerms();
   }, []);
 
+  // Run pg_trgm-powered fuzzy search when the (debounced) query is meaningful
+  useEffect(() => {
+    const q = debouncedQuery.trim();
+    if (q.length < 2) {
+      setSearchResults(null);
+      setIsSearching(false);
+      return;
+    }
+    let cancelled = false;
+    setIsSearching(true);
+    (async () => {
+      const { data, error } = await supabase.rpc('search_glossary_fuzzy', {
+        search_query: q,
+        result_limit: 50,
+      });
+      if (cancelled) return;
+      if (error) {
+        console.error('Glossary fuzzy search failed:', error);
+        setSearchResults(null);
+      } else {
+        setSearchResults((data as GlossaryTerm[]) || []);
+      }
+      setIsSearching(false);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [debouncedQuery]);
+
   useEffect(() => {
     if (expandedId) {
       const el = document.getElementById(`term-${expandedId}`);
@@ -134,19 +168,11 @@ const GlossaryPage: React.FC = () => {
   }, [terms]);
 
   const filtered = useMemo(() => {
-    let list = terms;
-    if (category !== 'Todos') list = list.filter(d => d.category === category);
-    if (searchQuery) {
-      const q = searchQuery.toLowerCase();
-      list = list.filter(d =>
-        d.term.toLowerCase().includes(q) ||
-        d.definition.toLowerCase().includes(q) ||
-        (ENRICHMENTS[d.term]?.pch?.toLowerCase().includes(q)) ||
-        (ENRICHMENTS[d.term]?.question?.toLowerCase().includes(q))
-      );
-    }
-    return list;
-  }, [category, searchQuery, terms]);
+    // When the user is searching, prefer the relevance-ranked RPC results
+    const base = searchResults ?? terms;
+    if (category === 'Todos') return base;
+    return base.filter(d => d.category === category);
+  }, [category, terms, searchResults]);
 
   const enrichedCount = useMemo(() => terms.filter(t => ENRICHMENTS[t.term]).length, [terms]);
 
