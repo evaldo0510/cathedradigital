@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vitest run src/test/saints-validation.test.ts && vite build",
-    "build:dev": "vitest run src/test/saints-validation.test.ts && vite build --mode development",
+    "build": "vite build",
+    "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
