@@ -9,9 +9,10 @@ import SacredImage from './SacredImage';
 import { SaintCardSkeleton, SaintGridSkeleton } from './SacredSkeleton';
 import SaintDetail, { CATEGORY_LABELS } from './SaintDetail';
 import { type Saint } from '@/data/saints';
-import { getSaintsByDate, searchSaints, getSaintsByCategory, getAllSaints, formatSaint } from '@/services/saintsService';
+import { getSaintsByDate, searchSaints, getSaintsByCategory, getAllSaints, formatSaint, type SaintWithScore } from '@/services/saintsService';
 import { supabase } from '@/integrations/supabase/client';
-import { Search, X, Calendar as CalendarIcon, ChevronLeft, ChevronRight, Sparkles, BookOpen, Quote, Shield } from 'lucide-react';
+import { useDebounce } from '@/hooks/useDebounce';
+import { Search, X, Calendar as CalendarIcon, ChevronLeft, ChevronRight, Sparkles, BookOpen, Quote, Shield, Target } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { format, addDays, subDays, isSameDay } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -65,11 +66,14 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
     enabled: ['writers', 'popes', 'all'].includes(viewMode),
   });
 
+  // Debounced search to avoid one DB hit per keystroke
+  const debouncedSearch = useDebounce(search, 300);
+
   // Search results
   const { data: searchResults = [], isLoading: isSearchingLocal } = useQuery({
-    queryKey: ['saints-search', search],
-    queryFn: () => searchSaints(search),
-    enabled: viewMode === 'search' && search.length >= 2,
+    queryKey: ['saints-search', debouncedSearch],
+    queryFn: () => searchSaints(debouncedSearch),
+    enabled: viewMode === 'search' && debouncedSearch.trim().length >= 2,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
@@ -455,48 +459,67 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
 Saints.displayName = 'Saints';
 
-const SaintCard: React.FC<{ saint: Saint; onClick: () => void }> = ({ saint, onClick }) => (
-  <button
-    onClick={onClick}
-    className="group bg-card border border-border rounded-[2rem] overflow-hidden hover:border-primary/50 hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 text-left flex flex-col h-full"
-  >
-    <div className="relative h-48 overflow-hidden">
-      <SacredImage 
-        src={saint.image || ''} 
-        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
-        alt={saint.name} 
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-      <div className="absolute bottom-4 left-6">
-        <span className="text-[10px] font-black uppercase tracking-widest text-white/90 bg-primary/80 px-2 py-0.5 rounded-md backdrop-blur-sm">
-          {CATEGORY_LABELS[saint.category] || saint.category}
-        </span>
-      </div>
-    </div>
-    
-    <div className="flex-1 p-6 space-y-4">
-      <div>
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-[10px] font-black uppercase tracking-widest text-primary">{saint.feastDay}</span>
-          {saint.works && saint.works.length > 0 && (
-            <div className="p-1 bg-primary/5 rounded-lg text-primary" title="Possui obras escritas">
-              <BookOpen className="w-3 h-3" />
-            </div>
-          )}
+const SaintCard: React.FC<{ saint: SaintWithScore; onClick: () => void }> = ({ saint, onClick }) => {
+  const score = saint.similarityScore;
+  const showScore = typeof score === 'number' && score > 0;
+  const pct = showScore ? Math.round(Math.min(1, score) * 100) : 0;
+  const scoreTone =
+    pct >= 70 ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30'
+    : pct >= 40 ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/30'
+    : 'bg-muted text-muted-foreground border-border';
+
+  return (
+    <button
+      onClick={onClick}
+      className="group bg-card border border-border rounded-[2rem] overflow-hidden hover:border-primary/50 hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 text-left flex flex-col h-full"
+    >
+      <div className="relative h-48 overflow-hidden">
+        <SacredImage 
+          src={saint.image || ''} 
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+          alt={saint.name} 
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+        <div className="absolute bottom-4 left-6 flex items-center gap-2">
+          <span className="text-[10px] font-black uppercase tracking-widest text-white/90 bg-primary/80 px-2 py-0.5 rounded-md backdrop-blur-sm">
+            {CATEGORY_LABELS[saint.category] || saint.category}
+          </span>
         </div>
-        <h3 className="text-xl font-serif font-bold text-foreground group-hover:text-primary transition-colors line-clamp-1">{saint.name}</h3>
-        <p className="text-xs text-muted-foreground font-serif italic line-clamp-1">{saint.title}</p>
+        {showScore && (
+          <div
+            title={`Relevância: ${pct}%`}
+            className={`absolute top-3 right-3 flex items-center gap-1 px-2 py-0.5 rounded-full border text-[9px] font-black uppercase tracking-widest backdrop-blur-sm ${scoreTone}`}
+          >
+            <Target className="w-2.5 h-2.5" />
+            {pct}%
+          </div>
+        )}
       </div>
       
-      <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">{saint.bio}</p>
-      
-      <div className="flex flex-wrap gap-1 mt-auto">
-        {saint.virtues?.slice(0, 2).map(v => (
-          <span key={v} className="px-2 py-0.5 bg-primary/5 text-primary text-[8px] font-black uppercase rounded-lg border border-primary/10">{v}</span>
-        ))}
+      <div className="flex-1 p-6 space-y-4">
+        <div>
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[10px] font-black uppercase tracking-widest text-primary">{saint.feastDay}</span>
+            {saint.works && saint.works.length > 0 && (
+              <div className="p-1 bg-primary/5 rounded-lg text-primary" title="Possui obras escritas">
+                <BookOpen className="w-3 h-3" />
+              </div>
+            )}
+          </div>
+          <h3 className="text-xl font-serif font-bold text-foreground group-hover:text-primary transition-colors line-clamp-1">{saint.name}</h3>
+          <p className="text-xs text-muted-foreground font-serif italic line-clamp-1">{saint.title}</p>
+        </div>
+        
+        <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">{saint.bio}</p>
+        
+        <div className="flex flex-wrap gap-1 mt-auto">
+          {saint.virtues?.slice(0, 2).map(v => (
+            <span key={v} className="px-2 py-0.5 bg-primary/5 text-primary text-[8px] font-black uppercase rounded-lg border border-primary/10">{v}</span>
+          ))}
+        </div>
       </div>
-    </div>
-  </button>
-);
+    </button>
+  );
+};
 
 export default Saints;

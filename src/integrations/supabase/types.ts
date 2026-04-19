@@ -1341,6 +1341,25 @@ export type Database = {
         }
         Returns: boolean
       }
+      search_glossary_fuzzy: {
+        Args: { result_limit?: number; search_query: string }
+        Returns: {
+          category: string | null
+          created_at: string
+          definition: string
+          id: string
+          journey_id: string | null
+          language: string
+          term: string
+          updated_at: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "glossary"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       search_saints_fuzzy: {
         Args: { result_limit?: number; search_query: string }
         Returns: {
