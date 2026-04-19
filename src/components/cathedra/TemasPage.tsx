@@ -267,6 +267,12 @@ const TemasPage = () => {
                 <X className="w-3.5 h-3.5 text-muted-foreground/60" />
               </button>
             )}
+            {isSearchActive && isSearchPending && (
+              <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                <Loader2 className="w-3 h-3 animate-spin" />
+                Buscando…
+              </div>
+            )}
           </div>
           
           <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto px-2 pb-2 sm:pb-0 scrollbar-none scroll-smooth">
