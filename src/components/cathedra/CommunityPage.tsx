@@ -567,67 +567,93 @@ const CommunityPage: React.FC = () => {
         </div>
       )}
 
-      {/* Posts list */}
-      {loading ? (
-        <div className="space-y-3">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-24 bg-muted rounded-2xl animate-pulse" />
-          ))}
-        </div>
-      ) : posts.length === 0 ? (
-        <div className="text-center py-16">
-          <Icons.Message className="w-12 h-12 mx-auto text-muted-foreground/30 mb-4" />
-          <p className="text-muted-foreground italic">Nenhuma discussão encontrada. Seja o primeiro!</p>
-        </div>
-      ) : (
-        <div className="space-y-3">
-          {posts.map(post => (
-            <button key={post.id} onClick={() => openPost(post)}
-              className={`w-full text-left border rounded-2xl p-5 hover:border-primary/30 transition-all group ${
-                post.category === 'testemunho' ? 'bg-primary/5 border-primary/20' :
-                post.category === 'partilha' ? 'bg-secondary/5 border-secondary/20' :
-                'bg-card border-border hover:bg-primary/5'
-              }`}>
-              <div className="flex items-start gap-4">
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm shrink-0 ${
-                  post.category === 'testemunho' ? 'bg-primary text-primary-foreground' : 'bg-foreground text-background'
-                }`}>
-                  {post.category === 'testemunho' ? '✝' : (post.author_name || 'A').charAt(0).toUpperCase()}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1 flex-wrap">
-                    <span className="text-xs font-bold text-foreground">{post.author_name}</span>
-                    <span className="text-[10px] text-muted-foreground">{timeAgo(post.created_at)}</span>
-                    <span className="text-[8px] font-black uppercase tracking-widest text-primary bg-primary/10 px-1.5 py-0.5 rounded-full">
-                      {CATEGORIES.find(c => c.id === post.category)?.label || post.category}
-                    </span>
-                    {post.status === 'pending' && post.user_id === user?.id && (
-                      <span className="text-[8px] font-black uppercase tracking-widest text-amber-600 bg-amber-500/10 px-1.5 py-0.5 rounded-full">
-                        ⏳ Em moderação
-                      </span>
-                    )}
-                    {post.status === 'rejected' && post.user_id === user?.id && (
-                      <span className="text-[8px] font-black uppercase tracking-widest text-destructive bg-destructive/10 px-1.5 py-0.5 rounded-full">
-                        ✕ Rejeitado
-                      </span>
-                    )}
+      {/* Posts list (search results override category browse when searching) */}
+      {(() => {
+        const isSearchMode = searchResults !== null;
+        const list = isSearchMode ? searchResults : posts;
+        const isLoadingList = isSearchMode ? isSearching : loading;
+
+        if (isLoadingList) {
+          return (
+            <div className="space-y-3">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="h-24 bg-muted rounded-2xl animate-pulse" />
+              ))}
+            </div>
+          );
+        }
+        if (list.length === 0) {
+          return (
+            <div className="text-center py-16">
+              <Icons.Message className="w-12 h-12 mx-auto text-muted-foreground/30 mb-4" />
+              <p className="text-muted-foreground italic">
+                {isSearchMode ? 'Nenhuma discussão encontrada para sua busca.' : 'Nenhuma discussão encontrada. Seja o primeiro!'}
+              </p>
+            </div>
+          );
+        }
+        return (
+          <div className="space-y-3">
+            {list.map(post => {
+              const tone = scoreToTone(post.similarityScore);
+              return (
+                <button key={post.id} onClick={() => openPost(post)}
+                  className={`w-full text-left border rounded-2xl p-5 hover:border-primary/30 transition-all group ${
+                    post.category === 'testemunho' ? 'bg-primary/5 border-primary/20' :
+                    post.category === 'partilha' ? 'bg-secondary/5 border-secondary/20' :
+                    'bg-card border-border hover:bg-primary/5'
+                  }`}>
+                  <div className="flex items-start gap-4">
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm shrink-0 ${
+                      post.category === 'testemunho' ? 'bg-primary text-primary-foreground' : 'bg-foreground text-background'
+                    }`}>
+                      {post.category === 'testemunho' ? '✝' : (post.author_name || 'A').charAt(0).toUpperCase()}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1 flex-wrap">
+                        <span className="text-xs font-bold text-foreground">{post.author_name}</span>
+                        <span className="text-[10px] text-muted-foreground">{timeAgo(post.created_at)}</span>
+                        <span className="text-[8px] font-black uppercase tracking-widest text-primary bg-primary/10 px-1.5 py-0.5 rounded-full">
+                          {CATEGORIES.find(c => c.id === post.category)?.label || post.category}
+                        </span>
+                        {tone && isSearchMode && (
+                          <span
+                            title={`Relevância: ${tone.pct}%`}
+                            className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full border text-[8px] font-black uppercase tracking-widest ${tone.classes}`}
+                          >
+                            <Target className="w-2.5 h-2.5" />
+                            {tone.pct}%
+                          </span>
+                        )}
+                        {post.status === 'pending' && post.user_id === user?.id && (
+                          <span className="text-[8px] font-black uppercase tracking-widest text-amber-600 bg-amber-500/10 px-1.5 py-0.5 rounded-full">
+                            ⏳ Em moderação
+                          </span>
+                        )}
+                        {post.status === 'rejected' && post.user_id === user?.id && (
+                          <span className="text-[8px] font-black uppercase tracking-widest text-destructive bg-destructive/10 px-1.5 py-0.5 rounded-full">
+                            ✕ Rejeitado
+                          </span>
+                        )}
+                      </div>
+                      <h3 className="text-sm font-bold text-foreground group-hover:text-primary transition-colors truncate">{post.title}</h3>
+                      <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{post.content}</p>
+                      <div className="flex items-center gap-4 mt-2">
+                        <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                          <Icons.Heart className={`w-3 h-3 ${post.user_liked ? 'fill-primary text-primary' : ''}`} /> {post.likes_count}
+                        </span>
+                        <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                          <Icons.Message className="w-3 h-3" /> Responder
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  <h3 className="text-sm font-bold text-foreground group-hover:text-primary transition-colors truncate">{post.title}</h3>
-                  <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{post.content}</p>
-                  <div className="flex items-center gap-4 mt-2">
-                    <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
-                      <Icons.Heart className={`w-3 h-3 ${post.user_liked ? 'fill-primary text-primary' : ''}`} /> {post.likes_count}
-                    </span>
-                    <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
-                      <Icons.Message className="w-3 h-3" /> Responder
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </button>
-          ))}
-        </div>
-      )}
+                </button>
+              );
+            })}
+          </div>
+        );
+      })()}
       </>
       )}
     </div>
