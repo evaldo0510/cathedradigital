@@ -169,6 +169,61 @@ const CommunityPage: React.FC = () => {
 
   useEffect(() => { fetchPosts(); }, [fetchPosts]);
 
+  // Fuzzy search via pg_trgm + unaccent (debounced)
+  useEffect(() => {
+    const q = debouncedSearch.trim();
+    if (q.length < 2) {
+      setSearchResults(null);
+      setIsSearching(false);
+      return;
+    }
+    let cancelled = false;
+    setIsSearching(true);
+    (async () => {
+      const { data, error } = await supabase.rpc('search_community_posts_fuzzy', {
+        search_query: q,
+        result_limit: 50,
+      });
+      if (cancelled) return;
+      if (error) {
+        console.error('Community fuzzy search failed:', error);
+        setSearchResults(null);
+        setIsSearching(false);
+        return;
+      }
+      const rows = (data as Post[]) || [];
+      // Enrich with author name + like status (mirrors fetchPosts behaviour)
+      const userIds = [...new Set(rows.map(p => p.user_id))];
+      let profileMap = new Map<string, string>();
+      if (userIds.length) {
+        const { data: profiles } = await supabase
+          .from('public_profiles' as any)
+          .select('id, name')
+          .in('id', userIds) as { data: { id: string; name: string }[] | null };
+        profileMap = new Map(profiles?.map(p => [p.id, p.name]) || []);
+      }
+      let likedPostIds = new Set<string>();
+      if (user && rows.length) {
+        const { data: likes } = await supabase
+          .from('community_likes')
+          .select('post_id')
+          .eq('user_id', user.id)
+          .in('post_id', rows.map(r => r.id));
+        likedPostIds = new Set(likes?.map(l => l.post_id) || []);
+      }
+      const enriched = rows.map(p => ({
+        ...p,
+        author_name: profileMap.get(p.user_id) || 'Anônimo',
+        user_liked: likedPostIds.has(p.id),
+        similarityScore: combinedSimilarity(q, p.title || '', p.content || '', 0.6),
+      }));
+      if (cancelled) return;
+      setSearchResults(enriched);
+      setIsSearching(false);
+    })();
+    return () => { cancelled = true; };
+  }, [debouncedSearch, user]);
+
   const createPost = async () => {
     if (!user) { navigate(AppRoute.LOGIN); return; }
     if (!newTitle.trim() || !newContent.trim()) return;
