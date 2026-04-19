@@ -1,0 +1,55 @@
+/**
+ * RelevanceBadge — shared visual indicator for fuzzy-search relevance.
+ *
+ * Used by Saints, Glossary and Community search results so the UX stays
+ * consistent and the score-to-color mapping lives in one place
+ * (see `scoreToTone` in `@/lib/similarity`).
+ */
+import React from 'react';
+import { Target } from 'lucide-react';
+import { scoreToTone } from '@/lib/similarity';
+import { cn } from '@/lib/utils';
+
+export interface RelevanceBadgeProps {
+  /** Similarity score in [0, 1]. Renders nothing when missing or ≤ 0. */
+  score: number | null | undefined;
+  /**
+   * Visual size preset. `xs` matches the tighter Community list,
+   * `sm` matches Saints/Glossary cards. Defaults to `sm`.
+   */
+  size?: 'xs' | 'sm';
+  /** Extra classes for positioning (e.g. absolute placement on a card). */
+  className?: string;
+}
+
+const SIZE_CLASSES: Record<NonNullable<RelevanceBadgeProps['size']>, string> = {
+  xs: 'px-1.5 py-0.5 text-[8px]',
+  sm: 'px-2 py-0.5 text-[9px]',
+};
+
+export const RelevanceBadge: React.FC<RelevanceBadgeProps> = ({
+  score,
+  size = 'sm',
+  className,
+}) => {
+  const tone = scoreToTone(score);
+  if (!tone) return null;
+
+  return (
+    <span
+      title={`Relevância: ${tone.pct}%`}
+      aria-label={`Relevância da busca: ${tone.pct} por cento`}
+      className={cn(
+        'inline-flex items-center gap-1 rounded-full border font-black uppercase tracking-widest',
+        SIZE_CLASSES[size],
+        tone.classes,
+        className,
+      )}
+    >
+      <Target className="w-2.5 h-2.5" />
+      {tone.pct}%
+    </span>
+  );
+};
+
+export default RelevanceBadge;

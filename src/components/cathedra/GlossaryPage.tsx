@@ -6,9 +6,10 @@ import { supabase } from '@/integrations/supabase/client';
 import { useDebounce } from '@/hooks/useDebounce';
 import { AppRoute } from '@/types';
 import { Button } from '@/components/ui/button';
-import { Compass, Heart, ArrowDown, Search, Sparkles, Book, BookOpen, Target } from 'lucide-react';
+import { Compass, Heart, ArrowDown, Search, Sparkles, Book, BookOpen } from 'lucide-react';
 
-import { combinedSimilarity, scoreToTone } from '@/lib/similarity';
+import { combinedSimilarity } from '@/lib/similarity';
+import { RelevanceBadge } from './RelevanceBadge';
 import { Loader2 } from 'lucide-react';
 
 interface GlossaryTerm {
@@ -280,19 +281,8 @@ const GlossaryPage: React.FC = () => {
                           <Icons.Sparkles className="w-2.5 h-2.5 inline mr-1" /> Com reflexão
                         </span>
                       )}
-                      {(() => {
-                        const tone = scoreToTone(term.similarityScore);
-                        if (!tone) return null;
-                        return (
-                          <span
-                            title={`Relevância: ${tone.pct}%`}
-                            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-[9px] font-black uppercase tracking-widest ${tone.classes}`}
-                          >
-                            <Target className="w-2.5 h-2.5" />
-                            {tone.pct}%
-                          </span>
-                        );
-                      })()}
+                      <RelevanceBadge score={term.similarityScore} />
+
                     </div>
                     <h3 className="text-base font-bold text-foreground">{term.term}</h3>
                     {!isExpanded && (

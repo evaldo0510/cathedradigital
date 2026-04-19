@@ -1341,6 +1341,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      immutable_unaccent: { Args: { "": string }; Returns: string }
       search_community_posts_fuzzy: {
         Args: { result_limit?: number; search_query: string }
         Returns: {
@@ -1410,6 +1411,23 @@ export type Database = {
         SetofOptions: {
           from: "*"
           to: "saints"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      search_tags_fuzzy: {
+        Args: { result_limit?: number; search_query: string }
+        Returns: {
+          category: string | null
+          created_at: string | null
+          emoji: string | null
+          id: string
+          label: string
+          slug: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "tags"
           isOneToOne: false
           isSetofReturn: true
         }

@@ -7,8 +7,9 @@ import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { toast } from 'sonner';
 import { useDebounce } from '@/hooks/useDebounce';
-import { combinedSimilarity, scoreToTone } from '@/lib/similarity';
-import { Loader2, Target, Search as SearchIcon, X } from 'lucide-react';
+import { combinedSimilarity } from '@/lib/similarity';
+import { RelevanceBadge } from './RelevanceBadge';
+import { Loader2, Search as SearchIcon, X } from 'lucide-react';
 
 const CATEGORIES = [
   { id: 'geral', label: 'Geral' },
@@ -595,7 +596,6 @@ const CommunityPage: React.FC = () => {
         return (
           <div className="space-y-3">
             {list.map(post => {
-              const tone = scoreToTone(post.similarityScore);
               return (
                 <button key={post.id} onClick={() => openPost(post)}
                   className={`w-full text-left border rounded-2xl p-5 hover:border-primary/30 transition-all group ${
@@ -616,14 +616,8 @@ const CommunityPage: React.FC = () => {
                         <span className="text-[8px] font-black uppercase tracking-widest text-primary bg-primary/10 px-1.5 py-0.5 rounded-full">
                           {CATEGORIES.find(c => c.id === post.category)?.label || post.category}
                         </span>
-                        {tone && isSearchMode && (
-                          <span
-                            title={`Relevância: ${tone.pct}%`}
-                            className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full border text-[8px] font-black uppercase tracking-widest ${tone.classes}`}
-                          >
-                            <Target className="w-2.5 h-2.5" />
-                            {tone.pct}%
-                          </span>
+                        {isSearchMode && (
+                          <RelevanceBadge score={post.similarityScore} size="xs" />
                         )}
                         {post.status === 'pending' && post.user_id === user?.id && (
                           <span className="text-[8px] font-black uppercase tracking-widest text-amber-600 bg-amber-500/10 px-1.5 py-0.5 rounded-full">

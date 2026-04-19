@@ -12,8 +12,8 @@ import { type Saint } from '@/data/saints';
 import { getSaintsByDate, searchSaints, getSaintsByCategory, getAllSaints, formatSaint, type SaintWithScore } from '@/services/saintsService';
 import { supabase } from '@/integrations/supabase/client';
 import { useDebounce } from '@/hooks/useDebounce';
-import { Search, X, Calendar as CalendarIcon, ChevronLeft, ChevronRight, Sparkles, BookOpen, Quote, Shield, Target, Loader2 } from 'lucide-react';
-import { scoreToTone } from '@/lib/similarity';
+import { Search, X, Calendar as CalendarIcon, ChevronLeft, ChevronRight, Sparkles, BookOpen, Quote, Shield, Loader2 } from 'lucide-react';
+import { RelevanceBadge } from './RelevanceBadge';
 import { Button } from '@/components/ui/button';
 import { format, addDays, subDays, isSameDay } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -468,8 +468,6 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
 Saints.displayName = 'Saints';
 
 const SaintCard: React.FC<{ saint: SaintWithScore; onClick: () => void }> = ({ saint, onClick }) => {
-  const tone = scoreToTone(saint.similarityScore);
-
   return (
     <button
       onClick={onClick}
@@ -487,15 +485,10 @@ const SaintCard: React.FC<{ saint: SaintWithScore; onClick: () => void }> = ({ s
             {CATEGORY_LABELS[saint.category] || saint.category}
           </span>
         </div>
-        {tone && (
-          <div
-            title={`Relevância: ${tone.pct}%`}
-            className={`absolute top-3 right-3 flex items-center gap-1 px-2 py-0.5 rounded-full border text-[9px] font-black uppercase tracking-widest backdrop-blur-sm ${tone.classes}`}
-          >
-            <Target className="w-2.5 h-2.5" />
-            {tone.pct}%
-          </div>
-        )}
+        <RelevanceBadge
+          score={saint.similarityScore}
+          className="absolute top-3 right-3 backdrop-blur-sm"
+        />
       </div>
       
       <div className="flex-1 p-6 space-y-4">
