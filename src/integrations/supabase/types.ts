@@ -1341,6 +1341,27 @@ export type Database = {
         }
         Returns: boolean
       }
+      search_community_posts_fuzzy: {
+        Args: { result_limit?: number; search_query: string }
+        Returns: {
+          category: string
+          content: string
+          created_at: string
+          id: string
+          likes_count: number
+          parent_id: string | null
+          status: string | null
+          title: string | null
+          updated_at: string
+          user_id: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "community_posts"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       search_glossary_fuzzy: {
         Args: { result_limit?: number; search_query: string }
         Returns: {
