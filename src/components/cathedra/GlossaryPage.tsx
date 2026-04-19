@@ -6,7 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useDebounce } from '@/hooks/useDebounce';
 import { AppRoute } from '@/types';
 import { Button } from '@/components/ui/button';
-import { Compass, Heart, ArrowDown, Search, Sparkles, Book, BookOpen } from 'lucide-react';
+import { Compass, Heart, ArrowDown, Search, Sparkles, Book, BookOpen, Target } from 'lucide-react';
 
 interface GlossaryTerm {
   id: string;
@@ -14,7 +14,29 @@ interface GlossaryTerm {
   definition: string;
   category: string;
   journey_id?: string;
+  similarityScore?: number;
 }
+
+/** Lightweight trigram-style similarity for client-side hint badges. */
+const computeSimilarity = (query: string, target: string): number => {
+  if (!query || !target) return 0;
+  const norm = (s: string) =>
+    s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const q = norm(query);
+  const t = norm(target);
+  if (t.includes(q)) return Math.min(1, q.length / Math.max(t.length, 1) + 0.5);
+  const trigrams = (s: string): Set<string> => {
+    const padded = `  ${s} `;
+    const set = new Set<string>();
+    for (let i = 0; i < padded.length - 2; i++) set.add(padded.slice(i, i + 3));
+    return set;
+  };
+  const a = trigrams(q);
+  const b = trigrams(t);
+  let shared = 0;
+  a.forEach(g => { if (b.has(g)) shared++; });
+  return shared / (a.size + b.size - shared || 1);
+};
 
 /* ── PCH enrichment for featured terms ── */
 interface TermEnrichment {
@@ -141,7 +163,14 @@ const GlossaryPage: React.FC = () => {
         console.error('Glossary fuzzy search failed:', error);
         setSearchResults(null);
       } else {
-        setSearchResults((data as GlossaryTerm[]) || []);
+        const ranked = ((data as GlossaryTerm[]) || []).map(t => ({
+          ...t,
+          similarityScore: Math.max(
+            computeSimilarity(q, t.term || ''),
+            computeSimilarity(q, t.definition || '') * 0.5,
+          ),
+        }));
+        setSearchResults(ranked);
       }
       setIsSearching(false);
     })();
@@ -266,6 +295,24 @@ const GlossaryPage: React.FC = () => {
                           <Icons.Sparkles className="w-2.5 h-2.5 inline mr-1" /> Com reflexão
                         </span>
                       )}
+                      {(() => {
+                        const score = term.similarityScore;
+                        if (typeof score !== 'number' || score <= 0) return null;
+                        const pct = Math.round(Math.min(1, score) * 100);
+                        const tone =
+                          pct >= 50 ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30'
+                          : pct >= 25 ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/30'
+                          : 'bg-muted text-muted-foreground border-border';
+                        return (
+                          <span
+                            title={`Relevância: ${pct}%`}
+                            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-[9px] font-black uppercase tracking-widest ${tone}`}
+                          >
+                            <Target className="w-2.5 h-2.5" />
+                            {pct}%
+                          </span>
+                        );
+                      })()}
                     </div>
                     <h3 className="text-base font-bold text-foreground">{term.term}</h3>
                     {!isExpanded && (
