@@ -5,6 +5,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2, ChevronRight, ChevronLeft, Hash, Sparkles, Tag as TagIcon, X, Search, Heart, Cross, BookOpen, Flame, Shield, Crown, Hand, Star, Globe, Eye, Users, Compass, Church, Wine, Orbit, Mountain, RefreshCw, Frown, Bird, Droplets, Wheat, Target, Clock, Megaphone, Skull } from 'lucide-react';
 import { Icons } from '@/constants';
+import { useFuzzySearch } from '@/hooks/useFuzzySearch';
+import { RelevanceBadge } from './RelevanceBadge';
 
 const tagIconMap: Record<string, React.ReactNode> = {
   '❤️': <Heart className="w-5 h-5" />,
@@ -77,6 +79,7 @@ interface Tag {
   slug: string;
   emoji: string;
   category: string;
+  similarityScore?: number;
 }
 
 interface ThemeContent {
@@ -126,14 +129,27 @@ const TemasPage = () => {
   }, [tags]);
 
 
+  // Server-side fuzzy search via search_tags_fuzzy (debounced 300ms, ≥2 chars).
+  const {
+    results: fuzzyTags,
+    isPending: isSearchPending,
+  } = useFuzzySearch<Tag>({
+    rpc: 'search_tags_fuzzy',
+    query: searchQuery,
+    primaryField: 'label',
+    secondaryField: 'category',
+    secondaryWeight: 0.5,
+  });
+  const isSearchActive = searchQuery.trim().length >= 2;
+
   const filteredTags = useMemo(() => {
     if (!tags) return [];
-    return tags.filter(tag => {
-      const matchesSearch = tag.label.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesCategory = activeCategory === 'all' || tag.category === activeCategory;
-      return matchesSearch && matchesCategory;
-    });
-  }, [tags, searchQuery, activeCategory]);
+    // When the user is searching, prefer the relevance-ranked RPC results;
+    // otherwise show the alphabetical full list.
+    const base: Tag[] = isSearchActive ? (fuzzyTags ?? []) : tags;
+    if (activeCategory === 'all') return base;
+    return base.filter(tag => tag.category === activeCategory);
+  }, [tags, fuzzyTags, isSearchActive, activeCategory]);
 
   useEffect(() => {
     const el = document.getElementById('tags-carousel');
