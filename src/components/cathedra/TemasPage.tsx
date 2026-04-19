@@ -80,6 +80,7 @@ interface Tag {
   emoji: string;
   category: string;
   similarityScore?: number;
+  [key: string]: unknown;
 }
 
 interface ThemeContent {
