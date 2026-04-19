@@ -1,5 +1,6 @@
 import { supabase } from '@/integrations/supabase/client';
 import { type Saint } from '@/data/saints';
+import { combinedSimilarity } from '@/lib/similarity';
 
 export const getSaintsByDate = async (month: number, day: number): Promise<Saint[]> => {
   const { data, error } = await supabase
@@ -14,32 +15,6 @@ export const getSaintsByDate = async (month: number, day: number): Promise<Saint
   }
 
   return (data || []).map(formatSaint);
-};
-
-/**
- * Compute a similarity score (0-1) between query and target using a
- * lightweight trigram-style approximation. Used purely for client-side
- * UI hints — the authoritative ranking still comes from Postgres pg_trgm.
- */
-const computeSimilarity = (query: string, target: string): number => {
-  if (!query || !target) return 0;
-  const norm = (s: string) =>
-    s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-  const q = norm(query);
-  const t = norm(target);
-  if (t.includes(q)) return Math.min(1, q.length / Math.max(t.length, 1) + 0.5);
-
-  const trigrams = (s: string): Set<string> => {
-    const padded = `  ${s} `;
-    const set = new Set<string>();
-    for (let i = 0; i < padded.length - 2; i++) set.add(padded.slice(i, i + 3));
-    return set;
-  };
-  const a = trigrams(q);
-  const b = trigrams(t);
-  let shared = 0;
-  a.forEach(g => { if (b.has(g)) shared++; });
-  return shared / (a.size + b.size - shared || 1);
 };
 
 export interface SaintWithScore extends Saint {
@@ -58,10 +33,7 @@ export const searchSaints = async (query: string): Promise<SaintWithScore[]> => 
 
   const attachScore = (saint: Saint): SaintWithScore => ({
     ...saint,
-    similarityScore: Math.max(
-      computeSimilarity(trimmed, saint.name || ''),
-      computeSimilarity(trimmed, saint.title || '') * 0.7
-    ),
+    similarityScore: combinedSimilarity(trimmed, saint.name || '', saint.title || '', 0.7),
   });
 
   if (error) {
