@@ -12,9 +12,10 @@ import { type Saint } from '@/data/saints';
 import { getSaintsByDate, searchSaints, getSaintsByCategory, getAllSaints, formatSaint, type SaintWithScore } from '@/services/saintsService';
 import { supabase } from '@/integrations/supabase/client';
 import { useDebounce } from '@/hooks/useDebounce';
-import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Sparkles, BookOpen, Quote, Shield } from 'lucide-react';
+import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Sparkles, BookOpen, Quote, Shield, User } from 'lucide-react';
 import { RelevanceBadge } from './RelevanceBadge';
 import { FuzzySearchInput } from './FuzzySearchInput';
+import { SearchResultCard } from './SearchResultCard';
 import { Button } from '@/components/ui/button';
 import { format, addDays, subDays, isSameDay } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -359,20 +360,33 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                 size="lg"
               />
 
-              <div className="max-w-5xl mx-auto px-4">
+              <div className="max-w-2xl mx-auto px-4">
                 {isLoadingDaily || isSearchingLocal ? (
                   <SaintGridSkeleton count={6} />
                 ) : search.trim() ? (
                   <>
                     {(searchResults.length > 0 || globalResults.length > 0) ? (
-                      <StaggeredList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      <div className="space-y-2">
                         {searchResults.map(saint => (
-                          <SaintCard key={saint.id} saint={saint} onClick={() => handleOpenSaint(saint, false)} />
+                          <SearchResultCard
+                            key={saint.id}
+                            title={saint.name}
+                            subtitle={saint.title}
+                            score={saint.similarityScore}
+                            icon={<User className="w-4 h-4" />}
+                            onClick={() => handleOpenSaint(saint, false)}
+                          />
                         ))}
                         {globalResults.map(saint => (
-                          <SaintCard key={saint.id} saint={saint} onClick={() => handleOpenSaint(saint, false)} />
+                          <SearchResultCard
+                            key={saint.id}
+                            title={saint.name}
+                            subtitle={saint.title}
+                            icon={<Sparkles className="w-4 h-4" />}
+                            onClick={() => handleOpenSaint(saint, false)}
+                          />
                         ))}
-                      </StaggeredList>
+                      </div>
                     ) : null}
 
                     {searchResults.length === 0 && !isSearchingGlobal && globalResults.length === 0 && (

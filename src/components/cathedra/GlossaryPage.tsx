@@ -10,6 +10,7 @@ import { Compass, Heart, ArrowDown, Search, Sparkles, Book, BookOpen } from 'luc
 
 import { RelevanceBadge } from './RelevanceBadge';
 import { FuzzySearchInput } from './FuzzySearchInput';
+import { SearchResultCard } from './SearchResultCard';
 
 interface GlossaryTerm {
   id: string;
@@ -213,6 +214,23 @@ const GlossaryPage: React.FC = () => {
         </div>
       )}
 
+      {/* Search results as SearchResultCards */}
+      {searchQuery.trim().length >= 2 && searchResults && searchResults.length > 0 && (
+        <div className="space-y-2">
+          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Resultados da busca</p>
+          {searchResults.map(term => (
+            <SearchResultCard
+              key={term.id}
+              title={term.term}
+              subtitle={term.definition}
+              score={term.similarityScore}
+              icon={<BookOpen className="w-4 h-4" />}
+              onClick={() => setExpandedId(expandedId === term.id ? null : term.id)}
+            />
+          ))}
+        </div>
+      )}
+
       {/* Glossary list */}
       <div className="space-y-3">
         {loading ? (
@@ -245,8 +263,6 @@ const GlossaryPage: React.FC = () => {
                           <Icons.Sparkles className="w-2.5 h-2.5 inline mr-1" /> Com reflexão
                         </span>
                       )}
-                      <RelevanceBadge score={term.similarityScore} />
-
                     </div>
                     <h3 className="text-base font-bold text-foreground">{term.term}</h3>
                     {!isExpanded && (

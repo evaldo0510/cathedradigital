@@ -12,6 +12,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 import FuzzySearchInput from './FuzzySearchInput';
 import RelevanceBadge from './RelevanceBadge';
+import { SearchResultCard } from './SearchResultCard';
 import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import type { Tables } from '@/integrations/supabase/types';
 
@@ -413,6 +414,23 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
         </div>
       </div>
     </motion.div>
+
+      {/* Search Results as SearchResultCards */}
+      {searchQuery.trim().length >= 2 && fuzzySearch.results && fuzzySearch.results.length > 0 && (
+        <div className="space-y-2">
+          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Resultados da busca</p>
+          {fuzzySearch.results.map(j => (
+            <SearchResultCard
+              key={j.id}
+              title={j.title}
+              subtitle={j.subtitle || j.description}
+              score={(j as any).similarityScore}
+              icon={<Icons.Compass className="w-4 h-4" />}
+              onClick={() => navigate(`/jornadas/${j.id}`)}
+            />
+          ))}
+        </div>
+      )}
 
       {/* Journey Cards */}
       <motion.div 
