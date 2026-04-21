@@ -367,7 +367,8 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   <>
                     {(searchResults.length > 0 || globalResults.length > 0) ? (
                       <div className="space-y-2">
-                        {searchResults.map(saint => (
+                        <AnimatePresence mode="popLayout">
+                        {searchResults.map((saint, i) => (
                           <SearchResultCard
                             key={saint.id}
                             title={saint.name}
@@ -375,17 +376,20 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                             score={saint.similarityScore}
                             icon={<User className="w-4 h-4" />}
                             onClick={() => handleOpenSaint(saint, false)}
+                            index={i}
                           />
                         ))}
-                        {globalResults.map(saint => (
+                        {globalResults.map((saint, i) => (
                           <SearchResultCard
                             key={saint.id}
                             title={saint.name}
                             subtitle={saint.title}
                             icon={<Sparkles className="w-4 h-4" />}
                             onClick={() => handleOpenSaint(saint, false)}
+                            index={searchResults.length + i}
                           />
                         ))}
+                        </AnimatePresence>
                       </div>
                     ) : null}
 
