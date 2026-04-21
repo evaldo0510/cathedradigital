@@ -40,6 +40,7 @@ const PAGE_COMMANDS: CommandItem[] = [
   { label: 'Litanias', description: 'Orações de invocação', path: AppRoute.LITANIES, icon: <Icons.Heart className="w-4 h-4" />, keywords: ['litania', 'invocação', 'sagrado coração', 'nossa senhora'], type: 'page' },
   { label: 'Calendário Litúrgico', description: 'Festas e cores litúrgicas', path: `${AppRoute.LITURGIA}?tab=calendario`, icon: <Icons.History className="w-4 h-4" />, keywords: ['calendário', 'litúrgico', 'festas', 'solenidade', 'cores'], type: 'page' },
   { label: 'Comunidade', description: 'Discussões teológicas', path: AppRoute.COMMUNITY, icon: <Icons.Message className="w-4 h-4" />, keywords: ['comunidade', 'discussão', 'pergunta', 'fórum', 'teologia'], type: 'page' },
+  { label: 'Busca Global', description: 'Pesquisar em todos os módulos', path: AppRoute.BUSCAR, icon: <Icons.Search className="w-4 h-4" />, keywords: ['buscar', 'pesquisar', 'procurar', 'busca', 'global', 'search'], type: 'page' },
 ];
 
 interface UnifiedResult {
