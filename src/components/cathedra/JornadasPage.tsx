@@ -415,6 +415,23 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
       </div>
     </motion.div>
 
+      {/* Search Results as SearchResultCards */}
+      {searchQuery.trim().length >= 2 && fuzzySearch.results && fuzzySearch.results.length > 0 && (
+        <div className="space-y-2">
+          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Resultados da busca</p>
+          {fuzzySearch.results.map(j => (
+            <SearchResultCard
+              key={j.id}
+              title={j.title}
+              subtitle={j.subtitle || j.description}
+              score={(j as any).similarityScore}
+              icon={<Icons.Compass className="w-4 h-4" />}
+              onClick={() => navigate(`/jornadas/${j.id}`)}
+            />
+          ))}
+        </div>
+      )}
+
       {/* Journey Cards */}
       <motion.div 
         className="space-y-3 sm:space-y-4"
