@@ -490,6 +490,9 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                           </div>
                         </div>
                         <div className="flex items-center gap-2 flex-shrink-0">
+                          {searchQuery.trim().length >= 2 && (
+                            <RelevanceBadge score={fuzzyScoreMap[journey.id]} size="xs" />
+                          )}
                           {journey.is_premium && (
                             <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 text-[9px] px-2">
                               <Icons.Sparkles className="w-3 h-3 mr-0.5" /> PRO
