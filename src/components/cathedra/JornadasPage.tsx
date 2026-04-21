@@ -12,6 +12,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 import FuzzySearchInput from './FuzzySearchInput';
 import RelevanceBadge from './RelevanceBadge';
+import { SearchResultCard } from './SearchResultCard';
 import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import type { Tables } from '@/integrations/supabase/types';
 
