@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import FuzzySearchInput from './FuzzySearchInput';
@@ -72,7 +72,8 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
             </TabsList>
 
             <TabsContent value="santos" className="space-y-2 mt-4">
-              {saints.results?.map(s => (
+              <AnimatePresence mode="popLayout">
+              {saints.results?.map((s, i) => (
                 <SearchResultCard
                   key={s.id}
                   title={s.name}
@@ -80,13 +81,16 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   score={(s as any).similarityScore}
                   icon={<Icons.User className="w-4 h-4" />}
                   onClick={() => navigate(`${AppRoute.SAINTS}?santo=${s.id}`)}
+                  index={i}
                 />
               ))}
+              </AnimatePresence>
               {saints.results?.length === 0 && <EmptyState text="Nenhum santo encontrado." />}
             </TabsContent>
 
             <TabsContent value="glossario" className="space-y-2 mt-4">
-              {glossary.results?.map(g => (
+              <AnimatePresence mode="popLayout">
+              {glossary.results?.map((g, i) => (
                 <SearchResultCard
                   key={g.id}
                   title={g.term}
@@ -94,13 +98,16 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   score={(g as any).similarityScore}
                   icon={<Icons.BookOpen className="w-4 h-4" />}
                   onClick={() => navigate(AppRoute.GLOSSARY)}
+                  index={i}
                 />
               ))}
+              </AnimatePresence>
               {glossary.results?.length === 0 && <EmptyState text="Nenhum termo encontrado." />}
             </TabsContent>
 
             <TabsContent value="comunidade" className="space-y-2 mt-4">
-              {community.results?.map(p => (
+              <AnimatePresence mode="popLayout">
+              {community.results?.map((p, i) => (
                 <SearchResultCard
                   key={p.id}
                   title={p.title || p.content.slice(0, 60)}
@@ -108,8 +115,10 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   score={(p as any).similarityScore}
                   icon={<Icons.MessageCircle className="w-4 h-4" />}
                   onClick={() => navigate(AppRoute.COMMUNITY)}
+                  index={i}
                 />
               ))}
+              </AnimatePresence>
               {community.results?.length === 0 && <EmptyState text="Nenhuma discussão encontrada." />}
             </TabsContent>
 
@@ -127,7 +136,8 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
             </TabsContent>
 
             <TabsContent value="jornadas" className="space-y-2 mt-4">
-              {journeys.results?.map(j => (
+              <AnimatePresence mode="popLayout">
+              {journeys.results?.map((j, i) => (
                 <SearchResultCard
                   key={j.id}
                   title={j.title}
@@ -135,8 +145,10 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   score={(j as any).similarityScore}
                   icon={<Icons.Compass className="w-4 h-4" />}
                   onClick={() => navigate(`/jornadas/${j.id}`)}
+                  index={i}
                 />
               ))}
+              </AnimatePresence>
               {journeys.results?.length === 0 && <EmptyState text="Nenhuma jornada encontrada." />}
             </TabsContent>
           </Tabs>

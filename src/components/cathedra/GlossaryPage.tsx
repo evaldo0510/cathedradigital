@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
 import { Icons } from '../../constants';
@@ -218,7 +219,8 @@ const GlossaryPage: React.FC = () => {
       {searchQuery.trim().length >= 2 && searchResults && searchResults.length > 0 && (
         <div className="space-y-2">
           <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Resultados da busca</p>
-          {searchResults.map(term => (
+          <AnimatePresence mode="popLayout">
+          {searchResults.map((term, i) => (
             <SearchResultCard
               key={term.id}
               title={term.term}
@@ -226,8 +228,10 @@ const GlossaryPage: React.FC = () => {
               score={term.similarityScore}
               icon={<BookOpen className="w-4 h-4" />}
               onClick={() => setExpandedId(expandedId === term.id ? null : term.id)}
+              index={i}
             />
           ))}
+          </AnimatePresence>
         </div>
       )}
 
