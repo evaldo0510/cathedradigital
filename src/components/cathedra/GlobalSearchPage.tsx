@@ -4,9 +4,9 @@ import SEOHead from '@/components/SEOHead';
 import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Card, CardContent } from '@/components/ui/card';
 import FuzzySearchInput from './FuzzySearchInput';
 import RelevanceBadge from './RelevanceBadge';
+import SearchResultCard from './SearchResultCard';
 import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import { AppRoute } from '@/types';
 import type { Tables } from '@/integrations/supabase/types';
@@ -37,6 +37,10 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
     temas: tags.results?.length ?? 0,
     jornadas: journeys.results?.length ?? 0,
   };
+
+  const EmptyState = ({ text }: { text: string }) => (
+    <p className="text-center text-sm text-muted-foreground py-6">{text}</p>
+  );
 
   return (
     <>
@@ -69,47 +73,44 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
             <TabsContent value="santos" className="space-y-2 mt-4">
               {saints.results?.map(s => (
-                <Card key={s.id} className="cursor-pointer hover:bg-muted/30 transition-colors" onClick={() => navigate(`${AppRoute.SAINTS}?santo=${s.id}`)}>
-                  <CardContent className="p-3 flex items-center justify-between gap-2">
-                    <div className="min-w-0">
-                      <p className="font-semibold text-sm text-foreground truncate">{s.name}</p>
-                      {s.title && <p className="text-xs text-muted-foreground truncate">{s.title}</p>}
-                    </div>
-                    <RelevanceBadge score={(s as any).similarityScore} size="xs" />
-                  </CardContent>
-                </Card>
+                <SearchResultCard
+                  key={s.id}
+                  title={s.name}
+                  subtitle={s.title}
+                  score={(s as any).similarityScore}
+                  icon={<Icons.User className="w-4 h-4" />}
+                  onClick={() => navigate(`${AppRoute.SAINTS}?santo=${s.id}`)}
+                />
               ))}
-              {saints.results?.length === 0 && <p className="text-center text-sm text-muted-foreground py-6">Nenhum santo encontrado.</p>}
+              {saints.results?.length === 0 && <EmptyState text="Nenhum santo encontrado." />}
             </TabsContent>
 
             <TabsContent value="glossario" className="space-y-2 mt-4">
               {glossary.results?.map(g => (
-                <Card key={g.id} className="cursor-pointer hover:bg-muted/30 transition-colors" onClick={() => navigate(AppRoute.GLOSSARY)}>
-                  <CardContent className="p-3 flex items-center justify-between gap-2">
-                    <div className="min-w-0">
-                      <p className="font-semibold text-sm text-foreground truncate">{g.term}</p>
-                      <p className="text-xs text-muted-foreground line-clamp-1">{g.definition}</p>
-                    </div>
-                    <RelevanceBadge score={(g as any).similarityScore} size="xs" />
-                  </CardContent>
-                </Card>
+                <SearchResultCard
+                  key={g.id}
+                  title={g.term}
+                  subtitle={g.definition}
+                  score={(g as any).similarityScore}
+                  icon={<Icons.BookOpen className="w-4 h-4" />}
+                  onClick={() => navigate(AppRoute.GLOSSARY)}
+                />
               ))}
-              {glossary.results?.length === 0 && <p className="text-center text-sm text-muted-foreground py-6">Nenhum termo encontrado.</p>}
+              {glossary.results?.length === 0 && <EmptyState text="Nenhum termo encontrado." />}
             </TabsContent>
 
             <TabsContent value="comunidade" className="space-y-2 mt-4">
               {community.results?.map(p => (
-                <Card key={p.id} className="cursor-pointer hover:bg-muted/30 transition-colors" onClick={() => navigate(AppRoute.COMMUNITY)}>
-                  <CardContent className="p-3 flex items-center justify-between gap-2">
-                    <div className="min-w-0">
-                      <p className="font-semibold text-sm text-foreground truncate">{p.title || p.content.slice(0, 60)}</p>
-                      <p className="text-xs text-muted-foreground line-clamp-1">{p.content}</p>
-                    </div>
-                    <RelevanceBadge score={(p as any).similarityScore} size="xs" />
-                  </CardContent>
-                </Card>
+                <SearchResultCard
+                  key={p.id}
+                  title={p.title || p.content.slice(0, 60)}
+                  subtitle={p.content}
+                  score={(p as any).similarityScore}
+                  icon={<Icons.MessageCircle className="w-4 h-4" />}
+                  onClick={() => navigate(AppRoute.COMMUNITY)}
+                />
               ))}
-              {community.results?.length === 0 && <p className="text-center text-sm text-muted-foreground py-6">Nenhuma discussão encontrada.</p>}
+              {community.results?.length === 0 && <EmptyState text="Nenhuma discussão encontrada." />}
             </TabsContent>
 
             <TabsContent value="temas" className="space-y-2 mt-4">
@@ -122,22 +123,21 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   </div>
                 ))}
               </div>
-              {tags.results?.length === 0 && <p className="text-center text-sm text-muted-foreground py-6">Nenhum tema encontrado.</p>}
+              {tags.results?.length === 0 && <EmptyState text="Nenhum tema encontrado." />}
             </TabsContent>
 
             <TabsContent value="jornadas" className="space-y-2 mt-4">
               {journeys.results?.map(j => (
-                <Card key={j.id} className="cursor-pointer hover:bg-muted/30 transition-colors" onClick={() => navigate(`/jornadas/${j.id}`)}>
-                  <CardContent className="p-3 flex items-center justify-between gap-2">
-                    <div className="min-w-0">
-                      <p className="font-semibold text-sm text-foreground truncate">{j.title}</p>
-                      {j.subtitle && <p className="text-xs text-muted-foreground truncate">{j.subtitle}</p>}
-                    </div>
-                    <RelevanceBadge score={(j as any).similarityScore} size="xs" />
-                  </CardContent>
-                </Card>
+                <SearchResultCard
+                  key={j.id}
+                  title={j.title}
+                  subtitle={j.subtitle}
+                  score={(j as any).similarityScore}
+                  icon={<Icons.Compass className="w-4 h-4" />}
+                  onClick={() => navigate(`/jornadas/${j.id}`)}
+                />
               ))}
-              {journeys.results?.length === 0 && <p className="text-center text-sm text-muted-foreground py-6">Nenhuma jornada encontrada.</p>}
+              {journeys.results?.length === 0 && <EmptyState text="Nenhuma jornada encontrada." />}
             </TabsContent>
           </Tabs>
         )}
