@@ -87,6 +87,13 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
   const [filterDifficulty, setFilterDifficulty] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
 
+  const fuzzySearch = useFuzzySearch<Tables<'journeys'>>({
+    rpc: 'search_journeys_fuzzy',
+    query: searchQuery,
+    primaryField: 'title',
+    secondaryField: 'description',
+    resultLimit: 50,
+  });
   const categories = useMemo(() => {
     const cats = [...new Set(journeys.map(j => j.category))];
     return cats.sort();
@@ -111,17 +118,35 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
     return normalize(journeyDiff) === normalize(filterDiff);
   };
 
+  const fuzzyResultIds = useMemo(() => {
+    if (!fuzzySearch.results) return null;
+    return new Set(fuzzySearch.results.map(r => r.id));
+  }, [fuzzySearch.results]);
+
+  const fuzzyScoreMap = useMemo(() => {
+    if (!fuzzySearch.results) return {};
+    const map: Record<string, number> = {};
+    fuzzySearch.results.forEach(r => { map[r.id] = (r as any).similarityScore ?? 0; });
+    return map;
+  }, [fuzzySearch.results]);
+
   const filteredJourneys = useMemo(() => {
     return journeys.filter(j => {
-      const matchesSearch = !searchQuery || 
-        j.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (j.subtitle && j.subtitle.toLowerCase().includes(searchQuery.toLowerCase()));
-      if (!matchesSearch) return false;
+      // If fuzzy search is active, use fuzzy results; otherwise show all
+      if (searchQuery.trim().length >= 2) {
+        if (!fuzzyResultIds || !fuzzyResultIds.has(j.id)) return false;
+      }
       if (filterCategory !== 'all' && j.category !== filterCategory) return false;
       if (filterDifficulty !== 'all' && !difficultyMatches(j.difficulty, filterDifficulty)) return false;
       return true;
+    }).sort((a, b) => {
+      // When fuzzy is active, sort by score
+      if (searchQuery.trim().length >= 2) {
+        return (fuzzyScoreMap[b.id] ?? 0) - (fuzzyScoreMap[a.id] ?? 0);
+      }
+      return 0;
     });
-  }, [journeys, filterCategory, filterDifficulty, searchQuery]);
+  }, [journeys, filterCategory, filterDifficulty, searchQuery, fuzzyResultIds, fuzzyScoreMap]);
 
   // Stats
   const stats = useMemo(() => {
@@ -330,18 +355,12 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
       >
-        <div className="relative group">
-          <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-            <Icons.Search className="w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
-          </div>
-          <input
-            type="text"
-            placeholder="Buscar jornadas..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-muted/50 border border-border/50 rounded-xl sm:rounded-2xl py-2.5 sm:py-3 pl-10 pr-4 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
-          />
-        </div>
+        <FuzzySearchInput
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Buscar jornadas..."
+          isSearching={fuzzySearch.isPending}
+        />
 
         <div className="space-y-3">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
