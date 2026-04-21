@@ -6,6 +6,7 @@
  */
 import React from 'react';
 import { ChevronRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { RelevanceBadge } from './RelevanceBadge';
 import { cn } from '@/lib/utils';
@@ -25,7 +26,11 @@ export interface SearchResultCardProps {
   showArrow?: boolean;
   /** Extra wrapper classes. */
   className?: string;
+  /** Animation stagger index (used for staggered entry). */
+  index?: number;
 }
+
+const MotionCard = motion.create(Card);
 
 export const SearchResultCard: React.FC<SearchResultCardProps> = ({
   title,
@@ -35,8 +40,19 @@ export const SearchResultCard: React.FC<SearchResultCardProps> = ({
   onClick,
   showArrow = true,
   className,
+  index = 0,
 }) => (
-  <Card
+  <MotionCard
+    initial={{ opacity: 0, y: 12, scale: 0.97 }}
+    animate={{ opacity: 1, y: 0, scale: 1 }}
+    exit={{ opacity: 0, y: -8, scale: 0.97 }}
+    transition={{
+      type: 'spring',
+      stiffness: 380,
+      damping: 30,
+      delay: Math.min(index * 0.04, 0.4),
+    }}
+    layout
     className={cn(
       'cursor-pointer hover:bg-muted/30 transition-colors group',
       className,
@@ -62,7 +78,7 @@ export const SearchResultCard: React.FC<SearchResultCardProps> = ({
         )}
       </div>
     </CardContent>
-  </Card>
+  </MotionCard>
 );
 
 export default SearchResultCard;
