@@ -54,7 +54,8 @@ export enum AppRoute {
   ENCYCLOPEDIA = '/encyclopedia',
   AZ_FAITH = '/az-faith',
   MODULES_GUIDE = '/guia-modulos',
-  POPES = '/papas'
+  POPES = '/papas',
+  BUSCAR = '/buscar'
 }
 
 export interface TrackStep {

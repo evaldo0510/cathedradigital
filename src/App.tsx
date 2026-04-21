@@ -92,6 +92,7 @@ const AZFaithPage = lazy(() => import('./components/cathedra/AZFaithPage'));
 const EncyclopediaPage = lazy(() => import('./components/cathedra/EncyclopediaPage'));
 const ModulesGuidePage = lazy(() => import('./components/cathedra/ModulesGuidePage'));
 const PopesPage = lazy(() => import('./components/cathedra/PopesPage'));
+const GlobalSearchPage = lazy(() => import('./components/cathedra/GlobalSearchPage'));
 
 const PartnersPage = lazy(() => import('./components/cathedra/PartnersPage'));
 
@@ -517,6 +518,7 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.BIBLIOTECA} element={<PageTransition><AuthGuard><BibliotecaPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.MODULES_GUIDE} element={<PageTransition><ModulesGuidePage /></PageTransition>} />
                   <Route path={AppRoute.POPES} element={<PageTransition><AuthGuard><PopesPage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.BUSCAR} element={<PageTransition><AuthGuard><GlobalSearchPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.ADMIN} element={
                     <PageTransition>
                       <AdminGuard>
