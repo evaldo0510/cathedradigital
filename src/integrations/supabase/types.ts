@@ -1382,6 +1382,32 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      search_journeys_fuzzy: {
+        Args: { result_limit?: number; search_query: string }
+        Returns: {
+          category: string
+          cover_url: string | null
+          created_at: string
+          description: string
+          difficulty: string
+          estimated_days: number
+          icon: string
+          id: string
+          is_active: boolean
+          is_premium: boolean
+          sort_order: number
+          subtitle: string | null
+          tags: string[] | null
+          title: string
+          updated_at: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "journeys"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       search_saints_fuzzy: {
         Args: { result_limit?: number; search_query: string }
         Returns: {

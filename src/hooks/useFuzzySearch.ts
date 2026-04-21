@@ -28,7 +28,8 @@ export type FuzzyRpcName =
   | 'search_saints_fuzzy'
   | 'search_glossary_fuzzy'
   | 'search_community_posts_fuzzy'
-  | 'search_tags_fuzzy';
+  | 'search_tags_fuzzy'
+  | 'search_journeys_fuzzy';
 
 export interface UseFuzzySearchOptions<TRow> {
   /** Name of the Postgres RPC. Must match the FuzzyRpcName union. */
