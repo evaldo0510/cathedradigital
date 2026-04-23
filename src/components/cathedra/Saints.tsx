@@ -29,6 +29,15 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
   const [isSearchingGlobal, setIsSearchingGlobal] = useState(false);
   const [globalResults, setGlobalResults] = useState<Saint[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
+  const { id } = useParams();
+
+  useEffect(() => {
+    if (id) {
+      getSaintById(id).then(saint => {
+        if (saint) setSelectedSaint(saint);
+      });
+    }
+  }, [id]);
 
   // ─── Queries ───
   
