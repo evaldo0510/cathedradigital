@@ -88,48 +88,64 @@ const ReadingCard: React.FC<{
   refrain?: string;
   onContext: () => void;
   onReflect: () => void;
+  onCompare: () => void;
   delay: number;
-}> = ({ label, icon, reference, text, refrain, onContext, onReflect, delay }) => (
+}> = ({ label, icon, reference, text, refrain, onContext, onReflect, onCompare, delay }) => (
   <motion.div
     initial={{ opacity: 0, y: 24 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.5, delay }}
-    className="space-y-6 bg-card border border-border rounded-3xl p-8 shadow-sm hover:shadow-md transition-all group"
+    className="space-y-6 bg-card border border-border rounded-3xl p-8 shadow-sm hover:shadow-md transition-all group relative overflow-hidden"
   >
-    <div className="flex items-center justify-between">
+    <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
+      {icon}
+    </div>
+
+    <div className="flex items-center justify-between relative z-10">
       <div className="flex items-center gap-3">
-        <div className="p-2 rounded-xl bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all">
+        <div className="p-2.5 rounded-xl bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
           {icon}
         </div>
-        <h2 className="text-[10px] font-black uppercase tracking-[0.25em] text-primary">{label}</h2>
+        <div>
+          <h2 className="text-[10px] font-black uppercase tracking-[0.25em] text-primary">{label}</h2>
+          <p className="text-[9px] font-bold text-secondary/60 uppercase tracking-[0.2em] mt-0.5">{reference}</p>
+        </div>
       </div>
-      <p className="text-[9px] font-bold text-secondary uppercase tracking-[0.2em]">{reference}</p>
     </div>
 
     {refrain && (
-      <div className="bg-secondary/5 rounded-2xl p-5 border border-secondary/20 border-l-4">
-        <p className="text-base font-serif italic text-primary leading-relaxed">℟ {refrain}</p>
+      <div className="bg-secondary/5 rounded-2xl p-6 border border-secondary/20 border-l-4 shadow-inner">
+        <p className="text-lg font-serif italic text-primary leading-relaxed antialiased">℟ {refrain}</p>
       </div>
     )}
 
-    <p className="text-lg md:text-xl leading-[2] text-primary font-serif whitespace-pre-line selection:bg-secondary/30">
+    <p className="text-lg md:text-xl leading-[1.8] text-primary font-serif whitespace-pre-line selection:bg-secondary/30 antialiased tracking-tight">
       {text}
     </p>
 
-    <div className="flex flex-col sm:flex-row gap-3 pt-4">
+    <div className="flex flex-wrap gap-3 pt-6 border-t border-border/40">
       <Button
-        variant="outline"
+        variant="ghost"
         size="sm"
-        className="rounded-xl text-[10px] font-black uppercase tracking-widest flex-1 h-12"
+        className="rounded-xl text-[10px] font-black uppercase tracking-widest h-11 px-6 hover:bg-primary hover:text-white transition-all"
         onClick={onContext}
       >
-        <Icons.Bible className="w-4 h-4 mr-2" />
-        Contexto Bíblico
+        <Icons.Bible className="w-3.5 h-3.5 mr-2" />
+        Bíblia
+      </Button>
+      <Button
+        variant="ghost"
+        size="sm"
+        className="rounded-xl text-[10px] font-black uppercase tracking-widest h-11 px-6 hover:bg-primary/5 text-primary border border-primary/10"
+        onClick={onCompare}
+      >
+        <Icons.Columns className="w-3.5 h-3.5 mr-2" />
+        Comparar
       </Button>
       <Button
         variant="secondary"
         size="sm"
-        className="rounded-xl text-[10px] font-black uppercase tracking-widest flex-1 h-12 bg-secondary/10 border-none hover:bg-secondary/20 text-primary"
+        className="rounded-xl text-[10px] font-black uppercase tracking-widest ml-auto h-11 px-8 bg-secondary/10 border-none hover:bg-secondary/20 text-primary shadow-sm"
         onClick={onReflect}
       >
         <Icons.Lectio className="w-4 h-4 mr-2 text-secondary" />
