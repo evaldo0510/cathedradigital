@@ -1,0 +1,42 @@
+import React from 'react';
+import { ChevronRight } from 'lucide-react';
+import { FaithTerm } from '../AZFaithPage';
+
+interface EncyclopediaTermListProps {
+  terms: FaithTerm[];
+  selectedTerm: FaithTerm | null;
+  onTermClick: (term: FaithTerm) => void;
+}
+
+const EncyclopediaTermList: React.FC<EncyclopediaTermListProps> = ({
+  terms,
+  selectedTerm,
+  onTermClick,
+}) => {
+  return (
+    <div className="md:col-span-4 space-y-1 max-h-[60vh] overflow-y-auto pr-2 scrollbar-thin">
+      {terms.length === 0 && (
+        <p className="text-center text-muted-foreground text-sm py-8 italic">Nenhum termo encontrado.</p>
+      )}
+      {terms.map(t => {
+        const isActive = selectedTerm?.term === t.term;
+        return (
+          <button
+            key={t.term}
+            onClick={() => onTermClick(t)}
+            className={`w-full text-left px-4 py-3 rounded-xl transition-all flex items-center justify-between group
+              ${isActive
+                ? 'bg-primary/10 border border-primary/20 text-foreground'
+                : 'hover:bg-muted/50 text-foreground/80'
+              }`}
+          >
+            <span className="font-semibold text-sm truncate">{t.term}</span>
+            <ChevronRight className={`w-4 h-4 shrink-0 transition-transform ${isActive ? 'text-primary rotate-90' : 'text-muted-foreground/40 group-hover:text-muted-foreground'}`} />
+          </button>
+        );
+      })}
+    </div>
+  );
+};
+
+export default EncyclopediaTermList;
