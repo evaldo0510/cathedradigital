@@ -29,8 +29,6 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
   const anyPending = saints.isPending || glossary.isPending || community.isPending || tags.isPending || journeys.isPending;
   const hasQuery = query.trim().length >= 2;
-  const isAllEmpty = hasQuery && !anyPending && Object.values(counts).every(c => c === 0);
-
   const counts = {
     santos: saints.results?.length ?? 0,
     glossario: glossary.results?.length ?? 0,
@@ -38,6 +36,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
     temas: tags.results?.length ?? 0,
     jornadas: journeys.results?.length ?? 0,
   };
+  const isAllEmpty = hasQuery && !anyPending && Object.values(counts).every(c => c === 0);
 
   const EmptyState = ({ text }: { text: string }) => (
     <p className="text-center text-sm text-muted-foreground py-6">{text}</p>
