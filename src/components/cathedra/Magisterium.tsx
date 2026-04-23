@@ -379,7 +379,11 @@ const Magisterium: React.FC = () => {
                       ))}
                     </div>
 
-                    <Button variant="ghost" className="w-full justify-between group/btn text-[10px] font-black uppercase tracking-widest h-10 px-0 hover:bg-transparent hover:text-primary">
+                    <Button 
+                      variant="ghost" 
+                      className="w-full justify-between group/btn text-[10px] font-black uppercase tracking-widest h-10 px-0 hover:bg-transparent hover:text-primary"
+                      onClick={() => navigate(`/magisterium/${doc.id}`)}
+                    >
                       Ler Documento
                       <Icons.ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
                     </Button>
