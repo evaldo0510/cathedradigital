@@ -21,6 +21,7 @@ const MagisteriumPopover: React.FC<MagisteriumPopoverProps> = ({
   label,
   onNavigate,
 }) => {
+  const navigate = useNavigate();
   const [excerpt, setExcerpt] = useState('');
   const [title, setTitle] = useState('');
   const [loading, setLoading] = useState(false);
@@ -30,7 +31,7 @@ const MagisteriumPopover: React.FC<MagisteriumPopoverProps> = ({
     if (fetched) return;
     setLoading(true);
     try {
-      const url = DOCUMENT_URLS[documentName];
+      const url = MAGISTERIUM_URLS[documentName];
       if (!url) {
         setExcerpt(`Documento "${documentName}" — texto integral disponível no Magistério.`);
         setTitle(documentName);
