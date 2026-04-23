@@ -80,7 +80,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   subtitle={s.title}
                   score={(s as any).similarityScore}
                   icon={<Icons.User className="w-4 h-4" />}
-                  onClick={() => navigate(`${AppRoute.SAINTS}?santo=${s.id}`)}
+                  onClick={() => navigate(`/santos/${s.id}`)}
                   index={i}
                 />
               ))}
