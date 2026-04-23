@@ -78,7 +78,7 @@ const Index = () => {
           <div id="testimonials"><TestimonialsSection /></div>
           <div id="pricing"><PricingSection /></div>
           <AboutCreatorSection />
-          <FaqSection />
+          <div id="faq"><FaqSection /></div>
           <CtaBannerSection onStart={handleStart} />
           <FeedbackWidget />
           <WhatsAppButton />
