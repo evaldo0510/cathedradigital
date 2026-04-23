@@ -24,9 +24,22 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = ({
   label,
   onNavigate,
 }) => {
+  const navigate = useNavigate();
   const [verses, setVerses] = useState<{ number: number; text: string }[]>([]);
   const [loading, setLoading] = useState(false);
   const [fetched, setFetched] = useState(false);
+
+  const handleNavigate = () => {
+    if (onNavigate) {
+      onNavigate(abbr, chapter, verse);
+      return;
+    }
+    const params = new URLSearchParams();
+    params.set('book', abbr);
+    params.set('ch', String(chapter));
+    if (verse) params.set('v', String(verse));
+    navigate(`/biblia?${params.toString()}`);
+  };
 
   const fetchVerses = async () => {
     if (fetched) return;
