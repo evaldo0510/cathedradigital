@@ -149,6 +149,9 @@ const TemasPage = () => {
     return base.filter(tag => tag.category === activeCategory);
   }, [tags, fuzzyTags, isSearchActive, activeCategory]);
 
+  useEffect(() => {
+    const temaSlug = searchParams.get('tema');
+    if (temaSlug && tags && (!selectedTag || selectedTag.slug !== temaSlug)) {
       const match = tags.find(t => t.slug === temaSlug);
       if (match) setSelectedTag(match);
     }
