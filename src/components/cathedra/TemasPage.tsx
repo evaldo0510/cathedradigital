@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
@@ -20,16 +20,24 @@ interface Tag {
 }
 
 const TemasPage = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<string>(() => {
+    const fromUrl = searchParams.get('category');
+    if (fromUrl) return fromUrl;
     return localStorage.getItem('nexus_bubbles_filter') || 'all';
   });
 
   useEffect(() => {
     localStorage.setItem('nexus_bubbles_filter', activeCategory);
-  }, [activeCategory]);
+    if (activeCategory !== 'all') {
+      setSearchParams({ category: activeCategory }, { replace: true });
+    } else {
+      setSearchParams({}, { replace: true });
+    }
+  }, [activeCategory, setSearchParams]);
 
   const { data: tags, isLoading: loadingTags } = useQuery({
     queryKey: ['tags'],
@@ -78,6 +86,33 @@ const TemasPage = () => {
   const handleTagSelect = (tag: Tag) => {
     navigate(`${AppRoute.TEMAS}/${tag.slug}`);
   };
+
+  const prefetchTag = useCallback((tag: Tag) => {
+    queryClient.prefetchQuery({
+      queryKey: ['tag-contents', tag.id],
+      queryFn: async () => {
+        const { data: tagContents, error } = await supabase
+          .from('content_tags')
+          .select(`
+            spiritual_contents (
+              id, title, content_text, type, reference_id, tags
+            )
+          `)
+          .eq('tag_id', tag.id);
+        
+        if (error) throw error;
+        return (tagContents || []).map((c: any) => ({
+          id: c.spiritual_contents.id,
+          content_type: c.spiritual_contents.type,
+          reference: c.spiritual_contents.reference_id || c.spiritual_contents.title || 'Referência',
+          title: c.spiritual_contents.title,
+          text_content: c.spiritual_contents.content_text,
+          tags: c.spiritual_contents.tags || []
+        }));
+      },
+      staleTime: 1000 * 60 * 5,
+    });
+  }, [queryClient]);
 
   return (
     <div className="space-y-6 sm:space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-6xl mx-auto pb-20 px-2 sm:px-4">
@@ -156,6 +191,7 @@ const TemasPage = () => {
                           index={idx}
                           isSelected={false}
                           onClick={() => handleTagSelect(tag)}
+                          onMouseEnter={() => prefetchTag(tag)}
                           className="px-4 py-2.5 text-[10px] sm:text-[11px] uppercase tracking-widest"
                         />
                       </div>
