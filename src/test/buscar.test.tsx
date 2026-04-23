@@ -185,6 +185,6 @@ describe('CommandCenter (Ctrl+K)', () => {
     // Since we mocked useSearchSaints (indirectly via icons/other mocks if needed)
     // and CommandCenter has internal state for globalResults, 
     // we just check if it shows the query in the input.
-    expect(input.value).toBe('tomas');
+    expect((input as HTMLInputElement).value).toBe('tomas');
   });
 });
