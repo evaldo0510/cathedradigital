@@ -149,6 +149,7 @@ const DOCS_LIST = [
 const THEMES = Array.from(new Set(DOCS_LIST.flatMap(d => d.theme))).sort();
 
 const Magisterium: React.FC = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('guidance');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTheme, setSelectedTheme] = useState<string | null>(null);
