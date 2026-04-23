@@ -150,11 +150,7 @@ const TemasPage = () => {
   }, [tags, fuzzyTags, isSearchActive, activeCategory]);
 
   // removed useEffect for carousel scroll as it is replaced by flex-wrap logic
-              </>
-            )}
-          </div>
-        </div>
-      </div>
+
 
   useEffect(() => {
     const temaSlug = searchParams.get('tema');
