@@ -479,6 +479,62 @@ const LiturgiaPage: React.FC = () => {
                       delay={0.3} 
                     />
                   )}
+
+                  {readings && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.4 }}
+                      className="bg-secondary/5 border border-secondary/20 rounded-[2.5rem] p-10 space-y-8 relative overflow-hidden group"
+                    >
+                      <div className="absolute top-0 right-0 p-12 opacity-5 rotate-12">
+                        <Icons.Sparkles className="w-24 h-24" />
+                      </div>
+                      
+                      <div className="space-y-2 text-center relative z-10">
+                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary/10 border border-secondary/20 text-secondary text-[10px] font-black uppercase tracking-[0.3em]">
+                          <Icons.Brain className="w-3.5 h-3.5" /> Análise de Unidade Litúrgica
+                        </div>
+                        <h3 className="text-2xl font-display font-black text-primary tracking-tight">Como as leituras se conectam?</h3>
+                        <p className="text-sm text-muted-foreground max-w-md mx-auto">IARA analisa a harmonia entre o Antigo e o Novo Testamento na liturgia de hoje.</p>
+                      </div>
+
+                      <div className="grid gap-6 md:grid-cols-2 relative z-10">
+                        <div className="p-6 rounded-3xl bg-white border border-border shadow-sm hover:shadow-md transition-all">
+                          <h4 className="text-[10px] font-black uppercase tracking-widest text-secondary mb-4 flex items-center gap-2">
+                            <div className="w-1.5 h-1.5 rounded-full bg-secondary" />
+                            Tipologia Bíblica
+                          </h4>
+                          <p className="text-sm font-serif italic text-primary leading-relaxed">
+                            A Primeira Leitura frequentemente prefigura o que é revelado no Evangelho. A promessa e o cumprimento caminham juntos.
+                          </p>
+                        </div>
+                        <div className="p-6 rounded-3xl bg-white border border-border shadow-sm hover:shadow-md transition-all">
+                          <h4 className="text-[10px] font-black uppercase tracking-widest text-primary mb-4 flex items-center gap-2">
+                            <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                            O Fio Condutor
+                          </h4>
+                          <p className="text-sm font-serif italic text-primary leading-relaxed">
+                            O Salmo Responsorial é a nossa resposta orante à Palavra, unindo a profecia ao testemunho apostólico.
+                          </p>
+                        </div>
+                      </div>
+
+                      <Button 
+                        variant="secondary" 
+                        className="w-full h-14 rounded-2xl font-black uppercase tracking-widest bg-secondary text-white hover:bg-secondary/90 shadow-lg shadow-secondary/20"
+                        onClick={() => {
+                          setCompareReading({
+                            label: 'Liturgia Completa',
+                            reference: 'Unidade das Leituras',
+                            text: `Leituras de hoje:\n1ª: ${readings.primeiraLeitura?.referencia}\nSalmo: ${readings.salmo?.referencia}\nEvangelho: ${readings.evangelho?.referencia}`
+                          });
+                        }}
+                      >
+                        Gerar Análise Profunda da Unidade
+                      </Button>
+                    </motion.div>
+                  )}
                 </div>
               )}
 
