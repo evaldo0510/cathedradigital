@@ -85,24 +85,22 @@ const ProfilePage: React.FC = () => {
     fetchStats();
   }, [user]);
 
-  const badges = useMemo<Badge[]>(() => {
-    const { posts, likes, notes, daysActive } = stats;
-    return [
-      { id: 'first_post', label: 'Primeiro Passo', description: 'Crie sua primeira discussão', icon: <Icons.PenLine className="w-6 h-6" />, unlocked: posts >= 1 },
-      { id: 'community_5', label: 'Voz Ativa', description: 'Crie 5 discussões', icon: <Icons.MessageSquare className="w-6 h-6" />, unlocked: posts >= 5 },
-      { id: 'community_20', label: 'Pregador', description: 'Crie 20 discussões', icon: <Icons.Volume2 className="w-6 h-6" />, unlocked: posts >= 20 },
-      { id: 'likes_10', label: 'Apreciador', description: 'Dê 10 curtidas', icon: <Icons.Heart className="w-6 h-6" />, unlocked: likes >= 10 },
-      { id: 'likes_50', label: 'Generoso', description: 'Dê 50 curtidas', icon: <Icons.Sparkles className="w-6 h-6" />, unlocked: likes >= 50 },
-      { id: 'notes_5', label: 'Estudioso', description: 'Faça 5 anotações', icon: <Icons.BookOpen className="w-6 h-6" />, unlocked: notes >= 5 },
-      { id: 'notes_20', label: 'Erudito', description: 'Faça 20 anotações', icon: <Icons.Library className="w-6 h-6" />, unlocked: notes >= 20 },
-      { id: 'days_7', label: 'Fiel', description: 'Acesse por 7 dias', icon: <Icons.Calendar className="w-6 h-6" />, unlocked: daysActive >= 7 },
-      { id: 'days_30', label: 'Devoto', description: 'Acesse por 30 dias', icon: <Icons.Church className="w-6 h-6" />, unlocked: daysActive >= 30 },
-      { id: 'days_100', label: 'Peregrino Consagrado', description: 'Acesse por 100 dias', icon: <Icons.Trophy className="w-6 h-6" />, unlocked: daysActive >= 100 },
-    ];
-  }, [stats]);
+  const badges = useMemo(() => {
+    const { posts, likes, notes } = stats;
+    const currentBadges = new Set(profile?.badges || []);
+    
+    // We combine global badges with community-specific ones for display
+    return BADGE_DEFINITIONS.map(b => ({
+      id: b.id,
+      label: b.name,
+      description: b.description,
+      icon: <span className="text-xl">{b.icon}</span>,
+      unlocked: currentBadges.has(b.id)
+    }));
+  }, [stats, profile?.badges]);
 
-  const unlockedCount = badges.filter(b => b.unlocked).length;
-  const totalXp = stats.posts * 30 + stats.likes * 10 + stats.notes * 20 + stats.daysActive * 15 + unlockedCount * 50;
+  const unlockedCount = useMemo(() => (profile?.badges || []).length, [profile?.badges]);
+  const totalXp = profile?.xp || 0;
   const { levelIdx: currentLevelIdx, levelName, nextLevel, progress: xpProgress } = getLevelInfo(totalXp);
 
   useEffect(() => {
