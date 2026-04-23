@@ -34,6 +34,9 @@ const TemaDetailPage = () => {
   const navigate = useNavigate();
   const [logosInsight, setLogosInsight] = useState<string | null>(null);
   const [loadingLogos, setLoadingLogos] = useState(false);
+  const [bibleLimit, setBibleLimit] = useState(5);
+  const [traditionLimit, setTraditionLimit] = useState(5);
+  const [magisteriumLimit, setMagisteriumLimit] = useState(5);
 
   const { data: tags } = useQuery({
     queryKey: ['tags'],
@@ -198,28 +201,51 @@ const TemaDetailPage = () => {
 
             <TabsContent value="bible" className="mt-6 space-y-4">
               {bibleVerses.length > 0 ? (
-                bibleVerses.map((c, i) => (
-                  <motion.div
-                    key={c.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.1 }}
-                  >
-                    <Card className="border-border/40 bg-card/30 hover:bg-card/50 transition-colors rounded-3xl overflow-hidden group">
-                      <CardContent className="p-6 sm:p-8 space-y-4">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <BookOpen className="w-4 h-4 text-primary/60" />
-                            <span className="text-[10px] font-black uppercase tracking-widest text-primary">{c.reference}</span>
-                          </div>
-                        </div>
-                        <p className="text-base sm:text-lg text-foreground/80 leading-relaxed font-serif">
-                          "{c.text_content}"
-                        </p>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                ))
+                <>
+                  <div className="space-y-4">
+                    {bibleVerses.slice(0, bibleLimit).map((c, i) => (
+                      <motion.div
+                        key={c.id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.1 }}
+                      >
+                        <Card className="border-border/40 bg-card/30 hover:bg-card/50 transition-colors rounded-3xl overflow-hidden group">
+                          <CardContent className="p-6 sm:p-8 space-y-4">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <BookOpen className="w-4 h-4 text-primary/60" />
+                                <span className="text-[10px] font-black uppercase tracking-widest text-primary">{c.reference}</span>
+                              </div>
+                              <Button 
+                                variant="ghost" 
+                                size="sm"
+                                onClick={() => navigate(`/bible?ref=${encodeURIComponent(c.reference)}&from=temas&tema=${slug}`)}
+                                className="h-8 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-primary/5 hover:text-primary gap-1.5"
+                              >
+                                Ler na Bíblia <ExternalLink className="w-3 h-3" />
+                              </Button>
+                            </div>
+                            <p className="text-base sm:text-lg text-foreground/80 leading-relaxed font-serif">
+                              "{c.text_content}"
+                            </p>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+                    ))}
+                  </div>
+                  {bibleLimit < bibleVerses.length && (
+                    <div className="pt-4 flex justify-center">
+                      <Button 
+                        variant="ghost" 
+                        onClick={() => setBibleLimit(prev => prev + 5)}
+                        className="rounded-full text-[10px] font-black uppercase tracking-widest gap-2"
+                      >
+                        Carregar mais escrituras ({bibleVerses.length - bibleLimit})
+                      </Button>
+                    </div>
+                  )}
+                </>
               ) : (
                 <div className="text-center py-12 text-muted-foreground italic">Nenhum versículo catalogado para este tema.</div>
               )}
@@ -227,26 +253,54 @@ const TemaDetailPage = () => {
 
             <TabsContent value="tradition" className="mt-6 space-y-4">
               {catechism.length > 0 ? (
-                catechism.map((c, i) => (
-                  <motion.div
-                    key={c.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.1 }}
-                  >
-                    <Card className="border-border/40 bg-card/30 rounded-3xl overflow-hidden group">
-                      <CardContent className="p-6 sm:p-8 space-y-4">
-                        <div className="flex items-center gap-2">
-                          <Shield className="w-4 h-4 text-amber-500/60" />
-                          <span className="text-[10px] font-black uppercase tracking-widest text-amber-600">{c.reference}</span>
+                <>
+                  <div className="space-y-4">
+                    {catechism.slice(0, traditionLimit).map((c, i) => (
+                      <motion.div
+                        key={c.id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.1 }}
+                      >
+                        <Card className="border-border/40 bg-card/30 rounded-3xl overflow-hidden group">
+                          <CardContent className="p-6 sm:p-8 space-y-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <Shield className="w-4 h-4 text-amber-500/60" />
+                            <span className="text-[10px] font-black uppercase tracking-widest text-amber-600">{c.reference}</span>
+                          </div>
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            onClick={() => {
+                              const paragraph = (c.reference || '').replace(/\D/g, '');
+                              navigate(`/catechism?p=${paragraph}&from=temas&tema=${slug}`);
+                            }}
+                            className="h-8 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-amber-500/5 hover:text-amber-600 gap-1.5"
+                          >
+                            Ver no Catecismo <ExternalLink className="w-3 h-3" />
+                          </Button>
                         </div>
                         <p className="text-base text-foreground/80 leading-relaxed">
                           {c.text_content}
                         </p>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                ))
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+                    ))}
+                  </div>
+                  {traditionLimit < catechism.length && (
+                    <div className="pt-4 flex justify-center">
+                      <Button 
+                        variant="ghost" 
+                        onClick={() => setTraditionLimit(prev => prev + 5)}
+                        className="rounded-full text-[10px] font-black uppercase tracking-widest gap-2"
+                      >
+                        Carregar mais Tradição ({catechism.length - traditionLimit})
+                      </Button>
+                    </div>
+                  )}
+                </>
               ) : (
                 <div className="text-center py-12 text-muted-foreground italic">Conteúdo da Tradição em aprofundamento.</div>
               )}
@@ -254,26 +308,51 @@ const TemaDetailPage = () => {
 
             <TabsContent value="magisterium" className="mt-6 space-y-4">
               {magisterium.length > 0 ? (
-                magisterium.map((c, i) => (
-                  <motion.div
-                    key={c.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.1 }}
-                  >
-                    <Card className="border-border/40 bg-card/30 rounded-3xl overflow-hidden group">
-                      <CardContent className="p-6 sm:p-8 space-y-4">
-                        <div className="flex items-center gap-2">
-                          <Globe className="w-4 h-4 text-blue-500/60" />
-                          <span className="text-[10px] font-black uppercase tracking-widest text-blue-600">{c.reference}</span>
+                <>
+                  <div className="space-y-4">
+                    {magisterium.slice(0, magisteriumLimit).map((c, i) => (
+                      <motion.div
+                        key={c.id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.1 }}
+                      >
+                        <Card className="border-border/40 bg-card/30 rounded-3xl overflow-hidden group">
+                          <CardContent className="p-6 sm:p-8 space-y-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <Globe className="w-4 h-4 text-blue-500/60" />
+                            <span className="text-[10px] font-black uppercase tracking-widest text-blue-600">{c.reference}</span>
+                          </div>
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            onClick={() => navigate(`/magisterium?doc=${encodeURIComponent(c.reference)}&from=temas&tema=${slug}`)}
+                            className="h-8 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-500/5 hover:text-blue-600 gap-1.5"
+                          >
+                            Ver Documento <ExternalLink className="w-3 h-3" />
+                          </Button>
                         </div>
                         <p className="text-base text-foreground/80 leading-relaxed">
                           {c.text_content}
                         </p>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                ))
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+                    ))}
+                  </div>
+                  {magisteriumLimit < magisterium.length && (
+                    <div className="pt-4 flex justify-center">
+                      <Button 
+                        variant="ghost" 
+                        onClick={() => setMagisteriumLimit(prev => prev + 5)}
+                        className="rounded-full text-[10px] font-black uppercase tracking-widest gap-2"
+                      >
+                        Carregar mais Magistério ({magisterium.length - magisteriumLimit})
+                      </Button>
+                    </div>
+                  )}
+                </>
               ) : (
                 <div className="text-center py-12 text-muted-foreground italic">Documentos do Magistério em aprofundamento.</div>
               )}
