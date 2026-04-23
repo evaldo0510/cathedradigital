@@ -13,6 +13,7 @@ import ProConversionBanner from './ProConversionBanner';
 import { useSaintsToday } from '@/hooks/useSaints';
 import SaintOfTheDayCard from './SaintOfTheDayCard';
 import SacredImage from './SacredImage';
+import AudioContentPlayer from './AudioContentPlayer';
 import { toast } from 'sonner';
 import SEOHead from '@/components/SEOHead';
 import { useQuery } from '@tanstack/react-query';
