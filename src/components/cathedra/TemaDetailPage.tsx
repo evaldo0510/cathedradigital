@@ -84,6 +84,7 @@ const TemaDetailPage = () => {
   const [bibleLimit, setBibleLimit] = useState(5);
   const [traditionLimit, setTraditionLimit] = useState(5);
   const [magisteriumLimit, setMagisteriumLimit] = useState(5);
+  const [autoLoaded, setAutoLoaded] = useState(false);
 
   const { data: tags } = useQuery({
     queryKey: ['tags'],
@@ -169,6 +170,16 @@ const TemaDetailPage = () => {
     });
   };
 
+  useEffect(() => {
+    if (selectedTag && !logosInsight && !loadingLogos && !autoLoaded) {
+      setAutoLoaded(true);
+      const timer = setTimeout(() => {
+        handleLoadInsight();
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [selectedTag, logosInsight, loadingLogos, autoLoaded]);
+
   if (!selectedTag && tags) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60dvh] space-y-4">
@@ -182,8 +193,18 @@ const TemaDetailPage = () => {
   const catechism = contents?.filter(c => c.content_type === 'catechism') || [];
   const magisterium = contents?.filter(c => c.content_type === 'magisterium') || [];
 
+  const getCategoryColor = (category?: string) => {
+    switch (category?.toLowerCase()) {
+      case 'dores': return 'from-red-500/10 via-background to-background';
+      case 'fundamentos': return 'from-blue-500/10 via-background to-background';
+      case 'virtudes': return 'from-amber-500/10 via-background to-background';
+      default: return 'from-primary/10 via-background to-background';
+    }
+  };
+
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-4xl mx-auto pb-20 px-4">
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-4xl mx-auto pb-20 px-4 relative">
+      <div className={`fixed inset-0 bg-gradient-to-b ${getCategoryColor(selectedTag?.category)} -z-10 pointer-events-none`} />
       <SEOHead 
         title={`${selectedTag?.label || 'Tema'} - Cathedra`}
         description={`Explore conteúdos sagrados sobre ${selectedTag?.label}.`}
@@ -249,7 +270,7 @@ const TemaDetailPage = () => {
         </div>
 
         <AnimatePresence>
-          {logosInsight && (
+          {(logosInsight || loadingLogos) && (
             <motion.div 
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
@@ -267,9 +288,17 @@ const TemaDetailPage = () => {
                       <p className="text-xs text-muted-foreground font-medium">Síntese espiritual personalizada</p>
                     </div>
                   </div>
-                  <p className="text-lg sm:text-xl text-foreground/90 leading-relaxed font-serif italic first-letter:text-4xl first-letter:font-black first-letter:mr-1 first-letter:float-left first-letter:text-secondary">
-                    {logosInsight}
-                  </p>
+                  {loadingLogos && !logosInsight ? (
+                    <div className="space-y-3">
+                      <div className="h-4 w-full bg-muted animate-pulse rounded" />
+                      <div className="h-4 w-5/6 bg-muted animate-pulse rounded" />
+                      <div className="h-4 w-4/6 bg-muted animate-pulse rounded" />
+                    </div>
+                  ) : (
+                    <p className="text-lg sm:text-xl text-foreground/90 leading-relaxed font-serif italic first-letter:text-4xl first-letter:font-black first-letter:mr-1 first-letter:float-left first-letter:text-secondary">
+                      {logosInsight}
+                    </p>
+                  )}
                 </CardContent>
               </Card>
             </motion.div>
@@ -417,8 +446,8 @@ const TemaDetailPage = () => {
                 "A fé e a razão são como as duas asas com as quais o espírito humano se eleva à contemplação da verdade."
               </p>
               <div className="pt-2">
-                <p className="text-[10px] font-black uppercase tracking-widest text-primary">João Paulo II</p>
-                <p className="text-[8px] text-muted-foreground font-medium uppercase tracking-tighter">Fides et Ratio</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-primary">S. João Paulo II</p>
+                <p className="text-[9px] text-muted-foreground/60">Fides et Ratio</p>
               </div>
             </CardContent>
           </Card>
