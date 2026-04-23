@@ -20,16 +20,23 @@ interface Tag {
 }
 
 const TemasPage = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<string>(() => {
+    const fromUrl = searchParams.get('category');
+    if (fromUrl) return fromUrl;
     return localStorage.getItem('nexus_bubbles_filter') || 'all';
   });
 
   useEffect(() => {
     localStorage.setItem('nexus_bubbles_filter', activeCategory);
-  }, [activeCategory]);
+    if (activeCategory !== 'all') {
+      setSearchParams({ category: activeCategory }, { replace: true });
+    } else {
+      setSearchParams({}, { replace: true });
+    }
+  }, [activeCategory, setSearchParams]);
 
   const { data: tags, isLoading: loadingTags } = useQuery({
     queryKey: ['tags'],

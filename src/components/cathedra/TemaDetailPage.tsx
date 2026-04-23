@@ -116,16 +116,29 @@ const TemaDetailPage = () => {
         path={`/temas/${slug}`}
       />
 
-      <nav className="flex items-center gap-4">
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          onClick={() => navigate(AppRoute.TEMAS)}
-          className="rounded-full gap-2"
+      <nav className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 mb-4">
+        <button 
+          onClick={() => navigate(AppRoute.HOME)}
+          className="hover:text-primary transition-colors"
         >
-          <ChevronLeft className="w-4 h-4" />
-          Todos os Temas
-        </Button>
+          Início
+        </button>
+        <span className="opacity-30">/</span>
+        <button 
+          onClick={() => navigate(AppRoute.TEMAS)}
+          className="hover:text-primary transition-colors"
+        >
+          Temas
+        </button>
+        <span className="opacity-30">/</span>
+        <button 
+          onClick={() => navigate(`${AppRoute.TEMAS}?category=${selectedTag?.category}`)}
+          className="hover:text-primary transition-colors"
+        >
+          {selectedTag?.category}
+        </button>
+        <span className="opacity-30">/</span>
+        <span className="text-primary/80">{selectedTag?.label}</span>
       </nav>
 
       <header className="space-y-6">
