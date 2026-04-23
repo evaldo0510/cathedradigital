@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useContext, useMemo, useCallback, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
@@ -10,7 +10,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 import { LangContext } from '@/contexts/LangContext';
 import ProConversionBanner from './ProConversionBanner';
-import { useSaintsToday } from '@/hooks/useSaints';
+import { useSaintsToday, useOfficialSaint } from '@/hooks/useSaints';
 import SaintOfTheDayCard from './SaintOfTheDayCard';
 import SacredImage from './SacredImage';
 import AudioContentPlayer from './AudioContentPlayer';
@@ -18,6 +18,7 @@ import { toast } from 'sonner';
 import SEOHead from '@/components/SEOHead';
 import { useQuery } from '@tanstack/react-query';
 import { SaintCardSkeleton } from './SacredSkeleton';
+import DevDataInspector from './DevDataInspector';
 
 const LITURGICAL_QUOTES = [
   '"Sede misericordiosos como vosso Pai é misericordioso." — Lc 6,36',
@@ -141,6 +142,7 @@ const HojePage: React.FC = () => {
   const [logosSaint, setLogosSaint] = useState<any>(null);
 
   const { data: allSaintsToday = [], isLoading: loadingSaints } = useSaintsToday();
+  const { data: officialSaint, isLoading: loadingOfficial } = useOfficialSaint();
   const { data: activeJourneyData, isLoading: loadingJourney } = useActiveJourney(user?.id);
   const activeJourney = activeJourneyData?.journey || null;
   const journeyStep = activeJourneyData?.nextStep || null;
@@ -311,6 +313,18 @@ const HojePage: React.FC = () => {
         description="Acompanhe sua caminhada de fé diária com a liturgia, vida dos santos e direção espiritual personalizada."
         path="/hoje"
       />
+      
+      {/* Dev Mode Data Inspector */}
+      {import.meta.env.DEV && (
+        <DevDataInspector 
+          data={{
+            officialSaint,
+            allSaintsToday,
+            activeJourney,
+            profile: profile?._sensitive
+          }}
+        />
+      )}
       {/* ═══ MAIN COLUMN ═══ */}
       <div className="desktop-main space-y-12 max-w-2xl mx-auto lg:max-w-none lg:mx-0">
       {/* Logos IA Highlight - Centralized */}

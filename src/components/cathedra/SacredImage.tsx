@@ -3,7 +3,7 @@ import { Icons } from '../../constants';
 import { resolveColors, buildImageSrc, getInitials } from '@/lib/sacredPalette';
 
 interface SacredImageProps {
-  src: string;
+  src: string | string[];
   alt: string;
   className: string;
   priority?: boolean;
@@ -14,40 +14,62 @@ interface SacredImageProps {
 const SacredImage = React.forwardRef<HTMLDivElement, SacredImageProps>(({ src, alt, className, priority = false, liturgicalColor, dominantColor }, ref) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState(false);
+  const [currentSrcIndex, setCurrentSrcIndex] = useState(0);
 
+  const sources = useMemo(() => {
+    const s = Array.isArray(src) ? src : [src];
+    return s.filter(Boolean).map(url => buildImageSrc(url, priority));
+  }, [src, priority]);
+
+  const mainSrc = sources[currentSrcIndex];
   const colors = useMemo(() => resolveColors(liturgicalColor, dominantColor), [liturgicalColor, dominantColor]);
-  const mainSrc = useMemo(() => buildImageSrc(src, priority), [src, priority]);
   const initials = useMemo(() => getInitials(alt || ''), [alt]);
 
   useEffect(() => {
+    if (!mainSrc) {
+      if (currentSrcIndex < sources.length - 1) {
+        setCurrentSrcIndex(prev => prev + 1);
+      } else {
+        setError(true);
+        setIsLoaded(true);
+      }
+      return;
+    }
+
     setIsLoaded(false);
     setError(false);
-    if (!mainSrc) { setError(true); setIsLoaded(true); return; }
     
     const img = new Image();
     const timeout = setTimeout(() => {
       if (!isLoaded) {
+        handleImageError();
+      }
+    }, 10000);
+
+    const handleImageError = () => {
+      clearTimeout(timeout);
+      console.warn(`SacredImage: Failed to load ${mainSrc}`);
+      if (currentSrcIndex < sources.length - 1) {
+        setCurrentSrcIndex(prev => prev + 1);
+      } else {
         setError(true);
         setIsLoaded(true);
       }
-    }, 10000); // 10s fallback for images
+    };
 
     img.src = mainSrc;
     img.onload = () => {
       clearTimeout(timeout);
       setIsLoaded(true);
     };
-    img.onerror = () => {
-      clearTimeout(timeout);
-      setError(true);
-      setIsLoaded(true);
-    };
+    img.onerror = handleImageError;
+
     return () => {
       clearTimeout(timeout);
       img.onload = null; 
       img.onerror = null;
     };
-  }, [mainSrc]);
+  }, [mainSrc, currentSrcIndex, sources.length]);
 
   return (
     <div ref={ref} className={`relative bg-[#0c0a09] overflow-hidden ${className}`}>

@@ -32,10 +32,18 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
       });
       
       if (match) {
+        const fallbackImages = [
+          officialSaint.image,
+          match.image,
+          `https://source.unsplash.com/featured/?saint,${match.name.split(' ').join(',')}`,
+          `https://source.unsplash.com/featured/?catholic,${match.name.split(' ').join(',')}`
+        ].filter(Boolean) as string[];
+
         return { 
           ...match, 
           ...officialSaint,
-          id: match.id, // Keep the DB ID for navigation
+          id: match.id,
+          image: fallbackImages,
           fullBio: (officialSaint.fullBio && officialSaint.fullBio.length > 50) ? 
                    officialSaint.fullBio : 
                    (match.fullBio || match.bio || officialSaint.description || officialSaint.fullBio)
@@ -48,7 +56,11 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
         title: officialSaint.title || 'Santo do Dia',
         bio: officialSaint.description,
         fullBio: officialSaint.fullBio || officialSaint.description,
-        image: officialSaint.image,
+        image: [
+          officialSaint.image,
+          `https://source.unsplash.com/featured/?saint,${officialSaint.name.split(' ').join(',')}`,
+          'https://images.unsplash.com/photo-1548625361-195fe6144dfc?q=80&w=1000&auto=format&fit=crop' // Default Catholic image
+        ].filter(Boolean) as string[],
         url: officialSaint.url,
         category: 'confessor',
         feastDay: '',
