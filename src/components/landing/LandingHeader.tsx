@@ -35,7 +35,7 @@ const LandingHeader = () => {
     { name: "Funcionalidades", href: "#features" },
     { name: "Como Funciona", href: "#how-it-works" },
     { name: "Depoimentos", href: "#testimonials" },
-    { name: "Planos", href: AppRoute.PRICING },
+    { name: "Planos", href: "#pricing" },
     { name: "Sobre", href: AppRoute.ABOUT },
   ];
 
