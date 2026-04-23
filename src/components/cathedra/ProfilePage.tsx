@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getLevelInfo } from '@/lib/levels';
 import { Switch } from '@/components/ui/switch';
+import { BADGE_DEFINITIONS } from '@/lib/badges';
 import { ESTADOS_BRASIL, ESTADO_NOME, DIOCESES_POR_ESTADO, MOVIMENTOS_PASTORAIS } from '@/data/dioceses-brasil';
 
 interface Badge {
