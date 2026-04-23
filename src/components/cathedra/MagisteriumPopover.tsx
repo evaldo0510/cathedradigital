@@ -6,19 +6,9 @@ import {
   HoverCardTrigger,
 } from '@/components/ui/hover-card';
 import { Icons } from '../../constants';
+import { MAGISTERIUM_URLS } from '@/data/magisterium-urls';
+import { useNavigate } from 'react-router-dom';
 
-/** Maps document search terms to Vatican.va URLs (Portuguese) */
-const DOCUMENT_URLS: Record<string, string> = {
-  'Dei Filius': 'https://www.vatican.va/archive/hist_councils/i-vatican-council/documents/vat-i_const_18700424_dei-filius_la.html',
-  'Ineffabilis Deus': 'https://www.vatican.va/content/pius-ix/la/documents/bulla-ineffabilis-deus-8-decembris-1854.html',
-  'Munificentissimus Deus': 'https://www.vatican.va/content/pius-xii/pt/apost_constitutions/documents/hf_p-xii_apc_19501101_munificentissimus-deus.html',
-  'Pastor Aeternus': 'https://www.vatican.va/archive/hist_councils/i-vatican-council/documents/vat-i_const_18700718_pastor-aeternus_la.html',
-  'Mystici Corporis': 'https://www.vatican.va/content/pius-xii/pt/encyclicals/documents/hf_p-xii_enc_29061943_mystici-corporis-christi.html',
-  'Benedictus Deus': 'https://www.vatican.va/content/benedict-xii/la/documents/constitutio-dogmatica-benedictus-deus-29-ian-1336.html',
-  'Credo Niceno': 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_const_19641121_lumen-gentium_po.html',
-  'Dei Verbum': 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_const_19651118_dei-verbum_po.html',
-  'Decreto Sacrosanctis Trento': 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_const_19631204_sacrosanctum-concilium_po.html',
-};
 
 interface MagisteriumPopoverProps {
   documentName: string;
@@ -31,6 +21,7 @@ const MagisteriumPopover: React.FC<MagisteriumPopoverProps> = ({
   label,
   onNavigate,
 }) => {
+  const navigate = useNavigate();
   const [excerpt, setExcerpt] = useState('');
   const [title, setTitle] = useState('');
   const [loading, setLoading] = useState(false);
@@ -40,7 +31,7 @@ const MagisteriumPopover: React.FC<MagisteriumPopoverProps> = ({
     if (fetched) return;
     setLoading(true);
     try {
-      const url = DOCUMENT_URLS[documentName];
+      const url = MAGISTERIUM_URLS[documentName];
       if (!url) {
         setExcerpt(`Documento "${documentName}" — texto integral disponível no Magistério.`);
         setTitle(documentName);
@@ -93,15 +84,16 @@ const MagisteriumPopover: React.FC<MagisteriumPopoverProps> = ({
               {title || label}
             </span>
           </div>
-          {onNavigate && (
-            <button
-              onClick={() => onNavigate(documentName)}
-              className="text-[10px] font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 shrink-0 ml-2"
-            >
-              Abrir completo
-              <Icons.ArrowDown className="w-3 h-3 -rotate-90" />
-            </button>
-          )}
+          <button
+            onClick={() => {
+              if (onNavigate) onNavigate(documentName);
+              else navigate(`/magisterium/${documentName}`);
+            }}
+            className="text-[10px] font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 shrink-0 ml-2"
+          >
+            Abrir completo
+            <Icons.ArrowDown className="w-3 h-3 -rotate-90" />
+          </button>
         </div>
         <div className="p-3">
           {loading && (
