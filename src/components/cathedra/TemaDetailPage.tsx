@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2, ChevronLeft, Sparkles, BookOpen, Quote, Shield, Globe, ExternalLink } from 'lucide-react';
@@ -78,6 +78,7 @@ const ThemeContentCard = ({
 const TemaDetailPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [logosInsight, setLogosInsight] = useState<string | null>(null);
   const [loadingLogos, setLoadingLogos] = useState(false);
   const [bibleLimit, setBibleLimit] = useState(5);
@@ -129,6 +130,33 @@ const TemaDetailPage = () => {
     },
     enabled: !!selectedTag,
   });
+
+  const prefetchTag = useCallback((tag: Tag) => {
+    queryClient.prefetchQuery({
+      queryKey: ['tag-contents', tag.id],
+      queryFn: async () => {
+        const { data: tagContents, error } = await supabase
+          .from('content_tags')
+          .select(`
+            spiritual_contents (
+              id, title, content_text, type, reference_id, tags
+            )
+          `)
+          .eq('tag_id', tag.id);
+        
+        if (error) throw error;
+        return (tagContents || []).map((c: any) => ({
+          id: c.spiritual_contents.id,
+          content_type: c.spiritual_contents.type,
+          reference: c.spiritual_contents.reference_id || c.spiritual_contents.title || 'Referência',
+          title: c.spiritual_contents.title,
+          text_content: c.spiritual_contents.content_text,
+          tags: c.spiritual_contents.tags || []
+        }));
+      },
+      staleTime: 1000 * 60 * 5,
+    });
+  }, [queryClient]);
 
   const handleLoadInsight = () => {
     if (!selectedTag || loadingLogos) return;
@@ -373,6 +401,7 @@ const TemaDetailPage = () => {
                   emoji={tag.emoji}
                   index={idx}
                   onClick={() => navigate(`${AppRoute.TEMAS}/${tag.slug}`)}
+                  onMouseEnter={() => prefetchTag(tag)}
                   className="px-3 py-1.5"
                 />
               ))}
