@@ -16,37 +16,46 @@ export function useSaintsToday() {
   });
 }
 
-export function useOfficialSaint() {
+export function useOfficialSaint(forceRefresh = false) {
   return useQuery({
-    queryKey: ['official-saint', format(new Date(), 'yyyy-MM-dd')],
+    queryKey: ['official-saint', format(new Date(), 'yyyy-MM-dd'), forceRefresh],
     queryFn: async () => {
       const cacheKey = `official_saint_${format(new Date(), 'yyyy-MM-dd')}`;
       try {
-        const cached = localStorage.getItem(cacheKey);
-        if (cached) return JSON.parse(cached);
+        if (!forceRefresh) {
+          const cached = localStorage.getItem(cacheKey);
+          if (cached) {
+            const parsed = JSON.parse(cached);
+            if (parsed && parsed.name && parsed.name !== 'Santo do Dia') return parsed;
+          }
+        }
       } catch { /* ignore corrupt cache */ }
 
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 8000); // 8s timeout
+      const timeout = setTimeout(() => controller.abort(), 12000); // Increased to 12s for slow scrapers
 
       try {
-        const response = await supabase.functions.invoke('saint-of-the-day', {
-          body: null,
+        const { data, error } = await supabase.functions.invoke('saint-of-the-day', {
+          signal: controller.signal
         });
         clearTimeout(timeout);
 
-        if (response.data && !response.error) {
-          try { localStorage.setItem(cacheKey, JSON.stringify(response.data)); } catch {}
-          return response.data;
+        if (data && !error) {
+          // If we got valid data, cache it
+          if (data.name && data.name !== 'Santo do Dia') {
+            try { localStorage.setItem(cacheKey, JSON.stringify(data)); } catch {}
+          }
+          return data;
         }
+        if (error) throw error;
       } catch (e) {
         clearTimeout(timeout);
-        console.warn('Official saint fetch failed, using DB fallback:', e);
+        console.warn('Official saint fetch failed:', e);
       }
       return null;
     },
-    staleTime: 1000 * 60 * 60 * 24, // 24 hours
-    retry: 0, // Don't retry — fallback to DB saints
+    staleTime: 1000 * 60 * 60 * 6, // 6 hours (more frequent than 24h to catch corrections)
+    retry: 1,
     refetchOnWindowFocus: false,
   });
 }
