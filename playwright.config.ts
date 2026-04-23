@@ -8,7 +8,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {
-    baseURL: 'http://localhost:8080',
+    baseURL: process.env.PLAYWRIGHT_TEST_BASE_URL || 'https://id-preview--e2e50135-31f5-47d7-a8fa-ba1604a58ad9.lovable.app',
     trace: 'on-first-retry',
   },
   projects: [
@@ -17,9 +17,9 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
   ],
-  webServer: {
-    command: 'npm run dev',
-    url: 'http://localhost:8080',
-    reuseExistingServer: !process.env.CI,
-  },
+  // webServer: {
+  //   command: 'npm run dev',
+  //   url: 'http://localhost:8080',
+  //   reuseExistingServer: true,
+  // },
 });
