@@ -1072,26 +1072,38 @@ export type Database = {
       }
       themes: {
         Row: {
+          category: string | null
           created_at: string
           description: string | null
+          emoji: string | null
           id: string
+          image_url: string | null
           name: string
+          order_index: number | null
           slug: string
           updated_at: string
         }
         Insert: {
+          category?: string | null
           created_at?: string
           description?: string | null
+          emoji?: string | null
           id?: string
+          image_url?: string | null
           name: string
+          order_index?: number | null
           slug: string
           updated_at?: string
         }
         Update: {
+          category?: string | null
           created_at?: string
           description?: string | null
+          emoji?: string | null
           id?: string
+          image_url?: string | null
           name?: string
+          order_index?: number | null
           slug?: string
           updated_at?: string
         }
