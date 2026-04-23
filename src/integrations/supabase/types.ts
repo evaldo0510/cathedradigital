@@ -1440,6 +1440,7 @@ export type Database = {
         Returns: boolean
       }
       immutable_unaccent: { Args: { "": string }; Returns: string }
+      is_admin: { Args: never; Returns: boolean }
       search_community_posts_fuzzy: {
         Args: { result_limit?: number; search_query: string }
         Returns: {
