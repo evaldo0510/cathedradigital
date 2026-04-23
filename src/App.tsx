@@ -94,6 +94,7 @@ const EncyclopediaPage = lazy(() => import('./components/cathedra/EncyclopediaPa
 const ModulesGuidePage = lazy(() => import('./components/cathedra/ModulesGuidePage'));
 const PopesPage = lazy(() => import('./components/cathedra/PopesPage'));
 const GlobalSearchPage = lazy(() => import('./components/cathedra/GlobalSearchPage'));
+const MagisteriumViewer = lazy(() => import('./components/cathedra/MagisteriumViewer'));
 
 const PartnersPage = lazy(() => import('./components/cathedra/PartnersPage'));
 
