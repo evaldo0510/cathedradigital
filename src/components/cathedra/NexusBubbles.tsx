@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { getSpiritualInsight } from '@/services/aiService';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -62,11 +63,9 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean }> = 
         setContent(formatted);
       }
 
-      const { data: insightData, error: insightError } = await supabase.functions.invoke('logos-spiritual-insight', {
-        body: { query: tag.label }
-      });
-      if (!insightError && insightData?.insight) {
-        setLogosInsight(insightData.insight);
+      const result = await getSpiritualInsight(tag.label);
+      if (!result.error && result.content) {
+        setLogosInsight(result.content);
       }
     } catch (e) {
       console.error(e);

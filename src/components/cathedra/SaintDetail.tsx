@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { callColloquium } from '@/services/aiService';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '../../constants';
@@ -100,42 +101,12 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
       IMPORTANTE: Use os títulos "REALIDADE:", "PERGUNTA PROFUNDA:" e "O CAMINHO:" explicitamente no início de cada seção.
       Tom: Poético, visceral, encorajador e firme na doutrina católica. Use Markdown para formatar (negrito para ênfase). Seja breve mas impactante.`;
 
-      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/colloquium`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          messages: [{ role: 'user', content: prompt }] 
-        }),
+      const result = await callColloquium([{ role: 'user', content: prompt }], null, (content) => {
+        // Remove recommendation metadata from UI display
+        setLogosReflection(content.replace(/\[RECOMMENDATION:.*?\]/g, '').trim());
       });
 
-      if (!response.ok) throw new Error('Falha ao conectar com Logos');
-
-      const reader = response.body?.getReader();
-      const decoder = new TextDecoder();
-      let fullText = '';
-
-      if (reader) {
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          const chunk = decoder.decode(value);
-          const lines = chunk.split('\n');
-          for (const line of lines) {
-            if (line.startsWith('data: ')) {
-              try {
-                const data = JSON.parse(line.slice(6));
-                const content = data.choices?.[0]?.delta?.content || '';
-                fullText += content;
-                // Remove recommendation metadata from UI display
-                setLogosReflection(fullText.replace(/\[RECOMMENDATION:.*?\]/g, '').trim());
-              } catch (e) { /* ignore parse errors for partial chunks */ }
-            }
-          }
-        }
-      }
+      if (result.error) throw new Error(result.error);
     } catch (error) {
       console.error('Error generating Logos reflection:', error);
       setLogosReflection('Desculpe, não consegui conectar com Logos agora. Tente novamente em breve.');

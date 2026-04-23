@@ -14,6 +14,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import ProConversionBanner from './ProConversionBanner';
 import { toast } from 'sonner';
+import { callColloquium } from '@/services/aiService';
 import logosAvatarImg from '@/assets/logos-avatar.png';
 import logosAquinasImg from '@/assets/logos-aquinas.png';
 import logosColloquiumImg from '@/assets/logos-colloquium.png';
@@ -256,31 +257,9 @@ const StudyMode: React.FC = () => {
     }
 
     try {
-      const resp = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/colloquium`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
-        },
-        body: JSON.stringify({ messages: allMessages, mode: currentMode }),
-      });
-
-      if (!resp.ok) {
-        const err = await resp.json().catch(() => ({ error: 'Erro na conexão' }));
-        if (err.limit_reached) {
-          toast.error('Limite diário atingido! Assine o PRO para mensagens ilimitadas.');
-          navigate('/pricing');
-          throw new Error(err.error);
-        }
-        throw new Error(err.error || `Erro ${resp.status}`);
-      }
-      if (!resp.body) throw new Error('Sem resposta do servidor');
-
-      const reader = resp.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = '';
-
-      const upsertAssistant = (content: string) => {
+      const result = await callColloquium(allMessages, currentMode, (content) => {
+        assistantContent = content;
+        
         // Look for metadata line: [RECOMMENDATION:{"category":...}]
         const metadataMatch = content.match(/\[RECOMMENDATION:({.*})\]$/);
         let displayContent = content;
@@ -300,27 +279,11 @@ const StudyMode: React.FC = () => {
           }
           return [...prev, { role: 'assistant', content: displayContent }];
         });
-      };
+      });
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        buffer += decoder.decode(value, { stream: true });
-        let newlineIdx: number;
-        while ((newlineIdx = buffer.indexOf('\n')) !== -1) {
-          let line = buffer.slice(0, newlineIdx);
-          buffer = buffer.slice(newlineIdx + 1);
-          if (line.endsWith('\r')) line = line.slice(0, -1);
-          if (line.startsWith(':') || line.trim() === '') continue;
-          if (!line.startsWith('data: ')) continue;
-          const jsonStr = line.slice(6).trim();
-          if (jsonStr === '[DONE]') break;
-          try {
-            const parsed = JSON.parse(jsonStr);
-            const delta = parsed.choices?.[0]?.delta?.content;
-            if (delta) { assistantContent += delta; upsertAssistant(assistantContent); }
-          } catch { /* partial */ }
-        }
+      if (result.error) {
+        if (result.limit_reached) navigate('/pricing');
+        throw new Error(result.error);
       }
 
       // Background save to DB to keep UI responsive

@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useCallback, useEffect, lazy, Suspense } from 'react';
+import { callColloquium } from '@/services/aiService';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
@@ -177,27 +178,13 @@ const LiturgiaPage: React.FC = () => {
     setIsComparing(true);
     setComparisonAnalysis(null);
     try {
-      const { data, error } = await supabase.functions.invoke('colloquium', {
-        body: {
-          messages: [{
-            role: 'user',
-            content: `Analise e compare este texto bíblico (${ref}) com outros textos da Tradição Católica, Catecismo e escritos dos Santos. Forneça uma análise teológica profunda.\n\nTexto: ${text}`
-          }]
-        }
-      });
-      if (error) throw error;
+      const result = await callColloquium([{
+        role: 'user',
+        content: `Analise e compare este texto bíblico (${ref}) com outros textos da Tradição Católica, Catecismo e escritos dos Santos. Forneça uma análise teológica profunda.\n\nTexto: ${text}`
+      }]);
       
-      const reader = data.body?.getReader();
-      const decoder = new TextDecoder();
-      let fullText = '';
-      
-      // Handle potential streaming or direct response based on function implementation
-      if (data.choices) {
-        setComparisonAnalysis(data.choices[0].message.content);
-      } else {
-        // Fallback for simple response
-        setComparisonAnalysis(typeof data === 'string' ? data : JSON.stringify(data));
-      }
+      if (result.error) throw new Error(result.error);
+      setComparisonAnalysis(result.content || 'Sem resposta.');
     } catch (e) {
       console.error(e);
       setComparisonAnalysis('Erro ao gerar análise comparativa.');
@@ -279,44 +266,14 @@ const LiturgiaPage: React.FC = () => {
     setIsMeditationLoading(true);
     setMeditation(null);
     try {
-      const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/colloquium`;
-      const { data: { session } } = await supabase.auth.getSession();
-
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session?.access_token}`,
-        },
-        body: JSON.stringify({
-          messages: [{
-            role: 'user',
-            content: `Gere uma Meditação Diária Espiritual baseada no Evangelho do dia: ${readings.evangelho.referencia} - ${readings.evangelho.texto.substring(0, 800)}.`
-          }]
-        })
+      const result = await callColloquium([{
+        role: 'user',
+        content: `Gere uma Meditação Diária Espiritual baseada no Evangelho do dia: ${readings.evangelho.referencia} - ${readings.evangelho.texto.substring(0, 800)}.`
+      }], null, (content) => {
+        setMeditation(content);
       });
 
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const reader = response.body?.getReader();
-      if (!reader) throw new Error('No reader');
-      const decoder = new TextDecoder();
-      let fullText = '';
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        const chunk = decoder.decode(value);
-        for (const line of chunk.split('\n')) {
-          if (line.startsWith('data: ')) {
-            const d = line.substring(6).trim();
-            if (d === '[DONE]') continue;
-            try {
-              const json = JSON.parse(d);
-              fullText += json.choices?.[0]?.delta?.content || '';
-              setMeditation(fullText);
-            } catch { /* partial */ }
-          }
-        }
-      }
+      if (result.error) throw new Error(result.error);
     } catch (e) {
       console.error(e);
       setMeditation('Erro ao gerar meditação.');

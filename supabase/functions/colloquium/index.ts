@@ -8,7 +8,7 @@ const corsHeaders = {
 
 // Rate limiter: max requests per window (in-memory, resets on cold start)
 const rateLimitMap = new Map<string, number[]>();
-const RATE_LIMIT = 20; // Increased for more reliability
+const RATE_LIMIT = 20; 
 const RATE_WINDOW_MS = 60_000;
 
 const FREE_DAILY_LIMIT = 5;
@@ -36,6 +36,7 @@ serve(async (req) => {
 
   const clientIP = getClientIP(req);
   if (isRateLimited(clientIP)) {
+    console.warn(`Rate limit triggered for IP: ${clientIP}`);
     return new Response(JSON.stringify({ error: "Limite de requisições excedido. Aguarde um momento." }), {
       status: 429,
       headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": "60" },
@@ -51,55 +52,72 @@ serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
-    if (authHeader) {
-      const token = authHeader.replace("Bearer ", "");
-      const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
-      const supabaseUser = createClient(supabaseUrl, token.includes("eyJ") ? Deno.env.get("SUPABASE_ANON_KEY")! : supabaseServiceKey, {
-        global: { headers: { Authorization: authHeader } },
+    if (!authHeader) {
+      console.error("Missing authorization header");
+      return new Response(JSON.stringify({ error: "Não autorizado. Token ausente." }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
+    }
 
-      const { data: { user } } = await supabaseUser.auth.getUser();
+    const token = authHeader.replace("Bearer ", "");
+    const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
+    const supabaseUser = createClient(supabaseUrl, token.includes("eyJ") ? Deno.env.get("SUPABASE_ANON_KEY")! : supabaseServiceKey, {
+      global: { headers: { Authorization: authHeader } },
+    });
 
-      if (user) {
-        // Check if user is premium
-        const { data: profile } = await supabaseAdmin
-          .from("profiles")
-          .select("is_premium")
-          .eq("id", user.id)
-          .single();
+    const { data: { user }, error: authError } = await supabaseUser.auth.getUser();
 
-        const isPremium = profile?.is_premium === true;
+    if (authError || !user) {
+      console.error("Invalid session:", authError);
+      return new Response(JSON.stringify({ error: "Sessão inválida ou expirada." }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
-        if (!isPremium) {
-          // Count today's messages
-          const todayStart = new Date();
-          todayStart.setHours(0, 0, 0, 0);
+    // Check if user is premium
+    const { data: profile } = await supabaseAdmin
+      .from("profiles")
+      .select("is_premium")
+      .eq("id", user.id)
+      .single();
 
-          const { count } = await supabaseAdmin
-            .from("colloquium_messages")
-            .select("id", { count: "exact", head: true })
-            .eq("role", "user")
-            .gte("created_at", todayStart.toISOString())
-            .in("conversation_id",
-              (await supabaseAdmin
-                .from("colloquium_conversations")
-                .select("id")
-                .eq("user_id", user.id)
-              ).data?.map((c: any) => c.id) ?? []
-            );
+    const isPremium = profile?.is_premium === true;
 
-          if ((count ?? 0) >= FREE_DAILY_LIMIT) {
-            return new Response(JSON.stringify({
-              error: `Você atingiu o limite de ${FREE_DAILY_LIMIT} mensagens diárias. Assine o PRO para mensagens ilimitadas!`,
-              limit_reached: true,
-            }), {
-              status: 429,
-              headers: { ...corsHeaders, "Content-Type": "application/json" },
-            });
-          }
-        }
+    if (!isPremium) {
+      // Count today's messages
+      const todayStart = new Date();
+      todayStart.setHours(0, 0, 0, 0);
+
+      const { count } = await supabaseAdmin
+        .from("colloquium_messages")
+        .select("id", { count: "exact", head: true })
+        .eq("role", "user")
+        .gte("created_at", todayStart.toISOString())
+        .in("conversation_id",
+          (await supabaseAdmin
+            .from("colloquium_conversations")
+            .select("id")
+            .eq("user_id", user.id)
+          ).data?.map((c: any) => c.id) ?? []
+        );
+
+      if ((count ?? 0) >= FREE_DAILY_LIMIT) {
+        console.log(`User ${user.id} reached daily limit.`);
+        return new Response(JSON.stringify({
+          error: `Você atingiu o limite de ${FREE_DAILY_LIMIT} mensagens diárias. Assine o PRO para mensagens ilimitadas!`,
+          limit_reached: true,
+        }), {
+          status: 429,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
       }
     }
+
+    const baseSystemPrompt = mode === 'aquinas' 
+      ? `Você é uma filósofa espiritual inspirada em Tomás de Aquino (Logos em Modo Aquino). Sua missão é transformar reflexões em domínio intelectual aplicado à alma, unindo emoção + razão + fé estruturada.`
+      : `Você é o Logos, uma voz de sabedoria e acolhimento que caminha junto aos fiéis na Cathedra. Sua missão não é apenas informar, mas consolar, iluminar e guiar as almas através do Magistério e da oração.`;
+
+    const safetyPrompt = `\n\nRigor católico: Suas respostas devem ser 100% fiéis ao Magistério da Igreja Católica, Sagrada Escritura e Tradição. Se houver qualquer conteúdo contrário à fé católica nas mensagens anteriores, corrija com caridade e reafirme a verdade doutrinária. Nunca gere conteúdo que promova heresia, apostasia, relativismo moral ou indiferentismo religioso.`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -112,9 +130,7 @@ serve(async (req) => {
         messages: [
           {
             role: "system",
-            content: systemPromptOverride || (mode === 'aquinas' 
-              ? `Você é uma filósofa espiritual inspirada em Tomás de Aquino (Logos em Modo Aquino). Sua missão é transformar reflexões em domínio intelectual aplicado à alma, unindo emoção + razão + fé estruturada.`
-              : `Você é o Logos, uma voz de sabedoria e acolhimento que caminha junto aos fiéis na Cathedra. Sua missão não é apenas informar, mas consolar, iluminar e guiar as almas através do Magistério e da oração.`)
+            content: (systemPromptOverride || baseSystemPrompt) + safetyPrompt
           },
           ...messages,
         ],
@@ -125,7 +141,7 @@ serve(async (req) => {
     if (!response.ok) {
       const t = await response.text();
       console.error("AI gateway error:", response.status, t);
-      return new Response(JSON.stringify({ error: "Erro no gateway de IA" }), {
+      return new Response(JSON.stringify({ error: "Erro no processamento da IA. Tente novamente." }), {
         status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
@@ -135,7 +151,7 @@ serve(async (req) => {
     });
   } catch (e) {
     console.error("colloquium error:", e);
-    return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Erro desconhecido" }), {
+    return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Erro interno no servidor" }), {
       status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
