@@ -370,16 +370,53 @@ const LiturgiaPage: React.FC = () => {
               {readings && (
                 <div className="space-y-8">
                   {readings.primeiraLeitura && (
-                    <ReadingCard label="Primeira Leitura" icon={<Icons.Bible className="w-5 h-5" />} reference={readings.primeiraLeitura.referencia} text={readings.primeiraLeitura.texto} onContext={() => navigate(parseRefToRoute(readings.primeiraLeitura.referencia))} onReflect={() => navigateToLectio(readings.primeiraLeitura.referencia)} delay={0.1} />
+                    <ReadingCard 
+                      label="Primeira Leitura" 
+                      icon={<Icons.Bible className="w-5 h-5" />} 
+                      reference={readings.primeiraLeitura.referencia} 
+                      text={readings.primeiraLeitura.texto} 
+                      onContext={() => navigate(parseRefToRoute(readings.primeiraLeitura.referencia))} 
+                      onReflect={() => navigateToLectio(readings.primeiraLeitura.referencia)} 
+                      onCompare={() => setCompareReading({ label: 'Primeira Leitura', reference: readings.primeiraLeitura.referencia, text: readings.primeiraLeitura.texto })}
+                      delay={0.1} 
+                    />
                   )}
                   {readings.salmo && (
-                    <ReadingCard label="Salmo Responsorial" icon={<Icons.Music className="w-5 h-5" />} reference={readings.salmo.referencia} text={readings.salmo.texto} refrain={readings.salmo.refrao} onContext={() => navigate(parseRefToRoute(readings.salmo.referencia))} onReflect={() => navigateToLectio(readings.salmo.referencia)} delay={0.2} />
+                    <ReadingCard 
+                      label="Salmo Responsorial" 
+                      icon={<Icons.Music className="w-5 h-5" />} 
+                      reference={readings.salmo.referencia} 
+                      text={readings.salmo.texto} 
+                      refrain={readings.salmo.refrao} 
+                      onContext={() => navigate(parseRefToRoute(readings.salmo.referencia))} 
+                      onReflect={() => navigateToLectio(readings.salmo.referencia)} 
+                      onCompare={() => setCompareReading({ label: 'Salmo Responsorial', reference: readings.salmo.referencia, text: readings.salmo.texto })}
+                      delay={0.2} 
+                    />
                   )}
                   {readings.segundaLeitura && typeof readings.segundaLeitura === 'object' && (
-                    <ReadingCard label="Segunda Leitura" icon={<Icons.BookOpen className="w-5 h-5" />} reference={(readings.segundaLeitura as Reading).referencia} text={(readings.segundaLeitura as Reading).texto} onContext={() => navigate(parseRefToRoute((readings.segundaLeitura as Reading).referencia))} onReflect={() => navigateToLectio((readings.segundaLeitura as Reading).referencia)} delay={0.25} />
+                    <ReadingCard 
+                      label="Segunda Leitura" 
+                      icon={<Icons.BookOpen className="w-5 h-5" />} 
+                      reference={(readings.segundaLeitura as Reading).referencia} 
+                      text={(readings.segundaLeitura as Reading).texto} 
+                      onContext={() => navigate(parseRefToRoute((readings.segundaLeitura as Reading).referencia))} 
+                      onReflect={() => navigateToLectio((readings.segundaLeitura as Reading).referencia)} 
+                      onCompare={() => setCompareReading({ label: 'Segunda Leitura', reference: (readings.segundaLeitura as Reading).referencia, text: (readings.segundaLeitura as Reading).text })}
+                      delay={0.25} 
+                    />
                   )}
                   {readings.evangelho && (
-                    <ReadingCard label="Evangelho" icon={<Icons.Lectio className="w-5 h-5" />} reference={readings.evangelho.referencia} text={readings.evangelho.texto} onContext={() => navigate(parseRefToRoute(readings.evangelho.referencia))} onReflect={() => navigateToLectio(readings.evangelho.referencia)} delay={0.3} />
+                    <ReadingCard 
+                      label="Evangelho" 
+                      icon={<Icons.Lectio className="w-5 h-5" />} 
+                      reference={readings.evangelho.referencia} 
+                      text={readings.evangelho.texto} 
+                      onContext={() => navigate(parseRefToRoute(readings.evangelho.referencia))} 
+                      onReflect={() => navigateToLectio(readings.evangelho.referencia)} 
+                      onCompare={() => setCompareReading({ label: 'Evangelho', reference: readings.evangelho.referencia, text: readings.evangelho.texto })}
+                      delay={0.3} 
+                    />
                   )}
                 </div>
               )}
