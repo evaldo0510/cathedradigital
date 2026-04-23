@@ -86,7 +86,13 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
                           chapter={bibleSeg.chapter!}
                           verse={bibleSeg.verse}
                           label={bibleSeg.value}
-                          onNavigate={(abbr, chapter) => navigate(`/biblia?book=${abbr}&chapter=${chapter}`)}
+                          onNavigate={(abbr, chapter, verse) => {
+                            const params = new URLSearchParams();
+                            params.set('book', abbr);
+                            params.set('ch', String(chapter));
+                            if (verse) params.set('v', String(verse));
+                            navigate(`/biblia?${params.toString()}`);
+                          }}
                         />
                       ));
                     }
