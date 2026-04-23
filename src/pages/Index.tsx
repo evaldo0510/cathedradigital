@@ -76,9 +76,9 @@ const Index = () => {
           <CommunitySection />
           <BenefitsSection onLogin={() => navigate(AppRoute.LOGIN)} />
           <div id="testimonials"><TestimonialsSection /></div>
-          <PricingSection />
+          <div id="pricing"><PricingSection /></div>
           <AboutCreatorSection />
-          <FaqSection />
+          <div id="faq"><FaqSection /></div>
           <CtaBannerSection onStart={handleStart} />
           <FeedbackWidget />
           <WhatsAppButton />
