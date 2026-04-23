@@ -263,34 +263,15 @@ const TemaDetailPage = () => {
                 <>
                   <div className="space-y-4">
                     {bibleVerses.slice(0, bibleLimit).map((c, i) => (
-                      <motion.div
+                      <ThemeContentCard
                         key={c.id}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: i * 0.1 }}
-                      >
-                        <Card className="border-border/40 bg-card/30 hover:bg-card/50 transition-colors rounded-3xl overflow-hidden group">
-                          <CardContent className="p-6 sm:p-8 space-y-4">
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-2">
-                                <BookOpen className="w-4 h-4 text-primary/60" />
-                                <span className="text-[10px] font-black uppercase tracking-widest text-primary">{c.reference}</span>
-                              </div>
-                              <Button 
-                                variant="ghost" 
-                                size="sm"
-                                onClick={() => navigate(`/bible?ref=${encodeURIComponent(c.reference)}&from=temas&tema=${slug}`)}
-                                className="h-8 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-primary/5 hover:text-primary gap-1.5"
-                              >
-                                Ler na Bíblia <ExternalLink className="w-3 h-3" />
-                              </Button>
-                            </div>
-                            <p className="text-base sm:text-lg text-foreground/80 leading-relaxed font-serif">
-                              "{c.text_content}"
-                            </p>
-                          </CardContent>
-                        </Card>
-                      </motion.div>
+                        content={c}
+                        index={i}
+                        icon={BookOpen}
+                        accentColor="text-primary"
+                        buttonText="Ler na Bíblia"
+                        onAction={() => navigate(`/bible?ref=${encodeURIComponent(c.reference)}&from=temas&tema=${slug}`)}
+                      />
                     ))}
                   </div>
                   {bibleLimit < bibleVerses.length && (
@@ -315,37 +296,18 @@ const TemaDetailPage = () => {
                 <>
                   <div className="space-y-4">
                     {catechism.slice(0, traditionLimit).map((c, i) => (
-                      <motion.div
+                      <ThemeContentCard
                         key={c.id}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: i * 0.1 }}
-                      >
-                        <Card className="border-border/40 bg-card/30 rounded-3xl overflow-hidden group">
-                          <CardContent className="p-6 sm:p-8 space-y-4">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <Shield className="w-4 h-4 text-amber-500/60" />
-                            <span className="text-[10px] font-black uppercase tracking-widest text-amber-600">{c.reference}</span>
-                          </div>
-                          <Button 
-                            variant="ghost" 
-                            size="sm"
-                            onClick={() => {
-                              const paragraph = (c.reference || '').replace(/\D/g, '');
-                              navigate(`/catechism?p=${paragraph}&from=temas&tema=${slug}`);
-                            }}
-                            className="h-8 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-amber-500/5 hover:text-amber-600 gap-1.5"
-                          >
-                            Ver no Catecismo <ExternalLink className="w-3 h-3" />
-                          </Button>
-                        </div>
-                        <p className="text-base text-foreground/80 leading-relaxed">
-                          {c.text_content}
-                        </p>
-                          </CardContent>
-                        </Card>
-                      </motion.div>
+                        content={c}
+                        index={i}
+                        icon={Shield}
+                        accentColor="text-amber-600"
+                        buttonText="Ver no Catecismo"
+                        onAction={() => {
+                          const paragraph = (c.reference || '').replace(/\D/g, '');
+                          navigate(`/catechism?p=${paragraph}&from=temas&tema=${slug}`);
+                        }}
+                      />
                     ))}
                   </div>
                   {traditionLimit < catechism.length && (
@@ -370,34 +332,15 @@ const TemaDetailPage = () => {
                 <>
                   <div className="space-y-4">
                     {magisterium.slice(0, magisteriumLimit).map((c, i) => (
-                      <motion.div
+                      <ThemeContentCard
                         key={c.id}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: i * 0.1 }}
-                      >
-                        <Card className="border-border/40 bg-card/30 rounded-3xl overflow-hidden group">
-                          <CardContent className="p-6 sm:p-8 space-y-4">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <Globe className="w-4 h-4 text-blue-500/60" />
-                            <span className="text-[10px] font-black uppercase tracking-widest text-blue-600">{c.reference}</span>
-                          </div>
-                          <Button 
-                            variant="ghost" 
-                            size="sm"
-                            onClick={() => navigate(`/magisterium?doc=${encodeURIComponent(c.reference)}&from=temas&tema=${slug}`)}
-                            className="h-8 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-500/5 hover:text-blue-600 gap-1.5"
-                          >
-                            Ver Documento <ExternalLink className="w-3 h-3" />
-                          </Button>
-                        </div>
-                        <p className="text-base text-foreground/80 leading-relaxed">
-                          {c.text_content}
-                        </p>
-                          </CardContent>
-                        </Card>
-                      </motion.div>
+                        content={c}
+                        index={i}
+                        icon={Globe}
+                        accentColor="text-blue-600"
+                        buttonText="Ver Documento"
+                        onAction={() => navigate(`/magisterium?doc=${encodeURIComponent(c.reference)}&from=temas&tema=${slug}`)}
+                      />
                     ))}
                   </div>
                   {magisteriumLimit < magisterium.length && (
