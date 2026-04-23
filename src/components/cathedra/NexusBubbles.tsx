@@ -227,7 +227,13 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
     fetchTags();
   }, []);
 
-  const [activeFilter, setActiveFilter] = useState<string>('all');
+  const [activeFilter, setActiveFilter] = useState<string>(() => {
+    return localStorage.getItem('nexus_bubbles_filter') || 'all';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('nexus_bubbles_filter', activeFilter);
+  }, [activeFilter]);
 
   const categories = {
     fundamentos: { label: 'Fundamentos', icon: <Icons.Church className="w-3.5 h-3.5" /> },
