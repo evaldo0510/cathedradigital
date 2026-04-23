@@ -100,8 +100,7 @@ const TemasPage = () => {
   }, [tags, searchParams]);
 
   const handleTagSelect = (tag: Tag) => {
-    setSelectedTag(tag);
-    setSearchParams({ tema: tag.slug });
+    navigate(`${AppRoute.TEMAS}/${tag.slug}`);
   };
 
   useEffect(() => {
