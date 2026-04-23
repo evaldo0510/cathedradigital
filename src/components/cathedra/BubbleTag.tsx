@@ -72,7 +72,7 @@ export const bubbleVariants = {
     scale: 1,
     transition: {
       delay: index * 0.015,
-      type: 'spring',
+      type: 'spring' as const,
       damping: 15,
       stiffness: 100
     }
