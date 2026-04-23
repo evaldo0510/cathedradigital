@@ -296,6 +296,24 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
           )}
         </div>
       </div>
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none">
+        <button
+          onClick={() => setActiveFilter('all')}
+          className={`px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${activeFilter === 'all' ? 'bg-primary text-primary-foreground shadow-lg' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}
+        >
+          Todos
+        </button>
+        {Object.entries(categories).map(([key, cat]) => (
+          <button
+            key={key}
+            onClick={() => setActiveFilter(key)}
+            className={`px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-1.5 ${activeFilter === key ? 'bg-primary text-primary-foreground shadow-lg' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}
+          >
+            {cat.icon}
+            {cat.label}
+          </button>
+        ))}
+      </div>
 
       <div className="space-y-6">
         <AnimatePresence mode="wait">
