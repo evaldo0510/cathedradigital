@@ -29,7 +29,6 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
   const anyPending = saints.isPending || glossary.isPending || community.isPending || tags.isPending || journeys.isPending;
   const hasQuery = query.trim().length >= 2;
-
   const counts = {
     santos: saints.results?.length ?? 0,
     glossario: glossary.results?.length ?? 0,
@@ -37,6 +36,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
     temas: tags.results?.length ?? 0,
     jornadas: journeys.results?.length ?? 0,
   };
+  const isAllEmpty = hasQuery && !anyPending && Object.values(counts).every(c => c === 0);
 
   const EmptyState = ({ text }: { text: string }) => (
     <p className="text-center text-sm text-muted-foreground py-6">{text}</p>
@@ -61,7 +61,21 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           className="max-w-xl mx-auto"
         />
 
-        {hasQuery && (
+        {isAllEmpty && (
+          <motion.div 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            className="text-center py-12 space-y-4"
+          >
+            <Icons.Search className="w-12 h-12 mx-auto text-muted-foreground opacity-20" />
+            <div className="space-y-2">
+              <p className="text-lg font-serif italic text-muted-foreground">Nenhum resultado encontrado.</p>
+              <p className="text-sm text-muted-foreground/60">Tente buscar por termos mais genéricos ou verifique a ortografia.</p>
+            </div>
+          </motion.div>
+        )}
+
+        {hasQuery && !isAllEmpty && (
           <Tabs defaultValue="santos" className="mt-6">
             <TabsList className="w-full flex-wrap h-auto gap-1 bg-muted/50 p-1 rounded-xl">
               <TabsTrigger value="santos" className="text-xs flex-1 min-w-[80px]">Santos ({counts.santos})</TabsTrigger>
@@ -80,7 +94,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   subtitle={s.title}
                   score={(s as any).similarityScore}
                   icon={<Icons.User className="w-4 h-4" />}
-                  onClick={() => navigate(`${AppRoute.SAINTS}?santo=${s.id}`)}
+                  onClick={() => navigate(`/santos/${s.id}`)}
                   index={i}
                 />
               ))}

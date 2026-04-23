@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import SEOHead from '@/components/SEOHead';
@@ -9,7 +9,7 @@ import SacredImage from './SacredImage';
 import { SaintCardSkeleton, SaintGridSkeleton } from './SacredSkeleton';
 import SaintDetail, { CATEGORY_LABELS } from './SaintDetail';
 import { type Saint } from '@/data/saints';
-import { getSaintsByDate, searchSaints, getSaintsByCategory, getAllSaints, formatSaint, type SaintWithScore } from '@/services/saintsService';
+import { getSaintsByDate, searchSaints, getSaintsByCategory, getAllSaints, getSaintById, formatSaint, type SaintWithScore } from '@/services/saintsService';
 import { supabase } from '@/integrations/supabase/client';
 import { useDebounce } from '@/hooks/useDebounce';
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Sparkles, BookOpen, Quote, Shield, User } from 'lucide-react';
@@ -29,6 +29,15 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
   const [isSearchingGlobal, setIsSearchingGlobal] = useState(false);
   const [globalResults, setGlobalResults] = useState<Saint[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
+  const { id } = useParams();
+
+  useEffect(() => {
+    if (id) {
+      getSaintById(id).then(saint => {
+        if (saint) setSelectedSaint(saint);
+      });
+    }
+  }, [id]);
 
   // ─── Queries ───
   

@@ -85,7 +85,7 @@ export function useFuzzySearch<TRow>(
   const [error, setError] = useState<Error | null>(null);
 
   const trimmed = debouncedQuery.trim();
-  const isPending = query.trim() !== trimmed || (trimmed.length >= minLength && isSearching);
+  const isPending = query.trim().length >= minLength && (query.trim() !== trimmed || isSearching);
 
   useEffect(() => {
     if (trimmed.length < minLength) {
