@@ -333,7 +333,10 @@ const AdminJourneysTab: React.FC = () => {
                 }}>
                   <Edit className="w-4 h-4" />
                 </Button>
-                <Button variant="ghost" size="icon" className="text-destructive">
+                <Button variant="ghost" size="icon" className="text-destructive" onClick={(e) => {
+                  e.stopPropagation();
+                  handleDeleteJourney(journey.id);
+                }}>
                   <Trash2 className="w-4 h-4" />
                 </Button>
               </div>
