@@ -431,6 +431,9 @@ const AdminDashboard: React.FC = () => {
             <TabsTrigger value="geography" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
               <MapIcon className="w-3.5 h-3.5" /> Geografia
             </TabsTrigger>
+            <TabsTrigger value="construction" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+              <Building2 className="w-3.5 h-3.5" /> Obras
+            </TabsTrigger>
           </TabsList>
         </div>
 
@@ -980,6 +983,11 @@ const AdminDashboard: React.FC = () => {
               </CardContent>
             </Card>
           </div>
+        </TabsContent>
+        <TabsContent value="construction">
+          <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
+            <AdminConstructionTab />
+          </Suspense>
         </TabsContent>
       </Tabs>
     </div>
