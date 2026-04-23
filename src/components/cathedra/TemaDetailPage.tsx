@@ -34,6 +34,9 @@ const TemaDetailPage = () => {
   const navigate = useNavigate();
   const [logosInsight, setLogosInsight] = useState<string | null>(null);
   const [loadingLogos, setLoadingLogos] = useState(false);
+  const [bibleLimit, setBibleLimit] = useState(5);
+  const [traditionLimit, setTraditionLimit] = useState(5);
+  const [magisteriumLimit, setMagisteriumLimit] = useState(5);
 
   const { data: tags } = useQuery({
     queryKey: ['tags'],
