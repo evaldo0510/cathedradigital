@@ -144,11 +144,13 @@ const AdminJourneysTab: React.FC = () => {
     if (!editingStep) return;
     
     try {
+      console.log(`Saving step: ${editingStep.title} (${editingStep.id})`);
       let parsedContent = editingStep.content;
       try {
-        parsedContent = JSON.parse(stepContentString);
+        parsedContent = typeof stepContentString === 'string' ? JSON.parse(stepContentString) : stepContentString;
       } catch (e) {
-        toast.error('JSON inválido no conteúdo do passo.');
+        console.error('Invalid JSON in step content:', e);
+        toast.error('JSON inválido no conteúdo do passo. Verifique a sintaxe.');
         return;
       }
       
@@ -163,15 +165,20 @@ const AdminJourneysTab: React.FC = () => {
         })
         .eq('id', editingStep.id);
         
-      if (error) throw error;
+      if (error) {
+        console.error('Error saving step:', error);
+        throw error;
+      }
       
       setSteps(prev => prev.map(s => s.id === editingStep.id ? { ...editingStep, content: parsedContent } : s));
-      toast.success('Passo atualizado com sucesso.');
+      toast.success(`Passo "${editingStep.title}" atualizado.`);
       setIsEditStepDialogOpen(false);
     } catch (error: any) {
-      toast.error('Erro ao salvar passo: ' + error.message);
+      console.error('Critical error saving step:', error);
+      toast.error('Erro ao salvar passo: ' + (error.message || 'Falha na rede'));
     }
   };
+
   
   const handleDeleteStep = async (stepId: string) => {
     // Custom dialogs are better, but for steps within a journey, a simple confirmation might be okay.
