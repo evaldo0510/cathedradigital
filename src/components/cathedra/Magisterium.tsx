@@ -179,27 +179,33 @@ const Magisterium: React.FC = () => {
         </div>
 
         <TabsContent value="guidance" className="mt-0 focus-visible:outline-none outline-none">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <div className="lg:col-span-4 space-y-3">
-              {SPIRITUAL_GUIDANCE.map((item) => (
-                <button
+          <div className="space-y-12">
+            <div className="flex flex-wrap justify-center gap-3 bg-card/40 backdrop-blur-xl p-6 sm:p-10 rounded-[2.5rem] sm:rounded-[3.5rem] border border-border/40 shadow-xl relative overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+              {SPIRITUAL_GUIDANCE.map((item, idx) => (
+                <motion.button
                   key={item.id}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: idx * 0.05 }}
+                  whileHover={{ scale: 1.1, y: -4 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => handleSelectGuidance(item)}
-                  className={`w-full flex items-center gap-4 p-4 rounded-2xl border transition-all text-left ${
+                  className={`flex items-center gap-3 px-6 py-3.5 rounded-full border transition-all shadow-sm relative z-10 ${
                     selectedGuidance.id === item.id 
-                      ? 'bg-primary text-primary-foreground shadow-lg border-primary' 
-                      : 'bg-card border-border hover:border-primary/30'
+                      ? "bg-primary text-primary-foreground shadow-xl shadow-primary/30 scale-110" 
+                      : "bg-card/60 text-foreground/80 border-border/60 hover:border-primary/40 hover:text-primary hover:bg-primary/5"
                   }`}
                 >
-                  <div className={`p-2 rounded-xl ${selectedGuidance.id === item.id ? 'bg-white/20' : 'bg-muted'}`}>
+                  <div className={`p-2 rounded-full ${selectedGuidance.id === item.id ? "bg-white/20" : "bg-muted/50"}`}>
                     {item.icon}
                   </div>
-                  <span className="font-bold text-sm">{item.theme}</span>
-                </button>
+                  <span className="font-black text-[10px] sm:text-xs uppercase tracking-[0.15em]">{item.theme}</span>
+                </motion.button>
               ))}
             </div>
 
-            <div className="lg:col-span-8">
+            <div className="w-full">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={selectedGuidance.id}
