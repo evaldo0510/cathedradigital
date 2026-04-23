@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { callColloquium } from '@/services/aiService';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '../../constants';
