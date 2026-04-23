@@ -37,6 +37,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
         { label: t('journeys'), path: AppRoute.JORNADAS, icon: <Icons.Journeys className="w-5 h-5" /> },
         { label: 'Quiz da Fé', path: AppRoute.CERTAMEN, icon: <Icons.Trophy className="w-5 h-5" />, pro: false },
         { label: t('themes'), path: AppRoute.TEMAS, icon: <Icons.Themes className="w-5 h-5" /> },
+        { label: 'Magistério', path: AppRoute.MAGISTERIUM, icon: <Icons.ScrollText className="w-5 h-5" /> },
         { label: 'Enciclopédia', path: AppRoute.ENCYCLOPEDIA, icon: <Icons.Library className="w-5 h-5" /> },
         { label: 'Dogmas da Fé', path: AppRoute.DOGMAS, icon: <Icons.ScrollText className="w-5 h-5" /> },
         { label: 'Aparições', path: AppRoute.APARICOES, icon: <Icons.Heart className="w-5 h-5" /> },
