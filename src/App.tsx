@@ -473,6 +473,7 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.SAINTS} element={<PageTransition><AuthGuard><Saints /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.SAINT_DETAIL} element={<PageTransition><AuthGuard><Saints /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.MAGISTERIUM} element={<PageTransition><AuthGuard><Magisterium /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.MAGISTERIUM_DOC} element={<PageTransition><AuthGuard><MagisteriumViewer /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.LITURGIA} element={<PageTransition><AuthGuard><LiturgiaPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.DAILY_LITURGY} element={<Navigate to={`${AppRoute.LITURGIA}?tab=liturgia`} replace />} />
                   <Route path={AppRoute.ROSARY} element={<PageTransition><AuthGuard><Rosary /></AuthGuard></PageTransition>} />
