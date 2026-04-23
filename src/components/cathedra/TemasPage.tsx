@@ -94,11 +94,11 @@ const TemasPage = () => {
 
   useEffect(() => {
     const temaSlug = searchParams.get('tema');
-    if (temaSlug && tags && (!selectedTag || selectedTag.slug !== temaSlug)) {
-      const match = tags.find(t => t.slug === temaSlug);
-      if (match) setSelectedTag(match);
+    if (temaSlug) {
+      // Redirect legacy URL parameter to new path-based route
+      navigate(`${AppRoute.TEMAS}/${temaSlug}`, { replace: true });
     }
-  }, [tags, searchParams]);
+  }, [searchParams, navigate]);
 
   const handleTagSelect = (tag: Tag) => {
     navigate(`${AppRoute.TEMAS}/${tag.slug}`);
