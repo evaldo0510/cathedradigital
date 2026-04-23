@@ -354,7 +354,33 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                 isSearching={search !== debouncedSearch || isSearchingLocal}
                 size="lg"
               />
+          ) : viewMode === 'cloud' ? (
+            <motion.div
+              key="cloud"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="space-y-8"
+            >
+              <div className="text-center space-y-2">
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Nuvem de Testemunhas</p>
+                <p className="text-sm text-muted-foreground italic font-serif">"Estamos cercados de tão grande nuvem de testemunhas..." — Heb 12,1</p>
+              </div>
 
+              <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto" role="list">
+                {displaySaints.map((saint, i) => (
+                  <div key={saint.id} role="listitem">
+                    <BubbleTag
+                      label={saint.name}
+                      emoji={saint.category === 'pope' ? '👑' : saint.category === 'doctor' ? '📖' : '⛪'}
+                      index={i}
+                      onClick={() => handleOpenSaint(saint, false)}
+                      className="px-5 py-3 text-xs"
+                    />
+                  </div>
+                ))}
+              </div>
+            </motion.div>
               <div className="max-w-2xl mx-auto px-4">
                 {isLoadingDaily || isSearchingLocal ? (
                   <SaintGridSkeleton count={6} />
