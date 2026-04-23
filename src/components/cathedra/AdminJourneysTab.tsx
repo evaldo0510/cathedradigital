@@ -181,25 +181,28 @@ const AdminJourneysTab: React.FC = () => {
 
   
   const handleDeleteStep = async (stepId: string) => {
-    // Custom dialogs are better, but for steps within a journey, a simple confirmation might be okay.
-    // However, to follow the pattern, let's use a state for this too.
     if (!window.confirm('Tem certeza que deseja excluir este passo?')) return;
-
     
     try {
+      console.log(`Deleting step: ${stepId}`);
       const { error } = await supabase
         .from('journey_steps')
         .delete()
         .eq('id', stepId);
         
-      if (error) throw error;
+      if (error) {
+        console.error('Error deleting step:', error);
+        throw error;
+      }
       
       setSteps(prev => prev.filter(s => s.id !== stepId));
-      toast.success('Passo excluído com sucesso.');
+      toast.success('Passo removido com sucesso.');
     } catch (error: any) {
-      toast.error('Erro ao excluir passo: ' + error.message);
+      console.error('Step deletion error:', error);
+      toast.error('Erro ao excluir passo: ' + (error.message || 'Erro no servidor'));
     }
   };
+
 
   const handleSaveJourney = async () => {
     if (!editingJourney) return;
