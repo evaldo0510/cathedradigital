@@ -281,16 +281,20 @@ const AdminJourneysTab: React.FC = () => {
 
   const handleCreateJourney = async () => {
     try {
+      console.log('Creating new journey:', newJourney.title);
       const { data, error } = await supabase
         .from('journeys')
         .insert([newJourney])
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error creating journey:', error);
+        throw error;
+      }
       
       setJourneys([data, ...journeys]);
-      toast.success('Jornada criada com sucesso.');
+      toast.success(`Jornada "${newJourney.title}" criada com sucesso.`);
       setIsAddJourneyDialogOpen(false);
       setNewJourney({
         title: '',
@@ -303,9 +307,11 @@ const AdminJourneysTab: React.FC = () => {
         estimated_days: 7
       });
     } catch (error: any) {
-      toast.error('Erro ao criar jornada: ' + error.message);
+      console.error('Create journey error:', error);
+      toast.error('Erro ao criar jornada: ' + (error.message || 'Erro inesperado'));
     }
   };
+
 
   const handleCreateStep = async (journeyId: string) => {
     try {
