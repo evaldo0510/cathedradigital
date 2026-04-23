@@ -160,8 +160,7 @@ serve(async (req) => {
 
     if (dbSaint && !dbError) {
       return new Response(JSON.stringify({
-        name: dbSaint.name,
-        image: dbSaint.image,
+        ...dbSaint,
         description: dbSaint.bio,
         fullBio: dbSaint.full_bio,
         source: "Cathedra Database"
