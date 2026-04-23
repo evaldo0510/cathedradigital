@@ -80,7 +80,7 @@ const AdminThemesTab = () => {
   });
 
   const createThemeMutation = useMutation({
-    mutationFn: async (theme: Partial<Theme>) => {
+    mutationFn: async (theme: { name: string; slug: string; description: string; emoji?: string; category?: string; order_index?: number }) => {
       const { error } = await supabase.from('themes').insert([theme]);
       if (error) throw error;
     },
