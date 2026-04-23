@@ -120,10 +120,10 @@ export const BubbleTag: React.FC<BubbleTagProps> = ({
       className={`
         relative px-3.5 py-2 rounded-full border transition-all shadow-sm flex items-center gap-1.5 group/tag focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none
         ${isSelected 
-          ? 'border-primary/50 bg-primary/10 ring-2 ring-primary/10 text-primary' 
+          ? 'border-primary bg-primary/15 ring-4 ring-primary/5 text-primary shadow-lg scale-105' 
           : isSuggested
-            ? 'border-secondary/40 bg-secondary/5 hover:border-secondary/60 hover:bg-secondary/10 text-secondary'
-            : 'border-border bg-card/50 hover:border-primary/40 hover:bg-primary/5 hover:shadow-md text-foreground/80'
+            ? 'border-secondary/50 bg-secondary/10 hover:border-secondary/80 hover:bg-secondary/20 text-secondary hover:scale-105'
+            : 'border-border bg-card/50 hover:border-primary/60 hover:bg-primary/5 hover:shadow-md text-foreground/80 hover:scale-105 hover:text-foreground'
         }
         ${className}
       `}
