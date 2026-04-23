@@ -251,6 +251,12 @@ const Bible: React.FC = () => {
           if (!isNaN(ch) && ch >= 1 && ch <= found.chapters) {
             setSelectedChapter(ch);
             setViewMode('reading');
+            // Verse highlight via ?v=
+            const vParam = searchParams.get('v') || searchParams.get('verse');
+            if (vParam) {
+              const v = parseInt(vParam);
+              if (!isNaN(v)) setHighlightedVerse(v);
+            }
           } else {
             setViewMode('chapters');
           }
