@@ -24,6 +24,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import AudioButton from './AudioButton';
 import { BibleChapterSkeleton } from './SacredSkeleton';
+import { buildBibleAbsoluteUrl, parseVerseParam } from '@/lib/bibleUrl';
 
 
 type BibleBook = { name: string; abbr: string; chapters: number };
@@ -251,11 +252,18 @@ const Bible: React.FC = () => {
           if (!isNaN(ch) && ch >= 1 && ch <= found.chapters) {
             setSelectedChapter(ch);
             setViewMode('reading');
-            // Verse highlight via ?v=
-            const vParam = searchParams.get('v') || searchParams.get('verse');
-            if (vParam) {
-              const v = parseInt(vParam);
-              if (!isNaN(v)) setHighlightedVerse(v);
+            // Verse highlight via ?v= (with safe parsing + invalid fallback)
+            const rawV = searchParams.get('v') ?? searchParams.get('verse');
+            if (rawV !== null) {
+              const v = parseVerseParam(rawV);
+              if (v !== null) {
+                setHighlightedVerse(v);
+              } else {
+                setHighlightedVerse(null);
+                toast.warning(`Versículo "${rawV}" inválido`, {
+                  description: `Mostrando o capítulo ${found.name} ${ch} sem destaque.`,
+                });
+              }
             }
           } else {
             setViewMode('chapters');
@@ -401,9 +409,19 @@ const Bible: React.FC = () => {
     }
   }, [viewMode, selectedBook, selectedChapter, bibleCache]);
 
-  // Auto-scroll to highlighted verse when verses are loaded
+  // Auto-scroll to highlighted verse when verses are loaded.
+  // If the verse is out of range for the loaded chapter, warn the user
+  // but keep the chapter visible.
   useEffect(() => {
     if (highlightedVerse && verses.length > 0 && !isLoading) {
+      const exists = verses.some(v => v.number === highlightedVerse);
+      if (!exists) {
+        toast.warning(`Versículo ${highlightedVerse} não encontrado`, {
+          description: `Este capítulo tem ${verses.length} versículos. Mostrando o capítulo completo.`,
+        });
+        setHighlightedVerse(null);
+        return;
+      }
       // Wait for DOM to render
       setTimeout(() => {
         const el = document.getElementById(`v${highlightedVerse}`);
@@ -439,14 +457,39 @@ const Bible: React.FC = () => {
           </div>
         </div>
 
+        {/* Highlighted verse indicator (when ?v= is active) */}
+        {highlightedVerse && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            data-testid="bible-highlight-indicator"
+            className="flex items-center justify-between gap-3 px-4 py-3 rounded-2xl bg-primary/10 border border-primary/30"
+          >
+            <div className="flex items-center gap-2 min-w-0">
+              <Icons.Sparkles className="w-4 h-4 text-primary shrink-0" />
+              <span className="text-sm font-bold text-primary truncate">
+                Destacado: {selectedBook.name} {selectedChapter}:{highlightedVerse}
+              </span>
+            </div>
+            <button
+              onClick={() => setHighlightedVerse(null)}
+              aria-label="Limpar destaque"
+              className="text-xs font-bold text-primary/70 hover:text-primary transition-colors flex items-center gap-1 shrink-0"
+            >
+              Limpar
+              <Icons.X className="w-3 h-3" />
+            </button>
+          </motion.div>
+        )}
+
         {/* Toolbar */}
         <div className="flex items-center justify-between gap-3 flex-wrap bg-card/50 backdrop-blur-md p-2 rounded-2xl border border-border shadow-sm">
           <div className="flex items-center gap-2">
             <AudioButton variant="solid" className="px-6" />
             <ShareButton
-              title={`${selectedBook.name} ${selectedChapter}`}
+              title={`${selectedBook.name} ${selectedChapter}${highlightedVerse ? `:${highlightedVerse}` : ''}`}
               text={`Leia ${selectedBook.name}, capítulo ${selectedChapter} na Cathedra Digital`}
-              url={`${window.location.origin}/biblia?book=${selectedBook.abbr}&ch=${selectedChapter}`}
+              url={buildBibleAbsoluteUrl({ abbr: selectedBook.abbr, chapter: selectedChapter, verse: highlightedVerse ?? undefined })}
             />
           </div>
 

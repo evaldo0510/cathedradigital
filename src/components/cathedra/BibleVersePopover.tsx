@@ -7,13 +7,14 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { Icons } from '../../constants';
+import { buildBibleUrl } from '@/lib/bibleUrl';
 
 interface BibleVersePopoverProps {
   abbr: string;
   chapter: number;
   verse?: number;
   label: string;
-  /** Optional override; defaults to navigating to /biblia?book=&ch=&v= */
+  /** Optional override; defaults to navigating to /bible?book=&ch=&v= */
   onNavigate?: (abbr: string, chapter: number, verse?: number) => void;
 }
 
@@ -34,11 +35,7 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = ({
       onNavigate(abbr, chapter, verse);
       return;
     }
-    const params = new URLSearchParams();
-    params.set('book', abbr);
-    params.set('ch', String(chapter));
-    if (verse) params.set('v', String(verse));
-    navigate(`/biblia?${params.toString()}`);
+    navigate(buildBibleUrl({ abbr, chapter, verse }));
   };
 
   const fetchVerses = async () => {
