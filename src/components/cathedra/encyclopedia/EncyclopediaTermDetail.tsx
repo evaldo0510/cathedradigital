@@ -8,6 +8,7 @@ import BibleVersePopover from '../BibleVersePopover';
 import CatechismPopover from '../CatechismPopover';
 import MagisteriumPopover from '../MagisteriumPopover';
 import { parseBibleReferences } from '@/lib/bibleRefParser';
+import { buildBibleUrl } from '@/lib/bibleUrl';
 
 interface EncyclopediaTermDetailProps {
   selectedTerm: FaithTerm | null;
@@ -87,11 +88,7 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
                           verse={bibleSeg.verse}
                           label={bibleSeg.value}
                           onNavigate={(abbr, chapter, verse) => {
-                            const params = new URLSearchParams();
-                            params.set('book', abbr);
-                            params.set('ch', String(chapter));
-                            if (verse) params.set('v', String(verse));
-                            navigate(`/biblia?${params.toString()}`);
+                            navigate(buildBibleUrl({ abbr, chapter, verse }));
                           }}
                         />
                       ));
