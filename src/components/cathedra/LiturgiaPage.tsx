@@ -463,7 +463,7 @@ const LiturgiaPage: React.FC = () => {
                       text={(readings.segundaLeitura as Reading).texto} 
                       onContext={() => navigate(parseRefToRoute((readings.segundaLeitura as Reading).referencia))} 
                       onReflect={() => navigateToLectio((readings.segundaLeitura as Reading).referencia)} 
-                      onCompare={() => setCompareReading({ label: 'Segunda Leitura', reference: (readings.segundaLeitura as Reading).referencia, text: (readings.segundaLeitura as Reading).text })}
+                      onCompare={() => setCompareReading({ label: 'Segunda Leitura', reference: (readings.segundaLeitura as Reading).referencia, text: (readings.segundaLeitura as Reading).texto })}
                       delay={0.25} 
                     />
                   )}
