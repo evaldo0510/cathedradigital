@@ -11,6 +11,7 @@ import { ChevronRight, Sparkles } from 'lucide-react';
 interface SaintOfTheDayCardProps {
   variant?: 'compact' | 'full';
   showReflectionLink?: boolean;
+  className?: string;
 }
 
 const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({ 
@@ -21,7 +22,7 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
   const { data: officialSaint, isLoading: loadingOfficial } = useOfficialSaint();
   const { data: allSaintsToday = [], isLoading: loadingSaints } = useSaintsToday();
 
-  const isLoading = loadingOfficial && loadingSaints;
+  const isLoading = loadingOfficial || loadingSaints;
 
   const saint = useMemo(() => {
     if (officialSaint && officialSaint.name && officialSaint.name !== "Santo do Dia" && officialSaint.name !== "Menu") {
@@ -32,10 +33,18 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
       });
       
       if (match) {
+        const fallbackImages = [
+          officialSaint.image,
+          match.image,
+          `https://source.unsplash.com/featured/?saint,${match.name.split(' ').join(',')}`,
+          `https://source.unsplash.com/featured/?catholic,${match.name.split(' ').join(',')}`
+        ].filter(Boolean) as string[];
+
         return { 
           ...match, 
           ...officialSaint,
-          id: match.id, // Keep the DB ID for navigation
+          id: match.id,
+          image: fallbackImages,
           fullBio: (officialSaint.fullBio && officialSaint.fullBio.length > 50) ? 
                    officialSaint.fullBio : 
                    (match.fullBio || match.bio || officialSaint.description || officialSaint.fullBio)
@@ -48,7 +57,11 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
         title: officialSaint.title || 'Santo do Dia',
         bio: officialSaint.description,
         fullBio: officialSaint.fullBio || officialSaint.description,
-        image: officialSaint.image,
+        image: [
+          officialSaint.image,
+          `https://source.unsplash.com/featured/?saint,${officialSaint.name.split(' ').join(',')}`,
+          'https://images.unsplash.com/photo-1548625361-195fe6144dfc?q=80&w=1000&auto=format&fit=crop' // Default Catholic image
+        ].filter(Boolean) as string[],
         url: officialSaint.url,
         category: 'confessor',
         feastDay: '',
@@ -91,7 +104,9 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
           />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-[9px] font-black uppercase tracking-[0.2em] text-secondary/80 mb-0.5">{saint.title || 'Santo do Dia'}</p>
+          <p className="text-[9px] font-black uppercase tracking-[0.2em] text-secondary/80 mb-0.5">
+            {saint.title === 'Santo do Dia' ? 'Santidade Hoje' : (saint.title || 'Santo do Dia')}
+          </p>
           <h3 className="text-base font-bold text-foreground leading-tight group-hover:text-primary transition-colors truncate">
             {saint.name}
           </h3>
@@ -125,7 +140,9 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
       </div>
       <div className="flex-1 p-6 space-y-4 flex flex-col justify-center">
         <div className="space-y-2">
-          <p className="text-lg text-primary font-serif italic mb-2">"{saint.title || 'Exemplo de Santidade'}"</p>
+          <p className="text-lg text-primary font-serif italic mb-2">
+            "{saint.title === 'Santo do Dia' ? 'Exemplo de Santidade' : (saint.title || 'Exemplo de Santidade')}"
+          </p>
           <p className="text-xs text-muted-foreground font-serif italic line-clamp-3 leading-relaxed">
             {saint.quotes?.[0] || saint.bio}
           </p>
