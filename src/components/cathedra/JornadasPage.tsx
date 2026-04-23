@@ -14,6 +14,7 @@ import FuzzySearchInput from './FuzzySearchInput';
 import RelevanceBadge from './RelevanceBadge';
 import { SearchResultCard } from './SearchResultCard';
 import { useFuzzySearch } from '@/hooks/useFuzzySearch';
+import { BubbleTag, getTagIcon } from './BubbleTag';
 import type { Tables } from '@/integrations/supabase/types';
 
 const DIFFICULTY_LABELS: Record<string, string> = {
@@ -369,28 +370,28 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
             <span className="font-medium">Filtrar</span>
           </div>
 
-          <div className="flex flex-wrap gap-1.5 sm:gap-2">
-          <button
-            onClick={() => setFilterCategory('all')}
-            className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold transition-all duration-200 ${
-              filterCategory === 'all' ? 'bg-foreground text-background shadow-md' : 'bg-muted text-muted-foreground hover:bg-muted/80'
-            }`}
-          >
-            Todas
-          </button>
-          {categories.map(cat => (
-            <button
-              key={cat}
-              onClick={() => setFilterCategory(cat)}
-              className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold transition-all duration-200 flex items-center gap-1 sm:gap-1.5 ${
-                filterCategory === cat ? 'bg-foreground text-background shadow-md' : 'bg-muted text-muted-foreground hover:bg-muted/80'
-              }`}
-            >
-              {CATEGORY_ICONS[cat] ? React.cloneElement(CATEGORY_ICONS[cat] as React.ReactElement, { className: 'w-3.5 h-3.5' }) : null}
-              {CATEGORY_LABELS[cat] || cat}
-            </button>
-          ))}
-        </div>
+          <div className="flex flex-wrap gap-2" role="list">
+            <div role="listitem">
+              <BubbleTag
+                label="Todas"
+                emoji="✨"
+                index={0}
+                isSelected={filterCategory === 'all'}
+                onClick={() => setFilterCategory('all')}
+              />
+            </div>
+            {categories.map((cat, i) => (
+              <div key={cat} role="listitem">
+                <BubbleTag
+                  label={CATEGORY_LABELS[cat] || cat}
+                  emoji={cat === 'oracao' ? '❤️' : cat === 'formacao' ? '📖' : cat === 'fundamentos' ? '⛪' : '🧭'}
+                  index={i + 1}
+                  isSelected={filterCategory === cat}
+                  onClick={() => setFilterCategory(cat)}
+                />
+              </div>
+            ))}
+          </div>
         <div className="flex flex-wrap gap-1.5 sm:gap-2">
           <button
             onClick={() => setFilterDifficulty('all')}
