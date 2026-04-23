@@ -10,66 +10,7 @@ import { RelevanceBadge } from './RelevanceBadge';
 import { FuzzySearchInput } from './FuzzySearchInput';
 import { BubbleTag, getTagIcon } from './BubbleTag';
 
-const tagIconMap: Record<string, React.ReactNode> = {
-  '❤️': <Heart className="w-5 h-5" />,
-  '💖': <Heart className="w-5 h-5" />,
-  '💔': <Heart className="w-5 h-5" />,
-  '💜': <Heart className="w-5 h-5" />,
-  '🤍': <Heart className="w-5 h-5" />,
-  '🫶': <Heart className="w-5 h-5" />,
-  '✝️': <Cross className="w-5 h-5" />,
-  '⛪': <Church className="w-5 h-5" />,
-  '🙏': <Hand className="w-5 h-5" />,
-  '🤲': <Hand className="w-5 h-5" />,
-  '🕊️': <Bird className="w-5 h-5" />,
-  '🔥': <Flame className="w-5 h-5" />,
-  '📖': <BookOpen className="w-5 h-5" />,
-  '📕': <BookOpen className="w-5 h-5" />,
-  '👑': <Crown className="w-5 h-5" />,
-  '🛡️': <Shield className="w-5 h-5" />,
-  '⭐': <Star className="w-5 h-5" />,
-  '🌍': <Globe className="w-5 h-5" />,
-  '🌎': <Globe className="w-5 h-5" />,
-  '👁️': <Eye className="w-5 h-5" />,
-  '👥': <Users className="w-5 h-5" />,
-  '👨‍👩‍👧‍👦': <Users className="w-5 h-5" />,
-  '🧭': <Compass className="w-5 h-5" />,
-  '🍷': <Wine className="w-5 h-5" />,
-  '💫': <Sparkles className="w-5 h-5" />,
-  '✨': <Sparkles className="w-5 h-5" />,
-  '🌹': <Heart className="w-5 h-5" />,
-  '🌱': <Flame className="w-5 h-5" />,
-  '💡': <Star className="w-5 h-5" />,
-  '🕯️': <Flame className="w-5 h-5" />,
-  '⚔️': <Shield className="w-5 h-5" />,
-  '🏛️': <Church className="w-5 h-5" />,
-  '🤝': <Users className="w-5 h-5" />,
-  '😢': <Frown className="w-5 h-5" />,
-  '😰': <Frown className="w-5 h-5" />,
-  '😔': <Frown className="w-5 h-5" />,
-  '😞': <Frown className="w-5 h-5" />,
-  '😨': <Frown className="w-5 h-5" />,
-  '💀': <Skull className="w-5 h-5" />,
-  '🎭': <Eye className="w-5 h-5" />,
-  '☀️': <Star className="w-5 h-5" />,
-  '🌙': <Orbit className="w-5 h-5" />,
-  '🏔️': <Mountain className="w-5 h-5" />,
-  '🔄': <RefreshCw className="w-5 h-5" />,
-  '📏': <Target className="w-5 h-5" />,
-  '💧': <Droplets className="w-5 h-5" />,
-  '🌾': <Wheat className="w-5 h-5" />,
-  '🦅': <Bird className="w-5 h-5" />,
-  '🥀': <Heart className="w-5 h-5" />,
-  '🌑': <Orbit className="w-5 h-5" />,
-  '🕳️': <Orbit className="w-5 h-5" />,
-  '⏰': <Clock className="w-5 h-5" />,
-  '🎯': <Target className="w-5 h-5" />,
-  '📢': <Megaphone className="w-5 h-5" />,
-};
-
-const getTagIcon = (emoji: string) => {
-  return tagIconMap[emoji] || <Hash className="w-5 h-5" />;
-};
+// Using shared getTagIcon from BubbleTag
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
