@@ -61,7 +61,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
       if (viewMode === 'all' || viewMode === 'cloud') return getAllSaints(100);
       return [];
     },
-    enabled: ['writers', 'popes', 'all'].includes(viewMode),
+    enabled: ['writers', 'popes', 'all', 'cloud'].includes(viewMode),
   });
 
   // Debounced search to avoid one DB hit per keystroke
