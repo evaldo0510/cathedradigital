@@ -311,6 +311,14 @@ const AppLayout: React.FC = () => {
 
 
   useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const oldTema = searchParams.get('tema');
+    if (oldTema && location.pathname === AppRoute.TEMAS) {
+      navigate(`${AppRoute.TEMAS}/${oldTema}`, { replace: true });
+    }
+  }, [location, navigate]);
+
+  useEffect(() => {
     if (location.pathname !== AppRoute.LOGIN || loading || !user) return;
     navigate(getPostAuthRoute(), { replace: true });
   }, [getPostAuthRoute, loading, location.pathname, navigate, user, profile]);
