@@ -24,6 +24,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import AudioButton from './AudioButton';
 import { BibleChapterSkeleton } from './SacredSkeleton';
+import { buildBibleAbsoluteUrl, parseVerseParam } from '@/lib/bibleUrl';
 
 
 type BibleBook = { name: string; abbr: string; chapters: number };
@@ -251,11 +252,18 @@ const Bible: React.FC = () => {
           if (!isNaN(ch) && ch >= 1 && ch <= found.chapters) {
             setSelectedChapter(ch);
             setViewMode('reading');
-            // Verse highlight via ?v=
-            const vParam = searchParams.get('v') || searchParams.get('verse');
-            if (vParam) {
-              const v = parseInt(vParam);
-              if (!isNaN(v)) setHighlightedVerse(v);
+            // Verse highlight via ?v= (with safe parsing + invalid fallback)
+            const rawV = searchParams.get('v') ?? searchParams.get('verse');
+            if (rawV !== null) {
+              const v = parseVerseParam(rawV);
+              if (v !== null) {
+                setHighlightedVerse(v);
+              } else {
+                setHighlightedVerse(null);
+                toast.warning(`Versículo "${rawV}" inválido`, {
+                  description: `Mostrando o capítulo ${found.name} ${ch} sem destaque.`,
+                });
+              }
             }
           } else {
             setViewMode('chapters');
