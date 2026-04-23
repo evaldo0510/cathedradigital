@@ -9,6 +9,7 @@ export enum AppRoute {
    SAINTS = '/santos',
    SAINT_DETAIL = '/santos/:id',
   MAGISTERIUM = '/magisterium',
+  MAGISTERIUM_DOC = '/magisterium/:id',
   DOGMAS = '/dogmas',
   DAILY_LITURGY = '/daily-liturgy',
   LITURGICAL_CALENDAR = '/calendar',
