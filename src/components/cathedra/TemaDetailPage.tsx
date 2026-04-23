@@ -84,6 +84,7 @@ const TemaDetailPage = () => {
   const [bibleLimit, setBibleLimit] = useState(5);
   const [traditionLimit, setTraditionLimit] = useState(5);
   const [magisteriumLimit, setMagisteriumLimit] = useState(5);
+  const [autoLoaded, setAutoLoaded] = useState(false);
 
   const { data: tags } = useQuery({
     queryKey: ['tags'],
