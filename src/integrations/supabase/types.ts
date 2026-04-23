@@ -233,6 +233,92 @@ export type Database = {
           },
         ]
       }
+      construction_data: {
+        Row: {
+          actual_end_date: string | null
+          actual_start_date: string | null
+          actual_value: number | null
+          category: string | null
+          created_at: string
+          id: string
+          item_name: string
+          planned_end_date: string | null
+          planned_start_date: string | null
+          planned_value: number | null
+          progress: number | null
+          project_id: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          actual_end_date?: string | null
+          actual_start_date?: string | null
+          actual_value?: number | null
+          category?: string | null
+          created_at?: string
+          id?: string
+          item_name: string
+          planned_end_date?: string | null
+          planned_start_date?: string | null
+          planned_value?: number | null
+          progress?: number | null
+          project_id: string
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          actual_end_date?: string | null
+          actual_start_date?: string | null
+          actual_value?: number | null
+          category?: string | null
+          created_at?: string
+          id?: string
+          item_name?: string
+          planned_end_date?: string | null
+          planned_start_date?: string | null
+          planned_value?: number | null
+          progress?: number | null
+          project_id?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "construction_data_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "construction_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      construction_projects: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          status: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          status?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       content_tags: {
         Row: {
           content_id: string
