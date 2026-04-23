@@ -108,7 +108,6 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
 
       if (result.error) throw new Error(result.error);
     } catch (error) {
-    } catch (error) {
       console.error('Error generating Logos reflection:', error);
       setLogosReflection('Desculpe, não consegui conectar com Logos agora. Tente novamente em breve.');
     } finally {
