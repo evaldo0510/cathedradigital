@@ -496,7 +496,7 @@ const LiturgiaPage: React.FC = () => {
                           <Icons.Brain className="w-3.5 h-3.5" /> Análise de Unidade Litúrgica
                         </div>
                         <h3 className="text-2xl font-display font-black text-primary tracking-tight">Como as leituras se conectam?</h3>
-                        <p className="text-sm text-muted-foreground max-w-md mx-auto">IARA analisa a harmonia entre o Antigo e o Novo Testamento na liturgia de hoje.</p>
+                        <p className="text-sm text-muted-foreground max-w-md mx-auto">Logos analisa a harmonia entre o Antigo e o Novo Testamento na liturgia de hoje.</p>
                       </div>
 
                       <div className="grid gap-6 md:grid-cols-2 relative z-10">
@@ -547,7 +547,7 @@ const LiturgiaPage: React.FC = () => {
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }} className="bg-card border border-border rounded-[2rem] p-8 space-y-6 shadow-sm">
                 <div className="text-center space-y-2">
                   <Icons.Sparkles className="w-6 h-6 text-secondary mx-auto" />
-                  <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">Meditação com IARA</p>
+                  <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">Meditação com Logos</p>
                 </div>
                 {!meditation && !isMeditationLoading && (
                   <Button onClick={fetchMeditation} className="w-full h-14 rounded-2xl bg-primary text-white font-black uppercase tracking-widest hover:scale-[1.02] transition-transform">Gerar Meditação Personalizada</Button>
@@ -630,9 +630,9 @@ const LiturgiaPage: React.FC = () => {
 
                   <TabsContent value="analise" className="m-0 focus-visible:outline-none">
                     {isComparing ? (
-                      <div className="flex flex-col items-center justify-center py-20 space-y-4">
+                       <div className="flex flex-col items-center justify-center py-20 space-y-4">
                         <Icons.Loader2 className="w-10 h-10 text-secondary animate-spin" />
-                        <p className="text-sm font-black uppercase tracking-widest text-muted-foreground animate-pulse">IARA está analisando...</p>
+                        <p className="text-sm font-black uppercase tracking-widest text-muted-foreground animate-pulse">Logos está analisando...</p>
                       </div>
                     ) : (
                       <div className="prose prose-slate max-w-none dark:prose-invert font-serif text-lg leading-relaxed">

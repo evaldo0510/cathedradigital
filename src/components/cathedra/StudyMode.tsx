@@ -403,7 +403,7 @@ const StudyMode: React.FC = () => {
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
             <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
             <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">
-              {currentMode === 'aquinas' ? 'IARA — Modo Aquino' : 'Logos: Mentor Espiritual'}
+              {currentMode === 'aquinas' ? 'Logos — Modo Aquino' : 'Logos: Mentor Espiritual'}
             </span>
           </div>
           <h1 className="text-3xl md:text-4xl font-serif font-bold text-foreground">
