@@ -286,7 +286,7 @@ const AquinasOpera: React.FC = () => {
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-                    <span>IA IARA explicando decisões</span>
+                    <span>IA Logos explicando decisões</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary" />
@@ -339,7 +339,7 @@ const AquinasOpera: React.FC = () => {
                 className="inline-flex items-center gap-3 px-8 py-4 bg-primary text-primary-foreground rounded-2xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all group shadow-lg shadow-primary/20"
               >
                 <Icons.Brain className="w-5 h-5" />
-                Interagir com IARA (Modo Aquino)
+                Interagir com Logos (Modo Aquino)
               </button>
             </div>
           </motion.div>
