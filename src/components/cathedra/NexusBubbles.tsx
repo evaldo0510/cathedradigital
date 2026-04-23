@@ -227,11 +227,13 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
     fetchTags();
   }, []);
 
+  const [activeFilter, setActiveFilter] = useState<string>('all');
+
   const categories = {
-    fundamentos: { label: 'Fundamentos da Fé', icon: <Icons.Church className="w-3.5 h-3.5" /> },
-    dores: { label: 'Dores e Busca', icon: <Icons.Heart className="w-3.5 h-3.5 text-destructive" /> },
-    divino: { label: 'Mistério Divino', icon: <Icons.Sparkles className="w-3.5 h-3.5 text-secondary" /> },
-    vida: { label: 'Vida Prática', icon: <Icons.Flame className="w-3.5 h-3.5 text-orange-500" /> },
+    fundamentos: { label: 'Fundamentos', icon: <Icons.Church className="w-3.5 h-3.5" /> },
+    dores: { label: 'Dores', icon: <Icons.Heart className="w-3.5 h-3.5 text-destructive" /> },
+    divino: { label: 'Mistério', icon: <Icons.Sparkles className="w-3.5 h-3.5 text-secondary" /> },
+    vida: { label: 'Vida', icon: <Icons.Flame className="w-3.5 h-3.5 text-orange-500" /> },
   };
 
   const profileSuggestedTags = useMemo(() => {
@@ -239,18 +241,23 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
     const profile = PROFILES[profileId];
     if (!profile) return [];
 
-    // Filter tags by profile theme or related pains
     const relevantLabels = [profile.theme, profile.pain.label, 'Oração', 'Jesus', 'Fé'];
     return tags.filter(t => relevantLabels.some(l => t.label.toLowerCase().includes(l.toLowerCase()))).slice(0, 8);
   }, [profileId, tags]);
 
   const filteredTags = useMemo(() => {
-    if (!searchQuery) return null;
-    return tags.filter(t => 
-      t.label.toLowerCase().includes(searchQuery.toLowerCase()) || 
-      t.category.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [tags, searchQuery]);
+    let result = tags;
+    if (searchQuery) {
+      result = result.filter(t => 
+        t.label.toLowerCase().includes(searchQuery.toLowerCase()) || 
+        t.category.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+    if (activeFilter !== 'all') {
+      result = result.filter(t => t.category === activeFilter);
+    }
+    return result;
+  }, [tags, searchQuery, activeFilter]);
 
   if (loading) {
     return (
