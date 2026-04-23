@@ -167,6 +167,7 @@ const AdminJourneysTab: React.FC = () => {
         
       if (error) {
         console.error('Error saving step:', error);
+        toast.error(`Falha ao salvar o passo: ${error.message}`);
         throw error;
       }
       
@@ -303,6 +304,7 @@ const AdminJourneysTab: React.FC = () => {
 
       if (error) {
         console.error('Error creating journey:', error);
+        toast.error(`Falha ao criar jornada: ${error.message}`);
         throw error;
       }
       
