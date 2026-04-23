@@ -409,9 +409,19 @@ const Bible: React.FC = () => {
     }
   }, [viewMode, selectedBook, selectedChapter, bibleCache]);
 
-  // Auto-scroll to highlighted verse when verses are loaded
+  // Auto-scroll to highlighted verse when verses are loaded.
+  // If the verse is out of range for the loaded chapter, warn the user
+  // but keep the chapter visible.
   useEffect(() => {
     if (highlightedVerse && verses.length > 0 && !isLoading) {
+      const exists = verses.some(v => v.number === highlightedVerse);
+      if (!exists) {
+        toast.warning(`Versículo ${highlightedVerse} não encontrado`, {
+          description: `Este capítulo tem ${verses.length} versículos. Mostrando o capítulo completo.`,
+        });
+        setHighlightedVerse(null);
+        return;
+      }
       // Wait for DOM to render
       setTimeout(() => {
         const el = document.getElementById(`v${highlightedVerse}`);
