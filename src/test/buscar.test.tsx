@@ -2,6 +2,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import GlobalSearchPage from '../components/cathedra/GlobalSearchPage';
+import CommandCenter from '../components/cathedra/CommandCenter';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 // Mocking icons and supabase to avoid issues
