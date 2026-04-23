@@ -457,14 +457,39 @@ const Bible: React.FC = () => {
           </div>
         </div>
 
+        {/* Highlighted verse indicator (when ?v= is active) */}
+        {highlightedVerse && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            data-testid="bible-highlight-indicator"
+            className="flex items-center justify-between gap-3 px-4 py-3 rounded-2xl bg-primary/10 border border-primary/30"
+          >
+            <div className="flex items-center gap-2 min-w-0">
+              <Icons.Sparkles className="w-4 h-4 text-primary shrink-0" />
+              <span className="text-sm font-bold text-primary truncate">
+                Destacado: {selectedBook.name} {selectedChapter}:{highlightedVerse}
+              </span>
+            </div>
+            <button
+              onClick={() => setHighlightedVerse(null)}
+              aria-label="Limpar destaque"
+              className="text-xs font-bold text-primary/70 hover:text-primary transition-colors flex items-center gap-1 shrink-0"
+            >
+              Limpar
+              <Icons.X className="w-3 h-3" />
+            </button>
+          </motion.div>
+        )}
+
         {/* Toolbar */}
         <div className="flex items-center justify-between gap-3 flex-wrap bg-card/50 backdrop-blur-md p-2 rounded-2xl border border-border shadow-sm">
           <div className="flex items-center gap-2">
             <AudioButton variant="solid" className="px-6" />
             <ShareButton
-              title={`${selectedBook.name} ${selectedChapter}`}
+              title={`${selectedBook.name} ${selectedChapter}${highlightedVerse ? `:${highlightedVerse}` : ''}`}
               text={`Leia ${selectedBook.name}, capítulo ${selectedChapter} na Cathedra Digital`}
-              url={`${window.location.origin}/biblia?book=${selectedBook.abbr}&ch=${selectedChapter}`}
+              url={buildBibleAbsoluteUrl({ abbr: selectedBook.abbr, chapter: selectedChapter, verse: highlightedVerse ?? undefined })}
             />
           </div>
 
