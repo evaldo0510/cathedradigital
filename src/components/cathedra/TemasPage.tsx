@@ -231,51 +231,22 @@ const TemasPage = () => {
             ) : (
               <>
                 <div className="relative p-6 sm:p-10">
-                  <div className="flex flex-wrap justify-center gap-2 sm:gap-3 max-w-5xl mx-auto">
-                    {filteredTags.map((tag, idx) => {
-                      const isSelected = selectedTag?.id === tag.id;
-                      return (
-                        <motion.button
-                          key={tag.id}
-                          layoutId={`tag-${tag.id}`}
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          transition={{ 
-                            delay: idx * 0.015,
-                            type: "spring",
-                            damping: 15,
-                            stiffness: 100
-                          }}
-                          whileHover={{ 
-                            scale: 1.15, 
-                            y: -4,
-                            rotate: isSelected ? 0 : [0, -1, 1, 0],
-                            transition: { duration: 0.2 }
-                          }}
-                          whileTap={{ scale: 0.95 }}
+                  <div className="flex flex-wrap justify-center gap-2 sm:gap-3 max-w-5xl mx-auto" role="list">
+                    {filteredTags.map((tag, idx) => (
+                      <div key={tag.id} role="listitem">
+                        <BubbleTag
+                          label={tag.label}
+                          emoji={tag.emoji}
+                          index={idx}
+                          isSelected={selectedTag?.id === tag.id}
                           onClick={() => handleTagSelect(tag)}
                           className={`
-                            px-4 py-2.5 rounded-full text-[10px] sm:text-[11px] font-black uppercase tracking-widest transition-all duration-300
-                            flex items-center gap-2 border shrink-0 relative group/bubble
-                            ${isSelected 
-                              ? 'bg-primary text-primary-foreground border-primary shadow-xl shadow-primary/30 z-10 scale-110' 
-                              : 'bg-card/50 backdrop-blur-xl text-foreground/70 border-border/60 hover:border-primary/40 hover:bg-primary/5 hover:text-primary hover:shadow-2xl'
-                            }
+                            px-4 py-2.5 text-[10px] sm:text-[11px] uppercase tracking-widest
+                            ${selectedTag?.id === tag.id ? 'z-10 scale-110 shadow-primary/30' : ''}
                           `}
-                        >
-                          <span className="group-hover/bubble:scale-125 transition-transform duration-300 opacity-80 group-hover/bubble:opacity-100 text-sm">{getTagIcon(tag.emoji)}</span>
-                          <span className="relative whitespace-nowrap">
-                            {tag.label}
-                          </span>
-                          {isSearchActive && (
-                            <RelevanceBadge score={tag.similarityScore} size="xs" />
-                          )}
-                          {!isSelected && (
-                            <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover/bubble:opacity-100 rounded-full transition-opacity pointer-events-none" />
-                          )}
-                        </motion.button>
-                      );
-                    })}
+                        />
+                      </div>
+                    ))}
                   </div>
                 </div>
                 <div className="flex items-center justify-center gap-3 px-8 pb-6 pt-2">
