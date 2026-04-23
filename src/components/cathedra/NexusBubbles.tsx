@@ -317,17 +317,21 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
 
       <div className="space-y-6">
         <AnimatePresence mode="wait">
-          {searchQuery ? (
+          {searchQuery || activeFilter !== 'all' ? (
             <motion.div 
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               className="space-y-3"
             >
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Resultado da Busca</p>
-              <div className="flex flex-wrap gap-1.5">
-                {filteredTags?.length ? filteredTags.map((tag, i) => (
-                  <TagBubble key={tag.slug} tag={tag} index={i} />
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                {searchQuery ? 'Resultado da Busca' : categories[activeFilter as keyof typeof categories]?.label}
+              </p>
+              <div className="flex flex-wrap gap-1.5" role="list">
+                {filteredTags && filteredTags.length ? filteredTags.map((tag, i) => (
+                  <div key={tag.slug} role="listitem">
+                    <TagBubble tag={tag} index={i} />
+                  </div>
                 )) : (
                   <p className="text-[10px] text-muted-foreground italic">Nenhum tema encontrado.</p>
                 )}
@@ -351,9 +355,11 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
                       Sugeridos para sua Jornada
                     </span>
                   </div>
-                  <div className="flex flex-wrap gap-1.5">
+                  <div className="flex flex-wrap gap-1.5" role="list">
                     {profileSuggestedTags.map((tag, i) => (
-                      <TagBubble key={tag.slug} tag={tag} index={i} isSuggested />
+                      <div key={tag.slug} role="listitem">
+                        <TagBubble tag={tag} index={i} isSuggested />
+                      </div>
                     ))}
                   </div>
                 </motion.div>
@@ -383,9 +389,11 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
                         </span>
                       </button>
 
-                      <div className="flex flex-wrap gap-1.5">
+                      <div className="flex flex-wrap gap-1.5" role="list">
                         {(expandedCategory === key ? categoryTags : categoryTags.slice(0, 6)).map((tag, i) => (
-                          <TagBubble key={tag.slug} tag={tag} index={i} />
+                          <div key={tag.slug} role="listitem">
+                            <TagBubble tag={tag} index={i} />
+                          </div>
                         ))}
                         {expandedCategory !== key && categoryTags.length > 6 && (
                           <button
