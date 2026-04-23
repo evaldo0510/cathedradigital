@@ -66,6 +66,11 @@ const AdminJourneysTab: React.FC = () => {
   const [editingStep, setEditingStep] = useState<Step | null>(null);
   const [isEditStepDialogOpen, setIsEditStepDialogOpen] = useState(false);
   const [stepContentString, setStepContentString] = useState('');
+  
+  const [journeyToDelete, setJourneyToDelete] = useState<Journey | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [stepsToDeleteCount, setStepsToDeleteCount] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const [isAddJourneyDialogOpen, setIsAddJourneyDialogOpen] = useState(false);
   const [newJourney, setNewJourney] = useState({
@@ -78,6 +83,7 @@ const AdminJourneysTab: React.FC = () => {
     is_premium: false,
     estimated_days: 7
   });
+
 
   useEffect(() => {
     fetchJourneys();
