@@ -15,7 +15,7 @@ import MagisteriumPopover from './MagisteriumPopover';
 import { parseBibleReferences } from '@/lib/bibleRefParser';
 import AZFaithQuiz from './AZFaithQuiz';
 
-interface FaithTerm {
+export interface FaithTerm {
   term: string;
   definition: string;
   reference?: string;
