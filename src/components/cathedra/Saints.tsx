@@ -13,7 +13,7 @@ import { type Saint } from '@/data/saints';
 import { getSaintsByDate, searchSaints, getSaintsByCategory, getAllSaints, getSaintById, formatSaint, type SaintWithScore } from '@/services/saintsService';
 import { supabase } from '@/integrations/supabase/client';
 import { useDebounce } from '@/hooks/useDebounce';
-// Removed redundant lucide-react imports that exist in Icons constant
+import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Sparkles, BookOpen, Quote, Shield, User } from 'lucide-react';
 import { RelevanceBadge } from './RelevanceBadge';
 import { FuzzySearchInput } from './FuzzySearchInput';
 import { SearchResultCard } from './SearchResultCard';
