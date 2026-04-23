@@ -387,32 +387,50 @@ export type Database = {
       }
       glossary: {
         Row: {
+          bible_verses: string[] | null
+          catechism_references: string[] | null
           category: string | null
           created_at: string
+          deep_interpretation: string | null
           definition: string
           id: string
           journey_id: string | null
           language: string
+          magisterium_references: string[] | null
+          practical_application: string | null
+          reference: string | null
           term: string
           updated_at: string
         }
         Insert: {
+          bible_verses?: string[] | null
+          catechism_references?: string[] | null
           category?: string | null
           created_at?: string
+          deep_interpretation?: string | null
           definition: string
           id?: string
           journey_id?: string | null
           language?: string
+          magisterium_references?: string[] | null
+          practical_application?: string | null
+          reference?: string | null
           term: string
           updated_at?: string
         }
         Update: {
+          bible_verses?: string[] | null
+          catechism_references?: string[] | null
           category?: string | null
           created_at?: string
+          deep_interpretation?: string | null
           definition?: string
           id?: string
           journey_id?: string | null
           language?: string
+          magisterium_references?: string[] | null
+          practical_application?: string | null
+          reference?: string | null
           term?: string
           updated_at?: string
         }
@@ -1465,12 +1483,18 @@ export type Database = {
       search_glossary_fuzzy: {
         Args: { result_limit?: number; search_query: string }
         Returns: {
+          bible_verses: string[] | null
+          catechism_references: string[] | null
           category: string | null
           created_at: string
+          deep_interpretation: string | null
           definition: string
           id: string
           journey_id: string | null
           language: string
+          magisterium_references: string[] | null
+          practical_application: string | null
+          reference: string | null
           term: string
           updated_at: string
         }[]
