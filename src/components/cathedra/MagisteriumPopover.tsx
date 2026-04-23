@@ -6,19 +6,9 @@ import {
   HoverCardTrigger,
 } from '@/components/ui/hover-card';
 import { Icons } from '../../constants';
+import { MAGISTERIUM_URLS } from '@/data/magisterium-urls';
+import { useNavigate } from 'react-router-dom';
 
-/** Maps document search terms to Vatican.va URLs (Portuguese) */
-const DOCUMENT_URLS: Record<string, string> = {
-  'Dei Filius': 'https://www.vatican.va/archive/hist_councils/i-vatican-council/documents/vat-i_const_18700424_dei-filius_la.html',
-  'Ineffabilis Deus': 'https://www.vatican.va/content/pius-ix/la/documents/bulla-ineffabilis-deus-8-decembris-1854.html',
-  'Munificentissimus Deus': 'https://www.vatican.va/content/pius-xii/pt/apost_constitutions/documents/hf_p-xii_apc_19501101_munificentissimus-deus.html',
-  'Pastor Aeternus': 'https://www.vatican.va/archive/hist_councils/i-vatican-council/documents/vat-i_const_18700718_pastor-aeternus_la.html',
-  'Mystici Corporis': 'https://www.vatican.va/content/pius-xii/pt/encyclicals/documents/hf_p-xii_enc_29061943_mystici-corporis-christi.html',
-  'Benedictus Deus': 'https://www.vatican.va/content/benedict-xii/la/documents/constitutio-dogmatica-benedictus-deus-29-ian-1336.html',
-  'Credo Niceno': 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_const_19641121_lumen-gentium_po.html',
-  'Dei Verbum': 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_const_19651118_dei-verbum_po.html',
-  'Decreto Sacrosanctis Trento': 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_const_19631204_sacrosanctum-concilium_po.html',
-};
 
 interface MagisteriumPopoverProps {
   documentName: string;
