@@ -10,7 +10,8 @@ import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 import { LangContext } from '@/contexts/LangContext';
 import ProConversionBanner from './ProConversionBanner';
-import { useSaintsToday, useOfficialSaint } from '@/hooks/useSaints';
+import { useSaintsToday } from '@/hooks/useSaints';
+import SaintOfTheDayCard from './SaintOfTheDayCard';
 import SacredImage from './SacredImage';
 import AudioContentPlayer from './AudioContentPlayer';
 import { toast } from 'sonner';
@@ -139,8 +140,6 @@ const HojePage: React.FC = () => {
   const [logosThemeName, setLogosThemeName] = useState<string>('');
   const [logosSaint, setLogosSaint] = useState<any>(null);
 
-  // All data hooks — parallel loading
-  const { data: officialSaint, isLoading: loadingOfficial } = useOfficialSaint();
   const { data: allSaintsToday = [], isLoading: loadingSaints } = useSaintsToday();
   const { data: activeJourneyData, isLoading: loadingJourney } = useActiveJourney(user?.id);
   const activeJourney = activeJourneyData?.journey || null;
@@ -150,62 +149,6 @@ const HojePage: React.FC = () => {
   const { data: recommendedJourney } = useRecommendedJourney(
     user?.id, profile, userLevel, !!activeJourney
   );
-
-  const saintLoading = loadingOfficial && loadingSaints;
-
-  const featuredSaint = useMemo(() => {
-    if (officialSaint && officialSaint.name !== "Santo do Dia" && officialSaint.name !== "Menu") {
-      const match = allSaintsToday.find((s: any) => {
-        const officialName = (officialSaint.name || "").toLowerCase();
-        const saintName = (s.name || "").toLowerCase();
-        return officialName.includes(saintName) || saintName.includes(officialName);
-      });
-      if (match) {
-        return { 
-          ...match, 
-          ...officialSaint,
-          fullBio: (officialSaint.fullBio && officialSaint.fullBio.length > 50) ? 
-                   officialSaint.fullBio : 
-                   (match.fullBio || match.bio || officialSaint.description || officialSaint.fullBio)
-        };
-      }
-      return { 
-        id: 'official-today',
-        name: officialSaint.name,
-        title: 'Santo do Dia',
-        bio: officialSaint.description,
-        fullBio: officialSaint.fullBio || officialSaint.description,
-        image: officialSaint.image,
-        url: officialSaint.url,
-        category: 'confessor' as const,
-        works: (officialSaint.writings || []).map((w: string) => ({ title: w })),
-        quotes: officialSaint.writings || [],
-        feastDay: '',
-        feastMonth: 0,
-        feastDayNum: 0,
-        born: '',
-        died: '',
-        patronOf: []
-      };
-    }
-
-    if (allSaintsToday.length === 0) return null;
-    if (allSaintsToday.length === 1) return allSaintsToday[0];
-    
-    if (activeJourney) {
-      const categoryMap: Record<string, string[]> = {
-        'fundamentos': ['apostle', 'martyr'],
-        'formacao': ['doctor'],
-        'mistico': ['mystic', 'virgin'],
-        'rotina': ['confessor', 'founder']
-      };
-      const preferredCategories = categoryMap[activeJourney.category] || [];
-      const match = allSaintsToday.find((s: any) => preferredCategories.includes(s.category));
-      if (match) return match;
-    }
-    
-    return allSaintsToday[0];
-  }, [allSaintsToday, activeJourney, officialSaint]);
 
   const analyzeReflection = useCallback(async (text: string) => {
     if (!user || !text.trim()) return;
@@ -443,58 +386,7 @@ const HojePage: React.FC = () => {
             )}
           </div>
 
-          {saintLoading ? (
-            <SaintSkeleton />
-          ) : featuredSaint ? (
-            <motion.div
-              whileHover={{ scale: 1.01 }}
-              whileTap={{ scale: 0.99 }}
-              onClick={() => navigate(`${AppRoute.SAINTS}/${featuredSaint.id}?action=reflect`)}
-              className="group cursor-pointer p-0 rounded-3xl border border-border bg-card overflow-hidden shadow-sm hover:border-primary/30 transition-all flex flex-col sm:flex-row h-full"
-            >
-              <div className="w-full sm:w-1/3 h-40 sm:h-auto relative shrink-0 overflow-hidden">
-                <SacredImage 
-                  src={featuredSaint.image} 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
-                  alt={featuredSaint.name} 
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                <div className="absolute bottom-4 left-4 right-4">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-white/70 mb-1">{featuredSaint.feastDay}</p>
-                  <h3 className="text-xl font-serif font-bold text-white leading-tight">{featuredSaint.name}</h3>
-                </div>
-              </div>
-              <div className="flex-1 p-6 space-y-4 flex flex-col justify-center">
-                <div className="space-y-2">
-                  <p className="text-lg text-primary font-serif italic mb-2">"{featuredSaint.title}"</p>
-                  <p className="text-xs text-muted-foreground font-serif italic line-clamp-3 leading-relaxed">
-                    {featuredSaint.quotes?.[0] || featuredSaint.bio}
-                  </p>
-                </div>
-                <div className="flex items-center justify-between pt-2 border-t border-border/50">
-                  <div className="flex gap-1">
-                    {featuredSaint.virtues?.slice(0, 2).map((v: string) => (
-                      <span key={v} className="px-2 py-1 bg-primary/10 text-primary text-[9px] font-black uppercase rounded-lg">{v}</span>
-                    ))}
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                      <Icons.Sparkles className="w-4 h-4" />
-                    </div>
-                    <span className="text-[10px] font-black uppercase tracking-widest text-primary">Refletir</span>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          ) : (
-            <div className="p-8 rounded-3xl border border-border bg-muted/10 text-center">
-              <Icons.Saints className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
-              <p className="text-sm text-muted-foreground font-serif italic">Nenhum santo encontrado para hoje</p>
-              <Button variant="ghost" size="sm" className="mt-3 text-primary" onClick={() => navigate(AppRoute.SAINTS)}>
-                Ver todos os santos
-              </Button>
-            </div>
-          )}
+          <SaintOfTheDayCard />
         </motion.section>
 
         {/* Continuar Jornada */}

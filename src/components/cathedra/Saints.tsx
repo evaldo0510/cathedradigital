@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useSearchParams, useParams } from 'react-router-dom';
+import { useOfficialSaint } from '@/hooks/useSaints';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import SEOHead from '@/components/SEOHead';
@@ -41,23 +42,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
   // ─── Queries ───
   
-  // Official Saint of the Day (Scraped/Fetched from Edge Function)
-  const { data: officialSaint } = useQuery({
-    queryKey: ['official-saint'],
-    queryFn: async () => {
-      const cacheKey = `official_saint_${format(new Date(), 'yyyy-MM-dd')}`;
-      const cached = localStorage.getItem(cacheKey);
-      if (cached) return JSON.parse(cached);
-
-      const response = await supabase.functions.invoke('saint-of-the-day');
-      if (response.data && !response.error) {
-        localStorage.setItem(cacheKey, JSON.stringify(response.data));
-        return response.data;
-      }
-      return null;
-    },
-    staleTime: 1000 * 60 * 60 * 24, // 24 hours
-  });
+  const { data: officialSaint } = useOfficialSaint();
 
   // Daily Saints from Database
   const { data: localSaints = [], isLoading: isLoadingDaily } = useQuery({

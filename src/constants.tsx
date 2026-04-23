@@ -215,7 +215,7 @@ export const Icons = {
   ShieldQuestion: createIcon(ShieldQuestion),
   PartyPopper: createIcon(PartyPopper),
   
-  // Library & Study (Organized by source type)
+  // Library & Study
   Bible: createIcon(BookText),
   HolyBible: createIcon(BookText),
   Book: createIcon(Book),
@@ -262,14 +262,13 @@ export const Icons = {
   Rosary: createIcon(Orbit),
   ViaCrucis: createIcon(Cross),
   Church: createIcon(Church),
-  Dove: createIcon(Sparkles),
   LiturgicalCalendar: createIcon(Map),
+  Map: createIcon(Map),
   
   // Pathways & Journeys
   Journeys: createIcon(Compass),
   JourneysMap: createIcon(Map),
   Route: createIcon(Route),
-  Map: createIcon(Map),
   Compass: createIcon(Compass),
   Target: createIcon(Target),
   Flag: createIcon(Award),
@@ -306,14 +305,13 @@ export const Icons = {
   
   // Arrows & Direction
   ChevronLeft: createIcon(ChevronLeft),
-  Video: createIcon(Video),
   ChevronRight: createIcon(ChevronRight),
   ChevronDown: createIcon(ChevronDown),
   ChevronUp: createIcon(ChevronUp),
   ArrowLeft: createIcon(ArrowLeft),
   ArrowRight: createIcon(ArrowRight),
   ArrowDown: createIcon(ArrowDown),
-  ArrowUp: createIcon(ChevronUp),
+  Video: createIcon(Video),
   
   // Utilities
   Copy: createIcon(Copy),

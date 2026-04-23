@@ -23,11 +23,30 @@ const SacredImage = React.forwardRef<HTMLDivElement, SacredImageProps>(({ src, a
     setIsLoaded(false);
     setError(false);
     if (!mainSrc) { setError(true); setIsLoaded(true); return; }
+    
     const img = new Image();
+    const timeout = setTimeout(() => {
+      if (!isLoaded) {
+        setError(true);
+        setIsLoaded(true);
+      }
+    }, 10000); // 10s fallback for images
+
     img.src = mainSrc;
-    img.onload = () => setIsLoaded(true);
-    img.onerror = () => { setError(true); setIsLoaded(true); };
-    return () => { img.onload = null; img.onerror = null; };
+    img.onload = () => {
+      clearTimeout(timeout);
+      setIsLoaded(true);
+    };
+    img.onerror = () => {
+      clearTimeout(timeout);
+      setError(true);
+      setIsLoaded(true);
+    };
+    return () => {
+      clearTimeout(timeout);
+      img.onload = null; 
+      img.onerror = null;
+    };
   }, [mainSrc]);
 
   return (
