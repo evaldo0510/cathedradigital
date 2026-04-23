@@ -9,7 +9,7 @@ import SacredImage from './SacredImage';
 import { SaintCardSkeleton, SaintGridSkeleton } from './SacredSkeleton';
 import SaintDetail, { CATEGORY_LABELS } from './SaintDetail';
 import { type Saint } from '@/data/saints';
-import { getSaintsByDate, searchSaints, getSaintsByCategory, getAllSaints, formatSaint, type SaintWithScore } from '@/services/saintsService';
+import { getSaintsByDate, searchSaints, getSaintsByCategory, getAllSaints, getSaintById, formatSaint, type SaintWithScore } from '@/services/saintsService';
 import { supabase } from '@/integrations/supabase/client';
 import { useDebounce } from '@/hooks/useDebounce';
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Sparkles, BookOpen, Quote, Shield, User } from 'lucide-react';
