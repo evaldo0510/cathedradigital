@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import {
   Popover,
@@ -12,7 +13,8 @@ interface BibleVersePopoverProps {
   chapter: number;
   verse?: number;
   label: string;
-  onNavigate?: (abbr: string, chapter: number) => void;
+  /** Optional override; defaults to navigating to /biblia?book=&ch=&v= */
+  onNavigate?: (abbr: string, chapter: number, verse?: number) => void;
 }
 
 const BibleVersePopover: React.FC<BibleVersePopoverProps> = ({
