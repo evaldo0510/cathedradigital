@@ -218,23 +218,59 @@ const AdminJourneysTab: React.FC = () => {
       toast.error('Erro ao salvar jornada: ' + error.message);
     }
   };
-  const handleDeleteJourney = async (id: string) => {
-    if (!window.confirm('Tem certeza que deseja excluir esta jornada e todos os seus passos?')) return;
-
+  const initiateDeleteJourney = async (journey: Journey) => {
     try {
+      // Fetch step count for confirmation modal
+      const { count, error } = await supabase
+        .from('journey_steps')
+        .select('*', { count: 'exact', head: true })
+        .eq('journey_id', journey.id);
+      
+      if (error) throw error;
+      
+      setStepsToDeleteCount(count || 0);
+      setJourneyToDelete(journey);
+      setIsDeleteDialogOpen(true);
+    } catch (error: any) {
+      console.error('Error fetching step count for deletion:', error);
+      toast.error('Erro ao preparar exclusão: ' + error.message);
+    }
+  };
+
+  const confirmDeleteJourney = async () => {
+    if (!journeyToDelete) return;
+    
+    setIsDeleting(true);
+    try {
+      console.log(`Attempting to delete journey: ${journeyToDelete.title} (${journeyToDelete.id})`);
+      
       const { error } = await supabase
         .from('journeys')
         .delete()
-        .eq('id', id);
+        .eq('id', journeyToDelete.id);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Database error during journey deletion:', error);
+        throw error;
+      }
 
-      setJourneys(prev => prev.filter(j => j.id !== id));
-      toast.success('Jornada excluída com sucesso.');
+      setJourneys(prev => prev.filter(j => j.id !== journeyToDelete.id));
+      if (selectedJourneyId === journeyToDelete.id) {
+        setSelectedJourneyId(null);
+        setSteps([]);
+      }
+      
+      toast.success(`Jornada "${journeyToDelete.title}" e seus ${stepsToDeleteCount} passos foram excluídos com sucesso.`);
+      setIsDeleteDialogOpen(false);
+      setJourneyToDelete(null);
     } catch (error: any) {
-      toast.error('Erro ao excluir jornada: ' + error.message);
+      console.error('Critical error deleting journey:', error);
+      toast.error('Erro ao excluir jornada: ' + (error.message || 'Erro desconhecido'));
+    } finally {
+      setIsDeleting(false);
     }
   };
+
 
 
   const handleCreateJourney = async () => {
