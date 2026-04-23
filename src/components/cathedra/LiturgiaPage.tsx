@@ -177,27 +177,13 @@ const LiturgiaPage: React.FC = () => {
     setIsComparing(true);
     setComparisonAnalysis(null);
     try {
-      const { data, error } = await supabase.functions.invoke('colloquium', {
-        body: {
-          messages: [{
-            role: 'user',
-            content: `Analise e compare este texto bíblico (${ref}) com outros textos da Tradição Católica, Catecismo e escritos dos Santos. Forneça uma análise teológica profunda.\n\nTexto: ${text}`
-          }]
-        }
-      });
-      if (error) throw error;
+      const result = await callColloquium([{
+        role: 'user',
+        content: `Analise e compare este texto bíblico (${ref}) com outros textos da Tradição Católica, Catecismo e escritos dos Santos. Forneça uma análise teológica profunda.\n\nTexto: ${text}`
+      }]);
       
-      const reader = data.body?.getReader();
-      const decoder = new TextDecoder();
-      let fullText = '';
-      
-      // Handle potential streaming or direct response based on function implementation
-      if (data.choices) {
-        setComparisonAnalysis(data.choices[0].message.content);
-      } else {
-        // Fallback for simple response
-        setComparisonAnalysis(typeof data === 'string' ? data : JSON.stringify(data));
-      }
+      if (result.error) throw new Error(result.error);
+      setComparisonAnalysis(result.content || 'Sem resposta.');
     } catch (e) {
       console.error(e);
       setComparisonAnalysis('Erro ao gerar análise comparativa.');

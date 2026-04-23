@@ -16,6 +16,7 @@ import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
 import AudioContentPlayer from './AudioContentPlayer';
+import { callColloquium } from '@/services/aiService';
 
 const CATEGORY_LABELS: Record<string, string> = {
   apostle: 'Apóstolo',
