@@ -234,7 +234,7 @@ const CommandCenter: React.FC = () => {
               type: 'theme',
               label: t.name,
               description: t.description?.substring(0, 80) + '...',
-              path: `${AppRoute.TEMAS}?tema=${t.slug}`,
+              path: `${AppRoute.TEMAS}/${t.slug}`,
               icon: <Icons.Tag className="w-4 h-4" />,
             });
           });
