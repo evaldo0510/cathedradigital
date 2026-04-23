@@ -114,6 +114,27 @@ const sections = [
     route: AppRoute.POPES,
     color: 'bg-primary/10 text-primary',
   },
+  {
+    title: 'Aparições',
+    description: 'Manifestações de Nossa Senhora ao longo da história',
+    icon: <Icons.Heart className="w-5 h-5" />,
+    route: AppRoute.APARICOES,
+    color: 'bg-accent/10 text-accent',
+  },
+  {
+    title: 'Dogmas',
+    description: 'Verdades de fé infalivelmente definidas pela Igreja',
+    icon: <Icons.ScrollText className="w-5 h-5" />,
+    route: AppRoute.DOGMAS,
+    color: 'bg-primary/10 text-primary',
+  },
+  {
+    title: 'Enciclopédia',
+    description: 'Glossário completo de termos da tradição católica',
+    icon: <Icons.Library className="w-5 h-5" />,
+    route: AppRoute.ENCYCLOPEDIA,
+    color: 'bg-accent/10 text-accent',
+  },
 ];
 
 const BibliotecaPage: React.FC = () => {
