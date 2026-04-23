@@ -540,6 +540,68 @@ const LiturgiaPage: React.FC = () => {
           {activeTab === 'missal' && <div className="animate-in fade-in slide-in-from-bottom-4 duration-500"><MissalPage /></div>}
           {activeTab === 'calendario' && <div className="animate-in fade-in slide-in-from-bottom-4 duration-500"><LiturgicalCalendarPage /></div>}
         </Suspense>
+
+        <Dialog open={!!compareReading} onOpenChange={(open) => !open && setCompareReading(null)}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col p-0 gap-0 rounded-[2rem] border-none shadow-2xl">
+            <DialogHeader className="p-8 pb-4 bg-primary text-white">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 rounded-xl bg-white/10 text-secondary">
+                  <Icons.Columns className="w-5 h-5" />
+                </div>
+                <DialogTitle className="text-2xl font-display font-black tracking-tight">Análise Comparativa</DialogTitle>
+              </div>
+              <DialogDescription className="text-white/60 font-medium">
+                {compareReading?.label} — {compareReading?.reference}
+              </DialogDescription>
+            </DialogHeader>
+
+            <Tabs defaultValue="texto" className="flex-1 flex flex-col overflow-hidden">
+              <div className="px-8 bg-primary border-b border-white/10">
+                <TabsList className="bg-white/5 border-none h-12 p-1">
+                  <TabsTrigger value="texto" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-primary font-bold text-xs uppercase tracking-widest px-6">Texto</TabsTrigger>
+                  <TabsTrigger value="analise" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-primary font-bold text-xs uppercase tracking-widest px-6">Análise Teológica</TabsTrigger>
+                  <TabsTrigger value="tradicao" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-primary font-bold text-xs uppercase tracking-widest px-6">Tradição</TabsTrigger>
+                </TabsList>
+              </div>
+
+              <div className="flex-1 overflow-hidden">
+                <ScrollArea className="h-full p-8">
+                  <TabsContent value="texto" className="m-0 focus-visible:outline-none">
+                    <p className="text-xl leading-[2] font-serif text-primary whitespace-pre-line">
+                      {compareReading?.text}
+                    </p>
+                  </TabsContent>
+
+                  <TabsContent value="analise" className="m-0 focus-visible:outline-none">
+                    {isComparing ? (
+                      <div className="flex flex-col items-center justify-center py-20 space-y-4">
+                        <Icons.Loader2 className="w-10 h-10 text-secondary animate-spin" />
+                        <p className="text-sm font-black uppercase tracking-widest text-muted-foreground animate-pulse">IARA está analisando...</p>
+                      </div>
+                    ) : (
+                      <div className="prose prose-slate max-w-none dark:prose-invert font-serif text-lg leading-relaxed">
+                        <ReactMarkdown>{comparisonAnalysis || 'Nenhuma análise disponível.'}</ReactMarkdown>
+                      </div>
+                    )}
+                  </TabsContent>
+
+                  <TabsContent value="tradicao" className="m-0 focus-visible:outline-none">
+                    <div className="space-y-6">
+                      <div className="p-6 rounded-2xl bg-secondary/5 border border-secondary/20">
+                        <h4 className="text-xs font-black uppercase tracking-widest text-secondary mb-4">Catecismo da Igreja</h4>
+                        <p className="text-primary italic font-serif">Esta passagem fundamenta diversos pontos do Catecismo sobre a Revelação e a Vida em Cristo. Use a busca global para referências específicas.</p>
+                      </div>
+                      <div className="p-6 rounded-2xl bg-primary/5 border border-primary/10">
+                        <h4 className="text-xs font-black uppercase tracking-widest text-primary mb-4">Escritos dos Santos</h4>
+                        <p className="text-primary italic font-serif">"O que a Bíblia diz, a Igreja vive." — Santo Agostinho</p>
+                      </div>
+                    </div>
+                  </TabsContent>
+                </ScrollArea>
+              </div>
+            </Tabs>
+          </DialogContent>
+        </Dialog>
       </div>
     </>
   );
