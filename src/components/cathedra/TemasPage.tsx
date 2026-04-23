@@ -103,12 +103,8 @@ const TemasPage = () => {
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [scrollProgress, setScrollProgress] = useState(0);
 
-  const handleCarouselScroll = useCallback(() => {
-    const el = document.getElementById('tags-carousel');
-    if (!el) return;
-    const maxScroll = el.scrollWidth - el.clientWidth;
-    setScrollProgress(maxScroll > 0 ? el.scrollLeft / maxScroll : 0);
-  }, []);
+  // removed handleCarouselScroll as it is replaced by flex-wrap logic
+
 
   // moved below filteredTags
 
@@ -152,14 +148,6 @@ const TemasPage = () => {
     if (activeCategory === 'all') return base;
     return base.filter(tag => tag.category === activeCategory);
   }, [tags, fuzzyTags, isSearchActive, activeCategory]);
-
-  useEffect(() => {
-    const el = document.getElementById('tags-carousel');
-    if (!el) return;
-    el.addEventListener('scroll', handleCarouselScroll, { passive: true });
-    handleCarouselScroll();
-    return () => el.removeEventListener('scroll', handleCarouselScroll);
-  }, [handleCarouselScroll, filteredTags]);
 
   useEffect(() => {
     const temaSlug = searchParams.get('tema');
@@ -300,84 +288,69 @@ const TemasPage = () => {
               </div>
             ) : (
               <>
-                <div className="relative group/carousel">
-                  <button
-                    onClick={() => {
-                      const el = document.getElementById('tags-carousel');
-                      if (el) el.scrollBy({ left: -200, behavior: 'smooth' });
-                    }}
-                    className="absolute left-0 top-0 bottom-0 z-10 w-10 flex items-center justify-center bg-gradient-to-r from-card/90 to-transparent opacity-100 sm:opacity-0 sm:group-hover/carousel:opacity-100 transition-opacity duration-300 hover:from-card"
-                    aria-label="Scroll left"
-                  >
-                    <ChevronLeft className="w-5 h-5 text-foreground/70" />
-                  </button>
-                  <div id="tags-carousel" className="overflow-x-auto scrollbar-none py-4 px-8 scroll-smooth">
-                    <div className="flex gap-2 w-max">
-                      {filteredTags.map((tag, idx) => {
-                        const isSelected = selectedTag?.id === tag.id;
-                        return (
-                          <motion.button
-                            key={tag.id}
-                            layoutId={`tag-${tag.id}`}
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: idx * 0.01 }}
-                            whileHover={{ 
-                              scale: 1.08, 
-                              y: -2,
-                              transition: { type: "spring", stiffness: 400, damping: 10 }
-                            }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => handleTagSelect(tag)}
-                            className={`
-                              px-3 py-2 rounded-full text-[9px] font-bold uppercase tracking-wider transition-all duration-300
-                              flex items-center gap-1.5 border shrink-0 relative group
-                              ${isSelected 
-                                ? 'bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/20 z-10' 
-                                : 'bg-card/60 backdrop-blur-md text-foreground/80 border-border/60 hover:border-primary/40 hover:text-primary hover:shadow-md'
-                              }
-                            `}
-                          >
-                            <span className="group-hover:scale-110 transition-transform duration-200 opacity-70 group-hover:opacity-100">{getTagIcon(tag.emoji)}</span>
-                            <span className="relative whitespace-nowrap">
-                              {tag.label}
-                            </span>
-                            {isSearchActive && (
-                              <RelevanceBadge score={tag.similarityScore} size="xs" />
-                            )}
-                          </motion.button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => {
-                      const el = document.getElementById('tags-carousel');
-                      if (el) el.scrollBy({ left: 200, behavior: 'smooth' });
-                    }}
-                    className="absolute right-0 top-0 bottom-0 z-10 w-10 flex items-center justify-center bg-gradient-to-l from-card/90 to-transparent opacity-100 sm:opacity-0 sm:group-hover/carousel:opacity-100 transition-opacity duration-300 hover:from-card"
-                    aria-label="Scroll right"
-                  >
-                    <ChevronRight className="w-5 h-5 text-foreground/70" />
-                  </button>
-                </div>
-                <div className="flex items-center justify-center gap-3 px-8 pb-3 pt-1">
-                  <span className="text-[10px] font-bold text-muted-foreground/50 tabular-nums">
-                    {filteredTags.length} temas
-                  </span>
-                  <div className="flex-1 max-w-[200px] h-1 bg-muted/30 rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-primary/40 rounded-full transition-all duration-150"
-                      style={{ width: `${Math.max(10, scrollProgress * 100)}%` }}
-                    />
+                <div className="relative p-6 sm:p-10">
+                  <div className="flex flex-wrap justify-center gap-2 sm:gap-3 max-w-5xl mx-auto">
+                    {filteredTags.map((tag, idx) => {
+                      const isSelected = selectedTag?.id === tag.id;
+                      return (
+                        <motion.button
+                          key={tag.id}
+                          layoutId={`tag-${tag.id}`}
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ 
+                            delay: idx * 0.015,
+                            type: "spring",
+                            damping: 15,
+                            stiffness: 100
+                          }}
+                          whileHover={{ 
+                            scale: 1.15, 
+                            y: -4,
+                            rotate: isSelected ? 0 : [0, -1, 1, 0],
+                            transition: { duration: 0.2 }
+                          }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => handleTagSelect(tag)}
+                          className={`
+                            px-4 py-2.5 rounded-full text-[10px] sm:text-[11px] font-black uppercase tracking-widest transition-all duration-300
+                            flex items-center gap-2 border shrink-0 relative group/bubble
+                            ${isSelected 
+                              ? 'bg-primary text-primary-foreground border-primary shadow-xl shadow-primary/30 z-10 scale-110' 
+                              : 'bg-card/50 backdrop-blur-xl text-foreground/70 border-border/60 hover:border-primary/40 hover:bg-primary/5 hover:text-primary hover:shadow-2xl'
+                            }
+                          `}
+                        >
+                          <span className="group-hover/bubble:scale-125 transition-transform duration-300 opacity-80 group-hover/bubble:opacity-100 text-sm">{getTagIcon(tag.emoji)}</span>
+                          <span className="relative whitespace-nowrap">
+                            {tag.label}
+                          </span>
+                          {isSearchActive && (
+                            <RelevanceBadge score={tag.similarityScore} size="xs" />
+                          )}
+                          {!isSelected && (
+                            <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover/bubble:opacity-100 rounded-full transition-opacity pointer-events-none" />
+                          )}
+                        </motion.button>
+                      );
+                    })}
                   </div>
                 </div>
+                <div className="flex items-center justify-center gap-3 px-8 pb-6 pt-2">
+                  <div className="flex items-center gap-2 bg-muted/20 px-4 py-1.5 rounded-full border border-border/20">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 tabular-nums">
+                      {filteredTags.length} conexões sagradas
+                    </span>
+                    <div className="w-1 h-1 rounded-full bg-primary/30" />
+                    <Sparkles className="w-3 h-3 text-primary/40 animate-pulse" />
+                  </div>
+                </div>
+
               </>
             )}
           </div>
         </div>
       </div>
-
       <main className="min-h-[500px]">
         <AnimatePresence mode="wait">
           {!selectedTag ? (
