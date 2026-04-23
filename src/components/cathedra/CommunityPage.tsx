@@ -109,7 +109,7 @@ const CommunityPage: React.FC = () => {
     const entries: LeaderboardEntry[] = (profiles || []).map(p => {
       const s = userMap.get(p.id) || { posts: 0, likes: 0 };
       const score = s.posts * 10 + s.likes * 5;
-      const xp = s.posts * 30 + s.likes * 10;
+      const xp = s.posts * 30 + s.likes * 10 + s.likes * 5; // Updated to match profile logic better
       const { levelIdx, levelName } = getLevelInfo(xp);
       return {
         id: p.id,

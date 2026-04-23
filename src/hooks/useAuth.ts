@@ -125,11 +125,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const checkAndAwardBadges = useCallback(async (currentUser: SupabaseUser, currentProfile: Profile, streak: number) => {
     try {
-      // Count completed journeys
-      const { count } = await supabase
-        .from('journey_progress')
-        .select('journey_id', { count: 'exact', head: true })
-        .eq('user_id', currentUser.id);
+      // 1. Fetch all necessary stats for badge conditions
+      const [journeyRes, postsRes, likesRes, notesRes] = await Promise.all([
+        supabase.from('journey_progress').select('journey_id', { count: 'exact', head: true }).eq('user_id', currentUser.id),
+        supabase.from('community_posts').select('id', { count: 'exact', head: true }).eq('user_id', currentUser.id),
+        supabase.from('community_likes').select('id', { count: 'exact', head: true }).eq('user_id', currentUser.id),
+        supabase.from('user_notes').select('id', { count: 'exact', head: true }).eq('user_id', currentUser.id),
+      ]);
 
       const currentBadges = currentProfile.badges || [];
       const ctx: BadgeContext = {
@@ -137,8 +139,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         chaptersRead: {},
         totalMinutesRead: currentProfile.total_minutes_read || 0,
         streak,
-        completedJourneys: count || 0,
-      };
+        completedJourneys: journeyRes.count || 0,
+        posts: postsRes.count || 0,
+        likes: likesRes.count || 0,
+        notes: notesRes.count || 0,
+      } as any;
 
       const newBadgeIds = checkNewBadges(currentBadges, ctx);
       if (newBadgeIds.length > 0) {
