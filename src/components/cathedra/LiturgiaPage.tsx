@@ -266,44 +266,14 @@ const LiturgiaPage: React.FC = () => {
     setIsMeditationLoading(true);
     setMeditation(null);
     try {
-      const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/colloquium`;
-      const { data: { session } } = await supabase.auth.getSession();
-
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session?.access_token}`,
-        },
-        body: JSON.stringify({
-          messages: [{
-            role: 'user',
-            content: `Gere uma Meditação Diária Espiritual baseada no Evangelho do dia: ${readings.evangelho.referencia} - ${readings.evangelho.texto.substring(0, 800)}.`
-          }]
-        })
+      const result = await callColloquium([{
+        role: 'user',
+        content: `Gere uma Meditação Diária Espiritual baseada no Evangelho do dia: ${readings.evangelho.referencia} - ${readings.evangelho.texto.substring(0, 800)}.`
+      }], null, (content) => {
+        setMeditation(content);
       });
 
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const reader = response.body?.getReader();
-      if (!reader) throw new Error('No reader');
-      const decoder = new TextDecoder();
-      let fullText = '';
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        const chunk = decoder.decode(value);
-        for (const line of chunk.split('\n')) {
-          if (line.startsWith('data: ')) {
-            const d = line.substring(6).trim();
-            if (d === '[DONE]') continue;
-            try {
-              const json = JSON.parse(d);
-              fullText += json.choices?.[0]?.delta?.content || '';
-              setMeditation(fullText);
-            } catch { /* partial */ }
-          }
-        }
-      }
+      if (result.error) throw new Error(result.error);
     } catch (e) {
       console.error(e);
       setMeditation('Erro ao gerar meditação.');
