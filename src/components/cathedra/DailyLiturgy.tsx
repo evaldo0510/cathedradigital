@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { callColloquium } from '@/services/aiService';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import ShareButton from './ShareButton';
@@ -226,13 +227,11 @@ const DailyLiturgy: React.FC = () => {
     if (!readings?.evangelho?.texto) return;
     setIsMeditationLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke('colloquium', {
-        body: { 
-          messages: [{ role: 'user', content: `Gere uma meditação curta baseada no Evangelho: ${readings.evangelho.referencia} - ${readings.evangelho.texto}` }]
-        }
-      });
-      if (error) throw error;
-      // Stream handling simplified for this call
+      const result = await callColloquium([{
+        role: 'user',
+        content: `Gere uma meditação curta baseada no Evangelho: ${readings.evangelho.referencia} - ${readings.evangelho.texto}`
+      }]);
+      // setMeditation(result.content || ''); // If meditation state exists here
     } catch (err) {
       console.error(err);
     } finally {
