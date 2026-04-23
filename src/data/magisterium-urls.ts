@@ -18,7 +18,7 @@ export const MAGISTERIUM_URLS: Record<string, string> = {
   'hv': 'https://www.vatican.va/content/paul-vi/pt/encyclicals/documents/hf_p-vi_enc_25071968_humanae-vitae.html',
   'ls': 'https://www.vatican.va/content/francesco/pt/encyclicals/documents/papa-francesco_20150524_enciclica-laudato-si.html',
   'ft': 'https://www.vatican.va/content/francesco/pt/encyclicals/documents/papa-francesco_20201003_enciclica-fratelli-tutti.html',
-  'rh': 'https://www.vatican.va/content/john-paul-ii/pt/encyclicals/documents/hf_jp-ii_enc_0403179_redemptor-hominis.html',
+  'rh': 'https://www.vatican.va/content/john-paul-ii/pt/encyclicals/documents/hf_jp-ii_enc_04031979_redemptor-hominis.html',
   'vs': 'https://www.vatican.va/content/john-paul-ii/pt/encyclicals/documents/hf_jp-ii_enc_06081993_veritatis-splendor.html',
   'fr': 'https://www.vatican.va/content/john-paul-ii/pt/encyclicals/documents/hf_jp-ii_enc_14091998_fides-et-ratio.html',
   'dce': 'https://www.vatican.va/content/benedict-xvi/pt/encyclicals/documents/hf_ben-xvi_enc_20051225_deus-caritas-est.html',
@@ -31,6 +31,7 @@ export const MAGISTERIUM_URLS: Record<string, string> = {
   'cv': 'https://www.vatican.va/content/francesco/pt/apost_exhortations/documents/papa-francesco_esortazione-ap_20190325_christus-vivit.html',
   'sd': 'https://www.vatican.va/content/john-paul-ii/pt/apost_letters/1984/documents/hf_jp-ii_apl_11021984_salvifici-doloris.html',
   'lg': 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_const_19641121_lumen-gentium_po.html',
+  'gs': 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_const_19651207_gaudium-et-spes_po.html',
   'pc': 'https://www.vatican.va/content/francesco/pt/apost_letters/documents/papa-francesco-lettera-ap_20201208_patris-corde.html',
   'mm': 'https://www.vatican.va/content/francesco/pt/apost_letters/documents/papa-francesco-lettera-ap_20161120_misericordia-et-misera.html',
   'rvm': 'https://www.vatican.va/content/john-paul-ii/pt/apost_letters/2002/documents/hf_jp-ii_apl_20021016_rosarium-virginis-mariae.html',
@@ -38,4 +39,6 @@ export const MAGISTERIUM_URLS: Record<string, string> = {
   'md': 'https://www.vatican.va/content/john-paul-ii/pt/apost_letters/1988/documents/hf_jp-ii_apl_15081988_mulieris-dignitatem.html',
   'cdsi': 'https://www.vatican.va/roman_curia/pontifical_councils/justpeace/documents/rc_pc_justpeace_doc_20060526_compendio-dott-soc_po.html',
   'di': 'https://www.vatican.va/roman_curia/congregations/cfaith/documents/rc_con_cfaith_doc_20000806_dominus-iesus_po.html',
+  'cdc': 'https://www.vatican.va/archive/cod-iuris-canonici/portuguese/codex-iuris-canonici_po.pdf',
+  'cic': 'https://www.vatican.va/archive/cathechism_po/index_po.htm',
 };
