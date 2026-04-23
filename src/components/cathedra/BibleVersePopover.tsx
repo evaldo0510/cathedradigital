@@ -88,15 +88,13 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = ({
               {label}
             </span>
           </div>
-          {onNavigate && (
-            <button
-              onClick={() => onNavigate(abbr, chapter)}
-              className="text-[10px] font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-1"
-            >
-              Abrir completo
-              <Icons.ArrowDown className="w-3 h-3 -rotate-90" />
-            </button>
-          )}
+          <button
+            onClick={handleNavigate}
+            className="text-[10px] font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-1"
+          >
+            {verse ? `Ir ao versículo ${verse}` : 'Abrir completo'}
+            <Icons.ArrowDown className="w-3 h-3 -rotate-90" />
+          </button>
         </div>
         <div className="p-3 space-y-2">
           {loading && (
