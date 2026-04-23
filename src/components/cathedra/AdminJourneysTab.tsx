@@ -387,12 +387,13 @@ const AdminJourneysTab: React.FC = () => {
                 }}>
                   <Edit className="w-4 h-4" />
                 </Button>
-                <Button variant="ghost" size="icon" className="text-destructive" onClick={(e) => {
+                <Button variant="ghost" size="icon" className="text-destructive hover:bg-destructive/10" onClick={(e) => {
                   e.stopPropagation();
-                  handleDeleteJourney(journey.id);
+                  initiateDeleteJourney(journey);
                 }}>
                   <Trash2 className="w-4 h-4" />
                 </Button>
+
               </div>
             </div>
 
