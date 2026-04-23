@@ -200,6 +200,24 @@ const AdminJourneysTab: React.FC = () => {
       toast.error('Erro ao salvar jornada: ' + error.message);
     }
   };
+  const handleDeleteJourney = async (id: string) => {
+    if (!window.confirm('Tem certeza que deseja excluir esta jornada e todos os seus passos?')) return;
+
+    try {
+      const { error } = await supabase
+        .from('journeys')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setJourneys(prev => prev.filter(j => j.id !== id));
+      toast.success('Jornada excluída com sucesso.');
+    } catch (error: any) {
+      toast.error('Erro ao excluir jornada: ' + error.message);
+    }
+  };
+
 
   const handleCreateJourney = async () => {
     try {
