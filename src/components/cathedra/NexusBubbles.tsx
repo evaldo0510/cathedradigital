@@ -3,10 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AppRoute } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, ExternalLink, Sparkles, Search, X, Heart, Church, Flame, Cross, BookOpen, Shield, Crown, Hand, Star, Globe, Eye, Users, Compass, Wine, Orbit, Hash, Mountain, RefreshCw, Frown, Bird, Droplets, Wheat, Target, Clock, Megaphone, Skull } from 'lucide-react';
+import { Loader2, ExternalLink, Sparkles, Search, X, Heart, Church, Flame, Cross, BookOpen, Shield, Crown, Hand, Star, Globe, Eye, Users, Compass, Wine, Orbit, Hash, Mountain, RefreshCw, Frown, Bird, Droplets, Wheat, Target, Clock, Megaphone, Skull, Filter } from 'lucide-react';
 import { Icons } from '@/constants';
-
-// Using shared getTagIcon and components from BubbleTag
+import { BubbleTag, getTagIcon } from './BubbleTag';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { type ProfileId, PROFILES } from './SpiritualQuiz';
@@ -79,45 +78,16 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean }> = 
       if (val) fetchContent();
     }}>
       <PopoverTrigger asChild>
-        <motion.button
-          key={tag.slug}
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ 
-            delay: index * 0.015, 
-            type: 'spring', 
-            damping: 15,
-            stiffness: 100
-          }}
-          whileHover={{ 
-            scale: 1.1,
-            y: -2,
-            transition: { duration: 0.2 }
-          }}
-          whileTap={{ scale: 0.95 }}
-          className={`
-            relative px-3.5 py-2 rounded-full border transition-all shadow-sm flex items-center gap-1.5 group/tag
-            ${open 
-              ? 'border-primary/50 bg-primary/10 ring-2 ring-primary/10' 
-              : isSuggested
-                ? 'border-secondary/40 bg-secondary/5 hover:border-secondary/60 hover:bg-secondary/10'
-                : 'border-border bg-card/50 hover:border-primary/40 hover:bg-primary/5 hover:shadow-md'
-            }
-          `}
-        >
-          {isSuggested && (
-            <div className="absolute -top-1 -right-1">
-              <Sparkles className="w-2.5 h-2.5 text-secondary animate-pulse" />
-            </div>
-          )}
-          <span className="text-sm group-hover/tag:scale-110 transition-transform text-primary/70">{getTagIcon(tag.emoji)}</span>
-          <span className={`
-            text-[11px] font-bold transition-colors tracking-tight
-            ${open ? 'text-primary' : isSuggested ? 'text-secondary' : 'text-foreground/80 group-hover/tag:text-primary'}
-          `}>
-            {tag.label}
-          </span>
-        </motion.button>
+        <div>
+          <BubbleTag
+            label={tag.label}
+            emoji={tag.emoji}
+            index={index}
+            isSelected={open}
+            isSuggested={isSuggested}
+            onClick={() => {}} // Popover handles trigger
+          />
+        </div>
       </PopoverTrigger>
       <PopoverContent className="w-[320px] p-0 rounded-[2rem] border-primary/20 overflow-hidden shadow-2xl z-[100] backdrop-blur-xl">
         <div className="bg-gradient-to-r from-primary/10 to-transparent p-4 border-b border-border/50 flex items-center justify-between">
@@ -128,7 +98,7 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean }> = 
             <span className="text-xs font-black uppercase tracking-widest text-primary">{tag.label}</span>
           </div>
           <button 
-            onClick={() => navigate(`${AppRoute.TEMAS}?tema=${tag.slug}`)}
+            onClick={() => navigate(`${AppRoute.TEMAS}/${tag.slug}`)}
             className="p-1.5 rounded-full bg-primary/5 hover:bg-primary/20 text-primary transition-colors group"
             title="Estudo Completo"
           >
@@ -224,7 +194,7 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean }> = 
             variant="ghost" 
             size="sm" 
             className="w-full rounded-xl text-[10px] font-black uppercase tracking-widest h-9 hover:bg-primary/10 hover:text-primary transition-all active:scale-95"
-            onClick={() => navigate(`${AppRoute.TEMAS}?tema=${tag.slug}`)}
+            onClick={() => navigate(`${AppRoute.TEMAS}/${tag.slug}`)}
           >
             Navegação Completa
           </Button>
