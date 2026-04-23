@@ -169,6 +169,48 @@ const LiturgiaPage: React.FC = () => {
   const [copiedMeditation, setCopiedMeditation] = useState(false);
   const [isOfflineData, setIsOfflineData] = useState(false);
   const [emotionalRoutes, setEmotionalRoutes] = useState<RouteRecommendation[]>([]);
+  const [compareReading, setCompareReading] = useState<{ label: string; reference: string; text: string } | null>(null);
+  const [comparisonAnalysis, setComparisonAnalysis] = useState<string | null>(null);
+  const [isComparing, setIsComparing] = useState(false);
+
+  const fetchComparison = async (ref: string, text: string) => {
+    setIsComparing(true);
+    setComparisonAnalysis(null);
+    try {
+      const { data, error } = await supabase.functions.invoke('colloquium', {
+        body: {
+          messages: [{
+            role: 'user',
+            content: `Analise e compare este texto bíblico (${ref}) com outros textos da Tradição Católica, Catecismo e escritos dos Santos. Forneça uma análise teológica profunda.\n\nTexto: ${text}`
+          }]
+        }
+      });
+      if (error) throw error;
+      
+      const reader = data.body?.getReader();
+      const decoder = new TextDecoder();
+      let fullText = '';
+      
+      // Handle potential streaming or direct response based on function implementation
+      if (data.choices) {
+        setComparisonAnalysis(data.choices[0].message.content);
+      } else {
+        // Fallback for simple response
+        setComparisonAnalysis(typeof data === 'string' ? data : JSON.stringify(data));
+      }
+    } catch (e) {
+      console.error(e);
+      setComparisonAnalysis('Erro ao gerar análise comparativa.');
+    } finally {
+      setIsComparing(false);
+    }
+  };
+
+  useEffect(() => {
+    if (compareReading) {
+      fetchComparison(compareReading.reference, compareReading.text);
+    }
+  }, [compareReading]);
 
   usePrefetchLiturgyCache();
 
