@@ -119,6 +119,21 @@ export const getSaintBySubtitle = async (subtitle: string): Promise<Saint | null
   return formatSaint(data[0]);
 };
 
+export const getSaintById = async (id: string): Promise<Saint | null> => {
+  const { data, error } = await supabase
+    .from('saints')
+    .select('*')
+    .eq('id', id)
+    .maybeSingle();
+
+  if (error || !data) {
+    if (error) console.error('Error fetching saint by id:', error);
+    return null;
+  }
+
+  return formatSaint(data);
+};
+
 export const formatSaint = (dbSaint: any): Saint => {
   return {
     ...dbSaint,
