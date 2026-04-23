@@ -200,6 +200,24 @@ const AdminJourneysTab: React.FC = () => {
       toast.error('Erro ao salvar jornada: ' + error.message);
     }
   };
+  const handleDeleteJourney = async (id: string) => {
+    if (!window.confirm('Tem certeza que deseja excluir esta jornada e todos os seus passos?')) return;
+
+    try {
+      const { error } = await supabase
+        .from('journeys')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setJourneys(prev => prev.filter(j => j.id !== id));
+      toast.success('Jornada excluída com sucesso.');
+    } catch (error: any) {
+      toast.error('Erro ao excluir jornada: ' + error.message);
+    }
+  };
+
 
   const handleCreateJourney = async () => {
     try {
@@ -315,7 +333,10 @@ const AdminJourneysTab: React.FC = () => {
                 }}>
                   <Edit className="w-4 h-4" />
                 </Button>
-                <Button variant="ghost" size="icon" className="text-destructive">
+                <Button variant="ghost" size="icon" className="text-destructive" onClick={(e) => {
+                  e.stopPropagation();
+                  handleDeleteJourney(journey.id);
+                }}>
                   <Trash2 className="w-4 h-4" />
                 </Button>
               </div>
