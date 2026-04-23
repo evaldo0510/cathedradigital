@@ -388,8 +388,7 @@ const HojePage: React.FC = () => {
         >
           <div className="flex items-center gap-3">
             <div className="h-px w-6 bg-primary/30" />
-            <h3 className="text-[11px] font-black uppercase tracking-[0.3em] text-primary flex items-center gap-2">
-              <Icons.Saints className="w-3.5 h-3.5" />
+            <h3 className="text-[11px] font-black uppercase tracking-[0.3em] text-primary">
               Santo do Dia
             </h3>
             {activeJourney && (
