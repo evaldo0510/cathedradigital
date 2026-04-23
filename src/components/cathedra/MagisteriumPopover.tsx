@@ -84,15 +84,16 @@ const MagisteriumPopover: React.FC<MagisteriumPopoverProps> = ({
               {title || label}
             </span>
           </div>
-          {onNavigate && (
-            <button
-              onClick={() => onNavigate(documentName)}
-              className="text-[10px] font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 shrink-0 ml-2"
-            >
-              Abrir completo
-              <Icons.ArrowDown className="w-3 h-3 -rotate-90" />
-            </button>
-          )}
+          <button
+            onClick={() => {
+              if (onNavigate) onNavigate(documentName);
+              else navigate(`/magisterium/${documentName}`);
+            }}
+            className="text-[10px] font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 shrink-0 ml-2"
+          >
+            Abrir completo
+            <Icons.ArrowDown className="w-3 h-3 -rotate-90" />
+          </button>
         </div>
         <div className="p-3">
           {loading && (
