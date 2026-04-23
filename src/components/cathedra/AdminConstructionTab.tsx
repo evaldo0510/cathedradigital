@@ -171,11 +171,10 @@ const AdminConstructionTab: React.FC = () => {
           }
         });
 
-        // Insert/Update in database
-        // For simplicity, we'll insert as new items. In a real scenario, we might want to upsert based on name.
+        // Insert/Update in database using upsert with our new unique constraint
         const { error } = await supabase
           .from('construction_data')
-          .insert(formattedData);
+          .upsert(formattedData, { onConflict: 'project_id,type,item_name,category' });
 
         if (error) throw error;
 
