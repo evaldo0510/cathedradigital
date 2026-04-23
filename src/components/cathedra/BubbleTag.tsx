@@ -92,6 +92,7 @@ interface BubbleTagProps {
   isSelected?: boolean;
   isSuggested?: boolean;
   onClick: () => void;
+  onMouseEnter?: () => void;
   className?: string;
   ariaLabel?: string;
 }
@@ -103,6 +104,7 @@ export const BubbleTag: React.FC<BubbleTagProps> = ({
   isSelected,
   isSuggested,
   onClick,
+  onMouseEnter,
   className = "",
   ariaLabel
 }) => {
@@ -115,6 +117,7 @@ export const BubbleTag: React.FC<BubbleTagProps> = ({
       whileTap="tap"
       custom={index}
       onClick={onClick}
+      onMouseEnter={onMouseEnter}
       aria-pressed={isSelected}
       aria-label={ariaLabel || `Tema: ${label}`}
       className={`

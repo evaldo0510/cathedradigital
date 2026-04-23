@@ -29,6 +29,52 @@ interface ThemeContent {
   tags: string[];
 }
 
+const ThemeContentCard = ({ 
+  content, 
+  index, 
+  icon: Icon, 
+  accentColor, 
+  buttonText, 
+  onAction 
+}: { 
+  content: ThemeContent; 
+  index: number; 
+  icon: any; 
+  accentColor: string; 
+  buttonText: string; 
+  onAction: () => void;
+}) => (
+  <motion.div
+    initial={{ opacity: 0, y: 10 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: index * 0.1 }}
+  >
+    <Card className="border-border/40 bg-card/30 hover:bg-card/50 transition-all duration-300 rounded-[2rem] overflow-hidden group hover:shadow-lg hover:border-primary/20">
+      <CardContent className="p-6 sm:p-8 space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className={`p-2 rounded-xl ${accentColor.replace('text-', 'bg-')}/10`}>
+              <Icon className={`w-4 h-4 ${accentColor}`} />
+            </div>
+            <span className={`text-[10px] font-black uppercase tracking-widest ${accentColor}`}>{content.reference}</span>
+          </div>
+          <Button 
+            variant="ghost" 
+            size="sm"
+            onClick={onAction}
+            className={`h-9 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-primary/5 hover:text-primary gap-1.5 px-4 transition-all duration-300`}
+          >
+            {buttonText} <ExternalLink className="w-3.5 h-3.5" />
+          </Button>
+        </div>
+        <p className="text-base sm:text-lg text-foreground/80 leading-relaxed font-serif">
+          {content.content_type === 'bible' ? `"${content.text_content}"` : content.text_content}
+        </p>
+      </CardContent>
+    </Card>
+  </motion.div>
+);
+
 const TemaDetailPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
