@@ -195,6 +195,7 @@ const AdminJourneysTab: React.FC = () => {
     if (!editingJourney) return;
 
     try {
+      console.log(`Updating journey: ${editingJourney.title} (${editingJourney.id})`);
       const { error } = await supabase
         .from('journeys')
         .update({
@@ -209,15 +210,20 @@ const AdminJourneysTab: React.FC = () => {
         })
         .eq('id', editingJourney.id);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error updating journey:', error);
+        throw error;
+      }
 
       setJourneys(prev => prev.map(j => j.id === editingJourney.id ? editingJourney : j));
       toast.success('Jornada atualizada com sucesso.');
       setIsEditDialogOpen(false);
     } catch (error: any) {
-      toast.error('Erro ao salvar jornada: ' + error.message);
+      console.error('Save journey error:', error);
+      toast.error('Erro ao salvar jornada: ' + (error.message || 'Falha na conexão'));
     }
   };
+
   const initiateDeleteJourney = async (journey: Journey) => {
     try {
       // Fetch step count for confirmation modal
