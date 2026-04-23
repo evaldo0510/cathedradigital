@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import {
   Popover,
@@ -12,7 +13,8 @@ interface BibleVersePopoverProps {
   chapter: number;
   verse?: number;
   label: string;
-  onNavigate?: (abbr: string, chapter: number) => void;
+  /** Optional override; defaults to navigating to /biblia?book=&ch=&v= */
+  onNavigate?: (abbr: string, chapter: number, verse?: number) => void;
 }
 
 const BibleVersePopover: React.FC<BibleVersePopoverProps> = ({
@@ -22,9 +24,22 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = ({
   label,
   onNavigate,
 }) => {
+  const navigate = useNavigate();
   const [verses, setVerses] = useState<{ number: number; text: string }[]>([]);
   const [loading, setLoading] = useState(false);
   const [fetched, setFetched] = useState(false);
+
+  const handleNavigate = () => {
+    if (onNavigate) {
+      onNavigate(abbr, chapter, verse);
+      return;
+    }
+    const params = new URLSearchParams();
+    params.set('book', abbr);
+    params.set('ch', String(chapter));
+    if (verse) params.set('v', String(verse));
+    navigate(`/biblia?${params.toString()}`);
+  };
 
   const fetchVerses = async () => {
     if (fetched) return;
@@ -73,15 +88,13 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = ({
               {label}
             </span>
           </div>
-          {onNavigate && (
-            <button
-              onClick={() => onNavigate(abbr, chapter)}
-              className="text-[10px] font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-1"
-            >
-              Abrir completo
-              <Icons.ArrowDown className="w-3 h-3 -rotate-90" />
-            </button>
-          )}
+          <button
+            onClick={handleNavigate}
+            className="text-[10px] font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-1"
+          >
+            {verse ? `Ir ao versículo ${verse}` : 'Abrir completo'}
+            <Icons.ArrowDown className="w-3 h-3 -rotate-90" />
+          </button>
         </div>
         <div className="p-3 space-y-2">
           {loading && (
