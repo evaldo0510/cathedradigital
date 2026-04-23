@@ -5,6 +5,9 @@ import { motion } from 'framer-motion';
 
 import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import SEOHead from '@/components/SEOHead';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -85,48 +88,64 @@ const ReadingCard: React.FC<{
   refrain?: string;
   onContext: () => void;
   onReflect: () => void;
+  onCompare: () => void;
   delay: number;
-}> = ({ label, icon, reference, text, refrain, onContext, onReflect, delay }) => (
+}> = ({ label, icon, reference, text, refrain, onContext, onReflect, onCompare, delay }) => (
   <motion.div
     initial={{ opacity: 0, y: 24 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.5, delay }}
-    className="space-y-6 bg-card border border-border rounded-3xl p-8 shadow-sm hover:shadow-md transition-all group"
+    className="space-y-6 bg-card border border-border rounded-3xl p-8 shadow-sm hover:shadow-md transition-all group relative overflow-hidden"
   >
-    <div className="flex items-center justify-between">
+    <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
+      {icon}
+    </div>
+
+    <div className="flex items-center justify-between relative z-10">
       <div className="flex items-center gap-3">
-        <div className="p-2 rounded-xl bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all">
+        <div className="p-2.5 rounded-xl bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
           {icon}
         </div>
-        <h2 className="text-[10px] font-black uppercase tracking-[0.25em] text-primary">{label}</h2>
+        <div>
+          <h2 className="text-[10px] font-black uppercase tracking-[0.25em] text-primary">{label}</h2>
+          <p className="text-[9px] font-bold text-secondary/60 uppercase tracking-[0.2em] mt-0.5">{reference}</p>
+        </div>
       </div>
-      <p className="text-[9px] font-bold text-secondary uppercase tracking-[0.2em]">{reference}</p>
     </div>
 
     {refrain && (
-      <div className="bg-secondary/5 rounded-2xl p-5 border border-secondary/20 border-l-4">
-        <p className="text-base font-serif italic text-primary leading-relaxed">℟ {refrain}</p>
+      <div className="bg-secondary/5 rounded-2xl p-6 border border-secondary/20 border-l-4 shadow-inner">
+        <p className="text-lg font-serif italic text-primary leading-relaxed antialiased">℟ {refrain}</p>
       </div>
     )}
 
-    <p className="text-lg md:text-xl leading-[2] text-primary font-serif whitespace-pre-line selection:bg-secondary/30">
+    <p className="text-lg md:text-xl leading-[1.8] text-primary font-serif whitespace-pre-line selection:bg-secondary/30 antialiased tracking-tight">
       {text}
     </p>
 
-    <div className="flex flex-col sm:flex-row gap-3 pt-4">
+    <div className="flex flex-wrap gap-3 pt-6 border-t border-border/40">
       <Button
-        variant="outline"
+        variant="ghost"
         size="sm"
-        className="rounded-xl text-[10px] font-black uppercase tracking-widest flex-1 h-12"
+        className="rounded-xl text-[10px] font-black uppercase tracking-widest h-11 px-6 hover:bg-primary hover:text-white transition-all"
         onClick={onContext}
       >
-        <Icons.Bible className="w-4 h-4 mr-2" />
-        Contexto Bíblico
+        <Icons.Bible className="w-3.5 h-3.5 mr-2" />
+        Bíblia
+      </Button>
+      <Button
+        variant="ghost"
+        size="sm"
+        className="rounded-xl text-[10px] font-black uppercase tracking-widest h-11 px-6 hover:bg-primary/5 text-primary border border-primary/10"
+        onClick={onCompare}
+      >
+        <Icons.Columns className="w-3.5 h-3.5 mr-2" />
+        Comparar
       </Button>
       <Button
         variant="secondary"
         size="sm"
-        className="rounded-xl text-[10px] font-black uppercase tracking-widest flex-1 h-12 bg-secondary/10 border-none hover:bg-secondary/20 text-primary"
+        className="rounded-xl text-[10px] font-black uppercase tracking-widest ml-auto h-11 px-8 bg-secondary/10 border-none hover:bg-secondary/20 text-primary shadow-sm"
         onClick={onReflect}
       >
         <Icons.Lectio className="w-4 h-4 mr-2 text-secondary" />
@@ -150,6 +169,48 @@ const LiturgiaPage: React.FC = () => {
   const [copiedMeditation, setCopiedMeditation] = useState(false);
   const [isOfflineData, setIsOfflineData] = useState(false);
   const [emotionalRoutes, setEmotionalRoutes] = useState<RouteRecommendation[]>([]);
+  const [compareReading, setCompareReading] = useState<{ label: string; reference: string; text: string } | null>(null);
+  const [comparisonAnalysis, setComparisonAnalysis] = useState<string | null>(null);
+  const [isComparing, setIsComparing] = useState(false);
+
+  const fetchComparison = async (ref: string, text: string) => {
+    setIsComparing(true);
+    setComparisonAnalysis(null);
+    try {
+      const { data, error } = await supabase.functions.invoke('colloquium', {
+        body: {
+          messages: [{
+            role: 'user',
+            content: `Analise e compare este texto bíblico (${ref}) com outros textos da Tradição Católica, Catecismo e escritos dos Santos. Forneça uma análise teológica profunda.\n\nTexto: ${text}`
+          }]
+        }
+      });
+      if (error) throw error;
+      
+      const reader = data.body?.getReader();
+      const decoder = new TextDecoder();
+      let fullText = '';
+      
+      // Handle potential streaming or direct response based on function implementation
+      if (data.choices) {
+        setComparisonAnalysis(data.choices[0].message.content);
+      } else {
+        // Fallback for simple response
+        setComparisonAnalysis(typeof data === 'string' ? data : JSON.stringify(data));
+      }
+    } catch (e) {
+      console.error(e);
+      setComparisonAnalysis('Erro ao gerar análise comparativa.');
+    } finally {
+      setIsComparing(false);
+    }
+  };
+
+  useEffect(() => {
+    if (compareReading) {
+      fetchComparison(compareReading.reference, compareReading.text);
+    }
+  }, [compareReading]);
 
   usePrefetchLiturgyCache();
 
@@ -370,16 +431,109 @@ const LiturgiaPage: React.FC = () => {
               {readings && (
                 <div className="space-y-8">
                   {readings.primeiraLeitura && (
-                    <ReadingCard label="Primeira Leitura" icon={<Icons.Bible className="w-5 h-5" />} reference={readings.primeiraLeitura.referencia} text={readings.primeiraLeitura.texto} onContext={() => navigate(parseRefToRoute(readings.primeiraLeitura.referencia))} onReflect={() => navigateToLectio(readings.primeiraLeitura.referencia)} delay={0.1} />
+                    <ReadingCard 
+                      label="Primeira Leitura" 
+                      icon={<Icons.Bible className="w-5 h-5" />} 
+                      reference={readings.primeiraLeitura.referencia} 
+                      text={readings.primeiraLeitura.texto} 
+                      onContext={() => navigate(parseRefToRoute(readings.primeiraLeitura.referencia))} 
+                      onReflect={() => navigateToLectio(readings.primeiraLeitura.referencia)} 
+                      onCompare={() => setCompareReading({ label: 'Primeira Leitura', reference: readings.primeiraLeitura.referencia, text: readings.primeiraLeitura.texto })}
+                      delay={0.1} 
+                    />
                   )}
                   {readings.salmo && (
-                    <ReadingCard label="Salmo Responsorial" icon={<Icons.Music className="w-5 h-5" />} reference={readings.salmo.referencia} text={readings.salmo.texto} refrain={readings.salmo.refrao} onContext={() => navigate(parseRefToRoute(readings.salmo.referencia))} onReflect={() => navigateToLectio(readings.salmo.referencia)} delay={0.2} />
+                    <ReadingCard 
+                      label="Salmo Responsorial" 
+                      icon={<Icons.Music className="w-5 h-5" />} 
+                      reference={readings.salmo.referencia} 
+                      text={readings.salmo.texto} 
+                      refrain={readings.salmo.refrao} 
+                      onContext={() => navigate(parseRefToRoute(readings.salmo.referencia))} 
+                      onReflect={() => navigateToLectio(readings.salmo.referencia)} 
+                      onCompare={() => setCompareReading({ label: 'Salmo Responsorial', reference: readings.salmo.referencia, text: readings.salmo.texto })}
+                      delay={0.2} 
+                    />
                   )}
                   {readings.segundaLeitura && typeof readings.segundaLeitura === 'object' && (
-                    <ReadingCard label="Segunda Leitura" icon={<Icons.BookOpen className="w-5 h-5" />} reference={(readings.segundaLeitura as Reading).referencia} text={(readings.segundaLeitura as Reading).texto} onContext={() => navigate(parseRefToRoute((readings.segundaLeitura as Reading).referencia))} onReflect={() => navigateToLectio((readings.segundaLeitura as Reading).referencia)} delay={0.25} />
+                    <ReadingCard 
+                      label="Segunda Leitura" 
+                      icon={<Icons.BookOpen className="w-5 h-5" />} 
+                      reference={(readings.segundaLeitura as Reading).referencia} 
+                      text={(readings.segundaLeitura as Reading).texto} 
+                      onContext={() => navigate(parseRefToRoute((readings.segundaLeitura as Reading).referencia))} 
+                      onReflect={() => navigateToLectio((readings.segundaLeitura as Reading).referencia)} 
+                      onCompare={() => setCompareReading({ label: 'Segunda Leitura', reference: (readings.segundaLeitura as Reading).referencia, text: (readings.segundaLeitura as Reading).texto })}
+                      delay={0.25} 
+                    />
                   )}
                   {readings.evangelho && (
-                    <ReadingCard label="Evangelho" icon={<Icons.Lectio className="w-5 h-5" />} reference={readings.evangelho.referencia} text={readings.evangelho.texto} onContext={() => navigate(parseRefToRoute(readings.evangelho.referencia))} onReflect={() => navigateToLectio(readings.evangelho.referencia)} delay={0.3} />
+                    <ReadingCard 
+                      label="Evangelho" 
+                      icon={<Icons.Lectio className="w-5 h-5" />} 
+                      reference={readings.evangelho.referencia} 
+                      text={readings.evangelho.texto} 
+                      onContext={() => navigate(parseRefToRoute(readings.evangelho.referencia))} 
+                      onReflect={() => navigateToLectio(readings.evangelho.referencia)} 
+                      onCompare={() => setCompareReading({ label: 'Evangelho', reference: readings.evangelho.referencia, text: readings.evangelho.texto })}
+                      delay={0.3} 
+                    />
+                  )}
+
+                  {readings && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.4 }}
+                      className="bg-secondary/5 border border-secondary/20 rounded-[2.5rem] p-10 space-y-8 relative overflow-hidden group"
+                    >
+                      <div className="absolute top-0 right-0 p-12 opacity-5 rotate-12">
+                        <Icons.Sparkles className="w-24 h-24" />
+                      </div>
+                      
+                      <div className="space-y-2 text-center relative z-10">
+                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary/10 border border-secondary/20 text-secondary text-[10px] font-black uppercase tracking-[0.3em]">
+                          <Icons.Brain className="w-3.5 h-3.5" /> Análise de Unidade Litúrgica
+                        </div>
+                        <h3 className="text-2xl font-display font-black text-primary tracking-tight">Como as leituras se conectam?</h3>
+                        <p className="text-sm text-muted-foreground max-w-md mx-auto">IARA analisa a harmonia entre o Antigo e o Novo Testamento na liturgia de hoje.</p>
+                      </div>
+
+                      <div className="grid gap-6 md:grid-cols-2 relative z-10">
+                        <div className="p-6 rounded-3xl bg-white border border-border shadow-sm hover:shadow-md transition-all">
+                          <h4 className="text-[10px] font-black uppercase tracking-widest text-secondary mb-4 flex items-center gap-2">
+                            <div className="w-1.5 h-1.5 rounded-full bg-secondary" />
+                            Tipologia Bíblica
+                          </h4>
+                          <p className="text-sm font-serif italic text-primary leading-relaxed">
+                            A Primeira Leitura frequentemente prefigura o que é revelado no Evangelho. A promessa e o cumprimento caminham juntos.
+                          </p>
+                        </div>
+                        <div className="p-6 rounded-3xl bg-white border border-border shadow-sm hover:shadow-md transition-all">
+                          <h4 className="text-[10px] font-black uppercase tracking-widest text-primary mb-4 flex items-center gap-2">
+                            <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                            O Fio Condutor
+                          </h4>
+                          <p className="text-sm font-serif italic text-primary leading-relaxed">
+                            O Salmo Responsorial é a nossa resposta orante à Palavra, unindo a profecia ao testemunho apostólico.
+                          </p>
+                        </div>
+                      </div>
+
+                      <Button 
+                        variant="secondary" 
+                        className="w-full h-14 rounded-2xl font-black uppercase tracking-widest bg-secondary text-white hover:bg-secondary/90 shadow-lg shadow-secondary/20"
+                        onClick={() => {
+                          setCompareReading({
+                            label: 'Liturgia Completa',
+                            reference: 'Unidade das Leituras',
+                            text: `Leituras de hoje:\n1ª: ${readings.primeiraLeitura?.referencia}\nSalmo: ${readings.salmo?.referencia}\nEvangelho: ${readings.evangelho?.referencia}`
+                          });
+                        }}
+                      >
+                        Gerar Análise Profunda da Unidade
+                      </Button>
+                    </motion.div>
                   )}
                 </div>
               )}
@@ -442,6 +596,68 @@ const LiturgiaPage: React.FC = () => {
           {activeTab === 'missal' && <div className="animate-in fade-in slide-in-from-bottom-4 duration-500"><MissalPage /></div>}
           {activeTab === 'calendario' && <div className="animate-in fade-in slide-in-from-bottom-4 duration-500"><LiturgicalCalendarPage /></div>}
         </Suspense>
+
+        <Dialog open={!!compareReading} onOpenChange={(open) => !open && setCompareReading(null)}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col p-0 gap-0 rounded-[2rem] border-none shadow-2xl">
+            <DialogHeader className="p-8 pb-4 bg-primary text-white">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 rounded-xl bg-white/10 text-secondary">
+                  <Icons.Columns className="w-5 h-5" />
+                </div>
+                <DialogTitle className="text-2xl font-display font-black tracking-tight">Análise Comparativa</DialogTitle>
+              </div>
+              <DialogDescription className="text-white/60 font-medium">
+                {compareReading?.label} — {compareReading?.reference}
+              </DialogDescription>
+            </DialogHeader>
+
+            <Tabs defaultValue="texto" className="flex-1 flex flex-col overflow-hidden">
+              <div className="px-8 bg-primary border-b border-white/10">
+                <TabsList className="bg-white/5 border-none h-12 p-1">
+                  <TabsTrigger value="texto" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-primary font-bold text-xs uppercase tracking-widest px-6">Texto</TabsTrigger>
+                  <TabsTrigger value="analise" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-primary font-bold text-xs uppercase tracking-widest px-6">Análise Teológica</TabsTrigger>
+                  <TabsTrigger value="tradicao" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-primary font-bold text-xs uppercase tracking-widest px-6">Tradição</TabsTrigger>
+                </TabsList>
+              </div>
+
+              <div className="flex-1 overflow-hidden">
+                <ScrollArea className="h-full p-8">
+                  <TabsContent value="texto" className="m-0 focus-visible:outline-none">
+                    <p className="text-xl leading-[2] font-serif text-primary whitespace-pre-line">
+                      {compareReading?.text}
+                    </p>
+                  </TabsContent>
+
+                  <TabsContent value="analise" className="m-0 focus-visible:outline-none">
+                    {isComparing ? (
+                      <div className="flex flex-col items-center justify-center py-20 space-y-4">
+                        <Icons.Loader2 className="w-10 h-10 text-secondary animate-spin" />
+                        <p className="text-sm font-black uppercase tracking-widest text-muted-foreground animate-pulse">IARA está analisando...</p>
+                      </div>
+                    ) : (
+                      <div className="prose prose-slate max-w-none dark:prose-invert font-serif text-lg leading-relaxed">
+                        <ReactMarkdown>{comparisonAnalysis || 'Nenhuma análise disponível.'}</ReactMarkdown>
+                      </div>
+                    )}
+                  </TabsContent>
+
+                  <TabsContent value="tradicao" className="m-0 focus-visible:outline-none">
+                    <div className="space-y-6">
+                      <div className="p-6 rounded-2xl bg-secondary/5 border border-secondary/20">
+                        <h4 className="text-xs font-black uppercase tracking-widest text-secondary mb-4">Catecismo da Igreja</h4>
+                        <p className="text-primary italic font-serif">Esta passagem fundamenta diversos pontos do Catecismo sobre a Revelação e a Vida em Cristo. Use a busca global para referências específicas.</p>
+                      </div>
+                      <div className="p-6 rounded-2xl bg-primary/5 border border-primary/10">
+                        <h4 className="text-xs font-black uppercase tracking-widest text-primary mb-4">Escritos dos Santos</h4>
+                        <p className="text-primary italic font-serif">"O que a Bíblia diz, a Igreja vive." — Santo Agostinho</p>
+                      </div>
+                    </div>
+                  </TabsContent>
+                </ScrollArea>
+              </div>
+            </Tabs>
+          </DialogContent>
+        </Dialog>
       </div>
     </>
   );
