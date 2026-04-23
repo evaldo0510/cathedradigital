@@ -17,7 +17,7 @@ const BackToThemeBanner: React.FC = () => {
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => navigate(`/app/temas?tema=${tema}`)}
+          onClick={() => navigate(`${AppRoute.TEMAS}/${tema}`)}
           className="rounded-xl h-8 sm:h-9 px-3 text-primary hover:bg-primary/5 font-bold text-[10px] sm:text-xs uppercase tracking-widest gap-1.5"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
