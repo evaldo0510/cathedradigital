@@ -52,6 +52,7 @@ export enum AppRoute {
   PARTNERS = '/partners',
   UPGRADE = '/upgrade',
   TEMAS = '/temas',
+  TEMA_DETAIL = '/temas/:slug',
   ENCYCLOPEDIA = '/encyclopedia',
   AZ_FAITH = '/az-faith',
   MODULES_GUIDE = '/guia-modulos',

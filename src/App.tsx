@@ -85,6 +85,7 @@ const BibliotecaPage = lazy(() => import('./components/cathedra/BibliotecaPage')
 const JornadasPage = lazy(() => import('./components/cathedra/JornadasPage'));
 const Index = lazy(() => import('./pages/Index'));
 const TemasPage = lazy(() => import('./components/cathedra/TemasPage'));
+const TemaDetailPage = lazy(() => import('./components/cathedra/TemaDetailPage'));
 const CheckoutPage = lazy(() => import('./components/cathedra/CheckoutPage'));
 const DiagnosticsPage = lazy(() => import('./components/cathedra/DiagnosticsPage'));
 const UpgradePage = lazy(() => import('./components/cathedra/UpgradePage'));
@@ -480,6 +481,7 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.LOGIN} element={<PageTransition><Auth onSuccess={() => undefined} onSignupSuccess={() => navigate(AppRoute.ONBOARDING)} /></PageTransition>} />
                   <Route path={AppRoute.AQUINAS_OPERA} element={<PageTransition><AuthGuard><AquinasOpera /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.TEMAS} element={<PageTransition><AuthGuard><TemasPage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.TEMA_DETAIL} element={<PageTransition><AuthGuard><TemaDetailPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.CERTAMEN} element={<PageTransition><AuthGuard><Certamen /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.MISSAL} element={<Navigate to={`${AppRoute.LITURGIA}?tab=missal`} replace />} />
                   <Route path={AppRoute.FAVORITES} element={<PageTransition><AuthGuard><FavoritesPage /></AuthGuard></PageTransition>} />

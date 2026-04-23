@@ -3,67 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AppRoute } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, ExternalLink, Sparkles, Search, X, Heart, Church, Flame, Cross, BookOpen, Shield, Crown, Hand, Star, Globe, Eye, Users, Compass, Wine, Orbit, Hash, Mountain, RefreshCw, Frown, Bird, Droplets, Wheat, Target, Clock, Megaphone, Skull } from 'lucide-react';
+import { Loader2, ExternalLink, Sparkles, Search, X, Heart, Church, Flame, Cross, BookOpen, Shield, Crown, Hand, Star, Globe, Eye, Users, Compass, Wine, Orbit, Hash, Mountain, RefreshCw, Frown, Bird, Droplets, Wheat, Target, Clock, Megaphone, Skull, Filter } from 'lucide-react';
 import { Icons } from '@/constants';
-
-const tagIconMap: Record<string, React.ReactNode> = {
-  '❤️': <Heart className="w-3.5 h-3.5" />,
-  '💖': <Heart className="w-3.5 h-3.5" />,
-  '💔': <Heart className="w-3.5 h-3.5" />,
-  '💜': <Heart className="w-3.5 h-3.5" />,
-  '🤍': <Heart className="w-3.5 h-3.5" />,
-  '🫶': <Heart className="w-3.5 h-3.5" />,
-  '✝️': <Cross className="w-3.5 h-3.5" />,
-  '⛪': <Church className="w-3.5 h-3.5" />,
-  '🙏': <Hand className="w-3.5 h-3.5" />,
-  '🤲': <Hand className="w-3.5 h-3.5" />,
-  '🕊️': <Bird className="w-3.5 h-3.5" />,
-  '🔥': <Flame className="w-3.5 h-3.5" />,
-  '📖': <BookOpen className="w-3.5 h-3.5" />,
-  '📕': <BookOpen className="w-3.5 h-3.5" />,
-  '👑': <Crown className="w-3.5 h-3.5" />,
-  '🛡️': <Shield className="w-3.5 h-3.5" />,
-  '⭐': <Star className="w-3.5 h-3.5" />,
-  '🌍': <Globe className="w-3.5 h-3.5" />,
-  '🌎': <Globe className="w-3.5 h-3.5" />,
-  '👁️': <Eye className="w-3.5 h-3.5" />,
-  '👥': <Users className="w-3.5 h-3.5" />,
-  '👨‍👩‍👧‍👦': <Users className="w-3.5 h-3.5" />,
-  '🧭': <Compass className="w-3.5 h-3.5" />,
-  '🍷': <Wine className="w-3.5 h-3.5" />,
-  '💫': <Sparkles className="w-3.5 h-3.5" />,
-  '✨': <Sparkles className="w-3.5 h-3.5" />,
-  '🌹': <Heart className="w-3.5 h-3.5" />,
-  '🌱': <Flame className="w-3.5 h-3.5" />,
-  '💡': <Star className="w-3.5 h-3.5" />,
-  '🕯️': <Flame className="w-3.5 h-3.5" />,
-  '⚔️': <Shield className="w-3.5 h-3.5" />,
-  '🏛️': <Church className="w-3.5 h-3.5" />,
-  '🤝': <Users className="w-3.5 h-3.5" />,
-  '😢': <Frown className="w-3.5 h-3.5" />,
-  '😰': <Frown className="w-3.5 h-3.5" />,
-  '😔': <Frown className="w-3.5 h-3.5" />,
-  '😞': <Frown className="w-3.5 h-3.5" />,
-  '😨': <Frown className="w-3.5 h-3.5" />,
-  '💀': <Skull className="w-3.5 h-3.5" />,
-  '🎭': <Eye className="w-3.5 h-3.5" />,
-  '☀️': <Star className="w-3.5 h-3.5" />,
-  '🌙': <Orbit className="w-3.5 h-3.5" />,
-  '🏔️': <Mountain className="w-3.5 h-3.5" />,
-  '🔄': <RefreshCw className="w-3.5 h-3.5" />,
-  '📏': <Target className="w-3.5 h-3.5" />,
-  '💧': <Droplets className="w-3.5 h-3.5" />,
-  '🌾': <Wheat className="w-3.5 h-3.5" />,
-  '🦅': <Bird className="w-3.5 h-3.5" />,
-  '🥀': <Heart className="w-3.5 h-3.5" />,
-  '🌑': <Orbit className="w-3.5 h-3.5" />,
-  '🕳️': <Orbit className="w-3.5 h-3.5" />,
-  '⏰': <Clock className="w-3.5 h-3.5" />,
-  '🎯': <Target className="w-3.5 h-3.5" />,
-  '📢': <Megaphone className="w-3.5 h-3.5" />,
-};
-
-const getTagIcon = (emoji: string) => tagIconMap[emoji] || <Hash className="w-3.5 h-3.5" />;
+import { BubbleTag, getTagIcon } from './BubbleTag';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { type ProfileId, PROFILES } from './SpiritualQuiz';
@@ -136,45 +78,16 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean }> = 
       if (val) fetchContent();
     }}>
       <PopoverTrigger asChild>
-        <motion.button
-          key={tag.slug}
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ 
-            delay: index * 0.015, 
-            type: 'spring', 
-            damping: 15,
-            stiffness: 100
-          }}
-          whileHover={{ 
-            scale: 1.1,
-            y: -2,
-            transition: { duration: 0.2 }
-          }}
-          whileTap={{ scale: 0.95 }}
-          className={`
-            relative px-3.5 py-2 rounded-full border transition-all shadow-sm flex items-center gap-1.5 group/tag
-            ${open 
-              ? 'border-primary/50 bg-primary/10 ring-2 ring-primary/10' 
-              : isSuggested
-                ? 'border-secondary/40 bg-secondary/5 hover:border-secondary/60 hover:bg-secondary/10'
-                : 'border-border bg-card/50 hover:border-primary/40 hover:bg-primary/5 hover:shadow-md'
-            }
-          `}
-        >
-          {isSuggested && (
-            <div className="absolute -top-1 -right-1">
-              <Sparkles className="w-2.5 h-2.5 text-secondary animate-pulse" />
-            </div>
-          )}
-          <span className="text-sm group-hover/tag:scale-110 transition-transform text-primary/70">{getTagIcon(tag.emoji)}</span>
-          <span className={`
-            text-[11px] font-bold transition-colors tracking-tight
-            ${open ? 'text-primary' : isSuggested ? 'text-secondary' : 'text-foreground/80 group-hover/tag:text-primary'}
-          `}>
-            {tag.label}
-          </span>
-        </motion.button>
+        <div>
+          <BubbleTag
+            label={tag.label}
+            emoji={tag.emoji}
+            index={index}
+            isSelected={open}
+            isSuggested={isSuggested}
+            onClick={() => {}} // Popover handles trigger
+          />
+        </div>
       </PopoverTrigger>
       <PopoverContent className="w-[320px] p-0 rounded-[2rem] border-primary/20 overflow-hidden shadow-2xl z-[100] backdrop-blur-xl">
         <div className="bg-gradient-to-r from-primary/10 to-transparent p-4 border-b border-border/50 flex items-center justify-between">
@@ -185,7 +98,7 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean }> = 
             <span className="text-xs font-black uppercase tracking-widest text-primary">{tag.label}</span>
           </div>
           <button 
-            onClick={() => navigate(`${AppRoute.TEMAS}?tema=${tag.slug}`)}
+            onClick={() => navigate(`${AppRoute.TEMAS}/${tag.slug}`)}
             className="p-1.5 rounded-full bg-primary/5 hover:bg-primary/20 text-primary transition-colors group"
             title="Estudo Completo"
           >
@@ -281,7 +194,7 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean }> = 
             variant="ghost" 
             size="sm" 
             className="w-full rounded-xl text-[10px] font-black uppercase tracking-widest h-9 hover:bg-primary/10 hover:text-primary transition-all active:scale-95"
-            onClick={() => navigate(`${AppRoute.TEMAS}?tema=${tag.slug}`)}
+            onClick={() => navigate(`${AppRoute.TEMAS}/${tag.slug}`)}
           >
             Navegação Completa
           </Button>
@@ -314,11 +227,13 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
     fetchTags();
   }, []);
 
+  const [activeFilter, setActiveFilter] = useState<string>('all');
+
   const categories = {
-    fundamentos: { label: 'Fundamentos da Fé', icon: <Icons.Church className="w-3.5 h-3.5" /> },
-    dores: { label: 'Dores e Busca', icon: <Icons.Heart className="w-3.5 h-3.5 text-destructive" /> },
-    divino: { label: 'Mistério Divino', icon: <Icons.Sparkles className="w-3.5 h-3.5 text-secondary" /> },
-    vida: { label: 'Vida Prática', icon: <Icons.Flame className="w-3.5 h-3.5 text-orange-500" /> },
+    fundamentos: { label: 'Fundamentos', icon: <Icons.Church className="w-3.5 h-3.5" /> },
+    dores: { label: 'Dores', icon: <Icons.Heart className="w-3.5 h-3.5 text-destructive" /> },
+    divino: { label: 'Mistério', icon: <Icons.Sparkles className="w-3.5 h-3.5 text-secondary" /> },
+    vida: { label: 'Vida', icon: <Icons.Flame className="w-3.5 h-3.5 text-orange-500" /> },
   };
 
   const profileSuggestedTags = useMemo(() => {
@@ -326,18 +241,23 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
     const profile = PROFILES[profileId];
     if (!profile) return [];
 
-    // Filter tags by profile theme or related pains
     const relevantLabels = [profile.theme, profile.pain.label, 'Oração', 'Jesus', 'Fé'];
     return tags.filter(t => relevantLabels.some(l => t.label.toLowerCase().includes(l.toLowerCase()))).slice(0, 8);
   }, [profileId, tags]);
 
   const filteredTags = useMemo(() => {
-    if (!searchQuery) return null;
-    return tags.filter(t => 
-      t.label.toLowerCase().includes(searchQuery.toLowerCase()) || 
-      t.category.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [tags, searchQuery]);
+    let result = tags;
+    if (searchQuery) {
+      result = result.filter(t => 
+        t.label.toLowerCase().includes(searchQuery.toLowerCase()) || 
+        t.category.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+    if (activeFilter !== 'all') {
+      result = result.filter(t => t.category === activeFilter);
+    }
+    return result;
+  }, [tags, searchQuery, activeFilter]);
 
   if (loading) {
     return (
@@ -376,20 +296,42 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
           )}
         </div>
       </div>
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none">
+        <button
+          onClick={() => setActiveFilter('all')}
+          className={`px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${activeFilter === 'all' ? 'bg-primary text-primary-foreground shadow-lg' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}
+        >
+          Todos
+        </button>
+        {Object.entries(categories).map(([key, cat]) => (
+          <button
+            key={key}
+            onClick={() => setActiveFilter(key)}
+            className={`px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-1.5 ${activeFilter === key ? 'bg-primary text-primary-foreground shadow-lg' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}
+          >
+            {cat.icon}
+            {cat.label}
+          </button>
+        ))}
+      </div>
 
       <div className="space-y-6">
         <AnimatePresence mode="wait">
-          {searchQuery ? (
+          {searchQuery || activeFilter !== 'all' ? (
             <motion.div 
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               className="space-y-3"
             >
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Resultado da Busca</p>
-              <div className="flex flex-wrap gap-1.5">
-                {filteredTags?.length ? filteredTags.map((tag, i) => (
-                  <TagBubble key={tag.slug} tag={tag} index={i} />
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                {searchQuery ? 'Resultado da Busca' : categories[activeFilter as keyof typeof categories]?.label}
+              </p>
+              <div className="flex flex-wrap gap-1.5" role="list">
+                {filteredTags && filteredTags.length ? filteredTags.map((tag, i) => (
+                  <div key={tag.slug} role="listitem">
+                    <TagBubble tag={tag} index={i} />
+                  </div>
                 )) : (
                   <p className="text-[10px] text-muted-foreground italic">Nenhum tema encontrado.</p>
                 )}
@@ -413,9 +355,11 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
                       Sugeridos para sua Jornada
                     </span>
                   </div>
-                  <div className="flex flex-wrap gap-1.5">
+                  <div className="flex flex-wrap gap-1.5" role="list">
                     {profileSuggestedTags.map((tag, i) => (
-                      <TagBubble key={tag.slug} tag={tag} index={i} isSuggested />
+                      <div key={tag.slug} role="listitem">
+                        <TagBubble tag={tag} index={i} isSuggested />
+                      </div>
                     ))}
                   </div>
                 </motion.div>
@@ -445,9 +389,11 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
                         </span>
                       </button>
 
-                      <div className="flex flex-wrap gap-1.5">
+                      <div className="flex flex-wrap gap-1.5" role="list">
                         {(expandedCategory === key ? categoryTags : categoryTags.slice(0, 6)).map((tag, i) => (
-                          <TagBubble key={tag.slug} tag={tag} index={i} />
+                          <div key={tag.slug} role="listitem">
+                            <TagBubble tag={tag} index={i} />
+                          </div>
                         ))}
                         {expandedCategory !== key && categoryTags.length > 6 && (
                           <button

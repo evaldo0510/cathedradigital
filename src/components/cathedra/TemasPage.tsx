@@ -3,72 +3,15 @@ import { useQuery } from '@tanstack/react-query';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Loader2, ChevronRight, ChevronLeft, Hash, Sparkles, Tag as TagIcon, X, Search, Heart, Cross, BookOpen, Flame, Shield, Crown, Hand, Star, Globe, Eye, Users, Compass, Church, Wine, Orbit, Mountain, RefreshCw, Frown, Bird, Droplets, Wheat, Target, Clock, Megaphone, Skull } from 'lucide-react';
+import { AppRoute } from '@/types';
+import { Loader2, ChevronRight, ChevronLeft, Hash, Sparkles, Tag as TagIcon, X, Search, Heart, Cross, BookOpen, Flame, Shield, Crown, Hand, Star, Globe, Eye, Users, Compass, Church, Wine, Orbit, Mountain, RefreshCw, Frown, Bird, Droplets, Wheat, Target, Clock, Megaphone, Skull, Filter } from 'lucide-react';
 import { Icons } from '@/constants';
 import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import { RelevanceBadge } from './RelevanceBadge';
 import { FuzzySearchInput } from './FuzzySearchInput';
+import { BubbleTag, getTagIcon } from './BubbleTag';
 
-const tagIconMap: Record<string, React.ReactNode> = {
-  '❤️': <Heart className="w-5 h-5" />,
-  '💖': <Heart className="w-5 h-5" />,
-  '💔': <Heart className="w-5 h-5" />,
-  '💜': <Heart className="w-5 h-5" />,
-  '🤍': <Heart className="w-5 h-5" />,
-  '🫶': <Heart className="w-5 h-5" />,
-  '✝️': <Cross className="w-5 h-5" />,
-  '⛪': <Church className="w-5 h-5" />,
-  '🙏': <Hand className="w-5 h-5" />,
-  '🤲': <Hand className="w-5 h-5" />,
-  '🕊️': <Bird className="w-5 h-5" />,
-  '🔥': <Flame className="w-5 h-5" />,
-  '📖': <BookOpen className="w-5 h-5" />,
-  '📕': <BookOpen className="w-5 h-5" />,
-  '👑': <Crown className="w-5 h-5" />,
-  '🛡️': <Shield className="w-5 h-5" />,
-  '⭐': <Star className="w-5 h-5" />,
-  '🌍': <Globe className="w-5 h-5" />,
-  '🌎': <Globe className="w-5 h-5" />,
-  '👁️': <Eye className="w-5 h-5" />,
-  '👥': <Users className="w-5 h-5" />,
-  '👨‍👩‍👧‍👦': <Users className="w-5 h-5" />,
-  '🧭': <Compass className="w-5 h-5" />,
-  '🍷': <Wine className="w-5 h-5" />,
-  '💫': <Sparkles className="w-5 h-5" />,
-  '✨': <Sparkles className="w-5 h-5" />,
-  '🌹': <Heart className="w-5 h-5" />,
-  '🌱': <Flame className="w-5 h-5" />,
-  '💡': <Star className="w-5 h-5" />,
-  '🕯️': <Flame className="w-5 h-5" />,
-  '⚔️': <Shield className="w-5 h-5" />,
-  '🏛️': <Church className="w-5 h-5" />,
-  '🤝': <Users className="w-5 h-5" />,
-  '😢': <Frown className="w-5 h-5" />,
-  '😰': <Frown className="w-5 h-5" />,
-  '😔': <Frown className="w-5 h-5" />,
-  '😞': <Frown className="w-5 h-5" />,
-  '😨': <Frown className="w-5 h-5" />,
-  '💀': <Skull className="w-5 h-5" />,
-  '🎭': <Eye className="w-5 h-5" />,
-  '☀️': <Star className="w-5 h-5" />,
-  '🌙': <Orbit className="w-5 h-5" />,
-  '🏔️': <Mountain className="w-5 h-5" />,
-  '🔄': <RefreshCw className="w-5 h-5" />,
-  '📏': <Target className="w-5 h-5" />,
-  '💧': <Droplets className="w-5 h-5" />,
-  '🌾': <Wheat className="w-5 h-5" />,
-  '🦅': <Bird className="w-5 h-5" />,
-  '🥀': <Heart className="w-5 h-5" />,
-  '🌑': <Orbit className="w-5 h-5" />,
-  '🕳️': <Orbit className="w-5 h-5" />,
-  '⏰': <Clock className="w-5 h-5" />,
-  '🎯': <Target className="w-5 h-5" />,
-  '📢': <Megaphone className="w-5 h-5" />,
-};
-
-const getTagIcon = (emoji: string) => {
-  return tagIconMap[emoji] || <Hash className="w-5 h-5" />;
-};
+// Using shared getTagIcon from BubbleTag
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -158,8 +101,7 @@ const TemasPage = () => {
   }, [tags, searchParams]);
 
   const handleTagSelect = (tag: Tag) => {
-    setSelectedTag(tag);
-    setSearchParams({ tema: tag.slug });
+    navigate(`${AppRoute.TEMAS}/${tag.slug}`);
   };
 
   useEffect(() => {
@@ -289,51 +231,22 @@ const TemasPage = () => {
             ) : (
               <>
                 <div className="relative p-6 sm:p-10">
-                  <div className="flex flex-wrap justify-center gap-2 sm:gap-3 max-w-5xl mx-auto">
-                    {filteredTags.map((tag, idx) => {
-                      const isSelected = selectedTag?.id === tag.id;
-                      return (
-                        <motion.button
-                          key={tag.id}
-                          layoutId={`tag-${tag.id}`}
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          transition={{ 
-                            delay: idx * 0.015,
-                            type: "spring",
-                            damping: 15,
-                            stiffness: 100
-                          }}
-                          whileHover={{ 
-                            scale: 1.15, 
-                            y: -4,
-                            rotate: isSelected ? 0 : [0, -1, 1, 0],
-                            transition: { duration: 0.2 }
-                          }}
-                          whileTap={{ scale: 0.95 }}
+                  <div className="flex flex-wrap justify-center gap-2 sm:gap-3 max-w-5xl mx-auto" role="list">
+                    {filteredTags.map((tag, idx) => (
+                      <div key={tag.id} role="listitem">
+                        <BubbleTag
+                          label={tag.label}
+                          emoji={tag.emoji}
+                          index={idx}
+                          isSelected={selectedTag?.id === tag.id}
                           onClick={() => handleTagSelect(tag)}
                           className={`
-                            px-4 py-2.5 rounded-full text-[10px] sm:text-[11px] font-black uppercase tracking-widest transition-all duration-300
-                            flex items-center gap-2 border shrink-0 relative group/bubble
-                            ${isSelected 
-                              ? 'bg-primary text-primary-foreground border-primary shadow-xl shadow-primary/30 z-10 scale-110' 
-                              : 'bg-card/50 backdrop-blur-xl text-foreground/70 border-border/60 hover:border-primary/40 hover:bg-primary/5 hover:text-primary hover:shadow-2xl'
-                            }
+                            px-4 py-2.5 text-[10px] sm:text-[11px] uppercase tracking-widest
+                            ${selectedTag?.id === tag.id ? 'z-10 scale-110 shadow-primary/30' : ''}
                           `}
-                        >
-                          <span className="group-hover/bubble:scale-125 transition-transform duration-300 opacity-80 group-hover/bubble:opacity-100 text-sm">{getTagIcon(tag.emoji)}</span>
-                          <span className="relative whitespace-nowrap">
-                            {tag.label}
-                          </span>
-                          {isSearchActive && (
-                            <RelevanceBadge score={tag.similarityScore} size="xs" />
-                          )}
-                          {!isSelected && (
-                            <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover/bubble:opacity-100 rounded-full transition-opacity pointer-events-none" />
-                          )}
-                        </motion.button>
-                      );
-                    })}
+                        />
+                      </div>
+                    ))}
                   </div>
                 </div>
                 <div className="flex items-center justify-center gap-3 px-8 pb-6 pt-2">

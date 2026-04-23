@@ -18,6 +18,7 @@ import { RelevanceBadge } from './RelevanceBadge';
 import { FuzzySearchInput } from './FuzzySearchInput';
 import { SearchResultCard } from './SearchResultCard';
 import { Button } from '@/components/ui/button';
+import { BubbleTag, getTagIcon } from './BubbleTag';
 import { format, addDays, subDays, isSameDay } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
@@ -26,7 +27,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
   const [selectedSaint, setSelectedSaint] = useState<Saint | null>(null);
   const [autoReflect, setAutoReflect] = useState(false);
   const [search, setSearch] = useState('');
-  const [viewMode, setViewMode] = useState<'daily' | 'search' | 'all' | 'writers' | 'popes'>('daily');
+  const [viewMode, setViewMode] = useState<'daily' | 'search' | 'all' | 'writers' | 'popes' | 'cloud'>('daily');
   const [isSearchingGlobal, setIsSearchingGlobal] = useState(false);
   const [globalResults, setGlobalResults] = useState<Saint[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -57,10 +58,10 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
     queryFn: async () => {
       if (viewMode === 'writers') return getSaintsByCategory('doctor');
       if (viewMode === 'popes') return getSaintsByCategory('pope');
-      if (viewMode === 'all') return getAllSaints(100);
+      if (viewMode === 'all' || viewMode === 'cloud') return getAllSaints(100);
       return [];
     },
-    enabled: ['writers', 'popes', 'all'].includes(viewMode),
+    enabled: ['writers', 'popes', 'all', 'cloud'].includes(viewMode),
   });
 
   // Debounced search to avoid one DB hit per keystroke
@@ -184,7 +185,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
         <div className="flex justify-center overflow-x-auto pb-4 no-scrollbar">
           <div className="bg-secondary/50 p-1 rounded-2xl flex gap-1 min-w-max">
-            {(['daily', 'all', 'writers', 'popes', 'search'] as const).map(mode => (
+            {(['daily', 'all', 'writers', 'popes', 'cloud', 'search'] as const).map(mode => (
               <button
                 key={mode}
                 onClick={() => setViewMode(mode)}
@@ -192,7 +193,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   viewMode === mode ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                {mode === 'daily' ? 'Hoje' : mode === 'all' ? 'Todos' : mode === 'writers' ? 'Escritores' : mode === 'popes' ? 'Papas' : 'Buscar'}
+                {mode === 'daily' ? 'Hoje' : mode === 'all' ? 'Todos' : mode === 'writers' ? 'Escritores' : mode === 'popes' ? 'Papas' : mode === 'cloud' ? 'Nuvem' : 'Buscar'}
               </button>
             ))}
           </div>
@@ -353,7 +354,33 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                 isSearching={search !== debouncedSearch || isSearchingLocal}
                 size="lg"
               />
+          ) : viewMode === 'cloud' ? (
+            <motion.div
+              key="cloud"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="space-y-8"
+            >
+              <div className="text-center space-y-2">
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Nuvem de Testemunhas</p>
+                <p className="text-sm text-muted-foreground italic font-serif">"Estamos cercados de tão grande nuvem de testemunhas..." — Heb 12,1</p>
+              </div>
 
+              <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto" role="list">
+                {displaySaints.map((saint, i) => (
+                  <div key={saint.id} role="listitem">
+                    <BubbleTag
+                      label={saint.name}
+                      emoji={saint.category === 'pope' ? '👑' : saint.category === 'doctor' ? '📖' : '⛪'}
+                      index={i}
+                      onClick={() => handleOpenSaint(saint, false)}
+                      className="px-5 py-3 text-xs"
+                    />
+                  </div>
+                ))}
+              </div>
+            </motion.div>
               <div className="max-w-2xl mx-auto px-4">
                 {isLoadingDaily || isSearchingLocal ? (
                   <SaintGridSkeleton count={6} />
