@@ -21,6 +21,8 @@ const PAGE_COMMANDS: CommandItem[] = [
   { label: 'Santos', description: 'Hagiografia', path: AppRoute.SAINTS, icon: <Icons.SaintHalo className="w-4 h-4" />, keywords: ['santos', 'santo', 'santa', 'hagiografia', 'mártir'], type: 'page' },
   { label: 'Magistério', description: 'Encíclicas e documentos', path: AppRoute.MAGISTERIUM, icon: <Icons.ScrollText className="w-4 h-4" />, keywords: ['magistério', 'encíclica', 'concílio', 'papa', 'vaticano'], type: 'page' },
   { label: 'Dogmas', description: 'Dogmas da fé católica', path: AppRoute.DOGMAS, icon: <Icons.Star className="w-4 h-4" />, keywords: ['dogma', 'doutrina', 'verdade', 'fé'], type: 'page' },
+  { label: 'Enciclopédia', description: 'Glossário completo da fé', path: AppRoute.ENCYCLOPEDIA, icon: <Icons.Library className="w-4 h-4" />, keywords: ['enciclopédia', 'glossário', 'termos', 'fé'], type: 'page' },
+  { label: 'Aparições', description: 'Manifestações de Nossa Senhora', path: AppRoute.APARICOES, icon: <Icons.Heart className="w-4 h-4" />, keywords: ['aparição', 'nossa senhora', 'maria', 'milagre'], type: 'page' },
   { label: 'Liturgia Diária', description: 'Leituras do dia', path: `${AppRoute.LITURGIA}?tab=liturgia`, icon: <Icons.Star className="w-4 h-4" />, keywords: ['liturgia', 'leitura', 'missa', 'evangelho do dia'], type: 'page' },
   { label: 'Santo Rosário', description: 'Oração do terço', path: AppRoute.ROSARY, icon: <Icons.Heart className="w-4 h-4" />, keywords: ['rosário', 'terço', 'ave maria', 'mistérios'], type: 'page' },
   { label: 'Via Crucis', description: 'Caminho da Cruz', path: AppRoute.VIA_CRUCIS, icon: <Icons.Cross className="w-4 h-4" />, keywords: ['via crucis', 'cruz', 'estações', 'paixão'], type: 'page' },
