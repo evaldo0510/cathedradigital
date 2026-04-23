@@ -604,8 +604,36 @@ const AdminJourneysTab: React.FC = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2 text-destructive">
+              <AlertTriangle className="w-5 h-5" /> Confirmar Exclusão
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Você está prestes a excluir a jornada <strong className="text-foreground">"{journeyToDelete?.title}"</strong>.
+              <br /><br />
+              Esta ação removerá permanentemente a jornada e <strong className="text-destructive font-bold">{stepsToDeleteCount} passos</strong> associados. Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={(e) => {
+                e.preventDefault();
+                confirmDeleteJourney();
+              }}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              disabled={isDeleting}
+            >
+              {isDeleting ? 'Excluindo...' : 'Sim, Excluir Tudo'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
 
 export default AdminJourneysTab;
+
