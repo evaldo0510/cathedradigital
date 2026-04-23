@@ -363,14 +363,12 @@ const Bible: React.FC = () => {
       if (memCached) {
         setVerses(memCached);
         setBibleError('');
-        setHighlightedVerse(null);
         return;
       }
 
       setIsLoading(true);
       setBibleError('');
       setVerses([]);
-      setHighlightedVerse(null);
 
       // 2) Check IndexedDB cache, then fetch if miss
       import('@/lib/offlineCache').then(({ getCachedBibleChapter, cacheBibleChapter }) => {
@@ -402,6 +400,19 @@ const Bible: React.FC = () => {
       });
     }
   }, [viewMode, selectedBook, selectedChapter, bibleCache]);
+
+  // Auto-scroll to highlighted verse when verses are loaded
+  useEffect(() => {
+    if (highlightedVerse && verses.length > 0 && !isLoading) {
+      // Wait for DOM to render
+      setTimeout(() => {
+        const el = document.getElementById(`v${highlightedVerse}`);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 200);
+    }
+  }, [highlightedVerse, verses, isLoading]);
 
   // Reading view
   if (viewMode === 'reading' && selectedBook) {
