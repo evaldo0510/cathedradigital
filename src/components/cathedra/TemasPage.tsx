@@ -149,13 +149,8 @@ const TemasPage = () => {
     return base.filter(tag => tag.category === activeCategory);
   }, [tags, fuzzyTags, isSearchActive, activeCategory]);
 
-  useEffect(() => {
-    const el = document.getElementById('tags-carousel');
-    if (!el) return;
-    el.addEventListener('scroll', handleCarouselScroll, { passive: true });
-    handleCarouselScroll();
-    return () => el.removeEventListener('scroll', handleCarouselScroll);
-  }, [handleCarouselScroll, filteredTags]);
+  // removed useEffect for carousel scroll as it is replaced by flex-wrap logic
+
 
   useEffect(() => {
     const temaSlug = searchParams.get('tema');
