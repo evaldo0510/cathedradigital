@@ -170,6 +170,17 @@ const TemaDetailPage = () => {
     });
   };
 
+  useEffect(() => {
+    if (selectedTag && !logosInsight && !loadingLogos && !autoLoaded) {
+      setAutoLoaded(true);
+      // Small delay for better UX
+      const timer = setTimeout(() => {
+        handleLoadInsight();
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [selectedTag, logosInsight, loadingLogos, autoLoaded]);
+
   if (!selectedTag && tags) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60dvh] space-y-4">
