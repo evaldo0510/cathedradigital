@@ -15,10 +15,21 @@ import {
   Layers,
   Save,
   ChevronRight,
-  ChevronDown
+  ChevronDown,
+  AlertTriangle
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface Journey {
   id: string;
@@ -31,6 +42,7 @@ interface Journey {
   is_premium: boolean;
   estimated_days: number | null;
 }
+
 
 interface Step {
   id: string;
