@@ -58,7 +58,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
     queryFn: async () => {
       if (viewMode === 'writers') return getSaintsByCategory('doctor');
       if (viewMode === 'popes') return getSaintsByCategory('pope');
-      if (viewMode === 'all') return getAllSaints(100);
+      if (viewMode === 'all' || viewMode === 'cloud') return getAllSaints(100);
       return [];
     },
     enabled: ['writers', 'popes', 'all'].includes(viewMode),
