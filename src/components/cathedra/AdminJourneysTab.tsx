@@ -15,10 +15,21 @@ import {
   Layers,
   Save,
   ChevronRight,
-  ChevronDown
+  ChevronDown,
+  AlertTriangle
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface Journey {
   id: string;
@@ -31,6 +42,7 @@ interface Journey {
   is_premium: boolean;
   estimated_days: number | null;
 }
+
 
 interface Step {
   id: string;
@@ -54,6 +66,11 @@ const AdminJourneysTab: React.FC = () => {
   const [editingStep, setEditingStep] = useState<Step | null>(null);
   const [isEditStepDialogOpen, setIsEditStepDialogOpen] = useState(false);
   const [stepContentString, setStepContentString] = useState('');
+  
+  const [journeyToDelete, setJourneyToDelete] = useState<Journey | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [stepsToDeleteCount, setStepsToDeleteCount] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const [isAddJourneyDialogOpen, setIsAddJourneyDialogOpen] = useState(false);
   const [newJourney, setNewJourney] = useState({
@@ -66,6 +83,7 @@ const AdminJourneysTab: React.FC = () => {
     is_premium: false,
     estimated_days: 7
   });
+
 
   useEffect(() => {
     fetchJourneys();
@@ -126,11 +144,13 @@ const AdminJourneysTab: React.FC = () => {
     if (!editingStep) return;
     
     try {
+      console.log(`Saving step: ${editingStep.title} (${editingStep.id})`);
       let parsedContent = editingStep.content;
       try {
-        parsedContent = JSON.parse(stepContentString);
+        parsedContent = typeof stepContentString === 'string' ? JSON.parse(stepContentString) : stepContentString;
       } catch (e) {
-        toast.error('JSON inválido no conteúdo do passo.');
+        console.error('Invalid JSON in step content:', e);
+        toast.error('JSON inválido no conteúdo do passo. Verifique a sintaxe.');
         return;
       }
       
@@ -145,38 +165,50 @@ const AdminJourneysTab: React.FC = () => {
         })
         .eq('id', editingStep.id);
         
-      if (error) throw error;
+      if (error) {
+        console.error('Error saving step:', error);
+        throw error;
+      }
       
       setSteps(prev => prev.map(s => s.id === editingStep.id ? { ...editingStep, content: parsedContent } : s));
-      toast.success('Passo atualizado com sucesso.');
+      toast.success(`Passo "${editingStep.title}" atualizado.`);
       setIsEditStepDialogOpen(false);
     } catch (error: any) {
-      toast.error('Erro ao salvar passo: ' + error.message);
+      console.error('Critical error saving step:', error);
+      toast.error('Erro ao salvar passo: ' + (error.message || 'Falha na rede'));
     }
   };
+
   
   const handleDeleteStep = async (stepId: string) => {
     if (!window.confirm('Tem certeza que deseja excluir este passo?')) return;
     
     try {
+      console.log(`Deleting step: ${stepId}`);
       const { error } = await supabase
         .from('journey_steps')
         .delete()
         .eq('id', stepId);
         
-      if (error) throw error;
+      if (error) {
+        console.error('Error deleting step:', error);
+        throw error;
+      }
       
       setSteps(prev => prev.filter(s => s.id !== stepId));
-      toast.success('Passo excluído com sucesso.');
+      toast.success('Passo removido com sucesso.');
     } catch (error: any) {
-      toast.error('Erro ao excluir passo: ' + error.message);
+      console.error('Step deletion error:', error);
+      toast.error('Erro ao excluir passo: ' + (error.message || 'Erro no servidor'));
     }
   };
+
 
   const handleSaveJourney = async () => {
     if (!editingJourney) return;
 
     try {
+      console.log(`Updating journey: ${editingJourney.title} (${editingJourney.id})`);
       const { error } = await supabase
         .from('journeys')
         .update({
@@ -191,46 +223,91 @@ const AdminJourneysTab: React.FC = () => {
         })
         .eq('id', editingJourney.id);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error updating journey:', error);
+        throw error;
+      }
 
       setJourneys(prev => prev.map(j => j.id === editingJourney.id ? editingJourney : j));
       toast.success('Jornada atualizada com sucesso.');
       setIsEditDialogOpen(false);
     } catch (error: any) {
-      toast.error('Erro ao salvar jornada: ' + error.message);
+      console.error('Save journey error:', error);
+      toast.error('Erro ao salvar jornada: ' + (error.message || 'Falha na conexão'));
     }
   };
-  const handleDeleteJourney = async (id: string) => {
-    if (!window.confirm('Tem certeza que deseja excluir esta jornada e todos os seus passos?')) return;
 
+  const initiateDeleteJourney = async (journey: Journey) => {
     try {
+      // Fetch step count for confirmation modal
+      const { count, error } = await supabase
+        .from('journey_steps')
+        .select('*', { count: 'exact', head: true })
+        .eq('journey_id', journey.id);
+      
+      if (error) throw error;
+      
+      setStepsToDeleteCount(count || 0);
+      setJourneyToDelete(journey);
+      setIsDeleteDialogOpen(true);
+    } catch (error: any) {
+      console.error('Error fetching step count for deletion:', error);
+      toast.error('Erro ao preparar exclusão: ' + error.message);
+    }
+  };
+
+  const confirmDeleteJourney = async () => {
+    if (!journeyToDelete) return;
+    
+    setIsDeleting(true);
+    try {
+      console.log(`Attempting to delete journey: ${journeyToDelete.title} (${journeyToDelete.id})`);
+      
       const { error } = await supabase
         .from('journeys')
         .delete()
-        .eq('id', id);
+        .eq('id', journeyToDelete.id);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Database error during journey deletion:', error);
+        throw error;
+      }
 
-      setJourneys(prev => prev.filter(j => j.id !== id));
-      toast.success('Jornada excluída com sucesso.');
+      setJourneys(prev => prev.filter(j => j.id !== journeyToDelete.id));
+      if (selectedJourneyId === journeyToDelete.id) {
+        setSelectedJourneyId(null);
+        setSteps([]);
+      }
+      
+      toast.success(`Jornada "${journeyToDelete.title}" e seus ${stepsToDeleteCount} passos foram excluídos com sucesso.`);
+      setIsDeleteDialogOpen(false);
+      setJourneyToDelete(null);
     } catch (error: any) {
-      toast.error('Erro ao excluir jornada: ' + error.message);
+      console.error('Critical error deleting journey:', error);
+      toast.error('Erro ao excluir jornada: ' + (error.message || 'Erro desconhecido'));
+    } finally {
+      setIsDeleting(false);
     }
   };
+
 
 
   const handleCreateJourney = async () => {
     try {
+      console.log('Creating new journey:', newJourney.title);
       const { data, error } = await supabase
         .from('journeys')
         .insert([newJourney])
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error creating journey:', error);
+        throw error;
+      }
       
       setJourneys([data, ...journeys]);
-      toast.success('Jornada criada com sucesso.');
+      toast.success(`Jornada "${newJourney.title}" criada com sucesso.`);
       setIsAddJourneyDialogOpen(false);
       setNewJourney({
         title: '',
@@ -243,9 +320,11 @@ const AdminJourneysTab: React.FC = () => {
         estimated_days: 7
       });
     } catch (error: any) {
-      toast.error('Erro ao criar jornada: ' + error.message);
+      console.error('Create journey error:', error);
+      toast.error('Erro ao criar jornada: ' + (error.message || 'Erro inesperado'));
     }
   };
+
 
   const handleCreateStep = async (journeyId: string) => {
     try {
@@ -333,12 +412,13 @@ const AdminJourneysTab: React.FC = () => {
                 }}>
                   <Edit className="w-4 h-4" />
                 </Button>
-                <Button variant="ghost" size="icon" className="text-destructive" onClick={(e) => {
+                <Button variant="ghost" size="icon" className="text-destructive hover:bg-destructive/10" onClick={(e) => {
                   e.stopPropagation();
-                  handleDeleteJourney(journey.id);
+                  initiateDeleteJourney(journey);
                 }}>
                   <Trash2 className="w-4 h-4" />
                 </Button>
+
               </div>
             </div>
 
@@ -549,8 +629,36 @@ const AdminJourneysTab: React.FC = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2 text-destructive">
+              <AlertTriangle className="w-5 h-5" /> Confirmar Exclusão
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Você está prestes a excluir a jornada <strong className="text-foreground">"{journeyToDelete?.title}"</strong>.
+              <br /><br />
+              Esta ação removerá permanentemente a jornada e <strong className="text-destructive font-bold">{stepsToDeleteCount} passos</strong> associados. Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={(e) => {
+                e.preventDefault();
+                confirmDeleteJourney();
+              }}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              disabled={isDeleting}
+            >
+              {isDeleting ? 'Excluindo...' : 'Sim, Excluir Tudo'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
 
 export default AdminJourneysTab;
+
