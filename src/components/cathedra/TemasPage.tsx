@@ -43,7 +43,13 @@ const TemasPage = () => {
   const [logosInsight, setLogosInsight] = useState<string | null>(null);
   const [loadingLogos, setLoadingLogos] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeCategory, setActiveCategory] = useState<string>('all');
+  const [activeCategory, setActiveCategory] = useState<string>(() => {
+    return localStorage.getItem('nexus_bubbles_filter') || 'all';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('nexus_bubbles_filter', activeCategory);
+  }, [activeCategory]);
   const [scrollProgress, setScrollProgress] = useState(0);
 
   // removed handleCarouselScroll as it is replaced by flex-wrap logic
