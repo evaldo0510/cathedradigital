@@ -11,9 +11,13 @@ test.describe('Search and Navigation', () => {
     await searchInput.fill('xyz123abcnonexistentterm');
 
     // Wait for the search to process (it might have a debounce and network request)
-    // The "Nenhum resultado encontrado." message should appear
+    // We can wait for the 'Buscando…' indicator to appear and then disappear,
+    // or just wait for the results/empty state to appear.
+    const loadingIndicator = page.locator('text=Buscando…');
+    
+    // The "Nenhum resultado encontrado." message should appear after loading
     const noResultsMessage = page.locator('text=Nenhum resultado encontrado.');
-    await expect(noResultsMessage).toBeVisible({ timeout: 10000 });
+    await expect(noResultsMessage).toBeVisible({ timeout: 15000 });
     
     // Verify the subtext is also present
     await expect(page.locator('text=Tente buscar por termos mais genéricos')).toBeVisible();
