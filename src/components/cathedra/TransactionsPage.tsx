@@ -631,32 +631,79 @@ const TransactionsPage: React.FC = () => {
 
               {(isAdmin || selectedTx.error_message || selectedTx.webhook_payload) && (
                 <div className="space-y-4">
-                  <div className="flex justify-between items-center">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                       <AlertCircle className="w-3 h-3" /> Logs & Webhook Payload
                     </p>
-                    {selectedTx.webhook_payload && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-7 text-[10px] gap-1 px-2 rounded-lg hover:bg-primary/10"
-                        onClick={() => copyToClipboard(JSON.stringify(selectedTx.webhook_payload, null, 2))}
-                      >
-                        {copied ? <Check className="w-3 h-3 text-green-500" /> : <Copy className="w-3 h-3" />}
-                        {copied ? 'Copiado' : 'Copiar JSON'}
-                      </Button>
-                    )}
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                      <div className="relative flex-1 sm:w-48">
+                        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground" />
+                        <Input 
+                          placeholder="Buscar no JSON..." 
+                          value={payloadSearch}
+                          onChange={(e) => setPayloadSearch(e.target.value)}
+                          className="h-7 text-[10px] pl-8 rounded-lg bg-muted/50 border-border/30"
+                        />
+                      </div>
+                      {selectedTx.webhook_payload && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-7 text-[10px] gap-1 px-2 rounded-lg hover:bg-primary/10 whitespace-nowrap"
+                          onClick={() => copyToClipboard(JSON.stringify(selectedTx.webhook_payload, null, 2))}
+                        >
+                          {copied ? <Check className="w-3 h-3 text-green-500" /> : <Copy className="w-3 h-3" />}
+                          {copied ? 'Copiado' : 'Copiar'}
+                        </Button>
+                      )}
+                    </div>
                   </div>
-                  <div className="max-h-[300px] overflow-y-auto rounded-2xl border border-border/50 bg-slate-950 p-6 shadow-inner">
+                  <div className="max-h-[300px] overflow-y-auto rounded-2xl border border-border/50 bg-slate-950 p-6 shadow-inner custom-scrollbar">
                     <pre className="text-[11px] text-slate-300 font-mono leading-relaxed whitespace-pre-wrap">
-                      {JSON.stringify({
-                        webhook: selectedTx.webhook_payload,
-                        error: selectedTx.error_message ? (typeof selectedTx.error_message === 'string' ? JSON.parse(selectedTx.error_message) : selectedTx.error_message) : null
-                      }, null, 2)}
+                      {(() => {
+                        const fullObj = {
+                          webhook: selectedTx.webhook_payload,
+                          error: selectedTx.error_message ? (typeof selectedTx.error_message === 'string' ? JSON.parse(selectedTx.error_message) : selectedTx.error_message) : null
+                        };
+                        
+                        if (!payloadSearch.trim()) return JSON.stringify(fullObj, null, 2);
+                        
+                        // Simple filtering for specific keys or values containing the search term
+                        const filterObject = (obj: any, term: string): any => {
+                          if (typeof obj !== 'object' || obj === null) return String(obj).toLowerCase().includes(term.toLowerCase()) ? obj : undefined;
+                          
+                          if (Array.isArray(obj)) {
+                            const filtered = obj.map(v => filterObject(v, term)).filter(v => v !== undefined);
+                            return filtered.length > 0 ? filtered : undefined;
+                          }
+                          
+                          const result: any = {};
+                          let hasMatch = false;
+                          
+                          for (const key in obj) {
+                            if (key.toLowerCase().includes(term.toLowerCase())) {
+                              result[key] = obj[key];
+                              hasMatch = true;
+                              continue;
+                            }
+                            
+                            const val = filterObject(obj[key], term);
+                            if (val !== undefined) {
+                              result[key] = val;
+                              hasMatch = true;
+                            }
+                          }
+                          
+                          return hasMatch ? result : undefined;
+                        };
+                        
+                        const filtered = filterObject(fullObj, payloadSearch) || { message: "Nenhum resultado para a busca no JSON." };
+                        return JSON.stringify(filtered, null, 2);
+                      })()}
                     </pre>
                   </div>
                   <p className="text-[10px] italic text-muted-foreground text-center">
-                    Estes dados são técnicos e úteis para depuração de problemas no processamento.
+                    Utilize a busca acima para encontrar campos específicos como 'reason', 'status' ou 'id'.
                   </p>
                 </div>
               )}
