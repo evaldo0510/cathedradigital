@@ -399,10 +399,28 @@ const TransactionsPage: React.FC = () => {
                 </TableRow>
               ) : transactions.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={isAdmin ? 6 : 5} className="h-64 text-center">
-                    <div className="flex flex-col items-center justify-center space-y-2">
-                      <Search className="w-12 h-12 text-muted/30" />
-                      <p className="text-muted-foreground italic font-serif">Nenhuma transação encontrada para estes filtros.</p>
+                  <TableCell colSpan={isAdmin ? 6 : 5} className="h-80 text-center">
+                    <div className="flex flex-col items-center justify-center space-y-4 max-w-xs mx-auto">
+                      <div className="w-20 h-20 bg-muted/30 rounded-full flex items-center justify-center animate-in zoom-in duration-300">
+                        <Search className="w-10 h-10 text-muted/50" />
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-foreground font-serif font-bold">Nenhum registro encontrado</p>
+                        <p className="text-muted-foreground italic text-xs leading-relaxed">Não encontramos transações com os filtros aplicados. Tente ajustar o período ou o status.</p>
+                      </div>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="rounded-full text-primary hover:bg-primary/10 text-[10px] font-bold uppercase tracking-widest h-9 px-4"
+                        onClick={() => {
+                          setStatusFilter('all');
+                          setPlanFilter('all');
+                          setStartDate('');
+                          setEndDate('');
+                        }}
+                      >
+                        Limpar todos os filtros
+                      </Button>
                     </div>
                   </TableCell>
                 </TableRow>
