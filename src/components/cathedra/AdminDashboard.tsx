@@ -390,15 +390,7 @@ const AdminDashboard: React.FC = () => {
           <h1 className="text-xl sm:text-3xl font-display font-black uppercase tracking-tight text-primary">Painel Administrativo</h1>
           <p className="text-xs sm:text-sm text-muted-foreground font-medium uppercase tracking-wider opacity-70">CRM & Gestão completa da plataforma.</p>
         </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => navigate('/hoje')}
-          className="flex items-center gap-2 shrink-0 bg-muted/50 border-border/50 hover:bg-primary hover:text-white transition-all rounded-xl h-10 px-4"
-        >
-          <Home className="w-4 h-4" />
-          <span className="text-[10px] font-black uppercase tracking-widest">Voltar ao App</span>
-        </Button>
+        {/* Redundant back button removed */}
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
