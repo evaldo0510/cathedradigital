@@ -555,6 +555,29 @@ const TransactionsPage: React.FC = () => {
       </Dialog>
 
       {/* DETAILS DIALOG */}
+      <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
+        <DialogContent className="max-w-2xl rounded-[2.5rem] bg-background/95 backdrop-blur-xl">
+          <DialogHeader><DialogTitle className="text-2xl font-serif font-bold">Detalhes do Processamento</DialogTitle></DialogHeader>
+          {selectedTx && !Array.isArray(selectedTx) && (
+            <div className="space-y-6 py-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1"><p className="text-[10px] font-bold text-muted-foreground uppercase">ID Interno</p><p className="text-xs font-mono bg-muted p-2 rounded-lg truncate">{selectedTx.id}</p></div>
+                <div className="space-y-1"><p className="text-[10px] font-bold text-muted-foreground uppercase">ID Pagamento (MP)</p><p className="text-xs font-mono bg-muted p-2 rounded-lg truncate">{selectedTx.payment_id || 'N/A'}</p></div>
+              </div>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center"><p className="text-[10px] font-bold uppercase text-muted-foreground">Webhook Payload & Logs</p><div className="flex gap-2 items-center">
+                  <div className="relative"><Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground" /><Input placeholder="Buscar no JSON..." value={payloadSearch} onChange={(e) => setPayloadSearch(e.target.value)} className="h-7 text-[10px] pl-7 w-40 rounded-lg" /></div>
+                  <Badge variant="outline" className="text-[9px] font-bold">{filteredJSON?.count} matches</Badge>
+                  <Button variant="ghost" size="sm" className="h-7 text-[10px]" onClick={() => copyToClipboard(JSON.stringify(selectedTx.webhook_payload, null, 2))}>{copied ? <Check className="w-3 h-3 text-green-500" /> : <Copy className="w-3 h-3" />}</Button>
+                </div></div>
+                <div className="max-h-60 overflow-y-auto bg-slate-950 p-6 rounded-2xl border border-white/5 custom-scrollbar"><pre className="text-[11px] text-slate-300 font-mono whitespace-pre-wrap">{JSON.stringify(filteredJSON?.data, null, 2)}</pre></div>
+              </div>
+            </div>
+          )}
+          <Button onClick={() => setIsDetailsOpen(false)} className="rounded-full w-full font-bold h-12">Fechar Detalhes</Button>
+        </DialogContent>
+      </Dialog>
+
       {/* AUDIT LOGS DIALOG */}
       <Dialog open={isAuditOpen} onOpenChange={setIsAuditOpen}>
         <DialogContent className="max-w-4xl rounded-[2.5rem] bg-background/95 backdrop-blur-xl max-h-[80vh] overflow-y-auto">
@@ -595,7 +618,6 @@ const TransactionsPage: React.FC = () => {
                           size="sm" 
                           className="h-7 text-[10px] rounded-lg"
                           onClick={() => {
-                            // Apply filters from log and trigger export
                             const f = log.metadata?.filters;
                             setStatusFilter(f.status || 'all');
                             setPlanFilter(f.plan || 'all');
@@ -617,27 +639,6 @@ const TransactionsPage: React.FC = () => {
             </Table>
           </div>
           <Button onClick={() => setIsAuditOpen(false)} variant="outline" className="rounded-full w-full font-bold">Fechar</Button>
-        </DialogContent>
-      </Dialog>
-        <DialogContent className="max-w-2xl rounded-[2.5rem] bg-background/95 backdrop-blur-xl">
-          <DialogHeader><DialogTitle className="text-2xl font-serif font-bold">Detalhes do Processamento</DialogTitle></DialogHeader>
-          {selectedTx && (
-            <div className="space-y-6 py-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-1"><p className="text-[10px] font-bold text-muted-foreground uppercase">ID Interno</p><p className="text-xs font-mono bg-muted p-2 rounded-lg truncate">{selectedTx.id}</p></div>
-                <div className="space-y-1"><p className="text-[10px] font-bold text-muted-foreground uppercase">ID Pagamento (MP)</p><p className="text-xs font-mono bg-muted p-2 rounded-lg truncate">{selectedTx.payment_id || 'N/A'}</p></div>
-              </div>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center"><p className="text-[10px] font-bold uppercase text-muted-foreground">Webhook Payload & Logs</p><div className="flex gap-2 items-center">
-                  <div className="relative"><Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground" /><Input placeholder="Buscar no JSON..." value={payloadSearch} onChange={(e) => setPayloadSearch(e.target.value)} className="h-7 text-[10px] pl-7 w-40 rounded-lg" /></div>
-                  <Badge variant="outline" className="text-[9px] font-bold">{filteredJSON?.count} matches</Badge>
-                  <Button variant="ghost" size="sm" className="h-7 text-[10px]" onClick={() => copyToClipboard(JSON.stringify(selectedTx.webhook_payload, null, 2))}>{copied ? <Check className="w-3 h-3 text-green-500" /> : <Copy className="w-3 h-3" />}</Button>
-                </div></div>
-                <div className="max-h-60 overflow-y-auto bg-slate-950 p-6 rounded-2xl border border-white/5 custom-scrollbar"><pre className="text-[11px] text-slate-300 font-mono whitespace-pre-wrap">{JSON.stringify(filteredJSON?.data, null, 2)}</pre></div>
-              </div>
-            </div>
-          )}
-          <Button onClick={() => setIsDetailsOpen(false)} className="rounded-full w-full font-bold h-12">Fechar Detalhes</Button>
         </DialogContent>
       </Dialog>
     </div>
