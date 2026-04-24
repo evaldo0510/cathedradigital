@@ -26,6 +26,7 @@ import CommandCenter from './components/cathedra/CommandCenter';
 import OfflineIndicator from './components/cathedra/OfflineIndicator';
 import SplashScreen from './components/cathedra/SplashScreen';
 import { PWAInstallPrompt } from './components/cathedra/PWAInstallPrompt';
+import AIStatusBanner from './components/cathedra/AIStatusBanner';
 
 
 const queryClient = new QueryClient({
