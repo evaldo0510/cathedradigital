@@ -88,7 +88,7 @@ const WebhookSimulator: React.FC = () => {
               <SelectContent className="rounded-xl">
                 {users.map(u => (
                   <SelectItem key={u.id} value={u.id}>
-                    {u.name || u.email} {u.is_premium ? '(PRO)' : '(Free)'}
+                    {u.name || 'Usuário Sem Nome'} {u.is_premium ? '(PRO)' : '(Free)'}
                   </SelectItem>
                 ))}
               </SelectContent>
