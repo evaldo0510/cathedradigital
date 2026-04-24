@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext, useMemo, useCallback, Suspense } from 'react';
-import { callColloquium } from '@/services/aiService';
+import { callColloquium, type AIFallbackReason } from '@/services/aiService';
+import AIFallbackCard from './AIFallbackCard';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
