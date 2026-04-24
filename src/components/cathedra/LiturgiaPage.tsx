@@ -336,10 +336,7 @@ const LiturgiaPage: React.FC = () => {
           {activeTab === 'liturgia' && (
             <div className="max-w-2xl mx-auto space-y-10 animate-in fade-in duration-500">
               <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} className="space-y-4 text-center">
-                <button onClick={() => navigate(-1)} className="flex items-center gap-1.5 text-muted-foreground hover:text-primary transition-colors text-sm mx-auto sm:mx-0">
-                  <Icons.ChevronLeft className="w-4 h-4" />
-                  <span className="text-xs font-black uppercase tracking-widest">Voltar</span>
-                </button>
+                {/* Redundant back button removed */}
                 <h1 className="text-3xl md:text-5xl font-display font-black text-primary tracking-tight">Liturgia do Dia</h1>
                 <div className="flex items-center justify-center gap-4">
                   <button onClick={goToPrevDay} className="p-3 rounded-2xl bg-muted hover:bg-primary hover:text-white transition-all text-primary">
