@@ -21,8 +21,10 @@ const TransactionsPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [planFilter, setPlanFilter] = useState<string>('all');
+  const [userSearch, setUserSearch] = useState<string>('');
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
+  const [dateError, setDateError] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
   const [page, setPage] = useState(1);
   const pageSize = 10;
@@ -30,6 +32,7 @@ const TransactionsPage: React.FC = () => {
   const [selectedTx, setSelectedTx] = useState<any>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [payloadSearch, setPayloadSearch] = useState<string>('');
   const [availablePlans, setAvailablePlans] = useState<string[]>([]);
 
   const isAdmin = profile?.role === 'admin';
@@ -59,10 +62,12 @@ const TransactionsPage: React.FC = () => {
     // Date validation
     if (startDate && endDate) {
       if (isBefore(parseISO(endDate), parseISO(startDate))) {
-        toast.error('A data final não pode ser anterior à data inicial.');
+        setDateError('Data final não pode ser anterior à inicial');
+        setLoading(false);
         return;
       }
     }
+    setDateError(null);
 
     setLoading(true);
     try {
@@ -72,6 +77,15 @@ const TransactionsPage: React.FC = () => {
 
       if (!isAdmin) {
         query = query.eq('user_id', user.id);
+      } else if (userSearch.trim()) {
+        // Admin user search (OR condition for name/email)
+        // Since Supabase doesn't easily allow cross-table OR in a simple .select() without RPC or nested filter,
+        // we'll use a trick if possible or just filter by email if it looks like one.
+        if (userSearch.includes('@')) {
+          query = query.filter('profiles.email', 'ilike', `%${userSearch}%`);
+        } else {
+          query = query.filter('profiles.name', 'ilike', `%${userSearch}%`);
+        }
       }
 
       if (statusFilter !== 'all') {
@@ -83,11 +97,15 @@ const TransactionsPage: React.FC = () => {
       }
 
       if (startDate) {
-        query = query.gte('created_at', startOfDay(parseISO(startDate)).toISOString());
+        // Normalize to start of day in local time then to ISO
+        const start = startOfDay(parseISO(startDate));
+        query = query.gte('created_at', start.toISOString());
       }
 
       if (endDate) {
-        query = query.lte('created_at', endOfDay(parseISO(endDate)).toISOString());
+        // Normalize to end of day in local time then to ISO
+        const end = endOfDay(parseISO(endDate));
+        query = query.lte('created_at', end.toISOString());
       }
 
       const { data, error, count } = await query
@@ -106,7 +124,7 @@ const TransactionsPage: React.FC = () => {
 
   useEffect(() => {
     fetchTransactions();
-  }, [user, statusFilter, planFilter, startDate, endDate, sortOrder, page, isAdmin]);
+  }, [user, statusFilter, planFilter, userSearch, startDate, endDate, sortOrder, page, isAdmin]);
 
   const getStatusInfo = (status: string) => {
     switch (status) {
@@ -180,27 +198,55 @@ const TransactionsPage: React.FC = () => {
   };
 
   const exportToCSV = async (mode: 'current' | 'all' = 'current') => {
-    let dataToExport = transactions;
+    let dataToExport: any[] = [];
 
-    if (mode === 'all') {
-      toast.info('Preparando exportação completa...');
+    if (mode === 'current') {
+      dataToExport = transactions;
+    } else {
+      toast.info('Preparando exportação completa em lotes...');
+      setLoading(true);
       try {
-        let query = supabase
-          .from('transactions')
-          .select('*, profiles(name, email)');
+        let allData: any[] = [];
+        let from = 0;
+        const batchSize = 1000;
+        let hasMore = true;
 
-        if (!isAdmin) query = query.eq('user_id', user?.id);
-        if (statusFilter !== 'all') query = query.eq('status', statusFilter);
-        if (planFilter !== 'all') query = query.eq('plan_id', planFilter);
-        if (startDate) query = query.gte('created_at', startOfDay(parseISO(startDate)).toISOString());
-        if (endDate) query = query.lte('created_at', endOfDay(parseISO(endDate)).toISOString());
+        while (hasMore) {
+          let query = supabase
+            .from('transactions')
+            .select('*, profiles(name, email)');
 
-        const { data, error } = await query.order('created_at', { ascending: sortOrder === 'asc' });
-        if (error) throw error;
-        dataToExport = data || [];
+          if (!isAdmin) query = query.eq('user_id', user?.id);
+          if (userSearch.trim()) {
+            if (userSearch.includes('@')) query = query.filter('profiles.email', 'ilike', `%${userSearch}%`);
+            else query = query.filter('profiles.name', 'ilike', `%${userSearch}%`);
+          }
+          if (statusFilter !== 'all') query = query.eq('status', statusFilter);
+          if (planFilter !== 'all') query = query.eq('plan_id', planFilter);
+          if (startDate) query = query.gte('created_at', startOfDay(parseISO(startDate)).toISOString());
+          if (endDate) query = query.lte('created_at', endOfDay(parseISO(endDate)).toISOString());
+
+          const { data, error } = await query
+            .order('created_at', { ascending: sortOrder === 'asc' })
+            .range(from, from + batchSize - 1);
+
+          if (error) throw error;
+          
+          if (data && data.length > 0) {
+            allData = [...allData, ...data];
+            from += batchSize;
+            if (data.length < batchSize) hasMore = false;
+          } else {
+            hasMore = false;
+          }
+        }
+        dataToExport = allData;
       } catch (err: any) {
-        toast.error('Erro ao buscar todos os dados: ' + err.message);
+        toast.error('Erro ao exportar dados: ' + err.message);
+        setLoading(false);
         return;
+      } finally {
+        setLoading(false);
       }
     }
 
@@ -263,6 +309,7 @@ const TransactionsPage: React.FC = () => {
 
   const openDetails = (tx: any) => {
     setSelectedTx(tx);
+    setPayloadSearch('');
     setIsDetailsOpen(true);
   };
 
@@ -298,7 +345,21 @@ const TransactionsPage: React.FC = () => {
 
       <Card className="rounded-[2.5rem] border-border/50 shadow-xl shadow-primary/5 overflow-hidden">
         <CardHeader className="bg-muted/30 border-b border-border/50 px-8 py-6">
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+          <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-end">
+            {isAdmin && (
+              <div className="space-y-2">
+                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                  <Search className="w-3 h-3" /> Buscar Usuário
+                </label>
+                <Input 
+                  placeholder="Nome ou Email" 
+                  value={userSearch}
+                  onChange={(e) => setUserSearch(e.target.value)}
+                  className="rounded-xl bg-background/50 border-border/30 backdrop-blur-sm"
+                />
+              </div>
+            )}
+            
             <div className="space-y-2">
               <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                 <Filter className="w-3 h-3" /> Status
@@ -343,7 +404,7 @@ const TransactionsPage: React.FC = () => {
                 type="date" 
                 value={startDate} 
                 onChange={(e) => setStartDate(e.target.value)}
-                className="rounded-xl bg-background/50 border-border/30 backdrop-blur-sm"
+                className={`rounded-xl bg-background/50 border-border/30 backdrop-blur-sm ${dateError ? 'border-destructive' : ''}`}
               />
             </div>
 
@@ -355,7 +416,7 @@ const TransactionsPage: React.FC = () => {
                 type="date" 
                 value={endDate} 
                 onChange={(e) => setEndDate(e.target.value)}
-                className="rounded-xl bg-background/50 border-border/30 backdrop-blur-sm"
+                className={`rounded-xl bg-background/50 border-border/30 backdrop-blur-sm ${dateError ? 'border-destructive' : ''}`}
               />
             </div>
 
@@ -374,6 +435,7 @@ const TransactionsPage: React.FC = () => {
               </Select>
             </div>
           </div>
+          {dateError && <p className="text-[10px] text-destructive mt-2 font-bold animate-pulse">{dateError}</p>}
         </CardHeader>
         <CardContent className="p-0">
           <Table>
@@ -415,6 +477,7 @@ const TransactionsPage: React.FC = () => {
                         onClick={() => {
                           setStatusFilter('all');
                           setPlanFilter('all');
+                          setUserSearch('');
                           setStartDate('');
                           setEndDate('');
                         }}
@@ -570,32 +633,79 @@ const TransactionsPage: React.FC = () => {
 
               {(isAdmin || selectedTx.error_message || selectedTx.webhook_payload) && (
                 <div className="space-y-4">
-                  <div className="flex justify-between items-center">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                       <AlertCircle className="w-3 h-3" /> Logs & Webhook Payload
                     </p>
-                    {selectedTx.webhook_payload && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-7 text-[10px] gap-1 px-2 rounded-lg hover:bg-primary/10"
-                        onClick={() => copyToClipboard(JSON.stringify(selectedTx.webhook_payload, null, 2))}
-                      >
-                        {copied ? <Check className="w-3 h-3 text-green-500" /> : <Copy className="w-3 h-3" />}
-                        {copied ? 'Copiado' : 'Copiar JSON'}
-                      </Button>
-                    )}
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                      <div className="relative flex-1 sm:w-48">
+                        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground" />
+                        <Input 
+                          placeholder="Buscar no JSON..." 
+                          value={payloadSearch}
+                          onChange={(e) => setPayloadSearch(e.target.value)}
+                          className="h-7 text-[10px] pl-8 rounded-lg bg-muted/50 border-border/30"
+                        />
+                      </div>
+                      {selectedTx.webhook_payload && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-7 text-[10px] gap-1 px-2 rounded-lg hover:bg-primary/10 whitespace-nowrap"
+                          onClick={() => copyToClipboard(JSON.stringify(selectedTx.webhook_payload, null, 2))}
+                        >
+                          {copied ? <Check className="w-3 h-3 text-green-500" /> : <Copy className="w-3 h-3" />}
+                          {copied ? 'Copiado' : 'Copiar'}
+                        </Button>
+                      )}
+                    </div>
                   </div>
-                  <div className="max-h-[300px] overflow-y-auto rounded-2xl border border-border/50 bg-slate-950 p-6 shadow-inner">
+                  <div className="max-h-[300px] overflow-y-auto rounded-2xl border border-border/50 bg-slate-950 p-6 shadow-inner custom-scrollbar">
                     <pre className="text-[11px] text-slate-300 font-mono leading-relaxed whitespace-pre-wrap">
-                      {JSON.stringify({
-                        webhook: selectedTx.webhook_payload,
-                        error: selectedTx.error_message ? (typeof selectedTx.error_message === 'string' ? JSON.parse(selectedTx.error_message) : selectedTx.error_message) : null
-                      }, null, 2)}
+                      {(() => {
+                        const fullObj = {
+                          webhook: selectedTx.webhook_payload,
+                          error: selectedTx.error_message ? (typeof selectedTx.error_message === 'string' ? JSON.parse(selectedTx.error_message) : selectedTx.error_message) : null
+                        };
+                        
+                        if (!payloadSearch.trim()) return JSON.stringify(fullObj, null, 2);
+                        
+                        // Simple filtering for specific keys or values containing the search term
+                        const filterObject = (obj: any, term: string): any => {
+                          if (typeof obj !== 'object' || obj === null) return String(obj).toLowerCase().includes(term.toLowerCase()) ? obj : undefined;
+                          
+                          if (Array.isArray(obj)) {
+                            const filtered = obj.map(v => filterObject(v, term)).filter(v => v !== undefined);
+                            return filtered.length > 0 ? filtered : undefined;
+                          }
+                          
+                          const result: any = {};
+                          let hasMatch = false;
+                          
+                          for (const key in obj) {
+                            if (key.toLowerCase().includes(term.toLowerCase())) {
+                              result[key] = obj[key];
+                              hasMatch = true;
+                              continue;
+                            }
+                            
+                            const val = filterObject(obj[key], term);
+                            if (val !== undefined) {
+                              result[key] = val;
+                              hasMatch = true;
+                            }
+                          }
+                          
+                          return hasMatch ? result : undefined;
+                        };
+                        
+                        const filtered = filterObject(fullObj, payloadSearch) || { message: "Nenhum resultado para a busca no JSON." };
+                        return JSON.stringify(filtered, null, 2);
+                      })()}
                     </pre>
                   </div>
                   <p className="text-[10px] italic text-muted-foreground text-center">
-                    Estes dados são técnicos e úteis para depuração de problemas no processamento.
+                    Utilize a busca acima para encontrar campos específicos como 'reason', 'status' ou 'id'.
                   </p>
                 </div>
               )}
