@@ -13,6 +13,24 @@ const AboutPage: React.FC = () => (
       <p className="text-muted-foreground text-lg max-w-2xl mx-auto">Unindo a tradição milenar da Igreja à vanguarda tecnológica para a glória de Deus.</p>
     </div>
 
+    {/* Quick Navigation Anchors */}
+    <nav className="flex flex-wrap justify-center gap-2 md:gap-8 py-4 border-y border-border/50 sticky top-0 bg-background/95 backdrop-blur-sm z-20">
+      {[
+        { label: 'Missão', href: '#missao', icon: <Icons.Target className="w-4 h-4" /> },
+        { label: 'História', href: '#historia', icon: <Icons.History className="w-4 h-4" /> },
+        { label: 'Redes Sociais', href: '#redes-sociais', icon: <Icons.Instagram className="w-4 h-4" /> },
+      ].map((link) => (
+        <a 
+          key={link.href} 
+          href={link.href}
+          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-full transition-all"
+        >
+          {link.icon}
+          {link.label}
+        </a>
+      ))}
+    </nav>
+
     {/* Big Quote */}
     <div className="relative py-12">
       <div className="absolute top-0 left-0 text-primary/5 -z-10">
