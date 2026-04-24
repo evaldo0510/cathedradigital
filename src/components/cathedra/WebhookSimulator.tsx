@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 import { ShieldCheck, Play, CheckCircle2, AlertCircle, RefreshCcw } from 'lucide-react';
 
 const WebhookSimulator: React.FC = () => {
-  const { user } = useAuth();
+  const { user, refreshProfile } = useAuth();
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState<any[]>([]);
   const [selectedUserId, setSelectedUserId] = useState<string>('');
