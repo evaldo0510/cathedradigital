@@ -6,11 +6,8 @@ const PrivacyPage: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="max-w-3xl mx-auto pb-24">
-      <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-muted-foreground hover:text-foreground mb-8 transition-colors">
-        <ChevronLeft className="w-4 h-4" />
-        <span className="text-xs font-black uppercase tracking-widest">Retornar</span>
-      </button>
+    <div className="w-full pb-24">
+      {/* Redundant back button removed */}
 
       <h1 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-2">Política de Privacidade</h1>
       <p className="text-xs font-black uppercase tracking-widest text-primary mb-10">Última atualização: Abril de 2026</p>
