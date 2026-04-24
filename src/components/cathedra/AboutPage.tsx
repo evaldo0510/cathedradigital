@@ -43,7 +43,7 @@ const AboutPage: React.FC = () => (
 
     <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
       {/* Missão Section */}
-      <div className="space-y-6">
+      <div id="missao" className="scroll-mt-24 space-y-6">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
             <Icons.Target className="w-5 h-5 text-primary" />
