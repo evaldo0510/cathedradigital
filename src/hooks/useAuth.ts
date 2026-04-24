@@ -310,7 +310,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     signOut,
     isPremium: profile?.is_premium ?? false,
     userLevel,
-  }), [user, profile, loading, signOut, userLevel]);
+    refreshProfile,
+  }), [user, profile, loading, signOut, userLevel, refreshProfile]);
 
   return createElement(AuthContext.Provider, { value }, children);
 }
