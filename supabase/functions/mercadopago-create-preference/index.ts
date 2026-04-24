@@ -19,6 +19,8 @@ const RequestSchema = z.object({
   planId: z.string().trim().min(1).max(100).optional(),
   price: z.coerce.number().positive().finite().max(100000).optional(),
   title: z.string().trim().min(1).max(120).optional(),
+  couponCode: z.string().trim().optional(),
+  isDonation: z.boolean().optional(),
 });
 
 const json = (body: unknown, status = 200) =>
