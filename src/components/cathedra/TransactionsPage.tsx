@@ -845,6 +845,11 @@ const TransactionsPage: React.FC = () => {
                           className="h-7 text-[10px] pl-8 rounded-lg bg-muted/50 border-border/30"
                         />
                       </div>
+                      <div className="flex items-center gap-1.5 px-2 py-1 bg-primary/10 rounded-lg">
+                        <span className="text-[9px] font-bold text-primary uppercase tracking-wider">
+                          {filteredJSON?.count || 0} matches
+                        </span>
+                      </div>
                       {selectedTx.webhook_payload && (
                         <Button
                           variant="ghost"
@@ -860,50 +865,11 @@ const TransactionsPage: React.FC = () => {
                   </div>
                   <div className="max-h-[300px] overflow-y-auto rounded-2xl border border-border/50 bg-slate-950 p-6 shadow-inner custom-scrollbar">
                     <pre className="text-[11px] text-slate-300 font-mono leading-relaxed whitespace-pre-wrap">
-                      {(() => {
-                        const fullObj = {
-                          webhook: selectedTx.webhook_payload,
-                          error: selectedTx.error_message ? (typeof selectedTx.error_message === 'string' ? JSON.parse(selectedTx.error_message) : selectedTx.error_message) : null
-                        };
-                        
-                        if (!payloadSearch.trim()) return JSON.stringify(fullObj, null, 2);
-                        
-                        // Simple filtering for specific keys or values containing the search term
-                        const filterObject = (obj: any, term: string): any => {
-                          if (typeof obj !== 'object' || obj === null) return String(obj).toLowerCase().includes(term.toLowerCase()) ? obj : undefined;
-                          
-                          if (Array.isArray(obj)) {
-                            const filtered = obj.map(v => filterObject(v, term)).filter(v => v !== undefined);
-                            return filtered.length > 0 ? filtered : undefined;
-                          }
-                          
-                          const result: any = {};
-                          let hasMatch = false;
-                          
-                          for (const key in obj) {
-                            if (key.toLowerCase().includes(term.toLowerCase())) {
-                              result[key] = obj[key];
-                              hasMatch = true;
-                              continue;
-                            }
-                            
-                            const val = filterObject(obj[key], term);
-                            if (val !== undefined) {
-                              result[key] = val;
-                              hasMatch = true;
-                            }
-                          }
-                          
-                          return hasMatch ? result : undefined;
-                        };
-                        
-                        const filtered = filterObject(fullObj, payloadSearch) || { message: "Nenhum resultado para a busca no JSON." };
-                        return JSON.stringify(filtered, null, 2);
-                      })()}
+                      {JSON.stringify(filteredJSON?.data, null, 2)}
                     </pre>
                   </div>
                   <p className="text-[10px] italic text-muted-foreground text-center">
-                    Utilize a busca acima para encontrar campos específicos como 'reason', 'status' ou 'id'.
+                    Utilize a busca acima para encontrar campos específicos. A estrutura é filtrada para mostrar apenas caminhos com resultados.
                   </p>
                 </div>
               )}
