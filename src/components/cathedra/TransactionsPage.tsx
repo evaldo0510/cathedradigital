@@ -273,14 +273,27 @@ const TransactionsPage: React.FC = () => {
           <h1 className="text-3xl font-serif font-bold tracking-tight">Histórico de Transações</h1>
           <p className="text-muted-foreground italic font-serif">Acompanhe seus pagamentos e doações no Cathedra.</p>
         </div>
-        <Button 
-          variant="outline" 
-          onClick={exportToCSV}
-          className="rounded-full gap-2 border-primary/20 hover:border-primary hover:bg-primary/5 transition-all shadow-sm"
-        >
-          <Download className="w-4 h-4" />
-          Exportar CSV
-        </Button>
+        
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button 
+              variant="outline" 
+              className="rounded-full gap-2 border-primary/20 hover:border-primary hover:bg-primary/5 transition-all shadow-sm"
+            >
+              <Download className="w-4 h-4" />
+              Exportar CSV
+              <ChevronDown className="w-3 h-3 opacity-50" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="rounded-xl">
+            <DropdownMenuItem onClick={() => exportToCSV('current')}>
+              Exportar Página Atual
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => exportToCSV('all')}>
+              Exportar Tudo (Filtrado)
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       <Card className="rounded-[2.5rem] border-border/50 shadow-xl shadow-primary/5 overflow-hidden">
