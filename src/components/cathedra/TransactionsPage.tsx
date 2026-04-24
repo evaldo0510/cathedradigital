@@ -204,18 +204,42 @@ const TransactionsPage: React.FC = () => {
   };
 
   const exportToCSV = async (mode: 'current' | 'all' = 'current') => {
+    if (exporting) return;
+    
+    // Check if any filter is active for "all" mode to avoid accidental massive downloads
+    if (mode === 'all' && statusFilter === 'all' && planFilter === 'all' && !startDate && !endDate && !userSearch.trim()) {
+      const confirmAll = window.confirm('Você está tentando exportar TODAS as transações sem nenhum filtro. Isso pode demorar e gerar um arquivo muito grande. Deseja continuar?');
+      if (!confirmAll) return;
+    }
+
     let dataToExport: any[] = [];
+    setExporting(true);
+    setExportProgress(0);
 
     if (mode === 'current') {
       dataToExport = transactions;
     } else {
       toast.info('Preparando exportação completa em lotes...');
-      setLoading(true);
       try {
         let allData: any[] = [];
         let from = 0;
         const batchSize = 1000;
         let hasMore = true;
+
+        // Get total count first for progress
+        let countQuery = supabase.from('transactions').select('*', { count: 'exact', head: true });
+        if (!isAdmin) countQuery = countQuery.eq('user_id', user?.id);
+        if (userSearch.trim()) {
+          if (userSearch.includes('@')) countQuery = countQuery.filter('profiles.email', 'ilike', `%${userSearch}%`);
+          else countQuery = countQuery.filter('profiles.name', 'ilike', `%${userSearch}%`);
+        }
+        if (statusFilter !== 'all') countQuery = countQuery.eq('status', statusFilter);
+        if (planFilter !== 'all') countQuery = countQuery.eq('plan_id', planFilter);
+        if (startDate) countQuery = countQuery.gte('created_at', startOfDay(parseISO(startDate)).toISOString());
+        if (endDate) countQuery = countQuery.lte('created_at', endOfDay(parseISO(endDate)).toISOString());
+        
+        const { count: totalCountForExport } = await countQuery;
+        setTotalToExport(totalCountForExport || 0);
 
         while (hasMore) {
           let query = supabase
@@ -241,6 +265,7 @@ const TransactionsPage: React.FC = () => {
           if (data && data.length > 0) {
             allData = [...allData, ...data];
             from += batchSize;
+            setExportProgress(allData.length);
             if (data.length < batchSize) hasMore = false;
           } else {
             hasMore = false;
@@ -249,21 +274,21 @@ const TransactionsPage: React.FC = () => {
         dataToExport = allData;
       } catch (err: any) {
         toast.error('Erro ao exportar dados: ' + err.message);
-        setLoading(false);
+        setExporting(false);
         return;
-      } finally {
-        setLoading(false);
       }
     }
 
     if (dataToExport.length === 0) {
       toast.error('Nenhuma transação para exportar.');
+      setExporting(false);
       return;
     }
 
     const headers = [
       'ID', 
       'Data', 
+      'Audit_Timestamp_TZ',
       'Usuário', 
       'E-mail', 
       'Descrição', 
@@ -275,9 +300,13 @@ const TransactionsPage: React.FC = () => {
       'ID Pagamento'
     ];
 
+    const tzOffset = new Date().getTimezoneOffset();
+    const tzString = `UTC${tzOffset > 0 ? '-' : '+'}${Math.abs(tzOffset / 60)}`;
+
     const csvData = dataToExport.map(tx => [
       tx.id,
       format(new Date(tx.created_at), "yyyy-MM-dd HH:mm:ss"),
+      `${new Date(tx.created_at).toISOString()} (${tzString})`,
       tx.profiles?.name || '',
       tx.profiles?.email || '',
       tx.description || '',
@@ -303,8 +332,87 @@ const TransactionsPage: React.FC = () => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    
+    setExporting(false);
     toast.success(`CSV (${mode === 'all' ? 'total' : 'página atual'}) gerado com sucesso!`);
   };
+
+  const handleCleanup = async () => {
+    if (!startDate || !endDate) {
+      toast.error('Selecione um período (início e fim) para a limpeza.');
+      return;
+    }
+
+    setCleanupLoading(true);
+    try {
+      const { error } = await supabase
+        .from('transactions')
+        .delete()
+        .gte('created_at', startOfDay(parseISO(startDate)).toISOString())
+        .lte('created_at', endOfDay(parseISO(endDate)).toISOString());
+
+      if (error) throw error;
+      
+      toast.success('Transações do período removidas com sucesso.');
+      setIsCleanupOpen(false);
+      fetchTransactions();
+    } catch (err: any) {
+      toast.error('Erro na limpeza: ' + err.message);
+    } finally {
+      setCleanupLoading(false);
+    }
+  };
+
+  const filteredJSON = useMemo(() => {
+    if (!selectedTx) return null;
+    const fullObj = {
+      webhook: selectedTx.webhook_payload,
+      error: selectedTx.error_message ? (typeof selectedTx.error_message === 'string' ? JSON.parse(selectedTx.error_message) : selectedTx.error_message) : null
+    };
+    
+    if (!payloadSearch.trim()) return { data: fullObj, count: 0 };
+    
+    let matchCount = 0;
+    const term = payloadSearch.toLowerCase();
+
+    const filterObject = (obj: any): any => {
+      if (typeof obj !== 'object' || obj === null) {
+        if (String(obj).toLowerCase().includes(term)) {
+          matchCount++;
+          return obj;
+        }
+        return undefined;
+      }
+      
+      if (Array.isArray(obj)) {
+        const filtered = obj.map(v => filterObject(v)).filter(v => v !== undefined);
+        return filtered.length > 0 ? filtered : undefined;
+      }
+      
+      const result: any = {};
+      let hasMatch = false;
+      
+      for (const key in obj) {
+        if (key.toLowerCase().includes(term)) {
+          result[key] = obj[key];
+          hasMatch = true;
+          matchCount++;
+          continue;
+        }
+        
+        const val = filterObject(obj[key]);
+        if (val !== undefined) {
+          result[key] = val;
+          hasMatch = true;
+        }
+      }
+      
+      return hasMatch ? result : undefined;
+    };
+    
+    const filtered = filterObject(fullObj) || { message: "Nenhum resultado para a busca no JSON." };
+    return { data: filtered, count: matchCount };
+  }, [selectedTx, payloadSearch]);
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
