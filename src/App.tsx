@@ -57,7 +57,7 @@ const Certamen = lazy(() => import('./components/cathedra/Certamen'));
 // Redundant import removed
 const LiturgiaPage = lazy(() => import('./components/cathedra/LiturgiaPage'));
 const FavoritesPage = lazy(() => import('./components/cathedra/FavoritesPage'));
-const TrilhasPage = lazy(() => import('./components/cathedra/TrilhasPage'));
+// Redundant import removed
 const AboutPage = lazy(() => import('./components/cathedra/AboutPage'));
 const DogmasPage = lazy(() => import('./components/cathedra/DogmasPage'));
 const LectioDivina = lazy(() => import('./components/cathedra/LectioDivina'));
