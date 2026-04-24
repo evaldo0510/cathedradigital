@@ -124,7 +124,7 @@ const LandingHeader = () => {
             Entrar
           </Button>
           <Button
-            className="rounded-full px-6 bg-primary text-primary-foreground font-black uppercase tracking-widest text-[10px] h-11 shadow-lg shadow-primary/20 hover:scale-105 transition-all"
+            className="rounded-full px-6 bg-blue-600 hover:bg-blue-700 text-white font-black uppercase tracking-widest text-[10px] h-11 shadow-lg shadow-blue-600/20 hover:scale-105 transition-all"
             onClick={() => navigate(AppRoute.LOGIN)}
           >
             Começar <ChevronRight className="w-4 h-4 ml-1" />

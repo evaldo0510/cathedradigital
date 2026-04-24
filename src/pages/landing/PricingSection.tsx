@@ -136,7 +136,7 @@ const PricingSection = () => {
               <div className="mt-8">
                 <Button 
                   className={`w-full h-14 rounded-2xl font-black uppercase tracking-widest transition-all duration-300 ${
-                    tier.popular ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30" : "bg-muted hover:bg-primary/10 text-foreground"
+                    tier.popular ? "bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/30" : "bg-muted hover:bg-blue-600/10 text-foreground"
                   }`}
                 >
                   {tier.button}
