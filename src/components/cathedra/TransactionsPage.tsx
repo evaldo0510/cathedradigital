@@ -692,7 +692,7 @@ const TransactionsPage: React.FC = () => {
             variant="outline"
             size="sm"
             onClick={() => setPage(p => Math.max(1, p - 1))}
-            disabled={page === 1}
+            disabled={page === 1 || loading || exporting}
             className="rounded-full px-6 border-primary/20 hover:bg-primary/5 shadow-sm"
           >
             Anterior
@@ -706,13 +706,63 @@ const TransactionsPage: React.FC = () => {
             variant="outline"
             size="sm"
             onClick={() => setPage(p => p + 1)}
-            disabled={page * pageSize >= totalCount}
+            disabled={page * pageSize >= totalCount || loading || exporting}
             className="rounded-full px-6 border-primary/20 hover:bg-primary/5 shadow-sm"
           >
             Próxima
           </Button>
         </div>
       )}
+
+      {/* Cleanup Confirmation Modal */}
+      <Dialog open={isCleanupOpen} onOpenChange={setIsCleanupOpen}>
+        <DialogContent className="max-w-md rounded-[2.5rem] border-destructive/20 bg-background/95 backdrop-blur-xl shadow-2xl">
+          <DialogHeader className="border-b border-border/50 pb-6">
+            <DialogTitle className="text-2xl font-serif font-bold flex items-center gap-3 text-destructive">
+              <div className="p-2 bg-destructive/10 rounded-xl text-destructive">
+                <ShieldAlert className="w-6 h-6" />
+              </div>
+              Limpeza de Registros
+            </DialogTitle>
+            <DialogDescription className="italic font-serif">
+              Esta ação removerá permanentemente as transações no período selecionado.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="py-6 space-y-4">
+            <div className="p-4 bg-destructive/5 rounded-2xl border border-destructive/10">
+              <p className="text-sm font-bold text-destructive mb-1">Atenção!</p>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Você está prestes a apagar registros de {startDate || '...'} até {endDate || '...'}. 
+                Esta operação não pode ser desfeita.
+              </p>
+            </div>
+            
+            <div className="space-y-1">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Confirmar para prosseguir</p>
+              <p className="text-xs text-muted-foreground">Certifique-se de que os filtros de data no painel principal estão corretos antes de confirmar.</p>
+            </div>
+          </div>
+
+          <DialogFooter className="flex flex-col sm:flex-row gap-3 border-t border-border/50 pt-6">
+            <Button 
+              variant="ghost" 
+              onClick={() => setIsCleanupOpen(false)}
+              className="flex-1 rounded-full h-12"
+            >
+              Cancelar
+            </Button>
+            <Button 
+              onClick={handleCleanup}
+              disabled={cleanupLoading}
+              className="flex-1 rounded-full bg-destructive hover:bg-destructive/90 shadow-lg shadow-destructive/20 h-12 text-base font-bold"
+            >
+              {cleanupLoading ? <Clock className="w-4 h-4 animate-spin mr-2" /> : <Trash2 className="w-4 h-4 mr-2" />}
+              Confirmar Exclusão
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Detalhes da Transação Modal */}
       <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
