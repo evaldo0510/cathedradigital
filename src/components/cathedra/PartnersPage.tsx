@@ -99,7 +99,7 @@ const PartnersPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-12 py-8 px-4">
+    <div className="w-full space-y-12 py-4">
       {/* Header Section */}
       <section className="text-center space-y-4">
         <motion.div
