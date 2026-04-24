@@ -34,8 +34,36 @@ const TransactionsPage: React.FC = () => {
 
   const isAdmin = profile?.role === 'admin';
 
+  const fetchAvailablePlans = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('transactions')
+        .select('plan_id')
+        .not('plan_id', 'is', null);
+      
+      if (error) throw error;
+      const plans = Array.from(new Set(data.map(t => t.plan_id)));
+      setAvailablePlans(plans);
+    } catch (err) {
+      console.error('Error fetching plans:', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchAvailablePlans();
+  }, []);
+
   const fetchTransactions = async () => {
     if (!user) return;
+
+    // Date validation
+    if (startDate && endDate) {
+      if (isBefore(parseISO(endDate), parseISO(startDate))) {
+        toast.error('A data final não pode ser anterior à data inicial.');
+        return;
+      }
+    }
+
     setLoading(true);
     try {
       let query = supabase
@@ -50,12 +78,16 @@ const TransactionsPage: React.FC = () => {
         query = query.eq('status', statusFilter);
       }
 
+      if (planFilter !== 'all') {
+        query = query.eq('plan_id', planFilter);
+      }
+
       if (startDate) {
         query = query.gte('created_at', startOfDay(parseISO(startDate)).toISOString());
       }
 
       if (endDate) {
-        query = query.lte('created_at', endOfDay(parseISO(endDate)).toISOString());
+        query = query.lte('end_of_day', endOfDay(parseISO(endDate)).toISOString());
       }
 
       const { data, error, count } = await query
@@ -74,7 +106,7 @@ const TransactionsPage: React.FC = () => {
 
   useEffect(() => {
     fetchTransactions();
-  }, [user, statusFilter, startDate, endDate, sortOrder, page, isAdmin]);
+  }, [user, statusFilter, planFilter, startDate, endDate, sortOrder, page, isAdmin]);
 
   const getStatusInfo = (status: string) => {
     switch (status) {
