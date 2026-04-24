@@ -270,6 +270,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, [syncAuthState]);
 
+  const refreshProfile = useCallback(async () => {
+    if (!user) return;
+    const resolvedProfile = await fetchProfile(user);
+    if (resolvedProfile) setProfile(resolvedProfile);
+  }, [user, fetchProfile]);
+
   const signOut = useCallback(async () => {
     authRequestId.current += 1;
     await supabase.auth.signOut();
