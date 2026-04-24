@@ -87,7 +87,7 @@ const TransactionsPage: React.FC = () => {
       }
 
       if (endDate) {
-        query = query.lte('end_of_day', endOfDay(parseISO(endDate)).toISOString());
+        query = query.lte('created_at', endOfDay(parseISO(endDate)).toISOString());
       }
 
       const { data, error, count } = await query
