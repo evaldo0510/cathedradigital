@@ -435,27 +435,58 @@ const TransactionsPage: React.FC = () => {
           <p className="text-muted-foreground italic font-serif">Acompanhe seus pagamentos e doações no Cathedra.</p>
         </div>
         
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button 
-              variant="outline" 
-              className="rounded-full gap-2 border-primary/20 hover:border-primary hover:bg-primary/5 transition-all shadow-sm"
+        <div className="flex items-center gap-3">
+          {isAdmin && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsCleanupOpen(true)}
+              disabled={loading || exporting}
+              className="rounded-full gap-2 text-destructive hover:bg-destructive/10 border-destructive/20 hover:border-destructive transition-all"
             >
-              <Download className="w-4 h-4" />
-              Exportar CSV
-              <ChevronDown className="w-3 h-3 opacity-50" />
+              <Trash2 className="w-4 h-4" />
+              Limpar Período
             </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="rounded-xl">
-            <DropdownMenuItem onClick={() => exportToCSV('current')}>
-              Exportar Página Atual
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => exportToCSV('all')}>
-              Exportar Tudo (Filtrado)
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+          )}
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button 
+                variant="outline" 
+                disabled={loading || exporting}
+                className="rounded-full gap-2 border-primary/20 hover:border-primary hover:bg-primary/5 transition-all shadow-sm"
+              >
+                {exporting ? <Clock className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+                {exporting ? 'Exportando...' : 'Exportar CSV'}
+                <ChevronDown className="w-3 h-3 opacity-50" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="rounded-xl">
+              <DropdownMenuItem onClick={() => exportToCSV('current')}>
+                Exportar Página Atual
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => exportToCSV('all')}>
+                Exportar Tudo (Filtrado)
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
+
+      {exporting && totalToExport > 0 && (
+        <div className="bg-primary/5 border border-primary/10 rounded-2xl p-6 space-y-4 animate-in slide-in-from-top-4 duration-500">
+          <div className="flex justify-between items-end">
+            <div className="space-y-1">
+              <p className="text-xs font-bold uppercase tracking-widest text-primary">Progresso da Exportação</p>
+              <p className="text-sm font-serif italic text-muted-foreground">
+                Carregando {exportProgress} de {totalToExport} transações...
+              </p>
+            </div>
+            <p className="text-2xl font-bold text-primary">{Math.round((exportProgress / totalToExport) * 100)}%</p>
+          </div>
+          <Progress value={(exportProgress / totalToExport) * 100} className="h-2" />
+        </div>
+      )}
 
       <Card className="rounded-[2.5rem] border-border/50 shadow-xl shadow-primary/5 overflow-hidden">
         <CardHeader className="bg-muted/30 border-b border-border/50 px-8 py-6">
