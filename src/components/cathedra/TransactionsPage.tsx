@@ -124,7 +124,7 @@ const TransactionsPage: React.FC = () => {
                 transactions.map((tx) => (
                   <TableRow key={tx.id} className="hover:bg-muted/30 transition-colors">
                     <TableCell className="py-4 px-6 font-medium text-xs">
-                      {format(new Error(tx.created_at).getTime() ? new Date(tx.created_at) : new Date(), "dd 'de' MMMM, HH:mm", { locale: ptBR })}
+                      {format(new Date(tx.created_at), "dd 'de' MMMM, HH:mm", { locale: ptBR })}
                     </TableCell>
                     {isAdmin && (
                       <TableCell className="py-4">
