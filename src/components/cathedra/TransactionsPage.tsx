@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -9,11 +9,12 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Progress } from '@/components/ui/progress';
 import { Icons } from '../../constants';
 import { format, startOfDay, endOfDay, parseISO, isBefore } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { toast } from 'sonner';
-import { Download, Filter, Search, Calendar as CalendarIcon, ArrowUpDown, Info, CheckCircle2, Clock, AlertCircle, XCircle, RotateCcw, ShieldAlert, Copy, Check, ChevronDown } from 'lucide-react';
+import { Download, Filter, Search, Calendar as CalendarIcon, ArrowUpDown, Info, CheckCircle2, Clock, AlertCircle, XCircle, RotateCcw, ShieldAlert, Copy, Check, ChevronDown, Trash2 } from 'lucide-react';
 
 const TransactionsPage: React.FC = () => {
   const { user, profile } = useAuth();
@@ -31,6 +32,11 @@ const TransactionsPage: React.FC = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [selectedTx, setSelectedTx] = useState<any>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [isCleanupOpen, setIsCleanupOpen] = useState(false);
+  const [cleanupLoading, setCleanupLoading] = useState(false);
+  const [exporting, setExporting] = useState(false);
+  const [exportProgress, setExportProgress] = useState(0);
+  const [totalToExport, setTotalToExport] = useState(0);
   const [copied, setCopied] = useState(false);
   const [payloadSearch, setPayloadSearch] = useState<string>('');
   const [availablePlans, setAvailablePlans] = useState<string[]>([]);
@@ -198,18 +204,42 @@ const TransactionsPage: React.FC = () => {
   };
 
   const exportToCSV = async (mode: 'current' | 'all' = 'current') => {
+    if (exporting) return;
+    
+    // Check if any filter is active for "all" mode to avoid accidental massive downloads
+    if (mode === 'all' && statusFilter === 'all' && planFilter === 'all' && !startDate && !endDate && !userSearch.trim()) {
+      const confirmAll = window.confirm('Você está tentando exportar TODAS as transações sem nenhum filtro. Isso pode demorar e gerar um arquivo muito grande. Deseja continuar?');
+      if (!confirmAll) return;
+    }
+
     let dataToExport: any[] = [];
+    setExporting(true);
+    setExportProgress(0);
 
     if (mode === 'current') {
       dataToExport = transactions;
     } else {
       toast.info('Preparando exportação completa em lotes...');
-      setLoading(true);
       try {
         let allData: any[] = [];
         let from = 0;
         const batchSize = 1000;
         let hasMore = true;
+
+        // Get total count first for progress
+        let countQuery = supabase.from('transactions').select('*', { count: 'exact', head: true });
+        if (!isAdmin) countQuery = countQuery.eq('user_id', user?.id);
+        if (userSearch.trim()) {
+          if (userSearch.includes('@')) countQuery = countQuery.filter('profiles.email', 'ilike', `%${userSearch}%`);
+          else countQuery = countQuery.filter('profiles.name', 'ilike', `%${userSearch}%`);
+        }
+        if (statusFilter !== 'all') countQuery = countQuery.eq('status', statusFilter);
+        if (planFilter !== 'all') countQuery = countQuery.eq('plan_id', planFilter);
+        if (startDate) countQuery = countQuery.gte('created_at', startOfDay(parseISO(startDate)).toISOString());
+        if (endDate) countQuery = countQuery.lte('created_at', endOfDay(parseISO(endDate)).toISOString());
+        
+        const { count: totalCountForExport } = await countQuery;
+        setTotalToExport(totalCountForExport || 0);
 
         while (hasMore) {
           let query = supabase
@@ -235,6 +265,7 @@ const TransactionsPage: React.FC = () => {
           if (data && data.length > 0) {
             allData = [...allData, ...data];
             from += batchSize;
+            setExportProgress(allData.length);
             if (data.length < batchSize) hasMore = false;
           } else {
             hasMore = false;
@@ -243,21 +274,21 @@ const TransactionsPage: React.FC = () => {
         dataToExport = allData;
       } catch (err: any) {
         toast.error('Erro ao exportar dados: ' + err.message);
-        setLoading(false);
+        setExporting(false);
         return;
-      } finally {
-        setLoading(false);
       }
     }
 
     if (dataToExport.length === 0) {
       toast.error('Nenhuma transação para exportar.');
+      setExporting(false);
       return;
     }
 
     const headers = [
       'ID', 
       'Data', 
+      'Audit_Timestamp_TZ',
       'Usuário', 
       'E-mail', 
       'Descrição', 
@@ -269,9 +300,13 @@ const TransactionsPage: React.FC = () => {
       'ID Pagamento'
     ];
 
+    const tzOffset = new Date().getTimezoneOffset();
+    const tzString = `UTC${tzOffset > 0 ? '-' : '+'}${Math.abs(tzOffset / 60)}`;
+
     const csvData = dataToExport.map(tx => [
       tx.id,
       format(new Date(tx.created_at), "yyyy-MM-dd HH:mm:ss"),
+      `${new Date(tx.created_at).toISOString()} (${tzString})`,
       tx.profiles?.name || '',
       tx.profiles?.email || '',
       tx.description || '',
@@ -297,8 +332,87 @@ const TransactionsPage: React.FC = () => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    
+    setExporting(false);
     toast.success(`CSV (${mode === 'all' ? 'total' : 'página atual'}) gerado com sucesso!`);
   };
+
+  const handleCleanup = async () => {
+    if (!startDate || !endDate) {
+      toast.error('Selecione um período (início e fim) para a limpeza.');
+      return;
+    }
+
+    setCleanupLoading(true);
+    try {
+      const { error } = await supabase
+        .from('transactions')
+        .delete()
+        .gte('created_at', startOfDay(parseISO(startDate)).toISOString())
+        .lte('created_at', endOfDay(parseISO(endDate)).toISOString());
+
+      if (error) throw error;
+      
+      toast.success('Transações do período removidas com sucesso.');
+      setIsCleanupOpen(false);
+      fetchTransactions();
+    } catch (err: any) {
+      toast.error('Erro na limpeza: ' + err.message);
+    } finally {
+      setCleanupLoading(false);
+    }
+  };
+
+  const filteredJSON = useMemo(() => {
+    if (!selectedTx) return null;
+    const fullObj = {
+      webhook: selectedTx.webhook_payload,
+      error: selectedTx.error_message ? (typeof selectedTx.error_message === 'string' ? JSON.parse(selectedTx.error_message) : selectedTx.error_message) : null
+    };
+    
+    if (!payloadSearch.trim()) return { data: fullObj, count: 0 };
+    
+    let matchCount = 0;
+    const term = payloadSearch.toLowerCase();
+
+    const filterObject = (obj: any): any => {
+      if (typeof obj !== 'object' || obj === null) {
+        if (String(obj).toLowerCase().includes(term)) {
+          matchCount++;
+          return obj;
+        }
+        return undefined;
+      }
+      
+      if (Array.isArray(obj)) {
+        const filtered = obj.map(v => filterObject(v)).filter(v => v !== undefined);
+        return filtered.length > 0 ? filtered : undefined;
+      }
+      
+      const result: any = {};
+      let hasMatch = false;
+      
+      for (const key in obj) {
+        if (key.toLowerCase().includes(term)) {
+          result[key] = obj[key];
+          hasMatch = true;
+          matchCount++;
+          continue;
+        }
+        
+        const val = filterObject(obj[key]);
+        if (val !== undefined) {
+          result[key] = val;
+          hasMatch = true;
+        }
+      }
+      
+      return hasMatch ? result : undefined;
+    };
+    
+    const filtered = filterObject(fullObj) || { message: "Nenhum resultado para a busca no JSON." };
+    return { data: filtered, count: matchCount };
+  }, [selectedTx, payloadSearch]);
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -321,27 +435,58 @@ const TransactionsPage: React.FC = () => {
           <p className="text-muted-foreground italic font-serif">Acompanhe seus pagamentos e doações no Cathedra.</p>
         </div>
         
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button 
-              variant="outline" 
-              className="rounded-full gap-2 border-primary/20 hover:border-primary hover:bg-primary/5 transition-all shadow-sm"
+        <div className="flex items-center gap-3">
+          {isAdmin && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsCleanupOpen(true)}
+              disabled={loading || exporting}
+              className="rounded-full gap-2 text-destructive hover:bg-destructive/10 border-destructive/20 hover:border-destructive transition-all"
             >
-              <Download className="w-4 h-4" />
-              Exportar CSV
-              <ChevronDown className="w-3 h-3 opacity-50" />
+              <Trash2 className="w-4 h-4" />
+              Limpar Período
             </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="rounded-xl">
-            <DropdownMenuItem onClick={() => exportToCSV('current')}>
-              Exportar Página Atual
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => exportToCSV('all')}>
-              Exportar Tudo (Filtrado)
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+          )}
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button 
+                variant="outline" 
+                disabled={loading || exporting}
+                className="rounded-full gap-2 border-primary/20 hover:border-primary hover:bg-primary/5 transition-all shadow-sm"
+              >
+                {exporting ? <Clock className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+                {exporting ? 'Exportando...' : 'Exportar CSV'}
+                <ChevronDown className="w-3 h-3 opacity-50" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="rounded-xl">
+              <DropdownMenuItem onClick={() => exportToCSV('current')}>
+                Exportar Página Atual
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => exportToCSV('all')}>
+                Exportar Tudo (Filtrado)
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
+
+      {exporting && totalToExport > 0 && (
+        <div className="bg-primary/5 border border-primary/10 rounded-2xl p-6 space-y-4 animate-in slide-in-from-top-4 duration-500">
+          <div className="flex justify-between items-end">
+            <div className="space-y-1">
+              <p className="text-xs font-bold uppercase tracking-widest text-primary">Progresso da Exportação</p>
+              <p className="text-sm font-serif italic text-muted-foreground">
+                Carregando {exportProgress} de {totalToExport} transações...
+              </p>
+            </div>
+            <p className="text-2xl font-bold text-primary">{Math.round((exportProgress / totalToExport) * 100)}%</p>
+          </div>
+          <Progress value={(exportProgress / totalToExport) * 100} className="h-2" />
+        </div>
+      )}
 
       <Card className="rounded-[2.5rem] border-border/50 shadow-xl shadow-primary/5 overflow-hidden">
         <CardHeader className="bg-muted/30 border-b border-border/50 px-8 py-6">
@@ -355,6 +500,7 @@ const TransactionsPage: React.FC = () => {
                   placeholder="Nome ou Email" 
                   value={userSearch}
                   onChange={(e) => setUserSearch(e.target.value)}
+                  disabled={loading || exporting}
                   className="rounded-xl bg-background/50 border-border/30 backdrop-blur-sm"
                 />
               </div>
@@ -364,7 +510,7 @@ const TransactionsPage: React.FC = () => {
               <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                 <Filter className="w-3 h-3" /> Status
               </label>
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <Select value={statusFilter} onValueChange={setStatusFilter} disabled={loading || exporting}>
                 <SelectTrigger className="rounded-xl bg-background/50 border-border/30 backdrop-blur-sm">
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
@@ -383,7 +529,7 @@ const TransactionsPage: React.FC = () => {
               <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                 <ShieldAlert className="w-3 h-3" /> Plano
               </label>
-              <Select value={planFilter} onValueChange={setPlanFilter}>
+              <Select value={planFilter} onValueChange={setPlanFilter} disabled={loading || exporting}>
                 <SelectTrigger className="rounded-xl bg-background/50 border-border/30 backdrop-blur-sm">
                   <SelectValue placeholder="Plano" />
                 </SelectTrigger>
@@ -404,6 +550,7 @@ const TransactionsPage: React.FC = () => {
                 type="date" 
                 value={startDate} 
                 onChange={(e) => setStartDate(e.target.value)}
+                disabled={loading || exporting}
                 className={`rounded-xl bg-background/50 border-border/30 backdrop-blur-sm ${dateError ? 'border-destructive' : ''}`}
               />
             </div>
@@ -416,6 +563,7 @@ const TransactionsPage: React.FC = () => {
                 type="date" 
                 value={endDate} 
                 onChange={(e) => setEndDate(e.target.value)}
+                disabled={loading || exporting}
                 className={`rounded-xl bg-background/50 border-border/30 backdrop-blur-sm ${dateError ? 'border-destructive' : ''}`}
               />
             </div>
@@ -424,7 +572,7 @@ const TransactionsPage: React.FC = () => {
               <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                 <ArrowUpDown className="w-3 h-3" /> Ordenação
               </label>
-              <Select value={sortOrder} onValueChange={(v: any) => setSortOrder(v)}>
+              <Select value={sortOrder} onValueChange={(v: any) => setSortOrder(v)} disabled={loading || exporting}>
                 <SelectTrigger className="rounded-xl bg-background/50 border-border/30 backdrop-blur-sm">
                   <SelectValue placeholder="Ordenar por" />
                 </SelectTrigger>
@@ -544,7 +692,7 @@ const TransactionsPage: React.FC = () => {
             variant="outline"
             size="sm"
             onClick={() => setPage(p => Math.max(1, p - 1))}
-            disabled={page === 1}
+            disabled={page === 1 || loading || exporting}
             className="rounded-full px-6 border-primary/20 hover:bg-primary/5 shadow-sm"
           >
             Anterior
@@ -558,13 +706,63 @@ const TransactionsPage: React.FC = () => {
             variant="outline"
             size="sm"
             onClick={() => setPage(p => p + 1)}
-            disabled={page * pageSize >= totalCount}
+            disabled={page * pageSize >= totalCount || loading || exporting}
             className="rounded-full px-6 border-primary/20 hover:bg-primary/5 shadow-sm"
           >
             Próxima
           </Button>
         </div>
       )}
+
+      {/* Cleanup Confirmation Modal */}
+      <Dialog open={isCleanupOpen} onOpenChange={setIsCleanupOpen}>
+        <DialogContent className="max-w-md rounded-[2.5rem] border-destructive/20 bg-background/95 backdrop-blur-xl shadow-2xl">
+          <DialogHeader className="border-b border-border/50 pb-6">
+            <DialogTitle className="text-2xl font-serif font-bold flex items-center gap-3 text-destructive">
+              <div className="p-2 bg-destructive/10 rounded-xl text-destructive">
+                <ShieldAlert className="w-6 h-6" />
+              </div>
+              Limpeza de Registros
+            </DialogTitle>
+            <DialogDescription className="italic font-serif">
+              Esta ação removerá permanentemente as transações no período selecionado.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="py-6 space-y-4">
+            <div className="p-4 bg-destructive/5 rounded-2xl border border-destructive/10">
+              <p className="text-sm font-bold text-destructive mb-1">Atenção!</p>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Você está prestes a apagar registros de {startDate || '...'} até {endDate || '...'}. 
+                Esta operação não pode ser desfeita.
+              </p>
+            </div>
+            
+            <div className="space-y-1">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Confirmar para prosseguir</p>
+              <p className="text-xs text-muted-foreground">Certifique-se de que os filtros de data no painel principal estão corretos antes de confirmar.</p>
+            </div>
+          </div>
+
+          <DialogFooter className="flex flex-col sm:flex-row gap-3 border-t border-border/50 pt-6">
+            <Button 
+              variant="ghost" 
+              onClick={() => setIsCleanupOpen(false)}
+              className="flex-1 rounded-full h-12"
+            >
+              Cancelar
+            </Button>
+            <Button 
+              onClick={handleCleanup}
+              disabled={cleanupLoading}
+              className="flex-1 rounded-full bg-destructive hover:bg-destructive/90 shadow-lg shadow-destructive/20 h-12 text-base font-bold"
+            >
+              {cleanupLoading ? <Clock className="w-4 h-4 animate-spin mr-2" /> : <Trash2 className="w-4 h-4 mr-2" />}
+              Confirmar Exclusão
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Detalhes da Transação Modal */}
       <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
@@ -647,6 +845,11 @@ const TransactionsPage: React.FC = () => {
                           className="h-7 text-[10px] pl-8 rounded-lg bg-muted/50 border-border/30"
                         />
                       </div>
+                      <div className="flex items-center gap-1.5 px-2 py-1 bg-primary/10 rounded-lg">
+                        <span className="text-[9px] font-bold text-primary uppercase tracking-wider">
+                          {filteredJSON?.count || 0} matches
+                        </span>
+                      </div>
                       {selectedTx.webhook_payload && (
                         <Button
                           variant="ghost"
@@ -662,50 +865,11 @@ const TransactionsPage: React.FC = () => {
                   </div>
                   <div className="max-h-[300px] overflow-y-auto rounded-2xl border border-border/50 bg-slate-950 p-6 shadow-inner custom-scrollbar">
                     <pre className="text-[11px] text-slate-300 font-mono leading-relaxed whitespace-pre-wrap">
-                      {(() => {
-                        const fullObj = {
-                          webhook: selectedTx.webhook_payload,
-                          error: selectedTx.error_message ? (typeof selectedTx.error_message === 'string' ? JSON.parse(selectedTx.error_message) : selectedTx.error_message) : null
-                        };
-                        
-                        if (!payloadSearch.trim()) return JSON.stringify(fullObj, null, 2);
-                        
-                        // Simple filtering for specific keys or values containing the search term
-                        const filterObject = (obj: any, term: string): any => {
-                          if (typeof obj !== 'object' || obj === null) return String(obj).toLowerCase().includes(term.toLowerCase()) ? obj : undefined;
-                          
-                          if (Array.isArray(obj)) {
-                            const filtered = obj.map(v => filterObject(v, term)).filter(v => v !== undefined);
-                            return filtered.length > 0 ? filtered : undefined;
-                          }
-                          
-                          const result: any = {};
-                          let hasMatch = false;
-                          
-                          for (const key in obj) {
-                            if (key.toLowerCase().includes(term.toLowerCase())) {
-                              result[key] = obj[key];
-                              hasMatch = true;
-                              continue;
-                            }
-                            
-                            const val = filterObject(obj[key], term);
-                            if (val !== undefined) {
-                              result[key] = val;
-                              hasMatch = true;
-                            }
-                          }
-                          
-                          return hasMatch ? result : undefined;
-                        };
-                        
-                        const filtered = filterObject(fullObj, payloadSearch) || { message: "Nenhum resultado para a busca no JSON." };
-                        return JSON.stringify(filtered, null, 2);
-                      })()}
+                      {JSON.stringify(filteredJSON?.data, null, 2)}
                     </pre>
                   </div>
                   <p className="text-[10px] italic text-muted-foreground text-center">
-                    Utilize a busca acima para encontrar campos específicos como 'reason', 'status' ou 'id'.
+                    Utilize a busca acima para encontrar campos específicos. A estrutura é filtrada para mostrar apenas caminhos com resultados.
                   </p>
                 </div>
               )}
