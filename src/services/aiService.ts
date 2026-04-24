@@ -102,7 +102,7 @@ export const callColloquium = async (
     console.error("AI Service Error:", error);
     const msg = error.message || "Erro ao consultar a IA.";
     toast.error(msg);
-    return { error: msg };
+    return { error: msg, fallback_reason: 'network' };
   }
 };
 
