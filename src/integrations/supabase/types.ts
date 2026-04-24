@@ -1154,30 +1154,48 @@ export type Database = {
       transactions: {
         Row: {
           amount: number
+          coupon_code: string | null
           created_at: string | null
           description: string | null
+          error_message: string | null
           id: string
+          is_donation: boolean | null
+          payment_id: string | null
+          plan_id: string | null
           status: string | null
           updated_at: string | null
           user_id: string | null
+          webhook_payload: Json | null
         }
         Insert: {
           amount: number
+          coupon_code?: string | null
           created_at?: string | null
           description?: string | null
+          error_message?: string | null
           id?: string
+          is_donation?: boolean | null
+          payment_id?: string | null
+          plan_id?: string | null
           status?: string | null
           updated_at?: string | null
           user_id?: string | null
+          webhook_payload?: Json | null
         }
         Update: {
           amount?: number
+          coupon_code?: string | null
           created_at?: string | null
           description?: string | null
+          error_message?: string | null
           id?: string
+          is_donation?: boolean | null
+          payment_id?: string | null
+          plan_id?: string | null
           status?: string | null
           updated_at?: string | null
           user_id?: string | null
+          webhook_payload?: Json | null
         }
         Relationships: [
           {
