@@ -31,21 +31,40 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
       ]
     }] : []),
     {
-      label: 'Menu',
+      label: 'Navegação',
       items: [
         { label: t('home'), path: AppRoute.HOJE, icon: <Icons.Home className="w-5 h-5" /> },
         { label: t('journeys'), path: AppRoute.JORNADAS, icon: <Icons.Journeys className="w-5 h-5" /> },
-        { label: 'Quiz da Fé', path: AppRoute.CERTAMEN, icon: <Icons.Trophy className="w-5 h-5" />, pro: false },
         { label: t('themes'), path: AppRoute.TEMAS, icon: <Icons.Themes className="w-5 h-5" /> },
+        { label: t('explore'), path: AppRoute.BIBLIOTECA, icon: <Icons.Search className="w-5 h-5" /> },
+        { label: 'Busca Global', path: AppRoute.BUSCAR, icon: <Icons.Globe className="w-5 h-5" /> },
+        { label: t('community'), path: AppRoute.COMMUNITY, icon: <Icons.Users className="w-5 h-5" /> },
+        { label: t('profile'), path: AppRoute.PROFILE, icon: <Icons.User className="w-5 h-5" /> },
+      ]
+    },
+    {
+      label: 'Devocionário',
+      items: [
+        { label: 'Bíblia Sagrada', path: AppRoute.BIBLE, icon: <Icons.Bible className="w-5 h-5" /> },
+        { label: 'Catecismo', path: AppRoute.CATECHISM, icon: <Icons.Catechism className="w-5 h-5" /> },
+        { label: 'Liturgia Diária', path: AppRoute.LITURGIA, icon: <Icons.Liturgy className="w-5 h-5" /> },
+        { label: 'Santo Rosário', path: AppRoute.ROSARY, icon: <Icons.Heart className="w-5 h-5" /> },
+        { label: 'Orações', path: AppRoute.ORACAO, icon: <Icons.Volume2 className="w-5 h-5" /> },
+        { label: 'Via Sacra', path: AppRoute.VIA_CRUCIS, icon: <Icons.Cross className="w-5 h-5" /> },
+        { label: 'Confissão', path: AppRoute.POENITENTIA, icon: <Icons.Flame className="w-5 h-5" /> },
+        { label: 'Lectio Divina', path: AppRoute.LECTIO_DIVINA, icon: <Icons.Lectio className="w-5 h-5" /> },
+      ]
+    },
+    {
+      label: 'Formação',
+      items: [
+        { label: 'Quiz da Fé', path: AppRoute.CERTAMEN, icon: <Icons.Trophy className="w-5 h-5" />, pro: false },
         { label: 'Magistério', path: AppRoute.MAGISTERIUM, icon: <Icons.ScrollText className="w-5 h-5" /> },
         { label: 'Enciclopédia', path: AppRoute.ENCYCLOPEDIA, icon: <Icons.Library className="w-5 h-5" /> },
         { label: 'Dogmas da Fé', path: AppRoute.DOGMAS, icon: <Icons.ScrollText className="w-5 h-5" /> },
         { label: 'Aparições', path: AppRoute.APARICOES, icon: <Icons.Heart className="w-5 h-5" /> },
         { label: t('az_faith') || 'A–Z da Fé', path: AppRoute.AZ_FAITH, icon: <Icons.AZ className="w-5 h-5" /> },
-        { label: t('explore'), path: AppRoute.BIBLIOTECA, icon: <Icons.Search className="w-5 h-5" /> },
-        { label: 'Busca Global', path: AppRoute.BUSCAR, icon: <Icons.Globe className="w-5 h-5" /> },
-        { label: t('community'), path: AppRoute.COMMUNITY, icon: <Icons.Users className="w-5 h-5" /> },
-        { label: t('profile'), path: AppRoute.PROFILE, icon: <Icons.User className="w-5 h-5" /> },
+        { label: 'Os Papas', path: AppRoute.POPES, icon: <Icons.ShieldCheck className="w-5 h-5" /> },
       ]
     },
     {
