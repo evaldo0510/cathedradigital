@@ -26,6 +26,7 @@ import CommandCenter from './components/cathedra/CommandCenter';
 import OfflineIndicator from './components/cathedra/OfflineIndicator';
 import SplashScreen from './components/cathedra/SplashScreen';
 import { PWAInstallPrompt } from './components/cathedra/PWAInstallPrompt';
+import AIStatusBanner from './components/cathedra/AIStatusBanner';
 
 
 const queryClient = new QueryClient({
@@ -394,6 +395,7 @@ const AppLayout: React.FC = () => {
         <ScrollToTop />
         <CommandCenter />
         <OfflineIndicator />
+        <AIStatusBanner />
         <PWAInstallPrompt />
         <div className="flex h-[100dvh] w-full overflow-hidden bg-background selection:bg-primary/20">
           {/* Persistent Sidebar for Desktop */}

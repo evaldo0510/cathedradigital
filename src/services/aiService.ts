@@ -7,6 +7,11 @@ export interface AIResponse {
   limit_reached?: boolean;
 }
 
+function notifyAIStatus(type: 'credits_exhausted' | 'rate_limited', message?: string) {
+  if (typeof window === 'undefined') return;
+  window.dispatchEvent(new CustomEvent('ai-status-error', { detail: { type, message } }));
+}
+
 export const callColloquium = async (
   messages: { role: string; content: string }[],
   mode?: string | null,
@@ -32,6 +37,7 @@ export const callColloquium = async (
       const err = await response.json().catch(() => ({ error: 'Erro na conexão' }));
       
       if (response.status === 402 || err.credits_exhausted) {
+        notifyAIStatus('credits_exhausted', err.error);
         toast.error('Créditos de IA esgotados. O administrador precisa recarregar o workspace.', { duration: 8000 });
         return { error: err.error, limit_reached: true };
       }
@@ -42,6 +48,7 @@ export const callColloquium = async (
       }
 
       if (response.status === 429) {
+        notifyAIStatus('rate_limited', err.error);
         toast.error(err.error || 'Limite de requisições atingido. Aguarde um momento.');
         return { error: err.error };
       }
@@ -112,8 +119,14 @@ export const getSpiritualInsight = async (query?: string, tag?: string): Promise
 
     if (!response.ok) {
       const err = await response.json().catch(() => ({ error: 'Erro na conexão' }));
-      if (response.status === 402) {
+      if (response.status === 402 && err.credits_exhausted) {
+        notifyAIStatus('credits_exhausted', err.error);
+        toast.error('Créditos de IA esgotados.', { duration: 8000 });
+      } else if (response.status === 402) {
         toast.error("Este recurso é exclusivo para assinantes PRO.");
+      } else if (response.status === 429) {
+        notifyAIStatus('rate_limited', err.error);
+        toast.error(err.error || 'Limite de requisições atingido.');
       } else {
         toast.error(err.error || "Erro ao gerar insight.");
       }
