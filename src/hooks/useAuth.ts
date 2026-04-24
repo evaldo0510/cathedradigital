@@ -39,6 +39,7 @@ interface AuthContextValue {
   signOut: () => Promise<void>;
   isPremium: boolean;
   userLevel: UserLevelClass;
+  refreshProfile: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -269,6 +270,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, [syncAuthState]);
 
+  const refreshProfile = useCallback(async () => {
+    if (!user) return;
+    const resolvedProfile = await fetchProfile(user);
+    if (resolvedProfile) setProfile(resolvedProfile);
+  }, [user, fetchProfile]);
+
   const signOut = useCallback(async () => {
     authRequestId.current += 1;
     await supabase.auth.signOut();
@@ -303,7 +310,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     signOut,
     isPremium: profile?.is_premium ?? false,
     userLevel,
-  }), [user, profile, loading, signOut, userLevel]);
+    refreshProfile,
+  }), [user, profile, loading, signOut, userLevel, refreshProfile]);
 
   return createElement(AuthContext.Provider, { value }, children);
 }

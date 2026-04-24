@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
 import { motion } from 'framer-motion';
 import { CheckCircle2, Clock, XCircle } from 'lucide-react';
 import confetti from 'canvas-confetti';
@@ -11,6 +12,7 @@ type ResultState = 'loading' | 'success' | 'pending' | 'failure';
 
 const CheckoutResultPage: React.FC = () => {
   const navigate = useNavigate();
+  const { refreshProfile } = useAuth();
   const [searchParams] = useSearchParams();
   const checkoutState = searchParams.get('status');
   const paymentId = searchParams.get('payment_id');
@@ -65,6 +67,7 @@ const CheckoutResultPage: React.FC = () => {
 
         if (data?.status === 'approved') {
           setState('success');
+          void refreshProfile();
           return;
         }
         if (data?.status === 'pending') {
