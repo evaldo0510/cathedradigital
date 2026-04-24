@@ -42,28 +42,28 @@ export const callColloquium = async (
       if (response.status === 402 || err.credits_exhausted) {
         notifyAIStatus('credits_exhausted', err.error);
         toast.error('Créditos de IA esgotados. O administrador precisa recarregar o workspace.', { duration: 8000 });
-        return { error: err.error, limit_reached: true };
+        return { error: err.error, limit_reached: true, fallback_reason: 'credits_exhausted' };
       }
 
       if (response.status === 429 && err.limit_reached) {
         toast.error('Limite diário atingido! Assine o PRO para mensagens ilimitadas.');
-        return { error: err.error, limit_reached: true };
+        return { error: err.error, limit_reached: true, fallback_reason: 'daily_limit' };
       }
 
       if (response.status === 429) {
         notifyAIStatus('rate_limited', err.error);
         toast.error(err.error || 'Limite de requisições atingido. Aguarde um momento.');
-        return { error: err.error };
+        return { error: err.error, fallback_reason: 'rate_limited' };
       }
       
       if (response.status === 401) {
         toast.error("Sessão expirada. Por favor, faça login novamente.");
-        return { error: "Sessão expirada" };
+        return { error: "Sessão expirada", fallback_reason: 'auth' };
       }
 
       const errorMessage = err.error || `Erro ${response.status}`;
       toast.error(errorMessage);
-      return { error: errorMessage };
+      return { error: errorMessage, fallback_reason: 'network' };
     }
 
     if (onStream && response.body) {
