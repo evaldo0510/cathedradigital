@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext, useMemo, useCallback, Suspense } from 'react';
-import { callColloquium } from '@/services/aiService';
+import { callColloquium, type AIFallbackReason } from '@/services/aiService';
+import AIFallbackCard from './AIFallbackCard';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
@@ -135,6 +136,8 @@ const HojePage: React.FC = () => {
   const [todayQuote] = useState(() => LITURGICAL_QUOTES[new Date().getDate() % LITURGICAL_QUOTES.length]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [logosResponse, setLogosResponse] = useState('');
+  const [logosFallback, setLogosFallback] = useState<AIFallbackReason | null>(null);
+  const [lastReflectionText, setLastReflectionText] = useState('');
   const [logosRecommendation, setLogosRecommendation] = useState<any>(null);
   const [recommendedLogosJourney, setRecommendedLogosJourney] = useState<any>(null);
   const [recommendedLogosStep, setRecommendedLogosStep] = useState<any>(null);
@@ -157,6 +160,8 @@ const HojePage: React.FC = () => {
     if (!user || !text.trim()) return;
     setIsAnalyzing(true);
     setLogosResponse('');
+    setLogosFallback(null);
+    setLastReflectionText(text);
     setLogosRecommendation(null);
     setRecommendedLogosJourney(null);
     setLogosThemeContents([]);
@@ -167,7 +172,11 @@ const HojePage: React.FC = () => {
         setLogosResponse(content);
       });
 
-      if (result.error) throw new Error(result.error);
+      if (result.error) {
+        setLogosFallback(result.fallback_reason ?? 'network');
+        setLogosResponse('');
+        return;
+      }
       const fullText = result.content || '';
 
       const match = fullText.match(/\[RECOMMENDATION:(.*?)\]/);
@@ -518,7 +527,7 @@ const HojePage: React.FC = () => {
 
       {/* Spiritual Journal Area */}
       <div id="spiritual-journal" className="pt-12 scroll-mt-24 space-y-6">
-        {(isAnalyzing || logosResponse) && (
+        {(isAnalyzing || logosResponse || logosFallback) && (
           <motion.div
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -547,6 +556,22 @@ const HojePage: React.FC = () => {
                     <Icons.Loader className="w-8 h-8 text-primary animate-spin" />
                     <p className="text-sm text-muted-foreground animate-pulse font-serif italic">Logos está refletindo sobre sua partilha...</p>
                   </div>
+                ) : logosFallback ? (
+                  <AIFallbackCard
+                    reason={logosFallback}
+                    staticContent={
+                      <div className="space-y-2">
+                        <p className="font-serif italic">
+                          "Vinde a mim, todos os que estais cansados e sobrecarregados, e eu vos aliviarei." (Mt 11,28)
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Sua reflexão foi recebida. Volte em alguns instantes para ouvir Logos, ou continue sua jornada com a Liturgia do dia, o Catecismo e o santo de hoje.
+                        </p>
+                      </div>
+                    }
+                    onRetry={() => analyzeReflection(lastReflectionText)}
+                    isRetrying={isAnalyzing}
+                  />
                 ) : (
                   <div className="prose prose-sm dark:prose-invert max-w-none text-foreground leading-relaxed whitespace-pre-wrap font-serif text-lg italic border-l-2 border-primary/20 pl-6 py-2">
                     {logosResponse.replace(/\[RECOMMENDATION:.*?\]/g, '').trim()}

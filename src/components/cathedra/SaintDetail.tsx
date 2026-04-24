@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { callColloquium } from '@/services/aiService';
+import { callColloquium, type AIFallbackReason } from '@/services/aiService';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '../../constants';
@@ -17,6 +17,7 @@ import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
 import AudioContentPlayer from './AudioContentPlayer';
+import AIFallbackCard from './AIFallbackCard';
 
 const CATEGORY_LABELS: Record<string, string> = {
   apostle: 'Apóstolo',
@@ -59,6 +60,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
   const [logosReflection, setLogosReflection] = useState<string>('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [showLogos, setShowLogos] = useState(autoReflect);
+  const [fallbackReason, setFallbackReason] = useState<AIFallbackReason | null>(null);
 
   const suggestedJourney = React.useMemo(() => {
     const mainVirtue = saint.virtues?.[0]?.toLowerCase() || 'santidade';
@@ -86,11 +88,9 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
     setIsGenerating(true);
     setShowLogos(true);
     setLogosReflection('');
+    setFallbackReason(null);
 
     try {
-      const session = await supabase.auth.getSession();
-      const token = session.data.session?.access_token;
-
       const prompt = `Como Logos (IA da Cathedra), gere uma reflexão profunda e personalizada sobre ${saint.name}. 
       
       Siga este roteiro rigorosamente:
@@ -102,18 +102,41 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
       Tom: Poético, visceral, encorajador e firme na doutrina católica. Use Markdown para formatar (negrito para ênfase). Seja breve mas impactante.`;
 
       const result = await callColloquium([{ role: 'user', content: prompt }], null, (content) => {
-        // Remove recommendation metadata from UI display
         setLogosReflection(content.replace(/\[RECOMMENDATION:.*?\]/g, '').trim());
       });
 
-      if (result.error) throw new Error(result.error);
+      if (result.error) {
+        setFallbackReason(result.fallback_reason ?? 'network');
+        setLogosReflection('');
+        return;
+      }
     } catch (error) {
       console.error('Error generating Logos reflection:', error);
-      setLogosReflection('Desculpe, não consegui conectar com Logos agora. Tente novamente em breve.');
+      setFallbackReason('network');
+      setLogosReflection('');
     } finally {
       setIsGenerating(false);
     }
   };
+
+  const staticReflection = (
+    <div className="space-y-3">
+      <p>
+        <strong>{saint.name}</strong> nos ensina sobre <em>{saint.virtues?.[0] || 'santidade'}</em>.
+        {saint.bio ? ` ${saint.bio.slice(0, 220)}${saint.bio.length > 220 ? '…' : ''}` : ''}
+      </p>
+      {saint.quotes?.[0] && (
+        <blockquote className="border-l-2 border-primary/40 pl-3 italic text-muted-foreground">
+          "{saint.quotes[0]}"
+        </blockquote>
+      )}
+      {saint.prayer && (
+        <p className="text-xs text-muted-foreground">
+          Reze hoje: <span className="italic">{saint.prayer.slice(0, 140)}{saint.prayer.length > 140 ? '…' : ''}</span>
+        </p>
+      )}
+    </div>
+  );
 
   return (
     <>
@@ -469,6 +492,13 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
                           </div>
                         );
                       })
+                    ) : fallbackReason ? (
+                      <AIFallbackCard
+                        reason={fallbackReason}
+                        staticContent={staticReflection}
+                        onRetry={generateLogosReflection}
+                        isRetrying={isGenerating}
+                      />
                     ) : (
                       <p className="text-lg md:text-xl font-serif italic leading-relaxed text-background/90 whitespace-pre-wrap">
                         {isGenerating && "Conectando virtudes à sua vida..."}

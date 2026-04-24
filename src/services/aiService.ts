@@ -1,10 +1,13 @@
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+export type AIFallbackReason = 'credits_exhausted' | 'rate_limited' | 'daily_limit' | 'auth' | 'network';
+
 export interface AIResponse {
   content?: string;
   error?: string;
   limit_reached?: boolean;
+  fallback_reason?: AIFallbackReason;
 }
 
 function notifyAIStatus(type: 'credits_exhausted' | 'rate_limited', message?: string) {
@@ -39,28 +42,28 @@ export const callColloquium = async (
       if (response.status === 402 || err.credits_exhausted) {
         notifyAIStatus('credits_exhausted', err.error);
         toast.error('Créditos de IA esgotados. O administrador precisa recarregar o workspace.', { duration: 8000 });
-        return { error: err.error, limit_reached: true };
+        return { error: err.error, limit_reached: true, fallback_reason: 'credits_exhausted' };
       }
 
       if (response.status === 429 && err.limit_reached) {
         toast.error('Limite diário atingido! Assine o PRO para mensagens ilimitadas.');
-        return { error: err.error, limit_reached: true };
+        return { error: err.error, limit_reached: true, fallback_reason: 'daily_limit' };
       }
 
       if (response.status === 429) {
         notifyAIStatus('rate_limited', err.error);
         toast.error(err.error || 'Limite de requisições atingido. Aguarde um momento.');
-        return { error: err.error };
+        return { error: err.error, fallback_reason: 'rate_limited' };
       }
       
       if (response.status === 401) {
         toast.error("Sessão expirada. Por favor, faça login novamente.");
-        return { error: "Sessão expirada" };
+        return { error: "Sessão expirada", fallback_reason: 'auth' };
       }
 
       const errorMessage = err.error || `Erro ${response.status}`;
       toast.error(errorMessage);
-      return { error: errorMessage };
+      return { error: errorMessage, fallback_reason: 'network' };
     }
 
     if (onStream && response.body) {
@@ -99,7 +102,7 @@ export const callColloquium = async (
     console.error("AI Service Error:", error);
     const msg = error.message || "Erro ao consultar a IA.";
     toast.error(msg);
-    return { error: msg };
+    return { error: msg, fallback_reason: 'network' };
   }
 };
 
@@ -119,18 +122,22 @@ export const getSpiritualInsight = async (query?: string, tag?: string): Promise
 
     if (!response.ok) {
       const err = await response.json().catch(() => ({ error: 'Erro na conexão' }));
+      let reason: AIFallbackReason = 'network';
       if (response.status === 402 && err.credits_exhausted) {
         notifyAIStatus('credits_exhausted', err.error);
         toast.error('Créditos de IA esgotados.', { duration: 8000 });
+        reason = 'credits_exhausted';
       } else if (response.status === 402) {
         toast.error("Este recurso é exclusivo para assinantes PRO.");
+        reason = 'daily_limit';
       } else if (response.status === 429) {
         notifyAIStatus('rate_limited', err.error);
         toast.error(err.error || 'Limite de requisições atingido.');
+        reason = 'rate_limited';
       } else {
         toast.error(err.error || "Erro ao gerar insight.");
       }
-      return { error: err.error };
+      return { error: err.error, fallback_reason: reason };
     }
 
     const data = await response.json();
