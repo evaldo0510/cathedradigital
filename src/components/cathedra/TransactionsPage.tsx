@@ -309,6 +309,7 @@ const TransactionsPage: React.FC = () => {
 
   const openDetails = (tx: any) => {
     setSelectedTx(tx);
+    setPayloadSearch('');
     setIsDetailsOpen(true);
   };
 
