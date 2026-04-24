@@ -141,6 +141,25 @@ serve(async (req) => {
     if (!response.ok) {
       const t = await response.text();
       console.error("AI gateway error:", response.status, t);
+
+      if (response.status === 402) {
+        return new Response(JSON.stringify({
+          error: "Os créditos de IA do espaço de trabalho acabaram. Adicione créditos em Settings → Workspace → Usage para reativar o Logos.",
+          credits_exhausted: true,
+        }), {
+          status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      if (response.status === 429) {
+        return new Response(JSON.stringify({
+          error: "Limite de requisições da IA atingido. Aguarde um momento e tente novamente.",
+          rate_limited: true,
+        }), {
+          status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
       return new Response(JSON.stringify({ error: "Erro no processamento da IA. Tente novamente." }), {
         status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });

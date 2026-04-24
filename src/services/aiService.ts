@@ -31,9 +31,19 @@ export const callColloquium = async (
     if (!response.ok) {
       const err = await response.json().catch(() => ({ error: 'Erro na conexão' }));
       
+      if (response.status === 402 || err.credits_exhausted) {
+        toast.error('Créditos de IA esgotados. O administrador precisa recarregar o workspace.', { duration: 8000 });
+        return { error: err.error, limit_reached: true };
+      }
+
       if (response.status === 429 && err.limit_reached) {
         toast.error('Limite diário atingido! Assine o PRO para mensagens ilimitadas.');
         return { error: err.error, limit_reached: true };
+      }
+
+      if (response.status === 429) {
+        toast.error(err.error || 'Limite de requisições atingido. Aguarde um momento.');
+        return { error: err.error };
       }
       
       if (response.status === 401) {
