@@ -47,7 +47,7 @@ const Catechism = lazy(() => import('./components/cathedra/Catechism'));
 const StudyMode = lazy(() => import('./components/cathedra/StudyMode'));
 const Saints = lazy(() => import('./components/cathedra/Saints'));
 const Magisterium = lazy(() => import('./components/cathedra/Magisterium'));
-const DailyLiturgy = lazy(() => import('./components/cathedra/DailyLiturgy'));
+// Redundant imports removed (DailyLiturgy, MissalPage)
 const ViaCrucis = lazy(() => import('./components/cathedra/ViaCrucis'));
 const Rosary = lazy(() => import('./components/cathedra/Rosary'));
 const PrayerPage = lazy(() => import('./components/cathedra/PrayerPage'));
