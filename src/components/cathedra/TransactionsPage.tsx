@@ -62,10 +62,12 @@ const TransactionsPage: React.FC = () => {
     // Date validation
     if (startDate && endDate) {
       if (isBefore(parseISO(endDate), parseISO(startDate))) {
-        toast.error('A data final não pode ser anterior à data inicial.');
+        setDateError('Data final não pode ser anterior à inicial');
+        setLoading(false);
         return;
       }
     }
+    setDateError(null);
 
     setLoading(true);
     try {
@@ -75,6 +77,15 @@ const TransactionsPage: React.FC = () => {
 
       if (!isAdmin) {
         query = query.eq('user_id', user.id);
+      } else if (userSearch.trim()) {
+        // Admin user search (OR condition for name/email)
+        // Since Supabase doesn't easily allow cross-table OR in a simple .select() without RPC or nested filter,
+        // we'll use a trick if possible or just filter by email if it looks like one.
+        if (userSearch.includes('@')) {
+          query = query.filter('profiles.email', 'ilike', `%${userSearch}%`);
+        } else {
+          query = query.filter('profiles.name', 'ilike', `%${userSearch}%`);
+        }
       }
 
       if (statusFilter !== 'all') {
@@ -86,11 +97,15 @@ const TransactionsPage: React.FC = () => {
       }
 
       if (startDate) {
-        query = query.gte('created_at', startOfDay(parseISO(startDate)).toISOString());
+        // Normalize to start of day in local time then to ISO
+        const start = startOfDay(parseISO(startDate));
+        query = query.gte('created_at', start.toISOString());
       }
 
       if (endDate) {
-        query = query.lte('created_at', endOfDay(parseISO(endDate)).toISOString());
+        // Normalize to end of day in local time then to ISO
+        const end = endOfDay(parseISO(endDate));
+        query = query.lte('created_at', end.toISOString());
       }
 
       const { data, error, count } = await query
@@ -109,7 +124,7 @@ const TransactionsPage: React.FC = () => {
 
   useEffect(() => {
     fetchTransactions();
-  }, [user, statusFilter, planFilter, startDate, endDate, sortOrder, page, isAdmin]);
+  }, [user, statusFilter, planFilter, userSearch, startDate, endDate, sortOrder, page, isAdmin]);
 
   const getStatusInfo = (status: string) => {
     switch (status) {
