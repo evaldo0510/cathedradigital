@@ -21,8 +21,10 @@ const TransactionsPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [planFilter, setPlanFilter] = useState<string>('all');
+  const [userSearch, setUserSearch] = useState<string>('');
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
+  const [dateError, setDateError] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
   const [page, setPage] = useState(1);
   const pageSize = 10;
@@ -30,6 +32,7 @@ const TransactionsPage: React.FC = () => {
   const [selectedTx, setSelectedTx] = useState<any>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [payloadSearch, setPayloadSearch] = useState<string>('');
   const [availablePlans, setAvailablePlans] = useState<string[]>([]);
 
   const isAdmin = profile?.role === 'admin';
