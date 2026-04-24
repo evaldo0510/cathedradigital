@@ -153,7 +153,7 @@ const HeroContent = ({ heroOpacity, heroScale, heroY, onStart, onAbout }: HeroCo
             <span className="relative z-10 flex items-center gap-3">
               Iniciar Diálogo Espiritual <Icons.PenTool className="w-6 h-6 group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" />
             </span>
-            <motion.div className="absolute inset-0 bg-gradient-to-r from-primary via-secondary/20 to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <motion.div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-blue-400/20 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           </Button>
         </motion.div>
         <div className="flex items-center gap-2 opacity-60">
