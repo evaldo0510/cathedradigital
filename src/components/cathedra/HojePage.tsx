@@ -527,7 +527,7 @@ const HojePage: React.FC = () => {
 
       {/* Spiritual Journal Area */}
       <div id="spiritual-journal" className="pt-12 scroll-mt-24 space-y-6">
-        {(isAnalyzing || logosResponse) && (
+        {(isAnalyzing || logosResponse || logosFallback) && (
           <motion.div
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
