@@ -40,6 +40,10 @@ const TransactionsPage: React.FC = () => {
   const [copied, setCopied] = useState(false);
   const [payloadSearch, setPayloadSearch] = useState<string>('');
   const [availablePlans, setAvailablePlans] = useState<string[]>([]);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [previewRows, setPreviewRows] = useState<string[][]>([]);
+  const [pendingMode, setPendingMode] = useState<'current' | 'all'>('current');
+  const [cleanupConfirmation, setCleanupConfirmation] = useState('');
 
   const isAdmin = profile?.role === 'admin';
 
