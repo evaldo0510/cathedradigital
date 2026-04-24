@@ -517,7 +517,7 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.CERTAMEN} element={<PageTransition><AuthGuard><Certamen /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.MISSAL} element={<Navigate to={`${AppRoute.LITURGIA}?tab=missal`} replace />} />
                   <Route path={AppRoute.FAVORITES} element={<PageTransition><AuthGuard><FavoritesPage /></AuthGuard></PageTransition>} />
-                  <Route path={AppRoute.TRILHAS} element={<PageTransition><AuthGuard><TrilhasPage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.TRILHAS} element={<Navigate to={AppRoute.JORNADAS} replace />} />
                   <Route path={AppRoute.ABOUT} element={<PageTransition><AboutPage /></PageTransition>} />
                   <Route path={AppRoute.DOGMAS} element={<PageTransition><AuthGuard><DogmasPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.PARTNERS} element={<PageTransition><PartnersPage /></PageTransition>} />
