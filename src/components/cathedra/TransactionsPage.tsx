@@ -198,27 +198,55 @@ const TransactionsPage: React.FC = () => {
   };
 
   const exportToCSV = async (mode: 'current' | 'all' = 'current') => {
-    let dataToExport = transactions;
+    let dataToExport: any[] = [];
 
-    if (mode === 'all') {
-      toast.info('Preparando exportação completa...');
+    if (mode === 'current') {
+      dataToExport = transactions;
+    } else {
+      toast.info('Preparando exportação completa em lotes...');
+      setLoading(true);
       try {
-        let query = supabase
-          .from('transactions')
-          .select('*, profiles(name, email)');
+        let allData: any[] = [];
+        let from = 0;
+        const batchSize = 1000;
+        let hasMore = true;
 
-        if (!isAdmin) query = query.eq('user_id', user?.id);
-        if (statusFilter !== 'all') query = query.eq('status', statusFilter);
-        if (planFilter !== 'all') query = query.eq('plan_id', planFilter);
-        if (startDate) query = query.gte('created_at', startOfDay(parseISO(startDate)).toISOString());
-        if (endDate) query = query.lte('created_at', endOfDay(parseISO(endDate)).toISOString());
+        while (hasMore) {
+          let query = supabase
+            .from('transactions')
+            .select('*, profiles(name, email)');
 
-        const { data, error } = await query.order('created_at', { ascending: sortOrder === 'asc' });
-        if (error) throw error;
-        dataToExport = data || [];
+          if (!isAdmin) query = query.eq('user_id', user?.id);
+          if (userSearch.trim()) {
+            if (userSearch.includes('@')) query = query.filter('profiles.email', 'ilike', `%${userSearch}%`);
+            else query = query.filter('profiles.name', 'ilike', `%${userSearch}%`);
+          }
+          if (statusFilter !== 'all') query = query.eq('status', statusFilter);
+          if (planFilter !== 'all') query = query.eq('plan_id', planFilter);
+          if (startDate) query = query.gte('created_at', startOfDay(parseISO(startDate)).toISOString());
+          if (endDate) query = query.lte('created_at', endOfDay(parseISO(endDate)).toISOString());
+
+          const { data, error } = await query
+            .order('created_at', { ascending: sortOrder === 'asc' })
+            .range(from, from + batchSize - 1);
+
+          if (error) throw error;
+          
+          if (data && data.length > 0) {
+            allData = [...allData, ...data];
+            from += batchSize;
+            if (data.length < batchSize) hasMore = false;
+          } else {
+            hasMore = false;
+          }
+        }
+        dataToExport = allData;
       } catch (err: any) {
-        toast.error('Erro ao buscar todos os dados: ' + err.message);
+        toast.error('Erro ao exportar dados: ' + err.message);
+        setLoading(false);
         return;
+      } finally {
+        setLoading(false);
       }
     }
 
