@@ -179,8 +179,32 @@ const TransactionsPage: React.FC = () => {
     );
   };
 
-  const exportToCSV = () => {
-    if (transactions.length === 0) {
+  const exportToCSV = async (mode: 'current' | 'all' = 'current') => {
+    let dataToExport = transactions;
+
+    if (mode === 'all') {
+      toast.info('Preparando exportação completa...');
+      try {
+        let query = supabase
+          .from('transactions')
+          .select('*, profiles(name, email)');
+
+        if (!isAdmin) query = query.eq('user_id', user?.id);
+        if (statusFilter !== 'all') query = query.eq('status', statusFilter);
+        if (planFilter !== 'all') query = query.eq('plan_id', planFilter);
+        if (startDate) query = query.gte('created_at', startOfDay(parseISO(startDate)).toISOString());
+        if (endDate) query = query.lte('created_at', endOfDay(parseISO(endDate)).toISOString());
+
+        const { data, error } = await query.order('created_at', { ascending: sortOrder === 'asc' });
+        if (error) throw error;
+        dataToExport = data || [];
+      } catch (err: any) {
+        toast.error('Erro ao buscar todos os dados: ' + err.message);
+        return;
+      }
+    }
+
+    if (dataToExport.length === 0) {
       toast.error('Nenhuma transação para exportar.');
       return;
     }
@@ -199,7 +223,7 @@ const TransactionsPage: React.FC = () => {
       'ID Pagamento'
     ];
 
-    const csvData = transactions.map(tx => [
+    const csvData = dataToExport.map(tx => [
       tx.id,
       format(new Date(tx.created_at), "yyyy-MM-dd HH:mm:ss"),
       tx.profiles?.name || '',
@@ -222,12 +246,19 @@ const TransactionsPage: React.FC = () => {
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
     link.setAttribute('href', url);
-    link.setAttribute('download', `transacoes_${format(new Date(), 'yyyyMMdd_HHmm')}.csv`);
+    link.setAttribute('download', `transacoes_${mode === 'all' ? 'total' : 'pagina'}_${format(new Date(), 'yyyyMMdd_HHmm')}.csv`);
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    toast.success('Arquivo CSV gerado com sucesso!');
+    toast.success(`CSV (${mode === 'all' ? 'total' : 'página atual'}) gerado com sucesso!`);
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    toast.success('JSON copiado!');
+    setTimeout(() => setCopied(false), 2000);
   };
 
   const openDetails = (tx: any) => {
