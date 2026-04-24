@@ -161,11 +161,10 @@ const LandingHeader = () => {
               ))}
               <hr className="border-border" />
               <Button
-                variant="outline"
-                className="w-full h-14 rounded-2xl font-bold uppercase tracking-widest"
+                className="w-full h-14 rounded-2xl font-bold uppercase tracking-widest bg-blue-600 text-white hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 active:scale-95 border-none"
                 onClick={() => navigate(AppRoute.LOGIN)}
               >
-                Fazer Login
+                Entrar
               </Button>
             </div>
           </motion.div>
