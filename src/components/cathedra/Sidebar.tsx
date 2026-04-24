@@ -53,6 +53,8 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
         { label: 'Via Sacra', path: AppRoute.VIA_CRUCIS, icon: <Icons.Cross className="w-5 h-5" /> },
         { label: 'Confissão', path: AppRoute.POENITENTIA, icon: <Icons.Flame className="w-5 h-5" /> },
         { label: 'Lectio Divina', path: AppRoute.LECTIO_DIVINA, icon: <Icons.Lectio className="w-5 h-5" /> },
+        { label: 'Breviário', path: AppRoute.BREVIARY, icon: <Icons.Clock className="w-5 h-5" /> },
+        { label: 'Ladainhas', path: AppRoute.LITANIES, icon: <Icons.MessageCircle className="w-5 h-5" /> },
       ]
     },
     {
