@@ -30,9 +30,9 @@ const CtaBannerSection = ({ onStart }: CtaBannerSectionProps) => (
         </div>
         <div className="flex flex-col items-center gap-4">
           <motion.div variants={buttonHover} initial="rest" whileHover="hover" whileTap="tap" className="inline-block font-serif">
-            <Button size="lg" className="h-20 px-16 rounded-[2rem] bg-primary text-primary-foreground font-black uppercase tracking-[0.2em] shadow-[0_20px_50px_rgba(11,31,58,0.3)] text-lg border border-primary-foreground/10 group overflow-hidden" onClick={onStart}>
+            <Button size="lg" className="h-20 px-16 rounded-[2rem] bg-blue-600 hover:bg-blue-700 text-white font-black uppercase tracking-[0.2em] shadow-[0_20px_50px_rgba(37,99,235,0.3)] text-lg border border-blue-400/20 group overflow-hidden" onClick={onStart}>
               <span className="relative z-10">Iniciar Minha Jornada</span>
-              <motion.div className="absolute inset-0 bg-gradient-to-r from-primary via-secondary/20 to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <motion.div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-blue-400/20 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             </Button>
           </motion.div>
           <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em] opacity-60">
