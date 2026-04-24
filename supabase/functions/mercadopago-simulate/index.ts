@@ -42,6 +42,9 @@ serve(async (req) => {
           amount: amount,
           description: `SIMULAÇÃO: Cathedra PRO - ${planId}`,
           status: status,
+          plan_id: planId,
+          payment_id: `sim_${Math.random().toString(36).substr(2, 9)}`,
+          webhook_payload: { simulation: true, body },
         },
       ])
       .select()
