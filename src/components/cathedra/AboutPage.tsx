@@ -2,7 +2,7 @@ import React from 'react';
 import { Icons } from '../../constants';
 
 const AboutPage: React.FC = () => (
-  <div className="max-w-4xl mx-auto space-y-16 py-8 px-4 md:px-0 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+  <div className="w-full space-y-16 py-4 animate-in fade-in slide-in-from-bottom-4 duration-1000">
     {/* Hero Section */}
     <div className="text-center space-y-4">
       <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 rounded-full border border-primary/20">

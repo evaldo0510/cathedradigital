@@ -47,17 +47,17 @@ const Catechism = lazy(() => import('./components/cathedra/Catechism'));
 const StudyMode = lazy(() => import('./components/cathedra/StudyMode'));
 const Saints = lazy(() => import('./components/cathedra/Saints'));
 const Magisterium = lazy(() => import('./components/cathedra/Magisterium'));
-const DailyLiturgy = lazy(() => import('./components/cathedra/DailyLiturgy'));
+// Redundant imports removed (DailyLiturgy, MissalPage)
 const ViaCrucis = lazy(() => import('./components/cathedra/ViaCrucis'));
 const Rosary = lazy(() => import('./components/cathedra/Rosary'));
 const PrayerPage = lazy(() => import('./components/cathedra/PrayerPage'));
 const Auth = lazy(() => import('./components/cathedra/Auth'));
 const AquinasOpera = lazy(() => import('./components/cathedra/AquinasOpera'));
 const Certamen = lazy(() => import('./components/cathedra/Certamen'));
-const MissalPage = lazy(() => import('./components/cathedra/MissalPage'));
+// Redundant import removed
 const LiturgiaPage = lazy(() => import('./components/cathedra/LiturgiaPage'));
 const FavoritesPage = lazy(() => import('./components/cathedra/FavoritesPage'));
-const TrilhasPage = lazy(() => import('./components/cathedra/TrilhasPage'));
+// Redundant import removed
 const AboutPage = lazy(() => import('./components/cathedra/AboutPage'));
 const DogmasPage = lazy(() => import('./components/cathedra/DogmasPage'));
 const LectioDivina = lazy(() => import('./components/cathedra/LectioDivina'));
@@ -155,8 +155,8 @@ const AppLayout: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Pages that should NOT show header, footer, sidebar, or bottom nav
-  const chromelessPages: string[] = [AppRoute.ONBOARDING, AppRoute.LOGIN, '/reset-password', AppRoute.ABOUT, AppRoute.TERMS, AppRoute.PRIVACY, AppRoute.PRICING, AppRoute.PARTNERS];
+  // Pages that should NOT show header, footer, sidebar, or bottom nav (Auth flow & Landing)
+  const chromelessPages: string[] = [AppRoute.HOME, AppRoute.ONBOARDING, AppRoute.LOGIN, '/reset-password'];
   const isChromeless = chromelessPages.includes(location.pathname);
 
   // Main pages where "Back" button shouldn't show (root pages)
@@ -483,7 +483,7 @@ const AppLayout: React.FC = () => {
               </div>
             )}
             
-            <div className={isChromeless ? "w-full flex-1 pb-24 lg:pb-0" : "w-full max-w-[1200px] mx-auto flex-1 pb-32 lg:pb-12 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 pt-4 md:pt-6 lg:pt-10"}>
+            <div className={isChromeless ? "w-full flex-1 pb-24 lg:pb-0" : (location.pathname.startsWith('/admin') ? "w-full flex-1 pb-32 lg:pb-12 px-4 sm:px-6 md:px-8 lg:px-10 pt-4 md:pt-6 lg:pt-10" : "w-full max-w-[1200px] mx-auto flex-1 pb-32 lg:pb-12 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 pt-4 md:pt-6 lg:pt-10")}>
 
             <Suspense fallback={<LoadingFallback />}>
               <AnimatePresence mode="wait" initial={false}>
@@ -517,7 +517,7 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.CERTAMEN} element={<PageTransition><AuthGuard><Certamen /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.MISSAL} element={<Navigate to={`${AppRoute.LITURGIA}?tab=missal`} replace />} />
                   <Route path={AppRoute.FAVORITES} element={<PageTransition><AuthGuard><FavoritesPage /></AuthGuard></PageTransition>} />
-                  <Route path={AppRoute.TRILHAS} element={<PageTransition><AuthGuard><TrilhasPage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.TRILHAS} element={<Navigate to={AppRoute.JORNADAS} replace />} />
                   <Route path={AppRoute.ABOUT} element={<PageTransition><AboutPage /></PageTransition>} />
                   <Route path={AppRoute.DOGMAS} element={<PageTransition><AuthGuard><DogmasPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.PARTNERS} element={<PageTransition><PartnersPage /></PageTransition>} />
