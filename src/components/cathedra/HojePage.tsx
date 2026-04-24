@@ -556,6 +556,22 @@ const HojePage: React.FC = () => {
                     <Icons.Loader className="w-8 h-8 text-primary animate-spin" />
                     <p className="text-sm text-muted-foreground animate-pulse font-serif italic">Logos está refletindo sobre sua partilha...</p>
                   </div>
+                ) : logosFallback ? (
+                  <AIFallbackCard
+                    reason={logosFallback}
+                    staticContent={
+                      <div className="space-y-2">
+                        <p className="font-serif italic">
+                          "Vinde a mim, todos os que estais cansados e sobrecarregados, e eu vos aliviarei." (Mt 11,28)
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Sua reflexão foi recebida. Volte em alguns instantes para ouvir Logos, ou continue sua jornada com a Liturgia do dia, o Catecismo e o santo de hoje.
+                        </p>
+                      </div>
+                    }
+                    onRetry={() => analyzeReflection(lastReflectionText)}
+                    isRetrying={isAnalyzing}
+                  />
                 ) : (
                   <div className="prose prose-sm dark:prose-invert max-w-none text-foreground leading-relaxed whitespace-pre-wrap font-serif text-lg italic border-l-2 border-primary/20 pl-6 py-2">
                     {logosResponse.replace(/\[RECOMMENDATION:.*?\]/g, '').trim()}
