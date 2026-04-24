@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { Crown, Sparkles, Target, Library, Compass, ArrowRight, Zap } from 'lucide-react';
+import { Crown, Sparkles, Target, Library, Compass, ArrowRight, Zap, FlaskConical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 const ease = [0.25, 0.46, 0.45, 0.94] as [number, number, number, number];
 
