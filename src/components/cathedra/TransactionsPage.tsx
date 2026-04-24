@@ -371,16 +371,21 @@ const TransactionsPage: React.FC = () => {
         
         <div className="flex items-center gap-3">
           {isAdmin && (
-            <Button variant="outline" size="sm" onClick={() => setIsCleanupOpen(true)} disabled={loading || exporting} className="rounded-full gap-2 text-destructive border-destructive/20 hover:bg-destructive/5">
-              <Trash2 className="w-4 h-4" /> Limpar Período
-            </Button>
+            <>
+              <Button variant="outline" size="sm" onClick={() => setIsAuditOpen(true)} className="rounded-full gap-2 border-primary/20 hover:bg-primary/5">
+                <ShieldAlert className="w-4 h-4" /> Auditoria
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => setIsCleanupOpen(true)} disabled={loading || exporting} className="rounded-full gap-2 text-destructive border-destructive/20 hover:bg-destructive/5">
+                <Trash2 className="w-4 h-4" /> Limpar Período
+              </Button>
+            </>
           )}
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" disabled={loading || exporting} className="rounded-full gap-2 border-primary/20 hover:bg-primary/5">
                 {exporting ? <Clock className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-                {exporting ? 'Carregando...' : 'Exportar CSV'}
+                {exporting ? 'Exportando...' : 'Exportar CSV'}
                 <ChevronDown className="w-3 h-3 opacity-50" />
               </Button>
             </DropdownMenuTrigger>
@@ -395,11 +400,16 @@ const TransactionsPage: React.FC = () => {
       {exporting && totalToExport > 0 && (
         <Card className="bg-primary/5 border-primary/10 rounded-2xl p-6 space-y-3">
           <div className="flex justify-between items-end">
-            <p className="text-xs font-bold uppercase tracking-widest text-primary">Buscando registros...</p>
-            <p className="text-xl font-bold text-primary">{Math.round((exportProgress / totalToExport) * 100)}%</p>
+            <div className="space-y-1">
+              <p className="text-xs font-bold uppercase tracking-widest text-primary">Buscando registros...</p>
+              <p className="text-[10px] text-muted-foreground italic">{exportProgress} de {totalToExport} transações carregadas.</p>
+            </div>
+            <div className="flex items-center gap-4">
+              <Button variant="ghost" size="sm" onClick={() => abortController?.abort()} className="h-8 text-xs text-destructive hover:bg-destructive/10">Cancelar Exportação</Button>
+              <p className="text-xl font-bold text-primary">{Math.round((exportProgress / totalToExport) * 100)}%</p>
+            </div>
           </div>
           <Progress value={(exportProgress / totalToExport) * 100} className="h-1.5" />
-          <p className="text-[10px] text-muted-foreground italic">{exportProgress} de {totalToExport} transações carregadas.</p>
         </Card>
       )}
 
