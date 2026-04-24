@@ -160,6 +160,8 @@ const HojePage: React.FC = () => {
     if (!user || !text.trim()) return;
     setIsAnalyzing(true);
     setLogosResponse('');
+    setLogosFallback(null);
+    setLastReflectionText(text);
     setLogosRecommendation(null);
     setRecommendedLogosJourney(null);
     setLogosThemeContents([]);
@@ -170,7 +172,11 @@ const HojePage: React.FC = () => {
         setLogosResponse(content);
       });
 
-      if (result.error) throw new Error(result.error);
+      if (result.error) {
+        setLogosFallback(result.fallback_reason ?? 'network');
+        setLogosResponse('');
+        return;
+      }
       const fullText = result.content || '';
 
       const match = fullText.match(/\[RECOMMENDATION:(.*?)\]/);
