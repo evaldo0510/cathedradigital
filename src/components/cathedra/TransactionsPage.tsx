@@ -65,9 +65,26 @@ const TransactionsPage: React.FC = () => {
     }
   };
 
+  const fetchAuditLogs = async () => {
+    if (!isAdmin) return;
+    try {
+      const { data, error } = await supabase
+        .from('app_metrics')
+        .select('*')
+        .eq('metric_type', 'csv_export')
+        .order('created_at', { ascending: false })
+        .limit(50);
+      if (error) throw error;
+      setAuditLogs(data || []);
+    } catch (err) {
+      console.error('Error fetching audit logs:', err);
+    }
+  };
+
   useEffect(() => {
     fetchAvailablePlans();
-  }, []);
+    if (isAdmin) fetchAuditLogs();
+  }, [isAdmin]);
 
   const fetchTransactions = async () => {
     if (!user) return;
