@@ -54,7 +54,7 @@ const PrayerPage = lazy(() => import('./components/cathedra/PrayerPage'));
 const Auth = lazy(() => import('./components/cathedra/Auth'));
 const AquinasOpera = lazy(() => import('./components/cathedra/AquinasOpera'));
 const Certamen = lazy(() => import('./components/cathedra/Certamen'));
-const MissalPage = lazy(() => import('./components/cathedra/MissalPage'));
+// Redundant import removed
 const LiturgiaPage = lazy(() => import('./components/cathedra/LiturgiaPage'));
 const FavoritesPage = lazy(() => import('./components/cathedra/FavoritesPage'));
 const TrilhasPage = lazy(() => import('./components/cathedra/TrilhasPage'));
