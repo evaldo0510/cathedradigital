@@ -119,8 +119,14 @@ export const getSpiritualInsight = async (query?: string, tag?: string): Promise
 
     if (!response.ok) {
       const err = await response.json().catch(() => ({ error: 'Erro na conexão' }));
-      if (response.status === 402) {
+      if (response.status === 402 && err.credits_exhausted) {
+        notifyAIStatus('credits_exhausted', err.error);
+        toast.error('Créditos de IA esgotados.', { duration: 8000 });
+      } else if (response.status === 402) {
         toast.error("Este recurso é exclusivo para assinantes PRO.");
+      } else if (response.status === 429) {
+        notifyAIStatus('rate_limited', err.error);
+        toast.error(err.error || 'Limite de requisições atingido.');
       } else {
         toast.error(err.error || "Erro ao gerar insight.");
       }
