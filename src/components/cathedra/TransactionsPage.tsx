@@ -44,7 +44,6 @@ const TransactionsPage: React.FC = () => {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [previewData, setPreviewData] = useState<any[]>([]);
   const [previewMode, setPreviewMode] = useState<'current' | 'all'>('current');
-  const [cleanupConfirmation, setCleanupConfirmation] = useState('');
   const [isAuditOpen, setIsAuditOpen] = useState(false);
   const [auditLogs, setAuditLogs] = useState<any[]>([]);
   const [abortController, setAbortController] = useState<AbortController | null>(null);
