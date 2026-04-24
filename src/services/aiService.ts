@@ -7,6 +7,11 @@ export interface AIResponse {
   limit_reached?: boolean;
 }
 
+function notifyAIStatus(type: 'credits_exhausted' | 'rate_limited', message?: string) {
+  if (typeof window === 'undefined') return;
+  window.dispatchEvent(new CustomEvent('ai-status-error', { detail: { type, message } }));
+}
+
 export const callColloquium = async (
   messages: { role: string; content: string }[],
   mode?: string | null,
