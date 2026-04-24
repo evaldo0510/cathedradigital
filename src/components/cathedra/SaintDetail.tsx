@@ -60,6 +60,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
   const [logosReflection, setLogosReflection] = useState<string>('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [showLogos, setShowLogos] = useState(autoReflect);
+  const [fallbackReason, setFallbackReason] = useState<AIFallbackReason | null>(null);
 
   const suggestedJourney = React.useMemo(() => {
     const mainVirtue = saint.virtues?.[0]?.toLowerCase() || 'santidade';
