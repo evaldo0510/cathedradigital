@@ -49,6 +49,10 @@ const WebhookSimulator: React.FC = () => {
 
       toast.success(`Simulação concluída: ${status}`);
       
+      if (selectedUserId === user?.id) {
+        await refreshProfile();
+      }
+      
       // Check if premium status updated
       const { data: profile } = await supabase
         .from('profiles')
