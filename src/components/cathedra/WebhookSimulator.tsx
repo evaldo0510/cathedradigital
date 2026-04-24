@@ -21,7 +21,7 @@ const WebhookSimulator: React.FC = () => {
     const fetchUsers = async () => {
       const { data } = await supabase
         .from('profiles')
-        .select('id, name, email, is_premium')
+        .select('id, name, is_premium')
         .limit(20);
       setUsers(data || []);
       if (data && data.length > 0) setSelectedUserId(data[0].id);
