@@ -277,15 +277,33 @@ const HojePage: React.FC = () => {
     },
     {
       title: 'Oração',
-      icon: <Icons.Hand className="w-5 h-5" />,
+      icon: <Icons.Volume2 className="w-5 h-5" />,
       route: AppRoute.ORACAO,
       color: 'bg-accent/10 text-accent',
     },
     {
-      title: 'Escritura',
-      icon: <Icons.BookOpen className="w-5 h-5" />,
+      title: 'Bíblia',
+      icon: <Icons.Bible className="w-5 h-5" />,
       route: AppRoute.BIBLE,
       color: 'bg-primary/10 text-primary',
+    },
+    {
+      title: 'Rosário',
+      icon: <Icons.Heart className="w-5 h-5" />,
+      route: AppRoute.ROSARY,
+      color: 'bg-accent/10 text-accent',
+    },
+    {
+      title: 'Confissão',
+      icon: <Icons.Flame className="w-5 h-5" />,
+      route: AppRoute.POENITENTIA,
+      color: 'bg-primary/10 text-primary',
+    },
+    {
+      title: 'Catecismo',
+      icon: <Icons.Catechism className="w-5 h-5" />,
+      route: AppRoute.CATECHISM,
+      color: 'bg-accent/10 text-accent',
     },
   ], []);
 
