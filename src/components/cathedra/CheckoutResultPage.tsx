@@ -12,6 +12,7 @@ type ResultState = 'loading' | 'success' | 'pending' | 'failure';
 
 const CheckoutResultPage: React.FC = () => {
   const navigate = useNavigate();
+  const { refreshProfile } = useAuth();
   const [searchParams] = useSearchParams();
   const checkoutState = searchParams.get('status');
   const paymentId = searchParams.get('payment_id');
