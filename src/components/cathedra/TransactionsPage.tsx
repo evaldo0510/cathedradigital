@@ -344,7 +344,21 @@ const TransactionsPage: React.FC = () => {
 
       <Card className="rounded-[2.5rem] border-border/50 shadow-xl shadow-primary/5 overflow-hidden">
         <CardHeader className="bg-muted/30 border-b border-border/50 px-8 py-6">
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+          <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-end">
+            {isAdmin && (
+              <div className="space-y-2">
+                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                  <Search className="w-3 h-3" /> Buscar Usuário
+                </label>
+                <Input 
+                  placeholder="Nome ou Email" 
+                  value={userSearch}
+                  onChange={(e) => setUserSearch(e.target.value)}
+                  className="rounded-xl bg-background/50 border-border/30 backdrop-blur-sm"
+                />
+              </div>
+            )}
+            
             <div className="space-y-2">
               <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                 <Filter className="w-3 h-3" /> Status
@@ -389,7 +403,7 @@ const TransactionsPage: React.FC = () => {
                 type="date" 
                 value={startDate} 
                 onChange={(e) => setStartDate(e.target.value)}
-                className="rounded-xl bg-background/50 border-border/30 backdrop-blur-sm"
+                className={`rounded-xl bg-background/50 border-border/30 backdrop-blur-sm ${dateError ? 'border-destructive' : ''}`}
               />
             </div>
 
@@ -401,7 +415,7 @@ const TransactionsPage: React.FC = () => {
                 type="date" 
                 value={endDate} 
                 onChange={(e) => setEndDate(e.target.value)}
-                className="rounded-xl bg-background/50 border-border/30 backdrop-blur-sm"
+                className={`rounded-xl bg-background/50 border-border/30 backdrop-blur-sm ${dateError ? 'border-destructive' : ''}`}
               />
             </div>
 
@@ -420,6 +434,7 @@ const TransactionsPage: React.FC = () => {
               </Select>
             </div>
           </div>
+          {dateError && <p className="text-[10px] text-destructive mt-2 font-bold animate-pulse">{dateError}</p>}
         </CardHeader>
         <CardContent className="p-0">
           <Table>
