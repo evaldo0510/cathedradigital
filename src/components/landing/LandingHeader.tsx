@@ -118,8 +118,7 @@ const LandingHeader = () => {
 
         <div className="flex items-center gap-3">
           <Button
-            variant="outline"
-            className="hidden sm:flex text-sm font-bold uppercase tracking-widest px-6 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white transition-all"
+            className="hidden sm:flex text-sm font-bold uppercase tracking-widest px-6 bg-blue-600 text-white hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 active:scale-95 border-none"
             onClick={() => navigate(AppRoute.LOGIN)}
           >
             Entrar
