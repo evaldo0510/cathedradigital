@@ -298,14 +298,14 @@ const TransactionsPage: React.FC = () => {
 
       <Card className="rounded-[2.5rem] border-border/50 shadow-xl shadow-primary/5 overflow-hidden">
         <CardHeader className="bg-muted/30 border-b border-border/50 px-8 py-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
             <div className="space-y-2">
               <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                 <Filter className="w-3 h-3" /> Status
               </label>
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger className="rounded-xl bg-background/50 border-border/30 backdrop-blur-sm">
-                  <SelectValue placeholder="Filtrar por status" />
+                  <SelectValue placeholder="Status" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl">
                   <SelectItem value="all">Todos os Status</SelectItem>
@@ -314,6 +314,23 @@ const TransactionsPage: React.FC = () => {
                   <SelectItem value="rejected">Recusados</SelectItem>
                   <SelectItem value="cancelled">Cancelados</SelectItem>
                   <SelectItem value="refunded">Reembolsados</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                <ShieldAlert className="w-3 h-3" /> Plano
+              </label>
+              <Select value={planFilter} onValueChange={setPlanFilter}>
+                <SelectTrigger className="rounded-xl bg-background/50 border-border/30 backdrop-blur-sm">
+                  <SelectValue placeholder="Plano" />
+                </SelectTrigger>
+                <SelectContent className="rounded-xl">
+                  <SelectItem value="all">Todos os Planos</SelectItem>
+                  {availablePlans.map(p => (
+                    <SelectItem key={p} value={p}>{p}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
