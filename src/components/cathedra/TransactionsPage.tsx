@@ -500,6 +500,7 @@ const TransactionsPage: React.FC = () => {
                   placeholder="Nome ou Email" 
                   value={userSearch}
                   onChange={(e) => setUserSearch(e.target.value)}
+                  disabled={loading || exporting}
                   className="rounded-xl bg-background/50 border-border/30 backdrop-blur-sm"
                 />
               </div>
@@ -509,7 +510,7 @@ const TransactionsPage: React.FC = () => {
               <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                 <Filter className="w-3 h-3" /> Status
               </label>
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <Select value={statusFilter} onValueChange={setStatusFilter} disabled={loading || exporting}>
                 <SelectTrigger className="rounded-xl bg-background/50 border-border/30 backdrop-blur-sm">
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
@@ -528,7 +529,7 @@ const TransactionsPage: React.FC = () => {
               <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                 <ShieldAlert className="w-3 h-3" /> Plano
               </label>
-              <Select value={planFilter} onValueChange={setPlanFilter}>
+              <Select value={planFilter} onValueChange={setPlanFilter} disabled={loading || exporting}>
                 <SelectTrigger className="rounded-xl bg-background/50 border-border/30 backdrop-blur-sm">
                   <SelectValue placeholder="Plano" />
                 </SelectTrigger>
@@ -549,6 +550,7 @@ const TransactionsPage: React.FC = () => {
                 type="date" 
                 value={startDate} 
                 onChange={(e) => setStartDate(e.target.value)}
+                disabled={loading || exporting}
                 className={`rounded-xl bg-background/50 border-border/30 backdrop-blur-sm ${dateError ? 'border-destructive' : ''}`}
               />
             </div>
@@ -561,6 +563,7 @@ const TransactionsPage: React.FC = () => {
                 type="date" 
                 value={endDate} 
                 onChange={(e) => setEndDate(e.target.value)}
+                disabled={loading || exporting}
                 className={`rounded-xl bg-background/50 border-border/30 backdrop-blur-sm ${dateError ? 'border-destructive' : ''}`}
               />
             </div>
@@ -569,7 +572,7 @@ const TransactionsPage: React.FC = () => {
               <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                 <ArrowUpDown className="w-3 h-3" /> Ordenação
               </label>
-              <Select value={sortOrder} onValueChange={(v: any) => setSortOrder(v)}>
+              <Select value={sortOrder} onValueChange={(v: any) => setSortOrder(v)} disabled={loading || exporting}>
                 <SelectTrigger className="rounded-xl bg-background/50 border-border/30 backdrop-blur-sm">
                   <SelectValue placeholder="Ordenar por" />
                 </SelectTrigger>
