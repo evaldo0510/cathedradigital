@@ -191,6 +191,8 @@ const TransactionsPage: React.FC = () => {
       if (!confirmAll) return;
     }
 
+    const controller = new AbortController();
+    setAbortController(controller);
     setExporting(true);
     setExportProgress(0);
 
@@ -219,6 +221,12 @@ const TransactionsPage: React.FC = () => {
         setTotalToExport(total || 0);
 
         while (hasMore) {
+          if (controller.signal.aborted) {
+            toast.error('Exportação cancelada.');
+            setExporting(false);
+            return;
+          }
+
           let q = supabase.from('transactions').select('*, profiles(name, email)');
           if (!isAdmin) q = q.eq('user_id', user?.id);
           if (userSearch.trim()) {
