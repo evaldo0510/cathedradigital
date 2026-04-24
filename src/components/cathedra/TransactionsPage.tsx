@@ -44,6 +44,9 @@ const TransactionsPage: React.FC = () => {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [previewData, setPreviewData] = useState<any[]>([]);
   const [previewMode, setPreviewMode] = useState<'current' | 'all'>('current');
+  const [isAuditOpen, setIsAuditOpen] = useState(false);
+  const [auditLogs, setAuditLogs] = useState<any[]>([]);
+  const [abortController, setAbortController] = useState<AbortController | null>(null);
 
   const isAdmin = profile?.role === 'admin';
 
@@ -62,9 +65,26 @@ const TransactionsPage: React.FC = () => {
     }
   };
 
+  const fetchAuditLogs = async () => {
+    if (!isAdmin) return;
+    try {
+      const { data, error } = await supabase
+        .from('app_metrics')
+        .select('*')
+        .eq('metric_type', 'csv_export')
+        .order('created_at', { ascending: false })
+        .limit(50);
+      if (error) throw error;
+      setAuditLogs(data || []);
+    } catch (err) {
+      console.error('Error fetching audit logs:', err);
+    }
+  };
+
   useEffect(() => {
     fetchAvailablePlans();
-  }, []);
+    if (isAdmin) fetchAuditLogs();
+  }, [isAdmin]);
 
   const fetchTransactions = async () => {
     if (!user) return;
@@ -136,11 +156,20 @@ const TransactionsPage: React.FC = () => {
   };
 
   const executeDownload = (data: any[], mode: 'current' | 'all') => {
+    const metadata = [
+      `"Exportado por:","${user?.email || 'Sistema'}"`,
+      `"Data da Exportação:","${format(new Date(), "yyyy-MM-dd HH:mm:ss")}"`,
+      `"Filtros:","Status: ${statusFilter}, Plano: ${planFilter}, Início: ${startDate || 'N/A'}, Fim: ${endDate || 'N/A'}"`,
+      `"Total de Registros:","${data.length}"`,
+      '""' // Empty line
+    ].join('\n');
+
     const headers = ['ID', 'Data', 'Audit_Timestamp_TZ', 'Usuário', 'E-mail', 'Descrição', 'Valor', 'Status', 'Plano', 'Cupom', 'Doação', 'ID Pagamento'];
     const tzOffset = new Date().getTimezoneOffset();
     const tzString = `UTC${tzOffset > 0 ? '-' : '+'}${Math.abs(tzOffset / 60)}`;
 
     const csvContent = [
+      metadata,
       headers.join(','),
       ...data.map(tx => [
         tx.id,
@@ -179,6 +208,8 @@ const TransactionsPage: React.FC = () => {
       if (!confirmAll) return;
     }
 
+    const controller = new AbortController();
+    setAbortController(controller);
     setExporting(true);
     setExportProgress(0);
 
@@ -207,6 +238,12 @@ const TransactionsPage: React.FC = () => {
         setTotalToExport(total || 0);
 
         while (hasMore) {
+          if (controller.signal.aborted) {
+            toast.error('Exportação cancelada.');
+            setExporting(false);
+            return;
+          }
+
           let q = supabase.from('transactions').select('*, profiles(name, email)');
           if (!isAdmin) q = q.eq('user_id', user?.id);
           if (userSearch.trim()) {
@@ -334,16 +371,21 @@ const TransactionsPage: React.FC = () => {
         
         <div className="flex items-center gap-3">
           {isAdmin && (
-            <Button variant="outline" size="sm" onClick={() => setIsCleanupOpen(true)} disabled={loading || exporting} className="rounded-full gap-2 text-destructive border-destructive/20 hover:bg-destructive/5">
-              <Trash2 className="w-4 h-4" /> Limpar Período
-            </Button>
+            <>
+              <Button variant="outline" size="sm" onClick={() => setIsAuditOpen(true)} className="rounded-full gap-2 border-primary/20 hover:bg-primary/5">
+                <ShieldAlert className="w-4 h-4" /> Auditoria
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => setIsCleanupOpen(true)} disabled={loading || exporting} className="rounded-full gap-2 text-destructive border-destructive/20 hover:bg-destructive/5">
+                <Trash2 className="w-4 h-4" /> Limpar Período
+              </Button>
+            </>
           )}
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" disabled={loading || exporting} className="rounded-full gap-2 border-primary/20 hover:bg-primary/5">
                 {exporting ? <Clock className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-                {exporting ? 'Carregando...' : 'Exportar CSV'}
+                {exporting ? 'Exportando...' : 'Exportar CSV'}
                 <ChevronDown className="w-3 h-3 opacity-50" />
               </Button>
             </DropdownMenuTrigger>
@@ -358,11 +400,16 @@ const TransactionsPage: React.FC = () => {
       {exporting && totalToExport > 0 && (
         <Card className="bg-primary/5 border-primary/10 rounded-2xl p-6 space-y-3">
           <div className="flex justify-between items-end">
-            <p className="text-xs font-bold uppercase tracking-widest text-primary">Buscando registros...</p>
-            <p className="text-xl font-bold text-primary">{Math.round((exportProgress / totalToExport) * 100)}%</p>
+            <div className="space-y-1">
+              <p className="text-xs font-bold uppercase tracking-widest text-primary">Buscando registros...</p>
+              <p className="text-[10px] text-muted-foreground italic">{exportProgress} de {totalToExport} transações carregadas.</p>
+            </div>
+            <div className="flex items-center gap-4">
+              <Button variant="ghost" size="sm" onClick={() => abortController?.abort()} className="h-8 text-xs text-destructive hover:bg-destructive/10">Cancelar Exportação</Button>
+              <p className="text-xl font-bold text-primary">{Math.round((exportProgress / totalToExport) * 100)}%</p>
+            </div>
           </div>
           <Progress value={(exportProgress / totalToExport) * 100} className="h-1.5" />
-          <p className="text-[10px] text-muted-foreground italic">{exportProgress} de {totalToExport} transações carregadas.</p>
         </Card>
       )}
 
@@ -511,7 +558,7 @@ const TransactionsPage: React.FC = () => {
       <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
         <DialogContent className="max-w-2xl rounded-[2.5rem] bg-background/95 backdrop-blur-xl">
           <DialogHeader><DialogTitle className="text-2xl font-serif font-bold">Detalhes do Processamento</DialogTitle></DialogHeader>
-          {selectedTx && (
+          {selectedTx && !Array.isArray(selectedTx) && (
             <div className="space-y-6 py-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1"><p className="text-[10px] font-bold text-muted-foreground uppercase">ID Interno</p><p className="text-xs font-mono bg-muted p-2 rounded-lg truncate">{selectedTx.id}</p></div>
@@ -528,6 +575,70 @@ const TransactionsPage: React.FC = () => {
             </div>
           )}
           <Button onClick={() => setIsDetailsOpen(false)} className="rounded-full w-full font-bold h-12">Fechar Detalhes</Button>
+        </DialogContent>
+      </Dialog>
+
+      {/* AUDIT LOGS DIALOG */}
+      <Dialog open={isAuditOpen} onOpenChange={setIsAuditOpen}>
+        <DialogContent className="max-w-4xl rounded-[2.5rem] bg-background/95 backdrop-blur-xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-serif font-bold flex items-center gap-3">
+              <div className="p-2 bg-primary/10 rounded-xl text-primary"><ShieldAlert className="w-6 h-6" /></div>
+              Histórico de Exportações
+            </DialogTitle>
+            <DialogDescription>Rastreabilidade de todos os arquivos CSV gerados por administradores.</DialogDescription>
+          </DialogHeader>
+
+          <div className="py-6">
+            <Table>
+              <TableHeader className="bg-muted/50">
+                <TableRow>
+                  <TableHead className="text-[10px] font-bold">Data</TableHead>
+                  <TableHead className="text-[10px] font-bold">Admin</TableHead>
+                  <TableHead className="text-[10px] font-bold">Registros</TableHead>
+                  <TableHead className="text-[10px] font-bold">Filtros Aplicados</TableHead>
+                  <TableHead className="text-right text-[10px] font-bold">Ações</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {auditLogs.length === 0 ? (
+                  <TableRow><TableCell colSpan={5} className="h-32 text-center italic text-muted-foreground">Nenhum log de exportação encontrado.</TableCell></TableRow>
+                ) : (
+                  auditLogs.map((log: any) => (
+                    <TableRow key={log.id}>
+                      <TableCell className="text-[10px] font-medium">{format(new Date(log.created_at), "dd/MM HH:mm")}</TableCell>
+                      <TableCell className="text-[10px]">{log.metadata?.user_email || '---'}</TableCell>
+                      <TableCell className="text-[10px] font-bold text-primary">{log.metadata?.records_count}</TableCell>
+                      <TableCell className="text-[10px] max-w-[200px] truncate italic text-muted-foreground">
+                        {Object.entries(log.metadata?.filters || {}).map(([k, v]) => v !== 'all' && v ? `${k}:${v}` : null).filter(Boolean).join(', ') || 'Sem filtros'}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="h-7 text-[10px] rounded-lg"
+                          onClick={() => {
+                            const f = log.metadata?.filters;
+                            setStatusFilter(f.status || 'all');
+                            setPlanFilter(f.plan || 'all');
+                            setStartDate(f.start || '');
+                            setEndDate(f.end || '');
+                            setUserSearch(f.search || '');
+                            setIsAuditOpen(false);
+                            toast.success('Filtros aplicados do log. Iniciando exportação...');
+                            setTimeout(() => exportToCSV(log.metadata?.mode || 'all'), 500);
+                          }}
+                        >
+                          <Download className="w-3 h-3 mr-1" /> Re-exportar
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
+          <Button onClick={() => setIsAuditOpen(false)} variant="outline" className="rounded-full w-full font-bold">Fechar</Button>
         </DialogContent>
       </Dialog>
     </div>
