@@ -39,6 +39,7 @@ interface AuthContextValue {
   signOut: () => Promise<void>;
   isPremium: boolean;
   userLevel: UserLevelClass;
+  refreshProfile: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
