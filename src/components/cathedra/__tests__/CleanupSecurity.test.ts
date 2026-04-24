@@ -1,10 +1,15 @@
 
 import { describe, it, expect, vi } from 'vitest';
 
-// Mocking Supabase and Toast for testing the logic in TransactionsPage.tsx
-const mockToast = {
-  error: vi.fn(),
-  success: vi.fn(),
+// Types for the mocks
+interface MockToast {
+  error: (msg: string) => void;
+  success: (msg: string) => void;
+}
+
+const mockToast: MockToast = {
+  error: vi.fn() as any,
+  success: vi.fn() as any,
 };
 
 const mockSupabase = {
@@ -14,7 +19,7 @@ const mockSupabase = {
         lte: vi.fn(() => Promise.resolve({ error: null })),
       })),
     })),
-  })),
+  })) as any,
 };
 
 // Simulation of the cleanup logic in TransactionsPage.tsx
