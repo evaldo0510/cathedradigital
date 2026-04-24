@@ -13,6 +13,24 @@ const AboutPage: React.FC = () => (
       <p className="text-muted-foreground text-lg max-w-2xl mx-auto">Unindo a tradição milenar da Igreja à vanguarda tecnológica para a glória de Deus.</p>
     </div>
 
+    {/* Quick Navigation Anchors */}
+    <nav className="flex flex-wrap justify-center gap-2 md:gap-8 py-4 border-y border-border/50 sticky top-0 bg-background/95 backdrop-blur-sm z-20">
+      {[
+        { label: 'Missão', href: '#missao', icon: <Icons.Target className="w-4 h-4" /> },
+        { label: 'História', href: '#historia', icon: <Icons.History className="w-4 h-4" /> },
+        { label: 'Redes Sociais', href: '#redes-sociais', icon: <Icons.Instagram className="w-4 h-4" /> },
+      ].map((link) => (
+        <a 
+          key={link.href} 
+          href={link.href}
+          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-full transition-all"
+        >
+          {link.icon}
+          {link.label}
+        </a>
+      ))}
+    </nav>
+
     {/* Big Quote */}
     <div className="relative py-12">
       <div className="absolute top-0 left-0 text-primary/5 -z-10">
@@ -25,7 +43,7 @@ const AboutPage: React.FC = () => (
 
     <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
       {/* Missão Section */}
-      <div className="space-y-6">
+      <div id="missao" className="scroll-mt-24 space-y-6">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
             <Icons.Target className="w-5 h-5 text-primary" />
@@ -39,7 +57,7 @@ const AboutPage: React.FC = () => (
       </div>
 
       {/* História Section */}
-      <div className="space-y-6">
+      <div id="historia" className="scroll-mt-24 space-y-6">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
             <Icons.History className="w-5 h-5 text-primary" />
@@ -54,7 +72,7 @@ const AboutPage: React.FC = () => (
     </div>
 
     {/* Social Media Section */}
-    <div className="bg-muted/40 rounded-3xl p-8 md:p-12 border border-border/50">
+    <div id="redes-sociais" className="scroll-mt-24 bg-muted/40 rounded-3xl p-8 md:p-12 border border-border/50">
       <div className="text-center space-y-8">
         <div className="space-y-2">
           <h2 className="text-2xl font-serif font-bold text-foreground">Siga-nos nas Redes Sociais</h2>
