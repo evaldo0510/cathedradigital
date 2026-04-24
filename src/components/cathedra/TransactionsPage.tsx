@@ -20,6 +20,7 @@ const TransactionsPage: React.FC = () => {
   const [transactions, setTransactions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [planFilter, setPlanFilter] = useState<string>('all');
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
   const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
@@ -28,6 +29,8 @@ const TransactionsPage: React.FC = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [selectedTx, setSelectedTx] = useState<any>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [availablePlans, setAvailablePlans] = useState<string[]>([]);
 
   const isAdmin = profile?.role === 'admin';
 
