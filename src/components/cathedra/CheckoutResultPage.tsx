@@ -155,6 +155,14 @@ const CheckoutResultPage: React.FC = () => {
           </Button>
         )}
       </div>
+      
+      <Button
+        variant="ghost"
+        onClick={() => navigate(AppRoute.TRANSACTIONS)}
+        className="text-xs font-serif italic text-muted-foreground hover:text-primary transition-colors mt-4"
+      >
+        Ver histórico de transações
+      </Button>
     </motion.div>
   );
 };

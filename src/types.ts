@@ -58,7 +58,8 @@ export enum AppRoute {
   AZ_FAITH = '/az-faith',
   MODULES_GUIDE = '/guia-modulos',
   POPES = '/papas',
-  BUSCAR = '/buscar'
+  BUSCAR = '/buscar',
+  TRANSACTIONS = '/transactions'
 }
 
 export interface TrackStep {
