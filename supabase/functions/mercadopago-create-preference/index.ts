@@ -193,6 +193,9 @@ serve(async (req) => {
         description: title,
         status: "pending",
         user_id: user.id,
+        plan_id: parsedBody.data.planId ?? DEFAULT_PLAN_ID,
+        coupon_code: parsedBody.data.couponCode,
+        is_donation: parsedBody.data.isDonation ?? false,
       })
       .select("id")
       .single();
