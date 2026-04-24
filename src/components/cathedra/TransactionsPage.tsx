@@ -32,6 +32,11 @@ const TransactionsPage: React.FC = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [selectedTx, setSelectedTx] = useState<any>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [isCleanupOpen, setIsCleanupOpen] = useState(false);
+  const [cleanupLoading, setCleanupLoading] = useState(false);
+  const [exporting, setExporting] = useState(false);
+  const [exportProgress, setExportProgress] = useState(0);
+  const [totalToExport, setTotalToExport] = useState(0);
   const [copied, setCopied] = useState(false);
   const [payloadSearch, setPayloadSearch] = useState<string>('');
   const [availablePlans, setAvailablePlans] = useState<string[]>([]);
