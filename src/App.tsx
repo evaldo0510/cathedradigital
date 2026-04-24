@@ -395,6 +395,7 @@ const AppLayout: React.FC = () => {
         <ScrollToTop />
         <CommandCenter />
         <OfflineIndicator />
+        <AIStatusBanner />
         <PWAInstallPrompt />
         <div className="flex h-[100dvh] w-full overflow-hidden bg-background selection:bg-primary/20">
           {/* Persistent Sidebar for Desktop */}
