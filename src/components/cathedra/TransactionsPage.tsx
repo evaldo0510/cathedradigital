@@ -476,6 +476,7 @@ const TransactionsPage: React.FC = () => {
                         onClick={() => {
                           setStatusFilter('all');
                           setPlanFilter('all');
+                          setUserSearch('');
                           setStartDate('');
                           setEndDate('');
                         }}
