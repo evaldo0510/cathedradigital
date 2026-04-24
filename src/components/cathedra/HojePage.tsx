@@ -136,6 +136,8 @@ const HojePage: React.FC = () => {
   const [todayQuote] = useState(() => LITURGICAL_QUOTES[new Date().getDate() % LITURGICAL_QUOTES.length]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [logosResponse, setLogosResponse] = useState('');
+  const [logosFallback, setLogosFallback] = useState<AIFallbackReason | null>(null);
+  const [lastReflectionText, setLastReflectionText] = useState('');
   const [logosRecommendation, setLogosRecommendation] = useState<any>(null);
   const [recommendedLogosJourney, setRecommendedLogosJourney] = useState<any>(null);
   const [recommendedLogosStep, setRecommendedLogosStep] = useState<any>(null);
