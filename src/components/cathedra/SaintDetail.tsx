@@ -492,6 +492,13 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
                           </div>
                         );
                       })
+                    ) : fallbackReason ? (
+                      <AIFallbackCard
+                        reason={fallbackReason}
+                        staticContent={staticReflection}
+                        onRetry={generateLogosReflection}
+                        isRetrying={isGenerating}
+                      />
                     ) : (
                       <p className="text-lg md:text-xl font-serif italic leading-relaxed text-background/90 whitespace-pre-wrap">
                         {isGenerating && "Conectando virtudes à sua vida..."}
