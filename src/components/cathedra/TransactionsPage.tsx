@@ -550,19 +550,35 @@ const TransactionsPage: React.FC = () => {
                 </div>
               </div>
 
-              {(isAdmin || selectedTx.error_message) && (
-                <div className="space-y-2">
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                    <AlertCircle className="w-3 h-3" /> Logs & Webhook Payload
-                  </p>
-                  <div className="max-h-[200px] overflow-y-auto rounded-xl border border-border/50 bg-slate-950 p-4">
-                    <pre className="text-[10px] text-slate-300 font-mono leading-relaxed">
+              {(isAdmin || selectedTx.error_message || selectedTx.webhook_payload) && (
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                      <AlertCircle className="w-3 h-3" /> Logs & Webhook Payload
+                    </p>
+                    {selectedTx.webhook_payload && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-7 text-[10px] gap-1 px-2 rounded-lg hover:bg-primary/10"
+                        onClick={() => copyToClipboard(JSON.stringify(selectedTx.webhook_payload, null, 2))}
+                      >
+                        {copied ? <Check className="w-3 h-3 text-green-500" /> : <Copy className="w-3 h-3" />}
+                        {copied ? 'Copiado' : 'Copiar JSON'}
+                      </Button>
+                    )}
+                  </div>
+                  <div className="max-h-[300px] overflow-y-auto rounded-2xl border border-border/50 bg-slate-950 p-6 shadow-inner">
+                    <pre className="text-[11px] text-slate-300 font-mono leading-relaxed whitespace-pre-wrap">
                       {JSON.stringify({
                         webhook: selectedTx.webhook_payload,
-                        error: selectedTx.error_message ? JSON.parse(selectedTx.error_message) : null
+                        error: selectedTx.error_message ? (typeof selectedTx.error_message === 'string' ? JSON.parse(selectedTx.error_message) : selectedTx.error_message) : null
                       }, null, 2)}
                     </pre>
                   </div>
+                  <p className="text-[10px] italic text-muted-foreground text-center">
+                    Estes dados são técnicos e úteis para depuração de problemas no processamento.
+                  </p>
                 </div>
               )}
             </div>
