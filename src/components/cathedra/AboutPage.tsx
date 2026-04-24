@@ -72,7 +72,7 @@ const AboutPage: React.FC = () => (
     </div>
 
     {/* Social Media Section */}
-    <div className="bg-muted/40 rounded-3xl p-8 md:p-12 border border-border/50">
+    <div id="redes-sociais" className="scroll-mt-24 bg-muted/40 rounded-3xl p-8 md:p-12 border border-border/50">
       <div className="text-center space-y-8">
         <div className="space-y-2">
           <h2 className="text-2xl font-serif font-bold text-foreground">Siga-nos nas Redes Sociais</h2>
