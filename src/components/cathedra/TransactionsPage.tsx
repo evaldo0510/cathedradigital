@@ -8,17 +8,19 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Icons } from '../../constants';
-import { format, startOfDay, endOfDay, parseISO } from 'date-fns';
+import { format, startOfDay, endOfDay, parseISO, isBefore } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { toast } from 'sonner';
-import { Download, Filter, Search, Calendar as CalendarIcon, ArrowUpDown, Info, CheckCircle2, Clock, AlertCircle, XCircle, RotateCcw, ShieldAlert } from 'lucide-react';
+import { Download, Filter, Search, Calendar as CalendarIcon, ArrowUpDown, Info, CheckCircle2, Clock, AlertCircle, XCircle, RotateCcw, ShieldAlert, Copy, Check, ChevronDown } from 'lucide-react';
 
 const TransactionsPage: React.FC = () => {
   const { user, profile } = useAuth();
   const [transactions, setTransactions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [planFilter, setPlanFilter] = useState<string>('all');
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
   const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
@@ -27,11 +29,41 @@ const TransactionsPage: React.FC = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [selectedTx, setSelectedTx] = useState<any>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [availablePlans, setAvailablePlans] = useState<string[]>([]);
 
   const isAdmin = profile?.role === 'admin';
 
+  const fetchAvailablePlans = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('transactions')
+        .select('plan_id')
+        .not('plan_id', 'is', null);
+      
+      if (error) throw error;
+      const plans = Array.from(new Set(data.map(t => t.plan_id)));
+      setAvailablePlans(plans);
+    } catch (err) {
+      console.error('Error fetching plans:', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchAvailablePlans();
+  }, []);
+
   const fetchTransactions = async () => {
     if (!user) return;
+
+    // Date validation
+    if (startDate && endDate) {
+      if (isBefore(parseISO(endDate), parseISO(startDate))) {
+        toast.error('A data final não pode ser anterior à data inicial.');
+        return;
+      }
+    }
+
     setLoading(true);
     try {
       let query = supabase
@@ -44,6 +76,10 @@ const TransactionsPage: React.FC = () => {
 
       if (statusFilter !== 'all') {
         query = query.eq('status', statusFilter);
+      }
+
+      if (planFilter !== 'all') {
+        query = query.eq('plan_id', planFilter);
       }
 
       if (startDate) {
@@ -70,7 +106,7 @@ const TransactionsPage: React.FC = () => {
 
   useEffect(() => {
     fetchTransactions();
-  }, [user, statusFilter, startDate, endDate, sortOrder, page, isAdmin]);
+  }, [user, statusFilter, planFilter, startDate, endDate, sortOrder, page, isAdmin]);
 
   const getStatusInfo = (status: string) => {
     switch (status) {
@@ -143,8 +179,32 @@ const TransactionsPage: React.FC = () => {
     );
   };
 
-  const exportToCSV = () => {
-    if (transactions.length === 0) {
+  const exportToCSV = async (mode: 'current' | 'all' = 'current') => {
+    let dataToExport = transactions;
+
+    if (mode === 'all') {
+      toast.info('Preparando exportação completa...');
+      try {
+        let query = supabase
+          .from('transactions')
+          .select('*, profiles(name, email)');
+
+        if (!isAdmin) query = query.eq('user_id', user?.id);
+        if (statusFilter !== 'all') query = query.eq('status', statusFilter);
+        if (planFilter !== 'all') query = query.eq('plan_id', planFilter);
+        if (startDate) query = query.gte('created_at', startOfDay(parseISO(startDate)).toISOString());
+        if (endDate) query = query.lte('created_at', endOfDay(parseISO(endDate)).toISOString());
+
+        const { data, error } = await query.order('created_at', { ascending: sortOrder === 'asc' });
+        if (error) throw error;
+        dataToExport = data || [];
+      } catch (err: any) {
+        toast.error('Erro ao buscar todos os dados: ' + err.message);
+        return;
+      }
+    }
+
+    if (dataToExport.length === 0) {
       toast.error('Nenhuma transação para exportar.');
       return;
     }
@@ -163,7 +223,7 @@ const TransactionsPage: React.FC = () => {
       'ID Pagamento'
     ];
 
-    const csvData = transactions.map(tx => [
+    const csvData = dataToExport.map(tx => [
       tx.id,
       format(new Date(tx.created_at), "yyyy-MM-dd HH:mm:ss"),
       tx.profiles?.name || '',
@@ -186,12 +246,19 @@ const TransactionsPage: React.FC = () => {
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
     link.setAttribute('href', url);
-    link.setAttribute('download', `transacoes_${format(new Date(), 'yyyyMMdd_HHmm')}.csv`);
+    link.setAttribute('download', `transacoes_${mode === 'all' ? 'total' : 'pagina'}_${format(new Date(), 'yyyyMMdd_HHmm')}.csv`);
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    toast.success('Arquivo CSV gerado com sucesso!');
+    toast.success(`CSV (${mode === 'all' ? 'total' : 'página atual'}) gerado com sucesso!`);
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    toast.success('JSON copiado!');
+    setTimeout(() => setCopied(false), 2000);
   };
 
   const openDetails = (tx: any) => {
@@ -206,26 +273,39 @@ const TransactionsPage: React.FC = () => {
           <h1 className="text-3xl font-serif font-bold tracking-tight">Histórico de Transações</h1>
           <p className="text-muted-foreground italic font-serif">Acompanhe seus pagamentos e doações no Cathedra.</p>
         </div>
-        <Button 
-          variant="outline" 
-          onClick={exportToCSV}
-          className="rounded-full gap-2 border-primary/20 hover:border-primary hover:bg-primary/5 transition-all shadow-sm"
-        >
-          <Download className="w-4 h-4" />
-          Exportar CSV
-        </Button>
+        
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button 
+              variant="outline" 
+              className="rounded-full gap-2 border-primary/20 hover:border-primary hover:bg-primary/5 transition-all shadow-sm"
+            >
+              <Download className="w-4 h-4" />
+              Exportar CSV
+              <ChevronDown className="w-3 h-3 opacity-50" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="rounded-xl">
+            <DropdownMenuItem onClick={() => exportToCSV('current')}>
+              Exportar Página Atual
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => exportToCSV('all')}>
+              Exportar Tudo (Filtrado)
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       <Card className="rounded-[2.5rem] border-border/50 shadow-xl shadow-primary/5 overflow-hidden">
         <CardHeader className="bg-muted/30 border-b border-border/50 px-8 py-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
             <div className="space-y-2">
               <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                 <Filter className="w-3 h-3" /> Status
               </label>
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger className="rounded-xl bg-background/50 border-border/30 backdrop-blur-sm">
-                  <SelectValue placeholder="Filtrar por status" />
+                  <SelectValue placeholder="Status" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl">
                   <SelectItem value="all">Todos os Status</SelectItem>
@@ -234,6 +314,23 @@ const TransactionsPage: React.FC = () => {
                   <SelectItem value="rejected">Recusados</SelectItem>
                   <SelectItem value="cancelled">Cancelados</SelectItem>
                   <SelectItem value="refunded">Reembolsados</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                <ShieldAlert className="w-3 h-3" /> Plano
+              </label>
+              <Select value={planFilter} onValueChange={setPlanFilter}>
+                <SelectTrigger className="rounded-xl bg-background/50 border-border/30 backdrop-blur-sm">
+                  <SelectValue placeholder="Plano" />
+                </SelectTrigger>
+                <SelectContent className="rounded-xl">
+                  <SelectItem value="all">Todos os Planos</SelectItem>
+                  {availablePlans.map(p => (
+                    <SelectItem key={p} value={p}>{p}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -302,10 +399,28 @@ const TransactionsPage: React.FC = () => {
                 </TableRow>
               ) : transactions.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={isAdmin ? 6 : 5} className="h-64 text-center">
-                    <div className="flex flex-col items-center justify-center space-y-2">
-                      <Search className="w-12 h-12 text-muted/30" />
-                      <p className="text-muted-foreground italic font-serif">Nenhuma transação encontrada para estes filtros.</p>
+                  <TableCell colSpan={isAdmin ? 6 : 5} className="h-80 text-center">
+                    <div className="flex flex-col items-center justify-center space-y-4 max-w-xs mx-auto">
+                      <div className="w-20 h-20 bg-muted/30 rounded-full flex items-center justify-center animate-in zoom-in duration-300">
+                        <Search className="w-10 h-10 text-muted/50" />
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-foreground font-serif font-bold">Nenhum registro encontrado</p>
+                        <p className="text-muted-foreground italic text-xs leading-relaxed">Não encontramos transações com os filtros aplicados. Tente ajustar o período ou o status.</p>
+                      </div>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="rounded-full text-primary hover:bg-primary/10 text-[10px] font-bold uppercase tracking-widest h-9 px-4"
+                        onClick={() => {
+                          setStatusFilter('all');
+                          setPlanFilter('all');
+                          setStartDate('');
+                          setEndDate('');
+                        }}
+                      >
+                        Limpar todos os filtros
+                      </Button>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -453,19 +568,35 @@ const TransactionsPage: React.FC = () => {
                 </div>
               </div>
 
-              {(isAdmin || selectedTx.error_message) && (
-                <div className="space-y-2">
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                    <AlertCircle className="w-3 h-3" /> Logs & Webhook Payload
-                  </p>
-                  <div className="max-h-[200px] overflow-y-auto rounded-xl border border-border/50 bg-slate-950 p-4">
-                    <pre className="text-[10px] text-slate-300 font-mono leading-relaxed">
+              {(isAdmin || selectedTx.error_message || selectedTx.webhook_payload) && (
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                      <AlertCircle className="w-3 h-3" /> Logs & Webhook Payload
+                    </p>
+                    {selectedTx.webhook_payload && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-7 text-[10px] gap-1 px-2 rounded-lg hover:bg-primary/10"
+                        onClick={() => copyToClipboard(JSON.stringify(selectedTx.webhook_payload, null, 2))}
+                      >
+                        {copied ? <Check className="w-3 h-3 text-green-500" /> : <Copy className="w-3 h-3" />}
+                        {copied ? 'Copiado' : 'Copiar JSON'}
+                      </Button>
+                    )}
+                  </div>
+                  <div className="max-h-[300px] overflow-y-auto rounded-2xl border border-border/50 bg-slate-950 p-6 shadow-inner">
+                    <pre className="text-[11px] text-slate-300 font-mono leading-relaxed whitespace-pre-wrap">
                       {JSON.stringify({
                         webhook: selectedTx.webhook_payload,
-                        error: selectedTx.error_message ? JSON.parse(selectedTx.error_message) : null
+                        error: selectedTx.error_message ? (typeof selectedTx.error_message === 'string' ? JSON.parse(selectedTx.error_message) : selectedTx.error_message) : null
                       }, null, 2)}
                     </pre>
                   </div>
+                  <p className="text-[10px] italic text-muted-foreground text-center">
+                    Estes dados são técnicos e úteis para depuração de problemas no processamento.
+                  </p>
                 </div>
               )}
             </div>
