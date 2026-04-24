@@ -139,11 +139,20 @@ const TransactionsPage: React.FC = () => {
   };
 
   const executeDownload = (data: any[], mode: 'current' | 'all') => {
+    const metadata = [
+      `"Exportado por:","${user?.email || 'Sistema'}"`,
+      `"Data da Exportação:","${format(new Date(), "yyyy-MM-dd HH:mm:ss")}"`,
+      `"Filtros:","Status: ${statusFilter}, Plano: ${planFilter}, Início: ${startDate || 'N/A'}, Fim: ${endDate || 'N/A'}"`,
+      `"Total de Registros:","${data.length}"`,
+      '""' // Empty line
+    ].join('\n');
+
     const headers = ['ID', 'Data', 'Audit_Timestamp_TZ', 'Usuário', 'E-mail', 'Descrição', 'Valor', 'Status', 'Plano', 'Cupom', 'Doação', 'ID Pagamento'];
     const tzOffset = new Date().getTimezoneOffset();
     const tzString = `UTC${tzOffset > 0 ? '-' : '+'}${Math.abs(tzOffset / 60)}`;
 
     const csvContent = [
+      metadata,
       headers.join(','),
       ...data.map(tx => [
         tx.id,
