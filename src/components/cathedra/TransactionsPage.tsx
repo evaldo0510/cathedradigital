@@ -555,7 +555,70 @@ const TransactionsPage: React.FC = () => {
       </Dialog>
 
       {/* DETAILS DIALOG */}
-      <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
+      {/* AUDIT LOGS DIALOG */}
+      <Dialog open={isAuditOpen} onOpenChange={setIsAuditOpen}>
+        <DialogContent className="max-w-4xl rounded-[2.5rem] bg-background/95 backdrop-blur-xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-serif font-bold flex items-center gap-3">
+              <div className="p-2 bg-primary/10 rounded-xl text-primary"><ShieldAlert className="w-6 h-6" /></div>
+              Histórico de Exportações
+            </DialogTitle>
+            <DialogDescription>Rastreabilidade de todos os arquivos CSV gerados por administradores.</DialogDescription>
+          </DialogHeader>
+
+          <div className="py-6">
+            <Table>
+              <TableHeader className="bg-muted/50">
+                <TableRow>
+                  <TableHead className="text-[10px] font-bold">Data</TableHead>
+                  <TableHead className="text-[10px] font-bold">Admin</TableHead>
+                  <TableHead className="text-[10px] font-bold">Registros</TableHead>
+                  <TableHead className="text-[10px] font-bold">Filtros Aplicados</TableHead>
+                  <TableHead className="text-right text-[10px] font-bold">Ações</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {auditLogs.length === 0 ? (
+                  <TableRow><TableCell colSpan={5} className="h-32 text-center italic text-muted-foreground">Nenhum log de exportação encontrado.</TableCell></TableRow>
+                ) : (
+                  auditLogs.map((log: any) => (
+                    <TableRow key={log.id}>
+                      <TableCell className="text-[10px] font-medium">{format(new Date(log.created_at), "dd/MM HH:mm")}</TableCell>
+                      <TableCell className="text-[10px]">{log.metadata?.user_email || '---'}</TableCell>
+                      <TableCell className="text-[10px] font-bold text-primary">{log.metadata?.records_count}</TableCell>
+                      <TableCell className="text-[10px] max-w-[200px] truncate italic text-muted-foreground">
+                        {Object.entries(log.metadata?.filters || {}).map(([k, v]) => v !== 'all' && v ? `${k}:${v}` : null).filter(Boolean).join(', ') || 'Sem filtros'}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="h-7 text-[10px] rounded-lg"
+                          onClick={() => {
+                            // Apply filters from log and trigger export
+                            const f = log.metadata?.filters;
+                            setStatusFilter(f.status || 'all');
+                            setPlanFilter(f.plan || 'all');
+                            setStartDate(f.start || '');
+                            setEndDate(f.end || '');
+                            setUserSearch(f.search || '');
+                            setIsAuditOpen(false);
+                            toast.success('Filtros aplicados do log. Iniciando exportação...');
+                            setTimeout(() => exportToCSV(log.metadata?.mode || 'all'), 500);
+                          }}
+                        >
+                          <Download className="w-3 h-3 mr-1" /> Re-exportar
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
+          <Button onClick={() => setIsAuditOpen(false)} variant="outline" className="rounded-full w-full font-bold">Fechar</Button>
+        </DialogContent>
+      </Dialog>
         <DialogContent className="max-w-2xl rounded-[2.5rem] bg-background/95 backdrop-blur-xl">
           <DialogHeader><DialogTitle className="text-2xl font-serif font-bold">Detalhes do Processamento</DialogTitle></DialogHeader>
           {selectedTx && (
