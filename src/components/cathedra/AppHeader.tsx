@@ -163,7 +163,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
               {t('exit_session')}
             </button>
           ) : (
-            <button onClick={() => navigate(AppRoute.LOGIN)} className="px-4 sm:px-6 py-2 sm:py-2.5 bg-blue-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 active:scale-95">
+            <button onClick={() => navigate(AppRoute.LOGIN)} className="px-4 sm:px-6 py-2 sm:py-2.5 bg-foreground text-background rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-primary-foreground transition-all shadow-lg active:scale-95">
               {t('enter')}
             </button>
           )}
