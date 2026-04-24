@@ -155,6 +155,43 @@ const UpgradePage: React.FC = () => {
             <span>Cancele quando quiser</span>
           </div>
         </motion.div>
+
+        {isAdmin && (
+          <motion.div 
+            variants={fadeUp} 
+            initial="hidden" 
+            animate="visible" 
+            custom={4}
+            className="pt-12 border-t border-border/50"
+          >
+            <div className="flex flex-col items-center gap-4 bg-muted/30 p-8 rounded-[2.5rem] border border-dashed border-primary/30">
+              <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-2">
+                <FlaskConical className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-serif font-bold italic">Zona de Testes (Admin)</h3>
+              <p className="text-sm text-muted-foreground font-serif italic mb-4 max-w-sm">
+                Como administrador, você pode simular o checkout e o retorno do Mercado Pago para validar o fluxo de liberação PRO.
+              </p>
+              <div className="flex flex-wrap justify-center gap-3">
+                <Button 
+                  variant="outline"
+                  onClick={simulatePayment}
+                  disabled={isSimulating || isPremium}
+                  className="rounded-xl border-primary/30 text-primary hover:bg-primary/5 h-12 px-6 font-bold"
+                >
+                  {isSimulating ? 'Processando...' : isPremium ? '✓ Já é PRO' : 'Simular Aprovação (Webhook)'}
+                </Button>
+                <Button 
+                  variant="ghost"
+                  onClick={() => navigate(AppRoute.TRANSACTIONS)}
+                  className="rounded-xl h-12 px-6 font-bold"
+                >
+                  Ver Histórico de Transações
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        )}
       </div>
     </div>
   );
