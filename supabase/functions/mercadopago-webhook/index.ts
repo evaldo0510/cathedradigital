@@ -128,6 +128,8 @@ serve(async (req) => {
         status: normalizedStatus,
         amount: normalizedAmount,
         description: normalizedDescription,
+        payment_id: String(rawPaymentId),
+        webhook_payload: payment,
       })
       .eq("id", transactionId)
       .select("user_id")
@@ -135,6 +137,13 @@ serve(async (req) => {
 
     if (updateError) {
       console.error("Mercado Pago webhook transaction update error:", updateError);
+      
+      // Try to log the error in the transaction record if possible
+      await adminClient
+        .from("transactions")
+        .update({ error_message: JSON.stringify(updateError) })
+        .eq("id", transactionId);
+
       return json({ error: "Falha ao atualizar a transação." }, 500);
     }
 
