@@ -67,6 +67,7 @@ const CheckoutResultPage: React.FC = () => {
 
         if (data?.status === 'approved') {
           setState('success');
+          void refreshProfile();
           return;
         }
         if (data?.status === 'pending') {
