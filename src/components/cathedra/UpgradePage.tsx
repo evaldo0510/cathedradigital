@@ -45,7 +45,27 @@ const BENEFITS = [
 
 const UpgradePage: React.FC = () => {
   const navigate = useNavigate();
-  const { isPremium } = useAuth();
+  const { user, profile, isPremium } = useAuth();
+  const [isSimulating, setIsSimulating] = useState(false);
+
+  const isAdmin = profile?.role === 'admin';
+
+  const simulatePayment = async () => {
+    if (!user) return;
+    setIsSimulating(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('mercadopago-simulate', {
+        body: { userId: user.id, planId: 'cathedra_pro_annual_test', status: 'approved' },
+      });
+      if (error) throw error;
+      toast.success('Simulação concluída! Seu acesso PRO foi liberado.');
+      setTimeout(() => window.location.reload(), 1500);
+    } catch (error: any) {
+      toast.error('Erro na simulação: ' + error.message);
+    } finally {
+      setIsSimulating(false);
+    }
+  };
 
   return (
     <div className="min-h-[80dvh] flex flex-col items-center justify-center py-12 md:py-20 px-4 relative overflow-hidden">
