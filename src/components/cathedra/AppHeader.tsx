@@ -27,14 +27,15 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
   
   const isMainPage = [
     AppRoute.DASHBOARD,
-    AppRoute.HOME,
     AppRoute.HOJE,
     AppRoute.JORNADAS,
     AppRoute.BIBLIOTECA,
     AppRoute.PROFILE,
     AppRoute.LITURGIA,
     AppRoute.TEMAS,
-    AppRoute.COMMUNITY
+    AppRoute.COMMUNITY,
+    AppRoute.ENCYCLOPEDIA,
+    AppRoute.AZ_FAITH
   ].includes(pathname as AppRoute);
   
   const isDashboard = isMainPage;
