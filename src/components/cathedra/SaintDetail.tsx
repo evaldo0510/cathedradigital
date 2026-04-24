@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { callColloquium } from '@/services/aiService';
+import { callColloquium, type AIFallbackReason } from '@/services/aiService';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '../../constants';
@@ -17,6 +17,7 @@ import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
 import AudioContentPlayer from './AudioContentPlayer';
+import AIFallbackCard from './AIFallbackCard';
 
 const CATEGORY_LABELS: Record<string, string> = {
   apostle: 'Apóstolo',
