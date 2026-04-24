@@ -74,7 +74,7 @@ describe('JSON Recursive Filter', () => {
     const counter = { count: 0 };
     const result = filterRecursive(mockPayload, "Donation", counter);
     expect(counter.count).toBe(1);
-    expect(result.metadata.items[0]).toEqual({ name: "Donation", price: 5.0 });
+    expect(result.metadata.items[0]).toEqual({ name: "Donation" });
   });
 
   it('should handle case insensitivity', () => {
