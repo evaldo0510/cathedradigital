@@ -1,10 +1,13 @@
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+export type AIFallbackReason = 'credits_exhausted' | 'rate_limited' | 'daily_limit' | 'auth' | 'network';
+
 export interface AIResponse {
   content?: string;
   error?: string;
   limit_reached?: boolean;
+  fallback_reason?: AIFallbackReason;
 }
 
 function notifyAIStatus(type: 'credits_exhausted' | 'rate_limited', message?: string) {
