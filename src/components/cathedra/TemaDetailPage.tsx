@@ -227,6 +227,13 @@ const TemaDetailPage = () => {
     if (!selectedTag || loadingLogos) return;
     setLoadingLogos(true);
     supabase.functions.invoke('logos-spiritual-insight', {
+      body: { query: selectedTag.label }
+    }).then(({ data, error }) => {
+      if (!error && data?.insight) setLogosInsight(data.insight);
+      setLoadingLogos(false);
+    });
+  };
+
   const relatedThemes = React.useMemo(() => {
     if (!tags || !selectedTag) return [];
     
@@ -254,11 +261,6 @@ const TemaDetailPage = () => {
     if (selectedTag && !logosInsight && !loadingLogos && !autoLoaded) {
       setAutoLoaded(true);
       const timer = setTimeout(() => {
-        handleLoadInsight();
-      }, 1500);
-      return () => clearTimeout(timer);
-    }
-  }, [selectedTag, logosInsight, loadingLogos, autoLoaded]);
         handleLoadInsight();
       }, 1500);
       return () => clearTimeout(timer);
