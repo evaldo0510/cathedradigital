@@ -334,12 +334,13 @@ const ProfilePage: React.FC = () => {
           </p>
           <Button 
             variant="outline" 
-            className="w-full h-12 rounded-xl border-secondary/20 hover:bg-secondary/5 text-secondary gap-2 font-bold uppercase tracking-widest text-[10px]"
+            className="w-full h-12 rounded-xl border-secondary/20 hover:bg-secondary/5 text-secondary gap-2 font-bold uppercase tracking-widest text-[10px] focus-visible:ring-4 focus-visible:ring-secondary outline-none"
             onClick={() => navigate('/transactions/my')}
           >
             <Icons.History className="w-4 h-4" />
             Ver Histórico de Doações
           </Button>
+
         </div>
       </div>
 
