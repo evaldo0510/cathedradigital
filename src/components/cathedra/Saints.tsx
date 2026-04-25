@@ -184,12 +184,15 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
         </header>
 
         <div className="flex justify-center overflow-x-auto pb-4 no-scrollbar">
-          <div className="bg-secondary/50 p-1 rounded-2xl flex gap-1 min-w-max">
+          <div className="bg-secondary/50 p-1 rounded-2xl flex gap-1 min-w-max" role="tablist" aria-label="Modos de visualização dos santos">
             {(['daily', 'all', 'writers', 'popes', 'cloud', 'search'] as const).map(mode => (
               <button
                 key={mode}
+                role="tab"
+                aria-selected={viewMode === mode}
+                aria-controls={`panel-${mode}`}
                 onClick={() => setViewMode(mode)}
-                className={`px-4 md:px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                className={`px-4 md:px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                   viewMode === mode ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
@@ -197,6 +200,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
               </button>
             ))}
           </div>
+
         </div>
 
         <AnimatePresence mode="wait">
