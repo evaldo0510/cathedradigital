@@ -189,7 +189,7 @@ const TemasPage = () => {
             ) : (
               <>
                 <div className="relative p-6 sm:p-10">
-                  <div className="flex flex-wrap justify-center gap-2 sm:gap-3 max-w-5xl mx-auto" role="list">
+                  <div className="flex flex-wrap justify-center gap-2 sm:gap-3 max-w-5xl mx-auto" role="list" ref={tagsContainerRef}>
                     {filteredTags.map((tag, idx) => (
                       <div key={tag.id} role="listitem">
                         <BubbleTag
