@@ -395,7 +395,7 @@ const LiturgiaPage: React.FC = () => {
                 </motion.div>
               )}
 
-              {isLoading && <div className="flex justify-center py-20"><Icons.Loader2 className="w-10 h-10 text-secondary animate-spin" /></div>}
+              {isLoading && <LiturgiaSkeleton />}
 
               {readings && (
                 <div className="space-y-8">
