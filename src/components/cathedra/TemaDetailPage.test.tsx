@@ -68,27 +68,32 @@ describe('TemaDetailPage - Integration Tests', () => {
     expect(await screen.findByText(/Nenhum versículo catalogado/i)).toBeInTheDocument();
   });
 
-  it('renders empty states for all categories', async () => {
+  it('renders specific empty states for each category and ensures no leaking labels', async () => {
     const mockTags = [{ id: '1', label: 'Vazio', slug: 'vazio', category: 'fundamentos', emoji: '🕳️' }];
     (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
     (fetchNexusTagContent as any).mockResolvedValue([]);
 
     renderWithProviders(<TemaDetailPage />, '/temas/vazio');
 
-    // Bible
-    expect(await screen.findByText(/Nenhum versículo catalogado/i)).toBeInTheDocument();
+    // 1. Bible (Default Tab)
+    expect(await screen.findByText(/Nenhum versículo catalogado para este tema/i)).toBeInTheDocument();
+    // Ensure labels for other categories are NOT visible in the active content area
+    expect(screen.queryByText(/Conteúdo da Tradição em aprofundamento/i)).not.toBeInTheDocument();
 
-    // Tradition
+    // 2. Tradition
     await userEvent.click(screen.getByText('Tradição'));
     expect(await screen.findByText(/Conteúdo da Tradição em aprofundamento/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Nenhum versículo catalogado/i)).not.toBeInTheDocument();
 
-    // Magisterium
+    // 3. Magisterium
     await userEvent.click(screen.getByText('Magistério'));
     expect(await screen.findByText(/Documentos do Magistério em aprofundamento/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Conteúdo da Tradição em aprofundamento/i)).not.toBeInTheDocument();
 
-    // Journeys
+    // 4. Journeys
     await userEvent.click(screen.getByText('Jornadas'));
-    expect(await screen.findByText(/Nenhuma jornada específica vinculada/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Nenhuma jornada específica vinculada a este tema/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Documentos do Magistério em aprofundamento/i)).not.toBeInTheDocument();
   });
 
   it('completes loading state even when fetch returns undefined', async () => {
