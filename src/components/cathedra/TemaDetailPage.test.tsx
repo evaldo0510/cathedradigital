@@ -322,7 +322,7 @@ describe('TemaDetailPage - Integration Tests', () => {
     const retryButton = screen.getByTestId('retry-button');
     expect(retryButton).not.toBeDisabled();
 
-    await userEvent.click(retryButton);
+    fireEvent.click(retryButton);
     
     // 4. Wait for the button to show processing state
     await waitFor(() => {
