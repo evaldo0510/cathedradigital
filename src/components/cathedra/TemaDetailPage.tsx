@@ -536,7 +536,9 @@ const TemaDetailPage = () => {
                   label={tag.label}
                   emoji={tag.emoji}
                   index={idx}
+                  isSuggested={suggestedSlugs.has(tag.slug)}
                   onClick={() => navigate(`${AppRoute.TEMAS}/${tag.slug}`)}
+
                   onMouseEnter={() => prefetchTag(tag)}
                   className="px-3 py-1.5"
                 />
