@@ -10,17 +10,10 @@ import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import { RelevanceBadge } from './RelevanceBadge';
 import { FuzzySearchInput } from './FuzzySearchInput';
 import { ListSkeleton, PageHeaderSkeleton } from './SacredSkeleton';
-
+import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
 
 const CATEGORIES = [
-  { id: 'geral', label: 'Geral' },
-  { id: 'testemunho', label: '✝ Testemunho' },
-  { id: 'partilha', label: '💬 Partilha' },
-  { id: 'teologia', label: 'Teologia' },
-  { id: 'biblia', label: 'Bíblia' },
-  { id: 'liturgia', label: 'Liturgia' },
-  { id: 'moral', label: 'Moral' },
-  { id: 'espiritualidade', label: 'Espiritualidade' },
+... keep existing categories
 ];
 
 interface Post {
