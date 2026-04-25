@@ -68,10 +68,13 @@ const QuickDonation: React.FC = () => {
           variant="ghost" 
           size="sm" 
           onClick={() => setIsExpanded(!isExpanded)}
-          className="h-8 w-8 p-0 rounded-full"
+          className="h-8 w-8 p-0 rounded-full focus-visible:ring-2 focus-visible:ring-secondary outline-none"
+          aria-label={isExpanded ? "Recolher doação rápida" : "Expandir doação rápida"}
+          aria-expanded={isExpanded}
         >
           {isExpanded ? <Icons.ChevronUp className="w-4 h-4" /> : <Icons.ChevronDown className="w-4 h-4" />}
         </Button>
+
       </CardHeader>
 
       <AnimatePresence>
