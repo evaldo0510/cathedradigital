@@ -64,7 +64,7 @@ describe('JornadasPage - Integration Tests', () => {
 
     renderWithProviders(<JornadasPage />);
     
-    // The component has a loading state initially
+    // Check for empty state message
     const emptyMsg = await screen.findByText(/Nenhuma jornada disponível ainda/i, {}, { timeout: 5000 });
     expect(emptyMsg).toBeInTheDocument();
   });
@@ -74,28 +74,31 @@ describe('JornadasPage - Integration Tests', () => {
       { id: '1', title: 'UniqueJourney', difficulty: 'iniciante', category: 'fundamentos', steps_count: 5, tags: [] }
     ];
 
-    (supabase.from as any).mockReturnValue({
-      select: vi.fn(() => ({
-        order: vi.fn(() => Promise.resolve({ data: mockJourneys, error: null })),
-        eq: vi.fn(() => Promise.resolve({ data: [], error: null }))
-      }))
+    // Mock implementation for loadJourneys
+    (supabase.from as any).mockImplementation((table: string) => {
+      if (table === 'view_journeys_with_stats') {
+        return {
+          select: vi.fn(() => ({
+            order: vi.fn(() => Promise.resolve({ data: mockJourneys, error: null }))
+          }))
+        };
+      }
+      return {
+        select: vi.fn(() => ({
+          eq: vi.fn(() => Promise.resolve({ data: [], error: null }))
+        }))
+      };
     });
 
     renderWithProviders(<JornadasPage />);
 
     // Wait for initial load
-    expect(await screen.findByText('UniqueJourney')).toBeInTheDocument();
+    expect(await screen.findByText(/UniqueJourney/i)).toBeInTheDocument();
 
     // Click 'Intermediário' filter
-    // Filter buttons are plain buttons or have labels
-    const diffFilters = await screen.findAllByRole('button');
-    const intermediarioBtn = diffFilters.find(b => b.textContent?.trim() === 'Intermediário');
-    
-    if (intermediarioBtn) {
-      await userEvent.click(intermediarioBtn);
-    } else {
-      await userEvent.click(screen.getByText(/Intermediário/i));
-    }
+    // It's a button with the text 'Intermediário'
+    const intermediarioFilter = await screen.findByRole('button', { name: /Intermediário/i });
+    await userEvent.click(intermediarioFilter);
 
     // Wait for filtered list to update to empty
     const mismatchMsg = await screen.findByText(/Nenhuma jornada encontrada com esses filtros/i);
