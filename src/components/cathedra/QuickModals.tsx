@@ -43,12 +43,24 @@ export const BibleModal: React.FC<QuickModalProps> = ({ isOpen, onClose }) => {
   return (
     <ModalShell title="Bíblia — Consulta Rápida" onClose={onClose}>
       <div className="flex gap-2 mb-4">
-        <select value={book} onChange={e => { setBook(e.target.value); setChapter(1); }}
-          className="px-3 py-2 rounded-xl border border-border bg-card text-foreground text-sm focus:outline-none">
+        <select 
+          value={book} 
+          onChange={e => { setBook(e.target.value); setChapter(1); }}
+          className="px-3 py-2 rounded-xl border border-border bg-card text-foreground text-sm focus:ring-2 focus:ring-primary outline-none"
+          aria-label="Selecionar livro da Bíblia"
+        >
           {BOOKS.map(b => <option key={b} value={b}>{b}</option>)}
         </select>
-        <input type="number" min={1} max={150} value={chapter} onChange={e => setChapter(Number(e.target.value))}
-          className="w-20 px-3 py-2 rounded-xl border border-border bg-card text-foreground text-sm text-center focus:outline-none" />
+        <input 
+          type="number" 
+          min={1} 
+          max={150} 
+          value={chapter} 
+          onChange={e => setChapter(Number(e.target.value))}
+          className="w-20 px-3 py-2 rounded-xl border border-border bg-card text-foreground text-sm text-center focus:ring-2 focus:ring-primary outline-none" 
+          aria-label="Número do capítulo"
+        />
+
       </div>
       {loading ? <LoadingSkeleton /> : (
         <div className="max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
