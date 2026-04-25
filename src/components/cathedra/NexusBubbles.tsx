@@ -300,8 +300,8 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
     return result;
   }, [tags, searchQuery, activeFilter]);
 
-  const { activeIndex: filteredActiveIndex, handleKeyDown: handleFilteredKeyDown } = useRovingTabindex(filteredTags?.length || 0);
-  const { activeIndex: suggestedActiveIndex, handleKeyDown: handleSuggestedKeyDown } = useRovingTabindex(profileSuggestedTags?.length || 0);
+  const { activeIndex: filteredActiveIndex, handleKeyDown: handleFilteredKeyDown } = useRovingTabindex(filteredTags?.length || 0, filteredRef);
+  const { activeIndex: suggestedActiveIndex, handleKeyDown: handleSuggestedKeyDown } = useRovingTabindex(profileSuggestedTags?.length || 0, suggestedRef);
 
   if (loading) {
     return (
