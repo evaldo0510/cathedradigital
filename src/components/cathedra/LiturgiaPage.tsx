@@ -23,7 +23,7 @@ import { LiturgiaSkeleton } from './LiturgiaSkeleton';
 import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
 
 const MissalPage = lazy(() => import('./MissalPage'));
-... keep existing code
+
 const LiturgicalCalendarPage = lazy(() => import('./LiturgicalCalendarPage'));
 
 function usePrefetchLiturgyCache() {
