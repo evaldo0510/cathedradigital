@@ -97,6 +97,7 @@ const PopesPage = lazy(() => import('./components/cathedra/PopesPage'));
 const GlobalSearchPage = lazy(() => import('./components/cathedra/GlobalSearchPage'));
 const MagisteriumViewer = lazy(() => import('./components/cathedra/MagisteriumViewer'));
 const TransactionsPage = lazy(() => import('./components/cathedra/TransactionsPage'));
+const UserTransactionsPage = lazy(() => import('./components/cathedra/UserTransactionsPage'));
 
 const PartnersPage = lazy(() => import('./components/cathedra/PartnersPage'));
 
