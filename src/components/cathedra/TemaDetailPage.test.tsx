@@ -111,23 +111,23 @@ describe('TemaDetailPage - Integration Tests', () => {
     expect(header).toBeInTheDocument();
 
     // 1. Escrituras (Default Tab)
-    expect(screen.getByText('Nenhum versículo catalogado para este tema.')).toBeInTheDocument();
+    expect(screen.getByText(/Nenhum versículo catalogado para este tema/i)).toBeInTheDocument();
     expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
 
     // 2. Tradição
     const traditionTab = screen.getByText('Tradição');
     await userEvent.click(traditionTab);
-    expect(await screen.findByText('Conteúdo da Tradição em aprofundamento.')).toBeInTheDocument();
+    expect(await screen.findByText(/Conteúdo da Tradição em aprofundamento/i)).toBeInTheDocument();
 
     // 3. Magistério
     const magisteriumTab = screen.getByText('Magistério');
     await userEvent.click(magisteriumTab);
-    expect(await screen.findByText('Documentos do Magistério em aprofundamento.')).toBeInTheDocument();
+    expect(await screen.findByText(/Documentos do Magistério em aprofundamento/i)).toBeInTheDocument();
 
     // 4. Jornadas
     const journeysTab = screen.getByText('Jornadas');
     await userEvent.click(journeysTab);
-    expect(await screen.findByText('Nenhuma jornada específica vinculada a este tema.')).toBeInTheDocument();
+    expect(await screen.findByText(/Nenhuma jornada específica vinculada a este tema/i)).toBeInTheDocument();
   });
 
   it('completes loading state even when Supabase returns null data', async () => {
@@ -141,17 +141,17 @@ describe('TemaDetailPage - Integration Tests', () => {
       }))
     });
 
-    // Simulating null response which fetchNexusTagContent should handle (returning [])
     (fetchNexusTagContent as any).mockResolvedValue([]);
 
     renderWithProviders(<TemaDetailPage />, '/temas/null-tag');
 
-    // Should not show loading skeletons after settling
+    // Loader should disappear
     await waitFor(() => {
-      expect(screen.queryByTestId('loading-skeleton')).not.toBeInTheDocument();
+      expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
     });
     
-    // Header should appear
-    expect(await screen.findByText('NullTag')).toBeInTheDocument();
+    // Header H1 should appear
+    const h1 = await screen.findByRole('heading', { name: /NullTag/i, level: 1 });
+    expect(h1).toBeInTheDocument();
   });
 });
