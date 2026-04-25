@@ -157,6 +157,21 @@ const TemaDetailPage = () => {
     enabled: !!selectedTag,
   });
 
+  const { profileId } = useSpiritualProfile();
+  const suggestedSlugs = React.useMemo(() => {
+    if (!profileId || !tags) return new Set<string>();
+    const profile = PROFILES[profileId];
+    if (!profile) return new Set<string>();
+    const relevantLabels = [profile.theme, profile.pain.label, 'Oração', 'Jesus', 'Fé'];
+    return new Set(
+      tags
+        .filter(t => relevantLabels.some(l => t.label.toLowerCase().includes(l.toLowerCase())))
+        .slice(0, 8)
+        .map(t => t.slug)
+    );
+  }, [profileId, tags]);
+
+
   const prefetchTag = useCallback((tag: Tag) => {
     queryClient.prefetchQuery({
       queryKey: ['tag-contents', tag.id, tag.label],
