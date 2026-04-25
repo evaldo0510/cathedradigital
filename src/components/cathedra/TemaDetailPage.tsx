@@ -440,6 +440,7 @@ const TemaDetailPage = () => {
                 <div className="text-center py-12 text-muted-foreground italic">Nenhuma jornada específica vinculada a este tema.</div>
               )}
             </TabsContent>
+            )}
           </Tabs>
         </div>
 
