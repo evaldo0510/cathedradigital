@@ -119,30 +119,47 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
 
   const prefetchTag = useCallback(() => {
     queryClient.prefetchQuery({
-      queryKey: ['tag-contents', tag.id],
+      queryKey: ['tag-contents', tag.id, tag.label],
       queryFn: async () => {
-        const { data: tagContents, error } = await supabase
-          .from('content_tags')
-          .select(`
-            spiritual_contents (
-              id, title, content_text, type, reference_id, tags
-            )
-          `)
-          .eq('tag_id', tag.id);
+        const normalizedLabel = normalizeText(tag.label);
+        const searchTerms = [tag.label, normalizedLabel, tag.slug].filter(Boolean);
         
-        if (error) throw error;
-        return (tagContents || []).map((c: any) => ({
-          id: c.spiritual_contents.id,
-          content_type: c.spiritual_contents.type,
-          reference: c.spiritual_contents.reference_id || c.spiritual_contents.title || 'Referência',
-          title: c.spiritual_contents.title,
-          text_content: c.spiritual_contents.content_text,
-          tags: c.spiritual_contents.tags || []
+        const { data: spiritualData, error: dbError } = await supabase
+          .from('spiritual_contents')
+          .select('*')
+          .overlaps('tags', searchTerms)
+          .limit(10);
+        
+        const { data: journeyData, error: journeyError } = await supabase
+          .from('journeys')
+          .select('*')
+          .overlaps('tags', searchTerms)
+          .limit(5);
+
+        if (dbError) throw dbError;
+        if (journeyError) throw journeyError;
+
+        const results = (spiritualData || []).map((d: any) => ({
+          id: d.id,
+          type: d.type,
+          content_text: d.content_text,
+          title: d.title,
+          metadata: d.metadata
         }));
+
+        const journeyResults = (journeyData || []).map((d: any) => ({
+          id: d.id,
+          type: 'journey',
+          content_text: d.description || '',
+          title: d.title,
+          metadata: { ...d, is_direct_journey: true }
+        }));
+
+        return [...results, ...journeyResults];
       },
       staleTime: 1000 * 60 * 5,
     });
-  }, [queryClient, tag.id]);
+  }, [queryClient, tag.id, tag.label, tag.slug]);
 
   return (
     <Popover open={open} onOpenChange={(val) => {
