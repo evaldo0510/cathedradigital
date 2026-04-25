@@ -36,4 +36,14 @@ describe('tagNormalization', () => {
     expect(normalizeTag('Espírito Santo')).toBe('espirito_santo');
     expect(normalizeTag('holy spirit')).toBe('espirito_santo');
   });
+
+  it('should generate comprehensive search terms for a tag', () => {
+    const { getSearchTermsForTag } = require('./tagNormalization');
+    const tag = { label: 'Misericórdia', slug: 'misericordia' };
+    const terms = getSearchTermsForTag(tag);
+    
+    expect(terms).toContain('Misericórdia');
+    expect(terms).toContain('misericordia');
+    expect(terms.length).toBe(2); // Misericórdia and misericordia (slug is same as normalized)
+  });
 });
