@@ -9,6 +9,8 @@ import { toast } from 'sonner';
 import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import { RelevanceBadge } from './RelevanceBadge';
 import { FuzzySearchInput } from './FuzzySearchInput';
+import { ListSkeleton, PageHeaderSkeleton } from './SacredSkeleton';
+
 
 const CATEGORIES = [
   { id: 'geral', label: 'Geral' },
