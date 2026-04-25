@@ -56,8 +56,12 @@ describe('TemaDetailPage - Integration Tests', () => {
     fireEvent.click(screen.getByText(name));
     // Wait for debounce (300ms)
     await act(async () => {
-      await new Promise(r => setTimeout(r, 500));
+      await new Promise(r => setTimeout(r, 450));
     });
+    // Wait for loading to finish
+    await waitFor(() => {
+      expect(screen.queryByTestId('content-skeleton')).not.toBeInTheDocument();
+    }, { timeout: 3000 });
   };
 
   it('displays error message with "Try Again" button when fetch fails', async () => {
