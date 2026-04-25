@@ -450,6 +450,26 @@ const TemaDetailPage = () => {
                 <div className="text-center py-12 text-muted-foreground italic">Documentos do Magistério em aprofundamento.</div>
               )}
             </TabsContent>
+            
+            <TabsContent value="journeys" className="mt-6 space-y-4">
+              {journeys.length > 0 ? (
+                <div className="space-y-4">
+                  {journeys.map((c, i) => (
+                    <ThemeContentCard
+                      key={c.id}
+                      content={c}
+                      index={i}
+                      icon={Icons.Flame}
+                      accentColor="text-orange-500"
+                      buttonText="Iniciar Jornada"
+                      onAction={() => navigate(`/jornadas/${c.id}`)}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12 text-muted-foreground italic">Nenhuma jornada específica vinculada a este tema.</div>
+              )}
+            </TabsContent>
           </Tabs>
         </div>
 
