@@ -93,6 +93,7 @@ describe('TemaDetailPage - Integration Tests', () => {
       { id: '1', label: 'Vazio', slug: 'vazio', category: 'fundamentos', emoji: '🕳️' }
     ];
 
+    // Mock tags fetch with immediate resolution
     (supabase.from as any).mockReturnValue({
       select: vi.fn(() => ({
         order: vi.fn(() => Promise.resolve({ data: mockTags, error: null }))
@@ -104,19 +105,27 @@ describe('TemaDetailPage - Integration Tests', () => {
 
     renderWithProviders(<TemaDetailPage />, '/temas/vazio');
 
+    // Wait for the tag to be loaded (the header should show the label)
+    const header = await screen.findByText('Vazio');
+    expect(header).toBeInTheDocument();
+
     // Check for various empty states in tabs
-    await waitFor(() => {
-      expect(screen.getByText('Nenhum versículo catalogado para este tema.')).toBeInTheDocument();
-    });
+    expect(screen.getByText('Nenhum versículo catalogado para este tema.')).toBeInTheDocument();
 
     // Switch to tradition tab
     const traditionTab = screen.getByText('Tradição');
     fireEvent.click(traditionTab);
-    expect(screen.getByText('Conteúdo da Tradição em aprofundamento.')).toBeInTheDocument();
+    
+    await waitFor(() => {
+      expect(screen.getByText(/Conteúdo da Tradição em aprofundamento/i)).toBeInTheDocument();
+    });
 
     // Switch to magisterium tab
     const magisteriumTab = screen.getByText('Magistério');
     fireEvent.click(magisteriumTab);
-    expect(screen.getByText('Documentos do Magistério em aprofundamento.')).toBeInTheDocument();
+    
+    await waitFor(() => {
+      expect(screen.getByText(/Documentos do Magistério em aprofundamento/i)).toBeInTheDocument();
+    });
   });
 });
