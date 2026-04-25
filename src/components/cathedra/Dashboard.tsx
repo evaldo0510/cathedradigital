@@ -9,6 +9,7 @@ import RitualDoDia from './RitualDoDia';
 import NexusBubbles from './NexusBubbles';
 import SpiritualQuiz, { PROFILES, type ProfileId } from './SpiritualQuiz';
 import ProShowcase from './ProShowcase';
+import QuickDonation from './QuickDonation';
 import { useDashboardData } from '@/hooks/useDashboardData';
 
 interface DashboardProps {
@@ -298,6 +299,11 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             </>
           )}
         </div>
+        
+        {/* Quick Donation */}
+        <FadeUp delay={0.3}>
+          <QuickDonation />
+        </FadeUp>
 
         {/* Logos (IA) Suggestion */}
         <div

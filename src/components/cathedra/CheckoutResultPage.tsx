@@ -5,7 +5,7 @@ import { AppRoute } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { motion } from 'framer-motion';
-import { CheckCircle2, Clock, XCircle } from 'lucide-react';
+import { CheckCircle2, Clock, XCircle, Download } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 type ResultState = 'loading' | 'success' | 'pending' | 'failure';
@@ -23,6 +23,7 @@ const CheckoutResultPage: React.FC = () => {
     if (checkoutState === 'pending') return 'pending';
     return 'loading';
   });
+  const [txData, setTxData] = useState<any>(null);
 
   const firedConfetti = useRef(false);
 
@@ -61,9 +62,16 @@ const CheckoutResultPage: React.FC = () => {
           transactionId: externalReference || undefined,
         },
       })
-      .then(({ data, error }) => {
+      .then(async ({ data, error }) => {
         if (error) throw error;
         if (data?.error) throw new Error(data.error);
+
+        // Fetch transaction details for the summary
+        const txId = data.transactionId || externalReference;
+        if (txId) {
+          const { data: tx } = await supabase.from('transactions').select('*').eq('id', txId).maybeSingle();
+          if (tx) setTxData(tx);
+        }
 
         if (data?.status === 'approved') {
           setState('success');
@@ -79,7 +87,7 @@ const CheckoutResultPage: React.FC = () => {
       .catch(() => {
         setState('failure');
       });
-  }, [checkoutState, paymentId, externalReference, navigate]);
+  }, [checkoutState, paymentId, externalReference, navigate, refreshProfile]);
 
   const config: Record<Exclude<ResultState, 'loading'>, {
     icon: React.ReactNode;
@@ -140,6 +148,49 @@ const CheckoutResultPage: React.FC = () => {
         <h1 className="text-3xl md:text-4xl font-serif font-bold text-foreground">{c.title}</h1>
         <p className="text-muted-foreground font-serif italic text-base leading-relaxed">{c.description}</p>
       </div>
+
+      {txData && (
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="w-full bg-muted/50 rounded-3xl p-6 border border-border/50 space-y-4"
+        >
+          <div className="flex justify-between items-center pb-2 border-b border-border/50">
+            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Resumo da Transação</span>
+            <span className="text-[10px] font-mono text-muted-foreground">#{txData.payment_id || txData.id.slice(0, 8)}</span>
+          </div>
+          
+          <div className="space-y-3">
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-muted-foreground">Descrição</span>
+              <span className="text-sm font-bold text-foreground">{txData.description || 'Contribuição Cathedra'}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-muted-foreground">Valor</span>
+              <span className="text-lg font-black text-primary">
+                {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(txData.amount)}
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-muted-foreground">Status</span>
+              <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${state === 'success' ? 'bg-green-500/10 text-green-500' : 'bg-yellow-500/10 text-yellow-500'}`}>
+                {state === 'success' ? 'Aprovado' : 'Em processamento'}
+              </span>
+            </div>
+          </div>
+
+          {state === 'success' && (
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="w-full h-8 text-[10px] font-bold uppercase text-muted-foreground gap-2"
+              onClick={() => window.print()}
+            >
+              <Download className="w-3 h-3" /> Baixar Comprovante
+            </Button>
+          )}
+        </motion.div>
+      )}
 
       <div className="flex flex-col sm:flex-row gap-3 w-full">
         <Button

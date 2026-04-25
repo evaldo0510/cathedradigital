@@ -156,10 +156,27 @@ serve(async (req) => {
 
       if (profileError) {
         console.error("Mercado Pago webhook profile update error:", profileError);
-        // Don't fail the webhook — transaction is already updated
       } else {
         console.log(`PRO activated for user ${transaction.user_id}`);
+        
+        // Send success notification
+        await adminClient.from("notifications").insert({
+          user_id: transaction.user_id,
+          title: "Doação Recebida! ❤️",
+          message: `Obrigado! Sua contribuição de ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(normalizedAmount)} foi confirmada.`,
+          type: "payment",
+          link: "/transactions/my"
+        });
       }
+    } else if ((normalizedStatus === "rejected" || normalizedStatus === "cancelled") && transaction?.user_id) {
+      // Send failure notification
+      await adminClient.from("notifications").insert({
+        user_id: transaction.user_id,
+        title: "Problema no Pagamento ⚠️",
+        message: "Não conseguimos confirmar sua doação. Tente novamente ou use outro método.",
+        type: "payment",
+        link: "/checkout"
+      });
     }
 
     return json({ ok: true, transactionId, status: normalizedStatus, premium: normalizedStatus === "approved" });

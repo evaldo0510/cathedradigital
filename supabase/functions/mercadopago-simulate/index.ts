@@ -27,7 +27,7 @@ serve(async (req) => {
 
     const adminClient = createClient(supabaseUrl, serviceRoleKey);
     const body = await req.json();
-    const { userId, planId, status = "approved", amount = 19.9 } = body;
+    const { userId, planId, status = "approved", amount = 19.9, isDonation = false } = body;
 
     if (!userId || !planId) {
       return json({ error: "userId e planId são obrigatórios." }, 400);
@@ -40,9 +40,10 @@ serve(async (req) => {
         {
           user_id: userId,
           amount: amount,
-          description: `SIMULAÇÃO: Cathedra PRO - ${planId}`,
+          description: `SIMULAÇÃO: ${planId === 'donation' ? 'Doação Voluntária' : 'Cathedra PRO'}`,
           status: status,
           plan_id: planId,
+          is_donation: planId === 'donation' || isDonation,
           payment_id: `sim_${Math.random().toString(36).substr(2, 9)}`,
           webhook_payload: { simulation: true, body },
         },
@@ -65,6 +66,24 @@ serve(async (req) => {
       if (profileError) {
         console.error("Simulation profile update error:", profileError);
       }
+
+      // Send success notification
+      await adminClient.from("notifications").insert({
+        user_id: userId,
+        title: "Doação Recebida! (Simulação) ❤️",
+        message: `Obrigado! Sua contribuição simulada de ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(amount)} foi confirmada.`,
+        type: "payment",
+        link: "/transactions/my"
+      });
+    } else if (status === "rejected" || status === "cancelled") {
+      // Send failure notification
+      await adminClient.from("notifications").insert({
+        user_id: userId,
+        title: "Problema no Pagamento (Simulação) ⚠️",
+        message: "Não conseguimos confirmar sua doação simulada.",
+        type: "payment",
+        link: "/checkout"
+      });
     }
 
     return json({
