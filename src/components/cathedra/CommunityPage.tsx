@@ -176,7 +176,8 @@ const CommunityPage: React.FC = () => {
       ));
     }
     setLoading(false);
-  }, [category, user]);
+  }, [category, user, tab]); // Added tab to dependency to ensure it loads when switching back
+
 
   useEffect(() => { fetchPosts(); }, [fetchPosts]);
 
