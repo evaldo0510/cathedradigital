@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuites name="vitest tests" tests="30" failures="14" errors="0" time="29.203076467">
-    <testsuite name="src/components/cathedra/TemaDetailPage.advanced.test.tsx" timestamp="2026-04-25T04:38:53.317Z" hostname="sandbox-pool-77c949f697-6mpfs" tests="4" failures="0" errors="0" skipped="0" time="0.786951214">
-        <testcase classname="src/components/cathedra/TemaDetailPage.advanced.test.tsx" name="TemaDetailPage - Advanced Integration Tests &gt; validates accessibility roles and attributes for Tabs" time="0.243650381">
+<testsuites name="vitest tests" tests="30" failures="14" errors="0" time="28.549913903">
+    <testsuite name="src/components/cathedra/TemaDetailPage.advanced.test.tsx" timestamp="2026-04-25T04:40:18.854Z" hostname="sandbox-pool-77c949f697-6mpfs" tests="4" failures="0" errors="0" skipped="0" time="0.605892632">
+        <testcase classname="src/components/cathedra/TemaDetailPage.advanced.test.tsx" name="TemaDetailPage - Advanced Integration Tests &gt; validates accessibility roles and attributes for Tabs" time="0.198308576">
             <system-out>
 [STATS] {&quot;calls&quot;:0,&quot;tabs&quot;:{}}
 
@@ -12,27 +12,27 @@
 
             </system-err>
         </testcase>
-        <testcase classname="src/components/cathedra/TemaDetailPage.advanced.test.tsx" name="TemaDetailPage - Advanced Integration Tests &gt; ensures skeleton is correctly placed within active tab content" time="0.245200129">
+        <testcase classname="src/components/cathedra/TemaDetailPage.advanced.test.tsx" name="TemaDetailPage - Advanced Integration Tests &gt; ensures skeleton is correctly placed within active tab content" time="0.16337311">
             <system-out>
 [STATS] {&quot;calls&quot;:2,&quot;tabs&quot;:{&quot;SkelLoc&quot;:2}}
 
             </system-out>
         </testcase>
-        <testcase classname="src/components/cathedra/TemaDetailPage.advanced.test.tsx" name="TemaDetailPage - Advanced Integration Tests &gt; verifies that category limits are maintained" time="0.194296965">
+        <testcase classname="src/components/cathedra/TemaDetailPage.advanced.test.tsx" name="TemaDetailPage - Advanced Integration Tests &gt; verifies that category limits are maintained" time="0.138708591">
             <system-out>
 [STATS] {&quot;calls&quot;:1,&quot;tabs&quot;:{&quot;Limits&quot;:1}}
 
             </system-out>
         </testcase>
-        <testcase classname="src/components/cathedra/TemaDetailPage.advanced.test.tsx" name="TemaDetailPage - Advanced Integration Tests &gt; simulates fetch abort and ensures UI stability" time="0.101399806">
+        <testcase classname="src/components/cathedra/TemaDetailPage.advanced.test.tsx" name="TemaDetailPage - Advanced Integration Tests &gt; simulates fetch abort and ensures UI stability" time="0.103520456">
             <system-out>
 [STATS] {&quot;calls&quot;:2,&quot;tabs&quot;:{&quot;Abort&quot;:2}}
 
             </system-out>
         </testcase>
     </testsuite>
-    <testsuite name="src/components/cathedra/TemaDetailPage.keyboard.test.tsx" timestamp="2026-04-25T04:38:53.324Z" hostname="sandbox-pool-77c949f697-6mpfs" tests="3" failures="0" errors="0" skipped="0" time="0.825362485">
-        <testcase classname="src/components/cathedra/TemaDetailPage.keyboard.test.tsx" name="TemaDetailPage - Keyboard Navigation Integration Tests &gt; navigates between tabs using Arrow keys and validates content updates" time="0.63636543">
+    <testsuite name="src/components/cathedra/TemaDetailPage.keyboard.test.tsx" timestamp="2026-04-25T04:40:18.863Z" hostname="sandbox-pool-77c949f697-6mpfs" tests="3" failures="0" errors="0" skipped="0" time="0.621257063">
+        <testcase classname="src/components/cathedra/TemaDetailPage.keyboard.test.tsx" name="TemaDetailPage - Keyboard Navigation Integration Tests &gt; navigates between tabs using Arrow keys and validates content updates" time="0.454026715">
             <system-err>
 ⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
 ⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
@@ -73,9 +73,9 @@ This ensures that you&apos;re testing the behavior the user would see in the bro
 
             </system-err>
         </testcase>
-        <testcase classname="src/components/cathedra/TemaDetailPage.keyboard.test.tsx" name="TemaDetailPage - Keyboard Navigation Integration Tests &gt; handles error state and retry button via keyboard" time="0.099575204">
+        <testcase classname="src/components/cathedra/TemaDetailPage.keyboard.test.tsx" name="TemaDetailPage - Keyboard Navigation Integration Tests &gt; handles error state and retry button via keyboard" time="0.08458653">
         </testcase>
-        <testcase classname="src/components/cathedra/TemaDetailPage.keyboard.test.tsx" name="TemaDetailPage - Keyboard Navigation Integration Tests &gt; shows skeletons during keyboard-triggered navigation" time="0.086792582">
+        <testcase classname="src/components/cathedra/TemaDetailPage.keyboard.test.tsx" name="TemaDetailPage - Keyboard Navigation Integration Tests &gt; shows skeletons during keyboard-triggered navigation" time="0.079428982">
             <system-err>
 Warning: An update to ForwardRef inside a test was not wrapped in act(...).
 
@@ -114,10 +114,10 @@ This ensures that you&apos;re testing the behavior the user would see in the bro
             </system-err>
         </testcase>
     </testsuite>
-    <testsuite name="src/components/cathedra/TemaDetailPage.test.tsx" timestamp="2026-04-25T04:38:53.330Z" hostname="sandbox-pool-77c949f697-6mpfs" tests="23" failures="14" errors="0" skipped="0" time="27.590762768">
-        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; displays error message with &quot;Try Again&quot; button when fetch fails" time="0.380890101">
+    <testsuite name="src/components/cathedra/TemaDetailPage.test.tsx" timestamp="2026-04-25T04:40:18.867Z" hostname="sandbox-pool-77c949f697-6mpfs" tests="23" failures="14" errors="0" skipped="0" time="27.322764208">
+        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; displays error message with &quot;Try Again&quot; button when fetch fails" time="0.2568507">
             <system-out>
-STATS: {&quot;bible&quot;: 2}
+[STATS] {&quot;calls&quot;:0,&quot;tabs&quot;:{}}
 
             </system-out>
             <system-err>
@@ -126,9 +126,9 @@ STATS: {&quot;bible&quot;: 2}
 
             </system-err>
         </testcase>
-        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; renders specific empty states for each category and ensures no leaking labels" time="2.067661827">
+        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; renders specific empty states for each category and ensures no leaking labels" time="2.060760719">
             <system-out>
-STATS: {&quot;bible&quot;: 1}
+[STATS] {&quot;calls&quot;:0,&quot;tabs&quot;:{}}
 
             </system-out>
             <failure message="Unable to find an element with the text: /Conteúdo da Tradição em aprofundamento/i. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
@@ -731,42 +731,42 @@ Ignored nodes: comments, script, style
               stroke-linecap=&quot;r...
  ❯ waitForWrapper node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
  ❯ findByText node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
- ❯ src/components/cathedra/TemaDetailPage.test.tsx:105:25
+ ❯ src/components/cathedra/TemaDetailPage.test.tsx:114:25
             </failure>
         </testcase>
-        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; completes loading state even when fetch returns undefined" time="0.031213964">
+        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; completes loading state even when fetch returns undefined" time="0.031812342">
             <system-out>
-STATS: {&quot;bible&quot;: 0}
+[STATS] {&quot;calls&quot;:0,&quot;tabs&quot;:{}}
 
             </system-out>
         </testcase>
-        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; renders robust fallbacks for partially filled objects" time="0.061938607">
+        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; renders robust fallbacks for partially filled objects" time="0.04463358">
             <system-out>
-STATS: {&quot;bible&quot;: 1}
+[STATS] {&quot;calls&quot;:0,&quot;tabs&quot;:{}}
 
             </system-out>
         </testcase>
-        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; shows loading skeleton only in the active tab content area" time="1.06047025">
+        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; shows loading skeleton only in the active tab content area" time="1.067047673">
             <system-out>
-STATS: {&quot;bible&quot;: 1}
+[STATS] {&quot;calls&quot;:0,&quot;tabs&quot;:{}}
 
             </system-out>
         </testcase>
-        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; verifies retry flow: error -&gt; retry -&gt; success/fallback" time="0.072356385">
+        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; verifies retry flow: error -&gt; retry -&gt; success/fallback" time="0.077875248">
             <system-out>
-STATS: {&quot;bible&quot;: 2}
+[STATS] {&quot;calls&quot;:0,&quot;tabs&quot;:{}}
 
             </system-out>
         </testcase>
-        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; handles fetch exception by showing global error UI across all tabs" time="0.206093338">
+        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; handles fetch exception by showing global error UI across all tabs" time="0.198013957">
             <system-out>
-STATS: {&quot;bible&quot;: 5}
+[STATS] {&quot;calls&quot;:0,&quot;tabs&quot;:{}}
 
             </system-out>
         </testcase>
-        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; ensures no content leakage when switching between content and empty categories" time="1.065695355">
+        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; ensures no content leakage when switching between content and empty categories" time="1.047535096">
             <system-out>
-STATS: {&quot;bible&quot;: 1}
+[STATS] {&quot;calls&quot;:0,&quot;tabs&quot;:{}}
 
             </system-out>
             <failure message="[2mexpect([22m[31melement[39m[2m).not.toBeInTheDocument()[22m
@@ -783,12 +783,12 @@ expected document not to contain element, found &lt;p
 &gt;
   &quot;Bible Content&quot;
 &lt;/p&gt; instead
- ❯ src/components/cathedra/TemaDetailPage.test.tsx:251:54
+ ❯ src/components/cathedra/TemaDetailPage.test.tsx:260:54
             </failure>
         </testcase>
-        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; handles rapid multi-switch without skeleton accumulation" time="4.038008062">
+        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; handles rapid multi-switch without skeleton accumulation" time="4.045373246">
             <system-out>
-STATS: {&quot;bible&quot;: 1}
+[STATS] {&quot;calls&quot;:0,&quot;tabs&quot;:{}}
 
             </system-out>
             <failure message="Unable to find an element with the text: /Journey Data/i. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
@@ -1395,12 +1395,12 @@ Ignored nodes: comments, script, style
               height=...
  ❯ waitForWrapper node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
  ❯ findByText node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
- ❯ src/components/cathedra/TemaDetailPage.test.tsx:278:25
+ ❯ src/components/cathedra/TemaDetailPage.test.tsx:287:25
             </failure>
         </testcase>
-        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; ensures only the latest resolved request updates the UI (race condition protection)" time="3.043312117">
+        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; ensures only the latest resolved request updates the UI (race condition protection)" time="3.040999485">
             <system-out>
-STATS: {&quot;bible&quot;: 1}
+[STATS] {&quot;calls&quot;:0,&quot;tabs&quot;:{}}
 
             </system-out>
             <failure message="Unable to find an element with the text: /Magisterium Wins/i. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
@@ -2011,12 +2011,12 @@ Ignored nodes: comments, script, style
     ...
  ❯ waitForWrapper node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
  ❯ findByText node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
- ❯ src/components/cathedra/TemaDetailPage.test.tsx:315:25
+ ❯ src/components/cathedra/TemaDetailPage.test.tsx:324:25
             </failure>
         </testcase>
-        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; shows loading state during retry and resolves correctly" time="1.020904753">
+        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; shows loading state during retry and resolves correctly" time="1.024045636">
             <system-out>
-STATS: {&quot;bible&quot;: 1}
+[STATS] {&quot;calls&quot;:0,&quot;tabs&quot;:{}}
 
             </system-out>
             <failure message="Unable to find an element with the text: /Erro ao carregar conexões .* no Nexus/i. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
@@ -2623,12 +2623,12 @@ Ignored nodes: comments, script, style
               height=...
  ❯ waitForWrapper node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
  ❯ findByText node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
- ❯ src/components/cathedra/TemaDetailPage.test.tsx:334:25
+ ❯ src/components/cathedra/TemaDetailPage.test.tsx:343:25
             </failure>
         </testcase>
-        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; verifies that each category fallback appears only in its corresponding tab during loading error" time="1.024648979">
+        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; verifies that each category fallback appears only in its corresponding tab during loading error" time="1.02479007">
             <system-out>
-STATS: {&quot;bible&quot;: 1}
+[STATS] {&quot;calls&quot;:0,&quot;tabs&quot;:{}}
 
             </system-out>
             <failure message="Unable to find an element with the text: /Erro ao carregar conexões .* no Nexus/i. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
@@ -3235,32 +3235,32 @@ Ignored nodes: comments, script, style
               height=...
  ❯ waitForWrapper node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
  ❯ findByText node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
- ❯ src/components/cathedra/TemaDetailPage.test.tsx:377:25
+ ❯ src/components/cathedra/TemaDetailPage.test.tsx:386:25
             </failure>
         </testcase>
-        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; alternates rapidly between tabs with different response times and validates content" time="2.055081868">
+        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; alternates rapidly between tabs with different response times and validates content" time="2.036317338">
             <system-out>
-STATS: {&quot;bible&quot;: 1}
+[STATS] {&quot;calls&quot;:0,&quot;tabs&quot;:{}}
 
             </system-out>
             <failure message="resolvers[2] is not a function" type="TypeError">
 TypeError: resolvers[2] is not a function
- ❯ src/components/cathedra/TemaDetailPage.test.tsx:419:19
+ ❯ src/components/cathedra/TemaDetailPage.test.tsx:428:19
  ❯ node_modules/.bun/@testing-library+react@16.3.2+b41f8805ee63d2ff/node_modules/@testing-library/react/dist/act-compat.js:47:24
  ❯ act node_modules/.bun/react@18.3.1/node_modules/react/cjs/react.development.js:2512:16
  ❯ Proxy.act node_modules/.bun/@testing-library+react@16.3.2+b41f8805ee63d2ff/node_modules/@testing-library/react/dist/act-compat.js:46:25
- ❯ src/components/cathedra/TemaDetailPage.test.tsx:418:11
+ ❯ src/components/cathedra/TemaDetailPage.test.tsx:427:11
             </failure>
         </testcase>
-        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; confirms that error fallback persists if retry also fails" time="0.070637751">
+        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; confirms that error fallback persists if retry also fails" time="0.068661229">
             <system-out>
-STATS: {&quot;bible&quot;: 2}
+[STATS] {&quot;calls&quot;:0,&quot;tabs&quot;:{}}
 
             </system-out>
         </testcase>
-        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; handles tab switching with micro-delays and ensures stable UI state" time="4.086511409">
+        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; handles tab switching with micro-delays and ensures stable UI state" time="4.071933069">
             <system-out>
-STATS: {&quot;bible&quot;: 1}
+[STATS] {&quot;calls&quot;:0,&quot;tabs&quot;:{}}
 
             </system-out>
             <failure message="Unable to find an element with the text: /Nenhuma jornada específica vinculada a este tema/i. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
@@ -3867,18 +3867,18 @@ Ignored nodes: comments, script, style
               height=&quot;24&quot;[...
  ❯ waitForWrapper node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
  ❯ findByText node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
- ❯ src/components/cathedra/TemaDetailPage.test.tsx:473:25
+ ❯ src/components/cathedra/TemaDetailPage.test.tsx:482:25
             </failure>
         </testcase>
-        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; prevents multiple requests when &quot;Try Again&quot; is clicked twice rapidly" time="0.107421199">
+        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; prevents multiple requests when &quot;Try Again&quot; is clicked twice rapidly" time="0.083614849">
             <system-out>
-STATS: {&quot;bible&quot;: 1}
+[STATS] {&quot;calls&quot;:0,&quot;tabs&quot;:{}}
 
             </system-out>
         </testcase>
-        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; verifies that each category shows its specific error message and it updates after success" time="2.039766284">
+        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; verifies that each category shows its specific error message and it updates after success" time="2.036198289">
             <system-out>
-STATS: {&quot;bible&quot;: 1}
+[STATS] {&quot;calls&quot;:0,&quot;tabs&quot;:{}}
 
             </system-out>
             <failure message="Unable to find an element with the text: /Erro ao carregar conexões de Tradição no Nexus/i. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
@@ -4489,12 +4489,12 @@ Ignored nodes: comments, script, style
 ...
  ❯ waitForWrapper node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
  ❯ findByText node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
- ❯ src/components/cathedra/TemaDetailPage.test.tsx:521:25
+ ❯ src/components/cathedra/TemaDetailPage.test.tsx:530:25
             </failure>
         </testcase>
-        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; validates skeleton location and accessibility in the active TabsContent" time="0.334576806">
+        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; validates skeleton location and accessibility in the active TabsContent" time="0.312189235">
             <system-out>
-STATS: {&quot;bible&quot;: 1}
+[STATS] {&quot;calls&quot;:0,&quot;tabs&quot;:{}}
 
             </system-out>
             <failure message="Unable to find an accessible element with the role &quot;tabpanel&quot;
@@ -5139,18 +5139,18 @@ Ignored nodes: comments, script, style
  ❯ node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
  ❯ node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
  ❯ getByRole node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
- ❯ src/components/cathedra/TemaDetailPage.test.tsx:543:32
+ ❯ src/components/cathedra/TemaDetailPage.test.tsx:552:32
             </failure>
         </testcase>
-        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; ensures no DOM pollution: only one category fallback/content is present at a time" time="0.019057425">
+        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; ensures no DOM pollution: only one category fallback/content is present at a time" time="0.017848578">
             <system-out>
-STATS: {&quot;bible&quot;: 0}
+[STATS] {&quot;calls&quot;:0,&quot;tabs&quot;:{}}
 
             </system-out>
         </testcase>
-        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; handles 15+ rapid tab switches without skeleton accumulation" time="1.485920167">
+        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; handles 15+ rapid tab switches without skeleton accumulation" time="1.452876719">
             <system-out>
-STATS: {&quot;bible&quot;: 1}
+[STATS] {&quot;calls&quot;:0,&quot;tabs&quot;:{}}
 
             </system-out>
             <failure message="expected 0 to be greater than 0
@@ -5489,15 +5489,15 @@ Ignored nodes: comments, script, style
                     x2=&quot;8&quot;
                     y1=&quot;3&quot;
                     y2=&quot;...
- ❯ src/components/cathedra/TemaDetailPage.test.tsx:596:66
+ ❯ src/components/cathedra/TemaDetailPage.test.tsx:605:66
  ❯ runWithExpensiveErrorDiagnosticsDisabled node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
  ❯ checkCallback node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
  ❯ Timeout.checkRealTimersCallback node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
             </failure>
         </testcase>
-        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; verifies retry button accessibility states (aria-busy)" time="1.035360518">
+        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; verifies retry button accessibility states (aria-busy)" time="1.052345085">
             <system-out>
-STATS: {&quot;bible&quot;: 2}
+[STATS] {&quot;calls&quot;:0,&quot;tabs&quot;:{}}
 
             </system-out>
             <failure message="[2mexpect([22m[31melement[39m[2m).toHaveAttribute([22m[32m[32m&quot;aria-busy&quot;[32m[39m[2m, [22m[32m[32m&quot;true&quot;[32m[39m[2m) // element.getAttribute(&quot;aria-busy&quot;) === &quot;true&quot;[22m
@@ -5848,15 +5848,15 @@ Ignored nodes: comments, script, style
                     y1=&quot;3&quot;
                     y2=&quot;21&quot;
          ...
- ❯ src/components/cathedra/TemaDetailPage.test.tsx:622:24
+ ❯ src/components/cathedra/TemaDetailPage.test.tsx:631:24
  ❯ runWithExpensiveErrorDiagnosticsDisabled node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
  ❯ checkCallback node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
  ❯ Timeout.checkRealTimersCallback node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
             </failure>
         </testcase>
-        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; ensures stale responses from previous tabs are ignored (race condition)" time="1.84820218">
+        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; ensures stale responses from previous tabs are ignored (race condition)" time="1.834025216">
             <system-out>
-STATS: {&quot;bible&quot;: 1}
+[STATS] {&quot;calls&quot;:0,&quot;tabs&quot;:{}}
 
             </system-out>
             <failure message="Unable to find an element with the text: ACTIVE DATA. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
@@ -6467,17 +6467,17 @@ Ignored nodes: comments, script, style
   ...
  ❯ waitForWrapper node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
  ❯ findByText node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
- ❯ src/components/cathedra/TemaDetailPage.test.tsx:676:25
+ ❯ src/components/cathedra/TemaDetailPage.test.tsx:685:25
             </failure>
         </testcase>
-        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; validates that fetch is debounced during rapid tab switching" time="0.431485211">
+        <testcase classname="src/components/cathedra/TemaDetailPage.test.tsx" name="TemaDetailPage - Integration Tests &gt; validates that fetch is debounced during rapid tab switching" time="0.431889853">
             <system-out>
-STATS: {&quot;bible&quot;: 0}
+[STATS] {&quot;calls&quot;:0,&quot;tabs&quot;:{}}
 
             </system-out>
             <failure message="expected &quot;spy&quot; to be called 1 times, but got 0 times" type="AssertionError">
 AssertionError: expected &quot;spy&quot; to be called 1 times, but got 0 times
- ❯ src/components/cathedra/TemaDetailPage.test.tsx:703:41
+ ❯ src/components/cathedra/TemaDetailPage.test.tsx:712:41
             </failure>
         </testcase>
     </testsuite>

@@ -1,11 +1,11 @@
 # Relatório de Integração - TemaDetailPage
 
 **Status:** ❌ PENDENTE
-- **Data:** 4/25/2026, 4:38:53 AM
+- **Data:** 4/25/2026, 4:40:19 AM
 - **Total:** 30
 - **Sucessos:** 16
 - **Falhas:** 14
-- **Duração:** 29.20s
+- **Duração:** 28.54s
 
 ## 🏎️ Race Conditions & Performance
 - ✅ **simulates fetch abort and ensures UI stability** (TemaDetailPage.advanced.test.tsx)
@@ -194,7 +194,7 @@ Ignored nodes: comments, script, style
               [33mstroke-linecap[39m=[32m"r...
     at waitForWrapper (/dev-server/node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27)
     at findByText (/dev-server/node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33)
-    at /dev-server/src/components/cathedra/TemaDetailPage.test.tsx:105:25
+    at /dev-server/src/components/cathedra/TemaDetailPage.test.tsx:114:25
     at file:///dev-server/node_modules/.bun/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20
 ```
 ### ensures no content leakage when switching between content and empty categories
@@ -210,7 +210,7 @@ Error: [2mexpect([22m[31melement[39m[2m).not.toBeInTheDocument()[22m
     at Proxy.expectWrapper (file:///dev-server/node_modules/.bun/@vitest+expect@3.2.4/node_modules/@vitest/expect/dist/index.js:1745:12)
     at Proxy.<anonymous> (file:///dev-server/node_modules/.bun/@vitest+expect@3.2.4/node_modules/@vitest/expect/dist/index.js:1029:14)
     at Proxy.toBeInTheDocument (file:///dev-server/node_modules/.bun/chai@5.3.3/node_modules/chai/index.js:1686:25)
-    at /dev-server/src/components/cathedra/TemaDetailPage.test.tsx:251:54
+    at /dev-server/src/components/cathedra/TemaDetailPage.test.tsx:260:54
     at file:///dev-server/node_modules/.bun/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20
 ```
 ### handles rapid multi-switch without skeleton accumulation
@@ -369,7 +369,7 @@ Ignored nodes: comments, script, style
               [33mheight[39m=[32m...
     at waitForWrapper (/dev-server/node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27)
     at findByText (/dev-server/node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33)
-    at /dev-server/src/components/cathedra/TemaDetailPage.test.tsx:278:25
+    at /dev-server/src/components/cathedra/TemaDetailPage.test.tsx:287:25
     at file:///dev-server/node_modules/.bun/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20
 ```
 ### ensures only the latest resolved request updates the UI (race condition protection)
@@ -529,7 +529,7 @@ Ignored nodes: comments, script, style
     ...
     at waitForWrapper (/dev-server/node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27)
     at findByText (/dev-server/node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33)
-    at /dev-server/src/components/cathedra/TemaDetailPage.test.tsx:315:25
+    at /dev-server/src/components/cathedra/TemaDetailPage.test.tsx:324:25
     at file:///dev-server/node_modules/.bun/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20
 ```
 ### shows loading state during retry and resolves correctly
@@ -688,7 +688,7 @@ Ignored nodes: comments, script, style
               [33mheight[39m=[3...
     at waitForWrapper (/dev-server/node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27)
     at findByText (/dev-server/node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33)
-    at /dev-server/src/components/cathedra/TemaDetailPage.test.tsx:334:25
+    at /dev-server/src/components/cathedra/TemaDetailPage.test.tsx:343:25
     at file:///dev-server/node_modules/.bun/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11
     at file:///dev-server/node_modules/.bun/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26
     at file:///dev-server/node_modules/.bun/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20
@@ -853,7 +853,7 @@ Ignored nodes: comments, script, style
               [33mheight[39m=...
     at waitForWrapper (/dev-server/node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27)
     at findByText (/dev-server/node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33)
-    at /dev-server/src/components/cathedra/TemaDetailPage.test.tsx:377:25
+    at /dev-server/src/components/cathedra/TemaDetailPage.test.tsx:386:25
     at file:///dev-server/node_modules/.bun/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11
     at file:///dev-server/node_modules/.bun/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26
     at file:///dev-server/node_modules/.bun/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20
@@ -866,11 +866,11 @@ Ignored nodes: comments, script, style
 **Arquivo:** TemaDetailPage.test.tsx
 ```
 TypeError: resolvers[2] is not a function
-    at /dev-server/src/components/cathedra/TemaDetailPage.test.tsx:419:19
+    at /dev-server/src/components/cathedra/TemaDetailPage.test.tsx:428:19
     at /dev-server/node_modules/.bun/@testing-library+react@16.3.2+b41f8805ee63d2ff/node_modules/@testing-library/react/dist/act-compat.js:47:24
     at act (/dev-server/node_modules/.bun/react@18.3.1/node_modules/react/cjs/react.development.js:2512:16)
     at Proxy.act (/dev-server/node_modules/.bun/@testing-library+react@16.3.2+b41f8805ee63d2ff/node_modules/@testing-library/react/dist/act-compat.js:46:25)
-    at /dev-server/src/components/cathedra/TemaDetailPage.test.tsx:418:11
+    at /dev-server/src/components/cathedra/TemaDetailPage.test.tsx:427:11
     at file:///dev-server/node_modules/.bun/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20
 ```
 ### handles tab switching with micro-delays and ensures stable UI state
@@ -1029,7 +1029,7 @@ Ignored nodes: comments, script, style
               [33mheight[39m=[32m"24"[...
     at waitForWrapper (/dev-server/node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27)
     at findByText (/dev-server/node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33)
-    at /dev-server/src/components/cathedra/TemaDetailPage.test.tsx:473:25
+    at /dev-server/src/components/cathedra/TemaDetailPage.test.tsx:482:25
     at file:///dev-server/node_modules/.bun/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20
 ```
 ### verifies that each category shows its specific error message and it updates after success
@@ -1189,7 +1189,7 @@ Ignored nodes: comments, script, style
 ...
     at waitForWrapper (/dev-server/node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27)
     at findByText (/dev-server/node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33)
-    at /dev-server/src/components/cathedra/TemaDetailPage.test.tsx:521:25
+    at /dev-server/src/components/cathedra/TemaDetailPage.test.tsx:530:25
     at file:///dev-server/node_modules/.bun/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20
 ```
 ### validates skeleton location and accessibility in the active TabsContent
@@ -1518,7 +1518,7 @@ Ignored nodes: comments, script, style
     at /dev-server/node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
     at /dev-server/node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
     at getByRole (/dev-server/node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19)
-    at /dev-server/src/components/cathedra/TemaDetailPage.test.tsx:543:32
+    at /dev-server/src/components/cathedra/TemaDetailPage.test.tsx:552:32
     at runNextTicks (node:internal/process/task_queues:65:5)
     at listOnTimeout (node:internal/timers:549:9)
     at processTimers (node:internal/timers:523:7)
@@ -1695,7 +1695,7 @@ Ignored nodes: comments, script, style
                     [33mx2[39m=[32m"8"[39m
                     [33my1[39m=[32m"3"[39m
                     [33my2[39m=[32m"...
-    at /dev-server/src/components/cathedra/TemaDetailPage.test.tsx:596:66
+    at /dev-server/src/components/cathedra/TemaDetailPage.test.tsx:605:66
     at runWithExpensiveErrorDiagnosticsDisabled (/dev-server/node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12)
     at checkCallback (/dev-server/node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77)
     at Timeout.checkRealTimersCallback (/dev-server/node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16)
@@ -1882,7 +1882,7 @@ Ignored nodes: comments, script, style
     at Proxy.expectWrapper (file:///dev-server/node_modules/.bun/@vitest+expect@3.2.4/node_modules/@vitest/expect/dist/index.js:1745:12)
     at Proxy.<anonymous> (file:///dev-server/node_modules/.bun/@vitest+expect@3.2.4/node_modules/@vitest/expect/dist/index.js:1029:14)
     at Proxy.toHaveAttribute (file:///dev-server/node_modules/.bun/chai@5.3.3/node_modules/chai/index.js:1686:25)
-    at /dev-server/src/components/cathedra/TemaDetailPage.test.tsx:622:24
+    at /dev-server/src/components/cathedra/TemaDetailPage.test.tsx:631:24
     at runWithExpensiveErrorDiagnosticsDisabled (/dev-server/node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12)
     at checkCallback (/dev-server/node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77)
     at Timeout.checkRealTimersCallback (/dev-server/node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16)
@@ -2046,13 +2046,13 @@ Ignored nodes: comments, script, style
   ...
     at waitForWrapper (/dev-server/node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27)
     at findByText (/dev-server/node_modules/.bun/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33)
-    at /dev-server/src/components/cathedra/TemaDetailPage.test.tsx:676:25
+    at /dev-server/src/components/cathedra/TemaDetailPage.test.tsx:685:25
     at file:///dev-server/node_modules/.bun/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20
 ```
 ### validates that fetch is debounced during rapid tab switching
 **Arquivo:** TemaDetailPage.test.tsx
 ```
 AssertionError: expected "spy" to be called 1 times, but got 0 times
-    at /dev-server/src/components/cathedra/TemaDetailPage.test.tsx:703:41
+    at /dev-server/src/components/cathedra/TemaDetailPage.test.tsx:712:41
     at file:///dev-server/node_modules/.bun/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20
 ```
