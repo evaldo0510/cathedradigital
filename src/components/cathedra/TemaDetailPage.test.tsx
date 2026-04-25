@@ -54,10 +54,22 @@ const renderWithProviders = (ui: React.ReactElement, initialEntry = '/temas/fe')
 describe('TemaDetailPage - Integration Tests', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockStats = { calls: 0, tabs: {} };
   });
 
   afterEach(() => {
-    // Log the number of calls to fetchNexusTagContent for the report
+    console.log(`[STATS] ${JSON.stringify(mockStats)}`);
+  });
+
+  const trackedFetch = (impl: any) => {
+    return (tag: any, signal?: AbortSignal) => {
+      mockStats.calls++;
+      const label = tag.label || 'unknown';
+      mockStats.tabs[label] = (mockStats.tabs[label] || 0) + 1;
+      return impl(tag, signal);
+    };
+  };
+
     const callCount = (fetchNexusTagContent as any).mock.calls.length;
     console.log(`STATS: {"bible": ${callCount}}`);
   });
