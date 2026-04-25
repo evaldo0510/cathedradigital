@@ -238,10 +238,10 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
               {content.length > 0 ? (
                 <div className="space-y-6">
                   {[
-                    { id: 'bible', label: 'Bíblia', icon: <Icons.BookOpen className="w-3.5 h-3.5" /> },
-                    { id: 'catechism', label: 'Catecismo', icon: <Icons.Church className="w-3.5 h-3.5" /> },
-                    { id: 'magisterium', label: 'Magistério', icon: <Icons.Shield className="w-3.5 h-3.5" /> },
-                    { id: 'journey', label: 'Jornadas', icon: <Icons.Flame className="w-3.5 h-3.5" /> },
+                    { id: 'bible', label: 'Bíblia', icon: <BookOpen className="w-3.5 h-3.5" /> },
+                    { id: 'catechism', label: 'Catecismo', icon: <Church className="w-3.5 h-3.5" /> },
+                    { id: 'magisterium', label: 'Magistério', icon: <Shield className="w-3.5 h-3.5" /> },
+                    { id: 'journey', label: 'Jornadas', icon: <Flame className="w-3.5 h-3.5" /> },
                   ].map((category) => {
                     const categoryContent = content.filter(c => c.type === category.id);
                     if (categoryContent.length === 0) return null;
