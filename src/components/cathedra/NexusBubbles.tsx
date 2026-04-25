@@ -5,13 +5,13 @@ import { useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AppRoute } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, ExternalLink, Sparkles, Search, X, Heart, Church, Flame, Cross, BookOpen, Shield, Crown, Hand, Star, Globe, Eye, Users, Compass, Wine, Orbit, Hash, Mountain, RefreshCw, Frown, Bird, Droplets, Wheat, Target, Clock, Megaphone, Skull, Filter } from 'lucide-react';
+import { Loader2, ExternalLink, Sparkles, Search, X, Heart, Church, Flame, Cross, BookOpen, Shield, Crown, Hand, Star, Globe, Eye, Users, Compass, Wine, Orbit, Hash, Mountain, RefreshCw, Frown, Bird, Droplets, Wheat, Target, Clock, Megaphone, Skull, Filter, AlertCircle, Info } from 'lucide-react';
 import { Icons } from '@/constants';
 import { BubbleTag, getTagIcon } from './BubbleTag';
-import { useRovingTabindex } from './TabUtils';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { type ProfileId, PROFILES } from './SpiritualQuiz';
+import { useRovingTabindex } from './TabUtils';
 
 interface Tag {
   id: string;
@@ -36,6 +36,7 @@ interface NexusBubblesProps {
 const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabIndex?: number; onKeyDown?: (e: React.KeyboardEvent) => void }> = ({ tag, index, isSuggested, tabIndex, onKeyDown }) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const [open, setOpen] = useState(false);
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [content, setContent] = useState<TagContent[]>([]);
   const [logosInsight, setLogosInsight] = useState<string | null>(null);
@@ -46,6 +47,8 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
     setStatus('loading');
     setErrorDetails(null);
     console.log(`[Nexus Diagnostic] Fetching content for tag: ${tag.label} (ID: ${tag.id})`);
+    
+    try {
       const { data, error } = await supabase
         .from('content_tags')
         .select(`
@@ -60,19 +63,30 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
         .eq('tag_id', tag.id)
         .limit(3);
 
-      if (!error && data) {
+      if (error) throw error;
+
+      if (data) {
         const formatted = (data as any[]).map(d => d.spiritual_contents).filter(Boolean);
         setContent(formatted);
+        console.log(`[Nexus Diagnostic] Found ${formatted.length} items for ${tag.label}`);
+        if (formatted.length === 0) {
+          console.warn(`[Nexus Diagnostic] No spiritual_contents linked to tag: ${tag.label}`);
+        }
       }
 
       const result = await getSpiritualInsight(tag.label);
       if (!result.error && result.content) {
         setLogosInsight(result.content);
+      } else if (result.error) {
+        console.warn(`[Nexus Diagnostic] AI Insight error: ${result.error}`);
       }
-    } catch (e) {
-      console.error(e);
+
+      setStatus('success');
+    } catch (e: any) {
+      console.error(`[Nexus Diagnostic] Error fetching ${tag.label}:`, e);
+      setErrorDetails(e.message || 'Erro desconhecido');
+      setStatus('error');
     }
-    setLoading(false);
   };
 
   const prefetchTag = useCallback(() => {
@@ -144,7 +158,7 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
         </div>
         
         <div className="p-5 space-y-5 max-h-[350px] overflow-y-auto scrollbar-none">
-          {loading ? (
+          {status === 'loading' ? (
             <div className="space-y-4 py-2">
               <div className="flex gap-2">
                 <div className="w-8 h-8 rounded-full bg-muted animate-pulse" />
@@ -154,6 +168,14 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
                 </div>
               </div>
               <div className="h-32 bg-muted/20 rounded-2xl animate-pulse w-full" />
+              <p className="text-[10px] text-center text-muted-foreground animate-pulse">Consultando Nexus...</p>
+            </div>
+          ) : status === 'error' ? (
+            <div className="p-6 text-center space-y-3 bg-red-500/5 rounded-2xl border border-red-500/10">
+              <AlertCircle className="w-8 h-8 text-red-500 mx-auto" />
+              <p className="text-sm font-bold text-red-600">Erro ao carregar conteúdo</p>
+              <p className="text-[10px] text-muted-foreground italic">{errorDetails}</p>
+              <Button size="sm" variant="outline" onClick={fetchContent} className="h-8 rounded-xl text-[10px] uppercase font-black tracking-widest">Tentar Novamente</Button>
             </div>
           ) : (
             <>
@@ -214,12 +236,16 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
                     );
                   })}
                 </div>
-              ) : !logosInsight && (
-                <div className="flex flex-col items-center justify-center py-6 text-center space-y-2">
-                  <div className="w-10 h-10 rounded-full bg-muted/30 flex items-center justify-center">
-                    <ExternalLink className="w-5 h-5 text-muted-foreground/30" />
+              ) : !logosInsight && status === 'success' && (
+                <div className="flex flex-col items-center justify-center py-6 text-center space-y-3">
+                  <div className="w-12 h-12 rounded-full bg-muted/30 flex items-center justify-center">
+                    <Info className="w-6 h-6 text-muted-foreground/30" />
                   </div>
-                  <p className="text-[11px] text-muted-foreground italic">Conteúdo em aprofundamento...</p>
+                  <div>
+                    <p className="text-xs font-bold text-muted-foreground">Sem conteúdo vinculado</p>
+                    <p className="text-[10px] text-muted-foreground/60 italic px-4">Este tema ainda não possui versículos catalogados no Nexus.</p>
+                  </div>
+                  <Button size="sm" variant="ghost" onClick={() => navigate(`${AppRoute.TEMAS}/${tag.slug}`)} className="h-8 rounded-xl text-[10px] uppercase font-black tracking-widest">Explorar Completo</Button>
                 </div>
               )}
             </>
@@ -442,32 +468,19 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
                         onClick={() => setExpandedCategory(expandedCategory === key ? null : key)}
                         className="flex items-center gap-1.5 group w-full"
                       >
-                        <div className={`w-6 h-6 rounded-lg flex items-center justify-center transition-all ${expandedCategory === key ? 'bg-primary/10' : 'bg-muted/50'}`}>
-                          {category.icon}
-                        </div>
-                        <span className="text-[10px] font-black uppercase tracking-wider text-muted-foreground/80 group-hover:text-primary transition-colors">
+                        {category.icon}
+                        <span className="text-[10px] font-black uppercase tracking-widest text-foreground group-hover:text-primary transition-colors">
                           {category.label}
                         </span>
-                        <div className="h-[1px] flex-1 bg-gradient-to-r from-border/50 to-transparent" />
-                        <span className="text-[10px] text-muted-foreground/50 group-hover:text-primary">
-                          {expandedCategory === key ? 'Ocultar' : `Ver ${categoryTags.length}`}
-                        </span>
+                        <div className="h-px flex-1 bg-border/40" />
+                        <span className="text-[8px] font-black text-muted-foreground/40">{categoryTags.length} temas</span>
                       </button>
-
                       <div className="flex flex-wrap gap-1.5" role="list">
-                        {(expandedCategory === key ? categoryTags : categoryTags.slice(0, 6)).map((tag, i) => (
+                        {categoryTags.slice(0, expandedCategory === key ? 100 : 8).map((tag, i) => (
                           <div key={tag.slug} role="listitem">
                             <TagBubble tag={tag} index={i} />
                           </div>
                         ))}
-                        {expandedCategory !== key && categoryTags.length > 6 && (
-                          <button
-                            onClick={() => setExpandedCategory(key)}
-                            className="px-3 py-1.5 rounded-full border border-dashed border-border text-[11px] font-bold text-muted-foreground hover:text-primary hover:border-primary/40 transition-all flex items-center gap-1"
-                          >
-                            <span>+{categoryTags.length - 6}</span>
-                          </button>
-                        )}
                       </div>
                     </motion.div>
                   );
@@ -476,17 +489,6 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
             </>
           )}
         </AnimatePresence>
-      </div>
-
-      <div className="flex justify-center pt-2">
-        <Button
-          variant="ghost"
-          size="sm"
-          className="rounded-full text-[10px] font-black uppercase tracking-[0.2em] text-primary/60 hover:text-primary hover:bg-primary/5 px-6"
-          onClick={() => navigate(AppRoute.TEMAS)}
-        >
-          Explorar todos os temas →
-        </Button>
       </div>
     </div>
   );
