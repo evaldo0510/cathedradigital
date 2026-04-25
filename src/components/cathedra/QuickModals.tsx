@@ -43,12 +43,24 @@ export const BibleModal: React.FC<QuickModalProps> = ({ isOpen, onClose }) => {
   return (
     <ModalShell title="Bíblia — Consulta Rápida" onClose={onClose}>
       <div className="flex gap-2 mb-4">
-        <select value={book} onChange={e => { setBook(e.target.value); setChapter(1); }}
-          className="px-3 py-2 rounded-xl border border-border bg-card text-foreground text-sm focus:outline-none">
+        <select 
+          value={book} 
+          onChange={e => { setBook(e.target.value); setChapter(1); }}
+          className="px-3 py-2 rounded-xl border border-border bg-card text-foreground text-sm focus:ring-2 focus:ring-primary outline-none"
+          aria-label="Selecionar livro da Bíblia"
+        >
           {BOOKS.map(b => <option key={b} value={b}>{b}</option>)}
         </select>
-        <input type="number" min={1} max={150} value={chapter} onChange={e => setChapter(Number(e.target.value))}
-          className="w-20 px-3 py-2 rounded-xl border border-border bg-card text-foreground text-sm text-center focus:outline-none" />
+        <input 
+          type="number" 
+          min={1} 
+          max={150} 
+          value={chapter} 
+          onChange={e => setChapter(Number(e.target.value))}
+          className="w-20 px-3 py-2 rounded-xl border border-border bg-card text-foreground text-sm text-center focus:ring-2 focus:ring-primary outline-none" 
+          aria-label="Número do capítulo"
+        />
+
       </div>
       {loading ? <LoadingSkeleton /> : (
         <div className="max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
@@ -81,12 +93,32 @@ export const CatechismModal: React.FC<QuickModalProps> = ({ isOpen, onClose }) =
     <ModalShell title="Catecismo — Consulta Rápida" onClose={onClose}>
       <div className="flex items-center gap-3 mb-4">
         <span className="text-primary font-bold">§</span>
-        <input type="number" min={1} max={2865} value={paragraph} onChange={e => setParagraph(Number(e.target.value))}
-          className="w-24 px-3 py-2 rounded-xl border border-border bg-card text-foreground text-sm text-center focus:outline-none" />
+        <input 
+          type="number" 
+          min={1} 
+          max={2865} 
+          value={paragraph} 
+          onChange={e => setParagraph(Number(e.target.value))}
+          className="w-24 px-3 py-2 rounded-xl border border-border bg-card text-foreground text-sm text-center focus:ring-2 focus:ring-primary outline-none" 
+          aria-label="Número do parágrafo do Catecismo"
+        />
         <div className="flex gap-1">
-          <button onClick={() => setParagraph(Math.max(1, paragraph - 1))} className="px-2 py-1 rounded-lg border border-border text-xs">←</button>
-          <button onClick={() => setParagraph(Math.min(2865, paragraph + 1))} className="px-2 py-1 rounded-lg border border-border text-xs">→</button>
+          <button 
+            onClick={() => setParagraph(Math.max(1, paragraph - 1))} 
+            className="px-2 py-1 rounded-lg border border-border text-xs focus-visible:ring-2 focus-visible:ring-primary outline-none hover:bg-muted"
+            aria-label="Parágrafo anterior"
+          >
+            ←
+          </button>
+          <button 
+            onClick={() => setParagraph(Math.min(2865, paragraph + 1))} 
+            className="px-2 py-1 rounded-lg border border-border text-xs focus-visible:ring-2 focus-visible:ring-primary outline-none hover:bg-muted"
+            aria-label="Próximo parágrafo"
+          >
+            →
+          </button>
         </div>
+
       </div>
       {isLoading ? <LoadingSkeleton /> : (
         <div className="max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
@@ -164,18 +196,40 @@ export const DocumentsModal: React.FC<QuickModalProps> = ({ isOpen, onClose }) =
 };
 
 // ─── Shared Shell ───
-const ModalShell: React.FC<{ title: string; onClose: () => void; children: React.ReactNode }> = ({ title, onClose, children }) => (
-  <div className="fixed inset-0 z-[180] flex items-center justify-center p-4" onClick={onClose}>
-    <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
-    <div className="relative w-full max-w-lg bg-card border border-border rounded-2xl shadow-2xl p-6" onClick={e => e.stopPropagation()}>
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-black uppercase tracking-widest text-primary">{title}</h3>
-        <button onClick={onClose} className="p-1 rounded-lg hover:bg-muted text-muted-foreground"><Icons.ArrowDown className="w-4 h-4 rotate-180" /></button>
+const ModalShell: React.FC<{ title: string; onClose: () => void; children: React.ReactNode }> = ({ title, onClose, children }) => {
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [onClose]);
+
+  return (
+    <div 
+      className="fixed inset-0 z-[180] flex items-center justify-center p-4" 
+      role="dialog" 
+      aria-modal="true" 
+      aria-labelledby="modal-title"
+    >
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
+      <div className="relative w-full max-w-lg bg-card border border-border rounded-2xl shadow-2xl p-6 overflow-hidden animate-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center justify-between mb-4">
+          <h3 id="modal-title" className="text-sm font-black uppercase tracking-widest text-primary">{title}</h3>
+          <button 
+            onClick={onClose} 
+            className="p-1.5 rounded-lg hover:bg-muted text-muted-foreground transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none"
+            aria-label="Fechar modal"
+          >
+            <Icons.X className="w-5 h-5" />
+          </button>
+        </div>
+        {children}
       </div>
-      {children}
     </div>
-  </div>
-);
+  );
+};
+
 
 const LoadingSkeleton = () => (
   <div className="space-y-3 py-4">

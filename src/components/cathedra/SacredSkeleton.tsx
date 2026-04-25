@@ -1,29 +1,37 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 
+/**
+ * Standardized skeleton styles:
+ * - Layout: matching the domain layout (page header, grid, list)
+ * - Height: consistent with actual components
+ * - Animations: standard pulse or shimmer
+ */
+
 export const PageHeaderSkeleton: React.FC = () => (
-  <div className="text-center space-y-3 pt-6 mb-8 animate-pulse">
-    <div className="w-8 h-8 mx-auto rounded-full bg-muted" />
-    <div className="h-8 w-48 mx-auto bg-muted rounded-lg" />
-    <div className="h-4 w-64 mx-auto bg-muted rounded-lg" />
+  <div className="text-center space-y-4 pt-8 mb-10 animate-pulse">
+    <div className="w-12 h-12 mx-auto rounded-2xl bg-muted" />
+    <div className="h-10 w-64 mx-auto bg-muted rounded-xl" />
+    <div className="h-4 w-80 mx-auto bg-muted/60 rounded-lg" />
   </div>
 );
 
 export const CardGridSkeleton: React.FC<{ count?: number }> = ({ count = 6 }) => (
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 animate-pulse">
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-pulse">
     {Array.from({ length: count }).map((_, i) => (
-      <Card key={i} className="h-48 rounded-3xl bg-muted/40 border-none" />
+      <Card key={i} className="h-56 rounded-3xl bg-muted/30 border border-border/40 shadow-sm" />
     ))}
   </div>
 );
 
 export const ListSkeleton: React.FC<{ count?: number }> = ({ count = 5 }) => (
-  <div className="space-y-3 animate-pulse">
+  <div className="space-y-4 animate-pulse">
     {Array.from({ length: count }).map((_, i) => (
-      <div key={i} className="h-16 rounded-2xl bg-muted/30" />
+      <div key={i} className="h-20 rounded-2xl bg-muted/20 border border-border/30" />
     ))}
   </div>
 );
+
 
 export const SaintCardSkeleton: React.FC = () => (
   <div className="bg-card border border-border rounded-[2.5rem] overflow-hidden animate-pulse h-96">

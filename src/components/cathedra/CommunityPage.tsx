@@ -9,6 +9,8 @@ import { toast } from 'sonner';
 import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import { RelevanceBadge } from './RelevanceBadge';
 import { FuzzySearchInput } from './FuzzySearchInput';
+import { ListSkeleton, PageHeaderSkeleton } from './SacredSkeleton';
+
 
 const CATEGORIES = [
   { id: 'geral', label: 'Geral' },
@@ -176,7 +178,8 @@ const CommunityPage: React.FC = () => {
       ));
     }
     setLoading(false);
-  }, [category, user]);
+  }, [category, user, tab]); // Added tab to dependency to ensure it loads when switching back
+
 
   useEffect(() => { fetchPosts(); }, [fetchPosts]);
 
@@ -310,9 +313,14 @@ const CommunityPage: React.FC = () => {
   if (selectedPost) {
     return (
       <div className="max-w-3xl mx-auto space-y-6">
-        <button onClick={() => { setSelectedPost(null); setReplies([]); }} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+        <button 
+          onClick={() => { setSelectedPost(null); setReplies([]); }} 
+          className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none rounded-lg px-2 py-1"
+          aria-label="Voltar para a lista de discussões"
+        >
           <Icons.ChevronLeft className="w-4 h-4" /> Voltar
         </button>
+
 
         <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
           <div className="flex items-center gap-3">
@@ -330,10 +338,16 @@ const CommunityPage: React.FC = () => {
           <h2 className="text-xl font-serif font-bold text-foreground">{selectedPost.title}</h2>
           <p className="text-foreground/80 leading-relaxed whitespace-pre-wrap">{selectedPost.content}</p>
           <div className="flex items-center gap-4 pt-2 border-t border-border">
-            <button onClick={() => toggleLike(selectedPost)} className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors">
+            <button 
+              onClick={() => toggleLike(selectedPost)} 
+              className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none rounded-lg px-2 py-1"
+              aria-label={selectedPost.user_liked ? "Remover curtida" : "Curtir discussão"}
+              aria-pressed={selectedPost.user_liked}
+            >
               <Icons.Heart className={`w-4 h-4 ${selectedPost.user_liked ? 'fill-primary text-primary' : ''}`} />
               {selectedPost.likes_count}
             </button>
+
             <span className="text-sm text-muted-foreground">{replies.length} respostas</span>
           </div>
         </div>
@@ -382,32 +396,53 @@ const CommunityPage: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
-      {/* Header */}
-      <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
-          <Icons.Message className="w-4 h-4 text-primary" />
-          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Communitas Fidelium</span>
+      {loading && posts.length === 0 ? (
+        <div className="space-y-8">
+          <PageHeaderSkeleton />
+          <ListSkeleton count={6} />
         </div>
-        <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Comunidade</h1>
-        <p className="text-muted-foreground font-serif italic">Discussões, testemunhos e partilhas entre irmãos na fé.</p>
-        <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Todas as publicações são moderadas antes de aparecer para a comunidade</p>
-      </div>
+      ) : (
+        <>
+          {/* Header */}
+          <div className="text-center space-y-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
+              <Icons.Message className="w-4 h-4 text-primary" aria-hidden="true" />
+              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Communitas Fidelium</span>
+            </div>
+            <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Comunidade</h1>
+            <p className="text-muted-foreground font-serif italic">Discussões, testemunhos e partilhas entre irmãos na fé.</p>
+            <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Todas as publicações são moderadas antes de aparecer para a comunidade</p>
+          </div>
+        </>
+      )}
+
 
       {/* Tabs */}
-      <div className="flex gap-2 justify-center">
-        <button onClick={() => setTab('forum')}
-          className={`px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+      <div className="flex gap-2 justify-center" role="tablist" aria-label="Abas da comunidade">
+        <button 
+          role="tab"
+          aria-selected={tab === 'forum'}
+          aria-controls="panel-forum"
+          onClick={() => setTab('forum')}
+          className={`px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
             tab === 'forum' ? 'bg-foreground text-background' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
-          }`}>
+          }`}
+        >
           <Icons.Message className="w-3.5 h-3.5 inline mr-1.5" />Fórum
         </button>
-        <button onClick={() => setTab('ranking')}
-          className={`px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+        <button 
+          role="tab"
+          aria-selected={tab === 'ranking'}
+          aria-controls="panel-ranking"
+          onClick={() => setTab('ranking')}
+          className={`px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
             tab === 'ranking' ? 'bg-foreground text-background' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
-          }`}>
+          }`}
+        >
           <Icons.Star className="w-3.5 h-3.5 inline mr-1.5" />Ranking
         </button>
       </div>
+
 
       {tab === 'ranking' ? (
         /* Leaderboard */

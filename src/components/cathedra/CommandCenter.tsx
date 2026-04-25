@@ -346,8 +346,8 @@ const CommandCenter: React.FC = () => {
         onClick={e => e.stopPropagation()}
       >
         {/* Search input */}
-        <div className="flex items-center gap-3 px-5 py-4 border-b border-border">
-          <Icons.Search className="w-5 h-5 text-primary shrink-0" />
+        <div className="flex items-center gap-3 px-5 py-4 border-b border-border" role="combobox" aria-haspopup="listbox" aria-expanded={isOpen} aria-owns="command-list">
+          <Icons.Search className="w-5 h-5 text-primary shrink-0" aria-hidden="true" />
           <input
             ref={inputRef}
             value={query}
@@ -355,7 +355,11 @@ const CommandCenter: React.FC = () => {
             onKeyDown={handleKeyDown}
             placeholder="Buscar em tudo: Bíblia, Catecismo, Santos, Jornadas..."
             className="flex-1 bg-transparent text-foreground text-sm placeholder:text-muted-foreground focus:outline-none"
+            aria-autocomplete="list"
+            aria-controls="command-list"
+            aria-activedescendant={allItems[selectedIndex] ? `item-${selectedIndex}` : undefined}
           />
+
           {query && (
             <button onClick={() => setQuery('')} className="text-muted-foreground hover:text-foreground transition-colors">
               <Icons.X className="w-4 h-4" />
@@ -374,9 +378,9 @@ const CommandCenter: React.FC = () => {
         )}
 
         {/* Results */}
-        <div ref={listRef} className="max-h-[55vh] overflow-y-auto py-1">
+        <div ref={listRef} id="command-list" role="listbox" className="max-h-[55vh] overflow-y-auto py-1">
           {query.length >= 2 && !globalLoading && resultCount > 0 && (
-            <div className="px-5 py-2 text-[9px] font-black uppercase tracking-widest text-muted-foreground">
+            <div className="px-5 py-2 text-[9px] font-black uppercase tracking-widest text-muted-foreground" aria-live="polite">
               {resultCount} resultado{resultCount !== 1 ? 's' : ''} encontrado{resultCount !== 1 ? 's' : ''}
             </div>
           )}
@@ -397,15 +401,18 @@ const CommandCenter: React.FC = () => {
             return (
               <React.Fragment key={`${item.type}-${item.label}-${i}`}>
                 {showGroupHeader && (
-                  <div className="px-5 pt-3 pb-1 text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-2">
+                  <div className="px-5 pt-3 pb-1 text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-2" role="presentation">
                     <div className="w-4 h-px bg-border" />
                     {TYPE_LABELS[item.type] || item.type}
                   </div>
                 )}
                 <button
+                  id={`item-${i}`}
+                  role="option"
+                  aria-selected={i === selectedIndex}
                   onClick={() => go(item.path)}
                   onMouseEnter={() => setSelectedIndex(i)}
-                  className={`w-full flex items-center gap-3 px-5 py-2.5 text-left transition-all ${
+                  className={`w-full flex items-center gap-3 px-5 py-2.5 text-left transition-all outline-none focus:ring-0 ${
                     i === selectedIndex 
                       ? 'bg-primary/10 text-primary' 
                       : 'text-foreground hover:bg-muted/50'
@@ -428,6 +435,7 @@ const CommandCenter: React.FC = () => {
             );
           })}
         </div>
+
 
         {/* Footer */}
         <div className="flex items-center justify-between px-5 py-2.5 border-t border-border bg-muted/30">

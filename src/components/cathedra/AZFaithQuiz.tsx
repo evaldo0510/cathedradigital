@@ -319,13 +319,16 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
                   key={idx}
                   onClick={() => handleSelect(idx)}
                   disabled={answered}
-                  className={`w-full text-left p-4 rounded-2xl transition-all text-sm font-medium flex items-center gap-3 ${classes}`}
+                  aria-label={`Opção ${String.fromCharCode(65 + idx)}: ${opt}`}
+                  aria-pressed={idx === selected}
+                  className={`w-full text-left p-4 rounded-2xl transition-all text-sm font-medium flex items-center gap-3 focus-visible:ring-2 focus-visible:ring-primary outline-none ${classes}`}
                 >
-                  <span className="w-7 h-7 rounded-full border-2 flex items-center justify-center shrink-0 text-xs font-black">
+                  <span className="w-7 h-7 rounded-full border-2 flex items-center justify-center shrink-0 text-xs font-black" aria-hidden="true">
                     {answered && isCorrect ? <Check className="w-4 h-4" /> : answered && isSelected ? <X className="w-4 h-4" /> : String.fromCharCode(65 + idx)}
                   </span>
                   <span className="line-clamp-3">{opt}</span>
                 </button>
+
               );
             })}
           </div>

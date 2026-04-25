@@ -120,11 +120,13 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                       onClick={() => handleNav(item.path)}
                       onMouseEnter={() => prefetchRoute(item.path)}
                       onTouchStart={() => prefetchRoute(item.path)}
-                      className={`w-full flex items-center gap-4 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all
+                      aria-current={currentPath === item.path ? 'page' : undefined}
+                      className={`w-full flex items-center gap-4 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none
                         ${currentPath === item.path
                           ? 'bg-foreground text-background shadow-lg'
                           : 'text-muted-foreground hover:bg-muted hover:text-foreground'}`}
                     >
+
                       <span className="opacity-70">{item.icon}</span>
                       <span className="tracking-tight">{item.label}</span>
                       {(item as any).pro && <span className="ml-auto text-[8px] font-black uppercase tracking-widest text-primary bg-primary/10 px-1.5 py-0.5 rounded">PRO</span>}
@@ -143,18 +145,22 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
             <div className="flex gap-2">
               <button 
                 onClick={onToggleDark} 
-                className="flex-1 p-3 bg-muted text-muted-foreground hover:text-primary rounded-xl border border-border flex items-center justify-center gap-2 transition-all active:scale-95"
+                className="flex-1 p-3 bg-muted text-muted-foreground hover:text-primary rounded-xl border border-border flex items-center justify-center gap-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none"
+                aria-label={isDark ? "Mudar para modo claro" : "Mudar para modo escuro"}
               >
                 {isDark ? <Icons.Sun className="w-4 h-4 text-primary" /> : <Icons.Moon className="w-4 h-4" />}
                 <span className="text-[10px] font-black uppercase tracking-widest">{isDark ? (lang === 'pt' ? 'Claro' : 'Light') : (lang === 'pt' ? 'Escuro' : 'Dark')}</span>
               </button>
 
+
               <button 
                 onClick={onToggleSpeak} 
-                className={`flex-1 p-3 rounded-xl border border-border flex items-center justify-center gap-2 transition-all active:scale-95 ${
+                className={`flex-1 p-3 rounded-xl border border-border flex items-center justify-center gap-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                   isSpeaking ? 'bg-primary text-white' : 'bg-muted text-muted-foreground hover:text-primary'
                 }`}
+                aria-label={isSpeaking ? t('audio_stop') : t('audio_read')}
               >
+
                 {isSpeaking ? <Icons.Message className="w-4 h-4 animate-pulse" /> : <Icons.Volume2 className="w-4 h-4" />}
                 <span className="text-[10px] font-black uppercase tracking-widest">{isSpeaking ? t('audio_stop') : t('audio_read')}</span>
               </button>
@@ -165,7 +171,9 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                 <button
                   key={l}
                   onClick={() => (window as any).dispatchEvent(new CustomEvent('change-lang', { detail: l }))}
-                  className={`px-2 py-1 text-[8px] font-black uppercase rounded-lg border transition-all ${
+                  aria-label={`Mudar idioma para ${l.toUpperCase()}`}
+                  aria-pressed={lang === l}
+                  className={`px-2 py-1 text-[8px] font-black uppercase rounded-lg border transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                     lang === l 
                       ? 'bg-primary text-white border-primary' 
                       : 'bg-muted text-muted-foreground border-border hover:border-primary/50'
@@ -173,6 +181,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                 >
                   {l}
                 </button>
+
               ))}
             </div>
           </div>

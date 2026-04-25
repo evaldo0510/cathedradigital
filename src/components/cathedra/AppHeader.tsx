@@ -78,13 +78,16 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                 <button 
                   key={item.route} 
                   onClick={() => navigate(item.route)}
-                  className={`text-[10px] font-black uppercase tracking-[0.2em] transition-all whitespace-nowrap relative group ${
+                  className={`text-[10px] font-black uppercase tracking-[0.2em] transition-all whitespace-nowrap relative group focus-visible:ring-2 focus-visible:ring-primary outline-none px-2 py-1 rounded ${
                     pathname === item.route ? 'text-primary' : 'text-muted-foreground hover:text-primary'
                   }`}
+                  aria-label={item.label}
+                  aria-current={pathname === item.route ? 'page' : undefined}
                 >
                   {item.label}
                   <span className={`absolute -bottom-1 left-0 h-0.5 bg-primary transition-all ${pathname === item.route ? 'w-full' : 'w-0 group-hover:w-full'}`} />
                 </button>
+
               ))}
             </nav>
           )}
@@ -111,7 +114,10 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             <button 
               onClick={() => setShowNotifs(!showNotifs)} 
               className="p-2.5 sm:p-3 bg-muted text-primary hover:bg-primary hover:text-white rounded-xl sm:rounded-2xl border border-border relative transition-all shadow-sm active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none"
+              aria-label={showNotifs ? "Fechar notificações" : `Notificações (${unreadCount} não lidas)`}
+              aria-expanded={showNotifs}
             >
+
 
               <Icons.Message className="w-4 h-4" />
               {unreadCount > 0 && (
@@ -188,19 +194,21 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
 
           <button 
             onClick={onToggleSpeak} 
-            className={`hidden sm:flex lg:hidden p-2.5 sm:p-3 rounded-xl sm:rounded-2xl border border-border transition-all active:scale-95 shadow-sm items-center justify-center ${isSpeaking ? 'bg-primary text-white animate-pulse' : 'bg-muted text-primary hover:bg-primary hover:text-white'}`}
+            className={`hidden sm:flex lg:hidden p-2.5 sm:p-3 rounded-xl sm:rounded-2xl border border-border transition-all active:scale-95 shadow-sm items-center justify-center focus-visible:ring-2 focus-visible:ring-primary outline-none ${isSpeaking ? 'bg-primary text-white animate-pulse' : 'bg-muted text-primary hover:bg-primary hover:text-white'}`}
             title={isSpeaking ? t('audio_stop') : t('audio_read')}
+            aria-label={isSpeaking ? t('audio_stop') : t('audio_read')}
           >
             {isSpeaking ? <Icons.Stop className="w-4 h-4" /> : <Icons.Volume2 className="w-4 h-4" />}
           </button>
 
-          <button onClick={onToggleDark} className="hidden sm:flex lg:hidden p-2.5 sm:p-3 bg-muted text-primary hover:bg-primary hover:text-white rounded-xl sm:rounded-2xl border border-border transition-all active:scale-95 shadow-sm items-center justify-center">
+          <button onClick={onToggleDark} className="hidden sm:flex lg:hidden p-2.5 sm:p-3 bg-muted text-primary hover:bg-primary hover:text-white rounded-xl sm:rounded-2xl border border-border transition-all active:scale-95 shadow-sm items-center justify-center focus-visible:ring-2 focus-visible:ring-primary outline-none" aria-label="Alternar tema">
             {isDark ? <Icons.Sun className="w-4 h-4" /> : <Icons.Moon className="w-4 h-4" />}
           </button>
 
-          <button onClick={onOpenSidebar} className="sm:hidden p-2.5 bg-muted text-primary hover:bg-primary hover:text-white rounded-xl border border-border transition-all active:scale-95 shadow-sm flex items-center justify-center">
+          <button onClick={onOpenSidebar} className="sm:hidden p-2.5 bg-muted text-primary hover:bg-primary hover:text-white rounded-xl border border-border transition-all active:scale-95 shadow-sm flex items-center justify-center focus-visible:ring-2 focus-visible:ring-primary outline-none" aria-label="Abrir menu lateral">
             <Icons.Menu className="w-4.5 h-4.5" />
           </button>
+
         </div>
       </div>
     </header>

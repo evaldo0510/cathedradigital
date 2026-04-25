@@ -324,8 +324,15 @@ const SpiritualQuiz: React.FC = () => {
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="rounded-3xl border border-border bg-card p-5 space-y-3">
         <div className="flex items-center justify-between">
           <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">Seu Perfil Espiritual</span>
-          <button onClick={reset} className="text-[10px] text-primary hover:underline">Refazer</button>
+          <button 
+            onClick={reset} 
+            className="text-[10px] text-primary hover:underline focus-visible:ring-2 focus-visible:ring-primary outline-none rounded px-1"
+            aria-label="Refazer teste de perfil espiritual"
+          >
+            Refazer
+          </button>
         </div>
+
         <div className="flex items-center gap-3">
           <span className="text-3xl">{p.emoji}</span>
           <div className="flex-1 min-w-0">
@@ -476,19 +483,22 @@ const SpiritualQuiz: React.FC = () => {
         >
           <p className="text-xs text-muted-foreground text-center italic leading-relaxed whitespace-pre-line font-serif">{q.intro}</p>
           <h3 className="text-base font-bold text-foreground text-center leading-snug">{q.question}</h3>
-          <div className="space-y-2.5">
+          <div className="space-y-2.5" role="radiogroup" aria-label={q.question}>
             {q.options.map((opt) => (
               <motion.button
                 key={opt.value}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => handleAnswer(opt.value)}
-                className="w-full flex items-center gap-3 p-3.5 rounded-2xl border border-border bg-card hover:border-secondary/40 hover:bg-secondary/5 transition-all text-left group"
+                role="radio"
+                aria-checked={answers[q.id] === opt.value}
+                className="w-full flex items-center gap-3 p-3.5 rounded-2xl border border-border bg-card hover:border-secondary/40 hover:bg-secondary/5 transition-all text-left group focus-visible:ring-2 focus-visible:ring-secondary outline-none"
               >
-                <span className="text-secondary/60 group-hover:text-secondary transition-colors shrink-0">{opt.icon}</span>
+                <span className="text-secondary/60 group-hover:text-secondary transition-colors shrink-0" aria-hidden="true">{opt.icon}</span>
                 <span className="text-sm font-medium text-foreground/80 group-hover:text-foreground transition-colors">{opt.label}</span>
               </motion.button>
             ))}
           </div>
+
         </motion.div>
       </AnimatePresence>
 
