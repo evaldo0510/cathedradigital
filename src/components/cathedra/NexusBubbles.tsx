@@ -312,13 +312,13 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex flex-col">
+    <div className="space-y-6 max-w-4xl mx-auto">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-border/40 pb-4">
+        <div className="flex flex-col text-center sm:text-left">
           <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/70">
             Nexus Theologicus
           </span>
-          <span className="text-[9px] text-muted-foreground/60 font-medium italic mt-0.5">Clique nas bolhas para insights do Logos</span>
+          <span className="text-[10px] text-muted-foreground/60 font-medium italic mt-0.5">Clique nas bolhas para conexões teológicas</span>
         </div>
         
         <div className="relative group/search max-w-[140px] md:max-w-[200px]">
