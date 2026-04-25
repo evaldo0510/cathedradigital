@@ -415,13 +415,15 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
             <button
               key={diff}
               onClick={() => setFilterDifficulty(diff)}
-              className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold transition-all duration-200 ${
+              className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold transition-all duration-200 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                 filterDifficulty === diff ? 'bg-foreground text-background shadow-md' : 'bg-muted text-muted-foreground hover:bg-muted/80'
               }`}
+              aria-pressed={filterDifficulty === diff}
             >
               {DIFFICULTY_LABELS[diff] || diff}
             </button>
           ))}
+
         </div>
       </div>
     </motion.div>
