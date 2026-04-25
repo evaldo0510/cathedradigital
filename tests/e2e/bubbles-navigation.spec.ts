@@ -100,4 +100,65 @@ test.describe('Nexus Bubbles Navigation & Popovers', () => {
     // This depends on whether "Culpa" related themes match the profile
     // But we can at least check the mechanism is active
   });
+
+  test('should verify related themes logic: no duplicates, priority signals, and multi-step popover navigation', async ({ page }) => {
+    // 1. Set a profile to ensure we have "Profile" priority items
+    await page.goto('/');
+    await page.evaluate(() => {
+      localStorage.setItem('spiritual_profile_diagnosis', JSON.stringify({
+        id: 'ferido_em_busca', // Profile that likes 'Oração', 'Jesus', 'Fé'
+        timestamp: Date.now()
+      }));
+    });
+
+    // 2. Go to 'Graça' (Fundamentos category)
+    await page.goto('/temas/graca');
+    
+    // Wait for the "Temas Relacionados" sidebar to appear
+    const aside = page.locator('aside:has-text("Temas Relacionados")');
+    await expect(aside).toBeVisible();
+    
+    // 3. Verify no duplicates in the sidebar
+    const bubbles = aside.locator('button[data-roving-item]');
+    await expect(bubbles.first()).toBeVisible();
+    const labels = await bubbles.allInnerTexts();
+    const uniqueLabels = new Set(labels);
+    expect(labels.length).toBe(uniqueLabels.size);
+
+    // 4. Verify priority (Profile-related theme 'Fé' should be present)
+    const hasProfileTheme = labels.some(l => l.includes('Fé') || l.includes('Oração'));
+    expect(hasProfileTheme).toBe(true);
+
+    // 5. Click on two different themes via popovers to confirm navigation and priority continuity
+    // Step A: Open 'Fé' bubble
+    await page.locator('button[data-roving-item]').filter({ hasText: 'Fé' }).first().click();
+    const popover = page.locator('[role="dialog"]');
+    await expect(popover).toBeVisible();
+    
+    // Step B: Inside 'Fé' popover, click on 'Amor' (another theme)
+    const amorTag = popover.locator('button').filter({ hasText: 'Amor' }).first();
+    await expect(amorTag).toBeVisible();
+    await amorTag.click();
+    
+    // Verify navigation to /temas/amor
+    await expect(page).toHaveURL(/\/temas\/amor/);
+    await expect(page.locator('h1, h2')).toContainText('Amor', { ignoreCase: true });
+
+    // Step C: On 'Amor' page, open 'Esperança' bubble
+    const esperancaBubble = page.locator('button[data-roving-item]').filter({ hasText: 'Esperança' }).first();
+    await expect(esperancaBubble).toBeVisible();
+    await esperancaBubble.click();
+    await expect(popover).toBeVisible();
+    
+    // Step D: Inside 'Esperança' popover, click on 'Paz' or 'Graça'
+    const gracaTag = popover.locator('button').filter({ hasText: 'Graça' }).first();
+    if (await gracaTag.isVisible()) {
+      await gracaTag.click();
+      await expect(page).toHaveURL(/\/temas\/graca/);
+    }
+
+    // 6. Final verification of no duplicates on the final page
+    const finalLabels = await aside.locator('button[data-roving-item]').allInnerTexts();
+    expect(finalLabels.length).toBe(new Set(finalLabels).size);
+  });
 });
