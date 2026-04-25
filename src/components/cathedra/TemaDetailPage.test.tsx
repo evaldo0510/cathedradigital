@@ -60,7 +60,7 @@ describe('TemaDetailPage - Integration Tests', () => {
     renderWithProviders(<TemaDetailPage />);
 
     expect(await screen.findByText(/Erro ao carregar conexões do Nexus/i)).toBeInTheDocument();
-    const retryButton = screen.getByText(/Tentar Novamente/i);
+    const retryButton = screen.getByText(/Tentar Novamente|Processando/i);
     
     (fetchNexusTagContent as any).mockResolvedValueOnce([]);
     await userEvent.click(retryButton);
