@@ -1,17 +1,25 @@
 import { execSync } from 'child_process';
 import fs from 'fs';
 
-console.log('🚀 Iniciando geração do relatório de testes...');
+console.log('🚀 Iniciando geração do relatório de testes (TemaDetailPage)...');
+
+const TEST_FILE_PATTERN = 'src/components/cathedra/TemaDetailPage';
 
 try {
-  // Execute tests with JSON reporter and capture stdout for STATS logs
-  const testOutput = execSync('npx vitest run --reporter=json --reporter=verbose', { encoding: 'utf-8', stdio: 'pipe' });
-  
-  // Try to find the JSON file (Vitest usually prints where it saved it or we can specify)
-  // Since we used --reporter=json without --outputFile in the execSync (to avoid complexity), 
-  // let's just run it twice or use a temporary file.
-  
-  execSync('npx vitest run --reporter=json --outputFile=test-results.json', { stdio: 'inherit' });
+  // 1. Execute tests and generate JSON output
+  console.log('  - Executando testes e coletando métricas...');
+  try {
+    execSync(`npx vitest run ${TEST_FILE_PATTERN} --reporter=json --outputFile=test-results.json`, { stdio: 'pipe' });
+  } catch (e: any) {
+    // Vitest returns non-zero if tests fail, but we still want the JSON
+    if (!fs.existsSync('test-results.json')) {
+      throw e;
+    }
+  }
+
+  // 2. Execute tests again to capture STATS from stdout
+  const stdout = execSync(`npx vitest run ${TEST_FILE_PATTERN} --reporter=verbose`, { encoding: 'utf-8', stdio: 'pipe' });
+
   const results = JSON.parse(fs.readFileSync('test-results.json', 'utf-8'));
 
   const report = {
@@ -21,37 +29,25 @@ try {
     scenarios: [] as any[]
   };
 
-  // Parse stdout for STATS and specific scenarios
-  const lines = testOutput.split('\n');
+  // Parse stdout for STATS
+  const lines = stdout.split('\n');
   let currentTest = '';
   
   lines.forEach(line => {
-    if (line.includes('✓')) {
-      currentTest = line.replace('✓', '').trim();
+    // Look for test names in verbose output
+    if (line.includes('✓') || line.includes('×')) {
+      currentTest = line.replace(/[✓×]/, '').trim();
     }
     if (line.includes('STATS:')) {
-      const stats = JSON.parse(line.split('STATS:')[1]);
-      report.scenarios.push({
-        test: currentTest,
-        calls: stats,
-        status: 'passed'
-      });
+      try {
+        const stats = JSON.parse(line.split('STATS:')[1]);
+        report.scenarios.push({
+          test: currentTest,
+          calls: stats
+        });
+      } catch (e) {}
     }
   });
-
-  // Identify race conditions and try-again scenarios
-  const raceScenarios = results.testResults.flatMap((file: any) => 
-    file.assertionResults.filter((test: any) => 
-      test.title.toLowerCase().includes('race') || 
-      test.title.toLowerCase().includes('switch') ||
-      test.title.toLowerCase().includes('retry') ||
-      test.title.toLowerCase().includes('again')
-    ).map((test: any) => ({
-      title: test.title,
-      status: test.status,
-      failureMessages: test.failureMessages
-    }))
-  );
 
   console.log('\n==================================================');
   console.log('📊 RELATÓRIO DE INTEGRAÇÃO - TEMA DETAIL PAGE');
@@ -60,39 +56,32 @@ try {
   console.log(`Sucessos: ${report.passed}`);
   console.log(`Falhas: ${report.failed}`);
   
-  console.log('\n🏎️ Cenários de Corrida & Switch Rápido:');
-  raceScenarios.forEach((s: any) => {
-    const statusIcon = s.status === 'passed' ? '✅' : '❌';
-    console.log(`${statusIcon} ${s.title}`);
+  // Scenarios of interest
+  const assertions = results.testResults.flatMap((file: any) => file.assertionResults);
+  
+  console.log('\n🏎️ Cenários de Corrida & Performance:');
+  assertions.filter((t: any) => t.title.match(/race|switch|rapid/i)).forEach((t: any) => {
+    console.log(`${t.status === 'passed' ? '✅' : '❌'} ${t.title}`);
   });
 
-  console.log('\n🔄 Cenários de Retry (Tentar Novamente):');
-  const retryScenarios = raceScenarios.filter((s: any) => s.title.toLowerCase().includes('retry') || s.title.toLowerCase().includes('again'));
-  retryScenarios.forEach((s: any) => {
-    const statusIcon = s.status === 'passed' ? '✅' : '❌';
-    console.log(`${statusIcon} ${s.title}`);
+  console.log('\n🔄 Fluxos de Recuperação (Retry):');
+  assertions.filter((t: any) => t.title.match(/retry|again|error/i)).forEach((t: any) => {
+    console.log(`${t.status === 'passed' ? '✅' : '❌'} ${t.title}`);
   });
 
-  console.log('\n📞 Chamadas por Aba (Amostragem):');
-  report.scenarios.slice(0, 5).forEach((s: any) => {
-    console.log(`- ${s.test}: ${JSON.stringify(s.calls)}`);
+  console.log('\n⌨️ Acessibilidade & Teclado:');
+  assertions.filter((t: any) => t.title.match(/keyboard|arrow/i)).forEach((t: any) => {
+    console.log(`${t.status === 'passed' ? '✅' : '❌'} ${t.title}`);
   });
 
-  if (report.failed > 0) {
-    console.log('\n🚨 ALERTAS DE FALHA:');
-    results.testResults.forEach((file: any) => {
-      file.assertionResults.forEach((test: any) => {
-        if (test.status === 'failed') {
-          console.log(`❌ [${file.name}] ${test.title}`);
-          console.log(`   Erro: ${test.failureMessages[0]?.split('\n')[0]}`);
-        }
-      });
-    });
-  }
+  console.log('\n📞 Registro de Chamadas por Teste:');
+  report.scenarios.forEach((s: any) => {
+    console.log(`- ${s.test}: ${s.calls.bible} chamadas detectadas`);
+  });
 
   console.log('==================================================\n');
 
 } catch (error: any) {
-  console.error('❌ Erro ao gerar relatório:', error.message);
+  console.error('❌ Erro crítico ao gerar relatório:', error.message);
   process.exit(1);
 }
