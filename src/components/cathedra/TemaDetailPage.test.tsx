@@ -549,4 +549,130 @@ describe('TemaDetailPage - Integration Tests', () => {
     expect(screen.queryByText(/Conteúdo da Tradição em aprofundamento/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/Documentos do Magistério em aprofundamento/i)).not.toBeInTheDocument();
   });
+
+  it('handles 15+ rapid tab switches without skeleton accumulation', async () => {
+    const mockTags = [{ id: '1', label: 'Stress', slug: 'stress', category: 'fundamentos', emoji: '🤯' }];
+    (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
+    
+    // Controlled delay
+    (fetchNexusTagContent as any).mockImplementation(() => new Promise(resolve => setTimeout(() => resolve([]), 50)));
+
+    renderWithProviders(<TemaDetailPage />, '/temas/stress');
+    await screen.findAllByText('Stress');
+
+    const tabs = ['Tradição', 'Magistério', 'Jornadas', 'Escrituras'];
+    for (let i = 0; i < 15; i++) {
+      const tabName = tabs[i % tabs.length];
+      fireEvent.click(screen.getByText(tabName));
+    }
+
+    // Wait for final debounce and resolution
+    await waitFor(() => {
+      expect(document.querySelectorAll('.animate-pulse').length).toBeGreaterThan(0);
+    }, { timeout: 2000 });
+
+    // Ensure we don't have multiple sets of skeletons (ContentSkeleton renders 3 cards, each with several skeletons)
+    // There are 3 cards, each with ~4 skeletons = ~12 skeletons per tab.
+    // If they accumulated, we'd see 15 * 12 = 180+ skeletons.
+    const skeletons = document.querySelectorAll('.animate-pulse');
+    expect(skeletons.length).toBeLessThanOrEqual(20); // 3 cards * elements
+  });
+
+  it('verifies retry button accessibility states (aria-busy)', async () => {
+    const mockTags = [{ id: '1', label: 'A11y', slug: 'a11y', category: 'fundamentos', emoji: '♿' }];
+    (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
+
+    (fetchNexusTagContent as any).mockRejectedValueOnce(new Error('Fail'));
+    renderWithProviders(<TemaDetailPage />, '/temas/a11y');
+
+    const retryBtn = await screen.findByTestId('retry-button');
+    expect(retryBtn).not.toHaveAttribute('aria-busy', 'true');
+
+    let resolveRetry: any;
+    (fetchNexusTagContent as any).mockReturnValueOnce(new Promise(resolve => resolveRetry = resolve));
+
+    fireEvent.click(retryBtn);
+
+    expect(retryBtn).toHaveAttribute('aria-busy', 'true');
+    expect(retryBtn).toBeDisabled();
+
+    await act(async () => {
+      resolveRetry([]);
+    });
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('retry-button')).not.toBeInTheDocument();
+    });
+  });
+
+  it('ensures stale responses from previous tabs are ignored (race condition)', async () => {
+    const mockTags = [{ id: '1', label: 'Stale', slug: 'stale', category: 'fundamentos', emoji: '⏳' }];
+    (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
+
+    let resolve1: any, resolve2: any;
+    const p1 = new Promise(r => resolve1 = r);
+    const p2 = new Promise(r => resolve2 = r);
+
+    (fetchNexusTagContent as any)
+      .mockReturnValueOnce(Promise.resolve([])) // Initial
+      .mockReturnValueOnce(p1) // Tradition
+      .mockReturnValueOnce(p2); // Magisterium
+
+    renderWithProviders(<TemaDetailPage />, '/temas/stale');
+    await screen.findAllByText('Stale');
+
+    // Switch to Tradition (starts p1)
+    fireEvent.click(screen.getByText('Tradição'));
+    // Advance time for debounce
+    await act(async () => {
+      await new Promise(r => setTimeout(r, 350));
+    });
+
+    // Switch to Magisterium (starts p2)
+    fireEvent.click(screen.getByText('Magistério'));
+    await act(async () => {
+      await new Promise(r => setTimeout(r, 350));
+    });
+
+    // Resolve p1 (Tradition - now stale)
+    await act(async () => {
+      resolve1([{ id: 't1', type: 'catechism', content_text: 'STALE DATA' }]);
+    });
+
+    expect(screen.queryByText('STALE DATA')).not.toBeInTheDocument();
+
+    // Resolve p2 (Magisterium - active)
+    await act(async () => {
+      resolve2([{ id: 'm1', type: 'magisterium', content_text: 'ACTIVE DATA' }]);
+    });
+
+    expect(await screen.findByText('ACTIVE DATA')).toBeInTheDocument();
+  });
+
+  it('validates that fetch is debounced during rapid tab switching', async () => {
+    const mockTags = [{ id: '1', label: 'DebounceTest', slug: 'debounce-test', category: 'fundamentos', emoji: '⏱️' }];
+    (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
+    (fetchNexusTagContent as any).mockResolvedValue([]);
+
+    renderWithProviders(<TemaDetailPage />, '/temas/debounce-test');
+    await screen.findAllByText('DebounceTest');
+
+    (fetchNexusTagContent as any).mockClear();
+
+    // Rapidly switch between all tabs
+    fireEvent.click(screen.getByText('Tradição'));
+    fireEvent.click(screen.getByText('Magistério'));
+    fireEvent.click(screen.getByText('Jornadas'));
+
+    // Should NOT have called fetch yet due to debounce
+    expect(fetchNexusTagContent as any).not.toHaveBeenCalled();
+
+    // Wait for debounce (300ms)
+    await act(async () => {
+      await new Promise(r => setTimeout(r, 400));
+    });
+
+    // Should have been called exactly once for the last active tab (Jornadas)
+    expect(fetchNexusTagContent as any).toHaveBeenCalledTimes(1);
+  });
 });
