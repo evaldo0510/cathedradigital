@@ -298,10 +298,19 @@ const TemaDetailPage = () => {
                       <div className="h-4 w-[75%] bg-muted animate-pulse rounded-full opacity-40" />
                     </div>
                   ) : (
-                    <div className="space-y-6">
                       <p className="text-xl sm:text-2xl text-foreground/90 leading-relaxed font-serif italic first-letter:text-5xl first-letter:font-black first-letter:mr-2 first-letter:float-left first-letter:text-secondary selection:bg-secondary/20">
                         {logosInsight}
                       </p>
+                      
+                      <div className="pt-6 border-t border-secondary/10 flex items-start gap-3 opacity-80">
+                        <Icons.CheckCircle className="w-5 h-5 text-secondary shrink-0 mt-1" />
+                        <div>
+                          <p className="text-[10px] font-black uppercase tracking-widest text-secondary mb-1">Aplicação Prática</p>
+                          <p className="text-sm text-muted-foreground italic leading-relaxed">
+                            "Busque viver este mistério hoje através de um ato de caridade ou de um momento de silêncio contemplativo."
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   )}
                 </CardContent>
