@@ -67,7 +67,10 @@ const UserTransactionsPage: React.FC = () => {
 
   useEffect(() => {
     if (selectedTx) {
-      setAnnouncement(`Detalhes da transação de ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(selectedTx.amount)} abertos. Pressione Escape para fechar.`);
+      const statusText = selectedTx.status === 'approved' ? 'aprovada' : selectedTx.status === 'pending' ? 'pendente' : 'cancelada';
+      let msg = `Detalhes da transação de ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(selectedTx.amount)} abertos. Status: ${statusText}. Pressione Escape para fechar.`;
+      if (selectedTx.error_message) msg += ` Erro: ${selectedTx.error_message}`;
+      setAnnouncement(msg);
     }
   }, [selectedTx]);
 
