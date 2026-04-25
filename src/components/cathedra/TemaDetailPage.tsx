@@ -101,7 +101,7 @@ const TemaDetailPage = () => {
 
   const selectedTag = tags?.find(t => t.slug === slug);
 
-  const { data: contents, isLoading: loadingContents } = useQuery({
+  const { data: contents, isLoading: loadingContents, error: contentError } = useQuery({
     queryKey: ['tag-contents', selectedTag?.id, selectedTag?.label],
     queryFn: async () => {
       if (!selectedTag) return [];
