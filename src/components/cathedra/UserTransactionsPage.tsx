@@ -59,17 +59,31 @@ const UserTransactionsPage: React.FC = () => {
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [selectedTx, setSelectedTx] = useState<any | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
   const loaderRef = useRef<HTMLDivElement>(null);
 
-  // Reset state when user changes
+  // Reset state when user or filters change
   useEffect(() => {
     setTransactions([]);
     setPage(0);
     setHasMore(true);
     setError(null);
     setLoading(true);
-  }, [user?.id]);
+  }, [user?.id, statusFilter]);
 
+  // Debounced search
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setTransactions([]);
+      setPage(0);
+      setHasMore(true);
+      setError(null);
+      setLoading(true);
+      fetchTransactions(0);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
 
   const fetchTransactions = useCallback(async (pageNum: number) => {
     if (!user) return;
@@ -82,10 +96,26 @@ const UserTransactionsPage: React.FC = () => {
     const to = from + PAGE_SIZE - 1;
 
     try {
-      const { data, error: supabaseError } = await supabase
+      let query = supabase
         .from('transactions')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('user_id', user.id);
+
+      if (statusFilter !== 'all') {
+        query = query.eq('status', statusFilter);
+      }
+
+      if (searchTerm) {
+        // Search by payment_id, description or amount
+        const isNumeric = !isNaN(Number(searchTerm));
+        if (isNumeric) {
+          query = query.or(`payment_id.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%,amount.eq.${searchTerm}`);
+        } else {
+          query = query.or(`payment_id.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`);
+        }
+      }
+
+      const { data, error: supabaseError } = await query
         .order('created_at', { ascending: false })
         .range(from, to);
 
@@ -96,7 +126,7 @@ const UserTransactionsPage: React.FC = () => {
       setTransactions(prev => {
         if (pageNum === 0) return newItems;
         
-        // Deduplication: only add items that are not already in the list
+        // Deduplication
         const existingIds = new Set(prev.map(tx => tx.id));
         const filteredNewItems = newItems.filter(tx => !existingIds.has(tx.id));
         return [...prev, ...filteredNewItems];
@@ -105,18 +135,18 @@ const UserTransactionsPage: React.FC = () => {
       setHasMore(newItems.length === PAGE_SIZE);
     } catch (err: any) {
       console.error('Error fetching transactions:', err);
-      setError(err.message || 'Erro ao carregar transações. Verifique sua conexão.');
+      setError(err.message || 'Erro ao carregar transações.');
     } finally {
       setLoading(false);
       setLoadingMore(false);
     }
-  }, [user]);
+  }, [user, statusFilter, searchTerm]);
 
   useEffect(() => {
-    if (user?.id) {
+    if (user?.id && !searchTerm) { // searchTerm has its own useEffect
       fetchTransactions(0);
     }
-  }, [fetchTransactions, user?.id]);
+  }, [fetchTransactions, user?.id, statusFilter]);
 
   useEffect(() => {
     if (!hasMore || loading || loadingMore) return;
@@ -140,6 +170,55 @@ const UserTransactionsPage: React.FC = () => {
 
     return () => observer.disconnect();
   }, [hasMore, loading, loadingMore, fetchTransactions]);
+
+  const copyPaymentId = (id: string) => {
+    navigator.clipboard.writeText(id);
+    toast.success('ID do pagamento copiado!');
+  };
+
+  const handleExportPDF = () => {
+    if (transactions.length === 0) {
+      toast.error('Nenhuma transação para exportar.');
+      return;
+    }
+
+    const doc = new jsPDF();
+    
+    // Header
+    doc.setFontSize(20);
+    doc.text('Relatório de Doações - Cathedra', 14, 22);
+    doc.setFontSize(10);
+    doc.text(`Gerado em: ${format(new Date(), "dd/MM/yyyy HH:mm")}`, 14, 30);
+    doc.text(`Usuário: ${user?.email}`, 14, 35);
+
+    const tableData = transactions.map(tx => [
+      format(new Date(tx.created_at), "dd/MM/yyyy"),
+      tx.description || (tx.is_donation ? 'Doação' : 'Assinatura'),
+      tx.payment_id || '-',
+      tx.status === 'approved' ? 'Aprovado' : tx.status === 'pending' ? 'Pendente' : 'Cancelado',
+      new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(tx.amount)
+    ]);
+
+    (doc as any).autoTable({
+      startY: 45,
+      head: [['Data', 'Descrição', 'ID Pagamento', 'Status', 'Valor']],
+      body: tableData,
+      theme: 'grid',
+      headStyles: { fillStyle: '#8B5CF6' },
+      styles: { fontSize: 8 },
+    });
+
+    const total = transactions
+      .filter(tx => tx.status === 'approved')
+      .reduce((acc, curr) => acc + curr.amount, 0);
+
+    const finalY = (doc as any).lastAutoTable.finalY || 150;
+    doc.setFontSize(12);
+    doc.text(`Total Aprovado: ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(total)}`, 14, finalY + 10);
+
+    doc.save(`doacoes_cathedra_${format(new Date(), "yyyyMMdd")}.pdf`);
+    toast.success('PDF exportado com sucesso!');
+  };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
