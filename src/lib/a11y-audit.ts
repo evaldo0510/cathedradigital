@@ -4,6 +4,7 @@
  * Can be called from the browser console or integrated into a test suite.
  */
 export function runA11yAudit() {
+  console.log('%c🔍 Starting A11y Audit...', 'color: blue; font-weight: bold;');
   const issues: string[] = [];
   const ids = new Set<string>();
   const idElements = document.querySelectorAll('[id]');
