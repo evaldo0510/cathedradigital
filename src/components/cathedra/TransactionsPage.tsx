@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -53,6 +53,7 @@ const TransactionsPage: React.FC = () => {
   const [auditStart, setAuditStart] = useState('');
   const [auditEnd, setAuditEnd] = useState('');
   const [abortController, setAbortController] = useState<AbortController | null>(null);
+  const auditObserver = useRef<IntersectionObserver | null>(null);
 
   const isAdmin = profile?.role === 'admin';
 
@@ -111,6 +112,17 @@ const TransactionsPage: React.FC = () => {
       setAuditLoading(false);
     }
   };
+
+  const lastAuditElementRef = useCallback((node: HTMLDivElement | null) => {
+    if (auditLoading) return;
+    if (auditObserver.current) auditObserver.current.disconnect();
+    auditObserver.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMoreAudits) {
+        fetchAuditLogs();
+      }
+    });
+    if (node) auditObserver.current.observe(node);
+  }, [auditLoading, hasMoreAudits]);
 
   useEffect(() => {
     if (isAdmin && isAuditOpen) {
@@ -723,9 +735,9 @@ const TransactionsPage: React.FC = () => {
               </TableBody>
             </Table>
 
-            {hasMoreAudits && !auditLoading && (
-              <div className="mt-4 flex justify-center">
-                <Button variant="ghost" size="sm" onClick={() => fetchAuditLogs()} className="text-[10px] uppercase font-bold tracking-widest hover:bg-primary/5 rounded-full px-8">Carregar mais logs</Button>
+            {hasMoreAudits && (
+              <div ref={lastAuditElementRef} className="h-10 flex items-center justify-center">
+                {auditLoading && <Clock className="w-4 h-4 animate-spin text-muted-foreground" />}
               </div>
             )}
           </div>
