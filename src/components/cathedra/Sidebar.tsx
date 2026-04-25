@@ -171,7 +171,9 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                 <button
                   key={l}
                   onClick={() => (window as any).dispatchEvent(new CustomEvent('change-lang', { detail: l }))}
-                  className={`px-2 py-1 text-[8px] font-black uppercase rounded-lg border transition-all ${
+                  aria-label={`Mudar idioma para ${l.toUpperCase()}`}
+                  aria-pressed={lang === l}
+                  className={`px-2 py-1 text-[8px] font-black uppercase rounded-lg border transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                     lang === l 
                       ? 'bg-primary text-white border-primary' 
                       : 'bg-muted text-muted-foreground border-border hover:border-primary/50'
@@ -179,6 +181,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                 >
                   {l}
                 </button>
+
               ))}
             </div>
           </div>
