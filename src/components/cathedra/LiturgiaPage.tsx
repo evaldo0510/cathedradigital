@@ -326,7 +326,7 @@ const LiturgiaPage: React.FC = () => {
             ].map((tab, idx) => (
               <button
                 key={tab.id}
-                {...getTabProps(`tab-${idx}`, `panel-${tab.id}`, activeTab === tab.id, `flex items-center gap-2 px-10 py-3 rounded-full text-sm font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+                {...getTabProps(`tab-${tab.id}`, `panel-${tab.id}`, activeTab === tab.id, `flex items-center gap-2 px-10 py-3 rounded-full text-sm font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                   activeTab === tab.id 
                     ? 'bg-background shadow-xl text-primary scale-105' 
                     : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
