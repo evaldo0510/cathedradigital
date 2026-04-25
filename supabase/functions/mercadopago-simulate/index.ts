@@ -40,9 +40,10 @@ serve(async (req) => {
         {
           user_id: userId,
           amount: amount,
-          description: `SIMULAÇÃO: Cathedra PRO - ${planId}`,
+          description: `SIMULAÇÃO: ${planId === 'donation' ? 'Doação Voluntária' : 'Cathedra PRO'}`,
           status: status,
           plan_id: planId,
+          is_donation: planId === 'donation' || isDonation,
           payment_id: `sim_${Math.random().toString(36).substr(2, 9)}`,
           webhook_payload: { simulation: true, body },
         },
