@@ -341,8 +341,9 @@ const TemaDetailPage = () => {
                 <Button 
                   variant="outline" 
                   onClick={() => {
-                    console.log('Retry clicked, invalidating...');
+                    console.log('Retry clicked');
                     queryClient.invalidateQueries({ queryKey: ['tag-contents'] });
+                    console.log('Is fetching after invalidate:', queryClient.isFetching({ queryKey: ['tag-contents'] }));
                   }} 
                   className="h-10 rounded-xl px-6"
                   disabled={isFetchingContents}
