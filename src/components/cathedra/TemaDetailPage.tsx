@@ -463,6 +463,8 @@ const TemaDetailPage = () => {
                         accentColor="text-primary"
                         buttonText="Ler na Bíblia"
                         onAction={() => navigate(`/bible?ref=${encodeURIComponent(c.reference)}&from=temas&tema=${slug}`)}
+                        allThemes={tags}
+                        currentTagId={selectedTag?.id}
                       />
                     ))}
                   </div>
