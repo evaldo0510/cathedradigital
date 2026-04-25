@@ -103,11 +103,10 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
   }, [journeys]);
 
   const difficulties = useMemo(() => {
-    const normalize = (d: string) => d.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
     const seen = new Set<string>();
     const result: string[] = [];
     journeys.forEach(j => {
-      const key = normalize(j.difficulty);
+      const key = normalizeText(j.difficulty);
       if (!seen.has(key)) {
         seen.add(key);
         result.push(j.difficulty);
@@ -117,8 +116,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
   }, [journeys]);
 
   const difficultyMatches = (journeyDiff: string, filterDiff: string) => {
-    const normalize = (d: string) => d.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-    return normalize(journeyDiff) === normalize(filterDiff);
+    return normalizeText(journeyDiff) === normalizeText(filterDiff);
   };
 
   const fuzzyResultIds = useMemo(() => {
