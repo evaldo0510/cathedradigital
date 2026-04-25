@@ -59,23 +59,40 @@ export async function fetchNexusTagContent(tag: { label: string; slug: string },
     .overlaps('tags', searchTerms)
     .limit(10);
 
+  // New query for themes table contents
+  const themeContentQuery = supabase
+    .from('theme_contents')
+    .select('*')
+    .eq('theme_id', (tag as any).id)
+    .limit(10);
+
   if (signal) {
     spiritualQuery.abortSignal(signal);
     journeyQuery.abortSignal(signal);
+    themeContentQuery.abortSignal(signal);
   }
 
-  const [spiritualResponse, journeyResponse] = await Promise.all([
+  const [spiritualResponse, journeyResponse, themeContentResponse] = await Promise.all([
     spiritualQuery,
-    journeyQuery
+    journeyQuery,
+    themeContentQuery
   ]);
 
   if (spiritualResponse.error) throw spiritualResponse.error;
   if (journeyResponse.error) throw journeyResponse.error;
+  if (themeContentResponse.error) throw themeContentResponse.error;
 
   const spiritual = (spiritualResponse.data || []).map(d => formatNexusContent(d, d.type));
   const journeys = (journeyResponse.data || []).map(d => formatNexusContent(d, 'journey'));
+  const themeContents = (themeContentResponse.data || []).map(d => ({
+    id: d.id,
+    type: d.content_type,
+    content_text: d.text_content || '',
+    title: d.reference || d.title || 'Tradição',
+    metadata: { ...d, is_theme_content: true }
+  }));
 
-  const all = [...spiritual, ...journeys];
+  const all = [...spiritual, ...journeys, ...themeContents];
   // Unique by ID
   return Array.from(new Map(all.map(item => [item.id, item])).values());
 }
