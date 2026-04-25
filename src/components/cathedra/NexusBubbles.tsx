@@ -104,7 +104,7 @@ export const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolea
           className={className}
         />
       </PopoverTrigger>
-      <PopoverContent className="w-[340px] sm:w-[420px] p-0 rounded-[2.5rem] border-primary/20 overflow-hidden shadow-2xl z-[100] backdrop-blur-2xl bg-card/90">
+      <PopoverContent data-testid="nexus-popover" className="w-[340px] sm:w-[420px] p-0 rounded-[2.5rem] border-primary/20 overflow-hidden shadow-2xl z-[100] backdrop-blur-2xl bg-card/90">
         <div className="bg-gradient-to-r from-primary/15 via-primary/5 to-transparent p-6 border-b border-border/40 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-2xl bg-white/50 dark:bg-black/20 flex items-center justify-center shadow-inner text-primary border border-primary/10">
@@ -151,7 +151,7 @@ export const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolea
               <AlertCircle className="w-8 h-8 text-red-500 mx-auto" />
               <p className="text-sm font-bold text-red-600">Erro ao carregar conteúdo</p>
               <p className="text-[10px] text-muted-foreground italic">{errorDetails}</p>
-              <Button size="sm" variant="outline" onClick={fetchContent} className="h-8 rounded-xl text-[10px] uppercase font-black tracking-widest">Tentar Novamente</Button>
+              <Button size="sm" variant="outline" onClick={fetchContent} data-testid="retry-button" className="h-8 rounded-xl text-[10px] uppercase font-black tracking-widest">Tentar Novamente</Button>
             </div>
           ) : (
             <>
