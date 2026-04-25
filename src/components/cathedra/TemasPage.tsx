@@ -96,29 +96,49 @@ const TemasPage = () => {
 
   const prefetchTag = useCallback((tag: Tag) => {
     queryClient.prefetchQuery({
-      queryKey: ['tag-contents', tag.id],
-      queryFn: async () => {
-        const { data: tagContents, error } = await supabase
-          .from('content_tags')
-          .select(`
-            spiritual_contents (
-              id, title, content_text, type, reference_id, tags
-            )
-          `)
-          .eq('tag_id', tag.id);
-        
-        if (error) throw error;
-        return (tagContents || []).map((c: any) => ({
-          id: c.spiritual_contents.id,
-          content_type: c.spiritual_contents.type,
-          reference: c.spiritual_contents.reference_id || c.spiritual_contents.title || 'Referência',
-          title: c.spiritual_contents.title,
-          text_content: c.spiritual_contents.content_text,
-          tags: c.spiritual_contents.tags || []
-        }));
-      },
-      staleTime: 1000 * 60 * 5,
-    });
+    queryKey: ['tag-contents', tag.id, tag.label],
+    queryFn: async () => {
+      const normalizedLabel = normalizeText(tag.label);
+      const searchTerms = [tag.label, normalizedLabel, tag.slug].filter(Boolean);
+      
+      const { data: spiritualData, error: dbError } = await supabase
+        .from('spiritual_contents')
+        .select('*')
+        .overlaps('tags', searchTerms)
+        .limit(20);
+      
+      const { data: journeyData, error: journeyError } = await supabase
+        .from('journeys')
+        .select('*')
+        .overlaps('tags', searchTerms)
+        .limit(5);
+
+      if (dbError) throw dbError;
+      if (journeyError) throw journeyError;
+
+      const results = (spiritualData || []).map((d: any) => ({
+        id: d.id,
+        content_type: d.type,
+        reference: d.reference_id || d.title || 'Referência',
+        title: d.title,
+        text_content: d.content_text,
+        tags: d.tags || []
+      }));
+
+      const journeyResults = (journeyData || []).map((d: any) => ({
+        id: d.id,
+        content_type: 'journey',
+        reference: d.subtitle || d.category || 'Jornada',
+        title: d.title,
+        text_content: d.description || '',
+        tags: d.tags || []
+      }));
+
+      const all = [...results, ...journeyResults];
+      return Array.from(new Map(all.map(item => [item.id, item])).values());
+    },
+    staleTime: 1000 * 60 * 5,
+  });
   }, [queryClient]);
 
   return (
