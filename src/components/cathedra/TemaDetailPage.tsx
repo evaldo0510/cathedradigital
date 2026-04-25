@@ -503,6 +503,8 @@ const TemaDetailPage = () => {
                           const paragraph = (c.reference || '').replace(/\D/g, '');
                           navigate(`/catechism?p=${paragraph}&from=temas&tema=${slug}`);
                         }}
+                        allThemes={tags}
+                        currentTagId={selectedTag?.id}
                       />
                     ))}
                   </div>
