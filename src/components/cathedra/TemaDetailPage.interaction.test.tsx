@@ -14,6 +14,14 @@ const MOCK_THEMES = [
   { id: 't-perdao', name: 'Perdão', slug: 'perdao', emoji: '🕊️', category: 'dores' },
 ];
 
+vi.mock('@/hooks/useAuth', () => ({
+  useAuth: vi.fn(() => ({
+    user: { id: 'user-123' },
+    profile: { name: 'Teste' },
+    loading: false,
+  })),
+}));
+
 vi.mock('@/integrations/supabase/client', () => ({
   supabase: { 
     from: vi.fn(() => ({
