@@ -189,7 +189,7 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
               <div className="h-32 bg-muted/20 rounded-2xl animate-pulse w-full" />
               <p className="text-[10px] text-center text-muted-foreground animate-pulse">Consultando Nexus...</p>
             </div>
-          ) : status === 'error' ? (
+          ) : status === 'error' && content.length === 0 ? (
             <div className="p-6 text-center space-y-3 bg-red-500/5 rounded-2xl border border-red-500/10">
               <AlertCircle className="w-8 h-8 text-red-500 mx-auto" />
               <p className="text-sm font-bold text-red-600">Erro ao carregar conteúdo</p>
@@ -198,6 +198,11 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
             </div>
           ) : (
             <>
+              {status === 'error' && content.length > 0 && (
+                <div className="px-3 py-1 bg-amber-500/10 text-amber-600 rounded-lg text-[9px] font-bold flex items-center gap-2 mb-2">
+                  <Info className="w-3 h-3" /> IA Indisponível — Exibindo conteúdo parcial do Nexus
+                </div>
+              )}
               {logosInsight && (
                 <motion.div 
                   initial={{ opacity: 0, y: 10 }}
