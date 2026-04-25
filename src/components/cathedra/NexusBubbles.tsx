@@ -411,7 +411,13 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
                   <div className="flex flex-wrap gap-1.5" role="list">
                     {profileSuggestedTags.map((tag, i) => (
                       <div key={tag.slug} role="listitem">
-                        <TagBubble tag={tag} index={i} isSuggested />
+                        <TagBubble 
+                          tag={tag} 
+                          index={i} 
+                          isSuggested 
+                          tabIndex={suggestedActiveIndex === i ? 0 : -1}
+                          onKeyDown={(e) => handleSuggestedKeyDown(e, i)}
+                        />
                       </div>
                     ))}
                   </div>
