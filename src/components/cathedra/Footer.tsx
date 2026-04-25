@@ -317,9 +317,14 @@ const Footer: React.FC = React.memo(() => {
                 </React.Fragment>
               ))}
             </nav>
-            <button onClick={scrollToTop} className="p-2.5 bg-foreground/5 dark:bg-foreground/10 hover:bg-primary hover:text-primary-foreground rounded-lg transition-all border border-foreground/10 dark:border-foreground/20 group">
+            <button 
+              onClick={scrollToTop} 
+              className="p-2.5 bg-foreground/5 dark:bg-foreground/10 hover:bg-primary hover:text-primary-foreground rounded-lg transition-all border border-foreground/10 dark:border-foreground/20 group focus-visible:ring-2 focus-visible:ring-primary outline-none"
+              aria-label="Voltar ao topo"
+            >
               <Icons.ArrowDown className="w-4 h-4 rotate-180" />
             </button>
+
           </div>
         </div>
       </div>
