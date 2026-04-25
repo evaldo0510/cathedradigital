@@ -1,0 +1,133 @@
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import NexusBubbles from './NexusBubbles';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { BrowserRouter } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
+import { fetchNexusTagContent } from '@/lib/nexusContent';
+
+// Mocking dependencies
+vi.mock('@/integrations/supabase/client', () => ({
+  supabase: {
+    from: vi.fn(() => ({
+      select: vi.fn(() => ({
+        order: vi.fn(() => Promise.resolve({ data: [], error: null }))
+      }))
+    }))
+  }
+}));
+
+vi.mock('@/lib/nexusContent', () => ({
+  fetchNexusTagContent: vi.fn(),
+  normalizeText: vi.fn((t) => t.toLowerCase())
+}));
+
+vi.mock('@/services/aiService', () => ({
+  getSpiritualInsight: vi.fn(() => Promise.resolve({ content: 'Mocked Insight' }))
+}));
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+});
+
+const renderWithProviders = (ui: React.ReactElement) => {
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        {ui}
+      </BrowserRouter>
+    </QueryClientProvider>
+  );
+};
+
+describe('NexusBubbles - Integration Tests', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('renders correctly and handles empty tag list', async () => {
+    (supabase.from as any).mockReturnValue({
+      select: vi.fn(() => ({
+        order: vi.fn(() => Promise.resolve({ data: [], error: null }))
+      }))
+    });
+
+    renderWithProviders(<NexusBubbles />);
+    
+    // Wait for loading to finish
+    await waitFor(() => {
+      expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
+    });
+
+    // Check if categories are processed (they might not show if tags are 0)
+    // The component filters tags by category. If 0 tags, categories are empty.
+  });
+
+  it('displays fallback message when search returns no results', async () => {
+    const mockTags = [
+      { id: '1', label: 'Fé', slug: 'fe', category: 'fundamentos', emoji: '✝️' }
+    ];
+
+    (supabase.from as any).mockReturnValue({
+      select: vi.fn(() => ({
+        order: vi.fn(() => Promise.resolve({ data: mockTags, error: null }))
+      }))
+    });
+
+    renderWithProviders(<NexusBubbles />);
+
+    // Wait for tags to load
+    await waitFor(() => {
+      expect(screen.getByText('Fé')).toBeInTheDocument();
+    });
+
+    // Type in search that won't match
+    const searchInput = screen.getByPlaceholderText('Buscar tema...');
+    fireEvent.change(searchInput, { target: { value: 'Inexistente' } });
+
+    // Check for fallback message
+    expect(screen.getByText('Nenhum tema encontrado.')).toBeInTheDocument();
+  });
+
+  it('never displays "Referência" as a fallback in content results', async () => {
+    const mockTags = [
+      { id: '1', label: 'Fé', slug: 'fe', category: 'fundamentos', emoji: '✝️' }
+    ];
+
+    (supabase.from as any).mockReturnValue({
+      select: vi.fn(() => ({
+        order: vi.fn(() => Promise.resolve({ data: mockTags, error: null }))
+      }))
+    });
+
+    // Mock content with missing title/reference
+    (fetchNexusTagContent as any).mockResolvedValue([
+      { 
+        id: 'c1', 
+        type: 'bible', 
+        content_text: 'Versículo sem título', 
+        title: 'Escritura', // Fallback from formatNexusContent
+        metadata: {} 
+      }
+    ]);
+
+    renderWithProviders(<NexusBubbles />);
+
+    // Wait for tag and click it (popover trigger is the div wrapping BubbleTag)
+    const tag = await screen.findByText('Fé');
+    fireEvent.click(tag);
+
+    // Check if content appears
+    await waitFor(() => {
+      expect(screen.getByText('Versículo sem título')).toBeInTheDocument();
+    });
+
+    // Verify it shows "Escritura" and NOT "Referência"
+    expect(screen.getByText('Escritura')).toBeInTheDocument();
+    expect(screen.queryByText('Referência')).not.toBeInTheDocument();
+  });
+});
