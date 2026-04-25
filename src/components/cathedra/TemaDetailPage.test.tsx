@@ -302,7 +302,7 @@ describe('TemaDetailPage - Integration Tests', () => {
     expect(screen.getByText(/Magisterium Wins/i)).toBeInTheDocument();
     expect(screen.queryByText(/Tradition Late/i)).not.toBeInTheDocument();
   });
-  it('disables "Try Again" button during retry and re-enables after', async () => {
+  it('shows loading state during retry and resolves correctly', async () => {
     const mockTags = [{ id: '1', label: 'DisableRetry', slug: 'disable-retry', category: 'fundamentos', emoji: '🔘' }];
     (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
 
