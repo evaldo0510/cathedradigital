@@ -288,12 +288,20 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
   useEffect(() => {
     const fetchTags = async () => {
       const { data, error } = await supabase
-        .from('tags')
+        .from('themes')
         .select('*')
-        .order('label');
+        .order('name');
       
       if (!error && data) {
-        setTags(data as Tag[]);
+        // Map themes to the Tag interface expected by the component
+        const mappedTags = data.map((t: any) => ({
+          id: t.id,
+          slug: t.slug,
+          label: t.name,
+          emoji: t.emoji || '⛪',
+          category: t.category || 'Geral'
+        }));
+        setTags(mappedTags);
       }
       setLoading(false);
     };
