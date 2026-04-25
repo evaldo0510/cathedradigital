@@ -312,6 +312,7 @@ const UserTransactionsPage: React.FC = () => {
                 Carregar mais
               </Button>
             </div>
+          )}
         </div>
       )}
 
