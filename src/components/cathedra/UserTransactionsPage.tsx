@@ -18,6 +18,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { Icons } from '@/constants';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -515,12 +516,14 @@ const UserTransactionsPage: React.FC = () => {
               )}
 
               <div className="flex gap-3">
-                <Button 
-                  className="flex-1 rounded-xl font-bold uppercase text-[10px] tracking-widest" 
-                  onClick={() => setSelectedTx(null)}
-                >
-                  Fechar
-                </Button>
+                <DialogClose asChild>
+                  <Button 
+                    className="flex-1 rounded-xl font-bold uppercase text-[10px] tracking-widest" 
+                    autoFocus
+                  >
+                    Fechar
+                  </Button>
+                </DialogClose>
                 {selectedTx.status === 'approved' && (
                   <Button 
                     variant="outline" 
