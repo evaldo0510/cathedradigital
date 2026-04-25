@@ -322,7 +322,12 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         {/* Logos (IA) Suggestion */}
         <div
           onClick={() => goTo('/study')}
-          className="desktop-card cursor-pointer hover:border-secondary/40 transition-all group space-y-3"
+          className="desktop-card cursor-pointer hover:border-secondary/40 transition-all group space-y-3 focus-visible:ring-2 focus-visible:ring-secondary outline-none"
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => e.key === 'Enter' && goTo('/study')}
+          aria-label="Acessar IA Teológica Colloquium"
+
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-secondary/15 flex items-center justify-center text-secondary group-hover:scale-110 transition-transform">
