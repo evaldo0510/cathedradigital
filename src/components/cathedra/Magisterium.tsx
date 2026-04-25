@@ -17,9 +17,9 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import AudioButton from './AudioButton';
 import { useNavigate } from 'react-router-dom';
+import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
 
-
-const SPIRITUAL_GUIDANCE = [
+... keep existing code until SPIRITUAL_GUIDANCE
   {
     id: 'ansiedade',
     theme: 'Ansiedade',
