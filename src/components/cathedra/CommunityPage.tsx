@@ -449,7 +449,7 @@ const CommunityPage: React.FC = () => {
         >
           <Icons.Star className="w-3.5 h-3.5 inline mr-1.5" />Ranking
         </button>
-        </div>
+      </div>
 
 
       {tab === 'ranking' ? (
@@ -681,7 +681,7 @@ const CommunityPage: React.FC = () => {
           </div>
         );
       })()}
-      </>
+        </div>
       )}
     </div>
   );
