@@ -20,9 +20,10 @@ import ReactMarkdown from 'react-markdown';
 import { toast } from 'sonner';
 import { getCachedLiturgy, cacheLiturgy } from '@/lib/offlineCache';
 import { LiturgiaSkeleton } from './LiturgiaSkeleton';
-
+import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
 
 const MissalPage = lazy(() => import('./MissalPage'));
+
 const LiturgicalCalendarPage = lazy(() => import('./LiturgicalCalendarPage'));
 
 function usePrefetchLiturgyCache() {
@@ -161,7 +162,10 @@ const ReadingCard: React.FC<{
 const LiturgiaPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
+  const { handleKeyDown: handleTabKeyDown } = useTabNavigation();
   const activeTab = searchParams.get('tab') || 'liturgia';
+  const tabList = ['liturgia', 'missal', 'calendario'];
+  const activeTabIndex = tabList.indexOf(activeTab);
 
   const { user, profile } = useAuth();
   const [selectedDate, setSelectedDate] = useState(() => new Date());
@@ -318,23 +322,16 @@ const LiturgiaPage: React.FC = () => {
               { id: 'liturgia', label: 'Liturgia', icon: <Icons.Liturgy className="w-4 h-4" /> },
               { id: 'missal', label: 'Missal', icon: <Icons.Cross className="w-4 h-4" /> },
               { id: 'calendario', label: 'Calendário', icon: <Icons.Calendar className="w-4 h-4" /> }
-            ].map((tab, idx, arr) => (
+            ].map((tab, idx) => (
               <button
                 key={tab.id}
-                id={`tab-${tab.id}`}
-                role="tab"
-                aria-selected={activeTab === tab.id}
-                aria-controls={`panel-${tab.id}`}
-                onClick={() => setSearchParams({ tab: tab.id })}
-                onKeyDown={(e) => {
-                  if (e.key === 'ArrowRight' && idx < arr.length - 1) document.getElementById(`tab-${arr[idx+1]}`)?.focus();
-                  if (e.key === 'ArrowLeft' && idx > 0) document.getElementById(`tab-${arr[idx-1]}`)?.focus();
-                }}
-                className={`flex items-center gap-2 px-8 py-2.5 rounded-full text-sm font-semibold transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+                {...getTabProps(`tab-${idx}`, `panel-${tab.id}`, activeTab === tab.id, `flex items-center gap-2 px-8 py-2.5 rounded-full text-sm font-semibold transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                   activeTab === tab.id 
                     ? 'bg-background shadow-lg text-primary' 
                     : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
-                }`}
+                }`)}
+                onClick={() => setSearchParams({ tab: tab.id })}
+                onKeyDown={(e) => handleTabKeyDown(e, idx, 3, (newIdx) => setSearchParams({ tab: tabList[newIdx] }), 'tab-')}
               >
                 {tab.icon} {tab.label}
               </button>
@@ -345,11 +342,7 @@ const LiturgiaPage: React.FC = () => {
         <Suspense fallback={<div className="flex justify-center py-20"><Icons.Loader2 className="w-10 h-10 text-secondary animate-spin" /></div>}>
           {activeTab === 'liturgia' && (
             <div 
-              id="panel-liturgia"
-              role="tabpanel"
-              aria-labelledby="tab-liturgia"
-              className="max-w-2xl mx-auto space-y-10 animate-in fade-in duration-500 outline-none"
-              tabIndex={0}
+              {...getTabPanelProps('panel-liturgia', 'tab-0', activeTab === 'liturgia', "max-w-2xl mx-auto space-y-10 animate-in fade-in duration-500 outline-none")}
             >
               <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} className="space-y-4 text-center">
                 {/* Redundant back button removed */}

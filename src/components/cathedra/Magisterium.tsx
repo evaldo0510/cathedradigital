@@ -17,7 +17,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import AudioButton from './AudioButton';
 import { useNavigate } from 'react-router-dom';
-
+import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
 
 const SPIRITUAL_GUIDANCE = [
   {
@@ -150,11 +150,13 @@ const THEMES = Array.from(new Set(DOCS_LIST.flatMap(d => d.theme))).sort();
 
 const Magisterium: React.FC = () => {
   const navigate = useNavigate();
+  const { handleKeyDown: handleTabKeyDown } = useTabNavigation();
   const [activeTab, setActiveTab] = useState('guidance');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTheme, setSelectedTheme] = useState<string | null>(null);
   
   const [selectedGuidance, setSelectedGuidance] = useState(SPIRITUAL_GUIDANCE[0]);
+  const activeGuidanceIndex = SPIRITUAL_GUIDANCE.findIndex(g => g.id === selectedGuidance.id);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   const filteredDocs = useMemo(() => {
@@ -249,15 +251,11 @@ const Magisterium: React.FC = () => {
               <AnimatePresence mode="wait">
                 <motion.div
                   key={selectedGuidance.id}
-                  id={`panel-guidance-${selectedGuidance.id}`}
-                  role="tabpanel"
-                  aria-labelledby={`tab-guidance-${selectedGuidance.id}`}
+                  {...getTabPanelProps(`panel-guidance-${selectedGuidance.id}`, `tab-guidance-${activeGuidanceIndex}`, true, "bg-card border border-border rounded-[2.5rem] p-8 md:p-12 shadow-sm space-y-8 outline-none")}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.3 }}
-                  className="bg-card border border-border rounded-[2.5rem] p-8 md:p-12 shadow-sm space-y-8 outline-none"
-                  tabIndex={0}
                 >
                   <div className="pt-8 border-t border-border/40">
                     <DeepContentSection content={{

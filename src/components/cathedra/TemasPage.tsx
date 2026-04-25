@@ -8,6 +8,8 @@ import { Loader2, Sparkles, Tag as TagIcon, Search } from 'lucide-react';
 import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import { FuzzySearchInput } from './FuzzySearchInput';
 import { BubbleTag } from './BubbleTag';
+import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
+
 
 interface Tag {
   id: string;
@@ -24,6 +26,7 @@ const TemasPage = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState('');
+  const { handleKeyDown: handleTabKeyDown } = useTabNavigation();
   const [activeCategory, setActiveCategory] = useState<string>(() => {
     const fromUrl = searchParams.get('category');
     if (fromUrl) return fromUrl;
@@ -142,23 +145,21 @@ const TemasPage = () => {
             {categories.map((cat, idx) => (
               <motion.button
                 key={cat}
-                role="tab"
-                aria-selected={activeCategory === cat}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: idx * 0.03 }}
-                onClick={() => setActiveCategory(cat)}
-                className={`
+                {...getTabProps(`tab-category-${idx}`, `panel-temas`, activeCategory === cat, `
                   whitespace-nowrap px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] transition-all duration-300 focus-visible:ring-2 focus-visible:ring-primary outline-none
                   ${activeCategory === cat 
                     ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-105' 
                     : 'bg-muted/40 text-muted-foreground/70 hover:bg-muted hover:text-foreground hover:scale-102 border border-transparent hover:border-border/50'
                   }
-                `}
+                `)}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: idx * 0.03 }}
+                onClick={() => setActiveCategory(cat)}
+                onKeyDown={(e) => handleTabKeyDown(e, idx, categories.length, (newIdx) => setActiveCategory(categories[newIdx]), 'tab-category-')}
               >
                 {cat === 'all' ? 'Todos' : cat.charAt(0).toUpperCase() + cat.slice(1)}
               </motion.button>
-
             ))}
           </div>
         </div>
@@ -166,7 +167,7 @@ const TemasPage = () => {
         <div className="relative">
           <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent blur-3xl opacity-30 pointer-events-none" />
           
-          <div id="panel-temas" role="tabpanel" aria-labelledby={`tab-category-${activeCategory}`} className="relative overflow-hidden rounded-2xl border border-border/30 bg-card/20 backdrop-blur-sm outline-none" tabIndex={0}>
+          <div {...getTabPanelProps('panel-temas', `tab-category-${categories.indexOf(activeCategory)}`, true, "relative overflow-hidden rounded-2xl border border-border/30 bg-card/20 backdrop-blur-sm outline-none")}>
             {loadingTags ? (
               <div className="flex flex-col items-center gap-4 py-12 w-full justify-center">
                 <div className="relative">

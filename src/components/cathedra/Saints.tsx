@@ -22,6 +22,8 @@ import { BubbleTag, getTagIcon } from './BubbleTag';
 import { format, addDays, subDays, isSameDay } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { toast } from 'sonner';
+import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
+
 
 
 const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
@@ -29,7 +31,9 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
   const [selectedSaint, setSelectedSaint] = useState<Saint | null>(null);
   const [autoReflect, setAutoReflect] = useState(false);
   const [search, setSearch] = useState('');
+  const { handleKeyDown: handleTabKeyDown } = useTabNavigation();
   const [viewMode, setViewMode] = useState<'daily' | 'search' | 'all' | 'writers' | 'popes' | 'cloud'>('daily');
+  const viewModes = ['daily', 'all', 'writers', 'popes', 'cloud', 'search'] as const;
   const [isSearchingGlobal, setIsSearchingGlobal] = useState(false);
   const [globalResults, setGlobalResults] = useState<Saint[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -189,21 +193,14 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
         <div className="flex justify-center overflow-x-auto pb-4 no-scrollbar">
           <div className="bg-secondary/50 p-1 rounded-2xl flex gap-1 min-w-max" role="tablist" aria-label="Modos de visualização dos santos">
-            {(['daily', 'all', 'writers', 'popes', 'cloud', 'search'] as const).map((mode, idx, arr) => (
+            {viewModes.map((mode, idx) => (
               <button
                 key={mode}
-                id={`tab-${mode}`}
-                role="tab"
-                aria-selected={viewMode === mode}
-                aria-controls={`panel-${mode}`}
-                onClick={() => setViewMode(mode)}
-                onKeyDown={(e) => {
-                  if (e.key === 'ArrowRight' && idx < arr.length - 1) document.getElementById(`tab-${arr[idx+1]}`)?.focus();
-                  if (e.key === 'ArrowLeft' && idx > 0) document.getElementById(`tab-${arr[idx-1]}`)?.focus();
-                }}
-                className={`px-4 md:px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+                {...getTabProps(`tab-${idx}`, `panel-${mode}`, viewMode === mode, `px-4 md:px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                   viewMode === mode ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
-                }`}
+                }`)}
+                onClick={() => setViewMode(mode)}
+                onKeyDown={(e) => handleTabKeyDown(e, idx, viewModes.length, (newIdx) => setViewMode(viewModes[newIdx]), 'tab-')}
               >
                 {mode === 'daily' ? 'Hoje' : mode === 'all' ? 'Todos' : mode === 'writers' ? 'Escritores' : mode === 'popes' ? 'Papas' : mode === 'cloud' ? 'Nuvem' : 'Buscar'}
               </button>
@@ -214,17 +211,13 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
         <AnimatePresence mode="wait">
           {viewMode === 'daily' ? (
-            <motion.div
-              key="daily"
-              id="panel-daily"
-              role="tabpanel"
-              aria-labelledby="tab-daily"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="space-y-8 outline-none"
-              tabIndex={0}
-            >
+              <motion.div
+                key="daily"
+                {...getTabPanelProps('panel-daily', 'tab-0', viewMode === 'daily', "space-y-8 outline-none")}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+              >
               <div className="flex flex-col items-center gap-6">
                 <div className="flex items-center gap-4 md:gap-8">
                   <button 

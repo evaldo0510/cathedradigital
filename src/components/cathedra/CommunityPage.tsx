@@ -10,7 +10,7 @@ import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import { RelevanceBadge } from './RelevanceBadge';
 import { FuzzySearchInput } from './FuzzySearchInput';
 import { ListSkeleton, PageHeaderSkeleton } from './SacredSkeleton';
-
+import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
 
 const CATEGORIES = [
   { id: 'geral', label: 'Geral' },
@@ -53,6 +53,7 @@ interface LeaderboardEntry {
 const CommunityPage: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { handleKeyDown: handleTabKeyDown } = useTabNavigation();
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState('geral');
@@ -420,32 +421,20 @@ const CommunityPage: React.FC = () => {
       {/* Tabs */}
       <div className="flex gap-2 justify-center" role="tablist" aria-label="Abas da comunidade">
         <button 
-          id="tab-forum"
-          role="tab"
-          aria-selected={tab === 'forum'}
-          aria-controls="panel-forum"
-          onClick={() => setTab('forum')}
-          onKeyDown={(e) => {
-            if (e.key === 'ArrowRight') document.getElementById('tab-ranking')?.focus();
-          }}
-          className={`px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+          {...getTabProps('tab-0', 'panel-forum', tab === 'forum', `px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
             tab === 'forum' ? 'bg-foreground text-background' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
-          }`}
+          }`)}
+          onClick={() => setTab('forum')}
+          onKeyDown={(e) => handleTabKeyDown(e, 0, 2, (idx) => setTab(idx === 0 ? 'forum' : 'ranking'), 'tab-')}
         >
           <Icons.Message className="w-3.5 h-3.5 inline mr-1.5" />Fórum
         </button>
         <button 
-          id="tab-ranking"
-          role="tab"
-          aria-selected={tab === 'ranking'}
-          aria-controls="panel-ranking"
-          onClick={() => setTab('ranking')}
-          onKeyDown={(e) => {
-            if (e.key === 'ArrowLeft') document.getElementById('tab-forum')?.focus();
-          }}
-          className={`px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+          {...getTabProps('tab-1', 'panel-ranking', tab === 'ranking', `px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
             tab === 'ranking' ? 'bg-foreground text-background' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
-          }`}
+          }`)}
+          onClick={() => setTab('ranking')}
+          onKeyDown={(e) => handleTabKeyDown(e, 1, 2, (idx) => setTab(idx === 0 ? 'forum' : 'ranking'), 'tab-')}
         >
           <Icons.Star className="w-3.5 h-3.5 inline mr-1.5" />Ranking
         </button>
@@ -455,11 +444,7 @@ const CommunityPage: React.FC = () => {
       {tab === 'ranking' ? (
         /* Leaderboard */
         <div 
-          id="panel-ranking" 
-          role="tabpanel" 
-          aria-labelledby="tab-ranking"
-          className="space-y-4 outline-none"
-          tabIndex={0}
+          {...getTabPanelProps('panel-ranking', 'tab-1', tab === 'ranking', "space-y-4 outline-none")}
         >
           <div className="bg-card border border-border rounded-2xl p-6">
             <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-1">Ranking da Comunidade</h2>
@@ -524,11 +509,7 @@ const CommunityPage: React.FC = () => {
         </div>
       ) : (
         <div 
-          id="panel-forum" 
-          role="tabpanel" 
-          aria-labelledby="tab-forum"
-          className="space-y-8 outline-none"
-          tabIndex={0}
+          {...getTabPanelProps('panel-forum', 'tab-0', tab === 'forum', "space-y-8 outline-none")}
         >
 
 
