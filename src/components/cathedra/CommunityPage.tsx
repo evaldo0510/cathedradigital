@@ -413,7 +413,7 @@ const CommunityPage: React.FC = () => {
             <p className="text-muted-foreground font-serif italic">Discussões, testemunhos e partilhas entre irmãos na fé.</p>
             <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Todas as publicações são moderadas antes de aparecer para a comunidade</p>
           </div>
-        </div>
+        </>
       )}
 
 
