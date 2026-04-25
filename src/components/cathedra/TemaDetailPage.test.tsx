@@ -326,8 +326,7 @@ describe('TemaDetailPage - Integration Tests', () => {
     
     // 4. Wait for the button to transition to disabled state
     await waitFor(() => {
-      // Re-find the button because it might have re-rendered
-      const b = screen.queryByText(/Processando|Tentar Novamente/i)?.closest('button');
+      const b = screen.getByText(/Processando|Tentar Novamente/i).closest('button');
       expect(b).toBeDisabled();
     }, { timeout: 3000 });
 
