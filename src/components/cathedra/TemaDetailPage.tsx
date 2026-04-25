@@ -111,6 +111,14 @@ const TemaDetailPage = () => {
   const [magisteriumLimit, setMagisteriumLimit] = useState(5);
   const [autoLoaded, setAutoLoaded] = useState(false);
   const [activeTab, setActiveTab] = useState('bible');
+  const [debouncedTab, setDebouncedTab] = useState('bible');
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedTab(activeTab);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [activeTab]);
 
   const { data: tags } = useQuery({
     queryKey: ['tags'],
