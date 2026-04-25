@@ -155,8 +155,15 @@ describe('NexusBubbles - Integration Tests', () => {
     const tag = await screen.findByText('Silencioso');
     await userEvent.click(tag);
 
-    // Increase timeout for portal rendering
-    const fallbackTitle = await screen.findByText(/Nexus Silencioso/i, {}, { timeout: 3000 });
+    // Debug: what is on the screen now?
+    // console.log(screen.debug());
+
+    // Check for diagnostic panel which is always there when open
+    const queryInfo = await screen.findByText(/Query: "Silencioso"/i, {}, { timeout: 5000 });
+    expect(queryInfo).toBeInTheDocument();
+
+    // Now check for "Nexus Silencioso"
+    const fallbackTitle = await screen.findByText(/Nexus Silencioso/i);
     expect(fallbackTitle).toBeInTheDocument();
     
     expect(screen.getByText(/Ainda estamos tecendo as conexões/i)).toBeInTheDocument();
