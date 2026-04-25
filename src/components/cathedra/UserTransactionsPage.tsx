@@ -4,6 +4,13 @@ import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { Icons } from '@/constants';
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
@@ -40,6 +47,7 @@ const UserTransactionsPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+  const [selectedTx, setSelectedTx] = useState<any | null>(null);
   const loaderRef = useRef<HTMLDivElement>(null);
 
   // Reset state when user changes
@@ -236,8 +244,30 @@ const UserTransactionsPage: React.FC = () => {
                   {tx.status === 'approved' && (
                     <div className="bg-muted/30 px-4 md:px-6 py-2 border-t border-border/50 flex justify-between items-center">
                       <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Comprovante disponível</span>
-                      <Button variant="ghost" size="sm" className="h-6 text-[9px] font-bold uppercase gap-1.5" onClick={() => window.print()}>
-                        <Icons.Download className="w-3 h-3" /> Imprimir
+                      <div className="flex gap-2">
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="h-6 text-[9px] font-bold uppercase gap-1.5" 
+                          onClick={() => setSelectedTx(tx)}
+                        >
+                          <Icons.Info className="w-3 h-3" /> Detalhes
+                        </Button>
+                        <Button variant="ghost" size="sm" className="h-6 text-[9px] font-bold uppercase gap-1.5" onClick={() => window.print()}>
+                          <Icons.Download className="w-3 h-3" /> Imprimir
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                  {tx.status !== 'approved' && (
+                    <div className="bg-muted/30 px-4 md:px-6 py-2 border-t border-border/50 flex justify-end items-center">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-6 text-[9px] font-bold uppercase gap-1.5" 
+                        onClick={() => setSelectedTx(tx)}
+                      >
+                        <Icons.Info className="w-3 h-3" /> Detalhes
                       </Button>
                     </div>
                   )}
@@ -285,6 +315,99 @@ const UserTransactionsPage: React.FC = () => {
           )}
         </div>
       )}
+
+      <Dialog open={!!selectedTx} onOpenChange={(open) => !open && setSelectedTx(null)}>
+        <DialogContent className="max-w-md rounded-[2rem]">
+          <DialogHeader>
+            <DialogTitle className="font-serif text-xl flex items-center gap-3">
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${selectedTx?.is_donation ? 'bg-secondary/10 text-secondary' : 'bg-primary/10 text-primary'}`}>
+                {selectedTx?.is_donation ? <Icons.Heart className="w-5 h-5 fill-current" /> : <Icons.Star className="w-5 h-5 fill-current" />}
+              </div>
+              Detalhes da Transação
+            </DialogTitle>
+            <DialogDescription className="text-xs uppercase tracking-widest font-bold pt-2">
+              Informações completas do seu apoio
+            </DialogDescription>
+          </DialogHeader>
+
+          {selectedTx && (
+            <div className="space-y-6 pt-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Status</p>
+                  {getStatusBadge(selectedTx.status)}
+                </div>
+                <div className="space-y-1 text-right">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Valor</p>
+                  <p className="text-xl font-black text-foreground">
+                    {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(selectedTx.amount)}
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-3 bg-muted/30 p-4 rounded-2xl border border-border/50">
+                <div className="flex justify-between items-center">
+                  <span className="text-[10px] font-bold text-muted-foreground uppercase">Descrição</span>
+                  <span className="text-xs font-bold text-foreground">{selectedTx.description || (selectedTx.is_donation ? 'Doação Voluntária' : 'Assinatura PRO')}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-[10px] font-bold text-muted-foreground uppercase">Data</span>
+                  <span className="text-xs font-medium text-foreground">
+                    {format(new Date(selectedTx.created_at), "dd/MM/yyyy, HH:mm", { locale: ptBR })}
+                  </span>
+                </div>
+                {selectedTx.payment_id && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-[10px] font-bold text-muted-foreground uppercase">ID Pagamento</span>
+                    <span className="text-[10px] font-mono text-foreground">{selectedTx.payment_id}</span>
+                  </div>
+                )}
+                {selectedTx.coupon_code && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-[10px] font-bold text-muted-foreground uppercase">Cupom</span>
+                    <Badge variant="outline" className="text-[9px] font-mono">{selectedTx.coupon_code}</Badge>
+                  </div>
+                )}
+              </div>
+
+              {selectedTx.status === 'approved' && (
+                <div className="p-4 rounded-2xl bg-green-500/5 border border-green-500/10 flex items-center gap-3">
+                  <Icons.CheckCircle className="w-5 h-5 text-green-500" />
+                  <div>
+                    <p className="text-[10px] font-black uppercase text-green-600">Aprovado</p>
+                    <p className="text-[10px] text-green-600/80">Sua contribuição já está ajudando nossa missão!</p>
+                  </div>
+                </div>
+              )}
+
+              {selectedTx.error_message && (
+                <div className="p-4 rounded-2xl bg-destructive/5 border border-destructive/10">
+                  <p className="text-[10px] font-black uppercase text-destructive mb-1">Motivo do Problema</p>
+                  <p className="text-xs text-destructive/80 italic">{selectedTx.error_message}</p>
+                </div>
+              )}
+
+              <div className="flex gap-3">
+                <Button 
+                  className="flex-1 rounded-xl font-bold uppercase text-[10px] tracking-widest" 
+                  onClick={() => setSelectedTx(null)}
+                >
+                  Fechar
+                </Button>
+                {selectedTx.status === 'approved' && (
+                  <Button 
+                    variant="outline" 
+                    className="flex-1 rounded-xl font-bold uppercase text-[10px] tracking-widest gap-2"
+                    onClick={() => window.print()}
+                  >
+                    <Icons.Download className="w-3 h-3" /> Imprimir
+                  </Button>
+                )}
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
