@@ -9,8 +9,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { fetchNexusTagContent } from '@/lib/nexusContent';
 import React from 'react';
 
-// Call tracking for report generation
-let callCounts: Record<string, number> = {};
+let mockStats = { calls: 0, tabs: {} as Record<string, number> };
+
 
 // Mocking dependencies
 vi.mock('@/integrations/supabase/client', () => ({
@@ -54,15 +54,24 @@ const renderWithProviders = (ui: React.ReactElement, initialEntry = '/temas/fe')
 describe('TemaDetailPage - Integration Tests', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockStats = { calls: 0, tabs: {} };
   });
 
   afterEach(() => {
-    // Log the number of calls to fetchNexusTagContent for the report
-    const callCount = (fetchNexusTagContent as any).mock.calls.length;
-    console.log(`STATS: {"bible": ${callCount}}`);
+    console.log(`[STATS] ${JSON.stringify(mockStats)}`);
   });
 
+  const trackedFetch = (impl: any) => {
+    return (tag: any, signal?: AbortSignal) => {
+      mockStats.calls++;
+      const label = tag.label || 'unknown';
+      mockStats.tabs[label] = (mockStats.tabs[label] || 0) + 1;
+      return impl(tag, signal);
+    };
+  };
+
   const switchTab = async (name: string) => {
+
 
 
     fireEvent.click(screen.getByText(name));
