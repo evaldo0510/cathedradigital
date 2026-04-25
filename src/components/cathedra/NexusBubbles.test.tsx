@@ -121,14 +121,13 @@ describe('NexusBubbles - Integration Tests', () => {
 
     renderWithProviders(<NexusBubbles />);
 
-    // Wait for tag and click it (popover trigger is the div wrapping BubbleTag)
+    // Wait for tag and click it
     const tag = await screen.findByText('Fé');
-    fireEvent.click(tag);
+    await userEvent.click(tag);
 
     // Check if content appears
-    await waitFor(() => {
-      expect(screen.getByText('Versículo sem título')).toBeInTheDocument();
-    });
+    const contentText = await screen.findByText('Versículo sem título');
+    expect(contentText).toBeInTheDocument();
 
     // Verify it shows "Escritura" and NOT "Referência"
     const scripture = await screen.findByText('Escritura');
@@ -153,10 +152,11 @@ describe('NexusBubbles - Integration Tests', () => {
     renderWithProviders(<NexusBubbles />);
 
     const tag = await screen.findByText('Silencioso');
-    fireEvent.click(tag);
+    await userEvent.click(tag);
 
     // Wait for "Nexus Silencioso" fallback in the portal
-    const fallbackTitle = await screen.findByText('Nexus Silencioso');
+    // Radix Popover might take a frame to render the portal
+    const fallbackTitle = await screen.findByText(/Nexus Silencioso/i);
     expect(fallbackTitle).toBeInTheDocument();
     
     expect(screen.getByText(/Ainda estamos tecendo as conexões/i)).toBeInTheDocument();
