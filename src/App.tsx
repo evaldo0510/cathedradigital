@@ -546,7 +546,8 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.PRIVACY} element={<PageTransition><PrivacyPage /></PageTransition>} />
                   <Route path={AppRoute.PRICING} element={<PageTransition><PricingPage /></PageTransition>} />
                    <Route path={AppRoute.UPGRADE} element={<PageTransition><UpgradePage /></PageTransition>} />
-                   <Route path={AppRoute.TRANSACTIONS} element={<PageTransition><AuthGuard><TransactionsPage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.TRANSACTIONS} element={<PageTransition><AuthGuard><TransactionsPage /></AuthGuard></PageTransition>} />
+                  <Route path="/transactions/my" element={<PageTransition><AuthGuard><UserTransactionsPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.DIAGNOSTICO} element={<PageTransition><AuthGuard><DiagnosticoPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.HOJE} element={<PageTransition><AuthGuard><HojePage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.JORNADAS} element={<PageTransition><AuthGuard><JornadasPage /></AuthGuard></PageTransition>} />
