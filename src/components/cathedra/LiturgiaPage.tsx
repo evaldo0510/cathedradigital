@@ -322,23 +322,16 @@ const LiturgiaPage: React.FC = () => {
               { id: 'liturgia', label: 'Liturgia', icon: <Icons.Liturgy className="w-4 h-4" /> },
               { id: 'missal', label: 'Missal', icon: <Icons.Cross className="w-4 h-4" /> },
               { id: 'calendario', label: 'Calendário', icon: <Icons.Calendar className="w-4 h-4" /> }
-            ].map((tab, idx, arr) => (
+            ].map((tab, idx) => (
               <button
                 key={tab.id}
-                id={`tab-${tab.id}`}
-                role="tab"
-                aria-selected={activeTab === tab.id}
-                aria-controls={`panel-${tab.id}`}
-                onClick={() => setSearchParams({ tab: tab.id })}
-                onKeyDown={(e) => {
-                  if (e.key === 'ArrowRight' && idx < arr.length - 1) document.getElementById(`tab-${arr[idx+1]}`)?.focus();
-                  if (e.key === 'ArrowLeft' && idx > 0) document.getElementById(`tab-${arr[idx-1]}`)?.focus();
-                }}
-                className={`flex items-center gap-2 px-8 py-2.5 rounded-full text-sm font-semibold transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+                {...getTabProps(`tab-${idx}`, `panel-${tab.id}`, activeTab === tab.id, `flex items-center gap-2 px-8 py-2.5 rounded-full text-sm font-semibold transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                   activeTab === tab.id 
                     ? 'bg-background shadow-lg text-primary' 
                     : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
-                }`}
+                }`)}
+                onClick={() => setSearchParams({ tab: tab.id })}
+                onKeyDown={(e) => handleTabKeyDown(e, idx, 3, (newIdx) => setSearchParams({ tab: tabList[newIdx] }), 'tab-')}
               >
                 {tab.icon} {tab.label}
               </button>
