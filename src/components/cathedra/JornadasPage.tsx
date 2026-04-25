@@ -403,12 +403,14 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
         <div className="flex flex-wrap gap-1.5 sm:gap-2">
           <button
             onClick={() => setFilterDifficulty('all')}
-            className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold transition-all duration-200 ${
+            className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold transition-all duration-200 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
               filterDifficulty === 'all' ? 'bg-foreground text-background shadow-md' : 'bg-muted text-muted-foreground hover:bg-muted/80'
             }`}
+            aria-pressed={filterDifficulty === 'all'}
           >
             Todos os níveis
           </button>
+
           {difficulties.map(diff => (
             <button
               key={diff}
