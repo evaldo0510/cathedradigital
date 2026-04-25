@@ -66,7 +66,7 @@ export const SearchResultCard = React.forwardRef<HTMLDivElement, SearchResultCar
       tabIndex={0}
       aria-label={`${title}${subtitle ? `: ${subtitle}` : ''}`}
       className={cn(
-        'cursor-pointer hover:bg-muted/30 transition-colors group focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none',
+        'cursor-pointer hover:bg-muted/30 transition-all group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none',
         className,
       )}
       onClick={onClick}

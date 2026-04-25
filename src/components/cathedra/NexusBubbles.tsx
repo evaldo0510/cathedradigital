@@ -8,6 +8,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Loader2, ExternalLink, Sparkles, Search, X, Heart, Church, Flame, Cross, BookOpen, Shield, Crown, Hand, Star, Globe, Eye, Users, Compass, Wine, Orbit, Hash, Mountain, RefreshCw, Frown, Bird, Droplets, Wheat, Target, Clock, Megaphone, Skull, Filter } from 'lucide-react';
 import { Icons } from '@/constants';
 import { BubbleTag, getTagIcon } from './BubbleTag';
+import { useRovingTabindex } from './TabUtils';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { type ProfileId, PROFILES } from './SpiritualQuiz';
@@ -32,7 +33,7 @@ interface NexusBubblesProps {
   profileId?: ProfileId | null;
 }
 
-const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean }> = ({ tag, index, isSuggested }) => {
+const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabIndex?: number; onKeyDown?: (e: React.KeyboardEvent) => void }> = ({ tag, index, isSuggested, tabIndex, onKeyDown }) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
@@ -114,7 +115,10 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean }> = 
             isSelected={open}
             isSuggested={isSuggested}
             onClick={() => {}} // Popover handles trigger
+            onKeyDown={onKeyDown}
             onMouseEnter={prefetchTag}
+            tabIndex={tabIndex}
+            data-roving-item={true}
           />
         </div>
       </PopoverTrigger>
@@ -236,6 +240,8 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean }> = 
 
 const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
   const navigate = useNavigate();
+  const filteredRef = React.useRef<HTMLDivElement>(null);
+  const suggestedRef = React.useRef<HTMLDivElement>(null);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [tags, setTags] = useState<Tag[]>([]);
   const [loading, setLoading] = useState(true);
@@ -293,6 +299,9 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
     }
     return result;
   }, [tags, searchQuery, activeFilter]);
+
+  const { activeIndex: filteredActiveIndex, handleKeyDown: handleFilteredKeyDown } = useRovingTabindex(filteredTags?.length || 0, filteredRef);
+  const { activeIndex: suggestedActiveIndex, handleKeyDown: handleSuggestedKeyDown } = useRovingTabindex(profileSuggestedTags?.length || 0, suggestedRef);
 
   if (loading) {
     return (
@@ -368,10 +377,15 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
               <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
                 {searchQuery ? 'Resultado da Busca' : categories[activeFilter as keyof typeof categories]?.label}
               </p>
-              <div className="flex flex-wrap gap-1.5" role="list">
+              <div className="flex flex-wrap gap-1.5" role="list" ref={filteredRef}>
                 {filteredTags && filteredTags.length ? filteredTags.map((tag, i) => (
                   <div key={tag.slug} role="listitem">
-                    <TagBubble tag={tag} index={i} />
+                    <TagBubble 
+                      tag={tag} 
+                      index={i} 
+                      tabIndex={filteredActiveIndex === i ? 0 : -1}
+                      onKeyDown={(e) => handleFilteredKeyDown(e, i)}
+                    />
                   </div>
                 )) : (
                   <p className="text-[10px] text-muted-foreground italic">Nenhum tema encontrado.</p>
@@ -396,10 +410,16 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
                       Sugeridos para sua Jornada
                     </span>
                   </div>
-                  <div className="flex flex-wrap gap-1.5" role="list">
+                  <div className="flex flex-wrap gap-1.5" role="list" ref={suggestedRef}>
                     {profileSuggestedTags.map((tag, i) => (
                       <div key={tag.slug} role="listitem">
-                        <TagBubble tag={tag} index={i} isSuggested />
+                        <TagBubble 
+                          tag={tag} 
+                          index={i} 
+                          isSuggested 
+                          tabIndex={suggestedActiveIndex === i ? 0 : -1}
+                          onKeyDown={(e) => handleSuggestedKeyDown(e, i)}
+                        />
                       </div>
                     ))}
                   </div>

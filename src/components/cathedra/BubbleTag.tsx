@@ -92,9 +92,12 @@ interface BubbleTagProps {
   isSelected?: boolean;
   isSuggested?: boolean;
   onClick: () => void;
+  onKeyDown?: (e: React.KeyboardEvent) => void;
   onMouseEnter?: () => void;
   className?: string;
   ariaLabel?: string;
+  tabIndex?: number;
+  "data-roving-item"?: boolean;
 }
 
 export const BubbleTag: React.FC<BubbleTagProps> = ({
@@ -104,9 +107,12 @@ export const BubbleTag: React.FC<BubbleTagProps> = ({
   isSelected,
   isSuggested,
   onClick,
+  onKeyDown,
   onMouseEnter,
   className = "",
-  ariaLabel
+  ariaLabel,
+  tabIndex,
+  "data-roving-item": dataRovingItem
 }) => {
   return (
     <motion.button
@@ -117,11 +123,14 @@ export const BubbleTag: React.FC<BubbleTagProps> = ({
       whileTap="tap"
       custom={index}
       onClick={onClick}
+      onKeyDown={onKeyDown}
       onMouseEnter={onMouseEnter}
+      tabIndex={tabIndex}
+      data-roving-item={dataRovingItem}
       aria-pressed={isSelected}
       aria-label={ariaLabel || `Tema: ${label}`}
       className={`
-        relative px-3.5 py-2 rounded-full border transition-all shadow-sm flex items-center gap-1.5 group/tag focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none
+        relative px-3.5 py-2 rounded-full border transition-all shadow-sm flex items-center gap-1.5 group/tag focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:outline-none
         ${isSelected 
           ? 'border-primary bg-primary/15 ring-4 ring-primary/5 text-primary shadow-lg scale-105' 
           : isSuggested

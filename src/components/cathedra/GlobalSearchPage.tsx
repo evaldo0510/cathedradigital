@@ -9,6 +9,7 @@ import RelevanceBadge from './RelevanceBadge';
 import SearchResultCard from './SearchResultCard';
 import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import { AppRoute } from '@/types';
+import { useRovingTabindex } from './TabUtils';
 import type { Tables } from '@/integrations/supabase/types';
 
 type Saint = Tables<'saints'>;
@@ -20,6 +21,7 @@ type Journey = Tables<'journeys'>;
 const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
+  const tagsRef = React.useRef<HTMLDivElement>(null);
 
   const saints = useFuzzySearch<Saint>({ rpc: 'search_saints_fuzzy', query, primaryField: 'name', secondaryField: 'title', resultLimit: 10 });
   const glossary = useFuzzySearch<GlossaryRow>({ rpc: 'search_glossary_fuzzy', query, primaryField: 'term', secondaryField: 'definition', resultLimit: 10 });
@@ -37,6 +39,8 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
     jornadas: journeys.results?.length ?? 0,
   };
   const isAllEmpty = hasQuery && !anyPending && Object.values(counts).every(c => c === 0);
+  
+  const { activeIndex: tagsActiveIndex, handleKeyDown: handleTagsKeyDown } = useRovingTabindex(tags.results?.length || 0, tagsRef);
 
   const EmptyState = ({ text }: { text: string }) => (
     <p className="text-center text-sm text-muted-foreground py-6">{text}</p>
@@ -137,13 +141,16 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
             </TabsContent>
 
             <TabsContent value="temas" className="space-y-2 mt-4">
-              <div className="flex flex-wrap gap-2" role="list">
-                {tags.results?.map(t => (
+              <div className="flex flex-wrap gap-2" role="list" ref={tagsRef}>
+                {tags.results?.map((t, idx) => (
                   <button
                     key={t.id}
                     role="listitem"
                     onClick={() => navigate(`${AppRoute.TEMAS}/${t.slug}`)}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted/60 border border-border/50 hover:border-primary/40 hover:bg-primary/5 transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none group"
+                    onKeyDown={(e) => handleTagsKeyDown(e, idx, () => navigate(`${AppRoute.TEMAS}/${t.slug}`))}
+                    tabIndex={tagsActiveIndex === idx ? 0 : -1}
+                    data-roving-item="true"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted/60 border border-border/50 hover:border-primary/40 hover:bg-primary/5 transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none group"
                     aria-label={`Tema: ${t.label}`}
                   >
                     {t.emoji && <span className="group-hover:scale-110 transition-transform">{t.emoji}</span>}

@@ -8,7 +8,7 @@ import { Loader2, Sparkles, Tag as TagIcon, Search } from 'lucide-react';
 import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import { FuzzySearchInput } from './FuzzySearchInput';
 import { BubbleTag } from './BubbleTag';
-import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
+import { getTabProps, getTabPanelProps, useTabNavigation, useRovingTabindex } from './TabUtils';
 
 
 interface Tag {
@@ -26,6 +26,7 @@ const TemasPage = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState('');
+  const tagsContainerRef = React.useRef<HTMLDivElement>(null);
   const { handleKeyDown: handleTabKeyDown } = useTabNavigation();
   const [activeCategory, setActiveCategory] = useState<string>(() => {
     const fromUrl = searchParams.get('category');
@@ -78,6 +79,8 @@ const TemasPage = () => {
     if (activeCategory === 'all') return base;
     return base.filter(tag => tag.category === activeCategory);
   }, [tags, fuzzyTags, isSearchActive, activeCategory]);
+
+  const { activeIndex, handleKeyDown: handleRovingKeyDown } = useRovingTabindex(filteredTags.length, tagsContainerRef);
 
   useEffect(() => {
     const temaSlug = searchParams.get('tema');
@@ -186,7 +189,7 @@ const TemasPage = () => {
             ) : (
               <>
                 <div className="relative p-6 sm:p-10">
-                  <div className="flex flex-wrap justify-center gap-2 sm:gap-3 max-w-5xl mx-auto" role="list">
+                  <div className="flex flex-wrap justify-center gap-2 sm:gap-3 max-w-5xl mx-auto" role="list" ref={tagsContainerRef}>
                     {filteredTags.map((tag, idx) => (
                       <div key={tag.id} role="listitem">
                         <BubbleTag
@@ -195,7 +198,10 @@ const TemasPage = () => {
                           index={idx}
                           isSelected={false}
                           onClick={() => handleTagSelect(tag)}
+                          onKeyDown={(e) => handleRovingKeyDown(e, idx, () => handleTagSelect(tag))}
                           onMouseEnter={() => prefetchTag(tag)}
+                          tabIndex={activeIndex === idx ? 0 : -1}
+                          data-roving-item={true}
                           className="px-4 py-2.5 text-[10px] sm:text-[11px] uppercase tracking-widest"
                         />
                       </div>
