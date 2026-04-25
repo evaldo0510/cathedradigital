@@ -131,6 +131,21 @@ export function normalizeTags(tags: string[]): string[] {
   return [...new Set(normalized)];
 }
 
+/**
+ * Generates a list of search terms for a tag to ensure high recall.
+ * Includes the original label, normalized label, and slug.
+ */
+export function getSearchTermsForTag(tag: { label: string; slug: string }): string[] {
+  const normalized = normalizeText(tag.label);
+  const terms = [tag.label, normalized, tag.slug];
+  
+  // Also add common variations if not already present
+  // For example, if it's "Oração", normalized is "oracao", slug might be "oracao".
+  // We want to be sure.
+  
+  return Array.from(new Set(terms.filter(Boolean)));
+}
+
 /** All canonical tag categories for the Nexus system */
 export const TAG_CATEGORIES = {
   fundamentos: {

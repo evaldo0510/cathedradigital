@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { getSpiritualInsight } from '@/services/aiService';
 import { useNavigate } from 'react-router-dom';
 import { normalizeText } from '@/lib/utils';
+import { getSearchTermsForTag } from '@/lib/tagNormalization';
 import { useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AppRoute } from '@/types';
@@ -56,7 +57,7 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
     
     try {
       // Definir termos de busca (Label original, Label normalizado, Slug)
-      const searchTerms = [tag.label, normalizedTag, tag.slug].filter((v, i, a) => a.indexOf(v) === i);
+      const searchTerms = getSearchTermsForTag(tag);
       
       // 1. Fetch from spiritual_contents (Bíblia, Catecismo, Magistério)
       const { data: spiritualData, error: dbError } = await supabase
@@ -121,8 +122,7 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
     queryClient.prefetchQuery({
       queryKey: ['tag-contents', tag.id, tag.label],
       queryFn: async () => {
-        const normalizedLabel = normalizeText(tag.label);
-        const searchTerms = [tag.label, normalizedLabel, tag.slug].filter(Boolean);
+        const searchTerms = getSearchTermsForTag(tag);
         
         const { data: spiritualData, error: dbError } = await supabase
           .from('spiritual_contents')
