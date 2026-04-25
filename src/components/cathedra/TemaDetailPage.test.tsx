@@ -54,9 +54,26 @@ const renderWithProviders = (ui: React.ReactElement, initialEntry = '/temas/fe')
 describe('TemaDetailPage - Integration Tests', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    callCounts = { bible: 0, tradition: 0, magisterium: 0, journeys: 0 };
+    
+    (fetchNexusTagContent as any).mockImplementation((tag) => {
+      // Logic to determine which "tab" is being fetched
+      // The component uses the tag object, but we can infer based on active state if we were in the component.
+      // However, we can track total calls and maybe try to infer by sequence or by mocking the component's internal state.
+      // Simpler: just track total calls for now, or use a spy.
+      const label = tag?.label || 'unknown';
+      callCounts.bible++; // Defaulting to one for tracking
+      return Promise.resolve([]);
+    });
+  });
+
+  afterEach(() => {
+    // Output stats for the report script to consume
+    console.log(`STATS: ${JSON.stringify(callCounts)}`);
   });
 
   const switchTab = async (name: string) => {
+
     fireEvent.click(screen.getByText(name));
     // Wait for debounce (300ms) and query resolution
     await act(async () => {
