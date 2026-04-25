@@ -52,6 +52,14 @@ describe('TemaDetailPage - Integration Tests', () => {
     vi.clearAllMocks();
   });
 
+  const switchTab = async (name: string) => {
+    await userEvent.click(screen.getByText(name));
+    // Wait for debounce (300ms)
+    await act(async () => {
+      await new Promise(r => setTimeout(r, 400));
+    });
+  };
+
   it('displays error message with "Try Again" button when fetch fails', async () => {
     const mockTags = [{ id: '1', label: 'Fé', slug: 'fe', category: 'fundamentos', emoji: '✝️' }];
     (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
