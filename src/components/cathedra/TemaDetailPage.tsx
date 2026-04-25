@@ -127,7 +127,7 @@ const TemaDetailPage = () => {
       const results: ThemeContent[] = (spiritualData || []).map((d: any) => ({
         id: d.id,
         content_type: d.type,
-        reference: d.reference_id || d.title || 'Referência',
+        reference: d.reference_id || d.title || (d.type === 'bible' ? 'Escritura' : d.type === 'catechism' ? 'Catecismo' : 'Tradição'),
         title: d.title,
         text_content: d.content_text,
         tags: d.tags || []
@@ -137,7 +137,7 @@ const TemaDetailPage = () => {
         id: d.id,
         content_type: 'journey',
         reference: d.subtitle || d.category || 'Jornada',
-        title: d.title,
+        title: d.title || 'Jornada',
         text_content: d.description || '',
         tags: d.tags || []
       }));
