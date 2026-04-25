@@ -114,18 +114,17 @@ describe('TemaDetailPage - Integration Tests', () => {
 
     // Switch to tradition tab
     const traditionTab = screen.getByText('Tradição');
-    fireEvent.click(traditionTab);
+    await userEvent.click(traditionTab);
     
-    await waitFor(() => {
-      expect(screen.getByText(/Conteúdo da Tradição em aprofundamento/i)).toBeInTheDocument();
-    });
+    // Wait for empty state in this tab
+    const traditionEmpty = await screen.findByText(/Conteúdo da Tradição em aprofundamento/i);
+    expect(traditionEmpty).toBeInTheDocument();
 
     // Switch to magisterium tab
     const magisteriumTab = screen.getByText('Magistério');
-    fireEvent.click(magisteriumTab);
+    await userEvent.click(magisteriumTab);
     
-    await waitFor(() => {
-      expect(screen.getByText(/Documentos do Magistério em aprofundamento/i)).toBeInTheDocument();
-    });
+    const magisteriumEmpty = await screen.findByText(/Documentos do Magistério em aprofundamento/i);
+    expect(magisteriumEmpty).toBeInTheDocument();
   });
 });
