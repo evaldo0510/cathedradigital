@@ -310,9 +310,14 @@ const CommunityPage: React.FC = () => {
   if (selectedPost) {
     return (
       <div className="max-w-3xl mx-auto space-y-6">
-        <button onClick={() => { setSelectedPost(null); setReplies([]); }} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+        <button 
+          onClick={() => { setSelectedPost(null); setReplies([]); }} 
+          className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none rounded-lg px-2 py-1"
+          aria-label="Voltar para a lista de discussões"
+        >
           <Icons.ChevronLeft className="w-4 h-4" /> Voltar
         </button>
+
 
         <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
           <div className="flex items-center gap-3">
