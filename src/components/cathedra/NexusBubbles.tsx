@@ -122,20 +122,23 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
           />
         </div>
       </PopoverTrigger>
-      <PopoverContent className="w-[320px] p-0 rounded-[2rem] border-primary/20 overflow-hidden shadow-2xl z-[100] backdrop-blur-xl">
-        <div className="bg-gradient-to-r from-primary/10 to-transparent p-4 border-b border-border/50 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-full bg-white/50 flex items-center justify-center shadow-inner text-primary">
-              {getTagIcon(tag.emoji)}
+      <PopoverContent className="w-[340px] sm:w-[420px] p-0 rounded-[2.5rem] border-primary/20 overflow-hidden shadow-2xl z-[100] backdrop-blur-2xl bg-card/90">
+        <div className="bg-gradient-to-r from-primary/15 via-primary/5 to-transparent p-6 border-b border-border/40 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-2xl bg-white/50 dark:bg-black/20 flex items-center justify-center shadow-inner text-primary border border-primary/10">
+              {getTagIcon(tag.emoji, "w-6 h-6")}
             </div>
-            <span className="text-xs font-black uppercase tracking-widest text-primary">{tag.label}</span>
+            <div>
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/60">{tag.category}</span>
+              <h4 className="text-sm font-black uppercase tracking-widest text-primary leading-tight">{tag.label}</h4>
+            </div>
           </div>
           <button 
             onClick={() => navigate(`${AppRoute.TEMAS}/${tag.slug}`)}
-            className="p-1.5 rounded-full bg-primary/5 hover:bg-primary/20 text-primary transition-colors group"
+            className="w-10 h-10 rounded-2xl bg-primary text-primary-foreground hover:scale-110 active:scale-95 transition-all flex items-center justify-center shadow-lg shadow-primary/20 group"
             title="Estudo Completo"
           >
-            <ExternalLink className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
+            <ExternalLink className="w-4 h-4 group-hover:rotate-12 transition-transform" />
           </button>
         </div>
         
