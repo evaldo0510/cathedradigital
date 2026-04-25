@@ -41,25 +41,37 @@ export const SearchResultCard = React.forwardRef<HTMLDivElement, SearchResultCar
   showArrow = true,
   className,
   index = 0,
-}, ref) => (
-  <MotionCard
-    ref={ref}
-    initial={{ opacity: 0, y: 12, scale: 0.97 }}
-    animate={{ opacity: 1, y: 0, scale: 1 }}
-    exit={{ opacity: 0, y: -8, scale: 0.97 }}
-    transition={{
-      type: 'spring',
-      stiffness: 380,
-      damping: 30,
-      delay: Math.min(index * 0.04, 0.4),
-    }}
-    layout
-    className={cn(
-      'cursor-pointer hover:bg-muted/30 transition-colors group',
-      className,
-    )}
-    onClick={onClick}
-  >
+}, ref) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if ((e.key === 'Enter' || e.key === ' ') && onClick) {
+      e.preventDefault();
+      onClick();
+    }
+  };
+
+  return (
+    <MotionCard
+      ref={ref}
+      initial={{ opacity: 0, y: 12, scale: 0.97 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: -8, scale: 0.97 }}
+      transition={{
+        type: 'spring',
+        stiffness: 380,
+        damping: 30,
+        delay: Math.min(index * 0.04, 0.4),
+      }}
+      layout
+      role="button"
+      tabIndex={0}
+      aria-label={`${title}${subtitle ? `: ${subtitle}` : ''}`}
+      className={cn(
+        'cursor-pointer hover:bg-muted/30 transition-colors group focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none',
+        className,
+      )}
+      onClick={onClick}
+      onKeyDown={handleKeyDown}
+    >
     <CardContent className="p-3 flex items-center gap-3">
       {icon && (
         <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-muted/60 flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors">
