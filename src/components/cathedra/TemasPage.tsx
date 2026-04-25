@@ -84,7 +84,7 @@ const TemasPage = () => {
   const filteredTags = useMemo(() => {
     if (!tags) return [];
     const base: Tag[] = isSearchActive ? (fuzzyTags ?? []) : tags;
-    if (activeCategory === 'all') return base;
+    if (isSearchActive || activeCategory === 'all') return base;
     return base.filter(tag => tag.category === activeCategory);
   }, [tags, fuzzyTags, isSearchActive, activeCategory]);
 
