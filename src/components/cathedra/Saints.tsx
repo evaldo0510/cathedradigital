@@ -216,16 +216,21 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
           {viewMode === 'daily' ? (
             <motion.div
               key="daily"
+              id="panel-daily"
+              role="tabpanel"
+              aria-labelledby="tab-daily"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="space-y-8"
+              className="space-y-8 outline-none"
+              tabIndex={0}
             >
               <div className="flex flex-col items-center gap-6">
                 <div className="flex items-center gap-4 md:gap-8">
                   <button 
                     onClick={() => setSelectedDate(subDays(selectedDate, 1))}
                     className="p-3 bg-card border border-border rounded-full hover:bg-primary/5 hover:border-primary/30 transition-all text-muted-foreground hover:text-primary"
+                    aria-label="Dia anterior"
                   >
                     <ChevronLeft className="w-5 h-5" />
                   </button>
@@ -242,6 +247,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   <button 
                     onClick={() => setSelectedDate(addDays(selectedDate, 1))}
                     className="p-3 bg-card border border-border rounded-full hover:bg-primary/5 hover:border-primary/30 transition-all text-muted-foreground hover:text-primary"
+                    aria-label="Próximo dia"
                   >
                     <ChevronRight className="w-5 h-5" />
                   </button>
@@ -257,6 +263,8 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                           ? 'bg-primary border-primary text-primary-foreground shadow-lg shadow-primary/20 scale-110'
                           : 'bg-card border-border text-muted-foreground hover:border-primary/30 hover:text-primary'
                       }`}
+                      aria-label={format(date, "dd 'de' MMMM", { locale: ptBR })}
+                      aria-pressed={isSameDay(date, selectedDate)}
                     >
                       <span className="text-[9px] font-black uppercase tracking-tighter mb-1">
                         {format(date, "EEE", { locale: ptBR }).replace('.', '')}
@@ -354,10 +362,14 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
           ) : viewMode === 'search' ? (
             <motion.div
               key="search"
+              id="panel-search"
+              role="tabpanel"
+              aria-labelledby="tab-search"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="space-y-8"
+              className="space-y-8 outline-none"
+              tabIndex={0}
             >
               <FuzzySearchInput
                 className="max-w-2xl mx-auto px-4"
@@ -367,33 +379,6 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                 isSearching={search !== debouncedSearch || isSearchingLocal}
                 size="lg"
               />
-          ) : viewMode === 'cloud' ? (
-            <motion.div
-              key="cloud"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              className="space-y-8"
-            >
-              <div className="text-center space-y-2">
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Nuvem de Testemunhas</p>
-                <p className="text-sm text-muted-foreground italic font-serif">"Estamos cercados de tão grande nuvem de testemunhas..." — Heb 12,1</p>
-              </div>
-
-              <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto" role="list">
-                {displaySaints.map((saint, i) => (
-                  <div key={saint.id} role="listitem">
-                    <BubbleTag
-                      label={saint.name}
-                      emoji={saint.category === 'pope' ? '👑' : saint.category === 'doctor' ? '📖' : '⛪'}
-                      index={i}
-                      onClick={() => handleOpenSaint(saint, false)}
-                      className="px-5 py-3 text-xs"
-                    />
-                  </div>
-                ))}
-              </div>
-            </motion.div>
               <div className="max-w-2xl mx-auto px-4">
                 {isLoadingDaily || isSearchingLocal ? (
                   <SaintGridSkeleton count={6} />
@@ -456,13 +441,48 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                 )}
               </div>
             </motion.div>
+          ) : viewMode === 'cloud' ? (
+            <motion.div
+              key="cloud"
+              id="panel-cloud"
+              role="tabpanel"
+              aria-labelledby="tab-cloud"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="space-y-8 outline-none"
+              tabIndex={0}
+            >
+              <div className="text-center space-y-2">
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Nuvem de Testemunhas</p>
+                <p className="text-sm text-muted-foreground italic font-serif">"Estamos cercados de tão grande nuvem de testemunhas..." — Heb 12,1</p>
+              </div>
+
+              <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto" role="list">
+                {displaySaints.map((saint, i) => (
+                  <div key={saint.id} role="listitem">
+                    <BubbleTag
+                      label={saint.name}
+                      emoji={saint.category === 'pope' ? '👑' : saint.category === 'doctor' ? '📖' : '⛪'}
+                      index={i}
+                      onClick={() => handleOpenSaint(saint, false)}
+                      className="px-5 py-3 text-xs"
+                    />
+                  </div>
+                ))}
+              </div>
+            </motion.div>
           ) : (
             <motion.div
               key={viewMode}
+              id={`panel-${viewMode}`}
+              role="tabpanel"
+              aria-labelledby={`tab-${viewMode}`}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="space-y-8"
+              className="space-y-8 outline-none"
+              tabIndex={0}
             >
               <div className="text-center space-y-4 max-w-2xl mx-auto px-4">
                 <h2 className="text-2xl font-serif font-bold">
@@ -507,7 +527,7 @@ const SaintCard: React.FC<{ saint: SaintWithScore; onClick: () => void }> = ({ s
   return (
     <button
       onClick={onClick}
-      className="group bg-card border border-border rounded-[2rem] overflow-hidden hover:border-primary/50 hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 text-left flex flex-col h-full"
+      className="group bg-card border border-border rounded-[2rem] overflow-hidden hover:border-primary/50 hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 text-left flex flex-col h-full focus-visible:ring-2 focus-visible:ring-primary outline-none"
     >
       <div className="relative h-48 overflow-hidden">
         <SacredImage 
