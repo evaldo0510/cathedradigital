@@ -9,15 +9,21 @@ import { HelmetProvider } from 'react-helmet-async';
 import React from 'react';
 
 // Mocking dependencies
-vi.mock('@/integrations/supabase/client', () => ({
-  supabase: {
-    from: vi.fn(() => ({
-      select: vi.fn(() => ({
-        order: vi.fn(() => Promise.resolve({ data: [], error: null }))
+vi.mock('@/integrations/supabase/client', () => {
+  const mockSelect = vi.fn().mockReturnThis();
+  const mockOrder = vi.fn().mockResolvedValue({ data: [], error: null });
+  const mockEq = vi.fn().mockResolvedValue({ data: [], error: null });
+
+  return {
+    supabase: {
+      from: vi.fn(() => ({
+        select: mockSelect,
+        order: mockOrder,
+        eq: mockEq
       }))
-    }))
-  }
-}));
+    }
+  };
+});
 
 vi.mock('@/hooks/useAuth', () => ({
   useAuth: vi.fn(() => ({
