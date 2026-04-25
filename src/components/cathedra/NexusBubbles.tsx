@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { getSpiritualInsight } from '@/services/aiService';
 import { useNavigate } from 'react-router-dom';
+import { normalizeText } from '@/lib/utils';
 import { useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AppRoute } from '@/types';
@@ -49,44 +50,61 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
     setMetrics({ startTime });
     setStatus('loading');
     setErrorDetails(null);
-    console.log(`[Nexus Diagnostic] Fetching content for tag: ${tag.label} (ID: ${tag.id})`);
+    
+    const normalizedTag = normalizeText(tag.label);
+    console.log(`[Nexus Diagnostic] Fetching content for tag: ${tag.label} (Normalized: ${normalizedTag})`);
     
     try {
-      // 1. Supabase Fetch
-      const { data, error: dbError } = await supabase
-        .from('content_tags')
-        .select(`
-          spiritual_contents (
-            id,
-            content_text,
-            type,
-            title,
-            metadata
-          )
-        `)
-        .eq('tag_id', tag.id)
-        .limit(3);
+      // Definir termos de busca (Label original, Label normalizado, Slug)
+      const searchTerms = [tag.label, normalizedTag, tag.slug].filter((v, i, a) => a.indexOf(v) === i);
+      
+      // 1. Fetch from spiritual_contents (Bíblia, Catecismo, Magistério)
+      const { data: spiritualData, error: dbError } = await supabase
+        .from('spiritual_contents')
+        .select('*')
+        .overlaps('tags', searchTerms)
+        .limit(15);
 
-      if (dbError) {
-        setMetrics(prev => ({ ...prev, source: 'supabase' }));
-        throw dbError;
-      }
+      // 2. Fetch from journeys (Jornadas)
+      const { data: journeyData, error: journeyError } = await supabase
+        .from('journeys')
+        .select('*')
+        .overlaps('tags', searchTerms)
+        .limit(10);
 
-      if (data) {
-        const formatted = (data as any[]).map(d => d.spiritual_contents).filter(Boolean);
-        setContent(formatted);
-      }
+      if (dbError) throw dbError;
+      if (journeyError) throw journeyError;
 
-      // 2. IA Fetch
+      const formattedSpiritual = (spiritualData || []).map(d => ({
+        id: d.id,
+        type: d.type,
+        content_text: d.content_text,
+        title: d.title,
+        metadata: d.metadata
+      }));
+
+      const formattedJourneys = (journeyData || []).map(d => ({
+        id: d.id,
+        type: 'journey',
+        content_text: d.description || d.subtitle || '',
+        title: d.title,
+        metadata: { ...d, is_direct_journey: true }
+      }));
+
+      // Combine results and remove duplicates
+      const allResults = [...formattedSpiritual, ...formattedJourneys];
+      const uniqueResults = Array.from(new Map(allResults.map(item => [item.id, item])).values());
+      
+      setContent(uniqueResults as TagContent[]);
+
+      // AI Fetch
       try {
         const result = await getSpiritualInsight(tag.label);
         if (!result.error && result.content) {
           setLogosInsight(result.content);
-        } else if (result.error) {
-          console.warn(`[Nexus Diagnostic] AI Insight error: ${result.error}`);
         }
       } catch (iaErr) {
-        console.error(`[Nexus Diagnostic] AI Fetch failed, but Supabase content might be present.`, iaErr);
+        console.error(`[Nexus Diagnostic] AI Fetch failed.`, iaErr);
       }
 
       setMetrics(prev => ({ ...prev, endTime: performance.now(), source: 'both' }));
@@ -101,30 +119,47 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
 
   const prefetchTag = useCallback(() => {
     queryClient.prefetchQuery({
-      queryKey: ['tag-contents', tag.id],
+      queryKey: ['tag-contents', tag.id, tag.label],
       queryFn: async () => {
-        const { data: tagContents, error } = await supabase
-          .from('content_tags')
-          .select(`
-            spiritual_contents (
-              id, title, content_text, type, reference_id, tags
-            )
-          `)
-          .eq('tag_id', tag.id);
+        const normalizedLabel = normalizeText(tag.label);
+        const searchTerms = [tag.label, normalizedLabel, tag.slug].filter(Boolean);
         
-        if (error) throw error;
-        return (tagContents || []).map((c: any) => ({
-          id: c.spiritual_contents.id,
-          content_type: c.spiritual_contents.type,
-          reference: c.spiritual_contents.reference_id || c.spiritual_contents.title || 'Referência',
-          title: c.spiritual_contents.title,
-          text_content: c.spiritual_contents.content_text,
-          tags: c.spiritual_contents.tags || []
+        const { data: spiritualData, error: dbError } = await supabase
+          .from('spiritual_contents')
+          .select('*')
+          .overlaps('tags', searchTerms)
+          .limit(10);
+        
+        const { data: journeyData, error: journeyError } = await supabase
+          .from('journeys')
+          .select('*')
+          .overlaps('tags', searchTerms)
+          .limit(5);
+
+        if (dbError) throw dbError;
+        if (journeyError) throw journeyError;
+
+        const results = (spiritualData || []).map((d: any) => ({
+          id: d.id,
+          type: d.type,
+          content_text: d.content_text,
+          title: d.title,
+          metadata: d.metadata
         }));
+
+        const journeyResults = (journeyData || []).map((d: any) => ({
+          id: d.id,
+          type: 'journey',
+          content_text: d.description || '',
+          title: d.title,
+          metadata: { ...d, is_direct_journey: true }
+        }));
+
+        return [...results, ...journeyResults];
       },
       staleTime: 1000 * 60 * 5,
     });
-  }, [queryClient, tag.id]);
+  }, [queryClient, tag.id, tag.label, tag.slug]);
 
   return (
     <Popover open={open} onOpenChange={(val) => {
@@ -221,55 +256,83 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
               )}
               
               {content.length > 0 ? (
-                <div className="space-y-4">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/50 flex items-center gap-2">
-                    <div className="h-[1px] flex-1 bg-border/40" />
-                    Versículos & Fontes
-                    <div className="h-[1px] flex-1 bg-border/40" />
-                  </span>
-                  {content.map((c, i) => {
-                    const isBible = c.type === 'bible';
-                    const reference = c.title || 'Referência';
-                    const bibleLink = isBible && c.metadata?.book && c.metadata?.chapter 
-                      ? `/bible?book=${c.metadata.book}&ch=${c.metadata.chapter}` 
-                      : null;
+                <div className="space-y-6">
+                  {[
+                    { id: 'bible', label: 'Bíblia', icon: <BookOpen className="w-3.5 h-3.5" /> },
+                    { id: 'catechism', label: 'Catecismo', icon: <Church className="w-3.5 h-3.5" /> },
+                    { id: 'magisterium', label: 'Magistério', icon: <Shield className="w-3.5 h-3.5" /> },
+                    { id: 'journey', label: 'Jornadas', icon: <Flame className="w-3.5 h-3.5" /> },
+                  ].map((category) => {
+                    const categoryContent = content.filter(c => c.type === category.id);
+                    if (categoryContent.length === 0) return null;
 
                     return (
-                      <motion.div 
-                        key={c.id || i} 
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: i * 0.1 }}
-                        className="space-y-1.5 group/content"
-                      >
-                        <p className="text-[11px] leading-relaxed text-foreground/80 line-clamp-3 group-hover/content:text-foreground transition-colors">
-                          {c.content_text}
-                        </p>
-                        {bibleLink ? (
-                          <button 
-                            onClick={() => navigate(bibleLink)}
-                            className="text-[10px] font-bold text-primary hover:underline flex items-center gap-1.5 bg-primary/5 px-2 py-0.5 rounded-full w-fit"
-                          >
-                            {reference}
-                            <ExternalLink className="w-2.5 h-2.5" />
-                          </button>
-                        ) : (
-                          <span className="text-[10px] font-bold text-primary/60">{reference}</span>
-                        )}
-                      </motion.div>
+                      <div key={category.id} className="space-y-3">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/50 flex items-center gap-2">
+                          <div className="h-[1px] w-4 bg-border/40" />
+                          <div className="flex items-center gap-1.5 text-primary/60">
+                            {category.icon}
+                            {category.label}
+                          </div>
+                          <div className="h-[1px] flex-1 bg-border/40" />
+                        </span>
+                        
+                        <div className="space-y-4">
+                          {categoryContent.map((c, i) => {
+                            const isBible = c.type === 'bible';
+                            const isJourney = c.type === 'journey';
+                            const reference = c.title || 'Referência';
+                            
+                            const link = isBible && c.metadata?.book && c.metadata?.chapter 
+                              ? `/bible?book=${c.metadata.book}&ch=${c.metadata.chapter}` 
+                              : isJourney ? `/jornadas/${c.id}` : null;
+
+                            return (
+                              <motion.div 
+                                key={c.id || i} 
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: i * 0.05 }}
+                                className="space-y-1.5 group/content p-2 rounded-xl hover:bg-primary/5 transition-colors cursor-pointer"
+                                onClick={() => link && navigate(link)}
+                              >
+                                <p className="text-[11px] leading-relaxed text-foreground/80 line-clamp-3 group-hover/content:text-foreground transition-colors">
+                                  {c.content_text}
+                                </p>
+                                <div className="flex items-center justify-between">
+                                  <span className="text-[10px] font-bold text-primary flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-primary/5">
+                                    {reference}
+                                    {link && <ExternalLink className="w-2.5 h-2.5" />}
+                                  </span>
+                                </div>
+                              </motion.div>
+                            );
+                          })}
+                        </div>
+                      </div>
                     );
                   })}
                 </div>
               ) : !logosInsight && status === 'success' && (
-                <div className="flex flex-col items-center justify-center py-6 text-center space-y-3">
-                  <div className="w-12 h-12 rounded-full bg-muted/30 flex items-center justify-center">
-                    <Info className="w-6 h-6 text-muted-foreground/30" />
+                <div className="flex flex-col items-center justify-center py-10 text-center space-y-4">
+                  <div className="w-16 h-16 rounded-full bg-muted/20 flex items-center justify-center relative">
+                    <div className="absolute inset-0 rounded-full border border-primary/10 animate-ping opacity-20" />
+                    <Search className="w-8 h-8 text-muted-foreground/30" />
                   </div>
-                  <div>
-                    <p className="text-xs font-bold text-muted-foreground">Sem conteúdo vinculado</p>
-                    <p className="text-[10px] text-muted-foreground/60 italic px-4">Este tema ainda não possui versículos catalogados no Nexus.</p>
+                  <div className="space-y-1">
+                    <p className="text-sm font-black uppercase tracking-widest text-foreground">Nexus Silencioso</p>
+                    <p className="text-[10px] text-muted-foreground/60 italic max-w-[200px] mx-auto">
+                      Ainda estamos tecendo as conexões para "{tag.label}". Tente outro tema ou explore o A-Z.
+                    </p>
                   </div>
-                  <Button size="sm" variant="ghost" onClick={() => navigate(`${AppRoute.TEMAS}/${tag.slug}`)} className="h-8 rounded-xl text-[10px] uppercase font-black tracking-widest">Explorar Completo</Button>
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    onClick={() => navigate(`${AppRoute.TEMAS}/${tag.slug}`)} 
+                    className="h-8 rounded-xl text-[9px] uppercase font-black tracking-widest border-primary/20 hover:bg-primary/5 transition-all"
+                  >
+                    Navegação A-Z
+                  </Button>
                 </div>
               )}
             </>
@@ -343,9 +406,10 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
   const filteredTags = useMemo(() => {
     let result = tags;
     if (searchQuery) {
+      const q = normalizeText(searchQuery);
       result = result.filter(t => 
-        t.label.toLowerCase().includes(searchQuery.toLowerCase()) || 
-        t.category.toLowerCase().includes(searchQuery.toLowerCase())
+        normalizeText(t.label).includes(q) || 
+        normalizeText(t.category).includes(q)
       );
     }
     if (activeFilter !== 'all') {

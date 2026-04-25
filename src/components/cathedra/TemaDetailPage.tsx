@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { normalizeText } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Loader2, ChevronLeft, Sparkles, BookOpen, Quote, Shield, Globe, ExternalLink, CheckCircle } from 'lucide-react';
+import { Loader2, ChevronLeft, Sparkles, BookOpen, Quote, Shield, Globe, ExternalLink, CheckCircle, Flame } from 'lucide-react';
 import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -99,36 +100,51 @@ const TemaDetailPage = () => {
   const selectedTag = tags?.find(t => t.slug === slug);
 
   const { data: contents, isLoading: loadingContents } = useQuery({
-    queryKey: ['tag-contents', selectedTag?.id],
+    queryKey: ['tag-contents', selectedTag?.id, selectedTag?.label],
     queryFn: async () => {
       if (!selectedTag) return [];
       
-      const { data: tagContents, error: contentError } = await supabase
-        .from('content_tags')
-        .select(`
-          spiritual_contents (
-            id,
-            title,
-            content_text,
-            type,
-            reference_id,
-            tags
-          )
-        `)
-        .eq('tag_id', selectedTag.id);
+      const normalizedLabel = normalizeText(selectedTag.label);
+      const searchTerms = [selectedTag.label, normalizedLabel, selectedTag.slug].filter(Boolean);
       
-      if (contentError) throw contentError;
+      // Fetch from spiritual_contents
+      const { data: spiritualData, error: spiritualError } = await supabase
+        .from('spiritual_contents')
+        .select('*')
+        .overlaps('tags', searchTerms)
+        .limit(30);
+      
+      // Fetch from journeys
+      const { data: journeyData, error: journeyError } = await supabase
+        .from('journeys')
+        .select('*')
+        .overlaps('tags', searchTerms)
+        .limit(10);
+      
+      if (spiritualError) throw spiritualError;
+      if (journeyError) throw journeyError;
 
-      const results: ThemeContent[] = (tagContents || []).map((c: any) => ({
-        id: c.spiritual_contents.id,
-        content_type: c.spiritual_contents.type,
-        reference: c.spiritual_contents.reference_id || c.spiritual_contents.title || 'Referência',
-        title: c.spiritual_contents.title,
-        text_content: c.spiritual_contents.content_text,
-        tags: c.spiritual_contents.tags || []
+      const results: ThemeContent[] = (spiritualData || []).map((d: any) => ({
+        id: d.id,
+        content_type: d.type,
+        reference: d.reference_id || d.title || 'Referência',
+        title: d.title,
+        text_content: d.content_text,
+        tags: d.tags || []
       }));
 
-      return results;
+      const journeyResults: ThemeContent[] = (journeyData || []).map((d: any) => ({
+        id: d.id,
+        content_type: 'journey',
+        reference: d.subtitle || d.category || 'Jornada',
+        title: d.title,
+        text_content: d.description || '',
+        tags: d.tags || []
+      }));
+
+      // Combine and remove duplicates
+      const all = [...results, ...journeyResults];
+      return Array.from(new Map(all.map(item => [item.id, item])).values());
     },
     enabled: !!selectedTag,
   });
@@ -193,6 +209,7 @@ const TemaDetailPage = () => {
   const bibleVerses = contents?.filter(c => c.content_type === 'bible') || [];
   const catechism = contents?.filter(c => c.content_type === 'catechism') || [];
   const magisterium = contents?.filter(c => c.content_type === 'magisterium') || [];
+  const journeys = contents?.filter(c => c.content_type === 'journey') || [];
 
   const getCategoryColor = (category?: string) => {
     switch (category?.toLowerCase()) {
@@ -325,10 +342,11 @@ const TemaDetailPage = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="md:col-span-2 space-y-8">
           <Tabs defaultValue="bible" className="w-full">
-            <TabsList className="w-full bg-muted/40 p-1 rounded-2xl border border-border/40 grid grid-cols-3">
+            <TabsList className="w-full bg-muted/40 p-1 rounded-2xl border border-border/40 grid grid-cols-4">
               <TabsTrigger value="bible" className="rounded-xl text-[10px] font-black uppercase tracking-widest py-2.5">Escrituras</TabsTrigger>
               <TabsTrigger value="tradition" className="rounded-xl text-[10px] font-black uppercase tracking-widest py-2.5">Tradição</TabsTrigger>
               <TabsTrigger value="magisterium" className="rounded-xl text-[10px] font-black uppercase tracking-widest py-2.5">Magistério</TabsTrigger>
+              <TabsTrigger value="journeys" className="rounded-xl text-[10px] font-black uppercase tracking-widest py-2.5">Jornadas</TabsTrigger>
             </TabsList>
 
             <TabsContent value="bible" className="mt-6 space-y-4">
@@ -430,6 +448,26 @@ const TemaDetailPage = () => {
                 </>
               ) : (
                 <div className="text-center py-12 text-muted-foreground italic">Documentos do Magistério em aprofundamento.</div>
+              )}
+            </TabsContent>
+            
+            <TabsContent value="journeys" className="mt-6 space-y-4">
+              {journeys.length > 0 ? (
+                <div className="space-y-4">
+                  {journeys.map((c, i) => (
+                    <ThemeContentCard
+                      key={c.id}
+                      content={c}
+                      index={i}
+                      icon={Flame}
+                      accentColor="text-orange-500"
+                      buttonText="Iniciar Jornada"
+                      onAction={() => navigate(`/jornadas/${c.id}`)}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12 text-muted-foreground italic">Nenhuma jornada específica vinculada a este tema.</div>
               )}
             </TabsContent>
           </Tabs>
