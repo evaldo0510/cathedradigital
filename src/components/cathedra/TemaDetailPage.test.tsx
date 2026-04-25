@@ -227,7 +227,7 @@ describe('TemaDetailPage - Integration Tests', () => {
     renderWithProviders(<TemaDetailPage />, '/temas/skeleton');
 
     // Wait for the tag to be loaded and the header to appear
-    expect(await screen.findByText('Skeleton')).toBeInTheDocument();
+    await screen.findAllByText('Skeleton');
 
     const getSkeletons = () => document.querySelectorAll('.animate-pulse');
     
