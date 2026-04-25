@@ -81,4 +81,32 @@ describe('TemaDetailPage - Bubble interactions', () => {
     expect(await screen.findByText(/O Senhor perdoa\./i)).toBeInTheDocument();
     expect(screen.getByText(/Navegação Completa/i)).toBeInTheDocument();
   });
+
+  it('shows error message and retry button when content fetching fails in TemaDetailPage', async () => {
+    let callCount = 0;
+    (fetchNexusTagContent as any).mockImplementation(() => {
+      callCount += 1;
+      if (callCount === 1) {
+        return Promise.reject(new Error('Falha de rede simulada'));
+      }
+      return Promise.resolve([
+        { id: 'c1', type: 'bible', content_text: 'Recuperado com sucesso.', title: 'Sl 23', metadata: {} }
+      ]);
+    });
+
+    renderWithProviders('culpa');
+
+    const relatedTheme = await screen.findByRole('button', { name: /Tema: Perdão/i });
+    fireEvent.click(relatedTheme);
+
+    // Should show error
+    expect(await screen.findByText(/Erro ao carregar conteúdo/i)).toBeInTheDocument();
+    
+    // Should have retry button
+    const retryBtn = screen.getByRole('button', { name: /Tentar Novamente/i });
+    fireEvent.click(retryBtn);
+
+    // Should recover
+    expect(await screen.findByText(/Recuperado com sucesso\./i)).toBeInTheDocument();
+  });
 });
