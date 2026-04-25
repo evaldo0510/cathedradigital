@@ -24,13 +24,7 @@ interface Tag {
   category: string;
 }
 
-interface TagContent {
-  id: string;
-  type: string;
-  content_text: string;
-  title: string;
-  metadata: any;
-}
+// Reusing TagContent from @/lib/nexusContent
 
 interface NexusBubblesProps {
   profileId?: ProfileId | null;
