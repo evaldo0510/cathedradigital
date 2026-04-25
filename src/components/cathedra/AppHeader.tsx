@@ -57,7 +57,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           {!isDashboard && (
             <button 
               onClick={() => navigate(-1)} 
-              className="p-2 sm:p-2.5 bg-muted text-primary border border-border rounded-xl flex items-center gap-2 px-3 sm:px-5 active:scale-95 transition-all hover:bg-primary hover:text-white group shadow-sm"
+              className="p-2 sm:p-2.5 bg-muted text-primary border border-border rounded-xl flex items-center gap-2 px-3 sm:px-5 active:scale-95 transition-all hover:bg-primary hover:text-white group shadow-sm focus-visible:ring-2 focus-visible:ring-primary outline-none"
             >
               <Icons.ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
               <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline-block">{t('back')}</span>
