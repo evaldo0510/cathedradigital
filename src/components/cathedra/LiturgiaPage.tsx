@@ -20,9 +20,10 @@ import ReactMarkdown from 'react-markdown';
 import { toast } from 'sonner';
 import { getCachedLiturgy, cacheLiturgy } from '@/lib/offlineCache';
 import { LiturgiaSkeleton } from './LiturgiaSkeleton';
-
+import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
 
 const MissalPage = lazy(() => import('./MissalPage'));
+... keep existing code
 const LiturgicalCalendarPage = lazy(() => import('./LiturgicalCalendarPage'));
 
 function usePrefetchLiturgyCache() {
