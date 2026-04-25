@@ -406,9 +406,10 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
   const filteredTags = useMemo(() => {
     let result = tags;
     if (searchQuery) {
+      const q = normalizeText(searchQuery);
       result = result.filter(t => 
-        t.label.toLowerCase().includes(searchQuery.toLowerCase()) || 
-        t.category.toLowerCase().includes(searchQuery.toLowerCase())
+        normalizeText(t.label).includes(q) || 
+        normalizeText(t.category).includes(q)
       );
     }
     if (activeFilter !== 'all') {
