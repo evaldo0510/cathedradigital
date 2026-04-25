@@ -410,7 +410,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
                       Sugeridos para sua Jornada
                     </span>
                   </div>
-                  <div className="flex flex-wrap gap-1.5" role="list">
+                  <div className="flex flex-wrap gap-1.5" role="list" ref={suggestedRef}>
                     {profileSuggestedTags.map((tag, i) => (
                       <div key={tag.slug} role="listitem">
                         <TagBubble 
