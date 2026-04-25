@@ -299,6 +299,11 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             </>
           )}
         </div>
+        
+        {/* Quick Donation */}
+        <FadeUp delay={0.3}>
+          <QuickDonation />
+        </FadeUp>
 
         {/* Logos (IA) Suggestion */}
         <div
