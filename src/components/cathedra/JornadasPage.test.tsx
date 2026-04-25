@@ -8,7 +8,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { HelmetProvider } from 'react-helmet-async';
 import React from 'react';
 
-// Simplified Supabase mock that returns promises directly
+// Mock Supabase
 vi.mock('@/integrations/supabase/client', () => ({
   supabase: {
     from: vi.fn(),
@@ -55,17 +55,16 @@ describe('JornadasPage - Integration Tests', () => {
   });
 
   it('displays empty state message when no journeys are found', async () => {
-    (supabase.from as any).mockImplementation((table: string) => {
-      return {
-        select: vi.fn().mockReturnThis(),
+    (supabase.from as any).mockReturnValue({
+      select: vi.fn(() => ({
         order: vi.fn().mockResolvedValue({ data: [], error: null }),
         eq: vi.fn().mockResolvedValue({ data: [], error: null })
-      };
+      }))
     });
 
     renderWithProviders(<JornadasPage />);
     
-    // The component has a loading state initially
+    // Check for empty state message
     const emptyMsg = await screen.findByText(/Nenhuma jornada disponível ainda/i, {}, { timeout: 5000 });
     expect(emptyMsg).toBeInTheDocument();
   });
@@ -75,17 +74,11 @@ describe('JornadasPage - Integration Tests', () => {
       { id: '1', title: 'Jornada Teste', difficulty: 'iniciante', category: 'fundamentos', steps_count: 5, tags: [] }
     ];
 
-    (supabase.from as any).mockImplementation((table: string) => {
-      if (table === 'view_journeys_with_stats') {
-        return {
-          select: vi.fn().mockReturnThis(),
-          order: vi.fn().mockResolvedValue({ data: mockJourneys, error: null })
-        };
-      }
-      return {
-        select: vi.fn().mockReturnThis(),
+    (supabase.from as any).mockReturnValue({
+      select: vi.fn(() => ({
+        order: vi.fn().mockResolvedValue({ data: mockJourneys, error: null }),
         eq: vi.fn().mockResolvedValue({ data: [], error: null })
-      };
+      }))
     });
 
     renderWithProviders(<JornadasPage />);
@@ -94,7 +87,7 @@ describe('JornadasPage - Integration Tests', () => {
     expect(await screen.findByText('Jornada Teste')).toBeInTheDocument();
 
     // Click 'Intermediário' filter
-    const diffFilter = await screen.findByText(/Intermediário/i);
+    const diffFilter = await screen.findByRole('button', { name: /Intermediário/i });
     await userEvent.click(diffFilter);
 
     // Wait for filtered list to update to empty
