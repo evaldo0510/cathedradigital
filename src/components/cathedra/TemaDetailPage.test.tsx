@@ -313,21 +313,21 @@ describe('TemaDetailPage - Integration Tests', () => {
     
     expect(await screen.findByText(/Erro ao carregar conexões do Nexus/i)).toBeInTheDocument();
     
+    const retryButton = screen.getByTestId('retry-button');
+    expect(retryButton).not.toBeDisabled();
+
     // 2. Mock a delayed fetch for the retry
     let resolveRetry: any;
     const retryPromise = new Promise(resolve => resolveRetry = resolve);
     (fetchNexusTagContent as any).mockReturnValueOnce(retryPromise);
 
     // 3. Click retry
-    const retryButton = screen.getByText(/Tentar Novamente/i);
     await userEvent.click(retryButton);
     
     // 4. Wait for the button to transition to "Processando" and be disabled
     await waitFor(() => {
-      const b = screen.queryByText(/Processando/i);
-      expect(b).toBeInTheDocument();
-      const btn = b?.closest('button');
-      expect(btn).toBeDisabled();
+      expect(retryButton).toBeDisabled();
+      expect(retryButton.textContent).toMatch(/Processando/i);
     }, { timeout: 3000 });
 
     // 5. Resolve the retry
