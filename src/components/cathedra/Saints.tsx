@@ -196,7 +196,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
             {viewModes.map((mode, idx) => (
               <button
                 key={mode}
-                {...getTabProps(`tab-${idx}`, `panel-${mode}`, viewMode === mode, `px-4 md:px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+                {...getTabProps(`tab-${mode}`, `panel-${mode}`, viewMode === mode, `px-4 md:px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                   viewMode === mode ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
                 }`)}
                 onClick={() => setViewMode(mode)}
