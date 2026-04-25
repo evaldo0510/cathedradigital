@@ -212,4 +212,45 @@ describe('TemaDetailPage - Integration Tests', () => {
       (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
     }
   });
+
+  it('shows loading skeleton only in the active tab and disappears after fetch', async () => {
+    const mockTags = [{ id: '1', label: 'Skeleton', slug: 'skeleton', category: 'fundamentos', emoji: '💀' }];
+    (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
+
+    // Mock a delayed response
+    let resolveFetch: (value: any) => void;
+    const fetchPromise = new Promise((resolve) => {
+      resolveFetch = resolve;
+    });
+    (fetchNexusTagContent as any).mockReturnValue(fetchPromise);
+
+    renderWithProviders(<TemaDetailPage />, '/temas/skeleton');
+
+    // 1. Initial tab (Bible/Escrituras) should show skeleton
+    // The skeleton doesn't have a role, but we can look for the container with classes or just use querySelector if needed.
+    // However, since we added animate-pulse/Skeleton components, let's look for them.
+    // Skeletons are divs with 'animate-pulse' class.
+    const getSkeletons = () => document.querySelectorAll('.animate-pulse');
+    
+    expect(getSkeletons().length).toBeGreaterThan(0);
+
+    // 2. Switch to Tradition tab
+    await userEvent.click(screen.getByText('Tradição'));
+    
+    // Skeleton should still be visible because we are still loading (fetchPromise hasn't resolved)
+    expect(getSkeletons().length).toBeGreaterThan(0);
+
+    // 3. Resolve fetch
+    await act(async () => {
+      resolveFetch([]);
+    });
+
+    // 4. Skeletons should disappear
+    await waitFor(() => {
+      expect(getSkeletons().length).toBe(0);
+    });
+
+    // Check if fallback is now visible
+    expect(screen.getByText(/Conteúdo da Tradição em aprofundamento/i)).toBeInTheDocument();
+  });
 });
