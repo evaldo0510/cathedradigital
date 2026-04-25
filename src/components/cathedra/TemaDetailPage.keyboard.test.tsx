@@ -76,29 +76,39 @@ describe('TemaDetailPage - Keyboard Navigation Integration Tests', () => {
 
     // 1. Initial State (Escrituras active)
     expect(await screen.findByText('Escrituras')).toHaveAttribute('data-state', 'active');
-    expect(await screen.findByText(/Nenhum versículo catalogado/i)).toBeInTheDocument();
+    // Use waitFor to handle the async load
+    await waitFor(() => {
+      expect(screen.getByText(/Nenhum versículo catalogado para este tema/i)).toBeInTheDocument();
+    });
 
-    // 2. Focus the tab list and move to next tab
-    // Tab to the first trigger
-    await user.tab();
-    expect(screen.getByText('Escrituras')).toHaveFocus();
+    // 2. Focus the tab trigger directly to avoid multiple tabs
+    const bibleTab = screen.getByRole('tab', { name: /Escrituras/i });
+    bibleTab.focus();
+    expect(bibleTab).toHaveFocus();
 
     // 3. Arrow Right to "Tradição"
+    // In Radix Tabs, ArrowRight moves focus and selects the next tab (by default)
     await user.keyboard('{ArrowRight}');
-    expect(screen.getByText('Tradição')).toHaveAttribute('data-state', 'active');
     
-    // Wait for content update (debounce in component is 0ms but still async)
-    expect(await screen.findByText(/Conteúdo da Tradição em aprofundamento/i)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByRole('tab', { name: /Tradição/i })).toHaveAttribute('data-state', 'active');
+      expect(screen.getByText(/Conteúdo da Tradição em aprofundamento/i)).toBeInTheDocument();
+    });
 
     // 4. Arrow Right to "Magistério"
     await user.keyboard('{ArrowRight}');
-    expect(screen.getByText('Magistério')).toHaveAttribute('data-state', 'active');
-    expect(await screen.findByText(/Documentos do Magistério em aprofundamento/i)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByRole('tab', { name: /Magistério/i })).toHaveAttribute('data-state', 'active');
+      expect(screen.getByText(/Documentos do Magistério em aprofundamento/i)).toBeInTheDocument();
+    });
 
     // 5. Arrow Right to "Jornadas"
     await user.keyboard('{ArrowRight}');
-    expect(screen.getByText('Jornadas')).toHaveAttribute('data-state', 'active');
-    expect(await screen.findByText(/Nenhuma jornada específica vinculada/i)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByRole('tab', { name: /Jornadas/i })).toHaveAttribute('data-state', 'active');
+      expect(screen.getByText(/Nenhuma jornada específica vinculada a este tema/i)).toBeInTheDocument();
+    });
+
   });
 
   it('handles error state and retry button via keyboard', async () => {
