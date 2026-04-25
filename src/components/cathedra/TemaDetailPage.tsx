@@ -13,6 +13,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AppRoute } from '@/types';
+import { Skeleton } from '@/components/ui/skeleton';
 import SEOHead from '@/components/SEOHead';
 import { BubbleTag, getTagIcon } from './BubbleTag';
 
@@ -77,6 +78,26 @@ const ThemeContentCard = ({
       </CardContent>
     </Card>
   </motion.div>
+);
+
+const ContentSkeleton = () => (
+  <div className="space-y-4">
+    {[1, 2, 3].map((i) => (
+      <Card key={i} className="border-border/40 bg-card/20 rounded-[2rem] overflow-hidden">
+        <CardContent className="p-6 sm:p-8 space-y-4">
+          <div className="flex items-center gap-2">
+            <Skeleton className="w-8 h-8 rounded-xl" />
+            <Skeleton className="h-3 w-32" />
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-[90%]" />
+            <Skeleton className="h-4 w-[70%]" />
+          </div>
+        </CardContent>
+      </Card>
+    ))}
+  </div>
 );
 
 const TemaDetailPage = () => {
@@ -321,7 +342,9 @@ const TemaDetailPage = () => {
             ) : (
             <>
             <TabsContent value="bible" className="mt-6 space-y-4">
-              {bibleVerses.length > 0 ? (
+              {loadingContents ? (
+                <ContentSkeleton />
+              ) : bibleVerses.length > 0 ? (
                 <>
                   <div className="space-y-4">
                     {bibleVerses.slice(0, bibleLimit).map((c, i) => (
@@ -354,7 +377,9 @@ const TemaDetailPage = () => {
             </TabsContent>
 
             <TabsContent value="tradition" className="mt-6 space-y-4">
-              {catechism.length > 0 ? (
+              {loadingContents ? (
+                <ContentSkeleton />
+              ) : catechism.length > 0 ? (
                 <>
                   <div className="space-y-4">
                     {catechism.slice(0, traditionLimit).map((c, i) => (
@@ -390,7 +415,9 @@ const TemaDetailPage = () => {
             </TabsContent>
 
             <TabsContent value="magisterium" className="mt-6 space-y-4">
-              {magisterium.length > 0 ? (
+              {loadingContents ? (
+                <ContentSkeleton />
+              ) : magisterium.length > 0 ? (
                 <>
                   <div className="space-y-4">
                     {magisterium.slice(0, magisteriumLimit).map((c, i) => (
@@ -423,7 +450,9 @@ const TemaDetailPage = () => {
             </TabsContent>
             
             <TabsContent value="journeys" className="mt-6 space-y-4">
-              {journeys.length > 0 ? (
+              {loadingContents ? (
+                <ContentSkeleton />
+              ) : journeys.length > 0 ? (
                 <div className="space-y-4">
                   {journeys.map((c, i) => (
                     <ThemeContentCard

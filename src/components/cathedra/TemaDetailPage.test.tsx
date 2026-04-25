@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import TemaDetailPage from './TemaDetailPage';
@@ -211,5 +211,48 @@ describe('TemaDetailPage - Integration Tests', () => {
       // Re-mock supabase for the next iteration if needed (it's in beforeEach but we are in a loop)
       (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
     }
+  });
+
+  it('shows loading skeleton only in the active tab and disappears after fetch', async () => {
+    const mockTags = [{ id: '1', label: 'Skeleton', slug: 'skeleton', category: 'fundamentos', emoji: '💀' }];
+    (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
+
+    // Mock a delayed response
+    let resolveFetch: (value: any) => void;
+    const fetchPromise = new Promise((resolve) => {
+      resolveFetch = resolve;
+    });
+    (fetchNexusTagContent as any).mockReturnValue(fetchPromise);
+
+    renderWithProviders(<TemaDetailPage />, '/temas/skeleton');
+
+    // Wait for the tag to be loaded and the header to appear
+    await screen.findAllByText('Skeleton');
+
+    const getSkeletons = () => document.querySelectorAll('.animate-pulse');
+    
+    // Check for skeletons in the tabs area
+    await waitFor(() => {
+      expect(getSkeletons().length).toBeGreaterThan(0);
+    });
+
+    // 2. Switch to Tradition tab
+    await userEvent.click(screen.getByText('Tradição'));
+    
+    // Skeleton should still be visible because we are still loading (fetchPromise hasn't resolved)
+    expect(getSkeletons().length).toBeGreaterThan(0);
+
+    // 3. Resolve fetch
+    await act(async () => {
+      resolveFetch([]);
+    });
+
+    // 4. Skeletons should disappear
+    await waitFor(() => {
+      expect(getSkeletons().length).toBe(0);
+    });
+
+    // Check if fallback is now visible
+    expect(screen.getByText(/Conteúdo da Tradição em aprofundamento/i)).toBeInTheDocument();
   });
 });
