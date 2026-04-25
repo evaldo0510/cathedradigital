@@ -236,7 +236,8 @@ const TemaDetailPage = () => {
 
   const relatedThemes = React.useMemo(() => {
     if (!tags || !selectedTag) return [];
-    
+
+    // 1) Connections via shared tags in content
     const sharedContentTagIds = new Set<string>();
     contents?.forEach(c => {
       c.tags?.forEach(tLabel => {
@@ -246,16 +247,39 @@ const TemaDetailPage = () => {
         }
       });
     });
-
     const fromContent = tags.filter(t => sharedContentTagIds.has(t.id));
-    const fromCategory = tags.filter(t => 
-      t.category === selectedTag.category && 
-      t.id !== selectedTag.id && 
-      !sharedContentTagIds.has(t.id)
+
+    // 2) Connections via the user's spiritual profile (priority signal)
+    const profileSlugs = new Set<string>();
+    if (profileId) {
+      const profile = PROFILES[profileId];
+      if (profile) {
+        const labels = [profile.theme, profile.pain.label, 'Oração', 'Jesus', 'Fé'];
+        tags
+          .filter(t => labels.some(l => t.label.toLowerCase().includes(l.toLowerCase())))
+          .forEach(t => { if (t.id !== selectedTag.id) profileSlugs.add(t.slug); });
+      }
+    }
+    const fromProfile = tags.filter(t =>
+      profileSlugs.has(t.slug) &&
+      !sharedContentTagIds.has(t.id) &&
+      t.id !== selectedTag.id
     );
 
-    return [...fromContent, ...fromCategory].slice(0, 12);
-  }, [tags, selectedTag, contents]);
+    // 3) Same category fallback
+    const fromCategory = tags.filter(t =>
+      t.category && t.category === selectedTag.category &&
+      t.id !== selectedTag.id &&
+      !sharedContentTagIds.has(t.id) &&
+      !profileSlugs.has(t.slug)
+    );
+
+    // Dedupe by id, preserve order
+    const seen = new Set<string>();
+    return [...fromContent, ...fromProfile, ...fromCategory]
+      .filter(t => (seen.has(t.id) ? false : (seen.add(t.id), true)))
+      .slice(0, 12);
+  }, [tags, selectedTag, contents, profileId]);
 
   useEffect(() => {
     if (selectedTag && !logosInsight && !loadingLogos && !autoLoaded) {
