@@ -38,20 +38,30 @@ try {
 
   const processedResults = results.testResults.flatMap((file: any) => {
     return file.assertionResults.map((assertion: any) => {
-      // Find matching console output for this specific test
-      // Vitest JSON might group console by file or test depending on version
-      // We look for [STATS] in the console log
       const consoleLogs = file.console || [];
+      
+      // Aggregate stats from all logs in the file that belong to this test context
+      // (Vitest doesn't always map console logs perfectly to assertionResults in the JSON output)
       const testStats = consoleLogs
-        .filter((l: any) => l.origin === 'stdout' && l.content.includes('[STATS]'))
+        .filter((l: any) => l.origin === 'stdout' && (l.content.includes('[STATS]') || l.content.includes('STATS:')))
         .map((l: any) => {
           try {
-            return JSON.parse(l.content.replace('[STATS] ', ''));
+            const raw = l.content.includes('[STATS]') 
+              ? l.content.replace('[STATS] ', '') 
+              : l.content.replace('STATS: ', '');
+            return JSON.parse(raw);
           } catch {
             return null;
           }
         })
         .filter(Boolean);
+
+      // Merge stats if multiple entries found
+      const mergedStats = testStats.reduce((acc: any, curr: any) => {
+        acc.calls = (acc.calls || 0) + (curr.calls || curr.bible || 0);
+        acc.tabs = { ...(acc.tabs || {}), ...(curr.tabs || { bible: curr.bible }) };
+        return acc;
+      }, { calls: 0, tabs: {} });
 
       return {
         title: assertion.title,
@@ -59,11 +69,12 @@ try {
         ancestorTitles: assertion.ancestorTitles,
         failureMessages: assertion.failureMessages,
         duration: assertion.duration,
-        stats: testStats[0] || null, // Best effort to match stats to test
+        stats: mergedStats.calls > 0 ? mergedStats : null,
         fileName: path.basename(file.name)
       };
     });
   });
+
 
   // 3. Generate Markdown Report
   let md = `# Relatório de Integração - TemaDetailPage\n\n`;
