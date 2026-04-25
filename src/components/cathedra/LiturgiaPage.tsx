@@ -162,7 +162,10 @@ const ReadingCard: React.FC<{
 const LiturgiaPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
+  const { handleKeyDown: handleTabKeyDown } = useTabNavigation();
   const activeTab = searchParams.get('tab') || 'liturgia';
+  const tabList = ['liturgia', 'missal', 'calendario'];
+  const activeTabIndex = tabList.indexOf(activeTab);
 
   const { user, profile } = useAuth();
   const [selectedDate, setSelectedDate] = useState(() => new Date());
