@@ -167,7 +167,16 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
           </button>
         </div>
         
-        <div className="p-5 space-y-5 max-h-[350px] overflow-y-auto scrollbar-none">
+        <div className="p-5 space-y-5 max-h-[450px] overflow-y-auto scrollbar-none">
+          {/* Diagnostic Panel (Mini) */}
+          <div className="p-2 rounded-lg bg-muted/30 border border-border/40 flex items-center justify-between text-[8px] font-black uppercase tracking-widest opacity-60">
+            <div className="flex gap-2">
+              <span>Time: {metrics.endTime ? `${Math.round(metrics.endTime - metrics.startTime)}ms` : '--'}</span>
+              <span>Source: {metrics.source || 'pending'}</span>
+            </div>
+            <span>Query: "{tag.label}"</span>
+          </div>
+
           {status === 'loading' ? (
             <div className="space-y-4 py-2">
               <div className="flex gap-2">
