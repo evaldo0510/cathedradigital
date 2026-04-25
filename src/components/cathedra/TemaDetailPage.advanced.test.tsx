@@ -9,6 +9,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { fetchNexusTagContent } from '@/lib/nexusContent';
 import React from 'react';
 
+
 // Mocking dependencies
 vi.mock('@/integrations/supabase/client', () => ({
   supabase: {
