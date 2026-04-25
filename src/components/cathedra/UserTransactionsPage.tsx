@@ -2,6 +2,14 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -12,9 +20,12 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Icons } from '@/constants';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { toast } from 'sonner';
+import { jsPDF } from 'jspdf';
+import 'jspdf-autotable';
 
 const PAGE_SIZE = 10;
 
@@ -48,17 +59,9 @@ const UserTransactionsPage: React.FC = () => {
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [selectedTx, setSelectedTx] = useState<any | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
   const loaderRef = useRef<HTMLDivElement>(null);
-
-  // Reset state when user changes
-  useEffect(() => {
-    setTransactions([]);
-    setPage(0);
-    setHasMore(true);
-    setError(null);
-    setLoading(true);
-  }, [user?.id]);
-
 
   const fetchTransactions = useCallback(async (pageNum: number) => {
     if (!user) return;
@@ -71,10 +74,25 @@ const UserTransactionsPage: React.FC = () => {
     const to = from + PAGE_SIZE - 1;
 
     try {
-      const { data, error: supabaseError } = await supabase
+      let query = supabase
         .from('transactions')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('user_id', user.id);
+
+      if (statusFilter !== 'all') {
+        query = query.eq('status', statusFilter);
+      }
+
+      if (searchTerm) {
+        const isNumeric = !isNaN(Number(searchTerm));
+        if (isNumeric) {
+          query = query.or(`payment_id.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%,amount.eq.${searchTerm}`);
+        } else {
+          query = query.or(`payment_id.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`);
+        }
+      }
+
+      const { data, error: supabaseError } = await query
         .order('created_at', { ascending: false })
         .range(from, to);
 
@@ -84,8 +102,6 @@ const UserTransactionsPage: React.FC = () => {
       
       setTransactions(prev => {
         if (pageNum === 0) return newItems;
-        
-        // Deduplication: only add items that are not already in the list
         const existingIds = new Set(prev.map(tx => tx.id));
         const filteredNewItems = newItems.filter(tx => !existingIds.has(tx.id));
         return [...prev, ...filteredNewItems];
@@ -94,18 +110,35 @@ const UserTransactionsPage: React.FC = () => {
       setHasMore(newItems.length === PAGE_SIZE);
     } catch (err: any) {
       console.error('Error fetching transactions:', err);
-      setError(err.message || 'Erro ao carregar transações. Verifique sua conexão.');
+      setError(err.message || 'Erro ao carregar transações.');
     } finally {
       setLoading(false);
       setLoadingMore(false);
     }
-  }, [user]);
+  }, [user, statusFilter, searchTerm]);
 
+  // Reset state when filters or user change
   useEffect(() => {
-    if (user?.id) {
+    setTransactions([]);
+    setPage(0);
+    setHasMore(true);
+    setError(null);
+    setLoading(true);
+    fetchTransactions(0);
+  }, [user?.id, statusFilter]);
+
+  // Handle search with debounce
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setTransactions([]);
+      setPage(0);
+      setHasMore(true);
+      setError(null);
+      setLoading(true);
       fetchTransactions(0);
-    }
-  }, [fetchTransactions, user?.id]);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
 
   useEffect(() => {
     if (!hasMore || loading || loadingMore) return;
@@ -129,6 +162,53 @@ const UserTransactionsPage: React.FC = () => {
 
     return () => observer.disconnect();
   }, [hasMore, loading, loadingMore, fetchTransactions]);
+
+  const copyPaymentId = (id: string) => {
+    navigator.clipboard.writeText(id);
+    toast.success('ID do pagamento copiado!');
+  };
+
+  const handleExportPDF = () => {
+    if (transactions.length === 0) {
+      toast.error('Nenhuma transação para exportar.');
+      return;
+    }
+
+    const doc = new jsPDF();
+    doc.setFontSize(20);
+    doc.text('Relatório de Doações - Cathedra', 14, 22);
+    doc.setFontSize(10);
+    doc.text(`Gerado em: ${format(new Date(), "dd/MM/yyyy HH:mm")}`, 14, 30);
+    doc.text(`Usuário: ${user?.email}`, 14, 35);
+
+    const tableData = transactions.map(tx => [
+      format(new Date(tx.created_at), "dd/MM/yyyy"),
+      tx.description || (tx.is_donation ? 'Doação' : 'Assinatura'),
+      tx.payment_id || '-',
+      tx.status === 'approved' ? 'Aprovado' : tx.status === 'pending' ? 'Pendente' : 'Cancelado',
+      new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(tx.amount)
+    ]);
+
+    (doc as any).autoTable({
+      startY: 45,
+      head: [['Data', 'Descrição', 'ID Pagamento', 'Status', 'Valor']],
+      body: tableData,
+      theme: 'grid',
+      headStyles: { fillStyle: '#8B5CF6' },
+      styles: { fontSize: 8 },
+    });
+
+    const total = transactions
+      .filter(tx => tx.status === 'approved')
+      .reduce((acc, curr) => acc + curr.amount, 0);
+
+    const finalY = (doc as any).lastAutoTable.finalY || 150;
+    doc.setFontSize(12);
+    doc.text(`Total Aprovado: ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(total)}`, 14, finalY + 10);
+
+    doc.save(`doacoes_cathedra_${format(new Date(), "yyyyMMdd")}.pdf`);
+    toast.success('PDF exportado com sucesso!');
+  };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -164,14 +244,51 @@ const UserTransactionsPage: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 py-6">
-      <div className="flex items-center gap-4">
-        <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-          <Icons.History className="w-6 h-6" />
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+            <Icons.History className="w-6 h-6" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-black text-foreground">Minhas Doações</h1>
+            <p className="text-xs text-muted-foreground uppercase tracking-widest font-bold">Histórico de contribuições</p>
+          </div>
         </div>
-        <div>
-          <h1 className="text-2xl font-black text-foreground">Minhas Doações</h1>
-          <p className="text-xs text-muted-foreground uppercase tracking-widest font-bold">Histórico de contribuições e assinaturas</p>
+        
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={handleExportPDF}
+          className="gap-2 font-bold uppercase text-[10px] tracking-widest rounded-xl"
+        >
+          <Icons.Download className="w-4 h-4" /> Exportar PDF
+        </Button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="md:col-span-2 relative">
+          <Icons.Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input 
+            placeholder="Buscar por ID ou valor..." 
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10 bg-muted/50 border-border/50 focus:bg-background transition-all rounded-xl"
+          />
         </div>
+        <Select value={statusFilter} onValueChange={setStatusFilter}>
+          <SelectTrigger className="bg-muted/50 border-border/50 rounded-xl">
+            <div className="flex items-center gap-2">
+              <Icons.Filter className="w-4 h-4 text-muted-foreground" />
+              <SelectValue placeholder="Status" />
+            </div>
+          </SelectTrigger>
+          <SelectContent className="rounded-xl">
+            <SelectItem value="all">Todos os Status</SelectItem>
+            <SelectItem value="approved">Aprovados</SelectItem>
+            <SelectItem value="pending">Pendentes</SelectItem>
+            <SelectItem value="cancelled">Cancelados</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {error && transactions.length === 0 ? (
@@ -196,8 +313,8 @@ const UserTransactionsPage: React.FC = () => {
           <CardContent className="flex flex-col items-center justify-center py-12 space-y-4">
             <Icons.Heart className="w-12 h-12 text-muted-foreground/30" />
             <div className="text-center">
-              <p className="text-muted-foreground font-medium">Você ainda não possui transações.</p>
-              <p className="text-xs text-muted-foreground">Que tal fazer sua primeira doação hoje?</p>
+              <p className="text-muted-foreground font-medium">Nenhuma transação encontrada.</p>
+              <p className="text-xs text-muted-foreground">Tente ajustar seus filtros ou busca.</p>
             </div>
           </CardContent>
         </Card>
@@ -241,26 +358,11 @@ const UserTransactionsPage: React.FC = () => {
                     </div>
                   </div>
                   
-                  {tx.status === 'approved' && (
-                    <div className="bg-muted/30 px-4 md:px-6 py-2 border-t border-border/50 flex justify-between items-center">
-                      <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Comprovante disponível</span>
-                      <div className="flex gap-2">
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          className="h-6 text-[9px] font-bold uppercase gap-1.5" 
-                          onClick={() => setSelectedTx(tx)}
-                        >
-                          <Icons.Info className="w-3 h-3" /> Detalhes
-                        </Button>
-                        <Button variant="ghost" size="sm" className="h-6 text-[9px] font-bold uppercase gap-1.5" onClick={() => window.print()}>
-                          <Icons.Download className="w-3 h-3" /> Imprimir
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-                  {tx.status !== 'approved' && (
-                    <div className="bg-muted/30 px-4 md:px-6 py-2 border-t border-border/50 flex justify-end items-center">
+                  <div className="bg-muted/30 px-4 md:px-6 py-2 border-t border-border/50 flex justify-between items-center">
+                    <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">
+                      {tx.status === 'approved' ? 'Comprovante disponível' : 'Histórico da transação'}
+                    </span>
+                    <div className="flex gap-2">
                       <Button 
                         variant="ghost" 
                         size="sm" 
@@ -269,8 +371,13 @@ const UserTransactionsPage: React.FC = () => {
                       >
                         <Icons.Info className="w-3 h-3" /> Detalhes
                       </Button>
+                      {tx.status === 'approved' && (
+                        <Button variant="ghost" size="sm" className="h-6 text-[9px] font-bold uppercase gap-1.5" onClick={() => window.print()}>
+                          <Icons.Download className="w-3 h-3" /> Imprimir
+                        </Button>
+                      )}
                     </div>
-                  )}
+                  </div>
                 </CardContent>
               </Card>
             </motion.div>
@@ -357,9 +464,19 @@ const UserTransactionsPage: React.FC = () => {
                   </span>
                 </div>
                 {selectedTx.payment_id && (
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center group">
                     <span className="text-[10px] font-bold text-muted-foreground uppercase">ID Pagamento</span>
-                    <span className="text-[10px] font-mono text-foreground">{selectedTx.payment_id}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-mono text-foreground">{selectedTx.payment_id}</span>
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-5 w-5 opacity-50 group-hover:opacity-100 transition-opacity"
+                        onClick={() => copyPaymentId(selectedTx.payment_id)}
+                      >
+                        <Icons.Copy className="w-3 h-3" />
+                      </Button>
+                    </div>
                   </div>
                 )}
                 {selectedTx.coupon_code && (
@@ -371,12 +488,22 @@ const UserTransactionsPage: React.FC = () => {
               </div>
 
               {selectedTx.status === 'approved' && (
-                <div className="p-4 rounded-2xl bg-green-500/5 border border-green-500/10 flex items-center gap-3">
-                  <Icons.CheckCircle className="w-5 h-5 text-green-500" />
-                  <div>
-                    <p className="text-[10px] font-black uppercase text-green-600">Aprovado</p>
-                    <p className="text-[10px] text-green-600/80">Sua contribuição já está ajudando nossa missão!</p>
+                <div className="space-y-4">
+                  <div className="p-4 rounded-2xl bg-green-500/5 border border-green-500/10 flex items-center gap-3">
+                    <Icons.CheckCircle className="w-5 h-5 text-green-500" />
+                    <div>
+                      <p className="text-[10px] font-black uppercase text-green-600">Aprovado</p>
+                      <p className="text-[10px] text-green-600/80">Sua contribuição já está ajudando nossa missão!</p>
+                    </div>
                   </div>
+                  
+                  <Button 
+                    variant="link" 
+                    className="w-full text-[10px] font-bold uppercase tracking-widest text-primary gap-2 h-auto p-0"
+                    onClick={() => window.print()}
+                  >
+                    <Icons.ExternalLink className="w-3 h-3" /> Ver Comprovante
+                  </Button>
                 </div>
               )}
 
