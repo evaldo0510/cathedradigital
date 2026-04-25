@@ -279,25 +279,30 @@ const TemaDetailPage = () => {
               <div className="absolute inset-0 bg-secondary/5 blur-3xl rounded-[3rem]" />
               <Card className="border-secondary/30 bg-card/40 backdrop-blur-xl rounded-[2.5rem] overflow-hidden relative z-10 shadow-2xl">
                 <CardContent className="p-8 sm:p-10">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-10 h-10 rounded-2xl bg-secondary/20 flex items-center justify-center">
-                      <Sparkles className="w-5 h-5 text-secondary" />
+                  <div className="flex items-center justify-between mb-8">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 rounded-2xl bg-secondary/10 flex items-center justify-center border border-secondary/20 shadow-inner">
+                        <Sparkles className="w-6 h-6 text-secondary" />
+                      </div>
+                      <div>
+                        <p className="text-[11px] font-black uppercase tracking-[0.3em] text-secondary">Logos Theologicus</p>
+                        <p className="text-sm text-muted-foreground font-medium">Sentido & Aplicação</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary">Logos Theologicus</p>
-                      <p className="text-xs text-muted-foreground font-medium">Síntese espiritual personalizada</p>
-                    </div>
+                    <Badge variant="outline" className="text-[10px] font-black uppercase tracking-widest border-secondary/20 text-secondary animate-pulse px-3">IA Ativa</Badge>
                   </div>
                   {loadingLogos && !logosInsight ? (
-                    <div className="space-y-3">
-                      <div className="h-4 w-full bg-muted animate-pulse rounded" />
-                      <div className="h-4 w-5/6 bg-muted animate-pulse rounded" />
-                      <div className="h-4 w-4/6 bg-muted animate-pulse rounded" />
+                    <div className="space-y-4">
+                      <div className="h-4 w-full bg-muted animate-pulse rounded-full" />
+                      <div className="h-4 w-[90%] bg-muted animate-pulse rounded-full opacity-70" />
+                      <div className="h-4 w-[75%] bg-muted animate-pulse rounded-full opacity-40" />
                     </div>
                   ) : (
-                    <p className="text-lg sm:text-xl text-foreground/90 leading-relaxed font-serif italic first-letter:text-4xl first-letter:font-black first-letter:mr-1 first-letter:float-left first-letter:text-secondary">
-                      {logosInsight}
-                    </p>
+                    <div className="space-y-6">
+                      <p className="text-xl sm:text-2xl text-foreground/90 leading-relaxed font-serif italic first-letter:text-5xl first-letter:font-black first-letter:mr-2 first-letter:float-left first-letter:text-secondary selection:bg-secondary/20">
+                        {logosInsight}
+                      </p>
+                    </div>
                   )}
                 </CardContent>
               </Card>
