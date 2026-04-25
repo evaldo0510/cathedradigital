@@ -342,7 +342,9 @@ const TemaDetailPage = () => {
             ) : (
             <>
             <TabsContent value="bible" className="mt-6 space-y-4">
-              {bibleVerses.length > 0 ? (
+              {loadingContents ? (
+                <ContentSkeleton />
+              ) : bibleVerses.length > 0 ? (
                 <>
                   <div className="space-y-4">
                     {bibleVerses.slice(0, bibleLimit).map((c, i) => (
