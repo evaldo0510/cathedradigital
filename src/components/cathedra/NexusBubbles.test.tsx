@@ -110,4 +110,29 @@ describe('NexusBubbles - Integration Tests', () => {
     // Fallback message
     expect(screen.getByText(/Nenhum tema encontrado/i)).toBeInTheDocument();
   });
+
+  it('only shows category labels (Bíblia, Catecismo etc.) when they have content', async () => {
+    const mockTags = [{ id: '1', label: 'Fé', slug: 'fe', category: 'fundamentos', emoji: '✝️' }];
+    (supabase.from as any).mockReturnValue({
+      select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) }))
+    });
+
+    // Mock fetch to return only Bible content
+    (fetchNexusTagContent as any).mockResolvedValue([
+      { id: 'b1', type: 'bible', content_text: 'Gênesis 1:1', title: 'Gn 1,1', metadata: {} }
+    ]);
+
+    renderWithProviders(<NexusBubbles />);
+    const tag = await screen.findByText('Fé');
+    await userEvent.click(tag);
+
+    // Should show Bible label and content
+    expect(await screen.findByText(/Bíblia/i)).toBeInTheDocument();
+    expect(screen.getByText('Gn 1,1')).toBeInTheDocument();
+
+    // Should NOT show other category labels
+    expect(screen.queryByText(/Catecismo/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Magistério/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Jornadas/i)).not.toBeInTheDocument();
+  });
 });
