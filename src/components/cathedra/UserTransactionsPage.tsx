@@ -519,6 +519,7 @@ const UserTransactionsPage: React.FC = () => {
                         size="icon" 
                         className="h-5 w-5 opacity-50 group-hover:opacity-100 transition-opacity"
                         onClick={() => copyPaymentId(selectedTx.payment_id)}
+                        aria-label="Copiar ID do pagamento"
                       >
                         <Icons.Copy className="w-3 h-3" />
                       </Button>
