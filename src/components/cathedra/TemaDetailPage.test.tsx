@@ -120,4 +120,56 @@ describe('TemaDetailPage - Integration Tests', () => {
     // If title is empty, it should have the fallback from formatNexusContent ('Escritura')
     expect(await screen.findByText('Escritura')).toBeInTheDocument();
   });
+  
+  it('handles rapid tab switching without leaking content or fallbacks', async () => {
+    const mockTags = [
+      { id: '1', label: 'Rapid', slug: 'rapid', category: 'fundamentos', emoji: '⚡' },
+      { id: '2', label: 'Rapid Content', slug: 'rapid-content', category: 'fundamentos', emoji: '⚡' }
+    ];
+    (supabase.from as any).mockReturnValue({ 
+      select: vi.fn(() => ({ 
+        order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) 
+      })) 
+    });
+    
+    // 1. Test Fallbacks Isolation
+    (fetchNexusTagContent as any).mockResolvedValue([]);
+    const { unmount } = renderWithProviders(<TemaDetailPage />, '/temas/rapid');
+
+    expect(await screen.findByText(/Nenhum versículo catalogado/i)).toBeInTheDocument();
+
+    const tabs = [
+      { name: 'Tradição', fallback: /Conteúdo da Tradição em aprofundamento/i },
+      { name: 'Magistério', fallback: /Documentos do Magistério em aprofundamento/i },
+      { name: 'Jornadas', fallback: /Nenhuma jornada específica vinculada a este tema/i },
+      { name: 'Fundamentos', fallback: /Nenhum versículo catalogado/i }
+    ];
+
+    for (const tab of tabs) {
+      await userEvent.click(screen.getByText(tab.name));
+      expect(await screen.findByText(tab.fallback)).toBeInTheDocument();
+      tabs.filter(t => t.name !== tab.name).forEach(t => {
+        expect(screen.queryByText(t.fallback)).not.toBeInTheDocument();
+      });
+    }
+
+    unmount();
+
+    // 2. Test Content Isolation
+    (fetchNexusTagContent as any).mockResolvedValue([
+      { id: 'c1', type: 'bible', content_text: 'Unique Bible Content', title: 'Ref 1' },
+      { id: 'c2', type: 'catechism', content_text: 'Unique Tradition Content', title: 'Ref 2' }
+    ]);
+
+    renderWithProviders(<TemaDetailPage />, '/temas/rapid-content');
+
+    // Bible content should be visible initially
+    expect(await screen.findByText(/Unique Bible Content/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Unique Tradition Content/i)).not.toBeInTheDocument();
+
+    // Switch to Tradition
+    await userEvent.click(screen.getByText('Tradição'));
+    expect(await screen.findByText(/Unique Tradition Content/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Unique Bible Content/i)).not.toBeInTheDocument();
+  });
 });
