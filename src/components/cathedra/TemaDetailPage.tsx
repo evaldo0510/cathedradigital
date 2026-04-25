@@ -227,17 +227,38 @@ const TemaDetailPage = () => {
     if (!selectedTag || loadingLogos) return;
     setLoadingLogos(true);
     supabase.functions.invoke('logos-spiritual-insight', {
-      body: { query: selectedTag.label }
-    }).then(({ data, error }) => {
-      if (!error && data?.insight) setLogosInsight(data.insight);
-      setLoadingLogos(false);
+  const relatedThemes = React.useMemo(() => {
+    if (!tags || !selectedTag) return [];
+    
+    const sharedContentTagIds = new Set<string>();
+    contents?.forEach(c => {
+      c.tags?.forEach(tLabel => {
+        const matchingTag = tags.find(tag => tag.label.toLowerCase() === tLabel.toLowerCase());
+        if (matchingTag && matchingTag.id !== selectedTag.id) {
+          sharedContentTagIds.add(matchingTag.id);
+        }
+      });
     });
-  };
+
+    const fromContent = tags.filter(t => sharedContentTagIds.has(t.id));
+    const fromCategory = tags.filter(t => 
+      t.category === selectedTag.category && 
+      t.id !== selectedTag.id && 
+      !sharedContentTagIds.has(t.id)
+    );
+
+    return [...fromContent, ...fromCategory].slice(0, 12);
+  }, [tags, selectedTag, contents]);
 
   useEffect(() => {
     if (selectedTag && !logosInsight && !loadingLogos && !autoLoaded) {
       setAutoLoaded(true);
       const timer = setTimeout(() => {
+        handleLoadInsight();
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [selectedTag, logosInsight, loadingLogos, autoLoaded]);
         handleLoadInsight();
       }, 1500);
       return () => clearTimeout(timer);
