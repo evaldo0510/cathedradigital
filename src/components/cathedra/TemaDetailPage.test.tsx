@@ -87,4 +87,36 @@ describe('TemaDetailPage - Integration Tests', () => {
     // fetchNexusTagContent should have been called again (initial + retry)
     expect(fetchNexusTagContent).toHaveBeenCalledTimes(2);
   });
+
+  it('renders "Nenhum versículo" and other empty states when fetch returns empty array', async () => {
+    const mockTags = [
+      { id: '1', label: 'Vazio', slug: 'vazio', category: 'fundamentos', emoji: '🕳️' }
+    ];
+
+    (supabase.from as any).mockReturnValue({
+      select: vi.fn(() => ({
+        order: vi.fn(() => Promise.resolve({ data: mockTags, error: null }))
+      }))
+    });
+
+    // Mock content fetch to return EMPTY
+    (fetchNexusTagContent as any).mockResolvedValue([]);
+
+    renderWithProviders(<TemaDetailPage />, '/temas/vazio');
+
+    // Check for various empty states in tabs
+    await waitFor(() => {
+      expect(screen.getByText('Nenhum versículo catalogado para este tema.')).toBeInTheDocument();
+    });
+
+    // Switch to tradition tab
+    const traditionTab = screen.getByText('Tradição');
+    fireEvent.click(traditionTab);
+    expect(screen.getByText('Conteúdo da Tradição em aprofundamento.')).toBeInTheDocument();
+
+    // Switch to magisterium tab
+    const magisteriumTab = screen.getByText('Magistério');
+    fireEvent.click(magisteriumTab);
+    expect(screen.getByText('Documentos do Magistério em aprofundamento.')).toBeInTheDocument();
+  });
 });
