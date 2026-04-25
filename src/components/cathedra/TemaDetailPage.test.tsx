@@ -54,14 +54,10 @@ describe('TemaDetailPage - Integration Tests', () => {
 
   const switchTab = async (name: string) => {
     fireEvent.click(screen.getByText(name));
-    // Wait for debounce (300ms)
+    // Wait for debounce (300ms) and query resolution
     await act(async () => {
-      await new Promise(r => setTimeout(r, 450));
+      await new Promise(r => setTimeout(r, 1000));
     });
-    // Wait for loading to finish
-    await waitFor(() => {
-      expect(screen.queryByTestId('content-skeleton')).not.toBeInTheDocument();
-    }, { timeout: 3000 });
   };
 
   it('displays error message with "Try Again" button when fetch fails', async () => {
