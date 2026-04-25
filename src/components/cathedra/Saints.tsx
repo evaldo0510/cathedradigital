@@ -356,8 +356,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
             <motion.div
               key="search"
               id="panel-search"
-              role="tabpanel"
-              aria-labelledby="tab-search"
+              {...getTabPanelProps('panel-search', 'tab-search', viewMode === 'search', "space-y-8 outline-none")}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
