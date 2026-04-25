@@ -444,11 +444,7 @@ const CommunityPage: React.FC = () => {
       {tab === 'ranking' ? (
         /* Leaderboard */
         <div 
-          id="panel-ranking" 
-          role="tabpanel" 
-          aria-labelledby="tab-ranking"
-          className="space-y-4 outline-none"
-          tabIndex={0}
+          {...getTabPanelProps('panel-ranking', 'tab-1', tab === 'ranking', "space-y-4 outline-none")}
         >
           <div className="bg-card border border-border rounded-2xl p-6">
             <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-1">Ranking da Comunidade</h2>
