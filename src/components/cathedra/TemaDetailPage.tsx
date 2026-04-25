@@ -203,20 +203,20 @@ const TemaDetailPage = () => {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-4xl mx-auto pb-20 px-4 relative">
-      <div className={`fixed inset-0 bg-gradient-to-b ${getCategoryColor(selectedTag?.category)} -z-10 pointer-events-none`} />
+    <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-5xl mx-auto pb-24 px-4 relative">
+      <div className={`fixed inset-0 bg-gradient-to-b ${getCategoryColor(selectedTag?.category)} -z-10 pointer-events-none opacity-40`} />
       <SEOHead 
         title={`${selectedTag?.label || 'Tema'} - Cathedra`}
         description={`Explore conteúdos sagrados sobre ${selectedTag?.label}.`}
         path={`/temas/${slug}`}
       />
 
-      <nav className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 mb-4">
+      <nav className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/50 mb-8 overflow-x-auto whitespace-nowrap pb-2 scrollbar-none">
         <button 
           onClick={() => navigate(AppRoute.HOME)}
-          className="hover:text-primary transition-colors"
+          className="hover:text-primary transition-colors flex items-center gap-1"
         >
-          Início
+          <ChevronLeft className="w-3 h-3" /> Início
         </button>
         <span className="opacity-30">/</span>
         <button 
