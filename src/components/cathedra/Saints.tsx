@@ -211,17 +211,13 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
         <AnimatePresence mode="wait">
           {viewMode === 'daily' ? (
-            <motion.div
-              key="daily"
-              id="panel-daily"
-              role="tabpanel"
-              aria-labelledby="tab-daily"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="space-y-8 outline-none"
-              tabIndex={0}
-            >
+              <motion.div
+                key="daily"
+                {...getTabPanelProps('panel-daily', 'tab-0', viewMode === 'daily', "space-y-8 outline-none")}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+              >
               <div className="flex flex-col items-center gap-6">
                 <div className="flex items-center gap-4 md:gap-8">
                   <button 
