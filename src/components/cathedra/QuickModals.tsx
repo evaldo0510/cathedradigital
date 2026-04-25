@@ -196,18 +196,40 @@ export const DocumentsModal: React.FC<QuickModalProps> = ({ isOpen, onClose }) =
 };
 
 // ─── Shared Shell ───
-const ModalShell: React.FC<{ title: string; onClose: () => void; children: React.ReactNode }> = ({ title, onClose, children }) => (
-  <div className="fixed inset-0 z-[180] flex items-center justify-center p-4" onClick={onClose}>
-    <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
-    <div className="relative w-full max-w-lg bg-card border border-border rounded-2xl shadow-2xl p-6" onClick={e => e.stopPropagation()}>
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-black uppercase tracking-widest text-primary">{title}</h3>
-        <button onClick={onClose} className="p-1 rounded-lg hover:bg-muted text-muted-foreground"><Icons.ArrowDown className="w-4 h-4 rotate-180" /></button>
+const ModalShell: React.FC<{ title: string; onClose: () => void; children: React.ReactNode }> = ({ title, onClose, children }) => {
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [onClose]);
+
+  return (
+    <div 
+      className="fixed inset-0 z-[180] flex items-center justify-center p-4" 
+      role="dialog" 
+      aria-modal="true" 
+      aria-labelledby="modal-title"
+    >
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
+      <div className="relative w-full max-w-lg bg-card border border-border rounded-2xl shadow-2xl p-6 overflow-hidden animate-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center justify-between mb-4">
+          <h3 id="modal-title" className="text-sm font-black uppercase tracking-widest text-primary">{title}</h3>
+          <button 
+            onClick={onClose} 
+            className="p-1.5 rounded-lg hover:bg-muted text-muted-foreground transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none"
+            aria-label="Fechar modal"
+          >
+            <Icons.X className="w-5 h-5" />
+          </button>
+        </div>
+        {children}
       </div>
-      {children}
     </div>
-  </div>
-);
+  );
+};
+
 
 const LoadingSkeleton = () => (
   <div className="space-y-3 py-4">
