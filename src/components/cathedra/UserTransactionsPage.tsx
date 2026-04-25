@@ -312,6 +312,7 @@ const UserTransactionsPage: React.FC = () => {
                 Carregar mais
               </Button>
             </div>
+        </div>
       )}
 
       <Dialog open={!!selectedTx} onOpenChange={(open) => !open && setSelectedTx(null)}>
@@ -406,8 +407,6 @@ const UserTransactionsPage: React.FC = () => {
           )}
         </DialogContent>
       </Dialog>
-    </div>
-      )}
     </div>
   );
 };
