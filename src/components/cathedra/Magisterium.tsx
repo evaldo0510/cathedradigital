@@ -19,7 +19,7 @@ import AudioButton from './AudioButton';
 import { useNavigate } from 'react-router-dom';
 import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
 
-... keep existing code until SPIRITUAL_GUIDANCE
+const SPIRITUAL_GUIDANCE = [
   {
     id: 'ansiedade',
     theme: 'Ansiedade',
