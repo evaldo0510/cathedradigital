@@ -115,13 +115,13 @@ const AZFaithPage: React.FC = () => {
         path="/az-faith"
       />
 
-      <div className="max-w-5xl mx-auto pb-24 px-4 md:px-0 animate-in fade-in duration-500">
-        <header className="text-center space-y-3 pt-6 mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/5 rounded-full border border-primary/10">
-            <BookOpen className="w-3.5 h-3.5 text-primary" />
-            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Índice Alfabético</span>
+      <div className="max-w-6xl mx-auto pb-32 px-4 md:px-8 animate-in fade-in duration-700">
+        <header className="text-center space-y-6 pt-12 mb-16">
+          <div className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-primary/5 rounded-full border border-primary/10 shadow-inner">
+            <BookOpen className="w-4 h-4 text-primary" />
+            <span className="text-[11px] font-black uppercase tracking-[0.3em] text-primary">Glossarium Fidei</span>
           </div>
-          <h1 className="text-3xl md:text-4xl font-black tracking-tight text-foreground">A–Z da Fé</h1>
+          <h1 className="text-4xl md:text-7xl font-black tracking-tighter text-foreground bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent">A–Z da Fé</h1>
           <Button
             variant={quizMode ? 'default' : 'outline'}
             onClick={() => setQuizMode(!quizMode)}
