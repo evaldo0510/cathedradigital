@@ -11,6 +11,8 @@ import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import { FuzzySearchInput } from './FuzzySearchInput';
 import { BubbleTag } from './BubbleTag';
 import { getTabProps, getTabPanelProps, useTabNavigation, useRovingTabindex } from './TabUtils';
+import { useSpiritualProfile } from '@/hooks/useSpiritualProfile';
+import { PROFILES } from './SpiritualQuiz';
 
 
 interface Tag {
