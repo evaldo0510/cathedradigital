@@ -49,9 +49,9 @@ const TemasPage = () => {
     queryKey: ['tags'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('tags')
+        .from('themes')
         .select('*')
-        .order('label');
+        .order('name');
       if (error) throw error;
       return data as Tag[];
     },
