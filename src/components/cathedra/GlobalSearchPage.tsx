@@ -40,7 +40,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
   };
   const isAllEmpty = hasQuery && !anyPending && Object.values(counts).every(c => c === 0);
   
-  const { activeIndex: tagsActiveIndex, handleKeyDown: handleTagsKeyDown } = useRovingTabindex(tags.results?.length || 0);
+  const { activeIndex: tagsActiveIndex, handleKeyDown: handleTagsKeyDown } = useRovingTabindex(tags.results?.length || 0, tagsRef);
 
   const EmptyState = ({ text }: { text: string }) => (
     <p className="text-center text-sm text-muted-foreground py-6">{text}</p>
