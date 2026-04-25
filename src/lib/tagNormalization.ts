@@ -2,7 +2,9 @@ import { normalizeText } from './utils';
 
 /**
  * Tag Normalization System
-...
+ * Standardizes tags: lowercase, no accents, underscores for spaces.
+ * Maps synonyms to canonical slugs used in the themes table.
+ */
 
 const SYNONYM_MAP: Record<string, string> = {
   // Fé
