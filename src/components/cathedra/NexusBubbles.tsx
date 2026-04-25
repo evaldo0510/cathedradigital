@@ -88,20 +88,18 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
       if (val) fetchContent();
     }}>
       <PopoverTrigger asChild>
-        <div>
-          <BubbleTag
-            label={tag.label}
-            emoji={tag.emoji}
-            index={index}
-            isSelected={open}
-            isSuggested={isSuggested}
-            onClick={() => {}} // Popover handles trigger
-            onKeyDown={onKeyDown}
-            onMouseEnter={prefetchTag}
-            tabIndex={tabIndex}
-            data-roving-item={true}
-          />
-        </div>
+        <BubbleTag
+          label={tag.label}
+          emoji={tag.emoji}
+          index={index}
+          isSelected={open}
+          isSuggested={isSuggested}
+          onClick={() => {}} // Popover handles trigger
+          onKeyDown={onKeyDown}
+          onMouseEnter={prefetchTag}
+          tabIndex={tabIndex}
+          data-roving-item={true}
+        />
       </PopoverTrigger>
       <PopoverContent className="w-[340px] sm:w-[420px] p-0 rounded-[2.5rem] border-primary/20 overflow-hidden shadow-2xl z-[100] backdrop-blur-2xl bg-card/90">
         <div className="bg-gradient-to-r from-primary/15 via-primary/5 to-transparent p-6 border-b border-border/40 flex items-center justify-between">
@@ -288,12 +286,20 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
   useEffect(() => {
     const fetchTags = async () => {
       const { data, error } = await supabase
-        .from('tags')
+        .from('themes')
         .select('*')
-        .order('label');
+        .order('name');
       
       if (!error && data) {
-        setTags(data as Tag[]);
+        // Map themes to the Tag interface expected by the component
+        const mappedTags = data.map((t: any) => ({
+          id: t.id,
+          slug: t.slug,
+          label: t.name,
+          emoji: t.emoji || '⛪',
+          category: t.category || 'Geral'
+        }));
+        setTags(mappedTags);
       }
       setLoading(false);
     };
@@ -328,11 +334,12 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
     let result = tags;
     if (searchQuery) {
       const q = normalizeText(searchQuery);
-      result = result.filter(t => 
+      return result.filter(t => 
         normalizeText(t.label).includes(q) || 
         normalizeText(t.category).includes(q)
       );
     }
+    
     if (activeFilter !== 'all') {
       result = result.filter(t => t.category === activeFilter);
     }

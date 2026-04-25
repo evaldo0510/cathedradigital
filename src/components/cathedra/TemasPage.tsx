@@ -49,11 +49,17 @@ const TemasPage = () => {
     queryKey: ['tags'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('tags')
+        .from('themes')
         .select('*')
-        .order('label');
+        .order('name');
       if (error) throw error;
-      return data as Tag[];
+      return (data || []).map((t: any) => ({
+        id: t.id,
+        label: t.name,
+        slug: t.slug,
+        emoji: t.emoji || '⛪',
+        category: t.category || 'Geral'
+      })) as Tag[];
     },
   });
 
@@ -78,7 +84,7 @@ const TemasPage = () => {
   const filteredTags = useMemo(() => {
     if (!tags) return [];
     const base: Tag[] = isSearchActive ? (fuzzyTags ?? []) : tags;
-    if (activeCategory === 'all') return base;
+    if (isSearchActive || activeCategory === 'all') return base;
     return base.filter(tag => tag.category === activeCategory);
   }, [tags, fuzzyTags, isSearchActive, activeCategory]);
 

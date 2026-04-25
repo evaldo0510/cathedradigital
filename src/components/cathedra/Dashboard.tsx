@@ -257,7 +257,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
 
       {/* ═══ 4. NEXUS BUBBLES ═══ */}
       <FadeUp delay={0.2}>
-        <NexusBubbles />
+        <NexusBubbles profileId={spiritualProfile as ProfileId} />
       </FadeUp>
 
       {/* ═══ 5. PRO SHOWCASE ═══ */}
