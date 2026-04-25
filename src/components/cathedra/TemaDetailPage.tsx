@@ -341,7 +341,7 @@ const TemaDetailPage = () => {
                 <Button 
                   variant="outline" 
                   onClick={() => {
-                    queryClient.invalidateQueries({ queryKey: ['tag-contents'] });
+                    refetch();
                   }} 
                   className="h-10 rounded-xl px-6"
                   disabled={isFetchingContents || loadingContents}
