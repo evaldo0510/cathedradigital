@@ -62,9 +62,16 @@ const CheckoutResultPage: React.FC = () => {
           transactionId: externalReference || undefined,
         },
       })
-      .then(({ data, error }) => {
+      .then(async ({ data, error }) => {
         if (error) throw error;
         if (data?.error) throw new Error(data.error);
+
+        // Fetch transaction details for the summary
+        const txId = data.transactionId || externalReference;
+        if (txId) {
+          const { data: tx } = await supabase.from('transactions').select('*').eq('id', txId).maybeSingle();
+          if (tx) setTxData(tx);
+        }
 
         if (data?.status === 'approved') {
           setState('success');
@@ -80,7 +87,7 @@ const CheckoutResultPage: React.FC = () => {
       .catch(() => {
         setState('failure');
       });
-  }, [checkoutState, paymentId, externalReference, navigate]);
+  }, [checkoutState, paymentId, externalReference, navigate, refreshProfile]);
 
   const config: Record<Exclude<ResultState, 'loading'>, {
     icon: React.ReactNode;
