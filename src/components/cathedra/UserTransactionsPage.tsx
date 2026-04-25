@@ -137,10 +137,19 @@ const UserTransactionsPage: React.FC = () => {
     }
   };
 
-  if (loading) {
+  if (loading && transactions.length === 0) {
     return (
-      <div className="flex items-center justify-center min-h-[40vh]">
-        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+      <div className="max-w-4xl mx-auto space-y-8 py-6">
+        <div className="flex items-center gap-4 animate-pulse">
+          <div className="w-12 h-12 rounded-2xl bg-muted" />
+          <div className="space-y-2">
+            <div className="h-6 w-48 bg-muted rounded" />
+            <div className="h-4 w-64 bg-muted rounded" />
+          </div>
+        </div>
+        <div className="grid gap-4">
+          {[1, 2, 3].map(i => <TransactionSkeleton key={i} />)}
+        </div>
       </div>
     );
   }
@@ -157,7 +166,24 @@ const UserTransactionsPage: React.FC = () => {
         </div>
       </div>
 
-      {transactions.length === 0 ? (
+      {error && transactions.length === 0 ? (
+        <Card className="border-destructive/20 bg-destructive/5">
+          <CardContent className="flex flex-col items-center justify-center py-12 space-y-4">
+            <Icons.AlertCircle className="w-12 h-12 text-destructive/50" />
+            <div className="text-center">
+              <p className="text-destructive font-medium">{error}</p>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => fetchTransactions(0)}
+                className="mt-4 gap-2 border-destructive/20 text-destructive hover:bg-destructive/10"
+              >
+                <Icons.RefreshCcw className="w-4 h-4" /> Tentar Novamente
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      ) : transactions.length === 0 ? (
         <Card className="border-dashed">
           <CardContent className="flex flex-col items-center justify-center py-12 space-y-4">
             <Icons.Heart className="w-12 h-12 text-muted-foreground/30" />
