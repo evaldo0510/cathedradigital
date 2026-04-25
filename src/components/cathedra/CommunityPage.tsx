@@ -664,6 +664,32 @@ const CommunityPage: React.FC = () => {
       })()}
         </div>
       )}
+      </div>
+      
+      <aside className="desktop-aside space-y-6 hidden xl:block">
+        <div className="desktop-card bg-primary/5 border-primary/20">
+          <h3 className="text-[11px] font-black uppercase tracking-widest text-primary mb-3">Comunhão de Santos</h3>
+          <p className="text-xs text-muted-foreground leading-relaxed italic">
+            Participar da comunidade é viver a comunhão cristã. Compartilhe suas graças e edifique seus irmãos.
+          </p>
+        </div>
+        <div className="desktop-card">
+          <h3 className="text-[11px] font-black uppercase tracking-widest text-secondary mb-4">Líderes de Engajamento</h3>
+          <div className="space-y-4">
+            {leaderboard.slice(0, 3).map((entry, i) => (
+              <div key={entry.id} className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center font-black text-[10px]">
+                  {i + 1}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[10px] font-bold text-foreground truncate">{entry.name}</p>
+                  <p className="text-[8px] text-muted-foreground uppercase font-medium">{entry.levelName}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </aside>
     </div>
   );
 };
