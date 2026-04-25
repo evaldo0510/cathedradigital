@@ -9,6 +9,7 @@ import RelevanceBadge from './RelevanceBadge';
 import SearchResultCard from './SearchResultCard';
 import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import { AppRoute } from '@/types';
+import { useRovingTabindex } from './TabUtils';
 import type { Tables } from '@/integrations/supabase/types';
 
 type Saint = Tables<'saints'>;
