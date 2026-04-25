@@ -44,20 +44,29 @@ export function formatNexusContent(data: any, type: string): TagContent {
 /**
  * Fetches and formats content for a specific tag.
  */
-export async function fetchNexusTagContent(tag: { label: string; slug: string }): Promise<TagContent[]> {
+export async function fetchNexusTagContent(tag: { label: string; slug: string }, signal?: AbortSignal): Promise<TagContent[]> {
   const searchTerms = getSearchTermsForTag(tag);
   
+  const spiritualQuery = supabase
+    .from('spiritual_contents')
+    .select('*')
+    .overlaps('tags', searchTerms)
+    .limit(15);
+
+  const journeyQuery = supabase
+    .from('journeys')
+    .select('*')
+    .overlaps('tags', searchTerms)
+    .limit(10);
+
+  if (signal) {
+    spiritualQuery.abortSignal(signal);
+    journeyQuery.abortSignal(signal);
+  }
+
   const [spiritualResponse, journeyResponse] = await Promise.all([
-    supabase
-      .from('spiritual_contents')
-      .select('*')
-      .overlaps('tags', searchTerms)
-      .limit(15),
-    supabase
-      .from('journeys')
-      .select('*')
-      .overlaps('tags', searchTerms)
-      .limit(10)
+    spiritualQuery,
+    journeyQuery
   ]);
 
   if (spiritualResponse.error) throw spiritualResponse.error;
@@ -70,3 +79,4 @@ export async function fetchNexusTagContent(tag: { label: string; slug: string })
   // Unique by ID
   return Array.from(new Map(all.map(item => [item.id, item])).values());
 }
+
