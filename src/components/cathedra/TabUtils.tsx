@@ -45,6 +45,11 @@ export function useTabNavigation() {
 export function useRovingTabindex(totalCount: number, containerRef?: React.RefObject<HTMLElement>) {
   const [activeIndex, setActiveIndex] = React.useState(0);
 
+  // Reset active index when total count changes (e.g. filtering)
+  React.useEffect(() => {
+    setActiveIndex(0);
+  }, [totalCount]);
+
   const handleKeyDown = useCallback((e: React.KeyboardEvent, index: number, onSelect?: (index: number) => void) => {
     let nextIndex = -1;
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
