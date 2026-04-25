@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { normalizeText } from '@/lib/utils';
 import { getSearchTermsForTag } from '@/lib/tagNormalization';
 import { type TagContent, fetchNexusTagContent } from '@/lib/nexusContent';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AppRoute } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
@@ -41,6 +41,22 @@ export const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolea
   const [logosInsight, setLogosInsight] = useState<string | null>(null);
   const [errorDetails, setErrorDetails] = useState<string | null>(null);
   const [metrics, setMetrics] = useState<{ startTime: number; endTime?: number; source?: 'supabase' | 'ia' | 'both' }>({ startTime: 0 });
+
+  const { data: allThemes } = useQuery({
+    queryKey: ['tags'],
+    queryFn: async () => {
+      const { data, error } = await supabase.from('themes').select('*').order('name');
+      if (error) throw error;
+      return (data || []).map((t: any) => ({
+        id: t.id,
+        label: t.name,
+        slug: t.slug,
+        emoji: t.emoji || '⛪',
+        category: t.category || 'Geral'
+      })) as Tag[];
+    },
+    staleTime: 1000 * 60 * 30, // 30 minutes
+  });
 
   const fetchContent = async () => {
     if (content.length > 0 || status === 'loading') return;
@@ -221,11 +237,38 @@ export const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolea
                                 <p className="text-[11px] leading-relaxed text-foreground/80 line-clamp-3 group-hover/content:text-foreground transition-colors">
                                   {c.content_text}
                                 </p>
-                                <div className="flex items-center justify-between">
-                                  <span className="text-[10px] font-bold text-primary flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-primary/5">
-                                    {reference}
-                                    {link && <ExternalLink className="w-2.5 h-2.5" />}
-                                  </span>
+                                <div className="flex flex-col gap-2">
+                                  <div className="flex items-center justify-between">
+                                    <span className="text-[10px] font-bold text-primary flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-primary/5">
+                                      {reference}
+                                      {link && <ExternalLink className="w-2.5 h-2.5" />}
+                                    </span>
+                                  </div>
+                                  
+                                  {c.metadata?.tags && c.metadata.tags.length > 0 && (
+                                    <div className="flex flex-wrap gap-1 mt-1">
+                                      {c.metadata.tags
+                                        .filter((tLabel: string) => tLabel.toLowerCase() !== tag.label.toLowerCase())
+                                        .map((tLabel: string) => {
+                                          const matchingTag = allThemes?.find(at => at.label.toLowerCase() === tLabel.toLowerCase());
+                                          if (!matchingTag) return null;
+                                          return (
+                                            <button
+                                              key={matchingTag.id}
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                navigate(`${AppRoute.TEMAS}/${matchingTag.slug}`);
+                                                setOpen(false);
+                                              }}
+                                              className="text-[8px] font-bold px-1.5 py-0.5 rounded-md bg-muted hover:bg-primary/10 hover:text-primary transition-colors text-muted-foreground"
+                                            >
+                                              {matchingTag.label}
+                                            </button>
+                                          );
+                                        })
+                                      }
+                                    </div>
+                                  )}
                                 </div>
                               </motion.div>
                             );

@@ -37,7 +37,10 @@ export function formatNexusContent(data: any, type: string): TagContent {
     type: data.type,
     content_text: data.content_text || '',
     title: data.reference_id || data.title || fallbackReference,
-    metadata: data.metadata || {}
+    metadata: {
+      ...(data.metadata || {}),
+      tags: data.tags || []
+    }
   };
 }
 
