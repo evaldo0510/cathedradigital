@@ -254,14 +254,51 @@ const UserTransactionsPage: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 py-6">
-      <div className="flex items-center gap-4">
-        <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-          <Icons.History className="w-6 h-6" />
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+            <Icons.History className="w-6 h-6" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-black text-foreground">Minhas Doações</h1>
+            <p className="text-xs text-muted-foreground uppercase tracking-widest font-bold">Histórico de contribuições</p>
+          </div>
         </div>
-        <div>
-          <h1 className="text-2xl font-black text-foreground">Minhas Doações</h1>
-          <p className="text-xs text-muted-foreground uppercase tracking-widest font-bold">Histórico de contribuições e assinaturas</p>
+        
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={handleExportPDF}
+          className="gap-2 font-bold uppercase text-[10px] tracking-widest rounded-xl"
+        >
+          <Icons.Download className="w-4 h-4" /> Exportar PDF
+        </Button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="md:col-span-2 relative">
+          <Icons.Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input 
+            placeholder="Buscar por ID ou valor..." 
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10 bg-muted/50 border-border/50 focus:bg-background transition-all rounded-xl"
+          />
         </div>
+        <Select value={statusFilter} onValueChange={setStatusFilter}>
+          <SelectTrigger className="bg-muted/50 border-border/50 rounded-xl">
+            <div className="flex items-center gap-2">
+              <Icons.Filter className="w-4 h-4 text-muted-foreground" />
+              <SelectValue placeholder="Status" />
+            </div>
+          </SelectTrigger>
+          <SelectContent className="rounded-xl">
+            <SelectItem value="all">Todos os Status</SelectItem>
+            <SelectItem value="approved">Aprovados</SelectItem>
+            <SelectItem value="pending">Pendentes</SelectItem>
+            <SelectItem value="cancelled">Cancelados</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {error && transactions.length === 0 ? (
