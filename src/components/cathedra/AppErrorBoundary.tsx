@@ -35,7 +35,7 @@ class AppErrorBoundary extends Component<Props, State> {
           <div className="flex flex-col gap-3 w-full max-w-xs">
             <button
               onClick={() => window.location.reload()}
-              className="px-8 py-3 bg-primary text-primary-foreground rounded-2xl text-xs font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-xl"
+              className="px-8 py-3 bg-primary text-primary-foreground rounded-2xl text-xs font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-xl focus-visible:ring-4 focus-visible:ring-primary outline-none"
             >
               Tentar Novamente
             </button>
@@ -51,10 +51,11 @@ class AppErrorBoundary extends Component<Props, State> {
                 } catch (e) {}
                 window.location.href = '/';
               }}
-              className="px-8 py-3 bg-muted text-primary rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-muted/80 transition-all border border-border"
+              className="px-8 py-3 bg-muted text-primary rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-muted/80 transition-all border border-border focus-visible:ring-4 focus-visible:ring-primary outline-none"
             >
               Limpar Dados e Reiniciar
             </button>
+
           </div>
         </div>
       );
