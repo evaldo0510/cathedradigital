@@ -309,6 +309,16 @@ const TemaDetailPage = () => {
               <TabsTrigger value="journeys" className="rounded-xl text-[10px] font-black uppercase tracking-widest py-2.5">Jornadas</TabsTrigger>
             </TabsList>
 
+            {contentError ? (
+              <div className="p-12 text-center space-y-4 bg-red-500/5 rounded-[2rem] border border-red-500/10">
+                <AlertTriangle className="w-12 h-12 text-red-500 mx-auto" />
+                <p className="text-lg font-bold text-red-600">Erro ao carregar conexões do Nexus</p>
+                <p className="text-sm text-muted-foreground italic max-w-md mx-auto">
+                  Não foi possível estabelecer uma conexão estável com o banco de dados teológico. Por favor, tente novamente em alguns instantes.
+                </p>
+                <Button variant="outline" onClick={() => queryClient.invalidateQueries({ queryKey: ['tag-contents'] })} className="h-10 rounded-xl px-6">Tentar Novamente</Button>
+              </div>
+            ) : (
             <TabsContent value="bible" className="mt-6 space-y-4">
               {bibleVerses.length > 0 ? (
                 <>
