@@ -55,37 +55,49 @@ const UserTransactionsPage: React.FC = () => {
   const fetchTransactions = useCallback(async (pageNum: number) => {
     if (!user) return;
     
+    setError(null);
     if (pageNum === 0) setLoading(true);
     else setLoadingMore(true);
 
     const from = pageNum * PAGE_SIZE;
     const to = from + PAGE_SIZE - 1;
 
-    const { data, error } = await supabase
-      .from('transactions')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false })
-      .range(from, to);
+    try {
+      const { data, error: supabaseError } = await supabase
+        .from('transactions')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .range(from, to);
 
-    if (error) {
-      console.error('Error fetching transactions:', error);
-    } else {
-      if (pageNum === 0) {
-        setTransactions(data || []);
-      } else {
-        setTransactions(prev => [...prev, ...(data || [])]);
-      }
-      setHasMore((data || []).length === PAGE_SIZE);
+      if (supabaseError) throw supabaseError;
+
+      const newItems = data || [];
+      
+      setTransactions(prev => {
+        if (pageNum === 0) return newItems;
+        
+        // Deduplication: only add items that are not already in the list
+        const existingIds = new Set(prev.map(tx => tx.id));
+        const filteredNewItems = newItems.filter(tx => !existingIds.has(tx.id));
+        return [...prev, ...filteredNewItems];
+      });
+
+      setHasMore(newItems.length === PAGE_SIZE);
+    } catch (err: any) {
+      console.error('Error fetching transactions:', err);
+      setError(err.message || 'Erro ao carregar transações. Verifique sua conexão.');
+    } finally {
+      setLoading(false);
+      setLoadingMore(false);
     }
-    
-    setLoading(false);
-    setLoadingMore(false);
   }, [user]);
 
   useEffect(() => {
-    fetchTransactions(0);
-  }, [fetchTransactions]);
+    if (user?.id) {
+      fetchTransactions(0);
+    }
+  }, [fetchTransactions, user?.id]);
 
   useEffect(() => {
     if (!hasMore || loading || loadingMore) return;
