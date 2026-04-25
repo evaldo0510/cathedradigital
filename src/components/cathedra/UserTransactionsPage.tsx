@@ -20,8 +20,6 @@ const UserTransactionsPage: React.FC = () => {
   const [hasMore, setHasMore] = useState(true);
   const loaderRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!user) return;
 
   const fetchTransactions = useCallback(async (pageNum: number) => {
     if (!user) return;
