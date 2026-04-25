@@ -88,4 +88,23 @@ describe('TemasPage - Integration Tests', () => {
     expect(screen.getByText('Fundamentos')).toBeInTheDocument();
     expect(screen.getByText('Virtudes')).toBeInTheDocument();
   });
+
+  it('settles to non-loading state when tags fetch returns null', async () => {
+    (supabase.from as any).mockReturnValue({
+      select: vi.fn(() => ({
+        order: vi.fn(() => Promise.resolve({ data: null, error: null }))
+      }))
+    });
+
+    renderWithProviders(<TemasPage />);
+
+    // Loader should disappear
+    await waitFor(() => {
+      expect(screen.queryByText(/Consultando Nexus/i)).not.toBeInTheDocument();
+    }, { timeout: 3000 });
+
+    // Fallback message should be visible
+    const msg = await screen.findByText(/Nenhum tema encontrado/i);
+    expect(msg).toBeInTheDocument();
+  });
 });

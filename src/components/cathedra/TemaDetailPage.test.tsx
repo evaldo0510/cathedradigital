@@ -106,26 +106,52 @@ describe('TemaDetailPage - Integration Tests', () => {
 
     renderWithProviders(<TemaDetailPage />, '/temas/vazio');
 
-    // Wait for the tag to be loaded (the H1 should show the label)
+    // Wait for the tag to be loaded
     const header = await screen.findByRole('heading', { name: 'Vazio', level: 1 });
     expect(header).toBeInTheDocument();
 
-    // Check for various empty states in tabs
-    expect(screen.getByText('Nenhum versículo catalogado para este tema.')).toBeInTheDocument();
+    // 1. Escrituras (Default Tab)
+    expect(screen.getByText(/Nenhum versículo catalogado para este tema/i)).toBeInTheDocument();
+    expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
 
-    // Switch to tradition tab
+    // 2. Tradição
     const traditionTab = screen.getByText('Tradição');
     await userEvent.click(traditionTab);
-    
-    // Wait for empty state in this tab
-    const traditionEmpty = await screen.findByText(/Conteúdo da Tradição em aprofundamento/i);
-    expect(traditionEmpty).toBeInTheDocument();
+    expect(await screen.findByText(/Conteúdo da Tradição em aprofundamento/i)).toBeInTheDocument();
 
-    // Switch to magisterium tab
+    // 3. Magistério
     const magisteriumTab = screen.getByText('Magistério');
     await userEvent.click(magisteriumTab);
+    expect(await screen.findByText(/Documentos do Magistério em aprofundamento/i)).toBeInTheDocument();
+
+    // 4. Jornadas
+    const journeysTab = screen.getByText('Jornadas');
+    await userEvent.click(journeysTab);
+    expect(await screen.findByText(/Nenhuma jornada específica vinculada a este tema/i)).toBeInTheDocument();
+  });
+
+  it('completes loading state even when Supabase returns null data', async () => {
+    const mockTags = [
+      { id: '2', label: 'NullTag', slug: 'null-tag', category: 'fundamentos', emoji: '❓' }
+    ];
+
+    (supabase.from as any).mockReturnValue({
+      select: vi.fn(() => ({
+        order: vi.fn(() => Promise.resolve({ data: mockTags, error: null }))
+      }))
+    });
+
+    (fetchNexusTagContent as any).mockResolvedValue([]);
+
+    renderWithProviders(<TemaDetailPage />, '/temas/null-tag');
+
+    // Loader should disappear
+    await waitFor(() => {
+      expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
+    });
     
-    const magisteriumEmpty = await screen.findByText(/Documentos do Magistério em aprofundamento/i);
-    expect(magisteriumEmpty).toBeInTheDocument();
+    // Header H1 should appear
+    const h1s = await screen.findAllByRole('heading', { level: 1 });
+    expect(h1s.some(h => h.textContent?.includes('NullTag'))).toBe(true);
   });
 });
