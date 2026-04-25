@@ -38,11 +38,13 @@ const queryClient = new QueryClient({
 
 const renderWithProviders = (ui: React.ReactElement) => {
   return render(
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        {ui}
-      </BrowserRouter>
-    </QueryClientProvider>
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          {ui}
+        </BrowserRouter>
+      </QueryClientProvider>
+    </HelmetProvider>
   );
 };
 
