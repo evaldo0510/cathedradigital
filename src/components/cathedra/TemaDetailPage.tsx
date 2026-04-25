@@ -298,6 +298,7 @@ const TemaDetailPage = () => {
                       <div className="h-4 w-[75%] bg-muted animate-pulse rounded-full opacity-40" />
                     </div>
                   ) : (
+                    <div className="space-y-6">
                       <p className="text-xl sm:text-2xl text-foreground/90 leading-relaxed font-serif italic first-letter:text-5xl first-letter:font-black first-letter:mr-2 first-letter:float-left first-letter:text-secondary selection:bg-secondary/20">
                         {logosInsight}
                       </p>
