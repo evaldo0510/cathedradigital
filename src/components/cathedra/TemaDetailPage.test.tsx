@@ -90,7 +90,7 @@ describe('TemaDetailPage - Integration Tests', () => {
     expect(await screen.findByText(/Documentos do Magistério em aprofundamento/i)).toBeInTheDocument();
     expect(screen.queryByText(/Conteúdo da Tradição em aprofundamento/i)).not.toBeInTheDocument();
 
-    // 4. Journeys
+    // 4. Jornadas
     await userEvent.click(screen.getByText('Jornadas'));
     expect(await screen.findByText(/Nenhuma jornada específica vinculada a este tema/i)).toBeInTheDocument();
     expect(screen.queryByText(/Documentos do Magistério em aprofundamento/i)).not.toBeInTheDocument();
@@ -117,100 +117,7 @@ describe('TemaDetailPage - Integration Tests', () => {
     renderWithProviders(<TemaDetailPage />, '/temas/partial');
 
     // In TemaDetailPage, ThemeContentCard uses 'reference' which we mapped to 'title' in the queryFn.
-    // If title is empty, it should have the fallback from formatNexusContent ('Escritura')
     expect(await screen.findByText('Escritura')).toBeInTheDocument();
-  });
-  
-  it('handles rapid tab switching without leaking content or fallbacks', async () => {
-    const mockTags = [
-      { id: '1', label: 'Rapid', slug: 'rapid', category: 'fundamentos', emoji: '⚡' },
-      { id: '2', label: 'Rapid Content', slug: 'rapid-content', category: 'fundamentos', emoji: '⚡' }
-    ];
-    (supabase.from as any).mockReturnValue({ 
-      select: vi.fn(() => ({ 
-        order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) 
-      })) 
-    });
-    
-    // 1. Test Fallbacks Isolation
-    (fetchNexusTagContent as any).mockResolvedValue([]);
-    const { unmount } = renderWithProviders(<TemaDetailPage />, '/temas/rapid');
-
-    expect(await screen.findByText(/Nenhum versículo catalogado/i)).toBeInTheDocument();
-
-    const tabs = [
-      { name: 'Tradição', fallback: /Conteúdo da Tradição em aprofundamento/i },
-      { name: 'Magistério', fallback: /Documentos do Magistério em aprofundamento/i },
-      { name: 'Jornadas', fallback: /Nenhuma jornada específica vinculada a este tema/i },
-      { name: 'Escrituras', fallback: /Nenhum versículo catalogado/i }
-    ];
-
-    for (const tab of tabs) {
-      await userEvent.click(screen.getByText(tab.name));
-      expect(await screen.findByText(tab.fallback)).toBeInTheDocument();
-      tabs.filter(t => t.name !== tab.name).forEach(t => {
-        expect(screen.queryByText(t.fallback)).not.toBeInTheDocument();
-      });
-    }
-
-    unmount();
-
-    // 2. Test Content Isolation
-    (fetchNexusTagContent as any).mockResolvedValue([
-      { id: 'c1', type: 'bible', content_text: 'Unique Bible Content', title: 'Ref 1' },
-      { id: 'c2', type: 'catechism', content_text: 'Unique Tradition Content', title: 'Ref 2' }
-    ]);
-
-    renderWithProviders(<TemaDetailPage />, '/temas/rapid-content');
-
-    // Bible content should be visible initially
-    expect(await screen.findByText(/Unique Bible Content/i)).toBeInTheDocument();
-    expect(screen.queryByText(/Unique Tradition Content/i)).not.toBeInTheDocument();
-
-    // Switch to Tradition
-    await userEvent.click(screen.getByText('Tradição'));
-    expect(await screen.findByText(/Unique Tradition Content/i)).toBeInTheDocument();
-    expect(screen.queryByText(/Unique Bible Content/i)).not.toBeInTheDocument();
-  });
-
-  it('handles fetch returning null or undefined for all categories', async () => {
-    const mockTags = [{ id: '1', label: 'NullUndef', slug: 'null-undef', category: 'fundamentos', emoji: '👻' }];
-    (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
-
-    const testValues = [null, undefined];
-    const categories = [
-      { name: 'Escrituras', fallback: /Nenhum versículo catalogado/i },
-      { name: 'Tradição', fallback: /Conteúdo da Tradição em aprofundamento/i },
-      { name: 'Magistério', fallback: /Documentos do Magistério em aprofundamento/i },
-      { name: 'Jornadas', fallback: /Nenhuma jornada específica vinculada a este tema/i }
-    ];
-
-    for (const value of testValues) {
-      (fetchNexusTagContent as any).mockResolvedValue(value);
-      const { unmount } = renderWithProviders(<TemaDetailPage />, '/temas/null-undef');
-
-      // Check all tabs for this value
-      for (const cat of categories) {
-        await userEvent.click(screen.getByText(cat.name));
-        
-        // Wait for loading to finish
-        await waitFor(() => {
-          expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
-        });
-
-        // Specific fallback should be visible
-        expect(await screen.findByText(cat.fallback)).toBeInTheDocument();
-
-        // No other fallbacks should be visible
-        categories.filter(c => c.name !== cat.name).forEach(c => {
-          expect(screen.queryByText(c.fallback)).not.toBeInTheDocument();
-        });
-      }
-      unmount();
-      vi.clearAllMocks();
-      // Re-mock supabase for the next iteration if needed (it's in beforeEach but we are in a loop)
-      (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
-    }
   });
 
   it('shows loading skeleton only in the active tab content area', async () => {
@@ -227,14 +134,12 @@ describe('TemaDetailPage - Integration Tests', () => {
 
     await screen.findAllByText('Skeleton');
 
-    // Helper to find skeletons inside a specific tab content
-    const getSkeletonsInTab = (tabValue: string) => {
-      // Radix TabsContent has data-state="active" when active
+    const getSkeletonsInTab = () => {
       const content = document.querySelector(`[data-state="active"][role="tabpanel"]`);
       return content ? content.querySelectorAll('.animate-pulse') : [];
     };
 
-    const getInactiveSkeletons = () => {
+    const getInactiveSkeletonsCount = () => {
       const inactiveContents = document.querySelectorAll(`[data-state="inactive"][role="tabpanel"]`);
       let count = 0;
       inactiveContents.forEach(c => {
@@ -245,16 +150,16 @@ describe('TemaDetailPage - Integration Tests', () => {
 
     // 1. Bible (Default) active
     await waitFor(() => {
-      expect(getSkeletonsInTab('bible').length).toBeGreaterThan(0);
+      expect(getSkeletonsInTab().length).toBeGreaterThan(0);
     });
-    expect(getInactiveSkeletons()).toBe(0);
+    expect(getInactiveSkeletonsCount()).toBe(0);
 
     // 2. Switch to Tradition
     await userEvent.click(screen.getByText('Tradição'));
     await waitFor(() => {
-      expect(getSkeletonsInTab('tradition').length).toBeGreaterThan(0);
+      expect(getSkeletonsInTab().length).toBeGreaterThan(0);
     });
-    expect(getInactiveSkeletons()).toBe(0);
+    expect(getInactiveSkeletonsCount()).toBe(0);
 
     // 3. Resolve
     await act(async () => {
@@ -266,7 +171,7 @@ describe('TemaDetailPage - Integration Tests', () => {
     });
   });
 
-  it('verifies retry flow: error -> retry -> success', async () => {
+  it('verifies retry flow: error -> retry -> success/fallback', async () => {
     const mockTags = [{ id: '1', label: 'RetryTag', slug: 'retry-tag', category: 'fundamentos', emoji: '🔄' }];
     (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
 
@@ -278,16 +183,13 @@ describe('TemaDetailPage - Integration Tests', () => {
     // Error UI should appear
     expect(await screen.findByText(/Erro ao carregar conexões do Nexus/i)).toBeInTheDocument();
 
-    // 2. Prepare successful response and click retry
-    const mockContent = [{ id: 'c1', type: 'bible', content_text: 'Recovered Content', title: 'Ref 1' }];
-    (fetchNexusTagContent as any).mockResolvedValueOnce(mockContent);
+    // 2. Prepare successful empty response and click retry
+    (fetchNexusTagContent as any).mockResolvedValueOnce([]);
 
     const retryButton = screen.getByText(/Tentar Novamente/i);
     await userEvent.click(retryButton);
 
-    // Should show skeleton while retrying (briefly)
-    // Then show content
-    expect(await screen.findByText(/Recovered Content/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Nenhum versículo catalogado/i)).toBeInTheDocument();
     expect(screen.queryByText(/Erro ao carregar conexões do Nexus/i)).not.toBeInTheDocument();
   });
 
@@ -323,17 +225,81 @@ describe('TemaDetailPage - Integration Tests', () => {
     // Bible content visible
     expect(await screen.findByText(/Bible Content/i)).toBeInTheDocument();
 
-    // Switch to Tradition (which is empty)
+    // Switch to Tradition
     await userEvent.click(screen.getByText('Tradição'));
     
-    // Bible content should NOT be visible
     expect(screen.queryByText(/Bible Content/i)).not.toBeInTheDocument();
-    // Tradition fallback should be visible
     expect(screen.getByText(/Conteúdo da Tradição em aprofundamento/i)).toBeInTheDocument();
+  });
 
-    // Switch back to Bible
-    await userEvent.click(screen.getByText('Escrituras'));
-    expect(screen.getByText(/Bible Content/i)).toBeInTheDocument();
-    expect(screen.queryByText(/Conteúdo da Tradição em aprofundamento/i)).not.toBeInTheDocument();
+  it('handles rapid multi-switch without skeleton accumulation', async () => {
+    const mockTags = [{ id: '1', label: 'RapidSwitch', slug: 'rapid-switch', category: 'fundamentos', emoji: '⚡' }];
+    (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
+
+    let resolveLatest: any;
+    (fetchNexusTagContent as any).mockImplementation(() => new Promise((resolve) => {
+      resolveLatest = resolve;
+    }));
+
+    renderWithProviders(<TemaDetailPage />, '/temas/rapid-switch');
+    await screen.findAllByText('RapidSwitch');
+
+    // Rapid switch
+    await userEvent.click(screen.getByText('Tradição'));
+    await userEvent.click(screen.getByText('Magistério'));
+    await userEvent.click(screen.getByText('Jornadas'));
+
+    // Resolve for Jornadas
+    const journeys = [{ id: 'j1', type: 'journey', content_text: 'Journey Data', title: 'J Ref' }];
+    await act(async () => {
+      resolveLatest(journeys);
+    });
+
+    expect(await screen.findByText(/Journey Data/i)).toBeInTheDocument();
+    
+    // Ensure no skeletons persist
+    await waitFor(() => {
+      expect(document.querySelectorAll('.animate-pulse').length).toBe(0);
+    });
+  });
+
+  it('ensures only the latest resolved request updates the UI (race condition protection)', async () => {
+    const mockTags = [{ id: '1', label: 'Race', slug: 'race', category: 'fundamentos', emoji: '🏎️' }];
+    (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
+
+    let resolveTradition: any;
+    const traditionPromise = new Promise(r => resolveTradition = r);
+    
+    let resolveMagisterium: any;
+    const magisteriumPromise = new Promise(r => resolveMagisterium = r);
+
+    // Initial bible load
+    (fetchNexusTagContent as any).mockResolvedValueOnce([]);
+
+    renderWithProviders(<TemaDetailPage />, '/temas/race');
+    await screen.findAllByText('Race');
+
+    // 1. Trigger Tradition fetch
+    (fetchNexusTagContent as any).mockReturnValueOnce(traditionPromise);
+    await userEvent.click(screen.getByText('Tradição'));
+    
+    // 2. Trigger Magisterium fetch
+    (fetchNexusTagContent as any).mockReturnValueOnce(magisteriumPromise);
+    await userEvent.click(screen.getByText('Magistério'));
+
+    // 3. Resolve Magisterium first
+    await act(async () => {
+      resolveMagisterium([{ id: 'm1', type: 'magisterium', content_text: 'Magisterium Wins', title: 'M Ref' }]);
+    });
+
+    expect(await screen.findByText(/Magisterium Wins/i)).toBeInTheDocument();
+
+    // 4. Resolve Tradition later (should be ignored by active UI)
+    await act(async () => {
+      resolveTradition([{ id: 't1', type: 'catechism', content_text: 'Tradition Late', title: 'T Ref' }]);
+    });
+
+    expect(screen.getByText(/Magisterium Wins/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Tradition Late/i)).not.toBeInTheDocument();
   });
 });

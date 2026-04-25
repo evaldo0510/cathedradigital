@@ -110,6 +110,7 @@ const TemaDetailPage = () => {
   const [traditionLimit, setTraditionLimit] = useState(5);
   const [magisteriumLimit, setMagisteriumLimit] = useState(5);
   const [autoLoaded, setAutoLoaded] = useState(false);
+  const [activeTab, setActiveTab] = useState('bible');
 
   const { data: tags } = useQuery({
     queryKey: ['tags'],
@@ -123,7 +124,7 @@ const TemaDetailPage = () => {
   const selectedTag = tags?.find(t => t.slug === slug);
 
   const { data: contents, isLoading: loadingContents, error: contentError } = useQuery({
-    queryKey: ['tag-contents', selectedTag?.id, selectedTag?.label],
+    queryKey: ['tag-contents', selectedTag?.id, activeTab],
     queryFn: async () => {
       if (!selectedTag) return [];
       const results = await fetchNexusTagContent(selectedTag);
@@ -322,7 +323,7 @@ const TemaDetailPage = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="md:col-span-2 space-y-8">
-          <Tabs defaultValue="bible" className="w-full">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="w-full bg-muted/40 p-1 rounded-2xl border border-border/40 grid grid-cols-4">
               <TabsTrigger value="bible" className="rounded-xl text-[10px] font-black uppercase tracking-widest py-2.5">Escrituras</TabsTrigger>
               <TabsTrigger value="tradition" className="rounded-xl text-[10px] font-black uppercase tracking-widest py-2.5">Tradição</TabsTrigger>
