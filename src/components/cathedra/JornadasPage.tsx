@@ -288,7 +288,15 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.99 }}
                 >
-                  <Card className="border-primary/40 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border-2 overflow-hidden shadow-xl shadow-primary/5 relative cursor-pointer rounded-xl sm:rounded-2xl" onClick={() => navigate(`/jornadas/${journey.id}`)}>
+                  <Card 
+                    className="border-primary/40 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border-2 overflow-hidden shadow-xl shadow-primary/5 relative cursor-pointer rounded-xl sm:rounded-2xl focus-visible:ring-4 focus-visible:ring-primary outline-none" 
+                    onClick={() => navigate(`/jornadas/${journey.id}`)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => e.key === 'Enter' && navigate(`/jornadas/${journey.id}`)}
+                    aria-label={`Continuar jornada ${journey.title}, ${pct}% concluída`}
+                  >
+
                     <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
                       <Icons.Flame className="w-16 h-16 text-primary" />
                     </div>
