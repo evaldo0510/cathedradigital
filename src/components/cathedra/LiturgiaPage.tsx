@@ -19,6 +19,8 @@ import { useSaintsToday } from '@/hooks/useSaints';
 import ReactMarkdown from 'react-markdown';
 import { toast } from 'sonner';
 import { getCachedLiturgy, cacheLiturgy } from '@/lib/offlineCache';
+import { LiturgiaSkeleton } from './LiturgiaSkeleton';
+
 
 const MissalPage = lazy(() => import('./MissalPage'));
 const LiturgicalCalendarPage = lazy(() => import('./LiturgicalCalendarPage'));
