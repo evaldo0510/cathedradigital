@@ -336,11 +336,12 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
     let result = tags;
     if (searchQuery) {
       const q = normalizeText(searchQuery);
-      result = result.filter(t => 
+      return result.filter(t => 
         normalizeText(t.label).includes(q) || 
         normalizeText(t.category).includes(q)
       );
     }
+    
     if (activeFilter !== 'all') {
       result = result.filter(t => t.category === activeFilter);
     }
