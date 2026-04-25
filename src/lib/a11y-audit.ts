@@ -35,6 +35,20 @@ export function runA11yAudit() {
     }
   });
 
+  // 5. Check for missing alt text on images
+  const images = document.querySelectorAll('img:not([alt])');
+  images.forEach((img, idx) => {
+    issues.push(`Image missing alt text: "${img.getAttribute('src') || idx}"`);
+  });
+
+  // 6. Check for empty buttons
+  const buttons = document.querySelectorAll('button');
+  buttons.forEach((btn, idx) => {
+    if (!btn.innerText.trim() && !btn.getAttribute('aria-label')) {
+      issues.push(`Empty button without aria-label found at index ${idx}`);
+    }
+  });
+
   // 4. Check for focus traps or non-focusable roving items
   const rovingItems = document.querySelectorAll('[data-roving-item]');
   rovingItems.forEach((el, idx) => {
