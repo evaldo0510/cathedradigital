@@ -62,7 +62,40 @@ const UserTransactionsPage: React.FC = () => {
   const [selectedTx, setSelectedTx] = useState<any | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [announcement, setAnnouncement] = useState('');
   const loaderRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (selectedTx) {
+      const statusText = selectedTx.status === 'approved' ? 'aprovada' : selectedTx.status === 'pending' ? 'pendente' : 'cancelada';
+      let msg = `Detalhes da transação de ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(selectedTx.amount)} abertos. Status: ${statusText}. Pressione Escape para fechar.`;
+      if (selectedTx.error_message) msg += ` Erro: ${selectedTx.error_message}`;
+      setAnnouncement(msg);
+    }
+  }, [selectedTx]);
+
+  useEffect(() => {
+    if (loading) {
+      setAnnouncement('Carregando transações...');
+    } else if (transactions.length > 0) {
+      setAnnouncement(`${transactions.length} transações carregadas.`);
+    }
+  }, [loading, transactions.length]);
+
+  useEffect(() => {
+    if (searchTerm) {
+      const timer = setTimeout(() => {
+        setAnnouncement(`Buscando por: ${searchTerm}`);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [searchTerm]);
+
+  useEffect(() => {
+    if (statusFilter !== 'all') {
+      setAnnouncement(`Filtrando por status: ${statusFilter}`);
+    }
+  }, [statusFilter]);
 
   const fetchTransactions = useCallback(async (pageNum: number) => {
     if (!user) return;
@@ -228,7 +261,10 @@ const UserTransactionsPage: React.FC = () => {
 
   if (loading && transactions.length === 0) {
     return (
-      <div className="max-w-4xl mx-auto space-y-8 py-6">
+    <div className="max-w-4xl mx-auto space-y-8 py-6">
+      <div className="sr-only" aria-live="polite" role="status">
+        {announcement}
+      </div>
         <div className="flex items-center gap-4 animate-pulse">
           <div className="w-12 h-12 rounded-2xl bg-muted" />
           <div className="space-y-2">
@@ -424,8 +460,20 @@ const UserTransactionsPage: React.FC = () => {
         </div>
       )}
 
-      <Dialog open={!!selectedTx} onOpenChange={(open) => !open && setSelectedTx(null)}>
-        <DialogContent className="max-w-md rounded-[2rem]">
+      <Dialog 
+        open={!!selectedTx} 
+        onOpenChange={(open) => {
+          if (!open) {
+            setSelectedTx(null);
+            setAnnouncement('Modal de detalhes fechado.');
+          }
+        }}
+      >
+        <DialogContent 
+          className="max-w-md rounded-[2rem]"
+          onEscapeKeyDown={() => setSelectedTx(null)}
+          onPointerDownOutside={() => setSelectedTx(null)}
+        >
           <DialogHeader>
             <DialogTitle className="font-serif text-xl flex items-center gap-3">
               <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${selectedTx?.is_donation ? 'bg-secondary/10 text-secondary' : 'bg-primary/10 text-primary'}`}>
@@ -474,6 +522,7 @@ const UserTransactionsPage: React.FC = () => {
                         size="icon" 
                         className="h-5 w-5 opacity-50 group-hover:opacity-100 transition-opacity"
                         onClick={() => copyPaymentId(selectedTx.payment_id)}
+                        aria-label="Copiar ID do pagamento"
                       >
                         <Icons.Copy className="w-3 h-3" />
                       </Button>
