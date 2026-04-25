@@ -88,20 +88,18 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
       if (val) fetchContent();
     }}>
       <PopoverTrigger asChild>
-        <div>
-          <BubbleTag
-            label={tag.label}
-            emoji={tag.emoji}
-            index={index}
-            isSelected={open}
-            isSuggested={isSuggested}
-            onClick={() => {}} // Popover handles trigger
-            onKeyDown={onKeyDown}
-            onMouseEnter={prefetchTag}
-            tabIndex={tabIndex}
-            data-roving-item={true}
-          />
-        </div>
+        <BubbleTag
+          label={tag.label}
+          emoji={tag.emoji}
+          index={index}
+          isSelected={open}
+          isSuggested={isSuggested}
+          onClick={() => {}} // Popover handles trigger
+          onKeyDown={onKeyDown}
+          onMouseEnter={prefetchTag}
+          tabIndex={tabIndex}
+          data-roving-item={true}
+        />
       </PopoverTrigger>
       <PopoverContent className="w-[340px] sm:w-[420px] p-0 rounded-[2.5rem] border-primary/20 overflow-hidden shadow-2xl z-[100] backdrop-blur-2xl bg-card/90">
         <div className="bg-gradient-to-r from-primary/15 via-primary/5 to-transparent p-6 border-b border-border/40 flex items-center justify-between">
