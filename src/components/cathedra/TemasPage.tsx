@@ -121,15 +121,15 @@ const TemasPage = () => {
   }, [queryClient]);
 
   return (
-    <div className="space-y-6 sm:space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-6xl mx-auto pb-20 px-2 sm:px-4">
-      <header className="space-y-2 sm:space-y-4 text-center mb-6 sm:mb-12">
-        <div className="flex justify-center mb-2 sm:mb-4">
-          <div className="w-12 sm:w-16 h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent rounded-full" />
+    <div className="space-y-6 sm:space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-5xl mx-auto pb-20 px-4">
+      <header className="space-y-4 text-center mb-8 sm:mb-16">
+        <div className="flex justify-center mb-4">
+          <div className="w-16 h-1.5 bg-gradient-to-r from-transparent via-primary/50 to-transparent rounded-full shadow-[0_0_15px_rgba(var(--primary),0.3)]" />
         </div>
-        <h1 className="text-3xl sm:text-5xl md:text-7xl font-black tracking-tighter bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent">
-          Navegação por Temas
+        <h1 className="text-4xl sm:text-6xl md:text-8xl font-black tracking-tighter bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent leading-[0.9]">
+          Nexus<br className="sm:hidden" /> Temas
         </h1>
-        <p className="text-muted-foreground text-sm sm:text-xl max-w-3xl mx-auto font-serif italic">
+        <p className="text-muted-foreground text-base sm:text-xl max-w-2xl mx-auto font-serif italic leading-relaxed">
           "Fides quaerens intellectum" — Explore conexões sagradas entre as Escrituras e a Tradição.
         </p>
       </header>

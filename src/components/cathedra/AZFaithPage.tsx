@@ -115,13 +115,13 @@ const AZFaithPage: React.FC = () => {
         path="/az-faith"
       />
 
-      <div className="max-w-5xl mx-auto pb-24 px-4 md:px-0 animate-in fade-in duration-500">
-        <header className="text-center space-y-3 pt-6 mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/5 rounded-full border border-primary/10">
-            <BookOpen className="w-3.5 h-3.5 text-primary" />
-            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Índice Alfabético</span>
+      <div className="max-w-6xl mx-auto pb-32 px-4 md:px-8 animate-in fade-in duration-700">
+        <header className="text-center space-y-6 pt-12 mb-16">
+          <div className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-primary/5 rounded-full border border-primary/10 shadow-inner">
+            <BookOpen className="w-4 h-4 text-primary" />
+            <span className="text-[11px] font-black uppercase tracking-[0.3em] text-primary">Glossarium Fidei</span>
           </div>
-          <h1 className="text-3xl md:text-4xl font-black tracking-tight text-foreground">A–Z da Fé</h1>
+          <h1 className="text-4xl md:text-7xl font-black tracking-tighter text-foreground bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent">A–Z da Fé</h1>
           <Button
             variant={quizMode ? 'default' : 'outline'}
             onClick={() => setQuizMode(!quizMode)}
@@ -155,8 +155,8 @@ const AZFaithPage: React.FC = () => {
               )}
             </div>
 
-            <div className="flex justify-center gap-3 mb-6 flex-wrap">
-              {FEATURED_TERMS.map(name => {
+            <div className="flex justify-center gap-4 mb-12 flex-wrap max-w-4xl mx-auto px-4">
+              {FEATURED_TERMS.map((name, idx) => {
                 const term = allTerms.find(t => t.term === name);
                 if (!term) return null;
                 const isActive = selectedTerm?.term === name;
@@ -165,18 +165,18 @@ const AZFaithPage: React.FC = () => {
                     key={name}
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    whileHover={{ scale: 1.08 }}
+                    transition={{ delay: idx * 0.05 }}
+                    whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => handleTermClick(term)}
-                    className={`px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-wider border transition-all relative overflow-hidden group focus-visible:ring-4 focus-visible:ring-primary outline-none
+                    className={`px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-[0.1em] border transition-all relative overflow-hidden group focus-visible:ring-4 focus-visible:ring-primary outline-none shadow-sm
                       ${isActive
                         ? 'bg-primary text-primary-foreground border-primary shadow-lg ring-4 ring-primary/10'
-                        : 'bg-card/40 backdrop-blur-sm text-primary border-primary/20 hover:border-primary/50'
+                        : 'bg-card/40 backdrop-blur-sm text-primary border-primary/20 hover:border-primary/50 hover:shadow-md'
                       }`}
                   >
-
-                    <div className="flex items-center gap-2 relative z-10">
-                      <span>🫧</span>
+                    <div className="flex items-center gap-2.5 relative z-10">
+                      <span className="opacity-80 group-hover:scale-125 transition-transform duration-500">🫧</span>
                       {name}
                     </div>
                   </motion.button>

@@ -314,10 +314,11 @@ const LiturgiaPage: React.FC = () => {
     <>
       <SEOHead title="Liturgia do Dia" description="Leituras do dia." path="/liturgia" keywords="liturgia" />
 
-      <div className="max-w-4xl mx-auto px-4 py-6 space-y-10">
+      <div className="desktop-layout py-10">
+        <div className="desktop-main px-4">
         {/* Navigation Tabs */}
-        <div className="flex justify-center mb-8">
-          <div className="bg-muted/40 p-1.5 rounded-[2rem] border border-border/40 flex gap-1 overflow-x-auto max-w-full" role="tablist" aria-label="Navegação da Liturgia">
+        <div className="flex justify-center mb-12">
+          <div className="bg-muted/40 p-1.5 rounded-[2.5rem] border border-border/40 flex gap-1 overflow-x-auto max-w-full shadow-inner" role="tablist" aria-label="Navegação da Liturgia">
             {[
               { id: 'liturgia', label: 'Liturgia', icon: <Icons.Liturgy className="w-4 h-4" /> },
               { id: 'missal', label: 'Missal', icon: <Icons.Cross className="w-4 h-4" /> },
@@ -325,9 +326,9 @@ const LiturgiaPage: React.FC = () => {
             ].map((tab, idx) => (
               <button
                 key={tab.id}
-                {...getTabProps(`tab-${idx}`, `panel-${tab.id}`, activeTab === tab.id, `flex items-center gap-2 px-8 py-2.5 rounded-full text-sm font-semibold transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+                {...getTabProps(`tab-${idx}`, `panel-${tab.id}`, activeTab === tab.id, `flex items-center gap-2 px-10 py-3 rounded-full text-sm font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                   activeTab === tab.id 
-                    ? 'bg-background shadow-lg text-primary' 
+                    ? 'bg-background shadow-xl text-primary scale-105' 
                     : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
                 }`)}
                 onClick={() => setSearchParams({ tab: tab.id })}
@@ -646,6 +647,32 @@ const LiturgiaPage: React.FC = () => {
             </Tabs>
           </DialogContent>
         </Dialog>
+        </div>
+        
+        <aside className="desktop-aside space-y-6 hidden xl:block">
+          <div className="desktop-card bg-secondary/5 border-secondary/20">
+            <h3 className="text-[11px] font-black uppercase tracking-widest text-secondary mb-3">Liturgia das Horas</h3>
+            <p className="text-xs text-muted-foreground leading-relaxed italic">
+              Una-se à oração universal da Igreja. Santifique cada hora do seu dia através da meditação das leituras.
+            </p>
+          </div>
+          {saintsToday.length > 0 && (
+            <div className="desktop-card">
+              <h3 className="text-[11px] font-black uppercase tracking-widest text-primary mb-4">Santos de Hoje</h3>
+              <div className="space-y-4">
+                {saintsToday.slice(0, 2).map(s => (
+                  <div key={s.id} className="flex items-center gap-3 group cursor-pointer" onClick={() => navigate(`/santos/${s.id}`)}>
+                    <img src={s.image} alt={s.name} className="w-10 h-10 rounded-full object-cover border border-border group-hover:border-primary transition-all" />
+                    <div>
+                      <p className="text-[10px] font-bold text-foreground leading-tight">{s.name}</p>
+                      <p className="text-[8px] text-muted-foreground uppercase font-medium">{s.title}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </aside>
       </div>
     </>
   );
