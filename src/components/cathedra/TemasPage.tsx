@@ -239,7 +239,22 @@ const TemasPage = () => {
             Selecione uma das "bolhas" acima para navegar pelos conteúdos da Bíblia, Catecismo e Magistério relacionados ao tema.
           </p>
         </motion.div>
-      </main>
+      </div>
+
+      <aside className="desktop-aside space-y-6 hidden xl:block">
+        <div className="desktop-card bg-primary/5 border-primary/20">
+          <h3 className="text-[11px] font-black uppercase tracking-widest text-primary mb-3">Conexões Nexus</h3>
+          <p className="text-xs text-muted-foreground leading-relaxed italic">
+            O Nexus utiliza inteligência teológica para conectar temas da Escritura, Magistério e Tradição. Clique em uma bolha para iniciar o mergulho.
+          </p>
+        </div>
+        <div className="desktop-card">
+          <h3 className="text-[11px] font-black uppercase tracking-widest text-secondary mb-3">Dica de Estudo</h3>
+          <p className="text-[10px] text-muted-foreground leading-relaxed">
+            Use as setas do teclado para navegar rapidamente entre os temas e "Home" para voltar ao início.
+          </p>
+        </div>
+      </aside>
     </div>
   );
 };
