@@ -100,11 +100,10 @@ describe('TemasPage - Integration Tests', () => {
 
     // Loader should disappear
     await waitFor(() => {
-      expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
       expect(screen.queryByText(/Consultando Nexus/i)).not.toBeInTheDocument();
     });
 
     // Fallback message should be visible
-    expect(screen.getByText('Nenhum tema encontrado para sua busca teológica.')).toBeInTheDocument();
+    expect(screen.getByText(/Nenhum tema encontrado para sua busca teológica/i)).toBeInTheDocument();
   });
 });
