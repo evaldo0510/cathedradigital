@@ -93,12 +93,32 @@ export const CatechismModal: React.FC<QuickModalProps> = ({ isOpen, onClose }) =
     <ModalShell title="Catecismo — Consulta Rápida" onClose={onClose}>
       <div className="flex items-center gap-3 mb-4">
         <span className="text-primary font-bold">§</span>
-        <input type="number" min={1} max={2865} value={paragraph} onChange={e => setParagraph(Number(e.target.value))}
-          className="w-24 px-3 py-2 rounded-xl border border-border bg-card text-foreground text-sm text-center focus:outline-none" />
+        <input 
+          type="number" 
+          min={1} 
+          max={2865} 
+          value={paragraph} 
+          onChange={e => setParagraph(Number(e.target.value))}
+          className="w-24 px-3 py-2 rounded-xl border border-border bg-card text-foreground text-sm text-center focus:ring-2 focus:ring-primary outline-none" 
+          aria-label="Número do parágrafo do Catecismo"
+        />
         <div className="flex gap-1">
-          <button onClick={() => setParagraph(Math.max(1, paragraph - 1))} className="px-2 py-1 rounded-lg border border-border text-xs">←</button>
-          <button onClick={() => setParagraph(Math.min(2865, paragraph + 1))} className="px-2 py-1 rounded-lg border border-border text-xs">→</button>
+          <button 
+            onClick={() => setParagraph(Math.max(1, paragraph - 1))} 
+            className="px-2 py-1 rounded-lg border border-border text-xs focus-visible:ring-2 focus-visible:ring-primary outline-none hover:bg-muted"
+            aria-label="Parágrafo anterior"
+          >
+            ←
+          </button>
+          <button 
+            onClick={() => setParagraph(Math.min(2865, paragraph + 1))} 
+            className="px-2 py-1 rounded-lg border border-border text-xs focus-visible:ring-2 focus-visible:ring-primary outline-none hover:bg-muted"
+            aria-label="Próximo parágrafo"
+          >
+            →
+          </button>
         </div>
+
       </div>
       {isLoading ? <LoadingSkeleton /> : (
         <div className="max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
