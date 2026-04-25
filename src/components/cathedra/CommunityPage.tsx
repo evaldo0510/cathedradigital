@@ -335,10 +335,16 @@ const CommunityPage: React.FC = () => {
           <h2 className="text-xl font-serif font-bold text-foreground">{selectedPost.title}</h2>
           <p className="text-foreground/80 leading-relaxed whitespace-pre-wrap">{selectedPost.content}</p>
           <div className="flex items-center gap-4 pt-2 border-t border-border">
-            <button onClick={() => toggleLike(selectedPost)} className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors">
+            <button 
+              onClick={() => toggleLike(selectedPost)} 
+              className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none rounded-lg px-2 py-1"
+              aria-label={selectedPost.user_liked ? "Remover curtida" : "Curtir discussão"}
+              aria-pressed={selectedPost.user_liked}
+            >
               <Icons.Heart className={`w-4 h-4 ${selectedPost.user_liked ? 'fill-primary text-primary' : ''}`} />
               {selectedPost.likes_count}
             </button>
+
             <span className="text-sm text-muted-foreground">{replies.length} respostas</span>
           </div>
         </div>
