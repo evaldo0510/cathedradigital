@@ -21,6 +21,7 @@ type Journey = Tables<'journeys'>;
 const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
+  const tagsRef = React.useRef<HTMLDivElement>(null);
 
   const saints = useFuzzySearch<Saint>({ rpc: 'search_saints_fuzzy', query, primaryField: 'name', secondaryField: 'title', resultLimit: 10 });
   const glossary = useFuzzySearch<GlossaryRow>({ rpc: 'search_glossary_fuzzy', query, primaryField: 'term', secondaryField: 'definition', resultLimit: 10 });
