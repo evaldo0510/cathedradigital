@@ -346,8 +346,10 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
           <button
             key={key}
             onClick={() => setActiveFilter(key)}
-            className={`px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-1.5 ${activeFilter === key ? 'bg-primary text-primary-foreground shadow-lg' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}
+            aria-pressed={activeFilter === key}
+            className={`px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-primary outline-none ${activeFilter === key ? 'bg-primary text-primary-foreground shadow-lg' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}
           >
+
             {cat.icon}
             {cat.label}
           </button>
