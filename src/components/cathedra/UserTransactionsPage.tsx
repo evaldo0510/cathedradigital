@@ -63,28 +63,6 @@ const UserTransactionsPage: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const loaderRef = useRef<HTMLDivElement>(null);
 
-  // Reset state when user or filters change
-  useEffect(() => {
-    setTransactions([]);
-    setPage(0);
-    setHasMore(true);
-    setError(null);
-    setLoading(true);
-  }, [user?.id, statusFilter]);
-
-  // Debounced search
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setTransactions([]);
-      setPage(0);
-      setHasMore(true);
-      setError(null);
-      setLoading(true);
-      fetchTransactions(0);
-    }, 500);
-    return () => clearTimeout(timer);
-  }, [searchTerm]);
-
   const fetchTransactions = useCallback(async (pageNum: number) => {
     if (!user) return;
     
@@ -106,7 +84,6 @@ const UserTransactionsPage: React.FC = () => {
       }
 
       if (searchTerm) {
-        // Search by payment_id, description or amount
         const isNumeric = !isNaN(Number(searchTerm));
         if (isNumeric) {
           query = query.or(`payment_id.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%,amount.eq.${searchTerm}`);
@@ -125,8 +102,6 @@ const UserTransactionsPage: React.FC = () => {
       
       setTransactions(prev => {
         if (pageNum === 0) return newItems;
-        
-        // Deduplication
         const existingIds = new Set(prev.map(tx => tx.id));
         const filteredNewItems = newItems.filter(tx => !existingIds.has(tx.id));
         return [...prev, ...filteredNewItems];
@@ -142,11 +117,28 @@ const UserTransactionsPage: React.FC = () => {
     }
   }, [user, statusFilter, searchTerm]);
 
+  // Reset state when filters or user change
   useEffect(() => {
-    if (user?.id && !searchTerm) { // searchTerm has its own useEffect
+    setTransactions([]);
+    setPage(0);
+    setHasMore(true);
+    setError(null);
+    setLoading(true);
+    fetchTransactions(0);
+  }, [user?.id, statusFilter]);
+
+  // Handle search with debounce
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setTransactions([]);
+      setPage(0);
+      setHasMore(true);
+      setError(null);
+      setLoading(true);
       fetchTransactions(0);
-    }
-  }, [fetchTransactions, user?.id, statusFilter]);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
 
   useEffect(() => {
     if (!hasMore || loading || loadingMore) return;
@@ -183,8 +175,6 @@ const UserTransactionsPage: React.FC = () => {
     }
 
     const doc = new jsPDF();
-    
-    // Header
     doc.setFontSize(20);
     doc.text('Relatório de Doações - Cathedra', 14, 22);
     doc.setFontSize(10);
@@ -323,8 +313,8 @@ const UserTransactionsPage: React.FC = () => {
           <CardContent className="flex flex-col items-center justify-center py-12 space-y-4">
             <Icons.Heart className="w-12 h-12 text-muted-foreground/30" />
             <div className="text-center">
-              <p className="text-muted-foreground font-medium">Você ainda não possui transações.</p>
-              <p className="text-xs text-muted-foreground">Que tal fazer sua primeira doação hoje?</p>
+              <p className="text-muted-foreground font-medium">Nenhuma transação encontrada.</p>
+              <p className="text-xs text-muted-foreground">Tente ajustar seus filtros ou busca.</p>
             </div>
           </CardContent>
         </Card>
@@ -368,26 +358,11 @@ const UserTransactionsPage: React.FC = () => {
                     </div>
                   </div>
                   
-                  {tx.status === 'approved' && (
-                    <div className="bg-muted/30 px-4 md:px-6 py-2 border-t border-border/50 flex justify-between items-center">
-                      <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Comprovante disponível</span>
-                      <div className="flex gap-2">
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          className="h-6 text-[9px] font-bold uppercase gap-1.5" 
-                          onClick={() => setSelectedTx(tx)}
-                        >
-                          <Icons.Info className="w-3 h-3" /> Detalhes
-                        </Button>
-                        <Button variant="ghost" size="sm" className="h-6 text-[9px] font-bold uppercase gap-1.5" onClick={() => window.print()}>
-                          <Icons.Download className="w-3 h-3" /> Imprimir
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-                  {tx.status !== 'approved' && (
-                    <div className="bg-muted/30 px-4 md:px-6 py-2 border-t border-border/50 flex justify-end items-center">
+                  <div className="bg-muted/30 px-4 md:px-6 py-2 border-t border-border/50 flex justify-between items-center">
+                    <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">
+                      {tx.status === 'approved' ? 'Comprovante disponível' : 'Histórico da transação'}
+                    </span>
+                    <div className="flex gap-2">
                       <Button 
                         variant="ghost" 
                         size="sm" 
@@ -396,8 +371,13 @@ const UserTransactionsPage: React.FC = () => {
                       >
                         <Icons.Info className="w-3 h-3" /> Detalhes
                       </Button>
+                      {tx.status === 'approved' && (
+                        <Button variant="ghost" size="sm" className="h-6 text-[9px] font-bold uppercase gap-1.5" onClick={() => window.print()}>
+                          <Icons.Download className="w-3 h-3" /> Imprimir
+                        </Button>
+                      )}
                     </div>
-                  )}
+                  </div>
                 </CardContent>
               </Card>
             </motion.div>
@@ -484,9 +464,19 @@ const UserTransactionsPage: React.FC = () => {
                   </span>
                 </div>
                 {selectedTx.payment_id && (
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center group">
                     <span className="text-[10px] font-bold text-muted-foreground uppercase">ID Pagamento</span>
-                    <span className="text-[10px] font-mono text-foreground">{selectedTx.payment_id}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-mono text-foreground">{selectedTx.payment_id}</span>
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-5 w-5 opacity-50 group-hover:opacity-100 transition-opacity"
+                        onClick={() => copyPaymentId(selectedTx.payment_id)}
+                      >
+                        <Icons.Copy className="w-3 h-3" />
+                      </Button>
+                    </div>
                   </div>
                 )}
                 {selectedTx.coupon_code && (
@@ -498,12 +488,22 @@ const UserTransactionsPage: React.FC = () => {
               </div>
 
               {selectedTx.status === 'approved' && (
-                <div className="p-4 rounded-2xl bg-green-500/5 border border-green-500/10 flex items-center gap-3">
-                  <Icons.CheckCircle className="w-5 h-5 text-green-500" />
-                  <div>
-                    <p className="text-[10px] font-black uppercase text-green-600">Aprovado</p>
-                    <p className="text-[10px] text-green-600/80">Sua contribuição já está ajudando nossa missão!</p>
+                <div className="space-y-4">
+                  <div className="p-4 rounded-2xl bg-green-500/5 border border-green-500/10 flex items-center gap-3">
+                    <Icons.CheckCircle className="w-5 h-5 text-green-500" />
+                    <div>
+                      <p className="text-[10px] font-black uppercase text-green-600">Aprovado</p>
+                      <p className="text-[10px] text-green-600/80">Sua contribuição já está ajudando nossa missão!</p>
+                    </div>
                   </div>
+                  
+                  <Button 
+                    variant="link" 
+                    className="w-full text-[10px] font-bold uppercase tracking-widest text-primary gap-2 h-auto p-0"
+                    onClick={() => window.print()}
+                  >
+                    <Icons.ExternalLink className="w-3 h-3" /> Ver Comprovante
+                  </Button>
                 </div>
               )}
 
