@@ -142,12 +142,14 @@ const TemasPage = () => {
             {categories.map((cat, idx) => (
               <motion.button
                 key={cat}
+                role="tab"
+                aria-selected={activeCategory === cat}
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: idx * 0.03 }}
                 onClick={() => setActiveCategory(cat)}
                 className={`
-                  whitespace-nowrap px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] transition-all duration-300
+                  whitespace-nowrap px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] transition-all duration-300 focus-visible:ring-2 focus-visible:ring-primary outline-none
                   ${activeCategory === cat 
                     ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-105' 
                     : 'bg-muted/40 text-muted-foreground/70 hover:bg-muted hover:text-foreground hover:scale-102 border border-transparent hover:border-border/50'
@@ -156,6 +158,7 @@ const TemasPage = () => {
               >
                 {cat === 'all' ? 'Todos' : cat.charAt(0).toUpperCase() + cat.slice(1)}
               </motion.button>
+
             ))}
           </div>
         </div>
