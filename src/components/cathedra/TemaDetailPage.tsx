@@ -340,16 +340,14 @@ const TemaDetailPage = () => {
                 </p>
                 <Button 
                   variant="outline" 
-                  onClick={async () => {
-                    setIsRetrying(true);
-                    await refetch();
-                    setIsRetrying(false);
+                  onClick={() => {
+                    refetch();
                   }} 
                   className="h-10 rounded-xl px-6"
-                  disabled={isFetchingContents || loadingContents || isRetrying}
+                  disabled={isFetchingContents || loadingContents}
                   data-testid="retry-button"
                 >
-                  {isFetchingContents || loadingContents || isRetrying ? (
+                  {isFetchingContents || loadingContents ? (
                     "Processando..."
                   ) : (
                     "Tentar Novamente"
