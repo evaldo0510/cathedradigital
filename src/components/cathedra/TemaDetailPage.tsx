@@ -105,8 +105,7 @@ const TemaDetailPage = () => {
     queryFn: async () => {
       if (!selectedTag) return [];
       
-      const normalizedLabel = normalizeText(selectedTag.label);
-      const searchTerms = [selectedTag.label, normalizedLabel, selectedTag.slug].filter(Boolean);
+      const searchTerms = getSearchTermsForTag(selectedTag);
       
       // Fetch from spiritual_contents
       const { data: spiritualData, error: spiritualError } = await supabase
