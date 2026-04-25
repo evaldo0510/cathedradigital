@@ -59,7 +59,8 @@ export enum AppRoute {
   MODULES_GUIDE = '/guia-modulos',
   POPES = '/papas',
   BUSCAR = '/buscar',
-  TRANSACTIONS = '/transactions'
+  TRANSACTIONS = '/transactions',
+  A11Y_AUDIT = '/a11y-audit'
 }
 
 export interface TrackStep {
