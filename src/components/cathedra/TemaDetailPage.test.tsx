@@ -89,17 +89,17 @@ describe('TemaDetailPage - Integration Tests', () => {
     expect(screen.queryByText(/Conteúdo da Tradição em aprofundamento/i)).not.toBeInTheDocument();
 
     // 2. Tradition
-    await userEvent.click(screen.getByText('Tradição'));
+    await switchTab('Tradição');
     expect(await screen.findByText(/Conteúdo da Tradição em aprofundamento/i)).toBeInTheDocument();
     expect(screen.queryByText(/Nenhum versículo catalogado/i)).not.toBeInTheDocument();
 
     // 3. Magisterium
-    await userEvent.click(screen.getByText('Magistério'));
+    await switchTab('Magistério');
     expect(await screen.findByText(/Documentos do Magistério em aprofundamento/i)).toBeInTheDocument();
     expect(screen.queryByText(/Conteúdo da Tradição em aprofundamento/i)).not.toBeInTheDocument();
 
     // 4. Jornadas
-    await userEvent.click(screen.getByText('Jornadas'));
+    await switchTab('Jornadas');
     expect(await screen.findByText(/Nenhuma jornada específica vinculada a este tema/i)).toBeInTheDocument();
     expect(screen.queryByText(/Documentos do Magistério em aprofundamento/i)).not.toBeInTheDocument();
   });
@@ -163,7 +163,7 @@ describe('TemaDetailPage - Integration Tests', () => {
     expect(getInactiveSkeletonsCount()).toBe(0);
 
     // 2. Switch to Tradition
-    await userEvent.click(screen.getByText('Tradição'));
+    await switchTab('Tradição');
     await waitFor(() => {
       expect(getSkeletonsInTab().length).toBeGreaterThan(0);
     });
@@ -234,7 +234,7 @@ describe('TemaDetailPage - Integration Tests', () => {
     expect(await screen.findByText(/Bible Content/i)).toBeInTheDocument();
 
     // Switch to Tradition
-    await userEvent.click(screen.getByText('Tradição'));
+    await switchTab('Tradição');
     
     expect(screen.queryByText(/Bible Content/i)).not.toBeInTheDocument();
     expect(screen.getByText(/Conteúdo da Tradição em aprofundamento/i)).toBeInTheDocument();
@@ -253,9 +253,9 @@ describe('TemaDetailPage - Integration Tests', () => {
     await screen.findAllByText('RapidSwitch');
 
     // Rapid switch
-    await userEvent.click(screen.getByText('Tradição'));
-    await userEvent.click(screen.getByText('Magistério'));
-    await userEvent.click(screen.getByText('Jornadas'));
+    await switchTab('Tradição');
+    await switchTab('Magistério');
+    await switchTab('Jornadas');
 
     // Resolve for Jornadas
     const journeys = [{ id: 'j1', type: 'journey', content_text: 'Journey Data', title: 'J Ref' }];
@@ -289,11 +289,11 @@ describe('TemaDetailPage - Integration Tests', () => {
 
     // 1. Trigger Tradition fetch
     (fetchNexusTagContent as any).mockReturnValueOnce(traditionPromise);
-    await userEvent.click(screen.getByText('Tradição'));
+    await switchTab('Tradição');
     
     // 2. Trigger Magisterium fetch
     (fetchNexusTagContent as any).mockReturnValueOnce(magisteriumPromise);
-    await userEvent.click(screen.getByText('Magistério'));
+    await switchTab('Magistério');
 
     // 3. Resolve Magisterium first
     await act(async () => {
@@ -398,9 +398,9 @@ describe('TemaDetailPage - Integration Tests', () => {
     renderWithProviders(<TemaDetailPage />, '/temas/timing');
     
     // Switch to Tradition (1st resolver)
-    await userEvent.click(screen.getByText('Tradição'));
+    await switchTab('Tradição');
     // Switch to Magisterium (2nd resolver) 
-    await userEvent.click(screen.getByText('Magistério'));
+    await switchTab('Magistério');
     
     // Resolve Magisterium (latest)
     await act(async () => {
@@ -451,11 +451,11 @@ describe('TemaDetailPage - Integration Tests', () => {
     await screen.findAllByText('Debounce');
 
     // Switch rapidly with small delays
-    await userEvent.click(screen.getByText('Tradição'));
+    await switchTab('Tradição');
     await new Promise(r => setTimeout(r, 10)); 
-    await userEvent.click(screen.getByText('Magistério'));
+    await switchTab('Magistério');
     await new Promise(r => setTimeout(r, 10));
-    await userEvent.click(screen.getByText('Jornadas'));
+    await switchTab('Jornadas');
 
     // Wait for the final resolution
     expect(await screen.findByText(/Nenhuma jornada específica vinculada a este tema/i)).toBeInTheDocument();
@@ -505,7 +505,7 @@ describe('TemaDetailPage - Integration Tests', () => {
 
     // 2. Switch to Tradition and ensure it shows its error (re-fetch triggered by activeTab change)
     (fetchNexusTagContent as any).mockRejectedValueOnce(new Error('Tradition Error'));
-    await userEvent.click(screen.getByText('Tradição'));
+    await switchTab('Tradição');
     expect(await screen.findByText(/Erro ao carregar conexões de Tradição no Nexus/i)).toBeInTheDocument();
 
     // 3. Retry and succeed
