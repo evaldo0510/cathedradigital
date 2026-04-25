@@ -11,50 +11,93 @@ import { ptBR } from 'date-fns/locale';
 
 const PAGE_SIZE = 10;
 
+const TransactionSkeleton: React.FC = () => (
+  <Card className="overflow-hidden border-border/50 opacity-60 animate-pulse">
+    <CardContent className="p-4 md:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="flex items-center gap-4">
+        <div className="w-10 h-10 rounded-xl bg-muted" />
+        <div className="space-y-2">
+          <div className="h-4 w-32 bg-muted rounded" />
+          <div className="h-3 w-24 bg-muted rounded" />
+        </div>
+      </div>
+      <div className="flex items-center gap-6">
+        <div className="space-y-2 text-right">
+          <div className="h-5 w-20 bg-muted rounded" />
+          <div className="h-2 w-10 bg-muted rounded ml-auto" />
+        </div>
+        <div className="h-6 w-16 bg-muted rounded-full" />
+      </div>
+    </CardContent>
+  </Card>
+);
+
 const UserTransactionsPage: React.FC = () => {
   const { user } = useAuth();
   const [transactions, setTransactions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const loaderRef = useRef<HTMLDivElement>(null);
+
+  // Reset state when user changes
+  useEffect(() => {
+    setTransactions([]);
+    setPage(0);
+    setHasMore(true);
+    setError(null);
+    setLoading(true);
+  }, [user?.id]);
 
 
   const fetchTransactions = useCallback(async (pageNum: number) => {
     if (!user) return;
     
+    setError(null);
     if (pageNum === 0) setLoading(true);
     else setLoadingMore(true);
 
     const from = pageNum * PAGE_SIZE;
     const to = from + PAGE_SIZE - 1;
 
-    const { data, error } = await supabase
-      .from('transactions')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false })
-      .range(from, to);
+    try {
+      const { data, error: supabaseError } = await supabase
+        .from('transactions')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .range(from, to);
 
-    if (error) {
-      console.error('Error fetching transactions:', error);
-    } else {
-      if (pageNum === 0) {
-        setTransactions(data || []);
-      } else {
-        setTransactions(prev => [...prev, ...(data || [])]);
-      }
-      setHasMore((data || []).length === PAGE_SIZE);
+      if (supabaseError) throw supabaseError;
+
+      const newItems = data || [];
+      
+      setTransactions(prev => {
+        if (pageNum === 0) return newItems;
+        
+        // Deduplication: only add items that are not already in the list
+        const existingIds = new Set(prev.map(tx => tx.id));
+        const filteredNewItems = newItems.filter(tx => !existingIds.has(tx.id));
+        return [...prev, ...filteredNewItems];
+      });
+
+      setHasMore(newItems.length === PAGE_SIZE);
+    } catch (err: any) {
+      console.error('Error fetching transactions:', err);
+      setError(err.message || 'Erro ao carregar transações. Verifique sua conexão.');
+    } finally {
+      setLoading(false);
+      setLoadingMore(false);
     }
-    
-    setLoading(false);
-    setLoadingMore(false);
   }, [user]);
 
   useEffect(() => {
-    fetchTransactions(0);
-  }, [fetchTransactions]);
+    if (user?.id) {
+      fetchTransactions(0);
+    }
+  }, [fetchTransactions, user?.id]);
 
   useEffect(() => {
     if (!hasMore || loading || loadingMore) return;
@@ -94,10 +137,19 @@ const UserTransactionsPage: React.FC = () => {
     }
   };
 
-  if (loading) {
+  if (loading && transactions.length === 0) {
     return (
-      <div className="flex items-center justify-center min-h-[40vh]">
-        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+      <div className="max-w-4xl mx-auto space-y-8 py-6">
+        <div className="flex items-center gap-4 animate-pulse">
+          <div className="w-12 h-12 rounded-2xl bg-muted" />
+          <div className="space-y-2">
+            <div className="h-6 w-48 bg-muted rounded" />
+            <div className="h-4 w-64 bg-muted rounded" />
+          </div>
+        </div>
+        <div className="grid gap-4">
+          {[1, 2, 3].map(i => <TransactionSkeleton key={i} />)}
+        </div>
       </div>
     );
   }
@@ -114,7 +166,24 @@ const UserTransactionsPage: React.FC = () => {
         </div>
       </div>
 
-      {transactions.length === 0 ? (
+      {error && transactions.length === 0 ? (
+        <Card className="border-destructive/20 bg-destructive/5">
+          <CardContent className="flex flex-col items-center justify-center py-12 space-y-4">
+            <Icons.AlertTriangle className="w-12 h-12 text-destructive/50" />
+            <div className="text-center">
+              <p className="text-destructive font-medium">{error}</p>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => fetchTransactions(0)}
+                className="mt-4 gap-2 border-destructive/20 text-destructive hover:bg-destructive/10"
+              >
+                <Icons.RotateCcw className="w-4 h-4" /> Tentar Novamente
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      ) : transactions.length === 0 ? (
         <Card className="border-dashed">
           <CardContent className="flex flex-col items-center justify-center py-12 space-y-4">
             <Icons.Heart className="w-12 h-12 text-muted-foreground/30" />
@@ -177,9 +246,41 @@ const UserTransactionsPage: React.FC = () => {
             </motion.div>
           ))}
           
-          {hasMore && (
-            <div ref={loaderRef} className="flex justify-center py-8">
+          {loadingMore && (
+            <div className="grid gap-4 mt-4">
+              {[1, 2].map(i => <TransactionSkeleton key={i} />)}
+            </div>
+          )}
+
+          {error && transactions.length > 0 && (
+            <div className="p-4 rounded-xl bg-destructive/5 border border-destructive/10 text-center space-y-3 mt-4">
+              <p className="text-xs text-destructive font-medium">{error}</p>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => fetchTransactions(page)}
+                className="h-8 text-[10px] uppercase font-bold text-destructive hover:bg-destructive/10"
+              >
+                Tentar novamente
+              </Button>
+            </div>
+          )}
+          
+          {hasMore && !loadingMore && !error && (
+            <div ref={loaderRef} className="flex flex-col items-center justify-center py-8 space-y-4">
               <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin opacity-50" />
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => {
+                  const nextPage = page + 1;
+                  setPage(nextPage);
+                  fetchTransactions(nextPage);
+                }}
+                className="text-[10px] uppercase font-bold text-muted-foreground hover:text-primary"
+              >
+                Carregar mais
+              </Button>
             </div>
           )}
         </div>
