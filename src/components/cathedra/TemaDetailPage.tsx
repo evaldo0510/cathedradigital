@@ -6,7 +6,7 @@ import { getSearchTermsForTag } from '@/lib/tagNormalization';
 import { fetchNexusTagContent } from '@/lib/nexusContent';
 import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Loader2, ChevronLeft, Sparkles, BookOpen, Quote, Shield, Globe, ExternalLink, CheckCircle, Flame } from 'lucide-react';
+import { Loader2, ChevronLeft, Sparkles, BookOpen, Quote, Shield, Globe, ExternalLink, CheckCircle, Flame, AlertTriangle } from 'lucide-react';
 import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
