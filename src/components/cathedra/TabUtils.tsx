@@ -42,7 +42,7 @@ export function useTabNavigation() {
  * Hook for roving tabindex in a generic list (e.g., tags, search results).
  * Manages which item is currently focusable.
  */
-export function useRovingTabindex(totalCount: number) {
+export function useRovingTabindex(totalCount: number, containerRef?: React.RefObject<HTMLElement>) {
   const [activeIndex, setActiveIndex] = React.useState(0);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent, index: number, onSelect?: (index: number) => void) => {
