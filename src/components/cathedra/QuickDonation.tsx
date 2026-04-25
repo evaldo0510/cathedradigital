@@ -86,19 +86,21 @@ const QuickDonation: React.FC = () => {
             transition={{ duration: 0.3 }}
           >
             <CardContent className="p-4 pt-0 space-y-4">
-              <div className="grid grid-cols-4 gap-2">
+              <div className="grid grid-cols-4 gap-2" role="group" aria-label="Valores sugeridos para doação">
                 {DONATION_PRESETS.map((val) => (
                   <Button
                     key={val}
                     variant={amount === val ? 'default' : 'outline'}
                     size="sm"
                     onClick={() => setAmount(val)}
-                    className={`text-[10px] font-bold h-8 ${amount === val ? 'bg-secondary text-secondary-foreground hover:bg-secondary/90' : 'border-secondary/30 text-secondary'}`}
+                    aria-pressed={amount === val}
+                    className={`text-[10px] font-bold h-8 focus-visible:ring-2 focus-visible:ring-secondary outline-none ${amount === val ? 'bg-secondary text-secondary-foreground hover:bg-secondary/90' : 'border-secondary/30 text-secondary'}`}
                   >
                     R$ {val}
                   </Button>
                 ))}
               </div>
+
               
               <div className="flex gap-2 items-center">
                 <span className="text-[10px] font-bold text-muted-foreground whitespace-nowrap">Outro:</span>
