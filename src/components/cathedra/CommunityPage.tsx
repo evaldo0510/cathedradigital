@@ -405,20 +405,31 @@ const CommunityPage: React.FC = () => {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 justify-center">
-        <button onClick={() => setTab('forum')}
-          className={`px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+      <div className="flex gap-2 justify-center" role="tablist" aria-label="Abas da comunidade">
+        <button 
+          role="tab"
+          aria-selected={tab === 'forum'}
+          aria-controls="panel-forum"
+          onClick={() => setTab('forum')}
+          className={`px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
             tab === 'forum' ? 'bg-foreground text-background' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
-          }`}>
+          }`}
+        >
           <Icons.Message className="w-3.5 h-3.5 inline mr-1.5" />Fórum
         </button>
-        <button onClick={() => setTab('ranking')}
-          className={`px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+        <button 
+          role="tab"
+          aria-selected={tab === 'ranking'}
+          aria-controls="panel-ranking"
+          onClick={() => setTab('ranking')}
+          className={`px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
             tab === 'ranking' ? 'bg-foreground text-background' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
-          }`}>
+          }`}
+        >
           <Icons.Star className="w-3.5 h-3.5 inline mr-1.5" />Ranking
         </button>
       </div>
+
 
       {tab === 'ranking' ? (
         /* Leaderboard */
