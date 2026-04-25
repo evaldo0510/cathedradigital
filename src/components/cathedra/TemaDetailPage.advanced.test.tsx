@@ -57,7 +57,22 @@ const renderWithProviders = (ui: React.ReactElement, initialEntry = '/temas/fe')
 describe('TemaDetailPage - Advanced Integration Tests', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockStats = { calls: 0, tabs: {} };
   });
+
+  afterEach(() => {
+    console.log(`[STATS] ${JSON.stringify(mockStats)}`);
+  });
+
+  const trackedFetch = (impl: any) => {
+    return (tag: any, signal?: AbortSignal) => {
+      mockStats.calls++;
+      const label = tag.label || 'unknown';
+      mockStats.tabs[label] = (mockStats.tabs[label] || 0) + 1;
+      return impl(tag, signal);
+    };
+  };
+
 
   it('validates accessibility roles and attributes for Tabs', async () => {
     const mockTags = [{ id: '1', label: 'Acessibilidade', slug: 'acessibilidade', category: 'fundamentos', emoji: '♿' }];
