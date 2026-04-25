@@ -319,15 +319,14 @@ describe('TemaDetailPage - Integration Tests', () => {
     (fetchNexusTagContent as any).mockReturnValueOnce(retryPromise);
 
     // 3. Find and Click retry
-    const retryButton = screen.getByText(/Tentar Novamente/i).closest('button');
+    const retryButton = screen.getByTestId('retry-button');
     expect(retryButton).not.toBeDisabled();
 
-    await userEvent.click(retryButton!);
+    await userEvent.click(retryButton);
     
     // 4. Wait for the button to transition to disabled state
     await waitFor(() => {
-      const b = screen.getByText(/Processando|Tentar Novamente/i).closest('button');
-      expect(b).toBeDisabled();
+      expect(retryButton).toBeDisabled();
     }, { timeout: 3000 });
 
     // 5. Resolve the retry
