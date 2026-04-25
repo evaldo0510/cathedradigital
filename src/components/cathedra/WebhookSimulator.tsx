@@ -117,13 +117,16 @@ const WebhookSimulator: React.FC = () => {
 
         <div className="flex flex-col md:flex-row gap-6 items-end">
           <div className="flex-1 space-y-2">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Plano ID</label>
-            <Input 
-              value={planId} 
-              onChange={(e) => setPlanId(e.target.value)}
-              className="rounded-xl bg-background border-primary/20"
-              placeholder="Ex: cathedra_pro_anual"
-            />
+            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Plano ID / Tipo</label>
+            <Select value={planId} onValueChange={setPlanId}>
+              <SelectTrigger className="rounded-xl bg-background border-primary/20">
+                <SelectValue placeholder="Selecione o tipo" />
+              </SelectTrigger>
+              <SelectContent className="rounded-xl">
+                <SelectItem value="cathedra_pro">Assinatura PRO</SelectItem>
+                <SelectItem value="donation">Doação Voluntária</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <Button 
             onClick={runSimulation} 
