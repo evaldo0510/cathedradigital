@@ -66,6 +66,24 @@ serve(async (req) => {
       if (profileError) {
         console.error("Simulation profile update error:", profileError);
       }
+
+      // Send success notification
+      await adminClient.from("notifications").insert({
+        user_id: userId,
+        title: "Doação Recebida! (Simulação) ❤️",
+        message: `Obrigado! Sua contribuição simulada de ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(amount)} foi confirmada.`,
+        type: "payment",
+        link: "/transactions/my"
+      });
+    } else if (status === "rejected" || status === "cancelled") {
+      // Send failure notification
+      await adminClient.from("notifications").insert({
+        user_id: userId,
+        title: "Problema no Pagamento (Simulação) ⚠️",
+        message: "Não conseguimos confirmar sua doação simulada.",
+        type: "payment",
+        link: "/checkout"
+      });
     }
 
     return json({
