@@ -1,4 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import TemaDetailPage from './TemaDetailPage';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -86,5 +87,45 @@ describe('TemaDetailPage - Integration Tests', () => {
     
     // fetchNexusTagContent should have been called again (initial + retry)
     expect(fetchNexusTagContent).toHaveBeenCalledTimes(2);
+  });
+
+  it('renders "Nenhum versículo" and other empty states when fetch returns empty array', async () => {
+    const mockTags = [
+      { id: '1', label: 'Vazio', slug: 'vazio', category: 'fundamentos', emoji: '🕳️' }
+    ];
+
+    // Mock tags fetch with immediate resolution
+    (supabase.from as any).mockReturnValue({
+      select: vi.fn(() => ({
+        order: vi.fn(() => Promise.resolve({ data: mockTags, error: null }))
+      }))
+    });
+
+    // Mock content fetch to return EMPTY
+    (fetchNexusTagContent as any).mockResolvedValue([]);
+
+    renderWithProviders(<TemaDetailPage />, '/temas/vazio');
+
+    // Wait for the tag to be loaded (the H1 should show the label)
+    const header = await screen.findByRole('heading', { name: 'Vazio', level: 1 });
+    expect(header).toBeInTheDocument();
+
+    // Check for various empty states in tabs
+    expect(screen.getByText('Nenhum versículo catalogado para este tema.')).toBeInTheDocument();
+
+    // Switch to tradition tab
+    const traditionTab = screen.getByText('Tradição');
+    await userEvent.click(traditionTab);
+    
+    // Wait for empty state in this tab
+    const traditionEmpty = await screen.findByText(/Conteúdo da Tradição em aprofundamento/i);
+    expect(traditionEmpty).toBeInTheDocument();
+
+    // Switch to magisterium tab
+    const magisteriumTab = screen.getByText('Magistério');
+    await userEvent.click(magisteriumTab);
+    
+    const magisteriumEmpty = await screen.findByText(/Documentos do Magistério em aprofundamento/i);
+    expect(magisteriumEmpty).toBeInTheDocument();
   });
 });
