@@ -237,11 +237,38 @@ export const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolea
                                 <p className="text-[11px] leading-relaxed text-foreground/80 line-clamp-3 group-hover/content:text-foreground transition-colors">
                                   {c.content_text}
                                 </p>
-                                <div className="flex items-center justify-between">
-                                  <span className="text-[10px] font-bold text-primary flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-primary/5">
-                                    {reference}
-                                    {link && <ExternalLink className="w-2.5 h-2.5" />}
-                                  </span>
+                                <div className="flex flex-col gap-2">
+                                  <div className="flex items-center justify-between">
+                                    <span className="text-[10px] font-bold text-primary flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-primary/5">
+                                      {reference}
+                                      {link && <ExternalLink className="w-2.5 h-2.5" />}
+                                    </span>
+                                  </div>
+                                  
+                                  {c.metadata?.tags && c.metadata.tags.length > 0 && (
+                                    <div className="flex flex-wrap gap-1 mt-1">
+                                      {c.metadata.tags
+                                        .filter((tLabel: string) => tLabel.toLowerCase() !== tag.label.toLowerCase())
+                                        .map((tLabel: string) => {
+                                          const matchingTag = allThemes?.find(at => at.label.toLowerCase() === tLabel.toLowerCase());
+                                          if (!matchingTag) return null;
+                                          return (
+                                            <button
+                                              key={matchingTag.id}
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                navigate(`${AppRoute.TEMAS}/${matchingTag.slug}`);
+                                                setOpen(false);
+                                              }}
+                                              className="text-[8px] font-bold px-1.5 py-0.5 rounded-md bg-muted hover:bg-primary/10 hover:text-primary transition-colors text-muted-foreground"
+                                            >
+                                              {matchingTag.label}
+                                            </button>
+                                          );
+                                        })
+                                      }
+                                    </div>
+                                  )}
                                 </div>
                               </motion.div>
                             );
