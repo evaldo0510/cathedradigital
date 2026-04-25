@@ -75,7 +75,6 @@ const CommunityPage: React.FC = () => {
   const {
     results: rawSearchResults,
     isPending: isSearchPending,
-    isSearching,
   } = useFuzzySearch<Post>({
     rpc: 'search_community_posts_fuzzy',
     query: searchQuery,
@@ -86,7 +85,6 @@ const CommunityPage: React.FC = () => {
 
   const fetchLeaderboard = useCallback(async () => {
     setLbLoading(true);
-    // Get all posts grouped by user
     const { data: allPosts } = await supabase
       .from('community_posts')
       .select('user_id, likes_count');
@@ -112,7 +110,7 @@ const CommunityPage: React.FC = () => {
     const entries: LeaderboardEntry[] = (profiles || []).map(p => {
       const s = userMap.get(p.id) || { posts: 0, likes: 0 };
       const score = s.posts * 10 + s.likes * 5;
-      const xp = s.posts * 30 + s.likes * 10 + s.likes * 5; // Updated to match profile logic better
+      const xp = s.posts * 30 + s.likes * 10 + s.likes * 5;
       const { levelIdx, levelName } = getLevelInfo(xp);
       return {
         id: p.id,
@@ -149,7 +147,6 @@ const CommunityPage: React.FC = () => {
 
     const { data, error } = await query;
     if (!error && data) {
-      // Fetch author names
       const userIds = [...new Set(data.map(p => p.user_id))];
       const { data: profiles } = await supabase
         .from('public_profiles' as any)
@@ -158,7 +155,6 @@ const CommunityPage: React.FC = () => {
 
       const profileMap = new Map(profiles?.map(p => [p.id, p.name]) || []);
 
-      // Fetch user likes
       let likedPostIds = new Set<string>();
       if (user) {
         const { data: likes } = await supabase
@@ -173,19 +169,16 @@ const CommunityPage: React.FC = () => {
         author_name: profileMap.get(p.user_id) || 'Anônimo',
         user_liked: likedPostIds.has(p.id),
       }));
-      // Show approved posts to everyone; pending/rejected only to author
       setPosts(enriched.filter(p => 
         p.status === 'approved' || p.user_id === user?.id
       ));
     }
     setLoading(false);
-  }, [category, user, tab]); // Added tab to dependency to ensure it loads when switching back
+  }, [category, user, tab]);
 
 
   useEffect(() => { fetchPosts(); }, [fetchPosts]);
 
-  // Hydrate fuzzy search results with author + like status. The hook gives
-  // us ranked rows; this effect only adds the auxiliary profile/like data.
   useEffect(() => {
     if (rawSearchResults === null) {
       setSearchResults(null);
@@ -224,24 +217,20 @@ const CommunityPage: React.FC = () => {
     return () => { cancelled = true; };
   }, [rawSearchResults, user]);
 
-  const createPost = async () => {
-    if (!user) { navigate(AppRoute.LOGIN); return; }
-    if (!newTitle.trim() || !newContent.trim()) return;
-    setSubmitting(true);
-    const { error } = await supabase.from('community_posts').insert({
-      user_id: user.id,
-      title: newTitle.trim(),
-      content: newContent.trim(),
-      category: newCategory,
-    });
-    if (error) {
-      toast.error('Erro ao criar post');
-    } else {
-      toast.success('Discussão criada!');
-      setNewTitle(''); setNewContent(''); setShowNewPost(false);
-      fetchPosts();
+  const openPost = async (post: Post) => {
+    setSelectedPost(post);
+    const { data } = await supabase
+      .from('community_posts')
+      .select('*')
+      .eq('parent_id', post.id)
+      .order('created_at', { ascending: true });
+
+    if (data) {
+      const userIds = [...new Set(data.map(r => r.user_id))];
+      const { data: profiles } = await supabase.from('public_profiles' as any).select('id, name').in(userIds.length ? userIds : ['']) as { data: { id: string; name: string }[] | null };
+      const profileMap = new Map(profiles?.map(p => [p.id, p.name]) || []);
+      setReplies(data.map(r => ({ ...r, author_name: profileMap.get(r.user_id) || 'Anônimo' })));
     }
-    setSubmitting(false);
   };
 
   const toggleLike = async (post: Post) => {
@@ -254,22 +243,6 @@ const CommunityPage: React.FC = () => {
     fetchPosts();
   };
 
-  const openPost = async (post: Post) => {
-    setSelectedPost(post);
-    const { data } = await supabase
-      .from('community_posts')
-      .select('*')
-      .eq('parent_id', post.id)
-      .order('created_at', { ascending: true });
-
-    if (data) {
-      const userIds = [...new Set(data.map(r => r.user_id))];
-      const { data: profiles } = await supabase.from('public_profiles' as any).select('id, name').in('id', userIds.length ? userIds : ['']) as { data: { id: string; name: string }[] | null };
-      const profileMap = new Map(profiles?.map(p => [p.id, p.name]) || []);
-      setReplies(data.map(r => ({ ...r, author_name: profileMap.get(r.user_id) || 'Anônimo' })));
-    }
-  };
-
   const submitReply = async () => {
     if (!user || !selectedPost || !replyContent.trim()) return;
     setSubmitting(true);
@@ -280,19 +253,6 @@ const CommunityPage: React.FC = () => {
       category: selectedPost.category,
     });
     if (!error) {
-      // Send notification to post author if it's not the same user
-      if (selectedPost.user_id !== user.id) {
-        const { data: myProfile } = await supabase.from('profiles').select('name').eq('id', user.id).single();
-        const authorName = myProfile?.name || 'Alguém';
-        await supabase.from('notifications').insert({
-          user_id: selectedPost.user_id,
-          source_user_id: user.id,
-          type: 'reply',
-          title: `${authorName} respondeu sua discussão`,
-          message: replyContent.trim().substring(0, 100),
-          link: AppRoute.COMMUNITY,
-        });
-      }
       setReplyContent('');
       openPost(selectedPost);
       toast.success('Resposta enviada!');
@@ -310,10 +270,9 @@ const CommunityPage: React.FC = () => {
     return `${days}d`;
   };
 
-  // Detail view
   if (selectedPost) {
     return (
-      <div className="max-w-3xl mx-auto space-y-6">
+      <div className="max-w-3xl mx-auto space-y-6 py-10 px-4">
         <button 
           onClick={() => { setSelectedPost(null); setReplies([]); }} 
           className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none rounded-lg px-2 py-1"
@@ -321,7 +280,6 @@ const CommunityPage: React.FC = () => {
         >
           <Icons.ChevronLeft className="w-4 h-4" /> Voltar
         </button>
-
 
         <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
           <div className="flex items-center gap-3">
@@ -348,12 +306,10 @@ const CommunityPage: React.FC = () => {
               <Icons.Heart className={`w-4 h-4 ${selectedPost.user_liked ? 'fill-primary text-primary' : ''}`} />
               {selectedPost.likes_count}
             </button>
-
             <span className="text-sm text-muted-foreground">{replies.length} respostas</span>
           </div>
         </div>
 
-        {/* Replies */}
         <div className="space-y-3">
           {replies.map(r => (
             <div key={r.id} className="bg-card border border-border rounded-xl p-4 ml-6">
@@ -369,7 +325,6 @@ const CommunityPage: React.FC = () => {
           ))}
         </div>
 
-        {/* Reply input */}
         {user ? (
           <div className="bg-card border border-border rounded-2xl p-4 space-y-3">
             <textarea
@@ -393,8 +348,7 @@ const CommunityPage: React.FC = () => {
     );
   }
 
-  const MEDAL_COLORS = ['text-secondary', 'text-gray-400', 'text-amber-700'];
-
+  return (
     <div className="desktop-layout py-10">
       <div className="desktop-main px-4">
         {loading && posts.length === 0 ? (
@@ -404,7 +358,6 @@ const CommunityPage: React.FC = () => {
           </div>
         ) : (
           <>
-            {/* Header */}
             <div className="text-center space-y-4 pt-4 mb-10">
               <div className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-primary/5 rounded-full border border-primary/10 shadow-inner mb-2">
                 <Icons.Message className="w-4 h-4 text-primary" aria-hidden="true" />
@@ -417,255 +370,98 @@ const CommunityPage: React.FC = () => {
           </>
         )}
 
+        <div className="flex gap-2 justify-center mb-10" role="tablist" aria-label="Abas da comunidade">
+          <button 
+            {...getTabProps('tab-0', 'panel-forum', tab === 'forum', `px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+              tab === 'forum' ? 'bg-foreground text-background' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
+            }`)}
+            onClick={() => setTab('forum')}
+            onKeyDown={(e) => handleTabKeyDown(e, 0, 2, (idx) => setTab(idx === 0 ? 'forum' : 'ranking'), 'tab-')}
+          >
+            <Icons.Message className="w-3.5 h-3.5 inline mr-1.5" />Fórum
+          </button>
+          <button 
+            {...getTabProps('tab-1', 'panel-ranking', tab === 'ranking', `px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+              tab === 'ranking' ? 'bg-foreground text-background' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
+            }`)}
+            onClick={() => setTab('ranking')}
+            onKeyDown={(e) => handleTabKeyDown(e, 1, 2, (idx) => setTab(idx === 0 ? 'forum' : 'ranking'), 'tab-')}
+          >
+            <Icons.Star className="w-3.5 h-3.5 inline mr-1.5" />Ranking
+          </button>
+        </div>
 
-      {/* Tabs */}
-      <div className="flex gap-2 justify-center" role="tablist" aria-label="Abas da comunidade">
-        <button 
-          {...getTabProps('tab-0', 'panel-forum', tab === 'forum', `px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
-            tab === 'forum' ? 'bg-foreground text-background' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
-          }`)}
-          onClick={() => setTab('forum')}
-          onKeyDown={(e) => handleTabKeyDown(e, 0, 2, (idx) => setTab(idx === 0 ? 'forum' : 'ranking'), 'tab-')}
-        >
-          <Icons.Message className="w-3.5 h-3.5 inline mr-1.5" />Fórum
-        </button>
-        <button 
-          {...getTabProps('tab-1', 'panel-ranking', tab === 'ranking', `px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
-            tab === 'ranking' ? 'bg-foreground text-background' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
-          }`)}
-          onClick={() => setTab('ranking')}
-          onKeyDown={(e) => handleTabKeyDown(e, 1, 2, (idx) => setTab(idx === 0 ? 'forum' : 'ranking'), 'tab-')}
-        >
-          <Icons.Star className="w-3.5 h-3.5 inline mr-1.5" />Ranking
-        </button>
-      </div>
+        {tab === 'forum' ? (
+          <div className="space-y-6" {...getTabPanelProps('panel-forum', 'tab-0', true)}>
+            <div className="flex flex-col sm:flex-row gap-4 mb-6">
+              <FuzzySearchInput
+                value={searchQuery}
+                onChange={setSearchQuery}
+                placeholder="Buscar discussões..."
+                isSearching={isSearchPending}
+                className="flex-1"
+              />
+              <Button onClick={() => setShowNewPost(true)} className="rounded-xl h-12 px-6 font-black uppercase tracking-widest gap-2 bg-primary shadow-lg shadow-primary/20">
+                <Icons.Plus className="w-4 h-4" /> Nova Discussão
+              </Button>
+            </div>
 
-
-      {tab === 'ranking' ? (
-        /* Leaderboard */
-        <div 
-          {...getTabPanelProps('panel-ranking', 'tab-1', tab === 'ranking', "space-y-4 outline-none")}
-        >
-          <div className="bg-card border border-border rounded-2xl p-6">
-            <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-1">Ranking da Comunidade</h2>
-            <p className="text-[10px] text-muted-foreground mb-6">Pontuação: 10 pts por discussão + 5 pts por curtida recebida</p>
-
-            {!user ? (
-              <div className="text-center py-12 space-y-4">
-                <Icons.Star className="w-12 h-12 text-muted-foreground/30 mx-auto" />
-                <p className="text-muted-foreground font-serif italic">Faça login para ver o ranking da comunidade.</p>
-                <button onClick={() => navigate(AppRoute.LOGIN)}
-                  className="px-6 py-2.5 rounded-xl bg-foreground text-background text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-primary-foreground transition-all">
-                  Acessar o Santuário
-                </button>
-              </div>
-            ) : lbLoading ? (
-              <div className="space-y-3">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <div key={i} className="h-14 bg-muted rounded-xl animate-pulse" />
-                ))}
-              </div>
-            ) : leaderboard.length === 0 ? (
-              <p className="text-center text-muted-foreground italic py-8">Nenhum participante ainda.</p>
-            ) : (
-              <div className="space-y-2">
-                {leaderboard.map((entry, idx) => (
-                  <div key={entry.id} className={`flex items-center gap-4 p-4 rounded-xl transition-all ${
-                    idx < 3 ? 'bg-primary/5 border border-primary/20' : 'bg-muted/50 border border-border'
-                  } ${entry.id === user?.id ? 'ring-2 ring-primary' : ''}`}>
-                    <div className="w-8 flex justify-center items-center">
-                      {idx < 3 ? (
-                        <div className={`p-1.5 rounded-full bg-primary/10 ${MEDAL_COLORS[idx]}`}>
-                          <Icons.Trophy className="w-4 h-4" />
-                        </div>
-                      ) : (
-                        <span className="text-sm font-black text-muted-foreground">#{idx + 1}</span>
-                      )}
+            <div className="grid grid-cols-1 gap-4">
+              {posts.map(post => (
+                <Card key={post.id} className="cursor-pointer hover:border-primary/40 transition-all rounded-[2rem] bg-card/50 border-border/50 group" onClick={() => openPost(post)}>
+                  <CardContent className="p-6">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center font-black text-sm text-primary">
+                        {(post.author_name || 'A').charAt(0).toUpperCase()}
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-bold text-foreground">{post.author_name}</p>
+                        <p className="text-[10px] text-muted-foreground uppercase tracking-widest">{timeAgo(post.created_at)}</p>
+                      </div>
+                      <Badge variant="outline" className="text-[9px] font-black uppercase tracking-widest border-primary/20 text-primary/70">
+                        {CATEGORIES.find(c => c.id === post.category)?.label || post.category}
+                      </Badge>
                     </div>
-                    <div className="w-10 h-10 rounded-xl overflow-hidden bg-foreground text-background flex items-center justify-center font-black text-sm shrink-0">
-                      {entry.avatar_url ? (
-                        <img src={entry.avatar_url} alt={entry.name} className="w-full h-full object-cover" />
-                      ) : (
-                        entry.name.charAt(0).toUpperCase()
-                      )}
+                    <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors mb-2">{post.title}</h3>
+                    <p className="text-sm text-muted-foreground line-clamp-2 italic mb-4">{post.content}</p>
+                    <div className="flex items-center gap-4 pt-4 border-t border-border/40">
+                      <div className="flex items-center gap-1.5 text-[10px] font-bold text-muted-foreground">
+                        <Icons.Heart className="w-3.5 h-3.5" /> {post.likes_count}
+                      </div>
+                      <div className="flex items-center gap-1.5 text-[10px] font-bold text-muted-foreground">
+                        <Icons.MessageSquare className="w-3.5 h-3.5" /> {post.replies_count || 0}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-4" {...getTabPanelProps('panel-ranking', 'tab-1', true)}>
+            {lbLoading ? <ListSkeleton count={5} /> : (
+              <div className="grid grid-cols-1 gap-3">
+                {leaderboard.map((entry, idx) => (
+                  <div key={entry.id} className="flex items-center gap-4 p-5 bg-card/50 border border-border/50 rounded-[2rem]">
+                    <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center font-black text-sm">
+                      {idx + 1}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-bold text-foreground truncate">{entry.name}</p>
-                      <div className="flex gap-3 text-[10px] text-muted-foreground">
-                        <span className="text-primary font-bold">Nv.{entry.levelIdx + 1} {entry.levelName}</span>
-                        <span>{entry.posts} discussões</span>
-                        <span>{entry.likes} curtidas</span>
-                      </div>
+                      <p className="text-[10px] text-muted-foreground uppercase tracking-widest">{entry.levelName}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-lg font-black text-primary">{entry.score}</p>
-                      <p className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground">pts</p>
+                      <p className="text-sm font-black text-primary">{entry.score}</p>
+                      <p className="text-[8px] font-black uppercase text-muted-foreground">Pontos</p>
                     </div>
                   </div>
                 ))}
               </div>
             )}
           </div>
-        </div>
-      ) : (
-        <div 
-          {...getTabPanelProps('panel-forum', 'tab-0', tab === 'forum', "space-y-8 outline-none")}
-        >
-
-
-      {/* Search bar (fuzzy, debounced) */}
-      <FuzzySearchInput
-        className="max-w-xl mx-auto"
-        value={searchQuery}
-        onChange={setSearchQuery}
-        placeholder="Buscar discussões por título ou conteúdo…"
-        isSearching={isSearchPending}
-      />
-
-      {/* Actions */}
-      <div className="flex flex-col sm:flex-row gap-3 items-center justify-between">
-        <div className="flex gap-1.5 flex-wrap justify-center">
-          {CATEGORIES.map(c => (
-            <button key={c.id} onClick={() => setCategory(c.id)}
-              className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
-                category === c.id ? 'bg-foreground text-background' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
-              }`}>
-              {c.label}
-            </button>
-          ))}
-        </div>
-        <button onClick={() => user ? setShowNewPost(true) : navigate(AppRoute.LOGIN)}
-          className="px-4 py-2.5 rounded-xl bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-widest hover:bg-primary/90 transition-all">
-          + Nova Discussão
-        </button>
+        )}
       </div>
 
-      {/* New post form */}
-      {showNewPost && (
-        <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
-          <h3 className="text-sm font-bold text-foreground">Nova Discussão</h3>
-          <div className="flex gap-2 flex-wrap mb-2">
-            {[
-              { id: 'teologia', label: '📖 Discussão' },
-              { id: 'testemunho', label: '✝ Testemunho' },
-              { id: 'partilha', label: '💬 Partilha' },
-            ].map(t => (
-              <button key={t.id} type="button" onClick={() => setNewCategory(t.id)}
-                className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
-                  newCategory === t.id ? 'bg-foreground text-background' : 'bg-muted text-muted-foreground hover:text-foreground'
-                }`}>
-                {t.label}
-              </button>
-            ))}
-          </div>
-          <input
-            value={newTitle}
-            onChange={e => setNewTitle(e.target.value)}
-            placeholder={newCategory === 'testemunho' ? 'Título do testemunho...' : newCategory === 'partilha' ? 'O que deseja partilhar?' : 'Título da discussão...'}
-            className="w-full px-4 py-2.5 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
-          />
-          <textarea
-            value={newContent}
-            onChange={e => setNewContent(e.target.value)}
-            placeholder={newCategory === 'testemunho' ? 'Conte seu testemunho de fé...' : newCategory === 'partilha' ? 'Partilhe sua reflexão ou experiência...' : 'Descreva sua pergunta ou reflexão...'}
-            rows={4}
-            className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary/50"
-          />
-          <div className="flex items-center gap-3">
-            <div className="flex-1" />
-            <button onClick={() => setShowNewPost(false)} className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground">Cancelar</button>
-            <button onClick={createPost} disabled={submitting || !newTitle.trim() || !newContent.trim()}
-              className="px-5 py-2 rounded-xl bg-foreground text-background text-xs font-black uppercase tracking-widest disabled:opacity-40 hover:bg-primary hover:text-primary-foreground transition-all">
-              {submitting ? '...' : 'Publicar'}
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Posts list (search results override category browse when searching) */}
-      {(() => {
-        const isSearchMode = searchResults !== null;
-        const list = isSearchMode ? searchResults : posts;
-        const isLoadingList = isSearchMode ? isSearching : loading;
-
-        if (isLoadingList) {
-          return (
-            <div className="space-y-3">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="h-24 bg-muted rounded-2xl animate-pulse" />
-              ))}
-            </div>
-          );
-        }
-        if (list.length === 0) {
-          return (
-            <div className="text-center py-16">
-              <Icons.Message className="w-12 h-12 mx-auto text-muted-foreground/30 mb-4" />
-              <p className="text-muted-foreground italic">
-                {isSearchMode ? 'Nenhuma discussão encontrada para sua busca.' : 'Nenhuma discussão encontrada. Seja o primeiro!'}
-              </p>
-            </div>
-          );
-        }
-        return (
-          <div className="space-y-3">
-            {list.map(post => {
-              return (
-                <button key={post.id} onClick={() => openPost(post)}
-                  className={`w-full text-left border rounded-2xl p-5 hover:border-primary/30 transition-all group ${
-                    post.category === 'testemunho' ? 'bg-primary/5 border-primary/20' :
-                    post.category === 'partilha' ? 'bg-secondary/5 border-secondary/20' :
-                    'bg-card border-border hover:bg-primary/5'
-                  }`}>
-                  <div className="flex items-start gap-4">
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm shrink-0 ${
-                      post.category === 'testemunho' ? 'bg-primary text-primary-foreground' : 'bg-foreground text-background'
-                    }`}>
-                      {post.category === 'testemunho' ? '✝' : (post.author_name || 'A').charAt(0).toUpperCase()}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1 flex-wrap">
-                        <span className="text-xs font-bold text-foreground">{post.author_name}</span>
-                        <span className="text-[10px] text-muted-foreground">{timeAgo(post.created_at)}</span>
-                        <span className="text-[8px] font-black uppercase tracking-widest text-primary bg-primary/10 px-1.5 py-0.5 rounded-full">
-                          {CATEGORIES.find(c => c.id === post.category)?.label || post.category}
-                        </span>
-                        {isSearchMode && (
-                          <RelevanceBadge score={post.similarityScore} size="xs" />
-                        )}
-                        {post.status === 'pending' && post.user_id === user?.id && (
-                          <span className="text-[8px] font-black uppercase tracking-widest text-amber-600 bg-amber-500/10 px-1.5 py-0.5 rounded-full">
-                            ⏳ Em moderação
-                          </span>
-                        )}
-                        {post.status === 'rejected' && post.user_id === user?.id && (
-                          <span className="text-[8px] font-black uppercase tracking-widest text-destructive bg-destructive/10 px-1.5 py-0.5 rounded-full">
-                            ✕ Rejeitado
-                          </span>
-                        )}
-                      </div>
-                      <h3 className="text-sm font-bold text-foreground group-hover:text-primary transition-colors truncate">{post.title}</h3>
-                      <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{post.content}</p>
-                      <div className="flex items-center gap-4 mt-2">
-                        <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
-                          <Icons.Heart className={`w-3 h-3 ${post.user_liked ? 'fill-primary text-primary' : ''}`} /> {post.likes_count}
-                        </span>
-                        <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
-                          <Icons.Message className="w-3 h-3" /> Responder
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        );
-      })()}
-        </div>
-      )}
-      </div>
-      
       <aside className="desktop-aside space-y-6 hidden xl:block">
         <div className="desktop-card bg-primary/5 border-primary/20">
           <h3 className="text-[11px] font-black uppercase tracking-widest text-primary mb-3">Comunhão de Santos</h3>
