@@ -50,44 +50,58 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
     setMetrics({ startTime });
     setStatus('loading');
     setErrorDetails(null);
-    console.log(`[Nexus Diagnostic] Fetching content for tag: ${tag.label} (ID: ${tag.id})`);
+    
+    const normalizedTag = normalizeText(tag.label);
+    console.log(`[Nexus Diagnostic] Fetching content for tag: ${tag.label} (Normalized: ${normalizedTag})`);
     
     try {
-      // 1. Supabase Fetch
-      const { data, error: dbError } = await supabase
-        .from('content_tags')
-        .select(`
-          spiritual_contents (
-            id,
-            content_text,
-            type,
-            title,
-            metadata
-          )
-        `)
-        .eq('tag_id', tag.id)
-        .limit(3);
+      // 1. Fetch from spiritual_contents (Bíblia, Catecismo, Magistério)
+      const { data: spiritualData, error: dbError } = await supabase
+        .from('spiritual_contents')
+        .select('*')
+        .contains('tags', [normalizedTag])
+        .limit(10);
 
-      if (dbError) {
-        setMetrics(prev => ({ ...prev, source: 'supabase' }));
-        throw dbError;
-      }
+      // 2. Fetch from journeys (Jornadas)
+      const { data: journeyData, error: journeyError } = await supabase
+        .from('journeys')
+        .select('*')
+        .contains('tags', [normalizedTag])
+        .limit(5);
 
-      if (data) {
-        const formatted = (data as any[]).map(d => d.spiritual_contents).filter(Boolean);
-        setContent(formatted);
-      }
+      if (dbError) throw dbError;
+      if (journeyError) throw journeyError;
 
-      // 2. IA Fetch
+      const formattedSpiritual = (spiritualData || []).map(d => ({
+        id: d.id,
+        type: d.type,
+        content_text: d.content_text,
+        title: d.title,
+        metadata: d.metadata
+      }));
+
+      const formattedJourneys = (journeyData || []).map(d => ({
+        id: d.id,
+        type: 'journey',
+        content_text: d.description || d.subtitle || '',
+        title: d.title,
+        metadata: { ...d, is_direct_journey: true }
+      }));
+
+      // Combine results and remove duplicates
+      const allResults = [...formattedSpiritual, ...formattedJourneys];
+      const uniqueResults = Array.from(new Map(allResults.map(item => [item.id, item])).values());
+      
+      setContent(uniqueResults as TagContent[]);
+
+      // AI Fetch
       try {
         const result = await getSpiritualInsight(tag.label);
         if (!result.error && result.content) {
           setLogosInsight(result.content);
-        } else if (result.error) {
-          console.warn(`[Nexus Diagnostic] AI Insight error: ${result.error}`);
         }
       } catch (iaErr) {
-        console.error(`[Nexus Diagnostic] AI Fetch failed, but Supabase content might be present.`, iaErr);
+        console.error(`[Nexus Diagnostic] AI Fetch failed.`, iaErr);
       }
 
       setMetrics(prev => ({ ...prev, endTime: performance.now(), source: 'both' }));
