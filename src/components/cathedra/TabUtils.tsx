@@ -72,9 +72,10 @@ export function useRovingTabindex(totalCount: number, containerRef?: React.RefOb
       
       // Focus the next element after state update
       setTimeout(() => {
-        const root = containerRef?.current || document;
-        const elements = root.querySelectorAll('[data-roving-item="true"], [data-roving-item]');
-        (elements[nextIndex] as HTMLElement)?.focus();
+        const els = getElements();
+        if (els[nextIndex]) {
+          els[nextIndex].focus();
+        }
       }, 0);
     }
 
