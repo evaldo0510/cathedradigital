@@ -81,7 +81,7 @@ const ThemeContentCard = ({
 );
 
 const ContentSkeleton = () => (
-  <div className="space-y-4">
+  <div className="space-y-4" data-testid="content-skeleton">
     {[1, 2, 3].map((i) => (
       <Card key={i} className="border-border/40 bg-card/20 rounded-[2rem] overflow-hidden">
         <CardContent className="p-6 sm:p-8 space-y-4">
