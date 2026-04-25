@@ -213,7 +213,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
           {viewMode === 'daily' ? (
               <motion.div
                 key="daily"
-                {...getTabPanelProps('panel-daily', 'tab-0', viewMode === 'daily', "space-y-8 outline-none")}
+                {...getTabPanelProps('panel-daily', 'tab-daily', viewMode === 'daily', "space-y-8 outline-none")}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
