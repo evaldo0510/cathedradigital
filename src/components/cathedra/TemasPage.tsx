@@ -218,6 +218,7 @@ const TemasPage = () => {
                             emoji={tag.emoji}
                             index={idx}
                             isSelected={false}
+                            isSuggested={suggestedSlugs.has(tag.slug)}
                             onClick={() => handleTagSelect(tag)}
                             onKeyDown={(e) => handleRovingKeyDown(e, idx, () => handleTagSelect(tag))}
                             onMouseEnter={() => prefetchTag(tag)}
