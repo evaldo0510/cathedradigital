@@ -251,15 +251,11 @@ const Magisterium: React.FC = () => {
               <AnimatePresence mode="wait">
                 <motion.div
                   key={selectedGuidance.id}
-                  id={`panel-guidance-${selectedGuidance.id}`}
-                  role="tabpanel"
-                  aria-labelledby={`tab-guidance-${selectedGuidance.id}`}
+                  {...getTabPanelProps(`panel-guidance-${selectedGuidance.id}`, `tab-guidance-${activeGuidanceIndex}`, true, "bg-card border border-border rounded-[2.5rem] p-8 md:p-12 shadow-sm space-y-8 outline-none")}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.3 }}
-                  className="bg-card border border-border rounded-[2.5rem] p-8 md:p-12 shadow-sm space-y-8 outline-none"
-                  tabIndex={0}
                 >
                   <div className="pt-8 border-t border-border/40">
                     <DeepContentSection content={{
