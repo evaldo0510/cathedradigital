@@ -106,7 +106,7 @@ const TemaDetailPage = () => {
     queryFn: async () => {
       if (!selectedTag) return [];
       const results = await fetchNexusTagContent(selectedTag);
-      return results.map(r => ({
+      return (results || []).map(r => ({
         id: r.id,
         content_type: r.type,
         reference: r.title || (r.type === 'bible' ? 'Escritura' : r.type === 'catechism' ? 'Catecismo' : 'Tradição'),
@@ -123,7 +123,7 @@ const TemaDetailPage = () => {
       queryKey: ['tag-contents', tag.id, tag.label],
       queryFn: async () => {
         const results = await fetchNexusTagContent(tag);
-        return results.map(r => ({
+        return (results || []).map(r => ({
           id: r.id,
           content_type: r.type,
           reference: r.title || (r.type === 'bible' ? 'Escritura' : r.type === 'catechism' ? 'Catecismo' : 'Tradição'),
