@@ -478,7 +478,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   transition={{ type: 'spring', stiffness: 400, damping: 25 }}
                 >
                   <Card
-                    className={`overflow-hidden cursor-pointer transition-all group relative ${
+                    className={`overflow-hidden cursor-pointer transition-all group relative focus-visible:ring-4 focus-visible:ring-primary outline-none ${
                       isComplete 
                         ? 'border-emerald-500/30 ring-1 ring-emerald-500/10' 
                         : hasStarted 
@@ -486,7 +486,12 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                           : 'border-border hover:border-primary/30'
                     }`}
                     onClick={() => navigate(`/jornadas/${journey.id}`)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => e.key === 'Enter' && navigate(`/jornadas/${journey.id}`)}
+                    aria-label={`Jornada ${journey.title}. ${isComplete ? 'Concluída' : hasStarted ? `${Math.round(progressPercent)}% concluída` : 'Não iniciada'}`}
                   >
+
                     {/* Gradient accent */}
                     <div className={`absolute inset-0 bg-gradient-to-br ${gradientClass} opacity-60 pointer-events-none`} />
                     
