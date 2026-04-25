@@ -57,13 +57,14 @@ describe('JornadasPage - Integration Tests', () => {
   it('displays empty state message when no journeys are found', async () => {
     (supabase.from as any).mockReturnValue({
       select: vi.fn(() => ({
-        order: vi.fn().mockResolvedValue({ data: [], error: null }),
-        eq: vi.fn().mockResolvedValue({ data: [], error: null })
+        order: vi.fn(() => Promise.resolve({ data: [], error: null })),
+        eq: vi.fn(() => Promise.resolve({ data: [], error: null }))
       }))
     });
 
     renderWithProviders(<JornadasPage />);
     
+    // The component has a loading state initially
     const emptyMsg = await screen.findByText(/Nenhuma jornada disponível ainda/i, {}, { timeout: 5000 });
     expect(emptyMsg).toBeInTheDocument();
   });
@@ -75,25 +76,24 @@ describe('JornadasPage - Integration Tests', () => {
 
     (supabase.from as any).mockReturnValue({
       select: vi.fn(() => ({
-        order: vi.fn().mockResolvedValue({ data: mockJourneys, error: null }),
-        eq: vi.fn().mockResolvedValue({ data: [], error: null })
+        order: vi.fn(() => Promise.resolve({ data: mockJourneys, error: null })),
+        eq: vi.fn(() => Promise.resolve({ data: [], error: null }))
       }))
     });
 
     renderWithProviders(<JornadasPage />);
 
-    // Wait for initial load using a more unique selector
-    const journeyTitle = await screen.findByRole('heading', { name: /UniqueJourney/i });
-    expect(journeyTitle).toBeInTheDocument();
+    // Wait for initial load
+    expect(await screen.findByText('UniqueJourney')).toBeInTheDocument();
 
-    // Click 'Intermediário' filter using exact button match if possible
+    // Click 'Intermediário' filter
+    // Filter buttons are plain buttons or have labels
     const diffFilters = await screen.findAllByRole('button');
-    const intermediarioBtn = diffFilters.find(b => b.textContent?.includes('Intermediário'));
+    const intermediarioBtn = diffFilters.find(b => b.textContent?.trim() === 'Intermediário');
     
     if (intermediarioBtn) {
       await userEvent.click(intermediarioBtn);
     } else {
-      // Fallback to text match if role fails
       await userEvent.click(screen.getByText(/Intermediário/i));
     }
 
