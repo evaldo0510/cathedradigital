@@ -16,6 +16,9 @@ import { AppRoute } from '@/types';
 import { Skeleton } from '@/components/ui/skeleton';
 import SEOHead from '@/components/SEOHead';
 import { BubbleTag, getTagIcon } from './BubbleTag';
+import { useSpiritualProfile } from '@/hooks/useSpiritualProfile';
+import { PROFILES } from './SpiritualQuiz';
+
 
 interface Tag {
   id: string;
