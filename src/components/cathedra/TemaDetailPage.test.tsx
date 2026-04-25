@@ -70,11 +70,8 @@ describe('TemaDetailPage - Integration Tests', () => {
     };
   };
 
-    const callCount = (fetchNexusTagContent as any).mock.calls.length;
-    console.log(`STATS: {"bible": ${callCount}}`);
-  });
-
   const switchTab = async (name: string) => {
+
 
 
     fireEvent.click(screen.getByText(name));
