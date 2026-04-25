@@ -363,6 +363,17 @@ const Bible: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (viewMode !== 'reading' || !selectedBook) return;
+      if (e.key === 'ArrowLeft') navigateChapter(-1);
+      if (e.key === 'ArrowRight') navigateChapter(1);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [viewMode, selectedBook, navigateChapter]);
+
+  useEffect(() => {
+
     if (viewMode === 'reading' && selectedBook && selectedChapter > 0) {
       const cacheKey = `${selectedBook.abbr}_${selectedChapter}`;
       
