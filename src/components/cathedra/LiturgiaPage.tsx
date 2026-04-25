@@ -319,8 +319,10 @@ const LiturgiaPage: React.FC = () => {
             ].map(tab => (
               <button
                 key={tab.id}
+                role="tab"
+                aria-selected={activeTab === tab.id}
                 onClick={() => setSearchParams({ tab: tab.id })}
-                className={`flex items-center gap-2 px-8 py-2.5 rounded-full text-sm font-semibold transition-all ${
+                className={`flex items-center gap-2 px-8 py-2.5 rounded-full text-sm font-semibold transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                   activeTab === tab.id 
                     ? 'bg-background shadow-lg text-primary' 
                     : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
@@ -328,6 +330,7 @@ const LiturgiaPage: React.FC = () => {
               >
                 {tab.icon} {tab.label}
               </button>
+
             ))}
           </div>
         </div>
