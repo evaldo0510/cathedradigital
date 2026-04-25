@@ -9,8 +9,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { fetchNexusTagContent } from '@/lib/nexusContent';
 import React from 'react';
 
-// Call tracking for report generation
-let callCounts: Record<string, number> = {};
+let mockStats = { calls: 0, tabs: {} as Record<string, number> };
+
 
 // Mocking dependencies
 vi.mock('@/integrations/supabase/client', () => ({
