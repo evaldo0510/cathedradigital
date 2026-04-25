@@ -66,7 +66,8 @@ describe('JornadasPage - Integration Tests', () => {
   it('displays empty state message when no journeys are found', async () => {
     (supabase.from as any).mockReturnValue({
       select: vi.fn(() => ({
-        order: vi.fn(() => Promise.resolve({ data: [], error: null }))
+        order: vi.fn().mockResolvedValue({ data: [], error: null }),
+        eq: vi.fn().mockResolvedValue({ data: [], error: null })
       }))
     });
 
@@ -83,7 +84,8 @@ describe('JornadasPage - Integration Tests', () => {
 
     (supabase.from as any).mockReturnValue({
       select: vi.fn(() => ({
-        order: vi.fn(() => Promise.resolve({ data: mockJourneys, error: null }))
+        order: vi.fn().mockResolvedValue({ data: mockJourneys, error: null }),
+        eq: vi.fn().mockResolvedValue({ data: [], error: null })
       }))
     });
 
