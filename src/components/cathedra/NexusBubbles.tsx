@@ -80,7 +80,7 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
         id: d.id,
         type: d.type,
         content_text: d.content_text,
-        title: d.title,
+        title: d.reference_id || d.title || (d.type === 'bible' ? 'Escritura' : d.type === 'catechism' ? 'Catecismo' : 'Tradição'),
         metadata: d.metadata
       }));
 
@@ -88,7 +88,7 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
         id: d.id,
         type: 'journey',
         content_text: d.description || d.subtitle || '',
-        title: d.title,
+        title: d.title || 'Jornada',
         metadata: { ...d, is_direct_journey: true }
       }));
 
