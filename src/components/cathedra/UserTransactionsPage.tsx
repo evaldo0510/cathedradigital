@@ -176,6 +176,12 @@ const UserTransactionsPage: React.FC = () => {
               </Card>
             </motion.div>
           ))}
+          
+          {hasMore && (
+            <div ref={loaderRef} className="flex justify-center py-8">
+              <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin opacity-50" />
+            </div>
+          )}
         </div>
       )}
     </div>
