@@ -57,11 +57,11 @@ export const SearchResultCard = React.forwardRef<HTMLDivElement, SearchResultCar
       exit={{ opacity: 0, y: -8, scale: 0.97 }}
       transition={{
         type: 'spring',
-        stiffness: 380,
+        stiffness: 400,
         damping: 30,
-        delay: Math.min(index * 0.04, 0.4),
+        delay: Math.min(index * 0.03, 0.3),
       }}
-      layout
+      layout="position"
       role="button"
       tabIndex={0}
       aria-label={`${title}${subtitle ? `: ${subtitle}` : ''}`}
