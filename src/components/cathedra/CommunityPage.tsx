@@ -396,16 +396,26 @@ const CommunityPage: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
-      {/* Header */}
-      <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
-          <Icons.Message className="w-4 h-4 text-primary" />
-          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Communitas Fidelium</span>
+      {loading && posts.length === 0 ? (
+        <div className="space-y-8">
+          <PageHeaderSkeleton />
+          <ListSkeleton count={6} />
         </div>
-        <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Comunidade</h1>
-        <p className="text-muted-foreground font-serif italic">Discussões, testemunhos e partilhas entre irmãos na fé.</p>
-        <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Todas as publicações são moderadas antes de aparecer para a comunidade</p>
-      </div>
+      ) : (
+        <>
+          {/* Header */}
+          <div className="text-center space-y-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
+              <Icons.Message className="w-4 h-4 text-primary" aria-hidden="true" />
+              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Communitas Fidelium</span>
+            </div>
+            <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Comunidade</h1>
+            <p className="text-muted-foreground font-serif italic">Discussões, testemunhos e partilhas entre irmãos na fé.</p>
+            <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Todas as publicações são moderadas antes de aparecer para a comunidade</p>
+          </div>
+        </>
+      )}
+
 
       {/* Tabs */}
       <div className="flex gap-2 justify-center" role="tablist" aria-label="Abas da comunidade">
