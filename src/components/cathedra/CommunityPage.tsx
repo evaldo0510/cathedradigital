@@ -53,6 +53,7 @@ interface LeaderboardEntry {
 const CommunityPage: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { handleKeyDown: handleTabKeyDown } = useTabNavigation();
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState('geral');
