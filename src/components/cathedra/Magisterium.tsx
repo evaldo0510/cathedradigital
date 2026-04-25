@@ -206,13 +206,23 @@ const Magisterium: React.FC = () => {
 
         <TabsContent value="guidance" className="mt-0 focus-visible:outline-none outline-none">
           <div className="space-y-12">
-            <div className="flex flex-wrap justify-center gap-3 bg-card/40 backdrop-blur-xl p-6 sm:p-10 rounded-[2.5rem] sm:rounded-[3.5rem] border border-border/40 shadow-xl relative overflow-hidden group">
+            <div 
+              className="flex flex-wrap justify-center gap-3 bg-card/40 backdrop-blur-xl p-6 sm:p-10 rounded-[2.5rem] sm:rounded-[3.5rem] border border-border/40 shadow-xl relative overflow-hidden group"
+              role="tablist"
+              aria-label="Temas de guia espiritual"
+            >
               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
-              {SPIRITUAL_GUIDANCE.map((item, idx) => (
+              {SPIRITUAL_GUIDANCE.map((item, idx, arr) => (
                 <motion.button
                   key={item.id}
+                  id={`tab-guidance-${item.id}`}
                   role="tab"
                   aria-selected={selectedGuidance.id === item.id}
+                  aria-controls={`panel-guidance-${item.id}`}
+                  onKeyDown={(e) => {
+                    if (e.key === 'ArrowRight' && idx < arr.length - 1) document.getElementById(`tab-guidance-${arr[idx+1].id}`)?.focus();
+                    if (e.key === 'ArrowLeft' && idx > 0) document.getElementById(`tab-guidance-${arr[idx-1].id}`)?.focus();
+                  }}
                   initial={{ opacity: 0, scale: 0.9 }}
 
                   animate={{ opacity: 1, scale: 1 }}
@@ -239,11 +249,15 @@ const Magisterium: React.FC = () => {
               <AnimatePresence mode="wait">
                 <motion.div
                   key={selectedGuidance.id}
+                  id={`panel-guidance-${selectedGuidance.id}`}
+                  role="tabpanel"
+                  aria-labelledby={`tab-guidance-${selectedGuidance.id}`}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.3 }}
-                  className="bg-card border border-border rounded-[2.5rem] p-8 md:p-12 shadow-sm space-y-8"
+                  className="bg-card border border-border rounded-[2.5rem] p-8 md:p-12 shadow-sm space-y-8 outline-none"
+                  tabIndex={0}
                 >
                   <div className="pt-8 border-t border-border/40">
                     <DeepContentSection content={{
@@ -329,11 +343,13 @@ const Magisterium: React.FC = () => {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 no-scrollbar">
+            <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 no-scrollbar" role="tablist" aria-label="Filtros de temas">
               <Button 
                 variant={selectedTheme === null ? "default" : "outline"} 
                 className="rounded-xl h-10 px-4 text-[10px] font-black uppercase tracking-widest flex-shrink-0"
                 onClick={() => setSelectedTheme(null)}
+                role="tab"
+                aria-selected={selectedTheme === null}
               >
                 Todos
               </Button>
@@ -343,6 +359,8 @@ const Magisterium: React.FC = () => {
                   variant={selectedTheme === theme ? "default" : "outline"} 
                   className="rounded-xl h-10 px-4 text-[10px] font-black uppercase tracking-widest flex-shrink-0"
                   onClick={() => setSelectedTheme(theme)}
+                  role="tab"
+                  aria-selected={selectedTheme === theme}
                 >
                   {theme}
                 </Button>
