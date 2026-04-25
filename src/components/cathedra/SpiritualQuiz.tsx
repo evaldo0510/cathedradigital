@@ -324,8 +324,15 @@ const SpiritualQuiz: React.FC = () => {
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="rounded-3xl border border-border bg-card p-5 space-y-3">
         <div className="flex items-center justify-between">
           <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">Seu Perfil Espiritual</span>
-          <button onClick={reset} className="text-[10px] text-primary hover:underline">Refazer</button>
+          <button 
+            onClick={reset} 
+            className="text-[10px] text-primary hover:underline focus-visible:ring-2 focus-visible:ring-primary outline-none rounded px-1"
+            aria-label="Refazer teste de perfil espiritual"
+          >
+            Refazer
+          </button>
         </div>
+
         <div className="flex items-center gap-3">
           <span className="text-3xl">{p.emoji}</span>
           <div className="flex-1 min-w-0">
