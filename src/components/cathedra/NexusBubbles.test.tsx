@@ -130,4 +130,31 @@ describe('NexusBubbles - Integration Tests', () => {
     expect(screen.getByText('Escritura')).toBeInTheDocument();
     expect(screen.queryByText('Referência')).not.toBeInTheDocument();
   });
+
+  it('displays "Nexus Silencioso" fallback when content fetch returns null/empty', async () => {
+    const mockTags = [
+      { id: '1', label: 'Silencioso', slug: 'silencioso', category: 'fundamentos', emoji: '🤫' }
+    ];
+
+    (supabase.from as any).mockReturnValue({
+      select: vi.fn(() => ({
+        order: vi.fn(() => Promise.resolve({ data: mockTags, error: null }))
+      }))
+    });
+
+    // Mock content fetch to return EMPTY
+    (fetchNexusTagContent as any).mockResolvedValue([]);
+
+    renderWithProviders(<NexusBubbles />);
+
+    const tag = await screen.findByText('Silencioso');
+    fireEvent.click(tag);
+
+    // Wait for "Nexus Silencioso" fallback
+    await waitFor(() => {
+      expect(screen.getByText('Nexus Silencioso')).toBeInTheDocument();
+    });
+    
+    expect(screen.getByText(/Ainda estamos tecendo as conexões/i)).toBeInTheDocument();
+  });
 });
