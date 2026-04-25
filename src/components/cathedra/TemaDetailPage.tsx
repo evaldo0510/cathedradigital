@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { normalizeText } from '@/lib/utils';
 import { getSearchTermsForTag } from '@/lib/tagNormalization';
+import { fetchNexusTagContent } from '@/lib/nexusContent';
 import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2, ChevronLeft, Sparkles, BookOpen, Quote, Shield, Globe, ExternalLink, CheckCircle, Flame } from 'lucide-react';
@@ -25,7 +26,7 @@ interface Tag {
 
 interface ThemeContent {
   id: string;
-  content_type: 'bible' | 'catechism' | 'magisterium' | 'journey';
+  content_type: string;
   reference: string;
   title: string;
   text_content: string;
@@ -104,72 +105,31 @@ const TemaDetailPage = () => {
     queryKey: ['tag-contents', selectedTag?.id, selectedTag?.label],
     queryFn: async () => {
       if (!selectedTag) return [];
-      
-      const searchTerms = getSearchTermsForTag(selectedTag);
-      
-      // Fetch from spiritual_contents
-      const { data: spiritualData, error: spiritualError } = await supabase
-        .from('spiritual_contents')
-        .select('*')
-        .overlaps('tags', searchTerms)
-        .limit(30);
-      
-      // Fetch from journeys
-      const { data: journeyData, error: journeyError } = await supabase
-        .from('journeys')
-        .select('*')
-        .overlaps('tags', searchTerms)
-        .limit(10);
-      
-      if (spiritualError) throw spiritualError;
-      if (journeyError) throw journeyError;
-
-      const results: ThemeContent[] = (spiritualData || []).map((d: any) => ({
-        id: d.id,
-        content_type: d.type,
-        reference: d.reference_id || d.title || 'Referência',
-        title: d.title,
-        text_content: d.content_text,
-        tags: d.tags || []
+      const results = await fetchNexusTagContent(selectedTag);
+      return results.map(r => ({
+        id: r.id,
+        content_type: r.type,
+        reference: r.title,
+        title: r.title,
+        text_content: r.content_text,
+        tags: r.metadata?.tags || []
       }));
-
-      const journeyResults: ThemeContent[] = (journeyData || []).map((d: any) => ({
-        id: d.id,
-        content_type: 'journey',
-        reference: d.subtitle || d.category || 'Jornada',
-        title: d.title,
-        text_content: d.description || '',
-        tags: d.tags || []
-      }));
-
-      // Combine and remove duplicates
-      const all = [...results, ...journeyResults];
-      return Array.from(new Map(all.map(item => [item.id, item])).values());
     },
     enabled: !!selectedTag,
   });
 
   const prefetchTag = useCallback((tag: Tag) => {
     queryClient.prefetchQuery({
-      queryKey: ['tag-contents', tag.id],
+      queryKey: ['tag-contents', tag.id, tag.label],
       queryFn: async () => {
-        const { data: tagContents, error } = await supabase
-          .from('content_tags')
-          .select(`
-            spiritual_contents (
-              id, title, content_text, type, reference_id, tags
-            )
-          `)
-          .eq('tag_id', tag.id);
-        
-        if (error) throw error;
-        return (tagContents || []).map((c: any) => ({
-          id: c.spiritual_contents.id,
-          content_type: c.spiritual_contents.type,
-          reference: c.spiritual_contents.reference_id || c.spiritual_contents.title || 'Referência',
-          title: c.spiritual_contents.title,
-          text_content: c.spiritual_contents.content_text,
-          tags: c.spiritual_contents.tags || []
+        const results = await fetchNexusTagContent(tag);
+        return results.map(r => ({
+          id: r.id,
+          content_type: r.type,
+          reference: r.title,
+          title: r.title,
+          text_content: r.content_text,
+          tags: r.metadata?.tags || []
         }));
       },
       staleTime: 1000 * 60 * 5,

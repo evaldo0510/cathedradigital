@@ -3,6 +3,7 @@ import { getSpiritualInsight } from '@/services/aiService';
 import { useNavigate } from 'react-router-dom';
 import { normalizeText } from '@/lib/utils';
 import { getSearchTermsForTag } from '@/lib/tagNormalization';
+import { type TagContent, fetchNexusTagContent } from '@/lib/nexusContent';
 import { useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AppRoute } from '@/types';
@@ -23,13 +24,7 @@ interface Tag {
   category: string;
 }
 
-interface TagContent {
-  id: string;
-  type: string;
-  content_text: string;
-  title: string;
-  metadata: any;
-}
+// Reusing TagContent from @/lib/nexusContent
 
 interface NexusBubblesProps {
   profileId?: ProfileId | null;
@@ -56,49 +51,10 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
     console.log(`[Nexus Diagnostic] Fetching content for tag: ${tag.label} (Normalized: ${normalizedTag})`);
     
     try {
-      // Definir termos de busca (Label original, Label normalizado, Slug)
-      const searchTerms = getSearchTermsForTag(tag);
-      
-      // 1. Fetch from spiritual_contents (Bíblia, Catecismo, Magistério)
-      const { data: spiritualData, error: dbError } = await supabase
-        .from('spiritual_contents')
-        .select('*')
-        .overlaps('tags', searchTerms)
-        .limit(15);
+      const uniqueResults = await fetchNexusTagContent(tag);
+      setContent(uniqueResults);
 
-      // 2. Fetch from journeys (Jornadas)
-      const { data: journeyData, error: journeyError } = await supabase
-        .from('journeys')
-        .select('*')
-        .overlaps('tags', searchTerms)
-        .limit(10);
-
-      if (dbError) throw dbError;
-      if (journeyError) throw journeyError;
-
-      const formattedSpiritual = (spiritualData || []).map(d => ({
-        id: d.id,
-        type: d.type,
-        content_text: d.content_text,
-        title: d.title,
-        metadata: d.metadata
-      }));
-
-      const formattedJourneys = (journeyData || []).map(d => ({
-        id: d.id,
-        type: 'journey',
-        content_text: d.description || d.subtitle || '',
-        title: d.title,
-        metadata: { ...d, is_direct_journey: true }
-      }));
-
-      // Combine results and remove duplicates
-      const allResults = [...formattedSpiritual, ...formattedJourneys];
-      const uniqueResults = Array.from(new Map(allResults.map(item => [item.id, item])).values());
-      
-      setContent(uniqueResults as TagContent[]);
-
-      // AI Fetch
+      // IA Fetch
       try {
         const result = await getSpiritualInsight(tag.label);
         if (!result.error && result.content) {
@@ -121,45 +77,10 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
   const prefetchTag = useCallback(() => {
     queryClient.prefetchQuery({
       queryKey: ['tag-contents', tag.id, tag.label],
-      queryFn: async () => {
-        const searchTerms = getSearchTermsForTag(tag);
-        
-        const { data: spiritualData, error: dbError } = await supabase
-          .from('spiritual_contents')
-          .select('*')
-          .overlaps('tags', searchTerms)
-          .limit(10);
-        
-        const { data: journeyData, error: journeyError } = await supabase
-          .from('journeys')
-          .select('*')
-          .overlaps('tags', searchTerms)
-          .limit(5);
-
-        if (dbError) throw dbError;
-        if (journeyError) throw journeyError;
-
-        const results = (spiritualData || []).map((d: any) => ({
-          id: d.id,
-          type: d.type,
-          content_text: d.content_text,
-          title: d.title,
-          metadata: d.metadata
-        }));
-
-        const journeyResults = (journeyData || []).map((d: any) => ({
-          id: d.id,
-          type: 'journey',
-          content_text: d.description || '',
-          title: d.title,
-          metadata: { ...d, is_direct_journey: true }
-        }));
-
-        return [...results, ...journeyResults];
-      },
+      queryFn: () => fetchNexusTagContent(tag),
       staleTime: 1000 * 60 * 5,
     });
-  }, [queryClient, tag.id, tag.label, tag.slug]);
+  }, [queryClient, tag.id, tag.label]);
 
   return (
     <Popover open={open} onOpenChange={(val) => {
