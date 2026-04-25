@@ -576,6 +576,8 @@ const TemaDetailPage = () => {
                       accentColor="text-orange-500"
                       buttonText="Iniciar Jornada"
                       onAction={() => navigate(`/jornadas/${c.id}`)}
+                      allThemes={tags}
+                      currentTagId={selectedTag?.id}
                     />
                   ))}
                 </div>
