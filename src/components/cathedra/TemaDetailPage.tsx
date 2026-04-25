@@ -209,6 +209,7 @@ const TemaDetailPage = () => {
   const bibleVerses = contents?.filter(c => c.content_type === 'bible') || [];
   const catechism = contents?.filter(c => c.content_type === 'catechism') || [];
   const magisterium = contents?.filter(c => c.content_type === 'magisterium') || [];
+  const journeys = contents?.filter(c => c.content_type === 'journey') || [];
 
   const getCategoryColor = (category?: string) => {
     switch (category?.toLowerCase()) {
