@@ -459,7 +459,7 @@ const TemaDetailPage = () => {
                       key={c.id}
                       content={c}
                       index={i}
-                      icon={Icons.Flame}
+                      icon={Flame}
                       accentColor="text-orange-500"
                       buttonText="Iniciar Jornada"
                       onAction={() => navigate(`/jornadas/${c.id}`)}
