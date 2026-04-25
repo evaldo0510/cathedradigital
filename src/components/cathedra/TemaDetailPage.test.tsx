@@ -122,8 +122,15 @@ describe('TemaDetailPage - Integration Tests', () => {
   });
   
   it('handles rapid tab switching without leaking content or fallbacks', async () => {
-    const mockTags = [{ id: '1', label: 'Rapid', slug: 'rapid', category: 'fundamentos', emoji: '⚡' }];
-    (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
+    const mockTags = [
+      { id: '1', label: 'Rapid', slug: 'rapid', category: 'fundamentos', emoji: '⚡' },
+      { id: '2', label: 'Rapid Content', slug: 'rapid-content', category: 'fundamentos', emoji: '⚡' }
+    ];
+    (supabase.from as any).mockReturnValue({ 
+      select: vi.fn(() => ({ 
+        order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) 
+      })) 
+    });
     
     // 1. Test Fallbacks Isolation
     (fetchNexusTagContent as any).mockResolvedValue([]);
