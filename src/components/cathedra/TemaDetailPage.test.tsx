@@ -323,7 +323,9 @@ describe('TemaDetailPage - Integration Tests', () => {
     await userEvent.click(retryButton);
     
     // Should be disabled and show loading
-    expect(retryButton).toBeDisabled();
+    await waitFor(() => {
+      expect(retryButton).toBeDisabled();
+    });
     expect(retryButton.querySelector('.animate-spin')).toBeInTheDocument();
 
     // 3. Resolve
