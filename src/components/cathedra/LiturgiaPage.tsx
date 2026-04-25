@@ -647,6 +647,32 @@ const LiturgiaPage: React.FC = () => {
             </Tabs>
           </DialogContent>
         </Dialog>
+        </div>
+        
+        <aside className="desktop-aside space-y-6 hidden xl:block">
+          <div className="desktop-card bg-secondary/5 border-secondary/20">
+            <h3 className="text-[11px] font-black uppercase tracking-widest text-secondary mb-3">Liturgia das Horas</h3>
+            <p className="text-xs text-muted-foreground leading-relaxed italic">
+              Una-se à oração universal da Igreja. Santifique cada hora do seu dia através da meditação das leituras.
+            </p>
+          </div>
+          {saintsToday.length > 0 && (
+            <div className="desktop-card">
+              <h3 className="text-[11px] font-black uppercase tracking-widest text-primary mb-4">Santos de Hoje</h3>
+              <div className="space-y-4">
+                {saintsToday.slice(0, 2).map(s => (
+                  <div key={s.id} className="flex items-center gap-3 group cursor-pointer" onClick={() => navigate(`/santos/${s.id}`)}>
+                    <img src={s.image} alt={s.name} className="w-10 h-10 rounded-full object-cover border border-border group-hover:border-primary transition-all" />
+                    <div>
+                      <p className="text-[10px] font-bold text-foreground leading-tight">{s.name}</p>
+                      <p className="text-[8px] text-muted-foreground uppercase font-medium">{s.title}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </aside>
       </div>
     </>
   );
