@@ -313,17 +313,23 @@ const LiturgiaPage: React.FC = () => {
       <div className="max-w-4xl mx-auto px-4 py-6 space-y-10">
         {/* Navigation Tabs */}
         <div className="flex justify-center mb-8">
-          <div className="bg-muted/40 p-1.5 rounded-[2rem] border border-border/40 flex gap-1 overflow-x-auto max-w-full">
+          <div className="bg-muted/40 p-1.5 rounded-[2rem] border border-border/40 flex gap-1 overflow-x-auto max-w-full" role="tablist" aria-label="Navegação da Liturgia">
             {[
               { id: 'liturgia', label: 'Liturgia', icon: <Icons.Liturgy className="w-4 h-4" /> },
               { id: 'missal', label: 'Missal', icon: <Icons.Cross className="w-4 h-4" /> },
               { id: 'calendario', label: 'Calendário', icon: <Icons.Calendar className="w-4 h-4" /> }
-            ].map(tab => (
+            ].map((tab, idx, arr) => (
               <button
                 key={tab.id}
+                id={`tab-${tab.id}`}
                 role="tab"
                 aria-selected={activeTab === tab.id}
+                aria-controls={`panel-${tab.id}`}
                 onClick={() => setSearchParams({ tab: tab.id })}
+                onKeyDown={(e) => {
+                  if (e.key === 'ArrowRight' && idx < arr.length - 1) document.getElementById(`tab-${arr[idx+1]}`)?.focus();
+                  if (e.key === 'ArrowLeft' && idx > 0) document.getElementById(`tab-${arr[idx-1]}`)?.focus();
+                }}
                 className={`flex items-center gap-2 px-8 py-2.5 rounded-full text-sm font-semibold transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                   activeTab === tab.id 
                     ? 'bg-background shadow-lg text-primary' 
@@ -332,14 +338,19 @@ const LiturgiaPage: React.FC = () => {
               >
                 {tab.icon} {tab.label}
               </button>
-
             ))}
           </div>
         </div>
 
         <Suspense fallback={<div className="flex justify-center py-20"><Icons.Loader2 className="w-10 h-10 text-secondary animate-spin" /></div>}>
           {activeTab === 'liturgia' && (
-            <div className="max-w-2xl mx-auto space-y-10 animate-in fade-in duration-500">
+            <div 
+              id="panel-liturgia"
+              role="tabpanel"
+              aria-labelledby="tab-liturgia"
+              className="max-w-2xl mx-auto space-y-10 animate-in fade-in duration-500 outline-none"
+              tabIndex={0}
+            >
               <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} className="space-y-4 text-center">
                 {/* Redundant back button removed */}
                 <h1 className="text-3xl md:text-5xl font-display font-black text-primary tracking-tight">Liturgia do Dia</h1>
@@ -562,8 +573,28 @@ const LiturgiaPage: React.FC = () => {
               )}
             </div>
           )}
-          {activeTab === 'missal' && <div className="animate-in fade-in slide-in-from-bottom-4 duration-500"><MissalPage /></div>}
-          {activeTab === 'calendario' && <div className="animate-in fade-in slide-in-from-bottom-4 duration-500"><LiturgicalCalendarPage /></div>}
+          {activeTab === 'missal' && (
+            <div 
+              id="panel-missal"
+              role="tabpanel"
+              aria-labelledby="tab-missal"
+              className="animate-in fade-in slide-in-from-bottom-4 duration-500 outline-none"
+              tabIndex={0}
+            >
+              <MissalPage />
+            </div>
+          )}
+          {activeTab === 'calendario' && (
+            <div 
+              id="panel-calendario"
+              role="tabpanel"
+              aria-labelledby="tab-calendario"
+              className="animate-in fade-in slide-in-from-bottom-4 duration-500 outline-none"
+              tabIndex={0}
+            >
+              <LiturgicalCalendarPage />
+            </div>
+          )}
         </Suspense>
 
         <Dialog open={!!compareReading} onOpenChange={(open) => !open && setCompareReading(null)}>
@@ -590,38 +621,33 @@ const LiturgiaPage: React.FC = () => {
               </div>
 
               <div className="flex-1 overflow-hidden">
-                <ScrollArea className="h-full p-8">
-                  <TabsContent value="texto" className="m-0 focus-visible:outline-none">
-                    <p className="text-xl leading-[2] font-serif text-primary whitespace-pre-line">
-                      {compareReading?.text}
-                    </p>
-                  </TabsContent>
+                <ScrollArea className="h-full">
+                  <div className="p-8 space-y-6">
+                    <TabsContent value="texto" className="m-0 focus-visible:outline-none">
+                      <div className="prose prose-sm dark:prose-invert font-serif leading-relaxed text-primary max-w-none">
+                        <p className="whitespace-pre-line">{compareReading?.text}</p>
+                      </div>
+                    </TabsContent>
+                    
+                    <TabsContent value="analise" className="m-0 focus-visible:outline-none">
+                      {isComparing ? (
+                        <div className="flex flex-col items-center justify-center py-20 gap-4">
+                          <Icons.Loader2 className="w-10 h-10 text-secondary animate-spin" />
+                          <p className="text-sm font-bold text-primary/60 animate-pulse uppercase tracking-widest">Consultando Magistério...</p>
+                        </div>
+                      ) : (
+                        <div className="prose prose-sm dark:prose-invert font-serif leading-relaxed text-primary max-w-none">
+                          <ReactMarkdown>{comparisonAnalysis || ''}</ReactMarkdown>
+                        </div>
+                      )}
+                    </TabsContent>
 
-                  <TabsContent value="analise" className="m-0 focus-visible:outline-none">
-                    {isComparing ? (
-                       <div className="flex flex-col items-center justify-center py-20 space-y-4">
-                        <Icons.Loader2 className="w-10 h-10 text-secondary animate-spin" />
-                        <p className="text-sm font-black uppercase tracking-widest text-muted-foreground animate-pulse">Logos está analisando...</p>
+                    <TabsContent value="tradicao" className="m-0 focus-visible:outline-none">
+                      <div className="prose prose-sm dark:prose-invert font-serif leading-relaxed text-primary max-w-none">
+                        <p>Esta funcionalidade está em desenvolvimento. Em breve você terá acesso a citações diretas de Santos e do Catecismo relacionadas a este texto.</p>
                       </div>
-                    ) : (
-                      <div className="prose prose-slate max-w-none dark:prose-invert font-serif text-lg leading-relaxed">
-                        <ReactMarkdown>{comparisonAnalysis || 'Nenhuma análise disponível.'}</ReactMarkdown>
-                      </div>
-                    )}
-                  </TabsContent>
-
-                  <TabsContent value="tradicao" className="m-0 focus-visible:outline-none">
-                    <div className="space-y-6">
-                      <div className="p-6 rounded-2xl bg-secondary/5 border border-secondary/20">
-                        <h4 className="text-xs font-black uppercase tracking-widest text-secondary mb-4">Catecismo da Igreja</h4>
-                        <p className="text-primary italic font-serif">Esta passagem fundamenta diversos pontos do Catecismo sobre a Revelação e a Vida em Cristo. Use a busca global para referências específicas.</p>
-                      </div>
-                      <div className="p-6 rounded-2xl bg-primary/5 border border-primary/10">
-                        <h4 className="text-xs font-black uppercase tracking-widest text-primary mb-4">Escritos dos Santos</h4>
-                        <p className="text-primary italic font-serif">"O que a Bíblia diz, a Igreja vive." — Santo Agostinho</p>
-                      </div>
-                    </div>
-                  </TabsContent>
+                    </TabsContent>
+                  </div>
                 </ScrollArea>
               </div>
             </Tabs>
