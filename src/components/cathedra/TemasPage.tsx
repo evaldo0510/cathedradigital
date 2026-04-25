@@ -11,7 +11,6 @@ import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import { FuzzySearchInput } from './FuzzySearchInput';
 import { BubbleTag } from './BubbleTag';
 import { TagBubble } from './NexusBubbles';
-
 import { getTabProps, getTabPanelProps, useTabNavigation, useRovingTabindex } from './TabUtils';
 import { useSpiritualProfile } from '@/hooks/useSpiritualProfile';
 import { PROFILES } from './SpiritualQuiz';
@@ -224,7 +223,24 @@ const TemasPage = () => {
                             className="px-4 py-2.5 text-[10px] sm:text-[11px] uppercase tracking-widest"
                           />
                         </div>
-
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-center gap-3 px-8 pb-6 pt-2">
+                    <div className="flex items-center gap-2 bg-muted/20 px-4 py-1.5 rounded-full border border-border/20">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 tabular-nums">
+                        {filteredTags.length} conexões sagradas
+                      </span>
+                      <div className="w-1 h-1 rounded-full bg-primary/30" />
+                      <Sparkles className="w-3 h-3 text-primary/40 animate-pulse" />
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+        
         <div className="min-h-[400px] mt-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
