@@ -322,12 +322,17 @@ describe('TemaDetailPage - Integration Tests', () => {
     (fetchNexusTagContent as any).mockReturnValueOnce(retryPromise);
 
     // 3. Click retry
-    await userEvent.click(retryButton);
+    // Use act for the click to ensure state updates are processed
+    await act(async () => {
+      await userEvent.click(retryButton);
+    });
     
     // 4. Wait for the button to transition to "Processando" and be disabled
+    // Re-query the button inside waitFor to get the fresh reference if it re-renders
     await waitFor(() => {
-      expect(retryButton).toBeDisabled();
-      expect(retryButton.textContent).toMatch(/Processando/i);
+      const b = screen.getByTestId('retry-button');
+      expect(b).toBeDisabled();
+      expect(b.textContent).toMatch(/Processando/i);
     }, { timeout: 3000 });
 
     // 5. Resolve the retry
