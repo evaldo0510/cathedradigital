@@ -11,14 +11,45 @@ import { ptBR } from 'date-fns/locale';
 
 const PAGE_SIZE = 10;
 
+const TransactionSkeleton: React.FC = () => (
+  <Card className="overflow-hidden border-border/50 opacity-60 animate-pulse">
+    <CardContent className="p-4 md:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="flex items-center gap-4">
+        <div className="w-10 h-10 rounded-xl bg-muted" />
+        <div className="space-y-2">
+          <div className="h-4 w-32 bg-muted rounded" />
+          <div className="h-3 w-24 bg-muted rounded" />
+        </div>
+      </div>
+      <div className="flex items-center gap-6">
+        <div className="space-y-2 text-right">
+          <div className="h-5 w-20 bg-muted rounded" />
+          <div className="h-2 w-10 bg-muted rounded ml-auto" />
+        </div>
+        <div className="h-6 w-16 bg-muted rounded-full" />
+      </div>
+    </CardContent>
+  </Card>
+);
+
 const UserTransactionsPage: React.FC = () => {
   const { user } = useAuth();
   const [transactions, setTransactions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const loaderRef = useRef<HTMLDivElement>(null);
+
+  // Reset state when user changes
+  useEffect(() => {
+    setTransactions([]);
+    setPage(0);
+    setHasMore(true);
+    setError(null);
+    setLoading(true);
+  }, [user?.id]);
 
 
   const fetchTransactions = useCallback(async (pageNum: number) => {
