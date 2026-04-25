@@ -129,7 +129,7 @@ export const BubbleTag: React.FC<BubbleTagProps> = ({
       tabIndex={tabIndex}
       data-roving-item={dataRovingItem}
       aria-pressed={isSelected}
-      aria-label={ariaLabel || `Tema: ${label}`}
+      aria-label={`${ariaLabel || `Tema: ${label}`}${isSelected ? ' (Selecionado)' : ''}${isSuggested ? ' (Sugerido)' : ''}`}
       className={`
         relative px-3.5 py-2 rounded-full border transition-all shadow-sm flex items-center gap-1.5 group/tag focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:outline-none
         ${isSelected 

@@ -121,7 +121,10 @@ export const FuzzySearchInput: React.FC<FuzzySearchInputProps> = ({
         </button>
       )}
       {showHint && (
-        <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+        <div 
+          aria-live="polite"
+          className="absolute -bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground"
+        >
           <Loader2 className="w-3 h-3 animate-spin" />
           Buscando…
         </div>

@@ -64,7 +64,7 @@ export const SearchResultCard = React.forwardRef<HTMLDivElement, SearchResultCar
       layout="position"
       role="button"
       tabIndex={0}
-      aria-label={`${title}${subtitle ? `: ${subtitle}` : ''}`}
+      aria-label={`${title}${subtitle ? `. ${subtitle}` : ''}. Clique para ver detalhes.`}
       className={cn(
         'cursor-pointer hover:bg-muted/30 transition-all group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none',
         className,
