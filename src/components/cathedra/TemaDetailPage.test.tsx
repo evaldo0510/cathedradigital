@@ -601,8 +601,10 @@ describe('TemaDetailPage - Integration Tests', () => {
 
     fireEvent.click(retryBtn);
 
-    expect(retryBtn).toHaveAttribute('aria-busy', 'true');
-    expect(retryBtn).toBeDisabled();
+    await waitFor(() => {
+      expect(retryBtn).toHaveAttribute('aria-busy', 'true');
+      expect(retryBtn).toBeDisabled();
+    });
 
     await act(async () => {
       resolveRetry([]);
