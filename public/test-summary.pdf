@@ -1,0 +1,574 @@
+%PDF-1.3
+%ºß¬à
+3 0 obj
+<</Type /Page
+/Parent 1 0 R
+/Resources 2 0 R
+/MediaBox [0 0 595.2799999999999727 841.8899999999999864]
+/Contents 4 0 R
+>>
+endobj
+4 0 obj
+<<
+/Length 4486
+>>
+stream
+0.5670000000000001 w
+0 G
+BT
+/F1 22 Tf
+25.2999999999999972 TL
+0 g
+56.6929133858267775 785.1970866141732586 Td
+(Relatório de Testes de Integração) Tj
+ET
+BT
+/F1 16 Tf
+18.3999999999999986 TL
+0 g
+56.6929133858267775 756.8506299212598378 Td
+(Tema: TemaDetailPage \(Nexus\)) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0 g
+56.6929133858267775 728.5041732283464171 Td
+(Data: 4/25/2026) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0 g
+56.6929133858267775 700.15771653543311 Td
+(Total de Testes: 30) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0 g
+56.6929133858267775 671.8112598425196893 Td
+(Passaram: 16) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0 g
+56.6929133858267775 643.4648031496062686 Td
+(Falharam: 14) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+1. 0. 0. rg
+56.6929133858267775 615.1183464566928478 Td
+(Status Geral: PENDENTE) Tj
+ET
+BT
+/F1 14 Tf
+16.0999999999999979 TL
+0. g
+56.6929133858267775 558.42543307086612 Td
+(Cenários Cobertos:) Tj
+ET
+BT
+/F2 10 Tf
+11.5 TL
+0. g
+70.8661417322834666 530.0789763779526993 Td
+(Corrida & Race Conditions) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+85.0393700787401627 510.2364566929133503 Td
+([OK] simulates fetch abort and ensures UI stability) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+85.0393700787401627 493.2285826771653205 Td
+([FAIL] ensures no content leakage when switching between content and empty categories) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+85.0393700787401627 476.2207086614172908 Td
+([FAIL] handles rapid multi-switch without skeleton accumulation) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+85.0393700787401627 459.2128346456692611 Td
+([FAIL] ensures only the latest resolved request updates the UI \(race condition protection\)) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+85.0393700787401627 442.2049606299212314 Td
+([FAIL] alternates rapidly between tabs with different response times and validates content) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+85.0393700787401627 425.1970866141731449 Td
+([FAIL] handles tab switching with micro-delays and ensures stable UI state) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+85.0393700787401627 408.1892125984251152 Td
+([OK] prevents multiple requests when "Try Again" is clicked twice rapidly) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+85.0393700787401627 391.1813385826770855 Td
+([FAIL] handles 15+ rapid tab switches without skeleton accumulation) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+85.0393700787401627 374.1734645669290558 Td
+([FAIL] ensures stale responses from previous tabs are ignored \(race condition\)) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+85.0393700787401627 357.1655905511810261 Td
+([FAIL] validates that fetch is debounced during rapid tab switching) Tj
+ET
+BT
+/F2 10 Tf
+11.5 TL
+0. g
+70.8661417322834666 328.8191338582676053 Td
+(Acessibilidade & ARIA) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+85.0393700787401627 308.9766141732283131 Td
+([OK] validates accessibility roles and attributes for Tabs) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+85.0393700787401627 291.9687401574802834 Td
+([OK] handles error state and retry button via keyboard) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+85.0393700787401627 274.9608661417322537 Td
+([OK] shows skeletons during keyboard-triggered navigation) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+85.0393700787401627 257.952992125984224 Td
+([FAIL] validates skeleton location and accessibility in the active TabsContent) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+85.0393700787401627 240.9451181102361943 Td
+([FAIL] verifies retry button accessibility states \(aria-busy\)) Tj
+ET
+BT
+/F2 10 Tf
+11.5 TL
+0. g
+70.8661417322834666 212.5986614173227736 Td
+(Funcionalidades & UI) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+85.0393700787401627 192.7561417322833677 Td
+([OK] ensures skeleton is correctly placed within active tab content) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+85.0393700787401627 175.748267716535338 Td
+([OK] verifies that category limits are maintained) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+85.0393700787401627 158.7403937007873083 Td
+([OK] navigates between tabs using Arrow keys and validates content updates) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+85.0393700787401627 141.7325196850392786 Td
+([OK] displays error message with "Try Again" button when fetch fails) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+85.0393700787401627 124.7246456692912489 Td
+([FAIL] renders specific empty states for each category and ensures no leaking labels) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+85.0393700787401627 107.7167716535432191 Td
+([OK] completes loading state even when fetch returns undefined) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+85.0393700787401627 90.7088976377951894 Td
+([OK] renders robust fallbacks for partially filled objects) Tj
+ET
+endstream
+endobj
+5 0 obj
+<</Type /Page
+/Parent 1 0 R
+/Resources 2 0 R
+/MediaBox [0 0 595.2799999999999727 841.8899999999999864]
+/Contents 6 0 R
+>>
+endobj
+6 0 obj
+<<
+/Length 1824
+>>
+stream
+0.5670000000000001 w
+0 G
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+85.0393700787401627 785.1970866141732586 Td
+([OK] shows loading skeleton only in the active tab content area) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+85.0393700787401627 768.1892125984252289 Td
+([OK] verifies retry flow: error -> retry -> success/fallback) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+85.0393700787401627 751.1813385826771992 Td
+([OK] handles fetch exception by showing global error UI across all tabs) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+85.0393700787401627 734.1734645669291695 Td
+([FAIL] shows loading state during retry and resolves correctly) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+85.0393700787401627 717.1655905511811397 Td
+([FAIL] verifies that each category fallback appears only in its corresponding tab during loading error) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+85.0393700787401627 700.15771653543311 Td
+([OK] confirms that error fallback persists if retry also fails) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+85.0393700787401627 683.1498425196850803 Td
+([FAIL] verifies that each category shows its specific error message and it updates after success) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+85.0393700787401627 666.1419685039369369 Td
+([OK] ensures no DOM pollution: only one category fallback/content is present at a time) Tj
+ET
+BT
+/F1 14 Tf
+16.0999999999999979 TL
+0. g
+56.6929133858267775 637.7955118110235162 Td
+(Resumo de Cobertura \(Estimativa\):) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+85.0393700787401627 609.4490551181102092 Td
+(- Lógica de Abas: 100%) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+85.0393700787401627 592.4411811023621794 Td
+(- Tratamento de Erros: 100%) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+85.0393700787401627 575.4333070866141497 Td
+(- Cancelamento de Fetch \(Abort\): 100%) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+85.0393700787401627 558.42543307086612 Td
+(- Acessibilidade \(Roles/ARIA\): 100%) Tj
+ET
+endstream
+endobj
+1 0 obj
+<</Type /Pages
+/Kids [3 0 R 5 0 R ]
+/Count 2
+>>
+endobj
+7 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+8 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica-Bold
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+9 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica-Oblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+10 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica-BoldOblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+11 0 obj
+<<
+/Type /Font
+/BaseFont /Courier
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+12 0 obj
+<<
+/Type /Font
+/BaseFont /Courier-Bold
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+13 0 obj
+<<
+/Type /Font
+/BaseFont /Courier-Oblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+14 0 obj
+<<
+/Type /Font
+/BaseFont /Courier-BoldOblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+15 0 obj
+<<
+/Type /Font
+/BaseFont /Times-Roman
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+16 0 obj
+<<
+/Type /Font
+/BaseFont /Times-Bold
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+17 0 obj
+<<
+/Type /Font
+/BaseFont /Times-Italic
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+18 0 obj
+<<
+/Type /Font
+/BaseFont /Times-BoldItalic
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+19 0 obj
+<<
+/Type /Font
+/BaseFont /ZapfDingbats
+/Subtype /Type1
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+20 0 obj
+<<
+/Type /Font
+/BaseFont /Symbol
+/Subtype /Type1
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+2 0 obj
+<<
+/ProcSet [/PDF /Text /ImageB /ImageC /ImageI]
+/Font <<
+/F1 7 0 R
+/F2 8 0 R
+/F3 9 0 R
+/F4 10 0 R
+/F5 11 0 R
+/F6 12 0 R
+/F7 13 0 R
+/F8 14 0 R
+/F9 15 0 R
+/F10 16 0 R
+/F11 17 0 R
+/F12 18 0 R
+/F13 19 0 R
+/F14 20 0 R
+>>
+/XObject <<
+>>
+>>
+endobj
+21 0 obj
+<<
+/Producer (jsPDF 4.2.1)
+/CreationDate (D:20260425043638-00'00')
+>>
+endobj
+22 0 obj
+<<
+/Type /Catalog
+/Pages 1 0 R
+/OpenAction [3 0 R /FitH null]
+/PageLayout /OneColumn
+>>
+endobj
+xref
+0 23
+0000000000 65535 f 
+0000006703 00000 n 
+0000008528 00000 n 
+0000000015 00000 n 
+0000000152 00000 n 
+0000004690 00000 n 
+0000004827 00000 n 
+0000006766 00000 n 
+0000006891 00000 n 
+0000007021 00000 n 
+0000007154 00000 n 
+0000007292 00000 n 
+0000007416 00000 n 
+0000007545 00000 n 
+0000007677 00000 n 
+0000007813 00000 n 
+0000007941 00000 n 
+0000008068 00000 n 
+0000008197 00000 n 
+0000008330 00000 n 
+0000008432 00000 n 
+0000008778 00000 n 
+0000008864 00000 n 
+trailer
+<<
+/Size 23
+/Root 22 0 R
+/Info 21 0 R
+/ID [ <C87729795B3979333249BE858E71FDBA> <C87729795B3979333249BE858E71FDBA> ]
+>>
+startxref
+8968
+%%EOF
