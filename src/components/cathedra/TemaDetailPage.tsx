@@ -100,36 +100,51 @@ const TemaDetailPage = () => {
   const selectedTag = tags?.find(t => t.slug === slug);
 
   const { data: contents, isLoading: loadingContents } = useQuery({
-    queryKey: ['tag-contents', selectedTag?.id],
+    queryKey: ['tag-contents', selectedTag?.id, selectedTag?.label],
     queryFn: async () => {
       if (!selectedTag) return [];
       
-      const { data: tagContents, error: contentError } = await supabase
-        .from('content_tags')
-        .select(`
-          spiritual_contents (
-            id,
-            title,
-            content_text,
-            type,
-            reference_id,
-            tags
-          )
-        `)
-        .eq('tag_id', selectedTag.id);
+      const normalizedLabel = normalizeText(selectedTag.label);
+      const searchTerms = [selectedTag.label, normalizedLabel, selectedTag.slug].filter(Boolean);
       
-      if (contentError) throw contentError;
+      // Fetch from spiritual_contents
+      const { data: spiritualData, error: spiritualError } = await supabase
+        .from('spiritual_contents')
+        .select('*')
+        .overlaps('tags', searchTerms)
+        .limit(30);
+      
+      // Fetch from journeys
+      const { data: journeyData, error: journeyError } = await supabase
+        .from('journeys')
+        .select('*')
+        .overlaps('tags', searchTerms)
+        .limit(10);
+      
+      if (spiritualError) throw spiritualError;
+      if (journeyError) throw journeyError;
 
-      const results: ThemeContent[] = (tagContents || []).map((c: any) => ({
-        id: c.spiritual_contents.id,
-        content_type: c.spiritual_contents.type,
-        reference: c.spiritual_contents.reference_id || c.spiritual_contents.title || 'Referência',
-        title: c.spiritual_contents.title,
-        text_content: c.spiritual_contents.content_text,
-        tags: c.spiritual_contents.tags || []
+      const results: ThemeContent[] = (spiritualData || []).map((d: any) => ({
+        id: d.id,
+        content_type: d.type,
+        reference: d.reference_id || d.title || 'Referência',
+        title: d.title,
+        text_content: d.content_text,
+        tags: d.tags || []
       }));
 
-      return results;
+      const journeyResults: ThemeContent[] = (journeyData || []).map((d: any) => ({
+        id: d.id,
+        content_type: 'journey',
+        reference: d.subtitle || d.category || 'Jornada',
+        title: d.title,
+        text_content: d.description || '',
+        tags: d.tags || []
+      }));
+
+      // Combine and remove duplicates
+      const all = [...results, ...journeyResults];
+      return Array.from(new Map(all.map(item => [item.id, item])).values());
     },
     enabled: !!selectedTag,
   });
