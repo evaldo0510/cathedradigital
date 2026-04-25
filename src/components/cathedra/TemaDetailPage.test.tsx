@@ -646,7 +646,7 @@ describe('TemaDetailPage - Integration Tests', () => {
     // Switch to Magisterium (starts p2)
     fireEvent.click(screen.getByText('Magistério'));
     await act(async () => {
-      await new Promise(r => setTimeout(r, 350));
+      vi.advanceTimersByTime(400);
     });
 
     // Resolve p1 (Tradition - now stale)
