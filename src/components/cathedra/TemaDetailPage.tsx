@@ -123,9 +123,15 @@ const TemaDetailPage = () => {
   const { data: tags } = useQuery({
     queryKey: ['tags'],
     queryFn: async () => {
-      const { data, error } = await supabase.from('tags').select('*').order('label');
+      const { data, error } = await supabase.from('themes').select('*').order('name');
       if (error) throw error;
-      return data as Tag[];
+      return (data || []).map((t: any) => ({
+        id: t.id,
+        label: t.name,
+        slug: t.slug,
+        emoji: t.emoji || '⛪',
+        category: t.category || 'Geral'
+      })) as Tag[];
     },
   });
 
