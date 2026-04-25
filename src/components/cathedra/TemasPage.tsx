@@ -123,122 +123,123 @@ const TemasPage = () => {
   return (
     <div className="desktop-layout py-6 sm:py-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="desktop-main px-4">
-      <header className="space-y-4 text-center mb-8 sm:mb-16">
-        <div className="flex justify-center mb-4">
-          <div className="w-16 h-1.5 bg-gradient-to-r from-transparent via-primary/50 to-transparent rounded-full shadow-[0_0_15px_rgba(var(--primary),0.3)]" />
-        </div>
-        <h1 className="text-4xl sm:text-6xl md:text-8xl font-black tracking-tighter bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent leading-[0.9]">
-          Nexus<br className="sm:hidden" /> Temas
-        </h1>
-        <p className="text-muted-foreground text-base sm:text-xl max-w-2xl mx-auto font-serif italic leading-relaxed">
-          "Fides quaerens intellectum" — Explore conexões sagradas entre as Escrituras e a Tradição.
-        </p>
-      </header>
-
-      <div className="space-y-4 sm:space-y-8">
-        <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 bg-card/60 backdrop-blur-xl p-2 sm:p-3 rounded-2xl sm:rounded-[2.5rem] border border-border/40 shadow-xl sticky top-2 sm:top-4 z-20 transition-all duration-500 hover:shadow-2xl hover:border-primary/20 group/nav">
-          <FuzzySearchInput
-            className="flex-1 w-full"
-            value={searchQuery}
-            onChange={setSearchQuery}
-            placeholder="Buscar tema (ex: Amor, Graça...)"
-            isSearching={isSearchPending}
-          />
-          
-          <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto px-2 pb-2 sm:pb-0 scrollbar-none scroll-smooth">
-            {categories.map((cat, idx) => (
-              <motion.button
-                key={cat}
-                {...getTabProps(`tab-category-${idx}`, `panel-temas`, activeCategory === cat, `
-                  whitespace-nowrap px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] transition-all duration-300 focus-visible:ring-2 focus-visible:ring-primary outline-none
-                  ${activeCategory === cat 
-                    ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-105' 
-                    : 'bg-muted/40 text-muted-foreground/70 hover:bg-muted hover:text-foreground hover:scale-102 border border-transparent hover:border-border/50'
-                  }
-                `)}
-                initial={false}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: idx * 0.02 }}
-                onClick={() => setActiveCategory(cat)}
-                onKeyDown={(e) => handleTabKeyDown(e, idx, categories.length, (newIdx) => setActiveCategory(categories[newIdx]), 'tab-category-')}
-              >
-                {cat === 'all' ? 'Todos' : cat.charAt(0).toUpperCase() + cat.slice(1)}
-              </motion.button>
-            ))}
+        <header className="space-y-4 text-center mb-8 sm:mb-16">
+          <div className="flex justify-center mb-4">
+            <div className="w-16 h-1.5 bg-gradient-to-r from-transparent via-primary/50 to-transparent rounded-full shadow-[0_0_15px_rgba(var(--primary),0.3)]" />
           </div>
-        </div>
-
-        <div className="relative">
-          <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent blur-3xl opacity-30 pointer-events-none" />
-          
-          <div {...getTabPanelProps('panel-temas', `tab-category-${categories.indexOf(activeCategory)}`, true, "relative overflow-hidden rounded-2xl border border-border/30 bg-card/20 backdrop-blur-sm outline-none")}>
-            {loadingTags ? (
-              <div className="flex flex-col items-center gap-4 py-12 w-full justify-center">
-                <div className="relative">
-                  <Loader2 className="h-10 w-10 animate-spin text-primary/30" />
-                  <div className="absolute inset-0 bg-primary/20 blur-xl animate-pulse rounded-full" />
-                </div>
-                <span className="text-sm font-bold text-muted-foreground/60 tracking-widest uppercase">Consultando Nexus...</span>
-              </div>
-            ) : filteredTags.length === 0 ? (
-              <div className="py-20 px-8 text-center w-full space-y-4">
-                <div className="w-16 h-16 bg-muted/30 rounded-full flex items-center justify-center mx-auto">
-                  <Search className="w-6 h-6 text-muted-foreground/30" />
-                </div>
-                <p className="text-sm text-muted-foreground/60 italic font-medium tracking-wide">Nenhum tema encontrado para sua busca teológica.</p>
-              </div>
-            ) : (
-              <>
-                <div className="relative p-6 sm:p-10">
-                  <div className="flex flex-wrap justify-center gap-2 sm:gap-3 max-w-5xl mx-auto" role="list" ref={tagsContainerRef}>
-                    {filteredTags.map((tag, idx) => (
-                      <div key={tag.id} role="listitem">
-                        <BubbleTag
-                          label={tag.label}
-                          emoji={tag.emoji}
-                          index={idx}
-                          isSelected={false}
-                          onClick={() => handleTagSelect(tag)}
-                          onKeyDown={(e) => handleRovingKeyDown(e, idx, () => handleTagSelect(tag))}
-                          onMouseEnter={() => prefetchTag(tag)}
-                          tabIndex={activeIndex === idx ? 0 : -1}
-                          data-roving-item={true}
-                          className="px-4 py-2.5 text-[10px] sm:text-[11px] uppercase tracking-widest"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className="flex items-center justify-center gap-3 px-8 pb-6 pt-2">
-                  <div className="flex items-center gap-2 bg-muted/20 px-4 py-1.5 rounded-full border border-border/20">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 tabular-nums">
-                      {filteredTags.length} conexões sagradas
-                    </span>
-                    <div className="w-1 h-1 rounded-full bg-primary/30" />
-                    <Sparkles className="w-3 h-3 text-primary/40 animate-pulse" />
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-      
-      <div className="min-h-[500px]">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="h-[400px] flex flex-col items-center justify-center text-center p-12 bg-muted/10 rounded-[3rem] border border-dashed border-border/40 relative overflow-hidden group"
-        >
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 opacity-50" />
-          <div className="w-24 h-24 rounded-full bg-primary/5 flex items-center justify-center mb-8 border border-primary/10 shadow-inner group-hover:scale-110 transition-transform duration-500">
-            <TagIcon className="h-12 w-12 text-primary/30" />
-          </div>
-          <h3 className="text-3xl font-black mb-4 text-foreground tracking-tight">Descubra os tesouros da Fé</h3>
-          <p className="text-muted-foreground text-lg max-w-md font-serif italic">
-            Selecione uma das "bolhas" acima para navegar pelos conteúdos da Bíblia, Catecismo e Magistério relacionados ao tema.
+          <h1 className="text-4xl sm:text-6xl md:text-8xl font-black tracking-tighter bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent leading-[0.9]">
+            Nexus<br className="sm:hidden" /> Temas
+          </h1>
+          <p className="text-muted-foreground text-base sm:text-xl max-w-2xl mx-auto font-serif italic leading-relaxed">
+            "Fides quaerens intellectum" — Explore conexões sagradas entre as Escrituras e a Tradição.
           </p>
-        </motion.div>
+        </header>
+
+        <div className="space-y-4 sm:space-y-8">
+          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 bg-card/60 backdrop-blur-xl p-2 sm:p-3 rounded-2xl sm:rounded-[2.5rem] border border-border/40 shadow-xl sticky top-2 sm:top-4 z-20 transition-all duration-500 hover:shadow-2xl hover:border-primary/20 group/nav">
+            <FuzzySearchInput
+              className="flex-1 w-full"
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder="Buscar tema (ex: Amor, Graça...)"
+              isSearching={isSearchPending}
+            />
+            
+            <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto px-2 pb-2 sm:pb-0 scrollbar-none scroll-smooth">
+              {categories.map((cat, idx) => (
+                <motion.button
+                  key={cat}
+                  {...getTabProps(`tab-category-${idx}`, `panel-temas`, activeCategory === cat, `
+                    whitespace-nowrap px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] transition-all duration-300 focus-visible:ring-2 focus-visible:ring-primary outline-none
+                    ${activeCategory === cat 
+                      ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-105' 
+                      : 'bg-muted/40 text-muted-foreground/70 hover:bg-muted hover:text-foreground hover:scale-102 border border-transparent hover:border-border/50'
+                    }
+                  `)}
+                  initial={false}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: idx * 0.02 }}
+                  onClick={() => setActiveCategory(cat)}
+                  onKeyDown={(e) => handleTabKeyDown(e, idx, categories.length, (newIdx) => setActiveCategory(categories[newIdx]), 'tab-category-')}
+                >
+                  {cat === 'all' ? 'Todos' : cat.charAt(0).toUpperCase() + cat.slice(1)}
+                </motion.button>
+              ))}
+            </div>
+          </div>
+
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent blur-3xl opacity-30 pointer-events-none" />
+            
+            <div {...getTabPanelProps('panel-temas', `tab-category-${categories.indexOf(activeCategory)}`, true, "relative overflow-hidden rounded-2xl border border-border/30 bg-card/20 backdrop-blur-sm outline-none")}>
+              {loadingTags ? (
+                <div className="flex flex-col items-center gap-4 py-12 w-full justify-center">
+                  <div className="relative">
+                    <Loader2 className="h-10 w-10 animate-spin text-primary/30" />
+                    <div className="absolute inset-0 bg-primary/20 blur-xl animate-pulse rounded-full" />
+                  </div>
+                  <span className="text-sm font-bold text-muted-foreground/60 tracking-widest uppercase">Consultando Nexus...</span>
+                </div>
+              ) : filteredTags.length === 0 ? (
+                <div className="py-20 px-8 text-center w-full space-y-4">
+                  <div className="w-16 h-16 bg-muted/30 rounded-full flex items-center justify-center mx-auto">
+                    <Search className="w-6 h-6 text-muted-foreground/30" />
+                  </div>
+                  <p className="text-sm text-muted-foreground/60 italic font-medium tracking-wide">Nenhum tema encontrado para sua busca teológica.</p>
+                </div>
+              ) : (
+                <>
+                  <div className="relative p-6 sm:p-10">
+                    <div className="flex flex-wrap justify-center gap-2 sm:gap-3 max-w-5xl mx-auto" role="list" ref={tagsContainerRef}>
+                      {filteredTags.map((tag, idx) => (
+                        <div key={tag.id} role="listitem">
+                          <BubbleTag
+                            label={tag.label}
+                            emoji={tag.emoji}
+                            index={idx}
+                            isSelected={false}
+                            onClick={() => handleTagSelect(tag)}
+                            onKeyDown={(e) => handleRovingKeyDown(e, idx, () => handleTagSelect(tag))}
+                            onMouseEnter={() => prefetchTag(tag)}
+                            tabIndex={activeIndex === idx ? 0 : -1}
+                            data-roving-item={true}
+                            className="px-4 py-2.5 text-[10px] sm:text-[11px] uppercase tracking-widest"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-center gap-3 px-8 pb-6 pt-2">
+                    <div className="flex items-center gap-2 bg-muted/20 px-4 py-1.5 rounded-full border border-border/20">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 tabular-nums">
+                        {filteredTags.length} conexões sagradas
+                      </span>
+                      <div className="w-1 h-1 rounded-full bg-primary/30" />
+                      <Sparkles className="w-3 h-3 text-primary/40 animate-pulse" />
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+        
+        <div className="min-h-[400px] mt-12">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="h-[300px] flex flex-col items-center justify-center text-center p-12 bg-muted/10 rounded-[3rem] border border-dashed border-border/40 relative overflow-hidden group"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 opacity-50" />
+            <div className="w-24 h-24 rounded-full bg-primary/5 flex items-center justify-center mb-8 border border-primary/10 shadow-inner group-hover:scale-110 transition-transform duration-500">
+              <TagIcon className="h-12 w-12 text-primary/30" />
+            </div>
+            <h3 className="text-3xl font-black mb-4 text-foreground tracking-tight">Descubra os tesouros da Fé</h3>
+            <p className="text-muted-foreground text-lg max-w-md font-serif italic">
+              Selecione uma das "bolhas" acima para navegar pelos conteúdos da Bíblia, Catecismo e Magistério relacionados ao tema.
+            </p>
+          </motion.div>
+        </div>
       </div>
 
       <aside className="desktop-aside space-y-6 hidden xl:block">
