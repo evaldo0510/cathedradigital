@@ -442,8 +442,20 @@ const UserTransactionsPage: React.FC = () => {
         </div>
       )}
 
-      <Dialog open={!!selectedTx} onOpenChange={(open) => !open && setSelectedTx(null)}>
-        <DialogContent className="max-w-md rounded-[2rem]">
+      <Dialog 
+        open={!!selectedTx} 
+        onOpenChange={(open) => {
+          if (!open) {
+            setSelectedTx(null);
+            setAnnouncement('Modal de detalhes fechado.');
+          }
+        }}
+      >
+        <DialogContent 
+          className="max-w-md rounded-[2rem]"
+          onEscapeKeyDown={() => setSelectedTx(null)}
+          onPointerDownOutside={() => setSelectedTx(null)}
+        >
           <DialogHeader>
             <DialogTitle className="font-serif text-xl flex items-center gap-3">
               <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${selectedTx?.is_donation ? 'bg-secondary/10 text-secondary' : 'bg-primary/10 text-primary'}`}>
