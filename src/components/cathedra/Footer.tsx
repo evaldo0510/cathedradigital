@@ -305,10 +305,12 @@ const Footer: React.FC = React.memo(() => {
                 <React.Fragment key={item.label}>
                   <button 
                     onClick={() => navigate(item.route)} 
-                    className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors"
+                    className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none px-2 py-1 rounded"
+                    aria-label={item.label}
                   >
                     {item.label}
                   </button>
+
                   {index < array.length - 1 && (
                     <span className="mx-3 text-muted-foreground/20 font-light select-none">|</span>
                   )}
