@@ -123,7 +123,7 @@ const TemaDetailPage = () => {
 
   const selectedTag = tags?.find(t => t.slug === slug);
 
-  const { data: contents, isLoading: loadingContents, error: contentError } = useQuery({
+  const { data: contents, isLoading: loadingContents, isFetching: isFetchingContents, error: contentError } = useQuery({
     queryKey: ['tag-contents', selectedTag?.id, activeTab],
     queryFn: async () => {
       if (!selectedTag) return [];
@@ -342,9 +342,9 @@ const TemaDetailPage = () => {
                   variant="outline" 
                   onClick={() => queryClient.invalidateQueries({ queryKey: ['tag-contents'] })} 
                   className="h-10 rounded-xl px-6"
-                  disabled={loadingContents}
+                  disabled={isFetchingContents}
                 >
-                  {loadingContents ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                  {isFetchingContents ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
                   Tentar Novamente
                 </Button>
               </div>
