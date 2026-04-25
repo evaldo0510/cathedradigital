@@ -122,8 +122,7 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
     queryClient.prefetchQuery({
       queryKey: ['tag-contents', tag.id, tag.label],
       queryFn: async () => {
-        const normalizedLabel = normalizeText(tag.label);
-        const searchTerms = [tag.label, normalizedLabel, tag.slug].filter(Boolean);
+        const searchTerms = getSearchTermsForTag(tag);
         
         const { data: spiritualData, error: dbError } = await supabase
           .from('spiritual_contents')
