@@ -222,7 +222,7 @@ const AdminThemesTab = () => {
                     <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Nome</label>
                     <Input placeholder="Ex: Misericórdia" value={newTheme.name} onChange={e => {
                       const name = e.target.value;
-                      const slug = name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+                      const slug = normalizeText(name).replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
                       setNewTheme(p => ({ ...p, name, slug }));
                     }} />
                   </div>
