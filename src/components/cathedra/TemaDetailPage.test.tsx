@@ -1,6 +1,6 @@
 import { render, screen, waitFor, act, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import TemaDetailPage from './TemaDetailPage';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
@@ -8,6 +8,9 @@ import { HelmetProvider } from 'react-helmet-async';
 import { supabase } from '@/integrations/supabase/client';
 import { fetchNexusTagContent } from '@/lib/nexusContent';
 import React from 'react';
+
+// Call tracking for report generation
+let callCounts: Record<string, number> = {};
 
 // Mocking dependencies
 vi.mock('@/integrations/supabase/client', () => ({
@@ -32,6 +35,7 @@ const createQueryClient = () => new QueryClient({
   },
 });
 
+
 const renderWithProviders = (ui: React.ReactElement, initialEntry = '/temas/fe') => {
   const queryClient = createQueryClient();
   return render(
@@ -52,7 +56,15 @@ describe('TemaDetailPage - Integration Tests', () => {
     vi.clearAllMocks();
   });
 
+  afterEach(() => {
+    // Log the number of calls to fetchNexusTagContent for the report
+    const callCount = (fetchNexusTagContent as any).mock.calls.length;
+    console.log(`STATS: {"bible": ${callCount}}`);
+  });
+
   const switchTab = async (name: string) => {
+
+
     fireEvent.click(screen.getByText(name));
     // Wait for debounce (300ms) and query resolution
     await act(async () => {
