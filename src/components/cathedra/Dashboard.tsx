@@ -104,12 +104,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   ], [nextUp, t, spiritualProfile]);
 
   if (isLoading && !spiritualProfile && activeJourneys.length === 0) {
-    return (
-      <div className="flex items-center justify-center min-h-[60dvh]">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
+
 
   return (
     <div className="desktop-layout py-6 md:py-10">
