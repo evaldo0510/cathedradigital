@@ -196,6 +196,8 @@ const TemaDetailPage = () => {
     );
   }
 
+  const isLoadingAny = loadingContents || isFetchingContents || activeTab !== debouncedTab;
+
   const bibleVerses = contents?.filter(c => c.content_type === 'bible') || [];
   const catechism = contents?.filter(c => c.content_type === 'catechism') || [];
   const magisterium = contents?.filter(c => c.content_type === 'magisterium') || [];
