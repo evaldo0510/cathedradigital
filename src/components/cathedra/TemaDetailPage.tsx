@@ -110,6 +110,7 @@ const TemaDetailPage = () => {
   const [traditionLimit, setTraditionLimit] = useState(5);
   const [magisteriumLimit, setMagisteriumLimit] = useState(5);
   const [autoLoaded, setAutoLoaded] = useState(false);
+  const [activeTab, setActiveTab] = useState('bible');
 
   const { data: tags } = useQuery({
     queryKey: ['tags'],
