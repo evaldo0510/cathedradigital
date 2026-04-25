@@ -340,12 +340,21 @@ const TemaDetailPage = () => {
                 </p>
                 <Button 
                   variant="outline" 
-                  onClick={() => queryClient.invalidateQueries({ queryKey: ['tag-contents'] })} 
+                  onClick={() => {
+                    console.log('Retry clicked, invalidating...');
+                    queryClient.invalidateQueries({ queryKey: ['tag-contents'] });
+                  }} 
                   className="h-10 rounded-xl px-6"
                   disabled={isFetchingContents}
                 >
-                  {isFetchingContents ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-                  Tentar Novamente
+                  {isFetchingContents ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin mr-2" data-testid="retry-loader" />
+                      <span>Processando...</span>
+                    </>
+                  ) : (
+                    <span>Tentar Novamente</span>
+                  )}
                 </Button>
               </div>
             ) : (
