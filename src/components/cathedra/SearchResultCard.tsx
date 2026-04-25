@@ -91,8 +91,9 @@ export const SearchResultCard = React.forwardRef<HTMLDivElement, SearchResultCar
         )}
       </div>
     </CardContent>
-  </MotionCard>
-));
+    </MotionCard>
+  );
+});
 
 SearchResultCard.displayName = 'SearchResultCard';
 
