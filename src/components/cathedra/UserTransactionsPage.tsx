@@ -169,7 +169,7 @@ const UserTransactionsPage: React.FC = () => {
       {error && transactions.length === 0 ? (
         <Card className="border-destructive/20 bg-destructive/5">
           <CardContent className="flex flex-col items-center justify-center py-12 space-y-4">
-            <Icons.AlertCircle className="w-12 h-12 text-destructive/50" />
+            <Icons.AlertTriangle className="w-12 h-12 text-destructive/50" />
             <div className="text-center">
               <p className="text-destructive font-medium">{error}</p>
               <Button 
@@ -178,7 +178,7 @@ const UserTransactionsPage: React.FC = () => {
                 onClick={() => fetchTransactions(0)}
                 className="mt-4 gap-2 border-destructive/20 text-destructive hover:bg-destructive/10"
               >
-                <Icons.RefreshCcw className="w-4 h-4" /> Tentar Novamente
+                <Icons.RotateCcw className="w-4 h-4" /> Tentar Novamente
               </Button>
             </div>
           </CardContent>
