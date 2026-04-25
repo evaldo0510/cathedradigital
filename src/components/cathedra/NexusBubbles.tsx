@@ -240,6 +240,8 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
 
 const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
   const navigate = useNavigate();
+  const filteredRef = React.useRef<HTMLDivElement>(null);
+  const suggestedRef = React.useRef<HTMLDivElement>(null);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [tags, setTags] = useState<Tag[]>([]);
   const [loading, setLoading] = useState(true);
