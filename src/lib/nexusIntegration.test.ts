@@ -55,6 +55,20 @@ describe('Nexus Integration - Error and Edge Cases', () => {
     expect(results).toEqual([]);
   });
 
+  it('should return an empty array when Supabase returns undefined data without error', async () => {
+    (supabase.from as any).mockReturnValue({
+      select: vi.fn(() => ({
+        overlaps: vi.fn(() => ({
+          limit: vi.fn(() => Promise.resolve({ data: undefined, error: null }))
+        }))
+      }))
+    });
+
+    const tag = { label: 'UndefinedData', slug: 'undef' };
+    const results = await fetchNexusTagContent(tag);
+    expect(results).toEqual([]);
+  });
+
   it('should handle malformed data by providing robust fallbacks via formatNexusContent', () => {
     const malformedData = { id: 'bad-1', type: 'bible', content_text: null, title: null, reference_id: null };
     const formatted = formatNexusContent(malformedData, 'bible');
