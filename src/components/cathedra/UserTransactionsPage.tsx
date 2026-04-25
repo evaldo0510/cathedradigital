@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
@@ -9,31 +9,75 @@ import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
+const PAGE_SIZE = 10;
+
 const UserTransactionsPage: React.FC = () => {
   const { user } = useAuth();
   const [transactions, setTransactions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const loaderRef = useRef<HTMLDivElement>(null);
+
+
+  const fetchTransactions = useCallback(async (pageNum: number) => {
+    if (!user) return;
+    
+    if (pageNum === 0) setLoading(true);
+    else setLoadingMore(true);
+
+    const from = pageNum * PAGE_SIZE;
+    const to = from + PAGE_SIZE - 1;
+
+    const { data, error } = await supabase
+      .from('transactions')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .range(from, to);
+
+    if (error) {
+      console.error('Error fetching transactions:', error);
+    } else {
+      if (pageNum === 0) {
+        setTransactions(data || []);
+      } else {
+        setTransactions(prev => [...prev, ...(data || [])]);
+      }
+      setHasMore((data || []).length === PAGE_SIZE);
+    }
+    
+    setLoading(false);
+    setLoadingMore(false);
+  }, [user]);
 
   useEffect(() => {
-    if (!user) return;
+    fetchTransactions(0);
+  }, [fetchTransactions]);
 
-    const fetchTransactions = async () => {
-      const { data, error } = await supabase
-        .from('transactions')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
+  useEffect(() => {
+    if (!hasMore || loading || loadingMore) return;
 
-      if (error) {
-        console.error('Error fetching transactions:', error);
-      } else {
-        setTransactions(data || []);
-      }
-      setLoading(false);
-    };
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting) {
+          setPage(prev => {
+            const nextPage = prev + 1;
+            fetchTransactions(nextPage);
+            return nextPage;
+          });
+        }
+      },
+      { threshold: 0.1 }
+    );
 
-    fetchTransactions();
-  }, [user]);
+    if (loaderRef.current) {
+      observer.observe(loaderRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [hasMore, loading, loadingMore, fetchTransactions]);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -132,6 +176,12 @@ const UserTransactionsPage: React.FC = () => {
               </Card>
             </motion.div>
           ))}
+          
+          {hasMore && (
+            <div ref={loaderRef} className="flex justify-center py-8">
+              <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin opacity-50" />
+            </div>
+          )}
         </div>
       )}
     </div>
