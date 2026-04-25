@@ -116,7 +116,7 @@ const TemaDetailPage = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedTab(activeTab);
-    }, 300);
+    }, 0);
     return () => clearTimeout(timer);
   }, [activeTab]);
 
