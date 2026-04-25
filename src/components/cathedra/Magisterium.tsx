@@ -150,11 +150,13 @@ const THEMES = Array.from(new Set(DOCS_LIST.flatMap(d => d.theme))).sort();
 
 const Magisterium: React.FC = () => {
   const navigate = useNavigate();
+  const { handleKeyDown: handleTabKeyDown } = useTabNavigation();
   const [activeTab, setActiveTab] = useState('guidance');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTheme, setSelectedTheme] = useState<string | null>(null);
   
   const [selectedGuidance, setSelectedGuidance] = useState(SPIRITUAL_GUIDANCE[0]);
+  const activeGuidanceIndex = SPIRITUAL_GUIDANCE.findIndex(g => g.id === selectedGuidance.id);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   const filteredDocs = useMemo(() => {
