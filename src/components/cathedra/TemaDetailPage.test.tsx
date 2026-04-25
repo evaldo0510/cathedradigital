@@ -50,18 +50,13 @@ const renderWithProviders = (ui: React.ReactElement, initialEntry = '/temas/fe')
 describe('TemaDetailPage - Integration Tests', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.useFakeTimers();
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
   });
 
   const switchTab = async (name: string) => {
     fireEvent.click(screen.getByText(name));
-    // Advance timers for debounce (300ms)
+    // Wait for debounce (300ms)
     await act(async () => {
-      vi.advanceTimersByTime(400);
+      await new Promise(r => setTimeout(r, 500));
     });
   };
 
