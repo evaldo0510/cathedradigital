@@ -94,20 +94,17 @@ describe('TemaDetailPage - Integration Tests', () => {
       { id: '1', label: 'Vazio', slug: 'vazio', category: 'fundamentos', emoji: '🕳️' }
     ];
 
-    // Mock tags fetch with immediate resolution
     (supabase.from as any).mockReturnValue({
       select: vi.fn(() => ({
         order: vi.fn(() => Promise.resolve({ data: mockTags, error: null }))
       }))
     });
 
-    // Mock content fetch to return EMPTY
     (fetchNexusTagContent as any).mockResolvedValue([]);
 
     renderWithProviders(<TemaDetailPage />, '/temas/vazio');
 
-    // Wait for the tag to be loaded
-    const header = await screen.findByRole('heading', { name: 'Vazio', level: 1 });
+    const header = await screen.findByRole('heading', { name: /Vazio/i, level: 1 });
     expect(header).toBeInTheDocument();
 
     // 1. Escrituras (Default Tab)
@@ -118,11 +115,13 @@ describe('TemaDetailPage - Integration Tests', () => {
     const traditionTab = screen.getByText('Tradição');
     await userEvent.click(traditionTab);
     expect(await screen.findByText(/Conteúdo da Tradição em aprofundamento/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Nenhum versículo/i)).not.toBeInTheDocument(); // No cross-tab leak
 
     // 3. Magistério
     const magisteriumTab = screen.getByText('Magistério');
     await userEvent.click(magisteriumTab);
     expect(await screen.findByText(/Documentos do Magistério em aprofundamento/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Tradição em aprofundamento/i)).not.toBeInTheDocument();
 
     // 4. Jornadas
     const journeysTab = screen.getByText('Jornadas');
@@ -130,9 +129,9 @@ describe('TemaDetailPage - Integration Tests', () => {
     expect(await screen.findByText(/Nenhuma jornada específica vinculada a este tema/i)).toBeInTheDocument();
   });
 
-  it('completes loading state even when Supabase returns null data', async () => {
+  it('completes loading state even when Supabase returns undefined data', async () => {
     const mockTags = [
-      { id: '2', label: 'NullTag', slug: 'null-tag', category: 'fundamentos', emoji: '❓' }
+      { id: '2', label: 'UndefTag', slug: 'undef-tag', category: 'fundamentos', emoji: '❓' }
     ];
 
     (supabase.from as any).mockReturnValue({
@@ -141,17 +140,56 @@ describe('TemaDetailPage - Integration Tests', () => {
       }))
     });
 
-    (fetchNexusTagContent as any).mockResolvedValue([]);
+    (fetchNexusTagContent as any).mockResolvedValue(undefined); // undefined response
 
-    renderWithProviders(<TemaDetailPage />, '/temas/null-tag');
+    renderWithProviders(<TemaDetailPage />, '/temas/undef-tag');
 
-    // Loader should disappear
     await waitFor(() => {
       expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
     });
     
-    // Header H1 should appear
     const h1s = await screen.findAllByRole('heading', { level: 1 });
-    expect(h1s.some(h => h.textContent?.includes('NullTag'))).toBe(true);
+    expect(h1s.some(h => h.textContent?.includes('UndefTag'))).toBe(true);
+    expect(screen.getByText(/Nenhum versículo catalogado/i)).toBeInTheDocument();
+  });
+
+  it('handles retry after error and shows fallback if results are still empty', async () => {
+    const mockTags = [{ id: '3', label: 'Retry', slug: 'retry', category: 'fundamentos', emoji: '🔄' }];
+    (supabase.from as any).mockReturnValue({
+      select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) }))
+    });
+
+    // 1. First call fails
+    (fetchNexusTagContent as any).mockRejectedValueOnce(new Error('Timeout'));
+    
+    renderWithProviders(<TemaDetailPage />, '/temas/retry');
+
+    const retryBtn = await screen.findByText('Tentar Novamente');
+    
+    // 2. Second call returns empty list
+    (fetchNexusTagContent as any).mockResolvedValueOnce([]);
+    
+    await userEvent.click(retryBtn);
+
+    // Should show fallback, not error, not loader
+    expect(await screen.findByText(/Nenhum versículo catalogado/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Erro ao carregar/i)).not.toBeInTheDocument();
+  });
+
+  it('does not render empty titles when Supabase returns partially filled objects', async () => {
+    const mockTags = [{ id: '4', label: 'Partial', slug: 'partial', category: 'fundamentos', emoji: '🧩' }];
+    (supabase.from as any).mockReturnValue({
+      select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) }))
+    });
+
+    (fetchNexusTagContent as any).mockResolvedValue([
+      { id: 'c1', type: 'bible', content_text: 'Text only', title: '', metadata: {} }
+    ]);
+
+    renderWithProviders(<TemaDetailPage />, '/temas/partial');
+
+    // Title fallback should work (Escritura)
+    expect(await screen.findByText('Escritura')).toBeInTheDocument();
+    expect(screen.getByText('Text only')).toBeInTheDocument();
   });
 });
