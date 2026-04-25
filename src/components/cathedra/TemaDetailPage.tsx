@@ -80,6 +80,26 @@ const ThemeContentCard = ({
   </motion.div>
 );
 
+const ContentSkeleton = () => (
+  <div className="space-y-4">
+    {[1, 2, 3].map((i) => (
+      <Card key={i} className="border-border/40 bg-card/20 rounded-[2rem] overflow-hidden">
+        <CardContent className="p-6 sm:p-8 space-y-4">
+          <div className="flex items-center gap-2">
+            <Skeleton className="w-8 h-8 rounded-xl" />
+            <Skeleton className="h-3 w-32" />
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-[90%]" />
+            <Skeleton className="h-4 w-[70%]" />
+          </div>
+        </CardContent>
+      </Card>
+    ))}
+  </div>
+);
+
 const TemaDetailPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
