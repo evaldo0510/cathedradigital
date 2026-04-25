@@ -55,19 +55,22 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
     console.log(`[Nexus Diagnostic] Fetching content for tag: ${tag.label} (Normalized: ${normalizedTag})`);
     
     try {
+      // Definir termos de busca (Label original, Label normalizado, Slug)
+      const searchTerms = [tag.label, normalizedTag, tag.slug].filter((v, i, a) => a.indexOf(v) === i);
+      
       // 1. Fetch from spiritual_contents (Bíblia, Catecismo, Magistério)
       const { data: spiritualData, error: dbError } = await supabase
         .from('spiritual_contents')
         .select('*')
-        .contains('tags', [normalizedTag])
-        .limit(10);
+        .overlaps('tags', searchTerms)
+        .limit(15);
 
       // 2. Fetch from journeys (Jornadas)
       const { data: journeyData, error: journeyError } = await supabase
         .from('journeys')
         .select('*')
-        .contains('tags', [normalizedTag])
-        .limit(5);
+        .overlaps('tags', searchTerms)
+        .limit(10);
 
       if (dbError) throw dbError;
       if (journeyError) throw journeyError;
