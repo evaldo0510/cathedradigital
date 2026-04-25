@@ -123,7 +123,7 @@ const TemaDetailPage = () => {
 
   const selectedTag = tags?.find(t => t.slug === slug);
 
-  const { data: contents, isLoading: loadingContents, error: contentError } = useQuery({
+  const { data: contents, isLoading: loadingContents, isFetching: isFetchingContents, error: contentError } = useQuery({
     queryKey: ['tag-contents', selectedTag?.id, activeTab],
     queryFn: async () => {
       if (!selectedTag) return [];
@@ -338,7 +338,21 @@ const TemaDetailPage = () => {
                 <p className="text-sm text-muted-foreground italic max-w-md mx-auto">
                   Não foi possível estabelecer uma conexão estável com o banco de dados teológico. Por favor, tente novamente em alguns instantes.
                 </p>
-                <Button variant="outline" onClick={() => queryClient.invalidateQueries({ queryKey: ['tag-contents'] })} className="h-10 rounded-xl px-6">Tentar Novamente</Button>
+                <Button 
+                  variant="outline" 
+                  onClick={() => {
+                    queryClient.invalidateQueries({ queryKey: ['tag-contents'] });
+                  }} 
+                  className="h-10 rounded-xl px-6"
+                  disabled={isFetchingContents || loadingContents}
+                  data-testid="retry-button"
+                >
+                  {isFetchingContents || loadingContents ? (
+                    "Processando..."
+                  ) : (
+                    "Tentar Novamente"
+                  )}
+                </Button>
               </div>
             ) : (
             <>
