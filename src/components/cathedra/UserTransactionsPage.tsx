@@ -62,7 +62,22 @@ const UserTransactionsPage: React.FC = () => {
   const [selectedTx, setSelectedTx] = useState<any | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [announcement, setAnnouncement] = useState('');
   const loaderRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (selectedTx) {
+      setAnnouncement(`Detalhes da transação de ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(selectedTx.amount)} abertos.`);
+    }
+  }, [selectedTx]);
+
+  useEffect(() => {
+    if (loading) {
+      setAnnouncement('Carregando transações...');
+    } else if (transactions.length > 0) {
+      setAnnouncement(`${transactions.length} transações carregadas.`);
+    }
+  }, [loading, transactions.length]);
 
   const fetchTransactions = useCallback(async (pageNum: number) => {
     if (!user) return;
