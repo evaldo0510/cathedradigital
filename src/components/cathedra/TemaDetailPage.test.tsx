@@ -576,7 +576,7 @@ describe('TemaDetailPage - Integration Tests', () => {
 
     // Advance timers for debounce
     await act(async () => {
-      vi.advanceTimersByTime(400);
+      await new Promise(r => setTimeout(r, 400));
     });
 
     // Wait for resolution
