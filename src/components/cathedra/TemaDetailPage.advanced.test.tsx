@@ -11,7 +11,6 @@ import React from 'react';
 
 let mockStats = { calls: 0, tabs: {} as Record<string, number> };
 
-
 // Mocking dependencies
 vi.mock('@/integrations/supabase/client', () => ({
   supabase: {
@@ -73,11 +72,10 @@ describe('TemaDetailPage - Advanced Integration Tests', () => {
     };
   };
 
-
   it('validates accessibility roles and attributes for Tabs', async () => {
     const mockTags = [{ id: '1', label: 'Acessibilidade', slug: 'acessibilidade', category: 'fundamentos', emoji: '♿' }];
     (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
-    (fetchNexusTagContent as any).mockResolvedValue([]);
+    (fetchNexusTagContent as any).mockImplementation(trackedFetch(() => Promise.resolve([])));
 
     renderWithProviders(<TemaDetailPage />, '/temas/acessibilidade');
 
@@ -103,7 +101,7 @@ describe('TemaDetailPage - Advanced Integration Tests', () => {
     (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
     
     // Controlled promise for fetch
-    (fetchNexusTagContent as any).mockReturnValue(new Promise(() => {}));
+    (fetchNexusTagContent as any).mockImplementation(trackedFetch(() => new Promise(() => {})));
 
     const { user } = renderWithProviders(<TemaDetailPage />, '/temas/skel-loc');
 
@@ -133,7 +131,7 @@ describe('TemaDetailPage - Advanced Integration Tests', () => {
       id: `b${i}`, type: 'bible', content_text: `Verse ${i}`, title: `Ref ${i}` 
     }));
     
-    (fetchNexusTagContent as any).mockResolvedValue(bibleResults);
+    (fetchNexusTagContent as any).mockImplementation(trackedFetch(() => Promise.resolve(bibleResults)));
 
     const { user } = renderWithProviders(<TemaDetailPage />, '/temas/limits');
 
@@ -156,14 +154,14 @@ describe('TemaDetailPage - Advanced Integration Tests', () => {
     (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
 
     let abortSignalTriggered = false;
-    (fetchNexusTagContent as any).mockImplementation((tag: any, signal?: AbortSignal) => {
+    (fetchNexusTagContent as any).mockImplementation(trackedFetch((tag: any, signal?: AbortSignal) => {
       if (signal) {
         signal.addEventListener('abort', () => {
           abortSignalTriggered = true;
         });
       }
       return new Promise(() => {}); // Never resolves
-    });
+    }));
 
     const { user } = renderWithProviders(<TemaDetailPage />, '/temas/abort');
 
