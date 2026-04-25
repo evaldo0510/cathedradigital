@@ -172,4 +172,44 @@ describe('TemaDetailPage - Integration Tests', () => {
     expect(await screen.findByText(/Unique Tradition Content/i)).toBeInTheDocument();
     expect(screen.queryByText(/Unique Bible Content/i)).not.toBeInTheDocument();
   });
+
+  it('handles fetch returning null or undefined for all categories', async () => {
+    const mockTags = [{ id: '1', label: 'NullUndef', slug: 'null-undef', category: 'fundamentos', emoji: '👻' }];
+    (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
+
+    const testValues = [null, undefined];
+    const categories = [
+      { name: 'Escrituras', fallback: /Nenhum versículo catalogado/i },
+      { name: 'Tradição', fallback: /Conteúdo da Tradição em aprofundamento/i },
+      { name: 'Magistério', fallback: /Documentos do Magistério em aprofundamento/i },
+      { name: 'Jornadas', fallback: /Nenhuma jornada específica vinculada a este tema/i }
+    ];
+
+    for (const value of testValues) {
+      (fetchNexusTagContent as any).mockResolvedValue(value);
+      const { unmount } = renderWithProviders(<TemaDetailPage />, '/temas/null-undef');
+
+      // Check all tabs for this value
+      for (const cat of categories) {
+        await userEvent.click(screen.getByText(cat.name));
+        
+        // Wait for loading to finish
+        await waitFor(() => {
+          expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
+        });
+
+        // Specific fallback should be visible
+        expect(await screen.findByText(cat.fallback)).toBeInTheDocument();
+
+        // No other fallbacks should be visible
+        categories.filter(c => c.name !== cat.name).forEach(c => {
+          expect(screen.queryByText(c.fallback)).not.toBeInTheDocument();
+        });
+      }
+      unmount();
+      vi.clearAllMocks();
+      // Re-mock supabase for the next iteration if needed (it's in beforeEach but we are in a loop)
+      (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
+    }
+  });
 });
