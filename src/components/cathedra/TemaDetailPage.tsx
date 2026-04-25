@@ -532,15 +532,12 @@ const TemaDetailPage = () => {
             <h3 className="text-xs font-black uppercase tracking-widest text-foreground/60">Temas Relacionados</h3>
             <div className="flex flex-wrap gap-2">
               {tags?.filter(t => t.category === selectedTag?.category && t.id !== selectedTag?.id).slice(0, 8).map((tag, idx) => (
-                <BubbleTag 
+                <TagBubble 
                   key={tag.id}
-                  label={tag.label}
-                  emoji={tag.emoji}
+                  tag={tag}
                   index={idx}
                   isSuggested={suggestedSlugs.has(tag.slug)}
-                  onClick={() => navigate(`${AppRoute.TEMAS}/${tag.slug}`)}
-
-                  onMouseEnter={() => prefetchTag(tag)}
+                  onKeyDown={() => {}}
                   className="px-3 py-1.5"
                 />
               ))}
