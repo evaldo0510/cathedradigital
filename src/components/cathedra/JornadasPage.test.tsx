@@ -8,11 +8,26 @@ import { supabase } from '@/integrations/supabase/client';
 import { HelmetProvider } from 'react-helmet-async';
 import React from 'react';
 
-// Mocking dependencies
+// Robust generic Supabase mock
 vi.mock('@/integrations/supabase/client', () => {
+  const createMockChain = (data: any = [], error: any = null) => {
+    const chain = {
+      select: vi.fn().mockReturnThis(),
+      order: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockReturnThis(),
+      limit: vi.fn().mockReturnThis(),
+      overlaps: vi.fn().mockReturnThis(),
+      contains: vi.fn().mockReturnThis(),
+      // Use .then to make it awaitable like a promise
+      then: vi.fn().mockImplementation((resolve) => resolve({ data, error })),
+    };
+    return chain;
+  };
+
   return {
     supabase: {
-      from: vi.fn()
+      from: vi.fn((table) => createMockChain([])),
+      rpc: vi.fn(() => Promise.resolve({ data: [], error: null }))
     }
   };
 });
@@ -56,25 +71,12 @@ describe('JornadasPage - Integration Tests', () => {
   });
 
   it('displays empty state message when no journeys are found', async () => {
-    (supabase.from as any).mockImplementation((table: string) => {
-      if (table === 'view_journeys_with_stats') {
-        return {
-          select: vi.fn(() => ({
-            order: vi.fn().mockResolvedValue({ data: [], error: null })
-          }))
-        };
-      }
-      return {
-        select: vi.fn(() => ({
-          eq: vi.fn().mockResolvedValue({ data: [], error: null })
-        }))
-      };
-    });
-
+    // Already mocked to return empty data in vi.mock
     renderWithProviders(<JornadasPage />);
     
     // Check for empty state message
-    expect(await screen.findByText('Nenhuma jornada disponível ainda.')).toBeInTheDocument();
+    const emptyMsg = await screen.findByText(/Nenhuma jornada disponível ainda/i);
+    expect(emptyMsg).toBeInTheDocument();
   });
 
   it('displays filter mismatch message when filters return 0 results', async () => {
@@ -82,17 +84,20 @@ describe('JornadasPage - Integration Tests', () => {
       { id: '1', title: 'Jornada 1', difficulty: 'iniciante', category: 'fundamentos', steps_count: 5 }
     ];
 
+    // Override mock for this test
     (supabase.from as any).mockImplementation((table: string) => {
       if (table === 'view_journeys_with_stats') {
         return {
-          select: vi.fn(() => ({
-            order: vi.fn().mockResolvedValue({ data: mockJourneys, error: null })
+          select: vi.fn().mockReturnThis(),
+          order: vi.fn().mockImplementation((col, opt) => ({
+            then: (res: any) => res({ data: mockJourneys, error: null })
           }))
         };
       }
       return {
-        select: vi.fn(() => ({
-          eq: vi.fn().mockResolvedValue({ data: [], error: null })
+        select: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockImplementation((col, val) => ({
+          then: (res: any) => res({ data: [], error: null })
         }))
       };
     });
@@ -107,6 +112,6 @@ describe('JornadasPage - Integration Tests', () => {
     await userEvent.click(diffFilter);
 
     // Check for fallback message
-    expect(await screen.findByText('Nenhuma jornada encontrada com esses filtros.')).toBeInTheDocument();
+    expect(await screen.findByText(/Nenhuma jornada encontrada com esses filtros/i)).toBeInTheDocument();
   });
 });
