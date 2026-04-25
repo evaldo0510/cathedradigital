@@ -230,7 +230,7 @@ const CommunityPage: React.FC = () => {
 
     if (data) {
       const userIds = [...new Set(data.map(r => r.user_id))];
-      const { data: profiles } = await supabase.from('public_profiles' as any).select('id, name').in(userIds.length ? userIds : ['']) as { data: { id: string; name: string }[] | null };
+      const { data: profiles } = await supabase.from('public_profiles' as any).select('id, name').in('id', userIds.length ? userIds : ['']) as { data: { id: string; name: string }[] | null };
       const profileMap = new Map(profiles?.map(p => [p.id, p.name]) || []);
       setReplies(data.map(r => ({ ...r, author_name: profileMap.get(r.user_id) || 'Anônimo' })));
     }
