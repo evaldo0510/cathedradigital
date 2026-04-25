@@ -5,7 +5,7 @@ import { AppRoute } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { motion } from 'framer-motion';
-import { CheckCircle2, Clock, XCircle } from 'lucide-react';
+import { CheckCircle2, Clock, XCircle, Download } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 type ResultState = 'loading' | 'success' | 'pending' | 'failure';
