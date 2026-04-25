@@ -178,6 +178,20 @@ const TemasPage = () => {
                 </div>
               ) : (
                 <>
+                  {isSearchActive && activeCategory !== 'all' && (
+                    <div className="px-6 pt-6 flex items-center justify-between">
+                      <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-primary/5 border border-primary/10">
+                        <Sparkles className="w-3 h-3 text-primary/40" />
+                        <span className="text-[10px] font-bold text-primary/60 uppercase tracking-widest">Busca Global Ativa</span>
+                      </div>
+                      <button 
+                        onClick={() => setActiveCategory('all')}
+                        className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline underline-offset-4 transition-all"
+                      >
+                        Limpar Filtro
+                      </button>
+                    </div>
+                  )}
                   <div className="relative p-6 sm:p-10">
                     <div className="flex flex-wrap justify-center gap-2 sm:gap-3 max-w-5xl mx-auto" role="list" ref={tagsContainerRef}>
                       {filteredTags.map((tag, idx) => (
