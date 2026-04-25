@@ -121,7 +121,8 @@ const TemasPage = () => {
   }, [queryClient]);
 
   return (
-    <div className="space-y-6 sm:space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-5xl mx-auto pb-20 px-4">
+    <div className="desktop-layout py-6 sm:py-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="desktop-main px-4">
       <header className="space-y-4 text-center mb-8 sm:mb-16">
         <div className="flex justify-center mb-4">
           <div className="w-16 h-1.5 bg-gradient-to-r from-transparent via-primary/50 to-transparent rounded-full shadow-[0_0_15px_rgba(var(--primary),0.3)]" />
