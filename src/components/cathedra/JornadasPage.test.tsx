@@ -56,11 +56,19 @@ describe('JornadasPage - Integration Tests', () => {
   });
 
   it('displays empty state message when no journeys are found', async () => {
-    (supabase.from as any).mockReturnValue({
-      select: vi.fn(() => ({
-        order: vi.fn().mockResolvedValue({ data: [], error: null }),
-        eq: vi.fn().mockResolvedValue({ data: [], error: null })
-      }))
+    (supabase.from as any).mockImplementation((table: string) => {
+      if (table === 'view_journeys_with_stats') {
+        return {
+          select: vi.fn(() => ({
+            order: vi.fn().mockResolvedValue({ data: [], error: null })
+          }))
+        };
+      }
+      return {
+        select: vi.fn(() => ({
+          eq: vi.fn().mockResolvedValue({ data: [], error: null })
+        }))
+      };
     });
 
     renderWithProviders(<JornadasPage />);
@@ -74,11 +82,19 @@ describe('JornadasPage - Integration Tests', () => {
       { id: '1', title: 'Jornada 1', difficulty: 'iniciante', category: 'fundamentos', steps_count: 5 }
     ];
 
-    (supabase.from as any).mockReturnValue({
-      select: vi.fn(() => ({
-        order: vi.fn().mockResolvedValue({ data: mockJourneys, error: null }),
-        eq: vi.fn().mockResolvedValue({ data: [], error: null })
-      }))
+    (supabase.from as any).mockImplementation((table: string) => {
+      if (table === 'view_journeys_with_stats') {
+        return {
+          select: vi.fn(() => ({
+            order: vi.fn().mockResolvedValue({ data: mockJourneys, error: null })
+          }))
+        };
+      }
+      return {
+        select: vi.fn(() => ({
+          eq: vi.fn().mockResolvedValue({ data: [], error: null })
+        }))
+      };
     });
 
     renderWithProviders(<JornadasPage />);
