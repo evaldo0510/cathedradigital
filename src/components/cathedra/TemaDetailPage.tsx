@@ -377,7 +377,9 @@ const TemaDetailPage = () => {
             </TabsContent>
 
             <TabsContent value="tradition" className="mt-6 space-y-4">
-              {catechism.length > 0 ? (
+              {loadingContents ? (
+                <ContentSkeleton />
+              ) : catechism.length > 0 ? (
                 <>
                   <div className="space-y-4">
                     {catechism.slice(0, traditionLimit).map((c, i) => (
@@ -413,7 +415,9 @@ const TemaDetailPage = () => {
             </TabsContent>
 
             <TabsContent value="magisterium" className="mt-6 space-y-4">
-              {magisterium.length > 0 ? (
+              {loadingContents ? (
+                <ContentSkeleton />
+              ) : magisterium.length > 0 ? (
                 <>
                   <div className="space-y-4">
                     {magisterium.slice(0, magisteriumLimit).map((c, i) => (
@@ -446,7 +450,9 @@ const TemaDetailPage = () => {
             </TabsContent>
             
             <TabsContent value="journeys" className="mt-6 space-y-4">
-              {journeys.length > 0 ? (
+              {loadingContents ? (
+                <ContentSkeleton />
+              ) : journeys.length > 0 ? (
                 <div className="space-y-4">
                   {journeys.map((c, i) => (
                     <ThemeContentCard
