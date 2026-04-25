@@ -46,6 +46,12 @@ const TransactionsPage: React.FC = () => {
   const [previewMode, setPreviewMode] = useState<'current' | 'all'>('current');
   const [isAuditOpen, setIsAuditOpen] = useState(false);
   const [auditLogs, setAuditLogs] = useState<any[]>([]);
+  const [auditPage, setAuditPage] = useState(0);
+  const [hasMoreAudits, setHasMoreAudits] = useState(true);
+  const [auditLoading, setAuditLoading] = useState(false);
+  const [auditAdminFilter, setAuditAdminFilter] = useState('');
+  const [auditStart, setAuditStart] = useState('');
+  const [auditEnd, setAuditEnd] = useState('');
   const [abortController, setAbortController] = useState<AbortController | null>(null);
 
   const isAdmin = profile?.role === 'admin';
@@ -65,26 +71,52 @@ const TransactionsPage: React.FC = () => {
     }
   };
 
-  const fetchAuditLogs = async () => {
+  const fetchAuditLogs = async (isNewSearch = false) => {
     if (!isAdmin) return;
+    setAuditLoading(true);
     try {
-      const { data, error } = await supabase
+      const currentPage = isNewSearch ? 0 : auditPage;
+      let query = supabase
         .from('app_metrics')
         .select('*')
         .eq('metric_type', 'csv_export')
-        .order('created_at', { ascending: false })
-        .limit(50);
+        .order('created_at', { ascending: false });
+
+      if (auditAdminFilter.trim()) {
+        query = query.filter('metadata->>user_email', 'ilike', `%${auditAdminFilter}%`);
+      }
+      if (auditStart) {
+        query = query.gte('created_at', startOfDay(parseISO(auditStart)).toISOString());
+      }
+      if (auditEnd) {
+        query = query.lte('created_at', endOfDay(parseISO(auditEnd)).toISOString());
+      }
+
+      const { data, error } = await query
+        .range(currentPage * 20, (currentPage + 1) * 20 - 1);
+
       if (error) throw error;
-      setAuditLogs(data || []);
+      
+      if (isNewSearch) {
+        setAuditLogs(data || []);
+        setAuditPage(1);
+      } else {
+        setAuditLogs(prev => [...prev, ...(data || [])]);
+        setAuditPage(prev => prev + 1);
+      }
+      setHasMoreAudits(data && data.length === 20);
     } catch (err) {
       console.error('Error fetching audit logs:', err);
+    } finally {
+      setAuditLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchAvailablePlans();
-    if (isAdmin) fetchAuditLogs();
-  }, [isAdmin]);
+    if (isAdmin && isAuditOpen) {
+      fetchAuditLogs(true);
+    }
+  }, [isAdmin, isAuditOpen, auditAdminFilter, auditStart, auditEnd]);
 
   const fetchTransactions = async () => {
     if (!user) return;
@@ -137,9 +169,10 @@ const TransactionsPage: React.FC = () => {
     fetchTransactions();
   }, [user, statusFilter, planFilter, userSearch, startDate, endDate, sortOrder, page, isAdmin]);
 
-  const logExport = async (recordsCount: number, mode: string) => {
+  const logExport = async (recordsCount: number, mode: string, status: 'completed' | 'cancelled' = 'completed', customFilters?: any) => {
     if (!user) return;
     try {
+      const filtersToLog = customFilters || { status: statusFilter, plan: planFilter, start: startDate, end: endDate, search: userSearch };
       await supabase.from('app_metrics').insert([{
         metric_type: 'csv_export',
         metadata: {
@@ -147,19 +180,23 @@ const TransactionsPage: React.FC = () => {
           user_email: user.email,
           mode,
           records_count: recordsCount,
-          filters: { status: statusFilter, plan: planFilter, start: startDate, end: endDate, search: userSearch }
+          status,
+          filters: filtersToLog
         }
       }]);
+      if (isAuditOpen) fetchAuditLogs(true);
     } catch (err) {
       console.error('Audit log failed:', err);
     }
   };
 
-  const executeDownload = (data: any[], mode: 'current' | 'all') => {
+  const executeDownload = (data: any[], mode: 'current' | 'all', customFilters?: any) => {
+    const activeFilters = customFilters || { status: statusFilter, plan: planFilter, start: startDate, end: endDate, search: userSearch };
+    
     const metadata = [
       `"Exportado por:","${user?.email || 'Sistema'}"`,
       `"Data da Exportação:","${format(new Date(), "yyyy-MM-dd HH:mm:ss")}"`,
-      `"Filtros:","Status: ${statusFilter}, Plano: ${planFilter}, Início: ${startDate || 'N/A'}, Fim: ${endDate || 'N/A'}"`,
+      `"Filtros:","Status: ${activeFilters.status}, Plano: ${activeFilters.plan}, Início: ${activeFilters.start || 'N/A'}, Fim: ${activeFilters.end || 'N/A'}"`,
       `"Total de Registros:","${data.length}"`,
       '""' // Empty line
     ].join('\n');
@@ -195,15 +232,24 @@ const TransactionsPage: React.FC = () => {
     link.click();
     document.body.removeChild(link);
     
-    logExport(data.length, mode);
+    logExport(data.length, mode, 'completed', customFilters);
     toast.success('Download iniciado!');
     setIsPreviewOpen(false);
   };
 
-  const exportToCSV = async (mode: 'current' | 'all' = 'current') => {
+  const exportToCSV = async (mode: 'current' | 'all' = 'current', customFilters?: any) => {
     if (exporting) return;
     
-    if (mode === 'all' && statusFilter === 'all' && planFilter === 'all' && !startDate && !endDate && !userSearch.trim()) {
+    const filters = customFilters || { status: statusFilter, plan: planFilter, start: startDate, end: endDate, search: userSearch };
+
+    if (filters.start && filters.end) {
+      if (isBefore(parseISO(filters.end), parseISO(filters.start))) {
+        toast.error('Filtros inválidos: Data final anterior à inicial.');
+        return;
+      }
+    }
+
+    if (mode === 'all' && filters.status === 'all' && filters.plan === 'all' && !filters.start && !filters.end && !filters.search?.trim()) {
       const confirmAll = window.confirm('Você está tentando exportar TODAS as transações sem nenhum filtro. Isso pode demorar e gerar um arquivo muito grande. Deseja continuar?');
       if (!confirmAll) return;
     }
@@ -215,7 +261,7 @@ const TransactionsPage: React.FC = () => {
 
     try {
       let dataToExport: any[] = [];
-      if (mode === 'current') {
+      if (mode === 'current' && !customFilters) {
         dataToExport = transactions;
       } else {
         let allData: any[] = [];
@@ -225,20 +271,21 @@ const TransactionsPage: React.FC = () => {
 
         let countQuery = supabase.from('transactions').select('*', { count: 'exact', head: true });
         if (!isAdmin) countQuery = countQuery.eq('user_id', user?.id);
-        if (userSearch.trim()) {
-          if (userSearch.includes('@')) countQuery = countQuery.filter('profiles.email', 'ilike', `%${userSearch}%`);
-          else countQuery = countQuery.filter('profiles.name', 'ilike', `%${userSearch}%`);
+        if (filters.search?.trim()) {
+          if (filters.search.includes('@')) countQuery = countQuery.filter('profiles.email', 'ilike', `%${filters.search}%`);
+          else countQuery = countQuery.filter('profiles.name', 'ilike', `%${filters.search}%`);
         }
-        if (statusFilter !== 'all') countQuery = countQuery.eq('status', statusFilter);
-        if (planFilter !== 'all') countQuery = countQuery.eq('plan_id', planFilter);
-        if (startDate) countQuery = countQuery.gte('created_at', startOfDay(parseISO(startDate)).toISOString());
-        if (endDate) countQuery = countQuery.lte('created_at', endOfDay(parseISO(endDate)).toISOString());
+        if (filters.status !== 'all') countQuery = countQuery.eq('status', filters.status);
+        if (filters.plan !== 'all') countQuery = countQuery.eq('plan_id', filters.plan);
+        if (filters.start) countQuery = countQuery.gte('created_at', startOfDay(parseISO(filters.start)).toISOString());
+        if (filters.end) countQuery = countQuery.lte('created_at', endOfDay(parseISO(filters.end)).toISOString());
         
         const { count: total } = await countQuery;
         setTotalToExport(total || 0);
 
         while (hasMore) {
           if (controller.signal.aborted) {
+            logExport(allData.length, mode, 'cancelled', filters);
             toast.error('Exportação cancelada.');
             setExporting(false);
             return;
@@ -246,14 +293,14 @@ const TransactionsPage: React.FC = () => {
 
           let q = supabase.from('transactions').select('*, profiles(name, email)');
           if (!isAdmin) q = q.eq('user_id', user?.id);
-          if (userSearch.trim()) {
-            if (userSearch.includes('@')) q = q.filter('profiles.email', 'ilike', `%${userSearch}%`);
-            else q = q.filter('profiles.name', 'ilike', `%${userSearch}%`);
+          if (filters.search?.trim()) {
+            if (filters.search.includes('@')) q = q.filter('profiles.email', 'ilike', `%${filters.search}%`);
+            else q = q.filter('profiles.name', 'ilike', `%${filters.search}%`);
           }
-          if (statusFilter !== 'all') q = q.eq('status', statusFilter);
-          if (planFilter !== 'all') q = q.eq('plan_id', planFilter);
-          if (startDate) q = q.gte('created_at', startOfDay(parseISO(startDate)).toISOString());
-          if (endDate) q = q.lte('created_at', endOfDay(parseISO(endDate)).toISOString());
+          if (filters.status !== 'all') q = q.eq('status', filters.status);
+          if (filters.plan !== 'all') q = q.eq('plan_id', filters.plan);
+          if (filters.start) q = q.gte('created_at', startOfDay(parseISO(filters.start)).toISOString());
+          if (filters.end) q = q.lte('created_at', endOfDay(parseISO(filters.end)).toISOString());
 
           const { data, error } = await q.order('created_at', { ascending: sortOrder === 'asc' }).range(from, from + batchSize - 1);
           if (error) throw error;
@@ -580,7 +627,7 @@ const TransactionsPage: React.FC = () => {
 
       {/* AUDIT LOGS DIALOG */}
       <Dialog open={isAuditOpen} onOpenChange={setIsAuditOpen}>
-        <DialogContent className="max-w-4xl rounded-[2.5rem] bg-background/95 backdrop-blur-xl max-h-[80vh] overflow-y-auto">
+        <DialogContent className="max-w-4xl rounded-[2.5rem] bg-background/95 backdrop-blur-xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-2xl font-serif font-bold flex items-center gap-3">
               <div className="p-2 bg-primary/10 rounded-xl text-primary"><ShieldAlert className="w-6 h-6" /></div>
@@ -589,56 +636,100 @@ const TransactionsPage: React.FC = () => {
             <DialogDescription>Rastreabilidade de todos os arquivos CSV gerados por administradores.</DialogDescription>
           </DialogHeader>
 
-          <div className="py-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-6">
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold uppercase text-muted-foreground">Admin</label>
+              <Input placeholder="E-mail" value={auditAdminFilter} onChange={(e) => setAuditAdminFilter(e.target.value)} className="h-9 rounded-xl text-xs" />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold uppercase text-muted-foreground">Início</label>
+              <Input type="date" value={auditStart} onChange={(e) => setAuditStart(e.target.value)} className="h-9 rounded-xl text-xs" />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold uppercase text-muted-foreground">Fim</label>
+              <Input type="date" value={auditEnd} onChange={(e) => setAuditEnd(e.target.value)} className="h-9 rounded-xl text-xs" />
+            </div>
+          </div>
+
+          <div className="py-2">
             <Table>
               <TableHeader className="bg-muted/50">
                 <TableRow>
                   <TableHead className="text-[10px] font-bold">Data</TableHead>
-                  <TableHead className="text-[10px] font-bold">Admin</TableHead>
+                  <TableHead className="text-[10px] font-bold">Admin/Status</TableHead>
                   <TableHead className="text-[10px] font-bold">Registros</TableHead>
                   <TableHead className="text-[10px] font-bold">Filtros Aplicados</TableHead>
                   <TableHead className="text-right text-[10px] font-bold">Ações</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {auditLogs.length === 0 ? (
+                {auditLogs.length === 0 && !auditLoading ? (
                   <TableRow><TableCell colSpan={5} className="h-32 text-center italic text-muted-foreground">Nenhum log de exportação encontrado.</TableCell></TableRow>
                 ) : (
                   auditLogs.map((log: any) => (
-                    <TableRow key={log.id}>
+                    <TableRow key={log.id} className="group">
                       <TableCell className="text-[10px] font-medium">{format(new Date(log.created_at), "dd/MM HH:mm")}</TableCell>
-                      <TableCell className="text-[10px]">{log.metadata?.user_email || '---'}</TableCell>
+                      <TableCell className="text-[10px]">
+                        <div className="flex flex-col">
+                          <span>{log.metadata?.user_email || '---'}</span>
+                          <span className={`text-[9px] font-bold uppercase ${log.metadata?.status === 'cancelled' ? 'text-destructive' : 'text-green-500'}`}>
+                            {log.metadata?.status === 'cancelled' ? 'Cancelado' : 'Concluído'}
+                          </span>
+                        </div>
+                      </TableCell>
                       <TableCell className="text-[10px] font-bold text-primary">{log.metadata?.records_count}</TableCell>
                       <TableCell className="text-[10px] max-w-[200px] truncate italic text-muted-foreground">
                         {Object.entries(log.metadata?.filters || {}).map(([k, v]) => v !== 'all' && v ? `${k}:${v}` : null).filter(Boolean).join(', ') || 'Sem filtros'}
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          className="h-7 text-[10px] rounded-lg"
-                          onClick={() => {
-                            const f = log.metadata?.filters;
-                            setStatusFilter(f.status || 'all');
-                            setPlanFilter(f.plan || 'all');
-                            setStartDate(f.start || '');
-                            setEndDate(f.end || '');
-                            setUserSearch(f.search || '');
-                            setIsAuditOpen(false);
-                            toast.success('Filtros aplicados do log. Iniciando exportação...');
-                            setTimeout(() => exportToCSV(log.metadata?.mode || 'all'), 500);
-                          }}
-                        >
-                          <Download className="w-3 h-3 mr-1" /> Re-exportar
-                        </Button>
+                        <div className="flex justify-end gap-1">
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            className="h-7 text-[10px] rounded-lg"
+                            title="Baixar CSV diretamente"
+                            onClick={() => {
+                              setIsAuditOpen(false);
+                              toast.success('Iniciando download direto...');
+                              exportToCSV(log.metadata?.mode || 'all', log.metadata?.filters);
+                            }}
+                          >
+                            <Download className="w-3 h-3" />
+                          </Button>
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            className="h-7 text-[10px] rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                            title="Ver no painel principal"
+                            onClick={() => {
+                              const f = log.metadata?.filters;
+                              setStatusFilter(f.status || 'all');
+                              setPlanFilter(f.plan || 'all');
+                              setStartDate(f.start || '');
+                              setEndDate(f.end || '');
+                              setUserSearch(f.search || '');
+                              setIsAuditOpen(false);
+                              toast.success('Filtros aplicados.');
+                            }}
+                          >
+                            <RotateCcw className="w-3 h-3" />
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))
                 )}
+                {auditLoading && <TableRow><TableCell colSpan={5} className="h-20 text-center italic text-xs">Carregando...</TableCell></TableRow>}
               </TableBody>
             </Table>
+
+            {hasMoreAudits && !auditLoading && (
+              <div className="mt-4 flex justify-center">
+                <Button variant="ghost" size="sm" onClick={() => fetchAuditLogs()} className="text-[10px] uppercase font-bold tracking-widest hover:bg-primary/5 rounded-full px-8">Carregar mais logs</Button>
+              </div>
+            )}
           </div>
-          <Button onClick={() => setIsAuditOpen(false)} variant="outline" className="rounded-full w-full font-bold">Fechar</Button>
+          <Button onClick={() => setIsAuditOpen(false)} variant="outline" className="rounded-full w-full font-bold h-12 mt-4">Fechar Auditoria</Button>
         </DialogContent>
       </Dialog>
     </div>
