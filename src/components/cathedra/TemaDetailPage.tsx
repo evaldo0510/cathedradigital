@@ -303,7 +303,7 @@ const TemaDetailPage = () => {
         <div className="md:col-span-2 space-y-8">
           <Tabs defaultValue="bible" className="w-full">
             <TabsList className="w-full bg-muted/40 p-1 rounded-2xl border border-border/40 grid grid-cols-4">
-              <TabsTrigger value="bible" className="rounded-xl text-[10px] font-black uppercase tracking-widest py-2.5">Fundamentos</TabsTrigger>
+              <TabsTrigger value="bible" className="rounded-xl text-[10px] font-black uppercase tracking-widest py-2.5">Escrituras</TabsTrigger>
               <TabsTrigger value="tradition" className="rounded-xl text-[10px] font-black uppercase tracking-widest py-2.5">Tradição</TabsTrigger>
               <TabsTrigger value="magisterium" className="rounded-xl text-[10px] font-black uppercase tracking-widest py-2.5">Magistério</TabsTrigger>
               <TabsTrigger value="journeys" className="rounded-xl text-[10px] font-black uppercase tracking-widest py-2.5">Jornadas</TabsTrigger>
