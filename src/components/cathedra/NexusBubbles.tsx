@@ -115,7 +115,10 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
             isSelected={open}
             isSuggested={isSuggested}
             onClick={() => {}} // Popover handles trigger
+            onKeyDown={onKeyDown}
             onMouseEnter={prefetchTag}
+            tabIndex={tabIndex}
+            data-roving-item={true}
           />
         </div>
       </PopoverTrigger>
