@@ -197,7 +197,10 @@ const TemasPage = () => {
                           index={idx}
                           isSelected={false}
                           onClick={() => handleTagSelect(tag)}
+                          onKeyDown={(e) => handleRovingKeyDown(e, idx, () => handleTagSelect(tag))}
                           onMouseEnter={() => prefetchTag(tag)}
+                          tabIndex={activeIndex === idx ? 0 : -1}
+                          data-roving-item={true}
                           className="px-4 py-2.5 text-[10px] sm:text-[11px] uppercase tracking-widest"
                         />
                       </div>
