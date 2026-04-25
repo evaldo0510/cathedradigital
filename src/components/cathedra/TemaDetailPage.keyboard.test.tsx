@@ -171,18 +171,24 @@ describe('TemaDetailPage - Keyboard Navigation Integration Tests', () => {
     expect(await screen.findByTestId('content-skeleton')).toBeInTheDocument();
 
     // Move to next tab
-    await user.tab(); // Focus trigger
+    const bibleTab = screen.getByRole('tab', { name: /Escrituras/i });
+    bibleTab.focus();
     await user.keyboard('{ArrowRight}'); // Move to Tradição
 
     // Should still see skeleton in the new active tab
-    expect(screen.getByTestId('content-skeleton')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByTestId('content-skeleton')).toBeInTheDocument();
+    });
 
     // Resolve
     await act(async () => {
       resolveFetch([]);
     });
 
-    expect(await screen.findByText(/Conteúdo da Tradição em aprofundamento/i)).toBeInTheDocument();
-    expect(screen.queryByTestId('content-skeleton')).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText(/Conteúdo da Tradição em aprofundamento/i)).toBeInTheDocument();
+      expect(screen.queryByTestId('content-skeleton')).not.toBeInTheDocument();
+    });
+
   });
 });
