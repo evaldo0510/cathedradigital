@@ -186,7 +186,7 @@ const CheckoutResultPage: React.FC = () => {
               className="w-full h-8 text-[10px] font-bold uppercase text-muted-foreground gap-2"
               onClick={() => window.print()}
             >
-              <Icons.Download className="w-3 h-3" /> Baixar Comprovante
+              <Download className="w-3 h-3" /> Baixar Comprovante
             </Button>
           )}
         </motion.div>
