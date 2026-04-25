@@ -112,10 +112,7 @@ const SYNONYM_MAP: Record<string, string> = {
 
 /** Remove accents and convert to lowercase slug */
 function toSlug(text: string): string {
-  return text
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
+  return normalizeText(text)
     .replace(/\s+/g, '_')
     .replace(/[^a-z0-9_]/g, '');
 }
