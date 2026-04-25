@@ -126,7 +126,7 @@ const TemaDetailPage = () => {
         return results.map(r => ({
           id: r.id,
           content_type: r.type,
-          reference: r.title,
+          reference: r.title || (r.type === 'bible' ? 'Escritura' : r.type === 'catechism' ? 'Catecismo' : 'Tradição'),
           title: r.title,
           text_content: r.content_text,
           tags: r.metadata?.tags || []
