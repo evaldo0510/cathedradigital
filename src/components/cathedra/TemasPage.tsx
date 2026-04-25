@@ -11,6 +11,8 @@ import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import { FuzzySearchInput } from './FuzzySearchInput';
 import { BubbleTag } from './BubbleTag';
 import { getTabProps, getTabPanelProps, useTabNavigation, useRovingTabindex } from './TabUtils';
+import { useSpiritualProfile } from '@/hooks/useSpiritualProfile';
+import { PROFILES } from './SpiritualQuiz';
 
 
 interface Tag {
@@ -89,6 +91,21 @@ const TemasPage = () => {
   }, [tags, fuzzyTags, isSearchActive, activeCategory]);
 
   const { activeIndex, handleKeyDown: handleRovingKeyDown } = useRovingTabindex(filteredTags.length, tagsContainerRef);
+
+  // Suggested tags based on the user's spiritual profile (sparkle highlight)
+  const { profileId } = useSpiritualProfile();
+  const suggestedSlugs = useMemo(() => {
+    if (!profileId || !tags) return new Set<string>();
+    const profile = PROFILES[profileId];
+    if (!profile) return new Set<string>();
+    const relevantLabels = [profile.theme, profile.pain.label, 'Oração', 'Jesus', 'Fé'];
+    return new Set(
+      tags
+        .filter(t => relevantLabels.some(l => t.label.toLowerCase().includes(l.toLowerCase())))
+        .slice(0, 8)
+        .map(t => t.slug)
+    );
+  }, [profileId, tags]);
 
   useEffect(() => {
     const temaSlug = searchParams.get('tema');
@@ -201,6 +218,7 @@ const TemasPage = () => {
                             emoji={tag.emoji}
                             index={idx}
                             isSelected={false}
+                            isSuggested={suggestedSlugs.has(tag.slug)}
                             onClick={() => handleTagSelect(tag)}
                             onKeyDown={(e) => handleRovingKeyDown(e, idx, () => handleTagSelect(tag))}
                             onMouseEnter={() => prefetchTag(tag)}
