@@ -1,4 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import NexusBubbles from './NexusBubbles';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -54,6 +55,21 @@ describe('NexusBubbles - Integration Tests', () => {
     vi.clearAllMocks();
   });
 
+  it('settles to non-loading state when search returns null', async () => {
+    (supabase.from as any).mockReturnValue({
+      select: vi.fn(() => ({
+        order: vi.fn(() => Promise.resolve({ data: null, error: null }))
+      }))
+    });
+
+    renderWithProviders(<NexusBubbles />);
+
+    // Loader settles
+    await waitFor(() => {
+      expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
+    }, { timeout: 3000 });
+  });
+
   it('displays fallback message when search returns no results', async () => {
     const mockTags = [
       { id: '1', label: 'Fé', slug: 'fe', category: 'fundamentos', emoji: '✝️' }
@@ -67,16 +83,31 @@ describe('NexusBubbles - Integration Tests', () => {
 
     renderWithProviders(<NexusBubbles />);
 
-    // Wait for tags to load
-    await waitFor(() => {
-      expect(screen.getByText('Fé')).toBeInTheDocument();
-    });
+    // Wait for tags
+    expect(await screen.findByText('Fé')).toBeInTheDocument();
 
-    // Type in search that won't match
-    const searchInput = screen.getByPlaceholderText('Buscar tema...');
+    const searchInput = screen.getByPlaceholderText(/Buscar tema/i);
     fireEvent.change(searchInput, { target: { value: 'Inexistente' } });
 
-    // Check for fallback message
-    expect(screen.getByText('Nenhum tema encontrado.')).toBeInTheDocument();
+    expect(await screen.findByText(/Nenhum tema encontrado/i)).toBeInTheDocument();
+  });
+
+  it('displays category fallbacks when filter returns empty results', async () => {
+    const mockTags = [{ id: '1', label: 'Fé', slug: 'fe', category: 'fundamentos', emoji: '✝️' }];
+    (supabase.from as any).mockReturnValue({
+      select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) }))
+    });
+
+    renderWithProviders(<NexusBubbles />);
+    
+    // Click category that doesn't match 'fundamentos'
+    const mistérioBtn = await screen.findByRole('button', { name: /Mistério/i });
+    await userEvent.click(mistérioBtn);
+
+    // Filter results header
+    const headers = await screen.findAllByText(/Mistério/i);
+    expect(headers.length).toBeGreaterThan(0);
+    // Fallback message
+    expect(screen.getByText(/Nenhum tema encontrado/i)).toBeInTheDocument();
   });
 });
