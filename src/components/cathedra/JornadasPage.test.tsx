@@ -8,7 +8,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { HelmetProvider } from 'react-helmet-async';
 import React from 'react';
 
-// Mock Supabase
+// Mock Supabase with chains
 vi.mock('@/integrations/supabase/client', () => ({
   supabase: {
     from: vi.fn(),
@@ -17,24 +17,15 @@ vi.mock('@/integrations/supabase/client', () => ({
 }));
 
 vi.mock('@/hooks/useAuth', () => ({
-  useAuth: vi.fn(() => ({
-    user: { id: 'test-user' }
-  }))
+  useAuth: vi.fn(() => ({ user: { id: 'test-user' } }))
 }));
 
 vi.mock('@/hooks/useFuzzySearch', () => ({
-  useFuzzySearch: vi.fn(() => ({
-    results: [],
-    isPending: false
-  }))
+  useFuzzySearch: vi.fn(() => ({ results: [], isPending: false }))
 }));
 
 const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: false,
-    },
-  },
+  defaultOptions: { queries: { retry: false } },
 });
 
 const renderWithProviders = (ui: React.ReactElement) => {
@@ -55,50 +46,54 @@ describe('JornadasPage - Integration Tests', () => {
   });
 
   it('displays empty state message when no journeys are found', async () => {
-    (supabase.from as any).mockReturnValue({
-      select: vi.fn(() => ({
-        order: vi.fn(() => Promise.resolve({ data: [], error: null })),
-        eq: vi.fn(() => Promise.resolve({ data: [], error: null }))
-      }))
+    (supabase.from as any).mockImplementation((table: string) => {
+      return {
+        select: vi.fn().mockReturnThis(),
+        order: vi.fn().mockImplementation(() => ({
+          then: (resolve: any) => resolve({ data: [], error: null })
+        })),
+        eq: vi.fn().mockImplementation(() => ({
+          then: (resolve: any) => resolve({ data: [], error: null })
+        }))
+      };
     });
 
     renderWithProviders(<JornadasPage />);
     
-    // Check for empty state message
     const emptyMsg = await screen.findByText(/Nenhuma jornada disponível ainda/i, {}, { timeout: 5000 });
     expect(emptyMsg).toBeInTheDocument();
   });
 
   it('displays filter mismatch message when filters return 0 results', async () => {
     const mockJourneys = [
-      { id: '1', title: 'UniqueJourney', difficulty: 'iniciante', category: 'fundamentos', steps_count: 5, tags: [] }
+      { id: '1', title: 'TargetJourney', difficulty: 'iniciante', category: 'fundamentos', steps_count: 5, tags: [] }
     ];
 
-    // Mock implementation for loadJourneys
     (supabase.from as any).mockImplementation((table: string) => {
       if (table === 'view_journeys_with_stats') {
         return {
-          select: vi.fn(() => ({
-            order: vi.fn(() => Promise.resolve({ data: mockJourneys, error: null }))
+          select: vi.fn().mockReturnThis(),
+          order: vi.fn().mockImplementation(() => ({
+            then: (resolve: any) => resolve({ data: mockJourneys, error: null })
           }))
         };
       }
       return {
-        select: vi.fn(() => ({
-          eq: vi.fn(() => Promise.resolve({ data: [], error: null }))
+        select: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockImplementation(() => ({
+          then: (resolve: any) => resolve({ data: [], error: null })
         }))
       };
     });
 
     renderWithProviders(<JornadasPage />);
 
-    // Wait for initial load
-    expect(await screen.findByText(/UniqueJourney/i)).toBeInTheDocument();
+    // Wait for content
+    expect(await screen.findByText(/TargetJourney/i)).toBeInTheDocument();
 
     // Click 'Intermediário' filter
-    // It's a button with the text 'Intermediário'
-    const intermediarioFilter = await screen.findByRole('button', { name: /Intermediário/i });
-    await userEvent.click(intermediarioFilter);
+    const intermediarioBtn = await screen.findByRole('button', { name: /Intermediário/i });
+    await userEvent.click(intermediarioBtn);
 
     // Wait for filtered list to update to empty
     const mismatchMsg = await screen.findByText(/Nenhuma jornada encontrada com esses filtros/i);
