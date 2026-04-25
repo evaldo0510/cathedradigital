@@ -8,6 +8,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Loader2, ExternalLink, Sparkles, Search, X, Heart, Church, Flame, Cross, BookOpen, Shield, Crown, Hand, Star, Globe, Eye, Users, Compass, Wine, Orbit, Hash, Mountain, RefreshCw, Frown, Bird, Droplets, Wheat, Target, Clock, Megaphone, Skull, Filter } from 'lucide-react';
 import { Icons } from '@/constants';
 import { BubbleTag, getTagIcon } from './BubbleTag';
+import { useRovingTabindex } from './TabUtils';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { type ProfileId, PROFILES } from './SpiritualQuiz';
