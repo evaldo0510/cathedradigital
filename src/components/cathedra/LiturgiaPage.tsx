@@ -342,9 +342,14 @@ const LiturgiaPage: React.FC = () => {
                 {/* Redundant back button removed */}
                 <h1 className="text-3xl md:text-5xl font-display font-black text-primary tracking-tight">Liturgia do Dia</h1>
                 <div className="flex items-center justify-center gap-4">
-                  <button onClick={goToPrevDay} className="p-3 rounded-2xl bg-muted hover:bg-primary hover:text-white transition-all text-primary">
+                  <button 
+                    onClick={goToPrevDay} 
+                    className="p-3 rounded-2xl bg-muted hover:bg-primary hover:text-white transition-all text-primary focus-visible:ring-2 focus-visible:ring-primary outline-none"
+                    aria-label="Dia anterior"
+                  >
                     <Icons.ChevronLeft className="w-5 h-5" />
                   </button>
+
                   <p className="text-sm font-bold text-primary capitalize min-w-[200px]">
                     {formatDate()}
                     {isToday && <span className="ml-2 text-secondary">(Hoje)</span>}
