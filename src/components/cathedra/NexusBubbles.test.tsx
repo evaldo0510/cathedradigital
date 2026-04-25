@@ -24,6 +24,15 @@ vi.mock('@/lib/nexusContent', () => ({
   normalizeText: vi.fn((t) => t.toLowerCase())
 }));
 
+vi.mock('@radix-ui/react-popover', () => ({
+  Popover: ({ children, open, onOpenChange }: any) => {
+    // Basic mock that renders children
+    return <div data-testid=\"mock-popover\" data-open={open}>{children}</div>;
+  },
+  PopoverTrigger: ({ children, asChild }: any) => <div data-testid=\"mock-popover-trigger\">{children}</div>,
+  PopoverContent: ({ children }: any) => <div data-testid=\"mock-popover-content\">{children}</div>,
+}));
+
 vi.mock('@/services/aiService', () => ({
   getSpiritualInsight: vi.fn(() => Promise.resolve({ content: 'Mocked Insight' }))
 }));
