@@ -246,9 +246,41 @@ const UserTransactionsPage: React.FC = () => {
             </motion.div>
           ))}
           
-          {hasMore && (
-            <div ref={loaderRef} className="flex justify-center py-8">
+          {loadingMore && (
+            <div className="grid gap-4 mt-4">
+              {[1, 2].map(i => <TransactionSkeleton key={i} />)}
+            </div>
+          )}
+
+          {error && transactions.length > 0 && (
+            <div className="p-4 rounded-xl bg-destructive/5 border border-destructive/10 text-center space-y-3 mt-4">
+              <p className="text-xs text-destructive font-medium">{error}</p>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => fetchTransactions(page)}
+                className="h-8 text-[10px] uppercase font-bold text-destructive hover:bg-destructive/10"
+              >
+                Tentar novamente
+              </Button>
+            </div>
+          )}
+          
+          {hasMore && !loadingMore && !error && (
+            <div ref={loaderRef} className="flex flex-col items-center justify-center py-8 space-y-4">
               <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin opacity-50" />
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => {
+                  const nextPage = page + 1;
+                  setPage(nextPage);
+                  fetchTransactions(nextPage);
+                }}
+                className="text-[10px] uppercase font-bold text-muted-foreground hover:text-primary"
+              >
+                Carregar mais
+              </Button>
             </div>
           )}
         </div>
