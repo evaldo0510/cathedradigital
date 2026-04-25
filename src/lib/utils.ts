@@ -10,10 +10,10 @@ export function cn(...inputs: ClassValue[]) {
  * Removes accents (diacritics), converts to lowercase, and trims.
  */
 export function normalizeText(text: string): string {
-  if (!text) return \"\";
+  if (!text) return "";
   return text
     .toLowerCase()
-    .normalize(\"NFD\")
-    .replace(/[\\u0300-\\u036f]/g, \"\")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
     .trim();
 }
