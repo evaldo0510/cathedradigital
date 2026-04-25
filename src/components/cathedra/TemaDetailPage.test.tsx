@@ -59,7 +59,7 @@ describe('TemaDetailPage - Integration Tests', () => {
 
     renderWithProviders(<TemaDetailPage />);
 
-    expect(await screen.findByText(/Erro ao carregar conexões do Nexus/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Erro ao carregar conexões .* no Nexus/i)).toBeInTheDocument();
     const retryButton = screen.getByText(/Tentar Novamente|Processando/i);
     
     (fetchNexusTagContent as any).mockResolvedValueOnce([]);
@@ -181,7 +181,7 @@ describe('TemaDetailPage - Integration Tests', () => {
     renderWithProviders(<TemaDetailPage />, '/temas/retry-tag');
 
     // Error UI should appear
-    expect(await screen.findByText(/Erro ao carregar conexões do Nexus/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Erro ao carregar conexões .* no Nexus/i)).toBeInTheDocument();
 
     // 2. Prepare successful empty response and click retry
     (fetchNexusTagContent as any).mockResolvedValueOnce([]);
@@ -190,7 +190,7 @@ describe('TemaDetailPage - Integration Tests', () => {
     await userEvent.click(retryButton);
 
     expect(await screen.findByText(/Nenhum versículo catalogado/i)).toBeInTheDocument();
-    expect(screen.queryByText(/Erro ao carregar conexões do Nexus/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Erro ao carregar conexões .* no Nexus/i)).not.toBeInTheDocument();
   });
 
   it('handles fetch exception by showing global error UI across all tabs', async () => {
@@ -201,13 +201,13 @@ describe('TemaDetailPage - Integration Tests', () => {
     renderWithProviders(<TemaDetailPage />, '/temas/error-tag');
 
     // Should show error message
-    expect(await screen.findByText(/Erro ao carregar conexões do Nexus/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Erro ao carregar conexões .* no Nexus/i)).toBeInTheDocument();
 
     // Switch tabs and ensure error UI persists
     const tabs = ['Tradição', 'Magistério', 'Jornadas', 'Escrituras'];
     for (const tabName of tabs) {
       await userEvent.click(screen.getByText(tabName));
-      expect(screen.getByText(/Erro ao carregar conexões do Nexus/i)).toBeInTheDocument();
+      expect(screen.getByText(/Erro ao carregar conexões .* no Nexus/i)).toBeInTheDocument();
     }
   });
 
@@ -311,7 +311,7 @@ describe('TemaDetailPage - Integration Tests', () => {
 
     renderWithProviders(<TemaDetailPage />, '/temas/disable-retry');
     
-    expect(await screen.findByText(/Erro ao carregar conexões do Nexus/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Erro ao carregar conexões .* no Nexus/i)).toBeInTheDocument();
     
     // 2. Mock a delayed fetch for the retry
     let resolveRetry: any;
@@ -326,7 +326,7 @@ describe('TemaDetailPage - Integration Tests', () => {
     
     // 4. Wait for the error UI to disappear and skeletons to appear (since contentError is cleared on refetch)
     await waitFor(() => {
-      expect(screen.queryByText(/Erro ao carregar conexões do Nexus/i)).not.toBeInTheDocument();
+      expect(screen.queryByText(/Erro ao carregar conexões .* no Nexus/i)).not.toBeInTheDocument();
       expect(document.querySelectorAll('.animate-pulse').length).toBeGreaterThan(0);
     });
     
@@ -336,7 +336,7 @@ describe('TemaDetailPage - Integration Tests', () => {
     });
 
     await waitFor(() => {
-      expect(screen.queryByText(/Erro ao carregar conexões do Nexus/i)).not.toBeInTheDocument();
+      expect(screen.queryByText(/Erro ao carregar conexões .* no Nexus/i)).not.toBeInTheDocument();
     });
   });
 
@@ -354,7 +354,7 @@ describe('TemaDetailPage - Integration Tests', () => {
     // Currently TemaDetailPage shows a global ErrorUI within the Tabs area if contentError is true.
     // Let's verify that when error happens, we still show the error UI in the active tab.
 
-    expect(await screen.findByText(/Erro ao carregar conexões do Nexus/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Erro ao carregar conexões .* no Nexus/i)).toBeInTheDocument();
     
     // Switch tabs
     const tabs = [
@@ -365,7 +365,7 @@ describe('TemaDetailPage - Integration Tests', () => {
 
     for (const tab of tabs) {
       await userEvent.click(screen.getByText(tab.trigger));
-      expect(screen.getByText(/Erro ao carregar conexões do Nexus/i)).toBeInTheDocument();
+      expect(screen.getByText(/Erro ao carregar conexões .* no Nexus/i)).toBeInTheDocument();
       // Ensure the error is rendered within the correct tab content if using TabsContent
       // Actually the current implementation renders the error INSTEAD of TabsContent loop or inside the Tabs area.
     }
@@ -420,7 +420,7 @@ describe('TemaDetailPage - Integration Tests', () => {
 
     renderWithProviders(<TemaDetailPage />, '/temas/double-fail');
     
-    expect(await screen.findByText(/Erro ao carregar conexões do Nexus/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Erro ao carregar conexões .* no Nexus/i)).toBeInTheDocument();
 
     // 2. Retry failure
     (fetchNexusTagContent as any).mockRejectedValueOnce(new Error('Second failure'));
@@ -429,7 +429,7 @@ describe('TemaDetailPage - Integration Tests', () => {
     await userEvent.click(retryButton);
 
     // Should still show error
-    expect(await screen.findByText(/Erro ao carregar conexões do Nexus/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Erro ao carregar conexões .* no Nexus/i)).toBeInTheDocument();
     expect(screen.queryByText(/Nenhum versículo catalogado/i)).not.toBeInTheDocument();
   });
 
