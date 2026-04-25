@@ -344,9 +344,14 @@ const Catechism: React.FC = () => {
           </button>
         )}
         <div className="flex items-center gap-4">
-          <button onClick={goBack} className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all">
+          <button 
+            onClick={goBack} 
+            className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none"
+            aria-label="Voltar"
+          >
             <Icons.ArrowDown className="w-5 h-5 rotate-90 text-foreground" />
           </button>
+
           <div className="flex-1 min-w-0">
             <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">{selectedPart.part}</span>
             <h1 className="text-xl font-serif font-bold text-foreground truncate">{selectedSection.title}</h1>
@@ -373,9 +378,12 @@ const Catechism: React.FC = () => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }
             }}
-            className="px-3 py-2 rounded-xl bg-card border border-border text-xs font-bold disabled:opacity-30 hover:bg-primary/10 transition-all flex items-center gap-1">
+            className="px-3 py-2 rounded-xl bg-card border border-border text-xs font-bold disabled:opacity-30 hover:bg-primary/10 transition-all flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-primary outline-none"
+            aria-label="Seção anterior"
+          >
             <Icons.ArrowDown className="w-3.5 h-3.5 rotate-90" /> Seção Anterior
           </button>
+
           <div className="px-4 py-2 bg-primary/5 border border-primary/20 rounded-xl text-xs font-black uppercase tracking-widest text-primary">
             Lendo Seção {selectedSection.id}
           </div>
@@ -389,9 +397,12 @@ const Catechism: React.FC = () => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }
             }}
-            className="px-3 py-2 rounded-xl bg-card border border-border text-xs font-bold disabled:opacity-30 hover:bg-primary/10 transition-all flex items-center gap-1">
+            className="px-3 py-2 rounded-xl bg-card border border-border text-xs font-bold disabled:opacity-30 hover:bg-primary/10 transition-all flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-primary outline-none"
+            aria-label="Próxima seção"
+          >
             Próxima Seção <Icons.ArrowDown className="w-3.5 h-3.5 -rotate-90" />
           </button>
+
         </div>
 
         {/* Cross references */}

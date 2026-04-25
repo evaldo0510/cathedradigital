@@ -23,7 +23,9 @@ const AlphabetBar: React.FC<AlphabetBarProps> = ({
             key={letter}
             onClick={() => has && onLetterClick(letter)}
             disabled={!has}
-            className={`w-8 h-8 rounded-lg text-xs font-black transition-all
+            aria-label={`Letra ${letter}${!has ? ' (sem termos)' : ''}`}
+            aria-pressed={isActive}
+            className={`w-8 h-8 rounded-lg text-xs font-black transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none
               ${isActive
                 ? 'bg-primary text-primary-foreground shadow-md'
                 : has
@@ -33,6 +35,7 @@ const AlphabetBar: React.FC<AlphabetBarProps> = ({
           >
             {letter}
           </button>
+
         );
       })}
     </div>

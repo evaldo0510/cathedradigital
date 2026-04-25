@@ -19,6 +19,8 @@ import { useSaintsToday } from '@/hooks/useSaints';
 import ReactMarkdown from 'react-markdown';
 import { toast } from 'sonner';
 import { getCachedLiturgy, cacheLiturgy } from '@/lib/offlineCache';
+import { LiturgiaSkeleton } from './LiturgiaSkeleton';
+
 
 const MissalPage = lazy(() => import('./MissalPage'));
 const LiturgicalCalendarPage = lazy(() => import('./LiturgicalCalendarPage'));
@@ -319,8 +321,10 @@ const LiturgiaPage: React.FC = () => {
             ].map(tab => (
               <button
                 key={tab.id}
+                role="tab"
+                aria-selected={activeTab === tab.id}
                 onClick={() => setSearchParams({ tab: tab.id })}
-                className={`flex items-center gap-2 px-8 py-2.5 rounded-full text-sm font-semibold transition-all ${
+                className={`flex items-center gap-2 px-8 py-2.5 rounded-full text-sm font-semibold transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                   activeTab === tab.id 
                     ? 'bg-background shadow-lg text-primary' 
                     : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
@@ -328,6 +332,7 @@ const LiturgiaPage: React.FC = () => {
               >
                 {tab.icon} {tab.label}
               </button>
+
             ))}
           </div>
         </div>
@@ -339,16 +344,27 @@ const LiturgiaPage: React.FC = () => {
                 {/* Redundant back button removed */}
                 <h1 className="text-3xl md:text-5xl font-display font-black text-primary tracking-tight">Liturgia do Dia</h1>
                 <div className="flex items-center justify-center gap-4">
-                  <button onClick={goToPrevDay} className="p-3 rounded-2xl bg-muted hover:bg-primary hover:text-white transition-all text-primary">
+                  <button 
+                    onClick={goToPrevDay} 
+                    className="p-3 rounded-2xl bg-muted hover:bg-primary hover:text-white transition-all text-primary focus-visible:ring-2 focus-visible:ring-primary outline-none"
+                    aria-label="Dia anterior"
+                  >
                     <Icons.ChevronLeft className="w-5 h-5" />
                   </button>
+
                   <p className="text-sm font-bold text-primary capitalize min-w-[200px]">
                     {formatDate()}
                     {isToday && <span className="ml-2 text-secondary">(Hoje)</span>}
                   </p>
-                  <button onClick={goToNextDay} disabled={isToday} className="p-3 rounded-2xl bg-muted hover:bg-primary hover:text-white transition-all text-primary disabled:opacity-20">
+                  <button 
+                    onClick={goToNextDay} 
+                    disabled={isToday} 
+                    className="p-3 rounded-2xl bg-muted hover:bg-primary hover:text-white transition-all text-primary disabled:opacity-20 focus-visible:ring-2 focus-visible:ring-primary outline-none"
+                    aria-label="Próximo dia"
+                  >
                     <Icons.ChevronRight className="w-5 h-5" />
                   </button>
+
                 </div>
                 {isOfflineData && (
                   <div className="flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground bg-muted/50 rounded-full px-4 py-2 mt-4 mx-auto w-fit">
@@ -379,7 +395,7 @@ const LiturgiaPage: React.FC = () => {
                 </motion.div>
               )}
 
-              {isLoading && <div className="flex justify-center py-20"><Icons.Loader2 className="w-10 h-10 text-secondary animate-spin" /></div>}
+              {isLoading && <LiturgiaSkeleton />}
 
               {readings && (
                 <div className="space-y-8">

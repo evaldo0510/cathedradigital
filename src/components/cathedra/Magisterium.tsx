@@ -211,17 +211,21 @@ const Magisterium: React.FC = () => {
               {SPIRITUAL_GUIDANCE.map((item, idx) => (
                 <motion.button
                   key={item.id}
+                  role="tab"
+                  aria-selected={selectedGuidance.id === item.id}
                   initial={{ opacity: 0, scale: 0.9 }}
+
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: idx * 0.05 }}
                   whileHover={{ scale: 1.1, y: -4 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => handleSelectGuidance(item)}
-                  className={`flex items-center gap-3 px-6 py-3.5 rounded-full border transition-all shadow-sm relative z-10 ${
+                  className={`flex items-center gap-3 px-6 py-3.5 rounded-full border transition-all shadow-sm relative z-10 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                     selectedGuidance.id === item.id 
                       ? "bg-primary text-primary-foreground shadow-xl shadow-primary/30 scale-110" 
                       : "bg-card/60 text-foreground/80 border-border/60 hover:border-primary/40 hover:text-primary hover:bg-primary/5"
                   }`}
+
                 >
                   <div className={`p-2 rounded-full ${selectedGuidance.id === item.id ? "bg-white/20" : "bg-muted/50"}`}>
                     {item.icon}

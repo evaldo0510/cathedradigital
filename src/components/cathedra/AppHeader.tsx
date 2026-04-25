@@ -46,7 +46,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
     <header className="border-b border-border bg-background/90 backdrop-blur-xl sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)]">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-3 sm:py-4 flex items-center justify-between min-h-[56px] sm:min-h-[64px]">
         <div className="flex items-center gap-2 sm:gap-10 min-w-0">
-          <div className="flex lg:hidden items-center gap-2 sm:gap-4 cursor-pointer group min-w-0" onClick={() => navigate(AppRoute.DASHBOARD)}>
+          <div className="flex lg:hidden items-center gap-2 sm:gap-4 cursor-pointer group min-w-0 focus-visible:ring-2 focus-visible:ring-primary outline-none" role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && navigate(AppRoute.DASHBOARD)} onClick={() => navigate(AppRoute.DASHBOARD)}>
             <Icons.Logo className="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0" variant="blue" />
             <div className="flex flex-col min-w-0">
               <span className="text-xs sm:text-xl font-display font-black uppercase tracking-[0.1em] sm:tracking-[0.25em] text-primary leading-none truncate">Cathedra</span>
@@ -57,7 +57,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           {!isDashboard && (
             <button 
               onClick={() => navigate(-1)} 
-              className="p-2 sm:p-2.5 bg-muted text-primary border border-border rounded-xl flex items-center gap-2 px-3 sm:px-5 active:scale-95 transition-all hover:bg-primary hover:text-white group shadow-sm"
+              className="p-2 sm:p-2.5 bg-muted text-primary border border-border rounded-xl flex items-center gap-2 px-3 sm:px-5 active:scale-95 transition-all hover:bg-primary hover:text-white group shadow-sm focus-visible:ring-2 focus-visible:ring-primary outline-none"
             >
               <Icons.ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
               <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline-block">{t('back')}</span>
@@ -92,7 +92,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
 
         <div className="flex items-center gap-1.5 sm:gap-4 flex-shrink-0">
           <button 
-            className="p-2.5 sm:p-3 bg-muted text-primary rounded-xl sm:rounded-2xl border border-border hover:bg-primary hover:text-white transition-all shadow-sm active:scale-95 flex items-center gap-2" 
+            className="p-2.5 sm:p-3 bg-muted text-primary rounded-xl sm:rounded-2xl border border-border hover:bg-primary hover:text-white transition-all shadow-sm active:scale-95 flex items-center gap-2 focus-visible:ring-2 focus-visible:ring-primary outline-none" 
             onClick={() => {
               localStorage.removeItem('cathedra_onboarding_done');
               navigate(AppRoute.ONBOARDING);
@@ -103,15 +103,16 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             <span className="hidden md:inline text-[9px] font-black uppercase tracking-widest">Guia</span>
           </button>
 
-          <button className="p-2.5 sm:p-3 bg-muted text-primary rounded-xl sm:rounded-2xl border border-border hover:bg-primary hover:text-white transition-all shadow-sm active:scale-95" onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}>
+          <button className="p-2.5 sm:p-3 bg-muted text-primary rounded-xl sm:rounded-2xl border border-border hover:bg-primary hover:text-white transition-all shadow-sm active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none" onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}>
             <Icons.Search className="w-4 h-4" />
           </button>
 
           {user && (
             <button 
               onClick={() => setShowNotifs(!showNotifs)} 
-              className="p-2.5 sm:p-3 bg-muted text-primary hover:bg-primary hover:text-white rounded-xl sm:rounded-2xl border border-border relative transition-all shadow-sm active:scale-95"
+              className="p-2.5 sm:p-3 bg-muted text-primary hover:bg-primary hover:text-white rounded-xl sm:rounded-2xl border border-border relative transition-all shadow-sm active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none"
             >
+
               <Icons.Message className="w-4 h-4" />
               {unreadCount > 0 && (
                 <span className="absolute -top-1 -right-1 w-5 h-5 bg-secondary text-primary text-[10px] font-black flex items-center justify-center rounded-full border-2 border-background shadow-lg">

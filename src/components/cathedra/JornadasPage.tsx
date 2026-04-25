@@ -288,7 +288,15 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.99 }}
                 >
-                  <Card className="border-primary/40 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border-2 overflow-hidden shadow-xl shadow-primary/5 relative cursor-pointer rounded-xl sm:rounded-2xl" onClick={() => navigate(`/jornadas/${journey.id}`)}>
+                  <Card 
+                    className="border-primary/40 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border-2 overflow-hidden shadow-xl shadow-primary/5 relative cursor-pointer rounded-xl sm:rounded-2xl focus-visible:ring-4 focus-visible:ring-primary outline-none" 
+                    onClick={() => navigate(`/jornadas/${journey.id}`)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => e.key === 'Enter' && navigate(`/jornadas/${journey.id}`)}
+                    aria-label={`Continuar jornada ${journey.title}, ${pct}% concluída`}
+                  >
+
                     <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
                       <Icons.Flame className="w-16 h-16 text-primary" />
                     </div>
@@ -395,23 +403,27 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
         <div className="flex flex-wrap gap-1.5 sm:gap-2">
           <button
             onClick={() => setFilterDifficulty('all')}
-            className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold transition-all duration-200 ${
+            className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold transition-all duration-200 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
               filterDifficulty === 'all' ? 'bg-foreground text-background shadow-md' : 'bg-muted text-muted-foreground hover:bg-muted/80'
             }`}
+            aria-pressed={filterDifficulty === 'all'}
           >
             Todos os níveis
           </button>
+
           {difficulties.map(diff => (
             <button
               key={diff}
               onClick={() => setFilterDifficulty(diff)}
-              className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold transition-all duration-200 ${
+              className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold transition-all duration-200 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                 filterDifficulty === diff ? 'bg-foreground text-background shadow-md' : 'bg-muted text-muted-foreground hover:bg-muted/80'
               }`}
+              aria-pressed={filterDifficulty === diff}
             >
               {DIFFICULTY_LABELS[diff] || diff}
             </button>
           ))}
+
         </div>
       </div>
     </motion.div>
@@ -466,7 +478,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   transition={{ type: 'spring', stiffness: 400, damping: 25 }}
                 >
                   <Card
-                    className={`overflow-hidden cursor-pointer transition-all group relative ${
+                    className={`overflow-hidden cursor-pointer transition-all group relative focus-visible:ring-4 focus-visible:ring-primary outline-none ${
                       isComplete 
                         ? 'border-emerald-500/30 ring-1 ring-emerald-500/10' 
                         : hasStarted 
@@ -474,7 +486,12 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                           : 'border-border hover:border-primary/30'
                     }`}
                     onClick={() => navigate(`/jornadas/${journey.id}`)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => e.key === 'Enter' && navigate(`/jornadas/${journey.id}`)}
+                    aria-label={`Jornada ${journey.title}. ${isComplete ? 'Concluída' : hasStarted ? `${Math.round(progressPercent)}% concluída` : 'Não iniciada'}`}
                   >
+
                     {/* Gradient accent */}
                     <div className={`absolute inset-0 bg-gradient-to-br ${gradientClass} opacity-60 pointer-events-none`} />
                     
