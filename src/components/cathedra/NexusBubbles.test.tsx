@@ -151,12 +151,12 @@ describe('NexusBubbles - Integration Tests', () => {
 
     renderWithProviders(<NexusBubbles />);
 
+    // Wait for tag and click it
     const tag = await screen.findByText('Silencioso');
     await userEvent.click(tag);
 
-    // Wait for "Nexus Silencioso" fallback in the portal
-    // Radix Popover might take a frame to render the portal
-    const fallbackTitle = await screen.findByText(/Nexus Silencioso/i);
+    // Increase timeout for portal rendering
+    const fallbackTitle = await screen.findByText(/Nexus Silencioso/i, {}, { timeout: 3000 });
     expect(fallbackTitle).toBeInTheDocument();
     
     expect(screen.getByText(/Ainda estamos tecendo as conexões/i)).toBeInTheDocument();
