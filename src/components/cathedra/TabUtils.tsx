@@ -51,6 +51,10 @@ export function useRovingTabindex(totalCount: number, containerRef?: React.RefOb
   }, [totalCount]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent, index: number, onSelect?: (index: number) => void) => {
+    // Prevent focus loss during rapid navigation by checking if element exists
+    const root = containerRef?.current || document;
+    const getElements = () => Array.from(root.querySelectorAll('[data-roving-item="true"], [data-roving-item]')) as HTMLElement[];
+    
     let nextIndex = -1;
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
       nextIndex = (index + 1) % totalCount;
