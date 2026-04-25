@@ -12,7 +12,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "test:report": "bun run scripts/generate-test-report.ts"
+    "test:report": "bun run scripts/generate-test-report.ts",
+    "test:pdf": "bun run scripts/generate-pdf-report.ts"
   },
   "dependencies": {
     "@capacitor/cli": "^6.0.0",
