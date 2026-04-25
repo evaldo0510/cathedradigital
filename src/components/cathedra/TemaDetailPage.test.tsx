@@ -53,10 +53,10 @@ describe('TemaDetailPage - Integration Tests', () => {
   });
 
   const switchTab = async (name: string) => {
-    await userEvent.click(screen.getByText(name));
-    // Wait for debounce (300ms)
+    fireEvent.click(screen.getByText(name));
+    // Wait for debounce (300ms) and a bit of buffer
     await act(async () => {
-      await new Promise(r => setTimeout(r, 400));
+      await new Promise(r => setTimeout(r, 500));
     });
   };
 
