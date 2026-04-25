@@ -26,7 +26,7 @@ interface Tag {
 
 interface ThemeContent {
   id: string;
-  content_type: 'bible' | 'catechism' | 'magisterium' | 'journey';
+  content_type: string;
   reference: string;
   title: string;
   text_content: string;
