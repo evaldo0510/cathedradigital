@@ -155,10 +155,12 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
 
               <button 
                 onClick={onToggleSpeak} 
-                className={`flex-1 p-3 rounded-xl border border-border flex items-center justify-center gap-2 transition-all active:scale-95 ${
+                className={`flex-1 p-3 rounded-xl border border-border flex items-center justify-center gap-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                   isSpeaking ? 'bg-primary text-white' : 'bg-muted text-muted-foreground hover:text-primary'
                 }`}
+                aria-label={isSpeaking ? t('audio_stop') : t('audio_read')}
               >
+
                 {isSpeaking ? <Icons.Message className="w-4 h-4 animate-pulse" /> : <Icons.Volume2 className="w-4 h-4" />}
                 <span className="text-[10px] font-black uppercase tracking-widest">{isSpeaking ? t('audio_stop') : t('audio_read')}</span>
               </button>
