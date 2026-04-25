@@ -509,11 +509,7 @@ const CommunityPage: React.FC = () => {
         </div>
       ) : (
         <div 
-          id="panel-forum" 
-          role="tabpanel" 
-          aria-labelledby="tab-forum"
-          className="space-y-8 outline-none"
-          tabIndex={0}
+          {...getTabPanelProps('panel-forum', 'tab-0', tab === 'forum', "space-y-8 outline-none")}
         >
 
 
