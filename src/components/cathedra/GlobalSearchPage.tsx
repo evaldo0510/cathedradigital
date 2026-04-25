@@ -141,7 +141,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
             </TabsContent>
 
             <TabsContent value="temas" className="space-y-2 mt-4">
-              <div className="flex flex-wrap gap-2" role="list">
+              <div className="flex flex-wrap gap-2" role="list" ref={tagsRef}>
                 {tags.results?.map((t, idx) => (
                   <button
                     key={t.id}
