@@ -36,15 +36,16 @@ interface NexusBubblesProps {
 const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabIndex?: number; onKeyDown?: (e: React.KeyboardEvent) => void }> = ({ tag, index, isSuggested, tabIndex, onKeyDown }) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [content, setContent] = useState<TagContent[]>([]);
   const [logosInsight, setLogosInsight] = useState<string | null>(null);
+  const [errorDetails, setErrorDetails] = useState<string | null>(null);
 
   const fetchContent = async () => {
-    if (content.length > 0 || loading) return;
-    setLoading(true);
-    try {
+    if (content.length > 0 || status === 'loading') return;
+    setStatus('loading');
+    setErrorDetails(null);
+    console.log(`[Nexus Diagnostic] Fetching content for tag: ${tag.label} (ID: ${tag.id})`);
       const { data, error } = await supabase
         .from('content_tags')
         .select(`
