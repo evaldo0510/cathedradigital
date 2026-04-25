@@ -348,12 +348,9 @@ const TemaDetailPage = () => {
                   data-testid="retry-button"
                 >
                   {isFetchingContents || loadingContents ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                      <span>Processando...</span>
-                    </>
+                    "Processando..."
                   ) : (
-                    <span>Tentar Novamente</span>
+                    "Tentar Novamente"
                   )}
                 </Button>
               </div>
