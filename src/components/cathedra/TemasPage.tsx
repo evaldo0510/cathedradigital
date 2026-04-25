@@ -92,6 +92,21 @@ const TemasPage = () => {
 
   const { activeIndex, handleKeyDown: handleRovingKeyDown } = useRovingTabindex(filteredTags.length, tagsContainerRef);
 
+  // Suggested tags based on the user's spiritual profile (sparkle highlight)
+  const { profileId } = useSpiritualProfile();
+  const suggestedSlugs = useMemo(() => {
+    if (!profileId || !tags) return new Set<string>();
+    const profile = PROFILES[profileId];
+    if (!profile) return new Set<string>();
+    const relevantLabels = [profile.theme, profile.pain.label, 'Oração', 'Jesus', 'Fé'];
+    return new Set(
+      tags
+        .filter(t => relevantLabels.some(l => t.label.toLowerCase().includes(l.toLowerCase())))
+        .slice(0, 8)
+        .map(t => t.slug)
+    );
+  }, [profileId, tags]);
+
   useEffect(() => {
     const temaSlug = searchParams.get('tema');
     if (temaSlug) {
