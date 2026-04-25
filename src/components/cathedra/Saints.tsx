@@ -31,7 +31,9 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
   const [selectedSaint, setSelectedSaint] = useState<Saint | null>(null);
   const [autoReflect, setAutoReflect] = useState(false);
   const [search, setSearch] = useState('');
+  const { handleKeyDown: handleTabKeyDown } = useTabNavigation();
   const [viewMode, setViewMode] = useState<'daily' | 'search' | 'all' | 'writers' | 'popes' | 'cloud'>('daily');
+  const viewModes = ['daily', 'all', 'writers', 'popes', 'cloud', 'search'] as const;
   const [isSearchingGlobal, setIsSearchingGlobal] = useState(false);
   const [globalResults, setGlobalResults] = useState<Saint[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
