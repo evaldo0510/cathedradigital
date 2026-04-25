@@ -345,14 +345,15 @@ const TemaDetailPage = () => {
                   }} 
                   className="h-10 rounded-xl px-6"
                   disabled={isFetchingContents || loadingContents}
+                  data-testid="retry-button"
                 >
                   {isFetchingContents || loadingContents ? (
                     <>
-                      <Loader2 className="w-4 h-4 animate-spin mr-2" data-testid="retry-loader" />
-                      <span>Processando...</span>
+                      <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                      Processando...
                     </>
                   ) : (
-                    <span>Tentar Novamente</span>
+                    "Tentar Novamente"
                   )}
                 </Button>
               </div>
