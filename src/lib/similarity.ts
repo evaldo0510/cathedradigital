@@ -1,14 +1,13 @@
+import { normalizeText } from './utils';
+
 /**
  * Shared similarity helpers for search UX (Saints, Glossary, Community...).
- *
- * Authoritative ranking comes from Postgres (pg_trgm + unaccent), but we
- * compute a lightweight client-side approximation so we can render relevance
+...
  * badges immediately without an extra round-trip.
  */
 
-/** Lowercase + strip diacritics so "Tomás" and "tomas" match. */
-const norm = (s: string): string =>
-  s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+/** Lowercase + strip diacritics so \"Tomás\" and \"tomas\" match. */
+const norm = (s: string): string => normalizeText(s);
 
 const trigrams = (s: string): Set<string> => {
   const padded = `  ${s} `;
