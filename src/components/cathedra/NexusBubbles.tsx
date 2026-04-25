@@ -15,6 +15,8 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Button } from '@/components/ui/button';
 import { type ProfileId, PROFILES } from './SpiritualQuiz';
 import { useRovingTabindex } from './TabUtils';
+import { useSpiritualProfile } from '@/hooks/useSpiritualProfile';
+
 
 interface Tag {
   id: string;
