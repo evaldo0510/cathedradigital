@@ -395,27 +395,27 @@ const CommunityPage: React.FC = () => {
 
   const MEDAL_COLORS = ['text-secondary', 'text-gray-400', 'text-amber-700'];
 
-  return (
-    <div className="max-w-4xl mx-auto space-y-8">
-      {loading && posts.length === 0 ? (
-        <div className="space-y-8">
-          <PageHeaderSkeleton />
-          <ListSkeleton count={6} />
-        </div>
-      ) : (
-        <>
-          {/* Header */}
-          <div className="text-center space-y-3">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
-              <Icons.Message className="w-4 h-4 text-primary" aria-hidden="true" />
-              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Communitas Fidelium</span>
-            </div>
-            <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Comunidade</h1>
-            <p className="text-muted-foreground font-serif italic">Discussões, testemunhos e partilhas entre irmãos na fé.</p>
-            <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Todas as publicações são moderadas antes de aparecer para a comunidade</p>
+    <div className="desktop-layout py-10">
+      <div className="desktop-main px-4">
+        {loading && posts.length === 0 ? (
+          <div className="space-y-8">
+            <PageHeaderSkeleton />
+            <ListSkeleton count={6} />
           </div>
-        </>
-      )}
+        ) : (
+          <>
+            {/* Header */}
+            <div className="text-center space-y-4 pt-4 mb-10">
+              <div className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-primary/5 rounded-full border border-primary/10 shadow-inner mb-2">
+                <Icons.Message className="w-4 h-4 text-primary" aria-hidden="true" />
+                <span className="text-[11px] font-black uppercase tracking-[0.3em] text-primary">Communitas Fidelium</span>
+              </div>
+              <h1 className="text-4xl md:text-7xl font-black tracking-tighter text-foreground bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent leading-[0.9]">Comunidade</h1>
+              <p className="text-muted-foreground font-serif italic max-w-2xl mx-auto text-base sm:text-xl leading-relaxed">Discussões, testemunhos e partilhas entre irmãos na fé.</p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-widest opacity-60">Conteúdo moderado para edificação mútua</p>
+            </div>
+          </>
+        )}
 
 
       {/* Tabs */}
