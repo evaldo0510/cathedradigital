@@ -27,7 +27,7 @@ serve(async (req) => {
 
     const adminClient = createClient(supabaseUrl, serviceRoleKey);
     const body = await req.json();
-    const { userId, planId, status = "approved", amount = 19.9 } = body;
+    const { userId, planId, status = "approved", amount = 19.9, isDonation = false } = body;
 
     if (!userId || !planId) {
       return json({ error: "userId e planId são obrigatórios." }, 400);
