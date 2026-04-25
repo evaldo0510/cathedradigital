@@ -378,7 +378,12 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
               <div className="flex flex-wrap gap-1.5" role="list">
                 {filteredTags && filteredTags.length ? filteredTags.map((tag, i) => (
                   <div key={tag.slug} role="listitem">
-                    <TagBubble tag={tag} index={i} />
+                    <TagBubble 
+                      tag={tag} 
+                      index={i} 
+                      tabIndex={filteredActiveIndex === i ? 0 : -1}
+                      onKeyDown={(e) => handleFilteredKeyDown(e, i)}
+                    />
                   </div>
                 )) : (
                   <p className="text-[10px] text-muted-foreground italic">Nenhum tema encontrado.</p>
