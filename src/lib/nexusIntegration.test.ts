@@ -41,6 +41,20 @@ describe('Nexus Integration - Error and Edge Cases', () => {
     await expect(fetchNexusTagContent(tag)).rejects.toThrow('Database Timeout');
   });
 
+  it('should return an empty array when Supabase returns null data without error', async () => {
+    (supabase.from as any).mockReturnValue({
+      select: vi.fn(() => ({
+        overlaps: vi.fn(() => ({
+          limit: vi.fn(() => Promise.resolve({ data: null, error: null }))
+        }))
+      }))
+    });
+
+    const tag = { label: 'NullData', slug: 'null' };
+    const results = await fetchNexusTagContent(tag);
+    expect(results).toEqual([]);
+  });
+
   it('should handle malformed data by providing robust fallbacks via formatNexusContent', () => {
     const malformedData = { id: 'bad-1', type: 'bible', content_text: null, title: null, reference_id: null };
     const formatted = formatNexusContent(malformedData, 'bible');
