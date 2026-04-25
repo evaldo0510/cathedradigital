@@ -684,7 +684,7 @@ describe('TemaDetailPage - Integration Tests', () => {
 
     // Wait for debounce (300ms)
     await act(async () => {
-      vi.advanceTimersByTime(400);
+      await new Promise(r => setTimeout(r, 400));
     });
 
     // Should have been called exactly once for the last active tab (Jornadas)
