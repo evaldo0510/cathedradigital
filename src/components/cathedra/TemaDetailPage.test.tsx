@@ -120,4 +120,35 @@ describe('TemaDetailPage - Integration Tests', () => {
     // If title is empty, it should have the fallback from formatNexusContent ('Escritura')
     expect(await screen.findByText('Escritura')).toBeInTheDocument();
   });
+  
+  it('handles rapid tab switching without leaking content or fallbacks', async () => {
+    const mockTags = [{ id: '1', label: 'Rapid', slug: 'rapid', category: 'fundamentos', emoji: '⚡' }];
+    (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
+    // Simulate empty content to force fallbacks
+    (fetchNexusTagContent as any).mockResolvedValue([]);
+
+    renderWithProviders(<TemaDetailPage />, '/temas/rapid');
+
+    // Wait for initial load
+    expect(await screen.findByText(/Nenhum versículo catalogado/i)).toBeInTheDocument();
+
+    const tabs = [
+      { name: 'Tradição', fallback: /Conteúdo da Tradição em aprofundamento/i },
+      { name: 'Magistério', fallback: /Documentos do Magistério em aprofundamento/i },
+      { name: 'Jornadas', fallback: /Nenhuma jornada específica vinculada a este tema/i },
+      { name: 'Escrituras', fallback: /Nenhum versículo catalogado/i }
+    ];
+
+    // Rapidly click through tabs
+    for (const tab of tabs) {
+      await userEvent.click(screen.getByText(tab.name));
+      // Check that the correct fallback is now visible
+      expect(await screen.findByText(tab.fallback)).toBeInTheDocument();
+      
+      // Ensure other fallbacks are NOT visible in the active content area
+      tabs.filter(t => t.name !== tab.name).forEach(t => {
+        expect(screen.queryByText(t.fallback)).not.toBeInTheDocument();
+      });
+    }
+  });
 });
