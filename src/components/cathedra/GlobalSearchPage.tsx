@@ -137,13 +137,19 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
             </TabsContent>
 
             <TabsContent value="temas" className="space-y-2 mt-4">
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2" role="list">
                 {tags.results?.map(t => (
-                  <div key={t.id} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted/60 border border-border/50">
-                    {t.emoji && <span>{t.emoji}</span>}
-                    <span className="text-xs font-medium text-foreground">{t.label}</span>
+                  <button
+                    key={t.id}
+                    role="listitem"
+                    onClick={() => navigate(`${AppRoute.TEMAS}/${t.slug}`)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted/60 border border-border/50 hover:border-primary/40 hover:bg-primary/5 transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none group"
+                    aria-label={`Tema: ${t.label}`}
+                  >
+                    {t.emoji && <span className="group-hover:scale-110 transition-transform">{t.emoji}</span>}
+                    <span className="text-xs font-medium text-foreground group-hover:text-primary">{t.label}</span>
                     <RelevanceBadge score={(t as any).similarityScore} size="xs" />
-                  </div>
+                  </button>
                 ))}
               </div>
               {tags.results?.length === 0 && <EmptyState text="Nenhum tema encontrado." />}
