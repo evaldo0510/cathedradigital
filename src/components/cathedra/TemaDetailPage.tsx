@@ -135,7 +135,7 @@ const TemaDetailPage = () => {
     queryKey: ['tag-contents', selectedTag?.id, debouncedTab],
     queryFn: async () => {
       if (!selectedTag) return [];
-      const results = await fetchNexusTagContent(selectedTag);
+      const results = await fetchNexusTagContent(selectedTag, debouncedTab);
       return (results || []).map(r => ({
         id: r.id,
         content_type: r.type,
