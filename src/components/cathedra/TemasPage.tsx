@@ -155,9 +155,9 @@ const TemasPage = () => {
                     : 'bg-muted/40 text-muted-foreground/70 hover:bg-muted hover:text-foreground hover:scale-102 border border-transparent hover:border-border/50'
                   }
                 `)}
-                initial={{ opacity: 0, scale: 0.9 }}
+                initial={false}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: idx * 0.03 }}
+                transition={{ delay: idx * 0.02 }}
                 onClick={() => setActiveCategory(cat)}
                 onKeyDown={(e) => handleTabKeyDown(e, idx, categories.length, (newIdx) => setActiveCategory(categories[newIdx]), 'tab-category-')}
               >

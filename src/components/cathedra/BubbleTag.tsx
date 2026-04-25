@@ -121,6 +121,7 @@ export const BubbleTag: React.FC<BubbleTagProps> = ({
       animate="animate"
       whileHover="hover"
       whileTap="tap"
+      layout="position"
       custom={index}
       onClick={onClick}
       onKeyDown={onKeyDown}
