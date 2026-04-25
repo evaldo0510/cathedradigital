@@ -202,7 +202,7 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
                           {categoryContent.map((c, i) => {
                             const isBible = c.type === 'bible';
                             const isJourney = c.type === 'journey';
-                            const reference = c.title || 'Referência';
+                            const reference = c.title;
                             
                             const link = isBible && c.metadata?.book && c.metadata?.chapter 
                               ? `/bible?book=${c.metadata.book}&ch=${c.metadata.chapter}` 
