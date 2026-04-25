@@ -237,7 +237,7 @@ describe('TemaDetailPage - Integration Tests', () => {
     await switchTab('Tradição');
     
     expect(screen.queryByText(/Bible Content/i)).not.toBeInTheDocument();
-    expect(screen.getByText(/Conteúdo da Tradição em aprofundamento/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Conteúdo da Tradição em aprofundamento/i)).toBeInTheDocument();
   });
 
   it('handles rapid multi-switch without skeleton accumulation', async () => {
