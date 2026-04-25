@@ -42,13 +42,14 @@ export const SaintCardSkeleton: React.FC = () => (
   </div>
 );
 
-export const SaintGridSkeleton: React.FC = () => (
+export const SaintGridSkeleton: React.FC<{ count?: number }> = ({ count = 8 }) => (
   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 animate-pulse">
-    {Array.from({ length: 8 }).map((_, i) => (
+    {Array.from({ length: count }).map((_, i) => (
       <div key={i} className="h-48 rounded-3xl bg-muted" />
     ))}
   </div>
 );
+
 
 export const BibleChapterSkeleton: React.FC = () => (
   <div className="space-y-6 animate-pulse">
