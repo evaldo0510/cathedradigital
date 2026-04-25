@@ -147,7 +147,9 @@ describe('TemaDetailPage - Advanced Integration Tests', () => {
     await user.click(screen.getByRole('tab', { name: /Tradição/i }));
     await user.click(screen.getByRole('tab', { name: /Escrituras/i }));
 
-    expect(screen.getAllByText(/Verse \d/i)).toHaveLength(10);
+    await waitFor(() => {
+      expect(screen.getAllByText(/Verse \d/i)).toHaveLength(10);
+    });
   });
 
   it('simulates fetch abort and ensures UI stability', async () => {
