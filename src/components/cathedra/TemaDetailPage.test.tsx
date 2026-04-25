@@ -124,12 +124,11 @@ describe('TemaDetailPage - Integration Tests', () => {
   it('handles rapid tab switching without leaking content or fallbacks', async () => {
     const mockTags = [{ id: '1', label: 'Rapid', slug: 'rapid', category: 'fundamentos', emoji: '⚡' }];
     (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
-    // Simulate empty content to force fallbacks
+    
+    // 1. Test Fallbacks Isolation
     (fetchNexusTagContent as any).mockResolvedValue([]);
+    const { unmount } = renderWithProviders(<TemaDetailPage />, '/temas/rapid');
 
-    renderWithProviders(<TemaDetailPage />, '/temas/rapid');
-
-    // Wait for initial load
     expect(await screen.findByText(/Nenhum versículo catalogado/i)).toBeInTheDocument();
 
     const tabs = [
@@ -139,16 +138,29 @@ describe('TemaDetailPage - Integration Tests', () => {
       { name: 'Fundamentos', fallback: /Nenhum versículo catalogado/i }
     ];
 
-    // Rapidly click through tabs
     for (const tab of tabs) {
       await userEvent.click(screen.getByText(tab.name));
-      // Check that the correct fallback is now visible
       expect(await screen.findByText(tab.fallback)).toBeInTheDocument();
-      
-      // Ensure other fallbacks are NOT visible in the active content area
       tabs.filter(t => t.name !== tab.name).forEach(t => {
         expect(screen.queryByText(t.fallback)).not.toBeInTheDocument();
       });
     }
+
+    unmount();
+
+    // 2. Test Content Isolation
+    (fetchNexusTagContent as any).mockResolvedValue([
+      { id: 'c1', type: 'bible', content_text: 'Bible Text', title: 'Ref 1' },
+      { id: 'c2', type: 'catechism', content_text: 'Tradition Text', title: 'Ref 2' }
+    ]);
+
+    renderWithProviders(<TemaDetailPage />, '/temas/rapid-content');
+
+    expect(await screen.findByText('Bible Text')).toBeInTheDocument();
+    expect(screen.queryByText('Tradition Text')).not.toBeInTheDocument();
+
+    await userEvent.click(screen.getByText('Tradição'));
+    expect(await screen.findByText('Tradition Text')).toBeInTheDocument();
+    expect(screen.queryByText('Bible Text')).not.toBeInTheDocument();
   });
 });
