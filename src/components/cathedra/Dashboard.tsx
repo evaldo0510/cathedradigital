@@ -11,6 +11,8 @@ import SpiritualQuiz, { PROFILES, type ProfileId } from './SpiritualQuiz';
 import ProShowcase from './ProShowcase';
 import QuickDonation from './QuickDonation';
 import { useDashboardData } from '@/hooks/useDashboardData';
+import { DashboardSkeleton } from './DashboardSkeleton';
+
 
 interface DashboardProps {
   user: User | null;
