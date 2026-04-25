@@ -67,7 +67,7 @@ const UserTransactionsPage: React.FC = () => {
 
   useEffect(() => {
     if (selectedTx) {
-      setAnnouncement(`Detalhes da transação de ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(selectedTx.amount)} abertos.`);
+      setAnnouncement(`Detalhes da transação de ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(selectedTx.amount)} abertos. Pressione Escape para fechar.`);
     }
   }, [selectedTx]);
 
@@ -78,6 +78,21 @@ const UserTransactionsPage: React.FC = () => {
       setAnnouncement(`${transactions.length} transações carregadas.`);
     }
   }, [loading, transactions.length]);
+
+  useEffect(() => {
+    if (searchTerm) {
+      const timer = setTimeout(() => {
+        setAnnouncement(`Buscando por: ${searchTerm}`);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [searchTerm]);
+
+  useEffect(() => {
+    if (statusFilter !== 'all') {
+      setAnnouncement(`Filtrando por status: ${statusFilter}`);
+    }
+  }, [statusFilter]);
 
   const fetchTransactions = useCallback(async (pageNum: number) => {
     if (!user) return;
