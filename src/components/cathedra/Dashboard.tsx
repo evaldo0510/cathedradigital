@@ -223,7 +223,12 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         <FadeUp delay={0.12}>
           <div 
             onClick={() => goTo(nextUp.route)}
-            className="p-5 rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 via-background to-background cursor-pointer hover:border-primary/40 transition-all shadow-sm hover:shadow-md flex items-center justify-between group"
+            className="p-5 rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 via-background to-background cursor-pointer hover:border-primary/40 transition-all shadow-sm hover:shadow-md flex items-center justify-between group focus-visible:ring-2 focus-visible:ring-primary outline-none"
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => e.key === 'Enter' && goTo(nextUp.route)}
+            aria-label={`Continuar jornada: ${nextUp.label}`}
+
           >
             <div className="flex items-center gap-5">
               <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
