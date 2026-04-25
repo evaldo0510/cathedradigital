@@ -107,9 +107,12 @@ export const BubbleTag: React.FC<BubbleTagProps> = ({
   isSelected,
   isSuggested,
   onClick,
+  onKeyDown,
   onMouseEnter,
   className = "",
-  ariaLabel
+  ariaLabel,
+  tabIndex,
+  "data-roving-item": dataRovingItem
 }) => {
   return (
     <motion.button
