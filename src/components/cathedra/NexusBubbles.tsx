@@ -42,6 +42,22 @@ export const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolea
   const [errorDetails, setErrorDetails] = useState<string | null>(null);
   const [metrics, setMetrics] = useState<{ startTime: number; endTime?: number; source?: 'supabase' | 'ia' | 'both' }>({ startTime: 0 });
 
+  const { data: allThemes } = useQuery({
+    queryKey: ['tags'],
+    queryFn: async () => {
+      const { data, error } = await supabase.from('themes').select('*').order('name');
+      if (error) throw error;
+      return (data || []).map((t: any) => ({
+        id: t.id,
+        label: t.name,
+        slug: t.slug,
+        emoji: t.emoji || '⛪',
+        category: t.category || 'Geral'
+      })) as Tag[];
+    },
+    staleTime: 1000 * 60 * 30, // 30 minutes
+  });
+
   const fetchContent = async () => {
     if (content.length > 0 || status === 'loading') return;
     const startTime = performance.now();
