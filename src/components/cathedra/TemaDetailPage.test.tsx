@@ -136,7 +136,7 @@ describe('TemaDetailPage - Integration Tests', () => {
       { name: 'Tradição', fallback: /Conteúdo da Tradição em aprofundamento/i },
       { name: 'Magistério', fallback: /Documentos do Magistério em aprofundamento/i },
       { name: 'Jornadas', fallback: /Nenhuma jornada específica vinculada a este tema/i },
-      { name: 'Escrituras', fallback: /Nenhum versículo catalogado/i }
+      { name: 'Fundamentos', fallback: /Nenhum versículo catalogado/i }
     ];
 
     // Rapidly click through tabs
