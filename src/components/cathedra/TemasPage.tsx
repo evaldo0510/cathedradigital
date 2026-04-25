@@ -166,7 +166,7 @@ const TemasPage = () => {
         <div className="relative">
           <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent blur-3xl opacity-30 pointer-events-none" />
           
-          <div className="relative overflow-hidden rounded-2xl border border-border/30 bg-card/20 backdrop-blur-sm">
+          <div id="panel-temas" role="tabpanel" aria-labelledby={`tab-category-${activeCategory}`} className="relative overflow-hidden rounded-2xl border border-border/30 bg-card/20 backdrop-blur-sm outline-none" tabIndex={0}>
             {loadingTags ? (
               <div className="flex flex-col items-center gap-4 py-12 w-full justify-center">
                 <div className="relative">
