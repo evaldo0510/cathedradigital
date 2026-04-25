@@ -63,7 +63,8 @@ export function useRovingTabindex(totalCount: number) {
       
       // Focus the next element after state update
       setTimeout(() => {
-        const elements = document.querySelectorAll('[data-roving-item]');
+        // Use a more specific selector if needed, but this works if we tag the items
+        const elements = document.querySelectorAll('[data-roving-item="true"]');
         (elements[nextIndex] as HTMLElement)?.focus();
       }, 0);
     }
@@ -81,8 +82,18 @@ export function useRovingTabindex(totalCount: number) {
  * Shared utility for tab attributes to ensure consistency.
  */
 export const getTabProps = (
-// ... keep existing code
-
+  id: string, 
+  panelId: string, 
+  isSelected: boolean, 
+  className?: string
+) => ({
+  id,
+  role: 'tab',
+  'aria-selected': isSelected,
+  'aria-controls': panelId,
+  tabIndex: isSelected ? 0 : -1,
+  className
+});
 
 export const getTabPanelProps = (
   id: string, 
