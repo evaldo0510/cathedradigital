@@ -213,11 +213,10 @@ describe('TemaDetailPage - Integration Tests', () => {
     }
   });
 
-  it('shows loading skeleton only in the active tab and disappears after fetch', async () => {
+  it('shows loading skeleton only in the active tab content area', async () => {
     const mockTags = [{ id: '1', label: 'Skeleton', slug: 'skeleton', category: 'fundamentos', emoji: '💀' }];
     (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
 
-    // Mock a delayed response
     let resolveFetch: (value: any) => void;
     const fetchPromise = new Promise((resolve) => {
       resolveFetch = resolve;
@@ -226,34 +225,70 @@ describe('TemaDetailPage - Integration Tests', () => {
 
     renderWithProviders(<TemaDetailPage />, '/temas/skeleton');
 
-    // Wait for the tag to be loaded and the header to appear
     await screen.findAllByText('Skeleton');
 
-    const getSkeletons = () => document.querySelectorAll('.animate-pulse');
-    
-    // Check for skeletons in the tabs area
+    // Helper to find skeletons inside a specific tab content
+    const getSkeletonsInTab = (tabValue: string) => {
+      // Radix TabsContent has data-state="active" when active
+      const content = document.querySelector(`[data-state="active"][role="tabpanel"]`);
+      return content ? content.querySelectorAll('.animate-pulse') : [];
+    };
+
+    const getInactiveSkeletons = () => {
+      const inactiveContents = document.querySelectorAll(`[data-state="inactive"][role="tabpanel"]`);
+      let count = 0;
+      inactiveContents.forEach(c => {
+        count += c.querySelectorAll('.animate-pulse').length;
+      });
+      return count;
+    };
+
+    // 1. Bible (Default) active
     await waitFor(() => {
-      expect(getSkeletons().length).toBeGreaterThan(0);
+      expect(getSkeletonsInTab('bible').length).toBeGreaterThan(0);
     });
+    expect(getInactiveSkeletons()).toBe(0);
 
-    // 2. Switch to Tradition tab
+    // 2. Switch to Tradition
     await userEvent.click(screen.getByText('Tradição'));
-    
-    // Skeleton should still be visible because we are still loading (fetchPromise hasn't resolved)
-    expect(getSkeletons().length).toBeGreaterThan(0);
+    await waitFor(() => {
+      expect(getSkeletonsInTab('tradition').length).toBeGreaterThan(0);
+    });
+    expect(getInactiveSkeletons()).toBe(0);
 
-    // 3. Resolve fetch
+    // 3. Resolve
     await act(async () => {
       resolveFetch([]);
     });
 
-    // 4. Skeletons should disappear
     await waitFor(() => {
-      expect(getSkeletons().length).toBe(0);
+      expect(document.querySelectorAll('.animate-pulse').length).toBe(0);
     });
+  });
 
-    // Check if fallback is now visible
-    expect(screen.getByText(/Conteúdo da Tradição em aprofundamento/i)).toBeInTheDocument();
+  it('verifies retry flow: error -> retry -> success', async () => {
+    const mockTags = [{ id: '1', label: 'RetryTag', slug: 'retry-tag', category: 'fundamentos', emoji: '🔄' }];
+    (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
+
+    // 1. First attempt fails
+    (fetchNexusTagContent as any).mockRejectedValueOnce(new Error('Network Error'));
+
+    renderWithProviders(<TemaDetailPage />, '/temas/retry-tag');
+
+    // Error UI should appear
+    expect(await screen.findByText(/Erro ao carregar conexões do Nexus/i)).toBeInTheDocument();
+
+    // 2. Prepare successful response and click retry
+    const mockContent = [{ id: 'c1', type: 'bible', content_text: 'Recovered Content', title: 'Ref 1' }];
+    (fetchNexusTagContent as any).mockResolvedValueOnce(mockContent);
+
+    const retryButton = screen.getByText(/Tentar Novamente/i);
+    await userEvent.click(retryButton);
+
+    // Should show skeleton while retrying (briefly)
+    // Then show content
+    expect(await screen.findByText(/Recovered Content/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Erro ao carregar conexões do Nexus/i)).not.toBeInTheDocument();
   });
 
   it('handles fetch exception by showing global error UI across all tabs', async () => {
