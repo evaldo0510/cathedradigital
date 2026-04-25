@@ -101,6 +101,7 @@ export const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolea
           onMouseEnter={prefetchTag}
           tabIndex={tabIndex}
           data-roving-item={true}
+          className={className}
         />
       </PopoverTrigger>
       <PopoverContent className="w-[340px] sm:w-[420px] p-0 rounded-[2.5rem] border-primary/20 overflow-hidden shadow-2xl z-[100] backdrop-blur-2xl bg-card/90">
@@ -280,8 +281,12 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
   const { profileId: hookProfileId } = useSpiritualProfile();
   const profileId = propProfileId || hookProfileId;
   const navigate = useNavigate();
-...
   const filteredRef = React.useRef<HTMLDivElement>(null);
+  const suggestedRef = React.useRef<HTMLDivElement>(null);
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
+  const [tags, setTags] = useState<Tag[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchTags = async () => {
@@ -419,6 +424,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               className="space-y-3"
+              key="filtered"
             >
               <div className="flex items-center justify-between gap-2">
                 <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
@@ -452,7 +458,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
               </div>
             </motion.div>
           ) : (
-            <>
+            <div key="default" className="space-y-6">
               {/* Profile Suggestions */}
               {profileId && profileSuggestedTags.length > 0 && (
                 <motion.div 
@@ -515,7 +521,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
                   );
                 })}
               </div>
-            </>
+            </div>
           )}
         </AnimatePresence>
       </div>
