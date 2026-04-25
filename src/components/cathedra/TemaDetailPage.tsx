@@ -353,6 +353,8 @@ const TemaDetailPage = () => {
                   }} 
                   className="h-10 rounded-xl px-6"
                   disabled={isFetchingContents || loadingContents}
+                  aria-busy={isFetchingContents || loadingContents}
+                  aria-live="polite"
                   data-testid="retry-button"
                 >
                   {isFetchingContents || loadingContents ? (
