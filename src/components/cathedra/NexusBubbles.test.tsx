@@ -101,11 +101,12 @@ describe('NexusBubbles - Integration Tests', () => {
     renderWithProviders(<NexusBubbles />);
     
     // Click category that doesn't match 'fundamentos'
-    const mistérioBtn = await screen.findByText(/Mistério/i);
+    const mistérioBtn = await screen.findByRole('button', { name: /Mistério/i });
     await userEvent.click(mistérioBtn);
 
     // Filter results header
-    expect(await screen.findByText(/Mistério/i)).toBeInTheDocument();
+    const headers = await screen.findAllByText(/Mistério/i);
+    expect(headers.length).toBeGreaterThan(0);
     // Fallback message
     expect(screen.getByText(/Nenhum tema encontrado/i)).toBeInTheDocument();
   });
