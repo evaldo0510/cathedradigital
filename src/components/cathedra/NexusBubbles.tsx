@@ -298,6 +298,9 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
     return result;
   }, [tags, searchQuery, activeFilter]);
 
+  const { activeIndex: filteredActiveIndex, handleKeyDown: handleFilteredKeyDown } = useRovingTabindex(filteredTags?.length || 0);
+  const { activeIndex: suggestedActiveIndex, handleKeyDown: handleSuggestedKeyDown } = useRovingTabindex(profileSuggestedTags?.length || 0);
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-10">
