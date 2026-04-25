@@ -53,7 +53,13 @@ const TemasPage = () => {
         .select('*')
         .order('name');
       if (error) throw error;
-      return data as Tag[];
+      return (data || []).map((t: any) => ({
+        id: t.id,
+        label: t.name,
+        slug: t.slug,
+        emoji: t.emoji || '⛪',
+        category: t.category || 'Geral'
+      })) as Tag[];
     },
   });
 
