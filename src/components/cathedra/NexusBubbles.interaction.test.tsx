@@ -23,8 +23,18 @@ const buildSupabaseMock = (themes: any[] = MOCK_THEMES) => {
     order: vi.fn().mockImplementation(() => ({
       then: (resolve: any) => resolve({ data: themes, error: null }),
     })),
+    eq: vi.fn().mockReturnThis(),
+    maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }),
   };
 };
+
+vi.mock('@/hooks/useAuth', () => ({
+  useAuth: vi.fn(() => ({
+    user: { id: 'user-123' },
+    profile: { name: 'Teste' },
+    loading: false,
+  })),
+}));
 
 vi.mock('@/integrations/supabase/client', () => ({
   supabase: { from: vi.fn() },

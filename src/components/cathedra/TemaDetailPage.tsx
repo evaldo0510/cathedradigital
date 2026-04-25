@@ -16,6 +16,10 @@ import { AppRoute } from '@/types';
 import { Skeleton } from '@/components/ui/skeleton';
 import SEOHead from '@/components/SEOHead';
 import { BubbleTag, getTagIcon } from './BubbleTag';
+import { TagBubble } from './NexusBubbles';
+import { useSpiritualProfile } from '@/hooks/useSpiritualProfile';
+import { PROFILES } from './SpiritualQuiz';
+
 
 interface Tag {
   id: string;
@@ -153,6 +157,21 @@ const TemaDetailPage = () => {
     },
     enabled: !!selectedTag,
   });
+
+  const { profileId } = useSpiritualProfile();
+  const suggestedSlugs = React.useMemo(() => {
+    if (!profileId || !tags) return new Set<string>();
+    const profile = PROFILES[profileId];
+    if (!profile) return new Set<string>();
+    const relevantLabels = [profile.theme, profile.pain.label, 'Oração', 'Jesus', 'Fé'];
+    return new Set(
+      tags
+        .filter(t => relevantLabels.some(l => t.label.toLowerCase().includes(l.toLowerCase())))
+        .slice(0, 8)
+        .map(t => t.slug)
+    );
+  }, [profileId, tags]);
+
 
   const prefetchTag = useCallback((tag: Tag) => {
     queryClient.prefetchQuery({
@@ -513,13 +532,12 @@ const TemaDetailPage = () => {
             <h3 className="text-xs font-black uppercase tracking-widest text-foreground/60">Temas Relacionados</h3>
             <div className="flex flex-wrap gap-2">
               {tags?.filter(t => t.category === selectedTag?.category && t.id !== selectedTag?.id).slice(0, 8).map((tag, idx) => (
-                <BubbleTag 
+                <TagBubble 
                   key={tag.id}
-                  label={tag.label}
-                  emoji={tag.emoji}
+                  tag={tag}
                   index={idx}
-                  onClick={() => navigate(`${AppRoute.TEMAS}/${tag.slug}`)}
-                  onMouseEnter={() => prefetchTag(tag)}
+                  isSuggested={suggestedSlugs.has(tag.slug)}
+                  onKeyDown={() => {}}
                   className="px-3 py-1.5"
                 />
               ))}

@@ -10,6 +10,7 @@ import { Loader2, Sparkles, Tag as TagIcon, Search } from 'lucide-react';
 import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import { FuzzySearchInput } from './FuzzySearchInput';
 import { BubbleTag } from './BubbleTag';
+import { TagBubble } from './NexusBubbles';
 import { getTabProps, getTabPanelProps, useTabNavigation, useRovingTabindex } from './TabUtils';
 import { useSpiritualProfile } from '@/hooks/useSpiritualProfile';
 import { PROFILES } from './SpiritualQuiz';
@@ -213,17 +214,12 @@ const TemasPage = () => {
                     <div className="flex flex-wrap justify-center gap-2 sm:gap-3 max-w-5xl mx-auto" role="list" ref={tagsContainerRef}>
                       {filteredTags.map((tag, idx) => (
                         <div key={tag.id} role="listitem">
-                          <BubbleTag
-                            label={tag.label}
-                            emoji={tag.emoji}
+                          <TagBubble
+                            tag={tag}
                             index={idx}
-                            isSelected={false}
                             isSuggested={suggestedSlugs.has(tag.slug)}
-                            onClick={() => handleTagSelect(tag)}
-                            onKeyDown={(e) => handleRovingKeyDown(e, idx, () => handleTagSelect(tag))}
-                            onMouseEnter={() => prefetchTag(tag)}
+                            onKeyDown={(e) => handleRovingKeyDown(e, idx, () => {})}
                             tabIndex={activeIndex === idx ? 0 : -1}
-                            data-roving-item={true}
                             className="px-4 py-2.5 text-[10px] sm:text-[11px] uppercase tracking-widest"
                           />
                         </div>

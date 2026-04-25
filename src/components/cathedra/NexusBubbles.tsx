@@ -15,6 +15,8 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Button } from '@/components/ui/button';
 import { type ProfileId, PROFILES } from './SpiritualQuiz';
 import { useRovingTabindex } from './TabUtils';
+import { useSpiritualProfile } from '@/hooks/useSpiritualProfile';
+
 
 interface Tag {
   id: string;
@@ -30,7 +32,7 @@ interface NexusBubblesProps {
   profileId?: ProfileId | null;
 }
 
-const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabIndex?: number; onKeyDown?: (e: React.KeyboardEvent) => void }> = ({ tag, index, isSuggested, tabIndex, onKeyDown }) => {
+export const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabIndex?: number; onKeyDown?: (e: React.KeyboardEvent) => void; className?: string }> = ({ tag, index, isSuggested, tabIndex, onKeyDown, className }) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
@@ -99,6 +101,7 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
           onMouseEnter={prefetchTag}
           tabIndex={tabIndex}
           data-roving-item={true}
+          className={className}
         />
       </PopoverTrigger>
       <PopoverContent className="w-[340px] sm:w-[420px] p-0 rounded-[2.5rem] border-primary/20 overflow-hidden shadow-2xl z-[100] backdrop-blur-2xl bg-card/90">
@@ -274,7 +277,9 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
 };
 
 
-const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
+const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId }) => {
+  const { profileId: hookProfileId } = useSpiritualProfile();
+  const profileId = propProfileId || hookProfileId;
   const navigate = useNavigate();
   const filteredRef = React.useRef<HTMLDivElement>(null);
   const suggestedRef = React.useRef<HTMLDivElement>(null);
@@ -419,6 +424,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               className="space-y-3"
+              key="filtered"
             >
               <div className="flex items-center justify-between gap-2">
                 <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
@@ -452,7 +458,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
               </div>
             </motion.div>
           ) : (
-            <>
+            <div key="default" className="space-y-6">
               {/* Profile Suggestions */}
               {profileId && profileSuggestedTags.length > 0 && (
                 <motion.div 
@@ -515,7 +521,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
                   );
                 })}
               </div>
-            </>
+            </div>
           )}
         </AnimatePresence>
       </div>
