@@ -41,15 +41,19 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
   const [content, setContent] = useState<TagContent[]>([]);
   const [logosInsight, setLogosInsight] = useState<string | null>(null);
   const [errorDetails, setErrorDetails] = useState<string | null>(null);
+  const [metrics, setMetrics] = useState<{ startTime: number; endTime?: number; source?: 'supabase' | 'ia' | 'both' }>({ startTime: 0 });
 
   const fetchContent = async () => {
     if (content.length > 0 || status === 'loading') return;
+    const startTime = performance.now();
+    setMetrics({ startTime });
     setStatus('loading');
     setErrorDetails(null);
     console.log(`[Nexus Diagnostic] Fetching content for tag: ${tag.label} (ID: ${tag.id})`);
     
     try {
-      const { data, error } = await supabase
+      // 1. Supabase Fetch
+      const { data, error: dbError } = await supabase
         .from('content_tags')
         .select(`
           spiritual_contents (
@@ -63,28 +67,34 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
         .eq('tag_id', tag.id)
         .limit(3);
 
-      if (error) throw error;
+      if (dbError) {
+        setMetrics(prev => ({ ...prev, source: 'supabase' }));
+        throw dbError;
+      }
 
       if (data) {
         const formatted = (data as any[]).map(d => d.spiritual_contents).filter(Boolean);
         setContent(formatted);
-        console.log(`[Nexus Diagnostic] Found ${formatted.length} items for ${tag.label}`);
-        if (formatted.length === 0) {
-          console.warn(`[Nexus Diagnostic] No spiritual_contents linked to tag: ${tag.label}`);
+      }
+
+      // 2. IA Fetch
+      try {
+        const result = await getSpiritualInsight(tag.label);
+        if (!result.error && result.content) {
+          setLogosInsight(result.content);
+        } else if (result.error) {
+          console.warn(`[Nexus Diagnostic] AI Insight error: ${result.error}`);
         }
+      } catch (iaErr) {
+        console.error(`[Nexus Diagnostic] AI Fetch failed, but Supabase content might be present.`, iaErr);
       }
 
-      const result = await getSpiritualInsight(tag.label);
-      if (!result.error && result.content) {
-        setLogosInsight(result.content);
-      } else if (result.error) {
-        console.warn(`[Nexus Diagnostic] AI Insight error: ${result.error}`);
-      }
-
+      setMetrics(prev => ({ ...prev, endTime: performance.now(), source: 'both' }));
       setStatus('success');
     } catch (e: any) {
       console.error(`[Nexus Diagnostic] Error fetching ${tag.label}:`, e);
       setErrorDetails(e.message || 'Erro desconhecido');
+      setMetrics(prev => ({ ...prev, endTime: performance.now() }));
       setStatus('error');
     }
   };
