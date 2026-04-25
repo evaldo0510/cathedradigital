@@ -157,7 +157,12 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       <FadeUp delay={0.02}>
         <div 
           onClick={() => goTo(AppRoute.MODULES_GUIDE)}
-          className="mb-6 p-4 rounded-2xl bg-primary/5 border border-primary/10 flex items-center justify-between cursor-pointer hover:bg-primary/10 transition-colors group"
+          className="mb-6 p-4 rounded-2xl bg-primary/5 border border-primary/10 flex items-center justify-between cursor-pointer hover:bg-primary/10 transition-colors group focus-visible:ring-2 focus-visible:ring-primary outline-none"
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => e.key === 'Enter' && goTo(AppRoute.MODULES_GUIDE)}
+          aria-label="Abrir guia dos módulos"
+
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
