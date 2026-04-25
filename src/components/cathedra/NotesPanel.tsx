@@ -45,12 +45,15 @@ const NotesPanel: React.FC<NotesPanelProps> = ({ contentType, contentId, content
     <div className="relative inline-flex">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${
+        className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
           notes.length > 0
             ? 'bg-secondary/20 text-primary border border-secondary/30'
             : 'bg-card border border-border text-muted-foreground hover:text-foreground'
         }`}
         title="Minhas Anotações"
+        aria-label="Minhas Anotações"
+        aria-expanded={isOpen}
+        aria-haspopup="true"
       >
         <Icons.Book className="w-3.5 h-3.5" />
         {notes.length > 0 && <span>{notes.length}</span>}
