@@ -57,7 +57,7 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
     
     try {
       // Definir termos de busca (Label original, Label normalizado, Slug)
-      const searchTerms = [tag.label, normalizedTag, tag.slug].filter((v, i, a) => a.indexOf(v) === i);
+      const searchTerms = getSearchTermsForTag(tag);
       
       // 1. Fetch from spiritual_contents (Bíblia, Catecismo, Magistério)
       const { data: spiritualData, error: dbError } = await supabase
