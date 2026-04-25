@@ -13,7 +13,14 @@ import { ListSkeleton, PageHeaderSkeleton } from './SacredSkeleton';
 import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
 
 const CATEGORIES = [
-... keep existing categories
+  { id: 'geral', label: 'Geral' },
+  { id: 'testemunho', label: '✝ Testemunho' },
+  { id: 'partilha', label: '💬 Partilha' },
+  { id: 'teologia', label: 'Teologia' },
+  { id: 'biblia', label: 'Bíblia' },
+  { id: 'liturgia', label: 'Liturgia' },
+  { id: 'moral', label: 'Moral' },
+  { id: 'espiritualidade', label: 'Espiritualidade' },
 ];
 
 interface Post {
