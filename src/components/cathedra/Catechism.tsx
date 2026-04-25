@@ -378,9 +378,12 @@ const Catechism: React.FC = () => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }
             }}
-            className="px-3 py-2 rounded-xl bg-card border border-border text-xs font-bold disabled:opacity-30 hover:bg-primary/10 transition-all flex items-center gap-1">
+            className="px-3 py-2 rounded-xl bg-card border border-border text-xs font-bold disabled:opacity-30 hover:bg-primary/10 transition-all flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-primary outline-none"
+            aria-label="Seção anterior"
+          >
             <Icons.ArrowDown className="w-3.5 h-3.5 rotate-90" /> Seção Anterior
           </button>
+
           <div className="px-4 py-2 bg-primary/5 border border-primary/20 rounded-xl text-xs font-black uppercase tracking-widest text-primary">
             Lendo Seção {selectedSection.id}
           </div>
