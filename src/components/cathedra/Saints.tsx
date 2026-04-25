@@ -196,7 +196,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
             {viewModes.map((mode, idx) => (
               <button
                 key={mode}
-                {...getTabProps(`tab-${idx}`, `panel-${mode}`, viewMode === mode, `px-4 md:px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+                {...getTabProps(`tab-${mode}`, `panel-${mode}`, viewMode === mode, `px-4 md:px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                   viewMode === mode ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
                 }`)}
                 onClick={() => setViewMode(mode)}
@@ -213,7 +213,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
           {viewMode === 'daily' ? (
               <motion.div
                 key="daily"
-                {...getTabPanelProps('panel-daily', 'tab-0', viewMode === 'daily', "space-y-8 outline-none")}
+                {...getTabPanelProps('panel-daily', 'tab-daily', viewMode === 'daily', "space-y-8 outline-none")}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
@@ -356,8 +356,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
             <motion.div
               key="search"
               id="panel-search"
-              role="tabpanel"
-              aria-labelledby="tab-search"
+              {...getTabPanelProps('panel-search', 'tab-search', viewMode === 'search', "space-y-8 outline-none")}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
@@ -437,9 +436,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
           ) : viewMode === 'cloud' ? (
             <motion.div
               key="cloud"
-              id="panel-cloud"
-              role="tabpanel"
-              aria-labelledby="tab-cloud"
+              {...getTabPanelProps('panel-cloud', 'tab-cloud', viewMode === 'cloud', "space-y-8 outline-none")}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
