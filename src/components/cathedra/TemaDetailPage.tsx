@@ -319,6 +319,7 @@ const TemaDetailPage = () => {
                 <Button variant="outline" onClick={() => queryClient.invalidateQueries({ queryKey: ['tag-contents'] })} className="h-10 rounded-xl px-6">Tentar Novamente</Button>
               </div>
             ) : (
+            <>
             <TabsContent value="bible" className="mt-6 space-y-4">
               {bibleVerses.length > 0 ? (
                 <>
