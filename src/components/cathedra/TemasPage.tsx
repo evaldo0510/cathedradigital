@@ -26,6 +26,7 @@ const TemasPage = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState('');
+  const { handleKeyDown: handleTabKeyDown } = useTabNavigation();
   const [activeCategory, setActiveCategory] = useState<string>(() => {
     const fromUrl = searchParams.get('category');
     if (fromUrl) return fromUrl;
