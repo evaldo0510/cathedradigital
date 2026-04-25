@@ -79,6 +79,8 @@ const TemasPage = () => {
     return base.filter(tag => tag.category === activeCategory);
   }, [tags, fuzzyTags, isSearchActive, activeCategory]);
 
+  const { activeIndex, handleKeyDown: handleRovingKeyDown } = useRovingTabindex(filteredTags.length);
+
   useEffect(() => {
     const temaSlug = searchParams.get('tema');
     if (temaSlug) {
