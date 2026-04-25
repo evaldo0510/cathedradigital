@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import JornadasPage from './JornadasPage';
@@ -10,17 +10,9 @@ import React from 'react';
 
 // Mocking dependencies
 vi.mock('@/integrations/supabase/client', () => {
-  const mockSelect = vi.fn().mockReturnThis();
-  const mockOrder = vi.fn().mockResolvedValue({ data: [], error: null });
-  const mockEq = vi.fn().mockResolvedValue({ data: [], error: null });
-
   return {
     supabase: {
-      from: vi.fn(() => ({
-        select: mockSelect,
-        order: mockOrder,
-        eq: mockEq
-      }))
+      from: vi.fn()
     }
   };
 });
