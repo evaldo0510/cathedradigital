@@ -240,7 +240,8 @@ const ProfilePage: React.FC = () => {
           <button
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
-            className="absolute inset-0 rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+            className="absolute inset-0 rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center focus-visible:opacity-100 outline-none focus-visible:ring-4 focus-visible:ring-primary"
+            aria-label="Alterar foto de perfil"
           >
             {uploading ? (
               <div className="w-5 h-5 border-2 border-secondary border-t-transparent rounded-full animate-spin" />
@@ -250,6 +251,7 @@ const ProfilePage: React.FC = () => {
           </button>
           <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} />
         </div>
+
         <div>
           <h1 className="text-2xl font-black text-foreground">{profile.name || 'Peregrino'}</h1>
           <p className="text-xs text-muted-foreground uppercase tracking-widest font-bold">
