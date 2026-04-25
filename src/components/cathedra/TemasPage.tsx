@@ -8,7 +8,7 @@ import { Loader2, Sparkles, Tag as TagIcon, Search } from 'lucide-react';
 import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import { FuzzySearchInput } from './FuzzySearchInput';
 import { BubbleTag } from './BubbleTag';
-import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
+import { getTabProps, getTabPanelProps, useTabNavigation, useRovingTabindex } from './TabUtils';
 
 
 interface Tag {
