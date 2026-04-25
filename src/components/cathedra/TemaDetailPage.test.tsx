@@ -226,13 +226,15 @@ describe('TemaDetailPage - Integration Tests', () => {
 
     renderWithProviders(<TemaDetailPage />, '/temas/skeleton');
 
-    // 1. Initial tab (Bible/Escrituras) should show skeleton
-    // The skeleton doesn't have a role, but we can look for the container with classes or just use querySelector if needed.
-    // However, since we added animate-pulse/Skeleton components, let's look for them.
-    // Skeletons are divs with 'animate-pulse' class.
+    // Wait for the tag to be loaded and the header to appear
+    expect(await screen.findByText('Skeleton')).toBeInTheDocument();
+
     const getSkeletons = () => document.querySelectorAll('.animate-pulse');
     
-    expect(getSkeletons().length).toBeGreaterThan(0);
+    // Check for skeletons in the tabs area
+    await waitFor(() => {
+      expect(getSkeletons().length).toBeGreaterThan(0);
+    });
 
     // 2. Switch to Tradition tab
     await userEvent.click(screen.getByText('Tradição'));
