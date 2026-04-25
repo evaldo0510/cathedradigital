@@ -640,7 +640,7 @@ describe('TemaDetailPage - Integration Tests', () => {
     fireEvent.click(screen.getByText('Tradição'));
     // Advance time for debounce
     await act(async () => {
-      vi.advanceTimersByTime(400);
+      await new Promise(r => setTimeout(r, 400));
     });
 
     // Switch to Magisterium (starts p2)
