@@ -47,6 +47,7 @@ const UserTransactionsPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+  const [selectedTx, setSelectedTx] = useState<any | null>(null);
   const loaderRef = useRef<HTMLDivElement>(null);
 
   // Reset state when user changes
