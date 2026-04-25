@@ -324,10 +324,10 @@ describe('TemaDetailPage - Integration Tests', () => {
 
     await userEvent.click(retryButton);
     
-    // 4. Wait for the button to transition to disabled state
+    // 4. Wait for the button to show processing state
     await waitFor(() => {
-      expect(retryButton).toBeDisabled();
-    }, { timeout: 3000 });
+      expect(screen.getByText(/Processando/i)).toBeInTheDocument();
+    });
 
     // 5. Resolve the retry
     await act(async () => {
