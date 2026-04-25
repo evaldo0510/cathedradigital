@@ -127,7 +127,8 @@ describe('NexusBubbles - Integration Tests', () => {
     });
 
     // Verify it shows "Escritura" and NOT "Referência"
-    expect(screen.getByText('Escritura')).toBeInTheDocument();
+    const scripture = await screen.findByText('Escritura');
+    expect(scripture).toBeInTheDocument();
     expect(screen.queryByText('Referência')).not.toBeInTheDocument();
   });
 
@@ -150,10 +151,9 @@ describe('NexusBubbles - Integration Tests', () => {
     const tag = await screen.findByText('Silencioso');
     fireEvent.click(tag);
 
-    // Wait for "Nexus Silencioso" fallback
-    await waitFor(() => {
-      expect(screen.getByText('Nexus Silencioso')).toBeInTheDocument();
-    });
+    // Wait for "Nexus Silencioso" fallback in the portal
+    const fallbackTitle = await screen.findByText('Nexus Silencioso');
+    expect(fallbackTitle).toBeInTheDocument();
     
     expect(screen.getByText(/Ainda estamos tecendo as conexões/i)).toBeInTheDocument();
   });
