@@ -224,7 +224,7 @@ const TemasPage = () => {
         </div>
       </div>
       
-      <main className="min-h-[500px]">
+      <div className="min-h-[500px]">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
