@@ -276,14 +276,12 @@ export const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolea
 };
 
 
-const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
+const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId }) => {
+  const { profileId: hookProfileId } = useSpiritualProfile();
+  const profileId = propProfileId || hookProfileId;
   const navigate = useNavigate();
+...
   const filteredRef = React.useRef<HTMLDivElement>(null);
-  const suggestedRef = React.useRef<HTMLDivElement>(null);
-  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
-  const [tags, setTags] = useState<Tag[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchTags = async () => {
