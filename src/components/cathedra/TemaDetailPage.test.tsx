@@ -105,8 +105,8 @@ describe('TemaDetailPage - Integration Tests', () => {
 
     renderWithProviders(<TemaDetailPage />, '/temas/vazio');
 
-    // Wait for the tag to be loaded (the header should show the label)
-    const header = await screen.findByText('Vazio');
+    // Wait for the tag to be loaded (the H1 should show the label)
+    const header = await screen.findByRole('heading', { name: 'Vazio', level: 1 });
     expect(header).toBeInTheDocument();
 
     // Check for various empty states in tabs
