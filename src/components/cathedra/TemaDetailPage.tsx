@@ -338,7 +338,15 @@ const TemaDetailPage = () => {
                 <p className="text-sm text-muted-foreground italic max-w-md mx-auto">
                   Não foi possível estabelecer uma conexão estável com o banco de dados teológico. Por favor, tente novamente em alguns instantes.
                 </p>
-                <Button variant="outline" onClick={() => queryClient.invalidateQueries({ queryKey: ['tag-contents'] })} className="h-10 rounded-xl px-6">Tentar Novamente</Button>
+                <Button 
+                  variant="outline" 
+                  onClick={() => queryClient.invalidateQueries({ queryKey: ['tag-contents'] })} 
+                  className="h-10 rounded-xl px-6"
+                  disabled={loadingContents}
+                >
+                  {loadingContents ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                  Tentar Novamente
+                </Button>
               </div>
             ) : (
             <>
