@@ -155,8 +155,8 @@ const AZFaithPage: React.FC = () => {
               )}
             </div>
 
-            <div className="flex justify-center gap-3 mb-6 flex-wrap">
-              {FEATURED_TERMS.map(name => {
+            <div className="flex justify-center gap-4 mb-12 flex-wrap max-w-4xl mx-auto px-4">
+              {FEATURED_TERMS.map((name, idx) => {
                 const term = allTerms.find(t => t.term === name);
                 if (!term) return null;
                 const isActive = selectedTerm?.term === name;
@@ -165,18 +165,18 @@ const AZFaithPage: React.FC = () => {
                     key={name}
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    whileHover={{ scale: 1.08 }}
+                    transition={{ delay: idx * 0.05 }}
+                    whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => handleTermClick(term)}
-                    className={`px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-wider border transition-all relative overflow-hidden group focus-visible:ring-4 focus-visible:ring-primary outline-none
+                    className={`px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-[0.1em] border transition-all relative overflow-hidden group focus-visible:ring-4 focus-visible:ring-primary outline-none shadow-sm
                       ${isActive
                         ? 'bg-primary text-primary-foreground border-primary shadow-lg ring-4 ring-primary/10'
-                        : 'bg-card/40 backdrop-blur-sm text-primary border-primary/20 hover:border-primary/50'
+                        : 'bg-card/40 backdrop-blur-sm text-primary border-primary/20 hover:border-primary/50 hover:shadow-md'
                       }`}
                   >
-
-                    <div className="flex items-center gap-2 relative z-10">
-                      <span>🫧</span>
+                    <div className="flex items-center gap-2.5 relative z-10">
+                      <span className="opacity-80 group-hover:scale-125 transition-transform duration-500">🫧</span>
                       {name}
                     </div>
                   </motion.button>
