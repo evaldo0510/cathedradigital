@@ -344,9 +344,14 @@ const Catechism: React.FC = () => {
           </button>
         )}
         <div className="flex items-center gap-4">
-          <button onClick={goBack} className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all">
+          <button 
+            onClick={goBack} 
+            className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none"
+            aria-label="Voltar"
+          >
             <Icons.ArrowDown className="w-5 h-5 rotate-90 text-foreground" />
           </button>
+
           <div className="flex-1 min-w-0">
             <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">{selectedPart.part}</span>
             <h1 className="text-xl font-serif font-bold text-foreground truncate">{selectedSection.title}</h1>
