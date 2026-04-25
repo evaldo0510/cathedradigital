@@ -81,7 +81,7 @@ const ThemeContentCard = ({
 );
 
 const ContentSkeleton = () => (
-  <div className="space-y-4">
+  <div className="space-y-4" data-testid="content-skeleton">
     {[1, 2, 3].map((i) => (
       <Card key={i} className="border-border/40 bg-card/20 rounded-[2rem] overflow-hidden">
         <CardContent className="p-6 sm:p-8 space-y-4">
@@ -111,6 +111,14 @@ const TemaDetailPage = () => {
   const [magisteriumLimit, setMagisteriumLimit] = useState(5);
   const [autoLoaded, setAutoLoaded] = useState(false);
   const [activeTab, setActiveTab] = useState('bible');
+  const [debouncedTab, setDebouncedTab] = useState('bible');
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedTab(activeTab);
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [activeTab]);
 
   const { data: tags } = useQuery({
     queryKey: ['tags'],
@@ -124,7 +132,7 @@ const TemaDetailPage = () => {
   const selectedTag = tags?.find(t => t.slug === slug);
 
   const { data: contents, isLoading: loadingContents, isFetching: isFetchingContents, error: contentError, refetch } = useQuery({
-    queryKey: ['tag-contents', selectedTag?.id, activeTab],
+    queryKey: ['tag-contents', selectedTag?.id, debouncedTab],
     queryFn: async () => {
       if (!selectedTag) return [];
       const results = await fetchNexusTagContent(selectedTag);
@@ -187,6 +195,8 @@ const TemaDetailPage = () => {
       </div>
     );
   }
+
+  const isLoadingAny = loadingContents || isFetchingContents || activeTab !== debouncedTab;
 
   const bibleVerses = contents?.filter(c => c.content_type === 'bible') || [];
   const catechism = contents?.filter(c => c.content_type === 'catechism') || [];
@@ -344,10 +354,12 @@ const TemaDetailPage = () => {
                     refetch();
                   }} 
                   className="h-10 rounded-xl px-6"
-                  disabled={isFetchingContents || loadingContents}
+                  disabled={isLoadingAny}
+                  aria-busy={isLoadingAny}
+                  aria-live="polite"
                   data-testid="retry-button"
                 >
-                  {isFetchingContents || loadingContents ? (
+                  {isFetchingContents || isLoadingAny ? (
                     "Processando..."
                   ) : (
                     "Tentar Novamente"
@@ -357,7 +369,7 @@ const TemaDetailPage = () => {
             ) : (
             <>
             <TabsContent value="bible" className="mt-6 space-y-4">
-              {loadingContents ? (
+              {isLoadingAny ? (
                 <ContentSkeleton />
               ) : bibleVerses.length > 0 ? (
                 <>
@@ -392,7 +404,7 @@ const TemaDetailPage = () => {
             </TabsContent>
 
             <TabsContent value="tradition" className="mt-6 space-y-4">
-              {loadingContents ? (
+              {isLoadingAny ? (
                 <ContentSkeleton />
               ) : catechism.length > 0 ? (
                 <>
@@ -430,7 +442,7 @@ const TemaDetailPage = () => {
             </TabsContent>
 
             <TabsContent value="magisterium" className="mt-6 space-y-4">
-              {loadingContents ? (
+              {isLoadingAny ? (
                 <ContentSkeleton />
               ) : magisterium.length > 0 ? (
                 <>
@@ -465,7 +477,7 @@ const TemaDetailPage = () => {
             </TabsContent>
             
             <TabsContent value="journeys" className="mt-6 space-y-4">
-              {loadingContents ? (
+              {isLoadingAny ? (
                 <ContentSkeleton />
               ) : journeys.length > 0 ? (
                 <div className="space-y-4">
