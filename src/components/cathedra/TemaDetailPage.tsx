@@ -354,12 +354,12 @@ const TemaDetailPage = () => {
                     refetch();
                   }} 
                   className="h-10 rounded-xl px-6"
-                  disabled={isFetchingContents || loadingContents}
-                  aria-busy={isFetchingContents || loadingContents}
+                  disabled={isLoadingAny}
+                  aria-busy={isLoadingAny}
                   aria-live="polite"
                   data-testid="retry-button"
                 >
-                  {isFetchingContents || loadingContents ? (
+                  {isFetchingContents || isLoadingAny ? (
                     "Processando..."
                   ) : (
                     "Tentar Novamente"
@@ -369,7 +369,7 @@ const TemaDetailPage = () => {
             ) : (
             <>
             <TabsContent value="bible" className="mt-6 space-y-4">
-              {loadingContents ? (
+              {isLoadingAny ? (
                 <ContentSkeleton />
               ) : bibleVerses.length > 0 ? (
                 <>
@@ -404,7 +404,7 @@ const TemaDetailPage = () => {
             </TabsContent>
 
             <TabsContent value="tradition" className="mt-6 space-y-4">
-              {loadingContents ? (
+              {isLoadingAny ? (
                 <ContentSkeleton />
               ) : catechism.length > 0 ? (
                 <>
@@ -442,7 +442,7 @@ const TemaDetailPage = () => {
             </TabsContent>
 
             <TabsContent value="magisterium" className="mt-6 space-y-4">
-              {loadingContents ? (
+              {isLoadingAny ? (
                 <ContentSkeleton />
               ) : magisterium.length > 0 ? (
                 <>
@@ -477,7 +477,7 @@ const TemaDetailPage = () => {
             </TabsContent>
             
             <TabsContent value="journeys" className="mt-6 space-y-4">
-              {loadingContents ? (
+              {isLoadingAny ? (
                 <ContentSkeleton />
               ) : journeys.length > 0 ? (
                 <div className="space-y-4">
