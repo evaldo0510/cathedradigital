@@ -346,9 +346,9 @@ const TemaDetailPage = () => {
                     console.log('Is fetching after invalidate:', queryClient.isFetching({ queryKey: ['tag-contents'] }));
                   }} 
                   className="h-10 rounded-xl px-6"
-                  disabled={isFetchingContents || loadingContents}
+                  disabled={isFetchingContents || loadingContents || true}
                 >
-                  {isFetchingContents || loadingContents ? (
+                  {isFetchingContents || loadingContents || true ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin mr-2" data-testid="retry-loader" />
                       <span>Processando...</span>
