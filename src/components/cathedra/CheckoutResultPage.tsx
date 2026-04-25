@@ -23,6 +23,7 @@ const CheckoutResultPage: React.FC = () => {
     if (checkoutState === 'pending') return 'pending';
     return 'loading';
   });
+  const [txData, setTxData] = useState<any>(null);
 
   const firedConfetti = useRef(false);
 
