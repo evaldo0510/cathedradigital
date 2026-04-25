@@ -540,6 +540,8 @@ const TemaDetailPage = () => {
                         accentColor="text-blue-600"
                         buttonText="Ver Documento"
                         onAction={() => navigate(`/magisterium?doc=${encodeURIComponent(c.reference)}&from=temas&tema=${slug}`)}
+                        allThemes={tags}
+                        currentTagId={selectedTag?.id}
                       />
                     ))}
                   </div>
