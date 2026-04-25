@@ -151,7 +151,7 @@ describe('TemaDetailPage - Integration Tests', () => {
     });
     
     // Header H1 should appear
-    const h1 = await screen.findByRole('heading', { name: /NullTag/i, level: 1 });
-    expect(h1).toBeInTheDocument();
+    const h1s = await screen.findAllByRole('heading', { level: 1 });
+    expect(h1s.some(h => h.textContent?.includes('NullTag'))).toBe(true);
   });
 });
