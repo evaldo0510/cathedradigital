@@ -84,7 +84,7 @@ describe('NexusBubbles - Integration Tests', () => {
     renderWithProviders(<NexusBubbles />);
 
     // Wait for tags
-    expect(await screen.findByText('Fé')).toBeInTheDocument();
+    expect(await screen.findByText(/Fé/i)).toBeInTheDocument();
 
     const searchInput = screen.getByPlaceholderText(/Buscar tema/i);
     fireEvent.change(searchInput, { target: { value: 'Inexistente' } });
@@ -100,7 +100,7 @@ describe('NexusBubbles - Integration Tests', () => {
 
     renderWithProviders(<NexusBubbles />);
     
-    // Click category that doesn't match 'fundamentos'
+    // Use findAllByRole to find the Mistério filter button
     const buttons = await screen.findAllByRole('button');
     const mistérioBtn = buttons.find(b => b.textContent?.trim() === 'Mistério');
     expect(mistérioBtn).toBeDefined();
@@ -111,9 +111,11 @@ describe('NexusBubbles - Integration Tests', () => {
   });
 
   it('only shows category labels (Bíblia, Catecismo etc.) when they have content', async () => {
-    const mockTags = [{ id: '1', label: 'MyTag', slug: 'mytag', category: 'fundamentos', emoji: '✝️' }];
+    const mockTags = [{ id: '1', label: 'UniqueTag', slug: 'unique', category: 'fundamentos', emoji: '✝️' }];
     (supabase.from as any).mockReturnValue({
-      select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) }))
+      select: vi.fn(() => ({
+        order: vi.fn(() => Promise.resolve({ data: mockTags, error: null }))
+      }))
     });
 
     (fetchNexusTagContent as any).mockResolvedValue([
@@ -122,19 +124,16 @@ describe('NexusBubbles - Integration Tests', () => {
 
     renderWithProviders(<NexusBubbles />);
     
-    // Find the tag bubble button. It might be nested in other elements.
-    const tag = await screen.findByText('MyTag');
+    // Wait for initial load and find the tag bubble button
+    const tag = await screen.findByText(/UniqueTag/i);
     await userEvent.click(tag);
 
-    // Should show Bible label in the content results
+    // Should show Bible label in the content results area
     expect(await screen.findByText(/Bíblia/i)).toBeInTheDocument();
     
-    // Should NOT show other category labels in the results list area
-    // (Filtering results list to ensure no leaks)
-    const resultList = screen.queryByRole('list');
-    if (resultList) {
-      expect(resultList.textContent).not.toContain('Catecismo');
-      expect(resultList.textContent).not.toContain('Magistério');
-    }
+    // Labels for categories WITHOUT content should not be rendered
+    expect(screen.queryByText(/Catecismo/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Magistério/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Jornadas/i)).not.toBeInTheDocument();
   });
 });
