@@ -520,7 +520,7 @@ describe('TemaDetailPage - Integration Tests', () => {
     await screen.findAllByText('Skeleton');
 
     // Skeleton should be inside the active tab panel
-    const activePanel = screen.getByRole('tabpanel', { selected: true });
+    const activePanel = screen.getByRole('tabpanel', { hidden: false });
     
     // We search for elements with animate-pulse which is what our ContentSkeleton uses
     const skeletons = activePanel.querySelectorAll('.animate-pulse');
