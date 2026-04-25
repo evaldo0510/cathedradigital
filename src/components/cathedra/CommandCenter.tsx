@@ -346,8 +346,8 @@ const CommandCenter: React.FC = () => {
         onClick={e => e.stopPropagation()}
       >
         {/* Search input */}
-        <div className="flex items-center gap-3 px-5 py-4 border-b border-border">
-          <Icons.Search className="w-5 h-5 text-primary shrink-0" />
+        <div className="flex items-center gap-3 px-5 py-4 border-b border-border" role="combobox" aria-haspopup="listbox" aria-expanded={isOpen} aria-owns="command-list">
+          <Icons.Search className="w-5 h-5 text-primary shrink-0" aria-hidden="true" />
           <input
             ref={inputRef}
             value={query}
@@ -355,7 +355,11 @@ const CommandCenter: React.FC = () => {
             onKeyDown={handleKeyDown}
             placeholder="Buscar em tudo: Bíblia, Catecismo, Santos, Jornadas..."
             className="flex-1 bg-transparent text-foreground text-sm placeholder:text-muted-foreground focus:outline-none"
+            aria-autocomplete="list"
+            aria-controls="command-list"
+            aria-activedescendant={allItems[selectedIndex] ? `item-${selectedIndex}` : undefined}
           />
+
           {query && (
             <button onClick={() => setQuery('')} className="text-muted-foreground hover:text-foreground transition-colors">
               <Icons.X className="w-4 h-4" />
