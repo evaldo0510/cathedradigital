@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { normalizeTag, normalizeTags } from './tagNormalization';
+import { normalizeTag, normalizeTags, getSearchTermsForTag } from './tagNormalization';
 
 describe('tagNormalization', () => {
   it('should normalize basic tags', () => {
