@@ -3,6 +3,7 @@ import { getSpiritualInsight } from '@/services/aiService';
 import { useNavigate } from 'react-router-dom';
 import { normalizeText } from '@/lib/utils';
 import { getSearchTermsForTag } from '@/lib/tagNormalization';
+import { type TagContent, fetchNexusTagContent } from '@/lib/nexusContent';
 import { useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AppRoute } from '@/types';
