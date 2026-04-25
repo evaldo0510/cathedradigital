@@ -312,7 +312,7 @@ describe('TemaDetailPage - Integration Tests', () => {
     renderWithProviders(<TemaDetailPage />, '/temas/disable-retry');
     
     expect(await screen.findByText(/Erro ao carregar conexões do Nexus/i)).toBeInTheDocument();
-    const retryButton = screen.getByText(/Tentar Novamente/i);
+    const retryButton = screen.getByRole('button', { name: /Tentar Novamente/i });
     expect(retryButton).not.toBeDisabled();
 
     // 2. Click retry with delayed response
@@ -324,9 +324,10 @@ describe('TemaDetailPage - Integration Tests', () => {
     
     // Should be disabled and show loading
     await waitFor(() => {
-      expect(retryButton).toBeDisabled();
-    });
-    expect(retryButton.querySelector('.animate-spin')).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /Processando/i })).toBeDisabled();
+    }, { timeout: 2000 });
+    
+    expect(screen.getByTestId('retry-loader')).toBeInTheDocument();
 
     // 3. Resolve
     await act(async () => {
