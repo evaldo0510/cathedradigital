@@ -255,4 +255,50 @@ describe('TemaDetailPage - Integration Tests', () => {
     // Check if fallback is now visible
     expect(screen.getByText(/Conteúdo da Tradição em aprofundamento/i)).toBeInTheDocument();
   });
+
+  it('handles fetch exception by showing global error UI across all tabs', async () => {
+    const mockTags = [{ id: '1', label: 'ErrorTag', slug: 'error-tag', category: 'fundamentos', emoji: '❌' }];
+    (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
+    (fetchNexusTagContent as any).mockRejectedValue(new Error('Fetch failed'));
+
+    renderWithProviders(<TemaDetailPage />, '/temas/error-tag');
+
+    // Should show error message
+    expect(await screen.findByText(/Erro ao carregar conexões do Nexus/i)).toBeInTheDocument();
+
+    // Switch tabs and ensure error UI persists
+    const tabs = ['Tradição', 'Magistério', 'Jornadas', 'Escrituras'];
+    for (const tabName of tabs) {
+      await userEvent.click(screen.getByText(tabName));
+      expect(screen.getByText(/Erro ao carregar conexões do Nexus/i)).toBeInTheDocument();
+    }
+  });
+
+  it('ensures no content leakage when switching between content and empty categories', async () => {
+    const mockTags = [{ id: '1', label: 'LeakTest', slug: 'leak-test', category: 'fundamentos', emoji: '🚰' }];
+    (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
+    
+    // Bible has content, Tradition is empty
+    (fetchNexusTagContent as any).mockResolvedValue([
+      { id: 'b1', type: 'bible', content_text: 'Bible Content', title: 'Bible Ref' }
+    ]);
+
+    renderWithProviders(<TemaDetailPage />, '/temas/leak-test');
+
+    // Bible content visible
+    expect(await screen.findByText(/Bible Content/i)).toBeInTheDocument();
+
+    // Switch to Tradition (which is empty)
+    await userEvent.click(screen.getByText('Tradição'));
+    
+    // Bible content should NOT be visible
+    expect(screen.queryByText(/Bible Content/i)).not.toBeInTheDocument();
+    // Tradition fallback should be visible
+    expect(screen.getByText(/Conteúdo da Tradição em aprofundamento/i)).toBeInTheDocument();
+
+    // Switch back to Bible
+    await userEvent.click(screen.getByText('Escrituras'));
+    expect(screen.getByText(/Bible Content/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Conteúdo da Tradição em aprofundamento/i)).not.toBeInTheDocument();
+  });
 });
