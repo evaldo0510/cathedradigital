@@ -41,15 +41,19 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
   const [content, setContent] = useState<TagContent[]>([]);
   const [logosInsight, setLogosInsight] = useState<string | null>(null);
   const [errorDetails, setErrorDetails] = useState<string | null>(null);
+  const [metrics, setMetrics] = useState<{ startTime: number; endTime?: number; source?: 'supabase' | 'ia' | 'both' }>({ startTime: 0 });
 
   const fetchContent = async () => {
     if (content.length > 0 || status === 'loading') return;
+    const startTime = performance.now();
+    setMetrics({ startTime });
     setStatus('loading');
     setErrorDetails(null);
     console.log(`[Nexus Diagnostic] Fetching content for tag: ${tag.label} (ID: ${tag.id})`);
     
     try {
-      const { data, error } = await supabase
+      // 1. Supabase Fetch
+      const { data, error: dbError } = await supabase
         .from('content_tags')
         .select(`
           spiritual_contents (
@@ -63,28 +67,34 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
         .eq('tag_id', tag.id)
         .limit(3);
 
-      if (error) throw error;
+      if (dbError) {
+        setMetrics(prev => ({ ...prev, source: 'supabase' }));
+        throw dbError;
+      }
 
       if (data) {
         const formatted = (data as any[]).map(d => d.spiritual_contents).filter(Boolean);
         setContent(formatted);
-        console.log(`[Nexus Diagnostic] Found ${formatted.length} items for ${tag.label}`);
-        if (formatted.length === 0) {
-          console.warn(`[Nexus Diagnostic] No spiritual_contents linked to tag: ${tag.label}`);
+      }
+
+      // 2. IA Fetch
+      try {
+        const result = await getSpiritualInsight(tag.label);
+        if (!result.error && result.content) {
+          setLogosInsight(result.content);
+        } else if (result.error) {
+          console.warn(`[Nexus Diagnostic] AI Insight error: ${result.error}`);
         }
+      } catch (iaErr) {
+        console.error(`[Nexus Diagnostic] AI Fetch failed, but Supabase content might be present.`, iaErr);
       }
 
-      const result = await getSpiritualInsight(tag.label);
-      if (!result.error && result.content) {
-        setLogosInsight(result.content);
-      } else if (result.error) {
-        console.warn(`[Nexus Diagnostic] AI Insight error: ${result.error}`);
-      }
-
+      setMetrics(prev => ({ ...prev, endTime: performance.now(), source: 'both' }));
       setStatus('success');
     } catch (e: any) {
       console.error(`[Nexus Diagnostic] Error fetching ${tag.label}:`, e);
       setErrorDetails(e.message || 'Erro desconhecido');
+      setMetrics(prev => ({ ...prev, endTime: performance.now() }));
       setStatus('error');
     }
   };
@@ -157,7 +167,16 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
           </button>
         </div>
         
-        <div className="p-5 space-y-5 max-h-[350px] overflow-y-auto scrollbar-none">
+        <div className="p-5 space-y-5 max-h-[450px] overflow-y-auto scrollbar-none">
+          {/* Diagnostic Panel (Mini) */}
+          <div className="p-2 rounded-lg bg-muted/30 border border-border/40 flex items-center justify-between text-[8px] font-black uppercase tracking-widest opacity-60">
+            <div className="flex gap-2">
+              <span>Time: {metrics.endTime ? `${Math.round(metrics.endTime - metrics.startTime)}ms` : '--'}</span>
+              <span>Source: {metrics.source || 'pending'}</span>
+            </div>
+            <span>Query: "{tag.label}"</span>
+          </div>
+
           {status === 'loading' ? (
             <div className="space-y-4 py-2">
               <div className="flex gap-2">
@@ -170,7 +189,7 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
               <div className="h-32 bg-muted/20 rounded-2xl animate-pulse w-full" />
               <p className="text-[10px] text-center text-muted-foreground animate-pulse">Consultando Nexus...</p>
             </div>
-          ) : status === 'error' ? (
+          ) : status === 'error' && content.length === 0 ? (
             <div className="p-6 text-center space-y-3 bg-red-500/5 rounded-2xl border border-red-500/10">
               <AlertCircle className="w-8 h-8 text-red-500 mx-auto" />
               <p className="text-sm font-bold text-red-600">Erro ao carregar conteúdo</p>
@@ -179,6 +198,11 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
             </div>
           ) : (
             <>
+              {status === 'error' && content.length > 0 && (
+                <div className="px-3 py-1 bg-amber-500/10 text-amber-600 rounded-lg text-[9px] font-bold flex items-center gap-2 mb-2">
+                  <Info className="w-3 h-3" /> IA Indisponível — Exibindo conteúdo parcial do Nexus
+                </div>
+              )}
               {logosInsight && (
                 <motion.div 
                   initial={{ opacity: 0, y: 10 }}

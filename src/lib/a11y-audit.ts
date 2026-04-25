@@ -4,6 +4,7 @@
  * Can be called from the browser console or integrated into a test suite.
  */
 export function runA11yAudit() {
+  console.log('%c🔍 Starting A11y Audit...', 'color: blue; font-weight: bold;');
   const issues: string[] = [];
   const ids = new Set<string>();
   const idElements = document.querySelectorAll('[id]');
@@ -31,6 +32,20 @@ export function runA11yAudit() {
     const refId = el.getAttribute('aria-controls');
     if (refId && !document.getElementById(refId)) {
       issues.push(`Broken aria-controls reference: "${refId}" on <${el.tagName.toLowerCase()}>`);
+    }
+  });
+
+  // 5. Check for missing alt text on images
+  const images = document.querySelectorAll('img:not([alt])');
+  images.forEach((img, idx) => {
+    issues.push(`Image missing alt text: "${img.getAttribute('src') || idx}"`);
+  });
+
+  // 6. Check for empty buttons
+  const buttons = document.querySelectorAll('button');
+  buttons.forEach((btn, idx) => {
+    if (!btn.innerText.trim() && !btn.getAttribute('aria-label')) {
+      issues.push(`Empty button without aria-label found at index ${idx}`);
     }
   });
 
