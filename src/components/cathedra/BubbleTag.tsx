@@ -92,9 +92,12 @@ interface BubbleTagProps {
   isSelected?: boolean;
   isSuggested?: boolean;
   onClick: () => void;
+  onKeyDown?: (e: React.KeyboardEvent) => void;
   onMouseEnter?: () => void;
   className?: string;
   ariaLabel?: string;
+  tabIndex?: number;
+  "data-roving-item"?: boolean;
 }
 
 export const BubbleTag: React.FC<BubbleTagProps> = ({
