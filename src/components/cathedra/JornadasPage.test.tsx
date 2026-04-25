@@ -64,14 +64,13 @@ describe('JornadasPage - Integration Tests', () => {
 
     renderWithProviders(<JornadasPage />);
     
-    // Check for empty state message
     const emptyMsg = await screen.findByText(/Nenhuma jornada disponível ainda/i, {}, { timeout: 5000 });
     expect(emptyMsg).toBeInTheDocument();
   });
 
   it('displays filter mismatch message when filters return 0 results', async () => {
     const mockJourneys = [
-      { id: '1', title: 'Jornada Teste', difficulty: 'iniciante', category: 'fundamentos', steps_count: 5, tags: [] }
+      { id: '1', title: 'UniqueJourney', difficulty: 'iniciante', category: 'fundamentos', steps_count: 5, tags: [] }
     ];
 
     (supabase.from as any).mockReturnValue({
@@ -83,12 +82,20 @@ describe('JornadasPage - Integration Tests', () => {
 
     renderWithProviders(<JornadasPage />);
 
-    // Wait for initial load
-    expect(await screen.findByText('Jornada Teste')).toBeInTheDocument();
+    // Wait for initial load using a more unique selector
+    const journeyTitle = await screen.findByRole('heading', { name: /UniqueJourney/i });
+    expect(journeyTitle).toBeInTheDocument();
 
-    // Click 'Intermediário' filter
-    const diffFilter = await screen.findByRole('button', { name: /Intermediário/i });
-    await userEvent.click(diffFilter);
+    // Click 'Intermediário' filter using exact button match if possible
+    const diffFilters = await screen.findAllByRole('button');
+    const intermediarioBtn = diffFilters.find(b => b.textContent?.includes('Intermediário'));
+    
+    if (intermediarioBtn) {
+      await userEvent.click(intermediarioBtn);
+    } else {
+      // Fallback to text match if role fails
+      await userEvent.click(screen.getByText(/Intermediário/i));
+    }
 
     // Wait for filtered list to update to empty
     const mismatchMsg = await screen.findByText(/Nenhuma jornada encontrada com esses filtros/i);
