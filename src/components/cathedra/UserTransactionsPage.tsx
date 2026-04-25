@@ -243,7 +243,10 @@ const UserTransactionsPage: React.FC = () => {
 
   if (loading && transactions.length === 0) {
     return (
-      <div className="max-w-4xl mx-auto space-y-8 py-6">
+    <div className="max-w-4xl mx-auto space-y-8 py-6">
+      <div className="sr-only" aria-live="polite" role="status">
+        {announcement}
+      </div>
         <div className="flex items-center gap-4 animate-pulse">
           <div className="w-12 h-12 rounded-2xl bg-muted" />
           <div className="space-y-2">
