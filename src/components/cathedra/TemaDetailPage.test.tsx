@@ -457,4 +457,96 @@ describe('TemaDetailPage - Integration Tests', () => {
       expect(document.querySelectorAll('.animate-pulse').length).toBe(0);
     });
   });
+
+  it('prevents multiple requests when "Try Again" is clicked twice rapidly', async () => {
+    const mockTags = [{ id: '1', label: 'Retry', slug: 'retry', category: 'fundamentos', emoji: '🔄' }];
+    (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
+
+    // Force failure
+    (fetchNexusTagContent as any).mockRejectedValueOnce(new Error('Fail'));
+
+    renderWithProviders(<TemaDetailPage />, '/temas/retry');
+
+    const retryBtn = await screen.findByTestId('retry-button');
+    
+    // Clear mock calls to count only retries
+    (fetchNexusTagContent as any).mockClear();
+    (fetchNexusTagContent as any).mockImplementation(() => new Promise(resolve => setTimeout(() => resolve([]), 50)));
+
+    // Rapid double click
+    fireEvent.click(retryBtn);
+    fireEvent.click(retryBtn);
+
+    await waitFor(() => {
+      expect(screen.getByText(/Nenhum versículo catalogado/i)).toBeInTheDocument();
+    });
+
+    // Should only be called once because it's disabled during loading
+    expect(fetchNexusTagContent as any).toHaveBeenCalledTimes(1);
+  });
+
+  it('verifies that each category shows its specific error message and it updates after success', async () => {
+    const mockTags = [{ id: '1', label: 'Errors', slug: 'errors', category: 'fundamentos', emoji: '❌' }];
+    (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
+
+    // 1. Error in Scriptures (Bible)
+    (fetchNexusTagContent as any).mockRejectedValueOnce(new Error('Bible Error'));
+    renderWithProviders(<TemaDetailPage />, '/temas/errors');
+
+    expect(await screen.findByText(/Erro ao carregar conexões de Escrituras no Nexus/i)).toBeInTheDocument();
+
+    // 2. Switch to Tradition and ensure it shows its error (re-fetch triggered by activeTab change)
+    (fetchNexusTagContent as any).mockRejectedValueOnce(new Error('Tradition Error'));
+    await userEvent.click(screen.getByText('Tradição'));
+    expect(await screen.findByText(/Erro ao carregar conexões de Tradição no Nexus/i)).toBeInTheDocument();
+
+    // 3. Retry and succeed
+    (fetchNexusTagContent as any).mockResolvedValueOnce([]);
+    const retryBtn = screen.getByTestId('retry-button');
+    await userEvent.click(retryBtn);
+
+    expect(await screen.findByText(/Conteúdo da Tradição em aprofundamento/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Erro ao carregar conexões de/i)).not.toBeInTheDocument();
+  });
+
+  it('validates skeleton location and accessibility in the active TabsContent', async () => {
+    const mockTags = [{ id: '1', label: 'Skeleton', slug: 'skeleton', category: 'fundamentos', emoji: '💀' }];
+    (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
+
+    // Delay response to keep skeleton visible
+    (fetchNexusTagContent as any).mockReturnValue(new Promise(() => {}));
+
+    renderWithProviders(<TemaDetailPage />, '/temas/skeleton');
+    await screen.findAllByText('Skeleton');
+
+    // Skeleton should be inside the active tab panel
+    const activePanel = screen.getByRole('tabpanel', { selected: true });
+    
+    // We search for elements with animate-pulse which is what our ContentSkeleton uses
+    const skeletons = activePanel.querySelectorAll('.animate-pulse');
+    expect(skeletons.length).toBeGreaterThan(0);
+
+    // Ensure skeletons are NOT in other (hidden) panels
+    const allPanels = screen.getAllByRole('tabpanel', { hidden: true });
+    allPanels.forEach(panel => {
+      if (panel !== activePanel) {
+        expect(panel.querySelectorAll('.animate-pulse').length).toBe(0);
+      }
+    });
+  });
+
+  it('ensures no DOM pollution: only one category fallback/content is present at a time', async () => {
+    const mockTags = [{ id: '1', label: 'Isolation', slug: 'isolation', category: 'fundamentos', emoji: '🏝️' }];
+    (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
+    (fetchNexusTagContent as any).mockResolvedValue([]);
+
+    renderWithProviders(<TemaDetailPage />, '/temas/isolation');
+
+    // Default: Bible
+    expect(await screen.findByText(/Nenhum versículo catalogado para este tema/i)).toBeInTheDocument();
+    
+    // Check that other fallbacks are NOT in the DOM
+    expect(screen.queryByText(/Conteúdo da Tradição em aprofundamento/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Documentos do Magistério em aprofundamento/i)).not.toBeInTheDocument();
+  });
 });
