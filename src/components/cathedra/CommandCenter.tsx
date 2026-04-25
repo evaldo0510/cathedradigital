@@ -378,9 +378,9 @@ const CommandCenter: React.FC = () => {
         )}
 
         {/* Results */}
-        <div ref={listRef} className="max-h-[55vh] overflow-y-auto py-1">
+        <div ref={listRef} id="command-list" role="listbox" className="max-h-[55vh] overflow-y-auto py-1">
           {query.length >= 2 && !globalLoading && resultCount > 0 && (
-            <div className="px-5 py-2 text-[9px] font-black uppercase tracking-widest text-muted-foreground">
+            <div className="px-5 py-2 text-[9px] font-black uppercase tracking-widest text-muted-foreground" aria-live="polite">
               {resultCount} resultado{resultCount !== 1 ? 's' : ''} encontrado{resultCount !== 1 ? 's' : ''}
             </div>
           )}
@@ -401,15 +401,18 @@ const CommandCenter: React.FC = () => {
             return (
               <React.Fragment key={`${item.type}-${item.label}-${i}`}>
                 {showGroupHeader && (
-                  <div className="px-5 pt-3 pb-1 text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-2">
+                  <div className="px-5 pt-3 pb-1 text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-2" role="presentation">
                     <div className="w-4 h-px bg-border" />
                     {TYPE_LABELS[item.type] || item.type}
                   </div>
                 )}
                 <button
+                  id={`item-${i}`}
+                  role="option"
+                  aria-selected={i === selectedIndex}
                   onClick={() => go(item.path)}
                   onMouseEnter={() => setSelectedIndex(i)}
-                  className={`w-full flex items-center gap-3 px-5 py-2.5 text-left transition-all ${
+                  className={`w-full flex items-center gap-3 px-5 py-2.5 text-left transition-all outline-none focus:ring-0 ${
                     i === selectedIndex 
                       ? 'bg-primary/10 text-primary' 
                       : 'text-foreground hover:bg-muted/50'
@@ -432,6 +435,7 @@ const CommandCenter: React.FC = () => {
             );
           })}
         </div>
+
 
         {/* Footer */}
         <div className="flex items-center justify-between px-5 py-2.5 border-t border-border bg-muted/30">
