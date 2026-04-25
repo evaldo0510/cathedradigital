@@ -313,37 +313,27 @@ describe('TemaDetailPage - Integration Tests', () => {
     
     expect(await screen.findByText(/Erro ao carregar conexões do Nexus/i)).toBeInTheDocument();
     
-    const getRetryButton = () => {
-      // Find a button that has either "Tentar Novamente" or "Processando"
-      return screen.queryByRole('button', { name: /Tentar Novamente|Processando/i });
-    };
+    // 2. Mock a delayed fetch for the retry
+    let resolveRetry: any;
+    const retryPromise = new Promise(resolve => resolveRetry = resolve);
+    (fetchNexusTagContent as any).mockReturnValueOnce(retryPromise);
 
-    let retryButton = getRetryButton();
-    expect(retryButton).toBeDefined();
+    // 3. Click retry
+    const retryButton = screen.getByText(/Tentar Novamente/i);
+    await userEvent.click(retryButton);
     
-    // If it's already fetching (which it shouldn't be yet), skip the click
-    if (!retryButton?.textContent?.includes('Processando')) {
-      expect(retryButton).not.toBeDisabled();
+    // 4. Wait for the button to transition to "Processando" and be disabled
+    await waitFor(() => {
+      const b = screen.queryByText(/Processando/i);
+      expect(b).toBeInTheDocument();
+      const btn = b?.closest('button');
+      expect(btn).toBeDisabled();
+    }, { timeout: 3000 });
 
-      // 2. Click retry with delayed response
-      let resolveRetry: any;
-      const retryPromise = new Promise(resolve => resolveRetry = resolve);
-      (fetchNexusTagContent as any).mockReturnValueOnce(retryPromise);
-
-      await userEvent.click(retryButton!);
-      
-      // Should be disabled and show loading
-      await waitFor(() => {
-        const b = getRetryButton();
-        expect(b).toBeDisabled();
-        expect(b?.textContent).toMatch(/Processando/i);
-      }, { timeout: 3000 });
-
-      // 3. Resolve
-      await act(async () => {
-        resolveRetry([]);
-      });
-    }
+    // 5. Resolve the retry
+    await act(async () => {
+      resolveRetry([]);
+    });
 
     await waitFor(() => {
       expect(screen.queryByText(/Erro ao carregar conexões do Nexus/i)).not.toBeInTheDocument();
