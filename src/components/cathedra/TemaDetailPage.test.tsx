@@ -1,4 +1,4 @@
-import { render, screen, waitFor, act } from '@testing-library/react';
+import { render, screen, waitFor, act, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import TemaDetailPage from './TemaDetailPage';
@@ -302,7 +302,7 @@ describe('TemaDetailPage - Integration Tests', () => {
     expect(screen.getByText(/Magisterium Wins/i)).toBeInTheDocument();
     expect(screen.queryByText(/Tradition Late/i)).not.toBeInTheDocument();
   });
-  it('disables "Try Again" button during retry and re-enables after', async () => {
+  it('shows loading state during retry and resolves correctly', async () => {
     const mockTags = [{ id: '1', label: 'DisableRetry', slug: 'disable-retry', category: 'fundamentos', emoji: '🔘' }];
     (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
 
@@ -322,13 +322,14 @@ describe('TemaDetailPage - Integration Tests', () => {
     const retryButton = screen.getByTestId('retry-button');
     expect(retryButton).not.toBeDisabled();
 
-    await userEvent.click(retryButton);
+    fireEvent.click(retryButton);
     
-    // 4. Wait for the button to transition to disabled state
+    // 4. Wait for the error UI to disappear and skeletons to appear (since contentError is cleared on refetch)
     await waitFor(() => {
-      expect(retryButton).toBeDisabled();
-    }, { timeout: 3000 });
-
+      expect(screen.queryByText(/Erro ao carregar conexões do Nexus/i)).not.toBeInTheDocument();
+      expect(document.querySelectorAll('.animate-pulse').length).toBeGreaterThan(0);
+    });
+    
     // 5. Resolve the retry
     await act(async () => {
       resolveRetry([]);
@@ -408,5 +409,52 @@ describe('TemaDetailPage - Integration Tests', () => {
     // Should still show Magisterium
     expect(screen.getByText('Magisterium Fast')).toBeInTheDocument();
     expect(screen.queryByText('Tradition Slow')).not.toBeInTheDocument();
+  });
+
+  it('confirms that error fallback persists if retry also fails', async () => {
+    const mockTags = [{ id: '1', label: 'DoubleFail', slug: 'double-fail', category: 'fundamentos', emoji: '💀' }];
+    (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
+
+    // 1. Initial failure
+    (fetchNexusTagContent as any).mockRejectedValueOnce(new Error('First failure'));
+
+    renderWithProviders(<TemaDetailPage />, '/temas/double-fail');
+    
+    expect(await screen.findByText(/Erro ao carregar conexões do Nexus/i)).toBeInTheDocument();
+
+    // 2. Retry failure
+    (fetchNexusTagContent as any).mockRejectedValueOnce(new Error('Second failure'));
+
+    const retryButton = screen.getByTestId('retry-button');
+    await userEvent.click(retryButton);
+
+    // Should still show error
+    expect(await screen.findByText(/Erro ao carregar conexões do Nexus/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Nenhum versículo catalogado/i)).not.toBeInTheDocument();
+  });
+
+  it('handles tab switching with micro-delays and ensures stable UI state', async () => {
+    const mockTags = [{ id: '1', label: 'Debounce', slug: 'debounce', category: 'fundamentos', emoji: '⏱️' }];
+    (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
+
+    (fetchNexusTagContent as any).mockImplementation(() => new Promise(resolve => setTimeout(() => resolve([]), 50)));
+
+    renderWithProviders(<TemaDetailPage />, '/temas/debounce');
+    await screen.findAllByText('Debounce');
+
+    // Switch rapidly with small delays
+    await userEvent.click(screen.getByText('Tradição'));
+    await new Promise(r => setTimeout(r, 10)); 
+    await userEvent.click(screen.getByText('Magistério'));
+    await new Promise(r => setTimeout(r, 10));
+    await userEvent.click(screen.getByText('Jornadas'));
+
+    // Wait for the final resolution
+    expect(await screen.findByText(/Nenhuma jornada específica vinculada a este tema/i)).toBeInTheDocument();
+
+    // Ensure skeleton is gone
+    await waitFor(() => {
+      expect(document.querySelectorAll('.animate-pulse').length).toBe(0);
+    });
   });
 });

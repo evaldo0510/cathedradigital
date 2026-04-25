@@ -123,7 +123,7 @@ const TemaDetailPage = () => {
 
   const selectedTag = tags?.find(t => t.slug === slug);
 
-  const { data: contents, isLoading: loadingContents, isFetching: isFetchingContents, error: contentError } = useQuery({
+  const { data: contents, isLoading: loadingContents, isFetching: isFetchingContents, error: contentError, refetch } = useQuery({
     queryKey: ['tag-contents', selectedTag?.id, activeTab],
     queryFn: async () => {
       if (!selectedTag) return [];
@@ -341,7 +341,7 @@ const TemaDetailPage = () => {
                 <Button 
                   variant="outline" 
                   onClick={() => {
-                    queryClient.invalidateQueries({ queryKey: ['tag-contents'] });
+                    refetch();
                   }} 
                   className="h-10 rounded-xl px-6"
                   disabled={isFetchingContents || loadingContents}
