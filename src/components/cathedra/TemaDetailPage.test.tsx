@@ -157,17 +157,19 @@ describe('TemaDetailPage - Integration Tests', () => {
 
     // 2. Test Content Isolation
     (fetchNexusTagContent as any).mockResolvedValue([
-      { id: 'c1', type: 'bible', content_text: 'Bible Text', title: 'Ref 1' },
-      { id: 'c2', type: 'catechism', content_text: 'Tradition Text', title: 'Ref 2' }
+      { id: 'c1', type: 'bible', content_text: 'Unique Bible Content', title: 'Ref 1' },
+      { id: 'c2', type: 'catechism', content_text: 'Unique Tradition Content', title: 'Ref 2' }
     ]);
 
     renderWithProviders(<TemaDetailPage />, '/temas/rapid-content');
 
-    expect(await screen.findByText('Bible Text')).toBeInTheDocument();
-    expect(screen.queryByText('Tradition Text')).not.toBeInTheDocument();
+    // Bible content should be visible initially
+    expect(await screen.findByText(/Unique Bible Content/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Unique Tradition Content/i)).not.toBeInTheDocument();
 
+    // Switch to Tradition
     await userEvent.click(screen.getByText('Tradição'));
-    expect(await screen.findByText('Tradition Text')).toBeInTheDocument();
-    expect(screen.queryByText('Bible Text')).not.toBeInTheDocument();
+    expect(await screen.findByText(/Unique Tradition Content/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Unique Bible Content/i)).not.toBeInTheDocument();
   });
 });
