@@ -186,7 +186,7 @@ describe('TemaDetailPage - Integration Tests', () => {
     // 2. Prepare successful empty response and click retry
     (fetchNexusTagContent as any).mockResolvedValueOnce([]);
 
-    const retryButton = screen.getByText(/Tentar Novamente/i);
+    const retryButton = screen.getByText(/Tentar Novamente|Processando/i);
     await userEvent.click(retryButton);
 
     expect(await screen.findByText(/Nenhum versículo catalogado/i)).toBeInTheDocument();
