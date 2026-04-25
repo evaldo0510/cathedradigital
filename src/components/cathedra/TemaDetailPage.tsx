@@ -594,7 +594,7 @@ const TemaDetailPage = () => {
           <div className="bg-card/50 border border-border/40 rounded-[2rem] p-6 space-y-6">
             <h3 className="text-xs font-black uppercase tracking-widest text-foreground/60">Temas Relacionados</h3>
             <div className="flex flex-wrap gap-2">
-              {tags?.filter(t => t.category === selectedTag?.category && t.id !== selectedTag?.id).slice(0, 8).map((tag, idx) => (
+              {relatedThemes.map((tag, idx) => (
                 <TagBubble 
                   key={tag.id}
                   tag={tag}
