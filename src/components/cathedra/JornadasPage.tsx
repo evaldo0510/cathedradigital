@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { normalizeText } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
 import { motion, AnimatePresence } from 'framer-motion';
