@@ -436,9 +436,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
           ) : viewMode === 'cloud' ? (
             <motion.div
               key="cloud"
-              id="panel-cloud"
-              role="tabpanel"
-              aria-labelledby="tab-cloud"
+              {...getTabPanelProps('panel-cloud', 'tab-cloud', viewMode === 'cloud', "space-y-8 outline-none")}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
