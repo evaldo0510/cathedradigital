@@ -100,4 +100,63 @@ test.describe('Nexus Bubbles Navigation & Popovers', () => {
     // This depends on whether "Culpa" related themes match the profile
     // But we can at least check the mechanism is active
   });
+
+  test('should verify related themes logic: no duplicates and priority signals', async ({ page }) => {
+    // 1. Set a profile to ensure we have "Profile" priority items
+    await page.goto('/');
+    await page.evaluate(() => {
+      localStorage.setItem('spiritual_profile_diagnosis', JSON.stringify({
+        id: 'ferido_em_busca', // Likes: 'Oração', 'Jesus', 'Fé'
+        timestamp: Date.now()
+      }));
+    });
+
+    // 2. Go to 'Graça' (Fundamentos)
+    await page.goto('/temas/graca');
+    
+    // Wait for content and related themes to load
+    await expect(page.locator('aside >> text=Temas Relacionados')).toBeVisible();
+    
+    // 3. Get all related theme labels
+    const relatedSection = page.locator('aside:has-text("Temas Relacionados")');
+    const bubbles = relatedSection.locator('button[data-roving-item]');
+    
+    // Ensure we have some bubbles
+    await expect(bubbles.first()).toBeVisible();
+    
+    const allLabels = await bubbles.allInnerTexts();
+    console.log('Related themes found:', allLabels);
+
+    // 4. Verify no duplicates
+    const uniqueLabels = new Set(allLabels);
+    expect(allLabels.length).toBe(uniqueLabels.size);
+
+    // 5. Verify priority signals (Spiritual Profile)
+    // 'Fé' is a profile-related theme for 'ferido_em_busca'
+    const hasProfileTheme = allLabels.some(l => l.includes('Fé') || l.includes('Oração'));
+    expect(hasProfileTheme).toBe(true);
+    
+    // 6. Navigate to another theme from the popover to check continuity
+    // Open a bubble popover
+    await page.locator('button[data-roving-item]').filter({ hasText: 'Fé' }).first().click();
+    const popover = page.locator('[role="dialog"]');
+    await expect(popover).toBeVisible();
+    
+    // Find a "Conexão relacionada" tag inside the popover
+    const subTag = popover.locator('button').filter({ hasText: 'Amor' }).first();
+    if (await subTag.isVisible()) {
+      await subTag.click();
+      // Should navigate to /temas/amor
+      await expect(page).toHaveURL(/\/temas\/amor/);
+      
+      // Verify the new page also has no duplicates in related themes
+      const newRelatedSection = page.locator('aside:has-text("Temas Relacionados")');
+      const newBubbles = newRelatedSection.locator('button[data-roving-item]');
+      await expect(newBubbles.first()).toBeVisible();
+      
+      const newLabels = await newBubbles.allInnerTexts();
+      const newUniqueLabels = new Set(newLabels);
+      expect(newLabels.length).toBe(newUniqueLabels.size);
+    }
+  });
 });
