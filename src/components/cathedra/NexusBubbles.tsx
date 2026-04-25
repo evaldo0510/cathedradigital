@@ -420,9 +420,22 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId }) => {
               exit={{ opacity: 0, y: -10 }}
               className="space-y-3"
             >
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                {searchQuery ? 'Resultado da Busca' : categories[activeFilter as keyof typeof categories]?.label}
-              </p>
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                  {searchQuery ? 'Resultado da Busca' : categories[activeFilter as keyof typeof categories]?.label}
+                </p>
+                {searchQuery && activeFilter !== 'all' && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-[9px] text-primary/60 font-medium italic">Pesquisando globalmente</span>
+                    <button 
+                      onClick={() => setActiveFilter('all')}
+                      className="text-[9px] font-black uppercase tracking-tighter text-primary hover:underline"
+                    >
+                      Limpar Filtro
+                    </button>
+                  </div>
+                )}
+              </div>
               <div className="flex flex-wrap gap-1.5" role="list" ref={filteredRef}>
                 {filteredTags && filteredTags.length ? filteredTags.map((tag, i) => (
                   <div key={tag.slug} role="listitem">
