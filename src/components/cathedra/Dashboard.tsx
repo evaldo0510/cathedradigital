@@ -11,6 +11,8 @@ import SpiritualQuiz, { PROFILES, type ProfileId } from './SpiritualQuiz';
 import ProShowcase from './ProShowcase';
 import QuickDonation from './QuickDonation';
 import { useDashboardData } from '@/hooks/useDashboardData';
+import { DashboardSkeleton } from './DashboardSkeleton';
+
 
 interface DashboardProps {
   user: User | null;
@@ -102,12 +104,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   ], [nextUp, t, spiritualProfile]);
 
   if (isLoading && !spiritualProfile && activeJourneys.length === 0) {
-    return (
-      <div className="flex items-center justify-center min-h-[60dvh]">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
+
 
   return (
     <div className="desktop-layout py-6 md:py-10">
@@ -158,7 +157,12 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       <FadeUp delay={0.02}>
         <div 
           onClick={() => goTo(AppRoute.MODULES_GUIDE)}
-          className="mb-6 p-4 rounded-2xl bg-primary/5 border border-primary/10 flex items-center justify-between cursor-pointer hover:bg-primary/10 transition-colors group"
+          className="mb-6 p-4 rounded-2xl bg-primary/5 border border-primary/10 flex items-center justify-between cursor-pointer hover:bg-primary/10 transition-colors group focus-visible:ring-2 focus-visible:ring-primary outline-none"
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => e.key === 'Enter' && goTo(AppRoute.MODULES_GUIDE)}
+          aria-label="Abrir guia dos módulos"
+
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
@@ -182,7 +186,12 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               whileHover={{ y: -4, scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => goTo(door.route)}
-              className={`relative overflow-hidden p-5 rounded-3xl border ${door.borderColor} bg-gradient-to-br ${door.gradient} backdrop-blur-sm cursor-pointer transition-all shadow-sm hover:shadow-xl group`}
+              className={`relative overflow-hidden p-5 rounded-3xl border ${door.borderColor} bg-gradient-to-br ${door.gradient} backdrop-blur-sm cursor-pointer transition-all shadow-sm hover:shadow-xl group focus-visible:ring-2 focus-visible:ring-primary outline-none`}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => e.key === 'Enter' && goTo(door.route)}
+              aria-label={`Abrir ${door.label}`}
+
             >
               {door.suggested && (
                 <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-1 rounded-full bg-secondary text-secondary-foreground text-[8px] font-black uppercase tracking-tighter shadow-sm animate-pulse">
@@ -214,7 +223,12 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         <FadeUp delay={0.12}>
           <div 
             onClick={() => goTo(nextUp.route)}
-            className="p-5 rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 via-background to-background cursor-pointer hover:border-primary/40 transition-all shadow-sm hover:shadow-md flex items-center justify-between group"
+            className="p-5 rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 via-background to-background cursor-pointer hover:border-primary/40 transition-all shadow-sm hover:shadow-md flex items-center justify-between group focus-visible:ring-2 focus-visible:ring-primary outline-none"
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => e.key === 'Enter' && goTo(nextUp.route)}
+            aria-label={`Continuar jornada: ${nextUp.label}`}
+
           >
             <div className="flex items-center gap-5">
               <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
@@ -308,7 +322,12 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         {/* Logos (IA) Suggestion */}
         <div
           onClick={() => goTo('/study')}
-          className="desktop-card cursor-pointer hover:border-secondary/40 transition-all group space-y-3"
+          className="desktop-card cursor-pointer hover:border-secondary/40 transition-all group space-y-3 focus-visible:ring-2 focus-visible:ring-secondary outline-none"
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => e.key === 'Enter' && goTo('/study')}
+          aria-label="Acessar IA Teológica Colloquium"
+
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-secondary/15 flex items-center justify-center text-secondary group-hover:scale-110 transition-transform">
