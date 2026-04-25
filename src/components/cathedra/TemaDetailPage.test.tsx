@@ -579,10 +579,15 @@ describe('TemaDetailPage - Integration Tests', () => {
       fireEvent.click(screen.getByText(tabName));
     }
 
-    // Wait for final debounce and resolution
+    // Advance timers for debounce
+    await act(async () => {
+      vi.advanceTimersByTime(400);
+    });
+
+    // Wait for resolution
     await waitFor(() => {
       expect(document.querySelectorAll('.animate-pulse').length).toBeGreaterThan(0);
-    }, { timeout: 2000 });
+    });
 
     // Ensure we don't have multiple sets of skeletons (ContentSkeleton renders 3 cards, each with several skeletons)
     // There are 3 cards, each with ~4 skeletons = ~12 skeletons per tab.
