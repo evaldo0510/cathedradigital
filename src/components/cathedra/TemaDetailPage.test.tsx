@@ -409,4 +409,51 @@ describe('TemaDetailPage - Integration Tests', () => {
     expect(screen.getByText('Magisterium Fast')).toBeInTheDocument();
     expect(screen.queryByText('Tradition Slow')).not.toBeInTheDocument();
   });
+
+  it('confirms that error fallback persists if retry also fails', async () => {
+    const mockTags = [{ id: '1', label: 'DoubleFail', slug: 'double-fail', category: 'fundamentos', emoji: '💀' }];
+    (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
+
+    // 1. Initial failure
+    (fetchNexusTagContent as any).mockRejectedValueOnce(new Error('First failure'));
+
+    renderWithProviders(<TemaDetailPage />, '/temas/double-fail');
+    
+    expect(await screen.findByText(/Erro ao carregar conexões do Nexus/i)).toBeInTheDocument();
+
+    // 2. Retry failure
+    (fetchNexusTagContent as any).mockRejectedValueOnce(new Error('Second failure'));
+
+    const retryButton = screen.getByTestId('retry-button');
+    await userEvent.click(retryButton);
+
+    // Should still show error
+    expect(await screen.findByText(/Erro ao carregar conexões do Nexus/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Nenhum versículo catalogado/i)).not.toBeInTheDocument();
+  });
+
+  it('handles tab switching with micro-delays and ensures stable UI state', async () => {
+    const mockTags = [{ id: '1', label: 'Debounce', slug: 'debounce', category: 'fundamentos', emoji: '⏱️' }];
+    (supabase.from as any).mockReturnValue({ select: vi.fn(() => ({ order: vi.fn(() => Promise.resolve({ data: mockTags, error: null })) })) });
+
+    (fetchNexusTagContent as any).mockImplementation(() => new Promise(resolve => setTimeout(() => resolve([]), 50)));
+
+    renderWithProviders(<TemaDetailPage />, '/temas/debounce');
+    await screen.findAllByText('Debounce');
+
+    // Switch rapidly with small delays
+    await userEvent.click(screen.getByText('Tradição'));
+    await new Promise(r => setTimeout(r, 10)); 
+    await userEvent.click(screen.getByText('Magistério'));
+    await new Promise(r => setTimeout(r, 10));
+    await userEvent.click(screen.getByText('Jornadas'));
+
+    // Wait for the final resolution
+    expect(await screen.findByText(/Nenhuma jornada específica vinculada a este tema/i)).toBeInTheDocument();
+
+    // Ensure skeleton is gone
+    await waitFor(() => {
+      expect(document.querySelectorAll('.animate-pulse').length).toBe(0);
+    });
+  });
 });
