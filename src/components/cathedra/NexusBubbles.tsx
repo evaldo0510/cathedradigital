@@ -77,45 +77,10 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
   const prefetchTag = useCallback(() => {
     queryClient.prefetchQuery({
       queryKey: ['tag-contents', tag.id, tag.label],
-      queryFn: async () => {
-        const searchTerms = getSearchTermsForTag(tag);
-        
-        const { data: spiritualData, error: dbError } = await supabase
-          .from('spiritual_contents')
-          .select('*')
-          .overlaps('tags', searchTerms)
-          .limit(10);
-        
-        const { data: journeyData, error: journeyError } = await supabase
-          .from('journeys')
-          .select('*')
-          .overlaps('tags', searchTerms)
-          .limit(5);
-
-        if (dbError) throw dbError;
-        if (journeyError) throw journeyError;
-
-        const results = (spiritualData || []).map((d: any) => ({
-          id: d.id,
-          type: d.type,
-          content_text: d.content_text,
-          title: d.title,
-          metadata: d.metadata
-        }));
-
-        const journeyResults = (journeyData || []).map((d: any) => ({
-          id: d.id,
-          type: 'journey',
-          content_text: d.description || '',
-          title: d.title,
-          metadata: { ...d, is_direct_journey: true }
-        }));
-
-        return [...results, ...journeyResults];
-      },
+      queryFn: () => fetchNexusTagContent(tag),
       staleTime: 1000 * 60 * 5,
     });
-  }, [queryClient, tag.id, tag.label, tag.slug]);
+  }, [queryClient, tag.id, tag.label]);
 
   return (
     <Popover open={open} onOpenChange={(val) => {
