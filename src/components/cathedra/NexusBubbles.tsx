@@ -30,7 +30,7 @@ interface NexusBubblesProps {
   profileId?: ProfileId | null;
 }
 
-const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabIndex?: number; onKeyDown?: (e: React.KeyboardEvent) => void }> = ({ tag, index, isSuggested, tabIndex, onKeyDown }) => {
+export const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabIndex?: number; onKeyDown?: (e: React.KeyboardEvent) => void }> = ({ tag, index, isSuggested, tabIndex, onKeyDown }) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
