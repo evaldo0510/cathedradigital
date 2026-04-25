@@ -23,23 +23,63 @@ const UserTransactionsPage: React.FC = () => {
   useEffect(() => {
     if (!user) return;
 
-    const fetchTransactions = async () => {
-      const { data, error } = await supabase
-        .from('transactions')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
+  const fetchTransactions = useCallback(async (pageNum: number) => {
+    if (!user) return;
+    
+    if (pageNum === 0) setLoading(true);
+    else setLoadingMore(true);
 
-      if (error) {
-        console.error('Error fetching transactions:', error);
-      } else {
+    const from = pageNum * PAGE_SIZE;
+    const to = from + PAGE_SIZE - 1;
+
+    const { data, error } = await supabase
+      .from('transactions')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .range(from, to);
+
+    if (error) {
+      console.error('Error fetching transactions:', error);
+    } else {
+      if (pageNum === 0) {
         setTransactions(data || []);
+      } else {
+        setTransactions(prev => [...prev, ...(data || [])]);
       }
-      setLoading(false);
-    };
-
-    fetchTransactions();
+      setHasMore((data || []).length === PAGE_SIZE);
+    }
+    
+    setLoading(false);
+    setLoadingMore(false);
   }, [user]);
+
+  useEffect(() => {
+    fetchTransactions(0);
+  }, [fetchTransactions]);
+
+  useEffect(() => {
+    if (!hasMore || loading || loadingMore) return;
+
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting) {
+          setPage(prev => {
+            const nextPage = prev + 1;
+            fetchTransactions(nextPage);
+            return nextPage;
+          });
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (loaderRef.current) {
+      observer.observe(loaderRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [hasMore, loading, loadingMore, fetchTransactions]);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
