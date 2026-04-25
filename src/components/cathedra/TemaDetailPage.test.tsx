@@ -324,11 +324,12 @@ describe('TemaDetailPage - Integration Tests', () => {
 
     fireEvent.click(retryButton);
     
-    // 4. Wait for the button to show processing state
+    // 4. Wait for the error UI to disappear and skeletons to appear (since contentError is cleared on refetch)
     await waitFor(() => {
-      expect(screen.getByText(/Processando/i)).toBeInTheDocument();
+      expect(screen.queryByText(/Erro ao carregar conexões do Nexus/i)).not.toBeInTheDocument();
+      expect(document.querySelectorAll('.animate-pulse').length).toBeGreaterThan(0);
     });
-
+    
     // 5. Resolve the retry
     await act(async () => {
       resolveRetry([]);
