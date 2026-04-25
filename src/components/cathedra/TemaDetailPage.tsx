@@ -124,7 +124,7 @@ const TemaDetailPage = () => {
   const selectedTag = tags?.find(t => t.slug === slug);
 
   const { data: contents, isLoading: loadingContents, error: contentError } = useQuery({
-    queryKey: ['tag-contents', selectedTag?.id, selectedTag?.label],
+    queryKey: ['tag-contents', selectedTag?.id, activeTab],
     queryFn: async () => {
       if (!selectedTag) return [];
       const results = await fetchNexusTagContent(selectedTag);
