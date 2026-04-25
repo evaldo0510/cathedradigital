@@ -90,7 +90,9 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
       }
     } catch (err) {
       console.error('Global search error:', err);
+      toast.error('Erro na busca global', { description: 'Não foi possível encontrar o santo no momento.' });
     } finally {
+
       setIsSearchingGlobal(false);
     }
   };
