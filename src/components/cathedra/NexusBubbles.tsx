@@ -236,55 +236,83 @@ const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabI
               )}
               
               {content.length > 0 ? (
-                <div className="space-y-4">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/50 flex items-center gap-2">
-                    <div className="h-[1px] flex-1 bg-border/40" />
-                    Versículos & Fontes
-                    <div className="h-[1px] flex-1 bg-border/40" />
-                  </span>
-                  {content.map((c, i) => {
-                    const isBible = c.type === 'bible';
-                    const reference = c.title || 'Referência';
-                    const bibleLink = isBible && c.metadata?.book && c.metadata?.chapter 
-                      ? `/bible?book=${c.metadata.book}&ch=${c.metadata.chapter}` 
-                      : null;
+                <div className="space-y-6">
+                  {[
+                    { id: 'bible', label: 'Bíblia', icon: <Icons.BookOpen className="w-3.5 h-3.5" /> },
+                    { id: 'catechism', label: 'Catecismo', icon: <Icons.Church className="w-3.5 h-3.5" /> },
+                    { id: 'magisterium', label: 'Magistério', icon: <Icons.Shield className="w-3.5 h-3.5" /> },
+                    { id: 'journey', label: 'Jornadas', icon: <Icons.Flame className="w-3.5 h-3.5" /> },
+                  ].map((category) => {
+                    const categoryContent = content.filter(c => c.type === category.id);
+                    if (categoryContent.length === 0) return null;
 
                     return (
-                      <motion.div 
-                        key={c.id || i} 
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: i * 0.1 }}
-                        className="space-y-1.5 group/content"
-                      >
-                        <p className="text-[11px] leading-relaxed text-foreground/80 line-clamp-3 group-hover/content:text-foreground transition-colors">
-                          {c.content_text}
-                        </p>
-                        {bibleLink ? (
-                          <button 
-                            onClick={() => navigate(bibleLink)}
-                            className="text-[10px] font-bold text-primary hover:underline flex items-center gap-1.5 bg-primary/5 px-2 py-0.5 rounded-full w-fit"
-                          >
-                            {reference}
-                            <ExternalLink className="w-2.5 h-2.5" />
-                          </button>
-                        ) : (
-                          <span className="text-[10px] font-bold text-primary/60">{reference}</span>
-                        )}
-                      </motion.div>
+                      <div key={category.id} className="space-y-3">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/50 flex items-center gap-2">
+                          <div className="h-[1px] w-4 bg-border/40" />
+                          <div className="flex items-center gap-1.5 text-primary/60">
+                            {category.icon}
+                            {category.label}
+                          </div>
+                          <div className="h-[1px] flex-1 bg-border/40" />
+                        </span>
+                        
+                        <div className="space-y-4">
+                          {categoryContent.map((c, i) => {
+                            const isBible = c.type === 'bible';
+                            const isJourney = c.type === 'journey';
+                            const reference = c.title || 'Referência';
+                            
+                            const link = isBible && c.metadata?.book && c.metadata?.chapter 
+                              ? `/bible?book=${c.metadata.book}&ch=${c.metadata.chapter}` 
+                              : isJourney ? `/jornadas/${c.id}` : null;
+
+                            return (
+                              <motion.div 
+                                key={c.id || i} 
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: i * 0.05 }}
+                                className="space-y-1.5 group/content p-2 rounded-xl hover:bg-primary/5 transition-colors cursor-pointer"
+                                onClick={() => link && navigate(link)}
+                              >
+                                <p className="text-[11px] leading-relaxed text-foreground/80 line-clamp-3 group-hover/content:text-foreground transition-colors">
+                                  {c.content_text}
+                                </p>
+                                <div className="flex items-center justify-between">
+                                  <span className="text-[10px] font-bold text-primary flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-primary/5">
+                                    {reference}
+                                    {link && <ExternalLink className="w-2.5 h-2.5" />}
+                                  </span>
+                                </div>
+                              </motion.div>
+                            );
+                          })}
+                        </div>
+                      </div>
                     );
                   })}
                 </div>
               ) : !logosInsight && status === 'success' && (
-                <div className="flex flex-col items-center justify-center py-6 text-center space-y-3">
-                  <div className="w-12 h-12 rounded-full bg-muted/30 flex items-center justify-center">
-                    <Info className="w-6 h-6 text-muted-foreground/30" />
+                <div className="flex flex-col items-center justify-center py-10 text-center space-y-4">
+                  <div className="w-16 h-16 rounded-full bg-muted/20 flex items-center justify-center relative">
+                    <div className="absolute inset-0 rounded-full border border-primary/10 animate-ping opacity-20" />
+                    <Search className="w-8 h-8 text-muted-foreground/30" />
                   </div>
-                  <div>
-                    <p className="text-xs font-bold text-muted-foreground">Sem conteúdo vinculado</p>
-                    <p className="text-[10px] text-muted-foreground/60 italic px-4">Este tema ainda não possui versículos catalogados no Nexus.</p>
+                  <div className="space-y-1">
+                    <p className="text-sm font-black uppercase tracking-widest text-foreground">Nexus Silencioso</p>
+                    <p className="text-[10px] text-muted-foreground/60 italic max-w-[200px] mx-auto">
+                      Ainda estamos tecendo as conexões para "{tag.label}". Tente outro tema ou explore o A-Z.
+                    </p>
                   </div>
-                  <Button size="sm" variant="ghost" onClick={() => navigate(`${AppRoute.TEMAS}/${tag.slug}`)} className="h-8 rounded-xl text-[10px] uppercase font-black tracking-widest">Explorar Completo</Button>
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    onClick={() => navigate(`${AppRoute.TEMAS}/${tag.slug}`)} 
+                    className="h-8 rounded-xl text-[9px] uppercase font-black tracking-widest border-primary/20 hover:bg-primary/5 transition-all"
+                  >
+                    Navegação A-Z
+                  </Button>
                 </div>
               )}
             </>
