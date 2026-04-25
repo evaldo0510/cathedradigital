@@ -189,13 +189,18 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
         <div className="flex justify-center overflow-x-auto pb-4 no-scrollbar">
           <div className="bg-secondary/50 p-1 rounded-2xl flex gap-1 min-w-max" role="tablist" aria-label="Modos de visualização dos santos">
-            {(['daily', 'all', 'writers', 'popes', 'cloud', 'search'] as const).map(mode => (
+            {(['daily', 'all', 'writers', 'popes', 'cloud', 'search'] as const).map((mode, idx, arr) => (
               <button
                 key={mode}
+                id={`tab-${mode}`}
                 role="tab"
                 aria-selected={viewMode === mode}
                 aria-controls={`panel-${mode}`}
                 onClick={() => setViewMode(mode)}
+                onKeyDown={(e) => {
+                  if (e.key === 'ArrowRight' && idx < arr.length - 1) document.getElementById(`tab-${arr[idx+1]}`)?.focus();
+                  if (e.key === 'ArrowLeft' && idx > 0) document.getElementById(`tab-${arr[idx-1]}`)?.focus();
+                }}
                 className={`px-4 md:px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                   viewMode === mode ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
                 }`}
