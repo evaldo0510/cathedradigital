@@ -221,6 +221,7 @@ const TemasPage = () => {
                             onKeyDown={(e) => handleRovingKeyDown(e, idx, () => {})}
                             tabIndex={activeIndex === idx ? 0 : -1}
                             className="px-4 py-2.5 text-[10px] sm:text-[11px] uppercase tracking-widest"
+                            profileId={profileId as ProfileId}
                           />
                         </div>
                       ))}
