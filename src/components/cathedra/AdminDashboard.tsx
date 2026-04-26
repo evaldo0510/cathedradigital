@@ -104,24 +104,31 @@ const AdminDashboard: React.FC = () => {
     const params = new URLSearchParams(location.search);
     const tab = params.get('tab');
     
-    // Auto-reset logic for security tab
-    if (tab === 'security') {
-      setSecurityResetKey(prev => prev + 1);
-    }
-    
     if (tab && tab !== activeTab) {
       setActiveTab(tab);
+    }
+  }, [location.search, activeTab]);
+
+  // Debounced reset logic for security tab
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const tab = params.get('tab');
+    
+    if (tab === 'security') {
+      const timer = setTimeout(() => {
+        setSecurityResetKey(prev => prev + 1);
+      }, 300); // 300ms debounce
+      return () => clearTimeout(timer);
     }
   }, [location.search]);
 
   const handleTabChange = (value: string) => {
+    if (value === activeTab) return;
+    
     setActiveTab(value);
     navigate(`/admin?tab=${value}`, { replace: true });
     
-    // If clicking on security, also trigger reset
-    if (value === 'security') {
-      setSecurityResetKey(prev => prev + 1);
-    }
+    // If clicking on security, it will be handled by the useEffect above
   };
 
   useEffect(() => {
