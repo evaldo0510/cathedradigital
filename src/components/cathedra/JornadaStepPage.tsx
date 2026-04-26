@@ -361,7 +361,7 @@ const JornadaStepPage: React.FC = () => {
                             </div>
                           </div>
                         ) : (
-                          <p className={`text-sm text-foreground/90 leading-relaxed whitespace-pre-line font-serif ${key === 'pch' ? 'text-lg italic text-primary text-center' : ''}`}>
+                          <p className={`text-sm text-foreground/90 leading-relaxed whitespace-pre-line font-serif ${key === 'padh' ? 'text-lg italic text-primary text-center' : ''}`}>
                             {sectionContent}
                           </p>
                         )}
