@@ -145,7 +145,7 @@ export const UI_TRANSLATIONS: Record<Language, any> = {
     exit_session: "Log Out",
     journeys: "Journeys",
     explore: "Explore",
-    themes: "Themes",
+    themes: "Nexus Themes",
     weekly_summary: "Weekly Summary",
     streak: "Streak",
     day: "day",
