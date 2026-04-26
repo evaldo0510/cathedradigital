@@ -628,14 +628,15 @@ const TemaDetailPage = () => {
         <aside className="space-y-6">
           <div className="bg-card/50 border border-border/40 rounded-[2rem] p-6 space-y-6">
             <h3 className="text-xs font-black uppercase tracking-widest text-foreground/60">Temas Relacionados</h3>
-            <div className="flex flex-wrap gap-2">
+            <div ref={relatedRef} className="flex flex-wrap gap-2">
               {relatedThemes.map((tag, idx) => (
                 <TagBubble 
                   key={tag.id}
                   tag={tag}
                   index={idx}
                   isSuggested={suggestedSlugs.has(tag.slug)}
-                  onKeyDown={() => {}}
+                  onKeyDown={(e) => handleRelatedKeyDown(e, idx, () => navigate(`${AppRoute.TEMAS}/${tag.slug}`))}
+                  tabIndex={activeIndex === idx ? 0 : -1}
                   className="px-3 py-1.5"
                   profileId={profileId as ProfileId}
                   navigateOnClick={true}
