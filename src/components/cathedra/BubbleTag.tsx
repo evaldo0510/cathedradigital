@@ -130,6 +130,7 @@ export const BubbleTag: React.FC<BubbleTagProps> = ({
       onMouseEnter={onMouseEnter}
       tabIndex={tabIndex}
       data-roving-item={dataRovingItem}
+      {...props}
       aria-pressed={isSelected}
       aria-label={`${ariaLabel || `Tema: ${label}`}${isSelected ? ' (Selecionado)' : ''}${isSuggested ? ' (Sugerido)' : ''}`}
       className={`
