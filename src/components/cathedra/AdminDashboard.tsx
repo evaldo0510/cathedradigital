@@ -1,5 +1,5 @@
 import React, { useEffect, useState, lazy, Suspense } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { 
   Users, TrendingUp, Download, DollarSign, ArrowUpRight,
@@ -80,8 +80,6 @@ interface SensitiveRow {
 }
 
 const AdminDashboard: React.FC = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
   const [stats, setStats] = useState<any>(null);
   const [users, setUsers] = useState<any[]>([]);
   const [recentJournal, setRecentJournal] = useState<any[]>([]);
@@ -95,40 +93,23 @@ const AdminDashboard: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
   const tabsListRef = React.useRef<HTMLDivElement>(null);
   
-  // Sync with URL query param
-  const queryParams = new URLSearchParams(location.search);
-  const [activeTab, setActiveTab] = useState(queryParams.get('tab') || 'overview');
+  // Sync with URL query param for persistence
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'overview';
   const [securityResetKey, setSecurityResetKey] = useState(0);
 
+  // Debounced reset logic for security tab when URL changes
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const tab = params.get('tab') || 'overview';
-    
-    if (tab !== activeTab) {
-      setActiveTab(tab);
-    }
-  }, [location.search, activeTab]);
-
-  // Debounced reset logic for security tab
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const tab = params.get('tab');
-    
-    if (tab === 'security') {
+    if (activeTab === 'security') {
       const timer = setTimeout(() => {
         setSecurityResetKey(prev => prev + 1);
-      }, 300); // 300ms debounce
+      }, 300);
       return () => clearTimeout(timer);
     }
-  }, [location.search]);
+  }, [activeTab]);
 
   const handleTabChange = (value: string) => {
-    if (value === activeTab) return;
-    
-    setActiveTab(value);
-    navigate(`/admin?tab=${value}`, { replace: true });
-    
-    // If clicking on security, it will be handled by the useEffect above
+    setSearchParams({ tab: value }, { replace: true });
   };
 
   useEffect(() => {
