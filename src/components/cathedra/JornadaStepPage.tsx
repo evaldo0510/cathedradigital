@@ -19,7 +19,7 @@ import { getSaintBySubtitle } from '@/services/saintsService';
 import SacredImage from './SacredImage';
 
 const SECTION_CONFIG = [
-  { key: 'pch', label: 'A Palavra', icon: <Sparkles className="w-4 h-4" />, isPremium: false },
+  { key: 'padh', label: 'A Palavra', icon: <Sparkles className="w-4 h-4" />, isPremium: false },
   { key: 'interpretation', label: 'Reflexão', icon: <Icons.Bible className="w-4 h-4" />, isPremium: false },
   { key: 'practical_direction', label: 'Prática do Dia', icon: <Hand className="w-4 h-4" />, isPremium: true },
   { key: 'guided_exercise', label: 'Exercício Espiritual', icon: <PenLine className="w-4 h-4" />, isPremium: true },
