@@ -72,8 +72,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       suggested: spiritualProfile === 'ferido_em_busca' || spiritualProfile === 'sedento_de_sentido',
     },
     {
-      label: 'Santos',
-      description: 'Vidas e ensinamentos dos heróis da fé',
+      label: t('saints_label'),
+      description: t('saints_desc') || 'Vidas e ensinamentos dos heróis da fé',
       icon: Icons.Saints,
       route: AppRoute.SAINTS,
       gradient: 'from-secondary/5 to-transparent',
