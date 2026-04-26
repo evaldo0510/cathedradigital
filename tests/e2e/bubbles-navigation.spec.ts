@@ -4,7 +4,19 @@ test.describe('Nexus Bubbles Navigation & Popovers', () => {
   // Helper to extract clean bubble labels (text before icons/line breaks)
   const getCleanLabels = async (bubbles: Locator) => {
     const labels = await bubbles.allInnerTexts();
-    return labels.map(l => l.trim().split('\n')[0]);
+    return labels.map(l => {
+      // Normalization logic:
+      // 1. Take first line (handles multiline rendering if any)
+      // 2. Remove emojis (using broad unicode ranges)
+      // 3. Keep only letters (including accents), numbers, and single spaces
+      // 4. Trim resulting string
+      return l
+        .split('\n')[0]
+        .replace(/[\u{1F300}-\u{1F9FF}]|[\u{2700}-\u{27BF}]/gu, '') 
+        .replace(/[^\p{L}\p{N}\s]/gu, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+    });
   };
 
   // Helper to extract all data-priority attributes from a list of bubbles
