@@ -275,17 +275,17 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                                           const matchingTag = allThemes?.find(at => at.label.toLowerCase() === tLabel.toLowerCase());
                                           if (!matchingTag) return null;
                                           return (
-                                            <button
+                                            <BubbleTag
                                               key={matchingTag.id}
-                                              onClick={(e) => {
-                                                e.stopPropagation();
+                                              label={matchingTag.label}
+                                              emoji={matchingTag.emoji}
+                                              index={i}
+                                              size="xs"
+                                              onClick={() => {
                                                 navigate(`${AppRoute.TEMAS}/${matchingTag.slug}`);
                                                 setOpen(false);
                                               }}
-                                              className="text-[8px] font-bold px-1.5 py-0.5 rounded-md bg-muted hover:bg-primary/10 hover:text-primary transition-colors text-muted-foreground"
-                                            >
-                                              {matchingTag.label}
-                                            </button>
+                                            />
                                           );
                                         })
                                       }
