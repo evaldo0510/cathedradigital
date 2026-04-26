@@ -106,7 +106,7 @@ export const callColloquium = async (
   }
 };
 
-export const getSpiritualInsight = async (query?: string, tag?: string): Promise<AIResponse> => {
+export const getSpiritualInsight = async (query?: string, tag?: string, profileId?: string | null): Promise<AIResponse> => {
   try {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) return { error: "Não autenticado" };
@@ -117,7 +117,7 @@ export const getSpiritualInsight = async (query?: string, tag?: string): Promise
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${session.access_token}`,
       },
-      body: JSON.stringify({ query, tag }),
+      body: JSON.stringify({ query, tag, profileId }),
     });
 
     if (!response.ok) {

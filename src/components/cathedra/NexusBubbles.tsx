@@ -32,7 +32,18 @@ interface NexusBubblesProps {
   profileId?: ProfileId | null;
 }
 
-export const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabIndex?: number; onKeyDown?: (e: React.KeyboardEvent) => void; className?: string }> = ({ tag, index, isSuggested, tabIndex, onKeyDown, className }) => {
+interface TagBubbleProps {
+  tag: Tag;
+  index: number;
+  isSuggested?: boolean;
+  tabIndex?: number;
+  onKeyDown?: (e: React.KeyboardEvent) => void;
+  className?: string;
+  profileId?: ProfileId | null;
+  navigateOnClick?: boolean;
+}
+
+export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, tabIndex, onKeyDown, className, profileId, navigateOnClick }) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
@@ -74,7 +85,7 @@ export const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolea
 
       // IA Fetch
       try {
-        const result = await getSpiritualInsight(tag.label);
+        const result = await getSpiritualInsight(tag.label, undefined, profileId);
         if (!result.error && result.content) {
           setLogosInsight(result.content);
         }
@@ -101,7 +112,11 @@ export const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolea
   }, [queryClient, tag.id, tag.label]);
 
   return (
-    <Popover open={open} onOpenChange={(val) => {
+    <Popover open={navigateOnClick ? false : open} onOpenChange={(val) => {
+      if (navigateOnClick && val) {
+        navigate(`${AppRoute.TEMAS}/${tag.slug}`);
+        return;
+      }
       setOpen(val);
       if (val) fetchContent();
     }}>
@@ -112,7 +127,11 @@ export const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolea
           index={index}
           isSelected={open}
           isSuggested={isSuggested}
-          onClick={() => {}} // Popover handles trigger
+          onClick={() => {
+            if (navigateOnClick) {
+              navigate(`${AppRoute.TEMAS}/${tag.slug}`);
+            }
+          }} 
           onKeyDown={onKeyDown}
           onMouseEnter={prefetchTag}
           tabIndex={tabIndex}
@@ -389,7 +408,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
     }
     
     if (activeFilter !== 'all') {
-      result = result.filter(t => t.category === activeFilter);
+      result = result.filter(t => t.category?.toLowerCase() === activeFilter.toLowerCase());
     }
     return result;
   }, [tags, searchQuery, activeFilter]);
@@ -493,6 +512,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
                       index={i} 
                       tabIndex={filteredActiveIndex === i ? 0 : -1}
                       onKeyDown={(e) => handleFilteredKeyDown(e, i)}
+                      profileId={profileId}
                     />
                   </div>
                 )) : (
@@ -527,6 +547,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
                           isSuggested 
                           tabIndex={suggestedActiveIndex === i ? 0 : -1}
                           onKeyDown={(e) => handleSuggestedKeyDown(e, i)}
+                          profileId={profileId}
                         />
                       </div>
                     ))}
@@ -537,7 +558,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
               {/* Categorized Tags */}
               <div className="grid grid-cols-1 gap-5">
                 {Object.entries(categories).map(([key, category]) => {
-                  const categoryTags = tags.filter(t => t.category === key);
+                  const categoryTags = tags.filter(t => t.category?.toLowerCase() === key.toLowerCase());
                   if (categoryTags.length === 0) return null;
 
                   return (
@@ -556,7 +577,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
                       <div className="flex flex-wrap gap-1.5" role="list">
                         {categoryTags.slice(0, expandedCategory === key ? 100 : 8).map((tag, i) => (
                           <div key={tag.slug} role="listitem">
-                            <TagBubble tag={tag} index={i} />
+                            <TagBubble tag={tag} index={i} profileId={profileId} />
                           </div>
                         ))}
                       </div>

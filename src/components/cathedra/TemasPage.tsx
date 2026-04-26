@@ -13,7 +13,7 @@ import { BubbleTag } from './BubbleTag';
 import { TagBubble } from './NexusBubbles';
 import { getTabProps, getTabPanelProps, useTabNavigation, useRovingTabindex } from './TabUtils';
 import { useSpiritualProfile } from '@/hooks/useSpiritualProfile';
-import { PROFILES } from './SpiritualQuiz';
+import { PROFILES, type ProfileId } from './SpiritualQuiz';
 
 
 interface Tag {
@@ -221,6 +221,7 @@ const TemasPage = () => {
                             onKeyDown={(e) => handleRovingKeyDown(e, idx, () => {})}
                             tabIndex={activeIndex === idx ? 0 : -1}
                             className="px-4 py-2.5 text-[10px] sm:text-[11px] uppercase tracking-widest"
+                            profileId={profileId as ProfileId}
                           />
                         </div>
                       ))}
