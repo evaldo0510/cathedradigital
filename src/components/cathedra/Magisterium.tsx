@@ -50,7 +50,7 @@ const SPIRITUAL_GUIDANCE = [
     aplicacaoPratica: 'Identifique o seu maior medo hoje. Visualize-se entregando esse medo nas mãos de Jesus. Sinta o peso saindo dos seus ombros enquanto você repete: "O Senhor é minha luz e minha salvação, a quem temerei?"',
     reflexaoFinal: 'O que eu faria hoje se soubesse que Deus está segurando minha mão direita?',
     exercicio: 'Vá a uma igreja ou um lugar silencioso. Feche os olhos e respire a paz de Deus. Peça a graça de ver o mundo não através do medo, mas através da Providência.',
-    pch: '"O medo cresce…\nonde a presença é esquecida."',
+    padh: '"O medo cresce…\nonde a presença é esquecida."',
     innerQuestion: 'Onde você se sente sozinho diante do medo?',
     relatedDocs: ['ss', 'dce', 'lf'],
   },
