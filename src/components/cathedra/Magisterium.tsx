@@ -33,7 +33,7 @@ const SPIRITUAL_GUIDANCE = [
     aplicacaoPratica: 'Quando a ansiedade bater, pare por 30 segundos. Respire fundo e diga: "Jesus, eu confio em Vós". Repita isso até que seu coração sinta que o peso não é mais só seu.',
     reflexaoFinal: 'O que aconteceria se eu realmente acreditasse que Deus cuida de mim mais do que eu mesmo?',
     exercicio: 'Escreva em um papel tudo o que te preocupa hoje. Dobre o papel e coloque-o sob um crucifixo ou uma imagem de Maria, simbolizando que você entregou essas questões a Deus.',
-    pch: '"Ansiedade é tentar prever…\no que só pode ser vivido."',
+    padh: '"Ansiedade é tentar prever…\no que só pode ser vivido."',
     innerQuestion: 'O que você está tentando resolver sem confiar?',
     relatedDocs: ['ge', 'ss', 'gs'],
   },
