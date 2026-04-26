@@ -91,6 +91,7 @@ interface BubbleTagProps {
   index: number;
   isSelected?: boolean;
   isSuggested?: boolean;
+  size?: 'xs' | 'sm' | 'md';
   onClick: () => void;
   onKeyDown?: (e: React.KeyboardEvent) => void;
   onMouseEnter?: () => void;
