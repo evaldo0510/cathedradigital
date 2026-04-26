@@ -150,6 +150,7 @@ const TemaDetailPage = () => {
   const [autoLoaded, setAutoLoaded] = useState(false);
   const [activeTab, setActiveTab] = useState('bible');
   const [debouncedTab, setDebouncedTab] = useState('bible');
+  const relatedRef = React.useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
