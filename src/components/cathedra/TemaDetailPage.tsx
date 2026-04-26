@@ -638,7 +638,7 @@ const TemaDetailPage = () => {
                   isSuggested={suggestedSlugs.has(tag.slug)}
                   onKeyDown={(e) => handleRelatedKeyDown(e, idx, () => navigate(`${AppRoute.TEMAS}/${tag.slug}`))}
                   tabIndex={activeIndex === idx ? 0 : -1}
-                  className="px-3 py-1.5"
+                  size="sm"
                   profileId={profileId as ProfileId}
                   navigateOnClick={true}
                   priorityGroup={tag.priorityGroup}
