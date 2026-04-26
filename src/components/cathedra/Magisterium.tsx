@@ -33,7 +33,7 @@ const SPIRITUAL_GUIDANCE = [
     aplicacaoPratica: 'Quando a ansiedade bater, pare por 30 segundos. Respire fundo e diga: "Jesus, eu confio em Vós". Repita isso até que seu coração sinta que o peso não é mais só seu.',
     reflexaoFinal: 'O que aconteceria se eu realmente acreditasse que Deus cuida de mim mais do que eu mesmo?',
     exercicio: 'Escreva em um papel tudo o que te preocupa hoje. Dobre o papel e coloque-o sob um crucifixo ou uma imagem de Maria, simbolizando que você entregou essas questões a Deus.',
-    pch: '"Ansiedade é tentar prever…\no que só pode ser vivido."',
+    padh: '"Ansiedade é tentar prever…\no que só pode ser vivido."',
     innerQuestion: 'O que você está tentando resolver sem confiar?',
     relatedDocs: ['ge', 'ss', 'gs'],
   },
@@ -50,7 +50,7 @@ const SPIRITUAL_GUIDANCE = [
     aplicacaoPratica: 'Identifique o seu maior medo hoje. Visualize-se entregando esse medo nas mãos de Jesus. Sinta o peso saindo dos seus ombros enquanto você repete: "O Senhor é minha luz e minha salvação, a quem temerei?"',
     reflexaoFinal: 'O que eu faria hoje se soubesse que Deus está segurando minha mão direita?',
     exercicio: 'Vá a uma igreja ou um lugar silencioso. Feche os olhos e respire a paz de Deus. Peça a graça de ver o mundo não através do medo, mas através da Providência.',
-    pch: '"O medo cresce…\nonde a presença é esquecida."',
+    padh: '"O medo cresce…\nonde a presença é esquecida."',
     innerQuestion: 'Onde você se sente sozinho diante do medo?',
     relatedDocs: ['ss', 'dce', 'lf'],
   },
@@ -67,7 +67,7 @@ const SPIRITUAL_GUIDANCE = [
     aplicacaoPratica: 'Liste três coisas que você faz bem e que trazem alegria aos outros. Como você pode usar um desses talentos hoje para glorificar a Deus no seu trabalho ou na sua família?',
     reflexaoFinal: 'Se a minha vida fosse um livro escrito por Deus, qual seria o título do capítulo que estou vivendo agora?',
     exercicio: 'Durante o dia, em cada tarefa simples, diga: "Senhor, faço isso por Ti". Transforme o ordinário em oração e veja como o propósito brota da intenção.',
-    pch: '"Força não é ausência de fraqueza…\né direção apesar dela."',
+    padh: '"Força não é ausência de fraqueza…\né direção apesar dela."',
     innerQuestion: 'O que ainda te move quando tudo pesa?',
     relatedDocs: ['ge', 'lg', 'cv'],
   },
@@ -84,7 +84,7 @@ const SPIRITUAL_GUIDANCE = [
     aplicacaoPratica: 'Se você está sofrendo hoje, não tente entender o "porquê". Tente viver o "com quem". Ofereça sua dor por uma intenção específica (alguém doente, uma causa nobre). Isso dá um sentido sobrenatural à sua cruz.',
     reflexaoFinal: 'Eu permito que Deus me console na minha dor, ou me fecho na amargura?',
     exercicio: 'Contemple uma imagem do Cristo Crucificado por 5 minutos. Não diga nada. Apenas deixe que o olhar de Jesus encontre a sua dor e a acolha.',
-    pch: '"A dor não veio destruir…\nveio revelar o que ainda é frágil."',
+    padh: '"A dor não veio destruir…\nveio revelar o que ainda é frágil."',
     innerQuestion: 'O que o sofrimento está tentando te ensinar?',
     relatedDocs: ['ss', 'ev', 'gs', 'sd'],
   },
@@ -101,7 +101,7 @@ const SPIRITUAL_GUIDANCE = [
     aplicacaoPratica: 'Escolha uma pessoa com quem você tem dificuldade de se relacionar. Reze por ela hoje e, se possível, faça um pequeno gesto de gentileza sem que ela perceba.',
     reflexaoFinal: 'O meu jeito de amar atrai as pessoas para Deus ou as afasta?',
     exercicio: 'Pratique a "escuta profunda". Na próxima conversa, não pense na resposta enquanto o outro fala. Apenas acolha as palavras dele como um dom. Amar é, antes de tudo, dar atenção.',
-    pch: '"Amar não é completar o outro…\né caminhar junto sem exigir destino."',
+    padh: '"Amar não é completar o outro…\né caminhar junto sem exigir destino."',
     innerQuestion: 'Você está amando ou controlando?',
     relatedDocs: ['al', 'dce', 'hv'],
   },
@@ -293,7 +293,7 @@ const Magisterium: React.FC = () => {
                   </div>
 
                   <div className="bg-primary/5 rounded-2xl p-6 border border-primary/10 space-y-4">
-                    <p className="text-xl font-serif font-bold text-primary leading-tight">{selectedGuidance.pch}</p>
+                    <p className="text-xl font-serif font-bold text-primary leading-tight">{selectedGuidance.padh}</p>
                     <p className="text-sm font-bold text-foreground">
                       {parseTheologicalReferences(selectedGuidance.innerQuestion).map((seg, i) => {
                         if (seg.type === 'bibleRef') {

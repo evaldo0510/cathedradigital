@@ -22,9 +22,9 @@ interface GlossaryTerm {
   similarityScore?: number;
 }
 
-/* ── PCH enrichment for featured terms ── */
+/* ── P.A.D.H. enrichment for featured terms ── */
 interface TermEnrichment {
-  pch: string;
+  padh: string;
   question: string;
   relatedVerse?: string;
   relatedRoute?: string;
@@ -33,54 +33,54 @@ interface TermEnrichment {
 
 const ENRICHMENTS: Record<string, TermEnrichment> = {
   'Graça': {
-    pch: '"Não é algo que você conquista…\né algo que te encontra quando você para de fugir."',
+    padh: '"Não é algo que você conquista…\né algo que te encontra quando você para de fugir."',
     question: 'Onde você ainda acha que precisa merecer?',
     relatedVerse: 'Ef 2,8',
     relatedRoute: AppRoute.LECTIO_DIVINA,
     relatedLabel: 'Viver essa Palavra',
   },
   'Pecado': {
-    pch: '"Nem sempre é erro…\nàs vezes é distância."',
+    padh: '"Nem sempre é erro…\nàs vezes é distância."',
     question: 'Onde você se afastou de si mesmo?',
     relatedVerse: 'Rm 3,23',
     relatedRoute: AppRoute.POENITENTIA,
     relatedLabel: 'Exame de Consciência',
   },
   'Fé': {
-    pch: '"Fé não é enxergar…\né continuar mesmo sem mapa."',
+    padh: '"Fé não é enxergar…\né continuar mesmo sem mapa."',
     question: 'O que você só vai entender depois de confiar?',
     relatedVerse: 'Hb 11,1',
     relatedRoute: AppRoute.LECTIO_DIVINA,
     relatedLabel: 'Viver essa Palavra',
   },
   'Transubstanciação': {
-    pch: '"A aparência permanece…\nmas a essência já é outra.\nAssim como você, quando decide mudar por dentro."',
+    padh: '"A aparência permanece…\nmas a essência já é outra.\nAssim como você, quando decide mudar por dentro."',
     question: 'O que em você parece o mesmo, mas já mudou?',
     relatedVerse: 'Lc 22,19',
     relatedRoute: AppRoute.MISSAL,
     relatedLabel: 'Entender a Missa',
   },
   'Escatologia': {
-    pch: '"O fim não é destruição…\né o momento em que tudo finalmente faz sentido."',
+    padh: '"O fim não é destruição…\né o momento em que tudo finalmente faz sentido."',
     question: 'Se hoje fosse o último dia, o que você faria diferente?',
     relatedRoute: AppRoute.CATECHISM,
     relatedLabel: 'Ver no Catecismo',
   },
   'Eclesiologia': {
-    pch: '"A Igreja não é o prédio…\né o povo que se encontra para não caminhar sozinho."',
+    padh: '"A Igreja não é o prédio…\né o povo que se encontra para não caminhar sozinho."',
     question: 'Onde você encontra pertencimento?',
     relatedRoute: AppRoute.COMMUNITY,
     relatedLabel: 'Comunidade',
   },
   'Soteriologia': {
-    pch: '"Salvação não é fuga…\né voltar pra casa depois de tanto tempo perdido."',
+    padh: '"Salvação não é fuga…\né voltar pra casa depois de tanto tempo perdido."',
     question: 'De que você precisa ser salvo hoje?',
     relatedVerse: 'Jo 3,16',
     relatedRoute: AppRoute.LECTIO_DIVINA,
     relatedLabel: 'Viver essa Palavra',
   },
   'Mariologia': {
-    pch: '"Ela não pediu para ser escolhida…\nmas disse sim quando foi."',
+    padh: '"Ela não pediu para ser escolhida…\nmas disse sim quando foi."',
     question: 'Qual "sim" você está adiando?',
     relatedVerse: 'Lc 1,38',
     relatedRoute: AppRoute.ROSARY,
@@ -286,10 +286,10 @@ const GlossaryPage: React.FC = () => {
 
                     {enrichment && (
                       <>
-                        {/* Layer 2: PCH */}
+                        {/* Layer 2: P.A.D.H. */}
                         <div className="bg-primary/5 rounded-2xl p-5 text-center space-y-2">
                           <p className="text-[10px] font-black uppercase tracking-widest text-primary/70">🧠 Reflexão Poética</p>
-                          <p className="text-foreground font-serif italic leading-relaxed whitespace-pre-line text-sm">{enrichment.pch}</p>
+                          <p className="text-foreground font-serif italic leading-relaxed whitespace-pre-line text-sm">{enrichment.padh}</p>
                         </div>
 
                         {/* Layer 3: Inner question */}

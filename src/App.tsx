@@ -492,6 +492,8 @@ const AppLayout: React.FC = () => {
               <AnimatePresence mode="wait" initial={false}>
                 <Routes location={location} key={location.pathname}>
                   <Route path={AppRoute.HOME} element={<PageTransition><Index /></PageTransition>} />
+                  <Route path="/curso-pch" element={<Navigate to={AppRoute.JORNADAS} replace />} />
+                  <Route path="/pch" element={<Navigate to={AppRoute.JORNADAS} replace />} />
                   <Route path={AppRoute.DASHBOARD} element={<PageTransition><AuthGuard><Dashboard user={appUser} /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.BIBLE} element={<PageTransition><AuthGuard><Bible /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.CATECHISM} element={<PageTransition><AuthGuard><Catechism /></AuthGuard></PageTransition>} />
