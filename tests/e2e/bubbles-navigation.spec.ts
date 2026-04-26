@@ -479,4 +479,55 @@ test.describe('Nexus Bubbles Navigation & Popovers', () => {
       await expect(page.locator('h1, h2')).toContainText(bubbleText.trim().split('\n')[0], { ignoreCase: true });
     }
   });
+
+  test('should verify full integrity (no duplicates + correct order) in a complex source overlap scenario', async ({ page }) => {
+    // 1. Set profile that creates multiple overlaps
+    await page.goto('/');
+    await page.evaluate(() => {
+      localStorage.setItem('spiritual_profile_diagnosis', JSON.stringify({
+        id: 'firme_aprofundando', // Likes 'Fé', 'Oração'
+        timestamp: Date.now()
+      }));
+    });
+
+    // 2. Go to 'Graça'
+    // 'Fé' is usually in content, profile, and category for this setup.
+    await page.goto('/temas/graca');
+    
+    const aside = page.locator('aside:has-text("Temas Relacionados")');
+    await expect(aside).toBeVisible();
+
+    const bubbles = aside.locator('button[data-roving-item]');
+    await expect(bubbles.first()).toBeVisible();
+
+    // 3. Verify No Duplicates
+    const allLabels = await bubbles.allInnerTexts();
+    const cleanLabels = allLabels.map(l => l.trim().split('\n')[0]);
+    const uniqueLabels = new Set(cleanLabels);
+    expect(cleanLabels.length, `Duplicates found in list: ${cleanLabels}`).toBe(uniqueLabels.size);
+
+    // 4. Verify Correct Order (content > profile > category)
+    const priorities = await bubbles.evaluateAll(elements => 
+      elements.map(el => el.getAttribute('data-priority'))
+    );
+    const activePriorities = priorities.filter(p => p !== null) as string[];
+
+    const priorityOrder = ['content', 'profile', 'category'];
+    let lastPriorityIndex = 0;
+
+    for (let i = 0; i < activePriorities.length; i++) {
+      const currentP = activePriorities[i];
+      const currentPIndex = priorityOrder.indexOf(currentP);
+      
+      expect(currentPIndex, `Order violation: ${currentP} at index ${i} follows a lower priority group`).toBeGreaterThanOrEqual(lastPriorityIndex);
+      lastPriorityIndex = currentPIndex;
+    }
+
+    // 5. Verify overlapping theme ('Fé') is at the highest priority possible
+    const feBubble = bubbles.filter({ hasText: 'Fé' }).first();
+    const fePriority = await feBubble.getAttribute('data-priority');
+    
+    // It should be 'content' or 'profile' since it's in both, but we keep the first.
+    expect(['content', 'profile']).toContain(fePriority);
+  });
 });
