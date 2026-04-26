@@ -147,7 +147,8 @@ export const BubbleTag: React.FC<BubbleTagProps> = ({
       aria-pressed={isSelected}
       aria-label={`${ariaLabel || `Tema: ${label}`}${isSelected ? ' (Selecionado)' : ''}${isSuggested ? ' (Sugerido)' : ''}`}
       className={`
-        relative px-3.5 py-2 rounded-full border transition-all shadow-sm flex items-center gap-1.5 group/tag focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:outline-none
+        relative rounded-full border transition-all shadow-sm flex items-center group/tag focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:outline-none
+        ${sizeClasses[size]}
         ${isSelected 
           ? 'border-primary bg-primary/15 ring-4 ring-primary/5 text-primary shadow-lg scale-105' 
           : isSuggested
@@ -159,14 +160,14 @@ export const BubbleTag: React.FC<BubbleTagProps> = ({
     >
       {isSuggested && !isSelected && (
         <div className="absolute -top-1 -right-1">
-          <Sparkles className="w-2.5 h-2.5 text-secondary animate-pulse" />
+          <Sparkles className={`text-secondary animate-pulse ${size === 'xs' ? 'w-2 h-2' : 'w-2.5 h-2.5'}`} />
         </div>
       )}
-      <span className="text-sm group-hover/tag:scale-110 transition-transform opacity-80 group-hover/tag:opacity-100">
-        {getTagIcon(emoji)}
+      <span className="group-hover/tag:scale-110 transition-transform opacity-80 group-hover/tag:opacity-100">
+        {getTagIcon(emoji, iconSizes[size])}
       </span>
       <span className={`
-        text-[11px] font-bold transition-colors tracking-tight
+        font-bold transition-colors tracking-tight
         ${isSelected ? 'text-primary' : 'group-hover/tag:text-primary'}
       `}>
         {label}
