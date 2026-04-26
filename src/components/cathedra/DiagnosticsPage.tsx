@@ -124,9 +124,12 @@ const DiagnosticsPage: React.FC = () => {
             </div>
           ))}
         </div>
-        <div className="pt-4 flex justify-center">
+        <div className="pt-4 flex flex-col sm:flex-row justify-center gap-3">
           <Button onClick={checkStatus} disabled={loading} variant="outline" className="rounded-xl font-black uppercase tracking-widest text-[10px]">
             {loading ? 'Sincronizando...' : 'Recarregar Diagnóstico'}
+          </Button>
+          <Button asChild variant="ghost" className="rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-red-500/5 hover:text-red-600">
+            <a href="/security-audit">Auditoria de Segurança</a>
           </Button>
         </div>
       </div>

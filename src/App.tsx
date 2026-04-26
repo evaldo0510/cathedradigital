@@ -99,6 +99,7 @@ const MagisteriumViewer = lazy(() => import('./components/cathedra/MagisteriumVi
 const TransactionsPage = lazy(() => import('./components/cathedra/TransactionsPage'));
 const UserTransactionsPage = lazy(() => import('./components/cathedra/UserTransactionsPage'));
 const A11yAuditPage = lazy(() => import('./components/cathedra/A11yAuditPage'));
+const SecurityAuditPage = lazy(() => import('./components/cathedra/SecurityAuditPage'));
 
 const PartnersPage = lazy(() => import('./components/cathedra/PartnersPage'));
 
@@ -550,6 +551,7 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.PRICING} element={<PageTransition><PricingPage /></PageTransition>} />
                   <Route path={AppRoute.UPGRADE} element={<PageTransition><UpgradePage /></PageTransition>} />
                   <Route path={AppRoute.A11Y_AUDIT} element={<PageTransition><A11yAuditPage /></PageTransition>} />
+                  <Route path={AppRoute.SECURITY_AUDIT} element={<PageTransition><SecurityAuditPage /></PageTransition>} />
                   <Route path={AppRoute.TRANSACTIONS} element={<PageTransition><AuthGuard><TransactionsPage /></AuthGuard></PageTransition>} />
                   <Route path="/transactions/my" element={<PageTransition><AuthGuard><UserTransactionsPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.DIAGNOSTICO} element={<PageTransition><AuthGuard><DiagnosticoPage /></AuthGuard></PageTransition>} />
