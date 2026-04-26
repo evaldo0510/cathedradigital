@@ -100,15 +100,15 @@ const ThemeContentCard = ({
             <div className="pt-4 border-t border-border/10">
               <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 mb-2">Conexões relacionadas:</p>
               <div className="flex flex-wrap gap-2">
-                {otherTags.map((tag) => (
-                  <button
+                {otherTags.map((tag, idx) => (
+                  <BubbleTag
                     key={tag.id}
+                    label={tag.label}
+                    emoji={tag.emoji}
+                    index={idx}
+                    size="sm"
                     onClick={() => navigate(`${AppRoute.TEMAS}/${tag.slug}`)}
-                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/5 border border-primary/10 hover:bg-primary/10 hover:border-primary/20 transition-all text-[9px] font-bold text-primary/70"
-                  >
-                    <span>{tag.emoji}</span>
-                    <span>{tag.label}</span>
-                  </button>
+                  />
                 ))}
               </div>
             </div>
