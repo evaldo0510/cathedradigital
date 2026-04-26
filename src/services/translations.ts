@@ -290,7 +290,7 @@ export const UI_TRANSLATIONS: Record<Language, any> = {
     exit_session: "Exire",
     journeys: "Itinera",
     explore: "Explorare",
-    themes: "Themata",
+    themes: "Themata Nexus",
     weekly_summary: "Resumptio Hebdomadae",
     streak: "Series",
     day: "dies",
