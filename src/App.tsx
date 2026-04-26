@@ -100,6 +100,7 @@ const TransactionsPage = lazy(() => import('./components/cathedra/TransactionsPa
 const UserTransactionsPage = lazy(() => import('./components/cathedra/UserTransactionsPage'));
 const A11yAuditPage = lazy(() => import('./components/cathedra/A11yAuditPage'));
 const SecurityAuditPage = lazy(() => import('./components/cathedra/SecurityAuditPage'));
+const SellerDashboard = lazy(() => import('./components/cathedra/SellerDashboard'));
 
 const PartnersPage = lazy(() => import('./components/cathedra/PartnersPage'));
 
