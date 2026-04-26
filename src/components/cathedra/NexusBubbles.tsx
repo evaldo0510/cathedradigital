@@ -389,7 +389,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
     }
     
     if (activeFilter !== 'all') {
-      result = result.filter(t => t.category === activeFilter);
+      result = result.filter(t => t.category?.toLowerCase() === activeFilter.toLowerCase());
     }
     return result;
   }, [tags, searchQuery, activeFilter]);
@@ -537,7 +537,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
               {/* Categorized Tags */}
               <div className="grid grid-cols-1 gap-5">
                 {Object.entries(categories).map(([key, category]) => {
-                  const categoryTags = tags.filter(t => t.category === key);
+                  const categoryTags = tags.filter(t => t.category?.toLowerCase() === key.toLowerCase());
                   if (categoryTags.length === 0) return null;
 
                   return (
