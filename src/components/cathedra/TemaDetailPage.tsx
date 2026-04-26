@@ -233,7 +233,29 @@ const TemaDetailPage = () => {
     supabase.functions.invoke('logos-spiritual-insight', {
       body: { query: selectedTag.label }
     }).then(({ data, error }) => {
-      if (!error && data?.insight) setLogosInsight(data.insight);
+      if (error) {
+        console.error('Spiritual insight error:', error);
+        // Handle specific status codes if possible via error object
+        const status = (error as any).status || (error as any).status_code;
+        if (status === 402) {
+          window.dispatchEvent(new CustomEvent('ai-status-error', { 
+            detail: { type: 'credits_exhausted' } 
+          }));
+        } else if (status === 429) {
+          window.dispatchEvent(new CustomEvent('ai-status-error', { 
+            detail: { type: 'rate_limited' } 
+          }));
+        }
+      } else if (data?.insight) {
+        setLogosInsight(data.insight);
+      } else if (data?.error) {
+        // The function might return { error: "..." } with a 200/500 status
+        if (data.error.includes('esgotados')) {
+          window.dispatchEvent(new CustomEvent('ai-status-error', { 
+            detail: { type: 'credits_exhausted' } 
+          }));
+        }
+      }
       setLoadingLogos(false);
     });
   };
