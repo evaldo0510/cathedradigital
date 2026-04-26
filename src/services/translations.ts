@@ -70,7 +70,7 @@ export const UI_TRANSLATIONS: Record<Language, any> = {
     exit_session: "Sair",
     journeys: "Jornadas",
     explore: "Explorar",
-    themes: "Temas",
+    themes: "Nexus Temas",
     weekly_summary: "Resumo da Semana",
     streak: "Streak",
     day: "dia",
