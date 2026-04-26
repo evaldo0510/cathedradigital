@@ -292,6 +292,16 @@ const StudyMode: React.FC = () => {
         saveMessages(convId, finalMessages).catch(e => console.error('BG Save failed:', e));
       }
     } catch (e: any) {
+      console.error('Study mode error:', e);
+      if (e.message?.includes('402') || e.message?.includes('esgotados')) {
+        window.dispatchEvent(new CustomEvent('ai-status-error', { 
+          detail: { type: 'credits_exhausted' } 
+        }));
+      } else if (e.message?.includes('429')) {
+        window.dispatchEvent(new CustomEvent('ai-status-error', { 
+          detail: { type: 'rate_limited' } 
+        }));
+      }
       setMessages(prev => [...prev, { role: 'assistant', content: `⚠️ ${e.message || 'Erro ao consultar a IA. Tente novamente.'}` }]);
     } finally {
       setIsLoading(false);

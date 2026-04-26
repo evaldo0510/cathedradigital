@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CheckCircle, XCircle, ShieldAlert, FileCode, RotateCcw, AlertTriangle, Search, ExternalLink, ShieldCheck } from 'lucide-react';
@@ -82,9 +83,9 @@ const SecurityAuditPage = () => {
                       <p className="text-xs text-muted-foreground leading-relaxed">{item.detail}</p>
                     </div>
                     <Button variant="ghost" size="sm" asChild className="opacity-0 group-hover:opacity-100 rounded-xl">
-                      <a href={item.link} className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest">
+                      <Link to={item.link} className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest">
                         Detalhes <ExternalLink className="w-3 h-3" />
-                      </a>
+                      </Link>
                     </Button>
                   </div>
                 ))}
