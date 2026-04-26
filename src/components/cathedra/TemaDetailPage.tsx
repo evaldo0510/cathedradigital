@@ -290,6 +290,8 @@ const TemaDetailPage = () => {
       .slice(0, 12);
   }, [tags, selectedTag, contents, profileId]);
 
+  const { activeIndex, handleKeyDown: handleRelatedKeyDown } = useRovingTabindex(relatedThemes.length, relatedRef);
+
   useEffect(() => {
     if (selectedTag && !logosInsight && !loadingLogos && !autoLoaded) {
       setAutoLoaded(true);
