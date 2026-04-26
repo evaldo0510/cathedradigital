@@ -161,4 +161,49 @@ test.describe('Nexus Bubbles Navigation & Popovers', () => {
     const finalLabels = await aside.locator('button[data-roving-item]').allInnerTexts();
     expect(finalLabels.length).toBe(new Set(finalLabels).size);
   });
+
+  test('should verify related themes ordering: content > profile > category', async ({ page }) => {
+    // 1. Set profile to have profile-related items
+    await page.goto('/');
+    await page.evaluate(() => {
+      localStorage.setItem('spiritual_profile_diagnosis', JSON.stringify({
+        id: 'ferido_em_busca', // Likes Oração, Jesus, Fé
+        timestamp: Date.now()
+      }));
+    });
+
+    // 2. Go to a theme that has content tags, profile overlap, and category siblings
+    // We'll use 'Graça' which is in Fundamentos.
+    await page.goto('/temas/graca');
+    
+    const aside = page.locator('aside:has-text("Temas Relacionados")');
+    await expect(aside).toBeVisible();
+
+    // Get all related bubbles
+    const bubbles = aside.locator('button[data-roving-item]');
+    await expect(bubbles.first()).toBeVisible();
+
+    // Extract their data-priority attributes
+    const priorities = await bubbles.evaluateAll(elements => 
+      elements.map(el => el.getAttribute('data-priority'))
+    );
+
+    console.log('Detected priorities:', priorities);
+
+    // Filter out nulls (shouldn't be any in TemaDetailPage)
+    const activePriorities = priorities.filter(p => p !== null);
+
+    // Verify ordering logic:
+    // Once we see a 'profile', we should never see a 'content' after it.
+    // Once we see a 'category', we should never see a 'content' or 'profile' after it.
+    
+    let currentMaxPriorityIndex = 0;
+    const priorityOrder = ['content', 'profile', 'category'];
+
+    for (const p of activePriorities) {
+      const pIndex = priorityOrder.indexOf(p!);
+      expect(pIndex).toBeGreaterThanOrEqual(currentMaxPriorityIndex);
+      currentMaxPriorityIndex = pIndex;
+    }
+  });
 });
