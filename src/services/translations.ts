@@ -360,7 +360,7 @@ export const UI_TRANSLATIONS: Record<Language, any> = {
     exit_session: "Esci",
     journeys: "Percorsi",
     explore: "Esplora",
-    themes: "Temi",
+    themes: "Nexus Temi",
     weekly_summary: "Riepilogo Settimanale",
     streak: "Serie",
     day: "giorno",
