@@ -1,5 +1,5 @@
 import React, { useEffect, useState, lazy, Suspense } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { 
   Users, TrendingUp, Download, DollarSign, ArrowUpRight,
@@ -81,6 +81,7 @@ interface SensitiveRow {
 
 const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [stats, setStats] = useState<any>(null);
   const [users, setUsers] = useState<any[]>([]);
   const [recentJournal, setRecentJournal] = useState<any[]>([]);
@@ -92,7 +93,22 @@ const AdminDashboard: React.FC = () => {
   const [sortField, setSortField] = useState<'name' | 'created_at' | 'xp'>('created_at');
   const [sortAsc, setSortAsc] = useState(false);
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
-  const [activeTab, setActiveTab] = useState('overview');
+  
+  // Sync with URL query param
+  const queryParams = new URLSearchParams(location.search);
+  const [activeTab, setActiveTab] = useState(queryParams.get('tab') || 'overview');
+
+  useEffect(() => {
+    const tab = new URLSearchParams(location.search).get('tab');
+    if (tab && tab !== activeTab) {
+      setActiveTab(tab);
+    }
+  }, [location.search]);
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    navigate(`/admin?tab=${value}`, { replace: true });
+  };
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -395,7 +411,7 @@ const AdminDashboard: React.FC = () => {
         {/* Redundant back button removed */}
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
         <div className="px-4 sm:px-0 -mx-4 sm:mx-0">
           <TabsList className="flex w-full overflow-x-auto justify-start h-auto p-1 bg-muted/30 border border-border/10 rounded-xl no-scrollbar scroll-smooth snap-x">
             <TabsTrigger value="overview" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
@@ -417,13 +433,23 @@ const AdminDashboard: React.FC = () => {
               <MapIcon className="w-3.5 h-3.5" /> Jornadas
             </TabsTrigger>
             <TabsTrigger value="segmentation" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
-              <Target className="w-3.5 h-3.5" /> CRM
+              <Target className="w-3.5 h-3.5" /> CRM: Segmentos
+            </TabsTrigger>
+            <TabsTrigger value="retention" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+              <Activity className="w-3.5 h-3.5" /> CRM: Retenção
+            </TabsTrigger>
+            <TabsTrigger value="automations" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+              <Bell className="w-3.5 h-3.5" /> CRM: Automações
             </TabsTrigger>
             <TabsTrigger value="themes" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
               <Tag className="w-3.5 h-3.5" /> Temas
             </TabsTrigger>
-            <TabsTrigger value="security" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
-              <Shield className="w-3.5 h-3.5" /> Segurança
+            <TabsTrigger value="security" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start relative group">
+              <Shield className="w-3.5 h-3.5 text-red-500" /> Segurança
+              <span className="absolute -top-1 -right-1 flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+              </span>
             </TabsTrigger>
             <TabsTrigger value="tests" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
               <RefreshCcw className="w-3.5 h-3.5" /> Testes

@@ -47,7 +47,7 @@ const SecurityAuditPage = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-10 px-4 space-y-8 animate-in fade-in duration-500">
+    <div className="max-w-4xl mx-auto py-4 md:py-8 px-4 space-y-8 animate-in fade-in duration-500">
       <header className="text-center space-y-4">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-red-500/10 rounded-full text-red-600 border border-red-500/20">
           <ShieldAlert className="w-4 h-4" />
