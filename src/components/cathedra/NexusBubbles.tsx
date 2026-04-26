@@ -43,9 +43,10 @@ interface TagBubbleProps {
   profileId?: ProfileId | null;
   navigateOnClick?: boolean;
   priorityGroup?: string;
+  size?: 'xs' | 'sm' | 'md';
 }
 
-export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, tabIndex, onKeyDown, className, profileId, navigateOnClick, priorityGroup }) => {
+export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, tabIndex, onKeyDown, className, profileId, navigateOnClick, priorityGroup, size }) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
