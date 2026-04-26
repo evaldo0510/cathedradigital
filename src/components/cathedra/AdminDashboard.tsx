@@ -411,7 +411,7 @@ const AdminDashboard: React.FC = () => {
         {/* Redundant back button removed */}
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
         <div className="px-4 sm:px-0 -mx-4 sm:mx-0">
           <TabsList className="flex w-full overflow-x-auto justify-start h-auto p-1 bg-muted/30 border border-border/10 rounded-xl no-scrollbar scroll-smooth snap-x">
             <TabsTrigger value="overview" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
