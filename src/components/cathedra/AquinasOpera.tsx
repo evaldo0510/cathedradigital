@@ -252,8 +252,8 @@ const AquinasOpera: React.FC = () => {
                       <p className="text-sm font-serif italic text-foreground/80">{concept.aquino}</p>
                     </div>
                     <div>
-                      <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Reflexão PCH:</p>
-                      <p className="text-lg font-serif font-medium text-foreground">{concept.pch}</p>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Reflexão P.A.D.H.:</p>
+                      <p className="text-lg font-serif font-medium text-foreground">{concept.padh}</p>
                     </div>
                     <div className="pt-4 border-t border-border">
                       <p className="text-sm font-serif font-bold text-primary">👉 {concept.pergunta}</p>
