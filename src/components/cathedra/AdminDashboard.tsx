@@ -1,33 +1,7 @@
 import React, { useEffect, useState, lazy, Suspense } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { 
-  Users, TrendingUp, Download, DollarSign, ArrowUpRight,
-  BarChart3, Calendar, AlertCircle, Crown, Shield, Search,
-  ChevronDown, ChevronUp, UserCog, ArrowLeft, Home, Smartphone, MonitorSmartphone,
-  Target, Activity, Bell, LayoutGrid, UserCheck, Handshake, Heart, Wallet,
-  MessageSquare, Map as MapIcon, Clock, Tag, Building2, RefreshCcw
-} from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { toast } from 'sonner';
-
-const AdminChartsTab = lazy(() => import('./AdminChartsTab'));
-const AdminTransactionsTab = lazy(() => import('./AdminTransactionsTab'));
-const AdminCrmSegmentation = lazy(() => import('./AdminCrmSegmentation'));
-const AdminCrmRetention = lazy(() => import('./AdminCrmRetention'));
-const AdminCrmUserProfile = lazy(() => import('./AdminCrmUserProfile'));
-const AdminCrmAutomations = lazy(() => import('./AdminCrmAutomations'));
-const AdminPartnersTab = lazy(() => import('./AdminPartnersTab'));
-const AdminContentTab = lazy(() => import('./AdminContentTab'));
-const AdminJourneysTab = lazy(() => import('./AdminJourneysTab'));
-const AdminThemesTab = lazy(() => import('./AdminThemesTab'));
-const AdminConstructionTab = lazy(() => import('./AdminConstructionTab'));
-const WebhookSimulator = lazy(() => import('./WebhookSimulator'));
+// ... keep existing code
 const SecurityAuditPage = lazy(() => import('./SecurityAuditPage'));
 
 interface Stats {
