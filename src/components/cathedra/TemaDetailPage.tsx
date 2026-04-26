@@ -17,6 +17,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import SEOHead from '@/components/SEOHead';
 import { BubbleTag, getTagIcon } from './BubbleTag';
 import { TagBubble } from './NexusBubbles';
+import { useRovingTabindex } from './TabUtils';
 import { useSpiritualProfile } from '@/hooks/useSpiritualProfile';
 import { PROFILES, type ProfileId } from './SpiritualQuiz';
 
@@ -63,7 +64,8 @@ const ThemeContentCard = ({
     if (!content.tags || !allThemes) return [];
     return content.tags
       .map(tLabel => allThemes.find(at => at.label.toLowerCase() === tLabel.toLowerCase()))
-      .filter((t): t is Tag => !!t && t.id !== currentTagId);
+      .filter((t): t is Tag => !!t && t.id !== currentTagId)
+      .filter((t, i, arr) => arr.findIndex(x => x.id === t.id) === i);
   }, [content.tags, allThemes, currentTagId]);
 
   return (
@@ -98,15 +100,15 @@ const ThemeContentCard = ({
             <div className="pt-4 border-t border-border/10">
               <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 mb-2">Conexões relacionadas:</p>
               <div className="flex flex-wrap gap-2">
-                {otherTags.map((tag) => (
-                  <button
+                {otherTags.map((tag, idx) => (
+                  <BubbleTag
                     key={tag.id}
+                    label={tag.label}
+                    emoji={tag.emoji}
+                    index={idx}
+                    size="sm"
                     onClick={() => navigate(`${AppRoute.TEMAS}/${tag.slug}`)}
-                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/5 border border-primary/10 hover:bg-primary/10 hover:border-primary/20 transition-all text-[9px] font-bold text-primary/70"
-                  >
-                    <span>{tag.emoji}</span>
-                    <span>{tag.label}</span>
-                  </button>
+                  />
                 ))}
               </div>
             </div>
@@ -149,6 +151,7 @@ const TemaDetailPage = () => {
   const [autoLoaded, setAutoLoaded] = useState(false);
   const [activeTab, setActiveTab] = useState('bible');
   const [debouncedTab, setDebouncedTab] = useState('bible');
+  const relatedRef = React.useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -287,6 +290,8 @@ const TemaDetailPage = () => {
       .filter(t => (seen.has(t.id) ? false : (seen.add(t.id), true)))
       .slice(0, 12);
   }, [tags, selectedTag, contents, profileId]);
+
+  const { activeIndex, handleKeyDown: handleRelatedKeyDown } = useRovingTabindex(relatedThemes.length, relatedRef);
 
   useEffect(() => {
     if (selectedTag && !logosInsight && !loadingLogos && !autoLoaded) {
@@ -624,15 +629,16 @@ const TemaDetailPage = () => {
         <aside className="space-y-6">
           <div className="bg-card/50 border border-border/40 rounded-[2rem] p-6 space-y-6">
             <h3 className="text-xs font-black uppercase tracking-widest text-foreground/60">Temas Relacionados</h3>
-            <div className="flex flex-wrap gap-2">
+            <div ref={relatedRef} className="flex flex-wrap gap-2">
               {relatedThemes.map((tag, idx) => (
                 <TagBubble 
                   key={tag.id}
                   tag={tag}
                   index={idx}
                   isSuggested={suggestedSlugs.has(tag.slug)}
-                  onKeyDown={() => {}}
-                  className="px-3 py-1.5"
+                  onKeyDown={(e) => handleRelatedKeyDown(e, idx, () => navigate(`${AppRoute.TEMAS}/${tag.slug}`))}
+                  tabIndex={activeIndex === idx ? 0 : -1}
+                  size="sm"
                   profileId={profileId as ProfileId}
                   navigateOnClick={true}
                   priorityGroup={tag.priorityGroup}
