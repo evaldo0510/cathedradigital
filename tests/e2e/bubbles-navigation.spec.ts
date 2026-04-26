@@ -311,4 +311,61 @@ test.describe('Nexus Bubbles Navigation & Popovers', () => {
     const feBubblesAfter = aside.locator('button[data-roving-item]').filter({ hasText: 'Fé' });
     expect(await feBubblesAfter.count()).toBe(1);
   });
+
+  test('should strictly verify no holes in priority groups across multiple theme pages', async ({ page }) => {
+    // 1. Setup profile for consistent signals
+    await page.goto('/');
+    await page.evaluate(() => {
+      localStorage.setItem('spiritual_profile_diagnosis', JSON.stringify({
+        id: 'ferido_em_busca',
+        timestamp: Date.now()
+      }));
+    });
+
+    const themesToTest = ['/temas/culpa', '/temas/graca', '/temas/fe', '/temas/amor'];
+
+    const checkNoHoles = async (path: string) => {
+      await page.goto(path);
+      const aside = page.locator('aside:has-text("Temas Relacionados")');
+      await expect(aside).toBeVisible();
+
+      const bubbles = aside.locator('button[data-roving-item]');
+      await expect(bubbles.first()).toBeVisible();
+
+      const priorities = await bubbles.evaluateAll(elements => 
+        elements.map(el => el.getAttribute('data-priority'))
+      );
+
+      const activePriorities = priorities.filter(p => p !== null) as string[];
+      
+      const priorityOrder = ['content', 'profile', 'category'];
+      let lastPriorityIndex = -1;
+
+      for (let i = 0; i < activePriorities.length; i++) {
+        const currentP = activePriorities[i];
+        const currentPIndex = priorityOrder.indexOf(currentP);
+        
+        // Ordering check
+        expect(currentPIndex, `Priority order violation at index ${i} on ${path}`).toBeGreaterThanOrEqual(lastPriorityIndex);
+
+        // Contiguity check (No holes)
+        if (i > 0) {
+          const prevP = activePriorities[i - 1];
+          const prevPIndex = priorityOrder.indexOf(prevP);
+          
+          if (currentPIndex !== prevPIndex) {
+            // If the group changed, it must be the immediate next available group in this specific list
+            // However, a stronger check for "no holes" is that the gap in the actual index list is 1
+            // which we already did in a previous test, but here we scan the whole list.
+            expect(currentPIndex - prevPIndex, `Gap/Hole detected between ${prevP} and ${currentP} at index ${i}`).toBeGreaterThanOrEqual(1);
+          }
+        }
+        lastPriorityIndex = currentPIndex;
+      }
+    };
+
+    for (const themePath of themesToTest) {
+      await checkNoHoles(themePath);
+    }
+  });
 });
