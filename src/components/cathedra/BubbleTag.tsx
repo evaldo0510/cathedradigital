@@ -98,6 +98,7 @@ interface BubbleTagProps {
   ariaLabel?: string;
   tabIndex?: number;
   "data-roving-item"?: boolean;
+  [key: string]: any; // Allow data attributes
 }
 
 export const BubbleTag: React.FC<BubbleTagProps> = ({
@@ -112,7 +113,8 @@ export const BubbleTag: React.FC<BubbleTagProps> = ({
   className = "",
   ariaLabel,
   tabIndex,
-  "data-roving-item": dataRovingItem
+  "data-roving-item": dataRovingItem,
+  ...props
 }) => {
   return (
     <motion.button
