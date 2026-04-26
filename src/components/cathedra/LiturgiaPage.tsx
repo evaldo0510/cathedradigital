@@ -515,7 +515,7 @@ const LiturgiaPage: React.FC = () => {
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="bg-primary text-white rounded-[2rem] p-10 text-center space-y-6 shadow-2xl">
                 <Icons.Brain className="w-8 h-8 text-secondary mx-auto" />
                 <p className="text-[10px] font-black uppercase tracking-[0.4em] opacity-60">Reflexão do Dia</p>
-                <p className="text-xl md:text-2xl font-serif italic leading-relaxed">"{pchReflection}"</p>
+                <p className="text-xl md:text-2xl font-serif italic leading-relaxed">"{padhReflection}"</p>
               </motion.div>
 
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }} className="bg-card border border-border rounded-[2rem] p-8 space-y-6 shadow-sm">
