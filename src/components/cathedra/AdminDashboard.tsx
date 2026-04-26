@@ -28,6 +28,7 @@ const AdminJourneysTab = lazy(() => import('./AdminJourneysTab'));
 const AdminThemesTab = lazy(() => import('./AdminThemesTab'));
 const AdminConstructionTab = lazy(() => import('./AdminConstructionTab'));
 const WebhookSimulator = lazy(() => import('./WebhookSimulator'));
+const SecurityAuditPage = lazy(() => import('./SecurityAuditPage'));
 
 interface Stats {
   totalUsers: number;
