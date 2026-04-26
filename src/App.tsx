@@ -99,6 +99,7 @@ const MagisteriumViewer = lazy(() => import('./components/cathedra/MagisteriumVi
 const TransactionsPage = lazy(() => import('./components/cathedra/TransactionsPage'));
 const UserTransactionsPage = lazy(() => import('./components/cathedra/UserTransactionsPage'));
 const A11yAuditPage = lazy(() => import('./components/cathedra/A11yAuditPage'));
+const SecurityAuditPage = lazy(() => import('./components/cathedra/SecurityAuditPage'));
 
 const PartnersPage = lazy(() => import('./components/cathedra/PartnersPage'));
 
