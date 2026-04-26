@@ -191,18 +191,41 @@ test.describe('Nexus Bubbles Navigation & Popovers', () => {
     console.log('Detected priorities:', priorities);
 
     // Filter out nulls (shouldn't be any in TemaDetailPage)
-    const activePriorities = priorities.filter(p => p !== null);
+    const activePriorities = priorities.filter(p => p !== null) as string[];
 
-    // Verify ordering logic:
-    // Once we see a 'profile', we should never see a 'content' after it.
-    // Once we see a 'category', we should never see a 'content' or 'profile' after it.
+    // Verify ordering logic: Groups must be contiguous and follow: content > profile > category
+    // We check that the highest index of a higher priority group is always less than 
+    // the lowest index of a lower priority group.
     
+    const getIndices = (pName: string) => 
+      activePriorities.map((p, i) => p === pName ? i : -1).filter(i => i !== -1);
+
+    const contentIndices = getIndices('content');
+    const profileIndices = getIndices('profile');
+    const categoryIndices = getIndices('category');
+
+    console.log('Priority mapping:', {
+      content: contentIndices,
+      profile: profileIndices,
+      category: categoryIndices
+    });
+
+    if (contentIndices.length && profileIndices.length) {
+      expect(Math.max(...contentIndices)).toBeLessThan(Math.min(...profileIndices));
+    }
+    if (profileIndices.length && categoryIndices.length) {
+      expect(Math.max(...profileIndices)).toBeLessThan(Math.min(...categoryIndices));
+    }
+    if (contentIndices.length && categoryIndices.length) {
+      expect(Math.max(...contentIndices)).toBeLessThan(Math.min(...categoryIndices));
+    }
+
+    // Double check with a sequential scan to ensure no mixing within groups
     let currentMaxPriorityIndex = 0;
     const priorityOrder = ['content', 'profile', 'category'];
-
     for (const p of activePriorities) {
-      const pIndex = priorityOrder.indexOf(p!);
-      expect(pIndex).toBeGreaterThanOrEqual(currentMaxPriorityIndex);
+      const pIndex = priorityOrder.indexOf(p);
+      expect(pIndex, `Priority ${p} appeared out of order`).toBeGreaterThanOrEqual(currentMaxPriorityIndex);
       currentMaxPriorityIndex = pIndex;
     }
   });
