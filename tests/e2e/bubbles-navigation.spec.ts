@@ -276,4 +276,39 @@ test.describe('Nexus Bubbles Navigation & Popovers', () => {
     await page.goto('/temas/culpa');
     await checkDuplicates();
   });
+
+  test('should verify no duplicates even when themes overlap across content, profile, and category sources', async ({ page }) => {
+    // 1. Set profile to 'firme_aprofundando' which likes 'Fé'
+    await page.goto('/');
+    await page.evaluate(() => {
+      localStorage.setItem('spiritual_profile_diagnosis', JSON.stringify({
+        id: 'firme_aprofundando',
+        timestamp: Date.now()
+      }));
+    });
+
+    // 2. Go to 'Graça'
+    // 'Fé' is a Fundamentals theme (same category as 'Graça')
+    // 'Fé' is suggested by 'firme_aprofundando' profile
+    // 'Fé' is often linked in content tags for 'Graça'
+    await page.goto('/temas/graca');
+    
+    const aside = page.locator('aside:has-text("Temas Relacionados")');
+    await expect(aside).toBeVisible();
+
+    // Verify 'Fé' appears exactly once
+    const feBubbles = aside.locator('button[data-roving-item]').filter({ hasText: 'Fé' });
+    const count = await feBubbles.count();
+    expect(count, 'Theme "Fé" should appear exactly once even with multiple source overlaps').toBe(1);
+
+    // Verify deduplication logic holds after navigating to a theme and back
+    await feBubbles.first().click();
+    await expect(page.locator('h1, h2')).toContainText('Fé', { ignoreCase: true });
+    
+    await page.goBack();
+    await expect(page.locator('h1, h2')).toContainText('Graça', { ignoreCase: true });
+    
+    const feBubblesAfter = aside.locator('button[data-roving-item]').filter({ hasText: 'Fé' });
+    expect(await feBubblesAfter.count()).toBe(1);
+  });
 });
