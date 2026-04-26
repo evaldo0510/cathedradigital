@@ -100,10 +100,10 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
               localStorage.removeItem('cathedra_onboarding_done');
               navigate(AppRoute.ONBOARDING);
             }}
-            title="Guia do Ecossistema"
+            title={t('ecosystem_guide') || "Guia do Ecossistema"}
           >
             <Icons.Compass className="w-4 h-4" />
-            <span className="hidden md:inline text-[9px] font-black uppercase tracking-widest">Guia</span>
+            <span className="hidden md:inline text-[9px] font-black uppercase tracking-widest">{t('guide') || "Guia"}</span>
           </button>
 
           <button className="p-2.5 sm:p-3 bg-muted text-primary rounded-xl sm:rounded-2xl border border-border hover:bg-primary hover:text-white transition-all shadow-sm active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none" onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}>
