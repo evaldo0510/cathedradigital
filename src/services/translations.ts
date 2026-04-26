@@ -91,7 +91,10 @@ export const UI_TRANSLATIONS: Record<Language, any> = {
     good_afternoon: "Boa tarde",
     good_evening: "Boa noite",
     liturgy_sub: "Leituras e orações do dia",
-    journeys_sub: "Trilhas de formação espiritual"
+    journeys_sub: "Trilhas de formação espiritual",
+    encyclopedia: "Enciclopédia",
+    saints_label: "Santos",
+    saints_desc: "Vidas e ensinamentos dos heróis da fé"
   },
   en: {
     home: "Home (Narthex)",
