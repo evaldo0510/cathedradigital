@@ -293,7 +293,7 @@ const Magisterium: React.FC = () => {
                   </div>
 
                   <div className="bg-primary/5 rounded-2xl p-6 border border-primary/10 space-y-4">
-                    <p className="text-xl font-serif font-bold text-primary leading-tight">{selectedGuidance.pch}</p>
+                    <p className="text-xl font-serif font-bold text-primary leading-tight">{selectedGuidance.padh}</p>
                     <p className="text-sm font-bold text-foreground">
                       {parseTheologicalReferences(selectedGuidance.innerQuestion).map((seg, i) => {
                         if (seg.type === 'bibleRef') {
