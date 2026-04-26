@@ -811,9 +811,9 @@ const AdminDashboard: React.FC = () => {
         </TabsContent>
 
         {/* Security Tab */}
-        <TabsContent value="security" className="space-y-4">
+        <TabsContent value="security" className="space-y-4 outline-none">
           <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
-            <SecurityAuditPage />
+            <SecurityAuditPage key={securityResetKey} />
           </Suspense>
         </TabsContent>
 
