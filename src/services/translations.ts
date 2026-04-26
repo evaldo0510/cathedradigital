@@ -94,7 +94,18 @@ export const UI_TRANSLATIONS: Record<Language, any> = {
     journeys_sub: "Trilhas de formação espiritual",
     encyclopedia: "Enciclopédia",
     saints_label: "Santos",
-    saints_desc: "Vidas e ensinamentos dos heróis da fé"
+    saints_desc: "Vidas e ensinamentos dos heróis da fé",
+    rosary: "Santo Rosário",
+    via_crucis: "Via Sacra",
+    confession: "Confissão",
+    lectio_divina: "Lectio Divina",
+    breviary: "Breviário",
+    litanies: "Ladainhas",
+    magisterium: "Magistério",
+    dogmas: "Dogmas da Fé",
+    apparitions: "Aparições",
+    popes: "Os Papas",
+    aquinas: "Obras de Aquino"
   },
   en: {
     home: "Home (Narthex)",
