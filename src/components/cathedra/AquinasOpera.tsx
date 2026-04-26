@@ -11,70 +11,70 @@ const AQUINO_CONCEPTS = [
     id: 1,
     title: "Existência de Deus",
     aquino: "Deus pode ser conhecido pela razão",
-    pch: "“Nem tudo que é invisível… é inexistente.”",
+    padh: "“Nem tudo que é invisível… é inexistente.”",
     pergunta: "O que você exige ver antes de confiar?"
   },
   {
     id: 2,
     title: "Fé e Razão",
     aquino: "Não se contradizem",
-    pch: "“A fé não anula a lógica… ela a completa.”",
+    padh: "“A fé não anula a lógica… ela a completa.”",
     pergunta: "Onde você separou pensar de acreditar?"
   },
   {
     id: 3,
     title: "Lei Natural",
     aquino: "O bem está inscrito no ser humano",
-    pch: "“Você já sabia… antes de justificar.”",
+    padh: "“Você já sabia… antes de justificar.”",
     pergunta: "Onde você ignorou o que já sentia ser certo?"
   },
   {
     id: 4,
     title: "Virtude",
     aquino: "Hábitos que constroem o bem",
-    pch: "“Você não se torna… você repete.”",
+    padh: "“Você não se torna… você repete.”",
     pergunta: "O que você tem repetido sem perceber?"
   },
   {
     id: 5,
     title: "Livre-Arbítrio",
     aquino: "O homem escolhe",
-    pch: "“Você não está preso… está condicionado.”",
+    padh: "“Você não está preso… está condicionado.”",
     pergunta: "O que você ainda pode decidir hoje?"
   },
   {
     id: 6,
     title: "Felicidade",
     aquino: "O fim último é Deus",
-    pch: "“Nada finito preenche um vazio infinito.”",
+    padh: "“Nada finito preenche um vazio infinito.”",
     pergunta: "O que você espera que te complete… mas nunca completa?"
   },
   {
     id: 7,
     title: "Mal",
     aquino: "É ausência do bem",
-    pch: "“Nem tudo que dói… é presença do mal. Às vezes é falta de luz.”",
+    padh: "“Nem tudo que dói… é presença do mal. Às vezes é falta de luz.”",
     pergunta: "Onde falta clareza na sua vida?"
   },
   {
     id: 8,
     title: "Ordem",
     aquino: "Tudo tem propósito",
-    pch: "“O caos, muitas vezes… é ordem que você ainda não entendeu.”",
+    padh: "“O caos, muitas vezes… é ordem que você ainda não entendeu.”",
     pergunta: "O que parece confuso… mas pode ter sentido?"
   },
   {
     id: 9,
     title: "Consciência",
     aquino: "Julga o certo e o errado",
-    pch: "“Você sempre soube… só tentou não ouvir.”",
+    padh: "“Você sempre soube… só tentou não ouvir.”",
     pergunta: "O que você está evitando reconhecer?"
   },
   {
     id: 10,
     title: "Verdade",
     aquino: "Adequação entre mente e realidade",
-    pch: "“A verdade não muda… só a nossa coragem de aceitá-la.”",
+    padh: "“A verdade não muda… só a nossa coragem de aceitá-la.”",
     pergunta: "O que você já sabe… mas não assume?"
   }
 ];
