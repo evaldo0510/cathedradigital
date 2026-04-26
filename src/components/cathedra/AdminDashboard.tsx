@@ -81,6 +81,7 @@ interface SensitiveRow {
 
 const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [stats, setStats] = useState<any>(null);
   const [users, setUsers] = useState<any[]>([]);
   const [recentJournal, setRecentJournal] = useState<any[]>([]);
@@ -92,7 +93,22 @@ const AdminDashboard: React.FC = () => {
   const [sortField, setSortField] = useState<'name' | 'created_at' | 'xp'>('created_at');
   const [sortAsc, setSortAsc] = useState(false);
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
-  const [activeTab, setActiveTab] = useState('overview');
+  
+  // Sync with URL query param
+  const queryParams = new URLSearchParams(location.search);
+  const [activeTab, setActiveTab] = useState(queryParams.get('tab') || 'overview');
+
+  useEffect(() => {
+    const tab = new URLSearchParams(location.search).get('tab');
+    if (tab && tab !== activeTab) {
+      setActiveTab(tab);
+    }
+  }, [location.search]);
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    navigate(`/admin?tab=${value}`, { replace: true });
+  };
 
   useEffect(() => {
     const fetchStats = async () => {
