@@ -83,6 +83,17 @@ serve(async (req) => {
     if (!response.ok) {
       const t = await response.text()
       console.error('AI gateway error:', response.status, t)
+      
+      if (response.status === 429) {
+        return new Response(JSON.stringify({ error: 'Muitas requisições. Aguarde um momento e tente novamente.' }), {
+          status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        })
+      }
+      if (response.status === 402) {
+        return new Response(JSON.stringify({ error: 'Créditos de IA esgotados. Por favor, contate o administrador para recarregar.' }), {
+          status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        })
+      }
       return new Response(JSON.stringify({ error: 'Erro no gateway de IA' }), {
         status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })
