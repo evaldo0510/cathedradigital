@@ -41,9 +41,10 @@ interface TagBubbleProps {
   className?: string;
   profileId?: ProfileId | null;
   navigateOnClick?: boolean;
+  priorityGroup?: string;
 }
 
-export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, tabIndex, onKeyDown, className, profileId, navigateOnClick }) => {
+export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, tabIndex, onKeyDown, className, profileId, navigateOnClick, priorityGroup }) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
@@ -136,6 +137,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
           onMouseEnter={prefetchTag}
           tabIndex={tabIndex}
           data-roving-item={true}
+          data-priority={priorityGroup}
           className={className}
         />
       </PopoverTrigger>
