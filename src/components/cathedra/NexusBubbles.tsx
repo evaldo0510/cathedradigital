@@ -24,6 +24,7 @@ interface Tag {
   label: string;
   emoji: string;
   category: string;
+  priorityGroup?: string;
 }
 
 // Reusing TagContent from @/lib/nexusContent
