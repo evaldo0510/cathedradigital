@@ -69,7 +69,7 @@ const SellerDashboard: React.FC = () => {
     <div className="max-w-6xl mx-auto space-y-8 py-8 px-4 animate-in fade-in duration-700">
       <div className="flex items-center gap-4">
         <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-          <Icons.Store className="w-6 h-6" />
+          <Store className="w-6 h-6" />
         </div>
         <div>
           <h1 className="text-3xl font-serif font-bold tracking-tight">Painel do Vendedor</h1>
