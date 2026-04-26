@@ -93,6 +93,7 @@ const AdminDashboard: React.FC = () => {
   const [sortField, setSortField] = useState<'name' | 'created_at' | 'xp'>('created_at');
   const [sortAsc, setSortAsc] = useState(false);
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
+  const tabsListRef = React.useRef<HTMLDivElement>(null);
   
   // Sync with URL query param
   const queryParams = new URLSearchParams(location.search);
