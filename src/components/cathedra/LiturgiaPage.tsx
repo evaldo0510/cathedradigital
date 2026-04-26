@@ -65,7 +65,7 @@ interface LiturgyReadings {
   evangelho: Reading;
 }
 
-const PCH_REFLECTIONS = [
+const PADH_REFLECTIONS = [
   "A pressa revela onde a confiança ainda não chegou.",
   "Toda oração é um ato de coragem: você está admitindo que não está no controle.",
   "Deus não fala alto — Ele fala fundo.",
