@@ -22,9 +22,9 @@ interface GlossaryTerm {
   similarityScore?: number;
 }
 
-/* ── PCH enrichment for featured terms ── */
+/* ── P.A.D.H. enrichment for featured terms ── */
 interface TermEnrichment {
-  pch: string;
+  padh: string;
   question: string;
   relatedVerse?: string;
   relatedRoute?: string;
@@ -33,7 +33,7 @@ interface TermEnrichment {
 
 const ENRICHMENTS: Record<string, TermEnrichment> = {
   'Graça': {
-    pch: '"Não é algo que você conquista…\né algo que te encontra quando você para de fugir."',
+    padh: '"Não é algo que você conquista…\né algo que te encontra quando você para de fugir."',
     question: 'Onde você ainda acha que precisa merecer?',
     relatedVerse: 'Ef 2,8',
     relatedRoute: AppRoute.LECTIO_DIVINA,
