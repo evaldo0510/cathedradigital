@@ -134,8 +134,8 @@ const TemasPage = () => {
           <div className="flex justify-center mb-4">
             <div className="w-16 h-1.5 bg-gradient-to-r from-transparent via-primary/50 to-transparent rounded-full shadow-[0_0_15px_rgba(var(--primary),0.3)]" />
           </div>
-          <h1 className="text-4xl sm:text-6xl md:text-8xl font-black tracking-tighter bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent leading-[0.9]">
-            Nexus<br className="sm:hidden" /> Temas
+          <h1 className="text-4xl sm:text-6xl md:text-8xl font-black tracking-tighter bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent leading-[0.9] flex flex-col sm:block">
+            <span>Nexus</span> <span className="text-primary/90">Temas</span>
           </h1>
           <p className="text-muted-foreground text-base sm:text-xl max-w-2xl mx-auto font-serif italic leading-relaxed">
             "Fides quaerens intellectum" — Explore conexões sagradas entre as Escrituras e a Tradição.
