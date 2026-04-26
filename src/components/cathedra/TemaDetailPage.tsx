@@ -18,7 +18,7 @@ import SEOHead from '@/components/SEOHead';
 import { BubbleTag, getTagIcon } from './BubbleTag';
 import { TagBubble } from './NexusBubbles';
 import { useSpiritualProfile } from '@/hooks/useSpiritualProfile';
-import { PROFILES } from './SpiritualQuiz';
+import { PROFILES, type ProfileId } from './SpiritualQuiz';
 
 
 interface Tag {
@@ -626,6 +626,7 @@ const TemaDetailPage = () => {
                   isSuggested={suggestedSlugs.has(tag.slug)}
                   onKeyDown={() => {}}
                   className="px-3 py-1.5"
+                  profileId={profileId as ProfileId}
                 />
               ))}
             </div>
