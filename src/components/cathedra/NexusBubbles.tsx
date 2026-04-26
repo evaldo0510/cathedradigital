@@ -130,6 +130,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
           index={index}
           isSelected={open}
           isSuggested={isSuggested}
+          size={size}
           onClick={() => {
             if (navigateOnClick) {
               navigate(`${AppRoute.TEMAS}/${tag.slug}`);
