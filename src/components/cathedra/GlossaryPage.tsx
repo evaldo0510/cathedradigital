@@ -286,10 +286,10 @@ const GlossaryPage: React.FC = () => {
 
                     {enrichment && (
                       <>
-                        {/* Layer 2: PCH */}
+                        {/* Layer 2: P.A.D.H. */}
                         <div className="bg-primary/5 rounded-2xl p-5 text-center space-y-2">
                           <p className="text-[10px] font-black uppercase tracking-widest text-primary/70">🧠 Reflexão Poética</p>
-                          <p className="text-foreground font-serif italic leading-relaxed whitespace-pre-line text-sm">{enrichment.pch}</p>
+                          <p className="text-foreground font-serif italic leading-relaxed whitespace-pre-line text-sm">{enrichment.padh}</p>
                         </div>
 
                         {/* Layer 3: Inner question */}
