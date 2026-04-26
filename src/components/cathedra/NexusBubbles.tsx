@@ -32,7 +32,17 @@ interface NexusBubblesProps {
   profileId?: ProfileId | null;
 }
 
-export const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolean; tabIndex?: number; onKeyDown?: (e: React.KeyboardEvent) => void; className?: string }> = ({ tag, index, isSuggested, tabIndex, onKeyDown, className }) => {
+interface TagBubbleProps {
+  tag: Tag;
+  index: number;
+  isSuggested?: boolean;
+  tabIndex?: number;
+  onKeyDown?: (e: React.KeyboardEvent) => void;
+  className?: string;
+  profileId?: ProfileId | null;
+}
+
+export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, tabIndex, onKeyDown, className, profileId }) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
@@ -74,7 +84,7 @@ export const TagBubble: React.FC<{ tag: Tag; index: number; isSuggested?: boolea
 
       // IA Fetch
       try {
-        const result = await getSpiritualInsight(tag.label);
+        const result = await getSpiritualInsight(tag.label, undefined, profileId);
         if (!result.error && result.content) {
           setLogosInsight(result.content);
         }
@@ -493,6 +503,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
                       index={i} 
                       tabIndex={filteredActiveIndex === i ? 0 : -1}
                       onKeyDown={(e) => handleFilteredKeyDown(e, i)}
+                      profileId={profileId}
                     />
                   </div>
                 )) : (
@@ -527,6 +538,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
                           isSuggested 
                           tabIndex={suggestedActiveIndex === i ? 0 : -1}
                           onKeyDown={(e) => handleSuggestedKeyDown(e, i)}
+                          profileId={profileId}
                         />
                       </div>
                     ))}
@@ -556,7 +568,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
                       <div className="flex flex-wrap gap-1.5" role="list">
                         {categoryTags.slice(0, expandedCategory === key ? 100 : 8).map((tag, i) => (
                           <div key={tag.slug} role="listitem">
-                            <TagBubble tag={tag} index={i} />
+                            <TagBubble tag={tag} index={i} profileId={profileId} />
                           </div>
                         ))}
                       </div>
