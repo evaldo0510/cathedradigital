@@ -212,12 +212,17 @@ test.describe('Nexus Bubbles Navigation & Popovers', () => {
 
     if (contentIndices.length && profileIndices.length) {
       expect(Math.max(...contentIndices)).toBeLessThan(Math.min(...profileIndices));
+      // Contiguity check: the gap should be exactly 1 if they are the only types,
+      // but since we only have these 3 types, any gap would mean a violation of the 3-step order.
+      expect(Math.min(...profileIndices) - Math.max(...contentIndices), 'Hole between content and profile groups').toBe(1);
     }
     if (profileIndices.length && categoryIndices.length) {
       expect(Math.max(...profileIndices)).toBeLessThan(Math.min(...categoryIndices));
+      expect(Math.min(...categoryIndices) - Math.max(...profileIndices), 'Hole between profile and category groups').toBe(1);
     }
-    if (contentIndices.length && categoryIndices.length) {
+    if (contentIndices.length && categoryIndices.length && !profileIndices.length) {
       expect(Math.max(...contentIndices)).toBeLessThan(Math.min(...categoryIndices));
+      expect(Math.min(...categoryIndices) - Math.max(...contentIndices), 'Hole between content and category groups').toBe(1);
     }
 
     // Double check with a sequential scan to ensure no mixing within groups
