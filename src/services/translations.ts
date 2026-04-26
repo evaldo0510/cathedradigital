@@ -105,7 +105,9 @@ export const UI_TRANSLATIONS: Record<Language, any> = {
     dogmas: "Dogmas da Fé",
     apparitions: "Aparições",
     popes: "Os Papas",
-    aquinas: "Obras de Aquino"
+    aquinas: "Obras de Aquino",
+    ecosystem_guide: "Guia do Ecossistema",
+    guide: "Guia"
   },
   en: {
     home: "Home (Narthex)",
