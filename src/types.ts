@@ -60,7 +60,8 @@ export enum AppRoute {
   POPES = '/papas',
   BUSCAR = '/buscar',
   TRANSACTIONS = '/transactions',
-  A11Y_AUDIT = '/a11y-audit'
+  A11Y_AUDIT = '/a11y-audit',
+  SECURITY_AUDIT = '/security-audit'
 }
 
 export interface TrackStep {
