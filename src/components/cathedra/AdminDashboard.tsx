@@ -125,6 +125,15 @@ const AdminDashboard: React.FC = () => {
   };
 
   useEffect(() => {
+    if (activeTab && tabsListRef.current) {
+      const activeTrigger = tabsListRef.current.querySelector(`[data-state="active"]`);
+      if (activeTrigger) {
+        activeTrigger.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    }
+  }, [activeTab]);
+
+  useEffect(() => {
     const fetchStats = async () => {
       try {
         setLoading(true);
