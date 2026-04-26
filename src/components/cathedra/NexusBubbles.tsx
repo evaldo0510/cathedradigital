@@ -40,9 +40,10 @@ interface TagBubbleProps {
   onKeyDown?: (e: React.KeyboardEvent) => void;
   className?: string;
   profileId?: ProfileId | null;
+  navigateOnClick?: boolean;
 }
 
-export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, tabIndex, onKeyDown, className, profileId }) => {
+export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, tabIndex, onKeyDown, className, profileId, navigateOnClick }) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
@@ -111,7 +112,11 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
   }, [queryClient, tag.id, tag.label]);
 
   return (
-    <Popover open={open} onOpenChange={(val) => {
+    <Popover open={navigateOnClick ? false : open} onOpenChange={(val) => {
+      if (navigateOnClick && val) {
+        navigate(`${AppRoute.TEMAS}/${tag.slug}`);
+        return;
+      }
       setOpen(val);
       if (val) fetchContent();
     }}>
@@ -122,7 +127,11 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
           index={index}
           isSelected={open}
           isSuggested={isSuggested}
-          onClick={() => {}} // Popover handles trigger
+          onClick={() => {
+            if (navigateOnClick) {
+              navigate(`${AppRoute.TEMAS}/${tag.slug}`);
+            }
+          }} 
           onKeyDown={onKeyDown}
           onMouseEnter={prefetchTag}
           tabIndex={tabIndex}
