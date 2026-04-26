@@ -101,7 +101,7 @@ const SPIRITUAL_GUIDANCE = [
     aplicacaoPratica: 'Escolha uma pessoa com quem você tem dificuldade de se relacionar. Reze por ela hoje e, se possível, faça um pequeno gesto de gentileza sem que ela perceba.',
     reflexaoFinal: 'O meu jeito de amar atrai as pessoas para Deus ou as afasta?',
     exercicio: 'Pratique a "escuta profunda". Na próxima conversa, não pense na resposta enquanto o outro fala. Apenas acolha as palavras dele como um dom. Amar é, antes de tudo, dar atenção.',
-    pch: '"Amar não é completar o outro…\né caminhar junto sem exigir destino."',
+    padh: '"Amar não é completar o outro…\né caminhar junto sem exigir destino."',
     innerQuestion: 'Você está amando ou controlando?',
     relatedDocs: ['al', 'dce', 'hv'],
   },
