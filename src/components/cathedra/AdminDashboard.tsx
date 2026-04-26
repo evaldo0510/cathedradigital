@@ -80,8 +80,6 @@ interface SensitiveRow {
 }
 
 const AdminDashboard: React.FC = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
   const [stats, setStats] = useState<any>(null);
   const [users, setUsers] = useState<any[]>([]);
   const [recentJournal, setRecentJournal] = useState<any[]>([]);
