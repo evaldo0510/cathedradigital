@@ -102,9 +102,9 @@ const AdminDashboard: React.FC = () => {
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const tab = params.get('tab');
+    const tab = params.get('tab') || 'overview';
     
-    if (tab && tab !== activeTab) {
+    if (tab !== activeTab) {
       setActiveTab(tab);
     }
   }, [location.search, activeTab]);
