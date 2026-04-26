@@ -248,7 +248,9 @@ const TemaDetailPage = () => {
         }
       });
     });
-    const fromContent = tags.filter(t => sharedContentTagIds.has(t.id));
+    const fromContent = tags
+      .filter(t => sharedContentTagIds.has(t.id))
+      .map(t => ({ ...t, priorityGroup: 'content' }));
 
     // 2) Connections via the user's spiritual profile (priority signal)
     const profileSlugs = new Set<string>();
@@ -261,19 +263,23 @@ const TemaDetailPage = () => {
           .forEach(t => { if (t.id !== selectedTag.id) profileSlugs.add(t.slug); });
       }
     }
-    const fromProfile = tags.filter(t =>
-      profileSlugs.has(t.slug) &&
-      !sharedContentTagIds.has(t.id) &&
-      t.id !== selectedTag.id
-    );
+    const fromProfile = tags
+      .filter(t =>
+        profileSlugs.has(t.slug) &&
+        !sharedContentTagIds.has(t.id) &&
+        t.id !== selectedTag.id
+      )
+      .map(t => ({ ...t, priorityGroup: 'profile' }));
 
     // 3) Same category fallback
-    const fromCategory = tags.filter(t =>
-      t.category && t.category === selectedTag.category &&
-      t.id !== selectedTag.id &&
-      !sharedContentTagIds.has(t.id) &&
-      !profileSlugs.has(t.slug)
-    );
+    const fromCategory = tags
+      .filter(t =>
+        t.category && t.category === selectedTag.category &&
+        t.id !== selectedTag.id &&
+        !sharedContentTagIds.has(t.id) &&
+        !profileSlugs.has(t.slug)
+      )
+      .map(t => ({ ...t, priorityGroup: 'category' }));
 
     // Dedupe by id, preserve order
     const seen = new Set<string>();
@@ -629,6 +635,7 @@ const TemaDetailPage = () => {
                   className="px-3 py-1.5"
                   profileId={profileId as ProfileId}
                   navigateOnClick={true}
+                  priorityGroup={tag.priorityGroup}
                 />
               ))}
             </div>
