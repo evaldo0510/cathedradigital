@@ -433,7 +433,13 @@ const AdminDashboard: React.FC = () => {
               <MapIcon className="w-3.5 h-3.5" /> Jornadas
             </TabsTrigger>
             <TabsTrigger value="segmentation" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
-              <Target className="w-3.5 h-3.5" /> CRM
+              <Target className="w-3.5 h-3.5" /> CRM: Segmentos
+            </TabsTrigger>
+            <TabsTrigger value="retention" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+              <Activity className="w-3.5 h-3.5" /> CRM: Retenção
+            </TabsTrigger>
+            <TabsTrigger value="automations" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+              <Bell className="w-3.5 h-3.5" /> CRM: Automações
             </TabsTrigger>
             <TabsTrigger value="themes" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
               <Tag className="w-3.5 h-3.5" /> Temas
