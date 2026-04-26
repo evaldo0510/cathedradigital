@@ -67,7 +67,7 @@ const SPIRITUAL_GUIDANCE = [
     aplicacaoPratica: 'Liste três coisas que você faz bem e que trazem alegria aos outros. Como você pode usar um desses talentos hoje para glorificar a Deus no seu trabalho ou na sua família?',
     reflexaoFinal: 'Se a minha vida fosse um livro escrito por Deus, qual seria o título do capítulo que estou vivendo agora?',
     exercicio: 'Durante o dia, em cada tarefa simples, diga: "Senhor, faço isso por Ti". Transforme o ordinário em oração e veja como o propósito brota da intenção.',
-    pch: '"Força não é ausência de fraqueza…\né direção apesar dela."',
+    padh: '"Força não é ausência de fraqueza…\né direção apesar dela."',
     innerQuestion: 'O que ainda te move quando tudo pesa?',
     relatedDocs: ['ge', 'lg', 'cv'],
   },
