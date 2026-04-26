@@ -108,6 +108,7 @@ export const BubbleTag: React.FC<BubbleTagProps> = ({
   index,
   isSelected,
   isSuggested,
+  size = 'md',
   onClick,
   onKeyDown,
   onMouseEnter,
@@ -117,6 +118,17 @@ export const BubbleTag: React.FC<BubbleTagProps> = ({
   "data-roving-item": dataRovingItem,
   ...props
 }) => {
+  const sizeClasses = {
+    xs: 'px-2 py-0.5 text-[8px] gap-1',
+    sm: 'px-2.5 py-1 text-[9px] gap-1.5',
+    md: 'px-3.5 py-2 text-[11px] gap-1.5'
+  };
+
+  const iconSizes = {
+    xs: 'w-2.5 h-2.5',
+    sm: 'w-3 h-3',
+    md: 'w-3.5 h-3.5'
+  };
   return (
     <motion.button
       variants={bubbleVariants}
