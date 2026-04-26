@@ -84,7 +84,7 @@ const SPIRITUAL_GUIDANCE = [
     aplicacaoPratica: 'Se você está sofrendo hoje, não tente entender o "porquê". Tente viver o "com quem". Ofereça sua dor por uma intenção específica (alguém doente, uma causa nobre). Isso dá um sentido sobrenatural à sua cruz.',
     reflexaoFinal: 'Eu permito que Deus me console na minha dor, ou me fecho na amargura?',
     exercicio: 'Contemple uma imagem do Cristo Crucificado por 5 minutos. Não diga nada. Apenas deixe que o olhar de Jesus encontre a sua dor e a acolha.',
-    pch: '"A dor não veio destruir…\nveio revelar o que ainda é frágil."',
+    padh: '"A dor não veio destruir…\nveio revelar o que ainda é frágil."',
     innerQuestion: 'O que o sofrimento está tentando te ensinar?',
     relatedDocs: ['ss', 'ev', 'gs', 'sd'],
   },
