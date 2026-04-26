@@ -102,26 +102,33 @@ const AdminDashboard: React.FC = () => {
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
+    const tab = params.get('tab') || 'overview';
+    
+    if (tab !== activeTab) {
+      setActiveTab(tab);
+    }
+  }, [location.search, activeTab]);
+
+  // Debounced reset logic for security tab
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
     const tab = params.get('tab');
     
-    // Auto-reset logic for security tab
     if (tab === 'security') {
-      setSecurityResetKey(prev => prev + 1);
-    }
-    
-    if (tab && tab !== activeTab) {
-      setActiveTab(tab);
+      const timer = setTimeout(() => {
+        setSecurityResetKey(prev => prev + 1);
+      }, 300); // 300ms debounce
+      return () => clearTimeout(timer);
     }
   }, [location.search]);
 
   const handleTabChange = (value: string) => {
+    if (value === activeTab) return;
+    
     setActiveTab(value);
     navigate(`/admin?tab=${value}`, { replace: true });
     
-    // If clicking on security, also trigger reset
-    if (value === 'security') {
-      setSecurityResetKey(prev => prev + 1);
-    }
+    // If clicking on security, it will be handled by the useEffect above
   };
 
   useEffect(() => {
@@ -822,7 +829,29 @@ const AdminDashboard: React.FC = () => {
 
         {/* Security Tab */}
         <TabsContent value="security" className="space-y-4 outline-none">
-          <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
+          <Suspense fallback={
+            <Card className="border-primary/20 bg-primary/5 animate-pulse">
+              <CardHeader>
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-primary/10 rounded-lg">
+                    <Shield className="w-5 h-5 text-primary animate-spin" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-primary uppercase font-black tracking-widest text-xs">Verificando Segurança</CardTitle>
+                    <CardDescription className="text-[10px] font-bold uppercase opacity-60">Escaneando vulnerabilidades e RLS...</CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Skeleton className="h-12 w-full rounded-lg bg-primary/10" />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Skeleton className="h-32 w-full rounded-xl bg-primary/5" />
+                  <Skeleton className="h-32 w-full rounded-xl bg-primary/5" />
+                </div>
+                <Skeleton className="h-48 w-full rounded-xl bg-primary/5" />
+              </CardContent>
+            </Card>
+          }>
             <SecurityAuditPage key={securityResetKey} />
           </Suspense>
         </TabsContent>
