@@ -66,8 +66,8 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
         { label: t('dogmas') || 'Dogmas da Fé', path: AppRoute.DOGMAS, icon: <Icons.ScrollText className="w-5 h-5" /> },
         { label: t('apparitions') || 'Aparições', path: AppRoute.APARICOES, icon: <Icons.Heart className="w-5 h-5" /> },
         { label: t('az_faith') || 'A–Z da Fé', path: AppRoute.AZ_FAITH, icon: <Icons.AZ className="w-5 h-5" /> },
-        { label: 'Os Papas', path: AppRoute.POPES, icon: <Icons.ShieldCheck className="w-5 h-5" /> },
-        { label: 'Obras de Aquino', path: AppRoute.AQUINAS_OPERA, icon: <Icons.Aquinas className="w-5 h-5" /> },
+        { label: t('popes') || 'Os Papas', path: AppRoute.POPES, icon: <Icons.ShieldCheck className="w-5 h-5" /> },
+        { label: t('aquinas') || 'Obras de Aquino', path: AppRoute.AQUINAS_OPERA, icon: <Icons.Aquinas className="w-5 h-5" /> },
       ]
     },
     {
