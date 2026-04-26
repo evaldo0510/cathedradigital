@@ -68,7 +68,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             <nav className="hidden 2xl:flex items-center gap-5 border-l border-border pl-6 ml-2 min-w-0">
               {[
                 { label: t('home'), route: AppRoute.HOJE },
-                { label: 'Enciclopédia', route: AppRoute.ENCYCLOPEDIA },
+                { label: t('encyclopedia'), route: AppRoute.ENCYCLOPEDIA },
                 { label: t('journeys'), route: AppRoute.JORNADAS },
                 { label: t('explore'), route: AppRoute.BIBLIOTECA },
                 { label: t('themes'), route: AppRoute.TEMAS },
@@ -100,10 +100,10 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
               localStorage.removeItem('cathedra_onboarding_done');
               navigate(AppRoute.ONBOARDING);
             }}
-            title="Guia do Ecossistema"
+            title={t('ecosystem_guide') || "Guia do Ecossistema"}
           >
             <Icons.Compass className="w-4 h-4" />
-            <span className="hidden md:inline text-[9px] font-black uppercase tracking-widest">Guia</span>
+            <span className="hidden md:inline text-[9px] font-black uppercase tracking-widest">{t('guide') || "Guia"}</span>
           </button>
 
           <button className="p-2.5 sm:p-3 bg-muted text-primary rounded-xl sm:rounded-2xl border border-border hover:bg-primary hover:text-white transition-all shadow-sm active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none" onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}>
