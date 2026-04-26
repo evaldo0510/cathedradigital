@@ -27,6 +27,7 @@ interface Tag {
   slug: string;
   emoji: string;
   category: string;
+  priorityGroup?: string;
 }
 
 interface ThemeContent {
