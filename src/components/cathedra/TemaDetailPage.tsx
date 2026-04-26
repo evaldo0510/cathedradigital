@@ -17,6 +17,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import SEOHead from '@/components/SEOHead';
 import { BubbleTag, getTagIcon } from './BubbleTag';
 import { TagBubble } from './NexusBubbles';
+import { useRovingTabindex } from './TabUtils';
 import { useSpiritualProfile } from '@/hooks/useSpiritualProfile';
 import { PROFILES, type ProfileId } from './SpiritualQuiz';
 
