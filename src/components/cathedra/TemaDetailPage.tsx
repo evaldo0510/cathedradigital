@@ -627,6 +627,7 @@ const TemaDetailPage = () => {
                   onKeyDown={() => {}}
                   className="px-3 py-1.5"
                   profileId={profileId as ProfileId}
+                  navigateOnClick={true}
                 />
               ))}
             </div>
