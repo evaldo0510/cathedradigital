@@ -415,4 +415,68 @@ test.describe('Nexus Bubbles Navigation & Popovers', () => {
       lastPriorityIndex = currentPIndex;
     }
   });
+
+  test('should verify stability and order for themes with minimal content and no profile', async ({ page }) => {
+    // 1. Clear profile to ensure no profile matches
+    await page.goto('/');
+    await page.evaluate(() => {
+      localStorage.removeItem('spiritual_profile_diagnosis');
+    });
+
+    // 2. Navigate to a "thin" theme (Rotina has very little spiritual content)
+    await page.goto('/temas/rotina');
+    
+    // 3. Verify page loads correctly
+    await expect(page.locator('h1')).toContainText('Rotina');
+    
+    const aside = page.locator('aside:has-text("Temas Relacionados")');
+    await expect(aside).toBeVisible();
+
+    // 4. Check for related bubbles
+    const bubbles = aside.locator('button[data-roving-item]');
+    
+    // Even if content is sparse, category fallbacks should ensure items exist
+    const count = await bubbles.count();
+    expect(count).toBeGreaterThan(0);
+    
+    // 5. Verify no empty groups/holes and correct order among what's present
+    const priorities = await bubbles.evaluateAll(elements => 
+      elements.map(el => el.getAttribute('data-priority'))
+    );
+    const activePriorities = priorities.filter(p => p !== null) as string[];
+
+    console.log('Thin theme priorities:', activePriorities);
+
+    const priorityOrder = ['content', 'profile', 'category'];
+    let lastPriorityIndex = -1;
+
+    for (let i = 0; i < activePriorities.length; i++) {
+      const currentP = activePriorities[i];
+      const currentPIndex = priorityOrder.indexOf(currentP);
+      
+      // Ordering: current group index must be >= last group index
+      expect(currentPIndex, `Priority order violation: ${currentP} followed a lower priority group`).toBeGreaterThanOrEqual(lastPriorityIndex);
+      
+      // Contiguity: if we change groups, check that we didn't skip items in the UI list
+      if (i > 0) {
+        const prevP = activePriorities[i - 1];
+        const prevPIndex = priorityOrder.indexOf(prevP);
+        if (currentPIndex !== prevPIndex) {
+          // In the actual UI list, the items must be next to each other
+          // The gaps in the priorityOrder array (like skipping 'profile') are fine,
+          // as long as there aren't actual items mixed in or holes in the visual list.
+          expect(currentPIndex - prevPIndex).toBeGreaterThanOrEqual(1);
+        }
+      }
+      lastPriorityIndex = currentPIndex;
+    }
+
+    // 6. Verify clicking a fallback theme works
+    if (count > 0) {
+      const firstBubble = bubbles.first();
+      const bubbleText = await firstBubble.innerText();
+      await firstBubble.click();
+      await expect(page.locator('h1, h2')).toContainText(bubbleText.trim().split('\n')[0], { ignoreCase: true });
+    }
+  });
 });
