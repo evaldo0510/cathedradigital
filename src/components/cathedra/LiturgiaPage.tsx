@@ -255,8 +255,8 @@ const LiturgiaPage: React.FC = () => {
     staleTime: 1000 * 60 * 60,
   });
 
-  const pchReflection = useMemo(
-    () => PCH_REFLECTIONS[today.getDate() % PCH_REFLECTIONS.length],
+  const padhReflection = useMemo(
+    () => PADH_REFLECTIONS[today.getDate() % PADH_REFLECTIONS.length],
     [today]
   );
 
