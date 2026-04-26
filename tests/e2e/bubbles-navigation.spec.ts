@@ -229,4 +229,46 @@ test.describe('Nexus Bubbles Navigation & Popovers', () => {
       currentMaxPriorityIndex = pIndex;
     }
   });
+
+  test('should strictly verify no duplicate items in related themes after multiple transitions', async ({ page }) => {
+    // 1. Setup profile
+    await page.goto('/');
+    await page.evaluate(() => {
+      localStorage.setItem('spiritual_profile_diagnosis', JSON.stringify({
+        id: 'ferido_em_busca',
+        timestamp: Date.now()
+      }));
+    });
+
+    // 2. Start at 'Culpa'
+    await page.goto('/temas/culpa');
+    const aside = page.locator('aside:has-text("Temas Relacionados")');
+    await expect(aside).toBeVisible();
+
+    const checkDuplicates = async () => {
+      const labels = await aside.locator('button[data-roving-item]').allInnerTexts();
+      const cleanLabels = labels.map(l => l.trim().split('\n')[0]); // Handle potential icon/text mix
+      const uniqueLabels = new Set(cleanLabels);
+      expect(cleanLabels.length, `Duplicates found: ${cleanLabels}`).toBe(uniqueLabels.size);
+    };
+
+    // Initial check
+    await checkDuplicates();
+
+    // 3. Navigate through popovers and check for duplicates on each page
+    const themesToVisit = ['Solidão', 'Perdão', 'Paz'];
+    
+    for (const theme of themesToVisit) {
+      const bubble = aside.locator('button[data-roving-item]').filter({ hasText: theme }).first();
+      if (await bubble.isVisible()) {
+        await bubble.click();
+        await expect(page.locator('h1, h2')).toContainText(theme, { ignoreCase: true });
+        await checkDuplicates();
+      }
+    }
+
+    // 4. Verify no duplicates after returning to initial theme
+    await page.goto('/temas/culpa');
+    await checkDuplicates();
+  });
 });
