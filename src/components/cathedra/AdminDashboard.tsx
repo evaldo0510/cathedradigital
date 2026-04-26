@@ -93,13 +93,22 @@ const AdminDashboard: React.FC = () => {
   const [sortField, setSortField] = useState<'name' | 'created_at' | 'xp'>('created_at');
   const [sortAsc, setSortAsc] = useState(false);
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
+  const tabsListRef = React.useRef<HTMLDivElement>(null);
   
   // Sync with URL query param
   const queryParams = new URLSearchParams(location.search);
   const [activeTab, setActiveTab] = useState(queryParams.get('tab') || 'overview');
+  const [securityResetKey, setSecurityResetKey] = useState(0);
 
   useEffect(() => {
-    const tab = new URLSearchParams(location.search).get('tab');
+    const params = new URLSearchParams(location.search);
+    const tab = params.get('tab');
+    
+    // Auto-reset logic for security tab
+    if (tab === 'security') {
+      setSecurityResetKey(prev => prev + 1);
+    }
+    
     if (tab && tab !== activeTab) {
       setActiveTab(tab);
     }
@@ -108,7 +117,21 @@ const AdminDashboard: React.FC = () => {
   const handleTabChange = (value: string) => {
     setActiveTab(value);
     navigate(`/admin?tab=${value}`, { replace: true });
+    
+    // If clicking on security, also trigger reset
+    if (value === 'security') {
+      setSecurityResetKey(prev => prev + 1);
+    }
   };
+
+  useEffect(() => {
+    if (activeTab && tabsListRef.current) {
+      const activeTrigger = tabsListRef.current.querySelector(`[data-state="active"]`);
+      if (activeTrigger) {
+        activeTrigger.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    }
+  }, [activeTab]);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -413,7 +436,7 @@ const AdminDashboard: React.FC = () => {
 
       <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
         <div className="px-4 sm:px-0 -mx-4 sm:mx-0">
-          <TabsList className="flex w-full overflow-x-auto justify-start h-auto p-1 bg-muted/30 border border-border/10 rounded-xl no-scrollbar scroll-smooth snap-x">
+          <TabsList ref={tabsListRef} className="flex w-full overflow-x-auto justify-start h-auto p-1 bg-muted/30 border border-border/10 rounded-xl no-scrollbar scroll-smooth snap-x">
             <TabsTrigger value="overview" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
               <LayoutGrid className="w-3.5 h-3.5" /> Visão Geral
             </TabsTrigger>
@@ -798,9 +821,9 @@ const AdminDashboard: React.FC = () => {
         </TabsContent>
 
         {/* Security Tab */}
-        <TabsContent value="security" className="space-y-4">
+        <TabsContent value="security" className="space-y-4 outline-none">
           <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
-            <SecurityAuditPage />
+            <SecurityAuditPage key={securityResetKey} />
           </Suspense>
         </TabsContent>
 
