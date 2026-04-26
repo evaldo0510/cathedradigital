@@ -368,4 +368,51 @@ test.describe('Nexus Bubbles Navigation & Popovers', () => {
       await checkNoHoles(themePath);
     }
   });
+
+  test('should verify priority groups order and contiguity even with missing sources (e.g. no profile)', async ({ page }) => {
+    // 1. Clear profile to ensure 'profile' group is empty
+    await page.goto('/');
+    await page.evaluate(() => {
+      localStorage.removeItem('spiritual_profile_diagnosis');
+    });
+
+    // 2. Go to a theme
+    await page.goto('/temas/fe');
+    
+    const aside = page.locator('aside:has-text("Temas Relacionados")');
+    await expect(aside).toBeVisible();
+
+    const bubbles = aside.locator('button[data-roving-item]');
+    await expect(bubbles.first()).toBeVisible();
+
+    const priorities = await bubbles.evaluateAll(elements => 
+      elements.map(el => el.getAttribute('data-priority'))
+    );
+
+    const activePriorities = priorities.filter(p => p !== null) as string[];
+    
+    // Ensure 'profile' is NOT present
+    expect(activePriorities).not.toContain('profile');
+
+    // Verify 'content' and 'category' are ordered and contiguous
+    const priorityOrder = ['content', 'category']; // profile is missing
+    let lastPriorityIndex = -1;
+
+    for (let i = 0; i < activePriorities.length; i++) {
+      const currentP = activePriorities[i];
+      const currentPIndex = priorityOrder.indexOf(currentP);
+      
+      expect(currentPIndex).toBeGreaterThanOrEqual(lastPriorityIndex);
+      
+      if (i > 0) {
+        const prevP = activePriorities[i - 1];
+        const prevPIndex = priorityOrder.indexOf(prevP);
+        if (currentPIndex !== prevPIndex) {
+          // Gap check: if it jumps from content to category, it's still contiguous in the resulting list
+          expect(currentPIndex - prevPIndex).toBe(1);
+        }
+      }
+      lastPriorityIndex = currentPIndex;
+    }
+  });
 });
