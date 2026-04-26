@@ -97,9 +97,17 @@ const AdminDashboard: React.FC = () => {
   // Sync with URL query param
   const queryParams = new URLSearchParams(location.search);
   const [activeTab, setActiveTab] = useState(queryParams.get('tab') || 'overview');
+  const [securityResetKey, setSecurityResetKey] = useState(0);
 
   useEffect(() => {
-    const tab = new URLSearchParams(location.search).get('tab');
+    const params = new URLSearchParams(location.search);
+    const tab = params.get('tab');
+    
+    // Auto-reset logic for security tab
+    if (tab === 'security') {
+      setSecurityResetKey(prev => prev + 1);
+    }
+    
     if (tab && tab !== activeTab) {
       setActiveTab(tab);
     }
@@ -108,6 +116,11 @@ const AdminDashboard: React.FC = () => {
   const handleTabChange = (value: string) => {
     setActiveTab(value);
     navigate(`/admin?tab=${value}`, { replace: true });
+    
+    // If clicking on security, also trigger reset
+    if (value === 'security') {
+      setSecurityResetKey(prev => prev + 1);
+    }
   };
 
   useEffect(() => {
