@@ -406,10 +406,11 @@ const Catechism: React.FC = () => {
         <div className="flex items-center gap-4">
           <button 
             onClick={goBack} 
-            className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none"
-            aria-label="Voltar"
+            className="px-3 py-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none flex items-center gap-2"
+            aria-label="Voltar para o Sumário"
           >
-            <Icons.ArrowDown className="w-5 h-5 rotate-90 text-foreground" />
+            <Icons.ArrowDown className="w-4 h-4 rotate-90 text-foreground" />
+            <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Sumário</span>
           </button>
 
           <div className="flex-1 min-w-0">
