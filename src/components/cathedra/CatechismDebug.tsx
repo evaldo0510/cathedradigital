@@ -235,7 +235,7 @@ const CatechismDebug: React.FC = () => {
                         }}
                         className="p-2 rounded-lg hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all"
                       >
-                        <Icons.RefreshCw className="w-3.5 h-3.5" />
+                        <Icons.RotateCcw className="w-3.5 h-3.5" />
                       </button>
                     </td>
                   </tr>
