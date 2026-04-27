@@ -207,6 +207,7 @@ const AdminContentTab: React.FC = () => {
               </Card>
             ))
           )}
+        </TabsContent>
         <TabsContent value="catechism" className="space-y-4">
           <React.Suspense fallback={<Card className="h-64 animate-pulse" />}>
             <CatechismDebug />
