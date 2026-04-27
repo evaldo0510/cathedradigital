@@ -260,7 +260,7 @@ const CatechismDebug: React.FC = () => {
           <h1 className="text-2xl font-serif font-bold text-foreground">Depuração do Catecismo</h1>
           <p className="text-sm text-muted-foreground">Monitore o estado da geração automática via IA</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <button 
             onClick={loadData}
             disabled={loading}
@@ -275,6 +275,13 @@ const CatechismDebug: React.FC = () => {
             className="px-4 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-black uppercase tracking-widest hover:brightness-110 transition-all disabled:opacity-50 flex items-center gap-2"
           >
             <Icons.Zap className="w-3 h-3" /> Reprocessar Erros
+          </button>
+          <button 
+            onClick={reprocessIncomplete}
+            disabled={isReprocessing}
+            className="px-4 py-2 rounded-xl bg-orange-500 text-white text-xs font-black uppercase tracking-widest hover:brightness-110 transition-all disabled:opacity-50 flex items-center gap-2 shadow-sm"
+          >
+            <Icons.Wrench className="w-3 h-3" /> Reparar Incompletos
           </button>
           <button 
             onClick={clearInvalidCache}
