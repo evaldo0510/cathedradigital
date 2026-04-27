@@ -124,6 +124,21 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
           }}>{seg.value}</ReactMarkdown>
         )
       )}
+      {data && (data.textoBase || data.explicacao) && (
+        <div className="mt-8 pt-8 border-t border-border/30">
+          <DeepContentSection 
+            content={{ 
+              textoBase: data.textoBase, 
+              explicacao: data.explicacao, 
+              interpretacaoProfunda: data.interpretacaoProfunda, 
+              aplicacaoPratica: data.aplicacaoPratica, 
+              reflexaoFinal: data.reflexaoFinal, 
+              exercicio: data.exercicio 
+            }} 
+            title="Reflexão Doutrinária" 
+          />
+        </div>
+      )}
     </div>
   );
 };
