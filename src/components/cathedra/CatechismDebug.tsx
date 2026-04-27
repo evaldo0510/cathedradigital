@@ -103,6 +103,9 @@ const CatechismDebug: React.FC = () => {
     toast.dismiss('reprocess');
     toast.success(`Concluído: ${successCount} reprocessados, ${failCount} falharam.`);
     setIsReprocessing(false);
+    loadData();
+  };
+
   const reprocessIncomplete = async () => {
     if (!isAdmin) return;
     const incomplete = cache.filter(c => {
