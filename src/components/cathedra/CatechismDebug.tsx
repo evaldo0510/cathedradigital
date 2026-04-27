@@ -4,11 +4,19 @@ import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/useAuth';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 interface CacheEntry {
   id: string;
   paragraph: number;
   content: string;
+  texto_base?: string;
+  explicacao?: string;
+  interpretacao_profunda?: string;
+  aplicacao_pratica?: string;
+  reflexao_final?: string;
+  exercicio?: string;
   status: 'generated' | 'error_402' | 'error' | 'official' | 'static';
   last_error: string | null;
   retry_count: number;
@@ -31,9 +39,10 @@ const CatechismDebug: React.FC = () => {
   const [logs, setLogs] = useState<ExecutionLog[]>([]);
   const [loading, setLoading] = useState(true);
   const [isReprocessing, setIsReprocessing] = useState(false);
-  const [filter, setFilter] = useState<'all' | 'generated' | 'error'>('all');
-  const [view, setView] = useState<'cache' | 'logs'>('cache');
+  const [filter, setFilter] = useState<'all' | 'generated' | 'error' | 'incomplete'>('all');
+  const [view, setView] = useState<'cache' | 'logs' | 'integrity'>('cache');
   const [dateRange, setDateRange] = useState({ start: '', end: '' });
+  const [integrityData, setIntegrityData] = useState<any[]>([]);
 
 
   const isAdmin = profile?.role === 'admin';
@@ -101,6 +110,126 @@ const CatechismDebug: React.FC = () => {
     toast.success(`Concluído: ${successCount} reprocessados, ${failCount} falharam.`);
     setIsReprocessing(false);
     loadData();
+  };
+
+  const reprocessIncomplete = async () => {
+    if (!isAdmin) return;
+    const incomplete = cache.filter(c => {
+      const isActuallyIncomplete = !c.content || c.content.length < 50; // Basic check, will be refined in backend
+      // In a real scenario, we'd check all fields, but frontend CacheEntry only has basic fields
+      // The backend 'fix_incomplete' will do the deep check.
+      return isActuallyIncomplete || c.status === 'error' || c.status === 'error_402';
+    });
+
+    if (incomplete.length === 0) {
+      toast.info('Nenhum parágrafo incompleto para reprocessar');
+      return;
+    }
+
+    setIsReprocessing(true);
+    let successCount = 0;
+    let failCount = 0;
+
+    toast.loading(`Reparando ${incomplete.length} parágrafos...`, { id: 'reprocess-inc' });
+
+    const CHUNK_SIZE = 5;
+    for (let i = 0; i < incomplete.length; i += CHUNK_SIZE) {
+      const chunk = incomplete.slice(i, i + CHUNK_SIZE);
+      await Promise.all(chunk.map(async (item) => {
+        try {
+          const { data, error } = await supabase.functions.invoke('catechism-text', {
+            body: { paragraph: item.paragraph, action: 'fix_incomplete' }
+          });
+          if (!error && data?.status === 'generated') successCount++;
+          else failCount++;
+        } catch {
+          failCount++;
+        }
+      }));
+    }
+
+    toast.dismiss('reprocess-inc');
+    toast.success(`Integridade: ${successCount} corrigidos, ${failCount} falharam.`);
+    setIsReprocessing(false);
+    loadData();
+  };
+
+  const exportLogsToPDF = () => {
+    if (logs.length === 0) return;
+    
+    let filtered = logs;
+    if (dateRange.start) filtered = filtered.filter(l => new Date(l.created_at) >= new Date(dateRange.start));
+    if (dateRange.end) filtered = filtered.filter(l => new Date(l.created_at) <= new Date(dateRange.end));
+
+    const doc = new jsPDF();
+    doc.setFontSize(18);
+    doc.text('Catechism Execution Logs', 14, 22);
+    doc.setFontSize(11);
+    doc.setTextColor(100);
+    doc.text(`Exportado em: ${new Date().toLocaleString()}`, 14, 30);
+
+    const tableData = filtered.map(l => [
+      l.paragraph,
+      l.status,
+      `${l.duration_ms}ms`,
+      l.error_message || '-',
+      new Date(l.created_at).toLocaleDateString()
+    ]);
+
+    autoTable(doc, {
+      startY: 35,
+      head: [['Parágrafo', 'Status', 'Duração', 'Erro', 'Data']],
+      body: tableData,
+    });
+
+    doc.save(`catechism_logs_${new Date().toISOString().split('T')[0]}.pdf`);
+  };
+
+  const exportIntegrityToCSV = () => {
+    const headers = ['§', 'Texto', 'Explicação', 'Profundo', 'Aplicação', 'Exercício'];
+    const rows = cache.map(item => [
+      item.paragraph,
+      item.content?.length > 50 ? 'OK' : 'Incompleto',
+      item.explicacao?.length > 10 ? 'OK' : 'Incompleto',
+      item.interpretacao_profunda?.length > 10 ? 'OK' : 'Incompleto',
+      item.aplicacao_pratica?.length > 10 ? 'OK' : 'Incompleto',
+      item.exercicio?.length > 10 ? 'OK' : 'Incompleto'
+    ]);
+
+    const csvContent = "data:text/csv;charset=utf-8," 
+      + headers.join(",") + "\n"
+      + rows.map(e => e.join(",")).join("\n");
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `catechism_integrity_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const exportIntegrityToPDF = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(18);
+    doc.text('Relatório de Integridade do Catecismo', 14, 22);
+    
+    const tableData = cache.slice(0, 100).map(item => [
+      item.paragraph,
+      item.content?.length > 50 ? 'OK' : 'X',
+      item.explicacao?.length > 10 ? 'OK' : 'X',
+      item.interpretacao_profunda?.length > 10 ? 'OK' : 'X',
+      item.aplicacao_pratica?.length > 10 ? 'OK' : 'X',
+      item.exercicio?.length > 10 ? 'OK' : 'X'
+    ]);
+
+    autoTable(doc, {
+      startY: 35,
+      head: [['§', 'Texto', 'Explicação', 'Profundo', 'Aplicação', 'Exercício']],
+      body: tableData,
+    });
+
+    doc.save(`catechism_integrity_${new Date().toISOString().split('T')[0]}.pdf`);
   };
 
   const clearInvalidCache = async () => {
@@ -184,7 +313,7 @@ const CatechismDebug: React.FC = () => {
           <h1 className="text-2xl font-serif font-bold text-foreground">Depuração do Catecismo</h1>
           <p className="text-sm text-muted-foreground">Monitore o estado da geração automática via IA</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <button 
             onClick={loadData}
             disabled={loading}
@@ -199,6 +328,13 @@ const CatechismDebug: React.FC = () => {
             className="px-4 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-black uppercase tracking-widest hover:brightness-110 transition-all disabled:opacity-50 flex items-center gap-2"
           >
             <Icons.Zap className="w-3 h-3" /> Reprocessar Erros
+          </button>
+          <button 
+            onClick={reprocessIncomplete}
+            disabled={isReprocessing}
+            className="px-4 py-2 rounded-xl bg-orange-500 text-white text-xs font-black uppercase tracking-widest hover:brightness-110 transition-all disabled:opacity-50 flex items-center gap-2 shadow-sm"
+          >
+            <Icons.PenTool className="w-3 h-3" /> Reparar Incompletos
           </button>
           <button 
             onClick={clearInvalidCache}
@@ -244,12 +380,36 @@ const CatechismDebug: React.FC = () => {
               >
                 Logs
               </button>
+              <button 
+                onClick={() => setView('integrity')}
+                className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-md transition-all ${view === 'integrity' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+              >
+                Integridade
+              </button>
             </div>
             {view === 'cache' && (
               <div className="flex items-center gap-2 bg-background/50 border border-border rounded-lg p-1">
                 <button onClick={() => setFilter('all')} className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-md transition-all ${filter === 'all' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Todos</button>
                 <button onClick={() => setFilter('generated')} className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-md transition-all ${filter === 'generated' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Sucesso</button>
                 <button onClick={() => setFilter('error')} className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-md transition-all ${filter === 'error' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Erros</button>
+              </div>
+            )}
+            {view === 'integrity' && (
+              <div className="flex items-center gap-2">
+                <button 
+                  onClick={exportIntegrityToCSV}
+                  className="p-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-all"
+                  title="Exportar CSV"
+                >
+                  <Icons.FileText className="w-3 h-3" />
+                </button>
+                <button 
+                  onClick={exportIntegrityToPDF}
+                  className="p-2 rounded-lg bg-red-500/10 text-red-600 hover:bg-red-500/20 transition-all"
+                  title="Exportar PDF"
+                >
+                  <Icons.Download className="w-3 h-3" />
+                </button>
               </div>
             )}
           </div>
@@ -272,6 +432,13 @@ const CatechismDebug: React.FC = () => {
                   onClick={exportLogsToCSV}
                   className="p-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-all"
                   title="Exportar CSV"
+                >
+                  <Icons.FileText className="w-3 h-3" />
+                </button>
+                <button 
+                  onClick={exportLogsToPDF}
+                  className="p-2 rounded-lg bg-red-500/10 text-red-600 hover:bg-red-500/20 transition-all"
+                  title="Exportar PDF"
                 >
                   <Icons.Download className="w-3 h-3" />
                 </button>
@@ -353,7 +520,7 @@ const CatechismDebug: React.FC = () => {
                 )}
               </tbody>
             </table>
-          ) : (
+          ) : view === 'logs' ? (
             <table className="w-full text-left text-sm">
               <thead>
                 <tr className="border-b border-border text-[10px] font-black uppercase tracking-widest text-muted-foreground">
@@ -392,6 +559,57 @@ const CatechismDebug: React.FC = () => {
                 )}
               </tbody>
             </table>
+          ) : (
+            <div className="p-8 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {[
+                  { label: 'Texto Oficial', field: 'content' },
+                  { label: 'Explicação', field: 'explicacao' },
+                  { label: 'Prática', field: 'aplicacao_pratica' }
+                ].map(item => {
+                  const filled = cache.filter(c => c[item.field as keyof CacheEntry] && (c[item.field as keyof CacheEntry] as string).length > 20).length;
+                  const percent = Math.round((filled / 2865) * 100);
+                  return (
+                    <div key={item.field} className="space-y-2">
+                      <div className="flex justify-between text-[10px] font-black uppercase tracking-widest">
+                        <span>{item.label}</span>
+                        <span>{percent}%</span>
+                      </div>
+                      <div className="h-2 bg-muted rounded-full overflow-hidden">
+                        <div className="h-full bg-primary transition-all" style={{ width: `${percent}%` }} />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="border border-border rounded-2xl overflow-hidden">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-muted/50 border-b border-border">
+                    <tr className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                      <th className="px-4 py-3">Parágrafo</th>
+                      <th className="px-4 py-3">Texto</th>
+                      <th className="px-4 py-3">Explicação</th>
+                      <th className="px-4 py-3">Profundo</th>
+                      <th className="px-4 py-3">Aplicação</th>
+                      <th className="px-4 py-3">Exercício</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {cache.slice(0, 50).map(item => (
+                      <tr key={item.id} className="border-b border-border last:border-0">
+                        <td className="px-4 py-3 font-bold">§{item.paragraph}</td>
+                        <td className="px-4 py-3 text-center">{item.content?.length > 50 ? '✅' : '❌'}</td>
+                        <td className="px-4 py-3 text-center">{item.explicacao?.length > 10 ? '✅' : '❌'}</td>
+                        <td className="px-4 py-3 text-center">{item.interpretacao_profunda?.length > 10 ? '✅' : '❌'}</td>
+                        <td className="px-4 py-3 text-center">{item.aplicacao_pratica?.length > 10 ? '✅' : '❌'}</td>
+                        <td className="px-4 py-3 text-center">{item.exercicio?.length > 10 ? '✅' : '❌'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           )}
         </div>
       </div>
