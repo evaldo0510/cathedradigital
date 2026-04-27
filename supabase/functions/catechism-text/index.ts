@@ -56,6 +56,7 @@ serve(async (req: Request) => {
   try {
     const authHeader = req.headers.get('Authorization');
     let adminId = null;
+    let isAdmin = false;
 
     if (authHeader) {
       const token = authHeader.replace('Bearer ', '');
@@ -63,6 +64,15 @@ serve(async (req: Request) => {
       if (userResp.ok) {
         const userData = await userResp.json();
         adminId = userData.id;
+        
+        // Check if user is admin
+        const profileResp = await fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${adminId}&select=role`, {
+          headers: { 'apikey': serviceKey, 'Authorization': `Bearer ${serviceKey}` },
+        });
+        if (profileResp.ok) {
+          const profiles = await profileResp.json();
+          isAdmin = profiles?.[0]?.role === 'admin';
+        }
       }
     }
 
@@ -70,6 +80,11 @@ serve(async (req: Request) => {
     const paragraph = body.paragraph;
     const action = body.action || 'load';
     const forceReprocess = action === 'reprocess' || action === 'fix_incomplete';
+
+    if (forceReprocess && !isAdmin) {
+      activeRequests--;
+      return new Response(JSON.stringify({ error: 'Acesso negado. Apenas administradores podem reprocessar.' }), { status: 403, headers: corsHeaders });
+    }
 
     if (!paragraph || paragraph < 1 || paragraph > 2865) {
       activeRequests--;
