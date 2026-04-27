@@ -68,7 +68,8 @@ serve(async (req: Request) => {
 
     const body = await req.json();
     const paragraph = body.paragraph;
-    const forceReprocess = body.action === 'reprocess';
+    const action = body.action || 'load';
+    const forceReprocess = action === 'reprocess' || action === 'fix_incomplete';
 
     if (!paragraph || paragraph < 1 || paragraph > 2865) {
       activeRequests--;
@@ -82,72 +83,87 @@ serve(async (req: Request) => {
       return new Response(JSON.stringify({ ...PT_PARAGRAPHS[paragraph], paragraph, status: 'static' }), { headers: corsHeaders });
     }
 
-    // 2. Official DB
+    // 2. Load Existing (Official or Cache)
+    let existingContent: any = null;
+    let source: 'official' | 'cache' | null = null;
+
     const officialResp = await fetch(`${supabaseUrl}/rest/v1/catechism_official?paragraph=eq.${paragraph}&select=*`, {
       headers: { 'apikey': serviceKey, 'Authorization': `Bearer ${serviceKey}` },
     });
     if (officialResp.ok) {
       const rows = await officialResp.json();
       if (rows?.[0]?.content) {
-        await logExecution(paragraph, 'official', undefined, adminId);
-        activeRequests--;
-        const row = rows[0];
-        return new Response(JSON.stringify({ 
-          paragraph, 
-          content: row.content,
-          textoBase: row.texto_base,
-          explicacao: row.explicacao,
-          interpretacaoProfunda: row.interpretacao_profunda,
-          aplicacaoPratica: row.aplicacao_pratica,
-          reflexaoFinal: row.reflexao_final,
-          exercicio: row.exercicio,
-          status: 'official' 
-        }), { headers: corsHeaders });
+        existingContent = rows[0];
+        source = 'official';
       }
     }
 
-    // 3. Cache
-    const dbResp = await fetch(`${supabaseUrl}/rest/v1/catechism_cache?paragraph=eq.${paragraph}&select=*`, {
-      headers: { 'apikey': serviceKey, 'Authorization': `Bearer ${serviceKey}` },
-    });
-    if (dbResp.ok) {
-      const rows = await dbResp.json();
-      const existingRecord = rows?.[0];
-      if (existingRecord?.content && existingRecord.content.length > 50 && existingRecord.status === 'generated' && !forceReprocess) {
-        await logExecution(paragraph, 'cached', undefined, adminId);
-        activeRequests--;
-        return new Response(JSON.stringify({ 
-          paragraph, 
-          content: existingRecord.content,
-          textoBase: existingRecord.texto_base,
-          explicacao: existingRecord.explicacao,
-          interpretacaoProfunda: existingRecord.interpretacao_profunda,
-          aplicacaoPratica: existingRecord.aplicacao_pratica,
-          reflexaoFinal: existingRecord.reflexao_final,
-          exercicio: existingRecord.exercicio,
-          status: 'cached' 
-        }), { headers: corsHeaders });
+    if (!existingContent) {
+      const dbResp = await fetch(`${supabaseUrl}/rest/v1/catechism_cache?paragraph=eq.${paragraph}&select=*`, {
+        headers: { 'apikey': serviceKey, 'Authorization': `Bearer ${serviceKey}` },
+      });
+      if (dbResp.ok) {
+        const rows = await dbResp.json();
+        if (rows?.[0]?.content) {
+          existingContent = rows[0];
+          source = 'cache';
+        }
       }
     }
 
-    // 4. AI Generation
+    // Check completeness
+    const isIncomplete = existingContent && (
+      !existingContent.texto_base || 
+      !existingContent.explicacao || 
+      !existingContent.interpretacao_profunda || 
+      !existingContent.aplicacao_pratica || 
+      !existingContent.reflexao_final || 
+      !existingContent.exercicio
+    );
+
+    if (existingContent && !forceReprocess && !isIncomplete) {
+      await logExecution(paragraph, source === 'official' ? 'official' : 'cached', undefined, adminId);
+      activeRequests--;
+      return new Response(JSON.stringify({ 
+        paragraph, 
+        content: existingContent.content,
+        textoBase: existingContent.texto_base || existingContent.textoBase,
+        explicacao: existingContent.explicacao,
+        interpretacaoProfunda: existingContent.interpretacao_profunda || existingContent.interpretacaoProfunda,
+        aplicacaoPratica: existingContent.aplicacao_pratica || existingContent.aplicacaoPratica,
+        reflexaoFinal: existingContent.reflexao_final || existingContent.reflexaoFinal,
+        exercicio: existingContent.exercicio,
+        status: source
+      }), { headers: corsHeaders });
+    }
+
+    // 3. AI Generation (Full or missing fields)
     try {
+      const prompt = existingContent?.content 
+        ? `O texto oficial do parágrafo §${paragraph} do Catecismo é: "${existingContent.content}". 
+           Por favor, gere APENAS os campos de análise teológica que faltam ou estão incompletos:
+           1. textoBase: Uma frase resumo.
+           2. explicacao: Uma explicação simples (2-3 frases).
+           3. interpretacaoProfunda: Uma análise teológica mais densa.
+           4. aplicacaoPratica: Como viver isso hoje.
+           5. reflexaoFinal: Uma pergunta para meditação.
+           6. exercicio: Uma ação concreta.
+           Mantenha o tom fiel ao Magistério. Retorne em formato JSON.`
+        : `Reproduza o texto integral do parágrafo §${paragraph} do Catecismo da Igreja Católica em português. Além do texto oficial, forneça uma análise estruturada contendo:
+           1. textoBase: Uma frase resumo.
+           2. explicacao: Uma explicação simples (2-3 frases).
+           3. interpretacaoProfunda: Uma análise teológica mais densa.
+           4. aplicacaoPratica: Como viver isso hoje.
+           5. reflexaoFinal: Uma pergunta para meditação.
+           6. exercicio: Uma ação concreta.
+           Retorne em formato JSON.`;
+
       const resp = await fetch(`${supabaseUrl}/functions/v1/colloquium`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${serviceKey}` },
         body: JSON.stringify({
-          messages: [{ 
-            role: 'user', 
-            content: `Reproduza o texto integral do parágrafo §${paragraph} do Catecismo da Igreja Católica em português. Além do texto oficial, forneça uma análise estruturada contendo:
-            1. textoBase: Uma frase resumo.
-            2. explicacao: Uma explicação simples (2-3 frases).
-            3. interpretacaoProfunda: Uma análise teológica mais densa.
-            4. aplicacaoPratica: Como viver isso hoje.
-            5. reflexaoFinal: Uma pergunta para meditação.
-            6. exercicio: Uma ação concreta.
-            Retorne em formato JSON.` 
-          }],
-          system_prompt: "Você é um especialista em Catecismo. Retorne SEMPRE um JSON válido com os campos: content, textoBase, explicacao, interpretacaoProfunda, aplicacaoPratica, reflexaoFinal, exercicio.",
+          messages: [{ role: 'user', content: prompt }],
+          system_prompt: "Você é um especialista em Catecismo. Retorne SEMPRE um JSON válido com os campos: content (apenas se não fornecido), textoBase, explicacao, interpretacaoProfunda, aplicacaoPratica, reflexaoFinal, exercicio.",
           stream: false,
         }),
       });
@@ -155,37 +171,34 @@ serve(async (req: Request) => {
       if (resp.ok) {
         const data = await resp.json();
         let aiContent = (data.choices?.[0]?.message?.content || '').trim();
-        
         if (aiContent.startsWith('```json')) aiContent = aiContent.replace(/^```json/, '').replace(/```$/, '').trim();
         
         try {
           const p = JSON.parse(aiContent);
-          if (p.content && p.content.length > 30) {
+          const finalContent = p.content || existingContent?.content;
+          
+          if (finalContent && finalContent.length > 30) {
             await fetch(`${supabaseUrl}/rest/v1/catechism_cache`, {
               method: 'POST',
               headers: { 'apikey': serviceKey, 'Authorization': `Bearer ${serviceKey}`, 'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates' },
               body: JSON.stringify({ 
                 paragraph, 
-                content: p.content, 
+                content: finalContent, 
                 status: 'generated',
-                texto_base: p.textoBase,
-                explicacao: p.explicacao,
-                interpretacao_profunda: p.interpretacaoProfunda,
-                aplicacao_pratica: p.aplicacaoPratica,
-                reflexao_final: p.reflexaoFinal,
-                exercicio: p.exercicio
+                texto_base: p.textoBase || existingContent?.texto_base,
+                explicacao: p.explicacao || existingContent?.explicacao,
+                interpretacao_profunda: p.interpretacaoProfunda || existingContent?.interpretacao_profunda,
+                aplicacao_pratica: p.aplicacaoPratica || existingContent?.aplicacao_pratica,
+                reflexao_final: p.reflexaoFinal || existingContent?.reflexao_final,
+                exercicio: p.exercicio || existingContent?.exercicio
               }),
             });
             await logExecution(paragraph, 'generated', undefined, adminId);
             activeRequests--;
-            return new Response(JSON.stringify({ ...p, paragraph, status: 'generated' }), { headers: corsHeaders });
+            return new Response(JSON.stringify({ ...p, content: finalContent, paragraph, status: 'generated' }), { headers: corsHeaders });
           }
         } catch (e) {
-          if (aiContent.length > 30) {
-             await logExecution(paragraph, 'generated_raw', undefined, adminId);
-             activeRequests--;
-             return new Response(JSON.stringify({ paragraph, content: aiContent, status: 'generated' }), { headers: corsHeaders });
-          }
+          console.error('JSON Parse Error:', e);
         }
       } else {
         const status = resp.status === 402 ? 'error_402' : 'error';
