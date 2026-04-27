@@ -337,6 +337,12 @@ const CatechismDebug: React.FC = () => {
             <Icons.PenTool className="w-3 h-3" /> Reparar Incompletos
           </button>
           <button 
+            onClick={() => window.location.href = '/catechism/integrity'}
+            className="px-4 py-2 rounded-xl bg-blue-500 text-white text-xs font-black uppercase tracking-widest hover:brightness-110 transition-all flex items-center gap-2 shadow-sm"
+          >
+            <Icons.Activity className="w-3 h-3" /> Painel de Integridade
+          </button>
+          <button 
             onClick={clearInvalidCache}
             className="px-4 py-2 rounded-xl bg-destructive/10 text-destructive text-xs font-black uppercase tracking-widest hover:bg-destructive/20 transition-all flex items-center gap-2"
           >

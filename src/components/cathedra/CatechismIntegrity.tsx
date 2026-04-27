@@ -23,22 +23,53 @@ const CatechismIntegrity: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [isReprocessing, setIsReprocessing] = useState(false);
   const [filter, setFilter] = useState<'all' | 'error_402' | 'not_cached' | 'empty'>('all');
+  const [notCachedCount, setNotCachedCount] = useState(0);
 
   const isAdmin = profile?.role === 'admin';
 
   const loadData = async () => {
     setLoading(true);
-    // Para simplificar, vamos assumir que parágrafos not_cached são aqueles que não estão na tabela
-    // Mas para esta tela, vamos focar nos que ESTÃO com erro ou vazios
-    const { data: cacheRes, error } = await supabase
+    
+    // Get everything from cache
+    const { data: cacheRes, error: cacheError } = await supabase
       .from('catechism_cache')
       .select('id, paragraph, content, status, last_error, retry_count')
       .order('paragraph', { ascending: true });
 
-    if (error) {
+    // Get paragraph numbers from official
+    const { data: officialRes, error: officialError } = await supabase
+      .from('catechism_official')
+      .select('paragraph');
+
+    if (cacheError || officialError) {
       toast.error('Erro ao carregar dados de integridade');
     } else {
-      setData(cacheRes as CacheEntry[]);
+      const cachedParas = new Set((cacheRes || []).map(c => c.paragraph));
+      const officialParas = new Set((officialRes || []).map(o => o.paragraph));
+      
+      const combinedData: CacheEntry[] = [...(cacheRes as CacheEntry[] || [])];
+      
+      // Calculate missing (not in cache and not in official)
+      let missing = 0;
+      for (let i = 1; i <= 2865; i++) {
+        if (!cachedParas.has(i) && !officialParas.has(i)) {
+          missing++;
+          // Only add a few to the list to avoid performance issues
+          if (combinedData.length < 1000) {
+            combinedData.push({
+              id: `missing-${i}`,
+              paragraph: i,
+              content: '',
+              status: 'not_cached',
+              last_error: null,
+              retry_count: 0
+            });
+          }
+        }
+      }
+      
+      setData(combinedData.sort((a, b) => a.paragraph - b.paragraph));
+      setNotCachedCount(missing);
     }
     setLoading(false);
   };
@@ -67,16 +98,18 @@ const CatechismIntegrity: React.FC = () => {
   };
 
   const filteredData = data.filter(item => {
-    if (filter === 'all') return item.status === 'error_402' || !item.content || item.content.length < 50;
+    if (filter === 'all') return item.status === 'error_402' || item.status === 'not_cached' || !item.content || item.content.length < 50;
     if (filter === 'error_402') return item.status === 'error_402';
-    if (filter === 'empty') return !item.content || item.content.length < 50;
+    if (filter === 'not_cached') return item.status === 'not_cached';
+    if (filter === 'empty') return item.status !== 'not_cached' && (!item.content || item.content.length < 50);
     return true;
   });
 
   const stats = {
     error402: data.filter(i => i.status === 'error_402').length,
-    empty: data.filter(i => !i.content || i.content.length < 50).length,
-    totalIssues: data.filter(i => i.status === 'error_402' || !i.content || i.content.length < 50).length
+    empty: data.filter(i => i.status !== 'not_cached' && (!i.content || i.content.length < 50)).length,
+    notCached: notCachedCount,
+    totalIssues: data.filter(i => i.status === 'error_402' || i.status === 'not_cached' || !i.content || i.content.length < 50).length
   };
 
   if (!isAdmin) {
@@ -115,15 +148,15 @@ const CatechismIntegrity: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-card border border-border rounded-2xl p-4">
-          <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Total com Problemas</span>
-          <div className="text-2xl font-serif font-bold text-foreground">{stats.totalIssues}</div>
+          <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Nunca Acessados</span>
+          <div className="text-2xl font-serif font-bold text-foreground">{stats.notCached}</div>
         </div>
         <div className="bg-card border border-border rounded-2xl p-4">
           <span className="text-[10px] font-black uppercase tracking-widest text-orange-500">Erro 402 (Créditos)</span>
           <div className="text-2xl font-serif font-bold text-foreground">{stats.error402}</div>
         </div>
         <div className="bg-card border border-border rounded-2xl p-4">
-          <span className="text-[10px] font-black uppercase tracking-widest text-destructive">Sem Conteúdo</span>
+          <span className="text-[10px] font-black uppercase tracking-widest text-destructive">Incompletos</span>
           <div className="text-2xl font-serif font-bold text-foreground">{stats.empty}</div>
         </div>
       </div>
@@ -132,8 +165,9 @@ const CatechismIntegrity: React.FC = () => {
         <div className="p-4 border-b border-border bg-muted/30 flex items-center justify-between">
           <div className="flex items-center gap-2 bg-background/50 border border-border rounded-lg p-1">
             <button onClick={() => setFilter('all')} className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-md transition-all ${filter === 'all' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Todos</button>
+            <button onClick={() => setFilter('not_cached')} className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-md transition-all ${filter === 'not_cached' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Não Cacheado</button>
             <button onClick={() => setFilter('error_402')} className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-md transition-all ${filter === 'error_402' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Erro 402</button>
-            <button onClick={() => setFilter('empty')} className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-md transition-all ${filter === 'empty' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Vazios</button>
+            <button onClick={() => setFilter('empty')} className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-md transition-all ${filter === 'empty' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Incompletos</button>
           </div>
           <span className="text-[10px] text-muted-foreground uppercase font-black">
             {filteredData.length} itens encontrados
@@ -162,6 +196,8 @@ const CatechismIntegrity: React.FC = () => {
                     <td className="px-6 py-4">
                       {item.status === 'error_402' ? (
                         <span className="text-xs text-orange-600 font-medium">Falta de Créditos IA</span>
+                      ) : item.status === 'not_cached' ? (
+                        <span className="text-xs text-blue-500 font-medium">Nunca Acessado / Sem Cache</span>
                       ) : (
                         <span className="text-xs text-destructive font-medium">Conteúdo Incompleto</span>
                       )}
