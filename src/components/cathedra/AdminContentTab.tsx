@@ -157,7 +157,7 @@ const AdminContentTab: React.FC = () => {
           <TabsTrigger value="approved">Aprovados</TabsTrigger>
           <TabsTrigger value="rejected">Rejeitados</TabsTrigger>
           <TabsTrigger value="all">Todos</TabsTrigger>
-          <TabsTrigger value="catechism" onClick={() => window.open('/catechism/debug', '_blank')}>Depuração CIC</TabsTrigger>
+          <TabsTrigger value="catechism">Depuração CIC</TabsTrigger>
         </TabsList>
 
         <TabsContent value={activeTab} className="space-y-4">
