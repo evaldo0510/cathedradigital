@@ -28,17 +28,47 @@ const CatechismIntegrity: React.FC = () => {
 
   const loadData = async () => {
     setLoading(true);
-    // Para simplificar, vamos assumir que parágrafos not_cached são aqueles que não estão na tabela
-    // Mas para esta tela, vamos focar nos que ESTÃO com erro ou vazios
-    const { data: cacheRes, error } = await supabase
+    
+    // Get everything from cache
+    const { data: cacheRes, error: cacheError } = await supabase
       .from('catechism_cache')
       .select('id, paragraph, content, status, last_error, retry_count')
       .order('paragraph', { ascending: true });
 
-    if (error) {
+    // Get paragraph numbers from official
+    const { data: officialRes, error: officialError } = await supabase
+      .from('catechism_official')
+      .select('paragraph');
+
+    if (cacheError || officialError) {
       toast.error('Erro ao carregar dados de integridade');
     } else {
-      setData(cacheRes as CacheEntry[]);
+      const cachedParas = new Set((cacheRes || []).map(c => c.paragraph));
+      const officialParas = new Set((officialRes || []).map(o => o.paragraph));
+      
+      const combinedData = [...(cacheRes || [])];
+      
+      // Calculate missing (not in cache and not in official)
+      const missingCount = [];
+      for (let i = 1; i <= 2865; i++) {
+        if (!cachedParas.has(i) && !officialParas.has(i)) {
+          missingCount.push(i);
+          // Only add a few to the list to avoid performance issues
+          if (combinedData.length < 500) {
+            combinedData.push({
+              id: `missing-${i}`,
+              paragraph: i,
+              content: '',
+              status: 'not_cached',
+              last_error: null,
+              retry_count: 0
+            });
+          }
+        }
+      }
+      
+      setData(combinedData.sort((a, b) => a.paragraph - b.paragraph));
+      setNotCachedCount(missingCount.length);
     }
     setLoading(false);
   };
