@@ -103,6 +103,7 @@ const SecurityAuditPage = lazy(() => import('./components/cathedra/SecurityAudit
 const SellerDashboard = lazy(() => import('./components/cathedra/SellerDashboard'));
 
 const CatechismDebug = lazy(() => import('./components/cathedra/CatechismDebug'));
+const CatechismIntegrity = lazy(() => import('./components/cathedra/CatechismIntegrity'));
 const PartnersPage = lazy(() => import('./components/cathedra/PartnersPage'));
 
 const SkeletonBar = React.forwardRef<HTMLDivElement, { w?: string; h?: string; className?: string }>(
