@@ -11,6 +11,12 @@ interface CacheEntry {
   id: string;
   paragraph: number;
   content: string;
+  texto_base?: string;
+  explicacao?: string;
+  interpretacao_profunda?: string;
+  aplicacao_pratica?: string;
+  reflexao_final?: string;
+  exercicio?: string;
   status: 'generated' | 'error_402' | 'error' | 'official' | 'static';
   last_error: string | null;
   retry_count: number;
