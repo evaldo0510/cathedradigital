@@ -24,6 +24,10 @@ const CatechismIntegrity: React.FC = () => {
   const [isReprocessing, setIsReprocessing] = useState(false);
   const [filter, setFilter] = useState<'all' | 'error_402' | 'not_cached' | 'empty'>('all');
   const [notCachedCount, setNotCachedCount] = useState(0);
+  const [startPara, setStartPara] = useState(1);
+  const [endPara, setEndPara] = useState(2865);
+  const [batchSize, setBatchSize] = useState(10);
+
 
   const isAdmin = profile?.role === 'admin';
 
