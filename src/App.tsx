@@ -103,6 +103,7 @@ const SecurityAuditPage = lazy(() => import('./components/cathedra/SecurityAudit
 const SellerDashboard = lazy(() => import('./components/cathedra/SellerDashboard'));
 
 const CatechismDebug = lazy(() => import('./components/cathedra/CatechismDebug'));
+const CatechismIntegrity = lazy(() => import('./components/cathedra/CatechismIntegrity'));
 const PartnersPage = lazy(() => import('./components/cathedra/PartnersPage'));
 
 const SkeletonBar = React.forwardRef<HTMLDivElement, { w?: string; h?: string; className?: string }>(
@@ -504,6 +505,7 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.SAINT_DETAIL} element={<PageTransition><AuthGuard><Saints /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.MAGISTERIUM} element={<PageTransition><AuthGuard><Magisterium /></AuthGuard></PageTransition>} />
                   <Route path="/catechism/debug" element={<PageTransition><AdminGuard><CatechismDebug /></AdminGuard></PageTransition>} />
+                  <Route path={AppRoute.CATECHISM_INTEGRITY} element={<PageTransition><AdminGuard><CatechismIntegrity /></AdminGuard></PageTransition>} />
                   <Route path={AppRoute.MAGISTERIUM_DOC} element={<PageTransition><AuthGuard><MagisteriumViewer /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.LITURGIA} element={<PageTransition><AuthGuard><LiturgiaPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.DAILY_LITURGY} element={<Navigate to={`${AppRoute.LITURGIA}?tab=liturgia`} replace />} />
