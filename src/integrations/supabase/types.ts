@@ -66,6 +66,7 @@ export type Database = {
           id: string
           last_error: string | null
           paragraph: number
+          retry_count: number | null
           status: string | null
         }
         Insert: {
@@ -74,6 +75,7 @@ export type Database = {
           id?: string
           last_error?: string | null
           paragraph: number
+          retry_count?: number | null
           status?: string | null
         }
         Update: {
@@ -82,7 +84,56 @@ export type Database = {
           id?: string
           last_error?: string | null
           paragraph?: number
+          retry_count?: number | null
           status?: string | null
+        }
+        Relationships: []
+      }
+      catechism_execution_logs: {
+        Row: {
+          created_at: string | null
+          duration_ms: number | null
+          error_message: string | null
+          id: string
+          paragraph: number
+          start_time: string | null
+          status: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          duration_ms?: number | null
+          error_message?: string | null
+          id?: string
+          paragraph: number
+          start_time?: string | null
+          status?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          duration_ms?: number | null
+          error_message?: string | null
+          id?: string
+          paragraph?: number
+          start_time?: string | null
+          status?: string | null
+        }
+        Relationships: []
+      }
+      catechism_official: {
+        Row: {
+          content: string
+          created_at: string | null
+          paragraph: number
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          paragraph: number
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          paragraph?: number
         }
         Relationships: []
       }
