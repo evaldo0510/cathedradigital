@@ -119,7 +119,7 @@ const CatechismDebug: React.FC = () => {
             className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all disabled:opacity-50"
             title="Atualizar"
           >
-            <Icons.RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+            <Icons.RotateCcw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           </button>
           <button 
             onClick={reprocessAll402}
