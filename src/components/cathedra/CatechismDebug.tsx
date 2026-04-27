@@ -185,6 +185,53 @@ const CatechismDebug: React.FC = () => {
     doc.save(`catechism_logs_${new Date().toISOString().split('T')[0]}.pdf`);
   };
 
+  const exportIntegrityToCSV = () => {
+    const headers = ['§', 'Texto', 'Explicação', 'Profundo', 'Aplicação', 'Exercício'];
+    const rows = cache.map(item => [
+      item.paragraph,
+      item.content?.length > 50 ? 'OK' : 'Incompleto',
+      item.explicacao?.length > 10 ? 'OK' : 'Incompleto',
+      item.interpretacao_profunda?.length > 10 ? 'OK' : 'Incompleto',
+      item.aplicacao_pratica?.length > 10 ? 'OK' : 'Incompleto',
+      item.exercicio?.length > 10 ? 'OK' : 'Incompleto'
+    ]);
+
+    const csvContent = "data:text/csv;charset=utf-8," 
+      + headers.join(",") + "\n"
+      + rows.map(e => e.join(",")).join("\n");
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `catechism_integrity_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const exportIntegrityToPDF = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(18);
+    doc.text('Relatório de Integridade do Catecismo', 14, 22);
+    
+    const tableData = cache.slice(0, 100).map(item => [
+      item.paragraph,
+      item.content?.length > 50 ? 'OK' : 'X',
+      item.explicacao?.length > 10 ? 'OK' : 'X',
+      item.interpretacao_profunda?.length > 10 ? 'OK' : 'X',
+      item.aplicacao_pratica?.length > 10 ? 'OK' : 'X',
+      item.exercicio?.length > 10 ? 'OK' : 'X'
+    ]);
+
+    autoTable(doc, {
+      startY: 35,
+      head: [['§', 'Texto', 'Explicação', 'Profundo', 'Aplicação', 'Exercício']],
+      body: tableData,
+    });
+
+    doc.save(`catechism_integrity_${new Date().toISOString().split('T')[0]}.pdf`);
+  };
+
   const clearInvalidCache = async () => {
     if (!isAdmin) return;
     const invalid = cache.filter(c => c.content.length < 50);
