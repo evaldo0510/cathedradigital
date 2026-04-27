@@ -206,10 +206,17 @@ const LazyParagraph: React.FC<{ paragraph: number; currentParagraph: number; par
 
 const CIC_SECTIONS = [
   {
+    part: 'Introdução',
+    title: 'Prólogo',
+    sections: [
+      { id: 0, title: 'Prólogo: A vida do homem é conhecer e amar a Deus', paragraphs: [1, 25] },
+    ],
+  },
+  {
     part: 'Parte I',
     title: 'A Profissão de Fé',
     sections: [
-      { id: 1, title: 'Eu Creio — Nós Cremos', paragraphs: [1, 184] },
+      { id: 1, title: 'Eu Creio — Nós Cremos', paragraphs: [26, 184] },
       { id: 2, title: 'Creio em Deus Pai', paragraphs: [185, 421] },
       { id: 3, title: 'Creio em Jesus Cristo', paragraphs: [422, 682] },
       { id: 4, title: 'Creio no Espírito Santo', paragraphs: [683, 1065] },
