@@ -165,8 +165,9 @@ const CatechismIntegrity: React.FC = () => {
         <div className="p-4 border-b border-border bg-muted/30 flex items-center justify-between">
           <div className="flex items-center gap-2 bg-background/50 border border-border rounded-lg p-1">
             <button onClick={() => setFilter('all')} className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-md transition-all ${filter === 'all' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Todos</button>
+            <button onClick={() => setFilter('not_cached')} className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-md transition-all ${filter === 'not_cached' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Não Cacheado</button>
             <button onClick={() => setFilter('error_402')} className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-md transition-all ${filter === 'error_402' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Erro 402</button>
-            <button onClick={() => setFilter('empty')} className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-md transition-all ${filter === 'empty' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Vazios</button>
+            <button onClick={() => setFilter('empty')} className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-md transition-all ${filter === 'empty' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Incompletos</button>
           </div>
           <span className="text-[10px] text-muted-foreground uppercase font-black">
             {filteredData.length} itens encontrados
