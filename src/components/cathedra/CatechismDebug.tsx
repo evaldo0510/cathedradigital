@@ -455,7 +455,7 @@ const CatechismDebug: React.FC = () => {
                 )}
               </tbody>
             </table>
-          ) : (
+          ) : view === 'logs' ? (
             <table className="w-full text-left text-sm">
               <thead>
                 <tr className="border-b border-border text-[10px] font-black uppercase tracking-widest text-muted-foreground">
@@ -494,6 +494,57 @@ const CatechismDebug: React.FC = () => {
                 )}
               </tbody>
             </table>
+          ) : (
+            <div className="p-8 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {[
+                  { label: 'Texto Oficial', field: 'content' },
+                  { label: 'Explicação', field: 'explicacao' },
+                  { label: 'Prática', field: 'aplicacao_pratica' }
+                ].map(item => {
+                  const filled = cache.filter(c => c[item.field as keyof CacheEntry] && (c[item.field as keyof CacheEntry] as string).length > 20).length;
+                  const percent = Math.round((filled / 2865) * 100);
+                  return (
+                    <div key={item.field} className="space-y-2">
+                      <div className="flex justify-between text-[10px] font-black uppercase tracking-widest">
+                        <span>{item.label}</span>
+                        <span>{percent}%</span>
+                      </div>
+                      <div className="h-2 bg-muted rounded-full overflow-hidden">
+                        <div className="h-full bg-primary transition-all" style={{ width: `${percent}%` }} />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="border border-border rounded-2xl overflow-hidden">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-muted/50 border-b border-border">
+                    <tr className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                      <th className="px-4 py-3">Parágrafo</th>
+                      <th className="px-4 py-3">Texto</th>
+                      <th className="px-4 py-3">Explicação</th>
+                      <th className="px-4 py-3">Profundo</th>
+                      <th className="px-4 py-3">Aplicação</th>
+                      <th className="px-4 py-3">Exercício</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {cache.slice(0, 50).map(item => (
+                      <tr key={item.id} className="border-b border-border last:border-0">
+                        <td className="px-4 py-3 font-bold">§{item.paragraph}</td>
+                        <td className="px-4 py-3 text-center">{item.content?.length > 50 ? '✅' : '❌'}</td>
+                        <td className="px-4 py-3 text-center">{item.explicacao?.length > 10 ? '✅' : '❌'}</td>
+                        <td className="px-4 py-3 text-center">{item.interpretacao_profunda?.length > 10 ? '✅' : '❌'}</td>
+                        <td className="px-4 py-3 text-center">{item.aplicacao_pratica?.length > 10 ? '✅' : '❌'}</td>
+                        <td className="px-4 py-3 text-center">{item.exercicio?.length > 10 ? '✅' : '❌'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           )}
         </div>
       </div>
