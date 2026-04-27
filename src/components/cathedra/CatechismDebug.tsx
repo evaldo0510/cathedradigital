@@ -196,91 +196,144 @@ const CatechismDebug: React.FC = () => {
 
       <div className="bg-card border border-border rounded-3xl overflow-hidden shadow-sm">
         <div className="p-4 border-b border-border bg-muted/30 flex items-center justify-between">
-          <div className="flex items-center gap-2 bg-background/50 border border-border rounded-lg p-1">
-            <button 
-              onClick={() => setFilter('all')}
-              className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-md transition-all ${filter === 'all' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
-            >
-              Todos
-            </button>
-            <button 
-              onClick={() => setFilter('generated')}
-              className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-md transition-all ${filter === 'generated' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
-            >
-              Sucesso
-            </button>
-            <button 
-              onClick={() => setFilter('error')}
-              className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-md transition-all ${filter === 'error' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
-            >
-              Erros
-            </button>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 bg-background/50 border border-border rounded-lg p-1">
+              <button 
+                onClick={() => setView('cache')}
+                className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-md transition-all ${view === 'cache' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+              >
+                Cache
+              </button>
+              <button 
+                onClick={() => setView('logs')}
+                className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-md transition-all ${view === 'logs' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+              >
+                Logs
+              </button>
+            </div>
+            {view === 'cache' && (
+              <div className="flex items-center gap-2 bg-background/50 border border-border rounded-lg p-1">
+                <button onClick={() => setFilter('all')} className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-md transition-all ${filter === 'all' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Todos</button>
+                <button onClick={() => setFilter('generated')} className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-md transition-all ${filter === 'generated' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Sucesso</button>
+                <button onClick={() => setFilter('error')} className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-md transition-all ${filter === 'error' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Erros</button>
+              </div>
+            )}
           </div>
-          <span className="text-[10px] text-muted-foreground uppercase font-black">Mostrando {filteredCache.length} registros</span>
+          <span className="text-[10px] text-muted-foreground uppercase font-black">
+            {view === 'cache' ? `Mostrando ${filteredCache.length} registros` : `Últimas 100 execuções`}
+          </span>
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead>
-              <tr className="border-b border-border text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                <th className="px-6 py-4">§</th>
-                <th className="px-6 py-4">Status</th>
-                <th className="px-6 py-4">Prévia / Erro</th>
-                <th className="px-6 py-4 text-right">Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredCache.length === 0 ? (
-                <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center text-muted-foreground italic">Nenhum registro encontrado com este filtro</td>
+          {view === 'cache' ? (
+            <table className="w-full text-left text-sm">
+              <thead>
+                <tr className="border-b border-border text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                  <th className="px-6 py-4">§</th>
+                  <th className="px-6 py-4">Status</th>
+                  <th className="px-6 py-4">Retentativas</th>
+                  <th className="px-6 py-4">Prévia / Erro</th>
+                  <th className="px-6 py-4 text-right">Ações</th>
                 </tr>
-              ) : (
-                filteredCache.map(item => (
-                  <tr key={item.id} className="border-b border-border/50 hover:bg-muted/20 transition-colors">
-                    <td className="px-6 py-4 font-bold text-primary font-serif">§{item.paragraph}</td>
-                    <td className="px-6 py-4">
-                      {item.status === 'generated' ? (
-                        <span className="flex items-center gap-1.5 text-xs text-green-600 dark:text-green-400 font-bold">
-                          <Icons.CheckCircle className="w-3 h-3" /> Gerado
-                        </span>
-                      ) : item.status === 'error_402' ? (
-                        <span className="flex items-center gap-1.5 text-xs text-orange-500 font-bold">
-                          <Icons.AlertTriangle className="w-3 h-3" /> Créditos (402)
-                        </span>
-                      ) : (
-                        <span className="flex items-center gap-1.5 text-xs text-destructive font-bold">
-                          <Icons.XCircle className="w-3 h-3" /> Falha
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 max-w-xs md:max-w-md">
-                      <p className="text-xs truncate text-muted-foreground">
-                        {item.status === 'generated' ? item.content : (item.last_error || 'Erro desconhecido')}
-                      </p>
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <button 
-                        onClick={async () => {
-                          const { data } = await supabase.functions.invoke('catechism-text', {
-                            body: { paragraph: item.paragraph, action: 'reprocess' }
-                          });
-                          if (data?.status === 'generated' || data?.status === 'official') {
-                            toast.success(`§${item.paragraph} reprocessado`);
-                            loadData();
-                          } else {
-                            toast.error(`Falha ao reprocessar §${item.paragraph}`);
-                          }
-                        }}
-                        className="p-2 rounded-lg hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all"
-                      >
-                        <Icons.RotateCcw className="w-3.5 h-3.5" />
-                      </button>
-                    </td>
+              </thead>
+              <tbody>
+                {filteredCache.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="px-6 py-12 text-center text-muted-foreground italic">Nenhum registro encontrado com este filtro</td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                ) : (
+                  filteredCache.map(item => (
+                    <tr key={item.id} className="border-b border-border/50 hover:bg-muted/20 transition-colors">
+                      <td className="px-6 py-4 font-bold text-primary font-serif">§{item.paragraph}</td>
+                      <td className="px-6 py-4">
+                        {item.status === 'generated' ? (
+                          <span className="flex items-center gap-1.5 text-xs text-green-600 dark:text-green-400 font-bold">
+                            <Icons.CheckCircle className="w-3 h-3" /> Gerado
+                          </span>
+                        ) : item.status === 'official' ? (
+                          <span className="flex items-center gap-1.5 text-xs text-blue-500 font-bold">
+                            <Icons.CheckCircle className="w-3 h-3" /> Oficial
+                          </span>
+                        ) : item.status === 'error_402' ? (
+                          <span className="flex items-center gap-1.5 text-xs text-orange-500 font-bold">
+                            <Icons.AlertTriangle className="w-3 h-3" /> Créditos (402)
+                          </span>
+                        ) : (
+                          <span className="flex items-center gap-1.5 text-xs text-destructive font-bold">
+                            <Icons.XCircle className="w-3 h-3" /> Falha
+                          </span>
+                        )}
+                      </td>
+                      <td className="px-6 py-4 font-mono text-xs">{item.retry_count} / 3</td>
+                      <td className="px-6 py-4 max-w-xs md:max-w-sm">
+                        <p className="text-xs truncate text-muted-foreground">
+                          {item.status === 'generated' || item.status === 'official' ? item.content : (item.last_error || 'Erro desconhecido')}
+                        </p>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <button 
+                          disabled={isReprocessing}
+                          onClick={async () => {
+                            const { data } = await supabase.functions.invoke('catechism-text', {
+                              body: { paragraph: item.paragraph, action: 'reprocess' }
+                            });
+                            if (data?.status === 'generated' || data?.status === 'official') {
+                              toast.success(`§${item.paragraph} reprocessado`);
+                              loadData();
+                            } else {
+                              toast.error(`Falha ao reprocessar §${item.paragraph}`);
+                            }
+                          }}
+                          className="p-2 rounded-lg hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all disabled:opacity-30"
+                        >
+                          <Icons.RotateCcw className="w-3.5 h-3.5" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          ) : (
+            <table className="w-full text-left text-sm">
+              <thead>
+                <tr className="border-b border-border text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                  <th className="px-6 py-4">§</th>
+                  <th className="px-6 py-4">Status</th>
+                  <th className="px-6 py-4">Duração</th>
+                  <th className="px-6 py-4">Mensagem</th>
+                  <th className="px-6 py-4 text-right">Data</th>
+                </tr>
+              </thead>
+              <tbody>
+                {logs.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="px-6 py-12 text-center text-muted-foreground italic">Nenhum log de execução encontrado</td>
+                  </tr>
+                ) : (
+                  logs.map(log => (
+                    <tr key={log.id} className="border-b border-border/50 hover:bg-muted/20 transition-colors">
+                      <td className="px-6 py-4 font-bold text-primary font-serif">§{log.paragraph}</td>
+                      <td className="px-6 py-4">
+                        <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${
+                          log.status === 'generated' || log.status === 'official' || log.status === 'static' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
+                          log.status === 'error_402' ? 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400' :
+                          'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+                        }`}>
+                          {log.status}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 font-mono text-xs text-muted-foreground">{log.duration_ms}ms</td>
+                      <td className="px-6 py-4 text-xs text-muted-foreground truncate max-w-xs">{log.error_message || '-'}</td>
+                      <td className="px-6 py-4 text-right text-[10px] text-muted-foreground font-medium">
+                        {new Date(log.created_at).toLocaleString('pt-BR')}
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
     </div>
