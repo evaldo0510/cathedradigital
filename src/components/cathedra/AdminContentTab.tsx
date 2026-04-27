@@ -32,6 +32,8 @@ interface Post {
   };
 }
 
+const CatechismDebug = React.lazy(() => import('./CatechismDebug'));
+
 const AdminContentTab: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
@@ -155,6 +157,7 @@ const AdminContentTab: React.FC = () => {
           <TabsTrigger value="approved">Aprovados</TabsTrigger>
           <TabsTrigger value="rejected">Rejeitados</TabsTrigger>
           <TabsTrigger value="all">Todos</TabsTrigger>
+          <TabsTrigger value="catechism">Depuração CIC</TabsTrigger>
         </TabsList>
 
         <TabsContent value={activeTab} className="space-y-4">
@@ -204,6 +207,11 @@ const AdminContentTab: React.FC = () => {
               </Card>
             ))
           )}
+        </TabsContent>
+        <TabsContent value="catechism" className="space-y-4">
+          <React.Suspense fallback={<Card className="h-64 animate-pulse" />}>
+            <CatechismDebug />
+          </React.Suspense>
         </TabsContent>
       </Tabs>
     </div>
