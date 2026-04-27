@@ -102,13 +102,23 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
   if (data?.status === 'not_cached') {
     return (
       <div className="reader-text py-4 space-y-3">
-        <p className="text-sm text-muted-foreground italic">Conteúdo do §{paragraph} ainda não disponível.</p>
-        <button
-          onClick={() => window.location.reload()}
-          className="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2"
-        >
-          <Icons.Loader className="w-3 h-3" /> Tentar carregar novamente
-        </button>
+        <p className="text-sm text-muted-foreground italic">Conteúdo do §{paragraph} ainda não disponível no nosso banco de dados.</p>
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2"
+          >
+            <Icons.Loader className="w-3 h-3" /> Tentar carregar
+          </button>
+          <a 
+            href="https://www.vatican.va/archive/cathechism_po/index_new/prima-pagina-cic_po.html" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="px-4 py-2 bg-card border border-border hover:bg-primary/5 text-muted-foreground hover:text-primary rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2"
+          >
+            <Icons.ExternalLink className="w-3 h-3" /> Ver no Vaticano
+          </a>
+        </div>
       </div>
     );
   }
