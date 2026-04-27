@@ -568,6 +568,18 @@ const Catechism: React.FC = () => {
           </div>
         </div>
       </motion.div>
+      
+      {user?.role === 'admin' && (
+        <div className="flex justify-center">
+          <button 
+            onClick={() => navigate('/catechism/integrity')}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-orange-500/10 text-orange-600 border border-orange-500/20 text-[10px] font-black uppercase tracking-widest hover:bg-orange-500/20 transition-all"
+          >
+            <Icons.Activity className="w-3.5 h-3.5" /> Painel de Integridade (Admin)
+          </button>
+        </div>
+      )}
+
 
       {/* Suggestion Card */}
       {nextUnreadParagraph && (
