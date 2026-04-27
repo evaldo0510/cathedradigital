@@ -33,8 +33,14 @@ export const fetchCatechismParagraph = async (paragraph: number, forceGenerate =
   if (error) {
     throw new Error(error.message || `Erro ao carregar o parágrafo §${paragraph}`);
   }
-
+  
   const parsed = typeof data === 'string' ? JSON.parse(data) : data;
+  
+  if (parsed.status === 'error_402') {
+    window.dispatchEvent(new CustomEvent('ai-status-error', { 
+      detail: { type: 'credits_exhausted', message: `Créditos esgotados ao gerar §${paragraph}` } 
+    }));
+  }
 
   const result: CatechismParagraph = {
     paragraph: parsed.paragraph || paragraph,
