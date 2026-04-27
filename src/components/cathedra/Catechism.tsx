@@ -157,7 +157,7 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
               reflexaoFinal: data.reflexaoFinal, 
               exercicio: data.exercicio 
             }} 
-            title="Reflexão Doutrinária" 
+            title="Ensino & Reflexão Doutrinária" 
           />
         </div>
       )}
