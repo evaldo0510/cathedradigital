@@ -66,6 +66,26 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
     );
   }
 
+  if (data?.status === 'error_402') {
+    return (
+      <div className="reader-text bg-amber-500/5 border border-amber-500/10 rounded-2xl p-4 text-amber-600 dark:text-amber-400 font-serif text-sm py-4 space-y-3">
+        <div className="font-bold flex items-center gap-2">
+           <Icons.AlertTriangle className="w-4 h-4" />
+           Geração pausada: Créditos de IA esgotados.
+        </div>
+        <p className="text-xs opacity-80 leading-relaxed">
+          O parágrafo §{paragraph} ainda não foi gerado e o limite de IA do workspace foi atingido. 
+          O conteúdo será gerado automaticamente assim que os créditos forem recarregados.
+        </p>
+        {data.content && data.content.length > 30 && (
+           <div className="pt-2 border-t border-amber-500/10 text-foreground italic opacity-90">
+             "{data.content}"
+           </div>
+        )}
+      </div>
+    );
+  }
+
   // Not cached - this shouldn't happen with the new auto-generate function, but we keep a generic fallback
   if (data?.status === 'not_cached') {
     return (
