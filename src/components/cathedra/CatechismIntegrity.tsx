@@ -196,6 +196,8 @@ const CatechismIntegrity: React.FC = () => {
                     <td className="px-6 py-4">
                       {item.status === 'error_402' ? (
                         <span className="text-xs text-orange-600 font-medium">Falta de Créditos IA</span>
+                      ) : item.status === 'not_cached' ? (
+                        <span className="text-xs text-blue-500 font-medium">Nunca Acessado / Sem Cache</span>
                       ) : (
                         <span className="text-xs text-destructive font-medium">Conteúdo Incompleto</span>
                       )}
