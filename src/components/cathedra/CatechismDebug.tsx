@@ -264,9 +264,9 @@ const CatechismDebug: React.FC = () => {
                           const { data } = await supabase.functions.invoke('catechism-text', {
                             body: { paragraph: item.paragraph, action: 'reprocess' }
                           });
-                          if (data?.status === 'generated') {
+                          if (data?.status === 'generated' || data?.status === 'official') {
                             toast.success(`§${item.paragraph} reprocessado`);
-                            loadCache();
+                            loadData();
                           } else {
                             toast.error(`Falha ao reprocessar §${item.paragraph}`);
                           }
