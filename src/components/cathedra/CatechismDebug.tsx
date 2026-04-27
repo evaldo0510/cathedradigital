@@ -327,6 +327,12 @@ const CatechismDebug: React.FC = () => {
               >
                 Logs
               </button>
+              <button 
+                onClick={() => setView('integrity')}
+                className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-md transition-all ${view === 'integrity' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+              >
+                Integridade
+              </button>
             </div>
             {view === 'cache' && (
               <div className="flex items-center gap-2 bg-background/50 border border-border rounded-lg p-1">
