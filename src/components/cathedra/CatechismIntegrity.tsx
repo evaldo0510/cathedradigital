@@ -148,15 +148,15 @@ const CatechismIntegrity: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-card border border-border rounded-2xl p-4">
-          <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Total com Problemas</span>
-          <div className="text-2xl font-serif font-bold text-foreground">{stats.totalIssues}</div>
+          <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Nunca Acessados</span>
+          <div className="text-2xl font-serif font-bold text-foreground">{stats.notCached}</div>
         </div>
         <div className="bg-card border border-border rounded-2xl p-4">
           <span className="text-[10px] font-black uppercase tracking-widest text-orange-500">Erro 402 (Créditos)</span>
           <div className="text-2xl font-serif font-bold text-foreground">{stats.error402}</div>
         </div>
         <div className="bg-card border border-border rounded-2xl p-4">
-          <span className="text-[10px] font-black uppercase tracking-widest text-destructive">Sem Conteúdo</span>
+          <span className="text-[10px] font-black uppercase tracking-widest text-destructive">Incompletos</span>
           <div className="text-2xl font-serif font-bold text-foreground">{stats.empty}</div>
         </div>
       </div>
