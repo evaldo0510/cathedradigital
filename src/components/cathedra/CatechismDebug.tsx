@@ -3,13 +3,24 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { useAuth } from '@/hooks/useAuth';
 
 interface CacheEntry {
   id: string;
   paragraph: number;
   content: string;
-  status: 'generated' | 'error_402' | 'error';
+  status: 'generated' | 'error_402' | 'error' | 'official' | 'static';
   last_error: string | null;
+  retry_count: number;
+  created_at: string;
+}
+
+interface ExecutionLog {
+  id: string;
+  paragraph: number;
+  status: string;
+  duration_ms: number;
+  error_message: string | null;
   created_at: string;
 }
 
