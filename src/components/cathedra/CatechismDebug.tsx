@@ -362,6 +362,13 @@ const CatechismDebug: React.FC = () => {
                   className="p-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-all"
                   title="Exportar CSV"
                 >
+                  <Icons.FileText className="w-3 h-3" />
+                </button>
+                <button 
+                  onClick={exportLogsToPDF}
+                  className="p-2 rounded-lg bg-red-500/10 text-red-600 hover:bg-red-500/20 transition-all"
+                  title="Exportar PDF"
+                >
                   <Icons.Download className="w-3 h-3" />
                 </button>
               </div>
