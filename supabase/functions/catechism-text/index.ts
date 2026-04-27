@@ -203,9 +203,13 @@ serve(async (req: Request) => {
       } else {
         const status = resp.status === 402 ? 'error_402' : 'error';
         await logExecution(paragraph, status, `AI status ${resp.status}`, adminId);
+        activeRequests--;
+        return new Response(JSON.stringify({ paragraph, status }), { headers: corsHeaders });
       }
     } catch (e) {
       await logExecution(paragraph, 'exception', String(e), adminId);
+      activeRequests--;
+      return new Response(JSON.stringify({ paragraph, status: 'error', error: String(e) }), { headers: corsHeaders });
     }
 
     activeRequests--;

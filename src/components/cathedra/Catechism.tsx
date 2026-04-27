@@ -77,10 +77,22 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
           O parágrafo §{paragraph} ainda não foi gerado e o limite de IA do workspace foi atingido. 
           O conteúdo será gerado automaticamente assim que os créditos forem recarregados.
         </p>
-        {data.content && data.content.length > 30 && (
+        {data.content && data.content.length > 30 ? (
            <div className="pt-2 border-t border-amber-500/10 text-foreground italic opacity-90">
              "{data.content}"
            </div>
+        ) : (
+          <div className="pt-2 border-t border-amber-500/10 flex flex-col gap-2">
+            <p className="text-[10px] uppercase font-black tracking-widest opacity-60">Alternativa:</p>
+            <a 
+              href={`https://www.vatican.va/archive/cathechism_po/index_new/prima-pagina-cic_po.html`} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-primary hover:underline font-bold"
+            >
+              Ver no site oficial do Vaticano <Icons.ExternalLink className="w-3 h-3" />
+            </a>
+          </div>
         )}
       </div>
     );
@@ -90,13 +102,23 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
   if (data?.status === 'not_cached') {
     return (
       <div className="reader-text py-4 space-y-3">
-        <p className="text-sm text-muted-foreground italic">Conteúdo do §{paragraph} ainda não disponível.</p>
-        <button
-          onClick={() => window.location.reload()}
-          className="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2"
-        >
-          <Icons.Loader className="w-3 h-3" /> Tentar carregar novamente
-        </button>
+        <p className="text-sm text-muted-foreground italic">Conteúdo do §{paragraph} ainda não disponível no nosso banco de dados.</p>
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2"
+          >
+            <Icons.Loader className="w-3 h-3" /> Tentar carregar
+          </button>
+          <a 
+            href="https://www.vatican.va/archive/cathechism_po/index_new/prima-pagina-cic_po.html" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="px-4 py-2 bg-card border border-border hover:bg-primary/5 text-muted-foreground hover:text-primary rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2"
+          >
+            <Icons.ExternalLink className="w-3 h-3" /> Ver no Vaticano
+          </a>
+        </div>
       </div>
     );
   }
