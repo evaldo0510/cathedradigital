@@ -5,20 +5,26 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
-// Key paragraphs in Portuguese
-const PT_PARAGRAPHS: Record<number, string> = {
-  1: 'Deus, infinitamente perfeito e bem-aventurado...',
-  2: 'Para que este apelo ressoasse...',
-  3: 'Os que, com a ajuda de Deus...',
-  27: 'O desejo de Deus está inscrito...',
-  1324: 'A Eucaristia é «fonte e cume...»',
-  1325: 'A Eucaristia contém todo o tesouro...',
-  2558: '«Grande é o mistério da fé»...',
-  2559: '«A oração é a elevação da alma...»',
-  2560: '«Se conhecesses o dom de Deus!»...',
-  2561: '«Tu é que Lhe pedirias...»',
-  2562: 'De onde vem a oração do homem?...',
-  2865: 'Com o «Amém» final...',
+// Key paragraphs with full deep content
+const PT_PARAGRAPHS: Record<number, any> = {
+  1: {
+    content: 'Deus, infinitamente perfeito e bem-aventurado em si mesmo, num desígnio de pura bondade, criou livremente o homem para o tornar participante da sua vida bem-aventurada. É por isso que, em todo o tempo e em todo o lugar, Ele está perto do homem. Chama-o e ajuda-o a procurá-Lo, a conhecê-Lo e a amá-Lo com todas as suas forças. Convoca todos os homens, dispersos pelo pecado, para a unidade da sua família, a Igreja. Para isso, enviou o seu Filho como Redentor e Salvador, quando chegou a plenitude dos tempos. N\'Ele e por Ele, chama os homens a tornarem-se, no Espírito Santo, seus filhos adotivos e, portanto, herdeiros da sua vida bem-aventurada.',
+    textoBase: "Deus criou o homem para o tornar participante da sua vida.",
+    explicacao: "Este parágrafo estabelece o fundamento de toda a fé: fomos criados por amor e para o amor.",
+    interpretacaoProfunda: "A vida cristã não é um esforço humano, mas uma resposta ao chamado divino que está sempre 'perto do homem'.",
+    aplicacaoPratica: "Reconheça a presença de Deus em seu dia a dia, pois Ele nunca está longe.",
+    reflexaoFinal: "Você se sente um filho adotivo de Deus?",
+    exercicio: "Faça uma oração de agradecimento pela sua criação."
+  },
+  1324: {
+    content: 'A Eucaristia é «fonte e cume de toda a vida cristã». «Os restantes sacramentos, assim como todos os ministérios eclesiásticos e obras de apostolado, estão vinculados à sagrada Eucaristia e a ela se ordenam. Com efeito, a santíssima Eucaristia contém todo o tesouro espiritual da Igreja, isto é, o próprio Cristo, a nossa Páscoa».',
+    textoBase: "A Eucaristia é fonte e cume de toda a vida cristã.",
+    explicacao: "Toda a vida da Igreja gira em torno da presença real de Cristo no altar.",
+    interpretacaoProfunda: "A Eucaristia não é apenas um símbolo, mas a posse antecipada da vida eterna.",
+    aplicacaoPratica: "Participe da Missa com a consciência de que está diante do próprio Deus.",
+    reflexaoFinal: "Como a Eucaristia transforma o seu cotidiano?",
+    exercicio: "Planeje uma visita ao Santíssimo Sacramento hoje."
+  }
 };
 
 const CONCURRENCY_LIMIT = 5;
@@ -30,14 +36,10 @@ serve(async (req: Request) => {
   }
 
   if (activeRequests >= CONCURRENCY_LIMIT) {
-    return new Response(JSON.stringify({ error: 'Sistema sobrecarregado. Tente novamente em instantes.' }), {
-      status: 429,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    return new Response(JSON.stringify({ error: 'Sistema sobrecarregado.' }), { status: 429, headers: corsHeaders });
   }
 
   activeRequests++;
-
   const startTime = Date.now();
   const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
   const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
@@ -46,18 +48,8 @@ serve(async (req: Request) => {
     const duration = Date.now() - startTime;
     await fetch(`${supabaseUrl}/rest/v1/catechism_execution_logs`, {
       method: 'POST',
-      headers: {
-        'apikey': serviceKey,
-        'Authorization': `Bearer ${serviceKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        paragraph,
-        status,
-        duration_ms: duration,
-        error_message: error,
-        admin_id: adminId,
-      }),
+      headers: { 'apikey': serviceKey, 'Authorization': `Bearer ${serviceKey}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ paragraph, status, duration_ms: duration, error_message: error, admin_id: adminId }),
     }).catch(console.error);
   };
 
@@ -67,9 +59,7 @@ serve(async (req: Request) => {
 
     if (authHeader) {
       const token = authHeader.replace('Bearer ', '');
-      const userResp = await fetch(`${supabaseUrl}/auth/v1/user`, {
-        headers: { 'Authorization': `Bearer ${token}`, 'apikey': serviceKey }
-      });
+      const userResp = await fetch(`${supabaseUrl}/auth/v1/user`, { headers: { 'Authorization': `Bearer ${token}`, 'apikey': serviceKey } });
       if (userResp.ok) {
         const userData = await userResp.json();
         adminId = userData.id;
@@ -78,106 +68,128 @@ serve(async (req: Request) => {
 
     const body = await req.json();
     const paragraph = body.paragraph;
-    const forceReprocess = body.action === 'reprocess' || body.action === 'clear';
+    const forceReprocess = body.action === 'reprocess';
 
     if (!paragraph || paragraph < 1 || paragraph > 2865) {
       activeRequests--;
-      return new Response(JSON.stringify({ error: 'Parágrafo inválido' }), {
-        status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      return new Response(JSON.stringify({ error: 'Parágrafo inválido' }), { status: 400, headers: corsHeaders });
     }
 
+    // 1. Static
     if (PT_PARAGRAPHS[paragraph]) {
       await logExecution(paragraph, 'static', undefined, adminId);
       activeRequests--;
-      return new Response(JSON.stringify({ paragraph, content: PT_PARAGRAPHS[paragraph], status: 'static' }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      return new Response(JSON.stringify({ ...PT_PARAGRAPHS[paragraph], paragraph, status: 'static' }), { headers: corsHeaders });
     }
 
-    const officialResp = await fetch(`${supabaseUrl}/rest/v1/catechism_official?paragraph=eq.${paragraph}&select=content`, {
+    // 2. Official DB
+    const officialResp = await fetch(`${supabaseUrl}/rest/v1/catechism_official?paragraph=eq.${paragraph}&select=*`, {
       headers: { 'apikey': serviceKey, 'Authorization': `Bearer ${serviceKey}` },
     });
-
     if (officialResp.ok) {
       const rows = await officialResp.json();
       if (rows?.[0]?.content) {
         await logExecution(paragraph, 'official', undefined, adminId);
         activeRequests--;
-        return new Response(JSON.stringify({ paragraph, content: rows[0].content, status: 'official' }), {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
+        const row = rows[0];
+        return new Response(JSON.stringify({ 
+          paragraph, 
+          content: row.content,
+          textoBase: row.texto_base,
+          explicacao: row.explicacao,
+          interpretacaoProfunda: row.interpretacao_profunda,
+          aplicacaoPratica: row.aplicacao_pratica,
+          reflexaoFinal: row.reflexao_final,
+          exercicio: row.exercicio,
+          status: 'official' 
+        }), { headers: corsHeaders });
       }
     }
 
+    // 3. Cache
     const dbResp = await fetch(`${supabaseUrl}/rest/v1/catechism_cache?paragraph=eq.${paragraph}&select=*`, {
       headers: { 'apikey': serviceKey, 'Authorization': `Bearer ${serviceKey}` },
     });
-
-    let existingRecord = null;
     if (dbResp.ok) {
       const rows = await dbResp.json();
-      existingRecord = rows?.[0];
-      
+      const existingRecord = rows?.[0];
       if (existingRecord?.content && existingRecord.content.length > 50 && existingRecord.status === 'generated' && !forceReprocess) {
         await logExecution(paragraph, 'cached', undefined, adminId);
         activeRequests--;
-        return new Response(JSON.stringify({ paragraph, content: existingRecord.content, status: 'cached' }), {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
+        return new Response(JSON.stringify({ 
+          paragraph, 
+          content: existingRecord.content,
+          textoBase: existingRecord.texto_base,
+          explicacao: existingRecord.explicacao,
+          interpretacaoProfunda: existingRecord.interpretacao_profunda,
+          aplicacaoPratica: existingRecord.aplicacao_pratica,
+          reflexaoFinal: existingRecord.reflexao_final,
+          exercicio: existingRecord.exercicio,
+          status: 'cached' 
+        }), { headers: corsHeaders });
       }
     }
 
-    const maxRetries = 5;
-    const currentRetry = existingRecord?.retry_count || 0;
-    
-    if (forceReprocess && currentRetry >= maxRetries) {
-      const errorMsg = `Limite de retentativas atingido (§${paragraph}).`;
-      await logExecution(paragraph, 'max_retries_exceeded', errorMsg, adminId);
-      activeRequests--;
-      return new Response(JSON.stringify({ paragraph, content: existingRecord?.content, status: 'error_max_retries' }), { status: 429, headers: corsHeaders });
-    }
-
+    // 4. AI Generation
     try {
       const resp = await fetch(`${supabaseUrl}/functions/v1/colloquium`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${serviceKey}` },
         body: JSON.stringify({
-          messages: [{ role: 'user', content: `Reproduza o texto do parágrafo §${paragraph} do Catecismo da Igreja Católica em português.` }],
-          system_prompt: "Transcrição fiel do Catecismo.",
+          messages: [{ 
+            role: 'user', 
+            content: `Reproduza o texto integral do parágrafo §${paragraph} do Catecismo da Igreja Católica em português. Além do texto oficial, forneça uma análise estruturada contendo:
+            1. textoBase: Uma frase resumo.
+            2. explicacao: Uma explicação simples (2-3 frases).
+            3. interpretacaoProfunda: Uma análise teológica mais densa.
+            4. aplicacaoPratica: Como viver isso hoje.
+            5. reflexaoFinal: Uma pergunta para meditação.
+            6. exercicio: Uma ação concreta.
+            Retorne em formato JSON.` 
+          }],
+          system_prompt: "Você é um especialista em Catecismo. Retorne SEMPRE um JSON válido com os campos: content, textoBase, explicacao, interpretacaoProfunda, aplicacaoPratica, reflexaoFinal, exercicio.",
           stream: false,
         }),
       });
 
       if (resp.ok) {
         const data = await resp.json();
-        const content = (data.choices?.[0]?.message?.content || '').trim();
-
-        if (content.length > 30) {
-          await fetch(`${supabaseUrl}/rest/v1/catechism_cache`, {
-            method: 'POST',
-            headers: { 'apikey': serviceKey, 'Authorization': `Bearer ${serviceKey}`, 'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates' },
-            body: JSON.stringify({ paragraph, content, status: 'generated', last_error: null, retry_count: 0 }),
-          });
-          await logExecution(paragraph, 'generated', undefined, adminId);
-          activeRequests--;
-          return new Response(JSON.stringify({ paragraph, content, status: 'generated' }), { headers: corsHeaders });
+        let aiContent = (data.choices?.[0]?.message?.content || '').trim();
+        
+        if (aiContent.startsWith('```json')) aiContent = aiContent.replace(/^```json/, '').replace(/```$/, '').trim();
+        
+        try {
+          const p = JSON.parse(aiContent);
+          if (p.content && p.content.length > 30) {
+            await fetch(`${supabaseUrl}/rest/v1/catechism_cache`, {
+              method: 'POST',
+              headers: { 'apikey': serviceKey, 'Authorization': `Bearer ${serviceKey}`, 'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates' },
+              body: JSON.stringify({ 
+                paragraph, 
+                content: p.content, 
+                status: 'generated',
+                texto_base: p.textoBase,
+                explicacao: p.explicacao,
+                interpretacao_profunda: p.interpretacaoProfunda,
+                aplicacao_pratica: p.aplicacaoPratica,
+                reflexao_final: p.reflexaoFinal,
+                exercicio: p.exercicio
+              }),
+            });
+            await logExecution(paragraph, 'generated', undefined, adminId);
+            activeRequests--;
+            return new Response(JSON.stringify({ ...p, paragraph, status: 'generated' }), { headers: corsHeaders });
+          }
+        } catch (e) {
+          if (aiContent.length > 30) {
+             await logExecution(paragraph, 'generated_raw', undefined, adminId);
+             activeRequests--;
+             return new Response(JSON.stringify({ paragraph, content: aiContent, status: 'generated' }), { headers: corsHeaders });
+          }
         }
       } else {
         const status = resp.status === 402 ? 'error_402' : 'error';
-        const errorMsg = `Erro ${resp.status}`;
-        await fetch(`${supabaseUrl}/rest/v1/catechism_cache`, {
-          method: 'POST',
-          headers: { 'apikey': serviceKey, 'Authorization': `Bearer ${serviceKey}`, 'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates' },
-          body: JSON.stringify({ 
-            paragraph, 
-            status, 
-            last_error: errorMsg, 
-            retry_count: forceReprocess ? currentRetry + 1 : currentRetry 
-          }),
-        });
-        await logExecution(paragraph, status, errorMsg, adminId);
+        await logExecution(paragraph, status, `AI status ${resp.status}`, adminId);
       }
     } catch (e) {
       await logExecution(paragraph, 'exception', String(e), adminId);

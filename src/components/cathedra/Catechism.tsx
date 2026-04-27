@@ -124,6 +124,21 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
           }}>{seg.value}</ReactMarkdown>
         )
       )}
+      {data && (data.textoBase || data.explicacao) && (
+        <div className="mt-8 pt-8 border-t border-border/30">
+          <DeepContentSection 
+            content={{ 
+              textoBase: data.textoBase, 
+              explicacao: data.explicacao, 
+              interpretacaoProfunda: data.interpretacaoProfunda, 
+              aplicacaoPratica: data.aplicacaoPratica, 
+              reflexaoFinal: data.reflexaoFinal, 
+              exercicio: data.exercicio 
+            }} 
+            title="Reflexão Doutrinária" 
+          />
+        </div>
+      )}
     </div>
   );
 };
@@ -159,11 +174,7 @@ const LazyParagraph: React.FC<{ paragraph: number; currentParagraph: number; par
         <div className="h-px flex-1 bg-gradient-to-r from-border/60 via-border/20 to-transparent" />
       </div>
       <CatechismContent paragraph={p} onNavigateToBible={handleNavigateToBible} isVisible={isVisible} />
-      {p === 1324 && (
-        <div className="mt-8 pt-8 border-t border-border/30">
-          <DeepContentSection content={{ textoBase: "A Eucaristia é «fonte e cume de toda a vida cristã».", explicacao: "Isso significa que tudo o que a Igreja faz nasce da Eucaristia e para ela caminha.", interpretacaoProfunda: "A santíssima Eucaristia contém todo o tesouro espiritual da Igreja, isto é, o próprio Cristo.", aplicacaoPratica: "Coloque a Eucaristia no centro de sua vida espiritual.", reflexaoFinal: "Como está sua relação com Jesus Eucarístico?", exercicio: "Faça uma visita ao Santíssimo Sacramento hoje." }} title="Reflexão Doutrinária" />
-        </div>
-      )}
+
       <div className="mt-4 opacity-0 group-hover:opacity-100 transition-opacity">
         <NotesPanel contentType="catechism" contentId={`${p}`} contentLabel={`§${p}`} />
       </div>

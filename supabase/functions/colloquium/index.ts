@@ -60,30 +60,41 @@ serve(async (req) => {
     }
 
     const token = authHeader.replace("Bearer ", "");
+    const isServiceCall = token === supabaseServiceKey;
+    let user = null;
+    let isPremium = false;
+
     const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
-    const supabaseUser = createClient(supabaseUrl, token.includes("eyJ") ? Deno.env.get("SUPABASE_ANON_KEY")! : supabaseServiceKey, {
-      global: { headers: { Authorization: authHeader } },
-    });
 
-    const { data: { user }, error: authError } = await supabaseUser.auth.getUser();
-
-    if (authError || !user) {
-      console.error("Invalid session:", authError);
-      return new Response(JSON.stringify({ error: "Sessão inválida ou expirada." }), {
-        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+    if (isServiceCall) {
+      // Internal call from another edge function (like catechism-text)
+      isPremium = true; 
+    } else {
+      const supabaseUser = createClient(supabaseUrl, token.includes("eyJ") ? Deno.env.get("SUPABASE_ANON_KEY")! : supabaseServiceKey, {
+        global: { headers: { Authorization: authHeader } },
       });
+
+      const { data: { user: authedUser }, error: authError } = await supabaseUser.auth.getUser();
+
+      if (authError || !authedUser) {
+        console.error("Invalid session:", authError);
+        return new Response(JSON.stringify({ error: "Sessão inválida ou expirada." }), {
+          status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      user = authedUser;
+
+      // Check if user is premium
+      const { data: profile } = await supabaseAdmin
+        .from("profiles")
+        .select("is_premium")
+        .eq("id", user.id)
+        .single();
+
+      isPremium = profile?.is_premium === true;
     }
 
-    // Check if user is premium
-    const { data: profile } = await supabaseAdmin
-      .from("profiles")
-      .select("is_premium")
-      .eq("id", user.id)
-      .single();
-
-    const isPremium = profile?.is_premium === true;
-
-    if (!isPremium) {
+    if (!isPremium && user) {
       // Count today's messages
       const todayStart = new Date();
       todayStart.setHours(0, 0, 0, 0);
