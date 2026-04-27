@@ -281,7 +281,7 @@ const CatechismDebug: React.FC = () => {
             disabled={isReprocessing}
             className="px-4 py-2 rounded-xl bg-orange-500 text-white text-xs font-black uppercase tracking-widest hover:brightness-110 transition-all disabled:opacity-50 flex items-center gap-2 shadow-sm"
           >
-            <Icons.Wrench className="w-3 h-3" /> Reparar Incompletos
+            <Icons.PenTool className="w-3 h-3" /> Reparar Incompletos
           </button>
           <button 
             onClick={clearInvalidCache}
