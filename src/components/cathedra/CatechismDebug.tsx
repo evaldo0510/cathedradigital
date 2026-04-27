@@ -133,6 +133,16 @@ const CatechismDebug: React.FC = () => {
     invalid: cache.filter(c => c.content.length < 50).length
   };
 
+  if (!isAdmin) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-8">
+        <Icons.Lock className="w-16 h-16 text-destructive mb-4 opacity-20" />
+        <h2 className="text-xl font-bold mb-2">Acesso Restrito</h2>
+        <p className="text-muted-foreground">Esta área é exclusiva para administradores.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-8 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -142,7 +152,7 @@ const CatechismDebug: React.FC = () => {
         </div>
         <div className="flex items-center gap-2">
           <button 
-            onClick={loadCache}
+            onClick={loadData}
             disabled={loading}
             className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all disabled:opacity-50"
             title="Atualizar"
@@ -150,11 +160,11 @@ const CatechismDebug: React.FC = () => {
             <Icons.RotateCcw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           </button>
           <button 
-            onClick={reprocessAll402}
+            onClick={reprocessAllErrors}
             disabled={isReprocessing || stats.pending === 0}
             className="px-4 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-black uppercase tracking-widest hover:brightness-110 transition-all disabled:opacity-50 flex items-center gap-2"
           >
-            <Icons.Zap className="w-3 h-3" /> Reprocessar Pendentes
+            <Icons.Zap className="w-3 h-3" /> Reprocessar Erros
           </button>
           <button 
             onClick={clearInvalidCache}
