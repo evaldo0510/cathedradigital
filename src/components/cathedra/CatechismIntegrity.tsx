@@ -129,12 +129,34 @@ const CatechismIntegrity: React.FC = () => {
           <h1 className="text-2xl font-serif font-bold text-foreground">Integridade do Conteúdo</h1>
           <p className="text-sm text-muted-foreground">Parágrafos sem conteúdo ou com erro de créditos</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
            <button 
             onClick={() => navigate('/catechism/debug')}
             className="px-4 py-2 rounded-xl border border-border text-xs font-black uppercase tracking-widest hover:bg-muted transition-all flex items-center gap-2"
           >
             <Icons.Settings className="w-3 h-3" /> Debug Geral
+          </button>
+          <button 
+            onClick={async () => {
+              const missing = [];
+              const cachedParas = new Set(data.map(d => d.paragraph));
+              for(let i=1; i<=2865; i++) {
+                if(!cachedParas.has(i)) missing.push(i);
+                if(missing.length >= 10) break; // Start small
+              }
+              if(missing.length === 0) {
+                toast.success('Nenhum gap detectado!');
+                return;
+              }
+              toast.info(`Processando ${missing.length} novos parágrafos...`);
+              for(const p of missing) {
+                await reprocessParagraph(p);
+              }
+            }}
+            disabled={isReprocessing}
+            className="px-4 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-black uppercase tracking-widest hover:brightness-110 transition-all flex items-center gap-2 shadow-sm"
+          >
+            <Icons.Zap className="w-3 h-3" /> Preencher Gaps (Lote 10)
           </button>
           <button 
             onClick={loadData}
