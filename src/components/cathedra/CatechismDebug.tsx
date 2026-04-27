@@ -394,6 +394,24 @@ const CatechismDebug: React.FC = () => {
                 <button onClick={() => setFilter('error')} className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-md transition-all ${filter === 'error' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Erros</button>
               </div>
             )}
+            {view === 'integrity' && (
+              <div className="flex items-center gap-2">
+                <button 
+                  onClick={exportIntegrityToCSV}
+                  className="p-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-all"
+                  title="Exportar CSV"
+                >
+                  <Icons.FileText className="w-3 h-3" />
+                </button>
+                <button 
+                  onClick={exportIntegrityToPDF}
+                  className="p-2 rounded-lg bg-red-500/10 text-red-600 hover:bg-red-500/20 transition-all"
+                  title="Exportar PDF"
+                >
+                  <Icons.Download className="w-3 h-3" />
+                </button>
+              </div>
+            )}
           </div>
           <div className="flex items-center gap-4">
             {view === 'logs' && (
