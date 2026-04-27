@@ -98,16 +98,18 @@ const CatechismIntegrity: React.FC = () => {
   };
 
   const filteredData = data.filter(item => {
-    if (filter === 'all') return item.status === 'error_402' || !item.content || item.content.length < 50;
+    if (filter === 'all') return item.status === 'error_402' || item.status === 'not_cached' || !item.content || item.content.length < 50;
     if (filter === 'error_402') return item.status === 'error_402';
-    if (filter === 'empty') return !item.content || item.content.length < 50;
+    if (filter === 'not_cached') return item.status === 'not_cached';
+    if (filter === 'empty') return item.status !== 'not_cached' && (!item.content || item.content.length < 50);
     return true;
   });
 
   const stats = {
     error402: data.filter(i => i.status === 'error_402').length,
-    empty: data.filter(i => !i.content || i.content.length < 50).length,
-    totalIssues: data.filter(i => i.status === 'error_402' || !i.content || i.content.length < 50).length
+    empty: data.filter(i => i.status !== 'not_cached' && (!i.content || i.content.length < 50)).length,
+    notCached: notCachedCount,
+    totalIssues: data.filter(i => i.status === 'error_402' || i.status === 'not_cached' || !i.content || i.content.length < 50).length
   };
 
   if (!isAdmin) {
