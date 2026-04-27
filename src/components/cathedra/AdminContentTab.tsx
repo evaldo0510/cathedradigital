@@ -32,6 +32,8 @@ interface Post {
   };
 }
 
+const CatechismDebug = React.lazy(() => import('./CatechismDebug'));
+
 const AdminContentTab: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
