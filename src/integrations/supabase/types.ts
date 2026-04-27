@@ -61,31 +61,49 @@ export type Database = {
       }
       catechism_cache: {
         Row: {
+          aplicacao_pratica: string | null
           content: string
           created_at: string
+          exercicio: string | null
+          explicacao: string | null
           id: string
+          interpretacao_profunda: string | null
           last_error: string | null
           paragraph: number
+          reflexao_final: string | null
           retry_count: number | null
           status: string | null
+          texto_base: string | null
         }
         Insert: {
+          aplicacao_pratica?: string | null
           content: string
           created_at?: string
+          exercicio?: string | null
+          explicacao?: string | null
           id?: string
+          interpretacao_profunda?: string | null
           last_error?: string | null
           paragraph: number
+          reflexao_final?: string | null
           retry_count?: number | null
           status?: string | null
+          texto_base?: string | null
         }
         Update: {
+          aplicacao_pratica?: string | null
           content?: string
           created_at?: string
+          exercicio?: string | null
+          explicacao?: string | null
           id?: string
+          interpretacao_profunda?: string | null
           last_error?: string | null
           paragraph?: number
+          reflexao_final?: string | null
           retry_count?: number | null
           status?: string | null
+          texto_base?: string | null
         }
         Relationships: []
       }
@@ -124,19 +142,37 @@ export type Database = {
       }
       catechism_official: {
         Row: {
+          aplicacao_pratica: string | null
           content: string
           created_at: string | null
+          exercicio: string | null
+          explicacao: string | null
+          interpretacao_profunda: string | null
           paragraph: number
+          reflexao_final: string | null
+          texto_base: string | null
         }
         Insert: {
+          aplicacao_pratica?: string | null
           content: string
           created_at?: string | null
+          exercicio?: string | null
+          explicacao?: string | null
+          interpretacao_profunda?: string | null
           paragraph: number
+          reflexao_final?: string | null
+          texto_base?: string | null
         }
         Update: {
+          aplicacao_pratica?: string | null
           content?: string
           created_at?: string | null
+          exercicio?: string | null
+          explicacao?: string | null
+          interpretacao_profunda?: string | null
           paragraph?: number
+          reflexao_final?: string | null
+          texto_base?: string | null
         }
         Relationships: []
       }
