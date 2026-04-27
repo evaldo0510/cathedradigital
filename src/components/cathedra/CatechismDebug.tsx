@@ -21,6 +21,7 @@ interface ExecutionLog {
   status: string;
   duration_ms: number;
   error_message: string | null;
+  admin_id: string | null;
   created_at: string;
 }
 
@@ -32,6 +33,8 @@ const CatechismDebug: React.FC = () => {
   const [isReprocessing, setIsReprocessing] = useState(false);
   const [filter, setFilter] = useState<'all' | 'generated' | 'error'>('all');
   const [view, setView] = useState<'cache' | 'logs'>('cache');
+  const [dateRange, setDateRange] = useState({ start: '', end: '' });
+
 
   const isAdmin = profile?.role === 'admin';
 
@@ -76,22 +79,22 @@ const CatechismDebug: React.FC = () => {
 
     toast.loading(`Reprocessando ${pending.length} parágrafos...`, { id: 'reprocess' });
 
-    for (const item of pending) {
-      if (item.retry_count >= 3) continue; // Skip max retries
-
-      try {
-        const { data, error } = await supabase.functions.invoke('catechism-text', {
-          body: { paragraph: item.paragraph, action: 'reprocess' }
-        });
-
-        if (!error && (data?.status === 'generated' || data?.status === 'official')) {
-          successCount++;
-        } else {
+    // Process in chunks to respect concurrency limit
+    const CHUNK_SIZE = 5;
+    for (let i = 0; i < pending.length; i += CHUNK_SIZE) {
+      const chunk = pending.slice(i, i + CHUNK_SIZE);
+      await Promise.all(chunk.map(async (item) => {
+        if (item.retry_count >= 5) return;
+        try {
+          const { data, error } = await supabase.functions.invoke('catechism-text', {
+            body: { paragraph: item.paragraph, action: 'reprocess' }
+          });
+          if (!error && (data?.status === 'generated' || data?.status === 'official')) successCount++;
+          else failCount++;
+        } catch {
           failCount++;
         }
-      } catch {
-        failCount++;
-      }
+      }));
     }
 
     toast.dismiss('reprocess');
@@ -117,6 +120,37 @@ const CatechismDebug: React.FC = () => {
       toast.success(`${invalid.length} registros removidos`);
       loadData();
     }
+  };
+
+  const exportLogsToCSV = () => {
+    if (logs.length === 0) return;
+    
+    let filtered = logs;
+    if (dateRange.start) filtered = filtered.filter(l => new Date(l.created_at) >= new Date(dateRange.start));
+    if (dateRange.end) filtered = filtered.filter(l => new Date(l.created_at) <= new Date(dateRange.end));
+
+    const headers = ['ID', 'Parágrafo', 'Status', 'Duração(ms)', 'Erro', 'AdminID', 'Data'];
+    const rows = filtered.map(l => [
+      l.id,
+      l.paragraph,
+      l.status,
+      l.duration_ms,
+      `"${(l.error_message || '').replace(/"/g, '""')}"`,
+      l.admin_id || '',
+      new Date(l.created_at).toISOString()
+    ]);
+
+    const csvContent = "data:text/csv;charset=utf-8," 
+      + headers.join(",") + "\n"
+      + rows.map(e => e.join(",")).join("\n");
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `catechism_logs_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const filteredCache = cache.filter(item => {
@@ -219,9 +253,34 @@ const CatechismDebug: React.FC = () => {
               </div>
             )}
           </div>
-          <span className="text-[10px] text-muted-foreground uppercase font-black">
-            {view === 'cache' ? `Mostrando ${filteredCache.length} registros` : `Últimas 100 execuções`}
-          </span>
+          <div className="flex items-center gap-4">
+            {view === 'logs' && (
+              <div className="flex items-center gap-2">
+                <input 
+                  type="date" 
+                  value={dateRange.start} 
+                  onChange={e => setDateRange(prev => ({ ...prev, start: e.target.value }))}
+                  className="bg-background border border-border rounded px-2 py-1 text-[10px]"
+                />
+                <input 
+                  type="date" 
+                  value={dateRange.end} 
+                  onChange={e => setDateRange(prev => ({ ...prev, end: e.target.value }))}
+                  className="bg-background border border-border rounded px-2 py-1 text-[10px]"
+                />
+                <button 
+                  onClick={exportLogsToCSV}
+                  className="p-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-all"
+                  title="Exportar CSV"
+                >
+                  <Icons.Download className="w-3 h-3" />
+                </button>
+              </div>
+            )}
+            <span className="text-[10px] text-muted-foreground uppercase font-black">
+              {view === 'cache' ? `Mostrando ${filteredCache.length} registros` : `Últimas 100 execuções`}
+            </span>
+          </div>
         </div>
 
         <div className="overflow-x-auto">
