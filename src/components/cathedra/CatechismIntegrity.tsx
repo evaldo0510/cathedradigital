@@ -24,6 +24,9 @@ const CatechismIntegrity: React.FC = () => {
   const [isReprocessing, setIsReprocessing] = useState(false);
   const [filter, setFilter] = useState<'all' | 'error_402' | 'not_cached' | 'empty'>('all');
   const [notCachedCount, setNotCachedCount] = useState(0);
+  const [startPara, setStartPara] = useState(1);
+  const [endPara, setEndPara] = useState(2865);
+  const [batchSize, setBatchSize] = useState(10);
 
   const isAdmin = profile?.role === 'admin';
 
@@ -129,39 +132,71 @@ const CatechismIntegrity: React.FC = () => {
           <h1 className="text-2xl font-serif font-bold text-foreground">Integridade do Conteúdo</h1>
           <p className="text-sm text-muted-foreground">Parágrafos sem conteúdo ou com erro de créditos</p>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap items-center gap-3">
            <button 
             onClick={() => navigate('/catechism/debug')}
             className="px-4 py-2 rounded-xl border border-border text-xs font-black uppercase tracking-widest hover:bg-muted transition-all flex items-center gap-2"
           >
             <Icons.Settings className="w-3 h-3" /> Debug Geral
           </button>
-          <button 
-            onClick={async () => {
-              const missing = [];
-              const cachedParas = new Set(data.map(d => d.paragraph));
-              for(let i=1; i<=2865; i++) {
-                if(!cachedParas.has(i)) missing.push(i);
-                if(missing.length >= 10) break; // Start small
-              }
-              if(missing.length === 0) {
-                toast.success('Nenhum gap detectado!');
-                return;
-              }
-              toast.info(`Processando ${missing.length} novos parágrafos...`);
-              for(const p of missing) {
-                await reprocessParagraph(p);
-              }
-            }}
-            disabled={isReprocessing}
-            className="px-4 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-black uppercase tracking-widest hover:brightness-110 transition-all flex items-center gap-2 shadow-sm"
-          >
-            <Icons.Zap className="w-3 h-3" /> Preencher Gaps (Lote 10)
-          </button>
+          
+          <div className="flex items-center gap-2 bg-muted/50 p-1.5 rounded-xl border border-border">
+            <div className="flex items-center gap-1">
+              <span className="text-[10px] font-bold text-muted-foreground uppercase px-1">De:</span>
+              <input 
+                type="number" 
+                value={startPara} 
+                onChange={e => setStartPara(Number(e.target.value))}
+                className="w-16 h-8 bg-background border border-border rounded-lg text-xs font-bold text-center"
+              />
+            </div>
+            <div className="flex items-center gap-1">
+              <span className="text-[10px] font-bold text-muted-foreground uppercase px-1">Até:</span>
+              <input 
+                type="number" 
+                value={endPara} 
+                onChange={e => setEndPara(Number(e.target.value))}
+                className="w-16 h-8 bg-background border border-border rounded-lg text-xs font-bold text-center"
+              />
+            </div>
+            <div className="flex items-center gap-1 ml-2 border-l border-border pl-2">
+              <span className="text-[10px] font-bold text-muted-foreground uppercase px-1">Lote:</span>
+              <input 
+                type="number" 
+                value={batchSize} 
+                onChange={e => setBatchSize(Number(e.target.value))}
+                className="w-14 h-8 bg-background border border-border rounded-lg text-xs font-bold text-center"
+              />
+            </div>
+            <button 
+              onClick={async () => {
+                const missing = [];
+                const cachedParas = new Set(data.map(d => d.paragraph));
+                for(let i = startPara; i <= endPara; i++) {
+                  if(!cachedParas.has(i)) missing.push(i);
+                  if(missing.length >= batchSize) break;
+                }
+                if(missing.length === 0) {
+                  toast.success('Nenhum gap detectado no intervalo!');
+                  return;
+                }
+                toast.info(`Processando lote de ${missing.length} parágrafos...`);
+                for(const p of missing) {
+                  await reprocessParagraph(p);
+                }
+              }}
+              disabled={isReprocessing}
+              className="ml-2 px-4 h-8 rounded-lg bg-primary text-primary-foreground text-xs font-black uppercase tracking-widest hover:brightness-110 transition-all flex items-center gap-2 shadow-sm disabled:opacity-50"
+            >
+              <Icons.Zap className="w-3 h-3" /> Iniciar
+            </button>
+          </div>
+
           <button 
             onClick={loadData}
             disabled={loading}
-            className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all disabled:opacity-50"
+            className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all disabled:opacity-50 ml-auto"
+            title="Recarregar dados"
           >
             <Icons.RotateCcw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           </button>
