@@ -33,9 +33,10 @@ const CatechismDebug: React.FC = () => {
   const [logs, setLogs] = useState<ExecutionLog[]>([]);
   const [loading, setLoading] = useState(true);
   const [isReprocessing, setIsReprocessing] = useState(false);
-  const [filter, setFilter] = useState<'all' | 'generated' | 'error'>('all');
-  const [view, setView] = useState<'cache' | 'logs'>('cache');
+  const [filter, setFilter] = useState<'all' | 'generated' | 'error' | 'incomplete'>('all');
+  const [view, setView] = useState<'cache' | 'logs' | 'integrity'>('cache');
   const [dateRange, setDateRange] = useState({ start: '', end: '' });
+  const [integrityData, setIntegrityData] = useState<any[]>([]);
 
 
   const isAdmin = profile?.role === 'admin';
