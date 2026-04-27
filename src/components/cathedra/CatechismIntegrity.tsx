@@ -47,15 +47,15 @@ const CatechismIntegrity: React.FC = () => {
       const cachedParas = new Set((cacheRes || []).map(c => c.paragraph));
       const officialParas = new Set((officialRes || []).map(o => o.paragraph));
       
-      const combinedData = [...(cacheRes || [])];
+      const combinedData: CacheEntry[] = [...(cacheRes as CacheEntry[] || [])];
       
       // Calculate missing (not in cache and not in official)
-      const missingCount = [];
+      let missing = 0;
       for (let i = 1; i <= 2865; i++) {
         if (!cachedParas.has(i) && !officialParas.has(i)) {
-          missingCount.push(i);
+          missing++;
           // Only add a few to the list to avoid performance issues
-          if (combinedData.length < 500) {
+          if (combinedData.length < 1000) {
             combinedData.push({
               id: `missing-${i}`,
               paragraph: i,
@@ -69,7 +69,7 @@ const CatechismIntegrity: React.FC = () => {
       }
       
       setData(combinedData.sort((a, b) => a.paragraph - b.paragraph));
-      setNotCachedCount(missingCount.length);
+      setNotCachedCount(missing);
     }
     setLoading(false);
   };
