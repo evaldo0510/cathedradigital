@@ -25,34 +25,48 @@ interface ExecutionLog {
 }
 
 const CatechismDebug: React.FC = () => {
+  const { profile } = useAuth();
   const [cache, setCache] = useState<CacheEntry[]>([]);
+  const [logs, setLogs] = useState<ExecutionLog[]>([]);
   const [loading, setLoading] = useState(true);
   const [isReprocessing, setIsReprocessing] = useState(false);
   const [filter, setFilter] = useState<'all' | 'generated' | 'error'>('all');
+  const [view, setView] = useState<'cache' | 'logs'>('cache');
 
-  const loadCache = async () => {
+  const isAdmin = profile?.role === 'admin';
+
+  const loadData = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from('catechism_cache')
-      .select('*')
-      .order('paragraph', { ascending: true });
+    const [cacheRes, logsRes] = await Promise.all([
+      supabase
+        .from('catechism_cache')
+        .select('*')
+        .order('paragraph', { ascending: true }),
+      supabase
+        .from('catechism_execution_logs')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(100)
+    ]);
 
-    if (error) {
-      toast.error('Erro ao carregar cache');
-    } else {
-      setCache(data as CacheEntry[]);
-    }
+    if (cacheRes.error) toast.error('Erro ao carregar cache');
+    else setCache(cacheRes.data as CacheEntry[]);
+
+    if (logsRes.error) console.error('Erro ao carregar logs:', logsRes.error);
+    else setLogs(logsRes.data as ExecutionLog[]);
+    
     setLoading(false);
   };
 
   useEffect(() => {
-    loadCache();
-  }, []);
+    if (isAdmin) loadData();
+  }, [isAdmin]);
 
-  const reprocessAll402 = async () => {
-    const pending = cache.filter(c => c.status === 'error_402');
+  const reprocessAllErrors = async () => {
+    if (!isAdmin) return;
+    const pending = cache.filter(c => c.status === 'error_402' || c.status === 'error');
     if (pending.length === 0) {
-      toast.info('Nenhum parágrafo pendente por créditos');
+      toast.info('Nenhum parágrafo com erro para reprocessar');
       return;
     }
 
@@ -63,12 +77,14 @@ const CatechismDebug: React.FC = () => {
     toast.loading(`Reprocessando ${pending.length} parágrafos...`, { id: 'reprocess' });
 
     for (const item of pending) {
+      if (item.retry_count >= 3) continue; // Skip max retries
+
       try {
         const { data, error } = await supabase.functions.invoke('catechism-text', {
           body: { paragraph: item.paragraph, action: 'reprocess' }
         });
 
-        if (!error && data?.status === 'generated') {
+        if (!error && (data?.status === 'generated' || data?.status === 'official')) {
           successCount++;
         } else {
           failCount++;
@@ -79,12 +95,13 @@ const CatechismDebug: React.FC = () => {
     }
 
     toast.dismiss('reprocess');
-    toast.success(`Concluído: ${successCount} reprocessados, ${failCount} ainda com erro.`);
+    toast.success(`Concluído: ${successCount} reprocessados, ${failCount} falharam.`);
     setIsReprocessing(false);
-    loadCache();
+    loadData();
   };
 
   const clearInvalidCache = async () => {
+    if (!isAdmin) return;
     const invalid = cache.filter(c => c.content.length < 50);
     if (invalid.length === 0) {
       toast.info('Nenhum cache inválido detectado');
