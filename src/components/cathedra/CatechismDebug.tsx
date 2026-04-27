@@ -103,7 +103,77 @@ const CatechismDebug: React.FC = () => {
     toast.dismiss('reprocess');
     toast.success(`Concluído: ${successCount} reprocessados, ${failCount} falharam.`);
     setIsReprocessing(false);
+  const reprocessIncomplete = async () => {
+    if (!isAdmin) return;
+    const incomplete = cache.filter(c => {
+      const isActuallyIncomplete = !c.content || c.content.length < 50; // Basic check, will be refined in backend
+      // In a real scenario, we'd check all fields, but frontend CacheEntry only has basic fields
+      // The backend 'fix_incomplete' will do the deep check.
+      return isActuallyIncomplete || c.status === 'error' || c.status === 'error_402';
+    });
+
+    if (incomplete.length === 0) {
+      toast.info('Nenhum parágrafo incompleto para reprocessar');
+      return;
+    }
+
+    setIsReprocessing(true);
+    let successCount = 0;
+    let failCount = 0;
+
+    toast.loading(`Reparando ${incomplete.length} parágrafos...`, { id: 'reprocess-inc' });
+
+    const CHUNK_SIZE = 5;
+    for (let i = 0; i < incomplete.length; i += CHUNK_SIZE) {
+      const chunk = incomplete.slice(i, i + CHUNK_SIZE);
+      await Promise.all(chunk.map(async (item) => {
+        try {
+          const { data, error } = await supabase.functions.invoke('catechism-text', {
+            body: { paragraph: item.paragraph, action: 'fix_incomplete' }
+          });
+          if (!error && data?.status === 'generated') successCount++;
+          else failCount++;
+        } catch {
+          failCount++;
+        }
+      }));
+    }
+
+    toast.dismiss('reprocess-inc');
+    toast.success(`Integridade: ${successCount} corrigidos, ${failCount} falharam.`);
+    setIsReprocessing(false);
     loadData();
+  };
+
+  const exportLogsToPDF = () => {
+    if (logs.length === 0) return;
+    
+    let filtered = logs;
+    if (dateRange.start) filtered = filtered.filter(l => new Date(l.created_at) >= new Date(dateRange.start));
+    if (dateRange.end) filtered = filtered.filter(l => new Date(l.created_at) <= new Date(dateRange.end));
+
+    const doc = new jsPDF();
+    doc.setFontSize(18);
+    doc.text('Catechism Execution Logs', 14, 22);
+    doc.setFontSize(11);
+    doc.setTextColor(100);
+    doc.text(`Exportado em: ${new Date().toLocaleString()}`, 14, 30);
+
+    const tableData = filtered.map(l => [
+      l.paragraph,
+      l.status,
+      `${l.duration_ms}ms`,
+      l.error_message || '-',
+      new Date(l.created_at).toLocaleDateString()
+    ]);
+
+    autoTable(doc, {
+      startY: 35,
+      head: [['Parágrafo', 'Status', 'Duração', 'Erro', 'Data']],
+      body: tableData,
+    });
+
+    doc.save(`catechism_logs_${new Date().toISOString().split('T')[0]}.pdf`);
   };
 
   const clearInvalidCache = async () => {
