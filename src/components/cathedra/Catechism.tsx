@@ -157,7 +157,7 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
               reflexaoFinal: data.reflexaoFinal, 
               exercicio: data.exercicio 
             }} 
-            title="Reflexão Doutrinária" 
+            title="Ensino & Reflexão Doutrinária" 
           />
         </div>
       )}
@@ -206,10 +206,17 @@ const LazyParagraph: React.FC<{ paragraph: number; currentParagraph: number; par
 
 const CIC_SECTIONS = [
   {
+    part: 'Introdução',
+    title: 'Prólogo',
+    sections: [
+      { id: 0, title: 'Prólogo: A vida do homem é conhecer e amar a Deus', paragraphs: [1, 25] },
+    ],
+  },
+  {
     part: 'Parte I',
     title: 'A Profissão de Fé',
     sections: [
-      { id: 1, title: 'Eu Creio — Nós Cremos', paragraphs: [1, 184] },
+      { id: 1, title: 'Eu Creio — Nós Cremos', paragraphs: [26, 184] },
       { id: 2, title: 'Creio em Deus Pai', paragraphs: [185, 421] },
       { id: 3, title: 'Creio em Jesus Cristo', paragraphs: [422, 682] },
       { id: 4, title: 'Creio no Espírito Santo', paragraphs: [683, 1065] },
@@ -399,10 +406,11 @@ const Catechism: React.FC = () => {
         <div className="flex items-center gap-4">
           <button 
             onClick={goBack} 
-            className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none"
-            aria-label="Voltar"
+            className="px-3 py-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none flex items-center gap-2"
+            aria-label="Voltar para o Sumário"
           >
-            <Icons.ArrowDown className="w-5 h-5 rotate-90 text-foreground" />
+            <Icons.ArrowDown className="w-4 h-4 rotate-90 text-foreground" />
+            <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Sumário</span>
           </button>
 
           <div className="flex-1 min-w-0">
@@ -528,7 +536,7 @@ const Catechism: React.FC = () => {
   // Parts overview
   return (
     <>
-    <SEOHead title="Catecismo da Igreja Católica" description="Acesse o Catecismo da Igreja Católica online. Estude a doutrina católica organizada por partes, seções e parágrafos." path="/catechism" keywords="catecismo online, catecismo da igreja católica, doutrina católica, CIC" breadcrumbs={[{ name: "Início", path: "/" }, { name: "Catecismo", path: "/catechism" }]} />
+    <SEOHead title="Catecismo da Igreja Católica" description="Acesse o Catecismo da Igreja Católica online. Estude a doutrina católica organizada por partes, seções e parágrafos." path="/catechism" keywords="catecismo online, catecismo da igreja católica, doutrina católica, CIC" breadcrumbs={[{ name: "Home", path: "/" }, { name: "Catecismo", path: "/catechism" }]} />
     <motion.div
       className="max-w-5xl mx-auto space-y-8"
       initial={{ opacity: 0 }}
@@ -561,6 +569,18 @@ const Catechism: React.FC = () => {
           </div>
         </div>
       </motion.div>
+      
+      {user?.role === 'admin' && (
+        <div className="flex justify-center">
+          <button 
+            onClick={() => navigate('/catechism/integrity')}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-orange-500/10 text-orange-600 border border-orange-500/20 text-[10px] font-black uppercase tracking-widest hover:bg-orange-500/20 transition-all"
+          >
+            <Icons.Activity className="w-3.5 h-3.5" /> Painel de Integridade (Admin)
+          </button>
+        </div>
+      )}
+
 
       {/* Suggestion Card */}
       {nextUnreadParagraph && (

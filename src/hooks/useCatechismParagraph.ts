@@ -17,7 +17,8 @@ export const fetchCatechismParagraph = async (paragraph: number, forceGenerate =
     cached.content.includes('processamento') || 
     cached.content.includes('sendo carregado') ||
     cached.content.includes('não disponível no cache') ||
-    cached.content.length < 20
+    cached.content.length < 20 ||
+    (!cached.explicacao && !cached.textoBase) // If both are missing, it's likely incomplete
   );
   
   if (cached?.content && !isStale) {

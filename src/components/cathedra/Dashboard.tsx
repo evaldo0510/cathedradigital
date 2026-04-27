@@ -101,6 +101,16 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       borderColor: 'border-border hover:border-secondary/50',
       suggested: spiritualProfile === 'firme_aprofundando',
     },
+    {
+      label: t('catechism'),
+      description: t('catechism_sub') || 'Doutrina e ensinamentos da Igreja',
+      icon: Icons.Catechism,
+      route: AppRoute.CATECHISM,
+      gradient: 'from-secondary/5 to-transparent',
+      iconColor: 'text-secondary',
+      borderColor: 'border-border hover:border-secondary/50',
+      suggested: true,
+    },
   ], [nextUp, t, spiritualProfile]);
 
   if (isLoading && !spiritualProfile && activeJourneys.length === 0) {

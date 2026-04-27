@@ -49,6 +49,13 @@ const features = [
     icon: <Star className="h-6 w-6" />, 
     route: AppRoute.JORNADAS 
   },
+  { 
+    title: "Catecismo da Igreja", 
+    description: "Estude a doutrina cristã de forma sistemática e orgânica, com análises profundas de cada parágrafo.", 
+    benefit: "Compreenda a fundo os fundamentos da fé católica com clareza e fidelidade ao Magistério.", 
+    icon: <Hash className="h-6 w-6" />, 
+    route: AppRoute.CATECHISM 
+  },
 ];
 
 interface FeaturesSectionProps {
