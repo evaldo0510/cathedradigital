@@ -91,6 +91,7 @@ export type Database = {
       }
       catechism_execution_logs: {
         Row: {
+          admin_id: string | null
           created_at: string | null
           duration_ms: number | null
           error_message: string | null
@@ -100,6 +101,7 @@ export type Database = {
           status: string | null
         }
         Insert: {
+          admin_id?: string | null
           created_at?: string | null
           duration_ms?: number | null
           error_message?: string | null
@@ -109,6 +111,7 @@ export type Database = {
           status?: string | null
         }
         Update: {
+          admin_id?: string | null
           created_at?: string | null
           duration_ms?: number | null
           error_message?: string | null
