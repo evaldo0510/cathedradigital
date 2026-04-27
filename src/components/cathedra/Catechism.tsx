@@ -77,10 +77,22 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
           O parágrafo §{paragraph} ainda não foi gerado e o limite de IA do workspace foi atingido. 
           O conteúdo será gerado automaticamente assim que os créditos forem recarregados.
         </p>
-        {data.content && data.content.length > 30 && (
+        {data.content && data.content.length > 30 ? (
            <div className="pt-2 border-t border-amber-500/10 text-foreground italic opacity-90">
              "{data.content}"
            </div>
+        ) : (
+          <div className="pt-2 border-t border-amber-500/10 flex flex-col gap-2">
+            <p className="text-[10px] uppercase font-black tracking-widest opacity-60">Alternativa:</p>
+            <a 
+              href={`https://www.vatican.va/archive/cathechism_po/index_new/prima-pagina-cic_po.html`} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-primary hover:underline font-bold"
+            >
+              Ver no site oficial do Vaticano <Icons.ExternalLink className="w-3 h-3" />
+            </a>
+          </div>
         )}
       </div>
     );
