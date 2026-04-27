@@ -128,8 +128,8 @@ const CatechismDebug: React.FC = () => {
 
   const stats = {
     total: cache.length,
-    generated: cache.filter(c => c.status === 'generated').length,
-    pending: cache.filter(c => c.status === 'error_402').length,
+    generated: cache.filter(c => c.status === 'generated' || c.status === 'official' || c.status === 'static').length,
+    pending: cache.filter(c => c.status === 'error_402' || c.status === 'error').length,
     invalid: cache.filter(c => c.content.length < 50).length
   };
 
