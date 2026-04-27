@@ -21,16 +21,29 @@ const PT_PARAGRAPHS: Record<number, string> = {
   2865: 'Com o «Amém» final, exprimimos o nosso «fiat» relativamente a estas sete petições: «Assim seja».',
 };
 
+const CONCURRENCY_LIMIT = 5;
+let activeRequests = 0;
+
 serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Basic Concurrency Control
+  if (activeRequests >= CONCURRENCY_LIMIT) {
+    return new Response(JSON.stringify({ error: 'Sistema sobrecarregado. Tente novamente em instantes.' }), {
+      status: 429,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
+
+  activeRequests++;
+
   const startTime = Date.now();
   const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
   const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
 
-  const logExecution = async (paragraph: number, status: string, error?: string) => {
+  const logExecution = async (paragraph: number, status: string, error?: string, adminId?: string) => {
     const duration = Date.now() - startTime;
     await fetch(`${supabaseUrl}/rest/v1/catechism_execution_logs`, {
       method: 'POST',
@@ -44,6 +57,7 @@ serve(async (req: Request) => {
         status,
         duration_ms: duration,
         error_message: error,
+        admin_id: adminId,
       }),
     }).catch(console.error);
   };
