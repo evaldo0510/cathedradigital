@@ -91,7 +91,18 @@ serve(async (req: Request) => {
       if (rows?.[0]?.content) {
         await logExecution(paragraph, 'official', undefined, adminId);
         activeRequests--;
-        return new Response(JSON.stringify({ ...rows[0], paragraph, status: 'official' }), { headers: corsHeaders });
+        const row = rows[0];
+        return new Response(JSON.stringify({ 
+          paragraph, 
+          content: row.content,
+          textoBase: row.texto_base,
+          explicacao: row.explicacao,
+          interpretacaoProfunda: row.interpretacao_profunda,
+          aplicacaoPratica: row.aplicacao_pratica,
+          reflexaoFinal: row.reflexao_final,
+          exercicio: row.exercicio,
+          status: 'official' 
+        }), { headers: corsHeaders });
       }
     }
 
@@ -105,7 +116,17 @@ serve(async (req: Request) => {
       if (existingRecord?.content && existingRecord.content.length > 50 && existingRecord.status === 'generated' && !forceReprocess) {
         await logExecution(paragraph, 'cached', undefined, adminId);
         activeRequests--;
-        return new Response(JSON.stringify({ ...existingRecord, paragraph, status: 'cached' }), { headers: corsHeaders });
+        return new Response(JSON.stringify({ 
+          paragraph, 
+          content: existingRecord.content,
+          textoBase: existingRecord.texto_base,
+          explicacao: existingRecord.explicacao,
+          interpretacaoProfunda: existingRecord.interpretacao_profunda,
+          aplicacaoPratica: existingRecord.aplicacao_pratica,
+          reflexaoFinal: existingRecord.reflexao_final,
+          exercicio: existingRecord.exercicio,
+          status: 'cached' 
+        }), { headers: corsHeaders });
       }
     }
 
@@ -135,29 +156,31 @@ serve(async (req: Request) => {
         const data = await resp.json();
         let aiContent = (data.choices?.[0]?.message?.content || '').trim();
         
-        // Clean markdown if present
         if (aiContent.startsWith('```json')) aiContent = aiContent.replace(/^```json/, '').replace(/```$/, '').trim();
         
         try {
-          const parsed = JSON.parse(aiContent);
-          if (parsed.content && parsed.content.length > 30) {
+          const p = JSON.parse(aiContent);
+          if (p.content && p.content.length > 30) {
             await fetch(`${supabaseUrl}/rest/v1/catechism_cache`, {
               method: 'POST',
               headers: { 'apikey': serviceKey, 'Authorization': `Bearer ${serviceKey}`, 'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates' },
               body: JSON.stringify({ 
                 paragraph, 
-                content: parsed.content, 
+                content: p.content, 
                 status: 'generated',
-                metadata: parsed // Store full AI response in metadata if column exists or just merge fields
+                texto_base: p.textoBase,
+                explicacao: p.explicacao,
+                interpretacao_profunda: p.interpretacaoProfunda,
+                aplicacao_pratica: p.aplicacaoPratica,
+                reflexao_final: p.reflexaoFinal,
+                exercicio: p.exercicio
               }),
             });
-            // Update cache with all fields if we can, for now just return them
             await logExecution(paragraph, 'generated', undefined, adminId);
             activeRequests--;
-            return new Response(JSON.stringify({ ...parsed, paragraph, status: 'generated' }), { headers: corsHeaders });
+            return new Response(JSON.stringify({ ...p, paragraph, status: 'generated' }), { headers: corsHeaders });
           }
         } catch (e) {
-          // Fallback if AI didn't return valid JSON
           if (aiContent.length > 30) {
              await logExecution(paragraph, 'generated_raw', undefined, adminId);
              activeRequests--;
