@@ -4,6 +4,8 @@ import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/useAuth';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 interface CacheEntry {
   id: string;
