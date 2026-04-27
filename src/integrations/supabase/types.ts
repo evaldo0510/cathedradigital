@@ -64,19 +64,25 @@ export type Database = {
           content: string
           created_at: string
           id: string
+          last_error: string | null
           paragraph: number
+          status: string | null
         }
         Insert: {
           content: string
           created_at?: string
           id?: string
+          last_error?: string | null
           paragraph: number
+          status?: string | null
         }
         Update: {
           content?: string
           created_at?: string
           id?: string
+          last_error?: string | null
           paragraph?: number
+          status?: string | null
         }
         Relationships: []
       }
