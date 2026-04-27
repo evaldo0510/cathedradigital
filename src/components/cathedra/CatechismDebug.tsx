@@ -115,7 +115,7 @@ const CatechismDebug: React.FC = () => {
 
     if (!error) {
       toast.success(`${invalid.length} registros removidos`);
-      loadCache();
+      loadData();
     }
   };
 
