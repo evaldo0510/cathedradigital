@@ -23,6 +23,7 @@ const CatechismIntegrity: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [isReprocessing, setIsReprocessing] = useState(false);
   const [filter, setFilter] = useState<'all' | 'error_402' | 'not_cached' | 'empty'>('all');
+  const [notCachedCount, setNotCachedCount] = useState(0);
 
   const isAdmin = profile?.role === 'admin';
 
