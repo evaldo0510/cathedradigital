@@ -1,0 +1,226 @@
+import React, { useState, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { CATECHISM_LOCAL_DATA } from '@/data/catechism';
+import { Icons } from '@/components/constants';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { useNavigate } from 'react-router-dom';
+import SEOHead from '@/components/SEOHead';
+
+const ITEMS_PER_PAGE = 10;
+
+const CatechismExplorer: React.FC = () => {
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [sortBy, setSortBy] = useState<'number-asc' | 'number-desc'>('number-asc');
+
+  const allParagraphs = useMemo(() => Object.values(CATECHISM_LOCAL_DATA), []);
+
+  // Calculate tag counts
+  const tagCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    allParagraphs.forEach(p => {
+      p.tags.forEach(tag => {
+        counts[tag] = (counts[tag] || 0) + 1;
+      });
+    });
+    return Object.entries(counts).sort((a, b) => b[1] - a[1]);
+  }, [allParagraphs]);
+
+  // Filter and sort
+  const filteredParagraphs = useMemo(() => {
+    let result = allParagraphs.filter(p => {
+      const matchesSearch = 
+        p.titulo.toLowerCase().includes(searchQuery.toLowerCase()) || 
+        p.conteudo.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.paragraph.toString().includes(searchQuery);
+      
+      const matchesTags = 
+        selectedTags.length === 0 || 
+        selectedTags.every(tag => p.tags.includes(tag));
+      
+      return matchesSearch && matchesTags;
+    });
+
+    result.sort((a, b) => {
+      if (sortBy === 'number-asc') return a.paragraph - b.paragraph;
+      return b.paragraph - a.paragraph;
+    });
+
+    return result;
+  }, [allParagraphs, searchQuery, selectedTags, sortBy]);
+
+  // Pagination
+  const totalPages = Math.ceil(filteredParagraphs.length / ITEMS_PER_PAGE);
+  const paginatedItems = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredParagraphs.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredParagraphs, currentPage]);
+
+  const toggleTag = (tag: string) => {
+    setSelectedTags(prev => 
+      prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
+    );
+    setCurrentPage(1);
+  };
+
+  return (
+    <div className="max-w-5xl mx-auto p-4 md:p-8 space-y-8 min-h-screen pb-24">
+      <SEOHead 
+        title="Explorador do Catecismo | Cathedra" 
+        description="Navegue pelos parágrafos do Catecismo da Igreja Católica com filtros inteligentes e temas."
+      />
+
+      <div className="flex flex-col gap-2">
+        <h1 className="text-3xl font-serif font-bold text-foreground">Explorador do Catecismo</h1>
+        <p className="text-muted-foreground">Conteúdo dogmático local e sempre disponível.</p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        {/* Filters Sidebar */}
+        <div className="lg:col-span-1 space-y-6">
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 text-primary font-bold uppercase text-[10px] tracking-widest">
+              <Icons.Search className="w-3 h-3" /> Busca Rápida
+            </div>
+            <Input 
+              placeholder="Ex: §142, fé, pecado..." 
+              value={searchQuery}
+              onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+              className="bg-card border-border/50"
+            />
+          </div>
+
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 text-primary font-bold uppercase text-[10px] tracking-widest">
+              <Icons.Tag className="w-3 h-3" /> Temas e Tags
+            </div>
+            <ScrollArea className="h-[400px] pr-4">
+              <div className="flex flex-wrap gap-2">
+                {tagCounts.map(([tag, count]) => (
+                  <button
+                    key={tag}
+                    onClick={() => toggleTag(tag)}
+                    className={`group flex items-center gap-2 px-3 py-1.5 rounded-full text-xs transition-all border ${
+                      selectedTags.includes(tag)
+                        ? 'bg-primary border-primary text-primary-foreground'
+                        : 'bg-card border-border hover:border-primary/50 text-muted-foreground hover:text-foreground'
+                    }`}
+                  >
+                    <span>{tag}</span>
+                    <Badge variant="secondary" className={`text-[10px] px-1.5 h-4 min-w-4 flex items-center justify-center ${selectedTags.includes(tag) ? 'bg-white/20 text-white' : ''}`}>
+                      {count}
+                    </Badge>
+                  </button>
+                ))}
+              </div>
+            </ScrollArea>
+          </div>
+        </div>
+
+        {/* Content Area */}
+        <div className="lg:col-span-3 space-y-6">
+          <div className="flex items-center justify-between gap-4">
+            <div className="text-sm font-medium text-muted-foreground">
+              {filteredParagraphs.length} resultados encontrados
+            </div>
+            <div className="flex items-center gap-2">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => setSortBy(sortBy === 'number-asc' ? 'number-desc' : 'number-asc')}
+                className="text-[10px] font-black uppercase tracking-widest h-8"
+              >
+                <Icons.ArrowDown className={`w-3 h-3 mr-2 transition-transform ${sortBy === 'number-desc' ? 'rotate-180' : ''}`} />
+                {sortBy === 'number-asc' ? 'Crescente' : 'Decrescente'}
+              </Button>
+            </div>
+          </div>
+
+          <AnimatePresence mode="popLayout">
+            <div className="space-y-4">
+              {paginatedItems.map((p) => (
+                <motion.div
+                  key={p.id}
+                  layout
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Card 
+                    className="p-6 cursor-pointer hover:border-primary/30 transition-all group"
+                    onClick={() => navigate(`/catechism?p=${p.paragraph}`)}
+                  >
+                    <div className="flex gap-4">
+                      <div className="text-2xl font-serif font-bold text-primary opacity-60 group-hover:opacity-100 transition-opacity">
+                        §{p.paragraph}
+                      </div>
+                      <div className="flex-1 space-y-2">
+                        <h3 className="text-lg font-serif font-bold text-foreground">{p.titulo}</h3>
+                        <p className="text-muted-foreground line-clamp-3 leading-relaxed">
+                          {p.conteudo}
+                        </p>
+                        <div className="flex flex-wrap gap-2 pt-2">
+                          {p.tags.map(tag => (
+                            <Badge key={tag} variant="secondary" className="text-[9px] font-bold uppercase tracking-wider bg-muted/50 text-muted-foreground group-hover:text-primary group-hover:bg-primary/5 transition-all">
+                              {tag}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                      <Icons.ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-all self-center" />
+                    </div>
+                  </Card>
+                </motion.div>
+              ))}
+
+              {filteredParagraphs.length === 0 && (
+                <div className="text-center py-20 bg-muted/20 rounded-3xl border-2 border-dashed border-border">
+                  <Icons.Search className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-20" />
+                  <h3 className="text-lg font-bold">Nenhum parágrafo encontrado</h3>
+                  <p className="text-muted-foreground">Tente ajustar seus filtros ou busca.</p>
+                  <Button variant="link" onClick={() => { setSearchQuery(''); setSelectedTags([]); }} className="mt-2">
+                    Limpar tudo
+                  </Button>
+                </div>
+              )}
+            </div>
+          </AnimatePresence>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-2 pt-8">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(prev => prev - 1)}
+              >
+                Anterior
+              </Button>
+              <div className="text-sm font-bold px-4">
+                Página {currentPage} de {totalPages}
+              </div>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage(prev => prev + 1)}
+              >
+                Próxima
+              </Button>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default CatechismExplorer;
