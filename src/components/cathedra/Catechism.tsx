@@ -14,6 +14,7 @@ import DeepContentSection from './DeepContentSection';
 import MagisteriumPopover from './MagisteriumPopover';
 import { getCatechismCrossRefs, getCatechismDocs } from '@/data/cross-references';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { AppRoute } from '@/types';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useAuth } from '@/hooks/useAuth';
 import { useCatechismParagraph, usePrefetchCatechismParagraph, useGenerateCatechismParagraph } from '@/hooks/useCatechismParagraph';
