@@ -384,6 +384,8 @@ const Catechism: React.FC = () => {
     else if (viewMode === 'sections') { setViewMode('parts'); setSelectedPart(null); }
   };
 
+  const goToExplorer = () => navigate(AppRoute.CATECHISM_EXPLORER);
+
   const nextUnreadParagraph = useMemo(() => {
     for (let i = 1; i <= 2865; i++) {
       if (!paragraphsRead.has(i)) return i;
