@@ -181,9 +181,24 @@ const CatechismIntegrity: React.FC = () => {
                   return;
                 }
                 toast.info(`Processando lote de ${missing.length} parágrafos...`);
+                let successCount = 0;
                 for(const p of missing) {
-                  await reprocessParagraph(p);
+                  try {
+                    const { data: res, error } = await supabase.functions.invoke('catechism-text', {
+                      body: { paragraph: p, action: 'reprocess' }
+                    });
+                    if (!error && (res?.status === 'generated' || res?.status === 'official')) {
+                      successCount++;
+                    } else if (res?.status === 'error_402' || (res?.error && res.error.includes('402'))) {
+                      toast.error(`Lote interrompido: créditos esgotados.`);
+                      break;
+                    }
+                  } catch (err) {
+                    console.error(err);
+                  }
                 }
+                toast.success(`Lote finalizado: ${successCount} parágrafos recuperados.`);
+                loadData();
               }}
               disabled={isReprocessing}
               className="ml-2 px-4 h-8 rounded-lg bg-primary text-primary-foreground text-xs font-black uppercase tracking-widest hover:brightness-110 transition-all flex items-center gap-2 shadow-sm disabled:opacity-50"
