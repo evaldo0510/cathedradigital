@@ -33,8 +33,8 @@ const CatechismExplorer: React.FC = () => {
 
   const allParagraphs = useMemo(() => Object.values(CATECHISM_LOCAL_DATA), []);
 
-  // Calculate tag counts
-  const tagCounts = useMemo(() => {
+  // Global Tag Counts (for the sidebar)
+  const globalTagCounts = useMemo(() => {
     const counts: Record<string, number> = {};
     allParagraphs.forEach(p => {
       p.tags.forEach(tag => {
@@ -67,6 +67,17 @@ const CatechismExplorer: React.FC = () => {
     return result;
   }, [allParagraphs, searchQuery, selectedTags, sortBy]);
 
+  // Dynamic Tag Counts (matches within current filtered set)
+  const dynamicTagCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    filteredParagraphs.forEach(p => {
+      p.tags.forEach(tag => {
+        counts[tag] = (counts[tag] || 0) + 1;
+      });
+    });
+    return counts;
+  }, [filteredParagraphs]);
+
   // Pagination
   const totalPages = Math.ceil(filteredParagraphs.length / ITEMS_PER_PAGE);
   const paginatedItems = useMemo(() => {
@@ -75,10 +86,30 @@ const CatechismExplorer: React.FC = () => {
   }, [filteredParagraphs, currentPage]);
 
   const toggleTag = (tag: string) => {
-    setSelectedTags(prev => 
-      prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
-    );
-    setCurrentPage(1);
+    const nextTags = selectedTags.includes(tag) 
+      ? selectedTags.filter(t => t !== tag) 
+      : [...selectedTags, tag];
+    
+    updateParams({ 
+      tags: nextTags.length > 0 ? nextTags.join(',') : null,
+      page: '1'
+    });
+  };
+
+  const handleSearchChange = (val: string) => {
+    updateParams({ q: val || null, page: '1' });
+  };
+
+  const handlePageChange = (newPage: number) => {
+    updateParams({ page: newPage.toString() });
+  };
+
+  const toggleSort = () => {
+    updateParams({ sort: sortBy === 'number-asc' ? 'number-desc' : 'number-asc' });
+  };
+
+  const clearAll = () => {
+    setSearchParams(new URLSearchParams());
   };
 
   return (
