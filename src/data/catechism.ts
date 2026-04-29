@@ -18,7 +18,7 @@ export const CATECHISM_LOCAL_DATA: Record<number, CatechismData> = {
   1: {
     id: "cat_1",
     paragraph: 1,
-    tipo: "errado", // Test failure
+    tipo: "catecismo",
     type: "catechism",
     titulo: "O desígnio de Deus para o homem",
     conteudo: "Deus, infinitamente perfeito e bem-aventurado em si mesmo, num desígnio de pura bondade, criou livremente o homem para o tornar participante da sua vida bem-aventurada. É por isso que, em todo o tempo e em todo o lugar, Ele está perto do homem.",
