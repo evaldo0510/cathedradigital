@@ -1,6 +1,9 @@
-import { CATECHISM_LOCAL_DATA } from '../src/data/catechism';
 import * as fs from 'fs';
 import * as path from 'path';
+
+// Allow overriding data for testing via env var
+const DATA_PATH = process.env.CATECHISM_DATA_PATH || '../src/data/catechism';
+const { CATECHISM_LOCAL_DATA } = await import(DATA_PATH);
 
 console.log('🔍 Iniciando validação avançada do Catecismo local...');
 
