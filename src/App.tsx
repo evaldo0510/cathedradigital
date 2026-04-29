@@ -98,6 +98,7 @@ const GlobalSearchPage = lazy(() => import('./components/cathedra/GlobalSearchPa
 const MagisteriumViewer = lazy(() => import('./components/cathedra/MagisteriumViewer'));
 const TransactionsPage = lazy(() => import('./components/cathedra/TransactionsPage'));
 const UserTransactionsPage = lazy(() => import('./components/cathedra/UserTransactionsPage'));
+const CatechismExplorer = lazy(() => import('./pages/CatechismExplorer'));
 const A11yAuditPage = lazy(() => import('./components/cathedra/A11yAuditPage'));
 const SecurityAuditPage = lazy(() => import('./components/cathedra/SecurityAuditPage'));
 const SellerDashboard = lazy(() => import('./components/cathedra/SellerDashboard'));
