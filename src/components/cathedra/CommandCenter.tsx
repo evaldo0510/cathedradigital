@@ -4,6 +4,7 @@ import { Icons } from '../../constants';
 import { AppRoute } from '../../types';
 import { supabase } from '@/integrations/supabase/client';
 import { useSearchSaints } from '@/hooks/useSaints';
+import { CATECHISM_LOCAL_DATA } from '@/data/catechism';
 
 interface CommandItem {
   label: string;
