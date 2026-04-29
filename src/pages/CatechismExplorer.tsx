@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CATECHISM_LOCAL_DATA } from '@/data/catechism';
-import { Icons } from '@/components/constants';
+import { Icons } from '@/constants';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
