@@ -99,6 +99,7 @@ const MagisteriumViewer = lazy(() => import('./components/cathedra/MagisteriumVi
 const TransactionsPage = lazy(() => import('./components/cathedra/TransactionsPage'));
 const UserTransactionsPage = lazy(() => import('./components/cathedra/UserTransactionsPage'));
 const CatechismExplorer = lazy(() => import('./pages/CatechismExplorer'));
+const CatechismHealthCheck = lazy(() => import('./components/cathedra/CatechismHealthCheck'));
 const A11yAuditPage = lazy(() => import('./components/cathedra/A11yAuditPage'));
 const SecurityAuditPage = lazy(() => import('./components/cathedra/SecurityAuditPage'));
 const SellerDashboard = lazy(() => import('./components/cathedra/SellerDashboard'));
@@ -508,6 +509,7 @@ const AppLayout: React.FC = () => {
                   <Route path="/catechism/debug" element={<PageTransition><AdminGuard><CatechismDebug /></AdminGuard></PageTransition>} />
                   <Route path={AppRoute.CATECHISM_INTEGRITY} element={<PageTransition><AdminGuard><CatechismIntegrity /></AdminGuard></PageTransition>} />
                   <Route path={AppRoute.CATECHISM_EXPLORER} element={<PageTransition><AuthGuard><CatechismExplorer /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.CATECHISM_HEALTH} element={<PageTransition><AdminGuard><CatechismHealthCheck /></AdminGuard></PageTransition>} />
                   <Route path={AppRoute.MAGISTERIUM_DOC} element={<PageTransition><AuthGuard><MagisteriumViewer /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.LITURGIA} element={<PageTransition><AuthGuard><LiturgiaPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.DAILY_LITURGY} element={<Navigate to={`${AppRoute.LITURGIA}?tab=liturgia`} replace />} />

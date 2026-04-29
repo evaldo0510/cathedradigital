@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CATECHISM_LOCAL_DATA } from '@/data/catechism';
 import { Icons } from '@/constants';
@@ -7,22 +7,35 @@ import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
+import { isCatechism } from '@/lib/catechismValidation';
 
 const ITEMS_PER_PAGE = 10;
 
 const CatechismExplorer: React.FC = () => {
   const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [sortBy, setSortBy] = useState<'number-asc' | 'number-desc'>('number-asc');
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // URL Persistence State
+  const searchQuery = searchParams.get('q') || '';
+  const selectedTags = useMemo(() => searchParams.get('tags')?.split(',').filter(Boolean) || [], [searchParams]);
+  const currentPage = parseInt(searchParams.get('page') || '1');
+  const sortBy = (searchParams.get('sort') as 'number-asc' | 'number-desc') || 'number-asc';
+
+  const updateParams = (updates: Record<string, string | null>) => {
+    const params = new URLSearchParams(searchParams);
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value === null) params.delete(key);
+      else params.set(key, value);
+    });
+    setSearchParams(params);
+  };
 
   const allParagraphs = useMemo(() => Object.values(CATECHISM_LOCAL_DATA), []);
 
-  // Calculate tag counts
-  const tagCounts = useMemo(() => {
+  // Global Tag Counts (for the sidebar)
+  const globalTagCounts = useMemo(() => {
     const counts: Record<string, number> = {};
     allParagraphs.forEach(p => {
       p.tags.forEach(tag => {
@@ -35,6 +48,9 @@ const CatechismExplorer: React.FC = () => {
   // Filter and sort
   const filteredParagraphs = useMemo(() => {
     let result = allParagraphs.filter(p => {
+      // Security/Validation check: must be catechism type
+      if (!isCatechism(p)) return false;
+
       const matchesSearch = 
         p.titulo.toLowerCase().includes(searchQuery.toLowerCase()) || 
         p.conteudo.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -55,6 +71,17 @@ const CatechismExplorer: React.FC = () => {
     return result;
   }, [allParagraphs, searchQuery, selectedTags, sortBy]);
 
+  // Dynamic Tag Counts (matches within current filtered set)
+  const dynamicTagCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    filteredParagraphs.forEach(p => {
+      p.tags.forEach(tag => {
+        counts[tag] = (counts[tag] || 0) + 1;
+      });
+    });
+    return counts;
+  }, [filteredParagraphs]);
+
   // Pagination
   const totalPages = Math.ceil(filteredParagraphs.length / ITEMS_PER_PAGE);
   const paginatedItems = useMemo(() => {
@@ -63,10 +90,30 @@ const CatechismExplorer: React.FC = () => {
   }, [filteredParagraphs, currentPage]);
 
   const toggleTag = (tag: string) => {
-    setSelectedTags(prev => 
-      prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
-    );
-    setCurrentPage(1);
+    const nextTags = selectedTags.includes(tag) 
+      ? selectedTags.filter(t => t !== tag) 
+      : [...selectedTags, tag];
+    
+    updateParams({ 
+      tags: nextTags.length > 0 ? nextTags.join(',') : null,
+      page: '1'
+    });
+  };
+
+  const handleSearchChange = (val: string) => {
+    updateParams({ q: val || null, page: '1' });
+  };
+
+  const handlePageChange = (newPage: number) => {
+    updateParams({ page: newPage.toString() });
+  };
+
+  const toggleSort = () => {
+    updateParams({ sort: sortBy === 'number-asc' ? 'number-desc' : 'number-asc' });
+  };
+
+  const clearAll = () => {
+    setSearchParams(new URLSearchParams());
   };
 
   return (
@@ -85,6 +132,17 @@ const CatechismExplorer: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Filters Sidebar */}
         <div className="lg:col-span-1 space-y-6">
+          <div className="p-4 bg-muted/30 rounded-2xl border border-border/50 space-y-2">
+            <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+              <span>Total Geral</span>
+              <span className="text-foreground">{allParagraphs.length}</span>
+            </div>
+            <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-primary">
+              <span>Filtrados</span>
+              <span className="font-black">{filteredParagraphs.length}</span>
+            </div>
+          </div>
+
           <div className="space-y-4">
             <div className="flex items-center gap-2 text-primary font-bold uppercase text-[10px] tracking-widest">
               <Icons.Search className="w-3 h-3" /> Busca Rápida
@@ -92,7 +150,7 @@ const CatechismExplorer: React.FC = () => {
             <Input 
               placeholder="Ex: §142, fé, pecado..." 
               value={searchQuery}
-              onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+              onChange={(e) => handleSearchChange(e.target.value)}
               className="bg-card border-border/50"
             />
           </div>
@@ -103,22 +161,34 @@ const CatechismExplorer: React.FC = () => {
             </div>
             <ScrollArea className="h-[400px] pr-4">
               <div className="flex flex-wrap gap-2">
-                {tagCounts.map(([tag, count]) => (
-                  <button
-                    key={tag}
-                    onClick={() => toggleTag(tag)}
-                    className={`group flex items-center gap-2 px-3 py-1.5 rounded-full text-xs transition-all border ${
-                      selectedTags.includes(tag)
-                        ? 'bg-primary border-primary text-primary-foreground'
-                        : 'bg-card border-border hover:border-primary/50 text-muted-foreground hover:text-foreground'
-                    }`}
-                  >
-                    <span>{tag}</span>
-                    <Badge variant="secondary" className={`text-[10px] px-1.5 h-4 min-w-4 flex items-center justify-center ${selectedTags.includes(tag) ? 'bg-white/20 text-white' : ''}`}>
-                      {count}
-                    </Badge>
-                  </button>
-                ))}
+                {globalTagCounts.map(([tag, totalCount]) => {
+                  const currentCount = dynamicTagCounts[tag] || 0;
+                  const isSelected = selectedTags.includes(tag);
+                  return (
+                    <button
+                      key={tag}
+                      onClick={() => toggleTag(tag)}
+                      disabled={currentCount === 0 && !isSelected}
+                      className={`group flex items-center gap-2 px-3 py-1.5 rounded-full text-xs transition-all border ${
+                        isSelected
+                          ? 'bg-primary border-primary text-primary-foreground'
+                          : currentCount === 0 
+                            ? 'opacity-40 cursor-not-allowed bg-muted/20 border-transparent text-muted-foreground'
+                            : 'bg-card border-border hover:border-primary/50 text-muted-foreground hover:text-foreground'
+                      }`}
+                    >
+                      <span>{tag}</span>
+                      <div className="flex items-center gap-1">
+                        <Badge variant="secondary" className={`text-[9px] px-1 h-3.5 min-w-[14px] flex items-center justify-center ${isSelected ? 'bg-white/20 text-white' : ''}`}>
+                          {currentCount}
+                        </Badge>
+                        {!isSelected && currentCount !== totalCount && (
+                          <span className="text-[8px] opacity-40">/ {totalCount}</span>
+                        )}
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
             </ScrollArea>
           </div>
@@ -134,7 +204,7 @@ const CatechismExplorer: React.FC = () => {
               <Button 
                 variant="ghost" 
                 size="sm" 
-                onClick={() => setSortBy(sortBy === 'number-asc' ? 'number-desc' : 'number-asc')}
+                onClick={toggleSort}
                 className="text-[10px] font-black uppercase tracking-widest h-8"
               >
                 <Icons.ArrowDown className={`w-3 h-3 mr-2 transition-transform ${sortBy === 'number-desc' ? 'rotate-180' : ''}`} />
@@ -186,7 +256,7 @@ const CatechismExplorer: React.FC = () => {
                   <Icons.Search className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-20" />
                   <h3 className="text-lg font-bold">Nenhum parágrafo encontrado</h3>
                   <p className="text-muted-foreground">Tente ajustar seus filtros ou busca.</p>
-                  <Button variant="link" onClick={() => { setSearchQuery(''); setSelectedTags([]); }} className="mt-2">
+                  <Button variant="link" onClick={clearAll} className="mt-2">
                     Limpar tudo
                   </Button>
                 </div>
@@ -201,7 +271,7 @@ const CatechismExplorer: React.FC = () => {
                 variant="outline" 
                 size="sm" 
                 disabled={currentPage === 1}
-                onClick={() => setCurrentPage(prev => prev - 1)}
+                onClick={() => handlePageChange(currentPage - 1)}
               >
                 Anterior
               </Button>
@@ -212,7 +282,7 @@ const CatechismExplorer: React.FC = () => {
                 variant="outline" 
                 size="sm" 
                 disabled={currentPage === totalPages}
-                onClick={() => setCurrentPage(prev => prev + 1)}
+                onClick={() => handlePageChange(currentPage + 1)}
               >
                 Próxima
               </Button>
