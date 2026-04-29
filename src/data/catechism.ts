@@ -83,7 +83,50 @@ export const CATECHISM_LOCAL_DATA: Record<number, CatechismData> = {
     aplicacaoPratica: "Comece sua oração hoje reconhecendo sua pequenez diante do Criador.",
     reflexaoFinal: "De onde nasce a sua oração?",
     exercicio: "Reze o Salmo 130 (De profundis) com atenção."
+  },
+  211: {
+    id: "cat_211",
+    paragraph: 211,
+    tipo: "catecismo",
+    titulo: "O Nome de Deus",
+    conteudo: "Ao revelar o seu nome misterioso de YHWH, «Eu Sou Aquele que Sou», ou «Eu Sou Aquele que É», ou ainda «Eu Sou Quem Eu Sou», Deus diz quem Ele é e por que nome se deve chamá-Lo.",
+    tags: ["deus", "nome-de-deus", "revelacao"],
+    textoBase: "Deus revelou o seu nome como 'Eu Sou'.",
+    explicacao: "O nome de Deus revela sua essência eterna e sua fidelidade constante.",
+    interpretacaoProfunda: "YHWH é o nome da misericórdia que se faz presente na história.",
+    aplicacaoPratica: "Invoque o nome do Senhor com reverência hoje.",
+    reflexaoFinal: "O que o nome de Deus significa para você?",
+    exercicio: "Repita o nome de Jesus com amor durante suas atividades."
+  },
+  422: {
+    id: "cat_422",
+    paragraph: 422,
+    tipo: "catecismo",
+    titulo: "Jesus Cristo",
+    conteudo: "«Mas, quando veio a plenitude dos tempos, Deus enviou o seu Filho, nascido de uma mulher, nascido sob a Lei, para resgatar os que estavam sob a Lei, a fim de recebermos a adoção de filhos» (Gl 4, 4-5).",
+    tags: ["jesus", "encarnacao", "redencao"],
+    textoBase: "Jesus é o Filho de Deus enviado para nos salvar.",
+    explicacao: "Deus se fez homem para que pudéssemos ser filhos de Deus.",
+    interpretacaoProfunda: "A Encarnação é o maior gesto de amor da história.",
+    aplicacaoPratica: "Agradeça a Jesus por ter se tornado seu irmão.",
+    reflexaoFinal: "Você vive como um filho resgatado por Cristo?",
+    exercicio: "Leia o prólogo de São João (Jo 1, 1-18)."
+  },
+  683: {
+    id: "cat_683",
+    paragraph: 683,
+    tipo: "catecismo",
+    titulo: "O Espírito Santo",
+    conteudo: "«Ninguém pode dizer: 'Jesus é o Senhor', a não ser sob a ação do Espírito Santo» (1 Cor 12, 3). «Deus enviou aos nossos corações o Espírito do seu Filho, que clama: Abba, Pai!» (Gl 4, 6).",
+    tags: ["espirito-santo", "fe", "trindade"],
+    textoBase: "O Espírito Santo nos permite confessar a fé.",
+    explicacao: "É o Espírito quem nos faz conhecer Jesus e nos ensina a rezar 'Pai'.",
+    interpretacaoProfunda: "O Espírito Santo é a alma da Igreja e do crente.",
+    aplicacaoPratica: "Peça a luz do Espírito Santo antes de tomar uma decisão hoje.",
+    reflexaoFinal: "Como você percebe a ação do Espírito em sua vida?",
+    exercicio: "Reze: 'Vinde, Espírito Santo'."
   }
 };
 
 export const getAllLocalCatechism = () => Object.values(CATECHISM_LOCAL_DATA);
+
