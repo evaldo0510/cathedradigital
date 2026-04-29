@@ -101,18 +101,18 @@ const CatechismIntegrity: React.FC = () => {
   };
 
   const filteredData = data.filter(item => {
-    if (filter === 'all') return item.status === 'error_402' || item.status === 'not_cached' || !item.content || item.content.length < 50;
-    if (filter === 'error_402') return item.status === 'error_402';
+    if (filter === 'all') return item.status === 'error_402' || item.status === 'error' || item.status === 'not_cached' || !item.content || item.content.length < 50;
+    if (filter === 'error_402') return item.status === 'error_402' || (item.status === 'error' && (item.last_error?.includes('402') || item.last_error?.includes('Créditos')));
     if (filter === 'not_cached') return item.status === 'not_cached';
     if (filter === 'empty') return item.status !== 'not_cached' && (!item.content || item.content.length < 50);
     return true;
   });
 
   const stats = {
-    error402: data.filter(i => i.status === 'error_402').length,
-    empty: data.filter(i => i.status !== 'not_cached' && (!i.content || i.content.length < 50)).length,
+    error402: data.filter(i => i.status === 'error_402' || (i.status === 'error' && (i.last_error?.includes('402') || i.last_error?.includes('Créditos')))).length,
+    empty: data.filter(i => i.status !== 'not_cached' && i.status !== 'error_402' && (!i.content || i.content.length < 50)).length,
     notCached: notCachedCount,
-    totalIssues: data.filter(i => i.status === 'error_402' || i.status === 'not_cached' || !i.content || i.content.length < 50).length
+    totalIssues: data.filter(i => i.status === 'error_402' || i.status === 'error' || i.status === 'not_cached' || !i.content || i.content.length < 50).length
   };
 
   if (!isAdmin) {
@@ -181,9 +181,24 @@ const CatechismIntegrity: React.FC = () => {
                   return;
                 }
                 toast.info(`Processando lote de ${missing.length} parágrafos...`);
+                let successCount = 0;
                 for(const p of missing) {
-                  await reprocessParagraph(p);
+                  try {
+                    const { data: res, error } = await supabase.functions.invoke('catechism-text', {
+                      body: { paragraph: p, action: 'reprocess' }
+                    });
+                    if (!error && (res?.status === 'generated' || res?.status === 'official')) {
+                      successCount++;
+                    } else if (res?.status === 'error_402' || (res?.error && res.error.includes('402'))) {
+                      toast.error(`Lote interrompido: créditos esgotados.`);
+                      break;
+                    }
+                  } catch (err) {
+                    console.error(err);
+                  }
                 }
+                toast.success(`Lote finalizado: ${successCount} parágrafos recuperados.`);
+                loadData();
               }}
               disabled={isReprocessing}
               className="ml-2 px-4 h-8 rounded-lg bg-primary text-primary-foreground text-xs font-black uppercase tracking-widest hover:brightness-110 transition-all flex items-center gap-2 shadow-sm disabled:opacity-50"
@@ -251,12 +266,12 @@ const CatechismIntegrity: React.FC = () => {
                   <tr key={item.id} className="border-b border-border/50 hover:bg-muted/20 transition-colors">
                     <td className="px-6 py-4 font-bold text-primary font-serif">§{item.paragraph}</td>
                     <td className="px-6 py-4">
-                      {item.status === 'error_402' ? (
+                      {item.status === 'error_402' || (item.status === 'error' && (item.last_error?.includes('402') || item.last_error?.includes('Créditos'))) ? (
                         <span className="text-xs text-orange-600 font-medium">Falta de Créditos IA</span>
                       ) : item.status === 'not_cached' ? (
                         <span className="text-xs text-blue-500 font-medium">Nunca Acessado / Sem Cache</span>
                       ) : (
-                        <span className="text-xs text-destructive font-medium">Conteúdo Incompleto</span>
+                        <span className="text-xs text-destructive font-medium">Erro na Geração / Incompleto</span>
                       )}
                     </td>
                     <td className="px-6 py-4">

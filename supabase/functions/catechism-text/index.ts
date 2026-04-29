@@ -217,9 +217,28 @@ serve(async (req: Request) => {
         }
       } else {
         const status = resp.status === 402 ? 'error_402' : 'error';
-        await logExecution(paragraph, status, `AI status ${resp.status}`, adminId);
+        const errorMsg = `Erro na geração via AI: ${resp.status}`;
+        
+        // Update cache record with error status so it's visible in Integrity Dashboard
+        await fetch(`${supabaseUrl}/rest/v1/catechism_cache`, {
+          method: 'POST',
+          headers: { 
+            'apikey': serviceKey, 
+            'Authorization': `Bearer ${serviceKey}`, 
+            'Content-Type': 'application/json', 
+            'Prefer': 'resolution=merge-duplicates' 
+          },
+          body: JSON.stringify({ 
+            paragraph, 
+            status,
+            last_error: errorMsg,
+            retry_count: (existingContent?.retry_count || 0) + 1
+          }),
+        });
+
+        await logExecution(paragraph, status, errorMsg, adminId);
         activeRequests--;
-        return new Response(JSON.stringify({ paragraph, status }), { headers: corsHeaders });
+        return new Response(JSON.stringify({ paragraph, status, error: errorMsg }), { headers: corsHeaders });
       }
     } catch (e) {
       await logExecution(paragraph, 'exception', String(e), adminId);
