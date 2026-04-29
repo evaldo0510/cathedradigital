@@ -2,6 +2,7 @@ export interface CatechismData {
   id: string;
   paragraph: number;
   tipo: "catecismo";
+  type: "catechism"; // Consistency with Nexus
   titulo: string;
   conteudo: string;
   tags: string[];
@@ -18,6 +19,7 @@ export const CATECHISM_LOCAL_DATA: Record<number, CatechismData> = {
     id: "cat_1",
     paragraph: 1,
     tipo: "catecismo",
+    type: "catechism",
     titulo: "O desígnio de Deus para o homem",
     conteudo: "Deus, infinitamente perfeito e bem-aventurado em si mesmo, num desígnio de pura bondade, criou livremente o homem para o tornar participante da sua vida bem-aventurada. É por isso que, em todo o tempo e em todo o lugar, Ele está perto do homem.",
     tags: ["criacao", "amor", "presenca-de-deus"],
@@ -32,6 +34,7 @@ export const CATECHISM_LOCAL_DATA: Record<number, CatechismData> = {
     id: "cat_27",
     paragraph: 27,
     tipo: "catecismo",
+    type: "catechism",
     titulo: "O desejo de Deus",
     conteudo: "O desejo de Deus está inscrito no coração do homem, porque o homem foi criado por Deus e para Deus; e Deus não deixa de atrair o homem para Si, e só em Deus é que o homem encontra a verdade e a felicidade que não cessa de procurar.",
     tags: ["desejo", "felicidade", "busca-de-deus"],
@@ -46,6 +49,7 @@ export const CATECHISM_LOCAL_DATA: Record<number, CatechismData> = {
     id: "cat_67",
     paragraph: 67,
     tipo: "catecismo",
+    type: "catechism",
     titulo: "Revelações Privadas",
     conteudo: "Ao longo dos séculos tem havido revelações ditas 'privadas', algumas das quais foram reconhecidas pela autoridade da Igreja. Elas não pertencem, contudo, ao depósito da fé. O seu papel não é 'aperfeiçoar' ou 'completar' a Revelação definitiva de Cristo, mas ajudar a vivê-la mais plenamente numa determinada época da história.",
     tags: ["revelacao", "fe", "aparicoes"],
@@ -56,24 +60,173 @@ export const CATECHISM_LOCAL_DATA: Record<number, CatechismData> = {
     reflexaoFinal: "Sua fé está baseada em Cristo ou em fenômenos extraordinários?",
     exercicio: "Leia um trecho do Evangelho hoje para se enraizar na Revelação Pública."
   },
+  142: {
+    id: "cat_142",
+    paragraph: 142,
+    tipo: "catecismo",
+    type: "catechism",
+    titulo: "A fé",
+    conteudo: "Pela fé, o homem submete completamente sua inteligência e vontade a Deus.",
+    tags: ["fe", "verdade", "deus"]
+  },
+  143: {
+    id: "cat_143",
+    paragraph: 143,
+    tipo: "catecismo",
+    type: "catechism",
+    titulo: "Obediência da fé",
+    conteudo: "Pela fé, o homem entrega-se livremente a Deus.",
+    tags: ["fe", "obediencia", "deus"]
+  },
+  150: {
+    id: "cat_150",
+    paragraph: 150,
+    tipo: "catecismo",
+    type: "catechism",
+    titulo: "Crer é um ato humano",
+    conteudo: "Crer é um ato humano, consciente e livre.",
+    tags: ["fe", "liberdade"]
+  },
+  211: {
+    id: "cat_211",
+    paragraph: 211,
+    tipo: "catecismo",
+    type: "catechism",
+    titulo: "O Nome de Deus",
+    conteudo: "Ao revelar o seu nome misterioso de YHWH, «Eu Sou Aquele que Sou», ou «Eu Sou Aquele que É», ou ainda «Eu Sou Quem Eu Sou», Deus diz quem Ele é e por que nome se deve chamá-Lo.",
+    tags: ["deus", "nome-de-deus", "revelacao"]
+  },
+  422: {
+    id: "cat_422",
+    paragraph: 422,
+    tipo: "catecismo",
+    type: "catechism",
+    titulo: "Jesus Cristo",
+    conteudo: "«Mas, quando veio a plenitude dos tempos, Deus enviou o seu Filho, nascido de uma mulher, nascido sob a Lei, para resgatar os que estavam sob a Lei, a fim de recebermos a adoção de filhos» (Gl 4, 4-5).",
+    tags: ["jesus", "encarnacao", "redencao"]
+  },
+  683: {
+    id: "cat_683",
+    paragraph: 683,
+    tipo: "catecismo",
+    type: "catechism",
+    titulo: "O Espírito Santo",
+    conteudo: "«Ninguém pode dizer: 'Jesus é o Senhor', a não ser sob a ação do Espírito Santo» (1 Cor 12, 3). «Deus enviou aos nossos corações o Espírito do seu Filho, que clama: Abba, Pai!» (Gl 4, 6).",
+    tags: ["espirito-santo", "fe", "trindade"]
+  },
   1324: {
     id: "cat_1324",
     paragraph: 1324,
     tipo: "catecismo",
+    type: "catechism",
     titulo: "A Eucaristia, fonte e cume",
     conteudo: "A Eucaristia é «fonte e cume de toda a vida cristã». «Os restantes sacramentos, assim como todos os ministérios eclesiásticos e obras de apostolado, estão vinculados à sagrada Eucaristia e a ela se ordenam. Com efeito, a santíssima Eucaristia contém todo o tesouro espiritual da Igreja, isto é, o próprio Cristo, a nossa Páscoa».",
-    tags: ["eucaristia", "sacramentos", "presenca-real"],
-    textoBase: "A Eucaristia é fonte e cume de toda a vida cristã.",
-    explicacao: "Toda a vida da Igreja gira em torno da presença real de Cristo no altar.",
-    interpretacaoProfunda: "A Eucaristia não é apenas um símbolo, mas a posse antecipada da vida eterna.",
-    aplicacaoPratica: "Participe da Missa com a consciência de que está diante do próprio Deus.",
-    reflexaoFinal: "Como a Eucaristia transforma o seu cotidiano?",
-    exercicio: "Planeje uma visita ao Santíssimo Sacramento hoje."
+    tags: ["eucaristia", "sacramentos", "presenca-real"]
+  },
+  1814: {
+    id: "cat_1814",
+    paragraph: 1814,
+    tipo: "catecismo",
+    type: "catechism",
+    titulo: "Virtude da fé",
+    conteudo: "A fé é a virtude teologal pela qual cremos em Deus.",
+    tags: ["fe", "virtudes"]
+  },
+  1822: {
+    id: "cat_1822",
+    paragraph: 1822,
+    tipo: "catecismo",
+    type: "catechism",
+    titulo: "A caridade",
+    conteudo: "A caridade é a virtude teologal pela qual amamos a Deus sobre todas as coisas.",
+    tags: ["amor", "caridade", "deus"]
+  },
+  1823: {
+    id: "cat_1823",
+    paragraph: 1823,
+    tipo: "catecismo",
+    type: "catechism",
+    titulo: "Amor ao próximo",
+    conteudo: "Jesus faz do amor ao próximo o novo mandamento.",
+    tags: ["amor", "relacionamentos"]
+  },
+  1849: {
+    id: "cat_1849",
+    paragraph: 1849,
+    tipo: "catecismo",
+    type: "catechism",
+    titulo: "O pecado",
+    conteudo: "O pecado é uma falta contra a razão, a verdade e a consciência.",
+    tags: ["pecado", "verdade"]
+  },
+  1855: {
+    id: "cat_1855",
+    paragraph: 1855,
+    tipo: "catecismo",
+    type: "catechism",
+    titulo: "Pecado mortal",
+    conteudo: "O pecado mortal destrói a caridade no coração do homem.",
+    tags: ["pecado", "amor"]
+  },
+  1863: {
+    id: "cat_1863",
+    paragraph: 1863,
+    tipo: "catecismo",
+    type: "catechism",
+    titulo: "Pecado venial",
+    conteudo: "O pecado venial enfraquece a caridade.",
+    tags: ["pecado"]
+  },
+  1996: {
+    id: "cat_1996",
+    paragraph: 1996,
+    tipo: "catecismo",
+    type: "catechism",
+    titulo: "Graça",
+    conteudo: "A graça é o favor, o auxílio gratuito que Deus nos dá.",
+    tags: ["graca", "deus"]
+  },
+  2001: {
+    id: "cat_2001",
+    paragraph: 2001,
+    tipo: "catecismo",
+    type: "catechism",
+    titulo: "Ação da graça",
+    conteudo: "A preparação do homem para acolher a graça é obra de Deus.",
+    tags: ["graca"]
+  },
+  2087: {
+    id: "cat_2087",
+    paragraph: 2087,
+    tipo: "catecismo",
+    type: "catechism",
+    titulo: "Dúvida na fé",
+    conteudo: "A dúvida pode levar à negligência da fé.",
+    tags: ["duvida", "fe"]
+  },
+  2090: {
+    id: "cat_2090",
+    paragraph: 2090,
+    tipo: "catecismo",
+    type: "catechism",
+    titulo: "Esperança",
+    conteudo: "A esperança é a virtude teologal pela qual desejamos o Reino dos Céus.",
+    tags: ["esperanca", "fe"]
+  },
+  2092: {
+    id: "cat_2092",
+    paragraph: 2092,
+    tipo: "catecismo",
+    type: "catechism",
+    titulo: "Desespero",
+    conteudo: "O desespero é a perda da esperança na salvação.",
+    tags: ["desanimo", "esperanca"]
   },
   2558: {
     id: "cat_2558",
     paragraph: 2558,
     tipo: "catecismo",
+    type: "catechism",
     titulo: "O que é a Oração?",
     conteudo: "«A oração é a elevação da alma a Deus ou o pedido a Deus dos bens convenientes». Donde falamos nós, ao rezar? Da altura do nosso orgulho e vontade própria, ou das «profundezas» (Sl 130, 1) dum coração humilde e contrito? Aquele que se humilha será exaltado. A humildade é o fundamento da oração.",
     tags: ["oracao", "humildade", "espiritualidade"],
@@ -84,49 +237,33 @@ export const CATECHISM_LOCAL_DATA: Record<number, CatechismData> = {
     reflexaoFinal: "De onde nasce a sua oração?",
     exercicio: "Reze o Salmo 130 (De profundis) com atenção."
   },
-  211: {
-    id: "cat_211",
-    paragraph: 211,
+  2559: {
+    id: "cat_2559",
+    paragraph: 2559,
     tipo: "catecismo",
-    titulo: "O Nome de Deus",
-    conteudo: "Ao revelar o seu nome misterioso de YHWH, «Eu Sou Aquele que Sou», ou «Eu Sou Aquele que É», ou ainda «Eu Sou Quem Eu Sou», Deus diz quem Ele é e por que nome se deve chamá-Lo.",
-    tags: ["deus", "nome-de-deus", "revelacao"],
-    textoBase: "Deus revelou o seu nome como 'Eu Sou'.",
-    explicacao: "O nome de Deus revela sua essência eterna e sua fidelidade constante.",
-    interpretacaoProfunda: "YHWH é o nome da misericórdia que se faz presente na história.",
-    aplicacaoPratica: "Invoque o nome do Senhor com reverência hoje.",
-    reflexaoFinal: "O que o nome de Deus significa para você?",
-    exercicio: "Repita o nome de Jesus com amor durante suas atividades."
+    type: "catechism",
+    titulo: "A oração",
+    conteudo: "A oração é a elevação da alma a Deus.",
+    tags: ["oracao", "deus"]
   },
-  422: {
-    id: "cat_422",
-    paragraph: 422,
+  2565: {
+    id: "cat_2565",
+    paragraph: 2565,
     tipo: "catecismo",
-    titulo: "Jesus Cristo",
-    conteudo: "«Mas, quando veio a plenitude dos tempos, Deus enviou o seu Filho, nascido de uma mulher, nascido sob a Lei, para resgatar os que estavam sob a Lei, a fim de recebermos a adoção de filhos» (Gl 4, 4-5).",
-    tags: ["jesus", "encarnacao", "redencao"],
-    textoBase: "Jesus é o Filho de Deus enviado para nos salvar.",
-    explicacao: "Deus se fez homem para que pudéssemos ser filhos de Deus.",
-    interpretacaoProfunda: "A Encarnação é o maior gesto de amor da história.",
-    aplicacaoPratica: "Agradeça a Jesus por ter se tornado seu irmão.",
-    reflexaoFinal: "Você vive como um filho resgatado por Cristo?",
-    exercicio: "Leia o prólogo de São João (Jo 1, 1-18)."
+    type: "catechism",
+    titulo: "Encontro com Deus",
+    conteudo: "Na oração, o homem entra em relação com Deus.",
+    tags: ["oracao", "relacao_com_deus"]
   },
-  683: {
-    id: "cat_683",
-    paragraph: 683,
+  2609: {
+    id: "cat_2609",
+    paragraph: 2609,
     tipo: "catecismo",
-    titulo: "O Espírito Santo",
-    conteudo: "«Ninguém pode dizer: 'Jesus é o Senhor', a não ser sob a ação do Espírito Santo» (1 Cor 12, 3). «Deus enviou aos nossos corações o Espírito do seu Filho, que clama: Abba, Pai!» (Gl 4, 6).",
-    tags: ["espirito-santo", "fe", "trindade"],
-    textoBase: "O Espírito Santo nos permite confessar a fé.",
-    explicacao: "É o Espírito quem nos faz conhecer Jesus e nos ensina a rezar 'Pai'.",
-    interpretacaoProfunda: "O Espírito Santo é a alma da Igreja e do crente.",
-    aplicacaoPratica: "Peça a luz do Espírito Santo antes de tomar uma decisão hoje.",
-    reflexaoFinal: "Como você percebe a ação do Espírito em sua vida?",
-    exercicio: "Reze: 'Vinde, Espírito Santo'."
+    type: "catechism",
+    titulo: "Confiança na oração",
+    conteudo: "A oração deve ser feita com confiança.",
+    tags: ["oracao", "fe", "confianca"]
   }
 };
 
 export const getAllLocalCatechism = () => Object.values(CATECHISM_LOCAL_DATA);
-
