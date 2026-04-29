@@ -14,6 +14,7 @@ import DeepContentSection from './DeepContentSection';
 import MagisteriumPopover from './MagisteriumPopover';
 import { getCatechismCrossRefs, getCatechismDocs } from '@/data/cross-references';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { AppRoute } from '@/types';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useAuth } from '@/hooks/useAuth';
 import { useCatechismParagraph, usePrefetchCatechismParagraph, useGenerateCatechismParagraph } from '@/hooks/useCatechismParagraph';
@@ -384,6 +385,8 @@ const Catechism: React.FC = () => {
     else if (viewMode === 'sections') { setViewMode('parts'); setSelectedPart(null); }
   };
 
+  const goToExplorer = () => navigate(AppRoute.CATECHISM_EXPLORER);
+
   const nextUnreadParagraph = useMemo(() => {
     for (let i = 1; i <= 2865; i++) {
       if (!paragraphsRead.has(i)) return i;
@@ -411,6 +414,15 @@ const Catechism: React.FC = () => {
           >
             <Icons.ArrowDown className="w-4 h-4 rotate-90 text-foreground" />
             <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Sumário</span>
+          </button>
+
+          <button 
+            onClick={goToExplorer} 
+            className="px-3 py-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none flex items-center gap-2"
+            title="Explorar por Temas"
+          >
+            <Icons.Search className="w-4 h-4 text-primary" />
+            <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Explorar</span>
           </button>
 
           <div className="flex-1 min-w-0">

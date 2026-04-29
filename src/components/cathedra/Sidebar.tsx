@@ -47,6 +47,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
       items: [
         { label: t('bible'), path: AppRoute.BIBLE, icon: <Icons.Bible className="w-5 h-5" /> },
         { label: t('catechism'), path: AppRoute.CATECHISM, icon: <Icons.Catechism className="w-5 h-5" /> },
+        { label: 'Explorar Catecismo', path: AppRoute.CATECHISM_EXPLORER, icon: <Icons.Search className="w-5 h-5" /> },
         { label: t('liturgy'), path: AppRoute.LITURGIA, icon: <Icons.Liturgy className="w-5 h-5" /> },
         { label: t('rosary') || 'Santo Rosário', path: AppRoute.ROSARY, icon: <Icons.Heart className="w-5 h-5" /> },
         { label: t('prayers'), path: AppRoute.ORACAO, icon: <Icons.Volume2 className="w-5 h-5" /> },

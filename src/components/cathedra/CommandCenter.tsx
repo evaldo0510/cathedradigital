@@ -4,6 +4,7 @@ import { Icons } from '../../constants';
 import { AppRoute } from '../../types';
 import { supabase } from '@/integrations/supabase/client';
 import { useSearchSaints } from '@/hooks/useSaints';
+import { CATECHISM_LOCAL_DATA } from '@/data/catechism';
 
 interface CommandItem {
   label: string;
@@ -18,6 +19,7 @@ const PAGE_COMMANDS: CommandItem[] = [
   { label: 'Dashboard', description: 'Página inicial', path: AppRoute.DASHBOARD, icon: <Icons.Home className="w-4 h-4" />, keywords: ['início', 'home', 'painel'], type: 'page' },
   { label: 'Bíblia Sagrada', description: 'Leitura bíblica', path: AppRoute.BIBLE, icon: <Icons.Book className="w-4 h-4" />, keywords: ['biblia', 'escritura', 'evangelho', 'genesis', 'salmos'], type: 'page' },
   { label: 'Catecismo (CIC)', description: 'Catecismo da Igreja Católica', path: AppRoute.CATECHISM, icon: <Icons.Cross className="w-4 h-4" />, keywords: ['catecismo', 'cic', 'doutrina', 'fé'], type: 'page' },
+  { label: 'Explorar Catecismo', description: 'Busca e temas do Catecismo', path: AppRoute.CATECHISM_EXPLORER, icon: <Icons.Search className="w-4 h-4" />, keywords: ['catecismo', 'explorar', 'tags', 'temas'], type: 'page' },
   { label: 'Santos', description: 'Hagiografia', path: AppRoute.SAINTS, icon: <Icons.SaintHalo className="w-4 h-4" />, keywords: ['santos', 'santo', 'santa', 'hagiografia', 'mártir'], type: 'page' },
   { label: 'Magistério', description: 'Encíclicas e documentos', path: AppRoute.MAGISTERIUM, icon: <Icons.ScrollText className="w-4 h-4" />, keywords: ['magistério', 'encíclica', 'concílio', 'papa', 'vaticano'], type: 'page' },
   { label: 'Dogmas', description: 'Dogmas da fé católica', path: AppRoute.DOGMAS, icon: <Icons.Star className="w-4 h-4" />, keywords: ['dogma', 'doutrina', 'verdade', 'fé'], type: 'page' },
@@ -170,22 +172,42 @@ const CommandCenter: React.FC = () => {
         }).catch(() => {}),
 
       // Catechism search
-      Promise.resolve(
-        supabase.from('catechism_cache')
-          .select('paragraph, content')
-          .ilike('content', `%${q}%`)
-          .limit(4)
-      ).then(({ data }) => {
-          data?.forEach(p => {
-            results.push({
-              type: 'catechism',
-              label: `§${p.paragraph}`,
-              description: p.content.substring(0, 80) + '...',
-              path: `${AppRoute.CATECHISM}?p=${p.paragraph}`,
-              icon: <Icons.Catechism className="w-4 h-4" />,
-            });
+      (async () => {
+        // Search in local data
+        const localMatches = Object.values(CATECHISM_LOCAL_DATA)
+          .filter((p: any) => p.conteudo.toLowerCase().includes(q.toLowerCase()) || p.titulo.toLowerCase().includes(q.toLowerCase()))
+          .slice(0, 4)
+          .map((p: any) => ({
+            type: 'catechism' as const,
+            label: `§${p.paragraph} (Local)`,
+            description: p.conteudo.substring(0, 80) + '...',
+            path: `${AppRoute.CATECHISM}?p=${p.paragraph}`,
+            icon: <Icons.Cross className="w-4 h-4" />,
+          }));
+        
+        results.push(...localMatches);
+
+        // Search in DB cache (if not enough local matches or to get more)
+        if (results.filter(r => r.type === 'catechism').length < 4) {
+          const { data } = await supabase.from('catechism_cache')
+            .select('paragraph, content')
+            .ilike('content', `%${q}%`)
+            .limit(4);
+          
+          data?.forEach((p: any) => {
+            // Avoid duplicates
+            if (!results.some(r => r.type === 'catechism' && r.label.includes(`§${p.paragraph}`))) {
+              results.push({
+                type: 'catechism',
+                label: `§${p.paragraph}`,
+                description: p.content.substring(0, 80) + '...',
+                path: `${AppRoute.CATECHISM}?p=${p.paragraph}`,
+                icon: <Icons.Cross className="w-4 h-4" />,
+              });
+            }
           });
-        }).catch(() => {}),
+        }
+      })().catch(() => {}),
 
       // Journeys search
       Promise.resolve(
