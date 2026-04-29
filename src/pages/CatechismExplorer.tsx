@@ -128,6 +128,17 @@ const CatechismExplorer: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Filters Sidebar */}
         <div className="lg:col-span-1 space-y-6">
+          <div className="p-4 bg-muted/30 rounded-2xl border border-border/50 space-y-2">
+            <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+              <span>Total Geral</span>
+              <span className="text-foreground">{allParagraphs.length}</span>
+            </div>
+            <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-primary">
+              <span>Filtrados</span>
+              <span className="font-black">{filteredParagraphs.length}</span>
+            </div>
+          </div>
+
           <div className="space-y-4">
             <div className="flex items-center gap-2 text-primary font-bold uppercase text-[10px] tracking-widest">
               <Icons.Search className="w-3 h-3" /> Busca Rápida
@@ -135,7 +146,7 @@ const CatechismExplorer: React.FC = () => {
             <Input 
               placeholder="Ex: §142, fé, pecado..." 
               value={searchQuery}
-              onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+              onChange={(e) => handleSearchChange(e.target.value)}
               className="bg-card border-border/50"
             />
           </div>
@@ -146,22 +157,34 @@ const CatechismExplorer: React.FC = () => {
             </div>
             <ScrollArea className="h-[400px] pr-4">
               <div className="flex flex-wrap gap-2">
-                {tagCounts.map(([tag, count]) => (
-                  <button
-                    key={tag}
-                    onClick={() => toggleTag(tag)}
-                    className={`group flex items-center gap-2 px-3 py-1.5 rounded-full text-xs transition-all border ${
-                      selectedTags.includes(tag)
-                        ? 'bg-primary border-primary text-primary-foreground'
-                        : 'bg-card border-border hover:border-primary/50 text-muted-foreground hover:text-foreground'
-                    }`}
-                  >
-                    <span>{tag}</span>
-                    <Badge variant="secondary" className={`text-[10px] px-1.5 h-4 min-w-4 flex items-center justify-center ${selectedTags.includes(tag) ? 'bg-white/20 text-white' : ''}`}>
-                      {count}
-                    </Badge>
-                  </button>
-                ))}
+                {globalTagCounts.map(([tag, totalCount]) => {
+                  const currentCount = dynamicTagCounts[tag] || 0;
+                  const isSelected = selectedTags.includes(tag);
+                  return (
+                    <button
+                      key={tag}
+                      onClick={() => toggleTag(tag)}
+                      disabled={currentCount === 0 && !isSelected}
+                      className={`group flex items-center gap-2 px-3 py-1.5 rounded-full text-xs transition-all border ${
+                        isSelected
+                          ? 'bg-primary border-primary text-primary-foreground'
+                          : currentCount === 0 
+                            ? 'opacity-40 cursor-not-allowed bg-muted/20 border-transparent text-muted-foreground'
+                            : 'bg-card border-border hover:border-primary/50 text-muted-foreground hover:text-foreground'
+                      }`}
+                    >
+                      <span>{tag}</span>
+                      <div className="flex items-center gap-1">
+                        <Badge variant="secondary" className={`text-[9px] px-1 h-3.5 min-w-[14px] flex items-center justify-center ${isSelected ? 'bg-white/20 text-white' : ''}`}>
+                          {currentCount}
+                        </Badge>
+                        {!isSelected && currentCount !== totalCount && (
+                          <span className="text-[8px] opacity-40">/ {totalCount}</span>
+                        )}
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
             </ScrollArea>
           </div>
