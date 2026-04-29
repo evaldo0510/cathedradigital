@@ -177,7 +177,7 @@ const CommandCenter: React.FC = () => {
         const localMatches = Object.values(CATECHISM_LOCAL_DATA)
           .filter((p: any) => p.conteudo.toLowerCase().includes(q.toLowerCase()) || p.titulo.toLowerCase().includes(q.toLowerCase()))
           .slice(0, 4)
-          .map(p => ({
+          .map((p: any) => ({
             type: 'catechism' as const,
             label: `§${p.paragraph} (Local)`,
             description: p.conteudo.substring(0, 80) + '...',
