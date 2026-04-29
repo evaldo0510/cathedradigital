@@ -200,7 +200,7 @@ const CatechismExplorer: React.FC = () => {
               <Button 
                 variant="ghost" 
                 size="sm" 
-                onClick={() => setSortBy(sortBy === 'number-asc' ? 'number-desc' : 'number-asc')}
+                onClick={toggleSort}
                 className="text-[10px] font-black uppercase tracking-widest h-8"
               >
                 <Icons.ArrowDown className={`w-3 h-3 mr-2 transition-transform ${sortBy === 'number-desc' ? 'rotate-180' : ''}`} />
@@ -252,7 +252,7 @@ const CatechismExplorer: React.FC = () => {
                   <Icons.Search className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-20" />
                   <h3 className="text-lg font-bold">Nenhum parágrafo encontrado</h3>
                   <p className="text-muted-foreground">Tente ajustar seus filtros ou busca.</p>
-                  <Button variant="link" onClick={() => { setSearchQuery(''); setSelectedTags([]); }} className="mt-2">
+                  <Button variant="link" onClick={clearAll} className="mt-2">
                     Limpar tudo
                   </Button>
                 </div>
@@ -267,7 +267,7 @@ const CatechismExplorer: React.FC = () => {
                 variant="outline" 
                 size="sm" 
                 disabled={currentPage === 1}
-                onClick={() => setCurrentPage(prev => prev - 1)}
+                onClick={() => handlePageChange(currentPage - 1)}
               >
                 Anterior
               </Button>
@@ -278,7 +278,7 @@ const CatechismExplorer: React.FC = () => {
                 variant="outline" 
                 size="sm" 
                 disabled={currentPage === totalPages}
-                onClick={() => setCurrentPage(prev => prev + 1)}
+                onClick={() => handlePageChange(currentPage + 1)}
               >
                 Próxima
               </Button>
