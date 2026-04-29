@@ -194,7 +194,7 @@ const CommandCenter: React.FC = () => {
             .ilike('content', `%${q}%`)
             .limit(4);
           
-          data?.forEach(p => {
+          data?.forEach((p: any) => {
             // Avoid duplicates
             if (!results.some(r => r.type === 'catechism' && r.label.includes(`§${p.paragraph}`))) {
               results.push({
