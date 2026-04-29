@@ -18,11 +18,11 @@ export const CATECHISM_LOCAL_DATA: Record<number, CatechismData> = {
   1: {
     id: "cat_1",
     paragraph: 1,
-    tipo: "catecismo",
-    type: "catechism",
-    titulo: "O desígnio de Deus para o homem",
-    conteudo: "Deus, infinitamente perfeito e bem-aventurado em si mesmo, num desígnio de pura bondade, criou livremente o homem para o tornar participante da sua vida bem-aventurada. É por isso que, em todo o tempo e em todo o lugar, Ele está perto do homem.",
-    tags: ["criacao", "amor", "presenca-de-deus"],
+    tipo: "errado", // Failure
+    type: "errado", // Failure
+    titulo: "", // Failure
+    conteudo: "Deus...",
+    tags: [], // Failure
     textoBase: "Deus criou o homem para o tornar participante da sua vida.",
     explicacao: "Este parágrafo estabelece o fundamento de toda a fé: fomos criados por amor e para o amor.",
     interpretacaoProfunda: "A vida cristã não é um esforço humano, mas uma resposta ao chamado divino que está sempre 'perto do homem'.",
