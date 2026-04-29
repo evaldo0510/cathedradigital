@@ -10,18 +10,18 @@ describe('Script de Validação do Catecismo', () => {
   });
 
   it('todos os registros devem ter tipo e type consistentes', () => {
-    const invalidTypes = items.filter(item => item.tipo !== 'catecismo' || item.type !== 'catechism');
+    const invalidTypes = items.filter((item: any) => item.tipo !== 'catecismo' || item.type !== 'catechism');
     expect(invalidTypes.length).toBe(0);
   });
 
   it('todos os registros devem ter pelo menos uma tag', () => {
-    const recordsWithoutTags = items.filter(item => !item.tags || item.tags.length === 0);
+    const recordsWithoutTags = items.filter((item: any) => !item.tags || item.tags.length === 0);
     expect(recordsWithoutTags.length).toBe(0);
   });
 
   it('as porcentagens calculadas devem ser matematicamente consistentes', () => {
     // Simulando a lógica do script de validação
-    const emptyTagsCount = items.filter(item => !item.tags || item.tags.length === 0).length;
+    const emptyTagsCount = items.filter((item: any) => !item.tags || item.tags.length === 0).length;
     const percentage = (emptyTagsCount / totalItems) * 100;
     
     expect(percentage).toBeGreaterThanOrEqual(0);
@@ -34,7 +34,7 @@ describe('Script de Validação do Catecismo', () => {
   });
 
   it('o ID de cada registro deve ser único', () => {
-    const ids = items.map(item => item.id);
+    const ids = items.map((item: any) => item.id);
     const uniqueIds = new Set(ids);
     expect(uniqueIds.size).toBe(ids.length);
   });
