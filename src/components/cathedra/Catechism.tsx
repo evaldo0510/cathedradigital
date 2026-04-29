@@ -416,6 +416,15 @@ const Catechism: React.FC = () => {
             <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Sumário</span>
           </button>
 
+          <button 
+            onClick={goToExplorer} 
+            className="px-3 py-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none flex items-center gap-2"
+            title="Explorar por Temas"
+          >
+            <Icons.Search className="w-4 h-4 text-primary" />
+            <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Explorar</span>
+          </button>
+
           <div className="flex-1 min-w-0">
             <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">{selectedPart.part}</span>
             <h1 className="text-xl font-serif font-bold text-foreground truncate">{selectedSection.title}</h1>
