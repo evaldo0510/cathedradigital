@@ -175,7 +175,7 @@ const CommandCenter: React.FC = () => {
       (async () => {
         // Search in local data
         const localMatches = Object.values(CATECHISM_LOCAL_DATA)
-          .filter(p => p.conteudo.toLowerCase().includes(q.toLowerCase()) || p.titulo.toLowerCase().includes(q.toLowerCase()))
+          .filter((p: any) => p.conteudo.toLowerCase().includes(q.toLowerCase()) || p.titulo.toLowerCase().includes(q.toLowerCase()))
           .slice(0, 4)
           .map(p => ({
             type: 'catechism' as const,
