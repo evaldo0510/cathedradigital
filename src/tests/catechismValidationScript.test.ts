@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { CATECHISM_LOCAL_DATA } from '../src/data/catechism';
+import { CATECHISM_LOCAL_DATA } from '@/data/catechism';
 
 describe('Script de Validação do Catecismo', () => {
   const items = Object.values(CATECHISM_LOCAL_DATA);
