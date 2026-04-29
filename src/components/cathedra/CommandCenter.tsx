@@ -171,22 +171,42 @@ const CommandCenter: React.FC = () => {
         }).catch(() => {}),
 
       // Catechism search
-      Promise.resolve(
-        supabase.from('catechism_cache')
-          .select('paragraph, content')
-          .ilike('content', `%${q}%`)
-          .limit(4)
-      ).then(({ data }) => {
+      (async () => {
+        // Search in local data
+        const localMatches = Object.values(CATECHISM_LOCAL_DATA)
+          .filter(p => p.conteudo.toLowerCase().includes(q.toLowerCase()) || p.titulo.toLowerCase().includes(q.toLowerCase()))
+          .slice(0, 4)
+          .map(p => ({
+            type: 'catechism' as const,
+            label: `§${p.paragraph} (Local)`,
+            description: p.conteudo.substring(0, 80) + '...',
+            path: `${AppRoute.CATECHISM}?p=${p.paragraph}`,
+            icon: <Icons.Cross className="w-4 h-4" />,
+          }));
+        
+        results.push(...localMatches);
+
+        // Search in DB cache (if not enough local matches or to get more)
+        if (results.filter(r => r.type === 'catechism').length < 4) {
+          const { data } = await supabase.from('catechism_cache')
+            .select('paragraph, content')
+            .ilike('content', `%${q}%`)
+            .limit(4);
+          
           data?.forEach(p => {
-            results.push({
-              type: 'catechism',
-              label: `§${p.paragraph}`,
-              description: p.content.substring(0, 80) + '...',
-              path: `${AppRoute.CATECHISM}?p=${p.paragraph}`,
-              icon: <Icons.Catechism className="w-4 h-4" />,
-            });
+            // Avoid duplicates
+            if (!results.some(r => r.type === 'catechism' && r.label.includes(`§${p.paragraph}`))) {
+              results.push({
+                type: 'catechism',
+                label: `§${p.paragraph}`,
+                description: p.content.substring(0, 80) + '...',
+                path: `${AppRoute.CATECHISM}?p=${p.paragraph}`,
+                icon: <Icons.Cross className="w-4 h-4" />,
+              });
+            }
           });
-        }).catch(() => {}),
+        }
+      })().catch(() => {}),
 
       // Journeys search
       Promise.resolve(
