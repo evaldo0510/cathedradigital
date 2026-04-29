@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CATECHISM_LOCAL_DATA } from '@/data/catechism';
 import { Icons } from '@/constants';
@@ -7,17 +7,29 @@ import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
 
 const ITEMS_PER_PAGE = 10;
 
 const CatechismExplorer: React.FC = () => {
   const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [sortBy, setSortBy] = useState<'number-asc' | 'number-desc'>('number-asc');
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // URL Persistence State
+  const searchQuery = searchParams.get('q') || '';
+  const selectedTags = useMemo(() => searchParams.get('tags')?.split(',').filter(Boolean) || [], [searchParams]);
+  const currentPage = parseInt(searchParams.get('page') || '1');
+  const sortBy = (searchParams.get('sort') as 'number-asc' | 'number-desc') || 'number-asc';
+
+  const updateParams = (updates: Record<string, string | null>) => {
+    const params = new URLSearchParams(searchParams);
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value === null) params.delete(key);
+      else params.set(key, value);
+    });
+    setSearchParams(params);
+  };
 
   const allParagraphs = useMemo(() => Object.values(CATECHISM_LOCAL_DATA), []);
 
