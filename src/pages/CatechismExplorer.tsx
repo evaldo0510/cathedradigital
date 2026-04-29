@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
+import { isCatechism } from '@/lib/catechismValidation';
 
 const ITEMS_PER_PAGE = 10;
 
