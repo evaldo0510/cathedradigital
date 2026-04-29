@@ -251,12 +251,12 @@ const CatechismIntegrity: React.FC = () => {
                   <tr key={item.id} className="border-b border-border/50 hover:bg-muted/20 transition-colors">
                     <td className="px-6 py-4 font-bold text-primary font-serif">§{item.paragraph}</td>
                     <td className="px-6 py-4">
-                      {item.status === 'error_402' ? (
+                      {item.status === 'error_402' || (item.status === 'error' && (item.last_error?.includes('402') || item.last_error?.includes('Créditos'))) ? (
                         <span className="text-xs text-orange-600 font-medium">Falta de Créditos IA</span>
                       ) : item.status === 'not_cached' ? (
                         <span className="text-xs text-blue-500 font-medium">Nunca Acessado / Sem Cache</span>
                       ) : (
-                        <span className="text-xs text-destructive font-medium">Conteúdo Incompleto</span>
+                        <span className="text-xs text-destructive font-medium">Erro na Geração / Incompleto</span>
                       )}
                     </td>
                     <td className="px-6 py-4">
