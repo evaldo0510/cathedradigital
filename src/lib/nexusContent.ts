@@ -1,5 +1,6 @@
 import { supabase } from '@/integrations/supabase/client';
 import { getSearchTermsForTag } from './tagNormalization';
+import { getAllLocalCatechism } from '@/data/catechism';
 
 export interface TagContent {
   id: string;
@@ -95,7 +96,18 @@ export async function fetchNexusTagContent(tag: { label: string; slug: string },
     metadata: { ...d, is_theme_content: true }
   }));
 
-  const all = [...spiritual, ...journeys, ...themeContents];
+  // Add local catechism data that matches search terms
+  const localCatechism = getAllLocalCatechism()
+    .filter(cat => cat.tags.some(t => searchTerms.includes(t)))
+    .map(cat => ({
+      id: cat.id,
+      type: 'catechism',
+      content_text: cat.conteudo,
+      title: `Catecismo §${cat.paragraph}`,
+      metadata: { ...cat, tags: cat.tags }
+    }));
+
+  const all = [...spiritual, ...journeys, ...themeContents, ...localCatechism];
   // Unique by ID
   return Array.from(new Map(all.map(item => [item.id, item])).values());
 }

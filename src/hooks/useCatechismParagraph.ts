@@ -2,6 +2,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { getCachedCatechismParagraph, cacheCatechismParagraph } from '@/lib/offlineCache';
 import { DeepContent } from '@/types';
+import { CATECHISM_LOCAL_DATA } from '@/data/catechism';
 
 export interface CatechismParagraph extends Partial<DeepContent> {
   paragraph: number;
@@ -11,19 +12,25 @@ export interface CatechismParagraph extends Partial<DeepContent> {
 }
 
 export const fetchCatechismParagraph = async (paragraph: number, forceGenerate = false): Promise<CatechismParagraph> => {
-  // 1) Check IndexedDB cache first
-  const cached = await getCachedCatechismParagraph(paragraph);
-  const isStale = cached?.content && (
-    cached.content.includes('processamento') || 
-    cached.content.includes('sendo carregado') ||
-    cached.content.includes('não disponível no cache') ||
-    cached.content.length < 20 ||
-    (!cached.explicacao && !cached.textoBase) // If both are missing, it's likely incomplete
-  );
-  
-  if (cached?.content && !isStale) {
-    return cached as CatechismParagraph;
+  // 0) Check local static data first (NATIVE CONTENT)
+  const localData = CATECHISM_LOCAL_DATA[paragraph];
+  if (localData && !forceGenerate) {
+    return {
+      paragraph: localData.paragraph,
+      content: localData.conteudo,
+      language: 'pt',
+      status: 'static',
+      textoBase: localData.textoBase,
+      explicacao: localData.explicacao,
+      interpretacaoProfunda: localData.interpretacaoProfunda,
+      aplicacaoPratica: localData.aplicacaoPratica,
+      reflexaoFinal: localData.reflexaoFinal,
+      exercicio: localData.exercicio
+    };
   }
+
+  // 1) Check IndexedDB cache next
+  const cached = await getCachedCatechismParagraph(paragraph);
 
   // 2) Fetch from edge function
   const body: any = { paragraph };
