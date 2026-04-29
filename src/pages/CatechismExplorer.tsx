@@ -74,6 +74,7 @@ const CatechismExplorer: React.FC = () => {
       <SEOHead 
         title="Explorador do Catecismo | Cathedra" 
         description="Navegue pelos parágrafos do Catecismo da Igreja Católica com filtros inteligentes e temas."
+        path="/catechism/explorer"
       />
 
       <div className="flex flex-col gap-2">
