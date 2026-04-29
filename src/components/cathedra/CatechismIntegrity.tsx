@@ -101,18 +101,18 @@ const CatechismIntegrity: React.FC = () => {
   };
 
   const filteredData = data.filter(item => {
-    if (filter === 'all') return item.status === 'error_402' || item.status === 'not_cached' || !item.content || item.content.length < 50;
-    if (filter === 'error_402') return item.status === 'error_402';
+    if (filter === 'all') return item.status === 'error_402' || item.status === 'error' || item.status === 'not_cached' || !item.content || item.content.length < 50;
+    if (filter === 'error_402') return item.status === 'error_402' || (item.status === 'error' && (item.last_error?.includes('402') || item.last_error?.includes('Créditos')));
     if (filter === 'not_cached') return item.status === 'not_cached';
     if (filter === 'empty') return item.status !== 'not_cached' && (!item.content || item.content.length < 50);
     return true;
   });
 
   const stats = {
-    error402: data.filter(i => i.status === 'error_402').length,
-    empty: data.filter(i => i.status !== 'not_cached' && (!i.content || i.content.length < 50)).length,
+    error402: data.filter(i => i.status === 'error_402' || (i.status === 'error' && (i.last_error?.includes('402') || i.last_error?.includes('Créditos')))).length,
+    empty: data.filter(i => i.status !== 'not_cached' && i.status !== 'error_402' && (!i.content || i.content.length < 50)).length,
     notCached: notCachedCount,
-    totalIssues: data.filter(i => i.status === 'error_402' || i.status === 'not_cached' || !i.content || i.content.length < 50).length
+    totalIssues: data.filter(i => i.status === 'error_402' || i.status === 'error' || i.status === 'not_cached' || !i.content || i.content.length < 50).length
   };
 
   if (!isAdmin) {
