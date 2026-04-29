@@ -1,31 +1,49 @@
 import { CATECHISM_LOCAL_DATA } from '../src/data/catechism';
 
-console.log('🔍 Iniciando validação do Catecismo local...');
+console.log('🔍 Iniciando validação detalhada do Catecismo local...');
 
 const items = Object.values(CATECHISM_LOCAL_DATA);
-const errors: string[] = [];
+const failingRecords: { id: string; paragraph: number; errors: string[] }[] = [];
 
 items.forEach((item: any) => {
-  const ref = `§${item.paragraph}`;
+  const itemErrors: string[] = [];
   
-  if (!item.id) errors.push(`[${ref}] ID ausente.`);
-  if (!item.paragraph || typeof item.paragraph !== 'number') errors.push(`[${ref}] Parágrafo inválido ou ausente.`);
+  if (!item.id) itemErrors.push('ID ausente');
+  if (item.paragraph === undefined || typeof item.paragraph !== 'number') itemErrors.push('Parágrafo inválido ou ausente');
   
   // Consistency checks
-  if (item.tipo !== 'catecismo') errors.push(`[${ref}] Campo 'tipo' inconsistente: esperado 'catecismo', recebido '${item.tipo}'.`);
-  if (item.type !== 'catechism') errors.push(`[${ref}] Campo 'type' inconsistente: esperado 'catechism', recebido '${item.type}'.`);
+  if (item.tipo !== 'catecismo') itemErrors.push(`tipo: esperado 'catecismo', recebido '${item.tipo}'`);
+  if (item.type !== 'catechism') itemErrors.push(`type: esperado 'catechism', recebido '${item.type}'`);
   
   if (!item.tags || !Array.isArray(item.tags) || item.tags.length === 0) {
-    errors.push(`[${ref}] Tags vazias ou ausentes.`);
+    itemErrors.push('Tags vazias ou ausentes');
   }
 
-  if (!item.titulo || item.titulo.trim() === '') errors.push(`[${ref}] Título ausente.`);
-  if (!item.conteudo || item.conteudo.trim() === '') errors.push(`[${ref}] Conteúdo ausente.`);
+  if (!item.titulo || item.titulo.trim() === '') itemErrors.push('Título ausente');
+  if (!item.conteudo || item.conteudo.trim() === '') itemErrors.push('Conteúdo ausente');
+
+  if (itemErrors.length > 0) {
+    failingRecords.push({
+      id: item.id || 'N/A',
+      paragraph: item.paragraph || 0,
+      errors: itemErrors
+    });
+  }
 });
 
-if (errors.length > 0) {
-  console.error('❌ Validação falhou! Erros encontrados:');
-  errors.forEach(err => console.error('  - ' + err));
+if (failingRecords.length > 0) {
+  console.error('\n❌ Validação falhou! Registros inválidos encontrados:\n');
+  
+  failingRecords.forEach((record, index) => {
+    console.error(`Record #${index + 1}`);
+    console.error(`  ID: ${record.id}`);
+    console.error(`  Parágrafo: §${record.paragraph}`);
+    console.error(`  Campos inválidos:`);
+    record.errors.forEach(err => console.error(`    - ${err}`));
+    console.error('-------------------------------------------');
+  });
+
+  console.error(`\nTotal de erros: ${failingRecords.length} registro(s) com problema.`);
   process.exit(1);
 }
 
