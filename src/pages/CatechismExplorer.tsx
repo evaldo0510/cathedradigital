@@ -48,6 +48,9 @@ const CatechismExplorer: React.FC = () => {
   // Filter and sort
   const filteredParagraphs = useMemo(() => {
     let result = allParagraphs.filter(p => {
+      // Security/Validation check: must be catechism type
+      if (!isCatechism(p)) return false;
+
       const matchesSearch = 
         p.titulo.toLowerCase().includes(searchQuery.toLowerCase()) || 
         p.conteudo.toLowerCase().includes(searchQuery.toLowerCase()) ||
