@@ -61,7 +61,19 @@ async function networkFirstLiturgy(request) {
 }
 
 // ─── Workbox Routing for other assets ───
+// Navigation route (App Shell)
+registerRoute(
+  ({ request }) => request.mode === 'navigate',
+  new NetworkFirst({
+    cacheName: 'navigation-cache',
+    plugins: [
+      new CacheableResponsePlugin({ statuses: [200] }),
+    ],
+  })
+);
+
 // Google Fonts
+
 registerRoute(
   /^https:\/\/fonts\.googleapis\.com\/.*/i,
   new CacheFirst({
