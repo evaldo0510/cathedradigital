@@ -108,7 +108,16 @@ registerRoute(
   })
 );
 
+// ─── Local JSON Data ───
+registerRoute(
+  ({ url }) => url.pathname.endsWith('.json') && !url.pathname.includes('manifest'),
+  new StaleWhileRevalidate({
+    cacheName: 'static-data-cache',
+  })
+);
+
 // ─── Push Notifications ───
+
 self.addEventListener('push', (event) => {
   let data = { title: 'Cathedra', body: 'Nova mensagem', url: '/dashboard' };
   try {
