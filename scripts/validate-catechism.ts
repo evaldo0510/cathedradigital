@@ -9,13 +9,17 @@ const { CATECHISM_LOCAL_DATA } = await import(DATA_PATH);
 const threshold = parseFloat(process.env.CATECHISM_VALIDATION_THRESHOLD || '0'); 
 const failOnAI = process.env.CATECHISM_FAIL_ON_AI_FIELDS !== 'false';
 const autoCleanAI = process.env.CATECHISM_AUTO_CLEAN_AI === 'true';
+const isDryRun = process.env.CATECHISM_DRY_RUN === 'true';
 
 let buildFailed = false;
 
 console.log('🔍 Iniciando validação avançada do Catecismo local...');
-if (autoCleanAI) {
+if (isDryRun) {
+  console.log('🧪 Modo DRY RUN ativado: nada será alterado e o build nunca falhará.');
+} else if (autoCleanAI) {
   console.log('🧹 Modo Auto-Clean ativado: campos de IA serão removidos dos registros.');
 }
+
 
 const items = Object.values(CATECHISM_LOCAL_DATA);
 const totalItems = items.length;
