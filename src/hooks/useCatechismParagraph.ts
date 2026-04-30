@@ -39,11 +39,6 @@ export const fetchCatechismParagraph = async (paragraph: number, forceGenerate =
   
   const parsed = typeof data === 'string' ? JSON.parse(data) : data;
   
-  if (parsed.status === 'error_402') {
-    window.dispatchEvent(new CustomEvent('ai-status-error', { 
-      detail: { type: 'credits_exhausted', message: `Créditos esgotados ao gerar §${paragraph}` } 
-    }));
-  }
 
   const result: CatechismParagraph = {
     paragraph: parsed.paragraph || paragraph,
