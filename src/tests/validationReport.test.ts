@@ -64,7 +64,11 @@ export const CATECHISM_LOCAL_DATA = {
     if (fs.existsSync(reportPath)) {
       fs.unlinkSync(reportPath);
     }
+    if (fs.existsSync(mockDataFile)) {
+      fs.unlinkSync(mockDataFile);
+    }
   });
+
 
   it('should generate the report file', () => {
     expect(fs.existsSync(reportPath)).toBe(true);
