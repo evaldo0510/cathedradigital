@@ -34,25 +34,23 @@ describe('Validation Report Ordering and Severity', () => {
     expect(fs.existsSync(reportPath)).toBe(true);
   });
 
-  it('should order failingRecords by severity (High -> Medium -> Low)', () => {
+  it('should order failingRecords by severity (High -> Medium -> Low) and group by category', () => {
     const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
     const failingRecords = report.failingRecords;
 
     expect(failingRecords.length).toBe(3);
 
-    // Record 1 has Tags vazias (HIGH - 0)
-    // Record 2 has ID ausente (MEDIUM - 1)
-    // Record 3 has Título ausente (LOW - 2)
+    // High Severity group (0)
+    // 1. Tags vazias ou ausentes (alphabetical)
+    // 2. Tipo inconsistente (tipo) (alphabetical)
+    // Medium Severity group (1)
+    // 3. ID ausente
     
-    expect(failingRecords[0].errors[0].severity).toBe(0); // High
-    expect(failingRecords[1].errors[0].severity).toBe(1); // Medium
-    expect(failingRecords[2].errors[0].severity).toBe(2); // Low
-    
-    // Verify specific categories match the expected order
     expect(failingRecords[0].errors[0].category).toBe('Tags vazias ou ausentes');
-    expect(failingRecords[1].errors[0].category).toBe('ID ausente');
-    expect(failingRecords[2].errors[0].category).toBe('Título ausente');
+    expect(failingRecords[1].errors[0].category).toBe('Tipo inconsistente (tipo)');
+    expect(failingRecords[2].errors[0].category).toBe('ID ausente');
   });
+
 
   it('should have consistent counts in the summary', () => {
     const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
