@@ -61,6 +61,9 @@ items.forEach((item: any, index) => {
   forbiddenFields.forEach(field => {
     if (item[field]) {
       addError('Campos de IA detectados', `O campo '${field}' não deve existir (Regra: Catecismo sem IA)`);
+      if (autoCleanAI) {
+        delete item[field];
+      }
     }
   });
 
@@ -88,9 +91,16 @@ failingRecords.sort((a, b) => {
 });
 
 
-// Threshold logic
-const threshold = parseFloat(process.env.CATECHISM_VALIDATION_THRESHOLD || '0'); // Default 0 (any error fails)
+// Threshold and Config flags
+const threshold = parseFloat(process.env.CATECHISM_VALIDATION_THRESHOLD || '0'); 
+const failOnAI = process.env.CATECHISM_FAIL_ON_AI_FIELDS !== 'false';
+const autoCleanAI = process.env.CATECHISM_AUTO_CLEAN_AI === 'true';
+
 let buildFailed = false;
+
+if (autoCleanAI) {
+  console.log('🧹 Modo Auto-Clean ativado: campos de IA serão removidos dos registros.');
+}
 
 const report = {
   timestamp: new Date().toISOString(),
@@ -116,10 +126,18 @@ Object.entries(errorCategories)
   .forEach(([category, data]) => {
     const percentage = (data.count / totalItems) * 100;
     const isOverThreshold = percentage > threshold;
-    if (isOverThreshold && data.count > 0) buildFailed = true;
+    const isAIError = category === 'Campos de IA detectados';
+    
+    if (data.count > 0) {
+      if (isAIError) {
+        if (failOnAI) buildFailed = true;
+      } else if (isOverThreshold) {
+        buildFailed = true;
+      }
+    }
 
-    const icon = data.count === 0 ? '✅' : (isOverThreshold ? '❌' : '⚠️');
-    console.log(`${icon} ${category.padEnd(28)}: ${data.count.toString().padStart(3)} (${percentage.toFixed(1).padStart(5)}%) ${isOverThreshold ? '[FALHA]' : ''}`);
+    const icon = data.count === 0 ? '✅' : (isAIError ? (failOnAI ? '❌' : '⚠️') : (isOverThreshold ? '❌' : '⚠️'));
+    console.log(`${icon} ${category.padEnd(28)}: ${data.count.toString().padStart(3)} (${percentage.toFixed(1).padStart(5)}%) ${((isAIError && failOnAI) || (isOverThreshold && !isAIError)) && data.count > 0 ? '[FALHA]' : ''}`);
     
     report.summary[category] = {
       count: data.count,
