@@ -75,46 +75,8 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
     return VIRTUE_TO_JOURNEY['paciência']; // Default
   }, [saint.virtues]);
 
-  React.useEffect(() => {
-    if (autoReflect) {
-      generateLogosReflection();
-    }
-  }, [autoReflect]);
+  // Logos AI logic removed
 
-  const generateLogosReflection = async () => {
-    setIsGenerating(true);
-    setShowLogos(true);
-    setLogosReflection('');
-    setFallbackReason(null);
-
-    try {
-      const prompt = `Como Logos (IA da Cathedra), gere uma reflexão profunda e personalizada sobre ${saint.name}. 
-      
-      Siga este roteiro rigorosamente:
-      1. REALIDADE: Relacione a virtude principal (${saint.virtues?.[0] || 'santidade'}) de ${saint.name} com os desafios reais, pressões e dilemas de um católico no mundo moderno hoje. Como essa virtude se traduz em ações concretas no trabalho, na família ou na vida digital?
-      2. PERGUNTA PROFUNDA: Gere uma pergunta provocativa e profunda que conecte a luta ou o exemplo de ${saint.name} com a alma e o estado espiritual do usuário agora.
-      3. O CAMINHO: Sugira um "caminho" (uma ação prática, um pequeno sacrifício ou uma oração específica) inspirado no exemplo de ${saint.name} para o usuário realizar hoje.
-      
-      IMPORTANTE: Use os títulos "REALIDADE:", "PERGUNTA PROFUNDA:" e "O CAMINHO:" explicitamente no início de cada seção.
-      Tom: Poético, visceral, encorajador e firme na doutrina católica. Use Markdown para formatar (negrito para ênfase). Seja breve mas impactante.`;
-
-      const result = await callColloquium([{ role: 'user', content: prompt }], null, (content) => {
-        setLogosReflection(content.replace(/\[RECOMMENDATION:.*?\]/g, '').trim());
-      });
-
-      if (result.error) {
-        setFallbackReason(result.fallback_reason ?? 'network');
-        setLogosReflection('');
-        return;
-      }
-    } catch (error) {
-      console.error('Error generating Logos reflection:', error);
-      setFallbackReason('network');
-      setLogosReflection('');
-    } finally {
-      setIsGenerating(false);
-    }
-  };
 
   const staticReflection = (
     <div className="space-y-3">
