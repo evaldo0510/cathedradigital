@@ -5,7 +5,17 @@ import * as path from 'path';
 const DATA_PATH = process.env.CATECHISM_DATA_PATH || '../src/data/catechism';
 const { CATECHISM_LOCAL_DATA } = await import(DATA_PATH);
 
+// Threshold and Config flags
+const threshold = parseFloat(process.env.CATECHISM_VALIDATION_THRESHOLD || '0'); 
+const failOnAI = process.env.CATECHISM_FAIL_ON_AI_FIELDS !== 'false';
+const autoCleanAI = process.env.CATECHISM_AUTO_CLEAN_AI === 'true';
+
+let buildFailed = false;
+
 console.log('🔍 Iniciando validação avançada do Catecismo local...');
+if (autoCleanAI) {
+  console.log('🧹 Modo Auto-Clean ativado: campos de IA serão removidos dos registros.');
+}
 
 const items = Object.values(CATECHISM_LOCAL_DATA);
 const totalItems = items.length;
@@ -91,16 +101,6 @@ failingRecords.sort((a, b) => {
 });
 
 
-// Threshold and Config flags
-const threshold = parseFloat(process.env.CATECHISM_VALIDATION_THRESHOLD || '0'); 
-const failOnAI = process.env.CATECHISM_FAIL_ON_AI_FIELDS !== 'false';
-const autoCleanAI = process.env.CATECHISM_AUTO_CLEAN_AI === 'true';
-
-let buildFailed = false;
-
-if (autoCleanAI) {
-  console.log('🧹 Modo Auto-Clean ativado: campos de IA serão removidos dos registros.');
-}
 
 const report = {
   timestamp: new Date().toISOString(),
