@@ -69,6 +69,17 @@ items.forEach((item: any, index) => {
   }
 });
 
+// Sort failing records by:
+// 1. Highest severity error (asc: 0 is HIGH)
+// 2. Category name of the first error (for grouping records with same severity)
+failingRecords.sort((a, b) => {
+  if (a.errors[0].severity !== b.errors[0].severity) {
+    return a.errors[0].severity - b.errors[0].severity;
+  }
+  return a.errors[0].category.localeCompare(b.errors[0].category);
+});
+
+
 // Threshold logic
 const threshold = parseFloat(process.env.CATECHISM_VALIDATION_THRESHOLD || '0'); // Default 0 (any error fails)
 let buildFailed = false;
@@ -80,9 +91,14 @@ const report = {
   failingRecords: failingRecords.map(r => ({
     id: r.id,
     paragraph: r.paragraph,
-    errors: r.errors.map((e: any) => ({ category: e.category, message: e.message }))
+    errors: r.errors.map((e: any) => ({ 
+      category: e.category, 
+      message: e.message,
+      severity: e.severity
+    }))
   }))
 };
+
 
 console.log('\n📊 RESUMO DE INTEGRIDADE');
 console.log('========================');

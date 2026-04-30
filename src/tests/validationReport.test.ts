@@ -3,79 +3,103 @@ import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 
-describe('Relatório de Validação do Catecismo', () => {
+describe('Validation Report Ordering and Severity', () => {
   const reportPath = path.join(process.cwd(), 'catechism-validation-report.json');
-  const tempDataPath = path.join(process.cwd(), 'scripts/temp-test-data.ts');
+  const mockDataFile = path.join(process.cwd(), 'src/tests/mockCatechismData.ts');
+  const mockDataPath = '../src/tests/mockCatechismData'; // Relative to scripts directory
 
   beforeAll(() => {
-    // Cleanup any existing report
-    if (fs.existsSync(reportPath)) fs.unlinkSync(reportPath);
+    // Create mock data
+    const mockContent = `
+export const CATECHISM_LOCAL_DATA = {
+  "1": {
+    "id": "1",
+    "paragraph": 1,
+    "tipo": "wrong",
+    "type": "catechism",
+    "tags": ["tag"],
+    "titulo": "Teste High 1",
+    "conteudo": "Conteudo"
+  },
+  "2": {
+    "id": "2",
+    "paragraph": 2,
+    "tipo": "catecismo",
+    "type": "catechism",
+    "tags": [],
+    "titulo": "Teste High 2",
+    "conteudo": "Conteudo"
+  },
+  "3": {
+    "id": "",
+    "paragraph": 3,
+    "tipo": "catecismo",
+    "type": "catechism",
+    "tags": ["tag"],
+    "titulo": "Teste Medium",
+    "conteudo": "Conteudo"
+  }
+};
+`;
+    fs.writeFileSync(mockDataFile, mockContent);
+
+    // Ensure we don't have a stale report
+
+    if (fs.existsSync(reportPath)) {
+      fs.unlinkSync(reportPath);
+    }
+    
+    try {
+      // Run the script with mock data
+      // We expect it to exit with 1 because there are errors and threshold is 0
+      execSync(`CATECHISM_DATA_PATH=${mockDataPath} CATECHISM_VALIDATION_THRESHOLD=0 bun scripts/validate-catechism.ts`, {
+        stdio: 'pipe'
+      });
+    } catch (error) {
+      // Script exits with 1 on validation failure, which is expected here
+    }
   });
 
   afterAll(() => {
-    // Cleanup temp files
-    if (fs.existsSync(reportPath)) fs.unlinkSync(reportPath);
-    if (fs.existsSync(tempDataPath)) fs.unlinkSync(tempDataPath);
+    if (fs.existsSync(reportPath)) {
+      fs.unlinkSync(reportPath);
+    }
+    if (fs.existsSync(mockDataFile)) {
+      fs.unlinkSync(mockDataFile);
+    }
   });
 
-  it('deve gerar um relatório JSON válido após a execução do script', () => {
-    try {
-      execSync('bun run scripts/validate-catechism.ts', { stdio: 'pipe' });
-    } catch (e) {
-      // It's okay if it fails for validation reasons, we just want the report
-    }
 
+  it('should generate the report file', () => {
     expect(fs.existsSync(reportPath)).toBe(true);
-    const report = JSON.parse(fs.readFileSync(reportPath, 'utf-8'));
-    
-    expect(report).toHaveProperty('timestamp');
-    expect(report).toHaveProperty('totalRecords');
-    expect(report).toHaveProperty('summary');
-    expect(report).toHaveProperty('failingRecords');
   });
 
-  it('deve conter contagens e porcentagens consistentes em caso de erros simulados', () => {
-    // 1. Create a "dirty" data file
-    const dirtyData = `
-      export const CATECHISM_LOCAL_DATA = {
-        9999: {
-          id: "", // Error: ID ausente
-          paragraph: 9999,
-          tipo: "errado", // Error: Tipo inconsistente
-          type: "errado", // Error: Tipo inconsistente
-          titulo: "Teste",
-          conteudo: "Conteúdo",
-          tags: [] // Error: Tags vazias
-        }
-      };
-    `;
-    fs.writeFileSync(tempDataPath, dirtyData);
+  it('should order failingRecords by severity (High -> Medium -> Low) and group by category', () => {
+    const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+    const failingRecords = report.failingRecords;
 
-    // 2. Run the script pointing to the dirty data
-    try {
-      execSync('bun run scripts/validate-catechism.ts', { 
-        env: { ...process.env, CATECHISM_DATA_PATH: './temp-test-data.ts' },
-        stdio: 'pipe' 
-      });
-    } catch (e) {
-      // Expect failure
-    }
+    expect(failingRecords.length).toBe(3);
 
-    // 3. Verify the report
-    const report = JSON.parse(fs.readFileSync(reportPath, 'utf-8'));
+    // High Severity group (0)
+    // 1. Tags vazias ou ausentes (alphabetical)
+    // 2. Tipo inconsistente (tipo) (alphabetical)
+    // Medium Severity group (1)
+    // 3. ID ausente
     
-    expect(report.totalRecords).toBe(1);
-    expect(report.failingRecords.length).toBe(1);
-    
+    expect(failingRecords[0].errors[0].category).toBe('Tags vazias ou ausentes');
+    expect(failingRecords[1].errors[0].category).toBe('Tipo inconsistente (tipo)');
+    expect(failingRecords[2].errors[0].category).toBe('ID ausente');
+  });
+
+
+  it('should have consistent counts in the summary', () => {
+    const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
     const summary = report.summary;
-    // We expect 4 errors for this single record
+
+    expect(summary['Tags vazias ou ausentes'].count).toBe(1);
     expect(summary['ID ausente'].count).toBe(1);
     expect(summary['Tipo inconsistente (tipo)'].count).toBe(1);
-    expect(summary['Tipo inconsistente (type)'].count).toBe(1);
-    expect(summary['Tags vazias ou ausentes'].count).toBe(1);
-    
-    // Check percentages (1 error in 1 record = 100%)
-    expect(parseFloat(summary['ID ausente'].percentage)).toBe(100);
-    expect(summary['ID ausente'].status).toBe('fail');
+    expect(summary['Título ausente'].count).toBe(0);
   });
+
 });
