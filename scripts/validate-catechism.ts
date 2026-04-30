@@ -75,7 +75,7 @@ items.forEach((item: any, index) => {
   forbiddenFields.forEach(field => {
     if (item[field]) {
       addError('Campos de IA detectados', `O campo '${field}' não deve existir (Regra: Catecismo sem IA)`);
-      if (autoCleanAI) {
+      if (autoCleanAI && !isDryRun) {
         delete item[field];
       }
     }
