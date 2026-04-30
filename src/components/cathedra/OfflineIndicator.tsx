@@ -25,11 +25,17 @@ const OfflineIndicator: React.FC = () => {
 
   if (!isOffline && !isSupabaseDown) return null;
 
-
   return (
-    <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[200] px-5 py-2.5 bg-secondary text-white rounded-2xl shadow-xl flex items-center gap-2 animate-in fade-in slide-in-from-bottom-4">
-      <span className="w-2 h-2 rounded-full bg-white/70 animate-pulse" />
-      <span className="text-xs font-bold uppercase tracking-wider">Modo Offline — usando cache local</span>
+    <div className={`fixed bottom-4 left-1/2 -translate-x-1/2 z-[200] px-5 py-2.5 ${isSupabaseDown ? 'bg-destructive' : 'bg-secondary'} text-white rounded-2xl shadow-xl flex flex-col items-center gap-1 animate-in fade-in slide-in-from-bottom-4 transition-colors`}>
+      <div className="flex items-center gap-2">
+        <span className="w-2 h-2 rounded-full bg-white/70 animate-pulse" />
+        <span className="text-xs font-bold uppercase tracking-wider">
+          {isSupabaseDown ? 'Banco de Dados Indisponível' : 'Modo Offline'}
+        </span>
+      </div>
+      <span className="text-[10px] opacity-80 font-medium">
+        {isSupabaseDown ? 'Tentando reconectar... Usando cache local.' : 'Usando cache local para textos essenciais'}
+      </span>
     </div>
   );
 };
