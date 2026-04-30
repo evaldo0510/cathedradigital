@@ -69,6 +69,9 @@ items.forEach((item: any, index) => {
   }
 });
 
+// Sort failing records by the highest severity error they contain BEFORE generating the report
+failingRecords.sort((a, b) => a.errors[0].severity - b.errors[0].severity);
+
 // Threshold logic
 const threshold = parseFloat(process.env.CATECHISM_VALIDATION_THRESHOLD || '0'); // Default 0 (any error fails)
 let buildFailed = false;
@@ -80,9 +83,14 @@ const report = {
   failingRecords: failingRecords.map(r => ({
     id: r.id,
     paragraph: r.paragraph,
-    errors: r.errors.map((e: any) => ({ category: e.category, message: e.message }))
+    errors: r.errors.map((e: any) => ({ 
+      category: e.category, 
+      message: e.message,
+      severity: e.severity
+    }))
   }))
 };
+
 
 console.log('\n📊 RESUMO DE INTEGRIDADE');
 console.log('========================');
