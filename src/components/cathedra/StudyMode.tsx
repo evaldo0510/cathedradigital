@@ -326,236 +326,54 @@ const StudyMode: React.FC = () => {
   }, [location.search, location.state, messages.length, isLoading]);
 
   return (
-    <div className="flex h-[calc(100vh-12rem)] max-w-5xl mx-auto gap-0">
-      {/* Sidebar - conversation history */}
-      {user && (
-        <div className={`${showSidebar ? 'w-64 border-r border-border' : 'w-0'} transition-all overflow-hidden shrink-0 flex flex-col bg-card/50`}>
-          <div className="p-3 border-b border-border flex items-center justify-between">
-            <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Histórico</span>
-            <button onClick={startNewConversation} className="p-1.5 rounded-lg hover:bg-primary/10 text-primary transition-colors" title="Nova conversa">
-              <Plus className="w-4 h-4" />
-            </button>
-          </div>
-          <div className="flex-1 overflow-y-auto custom-scrollbar">
-            {conversations.map(conv => (
-              <div
-                key={conv.id}
-                className={`group flex items-center gap-2 px-3 py-2.5 cursor-pointer hover:bg-primary/5 transition-colors ${activeConversationId === conv.id ? 'bg-primary/10 border-l-2 border-primary' : ''}`}
-                onClick={() => { setActiveConversationId(conv.id); setShowSidebar(false); }}
-              >
-                <MessageSquare className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
-                <span className="text-xs text-foreground truncate flex-1">{conv.title}</span>
-                <button
-                  onClick={(e) => { e.stopPropagation(); deleteConversation(conv.id); }}
-                  className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-all"
-                >
-                  <Trash2 className="w-3 h-3" />
-                </button>
-              </div>
-            ))}
-            {conversations.length === 0 && (
-              <p className="text-xs text-muted-foreground italic text-center p-4">Nenhuma conversa salva</p>
-            )}
-          </div>
+    <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-12 max-w-2xl mx-auto py-12">
+      <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
+        <Icons.Shield className="w-12 h-12 text-primary" />
+      </div>
+      
+      <div className="space-y-4">
+        <h1 className="text-3xl md:text-5xl font-serif font-black text-primary">Estudo e Verdade</h1>
+        <p className="text-lg text-muted-foreground font-serif italic">
+          "Para garantir a integridade absoluta da doutrina e a soberania da sua experiência espiritual, a Cathedra Digital optou por não utilizar serviços de Inteligência Artificial."
+        </p>
+      </div>
+
+      <div className="bg-card border border-border p-8 rounded-[2.5rem] shadow-sm space-y-6">
+        <p className="text-sm text-foreground/80 leading-relaxed">
+          O <strong>Modo Estudo</strong> está sendo reformulado para focar exclusivamente em <strong>Curadoria Humana</strong> e <strong>Fontes Oficiais</strong> da Igreja, permitindo que você navegue pela Tradição e pelo Magistério com total segurança.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Button 
+            className="rounded-2xl h-12 px-8 font-black uppercase text-[10px] tracking-widest"
+            onClick={() => navigate(AppRoute.CATECHISM)}
+          >
+            Explorar Catecismo
+          </Button>
+          <Button 
+            variant="outline"
+            className="rounded-2xl h-12 px-8 font-black uppercase text-[10px] tracking-widest border-primary/20 text-primary"
+            onClick={() => navigate(AppRoute.TRANSPARENCY)}
+          >
+            Saiba Mais
+          </Button>
         </div>
-      )}
+      </div>
 
-      {/* Main chat area */}
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* Header */}
-        <div className="text-center space-y-3 pb-6 border-b border-border relative">
-          {user && (
-            <button
-              onClick={() => setShowSidebar(!showSidebar)}
-              className="absolute left-0 top-0 p-2 rounded-lg hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
-              title="Histórico de conversas"
-            >
-              {showSidebar ? <ChevronLeft className="w-5 h-5" /> : <MessageSquare className="w-5 h-5" />}
-            </button>
-          )}
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
-            <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">
-              {currentMode === 'aquinas' ? 'Logos — Modo Aquino' : 'Logos: Mentor Espiritual'}
-            </span>
+      <div className="pt-8 border-t border-border w-full grid grid-cols-1 md:grid-cols-3 gap-6">
+        {[
+          { label: 'Integridade', desc: 'Conteúdo validado por humanos.' },
+          { label: 'Offline', desc: 'Funciona sem APIs externas.' },
+          { label: 'Fidelidade', desc: 'Fiel ao Magistério Vivo.' }
+        ].map(item => (
+          <div key={item.label} className="space-y-1">
+            <h4 className="text-[10px] font-black uppercase tracking-widest text-primary">{item.label}</h4>
+            <p className="text-[10px] text-muted-foreground">{item.desc}</p>
           </div>
-          <h1 className="text-3xl md:text-4xl font-serif font-bold text-foreground">
-            {currentMode === 'aquinas' ? 'Domínio Intelectual' : 'Ouvindo o Verbo'}
-          </h1>
-          <p className="text-muted-foreground font-serif italic">
-            {currentMode === 'aquinas' 
-              ? 'Razão, lógica e fé aplicadas à sua alma.' 
-              : 'A sabedoria milenar da Igreja ao encontro do seu coração.'}
-          </p>
-        </div>
-
-        {/* Messages */}
-        <div className="flex-1 overflow-y-auto custom-scrollbar py-6 space-y-6 px-2">
-          {messages.length === 0 && (
-            <div className="flex flex-col items-center justify-center h-full space-y-8">
-              <Icons.Feather className="w-16 h-16 text-primary/30" />
-              <p className="text-muted-foreground font-serif italic text-center">
-                {diagnosis?.spiritual_profile ? "O Logos preparou algumas reflexões para o seu momento:" : "O que sua alma busca hoje?"}
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl w-full">
-                {dynamicSuggestions.map((s, i) => (
-                  <button key={i} onClick={() => sendMessage(s)}
-                    className="text-left p-4 rounded-2xl border border-border bg-card hover:bg-primary/5 hover:border-primary/30 transition-all text-sm text-foreground">
-                    {s}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {messages.map((msg, i) => (
-            <div key={i} className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-              {msg.role === 'assistant' && (
-                <div className="shrink-0 w-8 h-8 rounded-full overflow-hidden border border-secondary/30 shadow-md mt-1">
-                  <img src={currentMode === 'aquinas' ? logosAquinasImg : logosColloquiumImg} alt="Logos" className="w-full h-full object-cover" loading="lazy" />
-                </div>
-              )}
-              <div className={`max-w-[80%] rounded-2xl px-5 py-4 ${
-                msg.role === 'user'
-                  ? 'bg-foreground text-background rounded-br-md'
-                  : 'bg-card border border-border rounded-bl-md'
-              }`}>
-                {msg.role === 'assistant' ? (
-                  <>
-                    <div className="prose prose-sm dark:prose-invert max-w-none font-serif">
-                      <ReactMarkdown components={markdownComponents}>{msg.content}</ReactMarkdown>
-                    </div>
-                    <CopyButton text={msg.content} />
-                  </>
-                ) : (
-                  <p className="text-sm">{msg.content}</p>
-                )}
-              </div>
-            </div>
-          ))}
-
-          {/* New A-Z / Theme Suggestion */}
-          {!isLoading && lastMetadata && lastMetadata.theme && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-primary/5 border border-primary/10 rounded-2xl p-6 space-y-4"
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="p-1.5 bg-primary/10 rounded-lg">
-                    <BookOpen className="w-4 h-4 text-primary" />
-                  </div>
-                  <h3 className="text-sm font-bold text-primary tracking-tight">Explorar tema: {lastMetadata.theme}</h3>
-                </div>
-                <Badge variant="outline" className="bg-background/50 text-[9px] uppercase tracking-widest px-2 py-0.5 border-primary/20">A–Z da Fé</Badge>
-              </div>
-
-              {lastMetadata.az_terms && lastMetadata.az_terms.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {lastMetadata.az_terms.map((term: string, idx: number) => (
-                    <button
-                      key={idx}
-                      onClick={() => navigate(`${AppRoute.AZ_FAITH}?q=${encodeURIComponent(term)}`)}
-                      className="px-3 py-1.5 bg-card hover:bg-primary/10 border border-border hover:border-primary/30 rounded-xl text-xs font-medium transition-all flex items-center gap-1.5 group"
-                    >
-                      {term}
-                      <ArrowRight className="w-3 h-3 text-muted-foreground group-hover:text-primary transition-colors" />
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              <Button
-                variant="default"
-                size="sm"
-                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase text-[10px] tracking-[0.2em] h-10 rounded-xl flex items-center justify-center gap-2"
-                onClick={() => navigate(AppRoute.AZ_FAITH)}
-              >
-                Ver glossário completo <ArrowRight className="w-3.5 h-3.5" />
-              </Button>
-            </motion.div>
-          )}
-
-          {/* Natural conversion: Logos deep response */}
-          {!isLoading && messages.length > 0 && messages[messages.length - 1].role === 'assistant' && (
-            messages[messages.length - 1].content.length > 400 || messages.filter(m => m.role === 'assistant').length >= 2
-          ) && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="px-2"
-            >
-              <ProConversionBanner context="logos" />
-            </motion.div>
-          )}
-
-          {isLoading && messages[messages.length - 1]?.role !== 'assistant' && (
-            <div className="flex justify-start gap-3">
-              {/* Pulsing Logos avatar */}
-              <motion.div
-                animate={{ scale: [1, 1.1, 1], opacity: [0.7, 1, 0.7] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                className="shrink-0 w-8 h-8 rounded-full overflow-hidden border border-secondary/30 shadow-md mt-1"
-              >
-                <img src={currentMode === 'aquinas' ? logosAquinasImg : logosColloquiumImg} alt="Logos pensando..." className="w-full h-full object-cover" />
-              </motion.div>
-              <div className="bg-card border border-border rounded-2xl rounded-bl-md px-5 py-4">
-                <div className="flex items-center gap-2">
-                  <div className="flex gap-1.5">
-                    <div className="w-2 h-2 bg-primary/40 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                    <div className="w-2 h-2 bg-primary/40 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                    <div className="w-2 h-2 bg-primary/40 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-                  </div>
-                  <span className="text-[10px] text-muted-foreground italic ml-1">Logos meditando...</span>
-                </div>
-              </div>
-            </div>
-          )}
-          <div ref={messagesEndRef} />
-        </div>
-
-        {/* Input */}
-        <div className="border-t border-border pt-4 px-2">
-          <div className="flex gap-3 items-end">
-            <textarea
-              ref={inputRef}
-              value={input}
-              onChange={e => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Faça sua pergunta teológica..."
-              rows={1}
-              className="flex-1 resize-none rounded-2xl border border-border bg-card px-5 py-3.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 custom-scrollbar"
-              style={{ maxHeight: '120px', minHeight: '48px' }}
-              onInput={e => { const t = e.currentTarget; t.style.height = '48px'; t.style.height = t.scrollHeight + 'px'; }}
-            />
-            <button
-              onClick={() => sendMessage(input)}
-              disabled={!input.trim() || isLoading}
-              className="p-3.5 bg-foreground text-background rounded-2xl hover:bg-primary hover:text-foreground transition-all disabled:opacity-30 shrink-0"
-            >
-              <Icons.Search className="w-5 h-5" />
-            </button>
-          </div>
-          <p className="text-[10px] text-muted-foreground text-center mt-2 font-serif italic">
-            Colloquium usa IA para auxiliar seus estudos. Sempre consulte fontes oficiais do Magistério.
-          </p>
-        </div>
-
-        {/* CTA: Continue to Jornadas */}
-        {messages.length >= 4 && (
-          <div className="pt-4 border-t border-border mt-4">
-            <button
-              onClick={() => navigate(AppRoute.JORNADAS)}
-              className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-primary text-primary-foreground text-sm font-bold hover:opacity-90 transition-all shadow-lg shadow-primary/10"
-            >
-              <Compass className="w-4 h-4" /> Iniciar uma Jornada de Fé
-            </button>
-          </div>
-        )}
+        ))}
       </div>
     </div>
   );
 };
 
 export default StudyMode;
+
