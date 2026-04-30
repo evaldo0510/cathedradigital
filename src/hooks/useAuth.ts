@@ -308,7 +308,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     profile,
     loading,
     signOut,
-    isPremium: profile?.is_premium ?? false,
+    isPremium: true, // Unlocked for everyone
     userLevel,
     refreshProfile,
   }), [user, profile, loading, signOut, userLevel, refreshProfile]);

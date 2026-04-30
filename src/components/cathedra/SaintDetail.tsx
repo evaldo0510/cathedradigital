@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { callColloquium, type AIFallbackReason } from '@/services/aiService';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '../../constants';
@@ -9,7 +8,7 @@ import DocumentViewer from './DocumentViewer';
 import DeepContentSection from './DeepContentSection';
 import { type Saint } from '@/data/saints';
 import { AppRoute } from '@/types';
-import { Sparkles, BookOpen, Quote, Shield, Info, Heart, Lightbulb, MessageSquare, Loader2, Sparkle } from 'lucide-react';
+import { BookOpen, Quote, Shield, Info, Heart, Lightbulb, MessageSquare, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
@@ -17,9 +16,8 @@ import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
 import AudioContentPlayer from './AudioContentPlayer';
-import AIFallbackCard from './AIFallbackCard';
 
-const CATEGORY_LABELS: Record<string, string> = {
+export const CATEGORY_LABELS: Record<string, string> = {
   apostle: 'Apóstolo',
   martyr: 'Mártir',
   doctor: 'Doutor(a) da Igreja',
@@ -57,10 +55,6 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
   const { isPremium } = useAuth();
   const navigate = useNavigate();
   const [viewingDoc, setViewingDoc] = useState<{ url: string; title: string } | null>(null);
-  const [logosReflection, setLogosReflection] = useState<string>('');
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [showLogos, setShowLogos] = useState(autoReflect);
-  const [fallbackReason, setFallbackReason] = useState<AIFallbackReason | null>(null);
 
   const suggestedJourney = React.useMemo(() => {
     const mainVirtue = saint.virtues?.[0]?.toLowerCase() || 'santidade';
@@ -77,66 +71,6 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
     
     return VIRTUE_TO_JOURNEY['paciência']; // Default
   }, [saint.virtues]);
-
-  React.useEffect(() => {
-    if (autoReflect) {
-      generateLogosReflection();
-    }
-  }, [autoReflect]);
-
-  const generateLogosReflection = async () => {
-    setIsGenerating(true);
-    setShowLogos(true);
-    setLogosReflection('');
-    setFallbackReason(null);
-
-    try {
-      const prompt = `Como Logos (IA da Cathedra), gere uma reflexão profunda e personalizada sobre ${saint.name}. 
-      
-      Siga este roteiro rigorosamente:
-      1. REALIDADE: Relacione a virtude principal (${saint.virtues?.[0] || 'santidade'}) de ${saint.name} com os desafios reais, pressões e dilemas de um católico no mundo moderno hoje. Como essa virtude se traduz em ações concretas no trabalho, na família ou na vida digital?
-      2. PERGUNTA PROFUNDA: Gere uma pergunta provocativa e profunda que conecte a luta ou o exemplo de ${saint.name} com a alma e o estado espiritual do usuário agora.
-      3. O CAMINHO: Sugira um "caminho" (uma ação prática, um pequeno sacrifício ou uma oração específica) inspirado no exemplo de ${saint.name} para o usuário realizar hoje.
-      
-      IMPORTANTE: Use os títulos "REALIDADE:", "PERGUNTA PROFUNDA:" e "O CAMINHO:" explicitamente no início de cada seção.
-      Tom: Poético, visceral, encorajador e firme na doutrina católica. Use Markdown para formatar (negrito para ênfase). Seja breve mas impactante.`;
-
-      const result = await callColloquium([{ role: 'user', content: prompt }], null, (content) => {
-        setLogosReflection(content.replace(/\[RECOMMENDATION:.*?\]/g, '').trim());
-      });
-
-      if (result.error) {
-        setFallbackReason(result.fallback_reason ?? 'network');
-        setLogosReflection('');
-        return;
-      }
-    } catch (error) {
-      console.error('Error generating Logos reflection:', error);
-      setFallbackReason('network');
-      setLogosReflection('');
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-
-  const staticReflection = (
-    <div className="space-y-3">
-      <p>
-        <strong>{saint.name}</strong> nos ensina sobre <em>{saint.virtues?.[0] || 'santidade'}</em>.
-        {saint.bio ? ` ${saint.bio.slice(0, 220)}${saint.bio.length > 220 ? '…' : ''}` : ''}
-      </p>
-      {saint.quotes?.[0] && (
-        <blockquote className="border-l-2 border-primary/40 pl-3 italic text-muted-foreground">
-          "{saint.quotes[0]}"
-        </blockquote>
-      )}
-      {saint.prayer && (
-        <p className="text-xs text-muted-foreground">
-          Reze hoje: <span className="italic">{saint.prayer.slice(0, 140)}{saint.prayer.length > 140 ? '…' : ''}</span>
-        </p>
-      )}
-    </div>
-  );
 
   return (
     <>
@@ -225,17 +159,6 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           </div>
 
           <div className="flex-1 flex justify-end items-center gap-3">
-            {!showLogos && (
-              <Button 
-                onClick={generateLogosReflection}
-                variant="outline"
-                className="bg-primary/5 hover:bg-primary/10 text-primary border-primary/20 text-[9px] font-black uppercase tracking-widest h-9 px-4 rounded-xl flex items-center gap-2 transition-all"
-              >
-                <Icons.Sparkles className="w-3 h-3" />
-                Refletir com Logos
-              </Button>
-            )}
-            
             <AudioContentPlayer 
               text={`${saint.name}. ${saint.title}. ${saint.bio}. ${saint.fullBio || ''}. ${saint.quotes?.[0] || ''}.`}
               title="Ouvir conteúdo"
@@ -293,17 +216,6 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
               </div>
             )}
           </div>
-          {!showLogos && (
-            <div className="flex justify-center pt-2">
-              <Button 
-                onClick={generateLogosReflection}
-                className="bg-primary hover:bg-primary/90 text-primary-foreground font-black text-xs uppercase tracking-widest h-12 px-8 rounded-2xl shadow-lg shadow-primary/20 flex items-center gap-3 group transition-all"
-              >
-                <Icons.Sparkles className="w-4 h-4 group-hover:rotate-12 transition-transform" />
-                Viver este exemplo com Logos
-              </Button>
-            </div>
-          )}
         </section>
 
         {/* Deep Content - Textos e Livros */}
@@ -312,7 +224,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           title="Meditação e Aprofundamento" 
         />
 
-        {/* Quote & Practical Application & Reflection */}
+        {/* Quote & Practical Application */}
         <div className="grid md:grid-cols-2 gap-8">
           {/* Quote Section */}
           <div className="space-y-4">
@@ -401,268 +313,36 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
               <p className="text-[10px] font-black uppercase tracking-widest text-primary/60 mb-1">Transformar Inspiração em Prática</p>
               <h4 className="text-lg font-bold text-foreground font-serif leading-tight">Jornada {suggestedJourney.name}</h4>
               <p className="text-xs text-muted-foreground font-serif italic max-w-sm">
-                O Logos recomenda que você cultive a virtude de <span className="text-primary font-bold not-italic">{saint.virtues?.[0] || 'Santidade'}</span> através desta trilha guiada.
+                Inspirada pela virtude de <span className="text-primary font-bold not-italic">{saint.virtues?.[0] || 'Santidade'}</span>.
               </p>
             </div>
           </div>
           <Button 
             onClick={() => {
-              onClose();
               navigate(`/jornadas/${suggestedJourney.id}`);
+              onClose();
             }}
-            className="w-full md:w-auto bg-primary text-primary-foreground font-black text-[10px] uppercase tracking-widest px-8 h-14 rounded-2xl shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all group-hover:bg-primary/90"
+            className="h-14 px-8 bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase text-[10px] tracking-[0.2em] rounded-2xl shadow-lg shadow-primary/20 group/btn transition-all"
           >
-            Viver isso na jornada <Icons.ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+            Começar Jornada <Icons.ChevronRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
           </Button>
         </motion.div>
 
-        <section className="space-y-4 pt-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-primary">
-              <Sparkles className="w-4 h-4" />
-              <h3 className="text-[11px] font-black uppercase tracking-[0.2em]">Reflexão Profunda</h3>
-            </div>
-            {!showLogos && (
-              <Button 
-                onClick={generateLogosReflection}
-                className="bg-primary hover:bg-primary/90 text-primary-foreground border-none text-[10px] font-black uppercase tracking-widest h-9 px-6 rounded-full flex items-center gap-2 group transition-all shadow-lg shadow-primary/20"
-              >
-                <Icons.Sparkles className="w-3.5 h-3.5 group-hover:rotate-12 transition-transform" />
-                Refletir com Logos
-              </Button>
-            )}
-          </div>
-
-          <div className="bg-foreground text-background p-10 rounded-[3rem] shadow-2xl relative overflow-hidden group min-h-[200px] flex flex-col justify-center transition-all duration-700">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-background/5 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-1000" />
-            
-            <AnimatePresence mode="wait">
-              {!showLogos ? (
-                <motion.div 
-                  key="static"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="relative z-10 space-y-6"
-                >
-                  <p className="text-xl md:text-2xl font-serif italic leading-snug text-background/90">
-                    {saint.interpretacaoProfunda || saint.reflexaoFinal || "A vida dos santos nos recorda que a santidade não é uma perfeição distante, mas uma amizade próxima e constante com Jesus Cristo."}
-                  </p>
-                  <div className="h-px w-20 bg-background/20" />
-                  <p className="text-xs uppercase tracking-[0.3em] font-black text-background/50">Meditação Diária</p>
-                </motion.div>
-              ) : (
-                <motion.div 
-                  key="logos"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="relative z-10 space-y-6"
-                >
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
-                      {isGenerating ? <Loader2 className="w-3 h-3 text-primary animate-spin" /> : <Icons.Sparkles className="w-3 h-3 text-primary" />}
-                    </div>
-                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-background/40">Logos está guiando sua reflexão...</span>
-                  </div>
-                  
-                  <div className="space-y-6">
-                    {logosReflection ? (
-                      logosReflection.split(/(?=REALIDADE:|PERGUNTA PROFUNDA:|O CAMINHO:)/).filter(Boolean).map((section, idx) => {
-                        const isReality = section.includes('REALIDADE:');
-                        const isQuestion = section.includes('PERGUNTA PROFUNDA:');
-                        const isPath = section.includes('O CAMINHO:');
-                        
-                        let content = section.replace(/REALIDADE:|PERGUNTA PROFUNDA:|O CAMINHO:/, '').trim();
-                        
-                        return (
-                          <div key={idx} className={`p-8 rounded-[2rem] ${isReality ? 'bg-primary/5 border border-primary/20' : isQuestion ? 'bg-secondary/40 border border-border shadow-inner' : isPath ? 'bg-primary text-primary-foreground shadow-2xl shadow-primary/30 border-t-4 border-primary-foreground/20' : ''}`}>
-                            <div className="flex items-center gap-3 mb-4">
-                              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${isPath ? 'bg-primary-foreground/20' : 'bg-primary/10'}`}>
-                                {isReality && <Icons.Globe className="w-4 h-4 text-primary" />}
-                                {isQuestion && <Icons.MessageSquare className="w-4 h-4 text-primary" />}
-                                {isPath && <Icons.Flame className="w-4 h-4 text-primary-foreground" />}
-                              </div>
-                              {isReality && <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Realidade Moderna</h4>}
-                              {isQuestion && <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Para sua Alma</h4>}
-                              {isPath && <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary-foreground/70">O Caminho Prático</h4>}
-                            </div>
-                            <p className={`text-lg font-serif italic leading-relaxed ${isPath ? 'text-primary-foreground' : 'text-background/90'}`}>
-                              {content}
-                            </p>
-                          </div>
-                        );
-                      })
-                    ) : fallbackReason ? (
-                      <AIFallbackCard
-                        reason={fallbackReason}
-                        staticContent={staticReflection}
-                        onRetry={generateLogosReflection}
-                        isRetrying={isGenerating}
-                      />
-                    ) : (
-                      <p className="text-lg md:text-xl font-serif italic leading-relaxed text-background/90 whitespace-pre-wrap">
-                        {isGenerating && "Conectando virtudes à sua vida..."}
-                      </p>
-                    )}
-                  </div>
-
-                  {!isGenerating && (
-                    <motion.div 
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 0.5 }}
-                      className="pt-6 border-t border-background/10"
-                    >
-                      <button 
-                        onClick={() => setShowLogos(false)}
-                        className="text-[9px] font-black uppercase tracking-widest text-background/40 hover:text-background/60 transition-colors"
-                      >
-                        ← Voltar para meditação padrão
-                      </button>
-                    </motion.div>
-                  )}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        </section>
-
-        {/* Patronage */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="p-5 bg-secondary/50 rounded-2xl border border-border">
-            <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground block mb-1">Padroeiro(a) de</span>
-            <div className="flex flex-wrap gap-1.5 mt-2">
-              {saint.patronOf.map(p => (
-                <span key={p} className="px-2 py-1 bg-background text-foreground text-[9px] font-black uppercase tracking-tighter rounded-md border border-border">{p}</span>
-              ))}
-            </div>
-          </div>
-          {/* You can add more secondary info here */}
-        </div>
-
-
-        {/* Deep Connections - PRO ONLY */}
-        {(saint.bibleRefs || saint.catechismRefs || saint.churchDocRefs) && (
-          <section className="space-y-6 pt-6 border-t border-border/50">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-primary">
-                <Icons.Sparkles className="w-4 h-4" />
-                <h3 className="text-[11px] font-black uppercase tracking-[0.2em]">Conexões Profundas</h3>
-              </div>
-              {!isPremium && (
-                <span className="text-[9px] font-black uppercase tracking-widest bg-primary/10 text-primary px-3 py-1.5 rounded-full border border-primary/20">
-                  Conteúdo Premium
-                </span>
-              )}
-            </div>
-
-            {!isPremium ? (
-              <div className="relative group cursor-pointer" onClick={() => navigate(AppRoute.PRICING)}>
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background/40 to-background/80 backdrop-blur-[2px] z-10 rounded-[2rem] flex items-center justify-center border border-primary/10">
-                  <div className="text-center space-y-3 p-8">
-                    <Icons.Lock className="w-8 h-8 text-primary mx-auto mb-2" />
-                    <h4 className="text-lg font-bold">Aprofunde seus estudos</h4>
-                    <p className="text-sm text-muted-foreground max-w-xs mx-auto">
-                      Assine o Cathedra Pro para acessar referências bíblicas, parágrafos do Catecismo e documentos da Igreja relacionados a {saint.name}.
-                    </p>
-                    <Button size="sm" className="bg-primary text-white rounded-full px-8 shadow-lg shadow-primary/20">Ver Planos</Button>
-                  </div>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 opacity-30 filter blur-md select-none pointer-events-none">
-                  <div className="p-4 bg-muted rounded-2xl h-32" />
-                  <div className="p-4 bg-muted rounded-2xl h-32" />
-                  <div className="p-4 bg-muted rounded-2xl h-32" />
-                </div>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-in fade-in duration-500">
-                {saint.bibleRefs && saint.bibleRefs.length > 0 && (
-                  <div className="space-y-4">
-                    <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                      <Icons.Book className="w-3.5 h-3.5" /> Escritura
-                    </h4>
-                    <div className="space-y-2">
-                      {saint.bibleRefs.map((ref, i) => {
-                        const parsed = parseTheologicalReferences(ref.ref);
-                        const bibleSeg = parsed.find(s => s.type === 'bibleRef');
-                        return (
-                          <div key={i} className="p-3 bg-secondary/30 rounded-xl border border-border/50 hover:border-primary/30 transition-colors space-y-1">
-                            {bibleSeg ? (
-                              <BibleVersePopover abbr={bibleSeg.abbr!} chapter={bibleSeg.chapter!} verse={bibleSeg.verse} label={ref.ref} />
-                            ) : (
-                              <p className="text-xs font-bold text-foreground">{ref.ref}</p>
-                            )}
-                            <p className="text-[10px] text-muted-foreground italic mt-0.5">{ref.label}</p>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-
-                {saint.catechismRefs && saint.catechismRefs.length > 0 && (
-                  <div className="space-y-4">
-                    <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                      <Icons.Cross className="w-3.5 h-3.5" /> Catecismo
-                    </h4>
-                    <div className="flex flex-wrap gap-2">
-                      {saint.catechismRefs.map(ref => (
-                        <CatechismPopover key={ref} paragraph={ref} onNavigate={() => { onClose(); navigate('/catechism'); }} />
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {saint.churchDocRefs && saint.churchDocRefs.length > 0 && (
-                  <div className="space-y-4">
-                    <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                      <Icons.FileText className="w-3.5 h-3.5" /> Documentos
-                    </h4>
-                    <div className="space-y-2">
-                      {saint.churchDocRefs.map((doc, i) => (
-                        <div key={i} className="flex items-center justify-between p-3 bg-card border border-border rounded-xl group hover:border-primary/40 transition-all">
-                          <span className="text-[10px] font-bold text-foreground truncate pr-2">{doc.title}</span>
-                          <button 
-                            onClick={() => setViewingDoc({ url: doc.url, title: doc.title })}
-                            className="p-1.5 text-primary hover:bg-primary/10 rounded-md transition-colors"
-                          >
-                            <Icons.ExternalLink className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-          </section>
-        )}
-
-        {/* Prayer */}
-        {saint.prayer && (
-          <section className="pt-6">
-            <div className="bg-primary text-primary-foreground p-10 rounded-[3rem] shadow-2xl shadow-primary/20 text-center space-y-6">
-              <span className="text-[10px] font-black uppercase tracking-[0.4em] opacity-60">Oração do Santo</span>
-              <p className="text-2xl font-serif italic leading-relaxed">"{saint.prayer}"</p>
-              <div className="pt-4">
-                <ShareButton
-                  title={`Oração de ${saint.name}`}
-                  text={saint.prayer}
-                  variant="button"
-                  className="!bg-primary-foreground !text-primary !rounded-full !px-8"
-                />
-              </div>
-            </div>
-          </section>
-        )}
       </div>
     </motion.div>
   </motion.div>
-  {viewingDoc && <DocumentViewer url={viewingDoc.url} title={viewingDoc.title} onClose={() => setViewingDoc(null)} />}
+  
+  <AnimatePresence>
+    {viewingDoc && (
+      <DocumentViewer 
+        url={viewingDoc.url} 
+        title={viewingDoc.title} 
+        onClose={() => setViewingDoc(null)} 
+      />
+    )}
+  </AnimatePresence>
   </>
   );
 };
 
 export default SaintDetail;
-export { CATEGORY_LABELS };
