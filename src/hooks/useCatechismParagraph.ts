@@ -51,11 +51,6 @@ export const fetchCatechismParagraph = async (paragraph: number, forceGenerate =
     language: parsed.language || 'pt',
     status: parsed.status,
     textoBase: parsed.textoBase,
-    explicacao: parsed.explicacao,
-    interpretacaoProfunda: parsed.interpretacaoProfunda,
-    aplicacaoPratica: parsed.aplicacaoPratica,
-    reflexaoFinal: parsed.reflexaoFinal,
-    exercicio: parsed.exercicio
   };
 
   // 3) Only cache if content is real (not a fallback)
