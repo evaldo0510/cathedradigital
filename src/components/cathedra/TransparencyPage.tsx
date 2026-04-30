@@ -101,14 +101,20 @@ const TransparencyPage: React.FC = () => {
           </div>
         </section>
 
-        {/* Offline Mode Info */}
+        {/* Offline Mode & Runtime Integrity */}
         <div className="p-8 rounded-[2rem] border border-border text-center space-y-4">
           <Icons.WifiOff className="w-8 h-8 text-muted-foreground mx-auto" />
-          <h3 className="font-bold uppercase tracking-widest text-xs text-foreground">Modo Offline e Dependências</h3>
-          <p className="text-xs text-muted-foreground leading-relaxed max-w-md mx-auto">
-            O site foi projetado para funcionar de forma independente. Cache local é utilizado para armazenar textos fundamentais, reduzindo a dependência de serviços externos e garantindo sua privacidade e disponibilidade.
+          <h3 className="font-bold uppercase tracking-widest text-xs text-foreground">Independência de Runtime</h3>
+          <p className="text-xs text-muted-foreground leading-relaxed max-w-md mx-auto italic">
+            O site foi projetado para funcionar de forma soberana. As chamadas para provedores externos foram reduzidas ao mínimo essencial (Supabase para dados), garantindo que a plataforma opere mesmo sem conexão estável e sem depender de serviços de terceiros que possam comprometer a integridade do conteúdo.
           </p>
+          <div className="pt-4">
+            <span className="px-4 py-2 rounded-full bg-secondary/10 text-primary text-[9px] font-black uppercase tracking-widest border border-primary/10">
+              PWA Habilitado para Uso Offline
+            </span>
+          </div>
         </div>
+
       </div>
     </div>
   );
