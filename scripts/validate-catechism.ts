@@ -142,7 +142,7 @@ Object.entries(errorCategories)
     report.summary[category] = {
       count: data.count,
       percentage: percentage.toFixed(2),
-      status: data.count === 0 ? 'pass' : (isOverThreshold ? 'fail' : 'warning')
+      status: data.count === 0 ? 'pass' : (isAIError ? (failOnAI ? 'fail' : 'warning') : (isOverThreshold ? 'fail' : 'warning'))
     };
   });
 console.log('========================');
