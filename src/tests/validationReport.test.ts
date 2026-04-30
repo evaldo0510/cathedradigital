@@ -5,10 +5,46 @@ import * as path from 'path';
 
 describe('Validation Report Ordering and Severity', () => {
   const reportPath = path.join(process.cwd(), 'catechism-validation-report.json');
+  const mockDataFile = path.join(process.cwd(), 'src/tests/mockCatechismData.ts');
   const mockDataPath = '../src/tests/mockCatechismData'; // Relative to scripts directory
 
   beforeAll(() => {
+    // Create mock data
+    const mockContent = `
+export const CATECHISM_LOCAL_DATA = {
+  "1": {
+    "id": "1",
+    "paragraph": 1,
+    "tipo": "wrong",
+    "type": "catechism",
+    "tags": ["tag"],
+    "titulo": "Teste High 1",
+    "conteudo": "Conteudo"
+  },
+  "2": {
+    "id": "2",
+    "paragraph": 2,
+    "tipo": "catecismo",
+    "type": "catechism",
+    "tags": [],
+    "titulo": "Teste High 2",
+    "conteudo": "Conteudo"
+  },
+  "3": {
+    "id": "",
+    "paragraph": 3,
+    "tipo": "catecismo",
+    "type": "catechism",
+    "tags": ["tag"],
+    "titulo": "Teste Medium",
+    "conteudo": "Conteudo"
+  }
+};
+`;
+    fs.writeFileSync(mockDataFile, mockContent);
+
     // Ensure we don't have a stale report
+
     if (fs.existsSync(reportPath)) {
       fs.unlinkSync(reportPath);
     }
