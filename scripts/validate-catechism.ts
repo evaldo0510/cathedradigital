@@ -9,13 +9,17 @@ const { CATECHISM_LOCAL_DATA } = await import(DATA_PATH);
 const threshold = parseFloat(process.env.CATECHISM_VALIDATION_THRESHOLD || '0'); 
 const failOnAI = process.env.CATECHISM_FAIL_ON_AI_FIELDS !== 'false';
 const autoCleanAI = process.env.CATECHISM_AUTO_CLEAN_AI === 'true';
+const isDryRun = process.env.CATECHISM_DRY_RUN === 'true';
 
 let buildFailed = false;
 
 console.log('🔍 Iniciando validação avançada do Catecismo local...');
-if (autoCleanAI) {
+if (isDryRun) {
+  console.log('🧪 Modo DRY RUN ativado: nada será alterado e o build nunca falhará.');
+} else if (autoCleanAI) {
   console.log('🧹 Modo Auto-Clean ativado: campos de IA serão removidos dos registros.');
 }
+
 
 const items = Object.values(CATECHISM_LOCAL_DATA);
 const totalItems = items.length;
@@ -71,7 +75,7 @@ items.forEach((item: any, index) => {
   forbiddenFields.forEach(field => {
     if (item[field]) {
       addError('Campos de IA detectados', `O campo '${field}' não deve existir (Regra: Catecismo sem IA)`);
-      if (autoCleanAI) {
+      if (autoCleanAI && !isDryRun) {
         delete item[field];
       }
     }
@@ -170,9 +174,11 @@ const reportPath = path.join(process.cwd(), 'catechism-validation-report.json');
 fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
 console.log(`\n📄 Relatório JSON gerado em: ${reportPath}`);
 
-if (buildFailed) {
+if (buildFailed && !isDryRun) {
   console.error('\n❌ O build foi interrompido porque a porcentagem de erros ultrapassou o limite permitido.');
   process.exit(1);
+} else if (buildFailed && isDryRun) {
+  console.log('\n⚠️ Build falharia, mas prosseguindo devido ao modo DRY RUN.');
 }
 
 console.log(`\n✅ Validação concluída. Build prosseguindo.`);
