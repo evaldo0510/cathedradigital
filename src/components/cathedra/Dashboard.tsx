@@ -8,11 +8,9 @@ import { useLang } from '@/hooks/useLang';
 import RitualDoDia from './RitualDoDia';
 import NexusBubbles from './NexusBubbles';
 import SpiritualQuiz, { PROFILES, type ProfileId } from './SpiritualQuiz';
-import ProShowcase from './ProShowcase';
 import QuickDonation from './QuickDonation';
 import { useDashboardData } from '@/hooks/useDashboardData';
 import { DashboardSkeleton } from './DashboardSkeleton';
-
 
 interface DashboardProps {
   user: User | null;
@@ -117,12 +115,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
     return <DashboardSkeleton />;
   }
 
-
   return (
     <div className="desktop-layout py-6 md:py-10">
       <div className="desktop-main content-section">
-
-      {/* ═══ HEADER ═══ */}
       <FadeUp>
         <div className="text-center space-y-6">
           <motion.div
@@ -163,16 +158,10 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         </div>
       </FadeUp>
 
-      {/* ═══ GUIDE LINK ═══ */}
       <FadeUp delay={0.02}>
         <div 
           onClick={() => goTo(AppRoute.MODULES_GUIDE)}
-          className="mb-6 p-4 rounded-2xl bg-primary/5 border border-primary/10 flex items-center justify-between cursor-pointer hover:bg-primary/10 transition-colors group focus-visible:ring-2 focus-visible:ring-primary outline-none"
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => e.key === 'Enter' && goTo(AppRoute.MODULES_GUIDE)}
-          aria-label="Abrir guia dos módulos"
-
+          className="mb-6 p-4 rounded-2xl bg-primary/5 border border-primary/10 flex items-center justify-between cursor-pointer hover:bg-primary/10 transition-colors group"
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
@@ -187,7 +176,6 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         </div>
       </FadeUp>
 
-      {/* ═══ MAIN DOORS 🚪 ═══ */}
       <FadeUp delay={0.05}>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {MAIN_DOORS.map((door, idx) => (
@@ -196,12 +184,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               whileHover={{ y: -4, scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => goTo(door.route)}
-              className={`relative overflow-hidden p-5 rounded-3xl border ${door.borderColor} bg-gradient-to-br ${door.gradient} backdrop-blur-sm cursor-pointer transition-all shadow-sm hover:shadow-xl group focus-visible:ring-2 focus-visible:ring-primary outline-none`}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => e.key === 'Enter' && goTo(door.route)}
-              aria-label={`Abrir ${door.label}`}
-
+              className={`relative overflow-hidden p-5 rounded-3xl border ${door.borderColor} bg-gradient-to-br ${door.gradient} backdrop-blur-sm cursor-pointer transition-all shadow-sm hover:shadow-xl group`}
             >
               {door.suggested && (
                 <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-1 rounded-full bg-secondary text-secondary-foreground text-[8px] font-black uppercase tracking-tighter shadow-sm animate-pulse">
@@ -215,30 +198,20 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
                 <h3 className="text-sm font-bold text-foreground leading-tight group-hover:text-primary transition-colors">{door.label}</h3>
                 <p className="text-[10px] text-muted-foreground line-clamp-2 leading-tight opacity-80">{door.description}</p>
               </div>
-              <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                <Icons.ChevronRight className="w-4 h-4 text-primary/40" />
-              </div>
             </motion.div>
           ))}
         </div>
       </FadeUp>
 
-      {/* ═══ 1. RITUAL DO DIA ⭐ ═══ */}
       <FadeUp delay={0.1}>
         <RitualDoDia />
       </FadeUp>
 
-      {/* ═══ 2. CONTINUAR JORNADA ═══ */}
       {nextUp && (
         <FadeUp delay={0.12}>
           <div 
             onClick={() => goTo(nextUp.route)}
-            className="p-5 rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 via-background to-background cursor-pointer hover:border-primary/40 transition-all shadow-sm hover:shadow-md flex items-center justify-between group focus-visible:ring-2 focus-visible:ring-primary outline-none"
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => e.key === 'Enter' && goTo(nextUp.route)}
-            aria-label={`Continuar jornada: ${nextUp.label}`}
-
+            className="p-5 rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 via-background to-background cursor-pointer hover:border-primary/40 transition-all shadow-sm hover:shadow-md flex items-center justify-between group"
           >
             <div className="flex items-center gap-5">
               <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
@@ -258,28 +231,18 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         </FadeUp>
       )}
 
-      {/* ═══ 3. QUIZ ESPIRITUAL (SE NÃO TIVER PERFIL) ═══ */}
       {!spiritualProfile && (
         <FadeUp delay={0.15}>
           <SpiritualQuiz />
         </FadeUp>
       )}
 
-      {/* ═══ 4. NEXUS BUBBLES ═══ */}
       <FadeUp delay={0.2}>
         <NexusBubbles profileId={spiritualProfile as ProfileId} />
       </FadeUp>
 
-      {/* ═══ 5. PRO SHOWCASE ═══ */}
-      {!profile?.is_premium && (
-        <FadeUp delay={0.25}>
-          <ProShowcase />
-        </FadeUp>
-      )}
-
       </div>
 
-      {/* ═══ SIDEBAR DESKTOP (STATS & INFO) ═══ */}
       <aside className="desktop-aside space-y-6 hidden xl:block">
         <div className="desktop-card space-y-4">
           <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary opacity-80">Estatísticas Semanais</h3>
@@ -297,78 +260,12 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               <p className="text-[8px] text-muted-foreground font-medium">{t('journeys')}</p>
             </div>
           </div>
-          {activeJourneys.length > 0 && (
-            <>
-              <div className="h-px bg-border" />
-              <div className="space-y-2">
-                {activeJourneys.slice(0, 2).map((j) => {
-                  const pct = j.totalSteps > 0 ? Math.round((j.completedSteps / j.totalSteps) * 100) : 0;
-                  return (
-                    <button
-                      key={j.id}
-                      onClick={() => goTo(`/jornadas/${j.id}`)}
-                      className="w-full flex items-center gap-3 p-2.5 rounded-xl bg-primary/[0.03] border border-primary/10 hover:border-primary/30 transition-colors text-left"
-                    >
-                      <div className="flex-1 min-w-0">
-                        <p className="text-[11px] font-bold text-foreground truncate">{j.title}</p>
-                        <div className="mt-1.5 h-1 w-full bg-muted rounded-full overflow-hidden">
-                          <div className="h-full bg-primary transition-all" style={{ width: `${pct}%` }} />
-                        </div>
-                      </div>
-                      <span className="text-[10px] font-black text-primary">{pct}%</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </>
-          )}
         </div>
         
-        {/* Quick Donation */}
         <FadeUp delay={0.3}>
           <QuickDonation />
         </FadeUp>
 
-        {/* Logos (IA) Suggestion */}
-        <div
-          onClick={() => goTo('/study')}
-          className="desktop-card cursor-pointer hover:border-secondary/40 transition-all group space-y-3 focus-visible:ring-2 focus-visible:ring-secondary outline-none"
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => e.key === 'Enter' && goTo('/study')}
-          aria-label="Acessar IA Teológica Colloquium"
-
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-secondary/15 flex items-center justify-center text-secondary group-hover:scale-110 transition-transform">
-              <Icons.Brain className="w-5 h-5" />
-            </div>
-            <div>
-              <p className="text-[9px] font-black uppercase tracking-[0.2em] text-secondary">Colloquium</p>
-              <p className="text-xs font-bold text-foreground group-hover:text-secondary transition-colors">IA Teológica</p>
-            </div>
-          </div>
-          <p className="text-[11px] text-muted-foreground leading-relaxed">Pergunte qualquer coisa sobre a Fé católica</p>
-        </div>
-
-        {/* PRO */}
-        {!profile?.is_premium && (
-          <div
-            onClick={() => goTo(AppRoute.PRICING)}
-            className="desktop-card cursor-pointer border-secondary/30 hover:border-secondary/50 bg-gradient-to-br from-secondary/5 via-card to-primary/5 transition-all group space-y-3"
-          >
-            <div className="flex items-center gap-2">
-              <Icons.Lock className="w-4 h-4 text-secondary" />
-              <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-secondary">Cathedra PRO</h3>
-            </div>
-            <p className="text-[11px] text-muted-foreground leading-relaxed">Desbloqueie jornadas, IA Logos, reflexões profundas e muito mais.</p>
-            <div className="flex items-center gap-1 text-xs font-bold text-secondary group-hover:underline">
-              Conhecer <Icons.ChevronRight className="w-3 h-3" />
-            </div>
-          </div>
-        )}
-
-        {/* Daily Quote */}
         <div className="desktop-card space-y-3">
           <p className="text-sm font-serif italic text-foreground leading-relaxed">
             {dailyQuote.text}
