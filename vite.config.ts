@@ -21,7 +21,7 @@ export default defineConfig(({ mode }) => ({
       srcDir: 'src',
       filename: 'sw.js',
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'icon-192.png', 'icon-512.png', 'icon-maskable.png', 'robots.txt'],
+      includeAssets: ['favicon.svg', 'favicon.png', 'icon-192.png', 'icon-512.png', 'icon-maskable.png', 'robots.txt', 'logos-avatar.png', 'logos-aquinas.png', 'logos-colloquium.png'],
       manifest: {
         name: 'Cathedra Digital',
         short_name: 'Cathedra',

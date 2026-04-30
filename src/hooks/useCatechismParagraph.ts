@@ -13,7 +13,7 @@ export interface CatechismParagraph extends Partial<DeepContent> {
 
 export const fetchCatechismParagraph = async (paragraph: number, forceGenerate = false): Promise<CatechismParagraph> => {
   // 0) Check local static data first (NATIVE CONTENT)
-  const localData = CATECHISM_LOCAL_DATA[paragraph];
+  const localData = (CATECHISM_LOCAL_DATA as any)[paragraph];
   if (localData && !forceGenerate) {
     return {
       paragraph: localData.paragraph,
@@ -26,34 +26,45 @@ export const fetchCatechismParagraph = async (paragraph: number, forceGenerate =
 
   // 1) Check IndexedDB cache next
   const cached = await getCachedCatechismParagraph(paragraph);
+  if (cached && !forceGenerate) {
+    return cached;
+  }
 
   // 2) Fetch from edge function
   const body: any = { paragraph };
   if (forceGenerate) body.action = 'generate';
   
-  const { data, error } = await supabase.functions.invoke('catechism-text', { body });
+  try {
+    const { data, error } = await supabase.functions.invoke('catechism-text', { body });
 
-  if (error) {
+    if (error) throw error;
+    
+    const parsed = typeof data === 'string' ? JSON.parse(data) : data;
+
+    const result: CatechismParagraph = {
+      paragraph: parsed.paragraph || paragraph,
+      content: parsed.content || `Parágrafo §${paragraph} — conteúdo não disponível.`,
+      language: parsed.language || 'pt',
+      status: parsed.status,
+      textoBase: parsed.textoBase,
+    };
+
+    // 3) Only cache if content is real (not a fallback)
+    if (!parsed.status || parsed.status !== 'not_cached') {
+      cacheCatechismParagraph(paragraph, result);
+    }
+
+    return result;
+  } catch (error: any) {
+    window.dispatchEvent(new CustomEvent('supabase-unreachable'));
+    // 4) Ultimate fallback to cache if available
+    if (cached) {
+
+      console.log(`Using cached content for §${paragraph} due to fetch error.`);
+      return cached;
+    }
     throw new Error(error.message || `Erro ao carregar o parágrafo §${paragraph}`);
   }
-  
-  const parsed = typeof data === 'string' ? JSON.parse(data) : data;
-  
-
-  const result: CatechismParagraph = {
-    paragraph: parsed.paragraph || paragraph,
-    content: parsed.content || `Parágrafo §${paragraph} — conteúdo não disponível.`,
-    language: parsed.language || 'pt',
-    status: parsed.status,
-    textoBase: parsed.textoBase,
-  };
-
-  // 3) Only cache if content is real (not a fallback)
-  if (!parsed.status || parsed.status !== 'not_cached') {
-    cacheCatechismParagraph(paragraph, result);
-  }
-
-  return result;
 };
 
 export const useCatechismParagraph = (paragraph: number, enabled = true) => {

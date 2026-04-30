@@ -61,7 +61,19 @@ async function networkFirstLiturgy(request) {
 }
 
 // ─── Workbox Routing for other assets ───
+// Navigation route (App Shell)
+registerRoute(
+  ({ request }) => request.mode === 'navigate',
+  new NetworkFirst({
+    cacheName: 'navigation-cache',
+    plugins: [
+      new CacheableResponsePlugin({ statuses: [200] }),
+    ],
+  })
+);
+
 // Google Fonts
+
 registerRoute(
   /^https:\/\/fonts\.googleapis\.com\/.*/i,
   new CacheFirst({
@@ -96,7 +108,16 @@ registerRoute(
   })
 );
 
+// ─── Local JSON Data ───
+registerRoute(
+  ({ url }) => url.pathname.endsWith('.json') && !url.pathname.includes('manifest'),
+  new StaleWhileRevalidate({
+    cacheName: 'static-data-cache',
+  })
+);
+
 // ─── Push Notifications ───
+
 self.addEventListener('push', (event) => {
   let data = { title: 'Cathedra', body: 'Nova mensagem', url: '/dashboard' };
   try {

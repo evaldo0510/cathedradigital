@@ -48,8 +48,10 @@ const MagisteriumViewer: React.FC = () => {
         });
       } catch (err: any) {
         console.error('Error fetching document:', err);
-        setError(err.message || 'Erro ao carregar o documento do Vaticano.');
+        window.dispatchEvent(new CustomEvent('supabase-unreachable'));
+        setError(err.message || 'Erro ao carregar o documento do Vaticano. Verifique sua conexão.');
         toast.error('Não foi possível carregar o documento.');
+
       } finally {
         setLoading(false);
       }
