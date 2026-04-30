@@ -58,7 +58,8 @@ describe('Validation Report Ordering and Severity', () => {
 
     expect(summary['Tags vazias ou ausentes'].count).toBe(1);
     expect(summary['ID ausente'].count).toBe(1);
-    expect(summary['Título ausente'].count).toBe(1);
-    expect(summary['Tipo inconsistente (tipo)'].count).toBe(0);
+    expect(summary['Tipo inconsistente (tipo)'].count).toBe(1);
+    expect(summary['Título ausente'].count).toBe(0);
   });
+
 });
