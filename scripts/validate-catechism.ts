@@ -174,9 +174,11 @@ const reportPath = path.join(process.cwd(), 'catechism-validation-report.json');
 fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
 console.log(`\n📄 Relatório JSON gerado em: ${reportPath}`);
 
-if (buildFailed) {
+if (buildFailed && !isDryRun) {
   console.error('\n❌ O build foi interrompido porque a porcentagem de erros ultrapassou o limite permitido.');
   process.exit(1);
+} else if (buildFailed && isDryRun) {
+  console.log('\n⚠️ Build falharia, mas prosseguindo devido ao modo DRY RUN.');
 }
 
 console.log(`\n✅ Validação concluída. Build prosseguindo.`);
