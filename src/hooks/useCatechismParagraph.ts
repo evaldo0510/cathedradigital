@@ -21,11 +21,6 @@ export const fetchCatechismParagraph = async (paragraph: number, forceGenerate =
       language: 'pt',
       status: 'static',
       textoBase: localData.textoBase,
-      explicacao: localData.explicacao,
-      interpretacaoProfunda: localData.interpretacaoProfunda,
-      aplicacaoPratica: localData.aplicacaoPratica,
-      reflexaoFinal: localData.reflexaoFinal,
-      exercicio: localData.exercicio
     };
   }
 
@@ -44,11 +39,6 @@ export const fetchCatechismParagraph = async (paragraph: number, forceGenerate =
   
   const parsed = typeof data === 'string' ? JSON.parse(data) : data;
   
-  if (parsed.status === 'error_402') {
-    window.dispatchEvent(new CustomEvent('ai-status-error', { 
-      detail: { type: 'credits_exhausted', message: `Créditos esgotados ao gerar §${paragraph}` } 
-    }));
-  }
 
   const result: CatechismParagraph = {
     paragraph: parsed.paragraph || paragraph,
@@ -56,11 +46,6 @@ export const fetchCatechismParagraph = async (paragraph: number, forceGenerate =
     language: parsed.language || 'pt',
     status: parsed.status,
     textoBase: parsed.textoBase,
-    explicacao: parsed.explicacao,
-    interpretacaoProfunda: parsed.interpretacaoProfunda,
-    aplicacaoPratica: parsed.aplicacaoPratica,
-    reflexaoFinal: parsed.reflexaoFinal,
-    exercicio: parsed.exercicio
   };
 
   // 3) Only cache if content is real (not a fallback)
