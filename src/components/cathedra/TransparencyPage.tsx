@@ -41,16 +41,17 @@ const TransparencyPage: React.FC = () => {
           <div className="relative space-y-6">
             <div className="flex items-center gap-3 text-primary">
               <CheckCircle className="w-6 h-6" />
-              <h2 className="text-xl font-bold uppercase tracking-wider">Compromisso Sem IA</h2>
+              <h2 className="text-xl font-bold uppercase tracking-wider">Compromisso 100% Sem IA</h2>
             </div>
             <p className="text-foreground/80 leading-relaxed font-serif text-lg">
               A Cathedra Digital assume o compromisso público de <strong>não utilizar Inteligência Artificial</strong> para a geração de comentários bíblicos, interpretações teológicas ou reflexões espirituais. 
             </p>
             <p className="text-foreground/80 leading-relaxed">
-              Acreditamos que a transmissão da Fé é uma experiência pessoal e eclesial que exige a mediação humana, fundamentada na Tradição e no Magistério Vivo da Igreja.
+              Diferente de outras plataformas, aqui nenhum algoritmo decide o que é relevante para sua alma. Acreditamos que a transmissão da Fé exige a mediação humana, fundamentada na Tradição e no Magistério Vivo da Igreja.
             </p>
           </div>
         </motion.section>
+
 
         {/* Content Generation */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
