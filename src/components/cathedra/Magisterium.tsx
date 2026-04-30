@@ -258,14 +258,18 @@ const Magisterium: React.FC = () => {
                   transition={{ duration: 0.3 }}
                 >
                   <div className="pt-8 border-t border-border/40">
-                    <DeepContentSection content={{
-                      textoBase: selectedGuidance.textoBase || selectedGuidance.magisteriumAnswer,
-                      explicacao: (selectedGuidance as any).explicacao || '',
-                      interpretacaoProfunda: (selectedGuidance as any).interpretacaoProfunda || '',
-                      aplicacaoPratica: (selectedGuidance as any).aplicacaoPratica || '',
-                      reflexaoFinal: (selectedGuidance as any).reflexaoFinal || '',
-                      exercicio: (selectedGuidance as any).exercicio || ''
-                    }} title="Lumen Veritatis" />
+                    <DeepContentSection 
+                      content={{
+                        textoBase: selectedGuidance.textoBase || selectedGuidance.magisteriumAnswer,
+                        explicacao: (selectedGuidance as any).explicacao || '',
+                        interpretacaoProfunda: (selectedGuidance as any).interpretacaoProfunda || '',
+                        aplicacaoPratica: (selectedGuidance as any).aplicacaoPratica || '',
+                        reflexaoFinal: (selectedGuidance as any).reflexaoFinal || '',
+                        exercicio: (selectedGuidance as any).exercicio || ''
+                      }} 
+                      contentType="other"
+                      title="Lumen Veritatis" 
+                    />
                   </div>
 
                   <div className="space-y-4 relative">

@@ -133,14 +133,18 @@ const AparicoesPage: React.FC = () => {
               </div>
             )}
             {activeTab === 'profundidade' && selectedApparition.textoBase && (
-              <DeepContentSection content={{
-                textoBase: selectedApparition.textoBase,
-                explicacao: selectedApparition.explicacao || '',
-                interpretacaoProfunda: selectedApparition.interpretacaoProfunda || '',
-                aplicacaoPratica: selectedApparition.aplicacaoPratica || '',
-                reflexaoFinal: selectedApparition.reflexaoFinal || '',
-                exercicio: selectedApparition.exercicio || ''
-              }} title="Mistério e Significado" />
+              <DeepContentSection 
+                content={{
+                  textoBase: selectedApparition.textoBase,
+                  explicacao: selectedApparition.explicacao || '',
+                  interpretacaoProfunda: selectedApparition.interpretacaoProfunda || '',
+                  aplicacaoPratica: selectedApparition.aplicacaoPratica || '',
+                  reflexaoFinal: selectedApparition.reflexaoFinal || '',
+                  exercicio: selectedApparition.exercicio || ''
+                }} 
+                contentType="apparition"
+                title="Mistério e Significado" 
+              />
             )}
             {activeTab === 'profundidade' && !selectedApparition.textoBase && (
               <div className="text-center py-12 space-y-4">
