@@ -69,8 +69,16 @@ items.forEach((item: any, index) => {
   }
 });
 
-// Sort failing records by the highest severity error they contain BEFORE generating the report
-failingRecords.sort((a, b) => a.errors[0].severity - b.errors[0].severity);
+// Sort failing records by:
+// 1. Highest severity error (asc: 0 is HIGH)
+// 2. Category name of the first error (for grouping records with same severity)
+failingRecords.sort((a, b) => {
+  if (a.errors[0].severity !== b.errors[0].severity) {
+    return a.errors[0].severity - b.errors[0].severity;
+  }
+  return a.errors[0].category.localeCompare(b.errors[0].category);
+});
+
 
 // Threshold logic
 const threshold = parseFloat(process.env.CATECHISM_VALIDATION_THRESHOLD || '0'); // Default 0 (any error fails)
