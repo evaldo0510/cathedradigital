@@ -17,7 +17,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useAuth } from '@/hooks/useAuth';
-import { useCatechismParagraph, usePrefetchCatechismParagraph, useGenerateCatechismParagraph } from '@/hooks/useCatechismParagraph';
+import { useCatechismParagraph, usePrefetchCatechismParagraph } from '@/hooks/useCatechismParagraph';
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import CatechismPopover from './CatechismPopover';
 import AudioButton from './AudioButton';
@@ -146,21 +146,6 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
             p: (props) => <span>{props.children}</span>,
           }}>{seg.value}</ReactMarkdown>
         )
-      )}
-      {data && (data.textoBase || data.explicacao) && (
-        <div className="mt-8 pt-8 border-t border-border/30">
-          <DeepContentSection 
-            content={{ 
-              textoBase: data.textoBase, 
-              explicacao: data.explicacao, 
-              interpretacaoProfunda: data.interpretacaoProfunda, 
-              aplicacaoPratica: data.aplicacaoPratica, 
-              reflexaoFinal: data.reflexaoFinal, 
-              exercicio: data.exercicio 
-            }} 
-            title="Ensino & Reflexão Doutrinária" 
-          />
-        </div>
       )}
     </div>
   );
