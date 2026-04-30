@@ -404,10 +404,12 @@ const Bible: React.FC = () => {
             body: { abbrev: selectedBook.abbr, chapter: selectedChapter }
           }).then(({ data, error }) => {
             if (error) {
-              setBibleError('Erro ao carregar o texto. Tente novamente.');
+              window.dispatchEvent(new CustomEvent('supabase-unreachable'));
+              setBibleError('Erro ao carregar o texto. Usando cache local se disponível.');
             } else if (data?.verses?.length > 0) {
               setVerses(data.verses);
               bibleCache.set(cacheKey, data.verses);
+
               // Persist to IndexedDB for offline
               cacheBibleChapter(selectedBook.abbr, selectedChapter, data);
             } else {
