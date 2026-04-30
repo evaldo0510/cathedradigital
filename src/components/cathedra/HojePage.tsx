@@ -148,99 +148,6 @@ const HojePage: React.FC = () => {
     user?.id, profile, userLevel, !!activeJourney
   );
 
-  const analyzeReflection = useCallback(async (text: string) => {
-    if (!user || !text.trim()) return;
-    setIsAnalyzing(true);
-    setLogosResponse('');
-    setLogosFallback(null);
-    setLastReflectionText(text);
-    setLogosRecommendation(null);
-    setRecommendedLogosJourney(null);
-    setLogosThemeContents([]);
-    setLogosThemeName('');
-
-    try {
-      const result = await callColloquium([{ role: 'user', content: text }], null, (content) => {
-        setLogosResponse(content);
-      });
-
-      if (result.error) {
-        setLogosFallback(result.fallback_reason ?? 'network');
-        setLogosResponse('');
-        return;
-      }
-      const fullText = result.content || '';
-
-      const match = fullText.match(/\[RECOMMENDATION:(.*?)\]/);
-      if (match) {
-        try {
-          const recommendation = JSON.parse(match[1]);
-          setLogosRecommendation(recommendation);
-          
-          const mainState = recommendation.main_state;
-          const virtueMap: Record<string, string[]> = {
-            'ansiedade': ['Paz', 'Confiança', 'Paciência', 'Abandono a Deus'],
-            'confusao': ['Sabedoria', 'Discernimento', 'Clareza', 'Busca pela Verdade'],
-            'dor_emocional': ['Esperança', 'Consolação', 'Fortaleza', 'Cura'],
-            'busca_espiritual': ['Contemplação', 'Mística', 'Oração', 'Silêncio']
-          };
-          const targetVirtues = virtueMap[mainState] || [];
-          import('@/services/saintsService').then(m => {
-            m.findSaintByVirtues(targetVirtues).then(s => {
-              if (s) setLogosSaint(s);
-            });
-          });
-
-          const [journeyRes, themesRes] = await Promise.all([
-            supabase
-              .from('journeys')
-              .select('*')
-              .eq('category', recommendation.category)
-              .eq('is_active', true)
-              .order('sort_order', { ascending: true })
-              .limit(1)
-              .maybeSingle(),
-            (() => {
-              const stateToThemeSlugs: Record<string, string[]> = {
-                'ansiedade': ['oracao', 'esperanca', 'fe'],
-                'confusao': ['fe', 'sabedoria', 'humildade'],
-                'dor_emocional': ['sofrimento', 'perdao', 'esperanca', 'amor'],
-                'busca_espiritual': ['santidade', 'vocacao', 'fe', 'oracao'],
-                'virtudes_e_missao': ['caridade', 'missao', 'humildade', 'santidade'],
-              };
-              const themeSlugs = stateToThemeSlugs[mainState] || ['fe', 'amor', 'oracao'];
-              return supabase.from('themes').select('id, name, slug').in('slug', themeSlugs).limit(3);
-            })(),
-          ]);
-
-          if (journeyRes.data) {
-            setRecommendedLogosJourney(journeyRes.data);
-            const [completedRes, stepsRes] = await Promise.all([
-              supabase.from('journey_progress').select('step_id').eq('user_id', user.id).eq('journey_id', journeyRes.data.id),
-              supabase.from('journey_steps').select('*').eq('journey_id', journeyRes.data.id).order('step_order', { ascending: true }),
-            ]);
-            const completedIds = (completedRes.data || []).map(s => s.step_id);
-            const next = (stepsRes.data || []).find(s => !completedIds.includes(s.id));
-            setRecommendedLogosStep(next || null);
-          }
-
-          if (themesRes.data && themesRes.data.length > 0) {
-            setLogosThemeName(themesRes.data[0].name);
-            const themeIds = themesRes.data.map(t => t.id);
-            const { data: contents } = await supabase.from('theme_contents').select('*').in('theme_id', themeIds).limit(6);
-            if (contents) setLogosThemeContents(contents);
-          }
-        } catch (e) {
-          console.error('Failed to parse recommendation:', e);
-        }
-      }
-    } catch (err) {
-      console.error('Failed to analyze reflection:', err);
-    } finally {
-      setIsAnalyzing(false);
-    }
-  }, [user]);
-
   const saveJournal = useCallback(async () => {
     if (!user || !journalText.trim()) return;
     try {
@@ -252,13 +159,13 @@ const HojePage: React.FC = () => {
       
       setJournalSaved(true);
       setTimeout(() => setJournalSaved(false), 3000);
-      
-      analyzeReflection(journalText).catch(e => console.error('BG Analysis failed:', e));
+      toast.success('Sua reflexão foi salva no seu diário espiritual.');
     } catch (err) {
       console.error('Failed to save journal:', err);
       toast.error('Erro ao salvar diário');
     }
-  }, [user, journalText, analyzeReflection]);
+  }, [user, journalText]);
+
 
   const dailySections = useMemo(() => [
     {
