@@ -78,8 +78,9 @@ const TransparencyPage: React.FC = () => {
         {/* Contact & Review */}
         <section className="space-y-8 pt-8 border-t border-border">
           <div className="text-center space-y-2">
-            <h2 className="text-2xl font-display font-bold">Dúvidas ou Correções?</h2>
-            <p className="text-muted-foreground text-sm">Se você encontrar qualquer imprecisão, entre em contato para que possamos realizar a revisão manual imediata.</p>
+            <h2 className="text-2xl font-display font-bold">Contato e Revisão Manual</h2>
+            <p className="text-muted-foreground text-sm">Se você encontrar qualquer imprecisão ou desejar sugerir uma melhoria na curadoria, utilize os canais abaixo para uma revisão humana imediata.</p>
+
           </div>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
