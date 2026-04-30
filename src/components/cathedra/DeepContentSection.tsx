@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Icons } from '../../constants';
 import { DeepContent, AppRoute } from '@/types';
@@ -13,11 +13,22 @@ import CatechismPopover from './CatechismPopover';
 interface DeepContentSectionProps {
   content: DeepContent;
   title?: string;
+  contentType?: 'bible' | 'catechism' | 'apparition' | 'other';
 }
 
-const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title }) => {
+const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title, contentType }) => {
   const { isPremium } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const forbiddenFields = ['explicacao', 'interpretacaoProfunda', 'aplicacaoPratica', 'reflexaoFinal', 'exercicio'];
+    const detected = forbiddenFields.filter(f => (content as any)[f]);
+    
+    if (detected.length > 0) {
+      console.error(`[SECURITY/VALIDATION] Campos de IA detectados em conteúdo do tipo '${contentType || 'desconhecido'}':`, detected);
+      // Optional: telemetry or error reporting call here
+    }
+  }, [content, contentType]);
 
   const sections = [
     { id: 'textoBase', label: 'Acesso Inicial', icon: <Icons.Book className="w-4 h-4" />, value: content.textoBase, isPremium: false },
@@ -26,7 +37,11 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title 
     { id: 'aplicacaoPratica', label: 'Continuidade', icon: <Icons.CheckCircle2 className="w-4 h-4" />, value: content.aplicacaoPratica, isPremium: true },
     { id: 'reflexaoFinal', label: 'Conteúdos Avançados', icon: <Icons.Compass className="w-4 h-4" />, value: content.reflexaoFinal, isPremium: true },
     { id: 'exercicio', label: 'Conteúdos Avançados', icon: <Icons.Play className="w-4 h-4" />, value: content.exercicio, isPremium: true },
-  ].filter(s => s.value);
+  ].filter(s => {
+    // If it's catechism, we strictly skip AI fields in UI even if they exist in data (defense in depth)
+    if (contentType === 'catechism' && s.id !== 'textoBase') return false;
+    return !!s.value;
+  });
 
   if (sections.length === 0) return null;
 
