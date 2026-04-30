@@ -24,7 +24,8 @@ const errorCategories: Record<string, { severity: number; count: number }> = {
   'ID ausente':                { severity: SEVERITY.MEDIUM, count: 0 },
   'Parágrafo inválido/ausente': { severity: SEVERITY.MEDIUM, count: 0 },
   'Título ausente':            { severity: SEVERITY.LOW, count: 0 },
-  'Conteúdo ausente':          { severity: SEVERITY.LOW, count: 0 }
+  'Conteúdo ausente':          { severity: SEVERITY.LOW, count: 0 },
+  'Campos de IA detectados':   { severity: SEVERITY.HIGH, count: 0 }
 };
 
 const failingRecords: any[] = [];
@@ -55,6 +56,13 @@ items.forEach((item: any, index) => {
 
   if (!item.titulo || item.titulo.trim() === '') addError('Título ausente', 'Título está vazio');
   if (!item.conteudo || item.conteudo.trim() === '') addError('Conteúdo ausente', 'Conteúdo está vazio');
+
+  const forbiddenFields = ['explicacao', 'interpretacaoProfunda', 'aplicacaoPratica', 'reflexaoFinal', 'exercicio'];
+  forbiddenFields.forEach(field => {
+    if (item[field]) {
+      addError('Campos de IA detectados', `O campo '${field}' não deve existir (Regra: Catecismo sem IA)`);
+    }
+  });
 
   if (itemErrors.length > 0) {
     // Sort errors by severity for this record

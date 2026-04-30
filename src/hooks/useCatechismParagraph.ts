@@ -21,11 +21,6 @@ export const fetchCatechismParagraph = async (paragraph: number, forceGenerate =
       language: 'pt',
       status: 'static',
       textoBase: localData.textoBase,
-      explicacao: localData.explicacao,
-      interpretacaoProfunda: localData.interpretacaoProfunda,
-      aplicacaoPratica: localData.aplicacaoPratica,
-      reflexaoFinal: localData.reflexaoFinal,
-      exercicio: localData.exercicio
     };
   }
 
