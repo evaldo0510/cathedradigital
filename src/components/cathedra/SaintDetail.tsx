@@ -184,16 +184,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           </div>
 
           <div className="flex-1 flex justify-end items-center gap-3">
-            {!showLogos && (
-              <Button 
-                onClick={generateLogosReflection}
-                variant="outline"
-                className="bg-primary/5 hover:bg-primary/10 text-primary border-primary/20 text-[9px] font-black uppercase tracking-widest h-9 px-4 rounded-xl flex items-center gap-2 transition-all"
-              >
-                <Icons.Sparkles className="w-3 h-3" />
-                Refletir com Logos
-              </Button>
-            )}
+
             
             <AudioContentPlayer 
               text={`${saint.name}. ${saint.title}. ${saint.bio}. ${saint.fullBio || ''}. ${saint.quotes?.[0] || ''}.`}
