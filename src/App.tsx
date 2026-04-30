@@ -107,6 +107,8 @@ const SellerDashboard = lazy(() => import('./components/cathedra/SellerDashboard
 const CatechismDebug = lazy(() => import('./components/cathedra/CatechismDebug'));
 const CatechismIntegrity = lazy(() => import('./components/cathedra/CatechismIntegrity'));
 const PartnersPage = lazy(() => import('./components/cathedra/PartnersPage'));
+const TransparencyPage = lazy(() => import('./components/cathedra/TransparencyPage'));
+
 
 const SkeletonBar = React.forwardRef<HTMLDivElement, { w?: string; h?: string; className?: string }>(
   ({ w = 'w-full', h = 'h-4', className = '' }, ref) => (
@@ -572,6 +574,8 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.JORNADA_COMPLETE} element={<PageTransition><AuthGuard><JornadaCompletePage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.BIBLIOTECA} element={<PageTransition><AuthGuard><BibliotecaPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.MODULES_GUIDE} element={<PageTransition><ModulesGuidePage /></PageTransition>} />
+                  <Route path={AppRoute.TRANSPARENCY} element={<PageTransition><TransparencyPage /></PageTransition>} />
+
                   <Route path={AppRoute.POPES} element={<PageTransition><AuthGuard><PopesPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.BUSCAR} element={<PageTransition><AuthGuard><GlobalSearchPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.ADMIN} element={

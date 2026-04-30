@@ -65,7 +65,8 @@ export enum AppRoute {
   SELLER = '/vendedor',
   CATECHISM_INTEGRITY = '/catechism/integrity',
   CATECHISM_EXPLORER = '/catechism/explorer',
-  CATECHISM_HEALTH = '/catechism/health'
+  CATECHISM_HEALTH = '/catechism/health',
+  TRANSPARENCY = '/transparencia'
 }
 
 export interface TrackStep {
