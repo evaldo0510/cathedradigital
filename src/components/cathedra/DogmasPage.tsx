@@ -383,14 +383,18 @@ const DogmasPage: React.FC = () => {
                 {/* Deep Content Section for Dogmas */}
                 {dogma.textoBase && (
                   <div className="pt-4 border-t border-border/40">
-                    <DeepContentSection content={{
-                      textoBase: dogma.textoBase,
-                      explicacao: dogma.explicacao || '',
-                      interpretacaoProfunda: dogma.interpretacaoProfunda || '',
-                      aplicacaoPratica: dogma.aplicacaoPratica || '',
-                      reflexaoFinal: dogma.reflexaoFinal || '',
-                      exercicio: dogma.exercicio || ''
-                    }} title="Aprofundamento Dogmático" />
+                    <DeepContentSection 
+                      content={{
+                        textoBase: dogma.textoBase,
+                        explicacao: dogma.explicacao || '',
+                        interpretacaoProfunda: dogma.interpretacaoProfunda || '',
+                        aplicacaoPratica: dogma.aplicacaoPratica || '',
+                        reflexaoFinal: dogma.reflexaoFinal || '',
+                        exercicio: dogma.exercicio || ''
+                      }} 
+                      contentType="other"
+                      title="Aprofundamento Dogmático" 
+                    />
                   </div>
                 )}
 
