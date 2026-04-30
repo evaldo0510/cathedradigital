@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { callColloquium, type AIFallbackReason } from '@/services/aiService';
+// AI service removed
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '../../constants';
@@ -9,7 +9,7 @@ import DocumentViewer from './DocumentViewer';
 import DeepContentSection from './DeepContentSection';
 import { type Saint } from '@/data/saints';
 import { AppRoute } from '@/types';
-import { Sparkles, BookOpen, Quote, Shield, Info, Heart, Lightbulb, MessageSquare, Loader2, Sparkle } from 'lucide-react';
+import { BookOpen, Quote, Shield, Info, Heart, Lightbulb, MessageSquare, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
@@ -17,7 +17,7 @@ import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
 import AudioContentPlayer from './AudioContentPlayer';
-import AIFallbackCard from './AIFallbackCard';
+
 
 const CATEGORY_LABELS: Record<string, string> = {
   apostle: 'Apóstolo',
