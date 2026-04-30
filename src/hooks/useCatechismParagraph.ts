@@ -56,8 +56,10 @@ export const fetchCatechismParagraph = async (paragraph: number, forceGenerate =
 
     return result;
   } catch (error: any) {
+    window.dispatchEvent(new CustomEvent('supabase-unreachable'));
     // 4) Ultimate fallback to cache if available
     if (cached) {
+
       console.log(`Using cached content for §${paragraph} due to fetch error.`);
       return cached;
     }
