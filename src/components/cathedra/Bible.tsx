@@ -594,14 +594,18 @@ const Bible: React.FC = () => {
 
             {/* Deep Content Section for famous Bible Chapters */}
             {selectedBook.abbr === 'Jo' && selectedChapter === 3 && (
-              <DeepContentSection content={{
-                textoBase: "Porque Deus amou tanto o mundo que deu o seu Filho unigénito, para que todo o que n’Ele crê não pereça, mas tenha a vida eterna.",
-                explicacao: "Este versículo (João 3:16) é frequentemente chamado de 'o Evangelho em miniatura'. Ele resume o plano de salvação de Deus: amor sacrificial que busca resgatar a humanidade através de Jesus.",
-                interpretacaoProfunda: "O 'amor' aqui mencionado (ágapé) não é um sentimento, mas uma decisão da vontade de dar-se inteiramente. Deus não 'precisava' salvar o mundo, mas escolheu fazê-lo pelo valor infinito que Ele atribui a cada alma humana.",
-                aplicacaoPratica: "Tente olhar para as pessoas ao seu redor hoje como pessoas que Deus amou a ponto de dar Seu Filho. Isso muda como tratamos os outros e como vemos a nós mesmos.",
-                reflexaoFinal: "Eu realmente acredito que sou amado por Deus com essa intensidade, ou trato minha fé como apenas um conjunto de regras?",
-                exercicio: "Passe 2 minutos em silêncio repetindo mentalmente: 'Deus me amou tanto que deu Seu Filho por mim'."
-              }} title="Lectio Divina Profunda" />
+              <DeepContentSection 
+                content={{
+                  textoBase: "Porque Deus amou tanto o mundo que deu o seu Filho unigénito, para que todo o que n’Ele crê não pereça, mas tenha a vida eterna.",
+                  explicacao: "Este versículo (João 3:16) é frequentemente chamado de 'o Evangelho em miniatura'. Ele resume o plano de salvação de Deus: amor sacrificial que busca resgatar a humanidade através de Jesus.",
+                  interpretacaoProfunda: "O 'amor' aqui mencionado (ágapé) não é um sentimento, mas uma decisão da vontade de dar-se inteiramente. Deus não 'precisava' salvar o mundo, mas escolheu fazê-lo pelo valor infinito que Ele atribui a cada alma humana.",
+                  aplicacaoPratica: "Tente olhar para as pessoas ao seu redor hoje como pessoas que Deus amou a ponto de dar Seu Filho. Isso muda como tratamos os outros e como vemos a nós mesmos.",
+                  reflexaoFinal: "Eu realmente acredito que sou amado por Deus com essa intensidade, ou trato minha fé como apenas um conjunto de regras?",
+                  exercicio: "Passe 2 minutos em silêncio repetindo mentalmente: 'Deus me amou tanto que deu Seu Filho por mim'."
+                }} 
+                contentType="bible"
+                title="Lectio Divina Profunda" 
+              />
             )}
 
             {/* Mark as read button */}
