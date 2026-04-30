@@ -26,16 +26,19 @@ export const fetchCatechismParagraph = async (paragraph: number, forceGenerate =
 
   // 1) Check IndexedDB cache next
   const cached = await getCachedCatechismParagraph(paragraph);
+  if (cached && !forceGenerate) {
+    return cached;
+  }
 
   // 2) Fetch from edge function
   const body: any = { paragraph };
   if (forceGenerate) body.action = 'generate';
   
-  const { data, error } = await supabase.functions.invoke('catechism-text', { body });
+  try {
+    const { data, error } = await supabase.functions.invoke('catechism-text', { body });
 
-  if (error) {
-    throw new Error(error.message || `Erro ao carregar o parágrafo §${paragraph}`);
-  }
+    if (error) throw error;
+
   
   const parsed = typeof data === 'string' ? JSON.parse(data) : data;
   
