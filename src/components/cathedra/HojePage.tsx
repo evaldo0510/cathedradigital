@@ -227,17 +227,12 @@ const HojePage: React.FC = () => {
       )}
       {/* ═══ MAIN COLUMN ═══ */}
       <div className="desktop-main space-y-12 max-w-2xl mx-auto lg:max-w-none lg:mx-0">
-      {/* Logos IA Highlight - Centralized */}
+      {/* Header - Centralized */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="text-center space-y-8"
       >
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-black uppercase tracking-[0.2em] border border-primary/20">
-          <Icons.Sparkles className="w-3 h-3" />
-          Logos Inteligência Artificial
-        </div>
-        
         <div className="space-y-4">
           <h1 className="text-4xl md:text-5xl font-serif text-foreground leading-tight">
             Sua jornada espiritual <br />
@@ -245,7 +240,7 @@ const HojePage: React.FC = () => {
           </h1>
           
           <p className="text-sm md:text-base text-muted-foreground leading-relaxed max-w-lg mx-auto italic font-serif">
-            "O que Deus colocou no seu coração hoje? Compartilhe suas dúvidas ou orações e receba uma direção espiritual personalizada."
+            "O que Deus colocou no seu coração hoje? Compartilhe suas dúvidas ou orações e guarde-as em seu diário espiritual."
           </p>
         </div>
 
@@ -266,7 +261,7 @@ const HojePage: React.FC = () => {
 
           <Button 
             size="lg" 
-            variant="outline"
+            variant="outline" 
             className="h-16 px-12 rounded-full text-base font-bold uppercase tracking-widest border-2 hover:bg-secondary/50 transition-all"
             onClick={() => navigate(AppRoute.CERTAMEN)}
           >
@@ -275,6 +270,7 @@ const HojePage: React.FC = () => {
           </Button>
         </div>
       </motion.div>
+
 
       {/* Main Content Sections */}
       <div className="pt-8 space-y-10">
