@@ -380,37 +380,8 @@ const HojePage: React.FC = () => {
           )}
         </section>
 
-        {/* Recomendação de Santo Baseada no Momento Emocional */}
-        {logosSaint && (
-          <section className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-primary flex items-center gap-3">
-              <div className="h-px w-6 bg-primary/30" />
-              Sugerido para seu momento
-            </h2>
-            
-            <motion.div
-              whileHover={{ scale: 1.01 }}
-              whileTap={{ scale: 0.99 }}
-              onClick={() => navigate(`${AppRoute.SAINTS}/${logosSaint.id}`)}
-              className="group cursor-pointer p-6 rounded-3xl border border-primary/20 bg-primary/5 hover:border-primary/40 transition-all shadow-sm"
-            >
-              <div className="flex items-center gap-5">
-                <div className="w-16 h-16 rounded-2xl overflow-hidden shrink-0 border border-primary/10">
-                  <SacredImage src={logosSaint.image} className="w-full h-full object-cover" alt={logosSaint.name} />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-base font-bold text-foreground">São {logosSaint.name}</h3>
-                  <p className="text-xs text-muted-foreground mt-1 font-medium">
-                    {logosSaint.patronOf?.[0] ? `Padroeiro(a) de ${logosSaint.patronOf[0]}` : logosSaint.title}
-                  </p>
-                </div>
-                <div className="w-10 h-10 rounded-full bg-background border border-border flex items-center justify-center text-primary group-hover:border-primary/30 transition-all">
-                  <Icons.ChevronRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
-                </div>
-              </div>
-            </motion.div>
-          </section>
-        )}
+{/* Simplified Hoje Experience */}
+
 
         {/* Acesso Rápido */}
         <section className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
