@@ -29,43 +29,6 @@ export const callColloquium = async (
 
 
 export const getSpiritualInsight = async (query?: string, tag?: string, profileId?: string | null): Promise<AIResponse> => {
-  try {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) return { error: "Não autenticado" };
-
-    const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/logos-spiritual-insight`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${session.access_token}`,
-      },
-      body: JSON.stringify({ query, tag, profileId }),
-    });
-
-    if (!response.ok) {
-      const err = await response.json().catch(() => ({ error: 'Erro na conexão' }));
-      let reason: AIFallbackReason = 'network';
-      if (response.status === 402 && err.credits_exhausted) {
-        notifyAIStatus('credits_exhausted', err.error);
-        toast.error('Créditos de IA esgotados.', { duration: 8000 });
-        reason = 'credits_exhausted';
-      } else if (response.status === 402) {
-        toast.error("Este recurso é exclusivo para assinantes PRO.");
-        reason = 'daily_limit';
-      } else if (response.status === 429) {
-        notifyAIStatus('rate_limited', err.error);
-        toast.error(err.error || 'Limite de requisições atingido.');
-        reason = 'rate_limited';
-      } else {
-        toast.error(err.error || "Erro ao gerar insight.");
-      }
-      return { error: err.error, fallback_reason: reason };
-    }
-
-    const data = await response.json();
-    return { content: data.insight };
-  } catch (error: any) {
-    console.error("Spiritual Insight Error:", error);
-    return { error: error.message };
-  }
+  return { error: "Serviço de IA desativado." };
 };
+
