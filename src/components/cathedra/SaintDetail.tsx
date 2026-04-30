@@ -17,7 +17,7 @@ import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
 import AudioContentPlayer from './AudioContentPlayer';
 
-const CATEGORY_LABELS: Record<string, string> = {
+export const CATEGORY_LABELS: Record<string, string> = {
   apostle: 'Apóstolo',
   martyr: 'Mártir',
   doctor: 'Doutor(a) da Igreja',
