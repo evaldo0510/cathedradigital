@@ -32,16 +32,8 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
 
   const sections = [
     { id: 'textoBase', label: 'Acesso Inicial', icon: <Icons.Book className="w-4 h-4" />, value: content.textoBase, isPremium: false },
-    { id: 'explicacao', label: 'Introdução', icon: <Icons.Search className="w-4 h-4" />, value: content.explicacao, isPremium: false },
-    { id: 'interpretacaoProfunda', label: 'Aprofundamento', icon: <Icons.Star className="w-4 h-4" />, value: content.interpretacaoProfunda, isPremium: true },
-    { id: 'aplicacaoPratica', label: 'Continuidade', icon: <Icons.CheckCircle2 className="w-4 h-4" />, value: content.aplicacaoPratica, isPremium: true },
-    { id: 'reflexaoFinal', label: 'Conteúdos Avançados', icon: <Icons.Compass className="w-4 h-4" />, value: content.reflexaoFinal, isPremium: true },
-    { id: 'exercicio', label: 'Conteúdos Avançados', icon: <Icons.Play className="w-4 h-4" />, value: content.exercicio, isPremium: true },
-  ].filter(s => {
-    // If it's catechism, we strictly skip AI fields in UI even if they exist in data (defense in depth)
-    if (contentType === 'catechism' && s.id !== 'textoBase') return false;
-    return !!s.value;
-  });
+  ].filter(s => !!s.value);
+
 
   if (sections.length === 0) return null;
 
