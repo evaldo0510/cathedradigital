@@ -52,10 +52,10 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
 
   const MAX_RETRIES = 3;
 
-  const handleDownload = async () => {
+  const handleDownload = async (resumeAttempt = 1, resumeProgress = 10) => {
     if (!paragraph) return;
     setDownloading(true);
-    setProgress(10);
+    setProgress(resumeProgress);
     isCancelled.current = false;
     
     const prevMode = localStorage.getItem('cathedra_offline_mode');
@@ -68,7 +68,9 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
       }
 
       setRetryAttempt(attempt);
-      setProgress(10 + (attempt * 25));
+      const currentProgress = 10 + (attempt * 25);
+      setProgress(currentProgress);
+      saveDownloadState(attempt, currentProgress);
       
       try {
         await fetchCatechismParagraph(paragraph);
@@ -76,6 +78,7 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
         
         setProgress(100);
         localStorage.setItem('cathedra_offline_mode', prevMode || 'false');
+        clearDownloadState();
         toast.success(`§${paragraph} baixado com sucesso!`);
         if (onRetry) onRetry();
       } catch (error) {
@@ -90,13 +93,14 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
           return attemptFetch(attempt + 1);
         } else {
           localStorage.setItem('cathedra_offline_mode', prevMode || 'false');
+          clearDownloadState();
           throw error;
         }
       }
     };
 
     try {
-      await attemptFetch(1);
+      await attemptFetch(resumeAttempt);
     } catch (error) {
       if (!isCancelled.current) {
         toast.error('Erro ao baixar parágrafo após várias tentativas. Verifique sua conexão.');
@@ -107,6 +111,7 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
       setProgress(0);
     }
   };
+
 
   const handleCancel = () => {
     isCancelled.current = true;
