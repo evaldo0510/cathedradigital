@@ -396,6 +396,7 @@ const InstitutionalVideoSection = () => {
                 playsInline
                 muted={isMuted}
                 onPlay={() => trackEvent('video_play')}
+                onTimeUpdate={handleTimeUpdate}
                 className="w-full h-full object-cover"
               >
                 {SUBTITLES.map(s => (
