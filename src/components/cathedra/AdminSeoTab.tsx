@@ -326,7 +326,7 @@ const AdminSeoTab: React.FC = () => {
                   </Badge>
                 ) : (
                   <Badge variant="destructive" className="bg-destructive/10 text-destructive border-destructive/20 gap-1">
-                    <XCircle, Copy, FileCode, Eye, Check className="w-3 h-3" /> Desconectado
+                    <XCircle className="w-3 h-3" /> Inativo
                   </Badge>
                 )}
               </div>
