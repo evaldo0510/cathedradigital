@@ -26,7 +26,7 @@ export const CATECHISM_LOCAL_DATA: Record<number, CatechismData> = {
     tipo: "catecismo",
     type: "catechism",
     titulo: "O desejo de Deus",
-    conteudo: "O desejo de Deus está inscrito no coração do homem, porque o homem foi criado por Deus e para Deus; e Deus não deixa de atrair o homem para Si, e só em Deus é que o homem encontra a verdade e a felicidade que não cessa de procurar.",
+    conteudo: "O desejo de Deus é um sentimento inscrito no coração do homem, porque o homem foi criado por Deus e para Deus. Deus não cessa de atrair o homem para Si e só em Deus é que o homem encontra a verdade e a felicidade que procura sem descanso: «A razão mais sublime da dignidade humana consiste na sua vocação à comunhão com Deus. Desde o começo da sua existência, o homem é convidado a dialogar com Deus: pois se existe, é só porque, criado por Deus por amor, é por Ele, e por amor, constantemente conservado: nem pode viver plenamente segundo a verdade, se não reconhecer livremente esse amor e não se entregar ao seu Criador».",
     tags: ["desejo", "felicidade", "busca-de-deus"],
     textoBase: "O homem tem um desejo natural de Deus."
   },
