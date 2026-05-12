@@ -7,6 +7,8 @@ import * as useSaintsHooks from '@/hooks/useSaints';
 import * as useDashboardDataHooks from '@/hooks/useDashboardData';
 import * as useAuthHooks from '@/hooks/useAuth';
 
+import { LangContext } from '@/contexts/LangContext';
+
 // Mock dependencies
 vi.mock('@/hooks/useAuth', () => ({
   useAuth: vi.fn()
@@ -19,12 +21,6 @@ vi.mock('@/hooks/useSaints', () => ({
 
 vi.mock('@/hooks/useDashboardData', () => ({
   useDashboardData: vi.fn()
-}));
-
-vi.mock('@/contexts/LangContext', () => ({
-  LangContext: {
-    Consumer: ({ children }: any) => children({ t: (k: string) => k, lang: 'pt' })
-  }
 }));
 
 // We need to mock Framer Motion to avoid issues in test environment
@@ -41,6 +37,27 @@ vi.mock('framer-motion', async (importOriginal) => {
     AnimatePresence: ({ children }: any) => <>{children}</>,
   };
 });
+
+// Mock RitualDoDia to simplify testing HojePage
+vi.mock('./RitualDoDia', () => ({
+  default: () => <div data-testid="ritual-do-dia" />
+}));
+
+// Mock NexusBubbles
+vi.mock('./NexusBubbles', () => ({
+  default: () => <div data-testid="nexus-bubbles" />
+}));
+
+// Mock HomeMainDoors
+vi.mock('./HomeMainDoors', () => ({
+  default: () => <div data-testid="home-main-doors" />
+}));
+
+// Mock SaintOfTheDayCard
+vi.mock('./SaintOfTheDayCard', () => ({
+  default: () => <div>Nenhum santo encontrado para hoje</div>
+}));
+
 
 const queryClient = new QueryClient({
   defaultOptions: {
