@@ -31,6 +31,14 @@ const AdminSeoTab: React.FC = () => {
   }, [seoSettings]);
 
   const handleSaveSEO = async () => {
+    // NAP Validation
+    if (!formData.business_name || !formData.business_address || (!formData.business_phone && !formData.business_whatsapp) || !formData.opening_hours) {
+      toast.error('Erro de Validação NAP', {
+        description: 'Todos os campos de SEO Local (Nome, Endereço, Telefone/Whats e Horários) são obrigatórios para garantir a indexação.'
+      });
+      return;
+    }
+
     setLoading(true);
     try {
       const { error } = await supabase
@@ -47,6 +55,45 @@ const AdminSeoTab: React.FC = () => {
       toast.error('Erro ao salvar SEO: ' + err.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleCopyJSONLD = () => {
+    const json = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": formData.business_name || "Cathedra Digital",
+      "telephone": formData.business_whatsapp || formData.business_phone || "—",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": formData.business_address || "—"
+      },
+      "openingHours": formData.opening_hours || "—"
+    }, null, jsonMode === 'pretty' ? 2 : 0);
+    
+    navigator.clipboard.writeText(json);
+    toast.success('Copiado para a área de transferência!');
+  };
+
+  const verifyDOM = async () => {
+    setDomVerified('pending');
+    try {
+      // Simulate checking the actual HTML (in a SPA we check document.head)
+      const scripts = document.querySelectorAll('script[type="application/ld+json"]');
+      let found = false;
+      scripts.forEach(s => {
+        if (s.textContent?.includes('LocalBusiness')) found = true;
+      });
+      
+      if (found) {
+        setDomVerified('ok');
+        toast.success('DOM Validado: JSON-LD LocalBusiness detectado!');
+      } else {
+        setDomVerified('fail');
+        toast.error('Erro na Validação: JSON-LD não encontrado no cabeçalho.');
+      }
+    } catch (e) {
+      setDomVerified('fail');
     }
   };
 
