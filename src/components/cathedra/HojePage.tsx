@@ -365,7 +365,7 @@ const HojePage: React.FC = () => {
           </motion.div>
         </div>
       </div>
-      <aside className="desktop-aside space-y-6 hidden lg:block">
+      <aside className="desktop-aside space-y-6 hidden lg:block" aria-label="Informações complementares">
         <div className="desktop-card space-y-4">
           <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary">Frutos da Semana</h3>
           <HomeStats stats={weeklyStats} t={t} />

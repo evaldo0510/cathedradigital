@@ -5,13 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "bun run scripts/validate-catechism.ts && bun run scripts/security-audit.ts && vite build",
+    "build": "bun run scripts/validate-catechism.ts && bun run scripts/security-audit.ts && bun run test:a11y && vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
+    "test:a11y": "vitest run src/tests/accessibility.test.tsx",
     "test:report": "bun run scripts/generate-test-report.ts",
     "test:pdf": "bun run scripts/generate-pdf-report.ts"
   },
@@ -111,6 +112,7 @@
     "typescript": "^5.5.0",
     "typescript-eslint": "^8.38.0",
     "vite": "^5.4.19",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "vitest-axe": "^0.1.0"
   }
 }

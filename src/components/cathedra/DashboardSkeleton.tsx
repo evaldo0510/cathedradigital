@@ -36,7 +36,7 @@ export const DashboardSkeleton: React.FC = () => {
       </div>
 
       {/* Sidebar Skeleton */}
-      <aside className="desktop-aside space-y-6 hidden xl:block">
+      <aside className="desktop-aside space-y-6 hidden xl:block" aria-label="Carregando informações laterais">
         <div className="p-6 rounded-3xl bg-muted h-64" />
         <div className="p-6 rounded-3xl bg-muted h-32" />
         <div className="p-6 rounded-3xl bg-muted h-48" />
