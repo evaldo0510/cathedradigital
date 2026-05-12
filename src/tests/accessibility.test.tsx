@@ -6,7 +6,8 @@ import Index from '../pages/Index';
 import HojePage from '../components/cathedra/HojePage';
 import BibliotecaPage from '../components/cathedra/BibliotecaPage';
 
-expect.extend(toHaveNoViolations);
+// Workaround for toHaveNoViolations type and extension
+expect.extend({ toHaveNoViolations });
 
 // Mock window.matchMedia
 Object.defineProperty(window, 'matchMedia', {
@@ -44,7 +45,7 @@ describe('Accessibility Tests', () => {
   it('Hoje page should have no accessibility violations', async () => {
     const { container } = render(
       <MemoryRouter>
-        <Hoje />
+        <HojePage />
       </MemoryRouter>
     );
     const results = await axe(container);
@@ -54,10 +55,11 @@ describe('Accessibility Tests', () => {
   it('Biblioteca page should have no accessibility violations', async () => {
     const { container } = render(
       <MemoryRouter>
-        <Biblioteca />
+        <BibliotecaPage />
       </MemoryRouter>
     );
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
 });
+
