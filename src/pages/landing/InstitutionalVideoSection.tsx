@@ -141,7 +141,7 @@ const InstitutionalVideoSection = () => {
           
           {/* Left Column: Narrative */}
           <motion.div 
-            style={{ opacity, scale }}
+            style={shouldReduceMotion ? { opacity: 1, scale: 1 } : { opacity, scale }}
             className="space-y-8"
           >
             <div className="space-y-4">
