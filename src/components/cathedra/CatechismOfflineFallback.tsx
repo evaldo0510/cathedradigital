@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import { fetchCatechismParagraph } from '@/hooks/useCatechismParagraph';
+import { toast } from 'sonner';
 
 interface CatechismOfflineFallbackProps {
   paragraph?: number;
