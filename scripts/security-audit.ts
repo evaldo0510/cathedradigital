@@ -42,9 +42,9 @@ async function runSecurityAudit() {
       } else {
         log(`❌ Erro ao chamar RPC de segurança: ${funcError.message}`, true);
       }
-    } else if (exposedFunctions && Array.isArray(exposedFunctions) && exposedFunctions.length > 0) {
+    } else if (exposedFunctions && Array.isArray(exposedFunctions) && (exposedFunctions as any[]).length > 0) {
       log('❌ ALERTA DE SEGURANÇA: Funções SECURITY DEFINER expostas detectadas!', true);
-      exposedFunctions.forEach((f: any) => {
+      (exposedFunctions as any[]).forEach((f: any) => {
         log(`  - Função: ${f.function_name} | Schema: ${f.schema_name}`, true);
       });
       process.exit(1);
