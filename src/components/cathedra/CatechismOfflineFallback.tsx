@@ -28,6 +28,8 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
   const [retryAttempt, setRetryAttempt] = useState(0);
   const [progress, setProgress] = useState(0);
   const isCancelled = useRef(false);
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+
 
   useEffect(() => {
     // Check if there was a pending download for this paragraph
