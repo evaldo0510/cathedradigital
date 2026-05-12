@@ -13,60 +13,49 @@ function log(msg: string, isError = false) {
   else console.log(msg);
   fs.appendFileSync(auditLogPath, line);
 }
-  console.log('🚀 [CI] Iniciando Auditoria de Segurança Supabase...');
+
+async function runSecurityAudit() {
+  if (fs.existsSync(auditLogPath)) fs.unlinkSync(auditLogPath);
+  log('🚀 [CI] Iniciando Auditoria de Segurança Supabase...');
   
   const hasUrl = !!process.env.VITE_SUPABASE_URL;
   const hasKey = !!process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
   
-  console.log(`🌍 Ambiente: ${typeof window === 'undefined' ? 'Servidor (Bun/Node)' : 'Navegador'}`);
-  console.log(`🔑 Configuração: URL=${hasUrl ? '✅' : '❌'} | KEY=${hasKey ? '✅' : '❌'}`);
+  log(`🌍 Ambiente: ${typeof window === 'undefined' ? 'Servidor (Bun/Node)' : 'Navegador'}`);
+  log(`🔑 Configuração: URL=${hasUrl ? '✅' : '❌'} | KEY=${hasKey ? '✅' : '❌'}`);
   
   try {
-    // Check if client is initialized with real credentials
-    // @ts-ignore - access private supabaseUrl to check placeholder
+    // @ts-expect-error - access private supabaseUrl to check placeholder
     const isPlaceholder = supabase.supabaseUrl.includes('placeholder.supabase.co');
     
     if (isPlaceholder || !hasUrl || !hasKey) {
-      console.warn('\n⚠️  AVISO: O cliente Supabase está em modo "Degradado" (Placeholder).');
-      console.warn('Isso ocorre quando as variáveis VITE_SUPABASE_URL ou VITE_SUPABASE_PUBLISHABLE_KEY não estão definidas.');
-      console.warn('Algumas verificações que dependem do banco de dados real serão ignoradas.');
-      
-      if (!process.env.CI) {
-        console.log('💡 Dica local: Crie um arquivo .env com as credenciais do Supabase.');
-      }
+      log('\n⚠️  AVISO: O cliente Supabase está em modo "Degradado" (Placeholder).');
+      log('Isso ocorre quando as variáveis VITE_SUPABASE_URL ou VITE_SUPABASE_PUBLISHABLE_KEY não estão definidas.');
+      log('Algumas verificações que dependem do banco de dados real serão ignoradas.');
     }
 
-    // Attempt to call RPC
     const { data: exposedFunctions, error: funcError } = await supabase.rpc('check_security_definer_exposure');
     
     if (funcError) {
       if (funcError.message?.includes('does not exist')) {
-        console.warn('ℹ️  INFO: RPC "check_security_definer_exposure" não encontrado no banco de dados.');
-        console.log('💡 Sugestão: Execute as migrações de segurança para habilitar verificações automáticas.');
+        log('ℹ️  INFO: RPC "check_security_definer_exposure" não encontrado no banco de dados.');
       } else {
-        console.error('❌ Erro ao chamar RPC de segurança:', funcError.message);
-        // Don't fail build just because RPC is missing, but log it
+        log(`❌ Erro ao chamar RPC de segurança: ${funcError.message}`, true);
       }
     } else if (exposedFunctions && Array.isArray(exposedFunctions) && exposedFunctions.length > 0) {
-      console.error('❌ ALERTA DE SEGURANÇA: Funções SECURITY DEFINER expostas detectadas!');
+      log('❌ ALERTA DE SEGURANÇA: Funções SECURITY DEFINER expostas detectadas!', true);
       exposedFunctions.forEach((f: any) => {
-        console.error(`  - Função: ${f.function_name} | Schema: ${f.schema_name}`);
+        log(`  - Função: ${f.function_name} | Schema: ${f.schema_name}`, true);
       });
       process.exit(1);
     } else {
-      console.log('✅ Nenhuma função SECURITY DEFINER vulnerável detectada.');
+      log('✅ Nenhuma função SECURITY DEFINER vulnerável detectada.');
     }
 
-    console.log('✅ Verificação de search_path concluída.');
-    console.log('🎉 Auditoria finalizada com sucesso!');
+    log('✅ Verificação de search_path concluída.');
+    log('🎉 Auditoria finalizada com sucesso!');
   } catch (e: any) {
-    console.error('❌ ERRO CRÍTICO na Auditoria de Segurança:');
-    console.error(e.message || e);
-    
-    if (e.message?.includes('fetch is not defined')) {
-      console.error('💡 Dica: O ambiente de execução não suporta fetch. Use Bun ou Node 18+');
-    }
-    
+    log(`❌ ERRO CRÍTICO na Auditoria de Segurança: ${e.message || e}`, true);
     process.exit(1);
   }
 }
