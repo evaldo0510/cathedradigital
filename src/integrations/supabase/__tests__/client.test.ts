@@ -1,0 +1,50 @@
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+
+describe('Supabase Client Environment', () => {
+  const originalWindow = global.window;
+  const originalImportMeta = import.meta.env;
+
+  beforeEach(() => {
+    vi.resetModules();
+    // Setup default env vars if needed
+  });
+
+  afterEach(() => {
+    global.window = originalWindow;
+    vi.unstubAllEnvs();
+  });
+
+  it('should initialize without errors when window is undefined (CI/SSR)', async () => {
+    // @ts-ignore
+    delete global.window;
+    
+    const { supabase } = await import('../client');
+    expect(supabase).toBeDefined();
+    // Should not throw ReferenceError: localStorage is not defined
+  });
+
+  it('should use custom storage that handles missing localStorage safely', async () => {
+    // @ts-ignore
+    delete global.window;
+    
+    const { supabase } = await import('../client');
+    // @ts-ignore - accessing private auth storage to verify it works
+    const storage = supabase.auth.storage;
+    
+    expect(() => storage.getItem('test')).not.toThrow();
+    expect(storage.getItem('test')).toBeNull();
+  });
+
+  it('should warn if environment variables are missing', async () => {
+    vi.stubEnv('VITE_SUPABASE_URL', '');
+    vi.stubEnv('VITE_SUPABASE_PUBLISHABLE_KEY', '');
+    
+    const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    
+    await import('../client');
+    
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining('Supabase credentials missing')
+    );
+  });
+});
