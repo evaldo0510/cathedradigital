@@ -7,8 +7,7 @@ import Index from '../pages/Index';
 import HojePage from '../components/cathedra/HojePage';
 import BibliotecaPage from '../components/cathedra/BibliotecaPage';
 
-// Workaround for toHaveNoViolations type and extension
-expect.extend({ toHaveNoViolations });
+expect.extend(matchers);
 
 // Mock window.matchMedia
 Object.defineProperty(window, 'matchMedia', {
@@ -40,6 +39,7 @@ describe('Accessibility Tests', () => {
       </MemoryRouter>
     );
     const results = await axe(container);
+    // @ts-ignore
     expect(results).toHaveNoViolations();
   });
 
@@ -50,6 +50,7 @@ describe('Accessibility Tests', () => {
       </MemoryRouter>
     );
     const results = await axe(container);
+    // @ts-ignore
     expect(results).toHaveNoViolations();
   });
 
@@ -60,7 +61,7 @@ describe('Accessibility Tests', () => {
       </MemoryRouter>
     );
     const results = await axe(container);
+    // @ts-ignore
     expect(results).toHaveNoViolations();
   });
 });
-
