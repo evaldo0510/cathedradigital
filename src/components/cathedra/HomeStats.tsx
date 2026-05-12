@@ -1,0 +1,40 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Icons } from '@/constants';
+
+interface HomeStatsProps {
+  stats: {
+    chaptersRead: number;
+    journeySteps: number;
+    catechismParagraphs: number;
+  };
+  t: (key: string) => string;
+}
+
+const HomeStats: React.FC<HomeStatsProps> = ({ stats, t }) => {
+  const statItems = [
+    { label: t('bible'), value: stats.chaptersRead, icon: <Icons.Bible className="w-4 h-4" /> },
+    { label: 'CIC', value: stats.catechismParagraphs, icon: <Icons.Catechism className="w-4 h-4" /> },
+    { label: t('journeys'), value: stats.journeySteps, icon: <Icons.Journeys className="w-4 h-4" /> },
+  ];
+
+  return (
+    <div className="grid grid-cols-3 gap-3">
+      {statItems.map((item, idx) => (
+        <motion.div 
+          key={idx}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: idx * 0.1 }}
+          className="p-3 rounded-2xl bg-card border border-border/50 shadow-sm text-center space-y-1 hover:border-primary/20 transition-colors"
+        >
+          <div className="flex justify-center text-primary/40 mb-1">{item.icon}</div>
+          <p className="text-xl font-black text-foreground tabular-nums leading-none">{item.value}</p>
+          <p className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">{item.label}</p>
+        </motion.div>
+      ))}
+    </div>
+  );
+};
+
+export default HomeStats;

@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext, useMemo, useCallback, Suspense } from 'react';
+import React, { useState, useEffect, useContext, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { supabase } from '@/integrations/supabase/client';
@@ -11,12 +11,18 @@ import { AppRoute } from '@/types';
 import { LangContext } from '@/contexts/LangContext';
 import { useSaintsToday, useOfficialSaint } from '@/hooks/useSaints';
 import SaintOfTheDayCard from './SaintOfTheDayCard';
-import SacredImage from './SacredImage';
+import RitualDoDia from './RitualDoDia';
+import NexusBubbles from './NexusBubbles';
+import HomeStats from './HomeStats';
+import HomeMainDoors from './HomeMainDoors';
+import { useDashboardData } from '@/hooks/useDashboardData';
 import { toast } from 'sonner';
 import SEOHead from '@/components/SEOHead';
 import { useQuery } from '@tanstack/react-query';
 import { SaintCardSkeleton } from './SacredSkeleton';
+import { DashboardSkeleton } from './DashboardSkeleton';
 import DevDataInspector from './DevDataInspector';
+import { ProfileId } from './SpiritualQuiz';
 
 const LITURGICAL_QUOTES = [
   '"Sede misericordiosos como vosso Pai é misericordioso." — Lc 6,36',
@@ -106,19 +112,30 @@ const JourneySkeleton = () => (
 const HojePage: React.FC = () => {
   const navigate = useNavigate();
   const { user, profile, userLevel } = useAuth();
-  const { t } = useContext(LangContext);
+  const { t, lang } = useContext(LangContext);
   const [journalText, setJournalText] = useState('');
   const [journalSaved, setJournalSaved] = useState(false);
   const [todayQuote] = useState(() => LITURGICAL_QUOTES[new Date().getDate() % LITURGICAL_QUOTES.length]);
 
   const { data: allSaintsToday = [], isLoading: loadingSaints } = useSaintsToday();
-  const { data: officialSaint, isLoading: loadingOfficial } = useOfficialSaint();
+  const { data: officialSaint } = useOfficialSaint();
+  
+  // Ported from Dashboard
+  const { spiritualProfile, nextUp, weeklyStats, isLoading: loadingStats } = useDashboardData(user as any);
+
   const { data: activeJourneyData, isLoading: loadingJourney } = useActiveJourney(user?.id);
   const activeJourney = activeJourneyData?.journey || null;
   const journeyStep = activeJourneyData?.nextStep || null;
   const journeyProgress = activeJourneyData?.progress || { completed: 0, total: 0 };
   
   const { data: recommendedJourney } = useRecommendedJourney(user?.id, profile, userLevel, !!activeJourney);
+
+  const hour = new Date().getHours();
+  const greeting = useMemo(() => {
+    if (hour < 12) return lang === 'pt' ? 'Bom dia' : 'Good morning';
+    if (hour < 18) return lang === 'pt' ? 'Boa tarde' : 'Good afternoon';
+    return lang === 'pt' ? 'Boa noite' : 'Good evening';
+  }, [hour, lang]);
 
   const saveJournal = useCallback(async () => {
     if (!user || !journalText.trim()) return;
@@ -148,37 +165,72 @@ const HojePage: React.FC = () => {
 
   return (
     <div className="desktop-layout pt-6 md:pt-12">
+      {loadingStats && <DashboardSkeleton />}
       <SEOHead title="Hoje - Sua Jornada Espiritual" description="Acompanhe sua caminhada de fé diária." path="/hoje" />
       {import.meta.env.DEV && <DevDataInspector data={{ officialSaint, allSaintsToday, activeJourney, profile: profile?._sensitive }} />}
       <div className="desktop-main space-y-12 max-w-2xl mx-auto lg:max-w-none lg:mx-0">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center space-y-8">
-          <div className="space-y-4">
-            <h1 className="text-4xl md:text-5xl font-serif text-foreground leading-tight">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center space-y-4 pt-4 md:pt-0">
+          <div className="space-y-2">
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60">
+              {greeting}, {profile?.name?.split(' ')[0] || 'fiel'}
+            </p>
+            <h1 className="text-4xl md:text-6xl font-serif text-foreground leading-tight">
               Sua jornada espiritual <br /><span className="text-primary italic">guiada pela Sabedoria.</span>
             </h1>
-            <p className="text-sm md:text-base text-muted-foreground italic font-serif max-w-lg mx-auto">
-              "O que Deus colocou no seu coração hoje? Compartilhe suas dúvidas ou orações e guarde-as em seu diário espiritual."
-            </p>
           </div>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button size="lg" className="h-16 px-12 bg-primary hover:bg-primary/90 rounded-full font-bold uppercase tracking-widest shadow-2xl" onClick={() => {
-              document.getElementById('spiritual-journal')?.scrollIntoView({ behavior: 'smooth' });
-              document.querySelector('textarea')?.focus();
-            }}>
-              <Icons.PenLine className="w-5 h-5 mr-3" /> Escreva sua reflexão
-            </Button>
-            <Button size="lg" variant="outline" className="h-16 px-12 rounded-full font-bold uppercase tracking-widest border-2" onClick={() => navigate(AppRoute.CERTAMEN)}>
-              <Icons.Trophy className="w-5 h-5 mr-3" /> Quiz da Fé
-            </Button>
+          <div className="flex items-center justify-center gap-4 flex-wrap pt-2">
+             {(profile?.streak || 0) > 0 && (
+              <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-primary/5 border border-primary/10 shadow-sm">
+                <Icons.Zap className="w-4 h-4 text-primary" />
+                <span className="text-xs font-black text-primary uppercase tracking-wider">{profile?.streak} {profile?.streak === 1 ? 'Dia' : 'Dias'}</span>
+              </div>
+            )}
+            <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-primary/5 border border-border shadow-sm">
+              <Icons.Star className="w-4 h-4 text-primary" />
+              <span className="text-xs font-black text-primary uppercase tracking-wider">{profile?.xp || 0} XP</span>
+            </div>
           </div>
         </motion.div>
-        <div className="pt-8 space-y-10">
-          <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="h-px w-6 bg-primary/30" /><h3 className="text-[11px] font-black uppercase tracking-[0.3em] text-primary">Santo do Dia</h3>
+
+        {nextUp && (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            onClick={() => navigate(nextUp.route)}
+            className="p-5 rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card cursor-pointer hover:border-primary/40 transition-all shadow-sm flex items-center justify-between group"
+          >
+            <div className="flex items-center gap-5">
+              <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                {nextUp.type === 'bible' ? <Icons.Bible className="w-6 h-6" /> : 
+                 nextUp.type === 'catechism' ? <Icons.Catechism className="w-6 h-6" /> : 
+                 <Icons.Flame className="w-6 h-6" />}
+              </div>
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-1">{nextUp.subtitle}</p>
+                <h3 className="text-lg font-bold text-foreground leading-tight group-hover:text-primary transition-colors">{nextUp.label}</h3>
+              </div>
             </div>
-            <SaintOfTheDayCard />
-          </motion.section>
+            <Icons.ChevronRight className="w-5 h-5 text-primary group-hover:translate-x-1 transition-transform" />
+          </motion.div>
+        )}
+
+        <RitualDoDia />
+
+        <div className="space-y-10">
+          <section className="space-y-4">
+            <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 flex items-center gap-3">
+              <div className="h-px w-6 bg-muted-foreground/30" /> Portas da Fé
+            </h2>
+            <HomeMainDoors t={t} />
+          </section>
+
+          <section className="space-y-4">
+            <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 flex items-center gap-3">
+              <div className="h-px w-6 bg-muted-foreground/30" /> Nexus Espiritual
+            </h2>
+            <NexusBubbles profileId={spiritualProfile as ProfileId} />
+          </section>
           <section className="space-y-4">
             <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 flex items-center gap-3">
               <div className="h-px w-6 bg-muted-foreground/30" /> Continuar Jornada
@@ -248,10 +300,15 @@ const HojePage: React.FC = () => {
         </div>
       </div>
       <aside className="desktop-aside space-y-6 hidden lg:block">
+        <div className="desktop-card space-y-4">
+          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary">Frutos da Semana</h3>
+          <HomeStats stats={weeklyStats} t={t} />
+        </div>
+
         <div className="desktop-card space-y-3">
           <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground">Explorar</h3>
           <div className="space-y-1.5">
-            {[{ label: 'A-Z da Fé', route: AppRoute.AZ_FAITH, icon: <Icons.AZ className="w-4 h-4" /> }, { label: 'Jornadas', route: AppRoute.JORNADAS, icon: <Icons.Route className="w-4 h-4" /> }, { label: 'Comunidade', route: AppRoute.COMMUNITY, icon: <Icons.Users className="w-4 h-4" /> }].map((item) => (
+            {[{ label: 'A-Z da Fé', route: AppRoute.AZ_FAITH, icon: <Icons.AZ className="w-4 h-4" /> }, { label: 'Jornadas', route: AppRoute.JORNADAS, icon: <Icons.Journeys className="w-4 h-4" /> }, { label: 'Comunidade', route: AppRoute.COMMUNITY, icon: <Icons.Users className="w-4 h-4" /> }].map((item) => (
               <button key={item.label} onClick={() => navigate(item.route)} className="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-muted/50 transition-all text-left group">
                 <span className="text-muted-foreground group-hover:text-primary transition-colors">{item.icon}</span>
                 <span className="text-sm font-medium text-foreground">{item.label}</span>
