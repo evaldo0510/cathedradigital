@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { fetchCatechismParagraph } from '@/hooks/useCatechismParagraph';
 import { toast } from 'sonner';
+import { Progress } from '@/components/ui/progress';
+
 
 interface CatechismOfflineFallbackProps {
   paragraph?: number;
@@ -14,28 +16,56 @@ interface CatechismOfflineFallbackProps {
 const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ paragraph, onRetry }) => {
   const navigate = useNavigate();
   const [downloading, setDownloading] = useState(false);
+  const [retryAttempt, setRetryAttempt] = useState(0);
+  const [progress, setProgress] = useState(0);
   const isForcedOffline = localStorage.getItem('cathedra_offline_mode') === 'true';
   const isOnline = navigator.onLine;
+
+  const MAX_RETRIES = 3;
 
   const handleDownload = async () => {
     if (!paragraph) return;
     setDownloading(true);
+    setProgress(10);
+    
+    // Temporarily disable forced offline to allow the fetch
+    const prevMode = localStorage.getItem('cathedra_offline_mode');
+    localStorage.setItem('cathedra_offline_mode', 'false');
+
+    const attemptFetch = async (attempt: number): Promise<void> => {
+      setRetryAttempt(attempt);
+      setProgress(10 + (attempt * 25));
+      
+      try {
+        await fetchCatechismParagraph(paragraph);
+        setProgress(100);
+        localStorage.setItem('cathedra_offline_mode', prevMode || 'false');
+        toast.success(`§${paragraph} baixado com sucesso!`);
+        if (onRetry) onRetry();
+      } catch (error) {
+        if (attempt < MAX_RETRIES) {
+          console.warn(`Download failed, retrying... (${attempt}/${MAX_RETRIES})`);
+          // Wait before retrying (exponential backoff or simple delay)
+          await new Promise(resolve => setTimeout(resolve, 2000));
+          return attemptFetch(attempt + 1);
+        } else {
+          localStorage.setItem('cathedra_offline_mode', prevMode || 'false');
+          throw error;
+        }
+      }
+    };
+
     try {
-      // Temporarily disable forced offline to allow the fetch
-      const prevMode = localStorage.getItem('cathedra_offline_mode');
-      localStorage.setItem('cathedra_offline_mode', 'false');
-      
-      await fetchCatechismParagraph(paragraph);
-      
-      localStorage.setItem('cathedra_offline_mode', prevMode || 'false');
-      toast.success(`§${paragraph} baixado com sucesso!`);
-      if (onRetry) onRetry();
+      await attemptFetch(1);
     } catch (error) {
-      toast.error('Erro ao baixar parágrafo. Verifique sua conexão.');
+      toast.error('Erro ao baixar parágrafo após várias tentativas. Verifique sua conexão.');
     } finally {
       setDownloading(false);
+      setRetryAttempt(0);
+      setProgress(0);
     }
   };
+
 
 
   return (
@@ -47,6 +77,17 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
       <div className="mx-auto w-16 h-16 rounded-full bg-primary/5 flex items-center justify-center border border-primary/10">
         <Icons.WifiOff className="w-8 h-8 text-primary/40" />
       </div>
+
+      {downloading && (
+        <div className="space-y-3 animate-in fade-in slide-in-from-top-2">
+          <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-primary">
+            <span>{retryAttempt > 1 ? `Re-tentando (${retryAttempt}/${MAX_RETRIES})...` : 'Baixando conteúdo...'}</span>
+            <span>{progress}%</span>
+          </div>
+          <Progress value={progress} className="h-1.5" />
+        </div>
+      )}
+
 
       <div className="space-y-2">
         <h3 className="text-xl font-serif font-bold text-foreground">
