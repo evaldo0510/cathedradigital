@@ -29,7 +29,7 @@ const PricingSection = () => {
         "Tudo do plano Grátis",
         "Logos IA Ilimitado",
         "Análises Teológicas Profundas",
-        "Programa Terapêutico 90 Dias",
+        "Jornadas de Fé Exclusivas",
         "Comunidade & Grupos de Estudo",
         "Acesso Antecipado a Recursos"
       ],

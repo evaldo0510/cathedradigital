@@ -830,7 +830,6 @@ export type Database = {
           movimento_pastoral: string | null
           name: string
           paroquia: string | null
-          program_duration: number | null
           push_enabled: boolean | null
           role: string | null
           streak: number | null
@@ -857,7 +856,6 @@ export type Database = {
           movimento_pastoral?: string | null
           name?: string
           paroquia?: string | null
-          program_duration?: number | null
           push_enabled?: boolean | null
           role?: string | null
           streak?: number | null
@@ -884,7 +882,6 @@ export type Database = {
           movimento_pastoral?: string | null
           name?: string
           paroquia?: string | null
-          program_duration?: number | null
           push_enabled?: boolean | null
           role?: string | null
           streak?: number | null
