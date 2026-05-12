@@ -8,6 +8,7 @@
     "build": "bun run scripts/validate-catechism.ts && bun run scripts/security-audit.ts && vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
