@@ -37,6 +37,8 @@ const CatechismVerification: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [stats, setStats] = useState({ total: 0, ok: 0, missing: 0, divergent: 0 });
   const [filter, setFilter] = useState<'all' | 'missing' | 'divergent'>('all');
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [officialDataMap, setOfficialDataMap] = useState<Map<number, any>>(new Map());
 
   const isAdmin = profile?.role === 'admin';
 
