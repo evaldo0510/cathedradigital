@@ -10,7 +10,7 @@ import { useSEO, useKeywords, SEOSettings } from '@/hooks/useSEO';
 import { 
   Globe, Search, LineChart, Save, Plus, Trash2, 
   ExternalLink, CheckCircle2, AlertCircle, Sparkles,
-  Smartphone, Monitor, Share2, Info, MapPin
+  Smartphone, Monitor, Share2, Info, MapPin, XCircle
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -119,7 +119,7 @@ const AdminSeoTab: React.FC = () => {
 
                 <div className="space-y-4 pt-6 border-t border-border/50">
                   <h4 className="text-sm font-serif font-bold text-primary flex items-center gap-2">
-                    <MapPin className="w-4 h-4" /> SEO Local & NAP
+                    <MapPin, XCircle className="w-4 h-4" /> SEO Local & NAP
                   </h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
