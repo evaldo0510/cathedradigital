@@ -70,9 +70,11 @@ const queryClient = new QueryClient({
 const renderWithProviders = (ui: React.ReactElement) => {
   return render(
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        {ui}
-      </BrowserRouter>
+      <LangContext.Provider value={{ t: (k: string) => k, lang: 'pt', setLang: vi.fn() }}>
+        <BrowserRouter>
+          {ui}
+        </BrowserRouter>
+      </LangContext.Provider>
     </QueryClientProvider>
   );
 };
