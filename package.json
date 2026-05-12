@@ -12,6 +12,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
+    "test:a11y": "vitest run src/tests/accessibility.test.tsx",
     "test:report": "bun run scripts/generate-test-report.ts",
     "test:pdf": "bun run scripts/generate-pdf-report.ts"
   },
