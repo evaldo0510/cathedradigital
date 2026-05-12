@@ -813,6 +813,12 @@ const AdminDashboard: React.FC = () => {
           </Suspense>
         </TabsContent>
 
+        <TabsContent value="seo" className="space-y-4">
+          <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
+            <AdminSeoTab />
+          </Suspense>
+        </TabsContent>
+
         {/* Security Tab */}
         <TabsContent value="security" className="space-y-4 outline-none">
           <Suspense fallback={
