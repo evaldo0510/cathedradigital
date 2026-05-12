@@ -18,6 +18,8 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
   const [downloading, setDownloading] = useState(false);
   const [retryAttempt, setRetryAttempt] = useState(0);
   const [progress, setProgress] = useState(0);
+  const isCancelled = useRef(false);
+
   const isForcedOffline = localStorage.getItem('cathedra_offline_mode') === 'true';
   const isOnline = navigator.onLine;
 
