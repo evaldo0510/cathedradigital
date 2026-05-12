@@ -17,6 +17,8 @@ import { toast } from 'sonner';
 
 // Core UI components (not lazy to ensure layout is instant)
 import ReadingModeToggle from './components/cathedra/ReadingModeToggle';
+import { initGA4AutoTracking } from './lib/analytics';
+
 import PageTransition from './components/PageTransition';
 import CathedralSidebar from './components/cathedra/Sidebar';
 import CathedralFooter from './components/cathedra/Footer';
