@@ -56,8 +56,8 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
       document.head.appendChild(script2);
 
       return () => {
-        document.head.removeChild(script1);
-        document.head.removeChild(script2);
+        if (document.head.contains(script1)) document.head.removeChild(script1);
+        if (document.head.contains(script2)) document.head.removeChild(script2);
       };
     }
   }, [seoSettings?.ga4_measurement_id]);
@@ -100,12 +100,12 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
     "address": {
       "@type": "PostalAddress",
       "streetAddress": seoSettings.business_address,
-      "addressLocality": "São Paulo", -- Could be dynamic if split
+      "addressLocality": "São Paulo",
       "addressRegion": "SP",
       "addressCountry": "BR"
     },
     "openingHours": seoSettings.opening_hours,
-    "geo": seoSettings.latitude && seoSettings.longitude ? {
+    "geo": (seoSettings.latitude && seoSettings.longitude) ? {
       "@type": "GeoCoordinates",
       "latitude": seoSettings.latitude,
       "longitude": seoSettings.longitude
@@ -145,9 +145,11 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
       {globalSchema && (
         <script type="application/ld+json">{JSON.stringify(globalSchema)}</script>
       )}
+      {localBusinessLD && (
+        <script type="application/ld+json">{JSON.stringify(localBusinessLD)}</script>
+      )}
     </Helmet>
   );
 };
 
 export default SEOHead;
-
