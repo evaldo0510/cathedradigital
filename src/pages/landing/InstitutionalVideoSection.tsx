@@ -122,7 +122,7 @@ const InstitutionalVideoSection = () => {
         if (e.key === "Escape") handleClose();
         
         if (e.key === "Tab") {
-          const focusableSelector = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"], video';
+          const focusableSelector = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"]), video';
           const focusableElements = modalContainerRef.current?.querySelectorAll(focusableSelector);
           
           if (!focusableElements || focusableElements.length === 0) return;
