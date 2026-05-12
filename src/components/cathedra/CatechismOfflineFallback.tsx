@@ -116,8 +116,10 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
   const handleCancel = () => {
     isCancelled.current = true;
     setDownloading(false);
+    clearDownloadState();
     toast.info('Download cancelado pelo usuário.');
   };
+
 
 
 
