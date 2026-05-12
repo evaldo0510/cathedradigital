@@ -218,7 +218,7 @@ export const CATECHISM_LOCAL_DATA: Record<number, CatechismData> = {
     tipo: "catecismo",
     type: "catechism",
     titulo: "A oração",
-    conteudo: "A oração é a elevação da alma a Deus.",
+    conteudo: "«A oração é a elevação da alma a Deus ou o pedido a Deus dos bens convenientes». Donde falamos nós, ao rezar? Da altura do nosso orgulho e vontade própria, ou das «profundezas» (Sl 130, 1) dum coração humilde e contrito? Aquele que se humilha será exaltado. A humildade é o fundamento da oração.",
     tags: ["oracao", "deus"]
   },
   2565: {
