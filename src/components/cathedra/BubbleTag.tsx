@@ -99,7 +99,7 @@ interface BubbleTagProps {
   ariaLabel?: string;
   tabIndex?: number;
   "data-roving-item"?: boolean;
-  [key: string]: any; // Allow data attributes
+  [key: string]: any;
 }
 
 export const BubbleTag = React.forwardRef<HTMLButtonElement, BubbleTagProps>(({
@@ -129,9 +129,11 @@ export const BubbleTag = React.forwardRef<HTMLButtonElement, BubbleTagProps>(({
     sm: 'w-3 h-3',
     md: 'w-3.5 h-3.5'
   };
+
   return (
     <motion.button
       ref={ref}
+      type="button"
       variants={bubbleVariants}
       initial="initial"
       animate="animate"
