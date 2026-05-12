@@ -13,6 +13,7 @@ import { supabase } from '@/integrations/supabase/client';
 import AuthGuard from './components/cathedra/AuthGuard';
 import AdminGuard from './components/cathedra/AdminGuard';
 import AppErrorBoundary from './components/cathedra/AppErrorBoundary';
+import { toast } from 'sonner';
 
 // Core UI components (not lazy to ensure layout is instant)
 import ReadingModeToggle from './components/cathedra/ReadingModeToggle';
