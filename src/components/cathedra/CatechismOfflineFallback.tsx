@@ -6,9 +6,17 @@ import { useNavigate } from 'react-router-dom';
 import { fetchCatechismParagraph } from '@/hooks/useCatechismParagraph';
 import { toast } from 'sonner';
 import { Progress } from '@/components/ui/progress';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
-
-interface CatechismOfflineFallbackProps {
   paragraph?: number;
   onRetry?: () => void;
 }
