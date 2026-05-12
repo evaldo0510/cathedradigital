@@ -88,3 +88,38 @@ export async function getCachedLiturgy(dateKey: string): Promise<any | null> {
 export async function cacheLiturgy(dateKey: string, data: any): Promise<void> {
   return putInStore('liturgy', dateKey, data);
 }
+
+export async function deleteFromStore(storeName: string, key: string): Promise<void> {
+  try {
+    const db = await openDB();
+    const tx = db.transaction(storeName, 'readwrite');
+    const store = tx.objectStore(storeName);
+    store.delete(key);
+  } catch {}
+}
+
+export async function getAllFromStore(storeName: string): Promise<CacheEntry[]> {
+  try {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(storeName, 'readonly');
+      const store = tx.objectStore(storeName);
+      const req = store.getAll();
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  } catch {
+    return [];
+  }
+}
+
+export async function clearAllCaches(): Promise<void> {
+  try {
+    const db = await openDB();
+    const stores = ['bible', 'catechism', 'liturgy'];
+    stores.forEach(s => {
+      const tx = db.transaction(s, 'readwrite');
+      tx.objectStore(s).clear();
+    });
+  } catch {}
+}
