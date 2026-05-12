@@ -174,24 +174,20 @@ const BubbleTagBase = React.forwardRef<HTMLButtonElement, BubbleTagProps>(({
 
 BubbleTagBase.displayName = 'BubbleTagBase';
 
-export const BubbleTag = React.forwardRef<HTMLButtonElement, BubbleTagProps>((props, ref) => {
-  return (
-    <motion.button
-      ref={ref}
-      variants={bubbleVariants}
-      initial="initial"
-      animate="animate"
-      whileHover="hover"
-      whileTap="tap"
-      layout="position"
-      custom={props.index}
-      {...props}
-      asChild={false} // Ensure it doesn't try to use asChild if passed from Radix, though motion.button doesn't support asChild directly usually
-    >
-      <BubbleTagBase {...props} ref={null as any} /> 
-    </motion.button>
-  );
-});
+const MotionBubbleTag = motion(BubbleTagBase);
+
+export const BubbleTag = React.forwardRef<HTMLButtonElement, BubbleTagProps>((props, ref) => (
+  <MotionBubbleTag
+    ref={ref}
+    variants={bubbleVariants}
+    initial="initial"
+    animate="animate"
+    whileHover="hover"
+    whileTap="tap"
+    layout="position"
+    custom={props.index}
+    {...props}
+  />
+));
 
 BubbleTag.displayName = 'BubbleTag';
-
