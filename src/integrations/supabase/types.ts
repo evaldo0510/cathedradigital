@@ -1025,6 +1025,75 @@ export type Database = {
         }
         Relationships: []
       }
+      seo_settings: {
+        Row: {
+          created_at: string
+          ga4_measurement_id: string | null
+          gsc_verification_code: string | null
+          id: string
+          json_ld_schema: Json | null
+          og_image_url: string | null
+          site_description: string | null
+          site_keywords: string | null
+          site_title: string
+          twitter_handle: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          ga4_measurement_id?: string | null
+          gsc_verification_code?: string | null
+          id?: string
+          json_ld_schema?: Json | null
+          og_image_url?: string | null
+          site_description?: string | null
+          site_keywords?: string | null
+          site_title?: string
+          twitter_handle?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          ga4_measurement_id?: string | null
+          gsc_verification_code?: string | null
+          id?: string
+          json_ld_schema?: Json | null
+          og_image_url?: string | null
+          site_description?: string | null
+          site_keywords?: string | null
+          site_title?: string
+          twitter_handle?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      site_keywords: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean | null
+          keyword: string
+          priority: number | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          keyword: string
+          priority?: number | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          keyword?: string
+          priority?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       spiritual_contents: {
         Row: {
           content_text: string

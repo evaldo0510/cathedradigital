@@ -6,7 +6,7 @@ import {
   BarChart3, Calendar, AlertCircle, Crown, Shield, Search,
   ChevronDown, ChevronUp, UserCog, ArrowLeft, Home, Smartphone, MonitorSmartphone,
   Target, Activity, Bell, LayoutGrid, UserCheck, Handshake, Heart, Wallet,
-  MessageSquare, Map as MapIcon, Clock, Tag, Building2, RefreshCcw
+  MessageSquare, Map as MapIcon, Clock, Tag, Building2, RefreshCcw, Globe
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -29,6 +29,8 @@ const AdminThemesTab = lazy(() => import('./AdminThemesTab'));
 const AdminConstructionTab = lazy(() => import('./AdminConstructionTab'));
 const WebhookSimulator = lazy(() => import('./WebhookSimulator'));
 const SecurityAuditPage = lazy(() => import('./SecurityAuditPage'));
+const AdminSeoTab = lazy(() => import('./AdminSeoTab'));
+
 
 interface Stats {
   totalUsers: number;
@@ -455,6 +457,9 @@ const AdminDashboard: React.FC = () => {
             <TabsTrigger value="themes" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
               <Tag className="w-3.5 h-3.5" /> Nexus Temas
             </TabsTrigger>
+            <TabsTrigger value="seo" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+              <Globe className="w-3.5 h-3.5" /> SEO
+            </TabsTrigger>
             <TabsTrigger value="security" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start relative group">
               <Shield className="w-3.5 h-3.5 text-red-500" /> Segurança
               <span className="absolute -top-1 -right-1 flex h-2 w-2">
@@ -805,6 +810,12 @@ const AdminDashboard: React.FC = () => {
         <TabsContent value="journeys" className="space-y-4">
           <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
             <AdminJourneysTab />
+          </Suspense>
+        </TabsContent>
+
+        <TabsContent value="seo" className="space-y-4">
+          <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
+            <AdminSeoTab />
           </Suspense>
         </TabsContent>
 
