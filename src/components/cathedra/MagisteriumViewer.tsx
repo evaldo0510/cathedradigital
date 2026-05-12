@@ -27,9 +27,16 @@ const MagisteriumViewer: React.FC = () => {
       setLoading(true);
       setError(null);
       
+      const isOfflineMode = localStorage.getItem('cathedra_offline_mode') === 'true';
       const url = MAGISTERIUM_URLS[id];
       if (!url) {
         setError('Documento não encontrado ou URL não configurada.');
+        setLoading(false);
+        return;
+      }
+
+      if (isOfflineMode) {
+        setError('Modo Somente-Cache ativo: Documentos do Vaticano não estão disponíveis offline.');
         setLoading(false);
         return;
       }
@@ -51,7 +58,6 @@ const MagisteriumViewer: React.FC = () => {
         window.dispatchEvent(new CustomEvent('supabase-unreachable'));
         setError(err.message || 'Erro ao carregar o documento do Vaticano. Verifique sua conexão.');
         toast.error('Não foi possível carregar o documento.');
-
       } finally {
         setLoading(false);
       }
