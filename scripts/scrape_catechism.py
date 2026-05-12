@@ -59,7 +59,11 @@ sections = [
     ('https://www.vatican.va/archive/cathechism_po/index_new/p1s1c2_50-141_po.html', 50, 141),
     ('https://www.vatican.va/archive/cathechism_po/index_new/p1s1c3_142-184_po.html', 142, 184),
     ('https://www.vatican.va/archive/cathechism_po/index_new/p1s2_185-197_po.html', 185, 197),
+    ('https://www.vatican.va/archive/cathechism_po/index_new/p2s1c1_1066-1090_po.html', 1066, 1090),
+    ('https://www.vatican.va/archive/cathechism_po/index_new/p3s1c1_1691-1715_po.html', 1691, 1715),
+    ('https://www.vatican.va/archive/cathechism_po/index_new/p4s2c1_2759-2802_po.html', 2759, 2802),
 ]
+
 
 all_p = []
 for url, start, end in sections:
