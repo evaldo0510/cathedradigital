@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { Play, Sparkles, X, Volume2, VolumeX, Shield, Church, Globe, Users, Languages } from "lucide-react";
 import { fadeUp } from "./animations";
 import { supabase } from "@/integrations/supabase/client";
@@ -13,6 +13,7 @@ const SUBTITLES = [
 ];
 
 const InstitutionalVideoSection = () => {
+  const shouldReduceMotion = useReducedMotion();
   const [isPlaying, setIsPlaying] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isMuted, setIsMuted] = useState(() => {
@@ -21,12 +22,18 @@ const InstitutionalVideoSection = () => {
     }
     return true;
   });
-  const [currentLang, setCurrentLang] = useState("pt");
+  const [currentLang, setCurrentLang] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('cathedra_video_lang') || "pt";
+    }
+    return "pt";
+  });
   const [videoError, setVideoError] = useState(false);
   
   const sectionRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const modalVideoRef = useRef<HTMLVideoElement>(null);
+  const modalContainerRef = useRef<HTMLDivElement>(null);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
 
   const { scrollYProgress } = useScroll({
