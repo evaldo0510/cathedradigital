@@ -125,6 +125,7 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
       whileTap={{ scale: 0.99 }}
       tabIndex={0}
       role="button"
+      aria-label={`Conhecer mais sobre ${saint.name}`}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
@@ -132,7 +133,7 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
         }
       }}
       onClick={handleNavigate}
-      className="group cursor-pointer p-0 rounded-3xl border border-border bg-card overflow-hidden shadow-sm hover:border-primary/30 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none transition-all flex flex-col sm:flex-row h-full"
+      className="group cursor-pointer p-0 rounded-3xl border border-border bg-card overflow-hidden shadow-sm hover:border-primary/30 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none focus-visible:ring-offset-1 transition-all flex flex-col sm:flex-row h-full"
     >
       <div className="w-full sm:w-1/3 h-48 sm:h-auto relative shrink-0 overflow-hidden">
         <SacredImage 

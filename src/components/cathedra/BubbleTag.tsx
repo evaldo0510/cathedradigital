@@ -102,7 +102,7 @@ interface BubbleTagProps {
   [key: string]: any;
 }
 
-const BubbleTagBase = React.forwardRef<HTMLButtonElement, BubbleTagProps>(({
+export const BubbleTag = React.forwardRef<HTMLButtonElement, BubbleTagProps>(({
   label,
   emoji,
   index,
@@ -131,7 +131,7 @@ const BubbleTagBase = React.forwardRef<HTMLButtonElement, BubbleTagProps>(({
   };
 
   return (
-    <button
+    <motion.button
       ref={ref}
       type="button"
       onClick={onClick}
@@ -139,6 +139,13 @@ const BubbleTagBase = React.forwardRef<HTMLButtonElement, BubbleTagProps>(({
       onMouseEnter={onMouseEnter}
       tabIndex={tabIndex}
       data-roving-item={dataRovingItem}
+      variants={bubbleVariants}
+      initial="initial"
+      animate="animate"
+      whileHover="hover"
+      whileTap="tap"
+      layout="position"
+      custom={index}
       {...props}
       aria-pressed={isSelected}
       aria-label={`${ariaLabel || `Tema: ${label}`}${isSelected ? ' (Selecionado)' : ''}${isSuggested ? ' (Sugerido)' : ''}`}
@@ -168,26 +175,8 @@ const BubbleTagBase = React.forwardRef<HTMLButtonElement, BubbleTagProps>(({
       `}>
         {label}
       </span>
-    </button>
+    </motion.button>
   );
 });
-
-BubbleTagBase.displayName = 'BubbleTagBase';
-
-const MotionBubbleTag = motion(BubbleTagBase);
-
-export const BubbleTag = React.forwardRef<HTMLButtonElement, BubbleTagProps>((props, ref) => (
-  <MotionBubbleTag
-    ref={ref}
-    variants={bubbleVariants}
-    initial="initial"
-    animate="animate"
-    whileHover="hover"
-    whileTap="tap"
-    layout="position"
-    custom={props.index}
-    {...props}
-  />
-));
 
 BubbleTag.displayName = 'BubbleTag';

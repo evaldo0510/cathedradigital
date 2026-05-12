@@ -373,10 +373,15 @@ const HojePage: React.FC = () => {
 
         <div className="desktop-card space-y-3">
           <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground">Explorar</h3>
-          <div className="space-y-1.5">
+          <div className="space-y-1.5" role="navigation" aria-label="Explorar seções">
             {[{ label: 'A-Z da Fé', route: AppRoute.AZ_FAITH, icon: <Icons.AZ className="w-4 h-4" /> }, { label: 'Jornadas', route: AppRoute.JORNADAS, icon: <Icons.Journeys className="w-4 h-4" /> }, { label: 'Comunidade', route: AppRoute.COMMUNITY, icon: <Icons.Users className="w-4 h-4" /> }].map((item) => (
-              <button key={item.label} onClick={() => navigate(item.route)} className="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-muted/50 transition-all text-left group">
-                <span className="text-muted-foreground group-hover:text-primary transition-colors">{item.icon}</span>
+              <button 
+                key={item.label} 
+                onClick={() => navigate(item.route)} 
+                aria-label={`Abrir ${item.label}`}
+                className="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-muted/50 transition-all text-left group focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
+              >
+                <span className="text-muted-foreground group-hover:text-primary transition-colors" aria-hidden="true">{item.icon}</span>
                 <span className="text-sm font-medium text-foreground">{item.label}</span>
               </button>
             ))}
