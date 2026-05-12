@@ -11,6 +11,11 @@ import { ptBR } from 'date-fns/locale';
 const OfflinePage: React.FC = () => {
   const navigate = useNavigate();
   const isForcedOffline = localStorage.getItem('cathedra_offline_mode') === 'true';
+  const [stats, setStats] = useState<any>(null);
+
+  useEffect(() => {
+    getCacheStats().then(setStats);
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[80dvh] p-6 text-center space-y-8 animate-in fade-in duration-700">
