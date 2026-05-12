@@ -263,12 +263,20 @@ const HojePage: React.FC = () => {
                 <div className="flex items-center gap-5">
                   <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/20 transition-colors"><Icons.Flame className="w-6 h-6" /></div>
                   <div className="flex-1">
-                    <h3 className="text-base font-bold text-foreground">{activeJourney.title}</h3>
+                    <h3 className="text-base font-bold text-foreground flex items-center gap-2">
+                      {activeJourney.title}
+                      {activeJourney.estimated_days === 90 && <Badge variant="secondary" className="bg-primary/10 text-primary text-[8px] h-4">90 DIAS</Badge>}
+                    </h3>
                     <div className="mt-3 flex items-center gap-4">
                       <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
-                        <div className="h-full bg-primary transition-all duration-1000 ease-out" style={{ width: `${journeyProgress.total > 0 ? (journeyProgress.completed / journeyProgress.total) * 100 : 0}%` }} />
+                        <div 
+                          className={`h-full ${activeJourney.estimated_days === 90 ? 'bg-primary shadow-[0_0_8px_rgba(var(--primary),0.4)]' : 'bg-primary'} transition-all duration-1000 ease-out`} 
+                          style={{ width: `${journeyProgress.total > 0 ? (journeyProgress.completed / (activeJourney.estimated_days || journeyProgress.total)) * 100 : 0}%` }} 
+                        />
                       </div>
-                      <span className="text-[11px] font-black text-primary uppercase tabular-nums">{journeyProgress.completed}/{journeyProgress.total}</span>
+                      <span className="text-[11px] font-black text-primary uppercase tabular-nums">
+                        {journeyProgress.completed}/{activeJourney.estimated_days || journeyProgress.total}
+                      </span>
                     </div>
                   </div>
                   <Icons.ChevronRight className="w-6 h-6 text-muted-foreground group-hover:translate-x-1 transition-transform" />
