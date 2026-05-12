@@ -29,7 +29,7 @@ describe('HojePage Navigation', () => {
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <AuthProvider>
-            <LangContext.Provider value={{ t: (k: string) => k, lang: 'pt' }}>
+            <LangContext.Provider value={{ t: (k: string) => k, lang: 'pt', setLang: () => {} }}>
               <HojePage />
             </LangContext.Provider>
           </AuthProvider>
