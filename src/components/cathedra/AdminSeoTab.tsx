@@ -10,7 +10,7 @@ import { useSEO, useKeywords, SEOSettings } from '@/hooks/useSEO';
 import { 
   Globe, Search, LineChart, Save, Plus, Trash2, 
   ExternalLink, CheckCircle2, AlertCircle, Sparkles,
-  Smartphone, Monitor, Share2, Info
+  Smartphone, Monitor, Share2, Info, MapPin
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -115,6 +115,62 @@ const AdminSeoTab: React.FC = () => {
                     rows={3}
                   />
                   <p className="text-[10px] text-muted-foreground italic">Recomendado: 150-160 caracteres.</p>
+                </div>
+
+                <div className="space-y-4 pt-6 border-t border-border/50">
+                  <h4 className="text-sm font-serif font-bold text-primary flex items-center gap-2">
+                    <MapPin className="w-4 h-4" /> SEO Local & NAP
+                  </h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-black uppercase tracking-widest opacity-70">Nome do Negócio</Label>
+                      <Input 
+                        value={formData.business_name || ''} 
+                        onChange={e => setFormData({...formData, business_name: e.target.value})}
+                        placeholder="Ex: Cathedra Digital HQ"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-black uppercase tracking-widest opacity-70">Email de Contato</Label>
+                      <Input 
+                        value={formData.business_email || ''} 
+                        onChange={e => setFormData({...formData, business_email: e.target.value})}
+                        placeholder="contato@cathedra.com"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-black uppercase tracking-widest opacity-70">Endereço Físico</Label>
+                      <Input 
+                        value={formData.business_address || ''} 
+                        onChange={e => setFormData({...formData, business_address: e.target.value})}
+                        placeholder="Rua Exemplo, 123 - São Paulo"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-black uppercase tracking-widest opacity-70">Horário de Funcionamento</Label>
+                      <Input 
+                        value={formData.opening_hours || ''} 
+                        onChange={e => setFormData({...formData, opening_hours: e.target.value})}
+                        placeholder="Seg-Sex 08:00-18:00"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-black uppercase tracking-widest opacity-70">WhatsApp / Telefone</Label>
+                      <Input 
+                        value={formData.business_whatsapp || ''} 
+                        onChange={e => setFormData({...formData, business_whatsapp: e.target.value})}
+                        placeholder="+55 11 99999-9999"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-black uppercase tracking-widest opacity-70">Google Maps URL</Label>
+                      <Input 
+                        value={formData.google_maps_url || ''} 
+                        onChange={e => setFormData({...formData, google_maps_url: e.target.value})}
+                        placeholder="https://maps.google.com/..."
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

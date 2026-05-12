@@ -1027,12 +1027,21 @@ export type Database = {
       }
       seo_settings: {
         Row: {
+          business_address: string | null
+          business_email: string | null
+          business_name: string | null
+          business_phone: string | null
+          business_whatsapp: string | null
           created_at: string
           ga4_measurement_id: string | null
+          google_maps_url: string | null
           gsc_verification_code: string | null
           id: string
           json_ld_schema: Json | null
+          latitude: number | null
+          longitude: number | null
           og_image_url: string | null
+          opening_hours: string | null
           site_description: string | null
           site_keywords: string | null
           site_title: string
@@ -1040,12 +1049,21 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          business_address?: string | null
+          business_email?: string | null
+          business_name?: string | null
+          business_phone?: string | null
+          business_whatsapp?: string | null
           created_at?: string
           ga4_measurement_id?: string | null
+          google_maps_url?: string | null
           gsc_verification_code?: string | null
           id?: string
           json_ld_schema?: Json | null
+          latitude?: number | null
+          longitude?: number | null
           og_image_url?: string | null
+          opening_hours?: string | null
           site_description?: string | null
           site_keywords?: string | null
           site_title?: string
@@ -1053,12 +1071,21 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          business_address?: string | null
+          business_email?: string | null
+          business_name?: string | null
+          business_phone?: string | null
+          business_whatsapp?: string | null
           created_at?: string
           ga4_measurement_id?: string | null
+          google_maps_url?: string | null
           gsc_verification_code?: string | null
           id?: string
           json_ld_schema?: Json | null
+          latitude?: number | null
+          longitude?: number | null
           og_image_url?: string | null
+          opening_hours?: string | null
           site_description?: string | null
           site_keywords?: string | null
           site_title?: string

@@ -56,8 +56,8 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
       document.head.appendChild(script2);
 
       return () => {
-        document.head.removeChild(script1);
-        document.head.removeChild(script2);
+        if (document.head.contains(script1)) document.head.removeChild(script1);
+        if (document.head.contains(script2)) document.head.removeChild(script2);
       };
     }
   }, [seoSettings?.ga4_measurement_id]);
@@ -87,6 +87,30 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
   } : null;
 
   const globalSchema = seoSettings?.json_ld_schema;
+
+  const localBusinessLD = seoSettings?.business_name ? {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": seoSettings.business_name,
+    "image": displayImage,
+    "@id": url,
+    "url": url,
+    "telephone": seoSettings.business_whatsapp || seoSettings.business_phone,
+    "email": seoSettings.business_email,
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": seoSettings.business_address,
+      "addressLocality": "São Paulo",
+      "addressRegion": "SP",
+      "addressCountry": "BR"
+    },
+    "openingHours": seoSettings.opening_hours,
+    "geo": (seoSettings.latitude && seoSettings.longitude) ? {
+      "@type": "GeoCoordinates",
+      "latitude": seoSettings.latitude,
+      "longitude": seoSettings.longitude
+    } : null
+  } : null;
 
   return (
     <Helmet>
@@ -121,9 +145,11 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
       {globalSchema && (
         <script type="application/ld+json">{JSON.stringify(globalSchema)}</script>
       )}
+      {localBusinessLD && (
+        <script type="application/ld+json">{JSON.stringify(localBusinessLD)}</script>
+      )}
     </Helmet>
   );
 };
 
 export default SEOHead;
-
