@@ -9,6 +9,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 import { LangContext } from '@/contexts/LangContext';
+import { Badge } from '@/components/ui/badge';
 import { useSaintsToday, useOfficialSaint } from '@/hooks/useSaints';
 import SaintOfTheDayCard from './SaintOfTheDayCard';
 import RitualDoDia from './RitualDoDia';
