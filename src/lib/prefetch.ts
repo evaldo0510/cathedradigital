@@ -82,7 +82,6 @@ export async function prefetchEssentialContent() {
   const day = today.getDate();
   const month = today.getMonth() + 1;
   
-  const { supabase } = await import('@/integrations/supabase/client');
   const { cacheLiturgy } = await import('./offlineCache');
   
   try {
