@@ -213,13 +213,19 @@ const BibliotecaPage: React.FC = () => {
                     <div
                       role="button"
                       tabIndex={0}
+                      aria-label={`Explorar ${item.title}`}
                       onClick={handleNavigate}
                       onMouseEnter={() => prefetchRoute(item.route)}
                       onTouchStart={() => prefetchRoute(item.route)}
-                      onKeyDown={(e) => { if (e.key === 'Enter') handleNavigate(); }}
-                      className="cursor-pointer h-full"
+                      onKeyDown={(e) => { 
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          handleNavigate(); 
+                        }
+                      }}
+                      className="cursor-pointer h-full outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-xl"
                     >
-                      <Card className="hover:border-primary/40 transition-all group h-full overflow-hidden bg-white/5 border-white/10">
+                      <Card className="hover:border-primary/40 transition-all group h-full overflow-hidden bg-white/5 border-white/10 group-focus-visible:border-primary/40">
                         <CardContent className="p-5 flex items-center gap-5 h-full">
                           <div className={`w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 ${item.color} transition-transform group-hover:scale-110 duration-300`}>
                             {item.icon}
