@@ -245,7 +245,21 @@ const HojePage: React.FC = () => {
               <div className="h-px w-6 bg-muted-foreground/30" /> Continuar Jornada
             </h2>
             {loadingJourney ? <JourneySkeleton /> : activeJourney ? (
-              <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }} onClick={() => navigate(journeyStep ? `/jornadas/${activeJourney.id}/step?step=${journeyStep.id}` : `/jornadas/${activeJourney.id}/complete`)} className="group cursor-pointer p-6 rounded-3xl border border-primary/20 bg-primary/5 hover:border-primary/40 transition-all shadow-sm">
+              <motion.div 
+                whileHover={{ scale: 1.01 }} 
+                whileTap={{ scale: 0.99 }} 
+                tabIndex={0}
+                role="button"
+                aria-label={`Continuar jornada: ${activeJourney.title}`}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    navigate(journeyStep ? `/jornadas/${activeJourney.id}/step?step=${journeyStep.id}` : `/jornadas/${activeJourney.id}/complete`);
+                  }
+                }}
+                onClick={() => navigate(journeyStep ? `/jornadas/${activeJourney.id}/step?step=${journeyStep.id}` : `/jornadas/${activeJourney.id}/complete`)} 
+                className="group cursor-pointer p-6 rounded-3xl border border-primary/20 bg-primary/5 hover:border-primary/40 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none transition-all shadow-sm"
+              >
                 <div className="flex items-center gap-5">
                   <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/20 transition-colors"><Icons.Flame className="w-6 h-6" /></div>
                   <div className="flex-1">
@@ -261,7 +275,21 @@ const HojePage: React.FC = () => {
                 </div>
               </motion.div>
             ) : recommendedJourney ? (
-              <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }} onClick={() => navigate(`/jornadas/${recommendedJourney.id}`)} className="group cursor-pointer p-6 rounded-3xl border border-border bg-muted/20 hover:border-primary/20 transition-all shadow-sm">
+              <motion.div 
+                whileHover={{ scale: 1.01 }} 
+                whileTap={{ scale: 0.99 }} 
+                tabIndex={0}
+                role="button"
+                aria-label={`Iniciar jornada recomendada: ${recommendedJourney.title}`}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    navigate(`/jornadas/${recommendedJourney.id}`);
+                  }
+                }}
+                onClick={() => navigate(`/jornadas/${recommendedJourney.id}`)} 
+                className="group cursor-pointer p-6 rounded-3xl border border-border bg-muted/20 hover:border-primary/20 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none transition-all shadow-sm"
+              >
                 <div className="flex items-center gap-5">
                   <div className="w-14 h-14 rounded-2xl bg-muted flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors"><Icons.Compass className="w-7 h-7" /></div>
                   <div className="flex-1"><h3 className="text-base font-bold text-foreground">{recommendedJourney.title}</h3><p className="text-xs text-muted-foreground mt-1 font-medium">Sugerido especialmente para seu perfil</p></div>
@@ -269,7 +297,21 @@ const HojePage: React.FC = () => {
                 </div>
               </motion.div>
             ) : (
-              <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }} onClick={() => navigate(AppRoute.JORNADAS)} className="group cursor-pointer p-6 rounded-3xl border border-border bg-muted/20 hover:border-primary/20 transition-all shadow-sm">
+              <motion.div 
+                whileHover={{ scale: 1.01 }} 
+                whileTap={{ scale: 0.99 }} 
+                tabIndex={0}
+                role="button"
+                aria-label="Explorar todas as jornadas"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    navigate(AppRoute.JORNADAS);
+                  }
+                }}
+                onClick={() => navigate(AppRoute.JORNADAS)} 
+                className="group cursor-pointer p-6 rounded-3xl border border-border bg-muted/20 hover:border-primary/20 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none transition-all shadow-sm"
+              >
                 <div className="flex items-center gap-5">
                   <div className="w-14 h-14 rounded-2xl bg-muted flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors"><Icons.Route className="w-7 h-7" /></div>
                   <div className="flex-1"><h3 className="text-base font-bold text-foreground">Iniciar uma Jornada</h3><p className="text-xs text-muted-foreground mt-1 font-medium">Descubra o caminho ideal para o seu momento espiritual</p></div>
