@@ -35,13 +35,15 @@ describe('Supabase Client Environment', () => {
     expect(storage.getItem('test')).toBeNull();
   });
 
-  it('should warn if environment variables are missing', async () => {
+  it('should warn if environment variables are missing but not crash', async () => {
     vi.stubEnv('VITE_SUPABASE_URL', '');
     vi.stubEnv('VITE_SUPABASE_PUBLISHABLE_KEY', '');
     
     const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     
-    await import('../client');
+    const { supabase } = await import('../client');
+    expect(supabase).toBeDefined();
     
     expect(consoleSpy).toHaveBeenCalledWith(
       expect.stringContaining('Supabase credentials missing')
