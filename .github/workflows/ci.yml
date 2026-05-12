@@ -7,13 +7,34 @@ on:
     branches: [ main, master ]
 
 env:
-  VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || 'https://placeholder.supabase.co' }}
-  VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY || 'placeholder' }}
+  VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+  VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
 
 jobs:
+  pre-flight:
+    name: 🔍 Pre-flight Checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate Supabase Credentials
+        run: |
+          ERROR=0
+          if [ -z "${{ secrets.VITE_SUPABASE_URL }}" ]; then
+            echo "::error::VITE_SUPABASE_URL is missing! Please add it to GitHub Secrets."
+            ERROR=1
+          fi
+          if [ -z "${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}" ]; then
+            echo "::error::VITE_SUPABASE_PUBLISHABLE_KEY is missing! Please add it to GitHub Secrets."
+            ERROR=1
+          fi
+          if [ $ERROR -eq 1 ]; then
+            exit 1
+          fi
+          echo "✅ All required secrets are present."
+
   lint-and-typecheck:
     name: 🧹 Lint & 🏗️ Typecheck
     runs-on: ubuntu-latest
+    needs: [pre-flight]
     steps:
       - uses: actions/checkout@v4
       
@@ -22,19 +43,39 @@ jobs:
         with:
           bun-version: latest
 
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+
       - name: Install dependencies
-        run: bun install
+        run: bun install --frozen-lockfile
+
+      - name: Create logs directory
+        run: mkdir -p ci-logs
 
       - name: Lint
-        run: bun run lint
+        run: bun run lint > ci-logs/lint.log 2>&1
 
       - name: Typecheck
-        run: bun run typecheck
+        run: bun run typecheck > ci-logs/typecheck.log 2>&1
+
+      - name: Upload Logs
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lint-typecheck-logs
+          path: ci-logs/
 
   validate-and-test:
     name: 🧪 Validation & 🧪 Tests
     runs-on: ubuntu-latest
     needs: [lint-and-typecheck]
+    permissions:
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
       
@@ -43,16 +84,24 @@ jobs:
         with:
           bun-version: latest
 
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
+
       - name: Install dependencies
-        run: bun install
+        run: bun install --frozen-lockfile
+
+      - name: Create logs directory
+        run: mkdir -p scripts/logs
 
       - name: Run CI Validation Scripts
         run: |
-          mkdir -p scripts/logs
           echo "Running validate-catechism..."
-          bun run scripts/validate-catechism.ts
+          bun run scripts/validate-catechism.ts > scripts/logs/validate-catechism.log 2>&1
           echo "Running security-audit..."
-          bun run scripts/security-audit.ts
+          bun run scripts/security-audit.ts > scripts/logs/security-audit.log 2>&1
         env:
           VITE_SUPABASE_URL: ${{ env.VITE_SUPABASE_URL }}
           VITE_SUPABASE_PUBLISHABLE_KEY: ${{ env.VITE_SUPABASE_PUBLISHABLE_KEY }}
@@ -60,11 +109,31 @@ jobs:
       - name: Run Tests with Coverage
         run: bun run test -- --coverage
         
+      - name: Summary of Coverage
+        if: github.event_name == 'pull_request'
+        continue-on-error: true
+        run: |
+          if [ -f coverage/coverage-summary.json ]; then
+            REPORT=$(cat coverage/coverage-summary.json | jq -r '.total | "Statements: \(.statements.pct)%\nLines: \(.lines.pct)%\nFunctions: \(.functions.pct)%\nBranches: \(.branches.pct)%"')
+            echo "### 📊 Test Coverage Summary" > pr_comment.md
+            echo "$REPORT" >> pr_comment.md
+            echo "" >> pr_comment.md
+            echo "Full reports are available in the [CI Artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})." >> pr_comment.md
+          else
+            echo "### ⚠️ Coverage report not found" > pr_comment.md
+          fi
+
+      - name: Comment on PR
+        uses: marocchino/sticky-pull-request-comment@v2
+        if: github.event_name == 'pull_request' && always()
+        with:
+          path: pr_comment.md
+
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ci-reports
+          name: test-validation-reports
           path: |
             coverage/
             scripts/logs/
@@ -82,11 +151,26 @@ jobs:
         with:
           bun-version: latest
 
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
+
       - name: Install dependencies
-        run: bun install
+        run: bun install --frozen-lockfile
 
       - name: Build App
-        run: bun run build
+        run: |
+          mkdir -p build-logs
+          bun run build > build-logs/build.log 2>&1
         env:
           VITE_SUPABASE_URL: ${{ env.VITE_SUPABASE_URL }}
           VITE_SUPABASE_PUBLISHABLE_KEY: ${{ env.VITE_SUPABASE_PUBLISHABLE_KEY }}
+
+      - name: Upload Build Logs
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: build-logs
+          path: build-logs/
