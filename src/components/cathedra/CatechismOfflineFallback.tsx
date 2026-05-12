@@ -125,19 +125,22 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
       <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
         {paragraph && isOnline && (
           <Button 
-            onClick={handleDownload}
-            disabled={downloading}
-            variant="default"
-            className="rounded-xl h-10 px-6 font-bold w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90"
+            onClick={downloading ? handleCancel : handleDownload}
+            variant={downloading ? "destructive" : "default"}
+            className="rounded-xl h-10 px-6 font-bold w-full sm:w-auto transition-all"
           >
             {downloading ? (
-              <Icons.Loader className="w-4 h-4 mr-2 animate-spin" />
+              <>
+                <Icons.X className="w-4 h-4 mr-2" /> Cancelar
+              </>
             ) : (
-              <Icons.Download className="w-4 h-4 mr-2" />
+              <>
+                <Icons.Download className="w-4 h-4 mr-2" /> Baixar Agora
+              </>
             )}
-            Baixar Agora
           </Button>
         )}
+
         {onRetry && !downloading && (
           <Button 
             onClick={onRetry}
