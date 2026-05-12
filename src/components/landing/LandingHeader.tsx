@@ -167,6 +167,10 @@ const LandingHeader = () => {
                 </button>
               ))}
               <hr className="border-border" />
+              <GoogleSignInButton 
+                className="w-full h-14 rounded-2xl"
+                text="Entrar com Google"
+              />
               <Button
                 className="w-full h-14 rounded-2xl font-bold uppercase tracking-widest bg-foreground text-background hover:bg-primary hover:text-primary-foreground transition-all shadow-lg active:scale-95 border-none"
                 onClick={() => navigate(AppRoute.LOGIN)}
