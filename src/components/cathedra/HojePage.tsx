@@ -197,8 +197,17 @@ const HojePage: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
+            tabIndex={0}
+            role="button"
+            aria-label={`Continuar leitura: ${nextUp.label}`}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                navigate(nextUp.route);
+              }
+            }}
             onClick={() => navigate(nextUp.route)}
-            className="p-5 rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card cursor-pointer hover:border-primary/40 transition-all shadow-sm flex items-center justify-between group"
+            className="p-5 rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card cursor-pointer hover:border-primary/40 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none transition-all shadow-sm flex items-center justify-between group"
           >
             <div className="flex items-center gap-5">
               <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
