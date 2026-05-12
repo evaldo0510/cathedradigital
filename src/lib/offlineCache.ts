@@ -98,6 +98,7 @@ export async function deleteFromStore(storeName: string, key: string): Promise<v
     const tx = db.transaction(storeName, 'readwrite');
     const store = tx.objectStore(storeName);
     store.delete(key);
+    window.dispatchEvent(new CustomEvent('cathedra_cache_updated'));
   } catch {}
 }
 
