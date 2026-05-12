@@ -455,6 +455,9 @@ const AdminDashboard: React.FC = () => {
               <Bell className="w-3.5 h-3.5" /> CRM: Automações
             </TabsTrigger>
             <TabsTrigger value="themes" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+            <TabsTrigger value="seo" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+              <Globe className="w-3.5 h-3.5" /> SEO
+            </TabsTrigger>
               <Tag className="w-3.5 h-3.5" /> Nexus Temas
             </TabsTrigger>
             <TabsTrigger value="security" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start relative group">
