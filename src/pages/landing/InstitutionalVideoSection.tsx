@@ -95,9 +95,33 @@ const InstitutionalVideoSection = () => {
   useEffect(() => {
     if (isPlaying) {
       closeBtnRef.current?.focus();
+      
       const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key === "Escape") handleClose();
+        
+        if (e.key === "Tab") {
+          const focusableElements = modalContainerRef.current?.querySelectorAll(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          );
+          if (!focusableElements || focusableElements.length === 0) return;
+          
+          const firstElement = focusableElements[0] as HTMLElement;
+          const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+          
+          if (e.shiftKey) {
+            if (document.activeElement === firstElement) {
+              lastElement.focus();
+              e.preventDefault();
+            }
+          } else {
+            if (document.activeElement === lastElement) {
+              firstElement.focus();
+              e.preventDefault();
+            }
+          }
+        }
       };
+      
       window.addEventListener("keydown", handleKeyDown);
       return () => window.removeEventListener("keydown", handleKeyDown);
     }
