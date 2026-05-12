@@ -2,16 +2,26 @@ import { supabase } from '../src/integrations/supabase/client';
 
 async function runSecurityAudit() {
   console.log('🚀 [CI] Iniciando Auditoria de Segurança Supabase...');
+  
+  const hasUrl = !!process.env.VITE_SUPABASE_URL;
+  const hasKey = !!process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+  
   console.log(`🌍 Ambiente: ${typeof window === 'undefined' ? 'Servidor (Bun/Node)' : 'Navegador'}`);
+  console.log(`🔑 Configuração: URL=${hasUrl ? '✅' : '❌'} | KEY=${hasKey ? '✅' : '❌'}`);
   
   try {
     // Check if client is initialized with real credentials
     // @ts-ignore - access private supabaseUrl to check placeholder
     const isPlaceholder = supabase.supabaseUrl.includes('placeholder.supabase.co');
     
-    if (isPlaceholder) {
-      console.warn('⚠️  AVISO: O cliente Supabase está usando credenciais temporárias (placeholder).');
-      console.warn('Isso é esperado em ambientes de build se as variáveis de ambiente não estiverem definidas.');
+    if (isPlaceholder || !hasUrl || !hasKey) {
+      console.warn('\n⚠️  AVISO: O cliente Supabase está em modo "Degradado" (Placeholder).');
+      console.warn('Isso ocorre quando as variáveis VITE_SUPABASE_URL ou VITE_SUPABASE_PUBLISHABLE_KEY não estão definidas.');
+      console.warn('Algumas verificações que dependem do banco de dados real serão ignoradas.');
+      
+      if (!process.env.CI) {
+        console.log('💡 Dica local: Crie um arquivo .env com as credenciais do Supabase.');
+      }
     }
 
     // Attempt to call RPC
