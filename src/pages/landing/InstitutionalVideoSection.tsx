@@ -91,30 +91,64 @@ const InstitutionalVideoSection = () => {
     trackEvent('video_mute_toggle', { muted: newMuted });
   };
 
-  // Video track management and scroll lock
+  // Scroll lock management
   useEffect(() => {
     if (isPlaying) {
       document.body.style.overflow = 'hidden';
-      
-      if (modalVideoRef.current) {
-        const video = modalVideoRef.current;
-        const tracks = Array.from(video.textTracks);
-        tracks.forEach(track => {
-          track.mode = track.language === currentLang ? 'showing' : 'disabled';
-        });
-
-        // Restore playback position
-        const savedPos = localStorage.getItem('cathedra_video_pos');
-        if (savedPos) {
-          video.currentTime = parseFloat(savedPos);
-        }
-      }
     } else {
       document.body.style.overflow = 'unset';
     }
     return () => {
       document.body.style.overflow = 'unset';
     };
+  }, [isPlaying]);
+
+  // Restore playback position once when modal opens
+  useEffect(() => {
+    if (isPlaying && modalVideoRef.current) {
+      const video = modalVideoRef.current;
+      const savedPos = localStorage.getItem('cathedra_video_pos');
+      if (savedPos) {
+        // Use a small delay to ensure video is ready to seek
+        const timer = setTimeout(() => {
+          if (video && savedPos) {
+            video.currentTime = parseFloat(savedPos);
+          }
+        }, 50);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [isPlaying]);
+
+  // Subtitle synchronization - updates immediately when language changes
+  useEffect(() => {
+    if (isPlaying && modalVideoRef.current) {
+      const video = modalVideoRef.current;
+      
+      const updateTracks = () => {
+        const tracks = Array.from(video.textTracks);
+        tracks.forEach(track => {
+          // Force immediate update by setting to disabled then showing
+          if (track.language === currentLang) {
+            track.mode = 'showing';
+          } else {
+            track.mode = 'disabled';
+          }
+        });
+      };
+
+      // Try immediate update
+      updateTracks();
+
+      // Also listen for track changes to ensure synchronization
+      video.textTracks.onaddtrack = updateTracks;
+      
+      return () => {
+        if (video.textTracks) {
+          video.textTracks.onaddtrack = null;
+        }
+      };
+    }
   }, [currentLang, isPlaying]);
 
   // Focus trap and keyboard navigation
