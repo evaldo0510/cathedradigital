@@ -76,8 +76,11 @@ export const fetchCatechismParagraph = async (paragraph: number, forceGenerate =
   }
 
   // 5) Fetch from edge function (STRICTLY FETCH ONLY - NO AI GENERATION FALLBACK)
+  if (forceGenerate) {
+    console.warn('AI generation requested but blocked by security policy.');
+  }
   const body: any = { paragraph, action: 'fetch' };
-  
+
   try {
     const { data, error } = await supabase.functions.invoke('catechism-text', { body });
 
