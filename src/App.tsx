@@ -368,7 +368,7 @@ const AppLayout: React.FC = () => {
     // ─── Global Offline Redirection ───
     const isOnline = navigator.onLine;
     const isOfflineMode = readStoredValue('cathedra_offline_mode') === 'true';
-    const isNetworkRequired = [AppRoute.COMMUNITY, AppRoute.UPGRADE, AppRoute.CHECKOUT, AppRoute.SEARCH_RESULT].includes(location.pathname as any);
+    const isNetworkRequired = [AppRoute.COMMUNITY, AppRoute.UPGRADE, AppRoute.CHECKOUT, AppRoute.BUSCAR].includes(location.pathname as any);
     
     if ((!isOnline || isOfflineMode) && isNetworkRequired) {
       navigate(AppRoute.OFFLINE);
