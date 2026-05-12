@@ -102,6 +102,12 @@ const InstitutionalVideoSection = () => {
         tracks.forEach(track => {
           track.mode = track.language === currentLang ? 'showing' : 'disabled';
         });
+
+        // Restore playback position
+        const savedPos = localStorage.getItem('cathedra_video_pos');
+        if (savedPos) {
+          video.currentTime = parseFloat(savedPos);
+        }
       }
     } else {
       document.body.style.overflow = 'unset';
@@ -131,12 +137,12 @@ const InstitutionalVideoSection = () => {
           const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
           
           if (e.shiftKey) {
-            if (document.activeElement === firstElement) {
+            if (document.activeElement === firstElement || !modalContainerRef.current?.contains(document.activeElement)) {
               lastElement.focus();
               e.preventDefault();
             }
           } else {
-            if (document.activeElement === lastElement) {
+            if (document.activeElement === lastElement || !modalContainerRef.current?.contains(document.activeElement)) {
               firstElement.focus();
               e.preventDefault();
             }
@@ -151,6 +157,10 @@ const InstitutionalVideoSection = () => {
       };
     }
   }, [isPlaying]);
+
+  const handleTimeUpdate = (e: React.SyntheticEvent<HTMLVideoElement>) => {
+    localStorage.setItem('cathedra_video_pos', String(e.currentTarget.currentTime));
+  };
 
   return (
     <section ref={sectionRef} className="relative w-full py-24 md:py-40 bg-background overflow-hidden" aria-labelledby="video-section-title">
