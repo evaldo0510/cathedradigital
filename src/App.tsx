@@ -45,7 +45,7 @@ const queryClient = new QueryClient({
 });
 
 // ALL route components are lazy-loaded for faster initial load
-const Dashboard = lazy(() => import('./components/cathedra/Dashboard'));
+// Dashboard component removed in favor of HojePage
 const Bible = lazy(() => import('./components/cathedra/Bible'));
 const Catechism = lazy(() => import('./components/cathedra/Catechism'));
 const StudyMode = lazy(() => import('./components/cathedra/StudyMode'));
@@ -639,7 +639,7 @@ const AppLayout: React.FC = () => {
                       </AdminGuard>
                     </PageTransition>
                   } />
-                  <Route path="*" element={<PageTransition><AuthGuard><Dashboard user={appUser} /></AuthGuard></PageTransition>} />
+                  <Route path="*" element={<Navigate to={AppRoute.HOJE} replace />} />
                 </Routes>
               </AnimatePresence>
             </Suspense>
