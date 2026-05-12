@@ -20,6 +20,7 @@ import { toast } from 'sonner';
 import SEOHead from '@/components/SEOHead';
 import { useQuery } from '@tanstack/react-query';
 import { SaintCardSkeleton } from './SacredSkeleton';
+import { DashboardSkeleton } from './DashboardSkeleton';
 import DevDataInspector from './DevDataInspector';
 import { ProfileId } from './SpiritualQuiz';
 
