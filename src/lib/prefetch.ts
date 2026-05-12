@@ -63,3 +63,43 @@ export function prefetchCoreModules() {
     }
   }, 3000);
 }
+
+// Prefetch essential data for offline availability
+export async function prefetchEssentialContent() {
+  const { supabase } = await import('@/integrations/supabase/client');
+  
+  // Check if Supabase is healthy before syncing
+  try {
+    const { error } = await supabase.from('profiles').select('id').limit(1).single();
+    if (error) throw error;
+  } catch (e) {
+    console.warn('Sync aborted: Supabase unreachable');
+    return;
+  }
+
+  // 1) Liturgia do dia
+  const today = new Date();
+  const day = today.getDate();
+  const month = today.getMonth() + 1;
+  
+  const { cacheLiturgy } = await import('./offlineCache');
+  
+  try {
+    const { data } = await supabase.functions.invoke('liturgical-calendar', {
+      body: { action: 'readings', day, month }
+    });
+    if (data) await cacheLiturgy(today.toDateString(), data);
+  } catch (e) {
+    console.warn('Auto-sync failed for liturgy:', e);
+  }
+
+  // 2) Prefetch next Catechism paragraph if we have a current one
+  try {
+    const stored = localStorage.getItem('cathedra_last_catechism_para');
+    if (stored) {
+      const p = parseInt(stored);
+      const { fetchCatechismParagraph } = await import('@/hooks/useCatechismParagraph');
+      if (p < 2865) await fetchCatechismParagraph(p + 1);
+    }
+  } catch {}
+}

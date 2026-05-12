@@ -85,6 +85,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
             localStorage.removeItem('cathedra_onboarding_done');
           }
         },
+        { label: 'Cache Local', path: AppRoute.CACHE_MANAGER, icon: <Icons.Library className="w-5 h-5" /> },
       ]
     }
   ];

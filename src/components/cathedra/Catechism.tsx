@@ -297,6 +297,7 @@ const Catechism: React.FC = () => {
             const p = parseInt(entry.target.id.replace('p', ''));
             if (!isNaN(p)) {
               setCurrentParagraph(p);
+              localStorage.setItem('cathedra_last_catechism_para', p.toString());
             }
           }
         });

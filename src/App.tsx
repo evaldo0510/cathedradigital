@@ -13,6 +13,7 @@ import { supabase } from '@/integrations/supabase/client';
 import AuthGuard from './components/cathedra/AuthGuard';
 import AdminGuard from './components/cathedra/AdminGuard';
 import AppErrorBoundary from './components/cathedra/AppErrorBoundary';
+import { toast } from 'sonner';
 
 // Core UI components (not lazy to ensure layout is instant)
 import ReadingModeToggle from './components/cathedra/ReadingModeToggle';
@@ -109,6 +110,8 @@ const CatechismDebug = lazy(() => import('./components/cathedra/CatechismDebug')
 const CatechismIntegrity = lazy(() => import('./components/cathedra/CatechismIntegrity'));
 const PartnersPage = lazy(() => import('./components/cathedra/PartnersPage'));
 const TransparencyPage = lazy(() => import('./components/cathedra/TransparencyPage'));
+const OfflinePage = lazy(() => import('./components/cathedra/OfflinePage'));
+const CacheManager = lazy(() => import('./components/cathedra/CacheManager'));
 
 
 const SkeletonBar = React.forwardRef<HTMLDivElement, { w?: string; h?: string; className?: string }>(
@@ -325,6 +328,36 @@ const AppLayout: React.FC = () => {
 
 
   useEffect(() => {
+    if (navigator.onLine) {
+      import('@/lib/prefetch').then(({ prefetchEssentialContent }) => {
+        prefetchEssentialContent();
+      });
+    }
+
+    const handleOnline = () => {
+      toast.success('Conexão restabelecida', {
+        description: 'Sincronizando cache local...',
+      });
+      import('@/lib/prefetch').then(({ prefetchEssentialContent }) => {
+        prefetchEssentialContent();
+      });
+    };
+    
+    const handleOffline = () => {
+      toast.warning('Modo Offline Detectado', {
+        description: 'Você ainda pode ler os textos essenciais salvos.',
+      });
+    };
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
+  useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const oldTema = searchParams.get('tema');
     if (oldTema && location.pathname === AppRoute.TEMAS) {
@@ -336,6 +369,17 @@ const AppLayout: React.FC = () => {
     if (location.pathname !== AppRoute.LOGIN || loading || !user) return;
     navigate(getPostAuthRoute(), { replace: true });
   }, [getPostAuthRoute, loading, location.pathname, navigate, user, profile]);
+
+  useEffect(() => {
+    // ─── Global Offline Redirection ───
+    const isOnline = navigator.onLine;
+    const isOfflineMode = readStoredValue('cathedra_offline_mode') === 'true';
+    const isNetworkRequired = [AppRoute.COMMUNITY, AppRoute.UPGRADE, AppRoute.CHECKOUT, AppRoute.BUSCAR].includes(location.pathname as any);
+    
+    if ((!isOnline || isOfflineMode) && isNetworkRequired) {
+      navigate(AppRoute.OFFLINE);
+    }
+  }, [location.pathname, navigate]);
 
   const lastTrackedPath = useRef('');
   useEffect(() => {
@@ -576,6 +620,8 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.BIBLIOTECA} element={<PageTransition><AuthGuard><BibliotecaPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.MODULES_GUIDE} element={<PageTransition><ModulesGuidePage /></PageTransition>} />
                   <Route path={AppRoute.TRANSPARENCY} element={<PageTransition><TransparencyPage /></PageTransition>} />
+                  <Route path={AppRoute.OFFLINE} element={<PageTransition><OfflinePage /></PageTransition>} />
+                  <Route path={AppRoute.CACHE_MANAGER} element={<PageTransition><CacheManager /></PageTransition>} />
 
                   <Route path={AppRoute.POPES} element={<PageTransition><AuthGuard><PopesPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.BUSCAR} element={<PageTransition><AuthGuard><GlobalSearchPage /></AuthGuard></PageTransition>} />
