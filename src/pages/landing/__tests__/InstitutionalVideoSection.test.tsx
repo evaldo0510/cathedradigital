@@ -25,23 +25,20 @@ vi.mock('@/integrations/supabase/client', () => ({
   },
 }));
 
-// Mock framer-motion to avoid animation issues in tests
-vi.mock('framer-motion', async () => {
-  const actual = await vi.importActual('framer-motion');
-  return {
-    ...actual,
-    motion: {
-      div: React.forwardRef(({ children, ...props }: any, ref: any) => <div {...props} ref={ref}>{children}</div>),
-      h2: ({ children, ...props }: any) => <h2 {...props}>{children}</h2>,
-      p: ({ children, ...props }: any) => <p {...props}>{children}</p>,
-      section: ({ children, ...props }: any) => <section {...props}>{children}</section>,
-    },
-    AnimatePresence: ({ children }: any) => <>{children}</>,
-    useScroll: () => ({ scrollYProgress: { get: () => 0 } }),
-    useTransform: () => ({ get: () => 0 }),
-    useReducedMotion: () => false,
-  };
-});
+// Mock framer-motion
+vi.mock('framer-motion', () => ({
+  motion: {
+    div: React.forwardRef(({ children, ...props }: any, ref: any) => <div {...props} ref={ref}>{children}</div>),
+    h2: React.forwardRef(({ children, ...props }: any, ref: any) => <h2 {...props} ref={ref}>{children}</h2>),
+    p: React.forwardRef(({ children, ...props }: any, ref: any) => <p {...props} ref={ref}>{children}</p>),
+    section: React.forwardRef(({ children, ...props }: any, ref: any) => <section {...props} ref={ref}>{children}</section>),
+    button: React.forwardRef(({ children, ...props }: any, ref: any) => <button {...props} ref={ref}>{children}</button>),
+  },
+  AnimatePresence: ({ children }: any) => <>{children}</>,
+  useScroll: () => ({ scrollYProgress: { get: () => 0 } }),
+  useTransform: () => ({ get: () => 0 }),
+  useReducedMotion: () => false,
+}));
 
 // Mock video asset
 vi.mock('../../assets/institutional-video.mp4.asset.json', () => ({
@@ -53,6 +50,10 @@ describe('InstitutionalVideoSection Accessibility', () => {
     localStorage.clear();
     vi.clearAllMocks();
     document.body.style.overflow = 'unset';
+    // Reset JSDOM active element
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
   });
 
   it('opens modal on play button click and focuses close button', async () => {
@@ -117,8 +118,6 @@ describe('InstitutionalVideoSection Accessibility', () => {
     fireEvent.click(screen.getByLabelText(/Abrir vídeo de apresentação/i));
     
     const video = await waitFor(() => screen.getByRole('dialog').querySelector('video') as HTMLVideoElement);
-    // In JSDOM, setting currentTime might not work directly without proper mocks, 
-    // but the code should have tried to set it.
     expect(video.currentTime).toBe(25);
   });
 
@@ -133,7 +132,7 @@ describe('InstitutionalVideoSection Accessibility', () => {
     const firstElement = focusableElements[0] as HTMLElement;
     const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
 
-    // Start at close button (usually the last or near last)
+    // Start at last element
     lastElement.focus();
     expect(document.activeElement).toBe(lastElement);
 
