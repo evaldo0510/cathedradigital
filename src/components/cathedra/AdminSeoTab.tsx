@@ -78,7 +78,7 @@ const AdminSeoTab: React.FC = () => {
   const verifyDOM = async () => {
     setDomVerified('pending');
     try {
-      // Simulate checking the actual HTML (in a SPA we check document.head)
+      // In a real browser we check document.head
       const scripts = document.querySelectorAll('script[type="application/ld+json"]');
       let found = false;
       scripts.forEach(s => {
@@ -243,29 +243,6 @@ const AdminSeoTab: React.FC = () => {
                     />
                   </div>
                 </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
-                  <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase tracking-widest opacity-70 flex items-center gap-1">
-                      <Share2 className="w-3 h-3" /> OG Image URL (Global)
-                    </Label>
-                    <Input 
-                      value={formData.og_image_url || ''} 
-                      onChange={e => setFormData({...formData, og_image_url: e.target.value})}
-                      placeholder="https://sua-imagem.png"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase tracking-widest opacity-70 flex items-center gap-1">
-                      Twitter Handle
-                    </Label>
-                    <Input 
-                      value={formData.twitter_handle || ''} 
-                      onChange={e => setFormData({...formData, twitter_handle: e.target.value})}
-                      placeholder="@seuusuario"
-                    />
-                  </div>
-                </div>
               </div>
 
               <div className="flex justify-end pt-4">
@@ -330,19 +307,13 @@ const AdminSeoTab: React.FC = () => {
                   </Badge>
                 )}
               </div>
-              
               <div className="pt-2 space-y-2 border-t border-border/50">
-                <p className="text-[10px] font-black uppercase tracking-widest opacity-60">Eventos Rastreados:</p>
+                <p className="text-[10px] font-black uppercase tracking-widest opacity-60">Rastreamento Ativo:</p>
                 <div className="grid grid-cols-2 gap-2">
-                  {[
-                    { label: 'Page Views', status: !!(window as any).gtag },
-                    { label: 'Button Clicks', status: !!(window as any).gtag },
-                    { label: 'Form Submits', status: !!(window as any).gtag },
-                    { label: 'Session Time', status: !!(window as any).gtag }
-                  ].map(ev => (
-                    <div key={ev.label} className="flex items-center gap-1.5 text-[10px] font-medium">
-                      <div className={`w-1.5 h-1.5 rounded-full ${ev.status ? 'bg-emerald-500' : 'bg-muted'}`} />
-                      {ev.label}
+                  {['Page Views', 'Clicks', 'Submits', 'Session'].map(ev => (
+                    <div key={ev} className="flex items-center gap-1.5 text-[10px] font-medium">
+                      <div className={`w-1.5 h-1.5 rounded-full ${(window as any).gtag ? 'bg-emerald-500' : 'bg-muted'}`} />
+                      {ev}
                     </div>
                   ))}
                 </div>
@@ -360,8 +331,8 @@ const AdminSeoTab: React.FC = () => {
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest opacity-60">
                   <span>NAP Status</span>
-                  {formData.business_name && formData.business_address && (formData.business_phone || formData.business_whatsapp) ? (
-                    <span className="text-emerald-600 flex items-center gap-1"><CheckCircle2 className="w-3 h-3" /> Válido para Google</span>
+                  {formData.business_name && formData.business_address && (formData.business_phone || formData.business_whatsapp) && formData.opening_hours ? (
+                    <span className="text-emerald-600 flex items-center gap-1"><CheckCircle2 className="w-3 h-3" /> Válido</span>
                   ) : (
                     <span className="text-destructive flex items-center gap-1"><AlertCircle className="w-3 h-3" /> Incompleto</span>
                   )}
@@ -372,8 +343,6 @@ const AdminSeoTab: React.FC = () => {
                   <Badge variant={formData.business_phone || formData.business_whatsapp ? "secondary" : "outline"} className="text-[8px] h-5 justify-start">Phone: {formData.business_phone || formData.business_whatsapp ? 'OK' : 'Missing'}</Badge>
                   <Badge variant={formData.opening_hours ? "secondary" : "outline"} className="text-[8px] h-5 justify-start">Hours: {formData.opening_hours ? 'OK' : 'Missing'}</Badge>
                 </div>
-              </div>
-
               </div>
 
               <div className="space-y-3">
@@ -450,10 +419,6 @@ const AdminSeoTab: React.FC = () => {
                 <p className="font-bold text-primary mb-1">Dica Local:</p>
                 "Adicionar o bairro ao endereço ajuda no posicionamento do Google Maps."
               </div>
-              <div className="p-3 bg-muted/50 rounded-lg border border-border/50 text-[11px] leading-relaxed">
-                <p className="font-bold text-primary mb-1">Keywords:</p>
-                "Sua meta descrição atual contém 3 de suas top keywords."
-              </div>
             </CardContent>
           </Card>
 
@@ -465,9 +430,6 @@ const AdminSeoTab: React.FC = () => {
               <div className="space-y-2">
                 <a href="https://search.google.com/search-console" target="_blank" rel="noopener" className="flex items-center justify-between text-xs hover:text-primary hover:underline group">
                   Search Console <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-                </a>
-                <a href="https://analytics.google.com" target="_blank" rel="noopener" className="flex items-center justify-between text-xs hover:text-primary hover:underline group">
-                  Analytics GA4 <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </a>
                 <a href="/sitemap.xml" target="_blank" className="flex items-center justify-between text-xs hover:text-primary hover:underline group">
                   Sitemap XML <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
