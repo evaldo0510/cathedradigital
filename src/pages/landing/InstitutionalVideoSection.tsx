@@ -91,18 +91,31 @@ const InstitutionalVideoSection = () => {
     trackEvent('video_mute_toggle', { muted: newMuted });
   };
 
+  // Video track management
+  useEffect(() => {
+    if (isPlaying && modalVideoRef.current) {
+      const video = modalVideoRef.current;
+      const tracks = Array.from(video.textTracks);
+      tracks.forEach(track => {
+        track.mode = track.language === currentLang ? 'showing' : 'disabled';
+      });
+    }
+  }, [currentLang, isPlaying]);
+
   // Focus trap and keyboard navigation
   useEffect(() => {
     if (isPlaying) {
-      closeBtnRef.current?.focus();
+      const timer = setTimeout(() => {
+        closeBtnRef.current?.focus();
+      }, 100);
       
       const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key === "Escape") handleClose();
         
         if (e.key === "Tab") {
-          const focusableElements = modalContainerRef.current?.querySelectorAll(
-            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-          );
+          const focusableSelector = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"]), video';
+          const focusableElements = modalContainerRef.current?.querySelectorAll(focusableSelector);
+          
           if (!focusableElements || focusableElements.length === 0) return;
           
           const firstElement = focusableElements[0] as HTMLElement;
@@ -123,7 +136,10 @@ const InstitutionalVideoSection = () => {
       };
       
       window.addEventListener("keydown", handleKeyDown);
-      return () => window.removeEventListener("keydown", handleKeyDown);
+      return () => {
+        window.removeEventListener("keydown", handleKeyDown);
+        clearTimeout(timer);
+      };
     }
   }, [isPlaying]);
 
