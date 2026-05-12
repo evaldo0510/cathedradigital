@@ -53,8 +53,9 @@ const CatechismVerification: React.FC = () => {
       if (error) throw error;
 
       const officialMap = new Map(officialData.map(d => [d.paragraph, d.content]));
+      setOfficialDataMap(new Map(officialData.map(d => [d.paragraph, d])));
       const newResults: VerificationResult[] = [];
-      
+
       // 2. Iterate through sections defined in the site
       CIC_SECTIONS.forEach(part => {
         part.sections.forEach(section => {
