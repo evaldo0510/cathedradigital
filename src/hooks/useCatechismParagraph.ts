@@ -75,14 +75,12 @@ export const fetchCatechismParagraph = async (paragraph: number, forceGenerate =
     throw new Error('Modo Somente-Cache ativo: Texto não disponível offline.');
   }
 
-  // 5) Fetch from edge function (ONLY if requested or as a last resort, but respecting the NO AI rule)
-  const body: any = { paragraph };
+  // 5) Fetch from edge function (STRICTLY FETCH ONLY - NO AI GENERATION FALLBACK)
   if (forceGenerate) {
-     body.action = 'generate';
-  } else {
-     body.action = 'fetch'; 
+    console.warn('AI generation requested but blocked by security policy.');
   }
-  
+  const body: any = { paragraph, action: 'fetch' };
+
   try {
     const { data, error } = await supabase.functions.invoke('catechism-text', { body });
 

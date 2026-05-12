@@ -35,9 +35,15 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
       { id: 'aplicacaoPratica', label: 'Vida Prática', icon: <Icons.Zap className="w-4 h-4" />, value: content.aplicacaoPratica, isPremium: true },
       { id: 'reflexaoFinal', label: 'Reflexão', icon: <Icons.Heart className="w-4 h-4" />, value: content.reflexaoFinal, isPremium: true },
       { id: 'exercicio', label: 'Exercício de Fé', icon: <Icons.PenTool className="w-4 h-4" />, value: content.exercicio, isPremium: true },
-    ].filter(sec => !!sec.value);
-    return s;
-  }, [content]);
+    ];
+
+    // If it's catechism, we might want to show all sections even if empty to satisfy the "clear message" requirement
+    if (contentType === 'catechism') {
+      return s;
+    }
+
+    return s.filter(sec => !!sec.value);
+  }, [content, contentType]);
 
   if (sections.length === 0) return null;
 
@@ -85,34 +91,42 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
               </div>
               
               <div className="relative">
-                <div className={`font-serif leading-relaxed ${isLocked ? 'blur-[6px] select-none pointer-events-none opacity-40' : ''} ${section.id === 'textoBase' ? 'text-lg italic text-foreground' : 'text-foreground/90 text-sm'}`}>
-                  {section.value!.split('\n\n').map((paragraph, pIdx) => (
-                    <p key={pIdx} className={pIdx > 0 ? 'mt-3' : ''}>
-                      {parseTheologicalReferences(paragraph).map((seg, sIdx) => {
-                        if (seg.type === 'bibleRef') {
-                          return (
-                            <BibleVersePopover
-                              key={sIdx}
-                              abbr={seg.abbr!}
-                              chapter={seg.chapter!}
-                              verse={seg.verse}
-                              label={seg.value}
-                            />
-                          );
-                        }
-                        if (seg.type === 'catechismRef') {
-                          return (
-                            <CatechismPopover
-                              key={sIdx}
-                              paragraph={seg.paragraph!}
-                            />
-                          );
-                        }
-                        return <span key={sIdx}>{seg.value}</span>;
-                      })}
+                {section.value ? (
+                  <div className={`font-serif leading-relaxed ${isLocked ? 'blur-[6px] select-none pointer-events-none opacity-40' : ''} ${section.id === 'textoBase' ? 'text-lg italic text-foreground' : 'text-foreground/90 text-sm'}`}>
+                    {section.value.split('\n\n').map((paragraph, pIdx) => (
+                      <p key={pIdx} className={pIdx > 0 ? 'mt-3' : ''}>
+                        {parseTheologicalReferences(paragraph).map((seg, sIdx) => {
+                          if (seg.type === 'bibleRef') {
+                            return (
+                              <BibleVersePopover
+                                key={sIdx}
+                                abbr={seg.abbr!}
+                                chapter={seg.chapter!}
+                                verse={seg.verse}
+                                label={seg.value}
+                              />
+                            );
+                          }
+                          if (seg.type === 'catechismRef') {
+                            return (
+                              <CatechismPopover
+                                key={sIdx}
+                                paragraph={seg.paragraph!}
+                              />
+                            );
+                          }
+                          return <span key={sIdx}>{seg.value}</span>;
+                        })}
+                      </p>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="py-4 px-2 rounded-xl bg-muted/30 border border-dashed border-border/50 text-center">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">
+                      Conteúdo oficial não disponível para este parágrafo no momento.
                     </p>
-                  ))}
-                </div>
+                  </div>
+                )}
 
                 {isLocked && (
                   <div className="absolute inset-0 flex flex-col items-center justify-center space-y-3 p-4 text-center">
