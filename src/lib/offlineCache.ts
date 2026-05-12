@@ -125,6 +125,7 @@ export async function clearAllCaches(): Promise<void> {
       tx.objectStore(s).clear();
     });
     localStorage.removeItem('cathedra_last_sync');
+    window.dispatchEvent(new CustomEvent('cathedra_cache_updated'));
   } catch {}
 }
 
