@@ -50,7 +50,7 @@ const RitualDoDia: React.FC = () => {
         <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
         {/* Bible Verse */}
-        <div className="space-y-2">
+        <div className="space-y-2" role="article" aria-label="Versículo do Dia">
           <div className="flex items-center gap-2">
             <BookOpen className="w-3.5 h-3.5 text-primary" />
             <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Versículo do Dia</span>
@@ -65,7 +65,7 @@ const RitualDoDia: React.FC = () => {
         <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
         {/* Reflection */}
-        <div className="space-y-2">
+        <div className="space-y-2" role="article" aria-label="Reflexão">
           <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">✦ Reflexão</span>
           <p className="text-sm text-foreground/80 leading-relaxed">
             {reflection}
