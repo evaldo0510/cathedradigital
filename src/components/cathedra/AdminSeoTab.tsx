@@ -119,7 +119,7 @@ const AdminSeoTab: React.FC = () => {
 
                 <div className="space-y-4 pt-6 border-t border-border/50">
                   <h4 className="text-sm font-serif font-bold text-primary flex items-center gap-2">
-                    <Icons.MapPin className="w-4 h-4" /> SEO Local & NAP
+                    <MapPin className="w-4 h-4" /> SEO Local & NAP
                   </h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
