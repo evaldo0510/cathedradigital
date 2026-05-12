@@ -66,6 +66,17 @@ export function prefetchCoreModules() {
 
 // Prefetch essential data for offline availability
 export async function prefetchEssentialContent() {
+  const { supabase } = await import('@/integrations/supabase/client');
+  
+  // Check if Supabase is healthy before syncing
+  try {
+    const { error } = await supabase.from('profiles').select('id').limit(1).single();
+    if (error) throw error;
+  } catch (e) {
+    console.warn('Sync aborted: Supabase unreachable');
+    return;
+  }
+
   // 1) Liturgia do dia
   const today = new Date();
   const day = today.getDate();
