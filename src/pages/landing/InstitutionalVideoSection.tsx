@@ -380,10 +380,15 @@ const InstitutionalVideoSection = () => {
                 <button 
                   ref={closeBtnRef}
                   onClick={handleClose}
-                  className="p-3 bg-white/10 hover:bg-white/20 border border-white/10 rounded-full transition-all backdrop-blur-md group"
-                  aria-label="Fechar vídeo"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      handleClose();
+                    }
+                  }}
+                  className="p-4 bg-white/20 hover:bg-white/30 border border-white/30 rounded-full transition-all backdrop-blur-md group focus:outline-none focus-visible:ring-4 focus-visible:ring-primary shadow-xl"
+                  aria-label="Fechar vídeo de apresentação (Esc)"
                 >
-                  <X className="w-6 h-6 text-white group-hover:rotate-90 transition-transform duration-300" />
+                  <X className="w-7 h-7 text-white group-hover:rotate-90 transition-transform duration-300" />
                 </button>
               </div>
 
