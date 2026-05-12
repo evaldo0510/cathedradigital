@@ -1,6 +1,18 @@
 import { supabase } from '../src/integrations/supabase/client';
+import * as fs from 'fs';
+import * as path from 'path';
 
-async function runSecurityAudit() {
+const logsDir = path.join(process.cwd(), 'scripts', 'logs');
+if (!fs.existsSync(logsDir)) fs.mkdirSync(logsDir, { recursive: true });
+const auditLogPath = path.join(logsDir, 'security-audit.log');
+
+function log(msg: string, isError = false) {
+  const timestamp = new Date().toISOString();
+  const line = `[${timestamp}] ${msg}\n`;
+  if (isError) console.error(msg);
+  else console.log(msg);
+  fs.appendFileSync(auditLogPath, line);
+}
   console.log('🚀 [CI] Iniciando Auditoria de Segurança Supabase...');
   
   const hasUrl = !!process.env.VITE_SUPABASE_URL;
