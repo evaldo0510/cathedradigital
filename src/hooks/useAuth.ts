@@ -29,6 +29,7 @@ export interface Profile {
   diocese?: string;
   paroquia?: string;
   movimento_pastoral?: string;
+  program_duration?: number;
   _sensitive?: SensitiveData;
 }
 
