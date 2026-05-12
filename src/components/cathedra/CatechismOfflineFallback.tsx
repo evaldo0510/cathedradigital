@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { fetchCatechismParagraph } from '@/hooks/useCatechismParagraph';
 import { toast } from 'sonner';
+import { Progress } from '@/components/ui/progress';
+
 
 interface CatechismOfflineFallbackProps {
   paragraph?: number;
