@@ -270,31 +270,63 @@ const AdminSeoTab: React.FC = () => {
                 <Badge variant="outline" className="font-mono">{formData.ga4_measurement_id || 'Não configurado'}</Badge>
               </div>
               <div className="flex items-center justify-between text-xs">
-                <span>Script Carregado:</span>
+                <span>Script Status:</span>
                 {(typeof window !== 'undefined' && (window as any).gtag) ? (
                   <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 gap-1">
-                    <CheckCircle2 className="w-3 h-3" /> Ativo
+                    <CheckCircle2 className="w-3 h-3" /> Conectado
                   </Badge>
                 ) : (
                   <Badge variant="destructive" className="bg-destructive/10 text-destructive border-destructive/20 gap-1">
-                    <XCircle className="w-3 h-3" /> Inativo
+                    <XCircle className="w-3 h-3" /> Desconectado
                   </Badge>
                 )}
               </div>
-              <p className="text-[10px] text-muted-foreground italic">
-                Nota: O script é injetado automaticamente em produção quando um ID válido é salvo.
-              </p>
+              
+              <div className="pt-2 space-y-2 border-t border-border/50">
+                <p className="text-[10px] font-black uppercase tracking-widest opacity-60">Eventos Rastreados:</p>
+                <div className="grid grid-cols-2 gap-2">
+                  {[
+                    { label: 'Page Views', status: !!(window as any).gtag },
+                    { label: 'Button Clicks', status: !!(window as any).gtag },
+                    { label: 'Form Submits', status: !!(window as any).gtag },
+                    { label: 'Session Time', status: !!(window as any).gtag }
+                  ].map(ev => (
+                    <div key={ev.label} className="flex items-center gap-1.5 text-[10px] font-medium">
+                      <div className={`w-1.5 h-1.5 rounded-full ${ev.status ? 'bg-emerald-500' : 'bg-muted'}`} />
+                      {ev.label}
+                    </div>
+                  ))}
+                </div>
+              </div>
             </CardContent>
           </Card>
 
           <Card className="border-border/50 shadow-sm h-fit">
             <CardHeader className="bg-amber-500/5 border-b border-border/50">
               <CardTitle className="text-md font-serif flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-amber-600" /> Prévia LocalBusiness
+                <MapPin className="w-4 h-4 text-amber-600" /> Validação NAP & Local SEO
               </CardTitle>
             </CardHeader>
             <CardContent className="p-4 space-y-4">
-              <div className="bg-black/90 text-amber-400 p-3 rounded-lg text-[10px] font-mono overflow-x-auto max-h-[200px] no-scrollbar shadow-inner">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest opacity-60">
+                  <span>NAP Status</span>
+                  {formData.business_name && formData.business_address && (formData.business_phone || formData.business_whatsapp) ? (
+                    <span className="text-emerald-600 flex items-center gap-1"><CheckCircle2 className="w-3 h-3" /> Válido para Google</span>
+                  ) : (
+                    <span className="text-destructive flex items-center gap-1"><AlertCircle className="w-3 h-3" /> Incompleto</span>
+                  )}
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <Badge variant={formData.business_name ? "secondary" : "outline"} className="text-[8px] h-5 justify-start">Name: {formData.business_name ? 'OK' : 'Missing'}</Badge>
+                  <Badge variant={formData.business_address ? "secondary" : "outline"} className="text-[8px] h-5 justify-start">Address: {formData.business_address ? 'OK' : 'Missing'}</Badge>
+                  <Badge variant={formData.business_phone || formData.business_whatsapp ? "secondary" : "outline"} className="text-[8px] h-5 justify-start">Phone: {formData.business_phone || formData.business_whatsapp ? 'OK' : 'Missing'}</Badge>
+                  <Badge variant={formData.opening_hours ? "secondary" : "outline"} className="text-[8px] h-5 justify-start">Hours: {formData.opening_hours ? 'OK' : 'Missing'}</Badge>
+                </div>
+              </div>
+
+              <div className="bg-black/90 text-amber-400 p-3 rounded-lg text-[9px] font-mono overflow-x-auto max-h-[150px] no-scrollbar shadow-inner border border-amber-500/20">
+                <p className="mb-2 text-white/40 border-b border-white/10 pb-1">Schema JSON-LD LocalBusiness</p>
                 <pre>
 {JSON.stringify({
   "@context": "https://schema.org",
@@ -303,24 +335,11 @@ const AdminSeoTab: React.FC = () => {
   "telephone": formData.business_whatsapp || formData.business_phone || "—",
   "address": {
     "@type": "PostalAddress",
-    "streetAddress": formData.business_address || "—",
-    "addressLocality": "São Paulo",
-    "addressRegion": "SP",
-    "addressCountry": "BR"
+    "streetAddress": formData.business_address || "—"
   },
   "openingHours": formData.opening_hours || "—"
 }, null, 2)}
                 </pre>
-              </div>
-              <div className="flex flex-col gap-1">
-                <div className="flex items-center justify-between text-[10px] font-bold uppercase opacity-60">
-                  <span>NAP Validation</span>
-                  {formData.business_name && formData.business_address && (formData.business_phone || formData.business_whatsapp) ? (
-                    <span className="text-emerald-600 flex items-center gap-1"><CheckCircle2 className="w-3 h-3" /> Completo</span>
-                  ) : (
-                    <span className="text-destructive flex items-center gap-1"><AlertCircle className="w-3 h-3" /> Incompleto</span>
-                  )}
-                </div>
               </div>
             </CardContent>
           </Card>
