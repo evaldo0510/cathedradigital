@@ -18,10 +18,21 @@ async function runSecurityAudit() {
     const { data: exposedFunctions, error: funcError } = await supabase.rpc('check_security_definer_exposure');
     
     if (funcError) {
-      console.warn('ℹ️  INFO: RPC de verificação não encontrado no banco de dados. Isso pode ser normal se ainda não foi criado.');
-      console.log('💡 Sugestão: Verifique as migrações de segurança no diretório supabase/migrations/');
+      if (funcError.message?.includes('does not exist')) {
+        console.warn('ℹ️  INFO: RPC "check_security_definer_exposure" não encontrado no banco de dados.');
+        console.log('💡 Sugestão: Execute as migrações de segurança para habilitar verificações automáticas.');
+      } else {
+        console.error('❌ Erro ao chamar RPC de segurança:', funcError.message);
+        // Don't fail build just because RPC is missing, but log it
+      }
+    } else if (exposedFunctions && Array.isArray(exposedFunctions) && exposedFunctions.length > 0) {
+      console.error('❌ ALERTA DE SEGURANÇA: Funções SECURITY DEFINER expostas detectadas!');
+      exposedFunctions.forEach((f: any) => {
+        console.error(`  - Função: ${f.function_name} | Schema: ${f.schema_name}`);
+      });
+      process.exit(1);
     } else {
-      console.log('✅ Verificação de SECURITY DEFINER concluída via RPC.');
+      console.log('✅ Nenhuma função SECURITY DEFINER vulnerável detectada.');
     }
 
     console.log('✅ Verificação de search_path concluída.');
