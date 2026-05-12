@@ -102,6 +102,12 @@ const InstitutionalVideoSection = () => {
         tracks.forEach(track => {
           track.mode = track.language === currentLang ? 'showing' : 'disabled';
         });
+
+        // Restore playback position
+        const savedPos = localStorage.getItem('cathedra_video_pos');
+        if (savedPos) {
+          video.currentTime = parseFloat(savedPos);
+        }
       }
     } else {
       document.body.style.overflow = 'unset';
@@ -131,12 +137,12 @@ const InstitutionalVideoSection = () => {
           const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
           
           if (e.shiftKey) {
-            if (document.activeElement === firstElement) {
+            if (document.activeElement === firstElement || !modalContainerRef.current?.contains(document.activeElement)) {
               lastElement.focus();
               e.preventDefault();
             }
           } else {
-            if (document.activeElement === lastElement) {
+            if (document.activeElement === lastElement || !modalContainerRef.current?.contains(document.activeElement)) {
               firstElement.focus();
               e.preventDefault();
             }
@@ -151,6 +157,10 @@ const InstitutionalVideoSection = () => {
       };
     }
   }, [isPlaying]);
+
+  const handleTimeUpdate = (e: React.SyntheticEvent<HTMLVideoElement>) => {
+    localStorage.setItem('cathedra_video_pos', String(e.currentTarget.currentTime));
+  };
 
   return (
     <section ref={sectionRef} className="relative w-full py-24 md:py-40 bg-background overflow-hidden" aria-labelledby="video-section-title">
@@ -370,10 +380,10 @@ const InstitutionalVideoSection = () => {
                 <button 
                   ref={closeBtnRef}
                   onClick={handleClose}
-                  className="p-3 bg-white/10 hover:bg-white/20 border border-white/10 rounded-full transition-all backdrop-blur-md group"
-                  aria-label="Fechar vídeo"
+                  className="p-4 bg-white/20 hover:bg-white/30 border border-white/30 rounded-full transition-all backdrop-blur-md group focus:outline-none focus-visible:ring-4 focus-visible:ring-primary shadow-xl"
+                  aria-label="Fechar vídeo de apresentação (Esc)"
                 >
-                  <X className="w-6 h-6 text-white group-hover:rotate-90 transition-transform duration-300" />
+                  <X className="w-7 h-7 text-white group-hover:rotate-90 transition-transform duration-300" />
                 </button>
               </div>
 
@@ -384,8 +394,10 @@ const InstitutionalVideoSection = () => {
                 loop
                 controls
                 playsInline
+                tabIndex={0}
                 muted={isMuted}
                 onPlay={() => trackEvent('video_play')}
+                onTimeUpdate={handleTimeUpdate}
                 className="w-full h-full object-cover"
               >
                 {SUBTITLES.map(s => (
