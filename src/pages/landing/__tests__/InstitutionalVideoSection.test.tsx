@@ -13,6 +13,11 @@ mockIntersectionObserver.mockReturnValue({
 });
 window.IntersectionObserver = mockIntersectionObserver;
 
+// Mock HTMLMediaElement
+window.HTMLMediaElement.prototype.play = vi.fn().mockImplementation(() => Promise.resolve());
+window.HTMLMediaElement.prototype.pause = vi.fn();
+window.HTMLMediaElement.prototype.load = vi.fn();
+
 // Mock supabase
 vi.mock('@/integrations/supabase/client', () => ({
   supabase: {
@@ -120,11 +125,18 @@ describe('InstitutionalVideoSection Accessibility', () => {
     await waitFor(() => screen.getByLabelText(/Fechar vídeo de apresentação/i));
     
     const modal = screen.getByRole('dialog');
-    const focusableElements = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"]), video');
+    const focusableSelector = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"]), video';
+    const focusableElements = modal.querySelectorAll(focusableSelector);
+    
     const firstElement = focusableElements[0] as HTMLElement;
     const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
 
+    // The order should be: Select -> Mute Btn -> Close Btn -> Video
+    // lastElement should be video
+    
     lastElement.focus();
+    expect(document.activeElement).toBe(lastElement);
+
     fireEvent.keyDown(lastElement, { key: 'Tab' });
     expect(document.activeElement).toBe(firstElement);
 
