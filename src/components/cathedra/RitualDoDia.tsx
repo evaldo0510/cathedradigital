@@ -29,7 +29,7 @@ const RitualDoDia: React.FC = () => {
       <div className="absolute -top-20 -right-20 w-60 h-60 bg-secondary/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="relative z-10 p-6 md:p-8 space-y-6">
+      <div className="relative z-10 p-5 md:p-6 space-y-4">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
