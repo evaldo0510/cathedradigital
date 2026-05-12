@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
@@ -18,6 +18,8 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
   const [downloading, setDownloading] = useState(false);
   const [retryAttempt, setRetryAttempt] = useState(0);
   const [progress, setProgress] = useState(0);
+  const isCancelled = useRef(false);
+
   const isForcedOffline = localStorage.getItem('cathedra_offline_mode') === 'true';
   const isOnline = navigator.onLine;
 
@@ -27,25 +29,36 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
     if (!paragraph) return;
     setDownloading(true);
     setProgress(10);
+    isCancelled.current = false;
     
-    // Temporarily disable forced offline to allow the fetch
     const prevMode = localStorage.getItem('cathedra_offline_mode');
     localStorage.setItem('cathedra_offline_mode', 'false');
 
     const attemptFetch = async (attempt: number): Promise<void> => {
+      if (isCancelled.current) {
+        localStorage.setItem('cathedra_offline_mode', prevMode || 'false');
+        return;
+      }
+
       setRetryAttempt(attempt);
       setProgress(10 + (attempt * 25));
       
       try {
         await fetchCatechismParagraph(paragraph);
+        if (isCancelled.current) return;
+        
         setProgress(100);
         localStorage.setItem('cathedra_offline_mode', prevMode || 'false');
         toast.success(`§${paragraph} baixado com sucesso!`);
         if (onRetry) onRetry();
       } catch (error) {
+        if (isCancelled.current) {
+          localStorage.setItem('cathedra_offline_mode', prevMode || 'false');
+          return;
+        }
+
         if (attempt < MAX_RETRIES) {
           console.warn(`Download failed, retrying... (${attempt}/${MAX_RETRIES})`);
-          // Wait before retrying (exponential backoff or simple delay)
           await new Promise(resolve => setTimeout(resolve, 2000));
           return attemptFetch(attempt + 1);
         } else {
@@ -58,13 +71,22 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
     try {
       await attemptFetch(1);
     } catch (error) {
-      toast.error('Erro ao baixar parágrafo após várias tentativas. Verifique sua conexão.');
+      if (!isCancelled.current) {
+        toast.error('Erro ao baixar parágrafo após várias tentativas. Verifique sua conexão.');
+      }
     } finally {
       setDownloading(false);
       setRetryAttempt(0);
       setProgress(0);
     }
   };
+
+  const handleCancel = () => {
+    isCancelled.current = true;
+    setDownloading(false);
+    toast.info('Download cancelado pelo usuário.');
+  };
+
 
 
 
@@ -103,19 +125,22 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
       <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
         {paragraph && isOnline && (
           <Button 
-            onClick={handleDownload}
-            disabled={downloading}
-            variant="default"
-            className="rounded-xl h-10 px-6 font-bold w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90"
+            onClick={downloading ? handleCancel : handleDownload}
+            variant={downloading ? "destructive" : "default"}
+            className="rounded-xl h-10 px-6 font-bold w-full sm:w-auto transition-all"
           >
             {downloading ? (
-              <Icons.Loader className="w-4 h-4 mr-2 animate-spin" />
+              <>
+                <Icons.X className="w-4 h-4 mr-2" /> Cancelar
+              </>
             ) : (
-              <Icons.Download className="w-4 h-4 mr-2" />
+              <>
+                <Icons.Download className="w-4 h-4 mr-2" /> Baixar Agora
+              </>
             )}
-            Baixar Agora
           </Button>
         )}
+
         {onRetry && !downloading && (
           <Button 
             onClick={onRetry}
