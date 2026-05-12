@@ -5,6 +5,7 @@ import * as matchers from 'vitest-axe/matchers';
 import { MemoryRouter } from 'react-router-dom';
 import { AuthProvider } from '../hooks/useAuth';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { HelmetProvider } from 'react-helmet-async';
 import Index from '../pages/Index';
 import HojePage from '../components/cathedra/HojePage';
 import BibliotecaPage from '../components/cathedra/BibliotecaPage';
@@ -42,13 +43,15 @@ const queryClient = new QueryClient({
 });
 
 const AllProviders = ({ children }: { children: React.ReactNode }) => (
-  <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <MemoryRouter>
-        {children}
-      </MemoryRouter>
-    </AuthProvider>
-  </QueryClientProvider>
+  <HelmetProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <MemoryRouter>
+          {children}
+        </MemoryRouter>
+      </AuthProvider>
+    </QueryClientProvider>
+  </HelmetProvider>
 );
 
 describe('Accessibility Tests', () => {
