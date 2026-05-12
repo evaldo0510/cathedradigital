@@ -11,7 +11,14 @@ import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
 
 interface DeepContentSectionProps {
-  content: DeepContent;
+  content: DeepContent & {
+    explicacao?: string;
+    interpretacaoProfunda?: string;
+    aplicacaoPratica?: string;
+    reflexaoFinal?: string;
+    exercicio?: string;
+    status?: string;
+  };
   title?: string;
   contentType?: 'bible' | 'catechism' | 'apparition' | 'other';
 }
@@ -20,20 +27,17 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
   const { isPremium } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const forbiddenFields = ['explicacao', 'interpretacaoProfunda', 'aplicacaoPratica', 'reflexaoFinal', 'exercicio'];
-    const detected = forbiddenFields.filter(f => (content as any)[f]);
-    
-    if (detected.length > 0) {
-      console.error(`[SECURITY/VALIDATION] Campos de IA detectados em conteúdo do tipo '${contentType || 'desconhecido'}':`, detected);
-      // Optional: telemetry or error reporting call here
-    }
-  }, [content, contentType]);
-
-  const sections = [
-    { id: 'textoBase', label: 'Acesso Inicial', icon: <Icons.Book className="w-4 h-4" />, value: content.textoBase, isPremium: false },
-  ].filter(s => !!s.value);
-
+  const sections = useMemo(() => {
+    const s = [
+      { id: 'textoBase', label: 'Acesso Inicial', icon: <Icons.Book className="w-4 h-4" />, value: content.textoBase, isPremium: false },
+      { id: 'explicacao', label: 'Explicação', icon: <Icons.Info className="w-4 h-4" />, value: content.explicacao, isPremium: true },
+      { id: 'interpretacaoProfunda', label: 'Sentido Profundo', icon: <Icons.Sparkle className="w-4 h-4" />, value: content.interpretacaoProfunda, isPremium: true },
+      { id: 'aplicacaoPratica', label: 'Vida Prática', icon: <Icons.Zap className="w-4 h-4" />, value: content.aplicacaoPratica, isPremium: true },
+      { id: 'reflexaoFinal', label: 'Reflexão', icon: <Icons.Heart className="w-4 h-4" />, value: content.reflexaoFinal, isPremium: true },
+      { id: 'exercicio', label: 'Exercício de Fé', icon: <Icons.PenTool className="w-4 h-4" />, value: content.exercicio, isPremium: true },
+    ].filter(sec => !!sec.value);
+    return s;
+  }, [content]);
 
   if (sections.length === 0) return null;
 
@@ -82,7 +86,7 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
               
               <div className="relative">
                 <div className={`font-serif leading-relaxed ${isLocked ? 'blur-[6px] select-none pointer-events-none opacity-40' : ''} ${section.id === 'textoBase' ? 'text-lg italic text-foreground' : 'text-foreground/90 text-sm'}`}>
-                  {section.value.split('\n\n').map((paragraph, pIdx) => (
+                  {section.value!.split('\n\n').map((paragraph, pIdx) => (
                     <p key={pIdx} className={pIdx > 0 ? 'mt-3' : ''}>
                       {parseTheologicalReferences(paragraph).map((seg, sIdx) => {
                         if (seg.type === 'bibleRef') {
