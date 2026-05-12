@@ -160,6 +160,7 @@ export async function importCache(jsonString: string): Promise<void> {
     }
   }
   localStorage.setItem('cathedra_last_sync', Date.now().toString());
+  window.dispatchEvent(new CustomEvent('cathedra_cache_updated'));
 }
 
 // ─── Stats ───
