@@ -188,6 +188,7 @@ const IconsInternal = {
   Menu: createIcon(Menu),
   Search: createIcon(Search),
   Settings: createIcon(Settings),
+  Database: createIcon(Database),
   User: createIcon(User),
   Creator: createIcon(Crown),
   UserCog: createIcon(UserCog),
