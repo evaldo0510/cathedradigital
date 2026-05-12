@@ -150,6 +150,16 @@ const LiturgiaPage: React.FC = () => {
     queryKey: ['liturgy-readings', dateKey],
     queryFn: async () => {
       const cached = await getCachedLiturgy(dateKey);
+      const isOfflineMode = localStorage.getItem('cathedra_offline_mode') === 'true';
+
+      if (isOfflineMode) {
+        if (cached) {
+          setIsOfflineData(true);
+          return cached as LiturgyReadings;
+        }
+        throw new Error('Modo Somente-Cache ativo: Liturgia não disponível offline.');
+      }
+
       try {
         const { data, error } = await supabase.functions.invoke('liturgical-calendar', {
           body: { action: 'readings', day: today.getDate(), month: today.getMonth() + 1 }
