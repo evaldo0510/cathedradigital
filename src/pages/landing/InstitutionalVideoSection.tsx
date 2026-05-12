@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { Play, Sparkles, X, Volume2, VolumeX, Shield, Church, Globe, Users, Languages } from "lucide-react";
 import { fadeUp } from "./animations";
 import { supabase } from "@/integrations/supabase/client";
@@ -13,6 +13,7 @@ const SUBTITLES = [
 ];
 
 const InstitutionalVideoSection = () => {
+  const shouldReduceMotion = useReducedMotion();
   const [isPlaying, setIsPlaying] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isMuted, setIsMuted] = useState(() => {
@@ -21,12 +22,18 @@ const InstitutionalVideoSection = () => {
     }
     return true;
   });
-  const [currentLang, setCurrentLang] = useState("pt");
+  const [currentLang, setCurrentLang] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('cathedra_video_lang') || "pt";
+    }
+    return "pt";
+  });
   const [videoError, setVideoError] = useState(false);
   
   const sectionRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const modalVideoRef = useRef<HTMLVideoElement>(null);
+  const modalContainerRef = useRef<HTMLDivElement>(null);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -88,9 +95,33 @@ const InstitutionalVideoSection = () => {
   useEffect(() => {
     if (isPlaying) {
       closeBtnRef.current?.focus();
+      
       const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key === "Escape") handleClose();
+        
+        if (e.key === "Tab") {
+          const focusableElements = modalContainerRef.current?.querySelectorAll(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          );
+          if (!focusableElements || focusableElements.length === 0) return;
+          
+          const firstElement = focusableElements[0] as HTMLElement;
+          const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+          
+          if (e.shiftKey) {
+            if (document.activeElement === firstElement) {
+              lastElement.focus();
+              e.preventDefault();
+            }
+          } else {
+            if (document.activeElement === lastElement) {
+              firstElement.focus();
+              e.preventDefault();
+            }
+          }
+        }
       };
+      
       window.addEventListener("keydown", handleKeyDown);
       return () => window.removeEventListener("keydown", handleKeyDown);
     }
@@ -100,8 +131,8 @@ const InstitutionalVideoSection = () => {
     <section ref={sectionRef} className="relative w-full py-24 md:py-40 bg-background overflow-hidden" aria-labelledby="video-section-title">
       {/* Cinematic Background Layers */}
       <div className="absolute inset-0 z-0" aria-hidden="true">
-        <motion.div style={{ y: y1 }} className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px]" />
-        <motion.div style={{ y: y2 }} className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/5 rounded-full blur-[100px]" />
+        <motion.div style={{ y: shouldReduceMotion ? 0 : y1 }} className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px]" />
+        <motion.div style={{ y: shouldReduceMotion ? 0 : y2 }} className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/5 rounded-full blur-[100px]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,hsl(var(--background))_70%)] opacity-80" />
       </div>
 
@@ -110,7 +141,7 @@ const InstitutionalVideoSection = () => {
           
           {/* Left Column: Narrative */}
           <motion.div 
-            style={{ opacity, scale }}
+            style={shouldReduceMotion ? { opacity: 1, scale: 1 } : { opacity, scale }}
             className="space-y-8"
           >
             <div className="space-y-4">
@@ -143,7 +174,7 @@ const InstitutionalVideoSection = () => {
               ].map((item, idx) => (
                 <motion.div
                   key={item.title}
-                  initial={{ opacity: 0, y: 10 }}
+                  initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 10 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: idx * 0.1 }}
                   viewport={{ once: true }}
@@ -229,7 +260,7 @@ const InstitutionalVideoSection = () => {
               {/* Progress Indicator Decorative */}
               <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-white/10">
                 <motion.div 
-                  initial={{ width: 0 }}
+                  initial={shouldReduceMotion ? { width: "100%" } : { width: 0 }}
                   whileInView={{ width: "100%" }}
                   transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
                   className="h-full bg-primary/60"
@@ -239,7 +270,7 @@ const InstitutionalVideoSection = () => {
 
             {/* Floating Badge / Sound Control */}
             <motion.div
-              animate={{ y: [0, -10, 0] }}
+              animate={shouldReduceMotion ? { y: 0 } : { y: [0, -10, 0] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               className="absolute -bottom-6 -right-6 hidden md:flex items-center gap-3 p-4 bg-card border border-border rounded-2xl shadow-xl z-20 cursor-pointer select-none"
               onClick={toggleMute}
@@ -275,9 +306,10 @@ const InstitutionalVideoSection = () => {
             aria-label="Vídeo Institucional Catedra Digital"
           >
             <motion.div
-              initial={{ scale: 0.9, y: 20, opacity: 0 }}
+              ref={modalContainerRef}
+              initial={shouldReduceMotion ? { opacity: 0 } : { scale: 0.9, y: 20, opacity: 0 }}
               animate={{ scale: 1, y: 0, opacity: 1 }}
-              exit={{ scale: 0.9, y: 20, opacity: 0 }}
+              exit={shouldReduceMotion ? { opacity: 0 } : { scale: 0.9, y: 20, opacity: 0 }}
               className="relative w-full max-w-6xl aspect-video bg-black rounded-[32px] overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.5)] border border-white/5"
               onClick={e => e.stopPropagation()}
             >
@@ -289,8 +321,10 @@ const InstitutionalVideoSection = () => {
                     <select 
                       value={currentLang}
                       onChange={(e) => {
-                        setCurrentLang(e.target.value);
-                        trackEvent('video_lang_change', { lang: e.target.value });
+                        const newLang = e.target.value;
+                        setCurrentLang(newLang);
+                        localStorage.setItem('cathedra_video_lang', newLang);
+                        trackEvent('video_lang_change', { lang: newLang });
                       }}
                       className="bg-transparent text-white text-xs font-bold focus:outline-none cursor-pointer"
                       aria-label="Selecionar idioma das legendas"
