@@ -16,7 +16,7 @@ export const CATECHISM_LOCAL_DATA: Record<number, CatechismData> = {
     tipo: "catecismo",
     type: "catechism",
     titulo: "O desígnio de Deus para o homem",
-    conteudo: "Deus, infinitamente perfeito e bem-aventurado em si mesmo, num desígnio de pura bondade, criou livremente o homem para o tornar participante da sua vida bem-aventurada. É por isso que, em todo o tempo e em todo o lugar, Ele está perto do homem.",
+    conteudo: "Deus, infinitamente perfeito e bem-aventurado em Si mesmo, num desígnio de pura bondade, criou livremente o homem para o tornar participante da sua vida bem-aventurada. Por isso, sempre e em toda a parte, Ele está próximo do homem. Chama-o e ajuda-o a procurá-Lo, a conhecê-Lo e a amá-Lo com todas as suas forças. Convoca todos os homens, dispersos pelo pecado, para a unidade da sua família que é a Igreja. Para tal, enviou o seu Filho como Redentor e Salvador na plenitude dos tempos. N'Ele e por Ele, chama os homens a tornarem-se, no Espírito Santo, seus filhos adoptivos e, portanto, herdeiros da sua vida bem-aventurada.",
     tags: ["criacao", "amor", "presenca-de-deus"],
     textoBase: "Deus criou o homem para o tornar participante da sua vida."
   },
