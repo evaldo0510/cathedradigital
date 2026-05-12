@@ -390,9 +390,9 @@ const Bible: React.FC = () => {
       setBibleError('');
       setVerses([]);
 
-      // 2) Check IndexedDB cache, then fetch if miss
+      // 2) Check IndexedDB cache, then direct DB, then fetch
       import('@/lib/offlineCache').then(({ getCachedBibleChapter, cacheBibleChapter }) => {
-        getCachedBibleChapter(selectedBook.abbr, selectedChapter).then((idbCached) => {
+        getCachedBibleChapter(selectedBook.abbr, selectedChapter).then(async (idbCached) => {
           if (idbCached?.verses?.length > 0) {
             setVerses(idbCached.verses);
             bibleCache.set(cacheKey, idbCached.verses);
@@ -400,14 +400,37 @@ const Bible: React.FC = () => {
             return;
           }
 
-          // 3) If in Offline Mode and miss cache, show error
+          // 3) Check Direct DB Connection (spiritual_contents) - No AI fallback requested
+          try {
+            const { data: dbData } = await supabase
+              .from('spiritual_contents')
+              .select('*')
+              .eq('type', 'bible')
+              .contains('metadata', { book: selectedBook.abbr, chapter: selectedChapter })
+              .order('metadata->verse', { ascending: true });
+
+            if (dbData && dbData.length > 0) {
+              const dbVerses = dbData.map(v => ({
+                number: (v.metadata as any).verse,
+                text: v.content_text
+              }));
+              setVerses(dbVerses);
+              bibleCache.set(cacheKey, dbVerses);
+              setIsLoading(false);
+              return;
+            }
+          } catch (err) {
+            console.error('Error fetching direct bible data:', err);
+          }
+
+          // 4) If in Offline Mode and miss cache, show error
           if (isOfflineMode) {
             setBibleError('Modo Somente-Cache ativo: Este capítulo não foi baixado para uso offline.');
             setIsLoading(false);
             return;
           }
 
-          // 4) Fetch from edge function
+          // 5) Fetch from edge function (Only as fallback)
           supabase.functions.invoke('bible-text', {
             body: { abbrev: selectedBook.abbr, chapter: selectedChapter }
           }).then(({ data, error }) => {
@@ -429,6 +452,7 @@ const Bible: React.FC = () => {
       });
     }
   }, [viewMode, selectedBook, selectedChapter, bibleCache]);
+
 
   // Auto-scroll to highlighted verse when verses are loaded.
   // If the verse is out of range for the loaded chapter, warn the user
