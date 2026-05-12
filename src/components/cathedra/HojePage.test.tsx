@@ -137,7 +137,7 @@ describe('HojePage - Loading and Error States', () => {
     renderWithProviders(<HojePage />);
     
     expect(screen.getByText('Gênesis 1')).toBeInTheDocument();
-    expect(screen.getByText('CONTINUAR LEITURA')).toBeInTheDocument();
+    expect(screen.getByText(/Continuar Leitura/i)).toBeInTheDocument();
   });
 
   it('handles empty saints today gracefully', () => {
