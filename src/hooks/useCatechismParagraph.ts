@@ -88,9 +88,9 @@ export const fetchCatechismParagraph = async (paragraph: number, forceGenerate =
     
     const parsed = typeof data === 'string' ? JSON.parse(data) : data;
 
-    if (!parsed || (parsed.status === 'not_cached' && !forceGenerate)) {
+    if (!parsed || (parsed.status === 'not_found' && !forceGenerate) || (parsed.status === 'not_cached' && !forceGenerate)) {
        // If not found and not forcing generation, just throw to handle in UI
-       throw new Error(`Parágrafo §${paragraph} não disponível.`);
+       throw new Error(`Parágrafo §${paragraph} não disponível no banco oficial.`);
     }
 
     const result: CatechismParagraph = {
