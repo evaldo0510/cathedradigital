@@ -12,6 +12,8 @@ export interface CatechismParagraph extends Partial<DeepContent> {
 }
 
 export const fetchCatechismParagraph = async (paragraph: number, forceGenerate = false): Promise<CatechismParagraph> => {
+  const isOfflineMode = localStorage.getItem('cathedra_offline_mode') === 'true';
+
   // 0) Check local static data first (NATIVE CONTENT)
   const localData = (CATECHISM_LOCAL_DATA as any)[paragraph];
   if (localData && !forceGenerate) {
@@ -30,7 +32,13 @@ export const fetchCatechismParagraph = async (paragraph: number, forceGenerate =
     return cached;
   }
 
-  // 2) Fetch from edge function
+  // 2) If in Offline Mode and not cached/static, we must throw or return fallback
+  if (isOfflineMode && !forceGenerate) {
+    if (cached) return cached;
+    throw new Error('Modo Somente-Cache ativo: Texto não disponível offline.');
+  }
+
+  // 3) Fetch from edge function
   const body: any = { paragraph };
   if (forceGenerate) body.action = 'generate';
   
