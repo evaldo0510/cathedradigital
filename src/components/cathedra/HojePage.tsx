@@ -324,7 +324,22 @@ const HojePage: React.FC = () => {
             <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 flex items-center gap-3"><div className="h-px w-6 bg-muted-foreground/30" /> Acesso Rápido</h2>
             <div className="grid grid-cols-3 gap-4">
               {dailySections.map((section) => (
-                <motion.div key={section.title} whileHover={{ y: -4 }} whileTap={{ scale: 0.96 }} onClick={() => navigate(section.route)} className="group cursor-pointer p-4 rounded-2xl border border-border bg-background hover:border-primary/5 transition-all text-center space-y-3">
+                <motion.div 
+                  key={section.title} 
+                  whileHover={{ y: -4 }} 
+                  whileTap={{ scale: 0.96 }} 
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`Acessar ${section.title}`}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      navigate(section.route);
+                    }
+                  }}
+                  onClick={() => navigate(section.route)} 
+                  className="group cursor-pointer p-4 rounded-2xl border border-border bg-background hover:border-primary/5 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none transition-all text-center space-y-3"
+                >
                   <div className={`mx-auto w-12 h-12 rounded-xl flex items-center justify-center ${section.color} group-hover:scale-110 transition-transform`}>{section.icon}</div>
                   <h3 className="font-bold text-[11px] text-foreground leading-tight uppercase tracking-wider">{section.title}</h3>
                 </motion.div>
