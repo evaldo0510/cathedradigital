@@ -139,6 +139,14 @@ const CatechismIntegrity: React.FC = () => {
           >
             <Icons.Settings className="w-3 h-3" /> Debug Geral
           </button>
+
+          <button 
+            onClick={() => navigate('/catechism/verify')}
+            className="px-4 py-2 rounded-xl border border-border text-xs font-black uppercase tracking-widest hover:bg-muted transition-all flex items-center gap-2"
+          >
+            <Icons.CheckCircle className="w-3 h-3" /> Verificação de Seções
+          </button>
+
           
           <div className="flex items-center gap-2 bg-muted/50 p-1.5 rounded-xl border border-border">
             <div className="flex items-center gap-1">

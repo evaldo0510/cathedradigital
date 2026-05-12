@@ -66,7 +66,9 @@ export enum AppRoute {
   CATECHISM_INTEGRITY = '/catechism/integrity',
   CATECHISM_EXPLORER = '/catechism/explorer',
   CATECHISM_HEALTH = '/catechism/health',
+  CATECHISM_VERIFY = '/catechism/verify',
   TRANSPARENCY = '/transparencia',
+
   OFFLINE = '/offline',
   CACHE_MANAGER = '/cache-manager'
 }

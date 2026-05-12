@@ -13,6 +13,8 @@ import BibleVersePopover from './BibleVersePopover';
 import DeepContentSection from './DeepContentSection';
 import MagisteriumPopover from './MagisteriumPopover';
 import { getCatechismCrossRefs, getCatechismDocs } from '@/data/cross-references';
+import { CIC_SECTIONS, CATECHISM_LOCAL_DATA } from '@/data/catechism';
+
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { useFavorites } from '@/hooks/useFavorites';
@@ -214,49 +216,6 @@ const LazyParagraph: React.FC<{ paragraph: number; currentParagraph: number; par
   );
 };
 
-const CIC_SECTIONS = [
-  {
-    part: 'Introdução',
-    title: 'Prólogo',
-    sections: [
-      { id: 0, title: 'Prólogo: A vida do homem é conhecer e amar a Deus', paragraphs: [1, 25] },
-    ],
-  },
-  {
-    part: 'Parte I',
-    title: 'A Profissão de Fé',
-    sections: [
-      { id: 1, title: 'Eu Creio — Nós Cremos', paragraphs: [26, 184] },
-      { id: 2, title: 'Creio em Deus Pai', paragraphs: [185, 421] },
-      { id: 3, title: 'Creio em Jesus Cristo', paragraphs: [422, 682] },
-      { id: 4, title: 'Creio no Espírito Santo', paragraphs: [683, 1065] },
-    ],
-  },
-  {
-    part: 'Parte II',
-    title: 'A Celebração do Mistério Cristão',
-    sections: [
-      { id: 5, title: 'A Economia Sacramental', paragraphs: [1066, 1209] },
-      { id: 6, title: 'Os Sete Sacramentos', paragraphs: [1210, 1690] },
-    ],
-  },
-  {
-    part: 'Parte III',
-    title: 'A Vida em Cristo',
-    sections: [
-      { id: 7, title: 'A Vocação do Homem', paragraphs: [1691, 2051] },
-      { id: 8, title: 'Os Dez Mandamentos', paragraphs: [2052, 2557] },
-    ],
-  },
-  {
-    part: 'Parte IV',
-    title: 'A Oração Cristã',
-    sections: [
-      { id: 9, title: 'A Oração na Vida Cristã', paragraphs: [2558, 2758] },
-      { id: 10, title: 'O Pai Nosso', paragraphs: [2759, 2865] },
-    ],
-  },
-];
 
 type ViewMode = 'parts' | 'sections' | 'reading';
 
