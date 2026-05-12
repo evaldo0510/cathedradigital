@@ -78,6 +78,17 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
         <Icons.WifiOff className="w-8 h-8 text-primary/40" />
       </div>
 
+      {downloading && (
+        <div className="space-y-3 animate-in fade-in slide-in-from-top-2">
+          <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-primary">
+            <span>{retryAttempt > 1 ? `Re-tentando (${retryAttempt}/${MAX_RETRIES})...` : 'Baixando conteúdo...'}</span>
+            <span>{progress}%</span>
+          </div>
+          <Progress value={progress} className="h-1.5" />
+        </div>
+      )}
+
+
       <div className="space-y-2">
         <h3 className="text-xl font-serif font-bold text-foreground">
           {paragraph ? `Parágrafo §${paragraph} Offline` : 'Catecismo Offline'}
