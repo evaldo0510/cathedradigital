@@ -109,6 +109,8 @@ const CatechismDebug = lazy(() => import('./components/cathedra/CatechismDebug')
 const CatechismIntegrity = lazy(() => import('./components/cathedra/CatechismIntegrity'));
 const PartnersPage = lazy(() => import('./components/cathedra/PartnersPage'));
 const TransparencyPage = lazy(() => import('./components/cathedra/TransparencyPage'));
+const OfflinePage = lazy(() => import('./components/cathedra/OfflinePage'));
+const CacheManager = lazy(() => import('./components/cathedra/CacheManager'));
 
 
 const SkeletonBar = React.forwardRef<HTMLDivElement, { w?: string; h?: string; className?: string }>(
