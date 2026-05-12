@@ -1,15 +1,33 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
-import { Play, Sparkles, X, Volume2, Shield, Church, Globe, Users } from "lucide-react";
+import { Play, Sparkles, X, Volume2, VolumeX, Shield, Church, Globe, Users, Languages } from "lucide-react";
 import { fadeUp } from "./animations";
+import { supabase } from "@/integrations/supabase/client";
 import videoAsset from "../../assets/institutional-video.mp4.asset.json";
+
+// Standardizing track structure
+const SUBTITLES = [
+  { label: "Português", src: "/subtitles/pt.vtt", lang: "pt" },
+  { label: "English", src: "/subtitles/en.vtt", lang: "en" },
+  { label: "Español", src: "/subtitles/es.vtt", lang: "es" },
+];
 
 const InstitutionalVideoSection = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [isMuted, setIsMuted] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('cathedra_video_muted') === 'true';
+    }
+    return true;
+  });
+  const [currentLang, setCurrentLang] = useState("pt");
+  const [videoError, setVideoError] = useState(false);
+  
   const sectionRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const modalVideoRef = useRef<HTMLVideoElement>(null);
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -20,6 +38,21 @@ const InstitutionalVideoSection = () => {
   const y2 = useTransform(scrollYProgress, [0, 1], [0, 100]);
   const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.2], [0.8, 1]);
+
+  // Analytics helper
+  const trackEvent = useCallback(async (eventName: string, props = {}) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      await supabase.from('analytics_events').insert({
+        event_name: eventName,
+        properties: { ...props, lang: currentLang },
+        user_id: user?.id,
+        url: window.location.href
+      });
+    } catch (err) {
+      console.error('Analytics error:', err);
+    }
+  }, [currentLang]);
 
   useEffect(() => {
     const el = sectionRef.current;
@@ -32,16 +65,41 @@ const InstitutionalVideoSection = () => {
     return () => observer.disconnect();
   }, []);
 
-  const handlePlay = () => setIsPlaying(true);
+  const handlePlay = () => {
+    setIsPlaying(true);
+    trackEvent('video_modal_open');
+  };
+
   const handleClose = () => {
     setIsPlaying(false);
     if (modalVideoRef.current) modalVideoRef.current.pause();
+    trackEvent('video_modal_close');
   };
 
+  const toggleMute = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const newMuted = !isMuted;
+    setIsMuted(newMuted);
+    localStorage.setItem('cathedra_video_muted', String(newMuted));
+    trackEvent('video_mute_toggle', { muted: newMuted });
+  };
+
+  // Focus trap and keyboard navigation
+  useEffect(() => {
+    if (isPlaying) {
+      closeBtnRef.current?.focus();
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") handleClose();
+      };
+      window.addEventListener("keydown", handleKeyDown);
+      return () => window.removeEventListener("keydown", handleKeyDown);
+    }
+  }, [isPlaying]);
+
   return (
-    <section ref={sectionRef} className="relative w-full py-24 md:py-40 bg-background overflow-hidden">
+    <section ref={sectionRef} className="relative w-full py-24 md:py-40 bg-background overflow-hidden" aria-labelledby="video-section-title">
       {/* Cinematic Background Layers */}
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-0" aria-hidden="true">
         <motion.div style={{ y: y1 }} className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px]" />
         <motion.div style={{ y: y2 }} className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/5 rounded-full blur-[100px]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,hsl(var(--background))_70%)] opacity-80" />
@@ -66,7 +124,7 @@ const InstitutionalVideoSection = () => {
                 <span>Experiência Digital</span>
               </motion.div>
               
-              <h2 className="text-5xl md:text-6xl font-display font-bold tracking-tight text-foreground leading-[1.1]">
+              <h2 id="video-section-title" className="text-5xl md:text-6xl font-display font-bold tracking-tight text-foreground leading-[1.1]">
                 A Tradição que <br />
                 <span className="text-primary italic font-light">Se Move com Você</span>
               </h2>
@@ -115,23 +173,33 @@ const InstitutionalVideoSection = () => {
             {/* Ambient Glow */}
             <div className="absolute -inset-4 bg-primary/10 rounded-[40px] blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
             
-            <div 
-              className="relative aspect-[4/5] sm:aspect-video rounded-[32px] overflow-hidden border border-border/50 bg-black shadow-2xl cursor-pointer group-hover:scale-[1.02] transition-all duration-700"
+            <button 
+              className="relative w-full aspect-[4/5] sm:aspect-video rounded-[32px] overflow-hidden border border-border/50 bg-black shadow-2xl cursor-pointer group-hover:scale-[1.02] transition-all duration-700 text-left focus:outline-none focus-visible:ring-4 focus-visible:ring-primary/50"
               onClick={handlePlay}
+              aria-label="Abrir vídeo de apresentação da Catedra Digital"
             >
-              {isVisible ? (
+              {isVisible && !videoError ? (
                 <video
                   ref={videoRef}
                   src={videoAsset.url}
+                  poster="https://images.unsplash.com/photo-1548610762-656391d1ad4d?auto=format&fit=crop&q=80&w=1200"
                   muted
                   loop
                   autoPlay
                   playsInline
                   preload="metadata"
+                  onError={() => setVideoError(true)}
                   className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-700"
                 />
               ) : (
-                <div className="w-full h-full bg-muted/20 animate-pulse" />
+                <div className="w-full h-full relative">
+                  <img 
+                    src="https://images.unsplash.com/photo-1548610762-656391d1ad4d?auto=format&fit=crop&q=80&w=1200" 
+                    alt="Catedral interior" 
+                    className="w-full h-full object-cover opacity-40"
+                  />
+                  <div className="absolute inset-0 bg-muted/20 animate-pulse" />
+                </div>
               )}
 
               {/* Cinematic Overlays */}
@@ -167,19 +235,24 @@ const InstitutionalVideoSection = () => {
                   className="h-full bg-primary/60"
                 />
               </div>
-            </div>
+            </button>
 
-            {/* Floating Badge */}
+            {/* Floating Badge / Sound Control */}
             <motion.div
               animate={{ y: [0, -10, 0] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute -bottom-6 -right-6 hidden md:flex items-center gap-3 p-4 bg-card border border-border rounded-2xl shadow-xl z-20"
+              className="absolute -bottom-6 -right-6 hidden md:flex items-center gap-3 p-4 bg-card border border-border rounded-2xl shadow-xl z-20 cursor-pointer select-none"
+              onClick={toggleMute}
+              role="button"
+              aria-label={isMuted ? "Ativar som" : "Desativar som"}
             >
               <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                <Volume2 className="w-5 h-5 text-primary" />
+                {isMuted ? <VolumeX className="w-5 h-5 text-primary" /> : <Volume2 className="w-5 h-5 text-primary" />}
               </div>
               <div className="space-y-0.5">
-                <p className="text-[10px] font-black text-primary uppercase tracking-tighter">Som Ativado</p>
+                <p className="text-[10px] font-black text-primary uppercase tracking-tighter">
+                  {isMuted ? "Mudo" : "Som Ativado"}
+                </p>
                 <p className="text-xs font-bold text-foreground">Experiência Imersiva</p>
               </div>
             </motion.div>
@@ -197,6 +270,9 @@ const InstitutionalVideoSection = () => {
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[100] bg-black/98 backdrop-blur-2xl flex items-center justify-center p-4 md:p-12"
             onClick={handleClose}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Vídeo Institucional Catedra Digital"
           >
             <motion.div
               initial={{ scale: 0.9, y: 20, opacity: 0 }}
@@ -205,12 +281,42 @@ const InstitutionalVideoSection = () => {
               className="relative w-full max-w-6xl aspect-video bg-black rounded-[32px] overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.5)] border border-white/5"
               onClick={e => e.stopPropagation()}
             >
-              <button 
-                onClick={handleClose}
-                className="absolute top-6 right-6 z-50 p-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full transition-all backdrop-blur-md group"
-              >
-                <X className="w-6 h-6 text-white group-hover:rotate-90 transition-transform duration-300" />
-              </button>
+              {/* Top Controls Overlay */}
+              <div className="absolute top-0 left-0 right-0 p-6 flex justify-between items-center z-50 bg-gradient-to-b from-black/80 to-transparent">
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-white/10 backdrop-blur-md rounded-full border border-white/10">
+                    <Languages className="w-4 h-4 text-white/70" />
+                    <select 
+                      value={currentLang}
+                      onChange={(e) => {
+                        setCurrentLang(e.target.value);
+                        trackEvent('video_lang_change', { lang: e.target.value });
+                      }}
+                      className="bg-transparent text-white text-xs font-bold focus:outline-none cursor-pointer"
+                      aria-label="Selecionar idioma das legendas"
+                    >
+                      {SUBTITLES.map(s => <option key={s.lang} value={s.lang} className="bg-black">{s.label}</option>)}
+                    </select>
+                  </div>
+                  
+                  <button 
+                    onClick={toggleMute}
+                    className="p-2.5 bg-white/10 hover:bg-white/20 rounded-full transition-all border border-white/10 backdrop-blur-md"
+                    aria-label={isMuted ? "Ativar som" : "Desativar som"}
+                  >
+                    {isMuted ? <VolumeX className="w-5 h-5 text-white" /> : <Volume2 className="w-5 h-5 text-white" />}
+                  </button>
+                </div>
+
+                <button 
+                  ref={closeBtnRef}
+                  onClick={handleClose}
+                  className="p-3 bg-white/10 hover:bg-white/20 border border-white/10 rounded-full transition-all backdrop-blur-md group"
+                  aria-label="Fechar vídeo"
+                >
+                  <X className="w-6 h-6 text-white group-hover:rotate-90 transition-transform duration-300" />
+                </button>
+              </div>
 
               <video
                 ref={modalVideoRef}
@@ -219,8 +325,22 @@ const InstitutionalVideoSection = () => {
                 loop
                 controls
                 playsInline
+                muted={isMuted}
+                onPlay={() => trackEvent('video_play')}
                 className="w-full h-full object-cover"
-              />
+              >
+                {SUBTITLES.map(s => (
+                  <track 
+                    key={s.lang}
+                    kind="subtitles"
+                    src={s.src}
+                    srcLang={s.lang}
+                    label={s.label}
+                    default={currentLang === s.lang}
+                  />
+                ))}
+                Desculpe, seu navegador não suporta vídeos incorporados.
+              </video>
             </motion.div>
           </motion.div>
         )}
