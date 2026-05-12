@@ -13,7 +13,30 @@ interface CatechismOfflineFallbackProps {
 
 const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ paragraph, onRetry }) => {
   const navigate = useNavigate();
+  const [downloading, setDownloading] = useState(false);
   const isForcedOffline = localStorage.getItem('cathedra_offline_mode') === 'true';
+  const isOnline = navigator.onLine;
+
+  const handleDownload = async () => {
+    if (!paragraph) return;
+    setDownloading(true);
+    try {
+      // Temporarily disable forced offline to allow the fetch
+      const prevMode = localStorage.getItem('cathedra_offline_mode');
+      localStorage.setItem('cathedra_offline_mode', 'false');
+      
+      await fetchCatechismParagraph(paragraph);
+      
+      localStorage.setItem('cathedra_offline_mode', prevMode || 'false');
+      toast.success(`§${paragraph} baixado com sucesso!`);
+      if (onRetry) onRetry();
+    } catch (error) {
+      toast.error('Erro ao baixar parágrafo. Verifique sua conexão.');
+    } finally {
+      setDownloading(false);
+    }
+  };
+
 
   return (
     <motion.div 
