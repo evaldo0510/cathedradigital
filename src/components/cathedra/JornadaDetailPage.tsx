@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
+import { toast } from 'sonner';
 
 const STEP_ICONS: Record<string, React.ReactNode> = {
   reading: <BookOpen className="w-4 h-4" />,
