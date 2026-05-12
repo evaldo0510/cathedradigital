@@ -460,7 +460,6 @@ const AdminDashboard: React.FC = () => {
             <TabsTrigger value="seo" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
               <Globe className="w-3.5 h-3.5" /> SEO
             </TabsTrigger>
-            </TabsTrigger>
             <TabsTrigger value="security" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start relative group">
               <Shield className="w-3.5 h-3.5 text-red-500" /> Segurança
               <span className="absolute -top-1 -right-1 flex h-2 w-2">
