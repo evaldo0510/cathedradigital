@@ -27,7 +27,6 @@ jobs:
 
       - name: Lint
         run: bun run lint
-        continue-on-error: true # Allow build to proceed but show errors in logs for now
 
       - name: Typecheck
         run: bun run typecheck
