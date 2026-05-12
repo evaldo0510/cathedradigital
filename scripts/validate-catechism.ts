@@ -170,7 +170,10 @@ if (failingRecords.length > 0) {
 }
 
 // Write JSON Report
-const reportPath = path.join(process.cwd(), 'catechism-validation-report.json');
+const logsDir = path.join(process.cwd(), 'scripts', 'logs');
+if (!fs.existsSync(logsDir)) fs.mkdirSync(logsDir, { recursive: true });
+
+const reportPath = path.join(logsDir, 'catechism-validation-report.json');
 fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
 console.log(`\n📄 Relatório JSON gerado em: ${reportPath}`);
 
