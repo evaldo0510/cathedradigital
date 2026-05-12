@@ -364,6 +364,17 @@ const AppLayout: React.FC = () => {
     navigate(getPostAuthRoute(), { replace: true });
   }, [getPostAuthRoute, loading, location.pathname, navigate, user, profile]);
 
+  useEffect(() => {
+    // ─── Global Offline Redirection ───
+    const isOnline = navigator.onLine;
+    const isOfflineMode = readStoredValue('cathedra_offline_mode') === 'true';
+    const isNetworkRequired = [AppRoute.COMMUNITY, AppRoute.UPGRADE, AppRoute.CHECKOUT, AppRoute.SEARCH_RESULT].includes(location.pathname as any);
+    
+    if ((!isOnline || isOfflineMode) && isNetworkRequired) {
+      navigate(AppRoute.OFFLINE);
+    }
+  }, [location.pathname, navigate]);
+
   const lastTrackedPath = useRef('');
   useEffect(() => {
     if (lastTrackedPath.current === location.pathname || !user) return;
