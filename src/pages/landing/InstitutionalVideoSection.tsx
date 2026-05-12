@@ -91,15 +91,24 @@ const InstitutionalVideoSection = () => {
     trackEvent('video_mute_toggle', { muted: newMuted });
   };
 
-  // Video track management
+  // Video track management and scroll lock
   useEffect(() => {
-    if (isPlaying && modalVideoRef.current) {
-      const video = modalVideoRef.current;
-      const tracks = Array.from(video.textTracks);
-      tracks.forEach(track => {
-        track.mode = track.language === currentLang ? 'showing' : 'disabled';
-      });
+    if (isPlaying) {
+      document.body.style.overflow = 'hidden';
+      
+      if (modalVideoRef.current) {
+        const video = modalVideoRef.current;
+        const tracks = Array.from(video.textTracks);
+        tracks.forEach(track => {
+          track.mode = track.language === currentLang ? 'showing' : 'disabled';
+        });
+      }
+    } else {
+      document.body.style.overflow = 'unset';
     }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
   }, [currentLang, isPlaying]);
 
   // Focus trap and keyboard navigation
@@ -113,7 +122,7 @@ const InstitutionalVideoSection = () => {
         if (e.key === "Escape") handleClose();
         
         if (e.key === "Tab") {
-          const focusableSelector = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"]), video';
+          const focusableSelector = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"], video';
           const focusableElements = modalContainerRef.current?.querySelectorAll(focusableSelector);
           
           if (!focusableElements || focusableElements.length === 0) return;
