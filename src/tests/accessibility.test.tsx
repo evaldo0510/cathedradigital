@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/react';
-import { axe, toHaveNoViolations } from 'vitest-axe';
+import { axe } from 'vitest-axe';
+import * as matchers from 'vitest-axe/matchers';
 import { MemoryRouter } from 'react-router-dom';
 import Index from '../pages/Index';
 import HojePage from '../components/cathedra/HojePage';
