@@ -169,7 +169,7 @@ const HojePage: React.FC = () => {
       <SEOHead title="Hoje - Sua Jornada Espiritual" description="Acompanhe sua caminhada de fé diária." path="/hoje" />
       {import.meta.env.DEV && <DevDataInspector data={{ officialSaint, allSaintsToday, activeJourney, profile: profile?._sensitive }} />}
       <div className="desktop-main space-y-12 max-w-2xl mx-auto lg:max-w-none lg:mx-0">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center space-y-4">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center space-y-4 pt-4 md:pt-0">
           <div className="space-y-2">
             <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60">
               {greeting}, {profile?.name?.split(' ')[0] || 'fiel'}
