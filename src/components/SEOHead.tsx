@@ -88,6 +88,30 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
 
   const globalSchema = seoSettings?.json_ld_schema;
 
+  const localBusinessLD = seoSettings?.business_name ? {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": seoSettings.business_name,
+    "image": displayImage,
+    "@id": url,
+    "url": url,
+    "telephone": seoSettings.business_whatsapp || seoSettings.business_phone,
+    "email": seoSettings.business_email,
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": seoSettings.business_address,
+      "addressLocality": "São Paulo", -- Could be dynamic if split
+      "addressRegion": "SP",
+      "addressCountry": "BR"
+    },
+    "openingHours": seoSettings.opening_hours,
+    "geo": seoSettings.latitude && seoSettings.longitude ? {
+      "@type": "GeoCoordinates",
+      "latitude": seoSettings.latitude,
+      "longitude": seoSettings.longitude
+    } : null
+  } : null;
+
   return (
     <Helmet>
       <title>{displayTitle}</title>
