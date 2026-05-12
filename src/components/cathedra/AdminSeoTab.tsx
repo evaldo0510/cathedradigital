@@ -10,7 +10,7 @@ import { useSEO, useKeywords, SEOSettings } from '@/hooks/useSEO';
 import { 
   Globe, Search, LineChart, Save, Plus, Trash2, 
   ExternalLink, CheckCircle2, AlertCircle, Sparkles,
-  Smartphone, Monitor, Share2, Info, MapPin, XCircle
+  Smartphone, Monitor, Share2, Info, MapPin, XCircle, Copy, FileCode, Eye, Check
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
@@ -279,7 +279,7 @@ const AdminSeoTab: React.FC = () => {
                   </Badge>
                 ) : (
                   <Badge variant="destructive" className="bg-destructive/10 text-destructive border-destructive/20 gap-1">
-                    <XCircle className="w-3 h-3" /> Desconectado
+                    <XCircle, Copy, FileCode, Eye, Check className="w-3 h-3" /> Desconectado
                   </Badge>
                 )}
               </div>
