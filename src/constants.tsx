@@ -456,6 +456,7 @@ export const Icons = {
   Smartphone: IconsInternal.Smartphone,
   MonitorSmartphone: IconsInternal.MonitorSmartphone,
   WifiOff: IconsInternal.WifiOff,
+  Wifi: IconsInternal.Wifi,
   
   // Social
   Instagram: IconsInternal.Instagram,
