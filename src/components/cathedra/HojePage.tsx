@@ -197,8 +197,17 @@ const HojePage: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
+            tabIndex={0}
+            role="button"
+            aria-label={`Continuar leitura: ${nextUp.label}`}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                navigate(nextUp.route);
+              }
+            }}
             onClick={() => navigate(nextUp.route)}
-            className="p-5 rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card cursor-pointer hover:border-primary/40 transition-all shadow-sm flex items-center justify-between group"
+            className="p-5 rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card cursor-pointer hover:border-primary/40 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none transition-all shadow-sm flex items-center justify-between group"
           >
             <div className="flex items-center gap-5">
               <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
@@ -236,7 +245,21 @@ const HojePage: React.FC = () => {
               <div className="h-px w-6 bg-muted-foreground/30" /> Continuar Jornada
             </h2>
             {loadingJourney ? <JourneySkeleton /> : activeJourney ? (
-              <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }} onClick={() => navigate(journeyStep ? `/jornadas/${activeJourney.id}/step?step=${journeyStep.id}` : `/jornadas/${activeJourney.id}/complete`)} className="group cursor-pointer p-6 rounded-3xl border border-primary/20 bg-primary/5 hover:border-primary/40 transition-all shadow-sm">
+              <motion.div 
+                whileHover={{ scale: 1.01 }} 
+                whileTap={{ scale: 0.99 }} 
+                tabIndex={0}
+                role="button"
+                aria-label={`Continuar jornada: ${activeJourney.title}`}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    navigate(journeyStep ? `/jornadas/${activeJourney.id}/step?step=${journeyStep.id}` : `/jornadas/${activeJourney.id}/complete`);
+                  }
+                }}
+                onClick={() => navigate(journeyStep ? `/jornadas/${activeJourney.id}/step?step=${journeyStep.id}` : `/jornadas/${activeJourney.id}/complete`)} 
+                className="group cursor-pointer p-6 rounded-3xl border border-primary/20 bg-primary/5 hover:border-primary/40 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none transition-all shadow-sm"
+              >
                 <div className="flex items-center gap-5">
                   <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/20 transition-colors"><Icons.Flame className="w-6 h-6" /></div>
                   <div className="flex-1">
@@ -252,7 +275,21 @@ const HojePage: React.FC = () => {
                 </div>
               </motion.div>
             ) : recommendedJourney ? (
-              <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }} onClick={() => navigate(`/jornadas/${recommendedJourney.id}`)} className="group cursor-pointer p-6 rounded-3xl border border-border bg-muted/20 hover:border-primary/20 transition-all shadow-sm">
+              <motion.div 
+                whileHover={{ scale: 1.01 }} 
+                whileTap={{ scale: 0.99 }} 
+                tabIndex={0}
+                role="button"
+                aria-label={`Iniciar jornada recomendada: ${recommendedJourney.title}`}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    navigate(`/jornadas/${recommendedJourney.id}`);
+                  }
+                }}
+                onClick={() => navigate(`/jornadas/${recommendedJourney.id}`)} 
+                className="group cursor-pointer p-6 rounded-3xl border border-border bg-muted/20 hover:border-primary/20 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none transition-all shadow-sm"
+              >
                 <div className="flex items-center gap-5">
                   <div className="w-14 h-14 rounded-2xl bg-muted flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors"><Icons.Compass className="w-7 h-7" /></div>
                   <div className="flex-1"><h3 className="text-base font-bold text-foreground">{recommendedJourney.title}</h3><p className="text-xs text-muted-foreground mt-1 font-medium">Sugerido especialmente para seu perfil</p></div>
@@ -260,7 +297,21 @@ const HojePage: React.FC = () => {
                 </div>
               </motion.div>
             ) : (
-              <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }} onClick={() => navigate(AppRoute.JORNADAS)} className="group cursor-pointer p-6 rounded-3xl border border-border bg-muted/20 hover:border-primary/20 transition-all shadow-sm">
+              <motion.div 
+                whileHover={{ scale: 1.01 }} 
+                whileTap={{ scale: 0.99 }} 
+                tabIndex={0}
+                role="button"
+                aria-label="Explorar todas as jornadas"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    navigate(AppRoute.JORNADAS);
+                  }
+                }}
+                onClick={() => navigate(AppRoute.JORNADAS)} 
+                className="group cursor-pointer p-6 rounded-3xl border border-border bg-muted/20 hover:border-primary/20 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none transition-all shadow-sm"
+              >
                 <div className="flex items-center gap-5">
                   <div className="w-14 h-14 rounded-2xl bg-muted flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors"><Icons.Route className="w-7 h-7" /></div>
                   <div className="flex-1"><h3 className="text-base font-bold text-foreground">Iniciar uma Jornada</h3><p className="text-xs text-muted-foreground mt-1 font-medium">Descubra o caminho ideal para o seu momento espiritual</p></div>
@@ -273,7 +324,22 @@ const HojePage: React.FC = () => {
             <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 flex items-center gap-3"><div className="h-px w-6 bg-muted-foreground/30" /> Acesso Rápido</h2>
             <div className="grid grid-cols-3 gap-4">
               {dailySections.map((section) => (
-                <motion.div key={section.title} whileHover={{ y: -4 }} whileTap={{ scale: 0.96 }} onClick={() => navigate(section.route)} className="group cursor-pointer p-4 rounded-2xl border border-border bg-background hover:border-primary/5 transition-all text-center space-y-3">
+                <motion.div 
+                  key={section.title} 
+                  whileHover={{ y: -4 }} 
+                  whileTap={{ scale: 0.96 }} 
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`Acessar ${section.title}`}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      navigate(section.route);
+                    }
+                  }}
+                  onClick={() => navigate(section.route)} 
+                  className="group cursor-pointer p-4 rounded-2xl border border-border bg-background hover:border-primary/5 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none transition-all text-center space-y-3"
+                >
                   <div className={`mx-auto w-12 h-12 rounded-xl flex items-center justify-center ${section.color} group-hover:scale-110 transition-transform`}>{section.icon}</div>
                   <h3 className="font-bold text-[11px] text-foreground leading-tight uppercase tracking-wider">{section.title}</h3>
                 </motion.div>

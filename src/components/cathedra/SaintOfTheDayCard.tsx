@@ -94,7 +94,7 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
     return (
       <button
         onClick={handleNavigate}
-        className="w-full flex items-center gap-4 group text-left p-4 rounded-3xl border border-border bg-card/50 hover:bg-card transition-all"
+        className="w-full flex items-center gap-4 group text-left p-4 rounded-3xl border border-border bg-card/50 hover:bg-card focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none transition-all"
       >
         <div className="w-16 h-16 rounded-2xl overflow-hidden border-2 border-secondary/20 shadow-md shrink-0">
           <SacredImage
@@ -123,8 +123,16 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
     <motion.div
       whileHover={{ scale: 1.01 }}
       whileTap={{ scale: 0.99 }}
+      tabIndex={0}
+      role="button"
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handleNavigate();
+        }
+      }}
       onClick={handleNavigate}
-      className="group cursor-pointer p-0 rounded-3xl border border-border bg-card overflow-hidden shadow-sm hover:border-primary/30 transition-all flex flex-col sm:flex-row h-full"
+      className="group cursor-pointer p-0 rounded-3xl border border-border bg-card overflow-hidden shadow-sm hover:border-primary/30 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none transition-all flex flex-col sm:flex-row h-full"
     >
       <div className="w-full sm:w-1/3 h-48 sm:h-auto relative shrink-0 overflow-hidden">
         <SacredImage 
