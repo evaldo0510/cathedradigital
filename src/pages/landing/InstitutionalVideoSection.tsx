@@ -110,18 +110,20 @@ const InstitutionalVideoSection = () => {
   useEffect(() => {
     if (isPlaying && modalVideoRef.current) {
       const video = modalVideoRef.current;
-      const savedPos = localStorage.getItem('cathedra_video_pos');
-      if (savedPos) {
+      const savedPosStr = localStorage.getItem('cathedra_video_pos');
+      if (savedPosStr) {
+        const savedPos = parseFloat(savedPosStr);
         // Use a small delay to ensure video is ready to seek
         const timer = setTimeout(() => {
-          if (video && savedPos) {
-            video.currentTime = parseFloat(savedPos);
+          if (video && !isNaN(savedPos)) {
+            video.currentTime = savedPos;
+            trackEvent('video_resume_position', { position: savedPos });
           }
         }, 50);
         return () => clearTimeout(timer);
       }
     }
-  }, [isPlaying]);
+  }, [isPlaying, trackEvent]);
 
   // Subtitle synchronization - updates immediately when language changes
   useEffect(() => {
