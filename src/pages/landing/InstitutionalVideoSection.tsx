@@ -260,7 +260,7 @@ const InstitutionalVideoSection = () => {
               {/* Progress Indicator Decorative */}
               <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-white/10">
                 <motion.div 
-                  initial={{ width: 0 }}
+                  initial={shouldReduceMotion ? { width: "100%" } : { width: 0 }}
                   whileInView={{ width: "100%" }}
                   transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
                   className="h-full bg-primary/60"
