@@ -328,6 +328,12 @@ const AppLayout: React.FC = () => {
 
 
   useEffect(() => {
+    if (navigator.onLine) {
+      import('@/lib/prefetch').then(({ prefetchEssentialContent }) => {
+        prefetchEssentialContent();
+      });
+    }
+
     const handleOnline = () => {
       toast.success('Conexão restabelecida', {
         description: 'Sincronizando cache local...',
