@@ -604,7 +604,6 @@ const AppLayout: React.FC = () => {
               <ReadingModeToggle />
             )}
             <OfflineIndicator />
-            <SplashScreen />
             <PWAInstallPrompt />
           </>
         )}
