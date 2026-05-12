@@ -10,10 +10,9 @@ import { useSEO, useKeywords, SEOSettings } from '@/hooks/useSEO';
 import { 
   Globe, Search, LineChart, Save, Plus, Trash2, 
   ExternalLink, CheckCircle2, AlertCircle, Sparkles,
-  Smartphone, Monitor, Share2, Info, MapPin
+  Smartphone, Monitor, Share2, Info, MapPin, XCircle
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const AdminSeoTab: React.FC = () => {
   const { data: seoSettings, refetch: refetchSEO } = useSEO();
@@ -81,7 +80,7 @@ const AdminSeoTab: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500">
+    <div className="space-y-6 animate-in fade-in duration-500 pb-20">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-2 space-y-6">
           <Card className="border-border/50 shadow-sm overflow-hidden">
@@ -173,7 +172,7 @@ const AdminSeoTab: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-6 border-t border-border/50">
                   <div className="space-y-2">
                     <Label className="text-[10px] font-black uppercase tracking-widest opacity-70 flex items-center gap-1">
                       <Search className="w-3 h-3" /> GSC Verification Code
@@ -196,7 +195,7 @@ const AdminSeoTab: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-border/50">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
                   <div className="space-y-2">
                     <Label className="text-[10px] font-black uppercase tracking-widest opacity-70 flex items-center gap-1">
                       <Share2 className="w-3 h-3" /> OG Image URL (Global)
@@ -260,52 +259,86 @@ const AdminSeoTab: React.FC = () => {
 
         <div className="space-y-6">
           <Card className="border-border/50 shadow-sm h-fit">
-            <CardHeader className="bg-primary/5 border-b border-border/50">
+            <CardHeader className="bg-muted/10 border-b border-border/50">
               <CardTitle className="text-md font-serif flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-primary" /> Sugestões de IA SEO
+                <LineChart className="w-4 h-4 text-primary" /> GA4 Debug Status
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-4 space-y-4">
-              <div className="p-3 bg-muted/50 rounded-lg border border-border/50 text-[11px] leading-relaxed">
-                <p className="font-bold text-primary mb-1">Otimização de Título:</p>
-                "Adicione 'Online' ou 'App' ao título para capturar buscas mobile."
+            <CardContent className="p-4 space-y-3">
+              <div className="flex items-center justify-between text-xs">
+                <span>Measurement ID:</span>
+                <Badge variant="outline" className="font-mono">{formData.ga4_measurement_id || 'Não configurado'}</Badge>
               </div>
-              <div className="p-3 bg-muted/50 rounded-lg border border-border/50 text-[11px] leading-relaxed">
-                <p className="font-bold text-primary mb-1">Faltando Schema:</p>
-                "O Schema 'ReligiousOrganization' não está configurado completamente."
+              <div className="flex items-center justify-between text-xs">
+                <span>Script Carregado:</span>
+                {(typeof window !== 'undefined' && (window as any).gtag) ? (
+                  <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 gap-1">
+                    <CheckCircle2 className="w-3 h-3" /> Ativo
+                  </Badge>
+                ) : (
+                  <Badge variant="destructive" className="bg-destructive/10 text-destructive border-destructive/20 gap-1">
+                    <XCircle className="w-3 h-3" /> Inativo
+                  </Badge>
+                )}
               </div>
-              <Button variant="outline" className="w-full text-[10px] font-black uppercase tracking-widest h-8 rounded-lg">
-                Gerar Novas Sugestões
-              </Button>
+              <p className="text-[10px] text-muted-foreground italic">
+                Nota: O script é injetado automaticamente em produção quando um ID válido é salvo.
+              </p>
             </CardContent>
           </Card>
 
           <Card className="border-border/50 shadow-sm h-fit">
-            <CardHeader>
-              <CardTitle className="text-md font-serif">Palavras-Chave Estratégicas</CardTitle>
+            <CardHeader className="bg-amber-500/5 border-b border-border/50">
+              <CardTitle className="text-md font-serif flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-amber-600" /> Prévia LocalBusiness
+              </CardTitle>
             </CardHeader>
             <CardContent className="p-4 space-y-4">
-              <div className="flex gap-2">
-                <Input 
-                  value={newKeyword} 
-                  onChange={e => setNewKeyword(e.target.value)}
-                  placeholder="Nova keyword..."
-                  className="h-9 text-xs"
-                />
-                <Button onClick={handleAddKeyword} size="icon" className="h-9 w-9 shrink-0">
-                  <Plus className="w-4 h-4" />
-                </Button>
+              <div className="bg-black/90 text-amber-400 p-3 rounded-lg text-[10px] font-mono overflow-x-auto max-h-[200px] no-scrollbar shadow-inner">
+                <pre>
+{JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": formData.business_name || "Cathedra Digital",
+  "telephone": formData.business_whatsapp || formData.business_phone || "—",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": formData.business_address || "—",
+    "addressLocality": "São Paulo",
+    "addressRegion": "SP",
+    "addressCountry": "BR"
+  },
+  "openingHours": formData.opening_hours || "—"
+}, null, 2)}
+                </pre>
               </div>
+              <div className="flex flex-col gap-1">
+                <div className="flex items-center justify-between text-[10px] font-bold uppercase opacity-60">
+                  <span>NAP Validation</span>
+                  {formData.business_name && formData.business_address && (formData.business_phone || formData.business_whatsapp) ? (
+                    <span className="text-emerald-600 flex items-center gap-1"><CheckCircle2 className="w-3 h-3" /> Completo</span>
+                  ) : (
+                    <span className="text-destructive flex items-center gap-1"><AlertCircle className="w-3 h-3" /> Incompleto</span>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
-              <div className="flex flex-wrap gap-2 max-h-[300px] overflow-y-auto pr-2 no-scrollbar">
-                {keywords?.map(kw => (
-                  <Badge key={kw.id} variant="secondary" className="gap-1 pr-1.5 py-1 text-[10px]">
-                    {kw.keyword}
-                    <button onClick={() => handleDeleteKeyword(kw.id)} className="hover:text-destructive transition-colors">
-                      <Trash2 className="w-3 h-3" />
-                    </button>
-                  </Badge>
-                ))}
+          <Card className="border-border/50 shadow-sm h-fit">
+            <CardHeader className="bg-primary/5 border-b border-border/50">
+              <CardTitle className="text-md font-serif flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-primary" /> IA SEO Insights
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-4 space-y-4">
+              <div className="p-3 bg-muted/50 rounded-lg border border-border/50 text-[11px] leading-relaxed">
+                <p className="font-bold text-primary mb-1">Dica Local:</p>
+                "Adicionar o bairro ao endereço ajuda no posicionamento do Google Maps."
+              </div>
+              <div className="p-3 bg-muted/50 rounded-lg border border-border/50 text-[11px] leading-relaxed">
+                <p className="font-bold text-primary mb-1">Keywords:</p>
+                "Sua meta descrição atual contém 3 de suas top keywords."
               </div>
             </CardContent>
           </Card>

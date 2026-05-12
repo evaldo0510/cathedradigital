@@ -1650,25 +1650,8 @@ export type Database = {
       }
     }
     Functions: {
-      can_update_own_profile: {
-        Args: {
-          _email: string
-          _is_premium: boolean
-          _profile_id: string
-          _role: string
-        }
-        Returns: boolean
-      }
       get_latest_journey_title: { Args: { p_user_id: string }; Returns: string }
-      has_role: {
-        Args: {
-          _role: Database["public"]["Enums"]["app_role"]
-          _user_id: string
-        }
-        Returns: boolean
-      }
       immutable_unaccent: { Args: { "": string }; Returns: string }
-      is_admin: { Args: never; Returns: boolean }
       search_community_posts_fuzzy: {
         Args: { result_limit?: number; search_query: string }
         Returns: {
