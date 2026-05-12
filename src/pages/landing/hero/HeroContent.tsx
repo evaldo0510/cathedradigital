@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { buttonHover } from "../animations";
 import { Play } from "lucide-react";
 import logosAvatar from "@/assets/logos-avatar.png";
+import GoogleSignInButton from "@/components/auth/GoogleSignInButton";
 
 const EASE = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
@@ -155,6 +156,23 @@ const HeroContent = ({ heroOpacity, heroScale, heroY, onStart, onAbout }: HeroCo
             </Button>
           </motion.div>
         </div>
+
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2.8 }}
+          className="w-full max-w-sm flex flex-col gap-3"
+        >
+          <div className="flex items-center gap-3 w-full">
+            <div className="h-px bg-border flex-1 opacity-20" />
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">Acesso Rápido</span>
+            <div className="h-px bg-border flex-1 opacity-20" />
+          </div>
+          <GoogleSignInButton 
+            className="h-14 sm:h-16 rounded-2xl bg-background hover:bg-muted/50 border-border/50 text-xs"
+            text="Continuar com Google"
+          />
+        </motion.div>
 
         <div className="flex items-center gap-3 opacity-40">
           <span className="w-8 h-px bg-muted-foreground" />

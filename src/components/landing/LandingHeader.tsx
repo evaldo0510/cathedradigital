@@ -6,6 +6,7 @@ import { AppRoute, Language } from "@/types";
 import { useNavigate } from "react-router-dom";
 import { Menu, X, ChevronRight, Globe } from "lucide-react";
 import { useLang } from "@/hooks/useLang";
+import GoogleSignInButton from "../auth/GoogleSignInButton";
 
 const LandingHeader = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -117,14 +118,20 @@ const LandingHeader = () => {
         </nav>
 
         <div className="flex items-center gap-3">
+          <div className="hidden lg:block">
+            <GoogleSignInButton 
+              className="h-11 px-6 rounded-2xl"
+              text="Entrar com Google"
+            />
+          </div>
           <Button
-            className="hidden sm:flex text-sm font-bold uppercase tracking-widest px-6 bg-foreground text-background hover:bg-primary hover:text-primary-foreground transition-all shadow-lg active:scale-95 border-none"
+            className="hidden sm:flex text-sm font-bold uppercase tracking-widest px-6 h-11 bg-foreground text-background hover:bg-primary hover:text-primary-foreground transition-all shadow-lg active:scale-95 border-none rounded-2xl"
             onClick={() => navigate(AppRoute.LOGIN)}
           >
             Entrar
           </Button>
           <Button
-            className="rounded-full px-6 bg-blue-600 hover:bg-blue-700 text-white font-black uppercase tracking-widest text-[10px] h-11 shadow-lg shadow-blue-600/20 hover:scale-105 transition-all"
+            className="rounded-2xl px-6 bg-blue-600 hover:bg-blue-700 text-white font-black uppercase tracking-widest text-[10px] h-11 shadow-lg shadow-blue-600/20 hover:scale-105 transition-all"
             onClick={() => navigate(AppRoute.LOGIN)}
           >
             Começar <ChevronRight className="w-4 h-4 ml-1" />
@@ -160,6 +167,10 @@ const LandingHeader = () => {
                 </button>
               ))}
               <hr className="border-border" />
+              <GoogleSignInButton 
+                className="w-full h-14 rounded-2xl"
+                text="Entrar com Google"
+              />
               <Button
                 className="w-full h-14 rounded-2xl font-bold uppercase tracking-widest bg-foreground text-background hover:bg-primary hover:text-primary-foreground transition-all shadow-lg active:scale-95 border-none"
                 onClick={() => navigate(AppRoute.LOGIN)}

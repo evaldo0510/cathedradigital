@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AppRoute, Language } from '@/types';
 import { Icons } from '@/constants';
+import GoogleSignInButton from '../auth/GoogleSignInButton';
 
 import { useNotifications } from '@/hooks/useNotifications';
 import { useLang } from '@/hooks/useLang';
@@ -171,9 +172,17 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
               {t('exit_session')}
             </button>
           ) : (
-            <button onClick={() => navigate(AppRoute.LOGIN)} className="px-4 sm:px-6 py-2 sm:py-2.5 bg-foreground text-background rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-primary-foreground transition-all shadow-lg active:scale-95">
-              {t('enter')}
-            </button>
+            <div className="flex items-center gap-2">
+              <div className="hidden md:block">
+                <GoogleSignInButton 
+                  className="h-10 px-4 rounded-xl"
+                  text="Google"
+                />
+              </div>
+              <button onClick={() => navigate(AppRoute.LOGIN)} className="px-4 sm:px-6 py-2 sm:py-2.5 bg-foreground text-background rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-primary-foreground transition-all shadow-lg active:scale-95">
+                {t('enter')}
+              </button>
+            </div>
           )}
 
           <div className="hidden sm:flex lg:hidden items-center gap-1.5 sm:gap-2">
