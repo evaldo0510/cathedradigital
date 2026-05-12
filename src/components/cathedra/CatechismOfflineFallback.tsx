@@ -17,6 +17,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
+interface CatechismOfflineFallbackProps {
   paragraph?: number;
   onRetry?: () => void;
 }
