@@ -334,6 +334,7 @@ const AppLayout: React.FC = () => {
   useEffect(() => {
     if (navigator.onLine) {
       import('@/lib/prefetch').then(({ prefetchEssentialContent }) => {
+        initGA4AutoTracking();
         prefetchEssentialContent();
       });
     }
