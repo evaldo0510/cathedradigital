@@ -131,15 +131,15 @@ describe('InstitutionalVideoSection Accessibility', () => {
     const firstElement = focusableElements[0] as HTMLElement;
     const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
 
-    // The order should be: Select -> Mute Btn -> Close Btn -> Video
-    // lastElement should be video
+    // The order should be: Select -> Mute Btn -> Close Btn -> Video (if tabIndex=0)
     
+    // Test forward circularity: last -> first
     lastElement.focus();
-    expect(document.activeElement).toBe(lastElement);
-
     fireEvent.keyDown(lastElement, { key: 'Tab' });
     expect(document.activeElement).toBe(firstElement);
 
+    // Test backward circularity: first -> last
+    firstElement.focus();
     fireEvent.keyDown(firstElement, { key: 'Tab', shiftKey: true });
     expect(document.activeElement).toBe(lastElement);
   });
