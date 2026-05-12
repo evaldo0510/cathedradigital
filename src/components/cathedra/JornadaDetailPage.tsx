@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Check, Lock, Clock, BookOpen, Hand, PenLine, HelpCircle, ChevronRight, Sparkles, Award, PartyPopper } from 'lucide-react';
+import { ArrowLeft, Check, Lock, Clock, BookOpen, Hand, PenLine, HelpCircle, ChevronRight, Sparkles, Award, PartyPopper, Download } from 'lucide-react';
+import { jsPDF } from 'jspdf';
+import 'jspdf-autotable';
 import { Button } from '@/components/ui/button';
 import { Icons } from '../../constants';
 import { Card, CardContent } from '@/components/ui/card';
@@ -57,6 +59,50 @@ const JornadaDetailPage: React.FC = () => {
     }
   };
 
+  const exportPlanToPDF = () => {
+    if (!journey) return;
+    const doc = new jsPDF();
+    
+    // Header
+    doc.setFontSize(20);
+    doc.setTextColor(11, 31, 58); // primary color
+    doc.text('Plano Terapêutico Espiritual', 20, 20);
+    
+    doc.setFontSize(14);
+    doc.setTextColor(200, 169, 106); // secondary color
+    doc.text(journey.title, 20, 30);
+    
+    doc.setFontSize(10);
+    doc.setTextColor(100);
+    doc.text(`Duração estimada: ${journey.estimated_days} dias`, 20, 40);
+    doc.text(`Gerado em: ${new Date().toLocaleDateString('pt-BR')}`, 20, 45);
+    
+    // Description
+    doc.setFontSize(11);
+    doc.setTextColor(0);
+    const splitDesc = doc.splitTextToSize(journey.description || '', 170);
+    doc.text(splitDesc, 20, 55);
+    
+    // Steps Table
+    const tableData = steps.map(s => [
+      s.step_order.toString(),
+      s.title,
+      s.subtitle || '',
+      `${s.duration_minutes} min`
+    ]);
+    
+    (doc as any).autoTable({
+      startY: 75,
+      head: [['Dia', 'Título', 'Foco', 'Tempo']],
+      body: tableData,
+      theme: 'striped',
+      headStyles: { fillStyle: [11, 31, 58] },
+    });
+    
+    doc.save(`plano_terapeutico_${id}.pdf`);
+    toast.success('Plano exportado com sucesso!');
+  };
+
   const completeStep = async (stepId: string) => {
     if (!user) return;
     try {
@@ -109,6 +155,9 @@ const JornadaDetailPage: React.FC = () => {
             <Sparkles className="w-3 h-3 mr-1" /> PRO
           </Badge>
         )}
+        <Button variant="outline" size="icon" onClick={exportPlanToPDF} title="Exportar Plano (PDF)" className="rounded-full">
+          <Download className="w-4 h-4" />
+        </Button>
       </div>
 
       {/* Progress */}
