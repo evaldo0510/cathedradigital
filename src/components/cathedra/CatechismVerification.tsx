@@ -10,6 +10,18 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
+import { cacheCatechismParagraph } from '@/lib/offlineCache';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface VerificationResult {
   paragraph: number;
@@ -23,8 +35,10 @@ const CatechismVerification: React.FC = () => {
   const navigate = useNavigate();
   const [results, setResults] = useState<VerificationResult[]>([]);
   const [loading, setLoading] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
   const [stats, setStats] = useState({ total: 0, ok: 0, missing: 0, divergent: 0 });
   const [filter, setFilter] = useState<'all' | 'missing' | 'divergent'>('all');
+  const [officialDataMap, setOfficialDataMap] = useState<Map<number, any>>(new Map());
 
   const isAdmin = profile?.role === 'admin';
 
@@ -39,6 +53,7 @@ const CatechismVerification: React.FC = () => {
       if (error) throw error;
 
       const officialMap = new Map(officialData.map(d => [d.paragraph, d.content]));
+      setOfficialDataMap(new Map(officialData.map(d => [d.paragraph, d])));
       const newResults: VerificationResult[] = [];
       
       // 2. Iterate through sections defined in the site
@@ -57,8 +72,6 @@ const CatechismVerification: React.FC = () => {
                 details: 'Ausente na tabela catechism_official'
               });
             } else if (localData && localData.conteudo !== officialContent) {
-              // Only check divergence if we have local data to compare with
-              // Divergence means local static data differs from DB official data
               newResults.push({
                 paragraph: p,
                 section: section.title,
@@ -66,8 +79,6 @@ const CatechismVerification: React.FC = () => {
                 details: 'Conteúdo local difere do banco oficial'
               });
             } else {
-              // It's in the DB and matches (or no local data to compare)
-              // Note: If no local data, we assume DB is the truth and it's OK
               newResults.push({
                 paragraph: p,
                 section: section.title,
@@ -100,6 +111,35 @@ const CatechismVerification: React.FC = () => {
     }
   };
 
+  const handleSync = async () => {
+    setIsSyncing(true);
+    let syncedCount = 0;
+    
+    try {
+      const divergentOrMissing = results.filter(r => r.status === 'missing' || r.status === 'divergent');
+      
+      for (const res of divergentOrMissing) {
+        const official = officialDataMap.get(res.paragraph);
+        if (official) {
+          await cacheCatechismParagraph(res.paragraph, {
+            paragraph: res.paragraph,
+            content: official.content,
+            language: 'pt',
+            status: 'official'
+          });
+          syncedCount++;
+        }
+      }
+      
+      toast.success(`${syncedCount} parágrafos sincronizados com o cache local.`);
+      runVerification();
+    } catch (err: any) {
+      toast.error('Erro na sincronização: ' + err.message);
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
   useEffect(() => {
     if (isAdmin) runVerification();
   }, [isAdmin]);
@@ -128,6 +168,32 @@ const CatechismVerification: React.FC = () => {
         </div>
         
         <div className="flex items-center gap-3">
+          {(stats.missing > 0 || stats.divergent > 0) && (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="default" className="rounded-xl bg-emerald-600 hover:bg-emerald-700">
+                  <Icons.CheckCircle className="w-4 h-4 mr-2" />
+                  Sincronizar {stats.missing + stats.divergent} Divergências
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent className="rounded-2xl border-border bg-card">
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="font-serif">Sincronizar com o Banco?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Isso irá atualizar o cache local dos parágrafos ausentes ou divergentes com o conteúdo oficial do banco de dados. 
+                    Isso garante que o usuário veja a versão mais recente mesmo offline.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel className="rounded-xl">Cancelar</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleSync} className="rounded-xl bg-emerald-600 hover:bg-emerald-700">
+                    Sincronizar Agora
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          )}
+
           <Button 
             onClick={runVerification} 
             disabled={loading}

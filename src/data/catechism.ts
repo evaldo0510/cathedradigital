@@ -16,7 +16,7 @@ export const CATECHISM_LOCAL_DATA: Record<number, CatechismData> = {
     tipo: "catecismo",
     type: "catechism",
     titulo: "O desígnio de Deus para o homem",
-    conteudo: "Deus, infinitamente perfeito e bem-aventurado em si mesmo, num desígnio de pura bondade, criou livremente o homem para o tornar participante da sua vida bem-aventurada. É por isso que, em todo o tempo e em todo o lugar, Ele está perto do homem.",
+    conteudo: "Deus, infinitamente perfeito e bem-aventurado em Si mesmo, num desígnio de pura bondade, criou livremente o homem para o tornar participante da sua vida bem-aventurada. Por isso, sempre e em toda a parte, Ele está próximo do homem. Chama-o e ajuda-o a procurá-Lo, a conhecê-Lo e a amá-Lo com todas as suas forças. Convoca todos os homens, dispersos pelo pecado, para a unidade da sua família que é a Igreja. Para tal, enviou o seu Filho como Redentor e Salvador na plenitude dos tempos. N'Ele e por Ele, chama os homens a tornarem-se, no Espírito Santo, seus filhos adoptivos e, portanto, herdeiros da sua vida bem-aventurada.",
     tags: ["criacao", "amor", "presenca-de-deus"],
     textoBase: "Deus criou o homem para o tornar participante da sua vida."
   },
@@ -26,7 +26,7 @@ export const CATECHISM_LOCAL_DATA: Record<number, CatechismData> = {
     tipo: "catecismo",
     type: "catechism",
     titulo: "O desejo de Deus",
-    conteudo: "O desejo de Deus está inscrito no coração do homem, porque o homem foi criado por Deus e para Deus; e Deus não deixa de atrair o homem para Si, e só em Deus é que o homem encontra a verdade e a felicidade que não cessa de procurar.",
+    conteudo: "O desejo de Deus é um sentimento inscrito no coração do homem, porque o homem foi criado por Deus e para Deus. Deus não cessa de atrair o homem para Si e só em Deus é que o homem encontra a verdade e a felicidade que procura sem descanso: «A razão mais sublime da dignidade humana consiste na sua vocação à comunhão com Deus. Desde o começo da sua existência, o homem é convidado a dialogar com Deus: pois se existe, é só porque, criado por Deus por amor, é por Ele, e por amor, constantemente conservado: nem pode viver plenamente segundo a verdade, se não reconhecer livremente esse amor e não se entregar ao seu Criador».",
     tags: ["desejo", "felicidade", "busca-de-deus"],
     textoBase: "O homem tem um desejo natural de Deus."
   },
@@ -208,7 +208,7 @@ export const CATECHISM_LOCAL_DATA: Record<number, CatechismData> = {
     tipo: "catecismo",
     type: "catechism",
     titulo: "O que é a Oração?",
-    conteudo: "«A oração é a elevação da alma a Deus ou o pedido a Deus dos bens convenientes». Donde falamos nós, ao rezar? Da altura do nosso orgulho e vontade própria, ou das «profundezas» (Sl 130, 1) dum coração humilde e contrito? Aquele que se humilha será exaltado. A humildade é o fundamento da oração.",
+    conteudo: "«Grande é o mistério da fé». A Igreja confessa-o no Símbolo dos Apóstolos e celebra-o na liturgia sacramental, para que a vida dos fiéis seja conformada com Cristo no Espírito Santo para glória de Deus Pai. Este mistério exige, pois, que os fiéis nele creiam, o celebrem e dele vivam, numa relação viva e pessoal com o Deus vivo e verdadeiro. Esta relação é a oração.",
     tags: ["oracao", "humildade", "espiritualidade"],
     textoBase: "A humildade é o fundamento da oração."
   },
@@ -218,7 +218,7 @@ export const CATECHISM_LOCAL_DATA: Record<number, CatechismData> = {
     tipo: "catecismo",
     type: "catechism",
     titulo: "A oração",
-    conteudo: "A oração é a elevação da alma a Deus.",
+    conteudo: "«A oração é a elevação da alma a Deus ou o pedido a Deus dos bens convenientes». Donde falamos nós, ao rezar? Da altura do nosso orgulho e vontade própria, ou das «profundezas» (Sl 130, 1) dum coração humilde e contrito? Aquele que se humilha será exaltado. A humildade é o fundamento da oração.",
     tags: ["oracao", "deus"]
   },
   2565: {
