@@ -6,7 +6,16 @@ import { useNavigate } from 'react-router-dom';
 import { fetchCatechismParagraph } from '@/hooks/useCatechismParagraph';
 import { toast } from 'sonner';
 import { Progress } from '@/components/ui/progress';
-
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface CatechismOfflineFallbackProps {
   paragraph?: number;
@@ -19,6 +28,8 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
   const [retryAttempt, setRetryAttempt] = useState(0);
   const [progress, setProgress] = useState(0);
   const isCancelled = useRef(false);
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+
 
   useEffect(() => {
     // Check if there was a pending download for this paragraph
@@ -114,13 +125,17 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
 
 
   const handleCancel = () => {
-    if (confirm('Deseja realmente cancelar o download do parágrafo? O progresso será perdido.')) {
-      isCancelled.current = true;
-      setDownloading(false);
-      clearDownloadState();
-      toast.info('Download cancelado pelo usuário.');
-    }
+    setShowCancelConfirm(true);
   };
+
+  const confirmCancel = () => {
+    isCancelled.current = true;
+    setDownloading(false);
+    clearDownloadState();
+    toast.info('Download cancelado pelo usuário.');
+    setShowCancelConfirm(false);
+  };
+
 
 
 
@@ -201,6 +216,25 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
           Dica: Vá em "Gerenciar Cache" para baixar seções completas para uso offline.
         </p>
       </div>
+      <AlertDialog open={showCancelConfirm} onOpenChange={setShowCancelConfirm}>
+        <AlertDialogContent className="rounded-[2rem]">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="font-serif">Confirmar Cancelamento</AlertDialogTitle>
+            <AlertDialogDescription>
+              Deseja realmente cancelar o download do parágrafo? O progresso será perdido.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="rounded-xl font-bold">Voltar</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={confirmCancel}
+              className="rounded-xl font-bold bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Confirmar e Cancelar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </motion.div>
   );
 };
