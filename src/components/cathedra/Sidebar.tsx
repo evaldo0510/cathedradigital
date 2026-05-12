@@ -4,7 +4,7 @@ import { prefetchRoute } from '@/lib/prefetch';
 import { Icons } from '../../constants';
 import { AppRoute, User } from '../../types';
 import { LangContext } from '@/contexts/LangContext';
-
+import { getCacheStats } from '@/lib/offlineCache';
 import { useLang } from '@/hooks/useLang';
 
 interface SidebarProps {
