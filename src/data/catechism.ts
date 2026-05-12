@@ -208,7 +208,7 @@ export const CATECHISM_LOCAL_DATA: Record<number, CatechismData> = {
     tipo: "catecismo",
     type: "catechism",
     titulo: "O que é a Oração?",
-    conteudo: "«A oração é a elevação da alma a Deus ou o pedido a Deus dos bens convenientes». Donde falamos nós, ao rezar? Da altura do nosso orgulho e vontade própria, ou das «profundezas» (Sl 130, 1) dum coração humilde e contrito? Aquele que se humilha será exaltado. A humildade é o fundamento da oração.",
+    conteudo: "«Grande é o mistério da fé». A Igreja confessa-o no Símbolo dos Apóstolos e celebra-o na liturgia sacramental, para que a vida dos fiéis seja conformada com Cristo no Espírito Santo para glória de Deus Pai. Este mistério exige, pois, que os fiéis nele creiam, o celebrem e dele vivam, numa relação viva e pessoal com o Deus vivo e verdadeiro. Esta relação é a oração.",
     tags: ["oracao", "humildade", "espiritualidade"],
     textoBase: "A humildade é o fundamento da oração."
   },
