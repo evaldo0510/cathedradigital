@@ -599,9 +599,13 @@ const AppLayout: React.FC = () => {
             <Suspense fallback={null}>
               <BottomNav onOpenSidebar={() => setIsSidebarOpen(true)} user={appUser} />
             </Suspense>
+            <OfflineModeToggle />
             {[AppRoute.BIBLE, AppRoute.DAILY_LITURGY, AppRoute.LITURGIA, AppRoute.BREVIARY, AppRoute.LECTIO_DIVINA, AppRoute.CATECHISM, AppRoute.MAGISTERIUM].includes(location.pathname as AppRoute) && (
               <ReadingModeToggle />
             )}
+            <OfflineIndicator />
+            <SplashScreen />
+            <PWAInstallPrompt />
           </>
         )}
       </div>
