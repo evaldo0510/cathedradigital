@@ -327,6 +327,30 @@ const AppLayout: React.FC = () => {
 
 
   useEffect(() => {
+    const handleOnline = () => {
+      toast.success('Conexão restabelecida', {
+        description: 'Sincronizando cache local...',
+      });
+      import('@/lib/prefetch').then(({ prefetchEssentialContent }) => {
+        prefetchEssentialContent();
+      });
+    };
+    
+    const handleOffline = () => {
+      toast.warning('Modo Offline Detectado', {
+        description: 'Você ainda pode ler os textos essenciais salvos.',
+      });
+    };
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
+  useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const oldTema = searchParams.get('tema');
     if (oldTema && location.pathname === AppRoute.TEMAS) {
