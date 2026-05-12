@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { buttonHover } from "../animations";
 import { Play } from "lucide-react";
 import logosAvatar from "@/assets/logos-avatar.png";
+import GoogleSignInButton from "@/components/auth/GoogleSignInButton";
 
 const EASE = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
