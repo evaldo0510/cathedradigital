@@ -21,6 +21,8 @@ const AdminSeoTab: React.FC = () => {
   const [formData, setFormData] = useState<Partial<SEOSettings>>({});
   const [newKeyword, setNewKeyword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [jsonMode, setJsonMode] = useState<'pretty' | 'minified'>('pretty');
+  const [domVerified, setDomVerified] = useState<'pending' | 'ok' | 'fail'>('pending');
 
   useEffect(() => {
     if (seoSettings) {
