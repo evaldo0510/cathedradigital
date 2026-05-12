@@ -53,6 +53,11 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
   }
 
   if (isError) {
+    const isOffline = !navigator.onLine || localStorage.getItem('cathedra_offline_mode') === 'true';
+    if (isOffline) {
+      return <CatechismOfflineFallback paragraph={paragraph} onRetry={() => window.location.reload()} />;
+    }
+
     return (
       <div className="reader-text bg-destructive/5 border border-destructive/10 rounded-2xl p-4 text-destructive font-serif text-sm py-4 space-y-2">
         <div className="font-bold flex items-center gap-2">
@@ -68,6 +73,7 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
       </div>
     );
   }
+
 
   if (data?.status === 'error_402') {
     return (
