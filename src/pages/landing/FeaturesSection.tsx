@@ -43,11 +43,11 @@ const features = [
     route: AppRoute.LITURGIA 
   },
   { 
-    title: "Jornadas de Fé", 
-    description: "Trilhas de formação espiritual desenhadas para converter seu conhecimento em vivência cristã autêntica.", 
-    benefit: "Um caminho seguro de maturidade espiritual através do estudo e da oração.", 
+    title: "Programa de 90 Dias", 
+    description: "Um plano terapêutico completo de cura e ordenação da alma, com metas semanais e acompanhamento diário.", 
+    benefit: "Cure feridas emocionais e vícios através de um caminho estruturado de 90 dias com a sabedoria da Igreja.", 
     icon: <Star className="h-6 w-6" />, 
-    route: AppRoute.JORNADAS 
+    route: '/jornadas/90909090-9090-4000-8000-000000000090' 
   },
   { 
     title: "Catecismo da Igreja", 
