@@ -47,12 +47,15 @@ const InstitutionalVideoSection = () => {
   const scale = useTransform(scrollYProgress, [0, 0.2], [0.8, 1]);
 
   // Analytics helper
-  const trackEvent = useCallback(async (eventName: string, props = {}) => {
+  const trackEvent = useCallback(async (eventName: string, props: Record<string, any> = {}) => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       await supabase.from('analytics_events').insert({
         event_name: eventName,
-        properties: { ...props, lang: currentLang },
+        properties: { 
+          lang: currentLang,
+          ...props 
+        },
         user_id: user?.id,
         url: window.location.href
       });
