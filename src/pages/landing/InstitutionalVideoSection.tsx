@@ -399,6 +399,7 @@ const InstitutionalVideoSection = () => {
                 loop
                 controls
                 playsInline
+                tabIndex={0}
                 muted={isMuted}
                 onPlay={() => trackEvent('video_play')}
                 onTimeUpdate={handleTimeUpdate}
