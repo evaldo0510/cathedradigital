@@ -54,8 +54,9 @@ async function runSecurityAudit() {
 
     log('✅ Verificação de search_path concluída.');
     log('🎉 Auditoria finalizada com sucesso!');
-  } catch (e: any) {
-    log(`❌ ERRO CRÍTICO na Auditoria de Segurança: ${e.message || e}`, true);
+  } catch (e: unknown) {
+    const error = e as Error;
+    log(`❌ ERRO CRÍTICO na Auditoria de Segurança: ${error.message || error}`, true);
     process.exit(1);
   }
 }
