@@ -2,9 +2,9 @@ import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'vitest-axe';
 import { MemoryRouter } from 'react-router-dom';
-import Index from '../src/pages/Index';
-import Hoje from '../src/pages/Hoje';
-import Biblioteca from '../src/pages/Biblioteca';
+import Index from '../pages/Index';
+import HojePage from '../components/cathedra/HojePage';
+import BibliotecaPage from '../components/cathedra/BibliotecaPage';
 
 expect.extend(toHaveNoViolations);
 
