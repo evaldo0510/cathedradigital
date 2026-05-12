@@ -23,20 +23,26 @@ vi.mock('@/hooks/useDashboardData', () => ({
   useDashboardData: vi.fn()
 }));
 
-// We need to mock Framer Motion to avoid issues in test environment
+// Mock SEOHead to avoid Helmet issues
+vi.mock('@/components/SEOHead', () => ({
+  default: () => <div data-testid="seo-head" />
+}));
+
+// We need to mock Framer Motion
 vi.mock('framer-motion', async (importOriginal) => {
   const actual = await importOriginal() as any;
   return {
     ...actual,
     motion: {
-      div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-      h1: ({ children, ...props }: any) => <h1 {...props}>{children}</h1>,
-      p: ({ children, ...props }: any) => <p {...props}>{children}</p>,
-      span: ({ children, ...props }: any) => <span {...props}>{children}</span>,
+      div: ({ children, whileHover, whileTap, initial, animate, transition, ...props }: any) => <div {...props}>{children}</div>,
+      h1: ({ children, initial, animate, transition, ...props }: any) => <h1 {...props}>{children}</h1>,
+      p: ({ children, initial, animate, transition, ...props }: any) => <p {...props}>{children}</p>,
+      span: ({ children, initial, animate, transition, ...props }: any) => <span {...props}>{children}</span>,
     },
     AnimatePresence: ({ children }: any) => <>{children}</>,
   };
 });
+
 
 // Mock RitualDoDia to simplify testing HojePage
 vi.mock('./RitualDoDia', () => ({
