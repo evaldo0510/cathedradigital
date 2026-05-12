@@ -306,9 +306,10 @@ const InstitutionalVideoSection = () => {
             aria-label="Vídeo Institucional Catedra Digital"
           >
             <motion.div
-              initial={{ scale: 0.9, y: 20, opacity: 0 }}
+              ref={modalContainerRef}
+              initial={shouldReduceMotion ? { opacity: 0 } : { scale: 0.9, y: 20, opacity: 0 }}
               animate={{ scale: 1, y: 0, opacity: 1 }}
-              exit={{ scale: 0.9, y: 20, opacity: 0 }}
+              exit={shouldReduceMotion ? { opacity: 0 } : { scale: 0.9, y: 20, opacity: 0 }}
               className="relative w-full max-w-6xl aspect-video bg-black rounded-[32px] overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.5)] border border-white/5"
               onClick={e => e.stopPropagation()}
             >
