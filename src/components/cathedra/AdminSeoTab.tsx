@@ -10,7 +10,7 @@ import { useSEO, useKeywords, SEOSettings } from '@/hooks/useSEO';
 import { 
   Globe, Search, LineChart, Save, Plus, Trash2, 
   ExternalLink, CheckCircle2, AlertCircle, Sparkles,
-  Smartphone, Monitor, Share2, Info
+  Smartphone, Monitor, Share2, Info, MapPin
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -313,7 +313,7 @@ const AdminSeoTab: React.FC = () => {
           <Card className="border-border/50 shadow-sm h-fit bg-muted/20">
             <CardContent className="p-4 space-y-3">
               <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary">
-                <Info className="w-3 h-3" /> Links Úteis
+                <Info, MapPin className="w-3 h-3" /> Links Úteis
               </div>
               <div className="space-y-2">
                 <a href="https://search.google.com/search-console" target="_blank" rel="noopener" className="flex items-center justify-between text-xs hover:text-primary hover:underline group">
