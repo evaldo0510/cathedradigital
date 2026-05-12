@@ -216,6 +216,25 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
           Dica: Vá em "Gerenciar Cache" para baixar seções completas para uso offline.
         </p>
       </div>
+      <AlertDialog open={showCancelConfirm} onOpenChange={setShowCancelConfirm}>
+        <AlertDialogContent className="rounded-[2rem]">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="font-serif">Confirmar Cancelamento</AlertDialogTitle>
+            <AlertDialogDescription>
+              Deseja realmente cancelar o download do parágrafo? O progresso será perdido.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="rounded-xl font-bold">Voltar</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={confirmCancel}
+              className="rounded-xl font-bold bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Confirmar e Cancelar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </motion.div>
   );
 };
