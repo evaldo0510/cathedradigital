@@ -102,7 +102,7 @@ interface BubbleTagProps {
   [key: string]: any;
 }
 
-export const BubbleTag = React.forwardRef<HTMLButtonElement, BubbleTagProps>(({
+const BubbleTagBase = React.forwardRef<HTMLButtonElement, BubbleTagProps>(({
   label,
   emoji,
   index,
@@ -131,16 +131,9 @@ export const BubbleTag = React.forwardRef<HTMLButtonElement, BubbleTagProps>(({
   };
 
   return (
-    <motion.button
+    <button
       ref={ref}
       type="button"
-      variants={bubbleVariants}
-      initial="initial"
-      animate="animate"
-      whileHover="hover"
-      whileTap="tap"
-      layout="position"
-      custom={index}
       onClick={onClick}
       onKeyDown={onKeyDown}
       onMouseEnter={onMouseEnter}
@@ -175,8 +168,26 @@ export const BubbleTag = React.forwardRef<HTMLButtonElement, BubbleTagProps>(({
       `}>
         {label}
       </span>
-    </motion.button>
+    </button>
   );
 });
+
+BubbleTagBase.displayName = 'BubbleTagBase';
+
+const MotionBubbleTag = motion(BubbleTagBase);
+
+export const BubbleTag = React.forwardRef<HTMLButtonElement, BubbleTagProps>((props, ref) => (
+  <MotionBubbleTag
+    ref={ref}
+    variants={bubbleVariants}
+    initial="initial"
+    animate="animate"
+    whileHover="hover"
+    whileTap="tap"
+    layout="position"
+    custom={props.index}
+    {...props}
+  />
+));
 
 BubbleTag.displayName = 'BubbleTag';
