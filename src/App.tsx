@@ -24,6 +24,7 @@ import AppHeader from './components/cathedra/AppHeader';
 import ProGate from './components/cathedra/ProGate';
 import CommandCenter from './components/cathedra/CommandCenter';
 import OfflineIndicator from './components/cathedra/OfflineIndicator';
+import OfflineModeToggle from './components/cathedra/OfflineModeToggle';
 import SplashScreen from './components/cathedra/SplashScreen';
 import { PWAInstallPrompt } from './components/cathedra/PWAInstallPrompt';
 // AIStatusBanner removed
