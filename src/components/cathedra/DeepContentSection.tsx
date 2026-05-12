@@ -35,9 +35,15 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
       { id: 'aplicacaoPratica', label: 'Vida Prática', icon: <Icons.Zap className="w-4 h-4" />, value: content.aplicacaoPratica, isPremium: true },
       { id: 'reflexaoFinal', label: 'Reflexão', icon: <Icons.Heart className="w-4 h-4" />, value: content.reflexaoFinal, isPremium: true },
       { id: 'exercicio', label: 'Exercício de Fé', icon: <Icons.PenTool className="w-4 h-4" />, value: content.exercicio, isPremium: true },
-    ].filter(sec => !!sec.value);
-    return s;
-  }, [content]);
+    ];
+
+    // If it's catechism, we might want to show all sections even if empty to satisfy the "clear message" requirement
+    if (contentType === 'catechism') {
+      return s;
+    }
+
+    return s.filter(sec => !!sec.value);
+  }, [content, contentType]);
 
   if (sections.length === 0) return null;
 
