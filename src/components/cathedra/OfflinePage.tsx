@@ -43,6 +43,20 @@ const OfflinePage: React.FC = () => {
             ? 'Você ativou o modo somente-cache. O acesso à rede foi desabilitado para garantir total privacidade e foco.'
             : 'Parece que você está sem conexão com a internet. Não se preocupe, a Palavra e o Magistério permanecem com você.'}
         </p>
+        
+        {stats && stats.total > 0 && (
+          <div className="flex flex-col items-center gap-2 pt-2 animate-in fade-in slide-in-from-top-1 duration-1000">
+            <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary bg-primary/5 px-4 py-2 rounded-full border border-primary/10">
+              <Icons.Library className="w-3 h-3" />
+              {stats.total} textos salvos offline
+            </div>
+            {stats.lastSync && (
+              <span className="text-[9px] text-muted-foreground font-medium italic">
+                Sincronizado {formatDistanceToNow(parseInt(stats.lastSync), { addSuffix: true, locale: ptBR })}
+              </span>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-sm">
