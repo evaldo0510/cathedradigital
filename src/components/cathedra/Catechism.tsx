@@ -13,6 +13,8 @@ import BibleVersePopover from './BibleVersePopover';
 import DeepContentSection from './DeepContentSection';
 import MagisteriumPopover from './MagisteriumPopover';
 import { getCatechismCrossRefs, getCatechismDocs } from '@/data/cross-references';
+import { CIC_SECTIONS, CATECHISM_LOCAL_DATA } from '@/data/catechism';
+
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { useFavorites } from '@/hooks/useFavorites';
