@@ -32,6 +32,31 @@ export const fetchCatechismParagraph = async (paragraph: number, forceGenerate =
     return cached;
   }
 
+  // 2) Check catechism_official table DIRECTLY (Bypassing AI edge function for official content)
+  try {
+    const { data: officialData, error: officialError } = await supabase
+      .from('catechism_official')
+      .select('*')
+      .eq('paragraph', paragraph)
+      .maybeSingle();
+
+    if (officialData && !officialError) {
+      const result: CatechismParagraph = {
+        paragraph: officialData.paragraph,
+        content: officialData.content,
+        language: 'pt',
+        status: 'official',
+        textoBase: officialData.texto_base,
+      };
+      
+      // Cache it locally
+      cacheCatechismParagraph(paragraph, result);
+      return result;
+    }
+  } catch (e) {
+    console.error('Error fetching official catechism:', e);
+  }
+
   // 2) If in Offline Mode and not cached/static, we must throw or return fallback
   if (isOfflineMode && !forceGenerate) {
     if (cached) return cached;
