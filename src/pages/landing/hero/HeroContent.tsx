@@ -2,6 +2,7 @@ import { motion, MotionValue } from "framer-motion";
 import { Icons } from "@/constants";
 import { Button } from "@/components/ui/button";
 import { buttonHover } from "../animations";
+import { Play } from "lucide-react";
 import logosAvatar from "@/assets/logos-avatar.png";
 
 const EASE = [0.16, 1, 0.3, 1] as [number, number, number, number];
@@ -40,142 +41,131 @@ interface HeroContentProps {
   onAbout: () => void;
 }
 
-const HeroContent = ({ heroOpacity, heroScale, heroY, onStart, onAbout }: HeroContentProps) => (
-  <motion.div
-    style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
-    className="relative z-10 max-w-4xl lg:max-w-5xl text-center space-y-8 sm:space-y-12 px-4"
-  >
-    {/* Logos Avatar */}
-    <motion.div
-      initial={{ opacity: 0, scale: 0.5 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 1, delay: 0.5, ease: EASE }}
-      className="flex justify-center"
-    >
-      <div className="relative group">
-        {/* Breathing halo glow */}
-        <motion.div
-          animate={{ opacity: [0.15, 0.3, 0.15], scale: [1, 1.15, 1] }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute inset-0 bg-secondary/20 blur-3xl rounded-full"
-        />
-        {/* Gentle floating */}
-        <motion.div
-          animate={{ y: [0, -8, 0] }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-          className="relative"
-        >
-          {/* Avatar container */}
-          <div className="relative w-28 h-28 sm:w-36 sm:h-36 rounded-full overflow-hidden border-[3px] border-secondary/40 shadow-2xl group-hover:border-secondary/60 transition-all duration-500 bg-card/60 backdrop-blur-xl">
-            <img src={logosAvatar} alt="Logos — Mestre Contemplativo" className="w-full h-full object-cover" />
-            {/* Soft breathing overlay — simulates liveliness */}
-            <motion.div
-              animate={{ opacity: [0, 0.06, 0] }}
-              transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute inset-0 bg-secondary/30 rounded-full"
-            />
-          </div>
-          {/* Rotating subtle halo ring */}
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            className="absolute -inset-4 rounded-full border border-secondary/10 -z-10"
-            style={{ borderStyle: 'dashed' }}
-          />
-          {/* Pulsing inner halo */}
-          <motion.div
-            animate={{ opacity: [0.1, 0.25, 0.1], scale: [0.95, 1.05, 0.95] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute -inset-3 rounded-full bg-gradient-to-b from-secondary/20 via-transparent to-transparent -z-10 blur-md"
-          />
-        </motion.div>
-        <motion.div 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.2 }}
-          className="absolute -bottom-6 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-primary text-primary-foreground text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] sm:tracking-[0.3em] whitespace-nowrap border-[4px] border-background shadow-2xl"
-        >
-          Logos · Mestre Contemplativo
-        </motion.div>
-      </div>
-    </motion.div>
+const HeroContent = ({ heroOpacity, heroScale, heroY, onStart, onAbout }: HeroContentProps) => {
+  const scrollToVideo = () => {
+    document.getElementById('video')?.scrollIntoView({ behavior: 'smooth' });
+  };
 
-    {/* Title */}
-    <div className="text-2xl xs:text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold tracking-tight text-foreground leading-[1.2] sm:leading-[1.1] pt-2 sm:pt-4">
-      <AnimatedTitle text="Como está a sua alma" />
-      <br className="hidden sm:block" />
-      <span className="inline sm:hidden">{" "}</span>
-      <motion.span
+  return (
+    <motion.div
+      style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
+      className="relative z-10 max-w-4xl lg:max-w-5xl text-center space-y-8 sm:space-y-12 px-4"
+    >
+      {/* Logos Avatar */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.5 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1, delay: 0.5, ease: EASE }}
+        className="flex justify-center"
+      >
+        <div className="relative group">
+          {/* Breathing halo glow */}
+          <motion.div
+            animate={{ opacity: [0.15, 0.3, 0.15], scale: [1, 1.15, 1] }}
+            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute inset-0 bg-secondary/20 blur-3xl rounded-full"
+          />
+          {/* Gentle floating */}
+          <motion.div
+            animate={{ y: [0, -8, 0] }}
+            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+            className="relative"
+          >
+            {/* Avatar container */}
+            <div className="relative w-28 h-28 sm:w-36 sm:h-36 rounded-full overflow-hidden border-[3px] border-secondary/40 shadow-2xl group-hover:border-secondary/60 transition-all duration-500 bg-card/60 backdrop-blur-xl">
+              <img src={logosAvatar} alt="Logos — Mestre Contemplativo" className="w-full h-full object-cover" />
+              <motion.div
+                animate={{ opacity: [0, 0.06, 0] }}
+                transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute inset-0 bg-secondary/30 rounded-full"
+              />
+            </div>
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              className="absolute -inset-4 rounded-full border border-secondary/10 -z-10"
+              style={{ borderStyle: 'dashed' }}
+            />
+          </motion.div>
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.2 }}
+            className="absolute -bottom-6 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-primary text-primary-foreground text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] sm:tracking-[0.3em] whitespace-nowrap border-[4px] border-background shadow-2xl"
+          >
+            Logos · Mestre Contemplativo
+          </motion.div>
+        </div>
+      </motion.div>
+
+      {/* Title */}
+      <div className="text-2xl xs:text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold tracking-tight text-foreground leading-[1.2] sm:leading-[1.1] pt-2 sm:pt-4">
+        <AnimatedTitle text="Como está a sua alma" />
+        <br className="hidden sm:block" />
+        <span className="inline sm:hidden">{" "}</span>
+        <motion.span
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.6, ease: EASE }}
+          className="text-primary italic font-light drop-shadow-sm inline-block font-serif text-[1.1em] sm:text-[0.9em]"
+        >
+          hoje?
+        </motion.span>
+      </div>
+
+      {/* Description */}
+      <motion.p
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 2.2 }}
+        className="max-w-2xl mx-auto text-xl md:text-2xl text-muted-foreground font-serif italic leading-relaxed"
+      >
+        "A oração é o respirar da alma e o silêncio é a linguagem de Deus." <br />
+        <span className="text-base md:text-lg not-italic opacity-80 block mt-3">
+          Abra seu coração ao Logos IA e receba orientações espirituais personalizadas fundamentadas na Sagrada Tradição e no Magistério.
+        </span>
+      </motion.p>
+
+      {/* CTA Buttons */}
+      <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 1.6, ease: EASE }}
-        className="text-primary italic font-light drop-shadow-sm inline-block font-serif text-[1.1em] sm:text-[0.9em]"
+        transition={{ duration: 0.6, delay: 2.5 }}
+        className="flex flex-col items-center justify-center gap-8 pt-4"
       >
-        hoje?
-      </motion.span>
-    </div>
-
-    {/* Separator */}
-    <motion.div
-      initial={{ scaleX: 0 }}
-      animate={{ scaleX: 1 }}
-      transition={{ duration: 0.8, delay: 2 }}
-      className="w-32 h-0.5 bg-gradient-to-r from-transparent via-primary/60 to-transparent mx-auto"
-    />
-
-    {/* Description */}
-    <motion.p
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: 2.2 }}
-      className="max-w-2xl mx-auto text-xl md:text-2xl text-muted-foreground font-serif italic leading-relaxed"
-    >
-      "A oração é o respirar da alma e o silêncio é a linguagem de Deus." <br />
-      <span className="text-base md:text-lg not-italic opacity-80 block mt-3">
-        Abra seu coração ao Logos IA e receba orientações espirituais personalizadas fundamentadas na Sagrada Tradição e no Magistério.
-      </span>
-    </motion.p>
-
-    {/* CTA */}
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: 2.5 }}
-      className="flex flex-col items-center justify-center gap-6 pt-4"
-    >
-      <div className="flex flex-col items-center gap-4">
-        <motion.div variants={buttonHover} initial="rest" whileHover="hover" whileTap="tap">
-          <Button
-            size="lg"
-            className="h-16 sm:h-20 px-8 sm:px-16 rounded-[1.5rem] sm:rounded-[2rem] bg-blue-600 hover:bg-blue-700 text-white font-black uppercase tracking-[0.2em] shadow-[0_20px_50px_rgba(37,99,235,0.3)] text-base sm:text-lg relative overflow-hidden group border border-blue-400/20"
-            onClick={onStart}
-          >
-            <span className="relative z-10 flex items-center gap-3">
-              Iniciar Diálogo Espiritual <Icons.PenTool className="w-6 h-6 group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" />
-            </span>
-            <motion.div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-blue-400/20 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-          </Button>
-        </motion.div>
-        <div className="flex items-center gap-2 opacity-60">
-          <span className="w-8 h-px bg-muted-foreground/30" />
-          <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em]">
-            Comece sua jornada interior
-          </p>
-          <span className="w-8 h-px bg-muted-foreground/30" />
+        <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 w-full max-w-2xl">
+          <motion.div className="w-full sm:flex-1" variants={buttonHover} initial="rest" whileHover="hover" whileTap="tap">
+            <Button
+              size="lg"
+              className="w-full h-16 sm:h-20 px-8 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black uppercase tracking-[0.2em] shadow-xl text-sm sm:text-base group"
+              onClick={onStart}
+            >
+              Iniciar Jornada <Icons.PenTool className="ml-3 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </motion.div>
+          
+          <motion.div className="w-full sm:flex-1" variants={buttonHover} initial="rest" whileHover="hover" whileTap="tap">
+            <Button
+              size="lg"
+              variant="outline"
+              className="w-full h-16 sm:h-20 px-8 rounded-2xl border-border bg-card/40 backdrop-blur-md hover:bg-card/60 text-foreground font-black uppercase tracking-[0.2em] text-sm sm:text-base group"
+              onClick={scrollToVideo}
+            >
+              <Play className="mr-3 w-5 h-5 fill-current" /> Ver Apresentação
+            </Button>
+          </motion.div>
         </div>
-      </div>
 
-      <motion.div variants={buttonHover} initial="rest" whileHover="hover" whileTap="tap">
-        <Button
-          variant="ghost"
-          className="text-muted-foreground hover:text-primary transition-colors font-medium text-sm tracking-wide"
-          onClick={onAbout}
-        >
-          Saiba como o Logos funciona
-        </Button>
+        <div className="flex items-center gap-3 opacity-40">
+          <span className="w-8 h-px bg-muted-foreground" />
+          <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">
+            Tradição & Tecnologia
+          </p>
+          <span className="w-8 h-px bg-muted-foreground" />
+        </div>
       </motion.div>
     </motion.div>
-  </motion.div>
-);
+  );
+};
 
 export default HeroContent;
