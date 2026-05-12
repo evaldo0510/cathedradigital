@@ -143,8 +143,13 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
 
                       <span className="opacity-70">{item.icon}</span>
                       <span className="tracking-tight">{item.label}</span>
+                      {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (
+                        <span className="ml-auto bg-primary/20 text-primary text-[9px] font-black px-1.5 py-0.5 rounded-md">
+                          {cacheCount}
+                        </span>
+                      )}
                       {(item as any).pro && <span className="ml-auto text-[8px] font-black uppercase tracking-widest text-primary bg-primary/10 px-1.5 py-0.5 rounded">PRO</span>}
-                      {currentPath === item.path && <div className="ml-auto w-1 h-1 rounded-full bg-primary" />}
+                      {currentPath === item.path && item.path !== AppRoute.CACHE_MANAGER && <div className="ml-auto w-1 h-1 rounded-full bg-primary" />}
                     </button>
                   </li>
                 ))}
