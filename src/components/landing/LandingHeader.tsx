@@ -6,6 +6,7 @@ import { AppRoute, Language } from "@/types";
 import { useNavigate } from "react-router-dom";
 import { Menu, X, ChevronRight, Globe } from "lucide-react";
 import { useLang } from "@/hooks/useLang";
+import GoogleSignInButton from "../auth/GoogleSignInButton";
 
 const LandingHeader = () => {
   const [isScrolled, setIsScrolled] = useState(false);
