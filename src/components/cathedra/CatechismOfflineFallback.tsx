@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
@@ -20,15 +20,42 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
   const [progress, setProgress] = useState(0);
   const isCancelled = useRef(false);
 
+  useEffect(() => {
+    // Check if there was a pending download for this paragraph
+    if (!paragraph) return;
+    
+    const pendingData = localStorage.getItem(`cathedra_download_pending_${paragraph}`);
+    if (pendingData) {
+      const { attempt, progress: lastProgress } = JSON.parse(pendingData);
+      // If found, auto-resume
+      handleDownload(attempt, lastProgress);
+    }
+  }, [paragraph]);
+
+  const saveDownloadState = (attempt: number, p: number) => {
+    if (!paragraph) return;
+    localStorage.setItem(`cathedra_download_pending_${paragraph}`, JSON.stringify({
+      attempt,
+      progress: p,
+      timestamp: Date.now()
+    }));
+  };
+
+  const clearDownloadState = () => {
+    if (!paragraph) return;
+    localStorage.removeItem(`cathedra_download_pending_${paragraph}`);
+  };
+
+
   const isForcedOffline = localStorage.getItem('cathedra_offline_mode') === 'true';
   const isOnline = navigator.onLine;
 
   const MAX_RETRIES = 3;
 
-  const handleDownload = async () => {
+  const handleDownload = async (resumeAttempt = 1, resumeProgress = 10) => {
     if (!paragraph) return;
     setDownloading(true);
-    setProgress(10);
+    setProgress(resumeProgress);
     isCancelled.current = false;
     
     const prevMode = localStorage.getItem('cathedra_offline_mode');
@@ -41,7 +68,9 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
       }
 
       setRetryAttempt(attempt);
-      setProgress(10 + (attempt * 25));
+      const currentProgress = 10 + (attempt * 25);
+      setProgress(currentProgress);
+      saveDownloadState(attempt, currentProgress);
       
       try {
         await fetchCatechismParagraph(paragraph);
@@ -49,6 +78,7 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
         
         setProgress(100);
         localStorage.setItem('cathedra_offline_mode', prevMode || 'false');
+        clearDownloadState();
         toast.success(`§${paragraph} baixado com sucesso!`);
         if (onRetry) onRetry();
       } catch (error) {
@@ -63,13 +93,14 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
           return attemptFetch(attempt + 1);
         } else {
           localStorage.setItem('cathedra_offline_mode', prevMode || 'false');
+          clearDownloadState();
           throw error;
         }
       }
     };
 
     try {
-      await attemptFetch(1);
+      await attemptFetch(resumeAttempt);
     } catch (error) {
       if (!isCancelled.current) {
         toast.error('Erro ao baixar parágrafo após várias tentativas. Verifique sua conexão.');
@@ -81,11 +112,14 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
     }
   };
 
+
   const handleCancel = () => {
     isCancelled.current = true;
     setDownloading(false);
+    clearDownloadState();
     toast.info('Download cancelado pelo usuário.');
   };
+
 
 
 
@@ -125,7 +159,7 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
       <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
         {paragraph && isOnline && (
           <Button 
-            onClick={downloading ? handleCancel : handleDownload}
+            onClick={downloading ? handleCancel : () => handleDownload()}
             variant={downloading ? "destructive" : "default"}
             className="rounded-xl h-10 px-6 font-bold w-full sm:w-auto transition-all"
           >
