@@ -140,13 +140,10 @@ describe('HojePage - Loading and Error States', () => {
     expect(screen.getByText(/Continuar Leitura/i)).toBeInTheDocument();
   });
 
-  it('handles empty saints today gracefully', () => {
-    (useSaintsHooks.useSaintsToday as any).mockReturnValue({ data: [], isLoading: false });
-    (useSaintsHooks.useOfficialSaint as any).mockReturnValue({ data: null, isLoading: false });
-
+  it('renders RitualDoDia section', () => {
     renderWithProviders(<HojePage />);
     
-    expect(screen.getByText('Nenhum santo encontrado para hoje')).toBeInTheDocument();
+    expect(screen.getByTestId('ritual-do-dia')).toBeInTheDocument();
   });
 
   it('shows weekly stats correctly', () => {
