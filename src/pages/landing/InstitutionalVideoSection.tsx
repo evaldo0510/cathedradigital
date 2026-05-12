@@ -320,8 +320,10 @@ const InstitutionalVideoSection = () => {
                     <select 
                       value={currentLang}
                       onChange={(e) => {
-                        setCurrentLang(e.target.value);
-                        trackEvent('video_lang_change', { lang: e.target.value });
+                        const newLang = e.target.value;
+                        setCurrentLang(newLang);
+                        localStorage.setItem('cathedra_video_lang', newLang);
+                        trackEvent('video_lang_change', { lang: newLang });
                       }}
                       className="bg-transparent text-white text-xs font-bold focus:outline-none cursor-pointer"
                       aria-label="Selecionar idioma das legendas"
