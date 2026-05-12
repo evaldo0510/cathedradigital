@@ -411,7 +411,7 @@ const Bible: React.FC = () => {
 
             if (dbData && dbData.length > 0) {
               const dbVerses = dbData.map(v => ({
-                number: v.metadata.verse,
+                number: (v.metadata as any).verse,
                 text: v.content_text
               }));
               setVerses(dbVerses);
