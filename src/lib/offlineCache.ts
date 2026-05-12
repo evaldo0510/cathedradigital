@@ -56,6 +56,7 @@ async function putInStore(storeName: string, key: string, data: any): Promise<vo
     const store = tx.objectStore(storeName);
     store.put({ key, data, cachedAt: Date.now() } as CacheEntry);
     localStorage.setItem('cathedra_last_sync', Date.now().toString());
+    window.dispatchEvent(new CustomEvent('cathedra_cache_updated'));
   } catch {
     // Silently fail — cache is best-effort
   }
