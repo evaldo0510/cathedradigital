@@ -1,9 +1,10 @@
 import json
 
-with open('paragraphs_0_197.json', 'r') as f:
+filename = 'paragraphs_full_v1.json'
+with open(filename, 'r') as f:
     data = json.load(f)
 
-with open('insert_0_197.sql', 'w') as f:
+with open('insert_anchors.sql', 'w') as f:
     f.write("BEGIN;\n")
     for item in data:
         p = item['paragraph']
