@@ -374,9 +374,28 @@ const AdminSeoTab: React.FC = () => {
                 </div>
               </div>
 
-              <div className="bg-black/90 text-amber-400 p-3 rounded-lg text-[9px] font-mono overflow-x-auto max-h-[150px] no-scrollbar shadow-inner border border-amber-500/20">
-                <p className="mb-2 text-white/40 border-b border-white/10 pb-1">Schema JSON-LD LocalBusiness</p>
-                <pre>
+              </div>
+
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <p className="text-[10px] font-black uppercase tracking-widest opacity-60">Schema Preview:</p>
+                  <div className="flex gap-2">
+                    <button 
+                      onClick={() => setJsonMode(jsonMode === 'pretty' ? 'minified' : 'pretty')}
+                      className="text-[9px] font-bold uppercase underline text-primary"
+                    >
+                      {jsonMode === 'pretty' ? 'Minificar' : 'Pretty Print'}
+                    </button>
+                    <button 
+                      onClick={handleCopyJSONLD}
+                      className="flex items-center gap-1 text-[9px] font-bold uppercase text-primary hover:bg-primary/5 p-1 rounded"
+                    >
+                      <Copy className="w-2.5 h-2.5" /> Copiar
+                    </button>
+                  </div>
+                </div>
+                <div className="bg-black/90 text-amber-400 p-3 rounded-lg text-[9px] font-mono overflow-x-auto max-h-[150px] no-scrollbar shadow-inner border border-amber-500/20">
+                  <pre>
 {JSON.stringify({
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
@@ -387,8 +406,35 @@ const AdminSeoTab: React.FC = () => {
     "streetAddress": formData.business_address || "—"
   },
   "openingHours": formData.opening_hours || "—"
-}, null, 2)}
-                </pre>
+}, null, jsonMode === 'pretty' ? 2 : 0)}
+                  </pre>
+                </div>
+              </div>
+
+              <div className="pt-2 border-t border-border/50">
+                <div className="flex items-center justify-between mb-2">
+                   <p className="text-[10px] font-black uppercase tracking-widest opacity-60">DOM Verification:</p>
+                   <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={verifyDOM}
+                    className="h-6 text-[9px] uppercase font-black"
+                   >
+                     <Eye className="w-3 h-3 mr-1" /> Verificar no Site
+                   </Button>
+                </div>
+                <div className={`p-2 rounded-lg border flex items-center justify-between ${
+                  domVerified === 'ok' ? 'bg-emerald-500/5 border-emerald-500/20 text-emerald-600' : 
+                  domVerified === 'fail' ? 'bg-destructive/5 border-destructive/20 text-destructive' : 
+                  'bg-muted/30 border-border/50 text-muted-foreground'
+                }`}>
+                  <span className="text-[10px] font-bold">
+                    {domVerified === 'pending' ? 'Aguardando verificação...' : 
+                     domVerified === 'ok' ? 'JSON-LD Ativo no DOM' : 'JSON-LD Ausente ou Inválido'}
+                  </span>
+                  {domVerified === 'ok' && <Check className="w-3 h-3" />}
+                  {domVerified === 'fail' && <AlertCircle className="w-3 h-3" />}
+                </div>
               </div>
             </CardContent>
           </Card>
