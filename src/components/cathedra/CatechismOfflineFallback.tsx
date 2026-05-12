@@ -157,7 +157,7 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
       <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
         {paragraph && isOnline && (
           <Button 
-            onClick={downloading ? handleCancel : handleDownload}
+            onClick={() => handleDownload()}
             variant={downloading ? "destructive" : "default"}
             className="rounded-xl h-10 px-6 font-bold w-full sm:w-auto transition-all"
           >
