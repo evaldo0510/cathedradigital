@@ -10,6 +10,7 @@ import {
   Flame, 
   Sparkle, 
   FileText, 
+  Database,
   Type, 
   Columns,
   Search,
