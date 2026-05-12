@@ -174,7 +174,7 @@ const InstitutionalVideoSection = () => {
               ].map((item, idx) => (
                 <motion.div
                   key={item.title}
-                  initial={{ opacity: 0, y: 10 }}
+                  initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 10 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: idx * 0.1 }}
                   viewport={{ once: true }}
