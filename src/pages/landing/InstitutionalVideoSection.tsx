@@ -47,12 +47,15 @@ const InstitutionalVideoSection = () => {
   const scale = useTransform(scrollYProgress, [0, 0.2], [0.8, 1]);
 
   // Analytics helper
-  const trackEvent = useCallback(async (eventName: string, props = {}) => {
+  const trackEvent = useCallback(async (eventName: string, props: Record<string, any> = {}) => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       await supabase.from('analytics_events').insert({
         event_name: eventName,
-        properties: { ...props, lang: currentLang },
+        properties: { 
+          lang: currentLang,
+          ...props 
+        },
         user_id: user?.id,
         url: window.location.href
       });
@@ -107,18 +110,20 @@ const InstitutionalVideoSection = () => {
   useEffect(() => {
     if (isPlaying && modalVideoRef.current) {
       const video = modalVideoRef.current;
-      const savedPos = localStorage.getItem('cathedra_video_pos');
-      if (savedPos) {
+      const savedPosStr = localStorage.getItem('cathedra_video_pos');
+      if (savedPosStr) {
+        const savedPos = parseFloat(savedPosStr);
         // Use a small delay to ensure video is ready to seek
         const timer = setTimeout(() => {
-          if (video && savedPos) {
-            video.currentTime = parseFloat(savedPos);
+          if (video && !isNaN(savedPos)) {
+            video.currentTime = savedPos;
+            trackEvent('video_resume_position', { position: savedPos });
           }
         }, 50);
         return () => clearTimeout(timer);
       }
     }
-  }, [isPlaying]);
+  }, [isPlaying, trackEvent]);
 
   // Subtitle synchronization - updates immediately when language changes
   useEffect(() => {
@@ -391,9 +396,13 @@ const InstitutionalVideoSection = () => {
                       value={currentLang}
                       onChange={(e) => {
                         const newLang = e.target.value;
+                        const previousLang = currentLang;
                         setCurrentLang(newLang);
                         localStorage.setItem('cathedra_video_lang', newLang);
-                        trackEvent('video_lang_change', { lang: newLang });
+                        trackEvent('video_lang_change', { 
+                          from_lang: previousLang,
+                          to_lang: newLang 
+                        });
                       }}
                       className="bg-transparent text-white text-xs font-bold focus:outline-none cursor-pointer"
                       aria-label="Selecionar idioma das legendas"
