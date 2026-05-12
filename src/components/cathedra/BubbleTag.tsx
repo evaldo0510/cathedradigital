@@ -102,7 +102,7 @@ interface BubbleTagProps {
   [key: string]: any; // Allow data attributes
 }
 
-export const BubbleTag: React.FC<BubbleTagProps> = ({
+export const BubbleTag = React.forwardRef<HTMLButtonElement, BubbleTagProps>(({
   label,
   emoji,
   index,
@@ -117,7 +117,7 @@ export const BubbleTag: React.FC<BubbleTagProps> = ({
   tabIndex,
   "data-roving-item": dataRovingItem,
   ...props
-}) => {
+}, ref) => {
   const sizeClasses = {
     xs: 'px-2 py-0.5 text-[8px] gap-1',
     sm: 'px-2.5 py-1 text-[9px] gap-1.5',
@@ -131,6 +131,7 @@ export const BubbleTag: React.FC<BubbleTagProps> = ({
   };
   return (
     <motion.button
+      ref={ref}
       variants={bubbleVariants}
       initial="initial"
       animate="animate"
@@ -174,4 +175,6 @@ export const BubbleTag: React.FC<BubbleTagProps> = ({
       </span>
     </motion.button>
   );
-};
+});
+
+BubbleTag.displayName = 'BubbleTag';
