@@ -290,6 +290,7 @@ const IconsInternal = {
   Smartphone: createIcon(Smartphone),
   MonitorSmartphone: createIcon(MonitorSmartphone),
   WifiOff: createIcon(WifiOff),
+  Wifi: createIcon(Wifi),
   Instagram: createIcon(Instagram),
   Facebook: createIcon(Facebook),
   Twitter: createIcon(Twitter),
