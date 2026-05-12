@@ -48,8 +48,8 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
         { label: t('home'), path: AppRoute.HOJE, icon: <Icons.Home className="w-5 h-5" /> },
         { label: t('journeys'), path: AppRoute.JORNADAS, icon: <Icons.Journeys className="w-5 h-5" /> },
         { label: t('themes'), path: AppRoute.TEMAS, icon: <Icons.Themes className="w-5 h-5" /> },
-        { label: t('explore'), path: AppRoute.BIBLIOTECA, icon: <Icons.Search className="w-5 h-5" /> },
-        { label: 'Busca Global', path: AppRoute.BUSCAR, icon: <Icons.Globe className="w-5 h-5" /> },
+        { label: t('explore'), path: AppRoute.BIBLIOTECA, icon: <Icons.Compass className="w-5 h-5" /> },
+        { label: 'Busca Global', path: AppRoute.BUSCAR, icon: <Icons.Search className="w-5 h-5" /> },
         { label: t('community'), path: AppRoute.COMMUNITY, icon: <Icons.Users className="w-5 h-5" /> },
         { label: t('profile'), path: AppRoute.PROFILE, icon: <Icons.User className="w-5 h-5" /> },
       ]
