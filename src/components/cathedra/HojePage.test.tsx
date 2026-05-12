@@ -61,8 +61,12 @@ vi.mock('./HomeMainDoors', () => ({
 
 // Mock SaintOfTheDayCard
 vi.mock('./SaintOfTheDayCard', () => ({
-  default: () => <div>Nenhum santo encontrado para hoje</div>
+  default: ({ isLoading, saint }: any) => {
+    if (isLoading) return <div data-testid="saint-skeleton" />;
+    return <div>Nenhum santo encontrado para hoje</div>;
+  }
 }));
+
 
 
 const queryClient = new QueryClient({
