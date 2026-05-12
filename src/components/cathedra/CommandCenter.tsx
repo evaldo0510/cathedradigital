@@ -16,7 +16,7 @@ interface CommandItem {
 }
 
 const PAGE_COMMANDS: CommandItem[] = [
-  { label: 'Dashboard', description: 'Página inicial', path: AppRoute.DASHBOARD, icon: <Icons.Home className="w-4 h-4" />, keywords: ['início', 'home', 'painel'], type: 'page' },
+  { label: 'Hoje', description: 'Liturgia e jornada diária', path: AppRoute.HOJE, icon: <Icons.Home className="w-4 h-4" />, keywords: ['início', 'home', 'painel', 'hoje'], type: 'page' },
   { label: 'Bíblia Sagrada', description: 'Leitura bíblica', path: AppRoute.BIBLE, icon: <Icons.Book className="w-4 h-4" />, keywords: ['biblia', 'escritura', 'evangelho', 'genesis', 'salmos'], type: 'page' },
   { label: 'Catecismo (CIC)', description: 'Catecismo da Igreja Católica', path: AppRoute.CATECHISM, icon: <Icons.Cross className="w-4 h-4" />, keywords: ['catecismo', 'cic', 'doutrina', 'fé'], type: 'page' },
   { label: 'Explorar Catecismo', description: 'Busca e temas do Catecismo', path: AppRoute.CATECHISM_EXPLORER, icon: <Icons.Search className="w-4 h-4" />, keywords: ['catecismo', 'explorar', 'tags', 'temas'], type: 'page' },
