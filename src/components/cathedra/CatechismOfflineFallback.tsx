@@ -20,6 +20,33 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
   const [progress, setProgress] = useState(0);
   const isCancelled = useRef(false);
 
+  useEffect(() => {
+    // Check if there was a pending download for this paragraph
+    if (!paragraph) return;
+    
+    const pendingData = localStorage.getItem(`cathedra_download_pending_${paragraph}`);
+    if (pendingData) {
+      const { attempt, progress: lastProgress } = JSON.parse(pendingData);
+      // If found, auto-resume
+      handleDownload(attempt, lastProgress);
+    }
+  }, [paragraph]);
+
+  const saveDownloadState = (attempt: number, p: number) => {
+    if (!paragraph) return;
+    localStorage.setItem(`cathedra_download_pending_${paragraph}`, JSON.stringify({
+      attempt,
+      progress: p,
+      timestamp: Date.now()
+    }));
+  };
+
+  const clearDownloadState = () => {
+    if (!paragraph) return;
+    localStorage.removeItem(`cathedra_download_pending_${paragraph}`);
+  };
+
+
   const isForcedOffline = localStorage.getItem('cathedra_offline_mode') === 'true';
   const isOnline = navigator.onLine;
 
