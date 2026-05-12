@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import { fetchCatechismParagraph } from '@/hooks/useCatechismParagraph';
+import { toast } from 'sonner';
 
 interface CatechismOfflineFallbackProps {
   paragraph?: number;
@@ -11,7 +13,30 @@ interface CatechismOfflineFallbackProps {
 
 const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ paragraph, onRetry }) => {
   const navigate = useNavigate();
+  const [downloading, setDownloading] = useState(false);
   const isForcedOffline = localStorage.getItem('cathedra_offline_mode') === 'true';
+  const isOnline = navigator.onLine;
+
+  const handleDownload = async () => {
+    if (!paragraph) return;
+    setDownloading(true);
+    try {
+      // Temporarily disable forced offline to allow the fetch
+      const prevMode = localStorage.getItem('cathedra_offline_mode');
+      localStorage.setItem('cathedra_offline_mode', 'false');
+      
+      await fetchCatechismParagraph(paragraph);
+      
+      localStorage.setItem('cathedra_offline_mode', prevMode || 'false');
+      toast.success(`§${paragraph} baixado com sucesso!`);
+      if (onRetry) onRetry();
+    } catch (error) {
+      toast.error('Erro ao baixar parágrafo. Verifique sua conexão.');
+    } finally {
+      setDownloading(false);
+    }
+  };
+
 
   return (
     <motion.div 
@@ -35,10 +60,25 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
       </div>
 
       <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-        {onRetry && (
+        {paragraph && isOnline && (
+          <Button 
+            onClick={handleDownload}
+            disabled={downloading}
+            variant="default"
+            className="rounded-xl h-10 px-6 font-bold w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90"
+          >
+            {downloading ? (
+              <Icons.Loader className="w-4 h-4 mr-2 animate-spin" />
+            ) : (
+              <Icons.Download className="w-4 h-4 mr-2" />
+            )}
+            Baixar Agora
+          </Button>
+        )}
+        {onRetry && !downloading && (
           <Button 
             onClick={onRetry}
-            variant="default"
+            variant="secondary"
             className="rounded-xl h-10 px-6 font-bold w-full sm:w-auto"
           >
             <Icons.RotateCcw className="w-4 h-4 mr-2" /> Tentar Carregar
