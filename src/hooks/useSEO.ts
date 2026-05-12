@@ -11,6 +11,15 @@ export interface SEOSettings {
   og_image_url?: string;
   twitter_handle?: string;
   json_ld_schema?: any;
+  business_name?: string;
+  business_address?: string;
+  business_phone?: string;
+  business_whatsapp?: string;
+  business_email?: string;
+  google_maps_url?: string;
+  latitude?: number;
+  longitude?: number;
+  opening_hours?: string;
 }
 
 export const useSEO = () => {
