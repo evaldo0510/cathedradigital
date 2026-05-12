@@ -4,7 +4,7 @@ import { prefetchRoute } from '@/lib/prefetch';
 import { Icons } from '../../constants';
 import { AppRoute, User } from '../../types';
 import { LangContext } from '@/contexts/LangContext';
-
+import { getCacheStats } from '@/lib/offlineCache';
 import { useLang } from '@/hooks/useLang';
 
 interface SidebarProps {
@@ -22,6 +22,18 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
   const location = useLocation();
   const currentPath = location.pathname;
   const { lang, t } = useLang();
+  const [cacheCount, setCacheCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    getCacheStats().then(stats => setCacheCount(stats.total));
+    
+    // Listen for cache updates
+    const handleCacheUpdate = () => {
+      getCacheStats().then(stats => setCacheCount(stats.total));
+    };
+    window.addEventListener('cathedra_cache_updated', handleCacheUpdate);
+    return () => window.removeEventListener('cathedra_cache_updated', handleCacheUpdate);
+  }, []);
   
   const sections = [
     ...(user?.role === 'admin' ? [{
@@ -131,8 +143,13 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
 
                       <span className="opacity-70">{item.icon}</span>
                       <span className="tracking-tight">{item.label}</span>
+                      {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (
+                        <span className="ml-auto bg-primary/20 text-primary text-[9px] font-black px-1.5 py-0.5 rounded-md">
+                          {cacheCount}
+                        </span>
+                      )}
                       {(item as any).pro && <span className="ml-auto text-[8px] font-black uppercase tracking-widest text-primary bg-primary/10 px-1.5 py-0.5 rounded">PRO</span>}
-                      {currentPath === item.path && <div className="ml-auto w-1 h-1 rounded-full bg-primary" />}
+                      {currentPath === item.path && item.path !== AppRoute.CACHE_MANAGER && <div className="ml-auto w-1 h-1 rounded-full bg-primary" />}
                     </button>
                   </li>
                 ))}

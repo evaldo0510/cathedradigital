@@ -1,13 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { getAllFromStore, deleteFromStore, clearAllCaches } from '@/lib/offlineCache';
+import { 
+  getAllFromStore, 
+  deleteFromStore, 
+  clearAllCaches, 
+  exportCache, 
+  importCache, 
+  preloadCatechism, 
+  preloadBible,
+  getCacheStats
+} from '@/lib/offlineCache';
 import { toast } from 'sonner';
 import SEOHead from '@/components/SEOHead';
-import { formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow, format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { Progress } from '@/components/ui/progress';
+import { Input } from '@/components/ui/input';
 
 interface CacheItem {
   key: string;
@@ -19,6 +30,11 @@ const CacheManager: React.FC = () => {
   const [items, setItems] = useState<CacheItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'bible' | 'catechism' | 'liturgy'>('all');
+  const [stats, setStats] = useState<any>(null);
+  const [preloading, setPreloading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [preloadCount, setPreloadCount] = useState(10);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const loadCache = async () => {
     setLoading(true);
@@ -27,6 +43,8 @@ const CacheManager: React.FC = () => {
     const liturgy = (await getAllFromStore('liturgy')).map(i => ({ ...i, store: 'liturgy' }));
     
     setItems([...bible, ...catechism, ...liturgy] as CacheItem[]);
+    const s = await getCacheStats();
+    setStats(s);
     setLoading(false);
   };
 
@@ -37,6 +55,8 @@ const CacheManager: React.FC = () => {
   const handleDelete = async (store: string, key: string) => {
     await deleteFromStore(store, key);
     setItems(prev => prev.filter(i => !(i.store === store && i.key === key)));
+    const s = await getCacheStats();
+    setStats(s);
     toast.success('Item removido do cache local');
   };
 
@@ -44,7 +64,80 @@ const CacheManager: React.FC = () => {
     if (confirm('Tem certeza que deseja limpar todo o cache local? Você precisará de internet para carregar estes textos novamente.')) {
       await clearAllCaches();
       setItems([]);
+      setStats(null);
       toast.success('Cache local limpo com sucesso');
+    }
+  };
+
+  const handleExport = async () => {
+    try {
+      const json = await exportCache();
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `cathedra-cache-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      toast.success('Cache exportado com sucesso');
+    } catch (e) {
+      toast.error('Erro ao exportar cache');
+    }
+  };
+
+  const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      try {
+        const json = event.target?.result as string;
+        await importCache(json);
+        toast.success('Cache importado com sucesso');
+        loadCache();
+      } catch (e) {
+        toast.error('Erro ao importar cache. Verifique o arquivo.');
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  const handlePreload = async (type: 'bible' | 'catechism') => {
+    setPreloading(true);
+    setProgress(0);
+    try {
+      if (type === 'catechism') {
+        // Start from last cached paragraph or paragraph 1
+        const catechismItems = items.filter(i => i.store === 'catechism');
+        const lastP = catechismItems.length > 0 
+          ? Math.max(...catechismItems.map(i => parseInt(i.key.split(':')[1])))
+          : 0;
+        await preloadCatechism(lastP + 1, preloadCount, setProgress);
+      } else {
+        // Just preload first 10 chapters of Genesis for now, or something simple
+        await preloadBible('Gn', 1, preloadCount, setProgress);
+      }
+      toast.success('Pré-carregamento concluído');
+      loadCache();
+    } catch (e) {
+      toast.error('Erro durante pré-carregamento');
+    } finally {
+      setPreloading(false);
+    }
+  };
+
+  const handleSyncNow = async () => {
+    if (navigator.onLine) {
+      toast.promise(loadCache(), {
+        loading: 'Sincronizando com a nuvem...',
+        success: 'Sincronização concluída',
+        error: 'Erro ao sincronizar'
+      });
+    } else {
+      toast.error('Você está offline. Conecte-se para sincronizar.');
     }
   };
 
@@ -77,16 +170,96 @@ const CacheManager: React.FC = () => {
           <h1 className="text-3xl font-serif font-bold text-foreground">Sanctuarium Offline</h1>
           <p className="text-muted-foreground">Gerencie a soberania dos seus dados e textos salvos localmente.</p>
         </div>
-        <Button 
-          variant="destructive" 
-          size="sm" 
-          className="rounded-xl h-11 px-6 font-bold"
-          onClick={handleClearAll}
-          disabled={items.length === 0}
-        >
-          <Icons.Trash className="w-4 h-4 mr-2" /> Limpar Tudo
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="rounded-xl h-11 px-6 font-bold"
+            onClick={handleSyncNow}
+          >
+            <Icons.RotateCcw className="w-4 h-4 mr-2" /> Sincronizar
+          </Button>
+          <Button 
+            variant="destructive" 
+            size="sm" 
+            className="rounded-xl h-11 px-6 font-bold"
+            onClick={handleClearAll}
+            disabled={items.length === 0}
+          >
+            <Icons.Trash className="w-4 h-4 mr-2" /> Limpar Tudo
+          </Button>
+        </div>
       </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card className="rounded-[2rem] bg-muted/20 border-border/40">
+          <CardHeader className="pb-2">
+            <CardDescription className="text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
+              <Icons.Database className="w-3 h-3" /> Status do Cache
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-serif font-bold text-foreground">{stats?.total || 0} Itens</div>
+            <p className="text-[10px] text-muted-foreground mt-1">
+              Última sincronização: {stats?.lastSync ? format(parseInt(stats.lastSync), "dd/MM 'às' HH:mm", { locale: ptBR }) : 'Nunca'}
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="rounded-[2rem] bg-muted/20 border-border/40">
+          <CardHeader className="pb-2">
+            <CardDescription className="text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
+              <Icons.Share2 className="w-3 h-3" /> Portabilidade
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex gap-2">
+            <Button variant="outline" size="sm" className="rounded-xl flex-1 h-9 text-[10px] font-black uppercase" onClick={handleExport}>
+              Exportar
+            </Button>
+            <Button variant="outline" size="sm" className="rounded-xl flex-1 h-9 text-[10px] font-black uppercase" onClick={() => fileInputRef.current?.click()}>
+              Importar
+            </Button>
+            <input type="file" ref={fileInputRef} className="hidden" accept=".json" onChange={handleImport} />
+          </CardContent>
+        </Card>
+
+        <Card className="rounded-[2rem] bg-muted/20 border-border/40">
+          <CardHeader className="pb-2">
+            <CardDescription className="text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
+              <Icons.Download className="w-3 h-3" /> Pré-carregar
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="flex items-center gap-2">
+              <Input 
+                type="number" 
+                value={preloadCount} 
+                onChange={(e) => setPreloadCount(parseInt(e.target.value))}
+                className="h-8 w-16 text-xs rounded-lg"
+              />
+              <span className="text-[10px] font-bold text-muted-foreground uppercase">unid.</span>
+            </div>
+            <div className="flex gap-2">
+              <Button variant="secondary" size="sm" className="rounded-xl flex-1 h-8 text-[9px] font-black uppercase" onClick={() => handlePreload('catechism')} disabled={preloading}>
+                Catecismo
+              </Button>
+              <Button variant="secondary" size="sm" className="rounded-xl flex-1 h-8 text-[9px] font-black uppercase" onClick={() => handlePreload('bible')} disabled={preloading}>
+                Bíblia
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {preloading && (
+        <div className="space-y-2 animate-in fade-in slide-in-from-top-2">
+          <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-primary">
+            <span>Pré-carregando conteúdo...</span>
+            <span>{progress}%</span>
+          </div>
+          <Progress value={progress} className="h-1.5" />
+        </div>
+      )}
 
       <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
         {(['all', 'bible', 'catechism', 'liturgy'] as const).map(f => (
@@ -138,7 +311,7 @@ const CacheManager: React.FC = () => {
                           {getStoreIcon(item.store)}
                         </div>
                         <div className="min-w-0">
-                          <p className="font-bold text-sm text-foreground truncate">{item.key.replace('p:', 'Parágrafo ')}</p>
+                          <p className="font-bold text-sm text-foreground truncate">{item.key.replace('p:', 'Parágrafo ').replace(':', ' Cap. ')}</p>
                           <div className="flex items-center gap-2 text-[10px] text-muted-foreground font-medium">
                             <span className="uppercase tracking-wider">{getStoreLabel(item.store)}</span>
                             <span className="w-1 h-1 rounded-full bg-border" />
@@ -169,7 +342,7 @@ const CacheManager: React.FC = () => {
         </div>
         <p className="text-sm text-muted-foreground leading-relaxed">
           O Cathedra utiliza o armazenamento local do seu navegador (IndexedDB) para garantir que você possa acessar os textos sagrados mesmo sem conexão. 
-          Estes arquivos nunca saem do seu dispositivo e são criptografados pelo sistema operacional. 
+          Estes arquivos nunca saem do seu dispositivo e podem ser exportados para portabilidade completa. 
           Limpar o cache aqui liberará espaço, mas exigirá uma nova conexão para baixar os conteúdos.
         </p>
       </div>

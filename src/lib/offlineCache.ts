@@ -1,10 +1,11 @@
 // IndexedDB cache for Bible chapters and Catechism paragraphs
 // Enables offline access to previously read content
+import { supabase } from '@/integrations/supabase/client';
 
 const DB_NAME = 'cathedra_cache';
 const DB_VERSION = 1;
 
-interface CacheEntry {
+export interface CacheEntry {
   key: string;
   data: any;
   cachedAt: number;
@@ -54,6 +55,8 @@ async function putInStore(storeName: string, key: string, data: any): Promise<vo
     const tx = db.transaction(storeName, 'readwrite');
     const store = tx.objectStore(storeName);
     store.put({ key, data, cachedAt: Date.now() } as CacheEntry);
+    localStorage.setItem('cathedra_last_sync', Date.now().toString());
+    window.dispatchEvent(new CustomEvent('cathedra_cache_updated'));
   } catch {
     // Silently fail — cache is best-effort
   }
@@ -95,6 +98,7 @@ export async function deleteFromStore(storeName: string, key: string): Promise<v
     const tx = db.transaction(storeName, 'readwrite');
     const store = tx.objectStore(storeName);
     store.delete(key);
+    window.dispatchEvent(new CustomEvent('cathedra_cache_updated'));
   } catch {}
 }
 
@@ -121,5 +125,117 @@ export async function clearAllCaches(): Promise<void> {
       const tx = db.transaction(s, 'readwrite');
       tx.objectStore(s).clear();
     });
+    localStorage.removeItem('cathedra_last_sync');
+    window.dispatchEvent(new CustomEvent('cathedra_cache_updated'));
   } catch {}
 }
+
+// ─── Import / Export ───
+
+export async function exportCache(): Promise<string> {
+  const data: Record<string, CacheEntry[]> = {};
+  const stores = ['bible', 'catechism', 'liturgy'];
+  
+  for (const store of stores) {
+    data[store] = await getAllFromStore(store);
+  }
+  
+  return JSON.stringify({
+    version: DB_VERSION,
+    exportedAt: Date.now(),
+    data
+  });
+}
+
+export async function importCache(jsonString: string): Promise<void> {
+  const parsed = JSON.parse(jsonString);
+  if (parsed.version !== DB_VERSION) throw new Error('Versão do cache incompatível');
+  
+  const db = await openDB();
+  for (const storeName in parsed.data) {
+    const tx = db.transaction(storeName, 'readwrite');
+    const store = tx.objectStore(storeName);
+    for (const entry of parsed.data[storeName]) {
+      store.put(entry);
+    }
+  }
+  localStorage.setItem('cathedra_last_sync', Date.now().toString());
+  window.dispatchEvent(new CustomEvent('cathedra_cache_updated'));
+}
+
+// ─── Stats ───
+
+export async function getCacheStats() {
+  const stores = ['bible', 'catechism', 'liturgy'];
+  const stats: Record<string, number> = {};
+  let total = 0;
+  
+  for (const store of stores) {
+    const items = await getAllFromStore(store);
+    stats[store] = items.length;
+    total += items.length;
+  }
+  
+  return {
+    ...stats,
+    total,
+    lastSync: localStorage.getItem('cathedra_last_sync')
+  };
+}
+
+// ─── Pre-load logic ───
+
+export async function preloadCatechism(start: number, count: number, onProgress?: (p: number) => void): Promise<void> {
+  for (let i = 0; i < count; i++) {
+    const paragraph = start + i;
+    if (paragraph > 2865) break;
+    
+    const cached = await getCachedCatechismParagraph(paragraph);
+    if (cached) continue;
+
+    try {
+      const { data, error } = await supabase.functions.invoke('catechism-text', { 
+        body: { paragraph } 
+      });
+      if (!error && data) {
+        const parsed = typeof data === 'string' ? JSON.parse(data) : data;
+        if (!parsed.status || parsed.status !== 'not_cached') {
+          await cacheCatechismParagraph(paragraph, {
+            paragraph,
+            content: parsed.content,
+            language: parsed.language || 'pt',
+            status: parsed.status,
+            textoBase: parsed.textoBase,
+          });
+        }
+      }
+    } catch (e) {
+      console.error(`Failed to preload catechism §${paragraph}`, e);
+    }
+    
+    onProgress?.(Math.round(((i + 1) / count) * 100));
+  }
+}
+
+export async function preloadBible(bookAbbr: string, startChapter: number, count: number, onProgress?: (p: number) => void): Promise<void> {
+  for (let i = 0; i < count; i++) {
+    const chapter = startChapter + i;
+    
+    const cached = await getCachedBibleChapter(bookAbbr, chapter);
+    if (cached) continue;
+
+    try {
+      const { data, error } = await supabase.functions.invoke('bible-text', { 
+        body: { book: bookAbbr, chapter } 
+      });
+      if (!error && data) {
+        await cacheBibleChapter(bookAbbr, chapter, data);
+      }
+    } catch (e) {
+      console.error(`Failed to preload bible ${bookAbbr} ${chapter}`, e);
+    }
+    
+    onProgress?.(Math.round(((i + 1) / count) * 100));
+  }
+}
+
