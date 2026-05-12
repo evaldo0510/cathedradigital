@@ -6,6 +6,7 @@ import BibliotecaPage from '../BibliotecaPage';
 import { AuthProvider } from '@/hooks/useAuth';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { LangContext } from '@/contexts/LangContext';
+import { HelmetProvider } from 'react-helmet-async';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -27,15 +28,17 @@ vi.mock('react-router-dom', async () => {
 describe('Navigation Tests', () => {
   const renderWithContext = (component: React.ReactNode) => {
     return render(
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <AuthProvider>
-            <LangContext.Provider value={{ t: (k: string) => k, lang: 'pt', setLang: () => {} }}>
-              {component}
-            </LangContext.Provider>
-          </AuthProvider>
-        </BrowserRouter>
-      </QueryClientProvider>
+      <HelmetProvider>
+        <QueryClientProvider client={queryClient}>
+          <BrowserRouter>
+            <AuthProvider>
+              <LangContext.Provider value={{ t: (k: string) => k, lang: 'pt', setLang: () => {} }}>
+                {component}
+              </LangContext.Provider>
+            </AuthProvider>
+          </BrowserRouter>
+        </QueryClientProvider>
+      </HelmetProvider>
     );
   };
 
