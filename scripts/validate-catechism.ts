@@ -42,9 +42,14 @@ const errorCategories: Record<string, { severity: number; count: number }> = {
   'Campos de IA detectados':   { severity: SEVERITY.HIGH, count: 0 }
 };
 
-const failingRecords: any[] = [];
+const failingRecords: {
+  index: number;
+  id: string;
+  paragraph: number;
+  errors: { category: string; message: string; severity: number }[];
+}[] = [];
 
-items.forEach((item: any, index) => {
+items.forEach((item: any, index: number) => {
   const itemErrors: { category: string; message: string; severity: number }[] = [];
   
   const addError = (category: string, message: string) => {
@@ -170,7 +175,10 @@ if (failingRecords.length > 0) {
 }
 
 // Write JSON Report
-const reportPath = path.join(process.cwd(), 'catechism-validation-report.json');
+const logsDir = path.join(process.cwd(), 'scripts', 'logs');
+if (!fs.existsSync(logsDir)) fs.mkdirSync(logsDir, { recursive: true });
+
+const reportPath = path.join(logsDir, 'catechism-validation-report.json');
 fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
 console.log(`\n📄 Relatório JSON gerado em: ${reportPath}`);
 
