@@ -111,12 +111,17 @@ jobs:
         
       - name: Summary of Coverage
         if: github.event_name == 'pull_request'
+        continue-on-error: true
         run: |
-          REPORT=$(cat coverage/coverage-summary.json | jq -r '.total | "Statements: \(.statements.pct)%\nLines: \(.lines.pct)%\nFunctions: \(.functions.pct)%\nBranches: \(.branches.pct)%"')
-          echo "### 📊 Test Coverage Summary" > pr_comment.md
-          echo "$REPORT" >> pr_comment.md
-          echo "" >> pr_comment.md
-          echo "Full reports are available in the [CI Artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})." >> pr_comment.md
+          if [ -f coverage/coverage-summary.json ]; then
+            REPORT=$(cat coverage/coverage-summary.json | jq -r '.total | "Statements: \(.statements.pct)%\nLines: \(.lines.pct)%\nFunctions: \(.functions.pct)%\nBranches: \(.branches.pct)%"')
+            echo "### 📊 Test Coverage Summary" > pr_comment.md
+            echo "$REPORT" >> pr_comment.md
+            echo "" >> pr_comment.md
+            echo "Full reports are available in the [CI Artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})." >> pr_comment.md
+          else
+            echo "### ⚠️ Coverage report not found" > pr_comment.md
+          fi
 
       - name: Comment on PR
         uses: marocchino/sticky-pull-request-comment@v2
