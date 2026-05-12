@@ -380,11 +380,6 @@ const InstitutionalVideoSection = () => {
                 <button 
                   ref={closeBtnRef}
                   onClick={handleClose}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      handleClose();
-                    }
-                  }}
                   className="p-4 bg-white/20 hover:bg-white/30 border border-white/30 rounded-full transition-all backdrop-blur-md group focus:outline-none focus-visible:ring-4 focus-visible:ring-primary shadow-xl"
                   aria-label="Fechar vídeo de apresentação (Esc)"
                 >
