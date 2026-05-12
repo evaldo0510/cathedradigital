@@ -311,6 +311,7 @@ export const Icons = {
   Menu: IconsInternal.Menu,
   Search: IconsInternal.Search,
   Settings: IconsInternal.Settings,
+  Database: IconsInternal.Database,
   User: IconsInternal.User,
   Creator: IconsInternal.Creator,
   UserCog: IconsInternal.UserCog,
