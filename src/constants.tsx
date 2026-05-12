@@ -117,7 +117,8 @@ import {
   Disc,
   Layers,
   Languages,
-  BookMarked
+  BookMarked,
+  Wifi
 } from 'lucide-react';
 import { cn } from './lib/utils';
 
