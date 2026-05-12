@@ -376,6 +376,7 @@ const Bible: React.FC = () => {
 
     if (viewMode === 'reading' && selectedBook && selectedChapter > 0) {
       const cacheKey = `${selectedBook.abbr}_${selectedChapter}`;
+      const isOfflineMode = localStorage.getItem('cathedra_offline_mode') === 'true';
       
       // 1) Check in-memory cache
       const memCached = bibleCache.get(cacheKey);
@@ -399,7 +400,14 @@ const Bible: React.FC = () => {
             return;
           }
 
-          // 3) Fetch from edge function
+          // 3) If in Offline Mode and miss cache, show error
+          if (isOfflineMode) {
+            setBibleError('Modo Somente-Cache ativo: Este capítulo não foi baixado para uso offline.');
+            setIsLoading(false);
+            return;
+          }
+
+          // 4) Fetch from edge function
           supabase.functions.invoke('bible-text', {
             body: { abbrev: selectedBook.abbr, chapter: selectedChapter }
           }).then(({ data, error }) => {

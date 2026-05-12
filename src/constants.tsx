@@ -117,7 +117,8 @@ import {
   Disc,
   Layers,
   Languages,
-  BookMarked
+  BookMarked,
+  Wifi
 } from 'lucide-react';
 import { cn } from './lib/utils';
 
@@ -289,6 +290,7 @@ const IconsInternal = {
   Smartphone: createIcon(Smartphone),
   MonitorSmartphone: createIcon(MonitorSmartphone),
   WifiOff: createIcon(WifiOff),
+  Wifi: createIcon(Wifi),
   Instagram: createIcon(Instagram),
   Facebook: createIcon(Facebook),
   Twitter: createIcon(Twitter),
@@ -454,6 +456,7 @@ export const Icons = {
   Smartphone: IconsInternal.Smartphone,
   MonitorSmartphone: IconsInternal.MonitorSmartphone,
   WifiOff: IconsInternal.WifiOff,
+  Wifi: IconsInternal.Wifi,
   
   // Social
   Instagram: IconsInternal.Instagram,

@@ -24,6 +24,7 @@ import AppHeader from './components/cathedra/AppHeader';
 import ProGate from './components/cathedra/ProGate';
 import CommandCenter from './components/cathedra/CommandCenter';
 import OfflineIndicator from './components/cathedra/OfflineIndicator';
+import OfflineModeToggle from './components/cathedra/OfflineModeToggle';
 import SplashScreen from './components/cathedra/SplashScreen';
 import { PWAInstallPrompt } from './components/cathedra/PWAInstallPrompt';
 // AIStatusBanner removed
@@ -598,9 +599,12 @@ const AppLayout: React.FC = () => {
             <Suspense fallback={null}>
               <BottomNav onOpenSidebar={() => setIsSidebarOpen(true)} user={appUser} />
             </Suspense>
+            <OfflineModeToggle />
             {[AppRoute.BIBLE, AppRoute.DAILY_LITURGY, AppRoute.LITURGIA, AppRoute.BREVIARY, AppRoute.LECTIO_DIVINA, AppRoute.CATECHISM, AppRoute.MAGISTERIUM].includes(location.pathname as AppRoute) && (
               <ReadingModeToggle />
             )}
+            <OfflineIndicator />
+            <PWAInstallPrompt />
           </>
         )}
       </div>
