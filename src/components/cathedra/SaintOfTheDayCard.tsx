@@ -94,7 +94,7 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
     return (
       <button
         onClick={handleNavigate}
-        className="w-full flex items-center gap-4 group text-left p-4 rounded-3xl border border-border bg-card/50 hover:bg-card transition-all"
+        className="w-full flex items-center gap-4 group text-left p-4 rounded-3xl border border-border bg-card/50 hover:bg-card focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none transition-all"
       >
         <div className="w-16 h-16 rounded-2xl overflow-hidden border-2 border-secondary/20 shadow-md shrink-0">
           <SacredImage
