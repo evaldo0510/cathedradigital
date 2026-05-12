@@ -10,7 +10,7 @@ import { useSEO, useKeywords, SEOSettings } from '@/hooks/useSEO';
 import { 
   Globe, Search, LineChart, Save, Plus, Trash2, 
   ExternalLink, CheckCircle2, AlertCircle, Sparkles,
-  Smartphone, Monitor, Share2, Info, MapPin, XCircle
+  Smartphone, Monitor, Share2, Info, MapPin, XCircle, Copy, FileCode, Eye, Check
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
@@ -21,6 +21,8 @@ const AdminSeoTab: React.FC = () => {
   const [formData, setFormData] = useState<Partial<SEOSettings>>({});
   const [newKeyword, setNewKeyword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [jsonMode, setJsonMode] = useState<'pretty' | 'minified'>('pretty');
+  const [domVerified, setDomVerified] = useState<'pending' | 'ok' | 'fail'>('pending');
 
   useEffect(() => {
     if (seoSettings) {
@@ -29,6 +31,14 @@ const AdminSeoTab: React.FC = () => {
   }, [seoSettings]);
 
   const handleSaveSEO = async () => {
+    // NAP Validation
+    if (!formData.business_name || !formData.business_address || (!formData.business_phone && !formData.business_whatsapp) || !formData.opening_hours) {
+      toast.error('Erro de Validação NAP', {
+        description: 'Todos os campos de SEO Local (Nome, Endereço, Telefone/Whats e Horários) são obrigatórios para garantir a indexação.'
+      });
+      return;
+    }
+
     setLoading(true);
     try {
       const { error } = await supabase
@@ -45,6 +55,45 @@ const AdminSeoTab: React.FC = () => {
       toast.error('Erro ao salvar SEO: ' + err.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleCopyJSONLD = () => {
+    const json = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": formData.business_name || "Cathedra Digital",
+      "telephone": formData.business_whatsapp || formData.business_phone || "—",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": formData.business_address || "—"
+      },
+      "openingHours": formData.opening_hours || "—"
+    }, null, jsonMode === 'pretty' ? 2 : 0);
+    
+    navigator.clipboard.writeText(json);
+    toast.success('Copiado para a área de transferência!');
+  };
+
+  const verifyDOM = async () => {
+    setDomVerified('pending');
+    try {
+      // In a real browser we check document.head
+      const scripts = document.querySelectorAll('script[type="application/ld+json"]');
+      let found = false;
+      scripts.forEach(s => {
+        if (s.textContent?.includes('LocalBusiness')) found = true;
+      });
+      
+      if (found) {
+        setDomVerified('ok');
+        toast.success('DOM Validado: JSON-LD LocalBusiness detectado!');
+      } else {
+        setDomVerified('fail');
+        toast.error('Erro na Validação: JSON-LD não encontrado no cabeçalho.');
+      }
+    } catch (e) {
+      setDomVerified('fail');
     }
   };
 
@@ -194,29 +243,6 @@ const AdminSeoTab: React.FC = () => {
                     />
                   </div>
                 </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
-                  <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase tracking-widest opacity-70 flex items-center gap-1">
-                      <Share2 className="w-3 h-3" /> OG Image URL (Global)
-                    </Label>
-                    <Input 
-                      value={formData.og_image_url || ''} 
-                      onChange={e => setFormData({...formData, og_image_url: e.target.value})}
-                      placeholder="https://sua-imagem.png"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase tracking-widest opacity-70 flex items-center gap-1">
-                      Twitter Handle
-                    </Label>
-                    <Input 
-                      value={formData.twitter_handle || ''} 
-                      onChange={e => setFormData({...formData, twitter_handle: e.target.value})}
-                      placeholder="@seuusuario"
-                    />
-                  </div>
-                </div>
               </div>
 
               <div className="flex justify-end pt-4">
@@ -277,23 +303,17 @@ const AdminSeoTab: React.FC = () => {
                   </Badge>
                 ) : (
                   <Badge variant="destructive" className="bg-destructive/10 text-destructive border-destructive/20 gap-1">
-                    <XCircle className="w-3 h-3" /> Desconectado
+                    <XCircle className="w-3 h-3" /> Inativo
                   </Badge>
                 )}
               </div>
-              
               <div className="pt-2 space-y-2 border-t border-border/50">
-                <p className="text-[10px] font-black uppercase tracking-widest opacity-60">Eventos Rastreados:</p>
+                <p className="text-[10px] font-black uppercase tracking-widest opacity-60">Rastreamento Ativo:</p>
                 <div className="grid grid-cols-2 gap-2">
-                  {[
-                    { label: 'Page Views', status: !!(window as any).gtag },
-                    { label: 'Button Clicks', status: !!(window as any).gtag },
-                    { label: 'Form Submits', status: !!(window as any).gtag },
-                    { label: 'Session Time', status: !!(window as any).gtag }
-                  ].map(ev => (
-                    <div key={ev.label} className="flex items-center gap-1.5 text-[10px] font-medium">
-                      <div className={`w-1.5 h-1.5 rounded-full ${ev.status ? 'bg-emerald-500' : 'bg-muted'}`} />
-                      {ev.label}
+                  {['Page Views', 'Clicks', 'Submits', 'Session'].map(ev => (
+                    <div key={ev} className="flex items-center gap-1.5 text-[10px] font-medium">
+                      <div className={`w-1.5 h-1.5 rounded-full ${(window as any).gtag ? 'bg-emerald-500' : 'bg-muted'}`} />
+                      {ev}
                     </div>
                   ))}
                 </div>
@@ -311,8 +331,8 @@ const AdminSeoTab: React.FC = () => {
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest opacity-60">
                   <span>NAP Status</span>
-                  {formData.business_name && formData.business_address && (formData.business_phone || formData.business_whatsapp) ? (
-                    <span className="text-emerald-600 flex items-center gap-1"><CheckCircle2 className="w-3 h-3" /> Válido para Google</span>
+                  {formData.business_name && formData.business_address && (formData.business_phone || formData.business_whatsapp) && formData.opening_hours ? (
+                    <span className="text-emerald-600 flex items-center gap-1"><CheckCircle2 className="w-3 h-3" /> Válido</span>
                   ) : (
                     <span className="text-destructive flex items-center gap-1"><AlertCircle className="w-3 h-3" /> Incompleto</span>
                   )}
@@ -325,9 +345,26 @@ const AdminSeoTab: React.FC = () => {
                 </div>
               </div>
 
-              <div className="bg-black/90 text-amber-400 p-3 rounded-lg text-[9px] font-mono overflow-x-auto max-h-[150px] no-scrollbar shadow-inner border border-amber-500/20">
-                <p className="mb-2 text-white/40 border-b border-white/10 pb-1">Schema JSON-LD LocalBusiness</p>
-                <pre>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <p className="text-[10px] font-black uppercase tracking-widest opacity-60">Schema Preview:</p>
+                  <div className="flex gap-2">
+                    <button 
+                      onClick={() => setJsonMode(jsonMode === 'pretty' ? 'minified' : 'pretty')}
+                      className="text-[9px] font-bold uppercase underline text-primary"
+                    >
+                      {jsonMode === 'pretty' ? 'Minificar' : 'Pretty Print'}
+                    </button>
+                    <button 
+                      onClick={handleCopyJSONLD}
+                      className="flex items-center gap-1 text-[9px] font-bold uppercase text-primary hover:bg-primary/5 p-1 rounded"
+                    >
+                      <Copy className="w-2.5 h-2.5" /> Copiar
+                    </button>
+                  </div>
+                </div>
+                <div className="bg-black/90 text-amber-400 p-3 rounded-lg text-[9px] font-mono overflow-x-auto max-h-[150px] no-scrollbar shadow-inner border border-amber-500/20">
+                  <pre>
 {JSON.stringify({
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
@@ -338,8 +375,35 @@ const AdminSeoTab: React.FC = () => {
     "streetAddress": formData.business_address || "—"
   },
   "openingHours": formData.opening_hours || "—"
-}, null, 2)}
-                </pre>
+}, null, jsonMode === 'pretty' ? 2 : 0)}
+                  </pre>
+                </div>
+              </div>
+
+              <div className="pt-2 border-t border-border/50">
+                <div className="flex items-center justify-between mb-2">
+                   <p className="text-[10px] font-black uppercase tracking-widest opacity-60">DOM Verification:</p>
+                   <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={verifyDOM}
+                    className="h-6 text-[9px] uppercase font-black"
+                   >
+                     <Eye className="w-3 h-3 mr-1" /> Verificar no Site
+                   </Button>
+                </div>
+                <div className={`p-2 rounded-lg border flex items-center justify-between ${
+                  domVerified === 'ok' ? 'bg-emerald-500/5 border-emerald-500/20 text-emerald-600' : 
+                  domVerified === 'fail' ? 'bg-destructive/5 border-destructive/20 text-destructive' : 
+                  'bg-muted/30 border-border/50 text-muted-foreground'
+                }`}>
+                  <span className="text-[10px] font-bold">
+                    {domVerified === 'pending' ? 'Aguardando verificação...' : 
+                     domVerified === 'ok' ? 'JSON-LD Ativo no DOM' : 'JSON-LD Ausente ou Inválido'}
+                  </span>
+                  {domVerified === 'ok' && <Check className="w-3 h-3" />}
+                  {domVerified === 'fail' && <AlertCircle className="w-3 h-3" />}
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -355,10 +419,6 @@ const AdminSeoTab: React.FC = () => {
                 <p className="font-bold text-primary mb-1">Dica Local:</p>
                 "Adicionar o bairro ao endereço ajuda no posicionamento do Google Maps."
               </div>
-              <div className="p-3 bg-muted/50 rounded-lg border border-border/50 text-[11px] leading-relaxed">
-                <p className="font-bold text-primary mb-1">Keywords:</p>
-                "Sua meta descrição atual contém 3 de suas top keywords."
-              </div>
             </CardContent>
           </Card>
 
@@ -370,9 +430,6 @@ const AdminSeoTab: React.FC = () => {
               <div className="space-y-2">
                 <a href="https://search.google.com/search-console" target="_blank" rel="noopener" className="flex items-center justify-between text-xs hover:text-primary hover:underline group">
                   Search Console <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-                </a>
-                <a href="https://analytics.google.com" target="_blank" rel="noopener" className="flex items-center justify-between text-xs hover:text-primary hover:underline group">
-                  Analytics GA4 <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </a>
                 <a href="/sitemap.xml" target="_blank" className="flex items-center justify-between text-xs hover:text-primary hover:underline group">
                   Sitemap XML <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
