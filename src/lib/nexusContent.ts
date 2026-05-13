@@ -95,7 +95,7 @@ export async function fetchNexusTagContent(
 
   // 2. Querying Stage
   // Depending on the mode, we build the query differently
-  const buildQuery = (tableName: string) => {
+  const buildQuery = (tableName: any) => {
     let query = supabase.from(tableName).select('*');
     
     if (params.mode === 'tags') {
@@ -104,12 +104,10 @@ export async function fetchNexusTagContent(
       const orCondition = searchTerms.map(t => `title.ilike.%${t}%`).join(',');
       query = query.or(orCondition);
     } else if (params.mode === 'reference') {
-      // Reference search only applies to spiritual_contents
       if (tableName === 'spiritual_contents') {
         const orCondition = searchTerms.map(t => `reference_id.ilike.%${t}%`).join(',');
         query = query.or(orCondition);
       } else {
-        // For other tables, skip or use title
         const orCondition = searchTerms.map(t => `title.ilike.%${t}%`).join(',');
         query = query.or(orCondition);
       }
@@ -119,16 +117,10 @@ export async function fetchNexusTagContent(
       const orCondition = searchTerms.map(t => `${field}.ilike.%${t}%`).join(',');
       query = query.or(orCondition);
     } else {
-      // 'all' mode
-      // This is complex for .or() because it spans multiple columns. 
-      // For simplicity in MVP, we'll combine tags and text search
       const field = tableName === 'journeys' ? 'description' : 
                     tableName === 'theme_contents' ? 'text_content' : 'content_text';
-      const orCondition = [
-        ...searchTerms.map(t => `title.ilike.%${t}%`),
-        ...searchTerms.map(t => `${field}.ilike.%${t}%`)
-      ].join(',');
-      query = query.or(`tags.overlaps.{${searchTerms.join(',')}},${orCondition}`);
+      // Fallback to tags + title for 'all' mode to avoid complex OR logic across types
+      query = query.or(`tags.overlaps.{${searchTerms.join(',')}},title.ilike.%${searchTerms[0]}%`);
     }
     
     return query.limit(15);
@@ -144,7 +136,7 @@ export async function fetchNexusTagContent(
     if (themeContentQuery) themeContentQuery.abortSignal(signal);
   }
 
-  const queries = [spiritualQuery, journeyQuery];
+  const queries: Promise<any>[] = [spiritualQuery, journeyQuery];
   if (themeContentQuery) queries.push(themeContentQuery);
 
   const results = await Promise.all(queries);
@@ -155,25 +147,25 @@ export async function fetchNexusTagContent(
 
   if (spiritualResponse.error) {
     console.error('Spiritual query error:', spiritualResponse.error);
-    logs.push({ stage: 'DB Query (Spiritual)', query: 'overlaps/ilike', resultsCount: 0, termsUsed: searchTerms, timestamp: new Date().toISOString() });
+    logs.push({ stage: 'DB Query (Spiritual)', query: params.mode, resultsCount: 0, termsUsed: searchTerms, timestamp: new Date().toISOString() });
   } else {
     const data = spiritualResponse.data || [];
-    content.push(...data.map(d => formatNexusContent(d, d.type)));
+    content.push(...data.map((d: any) => formatNexusContent(d, d.type)));
     logs.push({ stage: 'DB Query (Spiritual)', query: params.mode, resultsCount: data.length, termsUsed: searchTerms, timestamp: new Date().toISOString() });
   }
 
   if (journeyResponse.error) {
     console.error('Journey query error:', journeyResponse.error);
-    logs.push({ stage: 'DB Query (Journeys)', query: 'overlaps/ilike', resultsCount: 0, termsUsed: searchTerms, timestamp: new Date().toISOString() });
+    logs.push({ stage: 'DB Query (Journeys)', query: params.mode, resultsCount: 0, termsUsed: searchTerms, timestamp: new Date().toISOString() });
   } else {
     const data = journeyResponse.data || [];
-    content.push(...data.map(d => formatNexusContent(d, 'journey')));
+    content.push(...data.map((d: any) => formatNexusContent(d, 'journey')));
     logs.push({ stage: 'DB Query (Journeys)', query: params.mode, resultsCount: data.length, termsUsed: searchTerms, timestamp: new Date().toISOString() });
   }
 
   if (themeContentResponse && !themeContentResponse.error) {
     const data = themeContentResponse.data || [];
-    content.push(...data.map(d => ({
+    content.push(...data.map((d: any) => ({
       id: d.id,
       type: d.content_type,
       content_text: d.text_content || '',
@@ -182,6 +174,7 @@ export async function fetchNexusTagContent(
     })));
     logs.push({ stage: 'DB Query (Theme Contents)', query: 'theme_id', resultsCount: data.length, termsUsed: [tag.id!], timestamp: new Date().toISOString() });
   }
+
 
   // 3. Local Data Stage
   const normalizedSearchTerms = searchTerms.map(t => t.toLowerCase().replace(/[-_]/g, ' '));
