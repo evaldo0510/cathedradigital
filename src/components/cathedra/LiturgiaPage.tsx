@@ -158,6 +158,7 @@ const LiturgiaPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isExportingMonth, setIsExportingMonth] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [activeCelebrationIndex, setActiveCelebrationIndex] = useState(0);
 
   useEffect(() => {
     if (routeDate) {
@@ -192,11 +193,61 @@ const LiturgiaPage: React.FC = () => {
       const { data } = await supabase.functions.invoke('liturgical-calendar', {
         body: { action: 'month', year: today.getFullYear(), month: today.getMonth() + 1 }
       });
-      return data;
+      
+      if (!Array.isArray(data)) return [];
+      
+      // Deduplicate by date and internal celebrations by title
+      const uniqueDays = new Map();
+      data.forEach((day: any) => {
+        if (!uniqueDays.has(day.date)) {
+          const uniqueCelebs = [];
+          const seenTitles = new Set();
+          day.celebrations?.forEach((c: any) => {
+            if (!seenTitles.has(c.title)) {
+              uniqueCelebs.push(c);
+              seenTitles.add(c.title);
+            }
+          });
+          uniqueDays.set(day.date, { ...day, celebrations: uniqueCelebs });
+        }
+      });
+      return Array.from(uniqueDays.values());
     },
     enabled: isMonthViewOpen || searchQuery.length > 0,
     staleTime: 1000 * 60 * 60 * 24,
   });
+
+  const { data: dayCelebrations } = useQuery({
+    queryKey: ['liturgical-day-celebrations', dateKey],
+    queryFn: async () => {
+      const { data } = await supabase.functions.invoke('liturgical-calendar', {
+        body: { 
+          action: 'date', 
+          year: today.getFullYear(), 
+          month: today.getMonth() + 1, 
+          day: today.getDate() 
+        }
+      });
+
+      if (data && data.celebrations) {
+        const uniqueCelebs = [];
+        const seenTitles = new Set();
+        data.celebrations.forEach((c: any) => {
+          if (!seenTitles.has(c.title)) {
+            uniqueCelebs.push(c);
+            seenTitles.add(c.title);
+          }
+        });
+        return { ...data, celebrations: uniqueCelebs };
+      }
+      return data;
+    },
+    staleTime: 1000 * 60 * 60 * 24,
+  });
+
+  useEffect(() => {
+    setActiveCelebrationIndex(0);
+  }, [dateKey]);
 
   const liturgicalPeriods = useMemo(() => getLiturgicalPeriods(today.getFullYear()), [today.getFullYear()]);
 
@@ -445,11 +496,41 @@ const LiturgiaPage: React.FC = () => {
             <div {...getTabPanelProps('panel-liturgia', 'tab-liturgia', activeTab === 'liturgia', "max-w-2xl mx-auto space-y-10 animate-in fade-in duration-500 outline-none")}>
               <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} className="space-y-4 text-center">
                 <h1 className="text-3xl md:text-5xl font-display font-black text-primary tracking-tight">Liturgia do Dia</h1>
+                {dayCelebrations?.celebrations?.[activeCelebrationIndex] && (
+                  <motion.p 
+                    key={activeCelebrationIndex}
+                    initial={{ opacity: 0 }} 
+                    animate={{ opacity: 1 }} 
+                    className="text-lg font-serif italic text-primary/60"
+                  >
+                    {dayCelebrations.celebrations[activeCelebrationIndex].title}
+                  </motion.p>
+                )}
                 <div className="flex items-center justify-center gap-4">
                   <button onClick={goToPrevDay} className="p-3 rounded-2xl bg-muted hover:bg-primary hover:text-white transition-all text-primary focus-visible:ring-2 focus-visible:ring-primary outline-none" aria-label="Dia anterior"><Icons.ChevronLeft className="w-5 h-5" /></button>
                   <p className="text-sm font-bold text-primary capitalize min-w-[200px]">{formatDate()}{isToday && <span className="ml-2 text-secondary">(Hoje)</span>}</p>
                   <button onClick={goToNextDay} className="p-3 rounded-2xl bg-muted hover:bg-primary hover:text-white transition-all text-primary focus-visible:ring-2 focus-visible:ring-primary outline-none" aria-label="Próximo dia"><Icons.ChevronRight className="w-5 h-5" /></button>
                 </div>
+
+                {dayCelebrations?.celebrations?.length > 1 && (
+                  <div className="flex justify-center mt-6">
+                    <div className="bg-muted/30 p-1.5 rounded-2xl border border-border/40 flex gap-1 shadow-inner max-w-full overflow-x-auto">
+                      {dayCelebrations.celebrations.map((celeb: any, idx: number) => (
+                        <button
+                          key={`${celeb.title}-${idx}`}
+                          onClick={() => setActiveCelebrationIndex(idx)}
+                          className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap ${
+                            activeCelebrationIndex === idx 
+                              ? 'bg-background shadow-md text-primary scale-105' 
+                              : 'text-muted-foreground hover:text-foreground'
+                          }`}
+                        >
+                          {celeb.title}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 <div className="max-w-md mx-auto w-full px-4 mt-8">
                   <div className="relative group">
@@ -491,7 +572,7 @@ const LiturgiaPage: React.FC = () => {
                                   <p className="text-sm font-bold text-primary">{format(new Date(day.date + "T12:00:00"), 'dd')}</p>
                                 </div>
                                 <p className="text-xs font-bold text-foreground/80 line-clamp-1">
-                                  {day.celebrations?.map((c: any) => c.title).join(' / ')}
+                                  {day.celebrations?.[0]?.title} {day.celebrations?.length > 1 && `(+${day.celebrations.length - 1})`}
                                 </p>
                               </div>
                               <Icons.ChevronRight className="w-3 h-3 text-muted-foreground" />
@@ -630,7 +711,7 @@ const LiturgiaPage: React.FC = () => {
                                     <div className="h-8 w-px bg-border/40" />
                                     <div>
                                       <p className="text-sm font-bold text-foreground/80 line-clamp-1 group-hover:text-primary transition-colors">
-                                        {day.celebrations?.map((c: any) => c.title).join(' / ') || 'Feria'}
+                                        {day.celebrations?.[0]?.title} {day.celebrations?.length > 1 && `(+${day.celebrations.length - 1})`}
                                       </p>
                                       <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground opacity-60">
                                         {day.season || 'Tempo Comum'}
