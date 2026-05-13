@@ -316,7 +316,11 @@ const Catechism: React.FC = () => {
     try {
       await supabase
         .from('catechism_paragraphs_read')
-        .upsert({ user_id: user.id, paragraph: p }, { onConflict: 'user_id,paragraph' });
+        .upsert({ 
+          user_id: user.id, 
+          paragraph: p,
+          read_at: new Date().toISOString()
+        }, { onConflict: 'user_id,paragraph' });
       setParagraphsRead(prev => new Set([...prev, p]));
     } catch (err) {
       console.error('Failed to mark paragraph read:', err);
