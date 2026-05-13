@@ -46,7 +46,7 @@ const NexusAuditPage: React.FC = () => {
     for (let i = 0; i < themes.length; i++) {
       const theme = themes[i];
       try {
-        const content = await fetchNexusTagContent({ label: theme.name, slug: theme.slug, id: theme.id } as any);
+        const { content } = await fetchNexusTagContent({ label: theme.name, slug: theme.slug, id: theme.id } as any);
         
         const counts = {
           bible: content.filter(c => c.type === 'bible').length,
