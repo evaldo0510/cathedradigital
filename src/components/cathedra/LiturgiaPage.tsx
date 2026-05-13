@@ -138,10 +138,8 @@ const LiturgiaPage: React.FC = () => {
   const goToNextDay = () => {
     const d = new Date(selectedDate);
     d.setDate(d.getDate() + 1);
-    if (d <= new Date()) {
-      setSelectedDate(d);
-      setIsOfflineData(false);
-    }
+    setSelectedDate(d);
+    setIsOfflineData(false);
   };
 
   const isToday = selectedDate.toDateString() === new Date().toDateString();
@@ -224,7 +222,7 @@ const LiturgiaPage: React.FC = () => {
                 <div className="flex items-center justify-center gap-4">
                   <button onClick={goToPrevDay} className="p-3 rounded-2xl bg-muted hover:bg-primary hover:text-white transition-all text-primary focus-visible:ring-2 focus-visible:ring-primary outline-none" aria-label="Dia anterior"><Icons.ChevronLeft className="w-5 h-5" /></button>
                   <p className="text-sm font-bold text-primary capitalize min-w-[200px]">{formatDate()}{isToday && <span className="ml-2 text-secondary">(Hoje)</span>}</p>
-                  <button onClick={goToNextDay} disabled={isToday} className="p-3 rounded-2xl bg-muted hover:bg-primary hover:text-white transition-all text-primary disabled:opacity-20 focus-visible:ring-2 focus-visible:ring-primary outline-none" aria-label="Próximo dia"><Icons.ChevronRight className="w-5 h-5" /></button>
+                  <button onClick={goToNextDay} className="p-3 rounded-2xl bg-muted hover:bg-primary hover:text-white transition-all text-primary focus-visible:ring-2 focus-visible:ring-primary outline-none" aria-label="Próximo dia"><Icons.ChevronRight className="w-5 h-5" /></button>
                 </div>
                 {isOfflineData && <div className="flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground bg-muted/50 rounded-full px-4 py-2 mt-4 mx-auto w-fit"><Icons.WifiOff className="w-3.5 h-3.5" /> <span>Modo Offline</span></div>}
               </motion.div>
