@@ -383,6 +383,10 @@ const GlossaryPage: React.FC = () => {
             selectedLetter={selectedLetter}
             letterStatus={letterStatus}
             onLetterClick={(l) => {
+              if (l === '') {
+                setSelectedLetter(null);
+                return;
+              }
               const nextLetter = selectedLetter === l ? null : l;
               setSelectedLetter(nextLetter);
               setSearchQuery('');
