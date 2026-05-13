@@ -30,12 +30,26 @@ import CatechismOfflineFallback from './CatechismOfflineFallback';
 
 
 const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr: string, chapter: number) => void; isVisible?: boolean }> = ({ paragraph, onNavigateToBible, isVisible = true }) => {
-  const { data, isLoading, isError } = useCatechismParagraph(paragraph, isVisible);
+  const { data, isLoading, isError, refetch } = useCatechismParagraph(paragraph, isVisible);
   const prefetch = usePrefetchCatechismParagraph();
+  const generate = useGenerateCatechismParagraph();
+  const [isGenerating, setIsGenerating] = useState(false);
 
   useEffect(() => {
     if (isVisible && paragraph < 2865) prefetch(paragraph + 1);
   }, [paragraph, prefetch, isVisible]);
+
+  const handleRegenerate = async () => {
+    setIsGenerating(true);
+    try {
+      await generate(paragraph);
+      toast.success(`Parágrafo §${paragraph} regenerado com sucesso.`);
+    } catch (err) {
+      toast.error(`Falha ao regenerar §${paragraph}.`);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   const segments = useMemo(() => {
     if (!data?.content || data.status === 'not_cached') return [];
@@ -45,12 +59,12 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
   if (!isVisible) {
     return (
       <div className="reader-text text-foreground/30 leading-[2] text-lg py-4 h-24 flex items-center">
-        <span className="text-sm text-muted-foreground italic">Rolar para carregar §{paragraph}...</span>
+        <span className="text-sm text-muted-foreground italic">Rolar para carregar §${paragraph}...</span>
       </div>
     );
   }
 
-  if (isLoading) {
+  if (isLoading || isGenerating) {
     return <CatechismParagraphSkeleton paragraph={paragraph} />;
   }
 
@@ -61,17 +75,25 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
     }
 
     return (
-      <div className="reader-text bg-destructive/5 border border-destructive/10 rounded-2xl p-4 text-destructive font-serif text-sm py-4 space-y-2">
+      <div className="reader-text bg-destructive/5 border border-destructive/10 rounded-2xl p-4 text-destructive font-serif text-sm py-4 space-y-4">
         <div className="font-bold flex items-center gap-2">
            <Icons.Cross className="w-4 h-4" />
-           Ops! Problema ao carregar o parágrafo §{paragraph}.
+           Ops! Problema ao carregar o parágrafo §${paragraph}.
         </div>
-        <button 
-          onClick={() => window.location.reload()}
-          className="px-3 py-1.5 bg-destructive/10 text-destructive rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-destructive/20 transition-all"
-        >
-          Tentar novamente
-        </button>
+        <div className="flex flex-wrap gap-2">
+          <button 
+            onClick={() => refetch()}
+            className="px-3 py-1.5 bg-destructive/10 text-destructive rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-destructive/20 transition-all flex items-center gap-2"
+          >
+            <Icons.RotateCcw className="w-3 h-3" /> Tentar novamente
+          </button>
+          <button 
+            onClick={handleRegenerate}
+            className="px-3 py-1.5 bg-primary/10 text-primary rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-primary/20 transition-all flex items-center gap-2"
+          >
+            <Icons.Zap className="w-3 h-3" /> Regenerar via IA
+          </button>
+        </div>
       </div>
     );
   }
@@ -85,7 +107,7 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
            Geração pausada: Créditos de IA esgotados.
         </div>
         <p className="text-xs opacity-80 leading-relaxed">
-          O parágrafo §{paragraph} ainda não foi gerado e o limite de IA do workspace foi atingido. 
+          O parágrafo §${paragraph} ainda não foi gerado e o limite de IA do workspace foi atingido. 
           O conteúdo será gerado automaticamente assim que os créditos forem recarregados.
         </p>
         {data.content && data.content.length > 30 ? (
@@ -93,16 +115,24 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
              "{data.content}"
            </div>
         ) : (
-          <div className="pt-2 border-t border-amber-500/10 flex flex-col gap-2">
-            <p className="text-[10px] uppercase font-black tracking-widest opacity-60">Alternativa:</p>
-            <a 
-              href={`https://www.vatican.va/archive/cathechism_po/index_new/prima-pagina-cic_po.html`} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-primary hover:underline font-bold"
-            >
-              Ver no site oficial do Vaticano <Icons.ExternalLink className="w-3 h-3" />
-            </a>
+          <div className="pt-2 border-t border-amber-500/10 flex flex-col gap-3">
+            <p className="text-[10px] uppercase font-black tracking-widest opacity-60">Alternativas:</p>
+            <div className="flex flex-wrap gap-2">
+              <button 
+                onClick={handleRegenerate}
+                className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary/10 text-primary rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-primary/20 transition-all"
+              >
+                <Icons.Zap className="w-3 h-3" /> Tentar Gerar
+              </button>
+              <a 
+                href={`https://www.vatican.va/archive/cathechism_po/index_new/prima-pagina-cic_po.html`} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-primary hover:underline font-bold text-xs"
+              >
+                Ver no site oficial do Vaticano <Icons.ExternalLink className="w-3 h-3" />
+              </a>
+            </div>
           </div>
         )}
       </div>
@@ -110,16 +140,18 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
   }
 
   // Not cached - this shouldn't happen with the new auto-generate function, but we keep a generic fallback
-  if (data?.status === 'not_cached') {
+  if (data?.status === 'not_found' || data?.status === 'not_cached') {
     return (
-      <div className="reader-text py-4 space-y-3">
-        <p className="text-sm text-muted-foreground italic">Conteúdo do §{paragraph} ainda não disponível no nosso banco de dados.</p>
+      <div className="reader-text py-4 space-y-4">
+        <p className="text-sm text-muted-foreground italic">Conteúdo do §${paragraph} ainda não disponível no nosso banco de dados.</p>
         <div className="flex flex-wrap gap-2">
           <button
-            onClick={() => window.location.reload()}
+            onClick={handleRegenerate}
+            disabled={isGenerating}
             className="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2"
           >
-            <Icons.Loader className="w-3 h-3" /> Tentar carregar
+            {isGenerating ? <Icons.Loader className="w-3 h-3 animate-spin" /> : <Icons.Zap className="w-3 h-3" />} 
+            Gerar com IA
           </button>
           <a 
             href="https://www.vatican.va/archive/cathechism_po/index_new/prima-pagina-cic_po.html" 
