@@ -159,6 +159,7 @@ const AdminContentTab: React.FC = () => {
           <TabsTrigger value="rejected">Rejeitados</TabsTrigger>
           <TabsTrigger value="all">Todos</TabsTrigger>
           <TabsTrigger value="catechism">Depuração CIC</TabsTrigger>
+          <TabsTrigger value="nexus">Sinônimos Nexus</TabsTrigger>
         </TabsList>
 
         <TabsContent value={activeTab} className="space-y-4">
