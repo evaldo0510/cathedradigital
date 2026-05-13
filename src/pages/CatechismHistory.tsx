@@ -373,20 +373,32 @@ const CatechismHistory: React.FC = () => {
                       </div>
                       <h3 className="text-sm font-bold truncate text-destructive">{section.title}</h3>
                     </div>
-                    <Button 
-                      variant="destructive" 
-                      size="sm" 
-                      onClick={() => handleRegenerateSection(section.failed)}
-                      disabled={isRegeneratingAll}
-                      className="rounded-lg h-7 px-3 text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5"
-                    >
-                      {isRegeneratingAll ? (
-                        <Icons.Loader2 className="w-3 h-3 animate-spin" />
-                      ) : (
-                        <Icons.Zap className="w-3 h-3" />
+                    <div className="flex items-center gap-2">
+                      {isRegeneratingAll && section.failed.some(p => regenerationStatus[p.paragraph] === 'pending' || regenerationStatus[p.paragraph] === 'processing') && (
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          onClick={handleCancelRegeneration}
+                          className="rounded-lg h-7 px-3 text-[10px] font-black uppercase tracking-widest text-destructive hover:bg-destructive/10"
+                        >
+                          Cancelar
+                        </Button>
                       )}
-                      Regenerar Seção ({section.failed.length})
-                    </Button>
+                      <Button 
+                        variant="destructive" 
+                        size="sm" 
+                        onClick={() => handleRegenerateSection(section.failed)}
+                        disabled={isRegeneratingAll}
+                        className="rounded-lg h-7 px-3 text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5"
+                      >
+                        {isRegeneratingAll ? (
+                          <Icons.Loader2 className="w-3 h-3 animate-spin" />
+                        ) : (
+                          <Icons.Zap className="w-3 h-3" />
+                        )}
+                        Regenerar Seção ({section.failed.length})
+                      </Button>
+                    </div>
                   </div>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -465,7 +477,12 @@ const CatechismHistory: React.FC = () => {
                       §{item.paragraph}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Lido há</div>
+                      <div className="flex justify-between items-start mb-1">
+                        <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Lido há</div>
+                        <div className="text-[9px] font-bold text-primary/60" title={format(new Date(item.read_at), "dd/MM/yyyy HH:mm:ss")}>
+                          Sincronizado: {format(new Date(item.read_at), "HH:mm")}
+                        </div>
+                      </div>
                       <div className="text-sm font-medium truncate">
                         {formatDistanceToNow(new Date(item.read_at), { addSuffix: true, locale: ptBR })}
                       </div>
