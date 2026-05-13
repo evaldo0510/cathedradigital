@@ -19,7 +19,7 @@ import { jsPDF } from 'jspdf';
 import { Calendar as CalendarIcon, Heart, FileDown, Filter, List, Check } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { format } from "date-fns";
+import { format, startOfMonth, endOfMonth, eachDayOfInterval } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useFavorites } from '@/hooks/useFavorites';
 import { getLiturgicalPeriods } from '@/lib/liturgy';
@@ -31,6 +31,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from 'sonner';
 
 const MissalPage = lazy(() => import('./MissalPage'));
