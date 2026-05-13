@@ -681,7 +681,7 @@ const LiturgiaPage: React.FC = () => {
                                     <div className="h-8 w-px bg-border/40" />
                                     <div>
                                       <p className="text-sm font-bold text-foreground/80 line-clamp-1 group-hover:text-primary transition-colors">
-                                        {day.celebrations?.map((c: any) => c.title).join(' / ') || 'Feria'}
+                                        {day.celebrations?.[0]?.title} {day.celebrations?.length > 1 && `(+${day.celebrations.length - 1})`}
                                       </p>
                                       <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground opacity-60">
                                         {day.season || 'Tempo Comum'}
