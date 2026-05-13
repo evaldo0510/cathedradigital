@@ -206,7 +206,7 @@ const CatechismHistory: React.FC = () => {
 
       {/* Failed Paragraphs */}
       <AnimatePresence>
-        {failedParagraphs && failedParagraphs.length > 0 && (
+        {failedBySection.length > 0 && (
           <motion.section 
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
@@ -218,38 +218,53 @@ const CatechismHistory: React.FC = () => {
                 <Icons.AlertTriangle className="w-5 h-5 text-destructive" />
                 <h2 className="text-xl font-bold text-destructive">Falhas de Geração</h2>
               </div>
-              <Button 
-                variant="destructive" 
-                size="sm" 
-                onClick={handleRegenerateBatch}
-                disabled={isRegeneratingAll}
-                className="rounded-xl flex items-center gap-2"
-              >
-                {isRegeneratingAll ? (
-                  <Icons.Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <Icons.Zap className="w-4 h-4" />
-                )}
-                Regenerar Todos ({failedParagraphs.length})
-              </Button>
             </div>
-            <p className="text-sm text-destructive/80 max-w-2xl">
-              Alguns parágrafos não puderam ser gerados corretamente via IA. Clique para tentar regenerá-los em lote.
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {failedParagraphs.map(p => (
-                <div key={p.paragraph} className="bg-destructive/10 border border-destructive/20 rounded-xl p-3 flex items-center justify-between gap-3">
-                  <div className="min-w-0">
-                    <div className="text-xs font-bold text-destructive">§{p.paragraph}</div>
-                    <div className="text-[10px] text-destructive/60 truncate">{p.last_error || 'Erro desconhecido'}</div>
+            
+            <div className="space-y-8">
+              {failedBySection.map((section) => (
+                <div key={section.id} className="space-y-4">
+                  <div className="flex items-center justify-between gap-4 border-b border-destructive/10 pb-2">
+                    <div className="min-w-0">
+                      <div className="text-[10px] font-black uppercase tracking-widest text-destructive/60">
+                        {section.part}
+                      </div>
+                      <h3 className="text-sm font-bold truncate text-destructive">{section.title}</h3>
+                    </div>
+                    <Button 
+                      variant="destructive" 
+                      size="xs" 
+                      onClick={() => handleRegenerateSection(section.failed)}
+                      disabled={isRegeneratingAll}
+                      className="rounded-lg h-7 px-3 text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5"
+                    >
+                      {isRegeneratingAll ? (
+                        <Icons.Loader2 className="w-3 h-3 animate-spin" />
+                      ) : (
+                        <Icons.Zap className="w-3 h-3" />
+                      )}
+                      Regenerar Seção ({section.failed.length})
+                    </Button>
                   </div>
-                  <button 
-                    onClick={() => regenerateMutation.mutate(p.paragraph)}
-                    className="p-1.5 hover:bg-destructive/20 rounded-lg text-destructive transition-colors"
-                    title="Regenerar"
-                  >
-                    <Icons.RotateCcw className="w-3.5 h-3.5" />
-                  </button>
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {section.failed.map(p => (
+                      <div key={p.paragraph} className="bg-destructive/10 border border-destructive/20 rounded-xl p-3 flex items-center justify-between gap-3 group/item">
+                        <div className="min-w-0">
+                          <div className="text-xs font-bold text-destructive">§{p.paragraph}</div>
+                          <div className="text-[10px] text-destructive/60 truncate" title={p.last_error || 'Erro desconhecido'}>
+                            {p.last_error || 'Erro desconhecido'}
+                          </div>
+                        </div>
+                        <button 
+                          onClick={() => regenerateMutation.mutate(p.paragraph)}
+                          className="p-1.5 hover:bg-destructive/20 rounded-lg text-destructive transition-colors opacity-0 group-hover/item:opacity-100"
+                          title="Regenerar"
+                        >
+                          <Icons.RotateCcw className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               ))}
             </div>
