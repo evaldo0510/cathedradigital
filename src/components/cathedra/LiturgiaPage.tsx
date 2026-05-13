@@ -496,6 +496,16 @@ const LiturgiaPage: React.FC = () => {
             <div {...getTabPanelProps('panel-liturgia', 'tab-liturgia', activeTab === 'liturgia', "max-w-2xl mx-auto space-y-10 animate-in fade-in duration-500 outline-none")}>
               <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} className="space-y-4 text-center">
                 <h1 className="text-3xl md:text-5xl font-display font-black text-primary tracking-tight">Liturgia do Dia</h1>
+                {dayCelebrations?.celebrations?.[activeCelebrationIndex] && (
+                  <motion.p 
+                    key={activeCelebrationIndex}
+                    initial={{ opacity: 0 }} 
+                    animate={{ opacity: 1 }} 
+                    className="text-lg font-serif italic text-primary/60"
+                  >
+                    {dayCelebrations.celebrations[activeCelebrationIndex].title}
+                  </motion.p>
+                )}
                 <div className="flex items-center justify-center gap-4">
                   <button onClick={goToPrevDay} className="p-3 rounded-2xl bg-muted hover:bg-primary hover:text-white transition-all text-primary focus-visible:ring-2 focus-visible:ring-primary outline-none" aria-label="Dia anterior"><Icons.ChevronLeft className="w-5 h-5" /></button>
                   <p className="text-sm font-bold text-primary capitalize min-w-[200px]">{formatDate()}{isToday && <span className="ml-2 text-secondary">(Hoje)</span>}</p>
