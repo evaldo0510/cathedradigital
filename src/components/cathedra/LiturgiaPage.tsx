@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback, useEffect, lazy, Suspense } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
@@ -15,6 +15,24 @@ import { useSaintsToday } from '@/hooks/useSaints';
 import { getCachedLiturgy, cacheLiturgy } from '@/lib/offlineCache';
 import { LiturgiaSkeleton } from './LiturgiaSkeleton';
 import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
+import { jsPDF } from 'jspdf';
+import { Calendar as CalendarIcon, Heart, FileDown, Filter, List, Check } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { format, startOfMonth, endOfMonth, eachDayOfInterval } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { useFavorites } from '@/hooks/useFavorites';
+import { getLiturgicalPeriods } from '@/lib/liturgy';
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuTrigger,
+  DropdownMenuLabel,
+  DropdownMenuSeparator
+} from "@/components/ui/dropdown-menu";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { toast } from 'sonner';
 
 const MissalPage = lazy(() => import('./MissalPage'));
 const LiturgicalCalendarPage = lazy(() => import('./LiturgicalCalendarPage'));
@@ -120,9 +138,24 @@ const LiturgiaPage: React.FC = () => {
   const tabList = ['liturgia', 'missal', 'calendario'];
 
   const { profile } = useAuth();
+  const { toggleFavorite, isFavorite } = useFavorites();
   const [selectedDate, setSelectedDate] = useState(() => new Date());
   const today = selectedDate;
   const [isOfflineData, setIsOfflineData] = useState(false);
+  const [showMonthList, setShowMonthList] = useState(false);
+  const [isMonthViewOpen, setIsMonthViewOpen] = useState(false);
+
+  const { data: monthData, isLoading: isLoadingMonth } = useQuery({
+    queryKey: ['liturgical-month', today.getFullYear(), today.getMonth()],
+    queryFn: async () => {
+      const { data } = await supabase.functions.invoke('liturgical-calendar', {
+        body: { action: 'month', year: today.getFullYear(), month: today.getMonth() + 1 }
+      });
+      return data;
+    },
+    enabled: isMonthViewOpen,
+    staleTime: 1000 * 60 * 60 * 24,
+  });
 
   usePrefetchLiturgyCache();
 
@@ -140,6 +173,72 @@ const LiturgiaPage: React.FC = () => {
     d.setDate(d.getDate() + 1);
     setSelectedDate(d);
     setIsOfflineData(false);
+  };
+
+  const liturgicalPeriods = useMemo(() => getLiturgicalPeriods(today.getFullYear()), [today.getFullYear()]);
+
+  const exportToPDF = async () => {
+    if (!readings) return;
+    try {
+      const doc = new jsPDF();
+      const margin = 20;
+      let y = margin;
+
+      doc.setFontSize(22);
+      doc.setTextColor(30, 58, 138); // primary color
+      doc.text("Cathedra Digital", margin, y);
+      y += 10;
+      
+      doc.setFontSize(16);
+      doc.setTextColor(0, 0, 0);
+      doc.text(`Liturgia do Dia: ${formatDate()}`, margin, y);
+      y += 10;
+      doc.setFontSize(12);
+      doc.setTextColor(100, 100, 100);
+      doc.text(readings.liturgia, margin, y);
+      y += 15;
+
+      const addReading = (title: string, ref: string, text: string) => {
+        if (y > 240) { doc.addPage(); y = margin; }
+        doc.setFontSize(14);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(30, 58, 138);
+        doc.text(title, margin, y);
+        y += 7;
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "italic");
+        doc.setTextColor(150, 150, 150);
+        doc.text(ref, margin, y);
+        y += 8;
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(11);
+        doc.setTextColor(0, 0, 0);
+        const splitText = doc.splitTextToSize(text, 170);
+        doc.text(splitText, margin, y);
+        y += (splitText.length * 6) + 12;
+      };
+
+      if (readings.primeiraLeitura) addReading("Primeira Leitura", readings.primeiraLeitura.referencia, readings.primeiraLeitura.texto);
+      if (readings.salmo) addReading("Salmo Responsorial", readings.salmo.referencia, readings.salmo.refrao + "\n\n" + readings.salmo.texto);
+      if (readings.segundaLeitura && typeof readings.segundaLeitura !== 'string') addReading("Segunda Leitura", readings.segundaLeitura.referencia, readings.segundaLeitura.texto);
+      if (readings.evangelho) addReading("Evangelho", readings.evangelho.referencia, readings.evangelho.texto);
+
+      doc.save(`cathedra-liturgia-${format(today, 'yyyy-MM-dd')}.pdf`);
+      toast.success('PDF gerado com sucesso!');
+    } catch (err) {
+      console.error('PDF error:', err);
+      toast.error('Erro ao gerar PDF');
+    }
+  };
+
+  const toggleFavoriteDay = () => {
+    if (!readings) return;
+    toggleFavorite({
+      type: 'liturgy',
+      title: `Liturgia - ${format(today, 'dd/MM/yyyy')}`,
+      content: readings.liturgia,
+    });
+    toast.success(isFavorite('liturgy', `Liturgia - ${format(today, 'dd/MM/yyyy')}`) ? 'Removido dos favoritos' : 'Adicionado aos favoritos');
   };
 
   const isToday = selectedDate.toDateString() === new Date().toDateString();
@@ -224,6 +323,141 @@ const LiturgiaPage: React.FC = () => {
                   <p className="text-sm font-bold text-primary capitalize min-w-[200px]">{formatDate()}{isToday && <span className="ml-2 text-secondary">(Hoje)</span>}</p>
                   <button onClick={goToNextDay} className="p-3 rounded-2xl bg-muted hover:bg-primary hover:text-white transition-all text-primary focus-visible:ring-2 focus-visible:ring-primary outline-none" aria-label="Próximo dia"><Icons.ChevronRight className="w-5 h-5" /></button>
                 </div>
+
+                <div className="flex flex-wrap items-center justify-center gap-3">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" className="rounded-xl h-11 px-4 gap-2 border-border/50 hover:bg-muted/50 transition-all">
+                        <CalendarIcon className="w-4 h-4 text-primary" />
+                        <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Ir para Data</span>
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="center">
+                      <Calendar
+                        mode="single"
+                        selected={selectedDate}
+                        onSelect={(d) => d && setSelectedDate(d)}
+                        initialFocus
+                        locale={ptBR}
+                        className="rounded-3xl border-none p-4"
+                      />
+                    </PopoverContent>
+                  </Popover>
+
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" className="rounded-xl h-11 px-4 gap-2 border-border/50 hover:bg-muted/50 transition-all">
+                        <Filter className="w-4 h-4 text-primary" />
+                        <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Períodos</span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="center" className="w-56 rounded-3xl p-3 shadow-2xl border-border/40 bg-background/95 backdrop-blur-xl">
+                      <DropdownMenuLabel className="text-[10px] font-black uppercase tracking-widest p-2 opacity-50">Saltar para Período</DropdownMenuLabel>
+                      <DropdownMenuSeparator className="bg-border/40" />
+                      {liturgicalPeriods.map((period) => (
+                        <DropdownMenuItem 
+                          key={period.name}
+                          onClick={() => {
+                            setSelectedDate(period.date);
+                            toast.info(`Navegando para o início do ${period.name}`);
+                          }}
+                          className="rounded-2xl p-3 cursor-pointer flex items-center justify-between hover:bg-primary/5 transition-colors group"
+                        >
+                          <span className="text-xs font-bold text-foreground/80 group-hover:text-primary transition-colors">{period.name}</span>
+                          <div className={`w-2.5 h-2.5 rounded-full ring-4 ring-background shadow-sm ${
+                            period.color === 'roxo' ? 'bg-purple-500' :
+                            period.color === 'branco' ? 'bg-slate-300' :
+                            period.color === 'vermelho' ? 'bg-red-500' : 'bg-green-500'
+                          }`} />
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+
+                  <Dialog open={isMonthViewOpen} onOpenChange={setIsMonthViewOpen}>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" className="rounded-xl h-11 px-4 gap-2 border-border/50 hover:bg-muted/50 transition-all">
+                        <List className="w-4 h-4 text-primary" />
+                        <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Ver Mês</span>
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl max-h-[80vh] rounded-[2.5rem] p-0 overflow-hidden border-border/40 shadow-2xl">
+                      <DialogHeader className="p-8 pb-4 bg-muted/30">
+                        <DialogTitle className="text-2xl font-serif font-bold text-primary flex items-center gap-3">
+                          <Icons.Calendar className="w-6 h-6" />
+                          Leituras de {format(today, 'MMMM yyyy', { locale: ptBR })}
+                        </DialogTitle>
+                      </DialogHeader>
+                      <ScrollArea className="h-full max-h-[60vh] p-8 pt-0">
+                        <div className="space-y-3 pb-8">
+                          {isLoadingMonth ? (
+                            <div className="flex flex-col items-center justify-center py-20 space-y-4">
+                              <Icons.Loader2 className="w-8 h-8 text-primary animate-spin" />
+                              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Sincronizando calendário...</p>
+                            </div>
+                          ) : Array.isArray(monthData) ? (
+                            monthData.map((day: any) => {
+                              const date = new Date(day.date + "T12:00:00");
+                              const isDaySelected = date.toDateString() === today.toDateString();
+                              return (
+                                <button 
+                                  key={day.date}
+                                  onClick={() => {
+                                    setSelectedDate(date);
+                                    setIsMonthViewOpen(false);
+                                  }}
+                                  className={`w-full flex items-center justify-between p-4 rounded-2xl border transition-all text-left group
+                                    ${isDaySelected ? 'bg-primary/5 border-primary shadow-sm' : 'border-border/40 bg-card hover:border-primary/30 hover:bg-muted/30'}
+                                  `}
+                                >
+                                  <div className="flex items-center gap-4">
+                                    <div className="text-center min-w-[40px]">
+                                      <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">{format(date, 'eee', { locale: ptBR })}</p>
+                                      <p className="text-lg font-bold text-primary leading-none">{format(date, 'dd')}</p>
+                                    </div>
+                                    <div className="h-8 w-px bg-border/40" />
+                                    <div>
+                                      <p className="text-sm font-bold text-foreground/80 line-clamp-1 group-hover:text-primary transition-colors">
+                                        {day.celebrations?.[0]?.title || 'Feria'}
+                                      </p>
+                                      <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground opacity-60">
+                                        {day.season || 'Tempo Comum'}
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <Icons.ChevronRight className="w-4 h-4 text-muted-foreground group-hover:translate-x-1 transition-transform" />
+                                </button>
+                              );
+                            })
+                          ) : (
+                            <p className="text-center py-10 text-muted-foreground">Não foi possível carregar as leituras do mês.</p>
+                          )}
+                        </div>
+                      </ScrollArea>
+                    </DialogContent>
+                  </Dialog>
+
+                  <Button 
+                    variant="outline" 
+                    className="rounded-xl h-11 px-4 gap-2 border-border/50 hover:bg-muted/50 transition-all"
+                    onClick={exportToPDF}
+                    disabled={!readings || isLoading}
+                  >
+                    <FileDown className="w-4 h-4 text-primary" />
+                    <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Exportar PDF</span>
+                  </Button>
+
+                  <Button 
+                    variant="outline" 
+                    className={`rounded-xl h-11 px-4 gap-2 border-border/50 transition-all ${isFavorite('liturgy', `Liturgia - ${format(today, 'dd/MM/yyyy')}`) ? 'bg-primary/5 border-primary/40 text-primary' : 'hover:bg-muted/50'}`}
+                    onClick={toggleFavoriteDay}
+                    disabled={!readings || isLoading}
+                  >
+                    <Heart className={`w-4 h-4 ${isFavorite('liturgy', `Liturgia - ${format(today, 'dd/MM/yyyy')}`) ? 'fill-current' : 'text-primary'}`} />
+                    <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Favoritar</span>
+                  </Button>
+                </div>
+
                 {isOfflineData && <div className="flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground bg-muted/50 rounded-full px-4 py-2 mt-4 mx-auto w-fit"><Icons.WifiOff className="w-3.5 h-3.5" /> <span>Modo Offline</span></div>}
               </motion.div>
 

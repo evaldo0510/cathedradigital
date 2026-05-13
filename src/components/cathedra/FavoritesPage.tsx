@@ -9,7 +9,7 @@ const FavoritesPage: React.FC = () => {
   const filtered = filter === 'all' ? favorites : favorites.filter(f => f.type === filter);
 
   const types = ['all', ...Array.from(new Set(favorites.map(f => f.type)))];
-  const typeLabels: Record<string, string> = { all: 'Todos', verse: 'Versículos', catechism: 'Catecismo', prayer: 'Orações', study: 'Estudos', dogma: 'Dogmas' };
+  const typeLabels: Record<string, string> = { all: 'Todos', verse: 'Versículos', catechism: 'Catecismo', prayer: 'Orações', study: 'Estudos', dogma: 'Dogmas', liturgy: 'Liturgia' };
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
