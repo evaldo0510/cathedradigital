@@ -1,10 +1,11 @@
 import React, { useState, useMemo, useCallback, useEffect, lazy, Suspense } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useNavigate, useSearchParams, useParams } from 'react-router-dom';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import SEOHead from '@/components/SEOHead';
@@ -132,18 +133,58 @@ const ReadingCard: React.FC<{
 
 const LiturgiaPage: React.FC = () => {
   const navigate = useNavigate();
+  const { date: routeDate } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const { handleKeyDown: handleTabKeyDown } = useTabNavigation();
+  const queryClient = useQueryClient();
   const activeTab = searchParams.get('tab') || 'liturgia';
   const tabList = ['liturgia', 'missal', 'calendario'];
 
   const { profile } = useAuth();
   const { toggleFavorite, isFavorite } = useFavorites();
-  const [selectedDate, setSelectedDate] = useState(() => new Date());
+  
+  const [selectedDate, setSelectedDate] = useState(() => {
+    if (routeDate) {
+      const d = new Date(routeDate + "T12:00:00");
+      if (!isNaN(d.getTime())) return d;
+    }
+    return new Date();
+  });
+
   const today = selectedDate;
   const [isOfflineData, setIsOfflineData] = useState(false);
   const [showMonthList, setShowMonthList] = useState(false);
   const [isMonthViewOpen, setIsMonthViewOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isExportingMonth, setIsExportingMonth] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  useEffect(() => {
+    if (routeDate) {
+      const d = new Date(routeDate + "T12:00:00");
+      if (!isNaN(d.getTime()) && d.toDateString() !== selectedDate.toDateString()) {
+        setSelectedDate(d);
+      }
+    }
+  }, [routeDate]);
+
+  const dateKey = today.toDateString();
+
+  const goToPrevDay = () => {
+    const d = new Date(selectedDate);
+    d.setDate(d.getDate() - 1);
+    const dateStr = format(d, 'yyyy-MM-dd');
+    navigate(`${AppRoute.LITURGIA}/${dateStr}${location.search}`);
+    setIsOfflineData(false);
+  };
+
+  const goToNextDay = () => {
+    const d = new Date(selectedDate);
+    d.setDate(d.getDate() + 1);
+    const dateStr = format(d, 'yyyy-MM-dd');
+    navigate(`${AppRoute.LITURGIA}/${dateStr}${location.search}`);
+    setIsOfflineData(false);
+  };
 
   const { data: monthData, isLoading: isLoadingMonth } = useQuery({
     queryKey: ['liturgical-month', today.getFullYear(), today.getMonth()],
@@ -153,29 +194,110 @@ const LiturgiaPage: React.FC = () => {
       });
       return data;
     },
-    enabled: isMonthViewOpen,
+    enabled: isMonthViewOpen || searchQuery.length > 0,
     staleTime: 1000 * 60 * 60 * 24,
   });
 
-  usePrefetchLiturgyCache();
-
-  const dateKey = today.toDateString();
-
-  const goToPrevDay = () => {
-    const d = new Date(selectedDate);
-    d.setDate(d.getDate() - 1);
-    setSelectedDate(d);
-    setIsOfflineData(false);
-  };
-
-  const goToNextDay = () => {
-    const d = new Date(selectedDate);
-    d.setDate(d.getDate() + 1);
-    setSelectedDate(d);
-    setIsOfflineData(false);
-  };
-
   const liturgicalPeriods = useMemo(() => getLiturgicalPeriods(today.getFullYear()), [today.getFullYear()]);
+
+  const filteredMonthDays = useMemo(() => {
+    if (!searchQuery || !Array.isArray(monthData)) return [];
+    const q = searchQuery.toLowerCase();
+    return monthData.filter((day: any) => {
+      const title = day.celebrations?.[0]?.title?.toLowerCase() || '';
+      return title.includes(q);
+    });
+  }, [monthData, searchQuery]);
+
+  const downloadMonth = async () => {
+    setIsDownloading(true);
+    try {
+      const start = startOfMonth(today);
+      const end = endOfMonth(today);
+      const days = eachDayOfInterval({ start, end });
+      
+      let count = 0;
+      for (const d of days) {
+        const key = d.toDateString();
+        const cached = await getCachedLiturgy(key);
+        if (!cached) {
+          const { data } = await supabase.functions.invoke('liturgical-calendar', {
+            body: { action: 'readings', day: d.getDate(), month: d.getMonth() + 1 }
+          });
+          if (data) await cacheLiturgy(key, data as LiturgyReadings);
+        }
+        count++;
+      }
+      toast.success(`${count} liturgias baixadas para acesso offline.`);
+    } catch (err) {
+      toast.error('Erro ao baixar período');
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
+  const exportMonthPDF = async () => {
+    setIsExportingMonth(true);
+    try {
+      const doc = new jsPDF();
+      const margin = 20;
+      const start = startOfMonth(today);
+      const end = endOfMonth(today);
+      const days = eachDayOfInterval({ start, end });
+
+      doc.setFontSize(22);
+      doc.setTextColor(30, 58, 138);
+      doc.text(`Liturgia Consolidada: ${format(today, 'MMMM yyyy', { locale: ptBR })}`, margin, 20);
+
+      for (const d of days) {
+        doc.addPage();
+        let y = 20;
+        const key = d.toDateString();
+        let readingsData = await getCachedLiturgy(key);
+        
+        if (!readingsData) {
+          const { data } = await supabase.functions.invoke('liturgical-calendar', {
+            body: { action: 'readings', day: d.getDate(), month: d.getMonth() + 1 }
+          });
+          readingsData = data as LiturgyReadings;
+        }
+
+        if (readingsData) {
+          doc.setFontSize(16);
+          doc.setTextColor(0, 0, 0);
+          doc.text(format(d, 'dd/MM/yyyy - EEEE', { locale: ptBR }), margin, y);
+          y += 10;
+          doc.setFontSize(12);
+          doc.setTextColor(100, 100, 100);
+          doc.text((readingsData as any).liturgia, margin, y);
+          y += 15;
+
+          const addSection = (title: string, ref: string, text: string) => {
+            if (y > 240) { doc.addPage(); y = 20; }
+            doc.setFontSize(14); doc.setFont("helvetica", "bold"); doc.setTextColor(30, 58, 138);
+            doc.text(title, margin, y); y += 7;
+            doc.setFontSize(10); doc.setFont("helvetica", "italic"); doc.setTextColor(150, 150, 150);
+            doc.text(ref, margin, y); y += 8;
+            doc.setFont("helvetica", "normal"); doc.setFontSize(11); doc.setTextColor(0, 0, 0);
+            const splitText = doc.splitTextToSize(text, 170);
+            doc.text(splitText, margin, y);
+            y += (splitText.length * 6) + 12;
+          };
+
+          const r = readingsData as any;
+          if (r.primeiraLeitura) addSection("1ª Leitura", r.primeiraLeitura.referencia, r.primeiraLeitura.texto);
+          if (r.evangelho) addSection("Evangelho", r.evangelho.referencia, r.evangelho.texto);
+        }
+      }
+
+      doc.save(`liturgia-${format(today, 'yyyy-MM')}.pdf`);
+      toast.success('PDF consolidado gerado!');
+    } catch (err) {
+      toast.error('Erro ao exportar mês');
+    } finally {
+      setIsExportingMonth(false);
+    }
+  };
 
   const exportToPDF = async () => {
     if (!readings) return;
@@ -233,11 +355,17 @@ const LiturgiaPage: React.FC = () => {
 
   const toggleFavoriteDay = () => {
     if (!readings) return;
+    const currentPeriod = liturgicalPeriods.find(p => p.date <= today)?.name || 'Tempo Comum';
     toggleFavorite({
       type: 'liturgy',
       title: `Liturgia - ${format(today, 'dd/MM/yyyy')}`,
       content: readings.liturgia,
-    });
+      metadata: {
+        date: format(today, 'yyyy-MM-dd'),
+        year: today.getFullYear().toString(),
+        period: currentPeriod
+      }
+    } as any);
     toast.success(isFavorite('liturgy', `Liturgia - ${format(today, 'dd/MM/yyyy')}`) ? 'Removido dos favoritos' : 'Adicionado aos favoritos');
   };
 
@@ -324,6 +452,110 @@ const LiturgiaPage: React.FC = () => {
                   <button onClick={goToNextDay} className="p-3 rounded-2xl bg-muted hover:bg-primary hover:text-white transition-all text-primary focus-visible:ring-2 focus-visible:ring-primary outline-none" aria-label="Próximo dia"><Icons.ChevronRight className="w-5 h-5" /></button>
                 </div>
 
+                <div className="max-w-md mx-auto w-full px-4 mt-8">
+                  <div className="relative group">
+                    <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                    <input 
+                      type="text"
+                      placeholder="Buscar celebrações no mês..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full pl-12 pr-4 h-12 rounded-2xl border border-border/50 bg-muted/20 focus:bg-background focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm font-medium"
+                    />
+                  </div>
+                </div>
+
+                {searchQuery && (
+                  <div className="max-w-2xl mx-auto w-full px-4 mb-8 mt-4">
+                    <Card className="rounded-3xl border-primary/20 bg-primary/5 overflow-hidden shadow-sm">
+                      <div className="p-4 border-b border-border/20 flex items-center justify-between">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-primary">Resultados da Busca</span>
+                        <Button variant="ghost" size="sm" onClick={() => setSearchQuery('')} className="h-8 text-[9px] font-black uppercase">Limpar</Button>
+                      </div>
+                      <div className="max-h-60 overflow-y-auto p-2 space-y-2">
+                        {isLoadingMonth ? (
+                          <div className="flex justify-center py-4"><Icons.Loader2 className="w-5 h-5 animate-spin text-primary" /></div>
+                        ) : filteredMonthDays.length > 0 ? (
+                          filteredMonthDays.map((day: any) => (
+                            <button 
+                              key={day.date}
+                              onClick={() => {
+                                const d = new Date(day.date + "T12:00:00");
+                                setSelectedDate(d);
+                                setSearchQuery('');
+                                navigate(`${AppRoute.LITURGIA}/${day.date}`);
+                              }}
+                              className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-background transition-colors text-left"
+                            >
+                              <div className="flex items-center gap-3">
+                                <div className="text-center min-w-[32px]">
+                                  <p className="text-sm font-bold text-primary">{format(new Date(day.date + "T12:00:00"), 'dd')}</p>
+                                </div>
+                                <p className="text-xs font-bold text-foreground/80 line-clamp-1">{day.celebrations?.[0]?.title}</p>
+                              </div>
+                              <Icons.ChevronRight className="w-3 h-3 text-muted-foreground" />
+                            </button>
+                          ))
+                        ) : (
+                          <p className="text-center py-4 text-xs text-muted-foreground">Nenhuma celebração encontrada.</p>
+                        )}
+                      </div>
+                    </Card>
+                  </div>
+                )}
+
+                <div className="max-w-md mx-auto w-full px-4 mt-8">
+                  <div className="relative group">
+                    <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                    <input 
+                      type="text"
+                      placeholder="Buscar celebrações no mês..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full pl-12 pr-4 h-12 rounded-2xl border border-border/50 bg-muted/20 focus:bg-background focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm font-medium"
+                    />
+                  </div>
+                </div>
+
+                {searchQuery && (
+                  <div className="max-w-2xl mx-auto w-full px-4 mb-8 mt-4">
+                    <Card className="rounded-3xl border-primary/20 bg-primary/5 overflow-hidden shadow-sm">
+                      <div className="p-4 border-b border-border/20 flex items-center justify-between">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-primary">Resultados da Busca</span>
+                        <Button variant="ghost" size="sm" onClick={() => setSearchQuery('')} className="h-8 text-[9px] font-black uppercase">Limpar</Button>
+                      </div>
+                      <div className="max-h-60 overflow-y-auto p-2 space-y-2">
+                        {isLoadingMonth ? (
+                          <div className="flex justify-center py-4"><Icons.Loader2 className="w-5 h-5 animate-spin text-primary" /></div>
+                        ) : filteredMonthDays.length > 0 ? (
+                          filteredMonthDays.map((day: any) => (
+                            <button 
+                              key={day.date}
+                              onClick={() => {
+                                const d = new Date(day.date + "T12:00:00");
+                                setSelectedDate(d);
+                                setSearchQuery('');
+                                navigate(`${AppRoute.LITURGIA}/${day.date}`);
+                              }}
+                              className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-background transition-colors text-left"
+                            >
+                              <div className="flex items-center gap-3">
+                                <div className="text-center min-w-[32px]">
+                                  <p className="text-sm font-bold text-primary">{format(new Date(day.date + "T12:00:00"), 'dd')}</p>
+                                </div>
+                                <p className="text-xs font-bold text-foreground/80 line-clamp-1">{day.celebrations?.[0]?.title}</p>
+                              </div>
+                              <Icons.ChevronRight className="w-3 h-3 text-muted-foreground" />
+                            </button>
+                          ))
+                        ) : (
+                          <p className="text-center py-4 text-xs text-muted-foreground">Nenhuma celebração encontrada.</p>
+                        )}
+                      </div>
+                    </Card>
+                  </div>
+                )}
+
                 <div className="flex flex-wrap items-center justify-center gap-3">
                   <Popover>
                     <PopoverTrigger asChild>
@@ -336,7 +568,13 @@ const LiturgiaPage: React.FC = () => {
                       <Calendar
                         mode="single"
                         selected={selectedDate}
-                        onSelect={(d) => d && setSelectedDate(d)}
+                        onSelect={(d) => {
+                          if (d) {
+                            const dateStr = format(d, 'yyyy-MM-dd');
+                            setSelectedDate(d);
+                            navigate(`${AppRoute.LITURGIA}/${dateStr}`);
+                          }
+                        }}
                         initialFocus
                         locale={ptBR}
                         className="rounded-3xl border-none p-4"
@@ -383,10 +621,34 @@ const LiturgiaPage: React.FC = () => {
                     </DialogTrigger>
                     <DialogContent className="max-w-2xl max-h-[80vh] rounded-[2.5rem] p-0 overflow-hidden border-border/40 shadow-2xl">
                       <DialogHeader className="p-8 pb-4 bg-muted/30">
-                        <DialogTitle className="text-2xl font-serif font-bold text-primary flex items-center gap-3">
-                          <Icons.Calendar className="w-6 h-6" />
-                          Leituras de {format(today, 'MMMM yyyy', { locale: ptBR })}
-                        </DialogTitle>
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                          <DialogTitle className="text-2xl font-serif font-bold text-primary flex items-center gap-3">
+                            <Icons.Calendar className="w-6 h-6" />
+                            Leituras de {format(today, 'MMMM yyyy', { locale: ptBR })}
+                          </DialogTitle>
+                          <div className="flex gap-2">
+                            <Button 
+                              variant="outline" 
+                              size="sm" 
+                              onClick={downloadMonth}
+                              disabled={isDownloading}
+                              className="rounded-xl h-10 px-4 text-[9px] font-black uppercase tracking-widest gap-2"
+                            >
+                              {isDownloading ? <Icons.Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Icons.Download className="w-3.5 h-3.5" />}
+                              Baixar Mês
+                            </Button>
+                            <Button 
+                              variant="outline" 
+                              size="sm" 
+                              onClick={exportMonthPDF}
+                              disabled={isExportingMonth}
+                              className="rounded-xl h-10 px-4 text-[9px] font-black uppercase tracking-widest gap-2"
+                            >
+                              {isExportingMonth ? <Icons.Loader2 className="w-3.5 h-3.5 animate-spin" /> : <FileDown className="w-3.5 h-3.5" />}
+                              PDF Mensal
+                            </Button>
+                          </div>
+                        </div>
                       </DialogHeader>
                       <ScrollArea className="h-full max-h-[60vh] p-8 pt-0">
                         <div className="space-y-3 pb-8">
@@ -405,6 +667,7 @@ const LiturgiaPage: React.FC = () => {
                                   onClick={() => {
                                     setSelectedDate(date);
                                     setIsMonthViewOpen(false);
+                                    navigate(`${AppRoute.LITURGIA}/${day.date}`);
                                   }}
                                   className={`w-full flex items-center justify-between p-4 rounded-2xl border transition-all text-left group
                                     ${isDaySelected ? 'bg-primary/5 border-primary shadow-sm' : 'border-border/40 bg-card hover:border-primary/30 hover:bg-muted/30'}
