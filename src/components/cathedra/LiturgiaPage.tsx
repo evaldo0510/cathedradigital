@@ -451,6 +451,58 @@ const LiturgiaPage: React.FC = () => {
                   <button onClick={goToNextDay} className="p-3 rounded-2xl bg-muted hover:bg-primary hover:text-white transition-all text-primary focus-visible:ring-2 focus-visible:ring-primary outline-none" aria-label="Próximo dia"><Icons.ChevronRight className="w-5 h-5" /></button>
                 </div>
 
+                <div className="max-w-md mx-auto w-full px-4 mt-8">
+                  <div className="relative group">
+                    <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                    <input 
+                      type="text"
+                      placeholder="Buscar celebrações no mês..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full pl-12 pr-4 h-12 rounded-2xl border border-border/50 bg-muted/20 focus:bg-background focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm font-medium"
+                    />
+                  </div>
+                </div>
+
+                {searchQuery && (
+                  <div className="max-w-2xl mx-auto w-full px-4 mb-8 mt-4">
+                    <Card className="rounded-3xl border-primary/20 bg-primary/5 overflow-hidden shadow-sm">
+                      <div className="p-4 border-b border-border/20 flex items-center justify-between">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-primary">Resultados da Busca</span>
+                        <Button variant="ghost" size="sm" onClick={() => setSearchQuery('')} className="h-8 text-[9px] font-black uppercase">Limpar</Button>
+                      </div>
+                      <div className="max-h-60 overflow-y-auto p-2 space-y-2">
+                        {isLoadingMonth ? (
+                          <div className="flex justify-center py-4"><Icons.Loader2 className="w-5 h-5 animate-spin text-primary" /></div>
+                        ) : filteredMonthDays.length > 0 ? (
+                          filteredMonthDays.map((day: any) => (
+                            <button 
+                              key={day.date}
+                              onClick={() => {
+                                const d = new Date(day.date + "T12:00:00");
+                                setSelectedDate(d);
+                                setSearchQuery('');
+                                navigate(`${AppRoute.LITURGIA}/${day.date}`);
+                              }}
+                              className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-background transition-colors text-left"
+                            >
+                              <div className="flex items-center gap-3">
+                                <div className="text-center min-w-[32px]">
+                                  <p className="text-sm font-bold text-primary">{format(new Date(day.date + "T12:00:00"), 'dd')}</p>
+                                </div>
+                                <p className="text-xs font-bold text-foreground/80 line-clamp-1">{day.celebrations?.[0]?.title}</p>
+                              </div>
+                              <Icons.ChevronRight className="w-3 h-3 text-muted-foreground" />
+                            </button>
+                          ))
+                        ) : (
+                          <p className="text-center py-4 text-xs text-muted-foreground">Nenhuma celebração encontrada.</p>
+                        )}
+                      </div>
+                    </Card>
+                  </div>
+                )}
+
                 <div className="flex flex-wrap items-center justify-center gap-3">
                   <Popover>
                     <PopoverTrigger asChild>
