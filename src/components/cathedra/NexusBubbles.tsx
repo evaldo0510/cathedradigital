@@ -173,12 +173,47 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
         
         <div className="p-5 space-y-5 max-h-[450px] overflow-y-auto scrollbar-none">
           {/* Diagnostic Panel (Mini) */}
-          <div className="p-2 rounded-lg bg-muted/30 border border-border/40 flex items-center justify-between text-[8px] font-black uppercase tracking-widest opacity-60">
-            <div className="flex gap-2">
-              <span>Time: {metrics.endTime ? `${Math.round(metrics.endTime - metrics.startTime)}ms` : '--'}</span>
-              <span>Source: {metrics.source || 'pending'}</span>
+          <div 
+            className="p-2 rounded-lg bg-muted/30 border border-border/40 space-y-2 cursor-pointer hover:bg-muted/50 transition-colors"
+            onClick={() => setShowLogs(!showLogs)}
+          >
+            <div className="flex items-center justify-between text-[8px] font-black uppercase tracking-widest opacity-60">
+              <div className="flex gap-2">
+                <span>Time: {metrics.endTime ? `${Math.round(metrics.endTime - metrics.startTime)}ms` : '--'}</span>
+                <span>Mode: {searchMode}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Info className="w-2.5 h-2.5" />
+                <span>{showLogs ? 'Ocultar Logs' : 'Ver Logs'}</span>
+              </div>
             </div>
-            <span>Query: "{tag.label}"</span>
+            
+            <AnimatePresence>
+              {showLogs && (
+                <motion.div 
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="space-y-2 pt-2 border-t border-border/20 overflow-hidden"
+                >
+                  {logs.map((log, i) => (
+                    <div key={i} className="space-y-1">
+                      <div className="flex items-center justify-between text-[7px] font-black uppercase text-primary/70">
+                        <span>{log.stage}</span>
+                        <span>{log.resultsCount} resultados</span>
+                      </div>
+                      {log.termsUsed && log.termsUsed.length > 0 && (
+                        <div className="flex flex-wrap gap-1">
+                          {log.termsUsed.map((term: string, j: number) => (
+                            <span key={j} className="text-[6px] px-1 py-0.5 bg-primary/5 rounded font-mono lowercase">{term}</span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {status === 'loading' ? (
