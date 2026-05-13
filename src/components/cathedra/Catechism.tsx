@@ -455,7 +455,21 @@ const Catechism: React.FC = () => {
           <div className="flex-1 min-w-0">
             <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">{selectedPart.part}</span>
             <h1 className="text-xl font-serif font-bold text-foreground truncate">{selectedSection.title}</h1>
-            <p className="text-sm text-muted-foreground">§{start} — §{end}</p>
+            <div className="flex items-center gap-3">
+              <p className="text-sm text-muted-foreground whitespace-nowrap">§{start} — §{end}</p>
+              <div className="hidden md:flex flex-1 items-center gap-2">
+                <div className="h-1 flex-1 bg-primary/10 rounded-full overflow-hidden">
+                  <motion.div 
+                    className="h-full bg-primary"
+                    initial={{ width: 0 }}
+                    animate={{ width: `${Math.round(((paragraphsRead.size > 0 ? Array.from(paragraphsRead).filter(p => p >= start && p <= end).length : 0) / (end - start + 1)) * 100)}%` }}
+                  />
+                </div>
+                <span className="text-[10px] font-black text-primary">
+                  {Math.round(((paragraphsRead.size > 0 ? Array.from(paragraphsRead).filter(p => p >= start && p <= end).length : 0) / (end - start + 1)) * 100)}%
+                </span>
+              </div>
+            </div>
           </div>
           <button 
             onClick={() => navigate('/catechism/history')}
