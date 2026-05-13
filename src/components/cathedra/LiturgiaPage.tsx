@@ -568,7 +568,13 @@ const LiturgiaPage: React.FC = () => {
                       <Calendar
                         mode="single"
                         selected={selectedDate}
-                        onSelect={(d) => d && setSelectedDate(d)}
+                        onSelect={(d) => {
+                          if (d) {
+                            const dateStr = format(d, 'yyyy-MM-dd');
+                            setSelectedDate(d);
+                            navigate(`${AppRoute.LITURGIA}/${dateStr}`);
+                          }
+                        }}
                         initialFocus
                         locale={ptBR}
                         className="rounded-3xl border-none p-4"
