@@ -215,6 +215,11 @@ const AdminContentTab: React.FC = () => {
             <CatechismDebug />
           </React.Suspense>
         </TabsContent>
+        <TabsContent value="nexus" className="space-y-4">
+          <React.Suspense fallback={<Card className="h-64 animate-pulse" />}>
+            <AdminNexusSynonyms />
+          </React.Suspense>
+        </TabsContent>
       </Tabs>
     </div>
   );
