@@ -2,14 +2,12 @@ import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
-import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
 import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import { AppRoute } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Compass, Heart, ArrowDown, Search, Sparkles, Book, BookOpen, Star, ChevronLeft, Share2, HelpCircle, ArrowRight } from 'lucide-react';
 
-import { RelevanceBadge } from './RelevanceBadge';
 import { FuzzySearchInput } from './FuzzySearchInput';
 import { SearchResultCard } from './SearchResultCard';
 import AlphabetBar from './encyclopedia/AlphabetBar';
@@ -106,7 +104,6 @@ const GlossaryPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState('Todos');
   const [searchQuery, setSearchQuery] = useState('');
-  const [expandedId, setExpandedId] = useState<string | null>(null);
   const [selectedLetter, setSelectedLetter] = useState<string | null>(null);
   const [favorites, setFavorites] = useState<string[]>(() => {
     try {
@@ -146,12 +143,6 @@ const GlossaryPage: React.FC = () => {
     if (!termSlug) return null;
     return terms.find(t => slugify(t.term) === termSlug);
   }, [termSlug, terms]);
-
-  useEffect(() => {
-    if (selectedTerm) {
-      setExpandedId(selectedTerm.id);
-    }
-  }, [selectedTerm]);
 
   useEffect(() => {
     localStorage.setItem('cathedra_glossary_favorites', JSON.stringify(favorites));
@@ -242,14 +233,13 @@ const GlossaryPage: React.FC = () => {
       });
     } else {
       navigator.clipboard.writeText(url);
-      // alert('Link copiado!');
     }
   };
 
   if (selectedTerm && termSlug) {
     const enrichment = ENRICHMENTS[selectedTerm.term];
     return (
-      <div className="max-w-3xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="max-w-3xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-20">
         <SEOHead 
           title={`${selectedTerm.term} | Glossário da Fé`} 
           description={selectedTerm.definition} 
@@ -302,7 +292,7 @@ const GlossaryPage: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
                 <div className="bg-primary/5 rounded-3xl p-6 space-y-3">
                   <p className="text-[10px] font-black uppercase tracking-widest text-primary/70 flex items-center gap-2">
-                    <Icons.Sparkles className="w-3 h-3" /> Reflexão Poética
+                    <Sparkles className="w-3 h-3" /> Reflexão Poética
                   </p>
                   <p className="text-foreground font-serif italic leading-relaxed text-sm">
                     {enrichment.padh}
@@ -311,7 +301,7 @@ const GlossaryPage: React.FC = () => {
 
                 <div className="bg-accent/10 rounded-3xl p-6 space-y-3">
                   <p className="text-[10px] font-black uppercase tracking-widest text-accent-foreground/70 flex items-center gap-2">
-                    <Icons.HelpCircle className="w-3 h-3" /> Pergunta Interior
+                    <HelpCircle className="w-3 h-3" /> Pergunta Interior
                   </p>
                   <p className="text-foreground font-bold text-base leading-snug">
                     {enrichment.question}
@@ -323,7 +313,7 @@ const GlossaryPage: React.FC = () => {
             <div className="flex flex-wrap gap-4 pt-6 border-t border-border">
               {enrichment?.relatedVerse && (
                 <div className="flex items-center gap-2 text-sm text-muted-foreground bg-muted/30 px-4 py-2 rounded-xl">
-                  <Icons.Book className="w-4 h-4 text-primary" />
+                  <Book className="w-4 h-4 text-primary" />
                   <span className="font-serif italic">Referência: {enrichment.relatedVerse}</span>
                 </div>
               )}
@@ -332,7 +322,7 @@ const GlossaryPage: React.FC = () => {
                   onClick={() => navigate(`/jornadas/${selectedTerm.journey_id}`)}
                   className="bg-primary hover:bg-primary/90 text-white font-black uppercase text-[10px] tracking-widest px-6 py-5 rounded-2xl"
                 >
-                  <Icons.Compass className="w-4 h-4 mr-2" /> Iniciar Jornada
+                  <Compass className="w-4 h-4 mr-2" /> Iniciar Jornada
                 </Button>
               )}
               {enrichment?.relatedRoute && (
@@ -341,7 +331,7 @@ const GlossaryPage: React.FC = () => {
                   onClick={() => navigate(enrichment.relatedRoute!)}
                   className="font-black uppercase text-[10px] tracking-widest px-6 py-5 rounded-2xl border-border"
                 >
-                  <Icons.Heart className="w-4 h-4 mr-2" /> {enrichment.relatedLabel || 'Aprofundar'}
+                  <Heart className="w-4 h-4 mr-2" /> {enrichment.relatedLabel || 'Aprofundar'}
                 </Button>
               )}
             </div>
@@ -494,7 +484,7 @@ const GlossaryPage: React.FC = () => {
                     className="w-full justify-between text-[10px] font-black uppercase tracking-widest hover:bg-primary/5 hover:text-primary"
                   >
                     Ver detalhes
-                    <Icons.ArrowRight className="w-3 h-3" />
+                    <ArrowRight className="w-3 h-3" />
                   </Button>
                 </div>
               </motion.div>
@@ -502,7 +492,7 @@ const GlossaryPage: React.FC = () => {
           })
         ) : (
           <div className="col-span-full text-center py-12 bg-muted/20 rounded-3xl">
-            <Icons.Search className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
+            <Search className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
             <p className="text-muted-foreground font-serif">Nenhum termo encontrado.</p>
             <p className="text-xs text-muted-foreground mt-1 uppercase tracking-widest font-black">Tente buscar por outro sentimento ou palavra.</p>
           </div>
