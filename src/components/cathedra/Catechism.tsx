@@ -330,6 +330,7 @@ const Catechism: React.FC = () => {
       
       if (data && data.read_at) {
         setParagraphsRead(prev => new Set([...prev, p]));
+        // Toast for success if needed, or update a local state for the indicator
       }
     } catch (err) {
       console.error('Failed to mark paragraph read:', err);
