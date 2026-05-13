@@ -819,6 +819,12 @@ const AdminDashboard: React.FC = () => {
             <AdminSeoTab />
           </Suspense>
         </TabsContent>
+        
+        <TabsContent value="nexus-audit" className="space-y-4">
+          <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
+            <NexusAuditPage />
+          </Suspense>
+        </TabsContent>
 
         {/* Security Tab */}
         <TabsContent value="security" className="space-y-4 outline-none">
