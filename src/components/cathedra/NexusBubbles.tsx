@@ -221,7 +221,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                       onClick={() => exportNexusLogs(tag.label, logs, 'json')}
                       className="h-6 px-2 text-[7px] uppercase font-black tracking-widest rounded-lg hover:bg-primary/10"
                     >
-                      <Icons.FileJson className="w-2.5 h-2.5 mr-1" />
+                      <FileJson className="w-2.5 h-2.5 mr-1" />
                       Baixar JSON completo
                     </Button>
                   </div>
