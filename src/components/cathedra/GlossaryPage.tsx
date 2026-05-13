@@ -7,7 +7,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import { AppRoute } from '@/types';
 import { Button } from '@/components/ui/button';
-import { Compass, Heart, ArrowDown, Search, Sparkles, Book, BookOpen, Star, ChevronLeft, Share2 } from 'lucide-react';
+import { Compass, Heart, ArrowDown, Search, Sparkles, Book, BookOpen, Star, ChevronLeft, Share2, HelpCircle, ArrowRight } from 'lucide-react';
 
 import { RelevanceBadge } from './RelevanceBadge';
 import { FuzzySearchInput } from './FuzzySearchInput';
