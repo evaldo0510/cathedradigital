@@ -367,15 +367,20 @@ const GlossaryPage: React.FC = () => {
       />
 
       {/* Alphabet Bar */}
-      <AlphabetBar 
-        alphabet={alphabet}
-        selectedLetter={selectedLetter}
-        letterStatus={letterStatus}
-        onLetterClick={(l) => {
-          setSelectedLetter(selectedLetter === l ? null : l);
-          setSearchQuery('');
-        }}
-      />
+      <div className="space-y-4">
+        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-center text-muted-foreground">Índice Alfabético</p>
+        <AlphabetBar 
+          alphabet={alphabet}
+          selectedLetter={selectedLetter}
+          letterStatus={letterStatus}
+          onLetterClick={(l) => {
+            const nextLetter = selectedLetter === l ? null : l;
+            setSelectedLetter(nextLetter);
+            setSearchQuery('');
+            if (nextLetter) setCategory('Todos');
+          }}
+        />
+      </div>
 
       {/* Category tabs */}
       {!loading && terms.length > 0 && (
