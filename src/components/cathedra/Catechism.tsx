@@ -265,6 +265,7 @@ const Catechism: React.FC = () => {
   const isAutoScrolling = React.useRef(false);
   const { toggleFavorite, isFavorite } = useFavorites();
   const { user } = useAuth();
+  const [isSyncing, setIsSyncing] = useState(false);
 
   const crossRefs = getCatechismCrossRefs(currentParagraph);
   const docsRefs = getCatechismDocs(currentParagraph);
