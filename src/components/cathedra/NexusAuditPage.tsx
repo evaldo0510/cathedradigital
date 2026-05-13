@@ -8,7 +8,7 @@ import { Icons } from '@/constants';
 import { 
   Loader2, AlertTriangle, CheckCircle, Search, FileWarning, 
   Database, Sparkles, Filter, Download, FileText, ExternalLink,
-  ChevronDown, ChevronUp, Link as LinkIcon
+  ChevronDown, ChevronUp, Link as LinkIcon, Plus
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
