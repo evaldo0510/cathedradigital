@@ -97,8 +97,13 @@ export async function fetchNexusTagContent(tag: { label: string; slug: string },
   }));
 
   // Add local catechism data that matches search terms
+  const normalizedSearchTerms = searchTerms.map(t => t.toLowerCase().replace(/[-_]/g, ' '));
+  
   const localCatechism = getAllLocalCatechism()
-    .filter(cat => cat.tags.some(t => searchTerms.includes(t)))
+    .filter(cat => cat.tags.some(t => {
+      const nt = t.toLowerCase().replace(/[-_]/g, ' ');
+      return normalizedSearchTerms.includes(nt) || searchTerms.includes(t);
+    }))
     .map(cat => ({
       id: cat.id,
       type: 'catechism',
