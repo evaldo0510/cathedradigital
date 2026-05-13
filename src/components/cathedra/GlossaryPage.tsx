@@ -152,6 +152,14 @@ const GlossaryPage: React.FC = () => {
     setFavorites(prev => prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]);
   }, []);
 
+  const clearFilters = useCallback(() => {
+    setCategory('Todos');
+    setSelectedLetter(null);
+    setSearchQuery('');
+  }, []);
+
+  const hasActiveFilters = category !== 'Todos' || selectedLetter !== null || searchQuery !== '';
+
   const categories = useMemo(() => {
     const cats = new Set(terms.map(t => t.category).filter(Boolean));
     return ['Todos', 'Favoritos', ...Array.from(cats)];
