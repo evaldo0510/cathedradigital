@@ -488,15 +488,42 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
           <span className="text-[10px] text-muted-foreground/60 font-medium italic mt-0.5">Clique nas bolhas para conexões teológicas</span>
         </div>
         
-        <div className="relative group/search max-w-[140px] md:max-w-[200px]">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground/60 transition-colors group-focus-within/search:text-primary" />
-          <input 
-            type="text"
-            placeholder="Buscar tema..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full h-8 pl-8 pr-8 bg-card/50 border border-border/50 rounded-full text-[10px] focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
-            aria-label="Buscar tema no Nexus"
+        <div className="flex flex-col md:flex-row items-center gap-3">
+          <div className="flex items-center p-1 bg-muted/40 rounded-xl border border-border/40">
+            {[
+              { id: 'tags', label: 'Tags', icon: <Hash className="w-3 h-3" /> },
+              { id: 'title', label: 'Título', icon: <BookOpen className="w-3 h-3" /> },
+              { id: 'reference', label: 'Ref', icon: <Compass className="w-3 h-3" /> },
+              { id: 'text', label: 'Texto', icon: <Search className="w-3 h-3" /> },
+              { id: 'all', label: 'Tudo', icon: <Filter className="w-3 h-3" /> },
+            ].map((mode) => (
+              <button
+                key={mode.id}
+                onClick={() => setSearchMode(mode.id as any)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all ${
+                  searchMode === mode.id 
+                    ? 'bg-primary text-primary-foreground shadow-md shadow-primary/20' 
+                    : 'text-muted-foreground/60 hover:text-primary hover:bg-primary/5'
+                }`}
+              >
+                {mode.icon}
+                <span className="hidden sm:inline">{mode.label}</span>
+              </button>
+            ))}
+          </div>
+
+          <div className="relative group/search w-full md:w-[200px]">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground/60 transition-colors group-focus-within/search:text-primary" />
+            <input 
+              type="text"
+              placeholder="Filtrar temas..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full h-8 pl-8 pr-8 bg-card/50 border border-border/50 rounded-full text-[10px] focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+              aria-label="Buscar tema no Nexus"
+            />
+          </div>
+        </div>
 
           />
           {searchQuery && (
