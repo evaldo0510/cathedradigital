@@ -83,15 +83,19 @@ describe('LiturgiaPage Readings and Prayers', () => {
     });
   });
 
-  it('does not render cards when content is missing', async () => {
+  it('does not render cards when content is missing or only spaces', async () => {
     const mockReadings = {
       data: '2026-05-13',
       liturgia: 'Test Liturgy',
       cor: 'Branco',
+      oferendas: '   ', // Only spaces
+      antifonas: {
+        comunhao: '' // Empty string
+      },
+      comunhao: null, // Null
       primeiraLeitura: { referencia: 'At 1', texto: 'Text' },
       salmo: { referencia: 'Sl 1', refrao: 'Ref', texto: 'Text' },
       evangelho: { referencia: 'Jo 1', texto: 'Text' }
-      // Missing oferendas, antifonas.comunhao, comunhao
     };
 
     (supabase.functions.invoke as any).mockResolvedValue({ data: mockReadings });
@@ -102,6 +106,38 @@ describe('LiturgiaPage Readings and Prayers', () => {
       expect(screen.queryByText('Oração sobre as Oferendas')).toBeNull();
       expect(screen.queryByText('Antífona da Comunhão')).toBeNull();
       expect(screen.queryByText('Oração depois da Comunhão')).toBeNull();
+    });
+  });
+
+  it('renders prayer cards in the correct order', async () => {
+    const mockReadings = {
+      data: '2026-05-13',
+      liturgia: 'Test Liturgy',
+      cor: 'Branco',
+      oferendas: 'Oferendas Text',
+      antifonas: {
+        comunhao: 'Antifona Text'
+      },
+      comunhao: 'Pos-Comunhao Text',
+      primeiraLeitura: { referencia: 'At 1', texto: 'Text' },
+      salmo: { referencia: 'Sl 1', refrao: 'Ref', texto: 'Text' },
+      evangelho: { referencia: 'Jo 1', texto: 'Text' }
+    };
+
+    (supabase.functions.invoke as any).mockResolvedValue({ data: mockReadings });
+
+    renderLiturgia();
+
+    await waitFor(() => {
+      const labels = screen.getAllByRole('heading', { level: 3 })
+        .map(h => h.textContent)
+        .filter(t => ['Oração sobre as Oferendas', 'Antífona da Comunhão', 'Oração depois da Comunhão'].includes(t!));
+      
+      expect(labels).toEqual([
+        'Oração sobre as Oferendas',
+        'Antífona da Comunhão',
+        'Oração depois da Comunhão'
+      ]);
     });
   });
 });
