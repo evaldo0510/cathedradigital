@@ -21,6 +21,7 @@ import { AppRoute } from '@/types';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useAuth } from '@/hooks/useAuth';
 import { useCatechismParagraph, usePrefetchCatechismParagraph, useGenerateCatechismParagraph } from '@/hooks/useCatechismParagraph';
+import { useCatechismSync } from '@/hooks/useCatechismSync';
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import CatechismPopover from './CatechismPopover';
 import AudioButton from './AudioButton';
