@@ -266,6 +266,7 @@ const Catechism: React.FC = () => {
   const { toggleFavorite, isFavorite } = useFavorites();
   const { user } = useAuth();
   const [isSyncing, setIsSyncing] = useState(false);
+  const [lastSyncTime, setLastSyncTime] = useState<string | null>(null);
 
   const crossRefs = getCatechismCrossRefs(currentParagraph);
   const docsRefs = getCatechismDocs(currentParagraph);
