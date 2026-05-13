@@ -314,17 +314,27 @@ const Catechism: React.FC = () => {
 
   const markParagraphRead = useCallback(async (p: number) => {
     if (!user) return;
+    setIsSyncing(true);
     try {
-      await supabase
+      const { data, error } = await supabase
         .from('catechism_paragraphs_read')
         .upsert({ 
           user_id: user.id, 
           paragraph: p,
           read_at: new Date().toISOString()
-        }, { onConflict: 'user_id,paragraph' });
-      setParagraphsRead(prev => new Set([...prev, p]));
+        }, { onConflict: 'user_id,paragraph' })
+        .select()
+        .single();
+      
+      if (error) throw error;
+      
+      if (data && data.read_at) {
+        setParagraphsRead(prev => new Set([...prev, p]));
+      }
     } catch (err) {
       console.error('Failed to mark paragraph read:', err);
+    } finally {
+      setIsSyncing(false);
     }
   }, [user]);
 
