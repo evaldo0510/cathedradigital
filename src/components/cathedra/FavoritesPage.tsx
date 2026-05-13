@@ -1,15 +1,73 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Icons } from '../../constants';
 import { useFavorites } from '@/hooks/useFavorites';
+import { Filter, SortDesc, SortAsc, Calendar, ListFilter } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuTrigger,
+  DropdownMenuLabel,
+  DropdownMenuSeparator
+} from "@/components/ui/dropdown-menu";
 
 const FavoritesPage: React.FC = () => {
   const { favorites, removeFavorite } = useFavorites();
   const [filter, setFilter] = useState('all');
+  const [yearFilter, setYearFilter] = useState('all');
+  const [periodFilter, setPeriodFilter] = useState('all');
+  const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
 
-  const filtered = filter === 'all' ? favorites : favorites.filter(f => f.type === filter);
+  const typeLabels: Record<string, string> = { 
+    all: 'Todos', 
+    verse: 'Versículos', 
+    catechism: 'Catecismo', 
+    prayer: 'Orações', 
+    study: 'Estudos', 
+    dogma: 'Dogmas',
+    liturgy: 'Liturgia'
+  };
 
-  const types = ['all', ...Array.from(new Set(favorites.map(f => f.type)))];
-  const typeLabels: Record<string, string> = { all: 'Todos', verse: 'Versículos', catechism: 'Catecismo', prayer: 'Orações', study: 'Estudos', dogma: 'Dogmas', liturgy: 'Liturgia' };
+  const years = useMemo(() => {
+    const set = new Set<string>();
+    favorites.forEach(f => {
+      if (f.metadata?.year) set.add(f.metadata.year);
+    });
+    return ['all', ...Array.from(set).sort()];
+  }, [favorites]);
+
+  const periods = useMemo(() => {
+    const set = new Set<string>();
+    favorites.forEach(f => {
+      if (f.metadata?.period) set.add(f.metadata.period);
+    });
+    return ['all', ...Array.from(set).sort()];
+  }, [favorites]);
+
+  const filtered = useMemo(() => {
+    let result = [...favorites];
+    
+    if (filter !== 'all') {
+      result = result.filter(f => f.type === filter);
+    }
+    
+    if (yearFilter !== 'all') {
+      result = result.filter(f => f.metadata?.year === yearFilter);
+    }
+    
+    if (periodFilter !== 'all') {
+      result = result.filter(f => f.metadata?.period === periodFilter);
+    }
+    
+    result.sort((a, b) => {
+      const timeA = new Date(a.timestamp).getTime();
+      const timeB = new Date(b.timestamp).getTime();
+      return sortOrder === 'desc' ? timeB - timeA : timeA - timeB;
+    });
+    
+    return result;
+  }, [favorites, filter, yearFilter, periodFilter, sortOrder]);
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
