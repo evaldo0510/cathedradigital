@@ -266,6 +266,7 @@ const Catechism: React.FC = () => {
   const { toggleFavorite, isFavorite } = useFavorites();
   const { user } = useAuth();
   const [isSyncing, setIsSyncing] = useState(false);
+  const [lastSyncTime, setLastSyncTime] = useState<string | null>(null);
 
   const crossRefs = getCatechismCrossRefs(currentParagraph);
   const docsRefs = getCatechismDocs(currentParagraph);
@@ -330,6 +331,7 @@ const Catechism: React.FC = () => {
       
       if (data && data.read_at) {
         setParagraphsRead(prev => new Set([...prev, p]));
+        setLastSyncTime(new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }));
       }
     } catch (err) {
       console.error('Failed to mark paragraph read:', err);
@@ -425,9 +427,22 @@ const Catechism: React.FC = () => {
       <div className="max-w-3xl mx-auto space-y-6">
         {/* Persistent Section Progress Bar */}
         <div className="sticky top-[73px] z-[130] -mx-4 px-4 py-2 bg-background/80 backdrop-blur-md border-b border-border">
-          <div className="flex justify-between text-[8px] font-black uppercase tracking-widest text-primary/60 mb-1.5">
-            <span>Progresso na Seção</span>
-            <span>{Math.round(sectionProgress)}%</span>
+          <div className="flex justify-between items-center text-[8px] font-black uppercase tracking-widest mb-1.5">
+            <div className="flex items-center gap-2">
+              <span className="text-primary/60">Progresso na Seção</span>
+              {isSyncing ? (
+                <div className="flex items-center gap-1 animate-pulse text-primary">
+                  <Icons.Loader2 className="w-2 h-2 animate-spin" />
+                  <span>Sincronizando §{currentParagraph}...</span>
+                </div>
+              ) : lastSyncTime && (
+                <div className="flex items-center gap-1 text-green-500">
+                  <Icons.Check className="w-2 h-2" />
+                  <span>§{currentParagraph} Sincronizado {lastSyncTime}</span>
+                </div>
+              )}
+            </div>
+            <span className="text-primary/60">{Math.round(sectionProgress)}%</span>
           </div>
           <div className="h-1 w-full bg-muted rounded-full overflow-hidden">
             <motion.div 

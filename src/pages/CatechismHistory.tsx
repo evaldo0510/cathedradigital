@@ -477,10 +477,15 @@ const CatechismHistory: React.FC = () => {
                       §{item.paragraph}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="flex justify-between items-start mb-1">
-                        <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Lido há</div>
-                        <div className="text-[9px] font-bold text-primary/60" title={format(new Date(item.read_at), "dd/MM/yyyy HH:mm:ss")}>
-                          Sincronizado: {format(new Date(item.read_at), "HH:mm")}
+                      <div className="flex justify-between items-center mb-1">
+                        <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1">
+                          <Icons.History className="w-3 h-3" /> Lido há
+                        </div>
+                        <div 
+                          className="flex items-center gap-1 text-[9px] font-black uppercase tracking-widest text-green-500/80 bg-green-500/5 px-2 py-0.5 rounded-full border border-green-500/10" 
+                          title={`Sincronizado com sucesso em ${format(new Date(item.read_at), "dd/MM/yyyy HH:mm:ss")}`}
+                        >
+                          <Icons.Check className="w-2.5 h-2.5" /> Sincronizado {format(new Date(item.read_at), "HH:mm")}
                         </div>
                       </div>
                       <div className="text-sm font-medium truncate">
