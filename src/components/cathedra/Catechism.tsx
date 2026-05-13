@@ -21,6 +21,7 @@ import { AppRoute } from '@/types';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useAuth } from '@/hooks/useAuth';
 import { useCatechismParagraph, usePrefetchCatechismParagraph, useGenerateCatechismParagraph } from '@/hooks/useCatechismParagraph';
+import { useCatechismSync } from '@/hooks/useCatechismSync';
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import CatechismPopover from './CatechismPopover';
 import AudioButton from './AudioButton';
@@ -265,8 +266,7 @@ const Catechism: React.FC = () => {
   const isAutoScrolling = React.useRef(false);
   const { toggleFavorite, isFavorite } = useFavorites();
   const { user } = useAuth();
-  const [isSyncing, setIsSyncing] = useState(false);
-  const [lastSyncTime, setLastSyncTime] = useState<string | null>(null);
+  const { syncProgress, isSyncing, lastSyncTime } = useCatechismSync();
 
   const crossRefs = getCatechismCrossRefs(currentParagraph);
   const docsRefs = getCatechismDocs(currentParagraph);
@@ -313,38 +313,13 @@ const Catechism: React.FC = () => {
     return () => observer.disconnect();
   }, [viewMode]);
 
-  const markParagraphRead = useCallback(async (p: number) => {
-    if (!user) return;
-    setIsSyncing(true);
-    try {
-      const { data, error } = await supabase
-        .from('catechism_paragraphs_read')
-        .upsert({ 
-          user_id: user.id, 
-          paragraph: p,
-          read_at: new Date().toISOString()
-        }, { onConflict: 'user_id,paragraph' })
-        .select()
-        .single();
-      
-      if (error) throw error;
-      
-      if (data && data.read_at) {
-        setParagraphsRead(prev => new Set([...prev, p]));
-        setLastSyncTime(new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }));
-      }
-    } catch (err) {
-      console.error('Failed to mark paragraph read:', err);
-    } finally {
-      setIsSyncing(false);
-    }
-  }, [user]);
-
   useEffect(() => {
     if (viewMode === 'reading' && currentParagraph) {
-      markParagraphRead(currentParagraph);
+      syncProgress(currentParagraph, () => {
+        setParagraphsRead(prev => new Set([...prev, currentParagraph]));
+      });
     }
-  }, [viewMode, currentParagraph, markParagraphRead]);
+  }, [viewMode, currentParagraph, syncProgress]);
 
   const jumpToParagraph = useCallback((p: number) => {
     setCurrentParagraph(p);
