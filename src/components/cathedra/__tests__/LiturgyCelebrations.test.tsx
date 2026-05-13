@@ -5,7 +5,19 @@ import { BrowserRouter } from 'react-router-dom';
 import LiturgiaPage from '../LiturgiaPage';
 import { supabase } from '@/integrations/supabase/client';
 
-// Mock supabase.functions.invoke
+// Mock hooks and supabase
+vi.mock('@/hooks/useAuth', () => ({
+  useAuth: () => ({ profile: null })
+}));
+
+vi.mock('@/hooks/useFavorites', () => ({
+  useFavorites: () => ({ toggleFavorite: vi.fn(), isFavorite: () => false })
+}));
+
+vi.mock('@/hooks/useSaints', () => ({
+  useSaintsToday: () => ({ data: [] })
+}));
+
 vi.mock('@/integrations/supabase/client', () => ({
   supabase: {
     functions: {
