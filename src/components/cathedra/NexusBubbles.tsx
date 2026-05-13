@@ -83,7 +83,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
     console.log(`[Nexus Diagnostic] Fetching content for tag: ${tag.label} (Normalized: ${normalizedTag})`);
     
     try {
-      const uniqueResults = await fetchNexusTagContent(tag);
+      const { content: uniqueResults, logs: searchLogs } = await fetchNexusTagContent(tag);
       setContent(uniqueResults);
 
       // IA Fetch
