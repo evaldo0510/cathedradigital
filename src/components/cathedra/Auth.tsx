@@ -157,8 +157,8 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
               setLoading(true);
               setError('');
               const result = await lovable.auth.signInWithOAuth('google', {
-                redirectTo: `${window.location.origin}${AppRoute.LOGIN}`,
-                queryParams: {
+                redirect_uri: `${window.location.origin}${AppRoute.LOGIN}`,
+                extraParams: {
                   prompt: 'select_account',
                 }
               });
@@ -183,7 +183,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
               setLoading(true);
               setError('');
               const result = await lovable.auth.signInWithOAuth('apple', {
-                redirectTo: `${window.location.origin}${AppRoute.LOGIN}`,
+                redirect_uri: `${window.location.origin}${AppRoute.LOGIN}`,
               });
               if (result.error) {
                 console.error('Apple Auth Error:', result.error);
