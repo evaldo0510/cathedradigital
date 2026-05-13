@@ -1,21 +1,27 @@
-import React from 'react';
-import { useQuery } from '@tanstack/react-query';
+import React, { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
 import SEOHead from '@/components/SEOHead';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { CIC_SECTIONS } from '@/data/catechism';
+import { toast } from 'sonner';
 
 const CatechismHistory: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [isRegeneratingAll, setIsRegeneratingAll] = useState(false);
 
-  const { data: history, isLoading } = useQuery({
+  // 1. History (Last 50)
+  const { data: history, isLoading: isHistoryLoading } = useQuery({
     queryKey: ['catechism-history', user?.id],
     queryFn: async () => {
       if (!user) return [];
@@ -32,74 +38,274 @@ const CatechismHistory: React.FC = () => {
     enabled: !!user
   });
 
+  // 2. All progress for progress bars
+  const { data: allProgress } = useQuery({
+    queryKey: ['catechism-all-progress', user?.id],
+    queryFn: async () => {
+      if (!user) return new Set<number>();
+      const { data, error } = await supabase
+        .from('catechism_paragraphs_read')
+        .select('paragraph')
+        .eq('user_id', user.id);
+      
+      if (error) throw error;
+      return new Set(data.map(p => p.paragraph));
+    },
+    enabled: !!user
+  });
+
+  // 3. Failed paragraphs
+  const { data: failedParagraphs } = useQuery({
+    queryKey: ['catechism-failed-paragraphs'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('catechism_cache')
+        .select('paragraph, status, last_error')
+        .or('status.eq.error,status.eq.error_402,status.eq.incomplete')
+        .order('paragraph', { ascending: true });
+      
+      if (error) throw error;
+      return data;
+    }
+  });
+
+  const regenerateMutation = useMutation({
+    mutationFn: async (paragraph: number) => {
+      const { data, error } = await supabase.functions.invoke('catechism-text', {
+        body: { paragraph, action: 'reprocess' }
+      });
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['catechism-failed-paragraphs'] });
+    }
+  });
+
   const goBack = () => navigate('/catechism');
 
+  const continueFrom = () => {
+    if (!allProgress || allProgress.size === 0) {
+      navigate('/catechism?p=1');
+      return;
+    }
+    const sorted = Array.from(allProgress).sort((a, b) => b - a);
+    const lastRead = sorted[0];
+    const next = lastRead + 1;
+    navigate(`/catechism?p=${next > 2865 ? 2865 : next}`);
+  };
+
+  const calculateSectionProgress = (start: number, end: number) => {
+    if (!allProgress) return 0;
+    let count = 0;
+    for (let i = start; i <= end; i++) {
+      if (allProgress.has(i)) count++;
+    }
+    return Math.round((count / (end - start + 1)) * 100);
+  };
+
+  const failedBySection = CIC_SECTIONS.flatMap(part => 
+    part.sections.map(section => {
+      const [start, end] = section.paragraphs;
+      const failed = failedParagraphs?.filter(p => p.paragraph >= start && p.paragraph <= end) || [];
+      return { ...section, part: part.part, failed };
+    })
+  ).filter(s => s.failed.length > 0);
+
+  const handleRegenerateSection = async (sectionParagraphs: { paragraph: number }[]) => {
+    setIsRegeneratingAll(true);
+    let successCount = 0;
+    for (const p of sectionParagraphs) {
+      try {
+        await regenerateMutation.mutateAsync(p.paragraph);
+        successCount++;
+      } catch (err) {
+        console.error(`Failed to regenerate §${p.paragraph}:`, err);
+      }
+    }
+    setIsRegeneratingAll(false);
+    toast.success(`${successCount} parágrafos da seção regenerados.`);
+  };
+
   return (
-    <div className="max-w-4xl mx-auto p-4 md:p-8 space-y-8 min-h-screen">
+    <div className="max-w-4xl mx-auto p-4 md:p-8 space-y-12 min-h-screen pb-24">
       <SEOHead 
         title="Histórico de Leitura do Catecismo | Cathedra" 
         description="Visualize seus últimos parágrafos lidos e continue sua formação na fé."
         path="/catechism/history"
       />
 
-      <div className="flex items-center gap-4">
-        <button 
-          onClick={goBack}
-          className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all"
-        >
-          <Icons.ArrowDown className="w-5 h-5 rotate-90" />
-        </button>
-        <div>
-          <h1 className="text-3xl font-serif font-bold text-foreground">Histórico de Leitura</h1>
-          <p className="text-muted-foreground">Seus últimos 50 parágrafos lidos no Catecismo.</p>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="flex items-center gap-4">
+          <button 
+            onClick={goBack}
+            className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all"
+          >
+            <Icons.ArrowDown className="w-5 h-5 rotate-90" />
+          </button>
+          <div>
+            <h1 className="text-3xl font-serif font-bold text-foreground">Minha Jornada</h1>
+            <p className="text-muted-foreground">Acompanhe seu progresso no Catecismo.</p>
+          </div>
         </div>
+
+        <Button onClick={continueFrom} className="h-12 px-8 rounded-2xl shadow-lg shadow-primary/20 flex items-center gap-2 group">
+          Continuar a partir de §{allProgress ? (Math.max(...Array.from(allProgress), 0) + 1) : 1}
+          <Icons.ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+        </Button>
       </div>
 
-      {isLoading ? (
+      {/* Progress by Section */}
+      <section className="space-y-6">
+        <div className="flex items-center gap-2">
+          <Icons.Layout className="w-5 h-5 text-primary" />
+          <h2 className="text-xl font-bold">Progresso por Seção</h2>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {[1, 2, 3, 4].map(i => (
-            <Card key={i} className="p-6 animate-pulse bg-muted/20 h-24" />
-          ))}
-        </div>
-      ) : history && history.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {history.map((item, index) => (
-            <motion.div
-              key={`${item.paragraph}-${index}`}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.05 }}
-            >
-              <Card 
-                className="p-4 cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-all group"
-                onClick={() => navigate(`/catechism?p=${item.paragraph}`)}
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-serif font-bold text-xl group-hover:bg-primary group-hover:text-primary-foreground transition-all">
-                    §{item.paragraph}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-1">Lido há</div>
-                    <div className="text-sm font-medium truncate">
-                      {formatDistanceToNow(new Date(item.read_at), { addSuffix: true, locale: ptBR })}
+          {CIC_SECTIONS.flatMap(part => 
+            part.sections.map(section => {
+              const [start, end] = section.paragraphs;
+              const progress = calculateSectionProgress(start, end);
+              return (
+                <Card key={section.id} className="p-4 space-y-3 bg-card/50 backdrop-blur-sm border-border/50">
+                  <div className="flex justify-between items-start gap-4">
+                    <div className="min-w-0">
+                      <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">
+                        {part.part} • {part.title}
+                      </div>
+                      <h3 className="text-sm font-bold truncate leading-tight">{section.title}</h3>
+                      <div className="text-[10px] text-muted-foreground mt-1">§{start} — §{end}</div>
                     </div>
+                    <div className="text-sm font-black text-primary">{progress}%</div>
                   </div>
-                  <Icons.ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                  <Progress value={progress} className="h-1.5" />
+                </Card>
+              );
+            })
+          )}
+        </div>
+      </section>
+
+      {/* Failed Paragraphs */}
+      <AnimatePresence>
+        {failedBySection.length > 0 && (
+          <motion.section 
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="space-y-6 bg-destructive/5 border border-destructive/10 rounded-3xl p-6 overflow-hidden"
+          >
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-2">
+                <Icons.AlertTriangle className="w-5 h-5 text-destructive" />
+                <h2 className="text-xl font-bold text-destructive">Falhas de Geração</h2>
+              </div>
+            </div>
+            
+            <div className="space-y-8">
+              {failedBySection.map((section) => (
+                <div key={section.id} className="space-y-4">
+                  <div className="flex items-center justify-between gap-4 border-b border-destructive/10 pb-2">
+                    <div className="min-w-0">
+                      <div className="text-[10px] font-black uppercase tracking-widest text-destructive/60">
+                        {section.part}
+                      </div>
+                      <h3 className="text-sm font-bold truncate text-destructive">{section.title}</h3>
+                    </div>
+                    <Button 
+                      variant="destructive" 
+                      size="sm" 
+                      onClick={() => handleRegenerateSection(section.failed)}
+                      disabled={isRegeneratingAll}
+                      className="rounded-lg h-7 px-3 text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5"
+                    >
+                      {isRegeneratingAll ? (
+                        <Icons.Loader2 className="w-3 h-3 animate-spin" />
+                      ) : (
+                        <Icons.Zap className="w-3 h-3" />
+                      )}
+                      Regenerar Seção ({section.failed.length})
+                    </Button>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {section.failed.map(p => (
+                      <div key={p.paragraph} className="bg-destructive/10 border border-destructive/20 rounded-xl p-3 flex items-center justify-between gap-3 group/item">
+                        <div className="min-w-0">
+                          <div className="text-xs font-bold text-destructive">§{p.paragraph}</div>
+                          <div className="text-[10px] text-destructive/60 truncate" title={p.last_error || 'Erro desconhecido'}>
+                            {p.last_error || 'Erro desconhecido'}
+                          </div>
+                        </div>
+                        <button 
+                          onClick={() => regenerateMutation.mutate(p.paragraph)}
+                          className="p-1.5 hover:bg-destructive/20 rounded-lg text-destructive transition-colors opacity-0 group-hover/item:opacity-100"
+                          title="Regenerar"
+                        >
+                          <Icons.RotateCcw className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </Card>
-            </motion.div>
-          ))}
+              ))}
+            </div>
+          </motion.section>
+        )}
+      </AnimatePresence>
+
+      {/* History List */}
+      <section className="space-y-6">
+        <div className="flex items-center gap-2">
+          <Icons.History className="w-5 h-5 text-primary" />
+          <h2 className="text-xl font-bold">Últimos Lidos</h2>
         </div>
-      ) : (
-        <div className="text-center py-20 bg-muted/20 rounded-3xl border-2 border-dashed border-border">
-          <Icons.History className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-20" />
-          <h3 className="text-lg font-bold">Nenhum histórico encontrado</h3>
-          <p className="text-muted-foreground max-w-xs mx-auto">Comece a ler o Catecismo para acompanhar seu progresso aqui.</p>
-          <Button variant="default" onClick={goBack} className="mt-6">
-            Começar a ler
-          </Button>
-        </div>
-      )}
+        {isHistoryLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[1, 2, 3, 4, 5, 6].map(i => (
+              <Card key={i} className="p-6 animate-pulse bg-muted/20 h-24" />
+            ))}
+          </div>
+        ) : history && history.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {history.map((item, index) => (
+              <motion.div
+                key={`${item.paragraph}-${index}`}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.05 }}
+              >
+                <Card 
+                  className="p-4 cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-all group border-border/50"
+                  onClick={() => navigate(`/catechism?p=${item.paragraph}`)}
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-serif font-bold text-xl group-hover:bg-primary group-hover:text-primary-foreground transition-all">
+                      §{item.paragraph}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Lido há</div>
+                      <div className="text-sm font-medium truncate">
+                        {formatDistanceToNow(new Date(item.read_at), { addSuffix: true, locale: ptBR })}
+                      </div>
+                    </div>
+                    <Icons.ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                  </div>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-20 bg-muted/20 rounded-3xl border-2 border-dashed border-border">
+            <Icons.History className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-20" />
+            <h3 className="text-lg font-bold">Nenhum histórico encontrado</h3>
+            <p className="text-muted-foreground max-w-xs mx-auto">Comece a ler o Catecismo para acompanhar seu progresso aqui.</p>
+            <Button variant="default" onClick={goBack} className="mt-6">
+              Começar a ler
+            </Button>
+          </div>
+        )}
+      </section>
     </div>
   );
 };
