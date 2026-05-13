@@ -309,6 +309,78 @@ const LiturgiaPage: React.FC = () => {
                   <p className="text-sm font-bold text-primary capitalize min-w-[200px]">{formatDate()}{isToday && <span className="ml-2 text-secondary">(Hoje)</span>}</p>
                   <button onClick={goToNextDay} className="p-3 rounded-2xl bg-muted hover:bg-primary hover:text-white transition-all text-primary focus-visible:ring-2 focus-visible:ring-primary outline-none" aria-label="Próximo dia"><Icons.ChevronRight className="w-5 h-5" /></button>
                 </div>
+
+                <div className="flex flex-wrap items-center justify-center gap-3">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" className="rounded-xl h-11 px-4 gap-2 border-border/50 hover:bg-muted/50 transition-all">
+                        <CalendarIcon className="w-4 h-4 text-primary" />
+                        <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Ir para Data</span>
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="center">
+                      <Calendar
+                        mode="single"
+                        selected={selectedDate}
+                        onSelect={(d) => d && setSelectedDate(d)}
+                        initialFocus
+                        locale={ptBR}
+                        className="rounded-3xl border-none p-4"
+                      />
+                    </PopoverContent>
+                  </Popover>
+
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" className="rounded-xl h-11 px-4 gap-2 border-border/50 hover:bg-muted/50 transition-all">
+                        <Filter className="w-4 h-4 text-primary" />
+                        <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Períodos</span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="center" className="w-56 rounded-3xl p-3 shadow-2xl border-border/40 bg-background/95 backdrop-blur-xl">
+                      <DropdownMenuLabel className="text-[10px] font-black uppercase tracking-widest p-2 opacity-50">Saltar para Período</DropdownMenuLabel>
+                      <DropdownMenuSeparator className="bg-border/40" />
+                      {liturgicalPeriods.map((period) => (
+                        <DropdownMenuItem 
+                          key={period.name}
+                          onClick={() => {
+                            setSelectedDate(period.date);
+                            toast.info(`Navegando para o início do ${period.name}`);
+                          }}
+                          className="rounded-2xl p-3 cursor-pointer flex items-center justify-between hover:bg-primary/5 transition-colors group"
+                        >
+                          <span className="text-xs font-bold text-foreground/80 group-hover:text-primary transition-colors">{period.name}</span>
+                          <div className={`w-2.5 h-2.5 rounded-full ring-4 ring-background shadow-sm ${
+                            period.color === 'roxo' ? 'bg-purple-500' :
+                            period.color === 'branco' ? 'bg-slate-300' :
+                            period.color === 'vermelho' ? 'bg-red-500' : 'bg-green-500'
+                          }`} />
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+
+                  <Button 
+                    variant="outline" 
+                    className="rounded-xl h-11 px-4 gap-2 border-border/50 hover:bg-muted/50 transition-all"
+                    onClick={exportToPDF}
+                    disabled={!readings || isLoading}
+                  >
+                    <FileDown className="w-4 h-4 text-primary" />
+                    <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Exportar PDF</span>
+                  </Button>
+
+                  <Button 
+                    variant="outline" 
+                    className={`rounded-xl h-11 px-4 gap-2 border-border/50 transition-all ${isFavorite('liturgy', `Liturgia - ${format(today, 'dd/MM/yyyy')}`) ? 'bg-primary/5 border-primary/40 text-primary' : 'hover:bg-muted/50'}`}
+                    onClick={toggleFavoriteDay}
+                    disabled={!readings || isLoading}
+                  >
+                    <Heart className={`w-4 h-4 ${isFavorite('liturgy', `Liturgia - ${format(today, 'dd/MM/yyyy')}`) ? 'fill-current' : 'text-primary'}`} />
+                    <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Favoritar</span>
+                  </Button>
+                </div>
+
                 {isOfflineData && <div className="flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground bg-muted/50 rounded-full px-4 py-2 mt-4 mx-auto w-fit"><Icons.WifiOff className="w-3.5 h-3.5" /> <span>Modo Offline</span></div>}
               </motion.div>
 
