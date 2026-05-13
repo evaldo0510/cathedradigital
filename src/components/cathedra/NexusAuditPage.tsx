@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { fetchNexusTagContent, type TagContent } from '@/lib/nexusContent';
+import { fetchNexusTagContent, type TagContent, exportNexusLogs } from '@/lib/nexusContent';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,7 +8,7 @@ import { Icons } from '@/constants';
 import { 
   Loader2, AlertTriangle, CheckCircle, Search, FileWarning, 
   Database, Sparkles, Filter, Download, FileText, ExternalLink,
-  ChevronDown, ChevronUp, Link as LinkIcon, Plus
+  ChevronDown, ChevronUp, Link as LinkIcon, Plus, Info, FileJson
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -65,7 +65,7 @@ const NexusAuditPage: React.FC = () => {
     for (let i = 0; i < themes.length; i++) {
       const theme = themes[i];
       try {
-        const { content } = await fetchNexusTagContent({ label: theme.name, slug: theme.slug, id: theme.id } as any);
+        const { content, logs } = await fetchNexusTagContent({ label: theme.name, slug: theme.slug, id: theme.id } as any);
         
         const counts = {
           bible: content.filter(c => c.type === 'bible').length,
@@ -94,7 +94,8 @@ const NexusAuditPage: React.FC = () => {
           category: theme.category,
           counts,
           status,
-          variations: Array.from(new Set(variations))
+          variations: Array.from(new Set(variations)),
+          logs
         });
       } catch (err) {
         console.error(`Audit error for ${theme.name}:`, err);
@@ -115,7 +116,11 @@ const NexusAuditPage: React.FC = () => {
       let matchesContentType = true;
       if (filterContentType !== 'all') {
         const typeKey = filterContentType as keyof typeof r.counts;
-        matchesContentType = r.counts[typeKey] > 0;
+        if (filterContentType === 'none') {
+          matchesContentType = r.counts.total === 0;
+        } else {
+          matchesContentType = r.counts[typeKey] > 0;
+        }
       }
 
       const matchesSearch = r.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -136,7 +141,7 @@ const NexusAuditPage: React.FC = () => {
 
   const exportCSV = () => {
     if (filteredResults.length === 0) return;
-    const headers = ['Tema', 'Slug', 'Categoria', 'Bíblia', 'Catecismo', 'Magistério', 'Jornada', 'Total', 'Status'];
+    const headers = ['Tema', 'Slug', 'Categoria', 'Bíblia', 'Catecismo', 'Magistério', 'Jornada', 'Total', 'Status', 'Termos Utilizados'];
     const rows = filteredResults.map(r => [
       r.name,
       r.slug,
@@ -146,15 +151,16 @@ const NexusAuditPage: React.FC = () => {
       r.counts.magisterium,
       r.counts.journey,
       r.counts.total,
-      r.status
+      r.status,
+      r.variations.join('; ')
     ]);
     
-    const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
+    const csvContent = [headers, ...rows].map(e => e.map(val => `"${val}"`).join(",")).join("\n");
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
     link.setAttribute("href", url);
-    link.setAttribute("download", `nexus_audit_${new Date().toISOString().split('T')[0]}.csv`);
+    link.setAttribute("download", `nexus_audit_export_${new Date().toISOString().split('T')[0]}.csv`);
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
@@ -181,7 +187,7 @@ const NexusAuditPage: React.FC = () => {
       startY: 20,
     });
 
-    doc.save(`nexus_audit_${new Date().toISOString().split('T')[0]}.pdf`);
+    doc.save(`nexus_audit_export_${new Date().toISOString().split('T')[0]}.pdf`);
   };
 
   return (
@@ -296,11 +302,18 @@ const NexusAuditPage: React.FC = () => {
             <option value="all">Todas as Categorias</option>
             {categories.map(c => <option key={c} value={c}>{c}</option>)}
           </select>
-          <div className="flex items-center justify-end px-2">
-            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-              Mostrando {filteredResults.length} de {results.length}
-            </p>
-          </div>
+          <select 
+            value={filterContentType}
+            onChange={(e) => setFilterContentType(e.target.value)}
+            className="h-10 px-3 py-2 bg-background border border-input rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+          >
+            <option value="all">Qualquer Conteúdo</option>
+            <option value="bible">Tem Bíblia</option>
+            <option value="catechism">Tem Catecismo</option>
+            <option value="magisterium">Tem Magistério</option>
+            <option value="journey">Tem Jornada</option>
+            <option value="none">Sem Nenhum Conteúdo</option>
+          </select>
         </div>
 
         {!isAuditing && results.length === 0 && (
@@ -390,6 +403,26 @@ const NexusAuditPage: React.FC = () => {
                                     </code>
                                   ))}
                                 </div>
+                                
+                                {item.logs && (
+                                  <div className="mt-4 p-3 bg-muted/40 rounded-2xl border border-border/40 space-y-2">
+                                    <div className="flex items-center justify-between">
+                                      <h5 className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Diagnóstico de Termos</h5>
+                                      <Button variant="ghost" size="sm" onClick={() => exportNexusLogs(item.name, item.logs!)} className="h-6 text-[8px] uppercase font-black">
+                                        <FileJson className="w-3 h-3 mr-1" /> Exportar Logs
+                                      </Button>
+                                    </div>
+                                    <div className="space-y-1.5 max-h-32 overflow-y-auto">
+                                      {item.logs.map((log, idx) => (
+                                        <div key={idx} className="flex items-center justify-between text-[7px] border-b border-border/20 py-1">
+                                          <span className="font-mono">{log.stage}</span>
+                                          <span className={log.resultsCount === 0 ? 'text-red-500 font-bold' : 'text-primary'}>{log.resultsCount} res</span>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+                                
                                 <p className="text-[10px] text-muted-foreground italic font-serif">
                                   O Nexus tenta encontrar conteúdo usando estas variações automaticamente. Se nenhuma retornar resultados, considere cadastrar um sinônimo manual.
                                 </p>
