@@ -14,7 +14,17 @@ const AlphabetBar: React.FC<AlphabetBarProps> = ({
   onLetterClick,
 }) => {
   return (
-    <div className="flex justify-center gap-1.5 flex-wrap mb-8 px-2">
+    <div className="flex justify-center gap-1.5 flex-wrap mb-8 px-2 items-center">
+      <button
+        onClick={() => onLetterClick('')}
+        className={`px-3 h-8 rounded-lg text-[10px] font-black uppercase transition-all outline-none
+          ${selectedLetter === null || selectedLetter === ''
+            ? 'bg-primary text-primary-foreground shadow-md'
+            : 'bg-card border border-border text-foreground hover:border-primary/40 hover:text-primary'
+          }`}
+      >
+        Tudo
+      </button>
       {alphabet.map(letter => {
         const has = letterStatus[letter];
         const isActive = selectedLetter === letter;

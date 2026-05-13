@@ -6,7 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import { AppRoute } from '@/types';
 import { Button } from '@/components/ui/button';
-import { Compass, Heart, ArrowDown, Search, Sparkles, Book, BookOpen, Star, ChevronLeft, Share2, HelpCircle, ArrowRight } from 'lucide-react';
+import { Compass, Heart, ArrowDown, Search, Sparkles, Book, BookOpen, Star, ChevronLeft, Share2, HelpCircle, ArrowRight, X } from 'lucide-react';
 
 import { FuzzySearchInput } from './FuzzySearchInput';
 import { SearchResultCard } from './SearchResultCard';
@@ -151,6 +151,14 @@ const GlossaryPage: React.FC = () => {
   const toggleFavorite = useCallback((id: string) => {
     setFavorites(prev => prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]);
   }, []);
+
+  const clearFilters = useCallback(() => {
+    setCategory('Todos');
+    setSelectedLetter(null);
+    setSearchQuery('');
+  }, []);
+
+  const hasActiveFilters = category !== 'Todos' || selectedLetter !== null || searchQuery !== '';
 
   const categories = useMemo(() => {
     const cats = new Set(terms.map(t => t.category).filter(Boolean));
@@ -367,15 +375,26 @@ const GlossaryPage: React.FC = () => {
       />
 
       {/* Alphabet Bar */}
-      <AlphabetBar 
-        alphabet={alphabet}
-        selectedLetter={selectedLetter}
-        letterStatus={letterStatus}
-        onLetterClick={(l) => {
-          setSelectedLetter(selectedLetter === l ? null : l);
-          setSearchQuery('');
-        }}
-      />
+      <div className="sticky top-0 z-20 bg-background/95 backdrop-blur-md py-4 -mx-4 px-4 shadow-sm border-b md:relative md:top-auto md:z-0 md:bg-transparent md:backdrop-blur-none md:py-0 md:mx-0 md:px-0 md:shadow-none md:border-none">
+        <div className="space-y-4">
+          <p className="hidden md:block text-[10px] font-black uppercase tracking-[0.2em] text-center text-muted-foreground">Índice Alfabético</p>
+          <AlphabetBar 
+            alphabet={alphabet}
+            selectedLetter={selectedLetter}
+            letterStatus={letterStatus}
+            onLetterClick={(l) => {
+              if (l === '') {
+                setSelectedLetter(null);
+                return;
+              }
+              const nextLetter = selectedLetter === l ? null : l;
+              setSelectedLetter(nextLetter);
+              setSearchQuery('');
+              if (nextLetter) setCategory('Todos');
+            }}
+          />
+        </div>
+      </div>
 
       {/* Category tabs */}
       {!loading && terms.length > 0 && (
@@ -389,6 +408,14 @@ const GlossaryPage: React.FC = () => {
               {cat}
             </button>
           ))}
+          {hasActiveFilters && (
+            <button 
+              onClick={clearFilters}
+              className="px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest text-primary hover:bg-primary/10 transition-all flex items-center gap-1"
+            >
+              <X className="w-3 h-3" /> Limpar Filtros
+            </button>
+          )}
         </div>
       )}
 
