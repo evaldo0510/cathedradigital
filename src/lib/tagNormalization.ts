@@ -194,6 +194,9 @@ export const TAG_CATEGORIES = {
       { slug: 'pecado', label: 'Pecado', emoji: '⚔️' },
       { slug: 'perdao', label: 'Perdão', emoji: '🤲' },
       { slug: 'oracao', label: 'Oração', emoji: '🙏' },
+      { slug: 'igreja', label: 'Igreja', emoji: '⛪' },
+      { slug: 'liturgia', label: 'Liturgia', emoji: '📖' },
+      { slug: 'sacramentos', label: 'Sacramentos', emoji: '⛪' },
     ],
   },
   dores: {
@@ -222,6 +225,8 @@ export const TAG_CATEGORIES = {
       { slug: 'missao', label: 'Missão', emoji: '🌍' },
       { slug: 'caridade', label: 'Caridade', emoji: '🫶' },
       { slug: 'misericordia', label: 'Misericórdia', emoji: '🤍' },
+      { slug: 'maria', label: 'Maria', emoji: '🌹' },
+      { slug: 'purgatorio', label: 'Purgatório', emoji: '🔥' },
     ],
   },
   vida: {
@@ -236,6 +241,8 @@ export const TAG_CATEGORIES = {
       { slug: 'rotina', label: 'Rotina', emoji: '⏰' },
       { slug: 'sabedoria', label: 'Sabedoria', emoji: '📖' },
       { slug: 'humildade', label: 'Humildade', emoji: '🌾' },
+      { slug: 'mandamentos', label: 'Mandamentos', emoji: '📜' },
+      { slug: 'bem_aventurancas', label: 'Bem-aventuranças', emoji: '🏔️' },
     ],
   },
 } as const;
