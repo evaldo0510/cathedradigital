@@ -108,11 +108,11 @@ const DiagnosticsPage: React.FC = () => {
         </h2>
         <div className="grid gap-4">
           {[
-            { label: 'Autenticação (Magic Link)', status: 'Online' },
-            { label: 'Edge Functions (AI Study)', status: 'Online' },
-            { label: 'Storage (Bíblias & Docs)', status: 'Online' },
-            { label: 'Realtime (Notificações)', status: 'Avisos' },
-            { label: 'Analytics API', status: 'Online' },
+            { label: 'Autenticação (Google & Apple)', status: 'Online' },
+            { label: 'Edge Functions (Logos IA)', status: 'Online' },
+            { label: 'Storage (Sagrada Escritura)', status: 'Online' },
+            { label: 'Realtime (Notificações)', status: 'Online' },
+            { label: 'Analytics API (GA4)', status: 'Online' },
           ].map((service, i) => (
             <div key={i} className="flex items-center justify-between py-3 border-b border-border/50 last:border-0">
               <span className="text-sm font-bold text-foreground/80">{service.label}</span>
