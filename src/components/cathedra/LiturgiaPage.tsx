@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback, useEffect, lazy, Suspense } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useNavigate, useSearchParams, useParams } from 'react-router-dom';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { Icons } from '@/constants';
