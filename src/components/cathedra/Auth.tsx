@@ -157,19 +157,23 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
               setLoading(true);
               setError('');
               const result = await lovable.auth.signInWithOAuth('google', {
-                redirect_uri: window.location.origin,
+                redirect_uri: `${window.location.origin}${AppRoute.LOGIN}`,
+                extraParams: {
+                  prompt: 'select_account',
+                }
               });
               if (result.error) {
-                setError('Erro ao entrar com Google. Tente novamente.');
+                console.error('Google Auth Error:', result.error);
+                setError('Não foi possível conectar com o Google. Verifique sua conexão e tente novamente.');
               } else if (!result.redirected) {
                 onSuccess();
               }
               setLoading(false);
             }}
             disabled={loading}
-            className="w-full py-3.5 bg-background text-foreground border border-border rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-sm hover:bg-muted transition-all disabled:opacity-50 flex items-center justify-center gap-3"
+            className="w-full py-3.5 bg-background text-foreground border border-border rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-sm hover:bg-muted transition-all disabled:opacity-50 flex items-center justify-center gap-3 group"
           >
-            <Icons.Google className="w-5 h-5" />
+            <Icons.Google className="w-5 h-5 transition-transform group-hover:scale-110" />
             Google
           </button>
 
@@ -179,22 +183,32 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
               setLoading(true);
               setError('');
               const result = await lovable.auth.signInWithOAuth('apple', {
-                redirect_uri: window.location.origin,
+                redirect_uri: `${window.location.origin}${AppRoute.LOGIN}`,
               });
               if (result.error) {
-                setError('Erro ao entrar com Apple. Tente novamente.');
+                console.error('Apple Auth Error:', result.error);
+                setError('Não foi possível conectar com a Apple. Tente novamente em instantes.');
               } else if (!result.redirected) {
                 onSuccess();
               }
               setLoading(false);
             }}
             disabled={loading}
-            className="w-full py-3.5 bg-primary text-primary-foreground rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary/90 transition-all disabled:opacity-50 flex items-center justify-center gap-3"
+            className="w-full py-3.5 bg-primary text-primary-foreground rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary/90 transition-all disabled:opacity-50 flex items-center justify-center gap-3 group"
           >
-            <Icons.Apple className="w-5 h-5" />
+            <Icons.Apple className="w-5 h-5 transition-transform group-hover:scale-110" />
             Apple
           </button>
         </div>
+
+        {error && (
+          <button 
+            onClick={() => { setError(''); setLoading(false); }}
+            className="w-full py-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors"
+          >
+            Tentar novamente
+          </button>
+        )}
 
         <div className="text-center space-y-2">
           {mode === 'login' && (
