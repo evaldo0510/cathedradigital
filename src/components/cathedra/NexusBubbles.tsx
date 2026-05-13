@@ -2,13 +2,12 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { getSpiritualInsight } from '@/services/aiService';
 import { useNavigate } from 'react-router-dom';
 import { normalizeText } from '@/lib/utils';
-import { getSearchTermsForTag } from '@/lib/tagNormalization';
-import { type TagContent, fetchNexusTagContent } from '@/lib/nexusContent';
+import { fetchNexusTagContent, type TagContent } from '@/lib/nexusContent';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AppRoute } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, ExternalLink, Sparkles, Search, X, Heart, Church, Flame, Cross, BookOpen, Shield, Crown, Hand, Star, Globe, Eye, Users, Compass, Wine, Orbit, Hash, Mountain, RefreshCw, Frown, Bird, Droplets, Wheat, Target, Clock, Megaphone, Skull, Filter, AlertCircle, Info } from 'lucide-react';
+import { Loader2, ExternalLink, Sparkles, Search, X, Heart, Church, Flame, BookOpen, Shield, Compass, Hash, Filter, AlertCircle, Info } from 'lucide-react';
 import { Icons } from '@/constants';
 import { BubbleTag, getTagIcon } from './BubbleTag';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -16,7 +15,6 @@ import { Button } from '@/components/ui/button';
 import { type ProfileId, PROFILES } from './SpiritualQuiz';
 import { useRovingTabindex } from './TabUtils';
 import { useSpiritualProfile } from '@/hooks/useSpiritualProfile';
-
 
 interface Tag {
   id: string;
@@ -26,8 +24,6 @@ interface Tag {
   category: string;
   priorityGroup?: string;
 }
-
-// Reusing TagContent from @/lib/nexusContent
 
 interface NexusBubblesProps {
   profileId?: ProfileId | null;
@@ -44,33 +40,20 @@ interface TagBubbleProps {
   navigateOnClick?: boolean;
   priorityGroup?: string;
   size?: 'xs' | 'sm' | 'md';
+  searchMode?: 'tags' | 'title' | 'reference' | 'text' | 'all';
 }
 
-export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, tabIndex, onKeyDown, className, profileId, navigateOnClick, priorityGroup, size }) => {
+export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, tabIndex, onKeyDown, className, profileId, navigateOnClick, priorityGroup, size, searchMode = 'tags' }) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [content, setContent] = useState<TagContent[]>([]);
+  const [logs, setLogs] = useState<any[]>([]);
+  const [showLogs, setShowLogs] = useState(false);
   const [logosInsight, setLogosInsight] = useState<string | null>(null);
   const [errorDetails, setErrorDetails] = useState<string | null>(null);
   const [metrics, setMetrics] = useState<{ startTime: number; endTime?: number; source?: 'supabase' | 'ia' | 'both' }>({ startTime: 0 });
-
-  const { data: allThemes } = useQuery({
-    queryKey: ['tags'],
-    queryFn: async () => {
-      const { data, error } = await supabase.from('themes').select('*').order('name');
-      if (error) throw error;
-      return (data || []).map((t: any) => ({
-        id: t.id,
-        label: t.name,
-        slug: t.slug,
-        emoji: t.emoji || '⛪',
-        category: t.category || 'Geral'
-      })) as Tag[];
-    },
-    staleTime: 1000 * 60 * 30, // 30 minutes
-  });
 
   const fetchContent = async () => {
     if (content.length > 0 || status === 'loading') return;
@@ -79,12 +62,13 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
     setStatus('loading');
     setErrorDetails(null);
     
-    const normalizedTag = normalizeText(tag.label);
-    console.log(`[Nexus Diagnostic] Fetching content for tag: ${tag.label} (Normalized: ${normalizedTag})`);
-    
     try {
-      const uniqueResults = await fetchNexusTagContent(tag);
+      const { content: uniqueResults, logs: searchLogs } = await fetchNexusTagContent(
+        tag, 
+        { mode: searchMode, includeSynonyms: true }
+      );
       setContent(uniqueResults);
+      setLogs(searchLogs);
 
       // IA Fetch
       try {
@@ -108,11 +92,11 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
 
   const prefetchTag = useCallback(() => {
     queryClient.prefetchQuery({
-      queryKey: ['tag-contents', tag.id, tag.label],
-      queryFn: () => fetchNexusTagContent(tag),
+      queryKey: ['tag-contents', tag.id, tag.label, searchMode],
+      queryFn: () => fetchNexusTagContent(tag, { mode: searchMode, includeSynonyms: true }),
       staleTime: 1000 * 60 * 5,
     });
-  }, [queryClient, tag.id, tag.label]);
+  }, [queryClient, tag.id, tag.label, searchMode]);
 
   return (
     <Popover open={navigateOnClick ? false : open} onOpenChange={(val) => {
@@ -165,13 +149,48 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
         </div>
         
         <div className="p-5 space-y-5 max-h-[450px] overflow-y-auto scrollbar-none">
-          {/* Diagnostic Panel (Mini) */}
-          <div className="p-2 rounded-lg bg-muted/30 border border-border/40 flex items-center justify-between text-[8px] font-black uppercase tracking-widest opacity-60">
-            <div className="flex gap-2">
-              <span>Time: {metrics.endTime ? `${Math.round(metrics.endTime - metrics.startTime)}ms` : '--'}</span>
-              <span>Source: {metrics.source || 'pending'}</span>
+          {/* Diagnostic Panel */}
+          <div 
+            className="p-2 rounded-lg bg-muted/30 border border-border/40 space-y-2 cursor-pointer hover:bg-muted/50 transition-colors"
+            onClick={() => setShowLogs(!showLogs)}
+          >
+            <div className="flex items-center justify-between text-[8px] font-black uppercase tracking-widest opacity-60">
+              <div className="flex gap-2">
+                <span>Time: {metrics.endTime ? `${Math.round(metrics.endTime - metrics.startTime)}ms` : '--'}</span>
+                <span>Mode: {searchMode}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Info className="w-2.5 h-2.5" />
+                <span>{showLogs ? 'Ocultar Logs' : 'Ver Logs'}</span>
+              </div>
             </div>
-            <span>Query: "{tag.label}"</span>
+            
+            <AnimatePresence>
+              {showLogs && (
+                <motion.div 
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="space-y-2 pt-2 border-t border-border/20 overflow-hidden"
+                >
+                  {logs.map((log, i) => (
+                    <div key={i} className="space-y-1">
+                      <div className="flex items-center justify-between text-[7px] font-black uppercase text-primary/70">
+                        <span>{log.stage}</span>
+                        <span>{log.resultsCount} resultados</span>
+                      </div>
+                      {log.termsUsed && log.termsUsed.length > 0 && (
+                        <div className="flex flex-wrap gap-1">
+                          {log.termsUsed.map((term: string, j: number) => (
+                            <span key={j} className="text-[6px] px-1 py-0.5 bg-primary/5 rounded font-mono lowercase">{term}</span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {status === 'loading' ? (
@@ -191,7 +210,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
               <AlertCircle className="w-8 h-8 text-red-500 mx-auto" />
               <p className="text-sm font-bold text-red-600">Erro ao carregar conteúdo</p>
               <p className="text-[10px] text-muted-foreground italic">{errorDetails}</p>
-              <Button size="sm" variant="outline" onClick={fetchContent} data-testid="retry-button" className="h-8 rounded-xl text-[10px] uppercase font-black tracking-widest">Tentar Novamente</Button>
+              <Button size="sm" variant="outline" onClick={fetchContent} className="h-8 rounded-xl text-[10px] uppercase font-black tracking-widest">Tentar Novamente</Button>
             </div>
           ) : (
             <>
@@ -268,31 +287,6 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                                       {link && <ExternalLink className="w-2.5 h-2.5" />}
                                     </span>
                                   </div>
-                                  
-                                  {c.metadata?.tags && c.metadata.tags.length > 0 && (
-                                    <div className="flex flex-wrap gap-1 mt-1">
-                                      {c.metadata.tags
-                                        .filter((tLabel: string) => tLabel.toLowerCase() !== tag.label.toLowerCase())
-                                        .map((tLabel: string) => {
-                                          const matchingTag = allThemes?.find(at => at.label.toLowerCase() === tLabel.toLowerCase());
-                                          if (!matchingTag) return null;
-                                          return (
-                                            <BubbleTag
-                                              key={matchingTag.id}
-                                              label={matchingTag.label}
-                                              emoji={matchingTag.emoji}
-                                              index={i}
-                                              size="xs"
-                                              onClick={() => {
-                                                navigate(`${AppRoute.TEMAS}/${matchingTag.slug}`);
-                                                setOpen(false);
-                                              }}
-                                            />
-                                          );
-                                        })
-                                      }
-                                    </div>
-                                  )}
                                 </div>
                               </motion.div>
                             );
@@ -343,6 +337,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
   );
 };
 
+export type NexusSearchMode = 'tags' | 'title' | 'reference' | 'text' | 'all';
 
 const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId }) => {
   const { profileId: hookProfileId } = useSpiritualProfile();
@@ -354,6 +349,13 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
   const [tags, setTags] = useState<Tag[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchMode, setSearchMode] = useState<NexusSearchMode>(() => {
+    return (localStorage.getItem('nexus_search_mode') as NexusSearchMode) || 'tags';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('nexus_search_mode', searchMode);
+  }, [searchMode]);
 
   useEffect(() => {
     const fetchTags = async () => {
@@ -363,7 +365,6 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
         .order('name');
       
       if (!error && data) {
-        // Map themes to the Tag interface expected by the component
         const mappedTags = data.map((t: any) => ({
           id: t.id,
           slug: t.slug,
@@ -387,10 +388,10 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
   }, [activeFilter]);
 
   const categories = {
-    fundamentos: { label: 'Fundamentos', icon: <Icons.Church className="w-3.5 h-3.5" /> },
-    dores: { label: 'Dores', icon: <Icons.Heart className="w-3.5 h-3.5 text-destructive" /> },
-    divino: { label: 'Mistério', icon: <Icons.Sparkles className="w-3.5 h-3.5 text-secondary" /> },
-    vida: { label: 'Vida', icon: <Icons.Flame className="w-3.5 h-3.5 text-orange-500" /> },
+    fundamentos: { label: 'Fundamentos', icon: <Church className="w-3.5 h-3.5" /> },
+    dores: { label: 'Dores', icon: <Heart className="w-3.5 h-3.5 text-destructive" /> },
+    divino: { label: 'Mistério', icon: <Sparkles className="w-3.5 h-3.5 text-secondary" /> },
+    vida: { label: 'Vida', icon: <Flame className="w-3.5 h-3.5 text-orange-500" /> },
   };
 
   const profileSuggestedTags = useMemo(() => {
@@ -439,32 +440,56 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
           <span className="text-[10px] text-muted-foreground/60 font-medium italic mt-0.5">Clique nas bolhas para conexões teológicas</span>
         </div>
         
-        <div className="relative group/search max-w-[140px] md:max-w-[200px]">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground/60 transition-colors group-focus-within/search:text-primary" />
-          <input 
-            type="text"
-            placeholder="Buscar tema..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full h-8 pl-8 pr-8 bg-card/50 border border-border/50 rounded-full text-[10px] focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
-            aria-label="Buscar tema no Nexus"
+        <div className="flex flex-col md:flex-row items-center gap-3">
+          <div className="flex items-center p-1 bg-muted/40 rounded-xl border border-border/40">
+            {[
+              { id: 'tags', label: 'Tags', icon: <Hash className="w-3 h-3" /> },
+              { id: 'title', label: 'Título', icon: <BookOpen className="w-3 h-3" /> },
+              { id: 'reference', label: 'Ref', icon: <Compass className="w-3 h-3" /> },
+              { id: 'text', label: 'Texto', icon: <Search className="w-3 h-3" /> },
+              { id: 'all', label: 'Tudo', icon: <Filter className="w-3 h-3" /> },
+            ].map((mode) => (
+              <button
+                key={mode.id}
+                onClick={() => setSearchMode(mode.id as NexusSearchMode)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all ${
+                  searchMode === mode.id 
+                    ? 'bg-primary text-primary-foreground shadow-md shadow-primary/20' 
+                    : 'text-muted-foreground/60 hover:text-primary hover:bg-primary/5'
+                }`}
+              >
+                {mode.icon}
+                <span className="hidden sm:inline">{mode.label}</span>
+              </button>
+            ))}
+          </div>
 
-          />
-          {searchQuery && (
-            <button 
-              onClick={() => setSearchQuery('')}
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 hover:bg-muted rounded-full"
-            >
-              <X className="w-2.5 h-2.5 text-muted-foreground" />
-            </button>
-          )}
+          <div className="relative group/search w-full md:w-[200px]">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground/60 transition-colors group-focus-within/search:text-primary" />
+            <input 
+              type="text"
+              placeholder="Filtrar temas..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full h-8 pl-8 pr-8 bg-card/50 border border-border/50 rounded-full text-[10px] focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+              aria-label="Buscar tema no Nexus"
+            />
+            {searchQuery && (
+              <button 
+                onClick={() => setSearchQuery('')}
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 hover:bg-muted rounded-full"
+              >
+                <X className="w-2.5 h-2.5 text-muted-foreground" />
+              </button>
+            )}
+          </div>
         </div>
       </div>
+
       <div className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none">
         <button
           onClick={() => setActiveFilter('all')}
-          aria-pressed={activeFilter === 'all'}
-          className={`px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${activeFilter === 'all' ? 'bg-primary text-primary-foreground shadow-lg' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}
+          className={`px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${activeFilter === 'all' ? 'bg-primary text-primary-foreground shadow-lg' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}
         >
           Todos
         </button>
@@ -473,10 +498,8 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
           <button
             key={key}
             onClick={() => setActiveFilter(key)}
-            aria-pressed={activeFilter === key}
-            className={`px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-primary outline-none ${activeFilter === key ? 'bg-primary text-primary-foreground shadow-lg' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}
+            className={`px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-1.5 ${activeFilter === key ? 'bg-primary text-primary-foreground shadow-lg' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}
           >
-
             {cat.icon}
             {cat.label}
           </button>
@@ -497,17 +520,6 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
                 <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
                   {searchQuery ? 'Resultado da Busca' : categories[activeFilter as keyof typeof categories]?.label}
                 </p>
-                {searchQuery && activeFilter !== 'all' && (
-                  <div className="flex items-center gap-2">
-                    <span className="text-[9px] text-primary/60 font-medium italic">Pesquisando globalmente</span>
-                    <button 
-                      onClick={() => setActiveFilter('all')}
-                      className="text-[9px] font-black uppercase tracking-tighter text-primary hover:underline"
-                    >
-                      Limpar Filtro
-                    </button>
-                  </div>
-                )}
               </div>
               <div className="flex flex-wrap gap-1.5" role="list" ref={filteredRef}>
                 {filteredTags && filteredTags.length ? filteredTags.map((tag, i) => (
@@ -518,6 +530,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
                       tabIndex={filteredActiveIndex === i ? 0 : -1}
                       onKeyDown={(e) => handleFilteredKeyDown(e, i)}
                       profileId={profileId}
+                      searchMode={searchMode}
                     />
                   </div>
                 )) : (
@@ -527,7 +540,6 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
             </motion.div>
           ) : (
             <div key="default" className="space-y-6">
-              {/* Profile Suggestions */}
               {profileId && profileSuggestedTags.length > 0 && (
                 <motion.div 
                   initial={{ opacity: 0, x: -10 }}
@@ -553,6 +565,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
                           tabIndex={suggestedActiveIndex === i ? 0 : -1}
                           onKeyDown={(e) => handleSuggestedKeyDown(e, i)}
                           profileId={profileId}
+                          searchMode={searchMode}
                         />
                       </div>
                     ))}
@@ -560,7 +573,6 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
                 </motion.div>
               )}
 
-              {/* Categorized Tags */}
               <div className="grid grid-cols-1 gap-5">
                 {Object.entries(categories).map(([key, category]) => {
                   const categoryTags = tags.filter(t => t.category?.toLowerCase() === key.toLowerCase());
@@ -582,7 +594,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
                       <div className="flex flex-wrap gap-1.5" role="list">
                         {categoryTags.slice(0, expandedCategory === key ? 100 : 8).map((tag, i) => (
                           <div key={tag.slug} role="listitem">
-                            <TagBubble tag={tag} index={i} profileId={profileId} />
+                            <TagBubble tag={tag} index={i} profileId={profileId} searchMode={searchMode} />
                           </div>
                         ))}
                       </div>

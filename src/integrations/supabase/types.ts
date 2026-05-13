@@ -770,6 +770,30 @@ export type Database = {
         }
         Relationships: []
       }
+      nexus_synonyms: {
+        Row: {
+          canonical_slug: string
+          created_at: string
+          id: string
+          term: string
+          updated_at: string
+        }
+        Insert: {
+          canonical_slug: string
+          created_at?: string
+          id?: string
+          term: string
+          updated_at?: string
+        }
+        Update: {
+          canonical_slug?: string
+          created_at?: string
+          id?: string
+          term?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           created_at: string

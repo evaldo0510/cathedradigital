@@ -181,7 +181,7 @@ const TemaDetailPage = () => {
     queryKey: ['tag-contents', selectedTag?.id, debouncedTab],
     queryFn: async ({ signal }) => {
       if (!selectedTag) return [];
-      const results = await fetchNexusTagContent(selectedTag, signal);
+      const { content: results } = await fetchNexusTagContent(selectedTag, { mode: 'all', includeSynonyms: true }, signal);
       return (results || []).map(r => ({
         id: r.id,
         content_type: r.type,
@@ -213,7 +213,7 @@ const TemaDetailPage = () => {
     queryClient.prefetchQuery({
       queryKey: ['tag-contents', tag.id, tag.label],
       queryFn: async () => {
-        const results = await fetchNexusTagContent(tag);
+        const { content: results } = await fetchNexusTagContent(tag);
         return (results || []).map(r => ({
           id: r.id,
           content_type: r.type,
