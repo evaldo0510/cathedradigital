@@ -81,13 +81,59 @@ const FavoritesPage: React.FC = () => {
       </div>
 
       {favorites.length > 0 && (
-        <div className="flex flex-wrap gap-2 justify-center">
-          {types.map(t => (
-            <button key={t} onClick={() => setFilter(t)}
-              className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${t === filter ? 'bg-foreground text-background' : 'bg-card border border-border text-foreground hover:bg-primary/5'}`}>
-              {typeLabels[t] || t}
-            </button>
-          ))}
+        <div className="flex flex-col space-y-4">
+          <div className="flex flex-wrap gap-2 justify-center">
+            {['all', ...Array.from(new Set(favorites.map(f => f.type)))].map(t => (
+              <button key={t} onClick={() => setFilter(t)}
+                className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${t === filter ? 'bg-foreground text-background' : 'bg-card border border-border text-foreground hover:bg-primary/5'}`}>
+                {typeLabels[t] || t}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex flex-wrap gap-3 justify-center items-center pb-4">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="rounded-xl h-9 px-3 gap-2 border-border/50 text-[10px] font-black uppercase tracking-widest">
+                  <Calendar className="w-3.5 h-3.5 text-primary" />
+                  Ano: {yearFilter === 'all' ? 'Todos' : yearFilter}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="rounded-2xl border-border/40">
+                {years.map(y => (
+                  <DropdownMenuItem key={y} onClick={() => setYearFilter(y)} className="text-xs font-bold">
+                    {y === 'all' ? 'Todos os Anos' : y}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="rounded-xl h-9 px-3 gap-2 border-border/50 text-[10px] font-black uppercase tracking-widest">
+                  <Filter className="w-3.5 h-3.5 text-primary" />
+                  Período: {periodFilter === 'all' ? 'Todos' : periodFilter}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="rounded-2xl border-border/40">
+                {periods.map(p => (
+                  <DropdownMenuItem key={p} onClick={() => setPeriodFilter(p)} className="text-xs font-bold">
+                    {p === 'all' ? 'Todos os Períodos' : p}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc')}
+              className="rounded-xl h-9 px-3 gap-2 border-border/50 text-[10px] font-black uppercase tracking-widest"
+            >
+              {sortOrder === 'desc' ? <SortDesc className="w-3.5 h-3.5 text-primary" /> : <SortAsc className="w-3.5 h-3.5 text-primary" />}
+              {sortOrder === 'desc' ? 'Mais Recentes' : 'Mais Antigos'}
+            </Button>
+          </div>
         </div>
       )}
 
