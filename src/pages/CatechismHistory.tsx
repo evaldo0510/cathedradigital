@@ -124,10 +124,8 @@ const CatechismHistory: React.FC = () => {
     if (!failedParagraphs) return [];
     
     let filtered = failedParagraphs.filter(p => {
-      // Recovery status (already handled by the query, but we can filter success out if they are still in state)
       if (regenerationStatus[p.paragraph] === 'success') return false;
 
-      // Section filter
       if (filterSection !== 'all') {
         const sectionId = parseInt(filterSection);
         const section = CIC_SECTIONS.flatMap(part => part.sections).find(s => s.id === sectionId);
@@ -137,16 +135,13 @@ const CatechismHistory: React.FC = () => {
         }
       }
 
-      // Error filter
       if (filterError !== 'all' && p.status !== filterError) return false;
 
-      // Search term
       if (searchTerm && !p.paragraph.toString().includes(searchTerm) && !p.last_error?.toLowerCase().includes(searchTerm.toLowerCase())) return false;
 
       return true;
     });
 
-    // Sorting
     filtered.sort((a, b) => {
       if (sortBy === 'paragraph') return a.paragraph - b.paragraph;
       if (sortBy === 'error') return (a.last_error || '').localeCompare(b.last_error || '');
@@ -170,7 +165,6 @@ const CatechismHistory: React.FC = () => {
     setIsRegeneratingAll(true);
     let successCount = 0;
     
-    // Set initial status to pending
     const initialStatus: Record<number, RegenerationStatus> = {};
     sectionParagraphs.forEach(p => initialStatus[p.paragraph] = 'pending');
     setRegenerationStatus(prev => ({ ...prev, ...initialStatus }));
@@ -185,6 +179,36 @@ const CatechismHistory: React.FC = () => {
     }
     setIsRegeneratingAll(false);
     toast.success(`${successCount} parágrafos da seção regenerados.`);
+  };
+
+  const handleVerifyIntegrity = async () => {
+    if (!user) return;
+    setIsRegeneratingAll(true);
+    try {
+      const { data, error } = await supabase
+        .from('catechism_paragraphs_read')
+        .select('paragraph, read_at')
+        .eq('user_id', user.id);
+      
+      if (error) throw error;
+      
+      const seen = new Set<number>();
+      const duplicates: number[] = [];
+      data.forEach(p => {
+        if (seen.has(p.paragraph)) duplicates.push(p.paragraph);
+        seen.add(p.paragraph);
+      });
+      
+      if (duplicates.length > 0) {
+        toast.warning(`Detectados ${duplicates.length} conflitos. O banco de dados já os trata via unique constraint.`);
+      } else {
+        toast.success("Integridade verificada: Sem duplicatas.");
+      }
+    } catch (err) {
+      toast.error("Erro ao verificar integridade.");
+    } finally {
+      setIsRegeneratingAll(false);
+    }
   };
 
   const getStatusIcon = (paragraph: number) => {
@@ -220,10 +244,15 @@ const CatechismHistory: React.FC = () => {
           </div>
         </div>
 
-        <Button onClick={continueFrom} className="h-12 px-8 rounded-2xl shadow-lg shadow-primary/20 flex items-center gap-2 group">
-          Continuar a partir de §{allProgress ? (Math.max(...Array.from(allProgress), 0) + 1) : 1}
-          <Icons.ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-        </Button>
+        <div className="flex items-center gap-3">
+          <Button variant="outline" size="sm" onClick={handleVerifyIntegrity} disabled={isRegeneratingAll} className="rounded-xl border-dashed">
+             <Icons.Activity className="w-4 h-4 mr-2" /> Verificar Integridade
+          </Button>
+          <Button onClick={continueFrom} className="h-12 px-8 rounded-2xl shadow-lg shadow-primary/20 flex items-center gap-2 group">
+            Continuar a partir de §{allProgress ? (Math.max(...Array.from(allProgress), 0) + 1) : 1}
+            <Icons.ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </Button>
+        </div>
       </div>
 
       {/* Progress by Section */}
