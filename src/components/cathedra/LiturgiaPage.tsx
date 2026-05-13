@@ -522,7 +522,7 @@ const LiturgiaPage: React.FC = () => {
                                   <p className="text-sm font-bold text-primary">{format(new Date(day.date + "T12:00:00"), 'dd')}</p>
                                 </div>
                                 <p className="text-xs font-bold text-foreground/80 line-clamp-1">
-                                  {day.celebrations?.map((c: any) => c.title).join(' / ')}
+                                  {day.celebrations?.[0]?.title} {day.celebrations?.length > 1 && `(+${day.celebrations.length - 1})`}
                                 </p>
                               </div>
                               <Icons.ChevronRight className="w-3 h-3 text-muted-foreground" />
