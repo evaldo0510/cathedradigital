@@ -35,13 +35,20 @@ const queryClient = new QueryClient({
   },
 });
 
-const wrapper = ({ children }: { children: React.ReactNode }) => (
-  <HelmetProvider>
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>{children}</BrowserRouter>
-    </QueryClientProvider>
-  </HelmetProvider>
-);
+const renderLiturgia = (initialPath = '/liturgia') => {
+  return render(
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter initialEntries={[initialPath]}>
+          <Routes>
+            <Route path="/liturgia" element={<LiturgiaPage />} />
+            <Route path="/liturgia/:date" element={<LiturgiaPage />} />
+          </Routes>
+        </MemoryRouter>
+      </QueryClientProvider>
+    </HelmetProvider>
+  );
+};
 
 describe('LiturgiaPage Celebrations', () => {
   it('displays multiple celebrations once in search results', async () => {
@@ -57,17 +64,18 @@ describe('LiturgiaPage Celebrations', () => {
 
     (supabase.functions.invoke as any).mockResolvedValue({ data: mockMonthData });
 
-    render(<LiturgiaPage />, { wrapper });
+    renderLiturgia();
 
     const searchInput = screen.getByPlaceholderText(/Buscar celebrações no mês.../i);
     fireEvent.change(searchInput, { target: { value: 'Celebration' } });
 
     await waitFor(() => {
-      const results = screen.getAllByRole('button').filter(b => 
-        b.textContent?.includes('Celebration One')
+      // Find buttons that represent the search result for the day
+      // Our deduplication ensures one entry per day
+      const resultEntries = screen.queryAllByRole('button').filter(b => 
+        b.textContent?.includes('Celebration One') && b.textContent?.includes('(+1)')
       );
-      // Should show only one result for the day, even if it has multiple matches
-      expect(results.length).toBe(1);
+      expect(resultEntries.length).toBe(1);
     });
   });
 
@@ -89,19 +97,17 @@ describe('LiturgiaPage Celebrations', () => {
     (supabase.functions.invoke as any).mockImplementation(async (name, options) => {
       if (options.body.action === 'date') return { data: mockDayData };
       if (options.body.action === 'readings') return { data: mockReadings };
+      if (options.body.action === 'month') return { data: [mockDayData] };
       return { data: [] };
     });
 
-    render(<LiturgiaPage />, { wrapper });
+    renderLiturgia('/liturgia/2024-05-13');
 
-    await waitFor(() => {
-      expect(screen.getByText('Celebration One')).toBeDefined();
-      expect(screen.getByText('Celebration Two')).toBeDefined();
-    });
-
-    const selectorButtons = screen.getAllByRole('button').filter(b => 
-      b.textContent === 'Celebration One' || b.textContent === 'Celebration Two'
-    );
-    expect(selectorButtons.length).toBe(2);
+    // Wait for the buttons to appear in the selector
+    const btn1 = await screen.findByText('Celebration One', { selector: 'button' });
+    const btn2 = await screen.findByText('Celebration Two', { selector: 'button' });
+    
+    expect(btn1).toBeDefined();
+    expect(btn2).toBeDefined();
   });
 });
