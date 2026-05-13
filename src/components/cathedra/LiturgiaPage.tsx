@@ -143,6 +143,19 @@ const LiturgiaPage: React.FC = () => {
   const today = selectedDate;
   const [isOfflineData, setIsOfflineData] = useState(false);
   const [showMonthList, setShowMonthList] = useState(false);
+  const [isMonthViewOpen, setIsMonthViewOpen] = useState(false);
+
+  const { data: monthData, isLoading: isLoadingMonth } = useQuery({
+    queryKey: ['liturgical-month', today.getFullYear(), today.getMonth()],
+    queryFn: async () => {
+      const { data } = await supabase.functions.invoke('liturgical-calendar', {
+        body: { action: 'month', year: today.getFullYear(), month: today.getMonth() + 1 }
+      });
+      return data;
+    },
+    enabled: isMonthViewOpen,
+    staleTime: 1000 * 60 * 60 * 24,
+  });
 
   usePrefetchLiturgyCache();
 
