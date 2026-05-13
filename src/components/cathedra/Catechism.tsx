@@ -404,8 +404,29 @@ const Catechism: React.FC = () => {
   if (viewMode === 'reading' && selectedSection && selectedPart) {
     const [start, end] = selectedSection.paragraphs;
     const fromDashboard = searchParams.get('from') === 'dashboard';
+    
+    // Progress calculation for the section
+    const sectionParas = Array.from({ length: end - start + 1 }, (_, i) => start + i);
+    const readInSection = sectionParas.filter(p => paragraphsRead.has(p)).length;
+    const sectionProgress = (readInSection / sectionParas.length) * 100;
+
     return (
       <div className="max-w-3xl mx-auto space-y-6">
+        {/* Persistent Section Progress Bar */}
+        <div className="sticky top-[73px] z-[130] -mx-4 px-4 py-2 bg-background/80 backdrop-blur-md border-b border-border">
+          <div className="flex justify-between text-[8px] font-black uppercase tracking-widest text-primary/60 mb-1.5">
+            <span>Progresso na Seção</span>
+            <span>{Math.round(sectionProgress)}%</span>
+          </div>
+          <div className="h-1 w-full bg-muted rounded-full overflow-hidden">
+            <motion.div 
+              initial={{ width: 0 }}
+              animate={{ width: `${sectionProgress}%` }}
+              className="h-full bg-primary shadow-[0_0_8px_rgba(var(--primary),0.4)]"
+            />
+          </div>
+        </div>
+
         <BackToThemeBanner />
         {fromDashboard && (
           <button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-xs text-primary hover:underline">
@@ -436,6 +457,13 @@ const Catechism: React.FC = () => {
             <h1 className="text-xl font-serif font-bold text-foreground truncate">{selectedSection.title}</h1>
             <p className="text-sm text-muted-foreground">§{start} — §{end}</p>
           </div>
+          <button 
+            onClick={() => navigate('/catechism/history')}
+            className="p-2 rounded-xl border border-border bg-card text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all"
+            title="Histórico de Leitura"
+          >
+            <Icons.History className="w-4 h-4" />
+          </button>
           {(crossRefs.length > 0 || docsRefs.length > 0) && (
             <button onClick={() => setShowCrossRefs(!showCrossRefs)}
               className={`p-2 rounded-xl border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}
