@@ -122,7 +122,13 @@ function toSlug(text: string): string {
 /** Normalize a single tag to its canonical slug */
 export function normalizeTag(tag: string): string {
   const slug = toSlug(tag);
-  return SYNONYM_MAP[slug] || SYNONYM_MAP[tag.toLowerCase()] || slug;
+  // Check SYNONYM_MAP with normalized keys
+  const normalizedSynonyms: Record<string, string> = {};
+  Object.entries(SYNONYM_MAP).forEach(([key, val]) => {
+    normalizedSynonyms[toSlug(key)] = val;
+  });
+  
+  return normalizedSynonyms[slug] || SYNONYM_MAP[tag.toLowerCase()] || slug;
 }
 
 /** Normalize an array of tags, deduplicate */
@@ -132,18 +138,44 @@ export function normalizeTags(tags: string[]): string[] {
 }
 
 /**
+ * Returns all synonyms that map to a given canonical slug.
+ */
+export function getSynonymsForSlug(slug: string): string[] {
+  const synonyms = new Set<string>();
+  Object.entries(SYNONYM_MAP).forEach(([syn, canonical]) => {
+    if (canonical === slug) {
+      synonyms.add(syn);
+    }
+  });
+  return Array.from(synonyms);
+}
+
+/**
  * Generates a list of search terms for a tag to ensure high recall.
- * Includes the original label, normalized label, and slug.
+ * Includes the original label, normalized label, slug, and synonyms.
  */
 export function getSearchTermsForTag(tag: { label: string; slug: string }): string[] {
   const normalized = normalizeText(tag.label);
-  const terms = [tag.label, normalized, tag.slug];
+  const synonyms = getSynonymsForSlug(tag.slug);
   
-  // Also add common variations if not already present
-  // For example, if it's "Oração", normalized is "oracao", slug might be "oracao".
-  // We want to be sure.
+  const baseTerms = [tag.label, normalized, tag.slug, ...synonyms];
   
-  return Array.from(new Set(terms.filter(Boolean)));
+  // Expand with common variations
+  const expanded = baseTerms.flatMap(term => {
+    const norm = normalizeText(term);
+    const slug = toSlug(term);
+    return [
+      term,
+      term.toLowerCase(),
+      term.charAt(0).toUpperCase() + term.slice(1).toLowerCase(),
+      norm,
+      slug,
+      // For multi-word terms like "Espírito Santo", also add the words separately
+      ...(term.includes(' ') ? term.split(' ') : [])
+    ];
+  });
+  
+  return Array.from(new Set(expanded.filter(Boolean)));
 }
 
 /** All canonical tag categories for the Nexus system */
