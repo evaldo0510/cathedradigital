@@ -138,10 +138,8 @@ const LiturgiaPage: React.FC = () => {
   const goToNextDay = () => {
     const d = new Date(selectedDate);
     d.setDate(d.getDate() + 1);
-    if (d <= new Date()) {
-      setSelectedDate(d);
-      setIsOfflineData(false);
-    }
+    setSelectedDate(d);
+    setIsOfflineData(false);
   };
 
   const isToday = selectedDate.toDateString() === new Date().toDateString();
