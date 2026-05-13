@@ -331,7 +331,7 @@ const Catechism: React.FC = () => {
       
       if (data && data.read_at) {
         setParagraphsRead(prev => new Set([...prev, p]));
-        // Toast for success if needed, or update a local state for the indicator
+        setLastSyncTime(new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }));
       }
     } catch (err) {
       console.error('Failed to mark paragraph read:', err);
