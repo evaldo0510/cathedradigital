@@ -158,6 +158,7 @@ const LiturgiaPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isExportingMonth, setIsExportingMonth] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [activeCelebrationIndex, setActiveCelebrationIndex] = useState(0);
 
   useEffect(() => {
     if (routeDate) {
