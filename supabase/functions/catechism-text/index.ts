@@ -36,12 +36,15 @@ serve(async (req: Request) => {
 
       if (official) {
         return new Response(JSON.stringify({ 
-          ...official, 
-          status: 'official',
+          paragraph: official.paragraph,
+          content: official.content,
           textoBase: official.texto_base,
+          explicacao: official.explicacao,
           interpretacaoProfunda: official.interpretacao_profunda,
           aplicacaoPratica: official.aplicacao_pratica,
-          reflexaoFinal: official.reflexao_final
+          reflexaoFinal: official.reflexao_final,
+          exercicio: official.exercicio,
+          status: 'official'
         }), { headers: corsHeaders });
       }
     }
@@ -56,12 +59,15 @@ serve(async (req: Request) => {
 
       if (cached && cached.content && cached.status !== 'error' && cached.status !== 'error_402') {
         return new Response(JSON.stringify({ 
-          ...cached, 
-          status: 'cached',
+          paragraph: cached.paragraph,
+          content: cached.content,
           textoBase: cached.texto_base,
+          explicacao: cached.explicacao,
           interpretacaoProfunda: cached.interpretacao_profunda,
           aplicacaoPratica: cached.aplicacao_pratica,
-          reflexaoFinal: cached.reflexao_final
+          reflexaoFinal: cached.reflexao_final,
+          exercicio: cached.exercicio,
+          status: 'cached'
         }), { headers: corsHeaders });
       }
     }
@@ -74,14 +80,14 @@ serve(async (req: Request) => {
 Sua tarefa é fornecer o texto oficial do parágrafo §${paragraph} e uma análise teológica profunda.
 
 REGRAS CRÍTICAS:
-1. FIDELIDADE: O texto do parágrafo deve ser o texto oficial em Português.
-2. ESTRUTURA: Retorne obrigatoriamente um JSON válido com os seguintes campos:
+1. FIDELIDADE: O campo 'content' deve conter EXATAMENTE o texto oficial do Catecismo da Igreja Católica em Português. Não mude uma vírgula.
+2. ESTRUTURA: Retorne obrigatoriamente um JSON válido com os seguintes campos (use exatamente estes nomes em camelCase):
    - content: O texto oficial do parágrafo.
-   - texto_base: Uma síntese de 1 frase do ensinamento principal.
+   - textoBase: Uma síntese de 1 frase do ensinamento principal.
    - explicacao: Explicação detalhada do parágrafo.
-   - interpretacao_profunda: Conexões com o Magistério, Patrística e Escritura.
-   - aplicacao_pratica: Como viver este ensinamento hoje.
-   - reflexao_final: Uma breve oração ou pensamento meditativo.
+   - interpretacaoProfunda: Conexões com o Magistério, Patrística e Escritura.
+   - aplicacaoPratica: Como viver este ensinamento hoje.
+   - reflexaoFinal: Uma breve oração ou pensamento meditativo.
    - exercicio: Uma sugestão de ação prática.
 3. IDIOMA: Use Português do Brasil.
 4. FORMATO: Apenas o JSON, sem markdown ou explicações externas.`;
@@ -132,17 +138,17 @@ REGRAS CRÍTICAS:
 
       const parsed = JSON.parse(content);
 
-      // Save to Cache
+      // Save to Cache (mapping camelCase to snake_case for DB)
       const { data: saved, error: saveError } = await supabase
         .from('catechism_cache')
         .upsert({
           paragraph,
           content: parsed.content,
-          texto_base: parsed.texto_base,
+          texto_base: parsed.textoBase,
           explicacao: parsed.explicacao,
-          interpretacao_profunda: parsed.interpretacao_profunda,
-          aplicacao_pratica: parsed.aplicacao_pratica,
-          reflexao_final: parsed.reflexao_final,
+          interpretacao_profunda: parsed.interpretacaoProfunda,
+          aplicacao_pratica: parsed.aplicacaoPratica,
+          reflexao_final: parsed.reflexaoFinal,
           exercicio: parsed.exercicio,
           status: 'generated',
           retry_count: 0,
@@ -159,7 +165,7 @@ REGRAS CRÍTICAS:
       await supabase.from('catechism_execution_logs').insert({
         paragraph,
         status: 'generated',
-        duration_ms: 0 // Could calculate this if needed
+        duration_ms: 0 
       });
 
       return new Response(JSON.stringify({ 
