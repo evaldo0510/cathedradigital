@@ -374,6 +374,69 @@ const LiturgiaPage: React.FC = () => {
                     </DropdownMenuContent>
                   </DropdownMenu>
 
+                  <Dialog open={isMonthViewOpen} onOpenChange={setIsMonthViewOpen}>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" className="rounded-xl h-11 px-4 gap-2 border-border/50 hover:bg-muted/50 transition-all">
+                        <List className="w-4 h-4 text-primary" />
+                        <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Ver Mês</span>
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl max-h-[80vh] rounded-[2.5rem] p-0 overflow-hidden border-border/40 shadow-2xl">
+                      <DialogHeader className="p-8 pb-4 bg-muted/30">
+                        <DialogTitle className="text-2xl font-serif font-bold text-primary flex items-center gap-3">
+                          <Icons.Calendar className="w-6 h-6" />
+                          Leituras de {format(today, 'MMMM yyyy', { locale: ptBR })}
+                        </DialogTitle>
+                      </DialogHeader>
+                      <ScrollArea className="h-full max-h-[60vh] p-8 pt-0">
+                        <div className="space-y-3 pb-8">
+                          {isLoadingMonth ? (
+                            <div className="flex flex-col items-center justify-center py-20 space-y-4">
+                              <Icons.Loader2 className="w-8 h-8 text-primary animate-spin" />
+                              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Sincronizando calendário...</p>
+                            </div>
+                          ) : Array.isArray(monthData) ? (
+                            monthData.map((day: any) => {
+                              const date = new Date(day.date + "T12:00:00");
+                              const isDaySelected = date.toDateString() === today.toDateString();
+                              return (
+                                <button 
+                                  key={day.date}
+                                  onClick={() => {
+                                    setSelectedDate(date);
+                                    setIsMonthViewOpen(false);
+                                  }}
+                                  className={`w-full flex items-center justify-between p-4 rounded-2xl border transition-all text-left group
+                                    ${isDaySelected ? 'bg-primary/5 border-primary shadow-sm' : 'border-border/40 bg-card hover:border-primary/30 hover:bg-muted/30'}
+                                  `}
+                                >
+                                  <div className="flex items-center gap-4">
+                                    <div className="text-center min-w-[40px]">
+                                      <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">{format(date, 'eee', { locale: ptBR })}</p>
+                                      <p className="text-lg font-bold text-primary leading-none">{format(date, 'dd')}</p>
+                                    </div>
+                                    <div className="h-8 w-px bg-border/40" />
+                                    <div>
+                                      <p className="text-sm font-bold text-foreground/80 line-clamp-1 group-hover:text-primary transition-colors">
+                                        {day.celebrations?.[0]?.title || 'Feria'}
+                                      </p>
+                                      <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground opacity-60">
+                                        {day.season || 'Tempo Comum'}
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <Icons.ChevronRight className="w-4 h-4 text-muted-foreground group-hover:translate-x-1 transition-transform" />
+                                </button>
+                              );
+                            })
+                          ) : (
+                            <p className="text-center py-10 text-muted-foreground">Não foi possível carregar as leituras do mês.</p>
+                          )}
+                        </div>
+                      </ScrollArea>
+                    </DialogContent>
+                  </Dialog>
+
                   <Button 
                     variant="outline" 
                     className="rounded-xl h-11 px-4 gap-2 border-border/50 hover:bg-muted/50 transition-all"
