@@ -66,11 +66,23 @@ interface Reading {
   texto: string;
 }
 
+interface Reading {
+  referencia: string;
+  titulo: string;
+  texto: string;
+}
+
 interface LiturgyReadings {
   data: string;
   liturgia: string;
   cor: string;
-  dia: string;
+  dia: string; // Oratio / Coleta
+  antifonas?: {
+    entrada?: string;
+    comunhao?: string;
+  };
+  oferendas?: string;
+  comunhao?: string; // Oração depois da comunhão
   primeiraLeitura: Reading;
   salmo: { referencia: string; refrao: string; texto: string };
   segundaLeitura?: Reading | string;
