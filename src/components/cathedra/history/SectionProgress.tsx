@@ -9,6 +9,7 @@ interface SectionProgressProps {
 }
 
 const SectionProgress: React.FC<SectionProgressProps> = ({ allProgress }) => {
+  const navigate = useNavigate();
   const calculateSectionProgress = (start: number, end: number) => {
     if (!allProgress) return 0;
     let count = 0;
