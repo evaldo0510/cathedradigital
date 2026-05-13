@@ -615,7 +615,11 @@ const AdminDashboard: React.FC = () => {
               </CardContent>
             </Card>
           </div>
-
+        <TabsContent value="nexus-audit">
+          <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
+            <NexusAuditPage />
+          </Suspense>
+        </TabsContent>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             <Card className="shadow-none border-border/40">
