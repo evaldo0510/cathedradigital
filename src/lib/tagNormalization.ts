@@ -170,6 +170,7 @@ export function getSearchTermsForTag(tag: { label: string; slug: string }): stri
       term.charAt(0).toUpperCase() + term.slice(1).toLowerCase(),
       norm,
       slug,
+      slug.replace(/_/g, '-'),
       // For multi-word terms like "Espírito Santo", also add the words separately
       ...(term.includes(' ') ? term.split(' ') : [])
     ];
