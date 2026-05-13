@@ -190,6 +190,7 @@ const AppLayout: React.FC = () => {
     AppRoute.LITURGIA,
     AppRoute.TEMAS,
     AppRoute.AZ_FAITH,
+    AppRoute.GLOSSARY,
     AppRoute.COMMUNITY
   ].includes(location.pathname as AppRoute);
 
@@ -599,6 +600,7 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.PROFILE} element={<PageTransition><AuthGuard><ProfilePage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.POENITENTIA} element={<PageTransition><AuthGuard><PoenitentiaPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.GLOSSARY} element={<PageTransition><AuthGuard><GlossaryPage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.GLOSSARY_DETAIL} element={<PageTransition><AuthGuard><GlossaryPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.AZ_FAITH} element={<PageTransition><AuthGuard><AZFaithPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.ENCYCLOPEDIA} element={<PageTransition><AuthGuard><EncyclopediaPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.APARICOES} element={<PageTransition><AuthGuard><AparicoesPage /></AuthGuard></PageTransition>} />
