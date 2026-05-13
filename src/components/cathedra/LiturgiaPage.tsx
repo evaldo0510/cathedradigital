@@ -167,6 +167,27 @@ const ReadingCard: React.FC<{
   </motion.div>
 );
 
+const LiturgyPrayerCard: React.FC<{
+  label: string;
+  text: string;
+  delay: number;
+}> = ({ label, text, delay }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5, delay }}
+    className="p-10 bg-muted/20 border border-border/50 rounded-[2.5rem] space-y-4 shadow-inner"
+  >
+    <div className="flex items-center gap-3">
+      <div className="w-1.5 h-1.5 rounded-full bg-secondary/40" />
+      <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/40">{label}</h3>
+    </div>
+    <p className="text-lg md:text-2xl font-serif italic text-primary/70 leading-relaxed antialiased selection:bg-secondary/20">
+      {text}
+    </p>
+  </motion.div>
+);
+
 const LiturgiaPage: React.FC = () => {
   const navigate = useNavigate();
   const { date: routeDate } = useParams();
