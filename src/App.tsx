@@ -330,7 +330,6 @@ const AppLayout: React.FC = () => {
     }, 500);
     return () => clearInterval(timer);
   }, [isSpeaking]);
-                  <Route path="/nexus-audit" element={<PageTransition><AdminGuard><NexusAuditPage /></AdminGuard></PageTransition>} />
 
   useEffect(() => {
     if (navigator.onLine) {
