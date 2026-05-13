@@ -13,11 +13,13 @@ import FailedParagraphsSection, { RegenerationStatus } from '@/components/cathed
 import HistoryList from '@/components/cathedra/history/HistoryList';
 import SyncSummaryPanel from '@/components/cathedra/history/SyncSummaryPanel';
 
+import { useCatechismReconciliation } from '@/hooks/useCatechismReconciliation';
 
 const CatechismHistory: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  useCatechismReconciliation(); // Initialize reconciliation periodic routine
   const [isRegeneratingAll, setIsRegeneratingAll] = useState(false);
   const [regenerationStatus, setRegenerationStatus] = useState<Record<number, RegenerationStatus>>({});
   const cancelRegenerationRef = useRef(false);
@@ -117,45 +119,7 @@ const CatechismHistory: React.FC = () => {
     };
   }, [user, queryClient]);
 
-  // 5. Auto-integrity check on mount
-  useEffect(() => {
-    const runIntegrityCheck = async () => {
-      if (!user) return;
-      try {
-        const { data, error } = await supabase
-          .from('catechism_paragraphs_read')
-          .select('id, paragraph')
-          .eq('user_id', user.id);
-        
-        if (error) throw error;
-        
-        const seen = new Set<number>();
-        const idsToRemove: string[] = [];
-        
-        data.forEach(p => {
-          if (seen.has(p.paragraph)) {
-            idsToRemove.push(p.id);
-          } else {
-            seen.add(p.paragraph);
-          }
-        });
-        
-        if (idsToRemove.length > 0) {
-          await supabase
-            .from('catechism_paragraphs_read')
-            .delete()
-            .in('id', idsToRemove);
-          
-          queryClient.invalidateQueries({ queryKey: ['catechism-all-progress', user.id] });
-          toast.info(`${idsToRemove.length} duplicatas corrigidas automaticamente.`);
-        }
-      } catch (err) {
-        console.error("Auto-integrity check failed:", err);
-      }
-    };
-
-    runIntegrityCheck();
-  }, [user, queryClient]);
+  // Reconciliation is now handled by useCatechismReconciliation hook periodically
 
 
   const regenerateMutation = useMutation({
