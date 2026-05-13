@@ -523,12 +523,51 @@ const Catechism: React.FC = () => {
           />
         )}
 
-        <div className="bg-card border border-border rounded-3xl p-6 md:p-10 space-y-12">
+        <div className="bg-card border border-border rounded-3xl p-6 md:p-10 space-y-12 shadow-sm">
           <div className="flex flex-col gap-10">
             {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(p => (
               <LazyParagraph key={p} paragraph={p} currentParagraph={currentParagraph} paragraphsRead={paragraphsRead} isFavorite={isFavorite} toggleFavorite={toggleFavorite} handleNavigateToBible={handleNavigateToBible} />
             ))}
           </div>
+
+          {/* Next Paragraph Indicator */}
+          {currentParagraph < end ? (
+            <div className="pt-8 border-t border-border/40 flex flex-col items-center gap-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
+              <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Continue a leitura</div>
+              <button 
+                onClick={() => jumpToParagraph(currentParagraph + 1)}
+                className="group flex items-center gap-4 p-4 rounded-2xl bg-primary/5 border border-primary/20 hover:border-primary/40 hover:bg-primary/10 transition-all w-full max-w-sm"
+              >
+                <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/20 group-hover:scale-105 transition-transform">
+                  <span className="text-xl font-serif font-bold">§{currentParagraph + 1}</span>
+                </div>
+                <div className="text-left flex-1">
+                   <div className="text-xs font-bold text-foreground">Próximo Parágrafo</div>
+                   <div className="text-[10px] text-muted-foreground">Clique para saltar agora</div>
+                </div>
+                <Icons.ArrowDown className="w-5 h-5 text-primary -rotate-90 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </div>
+          ) : (
+            <div className="pt-8 border-t border-border/40 flex flex-col items-center gap-4">
+               <div className="text-[10px] font-black uppercase tracking-widest text-primary">Seção Concluída</div>
+               <p className="text-sm text-muted-foreground text-center">Você terminou esta seção! Deseja ir para a próxima?</p>
+               <button 
+                disabled={selectedSection.id >= 10}
+                onClick={() => {
+                  const nextSec = selectedPart.sections.find(s => s.id === selectedSection.id + 1);
+                  if (nextSec) {
+                    setSelectedSection(nextSec);
+                    setCurrentParagraph(nextSec.paragraphs[0]);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }
+                }}
+                className="px-6 py-2 bg-primary text-primary-foreground rounded-xl text-xs font-black uppercase tracking-widest hover:brightness-110 transition-all shadow-lg shadow-primary/20 disabled:opacity-30"
+               >
+                 Próxima Seção
+               </button>
+            </div>
+          )}
         </div>
 
         {/* Quick nav - Anchor links to jump between paragraphs */}
