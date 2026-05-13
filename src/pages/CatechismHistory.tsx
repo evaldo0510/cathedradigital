@@ -122,6 +122,29 @@ const CatechismHistory: React.FC = () => {
     return Math.round((count / (end - start + 1)) * 100);
   };
 
+  const failedBySection = CIC_SECTIONS.flatMap(part => 
+    part.sections.map(section => {
+      const [start, end] = section.paragraphs;
+      const failed = failedParagraphs?.filter(p => p.paragraph >= start && p.paragraph <= end) || [];
+      return { ...section, part: part.part, failed };
+    })
+  ).filter(s => s.failed.length > 0);
+
+  const handleRegenerateSection = async (sectionParagraphs: { paragraph: number }[]) => {
+    setIsRegeneratingAll(true);
+    let successCount = 0;
+    for (const p of sectionParagraphs) {
+      try {
+        await regenerateMutation.mutateAsync(p.paragraph);
+        successCount++;
+      } catch (err) {
+        console.error(`Failed to regenerate §${p.paragraph}:`, err);
+      }
+    }
+    setIsRegeneratingAll(false);
+    toast.success(`${successCount} parágrafos da seção regenerados.`);
+  };
+
   return (
     <div className="max-w-4xl mx-auto p-4 md:p-8 space-y-12 min-h-screen">
       <SEOHead 
