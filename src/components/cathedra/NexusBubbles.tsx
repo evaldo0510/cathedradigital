@@ -44,6 +44,7 @@ interface TagBubbleProps {
   navigateOnClick?: boolean;
   priorityGroup?: string;
   size?: 'xs' | 'sm' | 'md';
+  searchMode?: 'tags' | 'title' | 'reference' | 'text' | 'all';
 }
 
 export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, tabIndex, onKeyDown, className, profileId, navigateOnClick, priorityGroup, size }) => {
