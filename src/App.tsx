@@ -190,6 +190,7 @@ const AppLayout: React.FC = () => {
     AppRoute.LITURGIA,
     AppRoute.TEMAS,
     AppRoute.AZ_FAITH,
+    AppRoute.GLOSSARY,
     AppRoute.COMMUNITY
   ].includes(location.pathname as AppRoute);
 
