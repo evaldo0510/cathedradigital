@@ -200,4 +200,40 @@ export async function fetchNexusTagContent(
   return { content: uniqueContent, logs };
 }
 
+/**
+ * Utility to export diagnostic logs to CSV or JSON
+ */
+export function exportNexusLogs(tagLabel: string, logs: NexusDiagnosticLog[], format: 'csv' | 'json' = 'json') {
+  if (format === 'json') {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(logs, null, 2));
+    const downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href",     dataStr);
+    downloadAnchorNode.setAttribute("download", `nexus_logs_${tagLabel.toLowerCase().replace(/\s+/g, '_')}_${new Date().getTime()}.json`);
+    document.body.appendChild(downloadAnchorNode);
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+  } else {
+    const headers = ['Stage', 'Query', 'ResultsCount', 'TermsUsed', 'Timestamp'];
+    const rows = logs.map(log => [
+      log.stage,
+      log.query,
+      log.resultsCount,
+      log.termsUsed.join('; '),
+      log.timestamp
+    ]);
+    
+    const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `nexus_logs_${tagLabel.toLowerCase().replace(/\s+/g, '_')}_${new Date().getTime()}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+}
+
+
 
