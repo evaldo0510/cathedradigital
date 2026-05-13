@@ -204,8 +204,7 @@ const LiturgiaPage: React.FC = () => {
     if (!searchQuery || !Array.isArray(monthData)) return [];
     const q = searchQuery.toLowerCase();
     return monthData.filter((day: any) => {
-      const title = day.celebrations?.[0]?.title?.toLowerCase() || '';
-      return title.includes(q);
+      return day.celebrations?.some((c: any) => c.title?.toLowerCase().includes(q));
     });
   }, [monthData, searchQuery]);
 
