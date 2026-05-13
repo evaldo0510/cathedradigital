@@ -402,6 +402,14 @@ const GlossaryPage: React.FC = () => {
               {cat}
             </button>
           ))}
+          {hasActiveFilters && (
+            <button 
+              onClick={clearFilters}
+              className="px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest text-primary hover:bg-primary/10 transition-all flex items-center gap-1"
+            >
+              <Icons.X className="w-3 h-3" /> Limpar Filtros
+            </button>
+          )}
         </div>
       )}
 
