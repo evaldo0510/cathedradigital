@@ -137,9 +137,11 @@ const LiturgiaPage: React.FC = () => {
   const tabList = ['liturgia', 'missal', 'calendario'];
 
   const { profile } = useAuth();
+  const { toggleFavorite, isFavorite } = useFavorites();
   const [selectedDate, setSelectedDate] = useState(() => new Date());
   const today = selectedDate;
   const [isOfflineData, setIsOfflineData] = useState(false);
+  const [showMonthList, setShowMonthList] = useState(false);
 
   usePrefetchLiturgyCache();
 
@@ -157,6 +159,72 @@ const LiturgiaPage: React.FC = () => {
     d.setDate(d.getDate() + 1);
     setSelectedDate(d);
     setIsOfflineData(false);
+  };
+
+  const liturgicalPeriods = useMemo(() => getLiturgicalPeriods(today.getFullYear()), [today.getFullYear()]);
+
+  const exportToPDF = async () => {
+    if (!readings) return;
+    try {
+      const doc = new jsPDF();
+      const margin = 20;
+      let y = margin;
+
+      doc.setFontSize(22);
+      doc.setTextColor(30, 58, 138); // primary color
+      doc.text("Cathedra Digital", margin, y);
+      y += 10;
+      
+      doc.setFontSize(16);
+      doc.setTextColor(0, 0, 0);
+      doc.text(`Liturgia do Dia: ${formatDate()}`, margin, y);
+      y += 10;
+      doc.setFontSize(12);
+      doc.setTextColor(100, 100, 100);
+      doc.text(readings.liturgia, margin, y);
+      y += 15;
+
+      const addReading = (title: string, ref: string, text: string) => {
+        if (y > 240) { doc.addPage(); y = margin; }
+        doc.setFontSize(14);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(30, 58, 138);
+        doc.text(title, margin, y);
+        y += 7;
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "italic");
+        doc.setTextColor(150, 150, 150);
+        doc.text(ref, margin, y);
+        y += 8;
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(11);
+        doc.setTextColor(0, 0, 0);
+        const splitText = doc.splitTextToSize(text, 170);
+        doc.text(splitText, margin, y);
+        y += (splitText.length * 6) + 12;
+      };
+
+      if (readings.primeiraLeitura) addReading("Primeira Leitura", readings.primeiraLeitura.referencia, readings.primeiraLeitura.texto);
+      if (readings.salmo) addReading("Salmo Responsorial", readings.salmo.referencia, readings.salmo.refrao + "\n\n" + readings.salmo.texto);
+      if (readings.segundaLeitura && typeof readings.segundaLeitura !== 'string') addReading("Segunda Leitura", readings.segundaLeitura.referencia, readings.segundaLeitura.texto);
+      if (readings.evangelho) addReading("Evangelho", readings.evangelho.referencia, readings.evangelho.texto);
+
+      doc.save(`cathedra-liturgia-${format(today, 'yyyy-MM-dd')}.pdf`);
+      toast.success('PDF gerado com sucesso!');
+    } catch (err) {
+      console.error('PDF error:', err);
+      toast.error('Erro ao gerar PDF');
+    }
+  };
+
+  const toggleFavoriteDay = () => {
+    if (!readings) return;
+    toggleFavorite({
+      type: 'liturgy',
+      title: `Liturgia - ${format(today, 'dd/MM/yyyy')}`,
+      content: readings.liturgia,
+    });
+    toast.success(isFavorite('liturgy', `Liturgia - ${format(today, 'dd/MM/yyyy')}`) ? 'Removido dos favoritos' : 'Adicionado aos favoritos');
   };
 
   const isToday = selectedDate.toDateString() === new Date().toDateString();
