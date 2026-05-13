@@ -33,6 +33,7 @@ interface Post {
 }
 
 const CatechismDebug = React.lazy(() => import('./CatechismDebug'));
+const AdminNexusSynonyms = React.lazy(() => import('./AdminNexusSynonyms').then(m => ({ default: m.AdminNexusSynonyms })));
 
 const AdminContentTab: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
