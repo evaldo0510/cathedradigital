@@ -132,46 +132,56 @@ const ReadingCard: React.FC<{
 
 const LiturgiaPage: React.FC = () => {
   const navigate = useNavigate();
+  const { date: routeDate } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const { handleKeyDown: handleTabKeyDown } = useTabNavigation();
+  const queryClient = useQueryClient();
   const activeTab = searchParams.get('tab') || 'liturgia';
   const tabList = ['liturgia', 'missal', 'calendario'];
 
   const { profile } = useAuth();
   const { toggleFavorite, isFavorite } = useFavorites();
-  const [selectedDate, setSelectedDate] = useState(() => new Date());
+  
+  const [selectedDate, setSelectedDate] = useState(() => {
+    if (routeDate) {
+      const d = new Date(routeDate + "T12:00:00");
+      if (!isNaN(d.getTime())) return d;
+    }
+    return new Date();
+  });
+
   const today = selectedDate;
   const [isOfflineData, setIsOfflineData] = useState(false);
   const [showMonthList, setShowMonthList] = useState(false);
   const [isMonthViewOpen, setIsMonthViewOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isExportingMonth, setIsExportingMonth] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
-  const { data: monthData, isLoading: isLoadingMonth } = useQuery({
-    queryKey: ['liturgical-month', today.getFullYear(), today.getMonth()],
-    queryFn: async () => {
-      const { data } = await supabase.functions.invoke('liturgical-calendar', {
-        body: { action: 'month', year: today.getFullYear(), month: today.getMonth() + 1 }
-      });
-      return data;
-    },
-    enabled: isMonthViewOpen,
-    staleTime: 1000 * 60 * 60 * 24,
-  });
-
-  usePrefetchLiturgyCache();
+  useEffect(() => {
+    if (routeDate) {
+      const d = new Date(routeDate + "T12:00:00");
+      if (!isNaN(d.getTime()) && d.toDateString() !== selectedDate.toDateString()) {
+        setSelectedDate(d);
+      }
+    }
+  }, [routeDate]);
 
   const dateKey = today.toDateString();
 
   const goToPrevDay = () => {
     const d = new Date(selectedDate);
     d.setDate(d.getDate() - 1);
-    setSelectedDate(d);
+    const dateStr = format(d, 'yyyy-MM-dd');
+    navigate(`${AppRoute.LITURGIA}/${dateStr}${location.search}`);
     setIsOfflineData(false);
   };
 
   const goToNextDay = () => {
     const d = new Date(selectedDate);
     d.setDate(d.getDate() + 1);
-    setSelectedDate(d);
+    const dateStr = format(d, 'yyyy-MM-dd');
+    navigate(`${AppRoute.LITURGIA}/${dateStr}${location.search}`);
     setIsOfflineData(false);
   };
 
