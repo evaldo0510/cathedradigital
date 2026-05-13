@@ -112,6 +112,7 @@ const NexusAuditPage = lazy(() => import('./components/cathedra/NexusAuditPage')
 const CatechismDebug = lazy(() => import('./components/cathedra/CatechismDebug'));
 const CatechismIntegrity = lazy(() => import('./components/cathedra/CatechismIntegrity'));
 const CatechismVerification = lazy(() => import('./components/cathedra/CatechismVerification'));
+const CatechismHistory = lazy(() => import('./pages/CatechismHistory'));
 const PartnersPage = lazy(() => import('./components/cathedra/PartnersPage'));
 
 const TransparencyPage = lazy(() => import('./components/cathedra/TransparencyPage'));
@@ -565,6 +566,7 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.CATECHISM_HEALTH} element={<PageTransition><AdminGuard><CatechismHealthCheck /></AdminGuard></PageTransition>} />
                   <Route path={AppRoute.CATECHISM_VERIFY} element={<PageTransition><AdminGuard><CatechismVerification /></AdminGuard></PageTransition>} />
                   <Route path={AppRoute.MAGISTERIUM_DOC} element={<PageTransition><AuthGuard><MagisteriumViewer /></AuthGuard></PageTransition>} />
+                  <Route path="/catechism/history" element={<PageTransition><AuthGuard><CatechismHistory /></AuthGuard></PageTransition>} />
 
                   <Route path={AppRoute.LITURGIA} element={<PageTransition><AuthGuard><LiturgiaPage /></AuthGuard></PageTransition>} />
                   <Route path={`${AppRoute.LITURGIA}/:date`} element={<PageTransition><AuthGuard><LiturgiaPage /></AuthGuard></PageTransition>} />

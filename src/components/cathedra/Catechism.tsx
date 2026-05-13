@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import BackToThemeBanner from './BackToThemeBanner';
 import SEOHead from '@/components/SEOHead';
@@ -14,12 +14,13 @@ import DeepContentSection from './DeepContentSection';
 import MagisteriumPopover from './MagisteriumPopover';
 import { getCatechismCrossRefs, getCatechismDocs } from '@/data/cross-references';
 import { CIC_SECTIONS, CATECHISM_LOCAL_DATA } from '@/data/catechism';
+import { toast } from 'sonner';
 
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useAuth } from '@/hooks/useAuth';
-import { useCatechismParagraph, usePrefetchCatechismParagraph } from '@/hooks/useCatechismParagraph';
+import { useCatechismParagraph, usePrefetchCatechismParagraph, useGenerateCatechismParagraph } from '@/hooks/useCatechismParagraph';
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import CatechismPopover from './CatechismPopover';
 import AudioButton from './AudioButton';
@@ -30,12 +31,26 @@ import CatechismOfflineFallback from './CatechismOfflineFallback';
 
 
 const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr: string, chapter: number) => void; isVisible?: boolean }> = ({ paragraph, onNavigateToBible, isVisible = true }) => {
-  const { data, isLoading, isError } = useCatechismParagraph(paragraph, isVisible);
+  const { data, isLoading, isError, refetch } = useCatechismParagraph(paragraph, isVisible);
   const prefetch = usePrefetchCatechismParagraph();
+  const generate = useGenerateCatechismParagraph();
+  const [isGenerating, setIsGenerating] = useState(false);
 
   useEffect(() => {
     if (isVisible && paragraph < 2865) prefetch(paragraph + 1);
   }, [paragraph, prefetch, isVisible]);
+
+  const handleRegenerate = async () => {
+    setIsGenerating(true);
+    try {
+      await generate(paragraph);
+      toast.success(`Parágrafo §${paragraph} regenerado com sucesso.`);
+    } catch (err) {
+      toast.error(`Falha ao regenerar §${paragraph}.`);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   const segments = useMemo(() => {
     if (!data?.content || data.status === 'not_cached') return [];
@@ -45,12 +60,12 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
   if (!isVisible) {
     return (
       <div className="reader-text text-foreground/30 leading-[2] text-lg py-4 h-24 flex items-center">
-        <span className="text-sm text-muted-foreground italic">Rolar para carregar §{paragraph}...</span>
+        <span className="text-sm text-muted-foreground italic">Rolar para carregar §${paragraph}...</span>
       </div>
     );
   }
 
-  if (isLoading) {
+  if (isLoading || isGenerating) {
     return <CatechismParagraphSkeleton paragraph={paragraph} />;
   }
 
@@ -61,17 +76,25 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
     }
 
     return (
-      <div className="reader-text bg-destructive/5 border border-destructive/10 rounded-2xl p-4 text-destructive font-serif text-sm py-4 space-y-2">
+      <div className="reader-text bg-destructive/5 border border-destructive/10 rounded-2xl p-4 text-destructive font-serif text-sm py-4 space-y-4">
         <div className="font-bold flex items-center gap-2">
            <Icons.Cross className="w-4 h-4" />
-           Ops! Problema ao carregar o parágrafo §{paragraph}.
+           Ops! Problema ao carregar o parágrafo §${paragraph}.
         </div>
-        <button 
-          onClick={() => window.location.reload()}
-          className="px-3 py-1.5 bg-destructive/10 text-destructive rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-destructive/20 transition-all"
-        >
-          Tentar novamente
-        </button>
+        <div className="flex flex-wrap gap-2">
+          <button 
+            onClick={() => refetch()}
+            className="px-3 py-1.5 bg-destructive/10 text-destructive rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-destructive/20 transition-all flex items-center gap-2"
+          >
+            <Icons.RotateCcw className="w-3 h-3" /> Tentar novamente
+          </button>
+          <button 
+            onClick={handleRegenerate}
+            className="px-3 py-1.5 bg-primary/10 text-primary rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-primary/20 transition-all flex items-center gap-2"
+          >
+            <Icons.Zap className="w-3 h-3" /> Regenerar via IA
+          </button>
+        </div>
       </div>
     );
   }
@@ -85,7 +108,7 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
            Geração pausada: Créditos de IA esgotados.
         </div>
         <p className="text-xs opacity-80 leading-relaxed">
-          O parágrafo §{paragraph} ainda não foi gerado e o limite de IA do workspace foi atingido. 
+          O parágrafo §${paragraph} ainda não foi gerado e o limite de IA do workspace foi atingido. 
           O conteúdo será gerado automaticamente assim que os créditos forem recarregados.
         </p>
         {data.content && data.content.length > 30 ? (
@@ -93,16 +116,24 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
              "{data.content}"
            </div>
         ) : (
-          <div className="pt-2 border-t border-amber-500/10 flex flex-col gap-2">
-            <p className="text-[10px] uppercase font-black tracking-widest opacity-60">Alternativa:</p>
-            <a 
-              href={`https://www.vatican.va/archive/cathechism_po/index_new/prima-pagina-cic_po.html`} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-primary hover:underline font-bold"
-            >
-              Ver no site oficial do Vaticano <Icons.ExternalLink className="w-3 h-3" />
-            </a>
+          <div className="pt-2 border-t border-amber-500/10 flex flex-col gap-3">
+            <p className="text-[10px] uppercase font-black tracking-widest opacity-60">Alternativas:</p>
+            <div className="flex flex-wrap gap-2">
+              <button 
+                onClick={handleRegenerate}
+                className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary/10 text-primary rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-primary/20 transition-all"
+              >
+                <Icons.Zap className="w-3 h-3" /> Tentar Gerar
+              </button>
+              <a 
+                href={`https://www.vatican.va/archive/cathechism_po/index_new/prima-pagina-cic_po.html`} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-primary hover:underline font-bold text-xs"
+              >
+                Ver no site oficial do Vaticano <Icons.ExternalLink className="w-3 h-3" />
+              </a>
+            </div>
           </div>
         )}
       </div>
@@ -110,16 +141,18 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
   }
 
   // Not cached - this shouldn't happen with the new auto-generate function, but we keep a generic fallback
-  if (data?.status === 'not_cached') {
+  if (data?.status === 'not_found' || data?.status === 'not_cached') {
     return (
-      <div className="reader-text py-4 space-y-3">
-        <p className="text-sm text-muted-foreground italic">Conteúdo do §{paragraph} ainda não disponível no nosso banco de dados.</p>
+      <div className="reader-text py-4 space-y-4">
+        <p className="text-sm text-muted-foreground italic">Conteúdo do §${paragraph} ainda não disponível no nosso banco de dados.</p>
         <div className="flex flex-wrap gap-2">
           <button
-            onClick={() => window.location.reload()}
+            onClick={handleRegenerate}
+            disabled={isGenerating}
             className="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2"
           >
-            <Icons.Loader className="w-3 h-3" /> Tentar carregar
+            {isGenerating ? <Icons.Loader className="w-3 h-3 animate-spin" /> : <Icons.Zap className="w-3 h-3" />} 
+            Gerar com IA
           </button>
           <a 
             href="https://www.vatican.va/archive/cathechism_po/index_new/prima-pagina-cic_po.html" 
@@ -283,7 +316,11 @@ const Catechism: React.FC = () => {
     try {
       await supabase
         .from('catechism_paragraphs_read')
-        .upsert({ user_id: user.id, paragraph: p }, { onConflict: 'user_id,paragraph' });
+        .upsert({ 
+          user_id: user.id, 
+          paragraph: p,
+          read_at: new Date().toISOString()
+        }, { onConflict: 'user_id,paragraph' });
       setParagraphsRead(prev => new Set([...prev, p]));
     } catch (err) {
       console.error('Failed to mark paragraph read:', err);
@@ -367,8 +404,29 @@ const Catechism: React.FC = () => {
   if (viewMode === 'reading' && selectedSection && selectedPart) {
     const [start, end] = selectedSection.paragraphs;
     const fromDashboard = searchParams.get('from') === 'dashboard';
+    
+    // Progress calculation for the section
+    const sectionParas = Array.from({ length: end - start + 1 }, (_, i) => start + i);
+    const readInSection = sectionParas.filter(p => paragraphsRead.has(p)).length;
+    const sectionProgress = (readInSection / sectionParas.length) * 100;
+
     return (
       <div className="max-w-3xl mx-auto space-y-6">
+        {/* Persistent Section Progress Bar */}
+        <div className="sticky top-[73px] z-[130] -mx-4 px-4 py-2 bg-background/80 backdrop-blur-md border-b border-border">
+          <div className="flex justify-between text-[8px] font-black uppercase tracking-widest text-primary/60 mb-1.5">
+            <span>Progresso na Seção</span>
+            <span>{Math.round(sectionProgress)}%</span>
+          </div>
+          <div className="h-1 w-full bg-muted rounded-full overflow-hidden">
+            <motion.div 
+              initial={{ width: 0 }}
+              animate={{ width: `${sectionProgress}%` }}
+              className="h-full bg-primary shadow-[0_0_8px_rgba(var(--primary),0.4)]"
+            />
+          </div>
+        </div>
+
         <BackToThemeBanner />
         {fromDashboard && (
           <button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-xs text-primary hover:underline">
@@ -399,6 +457,13 @@ const Catechism: React.FC = () => {
             <h1 className="text-xl font-serif font-bold text-foreground truncate">{selectedSection.title}</h1>
             <p className="text-sm text-muted-foreground">§{start} — §{end}</p>
           </div>
+          <button 
+            onClick={() => navigate('/catechism/history')}
+            className="p-2 rounded-xl border border-border bg-card text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all"
+            title="Histórico de Leitura"
+          >
+            <Icons.History className="w-4 h-4" />
+          </button>
           {(crossRefs.length > 0 || docsRefs.length > 0) && (
             <button onClick={() => setShowCrossRefs(!showCrossRefs)}
               className={`p-2 rounded-xl border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}
@@ -458,12 +523,51 @@ const Catechism: React.FC = () => {
           />
         )}
 
-        <div className="bg-card border border-border rounded-3xl p-6 md:p-10 space-y-12">
+        <div className="bg-card border border-border rounded-3xl p-6 md:p-10 space-y-12 shadow-sm">
           <div className="flex flex-col gap-10">
             {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(p => (
               <LazyParagraph key={p} paragraph={p} currentParagraph={currentParagraph} paragraphsRead={paragraphsRead} isFavorite={isFavorite} toggleFavorite={toggleFavorite} handleNavigateToBible={handleNavigateToBible} />
             ))}
           </div>
+
+          {/* Next Paragraph Indicator */}
+          {currentParagraph < end ? (
+            <div className="pt-8 border-t border-border/40 flex flex-col items-center gap-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
+              <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Continue a leitura</div>
+              <button 
+                onClick={() => jumpToParagraph(currentParagraph + 1)}
+                className="group flex items-center gap-4 p-4 rounded-2xl bg-primary/5 border border-primary/20 hover:border-primary/40 hover:bg-primary/10 transition-all w-full max-w-sm"
+              >
+                <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/20 group-hover:scale-105 transition-transform">
+                  <span className="text-xl font-serif font-bold">§{currentParagraph + 1}</span>
+                </div>
+                <div className="text-left flex-1">
+                   <div className="text-xs font-bold text-foreground">Próximo Parágrafo</div>
+                   <div className="text-[10px] text-muted-foreground">Clique para saltar agora</div>
+                </div>
+                <Icons.ArrowDown className="w-5 h-5 text-primary -rotate-90 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </div>
+          ) : (
+            <div className="pt-8 border-t border-border/40 flex flex-col items-center gap-4">
+               <div className="text-[10px] font-black uppercase tracking-widest text-primary">Seção Concluída</div>
+               <p className="text-sm text-muted-foreground text-center">Você terminou esta seção! Deseja ir para a próxima?</p>
+               <button 
+                disabled={selectedSection.id >= 10}
+                onClick={() => {
+                  const nextSec = selectedPart.sections.find(s => s.id === selectedSection.id + 1);
+                  if (nextSec) {
+                    setSelectedSection(nextSec);
+                    setCurrentParagraph(nextSec.paragraphs[0]);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }
+                }}
+                className="px-6 py-2 bg-primary text-primary-foreground rounded-xl text-xs font-black uppercase tracking-widest hover:brightness-110 transition-all shadow-lg shadow-primary/20 disabled:opacity-30"
+               >
+                 Próxima Seção
+               </button>
+            </div>
+          )}
         </div>
 
         {/* Quick nav - Anchor links to jump between paragraphs */}
