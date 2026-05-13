@@ -257,9 +257,10 @@ const LiturgicalCalendarPage: React.FC = () => {
     const apiDay = apiData[apiKey];
     if (apiDay?.celebrations?.length) {
       const c = apiDay.celebrations[0];
+      const titles = apiDay.celebrations.map((cel: ApiCelebration) => cel.title).join(' / ');
       const color = (COLOUR_TO_PT[c.colour?.toLowerCase()] || 'verde') as LiturgicalDay['color'];
       const rank = (RANK_TO_PT[c.rank?.toLowerCase()] || 'feria') as LiturgicalDay['rank'];
-      return { date, celebration: c.title, color, rank };
+      return { date, celebration: titles, color, rank };
     }
     // Fallback to local data
     const fixed = allCelebrations[key];
