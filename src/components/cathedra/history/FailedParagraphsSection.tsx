@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
 import { Card } from '@/components/ui/card';
@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { CIC_SECTIONS } from '@/data/catechism';
+import { toast } from 'sonner';
+
 
 export type RegenerationStatus = 'pending' | 'processing' | 'success' | 'error';
 
@@ -94,6 +96,39 @@ const FailedParagraphsSection: React.FC<FailedParagraphsSectionProps> = ({
     }
   };
 
+  const handleExportCSV = useCallback(() => {
+    if (!filteredFailedParagraphs || filteredFailedParagraphs.length === 0) {
+      toast.error("Nenhum dado para exportar.");
+      return;
+    }
+
+    const headers = ["Parágrafo", "Status", "Erro", "Seção"];
+    const rows = filteredFailedParagraphs.map(p => {
+      const section = CIC_SECTIONS.flatMap(part => part.sections).find(s => {
+        const [start, end] = s.paragraphs;
+        return p.paragraph >= start && p.paragraph <= end;
+      });
+      return [
+        p.paragraph,
+        p.status,
+        `"${(p.last_error || 'Erro desconhecido').replace(/"/g, '""')}"`,
+        `"${section?.title || 'N/A'}"`
+      ];
+    });
+
+    const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `falhas_catecismo_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success("CSV exportado com sucesso.");
+  }, [filteredFailedParagraphs]);
+
   if (!failedParagraphs || failedParagraphs.length === 0) return null;
 
   return (
@@ -110,6 +145,14 @@ const FailedParagraphsSection: React.FC<FailedParagraphsSectionProps> = ({
               <Icons.AlertTriangle className="w-5 h-5 text-destructive" />
               <h2 className="text-xl font-bold text-destructive">Falhas de Geração</h2>
             </div>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => handleExportCSV()}
+              className="rounded-xl border-destructive/20 hover:bg-destructive/10 text-destructive text-xs gap-2"
+            >
+              <Icons.Download className="w-4 h-4" /> Exportar CSV
+            </Button>
           </div>
 
           {/* Filters */}
