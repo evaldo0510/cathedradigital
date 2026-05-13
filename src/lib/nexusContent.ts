@@ -136,7 +136,7 @@ export async function fetchNexusTagContent(
     if (themeContentQuery) themeContentQuery.abortSignal(signal);
   }
 
-  const queries: Promise<any>[] = [spiritualQuery, journeyQuery];
+  const queries: any[] = [spiritualQuery, journeyQuery];
   if (themeContentQuery) queries.push(themeContentQuery);
 
   const results = await Promise.all(queries);
