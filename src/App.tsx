@@ -112,6 +112,7 @@ const NexusAuditPage = lazy(() => import('./components/cathedra/NexusAuditPage')
 const CatechismDebug = lazy(() => import('./components/cathedra/CatechismDebug'));
 const CatechismIntegrity = lazy(() => import('./components/cathedra/CatechismIntegrity'));
 const CatechismVerification = lazy(() => import('./components/cathedra/CatechismVerification'));
+const CatechismHistory = lazy(() => import('./pages/CatechismHistory'));
 const PartnersPage = lazy(() => import('./components/cathedra/PartnersPage'));
 
 const TransparencyPage = lazy(() => import('./components/cathedra/TransparencyPage'));
