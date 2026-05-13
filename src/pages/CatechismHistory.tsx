@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow, format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { CIC_SECTIONS } from '@/data/catechism';
 import { toast } from 'sonner';
@@ -24,6 +24,7 @@ const CatechismHistory: React.FC = () => {
   const queryClient = useQueryClient();
   const [isRegeneratingAll, setIsRegeneratingAll] = useState(false);
   const [regenerationStatus, setRegenerationStatus] = useState<Record<number, RegenerationStatus>>({});
+  const cancelRegenerationRef = useRef(false);
   
   // Filters
   const [filterSection, setFilterSection] = useState<string>('all');
