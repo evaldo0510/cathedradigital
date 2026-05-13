@@ -621,10 +621,34 @@ const LiturgiaPage: React.FC = () => {
                     </DialogTrigger>
                     <DialogContent className="max-w-2xl max-h-[80vh] rounded-[2.5rem] p-0 overflow-hidden border-border/40 shadow-2xl">
                       <DialogHeader className="p-8 pb-4 bg-muted/30">
-                        <DialogTitle className="text-2xl font-serif font-bold text-primary flex items-center gap-3">
-                          <Icons.Calendar className="w-6 h-6" />
-                          Leituras de {format(today, 'MMMM yyyy', { locale: ptBR })}
-                        </DialogTitle>
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                          <DialogTitle className="text-2xl font-serif font-bold text-primary flex items-center gap-3">
+                            <Icons.Calendar className="w-6 h-6" />
+                            Leituras de {format(today, 'MMMM yyyy', { locale: ptBR })}
+                          </DialogTitle>
+                          <div className="flex gap-2">
+                            <Button 
+                              variant="outline" 
+                              size="sm" 
+                              onClick={downloadMonth}
+                              disabled={isDownloading}
+                              className="rounded-xl h-10 px-4 text-[9px] font-black uppercase tracking-widest gap-2"
+                            >
+                              {isDownloading ? <Icons.Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Icons.Download className="w-3.5 h-3.5" />}
+                              Baixar Mês
+                            </Button>
+                            <Button 
+                              variant="outline" 
+                              size="sm" 
+                              onClick={exportMonthPDF}
+                              disabled={isExportingMonth}
+                              className="rounded-xl h-10 px-4 text-[9px] font-black uppercase tracking-widest gap-2"
+                            >
+                              {isExportingMonth ? <Icons.Loader2 className="w-3.5 h-3.5 animate-spin" /> : <FileDown className="w-3.5 h-3.5" />}
+                              PDF Mensal
+                            </Button>
+                          </div>
+                        </div>
                       </DialogHeader>
                       <ScrollArea className="h-full max-h-[60vh] p-8 pt-0">
                         <div className="space-y-3 pb-8">
