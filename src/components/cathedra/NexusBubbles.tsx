@@ -396,6 +396,13 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
   const [tags, setTags] = useState<Tag[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchMode, setSearchMode] = useState<'tags' | 'title' | 'reference' | 'text' | 'all'>(() => {
+    return (localStorage.getItem('nexus_search_mode') as any) || 'tags';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('nexus_search_mode', searchMode);
+  }, [searchMode]);
 
   useEffect(() => {
     const fetchTags = async () => {
