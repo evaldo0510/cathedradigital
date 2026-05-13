@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow, format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { CIC_SECTIONS } from '@/data/catechism';
 import { toast } from 'sonner';
@@ -24,6 +24,7 @@ const CatechismHistory: React.FC = () => {
   const queryClient = useQueryClient();
   const [isRegeneratingAll, setIsRegeneratingAll] = useState(false);
   const [regenerationStatus, setRegenerationStatus] = useState<Record<number, RegenerationStatus>>({});
+  const cancelRegenerationRef = useRef(false);
   
   // Filters
   const [filterSection, setFilterSection] = useState<string>('all');
@@ -65,7 +66,7 @@ const CatechismHistory: React.FC = () => {
     enabled: !!user
   });
 
-  // 3. Failed paragraphs
+  // 3. Failed paragraphs with automatic polling when regenerating
   const { data: failedParagraphs } = useQuery({
     queryKey: ['catechism-failed-paragraphs'],
     queryFn: async () => {
@@ -77,7 +78,8 @@ const CatechismHistory: React.FC = () => {
       
       if (error) throw error;
       return data;
-    }
+    },
+    refetchInterval: isRegeneratingAll ? 3000 : false, // Poll every 3s during regeneration
   });
 
   const regenerateMutation = useMutation({
@@ -163,13 +165,20 @@ const CatechismHistory: React.FC = () => {
 
   const handleRegenerateSection = async (sectionParagraphs: { paragraph: number }[]) => {
     setIsRegeneratingAll(true);
+    cancelRegenerationRef.current = false;
     let successCount = 0;
+    let cancelCount = 0;
     
     const initialStatus: Record<number, RegenerationStatus> = {};
     sectionParagraphs.forEach(p => initialStatus[p.paragraph] = 'pending');
     setRegenerationStatus(prev => ({ ...prev, ...initialStatus }));
 
     for (const p of sectionParagraphs) {
+      if (cancelRegenerationRef.current) {
+        cancelCount++;
+        continue;
+      }
+
       try {
         await regenerateMutation.mutateAsync(p.paragraph);
         successCount++;
@@ -177,8 +186,17 @@ const CatechismHistory: React.FC = () => {
         console.error(`Failed to regenerate §${p.paragraph}:`, err);
       }
     }
+    
     setIsRegeneratingAll(false);
-    toast.success(`${successCount} parágrafos da seção regenerados.`);
+    if (cancelCount > 0) {
+      toast.info(`Regeneração interrompida. ${successCount} concluídos, ${cancelCount} cancelados.`);
+    } else {
+      toast.success(`${successCount} parágrafos da seção regenerados.`);
+    }
+  };
+
+  const handleCancelRegeneration = () => {
+    cancelRegenerationRef.current = true;
   };
 
   const handleVerifyIntegrity = async () => {
@@ -355,20 +373,32 @@ const CatechismHistory: React.FC = () => {
                       </div>
                       <h3 className="text-sm font-bold truncate text-destructive">{section.title}</h3>
                     </div>
-                    <Button 
-                      variant="destructive" 
-                      size="sm" 
-                      onClick={() => handleRegenerateSection(section.failed)}
-                      disabled={isRegeneratingAll}
-                      className="rounded-lg h-7 px-3 text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5"
-                    >
-                      {isRegeneratingAll ? (
-                        <Icons.Loader2 className="w-3 h-3 animate-spin" />
-                      ) : (
-                        <Icons.Zap className="w-3 h-3" />
+                    <div className="flex items-center gap-2">
+                      {isRegeneratingAll && section.failed.some(p => regenerationStatus[p.paragraph] === 'pending' || regenerationStatus[p.paragraph] === 'processing') && (
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          onClick={handleCancelRegeneration}
+                          className="rounded-lg h-7 px-3 text-[10px] font-black uppercase tracking-widest text-destructive hover:bg-destructive/10"
+                        >
+                          Cancelar
+                        </Button>
                       )}
-                      Regenerar Seção ({section.failed.length})
-                    </Button>
+                      <Button 
+                        variant="destructive" 
+                        size="sm" 
+                        onClick={() => handleRegenerateSection(section.failed)}
+                        disabled={isRegeneratingAll}
+                        className="rounded-lg h-7 px-3 text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5"
+                      >
+                        {isRegeneratingAll ? (
+                          <Icons.Loader2 className="w-3 h-3 animate-spin" />
+                        ) : (
+                          <Icons.Zap className="w-3 h-3" />
+                        )}
+                        Regenerar Seção ({section.failed.length})
+                      </Button>
+                    </div>
                   </div>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -447,7 +477,12 @@ const CatechismHistory: React.FC = () => {
                       §{item.paragraph}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Lido há</div>
+                      <div className="flex justify-between items-start mb-1">
+                        <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Lido há</div>
+                        <div className="text-[9px] font-bold text-primary/60" title={format(new Date(item.read_at), "dd/MM/yyyy HH:mm:ss")}>
+                          Sincronizado: {format(new Date(item.read_at), "HH:mm")}
+                        </div>
+                      </div>
                       <div className="text-sm font-medium truncate">
                         {formatDistanceToNow(new Date(item.read_at), { addSuffix: true, locale: ptBR })}
                       </div>
