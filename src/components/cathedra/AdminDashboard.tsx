@@ -30,7 +30,7 @@ const AdminConstructionTab = lazy(() => import('./AdminConstructionTab'));
 const WebhookSimulator = lazy(() => import('./WebhookSimulator'));
 const SecurityAuditPage = lazy(() => import('./SecurityAuditPage'));
 const AdminSeoTab = lazy(() => import('./AdminSeoTab'));
-
+const NexusAuditPage = lazy(() => import('./NexusAuditPage'));
 
 interface Stats {
   totalUsers: number;
