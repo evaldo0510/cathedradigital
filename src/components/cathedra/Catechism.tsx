@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import BackToThemeBanner from './BackToThemeBanner';
 import SEOHead from '@/components/SEOHead';
@@ -14,12 +14,13 @@ import DeepContentSection from './DeepContentSection';
 import MagisteriumPopover from './MagisteriumPopover';
 import { getCatechismCrossRefs, getCatechismDocs } from '@/data/cross-references';
 import { CIC_SECTIONS, CATECHISM_LOCAL_DATA } from '@/data/catechism';
+import { toast } from 'sonner';
 
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useAuth } from '@/hooks/useAuth';
-import { useCatechismParagraph, usePrefetchCatechismParagraph } from '@/hooks/useCatechismParagraph';
+import { useCatechismParagraph, usePrefetchCatechismParagraph, useGenerateCatechismParagraph } from '@/hooks/useCatechismParagraph';
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import CatechismPopover from './CatechismPopover';
 import AudioButton from './AudioButton';
