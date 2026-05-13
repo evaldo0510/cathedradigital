@@ -1,33 +1,25 @@
-# Unified Home and Navigation Reconnection Plan
+The Catechism is currently experiencing errors because most paragraphs (over 2800 out of 2865) are missing from the database, and the `catechism-text` edge function is missing the logic to generate them using AI. This causes the application to show error messages or remain in a loading state for most paragraphs.
 
-The current site has redundant homepages (`Dashboard` and `HojePage`) and slightly disconnected navigation paths. This plan unifies the experience into a single, powerful "Hoje" (Today) portal while streamlining the content hub.
+### Proposed Changes
 
-## 1. Unified Home Experience (Hoje Portal)
-*   **Merge Dashboard Features**: Integrate `useDashboardData` into `HojePage` to provide personalized greetings, streaks, and XP.
-*   **Personalized Progress**: Add "Next Up" (Continuar de onde parou) logic for Bible and Catechism, not just Journeys.
-*   **Weekly Stats**: Add a "Frutos da Semana" section showing chapters read, paragraphs studied, and journey steps completed.
-*   **Portas da Fé (Main Doors)**: Re-implement the high-impact "Main Doors" from Dashboard into HojePage for quick navigation to core modules.
-*   **Nexus Integration**: Embed the Spiritual Profile insights (Nexus Bubbles) directly into the home flow.
-*   **Deprecation**: Set all `/dashboard` routes to redirect to `/hoje`.
+#### 1. Edge Function Enhancement
+- Update `supabase/functions/catechism-text/index.ts` to include AI generation logic.
+- Implement the Lovable AI Gateway integration using `LOVABLE_API_KEY` to generate missing content.
+- Support `action: 'fetch'`, `action: 'reprocess'`, and `action: 'fix_incomplete'`.
+- The generation will include the main content (official text) and "Deep Content" (explanation, interpretation, practical application, etc.).
+- Generated content will be cached in the `catechism_cache` table to avoid redundant AI calls.
 
-## 2. Navigation & Content Hub Streamlining
-*   **Biblioteca (Explore Hub)**: Refine the `BibliotecaPage` to be the definitive directory. Group items into:
-    *   **Palavra e Doutrina**: Bíblia, Catecismo, Magistério.
-    *   **Vida de Oração**: Rosário, Liturgia, Breviário, Via Sacra.
-    *   **Formação Intelectual**: Aquinas, Enciclopédia, Dogmas, Papas.
-    *   **Caminho e Partilha**: Jornadas, Temas, Comunidade.
-*   **Consistent Iconography**: Ensure the same icons are used in Sidebar, BottomNav, and Hub.
+#### 2. RLS Policy Fix
+- Investigate and fix the 403 error on the `catechism_paragraphs_read` table, ensuring users can track their reading progress correctly.
 
-## 3. Global Search & Discovery
-*   **Accessibility**: Link "Busca Global" more prominently in the UI.
-*   **Connectivity**: Ensure the search covers all themes and content types.
+#### 3. Frontend Resiliency
+- Ensure the frontend gracefully handles cases where AI generation might be temporarily unavailable (e.g., due to exhausted credits) by showing the official Vatican link as a fallback.
 
-## 4. Technical Cleanup
-*   **Route Cleanup**: Remove redundant redirects and unused imports in `App.tsx`.
-*   **Profile Sync**: Ensure `useAuth` and `useDashboardData` work in tandem to avoid duplicate profile fetches.
+### Technical Details
+- **AI Model**: `google/gemini-2.0-flash-lite` (consistent with other functions).
+- **Prompt**: Will be designed to ensure fidelity to the Catholic Magisterium while providing deep theological insights.
+- **Caching Strategy**: Check `catechism_official` first, then `catechism_cache`. If not found, generate and save to `catechism_cache`.
 
-## Technical Details
-*   Modify `src/components/cathedra/HojePage.tsx` to use `useDashboardData`.
-*   Create `src/components/cathedra/HomeStats.tsx` and `src/components/cathedra/HomeMainDoors.tsx` as reusable widgets.
-*   Update `src/App.tsx` routes.
-*   Sync terminology in `src/hooks/useLang.ts` and translations.
+**Fixed:** 0 issues
+**Remaining:** 1 issue (Catechism functional error)
+**Summary:** Restoring the AI generation capabilities to populate the Catechism content and fixing progress tracking permissions.
