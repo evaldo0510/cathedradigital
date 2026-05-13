@@ -29,7 +29,7 @@ const SectionProgress: React.FC<SectionProgressProps> = ({ allProgress }) => {
             <Card 
               key={section.id} 
               className="p-4 space-y-3 bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/30 transition-all hover:shadow-md cursor-pointer group"
-              onClick={() => window.location.href = `/catechism?p=${start}`}
+              onClick={() => navigate(`/catechism?p=${start}`)}
             >
               <div className="flex justify-between items-start gap-4">
                 <div className="min-w-0">
