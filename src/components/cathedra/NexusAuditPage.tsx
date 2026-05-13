@@ -111,11 +111,18 @@ const NexusAuditPage: React.FC = () => {
     return results.filter(r => {
       const matchesStatus = filterStatus === 'all' || r.status === filterStatus;
       const matchesCategory = filterCategory === 'all' || r.category === filterCategory;
+      
+      let matchesContentType = true;
+      if (filterContentType !== 'all') {
+        const typeKey = filterContentType as keyof typeof r.counts;
+        matchesContentType = r.counts[typeKey] > 0;
+      }
+
       const matchesSearch = r.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
                           r.slug.toLowerCase().includes(searchTerm.toLowerCase());
-      return matchesStatus && matchesCategory && matchesSearch;
+      return matchesStatus && matchesCategory && matchesSearch && matchesContentType;
     });
-  }, [results, filterStatus, filterCategory, searchTerm]);
+  }, [results, filterStatus, filterCategory, filterContentType, searchTerm]);
 
   const stats = useMemo(() => {
     if (results.length === 0) return null;
