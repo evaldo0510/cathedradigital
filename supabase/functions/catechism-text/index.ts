@@ -99,7 +99,7 @@ REGRAS CRÍTICAS:
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "google/gemini-2.0-flash-lite",
+          model: "google/gemini-2.5-flash-lite",
           messages: [
             { role: "system", content: systemPrompt },
             { role: "user", content: `Gere o conteúdo completo para o parágrafo §${paragraph} do Catecismo da Igreja Católica.` }
