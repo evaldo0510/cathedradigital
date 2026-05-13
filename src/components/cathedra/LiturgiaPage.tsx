@@ -193,11 +193,41 @@ const LiturgiaPage: React.FC = () => {
       const { data } = await supabase.functions.invoke('liturgical-calendar', {
         body: { action: 'month', year: today.getFullYear(), month: today.getMonth() + 1 }
       });
-      return data;
+      
+      if (!Array.isArray(data)) return [];
+      
+      // Deduplicate by date
+      const uniqueDays = new Map();
+      data.forEach((day: any) => {
+        if (!uniqueDays.has(day.date)) {
+          uniqueDays.set(day.date, day);
+        }
+      });
+      return Array.from(uniqueDays.values());
     },
     enabled: isMonthViewOpen || searchQuery.length > 0,
     staleTime: 1000 * 60 * 60 * 24,
   });
+
+  const { data: dayCelebrations } = useQuery({
+    queryKey: ['liturgical-day-celebrations', dateKey],
+    queryFn: async () => {
+      const { data } = await supabase.functions.invoke('liturgical-calendar', {
+        body: { 
+          action: 'date', 
+          year: today.getFullYear(), 
+          month: today.getMonth() + 1, 
+          day: today.getDate() 
+        }
+      });
+      return data;
+    },
+    staleTime: 1000 * 60 * 60 * 24,
+  });
+
+  useEffect(() => {
+    setActiveCelebrationIndex(0);
+  }, [dateKey]);
 
   const liturgicalPeriods = useMemo(() => getLiturgicalPeriods(today.getFullYear()), [today.getFullYear()]);
 
