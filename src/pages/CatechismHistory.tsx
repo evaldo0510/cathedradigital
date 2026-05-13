@@ -55,7 +55,7 @@ const CatechismHistory: React.FC = () => {
   });
 
   // 3. Failed paragraphs
-  const { data: failedParagraphs, isLoading: isFailedLoading } = useQuery({
+  const { data: failedParagraphs } = useQuery({
     queryKey: ['catechism-failed-paragraphs'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -81,24 +81,6 @@ const CatechismHistory: React.FC = () => {
       queryClient.invalidateQueries({ queryKey: ['catechism-failed-paragraphs'] });
     }
   });
-
-  const handleRegenerateBatch = async () => {
-    if (!failedParagraphs || failedParagraphs.length === 0) return;
-    setIsRegeneratingAll(true);
-    let successCount = 0;
-    
-    for (const p of failedParagraphs) {
-      try {
-        await regenerateMutation.mutateAsync(p.paragraph);
-        successCount++;
-      } catch (err) {
-        console.error(`Failed to regenerate §${p.paragraph}:`, err);
-      }
-    }
-    
-    setIsRegeneratingAll(false);
-    toast.success(`${successCount} parágrafos regenerados.`);
-  };
 
   const goBack = () => navigate('/catechism');
 
@@ -146,7 +128,7 @@ const CatechismHistory: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4 md:p-8 space-y-12 min-h-screen">
+    <div className="max-w-4xl mx-auto p-4 md:p-8 space-y-12 min-h-screen pb-24">
       <SEOHead 
         title="Histórico de Leitura do Catecismo | Cathedra" 
         description="Visualize seus últimos parágrafos lidos e continue sua formação na fé."
@@ -232,7 +214,7 @@ const CatechismHistory: React.FC = () => {
                     </div>
                     <Button 
                       variant="destructive" 
-                      size="xs" 
+                      size="sm" 
                       onClick={() => handleRegenerateSection(section.failed)}
                       disabled={isRegeneratingAll}
                       className="rounded-lg h-7 px-3 text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5"
