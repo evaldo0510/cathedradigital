@@ -36,6 +36,7 @@ const queryClient = new QueryClient({
 });
 
 const renderLiturgia = (initialPath = '/liturgia/2026-05-13') => {
+  queryClient.clear();
   return render(
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
