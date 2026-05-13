@@ -66,7 +66,7 @@ const CatechismHistory: React.FC = () => {
     enabled: !!user
   });
 
-  // 3. Failed paragraphs
+  // 3. Failed paragraphs with automatic polling when regenerating
   const { data: failedParagraphs } = useQuery({
     queryKey: ['catechism-failed-paragraphs'],
     queryFn: async () => {
@@ -78,7 +78,8 @@ const CatechismHistory: React.FC = () => {
       
       if (error) throw error;
       return data;
-    }
+    },
+    refetchInterval: isRegeneratingAll ? 3000 : false, // Poll every 3s during regeneration
   });
 
   const regenerateMutation = useMutation({
