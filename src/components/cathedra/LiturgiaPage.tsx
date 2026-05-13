@@ -482,6 +482,26 @@ const LiturgiaPage: React.FC = () => {
                   <button onClick={goToNextDay} className="p-3 rounded-2xl bg-muted hover:bg-primary hover:text-white transition-all text-primary focus-visible:ring-2 focus-visible:ring-primary outline-none" aria-label="Próximo dia"><Icons.ChevronRight className="w-5 h-5" /></button>
                 </div>
 
+                {dayCelebrations?.celebrations?.length > 1 && (
+                  <div className="flex justify-center mt-6">
+                    <div className="bg-muted/30 p-1.5 rounded-2xl border border-border/40 flex gap-1 shadow-inner max-w-full overflow-x-auto">
+                      {dayCelebrations.celebrations.map((celeb: any, idx: number) => (
+                        <button
+                          key={`${celeb.title}-${idx}`}
+                          onClick={() => setActiveCelebrationIndex(idx)}
+                          className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap ${
+                            activeCelebrationIndex === idx 
+                              ? 'bg-background shadow-md text-primary scale-105' 
+                              : 'text-muted-foreground hover:text-foreground'
+                          }`}
+                        >
+                          {celeb.title}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 <div className="max-w-md mx-auto w-full px-4 mt-8">
                   <div className="relative group">
                     <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
