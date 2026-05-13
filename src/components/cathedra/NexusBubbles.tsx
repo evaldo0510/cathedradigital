@@ -163,7 +163,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
             >
               <div className="flex gap-2">
                 <span className="flex items-center gap-1">
-                  <Icons.Timer className="w-2.5 h-2.5" />
+                  <Timer className="w-2.5 h-2.5" />
                   {metrics.endTime ? `${Math.round(metrics.endTime - metrics.startTime)}ms` : '--'}
                 </span>
                 <span className="flex items-center gap-1">
