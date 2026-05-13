@@ -185,7 +185,118 @@ const LiturgiaPage: React.FC = () => {
     setIsOfflineData(false);
   };
 
+  const { data: monthData, isLoading: isLoadingMonth } = useQuery({
+    queryKey: ['liturgical-month', today.getFullYear(), today.getMonth()],
+    queryFn: async () => {
+      const { data } = await supabase.functions.invoke('liturgical-calendar', {
+        body: { action: 'month', year: today.getFullYear(), month: today.getMonth() + 1 }
+      });
+      return data;
+    },
+    enabled: isMonthViewOpen || searchQuery.length > 0,
+    staleTime: 1000 * 60 * 60 * 24,
+  });
+
   const liturgicalPeriods = useMemo(() => getLiturgicalPeriods(today.getFullYear()), [today.getFullYear()]);
+
+  const filteredMonthDays = useMemo(() => {
+    if (!searchQuery || !Array.isArray(monthData)) return [];
+    const q = searchQuery.toLowerCase();
+    return monthData.filter((day: any) => {
+      const title = day.celebrations?.[0]?.title?.toLowerCase() || '';
+      return title.includes(q);
+    });
+  }, [monthData, searchQuery]);
+
+  const downloadMonth = async () => {
+    setIsDownloading(true);
+    try {
+      const start = startOfMonth(today);
+      const end = endOfMonth(today);
+      const days = eachDayOfInterval({ start, end });
+      
+      let count = 0;
+      for (const d of days) {
+        const key = d.toDateString();
+        const cached = await getCachedLiturgy(key);
+        if (!cached) {
+          const { data } = await supabase.functions.invoke('liturgical-calendar', {
+            body: { action: 'readings', day: d.getDate(), month: d.getMonth() + 1 }
+          });
+          if (data) await cacheLiturgy(key, data as LiturgyReadings);
+        }
+        count++;
+      }
+      toast.success(`${count} liturgias baixadas para acesso offline.`);
+    } catch (err) {
+      toast.error('Erro ao baixar período');
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
+  const exportMonthPDF = async () => {
+    setIsExportingMonth(true);
+    try {
+      const doc = new jsPDF();
+      const margin = 20;
+      const start = startOfMonth(today);
+      const end = endOfMonth(today);
+      const days = eachDayOfInterval({ start, end });
+
+      doc.setFontSize(22);
+      doc.setTextColor(30, 58, 138);
+      doc.text(`Liturgia Consolidada: ${format(today, 'MMMM yyyy', { locale: ptBR })}`, margin, 20);
+
+      for (const d of days) {
+        doc.addPage();
+        let y = 20;
+        const key = d.toDateString();
+        let readingsData = await getCachedLiturgy(key);
+        
+        if (!readingsData) {
+          const { data } = await supabase.functions.invoke('liturgical-calendar', {
+            body: { action: 'readings', day: d.getDate(), month: d.getMonth() + 1 }
+          });
+          readingsData = data as LiturgyReadings;
+        }
+
+        if (readingsData) {
+          doc.setFontSize(16);
+          doc.setTextColor(0, 0, 0);
+          doc.text(format(d, 'dd/MM/yyyy - EEEE', { locale: ptBR }), margin, y);
+          y += 10;
+          doc.setFontSize(12);
+          doc.setTextColor(100, 100, 100);
+          doc.text((readingsData as any).liturgia, margin, y);
+          y += 15;
+
+          const addSection = (title: string, ref: string, text: string) => {
+            if (y > 240) { doc.addPage(); y = 20; }
+            doc.setFontSize(14); doc.setFont("helvetica", "bold"); doc.setTextColor(30, 58, 138);
+            doc.text(title, margin, y); y += 7;
+            doc.setFontSize(10); doc.setFont("helvetica", "italic"); doc.setTextColor(150, 150, 150);
+            doc.text(ref, margin, y); y += 8;
+            doc.setFont("helvetica", "normal"); doc.setFontSize(11); doc.setTextColor(0, 0, 0);
+            const splitText = doc.splitTextToSize(text, 170);
+            doc.text(splitText, margin, y);
+            y += (splitText.length * 6) + 12;
+          };
+
+          const r = readingsData as any;
+          if (r.primeiraLeitura) addSection("1ª Leitura", r.primeiraLeitura.referencia, r.primeiraLeitura.texto);
+          if (r.evangelho) addSection("Evangelho", r.evangelho.referencia, r.evangelho.texto);
+        }
+      }
+
+      doc.save(`liturgia-${format(today, 'yyyy-MM')}.pdf`);
+      toast.success('PDF consolidado gerado!');
+    } catch (err) {
+      toast.error('Erro ao exportar mês');
+    } finally {
+      setIsExportingMonth(false);
+    }
+  };
 
   const exportToPDF = async () => {
     if (!readings) return;
@@ -243,11 +354,17 @@ const LiturgiaPage: React.FC = () => {
 
   const toggleFavoriteDay = () => {
     if (!readings) return;
+    const currentPeriod = liturgicalPeriods.find(p => p.date <= today)?.name || 'Tempo Comum';
     toggleFavorite({
       type: 'liturgy',
       title: `Liturgia - ${format(today, 'dd/MM/yyyy')}`,
       content: readings.liturgia,
-    });
+      metadata: {
+        date: format(today, 'yyyy-MM-dd'),
+        year: today.getFullYear().toString(),
+        period: currentPeriod
+      }
+    } as any);
     toast.success(isFavorite('liturgy', `Liturgia - ${format(today, 'dd/MM/yyyy')}`) ? 'Removido dos favoritos' : 'Adicionado aos favoritos');
   };
 
