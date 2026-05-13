@@ -877,10 +877,17 @@ const LiturgiaPage: React.FC = () => {
                     </div>
                   </motion.div>
 
+                  {readings.antifonas?.entrada && <LiturgyPrayerCard label="Antífona de Entrada" text={readings.antifonas.entrada} delay={0.05} />}
+                  {readings.dia && <LiturgyPrayerCard label="Oração do Dia" text={readings.dia} delay={0.08} />}
+
                   {readings.primeiraLeitura && <ReadingCard label="Primeira Leitura" icon={<Icons.Bible className="w-5 h-5" />} reference={readings.primeiraLeitura.referencia} text={readings.primeiraLeitura.texto} onContext={() => navigate(parseRefToRoute(readings.primeiraLeitura.referencia))} onReflect={() => navigateToLectio(readings.primeiraLeitura.referencia)} delay={0.1} />}
                   {readings.salmo && <ReadingCard label="Salmo Responsorial" icon={<Icons.Music className="w-5 h-5" />} reference={readings.salmo.referencia} text={readings.salmo.texto} refrain={readings.salmo.refrao} onContext={() => navigate(AppRoute.BIBLE)} onReflect={() => navigateToLectio(readings.salmo.referencia)} delay={0.2} />}
                   {readings.segundaLeitura && typeof readings.segundaLeitura !== 'string' && <ReadingCard label="Segunda Leitura" icon={<Icons.Bible className="w-5 h-5" />} reference={readings.segundaLeitura.referencia} text={readings.segundaLeitura.texto} onContext={() => navigate(parseRefToRoute((readings.segundaLeitura as Reading).referencia))} onReflect={() => navigateToLectio((readings.segundaLeitura as Reading).referencia)} delay={0.3} />}
                   {readings.evangelho && <ReadingCard label="Evangelho" icon={<Icons.Flame className="w-5 h-5" />} reference={readings.evangelho.referencia} text={readings.evangelho.texto} onContext={() => navigate(parseRefToRoute(readings.evangelho.referencia))} onReflect={() => navigateToLectio(readings.evangelho.referencia)} delay={0.4} />}
+
+                  {readings.oferendas && <LiturgyPrayerCard label="Oração sobre as Oferendas" text={readings.oferendas} delay={0.45} />}
+                  {readings.antifonas?.comunhao && <LiturgyPrayerCard label="Antífona de Comunhão" text={readings.antifonas.comunhao} delay={0.48} />}
+                  {readings.comunhao && <LiturgyPrayerCard label="Oração depois da Comunhão" text={readings.comunhao} delay={0.5} />}
                 </div>
               )}
 
