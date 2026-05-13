@@ -2,12 +2,12 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { getSpiritualInsight } from '@/services/aiService';
 import { useNavigate } from 'react-router-dom';
 import { normalizeText } from '@/lib/utils';
-import { fetchNexusTagContent, type TagContent } from '@/lib/nexusContent';
+import { fetchNexusTagContent, type TagContent, exportNexusLogs } from '@/lib/nexusContent';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AppRoute } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, ExternalLink, Sparkles, Search, X, Heart, Church, Flame, BookOpen, Shield, Compass, Hash, Filter, AlertCircle, Info } from 'lucide-react';
+import { Loader2, ExternalLink, Sparkles, Search, X, Heart, Church, Flame, BookOpen, Shield, Compass, Hash, Filter, AlertCircle, Info, Timer, FileJson, Download as DownloadIcon, Database } from 'lucide-react';
 import { Icons } from '@/constants';
 import { BubbleTag, getTagIcon } from './BubbleTag';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -151,46 +151,83 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
         <div className="p-5 space-y-5 max-h-[450px] overflow-y-auto scrollbar-none">
           {/* Diagnostic Panel */}
           <div 
-            className="p-2 rounded-lg bg-muted/30 border border-border/40 space-y-2 cursor-pointer hover:bg-muted/50 transition-colors"
-            onClick={() => setShowLogs(!showLogs)}
+            className={`p-3 rounded-2xl border transition-all ${
+              status === 'success' && content.length === 0 
+                ? 'bg-amber-500/5 border-amber-500/20 shadow-sm' 
+                : 'bg-muted/30 border-border/40'
+            }`}
           >
-            <div className="flex items-center justify-between text-[8px] font-black uppercase tracking-widest opacity-60">
+            <div 
+              className="flex items-center justify-between text-[8px] font-black uppercase tracking-widest opacity-70 cursor-pointer hover:opacity-100 transition-opacity mb-2"
+              onClick={() => setShowLogs(!showLogs)}
+            >
               <div className="flex gap-2">
-                <span>Time: {metrics.endTime ? `${Math.round(metrics.endTime - metrics.startTime)}ms` : '--'}</span>
-                <span>Mode: {searchMode}</span>
+                <span className="flex items-center gap-1">
+                  <Timer className="w-2.5 h-2.5" />
+                  {metrics.endTime ? `${Math.round(metrics.endTime - metrics.startTime)}ms` : '--'}
+                </span>
+                <span className="flex items-center gap-1">
+                  <Filter className="w-2.5 h-2.5" />
+                  Mode: {searchMode}
+                </span>
               </div>
-              <div className="flex items-center gap-1">
-                <Info className="w-2.5 h-2.5" />
-                <span>{showLogs ? 'Ocultar Logs' : 'Ver Logs'}</span>
+              <div className="flex items-center gap-2">
+                {logs.length > 0 && (
+                  <div className="flex items-center gap-1" onClick={(e) => { e.stopPropagation(); exportNexusLogs(tag.label, logs, 'csv'); }}>
+                    <DownloadIcon className="w-2.5 h-2.5 hover:text-primary transition-colors" />
+                    <span className="hover:text-primary transition-colors">Exportar</span>
+                  </div>
+                )}
+                <div className="flex items-center gap-1">
+                  <Info className="w-2.5 h-2.5" />
+                  <span>{showLogs ? 'Ocultar' : 'Detalhes'}</span>
+                </div>
               </div>
             </div>
             
-            <AnimatePresence>
-              {showLogs && (
-                <motion.div 
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="space-y-2 pt-2 border-t border-border/20 overflow-hidden"
-                >
-                  {logs.map((log, i) => (
-                    <div key={i} className="space-y-1">
-                      <div className="flex items-center justify-between text-[7px] font-black uppercase text-primary/70">
-                        <span>{log.stage}</span>
-                        <span>{log.resultsCount} resultados</span>
-                      </div>
-                      {log.termsUsed && log.termsUsed.length > 0 && (
-                        <div className="flex flex-wrap gap-1">
-                          {log.termsUsed.map((term: string, j: number) => (
-                            <span key={j} className="text-[6px] px-1 py-0.5 bg-primary/5 rounded font-mono lowercase">{term}</span>
-                          ))}
-                        </div>
-                      )}
+            {/* Always show terms used if 0 results or expanded */}
+            {(showLogs || (status === 'success' && content.length === 0)) && (
+              <motion.div 
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                className="space-y-3 pt-2 border-t border-border/20 overflow-hidden"
+              >
+                {logs.map((log, i) => (
+                  <div key={i} className="space-y-1.5">
+                    <div className="flex items-center justify-between text-[7px] font-black uppercase text-primary/70">
+                      <span className="flex items-center gap-1">
+                        <Database className="w-2 h-2" />
+                        {log.stage}
+                      </span>
+                      <span>{log.resultsCount} resultados</span>
                     </div>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
+                    {log.termsUsed && log.termsUsed.length > 0 && (
+                      <div className="flex flex-wrap gap-1">
+                        {log.termsUsed.map((term: string, j: number) => (
+                          <span key={j} className="text-[7px] px-1.5 py-0.5 bg-primary/10 rounded-md font-mono lowercase border border-primary/5">
+                            {term}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+                
+                {logs.length > 0 && (
+                  <div className="flex justify-end pt-1">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => exportNexusLogs(tag.label, logs, 'json')}
+                      className="h-6 px-2 text-[7px] uppercase font-black tracking-widest rounded-lg hover:bg-primary/10"
+                    >
+                      <FileJson className="w-2.5 h-2.5 mr-1" />
+                      Baixar JSON completo
+                    </Button>
+                  </div>
+                )}
+              </motion.div>
+            )}
           </div>
 
           {status === 'loading' ? (
