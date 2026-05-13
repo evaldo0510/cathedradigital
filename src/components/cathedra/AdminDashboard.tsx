@@ -421,7 +421,6 @@ const AdminDashboard: React.FC = () => {
           <h1 className="text-xl sm:text-3xl font-display font-black uppercase tracking-tight text-primary">Painel Administrativo</h1>
           <p className="text-xs sm:text-sm text-muted-foreground font-medium uppercase tracking-wider opacity-70">CRM & Gestão completa da plataforma.</p>
         </div>
-        {/* Redundant back button removed */}
       </div>
 
       <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
@@ -454,12 +453,13 @@ const AdminDashboard: React.FC = () => {
             <TabsTrigger value="automations" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
               <Bell className="w-3.5 h-3.5" /> CRM: Automações
             </TabsTrigger>
+            <TabsTrigger value="themes" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
               <Tag className="w-3.5 h-3.5" /> Nexus Temas
             </TabsTrigger>
-              <Activity className="w-3.5 h-3.5" /> Nexus Auditoria
+            <TabsTrigger value="nexus-audit" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+              <Search className="w-3.5 h-3.5" /> Nexus Auditoria
             </TabsTrigger>
-              <Tag className="w-3.5 h-3.5" /> Nexus Temas
-            </TabsTrigger>
+            <TabsTrigger value="seo" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
               <Globe className="w-3.5 h-3.5" /> SEO
             </TabsTrigger>
             <TabsTrigger value="security" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start relative group">
