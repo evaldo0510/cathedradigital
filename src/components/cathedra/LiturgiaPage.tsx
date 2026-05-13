@@ -885,9 +885,9 @@ const LiturgiaPage: React.FC = () => {
                   {readings.segundaLeitura && typeof readings.segundaLeitura !== 'string' && <ReadingCard label="Segunda Leitura" icon={<Icons.Bible className="w-5 h-5" />} reference={readings.segundaLeitura.referencia} text={readings.segundaLeitura.texto} onContext={() => navigate(parseRefToRoute((readings.segundaLeitura as Reading).referencia))} onReflect={() => navigateToLectio((readings.segundaLeitura as Reading).referencia)} delay={0.3} />}
                   {readings.evangelho && <ReadingCard label="Evangelho" icon={<Icons.Flame className="w-5 h-5" />} reference={readings.evangelho.referencia} text={readings.evangelho.texto} onContext={() => navigate(parseRefToRoute(readings.evangelho.referencia))} onReflect={() => navigateToLectio(readings.evangelho.referencia)} delay={0.4} />}
 
-                  {readings.oferendas && <LiturgyPrayerCard label="Oração sobre as Oferendas" text={readings.oferendas} delay={0.45} />}
+                  {readings.oferendas && <LiturgyPrayerCard label="Oferendas" text={readings.oferendas} delay={0.45} />}
                   {readings.antifonas?.comunhao && <LiturgyPrayerCard label="Antífona de Comunhão" text={readings.antifonas.comunhao} delay={0.48} />}
-                  {readings.comunhao && <LiturgyPrayerCard label="Oração depois da Comunhão" text={readings.comunhao} delay={0.5} />}
+                  {readings.comunhao && <LiturgyPrayerCard label="Pós-Comunhão" text={readings.comunhao} delay={0.5} />}
                 </div>
               )}
 
