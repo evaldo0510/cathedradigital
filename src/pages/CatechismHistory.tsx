@@ -13,11 +13,13 @@ import FailedParagraphsSection, { RegenerationStatus } from '@/components/cathed
 import HistoryList from '@/components/cathedra/history/HistoryList';
 import SyncSummaryPanel from '@/components/cathedra/history/SyncSummaryPanel';
 
+import { useCatechismReconciliation } from '@/hooks/useCatechismReconciliation';
 
 const CatechismHistory: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  useCatechismReconciliation(); // Initialize reconciliation periodic routine
   const [isRegeneratingAll, setIsRegeneratingAll] = useState(false);
   const [regenerationStatus, setRegenerationStatus] = useState<Record<number, RegenerationStatus>>({});
   const cancelRegenerationRef = useRef(false);
