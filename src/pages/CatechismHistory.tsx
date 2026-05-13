@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -11,6 +11,8 @@ import { toast } from 'sonner';
 import SectionProgress from '@/components/cathedra/history/SectionProgress';
 import FailedParagraphsSection, { RegenerationStatus } from '@/components/cathedra/history/FailedParagraphsSection';
 import HistoryList from '@/components/cathedra/history/HistoryList';
+import SyncSummaryPanel from '@/components/cathedra/history/SyncSummaryPanel';
+
 
 const CatechismHistory: React.FC = () => {
   const { user } = useAuth();
@@ -75,6 +77,86 @@ const CatechismHistory: React.FC = () => {
     },
     refetchInterval: isRegeneratingAll ? 3000 : false,
   });
+
+  // 4. Real-time updates subscription
+  useEffect(() => {
+    if (!user) return;
+
+    const channel = supabase
+      .channel('catechism-history-realtime')
+      .on(
+        'postgres_changes',
+        { 
+          event: '*', 
+          schema: 'public', 
+          table: 'catechism_paragraphs_read', 
+          filter: `user_id=eq.${user.id}` 
+        },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ['catechism-history', user.id] });
+          queryClient.invalidateQueries({ queryKey: ['catechism-all-progress', user.id] });
+          queryClient.invalidateQueries({ queryKey: ['catechism-sync-stats', user.id] });
+        }
+      )
+      .on(
+        'postgres_changes',
+        { 
+          event: '*', 
+          schema: 'public', 
+          table: 'catechism_cache'
+        },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ['catechism-failed-paragraphs'] });
+          queryClient.invalidateQueries({ queryKey: ['catechism-sync-stats', user.id] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user, queryClient]);
+
+  // 5. Auto-integrity check on mount
+  useEffect(() => {
+    const runIntegrityCheck = async () => {
+      if (!user) return;
+      try {
+        const { data, error } = await supabase
+          .from('catechism_paragraphs_read')
+          .select('id, paragraph')
+          .eq('user_id', user.id);
+        
+        if (error) throw error;
+        
+        const seen = new Set<number>();
+        const idsToRemove: string[] = [];
+        
+        data.forEach(p => {
+          if (seen.has(p.paragraph)) {
+            idsToRemove.push(p.id);
+          } else {
+            seen.add(p.paragraph);
+          }
+        });
+        
+        if (idsToRemove.length > 0) {
+          await supabase
+            .from('catechism_paragraphs_read')
+            .delete()
+            .in('id', idsToRemove);
+          
+          queryClient.invalidateQueries({ queryKey: ['catechism-all-progress', user.id] });
+          toast.info(`${idsToRemove.length} duplicatas corrigidas automaticamente.`);
+        }
+      } catch (err) {
+        console.error("Auto-integrity check failed:", err);
+      }
+    };
+
+    runIntegrityCheck();
+  }, [user, queryClient]);
+
 
   const regenerateMutation = useMutation({
     mutationFn: async (paragraph: number) => {
@@ -205,6 +287,9 @@ const CatechismHistory: React.FC = () => {
           </Button>
         </div>
       </div>
+
+      {/* Sync Summary Panel */}
+      <SyncSummaryPanel />
 
       {/* Progress by Section */}
       <section className="space-y-6">
