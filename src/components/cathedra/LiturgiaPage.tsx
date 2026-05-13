@@ -791,6 +791,59 @@ const LiturgiaPage: React.FC = () => {
               {isLoading && <LiturgiaSkeleton />}
               {readings && (
                 <div className="space-y-8">
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-card border border-border rounded-[2.5rem] p-8 flex flex-col items-center text-center space-y-6 shadow-sm overflow-hidden relative"
+                  >
+                    <div className="absolute top-0 left-0 w-full h-1.5" style={{ backgroundColor: getLiturgicalColorInfo(readings.cor).hex }} />
+                    <div className="flex flex-col items-center gap-4">
+                      <div className="relative group">
+                        <div className="absolute inset-0 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-all scale-150" />
+                        <img 
+                          src={getLiturgicalColorInfo(readings.cor).image} 
+                          alt={`Estola ${readings.cor}`}
+                          className="w-20 h-20 object-contain relative z-10 drop-shadow-xl"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/40">Ciclo Litúrgico</p>
+                        <h3 className="text-xl md:text-2xl font-display font-black text-primary leading-tight max-w-md">{readings.liturgia}</h3>
+                        <div className="flex items-center justify-center gap-2 mt-2">
+                          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: getLiturgicalColorInfo(readings.cor).hex }} />
+                          <span className="text-[10px] font-black uppercase tracking-widest text-primary/60">{readings.cor}</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+                      <div className="px-5 py-2 rounded-2xl bg-primary/5 border border-primary/10 shadow-sm">
+                        <p className="text-[11px] font-black text-primary uppercase tracking-widest">
+                          {readings.primeiraLeitura?.referencia}
+                        </p>
+                      </div>
+                      {readings.salmo && (
+                         <div className="px-5 py-2 rounded-2xl bg-primary/5 border border-primary/10 shadow-sm">
+                          <p className="text-[11px] font-black text-primary uppercase tracking-widest">
+                            {readings.salmo.referencia}
+                          </p>
+                        </div>
+                      )}
+                      {readings.segundaLeitura && (
+                        <div className="px-5 py-2 rounded-2xl bg-primary/5 border border-primary/10 shadow-sm">
+                          <p className="text-[11px] font-black text-primary uppercase tracking-widest">
+                            {typeof readings.segundaLeitura === 'string' ? readings.segundaLeitura : readings.segundaLeitura.referencia}
+                          </p>
+                        </div>
+                      )}
+                      <div className="px-5 py-2 rounded-2xl bg-primary/5 border border-primary/10 shadow-sm">
+                        <p className="text-[11px] font-black text-primary uppercase tracking-widest">
+                          {readings.evangelho?.referencia}
+                        </p>
+                      </div>
+                    </div>
+                  </motion.div>
+
                   {readings.primeiraLeitura && <ReadingCard label="Primeira Leitura" icon={<Icons.Bible className="w-5 h-5" />} reference={readings.primeiraLeitura.referencia} text={readings.primeiraLeitura.texto} onContext={() => navigate(parseRefToRoute(readings.primeiraLeitura.referencia))} onReflect={() => navigateToLectio(readings.primeiraLeitura.referencia)} delay={0.1} />}
                   {readings.salmo && <ReadingCard label="Salmo Responsorial" icon={<Icons.Music className="w-5 h-5" />} reference={readings.salmo.referencia} text={readings.salmo.texto} refrain={readings.salmo.refrao} onContext={() => navigate(AppRoute.BIBLE)} onReflect={() => navigateToLectio(readings.salmo.referencia)} delay={0.2} />}
                   {readings.segundaLeitura && typeof readings.segundaLeitura !== 'string' && <ReadingCard label="Segunda Leitura" icon={<Icons.Bible className="w-5 h-5" />} reference={readings.segundaLeitura.referencia} text={readings.segundaLeitura.texto} onContext={() => navigate(parseRefToRoute((readings.segundaLeitura as Reading).referencia))} onReflect={() => navigateToLectio((readings.segundaLeitura as Reading).referencia)} delay={0.3} />}
