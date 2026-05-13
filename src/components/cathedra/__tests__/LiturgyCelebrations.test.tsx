@@ -36,9 +36,11 @@ const queryClient = new QueryClient({
 });
 
 const wrapper = ({ children }: { children: React.ReactNode }) => (
-  <QueryClientProvider client={queryClient}>
-    <BrowserRouter>{children}</BrowserRouter>
-  </QueryClientProvider>
+  <HelmetProvider>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>{children}</BrowserRouter>
+    </QueryClientProvider>
+  </HelmetProvider>
 );
 
 describe('LiturgiaPage Celebrations', () => {
