@@ -188,6 +188,8 @@ const LiturgyPrayerCard: React.FC<{
   </motion.div>
 );
 
+const hasContent = (text: string | null | undefined) => !!text && text.trim().length > 0;
+
 const LiturgiaPage: React.FC = () => {
   const navigate = useNavigate();
   const { date: routeDate } = useParams();
