@@ -358,7 +358,7 @@ const GlossaryPage: React.FC = () => {
       {/* Header */}
       <div className="text-center space-y-3">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
-          <Icons.BookOpen className="w-4 h-4 text-primary" />
+          <BookOpen className="w-4 h-4 text-primary" />
           <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Lexicon Theologicum</span>
         </div>
         <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground">📘 Glossário da Fé</h1>
