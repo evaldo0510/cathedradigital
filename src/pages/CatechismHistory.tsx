@@ -165,13 +165,20 @@ const CatechismHistory: React.FC = () => {
 
   const handleRegenerateSection = async (sectionParagraphs: { paragraph: number }[]) => {
     setIsRegeneratingAll(true);
+    cancelRegenerationRef.current = false;
     let successCount = 0;
+    let cancelCount = 0;
     
     const initialStatus: Record<number, RegenerationStatus> = {};
     sectionParagraphs.forEach(p => initialStatus[p.paragraph] = 'pending');
     setRegenerationStatus(prev => ({ ...prev, ...initialStatus }));
 
     for (const p of sectionParagraphs) {
+      if (cancelRegenerationRef.current) {
+        cancelCount++;
+        continue;
+      }
+
       try {
         await regenerateMutation.mutateAsync(p.paragraph);
         successCount++;
@@ -179,8 +186,17 @@ const CatechismHistory: React.FC = () => {
         console.error(`Failed to regenerate §${p.paragraph}:`, err);
       }
     }
+    
     setIsRegeneratingAll(false);
-    toast.success(`${successCount} parágrafos da seção regenerados.`);
+    if (cancelCount > 0) {
+      toast.info(`Regeneração interrompida. ${successCount} concluídos, ${cancelCount} cancelados.`);
+    } else {
+      toast.success(`${successCount} parágrafos da seção regenerados.`);
+    }
+  };
+
+  const handleCancelRegeneration = () => {
+    cancelRegenerationRef.current = true;
   };
 
   const handleVerifyIntegrity = async () => {
