@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback, useEffect, lazy, Suspense } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
@@ -15,6 +15,23 @@ import { useSaintsToday } from '@/hooks/useSaints';
 import { getCachedLiturgy, cacheLiturgy } from '@/lib/offlineCache';
 import { LiturgiaSkeleton } from './LiturgiaSkeleton';
 import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
+import { jsPDF } from 'jspdf';
+import { Calendar as CalendarIcon, Heart, FileDown, Filter, List, Check } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { useFavorites } from '@/hooks/useFavorites';
+import { getLiturgicalPeriods } from '@/lib/liturgy';
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuTrigger,
+  DropdownMenuLabel,
+  DropdownMenuSeparator
+} from "@/components/ui/dropdown-menu";
+import { toast } from 'sonner';
 
 const MissalPage = lazy(() => import('./MissalPage'));
 const LiturgicalCalendarPage = lazy(() => import('./LiturgicalCalendarPage'));
