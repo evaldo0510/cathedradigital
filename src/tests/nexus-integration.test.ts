@@ -3,7 +3,7 @@ import { fetchNexusTagContent } from '../lib/nexusContent';
 import { supabase } from '../integrations/supabase/client';
 
 // Mocking Supabase to simulate different scenarios
-vi.mock('../src/integrations/supabase/client', () => ({
+vi.mock('../integrations/supabase/client', () => ({
   supabase: {
     from: vi.fn(() => ({
       select: vi.fn().mockReturnThis(),
