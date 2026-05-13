@@ -29,6 +29,7 @@ interface ThemeAudit {
   };
   status: 'healthy' | 'warning' | 'critical';
   variations: string[];
+  logs?: any[];
 }
 
 const NexusAuditPage: React.FC = () => {
@@ -37,6 +38,7 @@ const NexusAuditPage: React.FC = () => {
   const [progress, setProgress] = useState(0);
   const [filterStatus, setFilterStatus] = useState<'all' | 'healthy' | 'warning' | 'critical'>('all');
   const [filterCategory, setFilterCategory] = useState<string>('all');
+  const [filterContentType, setFilterContentType] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedRow, setExpandedRow] = useState<string | null>(null);
 
