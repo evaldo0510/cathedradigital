@@ -174,7 +174,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
               <div className="flex items-center gap-2">
                 {logs.length > 0 && (
                   <div className="flex items-center gap-1" onClick={(e) => { e.stopPropagation(); exportNexusLogs(tag.label, logs, 'csv'); }}>
-                    <Icons.Download className="w-2.5 h-2.5 hover:text-primary transition-colors" />
+                    <DownloadIcon className="w-2.5 h-2.5 hover:text-primary transition-colors" />
                     <span className="hover:text-primary transition-colors">Exportar</span>
                   </div>
                 )}
