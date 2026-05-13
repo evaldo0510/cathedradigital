@@ -566,6 +566,7 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.CATECHISM_HEALTH} element={<PageTransition><AdminGuard><CatechismHealthCheck /></AdminGuard></PageTransition>} />
                   <Route path={AppRoute.CATECHISM_VERIFY} element={<PageTransition><AdminGuard><CatechismVerification /></AdminGuard></PageTransition>} />
                   <Route path={AppRoute.MAGISTERIUM_DOC} element={<PageTransition><AuthGuard><MagisteriumViewer /></AuthGuard></PageTransition>} />
+                  <Route path="/catechism/history" element={<PageTransition><AuthGuard><CatechismHistory /></AuthGuard></PageTransition>} />
 
                   <Route path={AppRoute.LITURGIA} element={<PageTransition><AuthGuard><LiturgiaPage /></AuthGuard></PageTransition>} />
                   <Route path={`${AppRoute.LITURGIA}/:date`} element={<PageTransition><AuthGuard><LiturgiaPage /></AuthGuard></PageTransition>} />
