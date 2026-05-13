@@ -47,12 +47,14 @@ interface TagBubbleProps {
   searchMode?: 'tags' | 'title' | 'reference' | 'text' | 'all';
 }
 
-export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, tabIndex, onKeyDown, className, profileId, navigateOnClick, priorityGroup, size }) => {
+export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, tabIndex, onKeyDown, className, profileId, navigateOnClick, priorityGroup, size, searchMode = 'tags' }) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [content, setContent] = useState<TagContent[]>([]);
+  const [logs, setLogs] = useState<any[]>([]);
+  const [showLogs, setShowLogs] = useState(false);
   const [logosInsight, setLogosInsight] = useState<string | null>(null);
   const [errorDetails, setErrorDetails] = useState<string | null>(null);
   const [metrics, setMetrics] = useState<{ startTime: number; endTime?: number; source?: 'supabase' | 'ia' | 'both' }>({ startTime: 0 });
@@ -81,11 +83,15 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
     setErrorDetails(null);
     
     const normalizedTag = normalizeText(tag.label);
-    console.log(`[Nexus Diagnostic] Fetching content for tag: ${tag.label} (Normalized: ${normalizedTag})`);
+    console.log(`[Nexus Diagnostic] Fetching content for tag: ${tag.label} (Normalized: ${normalizedTag}) Mode: ${searchMode}`);
     
     try {
-      const { content: uniqueResults, logs: searchLogs } = await fetchNexusTagContent(tag);
+      const { content: uniqueResults, logs: searchLogs } = await fetchNexusTagContent(
+        tag, 
+        { mode: searchMode, includeSynonyms: true }
+      );
       setContent(uniqueResults);
+      setLogs(searchLogs);
 
       // IA Fetch
       try {
