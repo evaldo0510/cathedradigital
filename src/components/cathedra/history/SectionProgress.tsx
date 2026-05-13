@@ -2,6 +2,7 @@ import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { CIC_SECTIONS } from '@/data/catechism';
+import { useNavigate } from 'react-router-dom';
 
 interface SectionProgressProps {
   allProgress: Set<number> | undefined;
