@@ -196,11 +196,19 @@ const LiturgiaPage: React.FC = () => {
       
       if (!Array.isArray(data)) return [];
       
-      // Deduplicate by date
+      // Deduplicate by date and internal celebrations by title
       const uniqueDays = new Map();
       data.forEach((day: any) => {
         if (!uniqueDays.has(day.date)) {
-          uniqueDays.set(day.date, day);
+          const uniqueCelebs = [];
+          const seenTitles = new Set();
+          day.celebrations?.forEach((c: any) => {
+            if (!seenTitles.has(c.title)) {
+              uniqueCelebs.push(c);
+              seenTitles.add(c.title);
+            }
+          });
+          uniqueDays.set(day.date, { ...day, celebrations: uniqueCelebs });
         }
       });
       return Array.from(uniqueDays.values());
@@ -220,6 +228,18 @@ const LiturgiaPage: React.FC = () => {
           day: today.getDate() 
         }
       });
+
+      if (data && data.celebrations) {
+        const uniqueCelebs = [];
+        const seenTitles = new Set();
+        data.celebrations.forEach((c: any) => {
+          if (!seenTitles.has(c.title)) {
+            uniqueCelebs.push(c);
+            seenTitles.add(c.title);
+          }
+        });
+        return { ...data, celebrations: uniqueCelebs };
+      }
       return data;
     },
     staleTime: 1000 * 60 * 60 * 24,
