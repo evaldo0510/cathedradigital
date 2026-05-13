@@ -375,19 +375,21 @@ const GlossaryPage: React.FC = () => {
       />
 
       {/* Alphabet Bar */}
-      <div className="space-y-4">
-        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-center text-muted-foreground">Índice Alfabético</p>
-        <AlphabetBar 
-          alphabet={alphabet}
-          selectedLetter={selectedLetter}
-          letterStatus={letterStatus}
-          onLetterClick={(l) => {
-            const nextLetter = selectedLetter === l ? null : l;
-            setSelectedLetter(nextLetter);
-            setSearchQuery('');
-            if (nextLetter) setCategory('Todos');
-          }}
-        />
+      <div className="sticky top-0 z-20 bg-background/95 backdrop-blur-md py-4 -mx-4 px-4 shadow-sm border-b md:relative md:top-auto md:z-0 md:bg-transparent md:backdrop-blur-none md:py-0 md:mx-0 md:px-0 md:shadow-none md:border-none">
+        <div className="space-y-4">
+          <p className="hidden md:block text-[10px] font-black uppercase tracking-[0.2em] text-center text-muted-foreground">Índice Alfabético</p>
+          <AlphabetBar 
+            alphabet={alphabet}
+            selectedLetter={selectedLetter}
+            letterStatus={letterStatus}
+            onLetterClick={(l) => {
+              const nextLetter = selectedLetter === l ? null : l;
+              setSelectedLetter(nextLetter);
+              setSearchQuery('');
+              if (nextLetter) setCategory('Todos');
+            }}
+          />
+        </div>
       </div>
 
       {/* Category tabs */}
