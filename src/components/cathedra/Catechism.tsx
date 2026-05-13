@@ -286,6 +286,31 @@ const Catechism: React.FC = () => {
     loadProgress();
   }, [user]);
 
+  // Real-time updates for reading progress
+  useEffect(() => {
+    if (!user) return;
+
+    const channel = supabase
+      .channel('catechism-reading-realtime')
+      .on(
+        'postgres_changes',
+        { 
+          event: 'INSERT', 
+          schema: 'public', 
+          table: 'catechism_paragraphs_read', 
+          filter: `user_id=eq.${user.id}` 
+        },
+        (payload) => {
+          setParagraphsRead(prev => new Set([...prev, payload.new.paragraph]));
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user]);
+
   // Observer to track which paragraph is currently in view
   useEffect(() => {
     if (viewMode !== 'reading') return;
