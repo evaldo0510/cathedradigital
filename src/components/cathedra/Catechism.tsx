@@ -265,6 +265,7 @@ const Catechism: React.FC = () => {
   const isAutoScrolling = React.useRef(false);
   const { toggleFavorite, isFavorite } = useFavorites();
   const { user } = useAuth();
+  const [isSyncing, setIsSyncing] = useState(false);
 
   const crossRefs = getCatechismCrossRefs(currentParagraph);
   const docsRefs = getCatechismDocs(currentParagraph);
@@ -313,17 +314,27 @@ const Catechism: React.FC = () => {
 
   const markParagraphRead = useCallback(async (p: number) => {
     if (!user) return;
+    setIsSyncing(true);
     try {
-      await supabase
+      const { data, error } = await supabase
         .from('catechism_paragraphs_read')
         .upsert({ 
           user_id: user.id, 
           paragraph: p,
           read_at: new Date().toISOString()
-        }, { onConflict: 'user_id,paragraph' });
-      setParagraphsRead(prev => new Set([...prev, p]));
+        }, { onConflict: 'user_id,paragraph' })
+        .select()
+        .single();
+      
+      if (error) throw error;
+      
+      if (data && data.read_at) {
+        setParagraphsRead(prev => new Set([...prev, p]));
+      }
     } catch (err) {
       console.error('Failed to mark paragraph read:', err);
+    } finally {
+      setIsSyncing(false);
     }
   }, [user]);
 
@@ -471,13 +482,25 @@ const Catechism: React.FC = () => {
               </div>
             </div>
           </div>
-          <button 
-            onClick={() => navigate('/catechism/history')}
-            className="p-2 rounded-xl border border-border bg-card text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all"
-            title="Histórico de Leitura"
-          >
-            <Icons.History className="w-4 h-4" />
-          </button>
+          <div className="flex items-center gap-2">
+            {isSyncing && (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="flex items-center gap-1.5 px-2 py-1 bg-primary/10 border border-primary/20 rounded-lg"
+              >
+                <Icons.Loader2 className="w-3 h-3 animate-spin text-primary" />
+                <span className="text-[10px] font-black uppercase tracking-widest text-primary hidden md:inline">Sincronizando</span>
+              </motion.div>
+            )}
+            <button 
+              onClick={() => navigate('/catechism/history')}
+              className="p-2 rounded-xl border border-border bg-card text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all"
+              title="Histórico de Leitura"
+            >
+              <Icons.History className="w-4 h-4" />
+            </button>
+          </div>
           {(crossRefs.length > 0 || docsRefs.length > 0) && (
             <button onClick={() => setShowCrossRefs(!showCrossRefs)}
               className={`p-2 rounded-xl border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}
