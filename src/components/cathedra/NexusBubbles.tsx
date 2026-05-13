@@ -196,7 +196,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                   <div key={i} className="space-y-1.5">
                     <div className="flex items-center justify-between text-[7px] font-black uppercase text-primary/70">
                       <span className="flex items-center gap-1">
-                        <Icons.Database className="w-2 h-2" />
+                        <Database className="w-2 h-2" />
                         {log.stage}
                       </span>
                       <span>{log.resultsCount} resultados</span>
