@@ -80,7 +80,7 @@ serve(async (req: Request) => {
 Sua tarefa é fornecer o texto oficial do parágrafo §${paragraph} e uma análise teológica profunda.
 
 REGRAS CRÍTICAS:
-1. FIDELIDADE: O campo 'content' deve conter EXATAMENTE o texto oficial do Catecismo da Igreja Católica em Português. Não mude uma vírgula.
+1. FIDELIDADE: O campo 'content' deve conter EXATAMENTE o texto oficial do parágrafo §${paragraph} do Catecismo da Igreja Católica em Português. Não mude uma vírgula e certifique-se de que é o parágrafo §${paragraph} correto.
 2. ESTRUTURA: Retorne obrigatoriamente um JSON válido com os seguintes campos (use exatamente estes nomes em camelCase):
    - content: O texto oficial do parágrafo.
    - textoBase: Uma síntese de 1 frase do ensinamento principal.
