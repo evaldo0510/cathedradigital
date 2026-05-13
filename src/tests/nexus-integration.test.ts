@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { fetchNexusTagContent } from '../src/lib/nexusContent';
-import { supabase } from '../src/integrations/supabase/client';
+import { fetchNexusTagContent } from '../lib/nexusContent';
+import { supabase } from '../integrations/supabase/client';
 
 // Mocking Supabase to simulate different scenarios
 vi.mock('../src/integrations/supabase/client', () => ({
