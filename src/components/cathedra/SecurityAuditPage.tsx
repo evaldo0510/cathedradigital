@@ -34,7 +34,7 @@ const SecurityAuditPage = () => {
     { 
       id: 'secret-scan', 
       label: 'Varredura de Segredos (SAST)', 
-      status: 'warning', 
+      status: 'success', 
       detail: 'Scanner de chaves de API ativo em CI/CD e testes locais.',
       link: '#'
     }
