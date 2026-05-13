@@ -643,6 +643,7 @@ const LiturgiaPage: React.FC = () => {
                                   onClick={() => {
                                     setSelectedDate(date);
                                     setIsMonthViewOpen(false);
+                                    navigate(`${AppRoute.LITURGIA}/${day.date}`);
                                   }}
                                   className={`w-full flex items-center justify-between p-4 rounded-2xl border transition-all text-left group
                                     ${isDaySelected ? 'bg-primary/5 border-primary shadow-sm' : 'border-border/40 bg-card hover:border-primary/30 hover:bg-muted/30'}
