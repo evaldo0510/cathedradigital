@@ -213,55 +213,31 @@ const InstitutionalVideoSection = () => {
       <div className="container px-6 mx-auto relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           
-          {/* Left Column: Narrative */}
           <motion.div 
             style={shouldReduceMotion ? { opacity: 1, scale: 1 } : { opacity, scale }}
             className="space-y-8"
           >
             <div className="space-y-4">
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20 rounded-full text-primary text-[10px] font-black uppercase tracking-[0.2em]"
-              >
-                <Sparkles className="w-3 h-3" />
-                <span>Experiência Digital</span>
-              </motion.div>
-              
-              <h2 id="video-section-title" className="text-5xl md:text-6xl font-display font-bold tracking-tight text-foreground leading-[1.1]">
-                A Tradição que <br />
-                <span className="text-primary italic font-light">Se Move com Você</span>
+              <span className="text-[9px] font-bold uppercase tracking-[0.4em] text-primary/40 block">Apresentação</span>
+              <h2 id="video-section-title" className="text-4xl md:text-5xl font-display font-bold leading-tight">
+                A Tradição em <span className="text-primary italic">Movimento</span>
               </h2>
-              
-              <p className="text-xl text-muted-foreground font-serif italic max-w-xl leading-relaxed">
-                "Não tenhas medo da tecnologia, mas coloca-a a serviço do Evangelho." — Um convite para mergulhar na profundidade da fé com a agilidade do agora.
+              <p className="text-base text-muted-foreground font-serif italic max-w-md">
+                "Coloca a tecnologia a serviço do Evangelho."
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4">
+            <div className="grid grid-cols-2 gap-6 pt-4">
               {[
-                { icon: Church, title: "Liturgia Viva", desc: "Acompanhe o ritmo da Igreja em tempo real." },
-                { icon: Shield, title: "Magistério Fiel", desc: "Conteúdo 100% alinhado à Doutrina Católica." },
-                { icon: Globe, title: "Universalidade", desc: "Acesse tesouros da fé de qualquer lugar." },
-                { icon: Users, title: "Comunhão", desc: "Sinta-se parte de uma rede global de oração." },
-              ].map((item, idx) => (
-                <motion.div
-                  key={item.title}
-                  initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: idx * 0.1 }}
-                  viewport={{ once: true }}
-                  className="flex gap-4 group"
-                >
-                  <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-card border border-border/50 flex items-center justify-center group-hover:border-primary/30 transition-colors shadow-sm">
-                    <item.icon className="w-5 h-5 text-primary" />
-                  </div>
-                  <div className="space-y-1">
-                    <h4 className="font-bold text-foreground text-sm">{item.title}</h4>
-                    <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
-                  </div>
-                </motion.div>
+                { title: "Liturgia Viva", desc: "Igreja em tempo real." },
+                { title: "Magistério Fiel", desc: "100% Doutrina Católica." },
+                { title: "Universalidade", desc: "Tesouros de qualquer lugar." },
+                { title: "Comunhão", desc: "Rede global de oração." },
+              ].map((item) => (
+                <div key={item.title} className="space-y-1">
+                  <h4 className="font-bold text-foreground text-sm">{item.title}</h4>
+                  <p className="text-[10px] text-muted-foreground leading-relaxed">{item.desc}</p>
+                </div>
               ))}
             </div>
           </motion.div>
