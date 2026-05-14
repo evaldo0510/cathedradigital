@@ -75,7 +75,7 @@ const HojePage: React.FC = () => {
   return (
     <div className="desktop-layout pt-0 md:pt-10 lg:pt-20 pb-24 relative">
       {loadingStats && (
-        <div className="absolute inset-0 z-[200] bg-background">
+        <div className="fixed inset-0 z-[200] bg-background flex flex-col items-center justify-center">
           <DashboardSkeleton />
         </div>
       )}
