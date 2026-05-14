@@ -52,8 +52,8 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon, route, isAct
     onMouseEnter={() => prefetchRoute(route)}
     aria-label={label}
     aria-current={isActive ? 'page' : undefined}
-    className={`flex flex-col items-center justify-center gap-1 flex-1 py-1 relative overflow-hidden tap-highlight-transparent touch-manipulation focus-visible:bg-primary/10 outline-none transition-colors ${
-      isActive ? 'text-primary' : 'text-muted-foreground active:text-foreground'
+    className={`flex flex-col items-center justify-center gap-1.5 flex-1 py-1.5 relative overflow-hidden tap-highlight-transparent touch-manipulation focus-visible:bg-primary/5 outline-none transition-all duration-300 ${
+      isActive ? 'text-primary scale-105' : 'text-muted-foreground/60 active:text-foreground'
     }`}
   >
 
