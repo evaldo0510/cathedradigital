@@ -504,7 +504,7 @@ const AppLayout: React.FC = () => {
               transition={{ duration: 0.15 }}
               className="fixed inset-0 z-[150] lg:hidden"
             >
-              <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsSidebarOpen(false)} />
+              <div className="absolute inset-0 bg-black/60" onClick={() => setIsSidebarOpen(false)} />
               <motion.div
                 initial={{ x: -288 }}
                 animate={{ x: 0 }}
