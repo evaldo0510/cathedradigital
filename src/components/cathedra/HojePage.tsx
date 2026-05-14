@@ -275,7 +275,7 @@ const HojePage: React.FC = () => {
                   whileHover={{ y: -8, scale: 1.02 }} 
                   whileTap={{ scale: 0.95 }} 
                   onClick={() => navigate(section.route)} 
-                  className="group cursor-pointer p-6 rounded-[2rem] border border-border bg-card/30 hover:bg-card hover:border-primary/20 transition-all duration-500 shadow-sm text-center space-y-4"
+                  className="premium-card group cursor-pointer p-6 shadow-sm text-center space-y-4 rounded-3xl"
                 >
                   <div className={`w-14 h-14 mx-auto rounded-2xl ${section.color} flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform duration-500`}>
                     {section.icon}
