@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { useScroll, useTransform, motion } from "framer-motion";
+import { useScroll, useTransform } from "framer-motion";
 import HeroBackground from "./hero/HeroBackground";
 import HeroContent from "./hero/HeroContent";
 import HeroScrollIndicator from "./hero/HeroScrollIndicator";
@@ -24,7 +24,7 @@ const HeroSection = ({ onStart, onAbout }: HeroSectionProps) => {
       <HeroBackground bgY={heroY} />
       <HeroContent 
         heroOpacity={heroOpacity} 
-        heroScale={motion(1) as any} 
+        heroScale={1} 
         heroY={heroY} 
         onStart={onStart} 
         onAbout={onAbout} 

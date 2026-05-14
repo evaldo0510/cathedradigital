@@ -18,13 +18,13 @@ const fadeInUpVariants = {
 
 interface HeroContentProps {
   heroOpacity: MotionValue<number>;
-  heroScale: MotionValue<number>;
+  heroScale?: number;
   heroY: MotionValue<number>;
   onStart: () => void;
   onAbout: () => void;
 }
 
-const HeroContent = ({ heroOpacity, heroScale, heroY, onStart, onAbout }: HeroContentProps) => {
+const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: HeroContentProps) => {
   const scrollToVideo = () => {
     document.getElementById('video')?.scrollIntoView({ behavior: 'smooth' });
   };
