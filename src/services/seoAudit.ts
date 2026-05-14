@@ -138,18 +138,18 @@ export const runSEOAudit = async (url: string = window.location.href) => {
   const { data, error } = await supabase
     .from('seo_audits')
     .insert({
-      url: audit.url,
+      url: audit.url as string,
       score: audit.score,
-      findings: audit.findings,
-      meta_tags: audit.meta_tags,
-      headings: audit.headings,
-      links: audit.links
+      findings: audit.findings as any,
+      meta_tags: audit.meta_tags as any,
+      headings: audit.headings as any,
+      links: audit.links as any
     })
     .select()
     .single();
 
   if (error) throw error;
-  return data as SEOAudit;
+  return data as unknown as SEOAudit;
 };
 
 export const getAuditHistory = async () => {
@@ -159,5 +159,5 @@ export const getAuditHistory = async () => {
     .order('created_at', { ascending: false });
   
   if (error) throw error;
-  return data as SEOAudit[];
+  return data as unknown as SEOAudit[];
 };
