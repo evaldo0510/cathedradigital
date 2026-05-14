@@ -255,20 +255,21 @@ const AdminDashboard: React.FC = () => {
       </header>
 
       <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-10">
-        <TabsList ref={tabsListRef} className="flex w-full overflow-x-auto justify-start h-auto p-2 bg-muted/20 border border-border/10 rounded-[1.5rem] no-scrollbar snap-x backdrop-blur-xl">
-          <TabsTrigger value="overview" className="gap-2 text-[10px] font-black uppercase tracking-widest px-6 py-3 snap-start rounded-xl">
+        <TabsList ref={tabsListRef} className="flex w-full overflow-x-auto justify-start h-auto p-2 bg-muted/20 border border-border/10 rounded-[1.5rem] no-scrollbar snap-x backdrop-blur-xl flex-nowrap scroll-smooth">
+          <TabsTrigger value="overview" className="gap-2 text-[10px] font-black uppercase tracking-widest px-6 py-3 snap-start rounded-xl flex-shrink-0">
             <LayoutGrid className="w-4 h-4" /> Visão Geral
           </TabsTrigger>
-          <TabsTrigger value="users" className="gap-2 text-[10px] font-black uppercase tracking-widest px-6 py-3 snap-start rounded-xl">
+          <TabsTrigger value="users" className="gap-2 text-[10px] font-black uppercase tracking-widest px-6 py-3 snap-start rounded-xl flex-shrink-0">
             <Users className="w-4 h-4" /> Fiéis
           </TabsTrigger>
-          <TabsTrigger value="transactions" className="gap-2 text-[10px] font-black uppercase tracking-widest px-6 py-3 snap-start rounded-xl">
+          <TabsTrigger value="transactions" className="gap-2 text-[10px] font-black uppercase tracking-widest px-6 py-3 snap-start rounded-xl flex-shrink-0">
             <DollarSign className="w-4 h-4" /> Ofertas
           </TabsTrigger>
-          <TabsTrigger value="security" className="gap-2 text-[10px] font-black uppercase tracking-widest px-6 py-3 snap-start rounded-xl text-rose-500">
+          <TabsTrigger value="security" className="gap-2 text-[10px] font-black uppercase tracking-widest px-6 py-3 snap-start rounded-xl text-rose-500 flex-shrink-0">
             <Shield className="w-4 h-4" /> Segurança
           </TabsTrigger>
         </TabsList>
+
 
         <TabsContent value="overview" className="space-y-12 outline-none">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
