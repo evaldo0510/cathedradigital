@@ -196,7 +196,7 @@ const Certamen: React.FC = () => {
         <span className="text-primary font-black">{score} acertos</span>
       </div>
 
-      <div className="bg-card border border-border rounded-3xl p-8 space-y-6 shadow-sm">
+      <div className="premium-card p-8 space-y-6 shadow-sm">
         <span className="text-[10px] font-black uppercase tracking-widest text-primary bg-primary/10 px-2 py-1 rounded">{question.category}</span>
         <h2 className="text-xl md:text-2xl font-serif font-bold text-foreground leading-tight">{question.question}</h2>
 
