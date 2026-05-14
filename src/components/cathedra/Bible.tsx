@@ -759,10 +759,10 @@ const Bible: React.FC = () => {
           <button
             key={t}
             onClick={() => setTestament(t)}
-            className={`px-6 py-4 rounded-2xl font-bold transition-all border-2 text-sm
+            className={`px-8 py-4 rounded-2xl text-[11px] font-black uppercase tracking-[0.25em] transition-all duration-300 border
               ${testament === t 
-                ? 'bg-primary border-primary text-white shadow-lg shadow-primary/20 scale-[1.02]' 
-                : 'bg-card border-border text-muted-foreground hover:border-primary/40'}`}
+                ? 'bg-primary border-primary text-primary-foreground shadow-xl shadow-primary/20 scale-[1.02]' 
+                : 'bg-card border-border/40 text-muted-foreground/60 hover:border-primary/40 hover:text-primary hover:bg-primary/5 hover:translate-y-[-1px]'}`}
           >
             {t}
           </button>
