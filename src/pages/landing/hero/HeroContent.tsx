@@ -90,20 +90,14 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
             Iniciar Jornada
           </HomeButton>
           
-          <button
-            className="text-[10px] font-bold uppercase tracking-[0.3em] text-muted-foreground hover:text-primary transition-colors py-2 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none rounded-full px-6"
+          <HomeButton
+            variant="outline"
+            className="w-full sm:w-auto"
             onClick={scrollToVideo}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                scrollToVideo();
-              }
-            }}
             aria-label="Ver vídeo de apresentação"
-            type="button"
           >
             Ver Apresentação
-          </button>
+          </HomeButton>
         </div>
 
         <motion.div 

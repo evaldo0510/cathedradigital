@@ -40,7 +40,7 @@ const FeatureCard = ({ feature, onNavigate }: { feature: typeof features[0]; onN
   return (
     <HomeCard
       as="button"
-      className="p-8 flex flex-col items-center text-center space-y-6 cursor-pointer group w-full appearance-none outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+      className="p-8 flex flex-col items-center text-center space-y-6 group w-full appearance-none"
       onClick={() => onNavigate(feature.route)}
       onKeyDown={(e: React.KeyboardEvent) => {
         if (e.key === 'Enter' || e.key === ' ') {

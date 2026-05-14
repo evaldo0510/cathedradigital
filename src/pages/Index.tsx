@@ -46,6 +46,12 @@ const Index = () => {
 
   return (
     <div className="flex min-h-screen flex-col items-center bg-background text-foreground overflow-x-hidden selection:bg-primary/10">
+      <a 
+        href="#main-content" 
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[200] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-full focus:shadow-xl focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+      >
+        Pular para o conteúdo principal
+      </a>
       <LandingHeader />
       <SEOHead
         title="Bíblia, Catecismo e Tradição Católica"
@@ -63,7 +69,7 @@ const Index = () => {
         ]}
       />
       <HeroSection onStart={handleStart} onAbout={() => navigate(AppRoute.ABOUT)} />
-      <main className="w-full flex flex-col items-center">
+      <main id="main-content" className="w-full flex flex-col items-center outline-none" tabIndex={-1}>
         <Suspense fallback={<SectionSkeleton />}>
           <div id="features" className="w-full"><FeaturesSection onNavigate={handleNavigate} /></div>
         </Suspense>
