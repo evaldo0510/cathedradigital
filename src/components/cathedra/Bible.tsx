@@ -38,7 +38,7 @@ const BIBLE_CATEGORIES: Record<string, BibleCategory[]> = {
       { name: 'Levítico', abbr: 'Lv', chapters: 27 }, { name: 'Números', abbr: 'Nm', chapters: 36 },
       { name: 'Deuteronômio', abbr: 'Dt', chapters: 34 },
     ]},
-    { label: 'Históricos', icon: Icons.Swords, color: 'text-primary', bgColor: 'bg-muted border-border', books: [
+    { label: 'Históricos', icon: Icons.Swords, color: 'text-primary', bgColor: 'bg-primary/5 border-primary/10', books: [
       { name: 'Josué', abbr: 'Js', chapters: 24 }, { name: 'Juízes', abbr: 'Jz', chapters: 21 },
       { name: 'Rute', abbr: 'Rt', chapters: 4 }, { name: '1 Samuel', abbr: '1Sm', chapters: 31 },
       { name: '2 Samuel', abbr: '2Sm', chapters: 24 }, { name: '1 Reis', abbr: '1Rs', chapters: 22 },
