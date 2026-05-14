@@ -62,21 +62,23 @@ export const getContentById = async (type: ContentType, id: string): Promise<Bas
   switch (type) {
     case 'catechism':
       const { data: cic } = await supabase
-        .from('catechism_paragraphs')
+        .from('catechism_paragraphs' as any)
         .select('*')
         .eq('number', parseInt(id))
         .single();
-      if (!cic) return null;
+      
+      const item = cic as any;
+      if (!item) return null;
+      
       return {
-        id: `catechism-${cic.number}`,
+        id: `catechism-${item.number}`,
         type: 'catechism',
-        title: `CIC §${cic.number}`,
-        content: cic.content,
+        title: `CIC §${item.number}`,
+        content: item.content,
         tags: ['catecismo'],
-        route: `/catechism?p=${cic.number}`,
-        metadata: cic
+        route: `/catechism?p=${item.number}`,
+        metadata: item
       };
-    // Implement others
     default:
       return null;
   }
