@@ -119,16 +119,15 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
     <div className="desktop-layout py-6 md:py-10">
       <div className="desktop-main content-section">
       <FadeUp>
-        <div className="text-center space-y-6">
+        <div className="text-center space-y-4">
           <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 1.5, ease: "easeOut" }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
             className="flex justify-center"
           >
-            <div className="relative group">
-              <div className="absolute inset-0 bg-secondary/10 blur-3xl rounded-full scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
-              <Icons.Saints className="w-12 h-12 md:w-16 md:h-16 text-secondary transition-all duration-700 group-hover:rotate-12" />
+            <div className="relative">
+              <Icons.Saints className="w-12 h-12 md:w-14 md:h-14 text-secondary/80" />
             </div>
           </motion.div>
           <div className="space-y-2">
@@ -184,14 +183,14 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               whileHover={{ y: -4, scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => goTo(door.route)}
-              className={`relative overflow-hidden p-5 rounded-3xl border ${door.borderColor} bg-gradient-to-br ${door.gradient} backdrop-blur-sm cursor-pointer transition-all shadow-sm hover:shadow-xl group`}
+              className={`relative overflow-hidden p-5 rounded-3xl border border-border bg-card cursor-pointer transition-all hover:border-secondary/30 group`}
             >
               {door.suggested && (
-                <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-1 rounded-full bg-secondary text-secondary-foreground text-[8px] font-black uppercase tracking-tighter shadow-sm animate-pulse">
+                <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-1 rounded-full bg-secondary/10 text-secondary text-[8px] font-black uppercase tracking-tighter border border-secondary/20">
                   <Icons.Star className="w-2 h-2 fill-current" /> Sugerido
                 </div>
               )}
-              <div className={`w-12 h-12 rounded-2xl bg-background flex items-center justify-center ${door.iconColor} group-hover:scale-110 transition-transform mb-4 shadow-md border border-border/50`}>
+              <div className={`w-10 h-10 rounded-2xl bg-muted/30 flex items-center justify-center ${door.iconColor} group-hover:scale-105 transition-transform mb-4 border border-border/50`}>
                 <door.icon className="w-6 h-6" />
               </div>
               <div className="space-y-1">
@@ -211,7 +210,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         <FadeUp delay={0.12}>
           <div 
             onClick={() => goTo(nextUp.route)}
-            className="p-5 rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 via-background to-background cursor-pointer hover:border-primary/40 transition-all shadow-sm hover:shadow-md flex items-center justify-between group"
+            className="p-5 rounded-3xl border border-border bg-card cursor-pointer hover:border-primary/20 transition-all flex items-center justify-between group"
           >
             <div className="flex items-center gap-5">
               <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">

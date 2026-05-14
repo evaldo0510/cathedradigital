@@ -16,7 +16,7 @@
     --secondary-foreground: 222 47% 11%;
     --muted: 45 20% 90%;
     --muted-foreground: 222 20% 40%;
-    --accent: 45 64% 52% / 0.1;
+    --accent: 45 64% 52% / 0.05;
     --accent-foreground: 222 47% 11%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
@@ -48,7 +48,7 @@
     --secondary-foreground: 45 64% 52%;
     --muted: 222 30% 12%;
     --muted-foreground: 45 10% 70%;
-    --accent: 45 64% 52% / 0.15;
+    --accent: 45 64% 52% / 0.08;
     --accent-foreground: 45 64% 52%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
@@ -219,7 +219,7 @@
 
   /* Premium card style - Spiritual Minimalist */
   .desktop-card {
-    @apply bg-card border border-border/10 rounded-3xl p-8 md:p-10 lg:p-12 shadow-sm transition-all duration-300 hover:shadow-md hover:border-border/20;
+    @apply bg-card border border-border/5 rounded-3xl p-8 md:p-10 lg:p-12 shadow-sm transition-all duration-300;
   }
 
   /* Standard card shadow and radius */
