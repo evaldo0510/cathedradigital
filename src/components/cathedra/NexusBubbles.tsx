@@ -315,21 +315,20 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                                 initial={{ opacity: 0, x: -10 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: i * 0.05 }}
-                                className="space-y-1.5 group/content p-2 rounded-xl hover:bg-primary/5 transition-colors cursor-pointer"
+                                className="space-y-3 group/content p-4 rounded-2xl hover:bg-primary/5 transition-all duration-300 border border-transparent hover:border-primary/10 cursor-pointer"
                                 onClick={() => link && navigate(link)}
                               >
-                                <p className="text-[11px] leading-relaxed text-foreground/80 line-clamp-3 group-hover/content:text-foreground transition-colors">
+                                <p className="text-[14px] leading-relaxed text-foreground/80 group-hover/content:text-foreground transition-colors font-serif">
                                   {c.content_text}
                                 </p>
-                                <div className="flex flex-col gap-2">
-                                  <div className="flex items-center justify-between">
-                                    <span className="text-[10px] font-bold text-primary flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-primary/5">
-                                      {reference}
-                                      {link && <ExternalLink className="w-2.5 h-2.5" />}
-                                    </span>
-                                  </div>
+                                <div className="flex items-center justify-between pt-1">
+                                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 ring-1 ring-primary/20 shadow-sm">
+                                    {reference}
+                                    {link && <ExternalLink className="w-3 h-3" />}
+                                  </span>
                                 </div>
                               </motion.div>
+
                             );
                           })}
                         </div>
