@@ -1,4 +1,5 @@
 import { useEffect, lazy, Suspense } from "react";
+import { Icons } from "@/constants";
 import { useNavigate } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
 import { AppRoute } from "@/types";
