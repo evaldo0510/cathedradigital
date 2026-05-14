@@ -92,34 +92,32 @@ test.describe('Home Page Accessibility & Keyboard Navigation', () => {
   });
 
   test('logical tab order and navigation targets', async ({ page }) => {
-    // Start from top
-    await page.keyboard.press('Tab'); // Skip link
-    
-    // Tab through header
-    const logo = page.getByLabel(/Cathedra Digital/i).or(page.locator('a').first());
+    // 1. Skip link
     await page.keyboard.press('Tab');
+    const skipLink = page.locator('a[href="#main-content"]');
+    await expect(skipLink).toBeFocused();
     
-    // Check if we reach specific sections in order (simplified for stability across viewports)
-    const sections = ['#continue-journey', '#daily-ritual', '#main-themes'];
-    for (const selector of sections) {
-        const element = page.locator(selector);
-        if (await element.count() > 0 && await element.isVisible()) {
-            // Tab until we reach something inside this section or the section itself
-            // This is a loose check because specific links might vary by content
-            const isInSection = async () => {
-                return await page.evaluate((sel) => {
-                    const active = document.activeElement;
-                    return active && (active.closest(sel) || active.id === sel.replace('#', ''));
-                }, selector);
-            };
-            
-            let attempts = 0;
-            while (attempts < 30 && !await isInSection()) {
-                await page.keyboard.press('Tab');
-                attempts++;
-            }
-            expect(attempts).toBeLessThan(30);
+    // 2. Logo in Header
+    await page.keyboard.press('Tab');
+    const logo = page.getByLabel(/Cathedra - Página Inicial/i);
+    await expect(logo).toBeFocused();
+    
+    // 3. First nav link (Funcionalidades)
+    await page.keyboard.press('Tab');
+    const featuresLink = page.getByRole('button', { name: /Funcionalidades/i });
+    await expect(featuresLink).toBeFocused();
+
+    // 4. Iniciar Jornada in Hero (might need multiple tabs depending on screen)
+    // We tab until we find a button with "Iniciar Jornada"
+    let foundHeroBtn = false;
+    for (let i = 0; i < 20; i++) {
+        await page.keyboard.press('Tab');
+        const focused = page.getByRole('button', { name: /Iniciar Jornada/i }).first();
+        if (await focused.evaluate(node => document.activeElement === node)) {
+            foundHeroBtn = true;
+            break;
         }
     }
+    expect(foundHeroBtn).toBe(true);
   });
 });
