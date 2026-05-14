@@ -221,7 +221,7 @@
 
   /* Premium card style - Spiritual Minimalist */
   .desktop-card {
-    @apply bg-card border-none rounded-3xl p-6 md:p-10 lg:p-12 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.05)] hover:shadow-[0_8px_30px_-4px_rgba(15,23,42,0.1)] transition-all duration-700;
+    @apply bg-card border border-border/5 rounded-3xl p-6 md:p-10 lg:p-12 shadow-none hover:border-secondary/10 transition-all duration-700;
   }
 
   /* Standard card shadow and radius */
