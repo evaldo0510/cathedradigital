@@ -506,32 +506,32 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
             ))}
           </div>
 
-          <div className="relative group/search w-full md:w-[200px]">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground/60 transition-colors group-focus-within/search:text-primary" />
+          <div className="relative group/search w-full sm:w-[240px]">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/40 transition-colors group-focus-within/search:text-primary" />
             <input 
               type="text"
-              placeholder="Filtrar temas..."
+              placeholder="Buscar tema..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-8 pl-8 pr-8 bg-card/50 border border-border/50 rounded-full text-[10px] focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+              className="w-full h-11 pl-10 pr-10 bg-card/30 border border-border/10 rounded-2xl text-[12px] focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
               aria-label="Buscar tema no Nexus"
             />
             {searchQuery && (
               <button 
                 onClick={() => setSearchQuery('')}
-                className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 hover:bg-muted rounded-full"
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 hover:bg-muted rounded-full transition-colors"
               >
-                <X className="w-2.5 h-2.5 text-muted-foreground" />
+                <X className="w-3.5 h-3.5 text-muted-foreground/60" />
               </button>
             )}
           </div>
         </div>
       </div>
 
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none">
+      <div className="flex items-center gap-2 overflow-x-auto pb-4 scrollbar-none px-2">
         <button
           onClick={() => setActiveFilter('all')}
-          className={`px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${activeFilter === 'all' ? 'bg-primary text-primary-foreground shadow-lg' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}
+          className={`px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap ${activeFilter === 'all' ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/10' : 'bg-muted/30 text-muted-foreground/60 hover:bg-muted/50'}`}
         >
           Todos
         </button>
@@ -540,7 +540,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
           <button
             key={key}
             onClick={() => setActiveFilter(key)}
-            className={`px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-1.5 ${activeFilter === key ? 'bg-primary text-primary-foreground shadow-lg' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}
+            className={`px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2 whitespace-nowrap ${activeFilter === key ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/10' : 'bg-muted/30 text-muted-foreground/60 hover:bg-muted/50'}`}
           >
             {cat.icon}
             {cat.label}
