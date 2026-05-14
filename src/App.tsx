@@ -662,8 +662,10 @@ const AppLayout: React.FC = () => {
             {[AppRoute.BIBLE, AppRoute.DAILY_LITURGY, AppRoute.LITURGIA, AppRoute.BREVIARY, AppRoute.LECTIO_DIVINA, AppRoute.CATECHISM, AppRoute.MAGISTERIUM].includes(location.pathname as AppRoute) && (
               <ReadingModeToggle />
             )}
+            <CommandCenter />
             <OfflineIndicator />
             <PWAInstallPrompt />
+
           </>
         )}
       </div>
