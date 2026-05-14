@@ -88,13 +88,15 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
             size="lg"
             className="w-full h-14 px-8 rounded-full bg-primary text-primary-foreground font-bold uppercase tracking-[0.2em] text-xs shadow-none"
             onClick={onStart}
+            aria-label="Iniciar sua jornada espiritual"
           >
             Iniciar Jornada
           </Button>
           
           <button
-            className="text-[10px] font-bold uppercase tracking-[0.3em] text-muted-foreground hover:text-primary transition-colors py-2"
+            className="text-[10px] font-bold uppercase tracking-[0.3em] text-muted-foreground hover:text-primary transition-colors py-2 focus-visible:ring-1 focus-visible:ring-primary rounded-sm"
             onClick={scrollToVideo}
+            aria-label="Ver vídeo de apresentação"
           >
             Ver Apresentação
           </button>
