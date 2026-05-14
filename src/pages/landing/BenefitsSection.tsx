@@ -44,7 +44,7 @@ const BenefitsSection = ({ onLogin }: BenefitsSectionProps) => {
   return (
     <section ref={sectionRef} className="w-full bg-foreground text-background py-24 px-6 overflow-hidden relative">
       <div className="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none">
-        <div className="absolute inset-0" style={{ backgroundImage: "radial-gradient(circle, hsl(var(--primary)) 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
+        <div className="absolute inset-0 bg-primary/5" />
       </div>
 
       <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
