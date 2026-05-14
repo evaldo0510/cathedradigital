@@ -168,7 +168,7 @@ const HojePage: React.FC = () => {
       {loadingStats && <DashboardSkeleton />}
       <SEOHead 
         title="Cathedra Digital — Nem toda prisão é visível" 
-        description="A sabedoria da Igreja Católica ao seu alcance. Explore o Catecismo, a Bíblia e jornadas espirituais para uma vida de liberdade e verdade." 
+        description="Explore o Catecismo, a Bíblia e jornadas espirituais para uma vida de liberdade e verdade. A sabedoria da Igreja Católica ao seu alcance." 
         path="/hoje" 
       />
       {import.meta.env.DEV && <DevDataInspector data={{ officialSaint, allSaintsToday, activeJourney, profile: profile?._sensitive }} />}

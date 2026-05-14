@@ -112,8 +112,31 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
     } : null
   } : null;
 
+  const organizationLD = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Cathedra Digital",
+    "url": BASE_URL,
+    "logo": DEFAULT_OG_IMAGE,
+    "description": "Plataforma guiada para aprofundamento na fé católica com Bíblia, Catecismo e Jornadas Espirituais."
+  };
+
+  const websiteLD = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Cathedra Digital",
+    "url": BASE_URL,
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": `${BASE_URL}/buscar?q={search_term_string}`,
+      "query-input": "required name=search_term_string"
+    }
+  };
+
   return (
     <Helmet>
+      <script type="application/ld+json">{JSON.stringify(organizationLD)}</script>
+      <script type="application/ld+json">{JSON.stringify(websiteLD)}</script>
       <title>{displayTitle}</title>
       <meta name="description" content={displayDescription} />
       {displayKeywords && <meta name="keywords" content={displayKeywords} />}
