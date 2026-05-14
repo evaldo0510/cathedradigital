@@ -155,12 +155,12 @@ const HojePage: React.FC = () => {
   }, [user, journalText]);
 
   const dailySections = useMemo(() => [
-    { title: 'Liturgia', icon: <Icons.Calendar className="w-5 h-5" />, route: `${AppRoute.LITURGIA}?tab=liturgia`, color: 'bg-primary/10 text-primary' },
-    { title: 'Oração', icon: <Icons.Volume2 className="w-5 h-5" />, route: AppRoute.ORACAO, color: 'bg-accent/10 text-accent' },
-    { title: 'Comando', icon: <Icons.Search className="w-5 h-5" />, route: AppRoute.BUSCAR, color: 'bg-primary/5 text-primary border border-primary/20' },
-    { title: 'Rosário', icon: <Icons.Heart className="w-5 h-5" />, route: AppRoute.ROSARY, color: 'bg-accent/10 text-accent' },
-    { title: 'Confissão', icon: <Icons.Flame className="w-5 h-5" />, route: AppRoute.POENITENTIA, color: 'bg-primary/10 text-primary' },
-    { title: 'Catecismo', icon: <Icons.Catechism className="w-5 h-5" />, route: AppRoute.CATECHISM, color: 'bg-accent/10 text-accent' },
+    { title: 'Ritual do dia', icon: <Icons.Calendar className="w-5 h-5" />, route: `${AppRoute.LITURGIA}?tab=liturgia`, color: 'bg-primary/10 text-primary' },
+    { title: 'Temas principais', icon: <span className="text-xl">🫧</span>, route: AppRoute.TEMAS, color: 'bg-accent/10 text-accent' },
+    { title: 'Catecismo Interativo', icon: <span className="text-xl">📘</span>, route: AppRoute.CATECHISM, color: 'bg-primary/5 text-primary border border-primary/20' },
+    { title: 'Trilhas guiadas', icon: <span className="text-xl">🧭</span>, route: AppRoute.JORNADAS, color: 'bg-accent/10 text-accent' },
+    { title: 'Logos recomenda', icon: <span className="text-xl">🧠</span>, route: AppRoute.STUDY_MODE, color: 'bg-primary/10 text-primary' },
+    { title: 'Favoritos', icon: <span className="text-xl">❤️</span>, route: AppRoute.FAVORITES, color: 'bg-accent/10 text-accent' },
   ], []);
 
   return (
@@ -169,13 +169,13 @@ const HojePage: React.FC = () => {
       <SEOHead title="Hoje - Sua Jornada Espiritual" description="Acompanhe sua caminhada de fé diária." path="/hoje" />
       {import.meta.env.DEV && <DevDataInspector data={{ officialSaint, allSaintsToday, activeJourney, profile: profile?._sensitive }} />}
       <div className="desktop-main space-y-12 max-w-2xl mx-auto lg:max-w-none lg:mx-0">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center space-y-4 pt-4 md:pt-0">
-          <div className="space-y-2">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center space-y-6 pt-4 md:pt-0">
+          <div className="space-y-4">
             <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60">
               {greeting}, {profile?.name?.split(' ')[0] || 'fiel'}
             </p>
-            <h1 className="text-4xl md:text-6xl font-serif text-foreground leading-tight">
-              Sua jornada espiritual <br /><span className="text-primary italic">guiada pela Sabedoria.</span>
+            <h1 className="text-4xl md:text-7xl font-serif text-foreground leading-[1.1] tracking-tight">
+              "Nem toda prisão <br /><span className="text-primary italic">é visível."</span>
             </h1>
           </div>
           <div className="flex items-center justify-center gap-4 flex-wrap pt-2">
@@ -224,7 +224,7 @@ const HojePage: React.FC = () => {
           </motion.div>
         )}
 
-        <RitualDoDia />
+        {/* Ritual section moved into Acesso Rápido or handled via dailyRitual component */}
 
         <div className="space-y-10">
           <section className="space-y-4">
