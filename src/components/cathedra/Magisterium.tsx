@@ -209,7 +209,7 @@ const Magisterium: React.FC = () => {
         <TabsContent value="guidance" className="mt-0 focus-visible:outline-none outline-none">
           <div className="space-y-12">
             <div 
-              className="flex flex-wrap justify-center gap-3 bg-card/40 backdrop-blur-xl p-6 sm:p-10 rounded-[2.5rem] sm:rounded-[3.5rem] border border-border/40 shadow-xl relative overflow-hidden group"
+              className="premium-card p-6 sm:p-10 flex flex-wrap justify-center gap-3 group"
               role="tablist"
               aria-label="Temas de guia espiritual"
             >
