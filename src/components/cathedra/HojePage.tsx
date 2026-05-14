@@ -219,7 +219,7 @@ const HojePage: React.FC = () => {
             <h2 className="text-[11px] font-black uppercase tracking-[0.4em] text-muted-foreground/40 flex items-center gap-4 px-2">
               <div className="h-px w-10 bg-primary/20" /> Acesso Rápido
             </h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6">
               {dailySections.map((section) => (
                 <div 
                   key={section.title} 
