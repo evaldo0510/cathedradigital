@@ -213,7 +213,7 @@ const JornadaDetailPage: React.FC = () => {
       </div>
 
       {isLocked && (
-        <Card className="border-primary/30 bg-primary/5">
+        <Card className="premium-card p-0 border-primary/20">
           <CardContent className="p-4 text-center space-y-3">
             <Sparkles className="w-8 h-8 mx-auto text-primary" />
             <p className="text-sm text-foreground font-medium">Esta jornada é exclusiva para assinantes PRO</p>
