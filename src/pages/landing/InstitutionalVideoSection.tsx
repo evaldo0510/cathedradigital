@@ -280,17 +280,16 @@ const InstitutionalVideoSection = () => {
               )}
 
               {/* Cinematic Overlays */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+              <div className="absolute inset-0 bg-black/40" />
               
               <div className="absolute inset-0 flex flex-col items-center justify-center space-y-6">
                 <motion.div
-                  whileHover={{ scale: 1.1 }}
+                  whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="w-24 h-24 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center shadow-2xl group/btn overflow-hidden relative"
+                  className="w-24 h-24 bg-white/20 border border-white/30 rounded-full flex items-center justify-center shadow-lg group/btn overflow-hidden relative"
                 >
                   <div className="absolute inset-0 bg-primary/20 scale-0 group-hover/btn:scale-100 transition-transform duration-500 rounded-full" />
                   <Play className="w-10 h-10 text-white fill-white relative z-10 ml-1" />
-                  <div className="absolute inset-0 border-2 border-white/30 rounded-full animate-ping opacity-20" />
                 </motion.div>
                 
                 <div className="text-center space-y-2 px-8">
