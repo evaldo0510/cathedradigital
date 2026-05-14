@@ -49,7 +49,7 @@ const SecurityAuditPage = () => {
   return (
     <div className="max-w-4xl mx-auto py-4 md:py-8 px-4 space-y-8 animate-in fade-in duration-500">
       <header className="text-center space-y-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-red-500/10 rounded-full text-red-600 border border-red-500/20">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-red-500/10 rounded-2xl text-red-600 border border-red-500/20">
           <ShieldAlert className="w-4 h-4" />
           <span className="text-[10px] font-black uppercase tracking-[0.2em]">Security Protocol v3.0</span>
         </div>
@@ -94,9 +94,9 @@ const SecurityAuditPage = () => {
           </Card>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Card className="border-red-500/20 bg-red-500/5 rounded-full p-6 space-y-4">
+            <Card className="border-red-500/20 bg-red-500/5 rounded-2xl p-6 space-y-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-red-500/10 rounded-full text-red-600">
+                <div className="p-2 bg-red-500/10 rounded-2xl text-red-600">
                   <RotateCcw className="w-5 h-5" />
                 </div>
                 <h3 className="text-sm font-bold uppercase tracking-widest">Rollback Crítico</h3>
@@ -113,9 +113,9 @@ const SecurityAuditPage = () => {
               </Button>
             </Card>
 
-            <Card className="border-primary/20 bg-primary/5 rounded-full p-6 space-y-4">
+            <Card className="border-primary/20 bg-primary/5 rounded-2xl p-6 space-y-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-primary/10 rounded-full text-primary">
+                <div className="p-2 bg-primary/10 rounded-2xl text-primary">
                   <FileCode className="w-5 h-5" />
                 </div>
                 <h3 className="text-sm font-bold uppercase tracking-widest">Scan de Segredos</h3>

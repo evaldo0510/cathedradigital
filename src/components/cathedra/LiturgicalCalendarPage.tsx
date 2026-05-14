@@ -325,7 +325,7 @@ const LiturgicalCalendarPage: React.FC = () => {
     <div className="max-w-5xl mx-auto space-y-8">
       {/* Header */}
       <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl">
           <Icons.Star className="w-4 h-4 text-primary" />
           <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Calendarium Liturgicum</span>
         </div>
@@ -347,7 +347,7 @@ const LiturgicalCalendarPage: React.FC = () => {
 
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Calendar grid */}
-        <div className="lg:col-span-2 bg-card border border-border rounded-full p-6">
+        <div className="lg:col-span-2 bg-card border border-border rounded-2xl p-6">
           {/* Month navigation */}
           <div className="flex items-center justify-between mb-6">
             <button onClick={() => navigateMonth(-1)} className="p-2 rounded-full bg-muted hover:bg-primary/10 transition-all">
@@ -369,7 +369,7 @@ const LiturgicalCalendarPage: React.FC = () => {
           {/* Loading indicator */}
           {isLoadingApi && (
             <div className="flex justify-center mb-3">
-              <div className="w-4 h-4 border-2 border-secondary border-t-transparent rounded-full animate-spin" />
+              <div className="w-4 h-4 border-2 border-secondary border-t-transparent rounded-2xl animate-spin" />
             </div>
           )}
 
@@ -411,7 +411,7 @@ const LiturgicalCalendarPage: React.FC = () => {
                       {date.getDate()}
                     </span>
                     {info.rank === 'solenidade' && (
-                      <div className="w-1 h-1 rounded-full bg-primary" />
+                      <div className="w-1 h-1 rounded-2xl bg-primary" />
                     )}
                     {hasSaint && (
                       <div className="absolute top-1.5 right-1.5">
@@ -429,7 +429,7 @@ const LiturgicalCalendarPage: React.FC = () => {
         <div className="space-y-6">
           <AnimatePresence mode="wait">
             {selectedDay ? (
-              <div className="bg-card border border-border rounded-full overflow-hidden shadow-lg animate-in fade-in slide-in-from-bottom-4 duration-300">
+              <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-lg animate-in fade-in slide-in-from-bottom-4 duration-300">
                 {selectedSaint ? (
                   <div className="relative h-48 group">
                     <SacredImage src={selectedSaint.image} alt={selectedSaint.name} className="w-full h-full" />
@@ -476,7 +476,7 @@ const LiturgicalCalendarPage: React.FC = () => {
                       {LITURGICAL_COLORS[selectedInfo?.color || 'verde']?.label}
                     </div>
                     {selectedInfo?.rank && (
-                      <div className="px-2 py-1 rounded-full bg-muted border border-border text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                      <div className="px-2 py-1 rounded-2xl bg-muted border border-border text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                         {selectedInfo.rank}
                       </div>
                     )}
@@ -502,7 +502,7 @@ const LiturgicalCalendarPage: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <div className="bg-muted/30 border-2 border-dashed border-border rounded-full p-12 text-center space-y-3">
+              <div className="bg-muted/30 border-2 border-dashed border-border rounded-2xl p-12 text-center space-y-3">
                 <Icons.LiturgicalCalendar className="w-12 h-12 text-muted-foreground/30 mx-auto" />
                 <p className="text-sm text-muted-foreground font-serif italic">Selecione um dia para ver os detalhes</p>
               </div>
@@ -510,7 +510,7 @@ const LiturgicalCalendarPage: React.FC = () => {
           </AnimatePresence>
 
           {/* Upcoming list */}
-          <div className="bg-card border border-border rounded-full p-6">
+          <div className="bg-card border border-border rounded-2xl p-6">
             <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground mb-4">Próximas Solenidades</h3>
             <div className="space-y-3">
               {upcomingCelebrations.map((c, i) => (

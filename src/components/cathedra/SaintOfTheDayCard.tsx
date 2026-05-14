@@ -98,7 +98,7 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
         onClick={handleNavigate}
         className="w-full flex items-center gap-6 group text-left p-5"
       >
-        <div className="w-20 h-20 rounded-full overflow-hidden border border-border/20 shadow-soft shrink-0">
+        <div className="w-20 h-20 rounded-2xl overflow-hidden border border-border/20 shadow-soft shrink-0">
           <SacredImage
             src={saint.image}
             alt={saint.name}
@@ -168,7 +168,7 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
             )}
           </div>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-500">
+            <div className="w-10 h-10 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-500">
               <Sparkles className="w-5 h-5" />
             </div>
             <span className="text-[11px] font-black uppercase tracking-widest text-primary">Conhecer</span>

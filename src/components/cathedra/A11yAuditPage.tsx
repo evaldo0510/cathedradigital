@@ -52,7 +52,7 @@ const A11yAuditPage = () => {
   return (
     <div className="max-w-4xl mx-auto py-10 px-4 space-y-8 animate-in fade-in duration-500">
       <header className="text-center space-y-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full text-primary border border-primary/20">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl text-primary border border-primary/20">
           <ShieldCheck className="w-4 h-4" />
           <span className="text-[10px] font-black uppercase tracking-[0.2em]">Quality Assurance</span>
         </div>
@@ -85,7 +85,7 @@ const A11yAuditPage = () => {
                       {checklist[item.id] ? (
                         <CheckCircle className="w-5 h-5 text-green-500 fill-green-500/10" />
                       ) : (
-                        <div className="w-5 h-5 rounded-full border-2 border-border/60" />
+                        <div className="w-5 h-5 rounded-2xl border-2 border-border/60" />
                       )}
                     </button>
                   ))}
@@ -131,7 +131,7 @@ const A11yAuditPage = () => {
 
                 <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2 scrollbar-thin">
                   {auditResults.issues.map((issue, idx) => (
-                    <div key={idx} className="flex gap-3 p-3 rounded-full bg-muted/20 border border-border/40">
+                    <div key={idx} className="flex gap-3 p-3 rounded-2xl bg-muted/20 border border-border/40">
                       <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
                       <span className="text-xs text-muted-foreground leading-relaxed">{issue}</span>
                     </div>

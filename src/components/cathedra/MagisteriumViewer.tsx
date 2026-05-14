@@ -109,7 +109,7 @@ const MagisteriumViewer: React.FC = () => {
     return (
       <div className="max-w-4xl mx-auto px-4 py-20 flex flex-col items-center justify-center space-y-6">
         <div className="relative">
-          <div className="w-16 h-16 rounded-full bg-primary/10 animate-pulse border-2 border-primary/20" />
+          <div className="w-16 h-16 rounded-2xl bg-primary/10 animate-pulse border-2 border-primary/20" />
           <Icons.Loader className="absolute inset-0 w-16 h-16 text-primary animate-spin p-4" />
         </div>
         <p className="text-muted-foreground font-serif italic animate-pulse">Buscando documento nos arquivos do Vaticano...</p>
@@ -120,7 +120,7 @@ const MagisteriumViewer: React.FC = () => {
   if (error || !content) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-20 text-center space-y-6">
-        <div className="w-20 h-20 bg-destructive/10 rounded-full flex items-center justify-center mx-auto">
+        <div className="w-20 h-20 bg-destructive/10 rounded-2xl flex items-center justify-center mx-auto">
           <Icons.AlertTriangle className="w-10 h-10 text-destructive" />
         </div>
         <div className="space-y-2">

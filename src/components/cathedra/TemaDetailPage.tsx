@@ -393,7 +393,7 @@ const TemaDetailPage = () => {
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/60">{selectedTag?.category}</span>
-                <div className="w-1 h-1 rounded-full bg-primary/30" />
+                <div className="w-1 h-1 rounded-2xl bg-primary/30" />
                 <Badge variant="outline" className="text-[9px] font-black uppercase tracking-widest border-primary/20 text-primary/70">Nexus</Badge>
               </div>
               <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-foreground">{selectedTag?.label}</h1>
@@ -429,7 +429,7 @@ const TemaDetailPage = () => {
                 <CardContent className="p-8 sm:p-10">
                   <div className="flex items-center justify-between mb-8">
                     <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center border border-secondary/20 shadow-inner">
+                      <div className="w-12 h-12 rounded-2xl bg-secondary/10 flex items-center justify-center border border-secondary/20 shadow-inner">
                         <Sparkles className="w-6 h-6 text-secondary" />
                       </div>
                       <div>
@@ -441,9 +441,9 @@ const TemaDetailPage = () => {
                   </div>
                   {loadingLogos && !logosInsight ? (
                     <div className="space-y-4">
-                      <div className="h-4 w-full bg-muted animate-pulse rounded-full" />
-                      <div className="h-4 w-[90%] bg-muted animate-pulse rounded-full opacity-70" />
-                      <div className="h-4 w-[75%] bg-muted animate-pulse rounded-full opacity-40" />
+                      <div className="h-4 w-full bg-muted animate-pulse rounded-2xl" />
+                      <div className="h-4 w-[90%] bg-muted animate-pulse rounded-2xl opacity-70" />
+                      <div className="h-4 w-[75%] bg-muted animate-pulse rounded-2xl opacity-40" />
                     </div>
                   ) : (
                     <div className="space-y-6">
@@ -677,7 +677,7 @@ const TemaDetailPage = () => {
 
           <Card className="border-primary/20 bg-primary/5 rounded-[2rem] overflow-hidden">
             <CardContent className="p-6 space-y-4">
-              <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-2xl bg-primary/20 flex items-center justify-center">
                 <Quote className="w-5 h-5 text-primary" />
               </div>
               <p className="text-xs text-muted-foreground leading-relaxed italic">

@@ -134,8 +134,8 @@ const Certamen: React.FC = () => {
     const pct = Math.round((score / (answered || 1)) * 100);
     return (
       <div className="max-w-2xl mx-auto space-y-8 p-4">
-        <div className="bg-card border border-border rounded-full p-10 text-center space-y-6 shadow-xl">
-          <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto text-primary">
+        <div className="bg-card border border-border rounded-2xl p-10 text-center space-y-6 shadow-xl">
+          <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto text-primary">
             {pct >= 80 ? <Trophy className="w-10 h-10" /> : pct >= 50 ? <BookOpen className="w-10 h-10" /> : <Heart className="w-10 h-10" />}
           </div>
           <h2 className="text-3xl font-serif font-bold text-foreground">Resultado do Aprendizado</h2>
@@ -167,7 +167,7 @@ const Certamen: React.FC = () => {
   return (
     <div className="max-w-3xl mx-auto space-y-8 p-4">
       <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl">
           <Icons.Star className="w-4 h-4 text-primary" />
           <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Certamen Fidei</span>
         </div>
@@ -186,7 +186,7 @@ const Certamen: React.FC = () => {
 
       <div className="flex items-center justify-between text-sm px-2">
         <span className="text-muted-foreground font-bold">Pergunta {currentIndex + 1}/{filtered.length}</span>
-        <div className="h-2 flex-1 mx-4 bg-muted rounded-full overflow-hidden">
+        <div className="h-2 flex-1 mx-4 bg-muted rounded-2xl overflow-hidden">
           <motion.div 
             initial={{ width: 0 }}
             animate={{ width: `${((currentIndex + 1) / filtered.length) * 100}%` }}
@@ -196,7 +196,7 @@ const Certamen: React.FC = () => {
         <span className="text-primary font-black">{score} acertos</span>
       </div>
 
-      <div className="bg-card border border-border rounded-full p-8 space-y-6 shadow-sm">
+      <div className="bg-card border border-border rounded-2xl p-8 space-y-6 shadow-sm">
         <span className="text-[10px] font-black uppercase tracking-widest text-primary bg-primary/10 px-2 py-1 rounded">{question.category}</span>
         <h2 className="text-xl md:text-2xl font-serif font-bold text-foreground leading-tight">{question.question}</h2>
 

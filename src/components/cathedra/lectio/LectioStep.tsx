@@ -51,7 +51,7 @@ const LectioStep: React.FC<LectioStepProps> = ({
             title={`Lectio Divina — ${selectedPassage}`}
             text={`Meditando sobre ${selectedPassage} na Lectio Divina.`}
           />
-          <div className="flex items-center gap-3 px-5 py-3 rounded-full bg-card border border-border shadow-sm">
+          <div className="flex items-center gap-3 px-5 py-3 rounded-2xl bg-card border border-border shadow-sm">
             <Timer className="w-4 h-4 text-primary/60" />
             <span className="font-mono text-lg font-bold text-foreground tabular-nums">{formatTime(seconds)}</span>
           </div>

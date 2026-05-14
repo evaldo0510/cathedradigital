@@ -74,14 +74,14 @@ const PricingSection = () => {
               }`}
             >
               {tier.popular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-secondary text-primary-foreground text-[8px] font-bold uppercase tracking-[0.3em] px-4 py-1.5 rounded-full">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-secondary text-primary-foreground text-[8px] font-bold uppercase tracking-[0.3em] px-4 py-1.5 rounded-2xl">
                   Mais Escolhido
                 </div>
               )}
 
               <div className="space-y-6 flex-1">
                 <div className="flex justify-between items-center">
-                  <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center">
                     {tier.icon}
                   </div>
                   <h3 className="text-xl font-bold font-serif">{tier.name}</h3>

@@ -149,7 +149,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                         </span>
                       )}
                       {(item as any).pro && <span className="ml-auto text-[8px] font-black uppercase tracking-widest text-primary bg-primary/10 px-1.5 py-0.5 rounded">PRO</span>}
-                      {currentPath === item.path && item.path !== AppRoute.CACHE_MANAGER && <div className="ml-auto w-1 h-1 rounded-full bg-primary" />}
+                      {currentPath === item.path && item.path !== AppRoute.CACHE_MANAGER && <div className="ml-auto w-1 h-1 rounded-2xl bg-primary" />}
                     </button>
                   </li>
                 ))}
@@ -210,7 +210,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
               onClick={() => handleNav(AppRoute.PROFILE)} 
               className="w-full flex items-center gap-3 p-3 bg-muted rounded-full hover:border-primary border border-transparent transition-all cursor-pointer"
             >
-              <div className="w-10 h-10 rounded-full bg-foreground flex items-center justify-center text-background font-black shadow-sm">
+              <div className="w-10 h-10 rounded-2xl bg-foreground flex items-center justify-center text-background font-black shadow-sm">
                 {user.avatar ? (
                   <img src={user.avatar} alt={user.name} className="w-full h-full object-cover rounded-full" />
                 ) : (

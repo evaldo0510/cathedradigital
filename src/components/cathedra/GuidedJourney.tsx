@@ -229,7 +229,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
             className="space-y-8"
           >
             <div className="text-center space-y-2">
-              <div className="w-16 h-16 bg-secondary/10 rounded-full flex items-center justify-center mx-auto mb-4 text-secondary">
+              <div className="w-16 h-16 bg-secondary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 text-secondary">
                 <Sparkles className="w-8 h-8" />
               </div>
               <h2 className="text-3xl font-serif font-bold text-primary">Seu Roteiro está pronto!</h2>
@@ -239,7 +239,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
             </div>
 
             <div className="grid gap-6">
-              <div className="p-6 rounded-full bg-secondary/5 border border-secondary/20 space-y-3">
+              <div className="p-6 rounded-2xl bg-secondary/5 border border-secondary/20 space-y-3">
                 <div className="flex items-center gap-2 text-secondary">
                   <Book className="w-4 h-4" />
                   <span className="text-[10px] font-black uppercase tracking-widest">A Palavra de Deus</span>
@@ -249,7 +249,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                 </p>
               </div>
 
-              <div className="p-6 rounded-full bg-primary/5 border border-primary/10 space-y-3">
+              <div className="p-6 rounded-2xl bg-primary/5 border border-primary/10 space-y-3">
                 <div className="flex items-center gap-2 text-primary">
                   <Cross className="w-4 h-4" />
                   <span className="text-[10px] font-black uppercase tracking-widest">Catecismo</span>
@@ -259,7 +259,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                 </p>
               </div>
 
-              <div className="p-6 rounded-full bg-muted/30 border border-border space-y-3">
+              <div className="p-6 rounded-2xl bg-muted/30 border border-border space-y-3">
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <MessageSquare className="w-4 h-4" />
                   <span className="text-[10px] font-black uppercase tracking-widest">Logos IA: Apoio Contemplativo</span>

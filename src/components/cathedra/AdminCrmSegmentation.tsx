@@ -176,7 +176,7 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
                   <tr key={u.id} className="border-b border-border/30 hover:bg-muted/30 transition-colors">
                     <td className="p-3">
                       <div className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-full bg-foreground text-background flex items-center justify-center font-black text-xs shrink-0">
+                        <div className="w-8 h-8 rounded-2xl bg-foreground text-background flex items-center justify-center font-black text-xs shrink-0">
                           {u.name?.charAt(0)?.toUpperCase() || '?'}
                         </div>
                         <div className="min-w-0">

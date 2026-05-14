@@ -43,7 +43,7 @@ const DailyRoutineSection = () => {
               className="p-8 flex flex-col space-y-8"
             >
               <div className="flex justify-between items-center">
-                <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center text-primary">
+                <div className="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center text-primary">
                   {step.icon}
                 </div>
                 <span className="text-xs font-display font-bold text-primary/50 uppercase tracking-widest">

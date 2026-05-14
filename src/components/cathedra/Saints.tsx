@@ -192,7 +192,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
         </header>
 
         <div className="flex justify-center overflow-x-auto pb-4 no-scrollbar">
-          <div className="bg-secondary/50 p-1 rounded-full flex gap-1 min-w-max" role="tablist" aria-label="Modos de visualização dos santos">
+          <div className="bg-secondary/50 p-1 rounded-2xl flex gap-1 min-w-max" role="tablist" aria-label="Modos de visualização dos santos">
             {viewModes.map((mode, idx) => (
               <button
                 key={mode}
@@ -542,7 +542,7 @@ const SaintCard: React.FC<{ saint: SaintWithScore; onClick: () => void }> = ({ s
           <div className="flex items-center justify-between mb-2">
             <span className="text-[10px] font-black uppercase tracking-widest text-primary">{saint.feastDay}</span>
             {saint.works && saint.works.length > 0 && (
-              <div className="p-1 bg-primary/5 rounded-full text-primary" title="Possui obras escritas">
+              <div className="p-1 bg-primary/5 rounded-2xl text-primary" title="Possui obras escritas">
                 <BookOpen className="w-3 h-3" />
               </div>
             )}

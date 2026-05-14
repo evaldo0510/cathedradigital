@@ -110,7 +110,7 @@ const HoraDetail: React.FC<{ hora: HoraInfo; onBack: () => void }> = ({ hora, on
       </div>
     </div>
 
-    <div className="bg-card border border-border rounded-full p-6 md:p-10 space-y-8">
+    <div className="bg-card border border-border rounded-2xl p-6 md:p-10 space-y-8">
       {/* Opening */}
       <div className="text-center space-y-2 pb-6 border-b border-border">
         <p className="text-sm text-primary font-display font-bold">✠ Deus, vinde em meu auxílio.</p>
@@ -121,7 +121,7 @@ const HoraDetail: React.FC<{ hora: HoraInfo; onBack: () => void }> = ({ hora, on
       {/* Hymn */}
       <div className="space-y-3">
         <h3 className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground">Hino</h3>
-        <div className="bg-secondary/50 rounded-full p-5 border border-border">
+        <div className="bg-secondary/50 rounded-2xl p-5 border border-border">
           <p className="reader-text text-foreground/90 leading-[1.9] italic">{hora.hymn}</p>
         </div>
       </div>
@@ -131,7 +131,7 @@ const HoraDetail: React.FC<{ hora: HoraInfo; onBack: () => void }> = ({ hora, on
         <h3 className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground">Salmodia</h3>
         <div className="space-y-3">
           {hora.psalms.map((psalm, i) => (
-            <div key={i} className="bg-secondary/30 rounded-full p-5 border border-border">
+            <div key={i} className="bg-secondary/30 rounded-2xl p-5 border border-border">
               <p className="reader-text text-foreground/90 leading-[1.9]">{psalm}</p>
             </div>
           ))}
@@ -142,7 +142,7 @@ const HoraDetail: React.FC<{ hora: HoraInfo; onBack: () => void }> = ({ hora, on
       {hora.reading && (
         <div className="space-y-3">
           <h3 className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground">Leitura Breve</h3>
-          <div className="bg-primary/5 rounded-full p-5 border border-primary/10">
+          <div className="bg-primary/5 rounded-2xl p-5 border border-primary/10">
             <p className="reader-text text-foreground/90 leading-[1.9]">{hora.reading}</p>
           </div>
         </div>
@@ -151,7 +151,7 @@ const HoraDetail: React.FC<{ hora: HoraInfo; onBack: () => void }> = ({ hora, on
       {/* Prayer */}
       <div className="space-y-3">
         <h3 className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground">Oração</h3>
-        <div className="bg-secondary/50 rounded-full p-5 border border-border">
+        <div className="bg-secondary/50 rounded-2xl p-5 border border-border">
           <p className="reader-text text-foreground/90 leading-[1.9]">{hora.prayer}</p>
         </div>
       </div>
@@ -188,7 +188,7 @@ const BreviaryPage: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl">
           <Icons.History className="w-3.5 h-3.5 text-primary" />
           <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Liturgia Horarum</span>
         </div>

@@ -134,7 +134,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           )}
           
           {showNotifs && user && (
-            <div className="absolute top-full right-4 mt-4 w-80 bg-card border border-border rounded-full shadow-2xl z-[150] overflow-hidden animate-in fade-in zoom-in duration-300">
+            <div className="absolute top-full right-4 mt-4 w-80 bg-card border border-border rounded-2xl shadow-2xl z-[150] overflow-hidden animate-in fade-in zoom-in duration-300">
               <div className="p-5 border-b border-border flex items-center justify-between bg-muted/30">
                 <h3 className="text-[10px] font-black uppercase tracking-widest text-primary">{t('notifications')}</h3>
                 <button onClick={markAllRead} className="text-[10px] font-black uppercase tracking-widest text-secondary hover:opacity-70">{t('clear')}</button>

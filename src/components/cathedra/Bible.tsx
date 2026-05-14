@@ -528,7 +528,7 @@ const Bible: React.FC = () => {
         )}
 
         {/* Toolbar */}
-        <div className="flex items-center justify-between gap-3 flex-wrap bg-card p-2 rounded-full border border-border shadow-sm">
+        <div className="flex items-center justify-between gap-3 flex-wrap bg-card p-2 rounded-2xl border border-border shadow-sm">
           <div className="flex items-center gap-2">
             <AudioButton variant="solid" className="px-6" />
             <ShareButton
@@ -550,7 +550,7 @@ const Bible: React.FC = () => {
           </div>
           <div className="flex items-center gap-2">
             {/* Font size */}
-            <div className="flex items-center bg-card border border-border rounded-full overflow-hidden">
+            <div className="flex items-center bg-card border border-border rounded-2xl overflow-hidden">
               {FONT_SIZES.map((f, i) => (
                 <button key={f.label} onClick={() => setFontSizeIdx(i)}
                   className={`px-2.5 py-1.5 text-xs font-bold transition-all ${fontSizeIdx === i ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}>

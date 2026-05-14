@@ -157,7 +157,7 @@ const AdminPartnersTab: React.FC = () => {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {[1, 2, 3].map(i => (
-          <div key={i} className="h-48 rounded-full bg-muted/40 animate-pulse border border-border" />
+          <div key={i} className="h-48 rounded-2xl bg-muted/40 animate-pulse border border-border" />
         ))}
       </div>
     );
@@ -202,7 +202,7 @@ const AdminPartnersTab: React.FC = () => {
           {filteredPartners.length === 0 ? (
             <Card className="border-dashed border-2 py-12">
               <CardContent className="flex flex-col items-center text-center space-y-4">
-                <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center">
+                <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center">
                   <Building2 className="w-8 h-8 text-muted-foreground" />
                 </div>
                 <div className="space-y-1">
@@ -217,7 +217,7 @@ const AdminPartnersTab: React.FC = () => {
                 <Card key={partner.id} className="group hover:border-primary/30 transition-all bg-card ">
                   <CardHeader className="flex flex-row items-start justify-between pb-3">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center overflow-hidden border p-1 shadow-sm">
+                      <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center overflow-hidden border p-1 shadow-sm">
                         {partner.logo_url ? (
                           <img src={partner.logo_url} alt={partner.name} className="w-full h-full object-contain" />
                         ) : (

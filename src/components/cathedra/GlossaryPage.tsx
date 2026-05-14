@@ -164,7 +164,7 @@ const GlossaryPage: React.FC = () => {
     <div className="max-w-5xl mx-auto space-y-8">
       {/* Header */}
       <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl">
           <Icons.BookOpen className="w-4 h-4 text-primary" />
           <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Lexicon Theologicum</span>
         </div>
@@ -239,7 +239,7 @@ const GlossaryPage: React.FC = () => {
       <div className="space-y-3">
         {loading ? (
           <div className="flex justify-center py-12">
-            <div className="w-8 h-8 border-2 border-secondary border-t-transparent rounded-full animate-spin" />
+            <div className="w-8 h-8 border-2 border-secondary border-t-transparent rounded-2xl animate-spin" />
           </div>
         ) : filtered.length > 0 ? (
           filtered.map(term => {
@@ -287,13 +287,13 @@ const GlossaryPage: React.FC = () => {
                     {enrichment && (
                       <>
                         {/* Layer 2: P.A.D.H. */}
-                        <div className="bg-primary/5 rounded-full p-5 text-center space-y-2">
+                        <div className="bg-primary/5 rounded-2xl p-5 text-center space-y-2">
                           <p className="text-[10px] font-black uppercase tracking-widest text-primary/70">🧠 Reflexão Poética</p>
                           <p className="text-foreground font-serif italic leading-relaxed whitespace-pre-line text-sm">{enrichment.padh}</p>
                         </div>
 
                         {/* Layer 3: Inner question */}
-                        <div className="bg-accent/30 rounded-full p-5 text-center space-y-2">
+                        <div className="bg-accent/30 rounded-2xl p-5 text-center space-y-2">
                           <p className="text-[10px] font-black uppercase tracking-widest text-accent-foreground/70">❓ Pergunta Interior</p>
                           <p className="text-foreground font-bold text-base">{enrichment.question}</p>
                         </div>
@@ -308,7 +308,7 @@ const GlossaryPage: React.FC = () => {
 
                         {/* Journey Link */}
                         {term.journey_id && (
-                          <div className="bg-primary/10 border border-primary/20 rounded-full p-5 space-y-3">
+                          <div className="bg-primary/10 border border-primary/20 rounded-2xl p-5 space-y-3">
                             <div className="flex items-center gap-2">
                               <Icons.Compass className="w-5 h-5 text-primary" />
                               <p className="text-xs font-bold text-primary uppercase tracking-widest">Jornada Prática</p>
@@ -343,7 +343,7 @@ const GlossaryPage: React.FC = () => {
             );
           })
         ) : (
-          <div className="text-center py-12 bg-muted/20 rounded-full">
+          <div className="text-center py-12 bg-muted/20 rounded-2xl">
             <Icons.Search className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
             <p className="text-muted-foreground">Nenhum termo encontrado.</p>
             <p className="text-xs text-muted-foreground mt-1">Tente buscar por outro sentimento ou palavra.</p>

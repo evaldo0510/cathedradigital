@@ -16,7 +16,7 @@ const TransparencyPage: React.FC = () => {
       <div className="max-w-3xl mx-auto space-y-16 px-4">
         {/* Header */}
         <div className="text-center space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-black uppercase tracking-[0.2em] border border-primary/20">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-2xl bg-primary/10 text-primary text-[10px] font-black uppercase tracking-[0.2em] border border-primary/20">
             <ShieldCheck className="w-3 h-3" />
             Integridade Doutrinária
           </div>

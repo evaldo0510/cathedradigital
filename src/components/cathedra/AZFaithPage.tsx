@@ -102,7 +102,7 @@ const AZFaithPage: React.FC = () => {
   if (isLoading && allTerms.length === 0) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        <div className="animate-spin rounded-2xl h-12 w-12 border-b-2 border-primary"></div>
       </div>
     );
   }
@@ -117,7 +117,7 @@ const AZFaithPage: React.FC = () => {
 
       <div className="max-w-6xl mx-auto pb-32 px-4 md:px-8 animate-in fade-in duration-700">
         <header className="text-center space-y-6 pt-12 mb-16">
-          <div className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-primary/5 rounded-full border border-primary/10 shadow-inner">
+          <div className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-primary/5 rounded-2xl border border-primary/10 shadow-inner">
             <BookOpen className="w-4 h-4 text-primary" />
             <span className="text-[11px] font-black uppercase tracking-[0.3em] text-primary">Glossarium Fidei</span>
           </div>

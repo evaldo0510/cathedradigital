@@ -152,7 +152,7 @@ const CheckoutPage: React.FC = () => {
     <div className="max-w-5xl mx-auto space-y-14 py-8">
       {/* Hero */}
       <div className="text-center space-y-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl">
           <Icons.Zap className="w-4 h-4 text-primary" />
           <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Cathedra PRO</span>
         </div>
@@ -171,7 +171,7 @@ const CheckoutPage: React.FC = () => {
 
         <div className="space-y-4">
           {/* Plan selector */}
-          <div className="flex gap-2 p-1 bg-muted rounded-full">
+          <div className="flex gap-2 p-1 bg-muted rounded-2xl">
             {PLANS.map(p => (
               <button
                 key={p.id}
@@ -210,7 +210,7 @@ const CheckoutPage: React.FC = () => {
                 </span>
               </div>
               {plan.totalLabel && (
-                <CardDescription className="text-xs font-medium bg-primary/10 text-primary px-4 py-1.5 rounded-full inline-block font-serif">
+                <CardDescription className="text-xs font-medium bg-primary/10 text-primary px-4 py-1.5 rounded-2xl inline-block font-serif">
                   {appliedCoupon
                     ? `${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(finalChargePrice)}/ano · ${appliedCoupon.discount_percent}% off`
                     : `${plan.totalLabel} · ${plan.badge}`}
@@ -277,7 +277,7 @@ const CheckoutPage: React.FC = () => {
       {/* Plan Comparison */}
       <div className="max-w-3xl mx-auto">
         <h2 className="text-2xl font-serif font-bold text-center mb-8">Gratuito vs PRO</h2>
-        <Card className="rounded-full overflow-hidden border border-border/50">
+        <Card className="rounded-2xl overflow-hidden border border-border/50">
           <CardContent className="p-0">
             <table className="w-full text-sm">
               <thead>
@@ -311,9 +311,9 @@ const CheckoutPage: React.FC = () => {
 
       {/* Donation */}
       <div className="max-w-2xl mx-auto">
-        <Card className="border border-border/50 rounded-full overflow-hidden bg-muted/30">
+        <Card className="border border-border/50 rounded-2xl overflow-hidden bg-muted/30">
           <CardHeader className="text-center space-y-3 pb-4">
-            <div className="mx-auto w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
+            <div className="mx-auto w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center">
               <Icons.Heart className="w-7 h-7 text-primary" />
             </div>
             <CardTitle className="text-xl font-serif font-bold">Doação Voluntária</CardTitle>
@@ -390,7 +390,7 @@ const BenefitsSection: React.FC = () => (
         { icon: <Icons.Globe className="w-5 h-5" />, title: 'Offline total', desc: 'Baixe toda a Bíblia e o Catecismo para ler onde quer que esteja.' },
       ].map((benefit, i) => (
         <div key={i} className="flex gap-4 group">
-          <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
+          <div className="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
             {benefit.icon}
           </div>
           <div className="space-y-1">

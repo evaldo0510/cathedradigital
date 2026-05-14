@@ -121,7 +121,7 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
                     ))}
                   </div>
                 ) : (
-                  <div className="py-4 px-2 rounded-full bg-muted/30 border border-dashed border-border/50 text-center">
+                  <div className="py-4 px-2 rounded-2xl bg-muted/30 border border-dashed border-border/50 text-center">
                     <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">
                       Conteúdo oficial não disponível para este parágrafo no momento.
                     </p>

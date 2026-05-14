@@ -146,12 +146,12 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
 
           <div className="flex items-center justify-center gap-4 flex-wrap pt-2">
             {streak > 0 && (
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/10 border border-secondary/20 shadow-sm">
+              <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-secondary/10 border border-secondary/20 shadow-sm">
                 <Icons.Zap className="w-4 h-4 text-secondary" />
                 <span className="text-xs font-black text-primary uppercase tracking-wider">{streak} {streak === 1 ? t('day') : t('days')}</span>
               </div>
             )}
-            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 border border-border shadow-sm">
+            <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-primary/5 border border-border shadow-sm">
               <Icons.Star className="w-4 h-4 text-primary" />
               <span className="text-xs font-black text-primary uppercase tracking-wider">{profile?.xp || 0} XP</span>
             </div>
@@ -169,7 +169,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           onKeyDown={(e) => e.key === 'Enter' && goTo(AppRoute.MODULES_GUIDE)}
         >
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+            <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
               <Icons.HelpCircle className="w-5 h-5" />
             </div>
             <div>
@@ -194,7 +194,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               className="relative overflow-hidden p-5 cursor-pointer group flex flex-col items-start text-left"
             >
               {door.suggested && (
-                <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-1 rounded-full bg-secondary/10 text-secondary text-[8px] font-black uppercase tracking-tighter border border-secondary/20">
+                <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-1 rounded-2xl bg-secondary/10 text-secondary text-[8px] font-black uppercase tracking-tighter border border-secondary/20">
                   <Icons.Star className="w-2 h-2 fill-current" /> Sugerido
                 </div>
               )}
@@ -225,7 +225,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             onKeyDown={(e) => e.key === 'Enter' && goTo(nextUp.route)}
           >
             <div className="flex items-center gap-5">
-              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
                 {nextUp.type === 'bible' ? <Icons.Bible className="w-6 h-6" /> : 
                  nextUp.type === 'catechism' ? <Icons.Cross className="w-6 h-6" /> : 
                  <Icons.Flame className="w-6 h-6" />}
@@ -235,7 +235,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
                 <h3 className="text-lg font-bold text-foreground leading-tight group-hover:text-primary transition-colors">{nextUp.label}</h3>
               </div>
             </div>
-            <div className="w-10 h-10 rounded-full border border-primary/20 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
+            <div className="w-10 h-10 rounded-2xl border border-primary/20 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
               <Icons.ChevronRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
             </div>
           </HomeCard>
@@ -258,15 +258,15 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         <div className="desktop-card space-y-4">
           <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary opacity-80">Estatísticas Semanais</h3>
           <div className="grid grid-cols-3 gap-2 text-center">
-            <div className="p-2 rounded-full bg-primary/[0.04]">
+            <div className="p-2 rounded-2xl bg-primary/[0.04]">
               <p className="text-lg font-bold text-foreground">{weeklyStats.chaptersRead}</p>
               <p className="text-[8px] text-muted-foreground font-medium">{t('bible')}</p>
             </div>
-            <div className="p-2 rounded-full bg-primary/[0.04]">
+            <div className="p-2 rounded-2xl bg-primary/[0.04]">
               <p className="text-lg font-bold text-foreground">{weeklyStats.catechismParagraphs}</p>
               <p className="text-[8px] text-muted-foreground font-medium">CIC</p>
             </div>
-            <div className="p-2 rounded-full bg-primary/[0.04]">
+            <div className="p-2 rounded-2xl bg-primary/[0.04]">
               <p className="text-lg font-bold text-foreground">{weeklyStats.journeySteps}</p>
               <p className="text-[8px] text-muted-foreground font-medium">{t('journeys')}</p>
             </div>

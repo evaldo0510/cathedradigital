@@ -207,13 +207,13 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
     return (
       <div className="space-y-6 max-w-2xl mx-auto pb-24">
         <div className="text-center space-y-3 pt-4">
-          <div className="w-8 h-8 mx-auto rounded-full bg-primary/20 animate-pulse" />
-          <div className="h-7 w-48 mx-auto bg-muted/60 rounded-full animate-pulse" />
-          <div className="h-4 w-64 mx-auto bg-muted/40 rounded-full animate-pulse" />
+          <div className="w-8 h-8 mx-auto rounded-2xl bg-primary/20 animate-pulse" />
+          <div className="h-7 w-48 mx-auto bg-muted/60 rounded-2xl animate-pulse" />
+          <div className="h-4 w-64 mx-auto bg-muted/40 rounded-2xl animate-pulse" />
         </div>
         <div className="space-y-4">
           {[1, 2, 3].map(i => (
-            <div key={i} className="h-44 rounded-full bg-muted/40 animate-pulse" style={{ animationDelay: `${i * 150}ms` }} />
+            <div key={i} className="h-44 rounded-2xl bg-muted/40 animate-pulse" style={{ animationDelay: `${i * 150}ms` }} />
           ))}
         </div>
       </div>
@@ -234,7 +234,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-primary/5 rounded-full border border-primary/10 shadow-inner mb-2">
+        <div className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-primary/5 rounded-2xl border border-primary/10 shadow-inner mb-2">
           <Icons.Journeys className="w-4 h-4 text-primary" />
           <span className="text-[11px] font-black uppercase tracking-[0.3em] text-primary">Itinerarium Mentis</span>
         </div>
@@ -344,9 +344,9 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <Card className="border-primary/20 bg-gradient-to-r from-primary/5 to-transparent overflow-hidden rounded-full sm:rounded-full">
+          <Card className="border-primary/20 bg-gradient-to-r from-primary/5 to-transparent overflow-hidden rounded-full sm:rounded-2xl">
             <CardContent className="p-3 sm:p-4 flex items-center gap-3 sm:gap-4">
-              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0">
                 <Icons.Brain className="w-5 h-5 text-primary" />
               </div>
               <div className="flex-1">
@@ -508,7 +508,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-card via-card/40 to-transparent" />
                         {isComplete && (
-                          <div className="absolute top-3 right-3 bg-emerald-500 text-white px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest flex items-center gap-1 shadow-lg">
+                          <div className="absolute top-3 right-3 bg-emerald-500 text-white px-2.5 py-1 rounded-2xl text-[9px] font-black uppercase tracking-widest flex items-center gap-1 shadow-lg">
                             <Icons.Check className="w-3 h-3" /> Concluída
                           </div>
                         )}
@@ -520,7 +520,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap mb-1">
-                              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full sm:rounded-full bg-muted/80 flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity">
+                              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full sm:rounded-2xl bg-muted/80 flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity">
                               {CATEGORY_ICONS[journey.category] || <Icons.BookOpen className="w-4 h-4" />}
                             </div>
                             <div className="flex-1 min-w-0">
@@ -616,7 +616,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
-          <div className="w-16 h-16 mx-auto rounded-full bg-muted/50 flex items-center justify-center mb-4">
+          <div className="w-16 h-16 mx-auto rounded-2xl bg-muted/50 flex items-center justify-center mb-4">
             <Icons.Search className="w-7 h-7 text-muted-foreground" />
           </div>
           <p className="text-muted-foreground">
@@ -648,9 +648,9 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
         <div className="desktop-card">
           <h3 className="text-[11px] font-black uppercase tracking-widest text-secondary mb-3">Mais Populares</h3>
           <div className="space-y-3">
-            <div className="p-3 rounded-full bg-muted/20 border border-border/40 text-[10px] font-bold text-foreground">1. O Caminho da Perfeição</div>
-            <div className="p-3 rounded-full bg-muted/20 border border-border/40 text-[10px] font-bold text-foreground">2. Catecismo Explicado</div>
-            <div className="p-3 rounded-full bg-muted/20 border border-border/40 text-[10px] font-bold text-foreground">3. Mistérios Gloriosos</div>
+            <div className="p-3 rounded-2xl bg-muted/20 border border-border/40 text-[10px] font-bold text-foreground">1. O Caminho da Perfeição</div>
+            <div className="p-3 rounded-2xl bg-muted/20 border border-border/40 text-[10px] font-bold text-foreground">2. Catecismo Explicado</div>
+            <div className="p-3 rounded-2xl bg-muted/20 border border-border/40 text-[10px] font-bold text-foreground">3. Mistérios Gloriosos</div>
           </div>
         </div>
       </aside>

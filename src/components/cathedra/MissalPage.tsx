@@ -79,7 +79,7 @@ const MissalPage: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl">
           <Icons.Cross className="w-4 h-4 text-primary" />
           <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Ordo Missæ</span>
         </div>
@@ -118,7 +118,7 @@ const MissalPage: React.FC = () => {
 
       <div className="space-y-4">
         {MISSAL_SECTIONS.map(section => (
-          <div key={section.id} id={`missal-${section.id}`} className="bg-card border border-border rounded-full overflow-hidden">
+          <div key={section.id} id={`missal-${section.id}`} className="bg-card border border-border rounded-2xl overflow-hidden">
             <button
               onClick={() => setExpandedSection(expandedSection === section.id ? null : section.id)}
               className="w-full p-5 flex items-center justify-between text-left hover:bg-primary/5 transition-all"

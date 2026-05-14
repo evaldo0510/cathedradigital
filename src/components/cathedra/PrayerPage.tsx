@@ -41,7 +41,7 @@ const YOUTUBE_IDS: Record<MysteryKey, string> = {
 };
 
 const YouTubePlayer: React.FC<{ videoId: string; title: string }> = ({ videoId, title }) => (
-  <div className="w-full aspect-video rounded-full overflow-hidden border border-border bg-black shadow-lg">
+  <div className="w-full aspect-video rounded-2xl overflow-hidden border border-border bg-black shadow-lg">
     <iframe
       src={`https://www.youtube.com/embed/${videoId}?rel=0`}
       title={title}
@@ -185,7 +185,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
 
       {/* Intention */}
       {intention && phase === 'intro' && (
-        <div className="mx-6 mt-4 p-4 bg-secondary/5 border border-secondary/10 rounded-full text-center max-w-xl md:mx-auto">
+        <div className="mx-6 mt-4 p-4 bg-secondary/5 border border-secondary/10 rounded-2xl text-center max-w-xl md:mx-auto">
           <p className="text-[10px] font-black uppercase tracking-widest text-secondary/50 mb-1">Intenção</p>
           <p className="text-base font-serif text-secondary/70 italic leading-relaxed">"{intention}"</p>
         </div>
@@ -219,7 +219,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
                   { key: 'aveMaria', label: 'Ave Maria' },
                   { key: 'gloria', label: 'Glória ao Pai' },
                 ].map(p => (
-                  <div key={p.key} className="group bg-white/[0.04] rounded-full p-5 cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setExpandedPrayer(expandedPrayer === p.key ? null : p.key)}>
+                  <div key={p.key} className="group bg-white/[0.04] rounded-2xl p-5 cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setExpandedPrayer(expandedPrayer === p.key ? null : p.key)}>
                     <div className="flex items-center justify-between">
                       <p className="font-bold text-sm text-secondary/90">{p.label}</p>
                       <ChevronRight className={`w-4 h-4 text-secondary/30 transition-transform ${expandedPrayer === p.key ? 'rotate-90' : ''}`} />
@@ -289,7 +289,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
                   { key: 'aveMaria', label: 'Ave Maria (×10)' },
                   { key: 'gloria', label: 'Glória ao Pai' },
                 ].map(p => (
-                  <div key={p.key} className="group bg-white/[0.04] rounded-full p-5 cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setExpandedPrayer(expandedPrayer === p.key ? null : p.key)}>
+                  <div key={p.key} className="group bg-white/[0.04] rounded-2xl p-5 cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setExpandedPrayer(expandedPrayer === p.key ? null : p.key)}>
                     <div className="flex items-center justify-between">
                       <p className="font-bold text-sm text-secondary/90">{p.label}</p>
                       <ChevronRight className={`w-4 h-4 text-secondary/30 transition-transform ${expandedPrayer === p.key ? 'rotate-90' : ''}`} />
@@ -319,7 +319,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
           {phase === 'closing' && (
             <div className="space-y-8 animate-in fade-in zoom-in-95 duration-700">
               <h3 className="text-2xl font-serif font-bold text-secondary text-center">Oração Final</h3>
-              <div className="bg-white/[0.04] rounded-full p-6 cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setExpandedPrayer(expandedPrayer === 'salve' ? null : 'salve')}>
+              <div className="bg-white/[0.04] rounded-2xl p-6 cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setExpandedPrayer(expandedPrayer === 'salve' ? null : 'salve')}>
                 <div className="flex items-center justify-between">
                   <p className="font-bold text-sm text-secondary/90">Salve Rainha</p>
                   <ChevronRight className={`w-4 h-4 text-secondary/30 transition-transform ${expandedPrayer === 'salve' ? 'rotate-90' : ''}`} />
@@ -378,7 +378,7 @@ const PrayerPage: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
       >
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/5 border border-primary/10 rounded-full">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/5 border border-primary/10 rounded-2xl">
           <Heart className="w-4 h-4 text-primary" />
           <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Oratio et Devotio</span>
         </div>
@@ -418,7 +418,7 @@ const PrayerPage: React.FC = () => {
                 <div className="space-y-6">
                   <div className="space-y-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                      <div className="w-8 h-8 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
                         <MessageSquare className="w-4 h-4" />
                       </div>
                       <p className="text-sm font-serif text-muted-foreground italic leading-relaxed">
@@ -509,7 +509,7 @@ const PrayerPage: React.FC = () => {
         >
           <div className="bg-card border border-border rounded-[2rem] p-8 shadow-sm space-y-6">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+              <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
                 <BookOpen className="w-5 h-5" />
               </div>
               <h3 className="text-xl font-serif font-bold">Orações Comuns</h3>
@@ -521,7 +521,7 @@ const PrayerPage: React.FC = () => {
                 { key: 'gloria', title: 'Glória ao Pai', icon: Sparkles },
                 { key: 'salveRainha', title: 'Salve Rainha', icon: Heart },
               ].map(p => (
-                <div key={p.key} className="p-5 rounded-full bg-muted/30 border border-border/50 space-y-3 hover:bg-muted/50 transition-colors group">
+                <div key={p.key} className="p-5 rounded-2xl bg-muted/30 border border-border/50 space-y-3 hover:bg-muted/50 transition-colors group">
                   <div className="flex items-center gap-3">
                     <p className="font-serif font-bold text-sm flex-1">{p.title}</p>
                     <ShareButton

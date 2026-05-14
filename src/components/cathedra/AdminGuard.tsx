@@ -13,7 +13,7 @@ const AdminGuard: React.FC<AdminGuardProps> = ({ children }) => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="w-8 h-8 border-2 border-secondary border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-secondary border-t-transparent rounded-2xl animate-spin" />
       </div>
     );
   }
@@ -25,7 +25,7 @@ const AdminGuard: React.FC<AdminGuardProps> = ({ children }) => {
   if (profile?.role !== 'admin') {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-8">
-        <div className="w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center mb-4">
+        <div className="w-16 h-16 rounded-2xl bg-destructive/10 flex items-center justify-center mb-4">
           <span className="text-2xl">🔒</span>
         </div>
         <h2 className="text-xl font-bold mb-2">Acesso Restrito</h2>

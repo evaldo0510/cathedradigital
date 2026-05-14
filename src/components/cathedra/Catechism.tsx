@@ -61,7 +61,7 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
     }
 
     return (
-      <div className="reader-text bg-destructive/5 border border-destructive/10 rounded-full p-4 text-destructive font-serif text-sm py-4 space-y-2">
+      <div className="reader-text bg-destructive/5 border border-destructive/10 rounded-2xl p-4 text-destructive font-serif text-sm py-4 space-y-2">
         <div className="font-bold flex items-center gap-2">
            <Icons.Cross className="w-4 h-4" />
            Ops! Problema ao carregar o parágrafo §{paragraph}.
@@ -79,7 +79,7 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
 
   if (data?.status === 'error_402') {
     return (
-      <div className="reader-text bg-amber-500/5 border border-amber-500/10 rounded-full p-4 text-amber-600 dark:text-amber-400 font-serif text-sm py-4 space-y-3">
+      <div className="reader-text bg-amber-500/5 border border-amber-500/10 rounded-2xl p-4 text-amber-600 dark:text-amber-400 font-serif text-sm py-4 space-y-3">
         <div className="font-bold flex items-center gap-2">
            <Icons.AlertTriangle className="w-4 h-4" />
            Geração pausada: Créditos de IA esgotados.
@@ -194,7 +194,7 @@ const LazyParagraph: React.FC<{ paragraph: number; currentParagraph: number; par
 
   return (
     <div ref={ref} id={`p${p}`} className={`scroll-mt-28 transition-all duration-700 pb-10 border-b border-border/40 last:border-0 last:pb-0 ${currentParagraph === p ? 'relative' : 'opacity-80 hover:opacity-100'}`}>
-      {currentParagraph === p && <div className="absolute -left-4 top-0 bottom-0 w-1 bg-primary rounded-full hidden md:block" />}
+      {currentParagraph === p && <div className="absolute -left-4 top-0 bottom-0 w-1 bg-primary rounded-2xl hidden md:block" />}
       <div className="flex items-center gap-4 mb-6">
         <div className="flex items-center gap-2">
           <span className="text-3xl font-serif font-bold text-primary">§{p}</span>
@@ -426,7 +426,7 @@ const Catechism: React.FC = () => {
             <Icons.ArrowDown className="w-3.5 h-3.5 rotate-90" /> Seção Anterior
           </button>
 
-          <div className="px-4 py-2 bg-primary/5 border border-primary/20 rounded-full text-xs font-black uppercase tracking-widest text-primary">
+          <div className="px-4 py-2 bg-primary/5 border border-primary/20 rounded-2xl text-xs font-black uppercase tracking-widest text-primary">
             Lendo Seção {selectedSection.id}
           </div>
           <button 
@@ -458,7 +458,7 @@ const Catechism: React.FC = () => {
           />
         )}
 
-        <div className="bg-card border border-border rounded-full p-6 md:p-10 space-y-12">
+        <div className="bg-card border border-border rounded-2xl p-6 md:p-10 space-y-12">
           <div className="flex flex-col gap-10">
             {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(p => (
               <LazyParagraph key={p} paragraph={p} currentParagraph={currentParagraph} paragraphsRead={paragraphsRead} isFavorite={isFavorite} toggleFavorite={toggleFavorite} handleNavigateToBible={handleNavigateToBible} />
@@ -530,7 +530,7 @@ const Catechism: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
       >
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl">
           <Icons.Cross className="w-4 h-4 text-primary" />
           <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Codex Fidei</span>
         </div>
@@ -541,7 +541,7 @@ const Catechism: React.FC = () => {
             <span>Seu Progresso</span>
             <span>{Math.round((paragraphsRead.size / 2865) * 100)}%</span>
           </div>
-          <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+          <div className="h-1.5 w-full bg-muted rounded-2xl overflow-hidden">
             <motion.div 
               initial={{ width: 0 }}
               animate={{ width: `${(paragraphsRead.size / 2865) * 100}%` }}
@@ -571,7 +571,7 @@ const Catechism: React.FC = () => {
             className="max-w-md mx-auto p-4 rounded-full border border-primary/20 bg-primary/5 cursor-pointer hover:border-primary/40 transition-all flex items-center justify-between group"
           >
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/20 transition-colors">
+              <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/20 transition-colors">
                 <Icons.Sparkles className="w-5 h-5" />
               </div>
               <div>

@@ -321,7 +321,7 @@ const SpiritualQuiz: React.FC = () => {
     const dirLabel = existingData?.direction || p.direction.label;
     
     return (
-      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="rounded-full border border-border bg-card p-5 space-y-3">
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="rounded-2xl border border-border bg-card p-5 space-y-3">
         <div className="flex items-center justify-between">
           <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">Seu Perfil Espiritual</span>
           <button 
@@ -379,11 +379,11 @@ const SpiritualQuiz: React.FC = () => {
         <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
         <div className="grid grid-cols-2 gap-3">
-          <div className="p-3 rounded-full bg-background/60 border border-border space-y-1 text-center">
+          <div className="p-3 rounded-2xl bg-background/60 border border-border space-y-1 text-center">
             <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">💔 O que te trava</p>
             <p className="text-sm font-bold text-foreground">{painLabel}</p>
           </div>
-          <div className="p-3 rounded-full bg-background/60 border border-border space-y-1 text-center">
+          <div className="p-3 rounded-2xl bg-background/60 border border-border space-y-1 text-center">
             <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">🔥 Seu caminho</p>
             <p className="text-sm font-bold text-foreground">{dirLabel}</p>
           </div>
@@ -394,15 +394,15 @@ const SpiritualQuiz: React.FC = () => {
         <div className="space-y-2">
           <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground text-center">Recomendado para você</p>
           <div className="space-y-2 text-sm">
-            <div className="flex items-center gap-2 px-3 py-2.5 rounded-full bg-primary/[0.04] border border-primary/10">
+            <div className="flex items-center gap-2 px-3 py-2.5 rounded-2xl bg-primary/[0.04] border border-primary/10">
               <Sparkles className="w-4 h-4 text-primary shrink-0" />
               <span className="text-foreground/80">Jornada: <strong className="text-foreground">{p.journeyName}</strong></span>
             </div>
-            <div className="flex items-center gap-2 px-3 py-2.5 rounded-full bg-primary/[0.04] border border-primary/10">
+            <div className="flex items-center gap-2 px-3 py-2.5 rounded-2xl bg-primary/[0.04] border border-primary/10">
               <BookOpen className="w-4 h-4 text-primary shrink-0" />
               <span className="text-foreground/80">Tema: <strong className="text-foreground">{p.theme}</strong></span>
             </div>
-            <div className="flex items-center gap-2 px-3 py-2.5 rounded-full bg-secondary/[0.06] border border-secondary/10">
+            <div className="flex items-center gap-2 px-3 py-2.5 rounded-2xl bg-secondary/[0.06] border border-secondary/10">
               <Brain className="w-4 h-4 text-secondary shrink-0" />
               <span className="text-foreground/80">Reflexão com <strong className="text-foreground">Logos IA</strong></span>
             </div>
@@ -467,8 +467,8 @@ const SpiritualQuiz: React.FC = () => {
           <p className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary">Quiz Espiritual</p>
           <p className="text-[10px] font-bold text-muted-foreground">Pergunta {step + 1} de {QUESTIONS.length}</p>
         </div>
-        <div className="h-1.5 bg-muted rounded-full overflow-hidden">
-          <motion.div className="h-full bg-secondary rounded-full" animate={{ width: `${progress}%` }} transition={{ type: 'spring', damping: 20 }} />
+        <div className="h-1.5 bg-muted rounded-2xl overflow-hidden">
+          <motion.div className="h-full bg-secondary rounded-2xl" animate={{ width: `${progress}%` }} transition={{ type: 'spring', damping: 20 }} />
         </div>
       </div>
 

@@ -186,7 +186,7 @@ const Magisterium: React.FC = () => {
       />
 
       <div className="text-center space-y-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl">
           <Icons.Scroll className="w-4 h-4 text-primary" />
           <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Magisterium Ecclesiae</span>
         </div>
@@ -296,7 +296,7 @@ const Magisterium: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="bg-primary/5 rounded-full p-6 border border-primary/10 space-y-4">
+                  <div className="bg-primary/5 rounded-2xl p-6 border border-primary/10 space-y-4">
                     <p className="text-xl font-serif font-bold text-primary leading-tight">{selectedGuidance.padh}</p>
                     <p className="text-sm font-bold text-foreground">
                       {parseTheologicalReferences(selectedGuidance.innerQuestion).map((seg, i) => {
@@ -317,7 +317,7 @@ const Magisterium: React.FC = () => {
                       {selectedGuidance.relatedDocs.map(docId => {
                         const doc = DOCS_LIST.find(d => d.id === docId);
                         return (
-                          <div key={docId} className="p-4 rounded-full border border-border bg-muted/30 flex items-center gap-3">
+                          <div key={docId} className="p-4 rounded-2xl border border-border bg-muted/30 flex items-center gap-3">
                             <Icons.FileText className="w-5 h-5 text-primary" />
                             <div>
                               <p className="text-xs font-bold text-foreground">{doc?.title || 'Documento'}</p>
@@ -378,10 +378,10 @@ const Magisterium: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.05 }}
               >
-                <Card className="group h-full hover:border-primary/30 transition-all border-border bg-card overflow-hidden rounded-full">
+                <Card className="group h-full hover:border-primary/30 transition-all border-border bg-card overflow-hidden rounded-2xl">
                   <CardContent className="p-6 flex flex-col h-full space-y-4">
                     <div className="flex items-start justify-between gap-2">
-                      <div className="p-2.5 rounded-full bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all">
+                      <div className="p-2.5 rounded-2xl bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all">
                         {doc.type === 'Encíclica' ? <Icons.Scroll className="w-5 h-5" /> : 
                          doc.type === 'Constituição' ? <Icons.Library className="w-5 h-5" /> :
                          <Icons.FileText className="w-5 h-5" />}

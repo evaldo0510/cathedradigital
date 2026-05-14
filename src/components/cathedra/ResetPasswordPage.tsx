@@ -73,12 +73,12 @@ const ResetPasswordPage: React.FC = () => {
         <p className="text-muted-foreground font-serif italic">Defina sua nova senha abaixo.</p>
       </div>
 
-      <div className="bg-card border border-border rounded-full p-8 space-y-6">
+      <div className="bg-card border border-border rounded-2xl p-8 space-y-6">
         {error && (
-          <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-full text-sm text-destructive font-medium">{error}</div>
+          <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-2xl text-sm text-destructive font-medium">{error}</div>
         )}
         {success ? (
-          <div className="p-4 bg-primary/10 border border-primary/20 rounded-full text-sm text-primary font-medium text-center">
+          <div className="p-4 bg-primary/10 border border-primary/20 rounded-2xl text-sm text-primary font-medium text-center">
             Senha atualizada com sucesso! Redirecionando...
           </div>
         ) : (
