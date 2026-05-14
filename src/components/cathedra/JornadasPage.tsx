@@ -180,7 +180,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
         title: t.title,
         description: t.description,
         difficulty: t.level.toLowerCase(),
-        category: 'fundamentos',
+        category: 'formacao',
         is_active: true,
         sort_order: -1,
         steps_count: t.steps.length,
