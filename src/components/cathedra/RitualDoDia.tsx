@@ -71,7 +71,7 @@ const RitualDoDia: React.FC = () => {
         {/* Reflection */}
         <div className="space-y-4" role="article" aria-label="Reflexão">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-secondary/10 flex items-center justify-center">
+            <div className="premium-icon-box">
               <Sparkles className="w-4 h-4 text-secondary" />
             </div>
             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">Meditatio</span>
