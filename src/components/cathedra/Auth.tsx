@@ -153,8 +153,9 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <button
+          <Button
             type="button"
+            variant="outline"
             onClick={async () => {
               setLoading(true);
               setError('');
@@ -172,14 +173,14 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
               }
               setLoading(false);
             }}
-            disabled={loading}
-            className="w-full py-3.5 bg-background text-foreground border border-border rounded-full font-black uppercase text-[10px] tracking-widest shadow-sm hover:bg-muted transition-all disabled:opacity-50 flex items-center justify-center gap-3 group"
+            isLoading={loading}
+            className="w-full h-12 flex items-center justify-center gap-3 group"
           >
             <Icons.Google className="w-5 h-5 transition-transform group-hover:scale-110" />
             Google
-          </button>
+          </Button>
 
-          <button
+          <Button
             type="button"
             onClick={async () => {
               setLoading(true);
@@ -195,12 +196,12 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
               }
               setLoading(false);
             }}
-            disabled={loading}
-            className="w-full py-3.5 bg-primary text-primary-foreground rounded-full font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary/90 transition-all disabled:opacity-50 flex items-center justify-center gap-3 group"
+            isLoading={loading}
+            className="w-full h-12 flex items-center justify-center gap-3 group"
           >
             <Icons.Apple className="w-5 h-5 transition-transform group-hover:scale-110" />
             Apple
-          </button>
+          </Button>
         </div>
 
         {error && (
