@@ -3,8 +3,8 @@ import { Card, CardContent } from '@/components/ui/card';
 
 export const DashboardSkeleton: React.FC = () => {
   return (
-    <div className="desktop-layout py-6 md:py-10 animate-pulse">
-      <div className="desktop-main content-section space-y-8">
+    <div className="desktop-layout pt-6 md:pt-20 pb-24 animate-pulse">
+      <div className="desktop-main space-y-20 max-w-2xl mx-auto lg:max-w-none lg:mx-0">
         {/* Header Skeleton */}
         <div className="text-center space-y-6">
           <div className="flex justify-center">

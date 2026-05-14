@@ -73,8 +73,12 @@ const HojePage: React.FC = () => {
   ], []);
 
   return (
-    <div className="desktop-layout pt-6 md:pt-20 pb-24">
-      {loadingStats && <DashboardSkeleton />}
+    <div className="desktop-layout pt-6 md:pt-20 pb-24 relative">
+      {loadingStats && (
+        <div className="absolute inset-0 z-50 bg-background/80 backdrop-blur-sm">
+          <DashboardSkeleton />
+        </div>
+      )}
       <SEOHead 
         title="Cathedra Digital — Nem toda prisão é visível" 
         description="Explore o Catecismo, a Bíblia e jornadas espirituais para uma vida de liberdade e verdade. A sabedoria da Igreja Católica ao seu alcance." 
@@ -88,7 +92,7 @@ const HojePage: React.FC = () => {
             <p className="text-[10px] md:text-[12px] font-black uppercase tracking-[0.4em] text-primary/60">
               {greeting}, {profile?.name?.split(' ')[0] || 'fiel'}
             </p>
-            <h1 className="text-5xl md:text-9xl font-serif text-foreground leading-[1] tracking-tight">
+            <h1 className="text-4xl sm:text-5xl md:text-9xl font-serif text-foreground leading-[1] tracking-tight">
               "Nem toda prisão <br /><span className="text-primary italic font-medium">é visível."</span>
             </h1>
           </div>
