@@ -59,7 +59,7 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t }) => {
           tabIndex={0}
           role="button"
           aria-label={`${door.label}: ${door.description}`}
-          className="premium-card p-6 flex flex-col items-center text-center gap-4 cursor-pointer group rounded-3xl"
+          className="premium-card p-6 flex flex-col items-center text-center gap-4 cursor-pointer group rounded-3xl subtle-glow"
         >
           <div className="premium-icon-box group-hover:scale-110 transition-transform duration-500">
             <door.icon className="w-6 h-6" />
