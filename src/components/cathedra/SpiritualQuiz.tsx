@@ -513,7 +513,7 @@ const SpiritualQuiz: React.FC = () => {
         >
           <p className="text-xs text-muted-foreground text-center italic leading-relaxed whitespace-pre-line font-serif">{q.intro}</p>
           <h3 className="text-base font-bold text-foreground text-center leading-snug">{q.question}</h3>
-          <div className="space-y-2.5" role="radiogroup" aria-label={q.question}>
+          <div className="space-y-2.5 max-h-[50vh] overflow-y-auto no-scrollbar pr-1" role="radiogroup" aria-label={q.question}>
             {q.options.map((opt) => (
               <motion.button
                 key={opt.value}
