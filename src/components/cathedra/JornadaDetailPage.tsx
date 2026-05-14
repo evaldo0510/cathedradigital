@@ -199,7 +199,7 @@ const JornadaDetailPage: React.FC = () => {
                     <Button
                       size="sm"
                       variant={isNext ? 'default' : 'outline'}
-                      onClick={() => navigate(`/jornadas/${id}/step?step=${step.id}`)}
+                      onClick={() => navigate(step.slug ? `/trilhas/${step.slug}?step=${step.id}` : `/jornadas/${id}/step?step=${step.id}`)}
                     >
                       {isCompleted ? 'Rever' : isNext ? 'Iniciar' : 'Abrir'}
                       <ChevronRight className="w-4 h-4 ml-1" />
