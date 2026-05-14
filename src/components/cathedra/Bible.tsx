@@ -74,7 +74,7 @@ const BIBLE_CATEGORIES: Record<string, BibleCategory[]> = {
     { label: 'Atos', icon: Icons.Globe, color: 'text-primary', bgColor: 'bg-primary/5 border-primary/10', books: [
       { name: 'Atos dos Apóstolos', abbr: 'At', chapters: 28 },
     ]},
-    { label: 'Cartas Paulinas', icon: Icons.Mail, color: 'text-primary', bgColor: 'bg-muted border-border', books: [
+    { label: 'Cartas Paulinas', icon: Icons.Mail, color: 'text-primary', bgColor: 'bg-primary/5 border-primary/10', books: [
       { name: 'Romanos', abbr: 'Rm', chapters: 16 }, { name: '1 Coríntios', abbr: '1Cor', chapters: 16 },
       { name: '2 Coríntios', abbr: '2Cor', chapters: 13 }, { name: 'Gálatas', abbr: 'Gl', chapters: 6 },
       { name: 'Efésios', abbr: 'Ef', chapters: 6 }, { name: 'Filipenses', abbr: 'Fl', chapters: 4 },
