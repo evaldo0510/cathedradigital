@@ -174,12 +174,26 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
       if (error) throw error;
       if (!journeyData) { setLoading(false); return; }
       
-      setJourneys(journeyData);
+      const localTrails = getTrails().map(t => ({
+        id: t.id,
+        slug: t.slug,
+        title: t.title,
+        description: t.description,
+        difficulty: t.level.toLowerCase(),
+        category: 'fundamentos',
+        is_active: true,
+        sort_order: -1,
+        steps_count: t.steps.length,
+        is_premium: false,
+        estimated_days: t.steps.length
+      }));
+
+      setJourneys([...localTrails, ...journeyData]);
 
       // Reconstruct the steps count map from the view data
       const counts: Record<string, number> = {};
-      journeyData.forEach(j => {
-        counts[j.id] = j.steps_count;
+      [...localTrails, ...journeyData].forEach(j => {
+        counts[j.id] = (j as any).steps_count;
       });
       setStepsCountMap(counts);
 
