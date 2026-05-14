@@ -2,95 +2,68 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Search, BookOpen, Compass, Sparkles, Activity, Clock, Database, Zap } from 'lucide-react';
+import { 
+  Search, 
+  BookOpen, 
+  Compass, 
+  Sparkles, 
+  Activity, 
+  Clock, 
+  Database, 
+  Zap,
+  Tag,
+  ChevronRight
+} from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { searchUnified, BaseContent, SearchMetrics } from '@/services/conteudoService';
+import { searchUnified, BaseContent, SearchMetrics, getGlobalTags } from '@/services/conteudoService';
 import { useNavigate } from 'react-router-dom';
+import { AppRoute } from '@/types';
 
+/**
+ * CommandCenter: Unified search and navigation hub
+ */
 const CommandCenter: React.FC = () => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<BaseContent[]>([]);
   const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
   const [metrics, setMetrics] = useState<SearchMetrics | null>(null);
-  const [queryCount, setQueryCount] = useState(0);
+  const [tags, setTags] = useState<{name: string, category: string}[]>([]);
   
   const abortControllerRef = useRef<AbortController | null>(null);
-  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const navigate = useNavigate();
 
-  const handleSearch = (val: string, pageNum: number = 0) => {
-    setQuery(val);
-    
-    if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current);
-    }
+  useEffect(() => {
+    getGlobalTags().then(setTags);
+  }, []);
 
+  const handleSearch = async (val: string) => {
+    setQuery(val);
     if (val.length < 3) {
       setResults([]);
-      setHasMore(false);
+      setMetrics(null);
       return;
     }
 
-    debounceTimerRef.current = setTimeout(async () => {
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
-      abortControllerRef.current = new AbortController();
+    if (abortControllerRef.current) abortControllerRef.current.abort();
+    abortControllerRef.current = new AbortController();
 
-      setPage(pageNum);
-      setLoading(true);
-
-      try {
-        const { data, metrics: searchMetrics } = await searchUnified(
-          val, 
-          undefined, 
-          pageNum, 
-          10, 
-          abortControllerRef.current.signal
-        );
-        
-        if (pageNum === 0) {
-          setResults(data);
-          setMetrics(searchMetrics);
-          setQueryCount(prev => prev + 1);
-        } else {
-          setResults(prev => [...prev, ...data]);
-        }
-        
-        setHasMore(data.length === 10);
-      } catch (err: any) {
-        if (err.name !== 'AbortError') {
-          console.error('Search failed:', err);
-        }
-      } finally {
-        setLoading(false);
-      }
-    }, 300);
-  };
-
-  const loadMore = async () => {
     setLoading(true);
-    const nextP = page + 1;
-    setPage(nextP);
     try {
-      const { data } = await searchUnified(query, undefined, nextP, 10);
-      setResults(prev => [...prev, ...data]);
-      setHasMore(data.length === 10);
-    } catch (err) {
-      console.error('Load more failed:', err);
+      const { data, metrics: searchMetrics } = await searchUnified(
+        val, 
+        undefined, 
+        0, 
+        10, 
+        abortControllerRef.current.signal
+      );
+      setResults(data);
+      setMetrics(searchMetrics);
+    } catch (err: any) {
+      if (err.name !== 'AbortError') console.error('Search failed:', err);
     } finally {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    return () => {
-      if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
-      if (abortControllerRef.current) abortControllerRef.current.abort();
-    };
-  }, []);
 
   return (
     <div className="w-full max-w-4xl mx-auto space-y-6">
@@ -140,15 +113,6 @@ const CommandCenter: React.FC = () => {
                 </CardContent>
               </Card>
             ))}
-            {hasMore && results.length > 0 && !loading && (
-              <Button 
-                variant="ghost" 
-                className="w-full h-12 rounded-2xl text-[10px] font-black uppercase tracking-widest opacity-60 hover:opacity-100"
-                onClick={loadMore}
-              >
-                Carregar mais resultados
-              </Button>
-            )}
             {query.length >= 3 && results.length === 0 && !loading && (
               <div className="p-12 text-center border border-dashed rounded-3xl opacity-50">
                 <p className="text-sm">Nenhum resultado encontrado para "{query}"</p>
@@ -158,40 +122,6 @@ const CommandCenter: React.FC = () => {
         </div>
 
         <div className="space-y-6">
-          {metrics && (
-            <section className="space-y-3">
-              <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
-                <Activity className="w-3 h-3" /> Performance da Busca
-              </h3>
-              <Card className="bg-card/30 backdrop-blur-sm border-border/40 rounded-2xl overflow-hidden">
-                <CardContent className="p-4 grid grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <p className="text-[9px] text-muted-foreground uppercase font-bold flex items-center gap-1">
-                      <Clock className="w-2.5 h-2.5" /> Latência
-                    </p>
-                    <p className="text-sm font-serif font-bold">{metrics.responseTime.toFixed(1)}ms</p>
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-[9px] text-muted-foreground uppercase font-bold flex items-center gap-1">
-                      {metrics.cacheHit ? <Zap className="w-2.5 h-2.5 text-yellow-500" /> : <Database className="w-2.5 h-2.5" />} Status
-                    </p>
-                    <Badge variant={metrics.cacheHit ? "secondary" : "outline"} className="text-[9px] h-4 font-bold">
-                      {metrics.cacheHit ? 'CACHE HIT' : 'CACHE MISS'}
-                    </Badge>
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-[9px] text-muted-foreground uppercase font-bold">Consultas</p>
-                    <p className="text-sm font-serif font-bold">{queryCount}</p>
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-[9px] text-muted-foreground uppercase font-bold">Total</p>
-                    <p className="text-sm font-serif font-bold">{metrics.resultsCount} itens</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </section>
-          )}
-
           <section className="space-y-3">
             <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Tags Globais</h3>
             <div className="flex flex-wrap gap-2">

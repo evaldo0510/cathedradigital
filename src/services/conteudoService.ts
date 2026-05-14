@@ -25,6 +25,9 @@ export interface SearchMetrics {
 const SEARCH_CACHE: Record<string, { data: BaseContent[], timestamp: number }> = {};
 const CACHE_TTL = 1000 * 60 * 5; // 5 minutes
 
+/**
+ * Unified search for all content types
+ */
 export const searchUnified = async (
   query: string, 
   types?: ContentType[], 
@@ -33,7 +36,8 @@ export const searchUnified = async (
   signal?: AbortSignal
 ) => {
   const startTime = performance.now();
-  const cacheKey = `${query}-${types?.join(',')}-${page}-${limit}`;
+  const normalizedQuery = query.toLowerCase().trim();
+  const cacheKey = `${normalizedQuery}-${types?.sort().join(',')}-${page}-${limit}`;
   
   if (SEARCH_CACHE[cacheKey] && Date.now() - SEARCH_CACHE[cacheKey].timestamp < CACHE_TTL) {
     const metrics: SearchMetrics = {
@@ -42,7 +46,6 @@ export const searchUnified = async (
       resultsCount: SEARCH_CACHE[cacheKey].data.length,
       query
     };
-    console.log('[Search Metrics]', metrics);
     return { data: SEARCH_CACHE[cacheKey].data, metrics };
   }
 
@@ -50,6 +53,7 @@ export const searchUnified = async (
   const from = page * limit;
   const to = from + limit - 1;
   
+  // Search in Catechism
   if (!types || types.includes('catechism')) {
     const queryBuilder = supabase
       .from('catechism_paragraphs' as any)
@@ -72,13 +76,13 @@ export const searchUnified = async (
           summary: item.summary,
           content: item.content,
           tags: ['catecismo', 'doutrina'],
-          route: `/catechism?p=${item.number}`
+          route: `${AppRoute.CATECHISM}?p=${item.number}`
         });
       });
     }
   }
 
-  // Add more sources as needed
+  // Potential for other types (Bible, Saints, etc)
   
   SEARCH_CACHE[cacheKey] = { data: results, timestamp: Date.now() };
   
@@ -88,22 +92,27 @@ export const searchUnified = async (
     resultsCount: results.length,
     query
   };
-  console.log('[Search Metrics]', metrics);
   
   return { data: results, metrics };
 };
 
-export const getTagCloud = async () => {
-  // Centralized tags for global navigation/filtering
+/**
+ * Get global tag cloud
+ */
+export const getGlobalTags = async () => {
   return [
-    { name: 'Eucaristia', category: 'sacramentos' },
-    { name: 'Misericórdia', category: 'espiritualidade' },
-    { name: 'Oração', category: 'vida-crista' },
-    { name: 'Santos', category: 'biografia' },
-    { name: 'Doutrina', category: 'teologia' }
+    { name: 'Eucaristia', category: 'sacramentos', count: 120 },
+    { name: 'Confissão', category: 'sacramentos', count: 85 },
+    { name: 'Oração', category: 'vida-crista', count: 210 },
+    { name: 'Dogma', category: 'doutrina', count: 45 },
+    { name: 'Graça', category: 'teologia', count: 67 },
+    { name: 'Santos', category: 'biografia', count: 154 }
   ];
 };
 
+/**
+ * Get content by ID across all types
+ */
 export const getContentById = async (type: ContentType, id: string): Promise<BaseContent | null> => {
   switch (type) {
     case 'catechism':
@@ -122,7 +131,7 @@ export const getContentById = async (type: ContentType, id: string): Promise<Bas
         title: `CIC §${item.number}`,
         content: item.content,
         tags: ['catecismo'],
-        route: `/catechism?p=${item.number}`,
+        route: `${AppRoute.CATECHISM}?p=${item.number}`,
         metadata: item
       };
     default:

@@ -49,6 +49,7 @@ const queryClient = new QueryClient({
 const Bible = lazy(() => import('./components/cathedra/Bible'));
 const Catechism = lazy(() => import('./components/cathedra/Catechism'));
 const StudyMode = lazy(() => import('./components/cathedra/StudyMode'));
+const CommandCenterPage = lazy(() => import('./components/cathedra/CommandCenter'));
 const Saints = lazy(() => import('./components/cathedra/Saints'));
 const Magisterium = lazy(() => import('./components/cathedra/Magisterium'));
 // Redundant imports removed (DailyLiturgy, MissalPage)
@@ -636,7 +637,7 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.CACHE_MANAGER} element={<PageTransition><CacheManager /></PageTransition>} />
 
                   <Route path={AppRoute.POPES} element={<PageTransition><AuthGuard><PopesPage /></AuthGuard></PageTransition>} />
-                  <Route path={AppRoute.BUSCAR} element={<PageTransition><AuthGuard><GlobalSearchPage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.BUSCAR} element={<PageTransition><AuthGuard><CommandCenterPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.ADMIN} element={
                     <PageTransition>
                       <AdminGuard>
