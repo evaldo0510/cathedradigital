@@ -42,7 +42,7 @@ const ViaCrucis: React.FC = () => {
         <motion.div className="text-center space-y-4 pt-4" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}>
           <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/5 border border-primary/10 rounded-2xl">
             <Cross className="w-4 h-4 text-primary" />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Via Dolorosa</span>
+            <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Via Dolorosa</span>
           </div>
           <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground tracking-tight">Via Crucis</h1>
           <p className="text-lg text-muted-foreground font-serif italic max-w-2xl mx-auto">"Se alguém quer vir após mim, negue-se a si mesmo, tome sua cruz e siga-me."</p>
@@ -50,7 +50,7 @@ const ViaCrucis: React.FC = () => {
 
         <div className="flex justify-center">
           <button onClick={() => setIsJourney(true)} 
-            className="group px-10 py-5 bg-foreground text-background rounded-full font-black uppercase text-[10px] tracking-[0.2em] shadow-xl hover:bg-primary hover:text-primary-foreground transition-all active:scale-95 flex items-center gap-3">
+            className="group px-10 py-5 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-[0.2em] shadow-xl hover:bg-primary hover:text-primary-foreground transition-all active:scale-95 flex items-center gap-3">
             <Play className="w-4 h-4 fill-current" /> Iniciar Via Sacra
           </button>
         </div>
@@ -66,7 +66,7 @@ const ViaCrucis: React.FC = () => {
                 <div className="w-12 h-12 rounded-2xl bg-primary/5 text-primary flex items-center justify-center font-black text-lg shrink-0 border border-primary/10 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">{s.num}</div>
                 <div>
                   <p className="font-serif font-bold text-lg text-foreground group-hover:text-primary transition-colors leading-tight">{s.title}</p>
-                  <p className="text-[10px] text-muted-foreground mt-1 uppercase tracking-widest font-black opacity-60">{s.scripture}</p>
+                  <p className="text-premium-tiny text-muted-foreground mt-1 uppercase tracking-widest font-black opacity-60">{s.scripture}</p>
                 </div>
               </div>
             </button>
@@ -120,13 +120,13 @@ const ViaCrucis: React.FC = () => {
 
         <div className="relative space-y-12 max-w-2xl mx-auto">
           <div className="space-y-4">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/40 text-center">Meditação</h3>
+            <h3 className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary/40 text-center">Meditação</h3>
             <p className="text-xl md:text-2xl text-foreground/90 leading-relaxed font-serif text-center italic">"{station.meditation}"</p>
           </div>
           
           <div className="bg-primary/5 rounded-[2.5rem] p-8 md:p-12 border border-primary/10 relative">
             <Flame className="absolute -top-3 -right-3 w-8 h-8 text-primary/20 rotate-12" />
-            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/40 text-center mb-6">Oração</h3>
+            <h3 className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary/40 text-center mb-6">Oração</h3>
             <p className="text-lg text-foreground/80 leading-relaxed font-serif text-center">{station.prayer}</p>
           </div>
           
@@ -151,7 +151,7 @@ const ViaCrucis: React.FC = () => {
         <button 
           disabled={currentStation <= 0} 
           onClick={() => setCurrentStation(currentStation - 1)}
-          className="flex-1 max-w-[200px] h-14 rounded-full bg-card border border-border text-[10px] font-black uppercase tracking-widest disabled:opacity-20 hover:bg-primary/5 transition-all flex items-center justify-center gap-2 group shadow-sm"
+          className="flex-1 max-w-[200px] h-14 rounded-full bg-card border border-border text-premium-tiny font-black uppercase tracking-widest disabled:opacity-20 hover:bg-primary/5 transition-all flex items-center justify-center gap-2 group shadow-sm"
         >
           <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Anterior
         </button>
@@ -159,14 +159,14 @@ const ViaCrucis: React.FC = () => {
         {currentStation < STATIONS.length - 1 ? (
           <button 
             onClick={() => setCurrentStation(currentStation + 1)}
-            className="flex-1 max-w-[200px] h-14 rounded-full bg-foreground text-background text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-2 group shadow-xl"
+            className="flex-1 max-w-[200px] h-14 rounded-full bg-foreground text-background text-premium-tiny font-black uppercase tracking-widest hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-2 group shadow-xl"
           >
             Próxima <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </button>
         ) : (
           <button 
             onClick={() => setIsJourney(false)}
-            className="flex-1 max-w-[200px] h-14 rounded-full bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-2 group shadow-xl shadow-primary/20"
+            className="flex-1 max-w-[200px] h-14 rounded-full bg-primary text-primary-foreground text-premium-tiny font-black uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-2 group shadow-xl shadow-primary/20"
           >
             <Icons.Cross className="w-4 h-4" /> Concluir
           </button>
