@@ -107,4 +107,15 @@ describe("Button Accessibility & Keyboard Navigation", () => {
     const button = screen.getByRole("button");
     expect(button).toHaveClass("inline-flex items-center justify-center gap-2.5");
   });
+
+  it("matches snapshot for premium styling", () => {
+    const { container } = render(
+      <div className="space-y-4">
+        <Button variant="default">Primary</Button>
+        <Button variant="outline" size="sm">Small Outline</Button>
+        <Button size="icon" isLoading />
+      </div>
+    );
+    expect(container).toMatchSnapshot();
+  });
 });
