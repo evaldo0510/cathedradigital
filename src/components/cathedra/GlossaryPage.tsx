@@ -262,7 +262,7 @@ const GlossaryPage: React.FC = () => {
           <span className="text-xs font-black uppercase tracking-widest">Voltar ao Glossário</span>
         </button>
 
-        <div className="bg-card border border-border rounded-3xl overflow-hidden shadow-2xl">
+        <div className="premium-card p-0">
           <div className="p-8 space-y-6">
             <div className="flex justify-between items-start gap-4">
               <div className="space-y-2">
