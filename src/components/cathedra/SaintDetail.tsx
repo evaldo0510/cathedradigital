@@ -181,7 +181,8 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
             <ShareButton
               title={saint.name}
               text={`${saint.name} — ${saint.title}. ${saint.quotes?.[0] || ''}`}
-              variant="button"
+              variant="default"
+              size="sm"
               className="!px-4 !py-2.5 !text-[11px] !rounded-full !bg-foreground !text-background !font-black !uppercase !tracking-widest"
             />
           </div>

@@ -139,7 +139,8 @@ const ViaCrucis: React.FC = () => {
             <ShareButton
               title={`Via Crucis — ${station.num}ª Estação`}
               text={`${station.title}\n\n${station.meditation}\n\nOração: ${station.prayer}`}
-              variant="button"
+              variant="outline"
+              size="sm"
             />
           </div>
         </div>

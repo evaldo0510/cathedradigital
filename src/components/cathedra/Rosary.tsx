@@ -318,7 +318,8 @@ const Rosary: React.FC = () => {
               title={`Rosário — ${currentMystery + 1}º Mistério`}
               text={`${mystery.title}\n\n"${mystery.meditation}"\n\n${mystery.scripture}`}
               className="border-secondary/20 text-secondary/60 hover:text-secondary hover:border-secondary/40"
-              variant="button"
+              variant="outline"
+              size="sm"
             />
           </div>
           <button onClick={() => setStep('decade')} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-full font-black uppercase text-[10px] tracking-[0.2em] hover:bg-secondary/30 transition-all shadow-lg shadow-primary/20">
