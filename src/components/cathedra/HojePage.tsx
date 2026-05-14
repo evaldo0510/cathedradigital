@@ -166,7 +166,7 @@ const HojePage: React.FC = () => {
                 }
               }}
               onClick={() => navigate(nextUp.route)}
-              className="p-8 md:p-12 rounded-[3.5rem] border border-primary/20 bg-gradient-to-br from-primary/10 via-card/50 to-card backdrop-blur-2xl cursor-pointer hover:border-primary/40 hover:shadow-[0_20px_50px_rgba(var(--primary),0.1)] focus-visible:ring-4 focus-visible:ring-primary focus-visible:outline-none transition-all duration-700 flex flex-col md:flex-row md:items-center justify-between group shadow-xl gap-8"
+              className="premium-card p-8 md:p-12 cursor-pointer hover:shadow-[0_20px_50px_rgba(var(--primary),0.1)] transition-all duration-700 flex flex-col md:flex-row md:items-center justify-between group shadow-xl gap-8"
             >
               <div className="flex items-center gap-6">
                 <div className="w-16 h-16 rounded-[1.25rem] bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-500 shadow-inner">
@@ -215,11 +215,11 @@ const HojePage: React.FC = () => {
             {loadingStats ? <JourneySkeleton /> : activeJourney ? (
               <motion.div 
                 whileHover={{ y: -8 }} 
-                className="group cursor-pointer p-8 rounded-[2.5rem] border border-primary/20 bg-primary/5 hover:border-primary/40 transition-all duration-500 shadow-sm"
+                className="premium-card group cursor-pointer p-8 shadow-sm"
                 onClick={() => navigate(`/jornadas/${activeJourney.id}`)} 
               >
                 <div className="flex items-center gap-6">
-                  <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/20 transition-colors duration-500"><Icons.Flame className="w-7 h-7" /></div>
+                  <div className="premium-icon-box"><Icons.Flame className="w-6 h-6" /></div>
                   <div className="flex-1 space-y-4">
                     <div>
                       <h3 className="text-xl font-bold text-foreground">{activeJourney.title}</h3>
@@ -239,10 +239,10 @@ const HojePage: React.FC = () => {
               <motion.div 
                 whileHover={{ y: -8 }} 
                 onClick={() => navigate(`/jornadas/${recommendedJourney.id}`)} 
-                className="group cursor-pointer p-8 rounded-[2.5rem] border border-border bg-muted/20 hover:border-primary/30 transition-all duration-500 shadow-sm"
+                className="premium-card group cursor-pointer p-8 shadow-sm"
               >
                 <div className="flex items-center gap-6">
-                  <div className="w-16 h-16 rounded-[1.5rem] bg-muted flex items-center justify-center text-muted-foreground group-hover:text-primary group-hover:bg-primary/5 transition-all duration-500"><Icons.Compass className="w-8 h-8" /></div>
+                  <div className="premium-icon-box"><Icons.Compass className="w-6 h-6" /></div>
                   <div className="flex-1">
                     <h3 className="text-lg font-bold text-foreground">{recommendedJourney.title}</h3>
                     <p className="text-xs text-muted-foreground mt-1 font-medium font-serif italic">Sugerido especialmente para seu perfil espiritual</p>
@@ -275,9 +275,9 @@ const HojePage: React.FC = () => {
                   whileHover={{ y: -8, scale: 1.02 }} 
                   whileTap={{ scale: 0.95 }} 
                   onClick={() => navigate(section.route)} 
-                  className="group cursor-pointer p-6 rounded-[2rem] border border-border bg-card/30 hover:bg-card hover:border-primary/20 transition-all duration-500 shadow-sm text-center space-y-4"
+                  className="premium-card group cursor-pointer p-6 shadow-sm text-center space-y-4 rounded-3xl"
                 >
-                  <div className={`w-14 h-14 mx-auto rounded-2xl ${section.color} flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform duration-500`}>
+                  <div className="premium-icon-box mx-auto group-hover:scale-110 transition-transform duration-500">
                     {section.icon}
                   </div>
                   <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground group-hover:text-primary transition-colors block leading-tight">

@@ -307,7 +307,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   whileTap={{ scale: 0.99 }}
                 >
                   <Card 
-                    className="border-primary/30 bg-gradient-to-br from-primary/10 via-background to-background border-2 overflow-hidden shadow-2xl shadow-primary/5 relative cursor-pointer rounded-[2.5rem] focus-visible:ring-4 focus-visible:ring-primary outline-none group hover:border-primary/50 transition-all duration-500" 
+                    className="premium-card group shadow-2xl shadow-primary/5 cursor-pointer" 
                     onClick={() => navigate(`/jornadas/${journey.id}`)}
                     role="button"
                     tabIndex={0}
@@ -508,12 +508,12 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   transition={{ type: 'spring', stiffness: 400, damping: 25 }}
                 >
                   <Card
-                    className={`overflow-hidden cursor-pointer transition-all duration-500 group relative rounded-[2rem] focus-visible:ring-4 focus-visible:ring-primary/20 outline-none ${
+                    className={`premium-card group ${
                       isComplete 
-                        ? 'border-emerald-500/30 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)]' 
+                        ? 'border-emerald-500/30' 
                         : hasStarted 
-                          ? 'border-primary/20 shadow-[0_8px_30px_rgb(0,0,0,0.06)]'
-                          : 'border-border/40 hover:border-primary/30 shadow-sm hover:shadow-xl'
+                          ? 'border-primary/20'
+                          : 'hover:border-primary/30'
                     }`}
                     onClick={() => {
                       // Check if it's one of our local trilhas
@@ -555,7 +555,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap mb-1">
-                              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-card border border-border/40 flex items-center justify-center shadow-sm group-hover:border-primary/20 group-hover:scale-110 transition-all duration-500 flex-shrink-0">
+                              <div className="premium-icon-box flex-shrink-0">
                                 {CATEGORY_ICONS[journey.category] || <Icons.BookOpen className="w-5 h-5 text-primary" />}
                               </div>
                               <div className="flex-1 min-w-0">

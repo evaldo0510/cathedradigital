@@ -36,32 +36,32 @@
 
   /* Universal colors for all modes */
   .dark, [data-theme='dark'] {
-    --background: 214 68% 5%;    /* #050B14 */
+    --background: 214 68% 4%;    /* Darker background for more depth */
     --foreground: 0 0% 98%;      /* #F8F9FA */
-    --card: 214 68% 7%;
+    --card: 214 68% 6%;
     --card-foreground: 0 0% 98%;
-    --popover: 214 68% 6%;
+    --popover: 214 68% 5%;
     --popover-foreground: 0 0% 98%;
     --primary: 40 48% 60%;       /* #C8A96A - Gold becomes primary in dark */
     --primary-foreground: 214 68% 5%;
-    --secondary: 214 40% 15%;
+    --secondary: 214 40% 12%;
     --secondary-foreground: 40 48% 60%;
-    --muted: 214 40% 12%;
-    --muted-foreground: 214 10% 70%;
-    --accent: 40 48% 60% / 0.15;
+    --muted: 214 40% 10%;
+    --muted-foreground: 214 10% 65%;
+    --accent: 40 48% 60% / 0.12;
     --accent-foreground: 40 48% 60%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 214 40% 20%;
-    --input: 214 40% 20%;
+    --border: 214 40% 18%;
+    --input: 214 40% 18%;
     --ring: 40 48% 60%;
-    --sidebar-background: 214 68% 4%;
+    --sidebar-background: 214 68% 3%;
     --sidebar-foreground: 0 0% 98%;
     --sidebar-primary: 40 48% 60%;
-    --sidebar-primary-foreground: 214 68% 5%;
-    --sidebar-accent: 214 40% 12%;
+    --sidebar-primary-foreground: 214 68% 4%;
+    --sidebar-accent: 214 40% 10%;
     --sidebar-accent-foreground: 40 48% 60%;
-    --sidebar-border: 214 40% 15%;
+    --sidebar-border: 214 40% 12%;
     --sidebar-ring: 40 48% 60%;
   }
 }
@@ -205,25 +205,25 @@
     @apply w-full md:w-auto min-h-[44px] flex items-center justify-center;
   }
 
-  .no-stretch {
-    @apply self-start items-start;
+  /* Shared Premium Components as CSS Classes */
+  .premium-card {
+    @apply bg-card/60 backdrop-blur-2xl border border-border/40 rounded-[2.5rem] p-6 md:p-8 lg:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.15)] transition-all duration-500 hover:shadow-[0_20px_60px_rgb(0,0,0,0.08)] dark:hover:shadow-[0_20px_60px_rgb(0,0,0,0.25)] hover:border-primary/20 hover:translate-y-[-2px] relative overflow-hidden;
   }
 
-  .safe-area-top {
-    padding-top: env(safe-area-inset-top);
+  .premium-button {
+    @apply inline-flex items-center justify-center gap-3 whitespace-nowrap rounded-2xl text-[11px] font-black uppercase tracking-[0.25em] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 active:scale-[0.98] shadow-sm hover:shadow-xl hover:translate-y-[-1px] px-8 h-14;
   }
 
-  .safe-area-bottom {
-    padding-bottom: env(safe-area-inset-bottom);
+  .premium-icon-box {
+    @apply w-12 h-12 rounded-xl bg-primary/5 dark:bg-primary/10 border border-primary/10 flex items-center justify-center text-primary shadow-inner transition-all duration-300 group-hover:scale-110 group-hover:bg-primary/10 dark:group-hover:bg-primary/20;
   }
 
-  .pb-safe {
-    padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+  .contemplative-blur {
+    @apply backdrop-blur-[20px] bg-background/40;
   }
 
-  /* Desktop card with refined shadow */
-  .desktop-card {
-    @apply bg-card border border-border/40 rounded-[2.5rem] p-5 md:p-6 lg:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_60px_rgb(0,0,0,0.08)] hover:translate-y-[-2px] transition-all duration-500;
+  .subtle-glow {
+    @apply relative after:absolute after:inset-0 after:rounded-[inherit] after:shadow-[0_0_20px_rgba(var(--primary),0.05)] after:pointer-events-none after:transition-opacity hover:after:opacity-100;
   }
 }
 

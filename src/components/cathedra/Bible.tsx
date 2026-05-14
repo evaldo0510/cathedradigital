@@ -591,7 +591,7 @@ const Bible: React.FC = () => {
           )}
 
           <div className={`${showCrossRefs && (crossRefs.length > 0 || docsRefs.length > 0) ? 'lg:col-span-8' : 'lg:col-span-12'} w-full space-y-6 order-2 lg:order-1`}>
-            <Card className="border-border/40 shadow-sm overflow-hidden bg-card/50 backdrop-blur-sm">
+            <Card className="premium-card p-0">
               <CardContent className="p-6 md:p-8">
                 {isLoading ? (
                   <BibleChapterSkeleton />
@@ -661,7 +661,7 @@ const Bible: React.FC = () => {
             {/* Next Chapter Card */}
             {!isLoading && !bibleError && selectedChapter < selectedBook.chapters && (
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-                <Card className="border-primary/20 bg-primary/5 cursor-pointer hover:border-primary/40 transition-all"
+                <Card className="premium-card p-0 cursor-pointer"
                   onClick={() => navigateChapter(1)}>
                   <CardContent className="p-6 flex items-center justify-between">
                     <div>
@@ -677,7 +677,7 @@ const Bible: React.FC = () => {
             {/* If end of book */}
             {!isLoading && !bibleError && selectedChapter >= selectedBook.chapters && (
               <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}>
-                <Card className="border-secondary/40 bg-secondary/5 text-center p-8">
+                <Card className="premium-card p-8 border-secondary/20 text-center">
                   <div className="flex flex-col items-center gap-4">
                     <Icons.CheckCircle2 className="w-12 h-12 text-primary" />
                     <h2 className="text-xl font-bold font-serif">Livro Concluído!</h2>

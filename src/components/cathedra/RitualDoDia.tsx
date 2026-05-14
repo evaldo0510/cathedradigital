@@ -23,7 +23,7 @@ const RitualDoDia: React.FC = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-      className="relative overflow-hidden rounded-[2.5rem] border border-secondary/20 bg-gradient-to-br from-secondary/5 via-card/50 to-primary/5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-sm group transition-all duration-700 hover:shadow-[0_20px_60px_rgb(0,0,0,0.08)] hover:border-secondary/40"
+      className="premium-card p-0 shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-sm group transition-all duration-700 hover:shadow-[0_20px_60px_rgb(0,0,0,0.08)]"
     >
 
       {/* Decorative glow */}
@@ -53,7 +53,7 @@ const RitualDoDia: React.FC = () => {
         {/* Bible Verse */}
         <div className="space-y-4" role="article" aria-label="Versículo do Dia">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+            <div className="premium-icon-box">
               <BookOpen className="w-4 h-4 text-primary" />
             </div>
             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Scriptura Sacra</span>
@@ -71,7 +71,7 @@ const RitualDoDia: React.FC = () => {
         {/* Reflection */}
         <div className="space-y-4" role="article" aria-label="Reflexão">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-secondary/10 flex items-center justify-center">
+            <div className="premium-icon-box">
               <Sparkles className="w-4 h-4 text-secondary" />
             </div>
             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">Meditatio</span>
