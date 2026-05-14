@@ -173,6 +173,7 @@ const AppLayout: React.FC = () => {
   const [lang, setLangState] = useState<Language>(getInitialLanguage);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDark, setIsDark] = useState(getInitialTheme);
+  const [showSplash, setShowSplash] = useState(true);
   
   const { user, profile, signOut, isPremium, loading } = useAuth();
   const navigate = useNavigate();
@@ -478,6 +479,9 @@ const AppLayout: React.FC = () => {
         </div>
       }>
         <ScrollToTop />
+        <AnimatePresence>
+          {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
+        </AnimatePresence>
         {/* Moved to the bottom of the layout */}
 
         <div className="flex h-[100dvh] w-full overflow-hidden bg-background selection:bg-primary/20">
@@ -531,7 +535,7 @@ const AppLayout: React.FC = () => {
         <main id="main-content" className="flex-1 overflow-y-auto flex flex-col relative no-scrollbar overscroll-auto touch-pan-y scroll-smooth bg-background">
           <div className="w-full flex-1 flex flex-col items-center">
             {!isChromeless && (
-              <div className="w-full sticky top-0 z-[140] bg-background/90 backdrop-blur-xl border-b border-border">
+              <div className="w-full sticky top-0 z-[140] bg-background/60 backdrop-blur-2xl border-b border-primary/5">
                 <AppHeader
                   user={appUser}
                   isDark={isDark}

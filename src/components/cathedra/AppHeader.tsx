@@ -44,7 +44,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
   const [showNotifs, setShowNotifs] = useState(false);
 
   return (
-    <header className="border-b border-primary/5 bg-background/60 backdrop-blur-2xl sticky top-0 z-[140] transition-all duration-500 pt-[env(safe-area-inset-top,0px)] hover:bg-background/80">
+    <header className="border-b border-primary/5 bg-background/60 backdrop-blur-2xl sticky top-0 z-[140] transition-all duration-500 pt-[env(safe-area-inset-top,0px)] hover:bg-background/80 lg:hidden">
       <div className="max-w-[1400px] mx-auto px-4 py-3 sm:py-4 flex items-center justify-between min-h-[56px] sm:min-h-[64px]">
         <div className="flex items-center gap-2 sm:gap-10 min-w-0">
           <div className="flex lg:hidden items-center gap-2 sm:gap-4 cursor-pointer group min-w-0 focus-visible:ring-2 focus-visible:ring-primary outline-none" role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && navigate(AppRoute.HOJE)} onClick={() => navigate(AppRoute.HOJE)}>

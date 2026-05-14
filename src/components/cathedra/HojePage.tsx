@@ -73,9 +73,9 @@ const HojePage: React.FC = () => {
   ], []);
 
   return (
-    <div className="desktop-layout pt-6 md:pt-20 pb-24 relative">
+    <div className="desktop-layout pt-0 md:pt-10 lg:pt-20 pb-24 relative">
       {loadingStats && (
-        <div className="absolute inset-0 z-50 bg-background/80 backdrop-blur-sm">
+        <div className="absolute inset-0 z-[100] bg-background">
           <DashboardSkeleton />
         </div>
       )}
