@@ -1,19 +1,30 @@
 import { motion } from "framer-motion";
 
-const PARTICLES = [0, 2, 4] as const;
-
-const HeroParticles = () => (
-  <div className="absolute inset-0 z-[1] pointer-events-none overflow-hidden">
-    {PARTICLES.map((i) => (
-      <motion.div
-        key={i}
-        className="absolute w-1 h-1 rounded-full bg-primary/30"
-        style={{ left: `${15 + i * 14}%`, top: `${20 + (i % 3) * 25}%` }}
-        animate={{ y: [0, -30, 0], opacity: [0.2, 0.6, 0.2] }}
-        transition={{ duration: 4 + i * 0.5, repeat: Infinity, delay: i * 0.7, ease: "easeInOut" }}
-      />
-    ))}
-  </div>
-);
+const HeroParticles = () => {
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-20">
+      {[...Array(12)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute w-1 h-1 bg-primary rounded-full"
+          initial={{ 
+            x: Math.random() * 100 + "%", 
+            y: Math.random() * 100 + "%",
+            opacity: Math.random() * 0.5 
+          }}
+          animate={{ 
+            y: [null, Math.random() * -50, Math.random() * 50],
+            opacity: [0.1, 0.4, 0.1] 
+          }}
+          transition={{ 
+            duration: 15 + Math.random() * 15, 
+            repeat: Infinity, 
+            ease: "easeInOut" 
+          }}
+        />
+      ))}
+    </div>
+  );
+};
 
 export default HeroParticles;

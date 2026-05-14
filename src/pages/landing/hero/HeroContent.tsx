@@ -73,12 +73,12 @@ const HeroContent = ({ heroOpacity, heroScale, heroY, onStart, onAbout }: HeroCo
             className="relative"
           >
             {/* Avatar container */}
-            <div className="relative w-28 h-28 sm:w-36 sm:h-36 rounded-full overflow-hidden border-[3px] border-secondary/40 shadow-2xl group-hover:border-secondary/60 transition-all duration-500 bg-card/60 backdrop-blur-xl">
-              <img src={logosAvatar} alt="Logos — Mestre Contemplativo" className="w-full h-full object-cover" />
+            <div className="relative w-28 h-28 sm:w-36 sm:h-36 rounded-full overflow-hidden border-[1px] border-secondary/20 shadow-xl group-hover:border-secondary/40 transition-all duration-700 bg-card/40 backdrop-blur-sm">
+              <img src={logosAvatar} alt="Logos — Mestre Contemplativo" className="w-full h-full object-cover grayscale-[0.2] hover:grayscale-0 transition-all duration-700" />
               <motion.div
-                animate={{ opacity: [0, 0.06, 0] }}
-                transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute inset-0 bg-secondary/30 rounded-full"
+                animate={{ opacity: [0, 0.03, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute inset-0 bg-secondary/10 rounded-full"
               />
             </div>
             <motion.div
@@ -118,12 +118,12 @@ const HeroContent = ({ heroOpacity, heroScale, heroY, onStart, onAbout }: HeroCo
       <motion.p
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 2.2 }}
-        className="max-w-2xl mx-auto text-xl md:text-2xl text-muted-foreground font-serif italic leading-relaxed"
+        transition={{ duration: 0.8, delay: 2.2 }}
+        className="max-w-xl mx-auto text-lg md:text-xl text-muted-foreground/80 font-serif italic leading-relaxed"
       >
         "A oração é o respirar da alma e o silêncio é a linguagem de Deus." <br />
-        <span className="text-base md:text-lg not-italic opacity-80 block mt-3">
-          Abra seu coração ao Logos IA e receba orientações espirituais personalizadas fundamentadas na Sagrada Tradição e no Magistério.
+        <span className="text-sm md:text-base not-italic opacity-60 block mt-4 font-sans tracking-tight">
+          Um assistente contemplativo treinado com o Magistério da Igreja.
         </span>
       </motion.p>
 

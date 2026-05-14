@@ -75,11 +75,11 @@ const FeatureCard = React.forwardRef<HTMLDivElement, { feature: typeof features[
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
       >
         <Card
-          className="group h-full border-none bg-card shadow-xl hover:shadow-2xl transition-all duration-500 rounded-[2.5rem] overflow-hidden flex flex-col cursor-pointer relative lg:rounded-[2rem]"
+          className="group h-full border border-border/30 bg-card hover:bg-muted/10 transition-all duration-700 rounded-3xl overflow-hidden flex flex-col cursor-pointer relative"
           onClick={() => onNavigate(feature.route)}
         >
-          {/* Hover glow effect */}
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/0 via-primary/0 to-primary/0 group-hover:from-primary/5 group-hover:via-transparent group-hover:to-primary/5 transition-all duration-700 rounded-[2.5rem]" />
+          {/* Subtle hover focus */}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/0 to-primary/0 group-hover:from-primary/[0.02] group-hover:to-transparent transition-all duration-700" />
 
           <CardHeader className="space-y-4 relative z-10">
             <motion.div
@@ -100,9 +100,9 @@ const FeatureCard = React.forwardRef<HTMLDivElement, { feature: typeof features[
             <div className="p-4 bg-muted/30 rounded-2xl border border-primary/5 italic text-sm text-primary/80">
               <strong>Impacto:</strong> {feature.benefit}
             </div>
-            <Button variant="ghost" className="w-full mt-auto justify-between group/btn text-xs font-black uppercase tracking-[0.2em]">
-              Acessar Agora
-              <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-2 transition-transform" />
+            <Button variant="ghost" className="w-full mt-auto justify-between group/btn text-[10px] font-black uppercase tracking-[0.2em] opacity-50 group-hover:opacity-100 transition-opacity">
+              Explorar
+              <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
             </Button>
           </CardContent>
         </Card>

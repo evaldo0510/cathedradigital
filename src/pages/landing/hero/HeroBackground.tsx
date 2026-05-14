@@ -7,9 +7,9 @@ interface HeroBackgroundProps {
 const HeroBackground = ({ bgY }: HeroBackgroundProps) => (
   <motion.div style={{ y: bgY }} className="absolute inset-0 z-0">
     <img
-      src="https://images.unsplash.com/photo-1548610762-656391d1ad4d?auto=format&fit=crop&q=40&w=800"
-      alt="Catedral interior com vitrais"
-      className="w-full h-full object-cover opacity-10 dark:opacity-[0.06] scale-110 blur-[2px]"
+      src="https://images.unsplash.com/photo-1548610762-656391d1ad4d?auto=format&fit=crop&q=60&w=1200"
+      alt="Catedral interior"
+      className="w-full h-full object-cover opacity-[0.08] dark:opacity-[0.04] scale-100 blur-[3px]"
       loading="eager"
       decoding="async"
       fetchPriority="high"

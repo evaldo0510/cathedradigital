@@ -111,7 +111,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
 
   return (
     <>
-      <aside ref={ref} className="h-full w-72 bg-card border-r border-border flex flex-col p-5 overflow-hidden">
+      <aside ref={ref} className="h-full w-72 bg-card border-r border-border/40 flex flex-col p-6 overflow-hidden">
         <div className="mb-4 px-2 flex items-center gap-3 cursor-pointer group hover:opacity-90 transition-opacity" onClick={() => handleNav(AppRoute.HOJE)}>
           <Icons.Logo className="w-8 h-8 flex-shrink-0" variant="blue" />
           <div>
@@ -126,7 +126,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
         <nav className="flex-1 space-y-6 overflow-y-auto pb-4 no-scrollbar">
           {sections.map((section) => (section.items.length > 0 && (
             <div key={section.label}>
-              <h3 className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-4 px-4">{section.label}</h3>
+              <h3 className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/50 mb-4 px-4">{section.label}</h3>
               <ul className="space-y-1">
                 {section.items.map((item, idx) => (
                   <li key={idx}>
