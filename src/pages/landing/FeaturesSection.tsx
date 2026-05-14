@@ -4,7 +4,6 @@ import { BookOpen, Sparkles, Hash } from "lucide-react";
 import { AppRoute } from "@/types";
 import { HomeCard } from "@/components/cathedra/HomeCard";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { AppRoute } from "@/types";
 
 const features = [
   { 
