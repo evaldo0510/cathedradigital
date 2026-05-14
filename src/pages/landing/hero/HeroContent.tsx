@@ -42,15 +42,13 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
         className="flex justify-center"
       >
         <div className="relative">
-          {/* Subtle halo glow */}
-          <div className="absolute inset-0 bg-secondary/5 blur-3xl rounded-full" />
           <div className="relative">
             {/* Avatar container */}
-            <div className="relative w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden border border-secondary/20 bg-card/40 backdrop-blur-sm mx-auto">
+            <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border border-secondary/10 bg-card/40 backdrop-blur-sm mx-auto">
               <img src={logosAvatar} alt="Logos — Mestre Contemplativo" className="w-full h-full object-cover grayscale-[0.2]" />
             </div>
           </div>
-          <div className="mt-4 px-4 py-1 rounded-full border border-border/10 bg-background/50 backdrop-blur-sm text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.3em] inline-block mx-auto">
+          <div className="mt-4 px-4 py-1 rounded-full border border-border/5 bg-background/30 backdrop-blur-sm text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.3em] inline-block mx-auto">
             Logos · Mestre Contemplativo
           </div>
         </div>

@@ -65,10 +65,7 @@ const FeaturesSection = ({ onNavigate }: FeaturesSectionProps) => {
 
   return (
     <section ref={sectionRef} className="w-full section-spacing space-y-20 relative overflow-hidden">
-      {/* Decorative background element - simplified */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-full bg-primary/[0.02] blur-[120px] rounded-full" />
-      </div>
+      {/* Decorative background element removed for minimalism */}
 
       <div className="container px-6 mx-auto relative z-10">
         <div className="text-center space-y-4 max-w-2xl mx-auto mb-16">

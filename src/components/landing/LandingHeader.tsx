@@ -125,7 +125,8 @@ const LandingHeader = () => {
           </button>
           
           <Button
-            className="rounded-full px-8 bg-primary hover:bg-primary/90 text-primary-foreground font-bold uppercase tracking-[0.2em] text-[10px] h-11 shadow-none transition-all"
+            variant="ghost"
+            className={`rounded-full px-6 text-muted-foreground font-bold uppercase tracking-[0.2em] text-[10px] h-10 shadow-none transition-all ${isScrolled ? 'text-primary' : ''}`}
             onClick={() => navigate(AppRoute.LOGIN)}
           >
             Começar <ChevronRight className="w-4 h-4 ml-1" />
