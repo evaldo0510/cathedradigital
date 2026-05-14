@@ -20,7 +20,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
   const navigate = useNavigate();
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-6 space-y-32 pb-32">
+    <div className="app-container space-y-32 pb-32">
       {/* CONTINUE JORNADA */}
       <section className="space-y-12">
         <div className="flex items-center gap-6">
