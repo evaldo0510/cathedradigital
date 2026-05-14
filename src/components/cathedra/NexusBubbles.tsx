@@ -128,23 +128,23 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
           className={className}
         />
       </PopoverTrigger>
-      <PopoverContent data-testid="nexus-popover" className="w-[340px] sm:w-[460px] p-0 rounded-[3rem] border-primary/20 overflow-hidden shadow-2xl z-[100] backdrop-blur-3xl bg-card/95 ring-1 ring-primary/10">
-        <div className="bg-gradient-to-r from-primary/20 via-primary/5 to-transparent p-8 border-b border-border/40 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-white/60 dark:bg-black/40 flex items-center justify-center shadow-inner text-primary border border-primary/10 backdrop-blur-sm">
-              {getTagIcon(tag.emoji, "w-7 h-7")}
+      <PopoverContent data-testid="nexus-popover" className="w-[92vw] sm:w-[500px] p-0 rounded-[2.5rem] border-primary/10 overflow-hidden shadow-2xl z-[100] backdrop-blur-3xl bg-card/95 ring-1 ring-primary/5">
+        <div className="bg-gradient-to-r from-primary/10 via-primary/5 to-transparent p-8 border-b border-border/20 flex items-center justify-between">
+          <div className="flex items-center gap-5">
+            <div className="w-16 h-16 rounded-2xl bg-white/40 dark:bg-black/20 flex items-center justify-center shadow-inner text-primary border border-primary/5 backdrop-blur-md">
+              {getTagIcon(tag.emoji, "w-8 h-8")}
             </div>
             <div>
-              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/50 mb-1 block">{tag.category}</span>
-              <h4 className="text-lg font-black uppercase tracking-widest text-primary leading-tight">{tag.label}</h4>
+              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/40 mb-1.5 block">{tag.category}</span>
+              <h4 className="text-xl font-bold tracking-tight text-foreground leading-tight">{tag.label}</h4>
             </div>
           </div>
           <button 
             onClick={() => navigate(`${AppRoute.TEMAS}/${tag.slug}`)}
-            className="w-12 h-12 rounded-[1.25rem] bg-primary text-primary-foreground hover:scale-105 active:scale-95 transition-all flex items-center justify-center shadow-xl shadow-primary/30 group ring-4 ring-primary/10"
+            className="w-14 h-14 rounded-2xl bg-primary text-primary-foreground hover:scale-105 active:scale-95 transition-all flex items-center justify-center shadow-xl shadow-primary/20 group ring-4 ring-primary/5"
             title="Estudo Completo"
           >
-            <ExternalLink className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+            <ExternalLink className="w-6 h-6 group-hover:rotate-12 transition-transform" />
           </button>
         </div>
 
