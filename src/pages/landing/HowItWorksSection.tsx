@@ -73,7 +73,7 @@ const HowItWorksSection = () => {
                   whileInView={{ scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.5 + i * 0.2, type: "spring", stiffness: 500 }}
-                  className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-primary text-primary-foreground text-[10px] font-black flex items-center justify-center shadow-lg shadow-primary/30"
+                  className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-primary text-primary-foreground text-[10px] font-black flex items-center justify-center border border-primary/20"
                 >
                   {step.num}
                 </motion.span>
