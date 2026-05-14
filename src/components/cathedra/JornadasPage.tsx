@@ -307,7 +307,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   whileTap={{ scale: 0.99 }}
                 >
                   <Card 
-                    className="border-primary/30 bg-gradient-to-br from-primary/10 via-background to-background border-2 overflow-hidden shadow-2xl shadow-primary/5 relative cursor-pointer rounded-[2.5rem] focus-visible:ring-4 focus-visible:ring-primary outline-none group hover:border-primary/50 transition-all duration-500" 
+                    className="premium-card group shadow-2xl shadow-primary/5 cursor-pointer" 
                     onClick={() => navigate(`/jornadas/${journey.id}`)}
                     role="button"
                     tabIndex={0}
