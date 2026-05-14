@@ -132,7 +132,7 @@ const HojePage: React.FC = () => {
              {(profile?.streak || 0) > 0 && (
               <motion.div 
                 whileHover={{ scale: 1.05 }}
-                className="flex items-center gap-3 px-6 py-3 rounded-[1.5rem] bg-primary/5 border border-primary/10 shadow-sm backdrop-blur-sm"
+                className="premium-card p-3 md:p-4 rounded-3xl flex items-center gap-3 backdrop-blur-sm"
               >
                 <Icons.Zap className="w-5 h-5 text-primary" />
                 <span className="text-[11px] font-black text-primary uppercase tracking-[0.2em]">{profile?.streak} {profile?.streak === 1 ? 'Dia' : 'Dias'}</span>
@@ -140,7 +140,7 @@ const HojePage: React.FC = () => {
             )}
             <motion.div 
               whileHover={{ scale: 1.05 }}
-              className="flex items-center gap-3 px-6 py-3 rounded-[1.5rem] bg-card/50 border border-border shadow-sm backdrop-blur-sm"
+              className="premium-card p-3 md:p-4 rounded-3xl flex items-center gap-3 backdrop-blur-sm"
             >
               <Icons.Star className="w-5 h-5 text-primary" />
               <span className="text-[11px] font-black text-primary uppercase tracking-[0.2em]">{profile?.xp || 0} XP</span>
