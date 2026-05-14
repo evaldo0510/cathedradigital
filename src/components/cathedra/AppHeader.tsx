@@ -107,15 +107,19 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             <span className="hidden md:inline text-[9px] font-black uppercase tracking-widest">{t('guide') || "Guia"}</span>
           </button>
 
-          <button className="p-2.5 sm:p-3 bg-muted text-primary rounded-xl sm:rounded-2xl border border-border hover:bg-primary hover:text-white transition-all shadow-sm active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none" onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}>
+          <button 
+            className="p-2.5 sm:p-3 bg-muted text-primary rounded-xl sm:rounded-2xl border border-border hover:bg-primary hover:text-white transition-all shadow-sm active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none" 
+            onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}
+            aria-label={t('search') || "Buscar"}
+          >
             <Icons.Search className="w-4 h-4" />
           </button>
 
           {user && (
             <button 
               onClick={() => setShowNotifs(!showNotifs)} 
-              className="p-2.5 sm:p-3 bg-muted text-primary hover:bg-primary hover:text-white rounded-xl sm:rounded-2xl border border-border relative transition-all shadow-sm active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none"
-              aria-label={showNotifs ? "Fechar notificações" : `Notificações (${unreadCount} não lidas)`}
+              className="p-2.5 sm:p-3 bg-muted text-primary hover:bg-primary hover:text-white rounded-xl sm:rounded-2xl border border-border relative transition-all shadow-sm active:scale-95 focus:visible:ring-2 focus-visible:ring-primary outline-none"
+              aria-label={showNotifs ? t('close_notifications') || "Fechar notificações" : t('notifications_unread', { count: unreadCount }) || `Notificações (${unreadCount} não lidas)`}
               aria-expanded={showNotifs}
             >
 
