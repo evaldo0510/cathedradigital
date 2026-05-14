@@ -488,7 +488,15 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                           ? 'border-primary/20'
                           : 'border-border hover:border-primary/30'
                     }`}
-                    onClick={() => navigate(`/jornadas/${journey.id}`)}
+                    onClick={() => {
+                      // Check if it's one of our local trilhas
+                      const localTrail = ['intro-faith', 'eucharist-mystery'].includes(journey.slug || journey.id);
+                      if (localTrail) {
+                        navigate(`/trilhas/${journey.slug || journey.id}`);
+                      } else {
+                        navigate(`/jornadas/${journey.id}`);
+                      }
+                    }}
                     role="button"
                     tabIndex={0}
                     onKeyDown={(e) => e.key === 'Enter' && navigate(`/jornadas/${journey.id}`)}
