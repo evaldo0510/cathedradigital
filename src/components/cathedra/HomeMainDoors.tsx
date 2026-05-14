@@ -43,11 +43,11 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t }) => {
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-3">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 px-2">
       {doors.map((door, idx) => (
         <motion.div
           key={idx}
-          whileHover={{ scale: 1.02 }}
+          whileHover={{ scale: 1.02, y: -4 }}
           whileTap={{ scale: 0.98 }}
           onClick={() => navigate(door.route)}
           onKeyDown={(e) => {
@@ -59,14 +59,14 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t }) => {
           tabIndex={0}
           role="button"
           aria-label={`${door.label}: ${door.description}`}
-          className={`p-4 rounded-3xl border border-border/50 ${door.color} flex flex-col gap-3 cursor-pointer group transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none focus-visible:ring-offset-1`}
+          className={`p-6 rounded-[2rem] border border-border/10 bg-card/40 backdrop-blur-sm flex flex-col items-center text-center gap-4 cursor-pointer group transition-all duration-500 hover:border-primary/20 hover:shadow-xl hover:shadow-primary/5 focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:outline-none`}
         >
-          <div className="w-10 h-10 rounded-xl bg-background flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
-            <door.icon className="w-5 h-5" />
+          <div className={`w-14 h-14 rounded-2xl ${door.color} flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform duration-500`}>
+            <door.icon className="w-6 h-6" />
           </div>
-          <div>
-            <h3 className="text-xs font-black uppercase tracking-wider">{door.label}</h3>
-            <p className="text-[9px] text-muted-foreground line-clamp-1 mt-0.5">{door.description}</p>
+          <div className="space-y-1.5">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">{door.label}</h3>
+            <p className="text-[10px] text-muted-foreground/60 font-medium italic line-clamp-1">{door.description}</p>
           </div>
         </motion.div>
       ))}
