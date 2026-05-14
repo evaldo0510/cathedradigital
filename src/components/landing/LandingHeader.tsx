@@ -62,8 +62,12 @@ const LandingHeader = () => {
     >
       <div className="app-container flex items-center justify-between">
         <div 
-          className="flex items-center gap-3 cursor-pointer group"
+          className="flex items-center gap-3 cursor-pointer group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-lg p-1 transition-shadow"
           onClick={() => navigate(AppRoute.HOME)}
+          onKeyDown={(e) => e.key === 'Enter' && navigate(AppRoute.HOME)}
+          tabIndex={0}
+          role="button"
+          aria-label="Cathedra - Página Inicial"
         >
           <Icons.Logo className="w-10 h-10 transition-transform group-hover:scale-105" variant="gold" />
           <div className="hidden sm:block">
@@ -122,7 +126,8 @@ const LandingHeader = () => {
         <div className="flex items-center gap-4">
           <button
             onClick={() => navigate(AppRoute.LOGIN)}
-            className="hidden sm:block text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors"
+            className="hidden sm:block text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary rounded-sm p-1"
+            aria-label="Ir para página de login"
           >
             Entrar
           </button>
