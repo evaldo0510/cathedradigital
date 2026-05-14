@@ -65,7 +65,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
         initial="hidden"
         animate="visible"
         transition={{ delay: 0.2 }}
-        className="max-w-xl mx-auto text-base md:text-lg text-muted-foreground font-serif leading-relaxed"
+        className="max-w-2xl mx-auto text-base md:text-xl text-muted-foreground font-serif leading-relaxed opacity-80"
       >
         Uma experiência espiritual guiada por Bíblia, Catecismo e Logos IA.
       </motion.p>
