@@ -50,10 +50,9 @@ const ViaCrucis: React.FC = () => {
         </motion.div>
 
         <div className="flex justify-center">
-          <button onClick={() => setIsJourney(true)} 
-            className="group px-10 py-5 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-[0.2em] shadow-xl hover:bg-primary hover:text-primary-foreground transition-all active:scale-95 flex items-center gap-3">
+          <Button onClick={() => setIsJourney(true)} size="lg" className="h-16 px-10 gap-3 rounded-full shadow-xl">
             <Play className="w-4 h-4 fill-current" /> Iniciar Via Sacra
-          </button>
+          </Button>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
