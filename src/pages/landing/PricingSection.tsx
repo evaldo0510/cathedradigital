@@ -116,7 +116,7 @@ const PricingSection = () => {
                   {tier.button}
                 </HomeButton>
               </div>
-            </div>
+            </HomeCard>
           ))}
         </div>
       </div>

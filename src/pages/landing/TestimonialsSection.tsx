@@ -42,7 +42,7 @@ const TestimonialsSection = () => {
                   <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">{t.role}</p>
                 </div>
               </div>
-            </div>
+            </HomeCard>
           ))}
         </div>
       </div>

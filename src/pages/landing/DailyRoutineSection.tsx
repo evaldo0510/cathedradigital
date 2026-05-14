@@ -66,7 +66,7 @@ const DailyRoutineSection = () => {
                   </li>
                 ))}
               </ul>
-            </div>
+            </HomeCard>
           ))}
         </div>
       </div>
