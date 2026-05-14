@@ -19,11 +19,8 @@ const RitualDoDia: React.FC = () => {
   const audioText = `Versículo do dia: ${verse.text} — ${verse.ref}. Reflexão: ${reflection}`;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-      className="premium-card p-0 subtle-glow transition-all duration-700 hover:shadow-[0_20px_60px_rgb(0,0,0,0.08)]"
+    <div
+      className="premium-card p-0 subtle-glow transition-all duration-700 shadow-xl"
     >
 
       {/* Decorative glow */}
@@ -92,7 +89,7 @@ const RitualDoDia: React.FC = () => {
           />
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
