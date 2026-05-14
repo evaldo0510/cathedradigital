@@ -181,11 +181,10 @@ const TrailStudyPage: React.FC = () => {
               <div className="prose prose-lg dark:prose-invert max-w-none">
                 {currentStep.type === 'catechism' && (
                   <div className="bg-muted/30 p-6 rounded-2xl border border-border/40">
-                    <p className="text-xs font-black uppercase tracking-widest text-primary mb-4">Parágrafo §{currentStep.ref}</p>
-                    {/* Here we would ideally use a shared CatechismParagraph component */}
-                    <div className="font-serif italic text-lg leading-relaxed">
-                      Carregando parágrafo do Catecismo...
-                    </div>
+                    <CatechismContent 
+                      paragraph={parseInt(currentStep.ref)} 
+                      isVisible={true}
+                    />
                   </div>
                 )}
               </div>
