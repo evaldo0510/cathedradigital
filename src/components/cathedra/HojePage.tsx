@@ -108,45 +108,28 @@ const HojePage: React.FC = () => {
       />
       {import.meta.env.DEV && <DevDataInspector data={{ officialSaint, allSaintsToday, activeJourney, profile: profile?._sensitive }} />}
       <div className="desktop-main space-y-20 max-w-2xl mx-auto lg:max-w-none lg:mx-0">
-        <motion.div 
-          initial={{ opacity: 0, y: 40 }} 
-          animate={{ opacity: 1, y: 0 }} 
-          transition={{ duration: 1, ease: "easeOut" }}
-          className="text-center space-y-8 md:space-y-10 pt-4 md:pt-0"
-        >
+        <div className="text-center space-y-8 md:space-y-10 pt-4 md:pt-0">
           <div className="space-y-6 md:space-y-8">
-
-            <motion.p 
-              initial={{ opacity: 0, letterSpacing: "0.2em" }}
-              animate={{ opacity: 1, letterSpacing: "0.4em" }}
-              transition={{ duration: 1.2, delay: 0.4 }}
-              className="text-[10px] md:text-[12px] font-black uppercase tracking-[0.4em] text-primary/60"
-            >
+            <p className="text-[10px] md:text-[12px] font-black uppercase tracking-[0.4em] text-primary/60">
               {greeting}, {profile?.name?.split(' ')[0] || 'fiel'}
-            </motion.p>
+            </p>
             <h1 className="text-5xl md:text-9xl font-serif text-foreground leading-[1] tracking-tight">
               "Nem toda prisão <br /><span className="text-primary italic font-medium">é visível."</span>
             </h1>
           </div>
           <div className="flex items-center justify-center gap-6 flex-wrap pt-4">
              {(profile?.streak || 0) > 0 && (
-              <motion.div 
-                whileHover={{ scale: 1.05 }}
-                className="premium-card p-3 md:p-4 rounded-3xl flex items-center gap-3 backdrop-blur-sm"
-              >
+              <div className="premium-card p-3 md:p-4 rounded-3xl flex items-center gap-3 backdrop-blur-sm">
                 <Icons.Zap className="w-5 h-5 text-primary" />
                 <span className="text-[11px] font-black text-primary uppercase tracking-[0.2em]">{profile?.streak} {profile?.streak === 1 ? 'Dia' : 'Dias'}</span>
-              </motion.div>
+              </div>
             )}
-            <motion.div 
-              whileHover={{ scale: 1.05 }}
-              className="premium-card p-3 md:p-4 rounded-3xl flex items-center gap-3 backdrop-blur-sm"
-            >
+            <div className="premium-card p-3 md:p-4 rounded-3xl flex items-center gap-3 backdrop-blur-sm">
               <Icons.Star className="w-5 h-5 text-primary" />
               <span className="text-[11px] font-black text-primary uppercase tracking-[0.2em]">{profile?.xp || 0} XP</span>
-            </motion.div>
+            </div>
           </div>
-        </motion.div>
+        </div>
 
         <section className="space-y-6">
           <h2 className="text-[11px] font-black uppercase tracking-[0.4em] text-muted-foreground/40 flex items-center gap-4 px-2">
