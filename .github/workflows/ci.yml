@@ -163,8 +163,10 @@ jobs:
       - name: Install Playwright Browsers
         run: bunx playwright install --with-deps
 
-      - name: Run E2E Tests
-        run: bun run test:e2e
+      - name: Run E2E & A11y Tests
+        run: |
+          bun run test:e2e
+          bun run test:a11y
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
