@@ -43,8 +43,8 @@ const FeatureCard = ({ feature, onNavigate }: { feature: typeof features[0]; onN
       className="desktop-card flex flex-col items-center text-center space-y-6 cursor-pointer group"
       onClick={() => onNavigate(feature.route)}
     >
-      <div className="w-16 h-16 rounded-full bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors">
-        {React.cloneElement(feature.icon as React.ReactElement, { className: "w-8 h-8" })}
+      <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors">
+        {React.cloneElement(feature.icon as React.ReactElement, { className: "w-6 h-6" })}
       </div>
       <div className="space-y-2">
         <h3 className="text-xl font-display font-bold">{feature.title}</h3>
