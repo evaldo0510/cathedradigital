@@ -79,18 +79,20 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                 { label: t('community'), route: AppRoute.COMMUNITY },
                 { label: t('profile'), route: AppRoute.PROFILE },
               ].map(item => (
-                <button 
+                <Button 
                   key={item.route} 
+                  variant="ghost"
+                  size="sm"
                   onClick={() => navigate(item.route)}
-                  className={`text-[10px] font-black uppercase tracking-[0.2em] transition-all whitespace-nowrap relative group focus-visible:ring-2 focus-visible:ring-primary outline-none px-2 py-1 rounded ${
-                    pathname === item.route ? 'text-primary' : 'text-muted-foreground hover:text-primary'
+                  className={`px-3 py-1.5 h-auto text-[10px] font-black uppercase tracking-[0.2em] transition-all whitespace-nowrap relative group shadow-none ${
+                    pathname === item.route ? 'text-primary bg-primary/5' : 'text-muted-foreground hover:text-primary'
                   }`}
                   aria-label={item.label}
                   aria-current={pathname === item.route ? 'page' : undefined}
                 >
                   {item.label}
                   <span className={`absolute -bottom-1 left-0 h-0.5 bg-primary transition-all ${pathname === item.route ? 'w-full' : 'w-0 group-hover:w-full'}`} />
-                </button>
+                </Button>
 
               ))}
             </nav>
