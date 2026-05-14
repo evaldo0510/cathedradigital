@@ -8,9 +8,9 @@ const homeButtonVariants = cva(
   {
     variants: {
       variant: {
-        primary: "bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/5",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-lg shadow-secondary/5",
-        outline: "border border-border/60 bg-transparent text-foreground hover:bg-muted/30 hover:border-primary/20 hover:shadow-sm",
+        primary: "bg-primary text-primary-foreground hover:bg-primary/90 shadow-premium hover:shadow-premium-hover",
+        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-premium hover:shadow-premium-hover",
+        outline: "border border-border/60 bg-transparent text-foreground hover:bg-muted/30 hover:border-primary/20 hover:shadow-soft",
         ghost: "hover:bg-accent/10 hover:text-accent-foreground",
       },
       size: {
