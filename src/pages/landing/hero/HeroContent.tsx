@@ -56,7 +56,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
         variants={fadeInUpVariants}
         initial="hidden"
         animate="visible"
-        className="font-display font-bold tracking-tight text-foreground pt-4 sm:pt-6 text-4xl sm:text-6xl md:text-7xl lg:text-8xl leading-[1.1]"
+        className="font-display font-bold tracking-tight text-foreground pt-6 sm:pt-8 text-4xl sm:text-7xl md:text-8xl lg:text-[10rem] leading-[1] max-w-6xl mx-auto"
       > Nem toda prisão <br/> é visível </motion.h1>
 
       {/* Description */}
