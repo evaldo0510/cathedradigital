@@ -46,7 +46,7 @@ const DailyRoutineSection = () => {
                 <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center text-primary">
                   {step.icon}
                 </div>
-                <span className="text-xs font-display font-bold text-primary/30 uppercase tracking-widest">
+                <span className="text-xs font-display font-bold text-primary/50 uppercase tracking-widest">
                   {step.time}
                 </span>
               </div>
