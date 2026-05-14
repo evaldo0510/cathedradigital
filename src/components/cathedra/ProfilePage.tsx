@@ -299,36 +299,45 @@ const ProfilePage: React.FC = () => {
         ))}
       </div>
 
-      <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
+      <div className="bg-card border border-border rounded-[2.5rem] p-8 space-y-8 shadow-sm">
         <div className="flex items-center justify-between">
-          <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Conquistas</h2>
-          <span className="text-[10px] font-bold text-primary">{unlockedCount}/{badges.length} desbloqueadas</span>
+          <div className="space-y-1">
+            <h2 className="text-[11px] font-black uppercase tracking-[0.4em] text-primary/60">Caminho da Virtude</h2>
+            <p className="text-xl font-bold">Conquistas & Selos</p>
+          </div>
+          <div className="px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20">
+            <span className="text-[11px] font-black text-primary uppercase tabular-nums">{unlockedCount}/{badges.length} desbloqueadas</span>
+          </div>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-4">
           {badges.map(b => (
-            <div
+            <motion.div
               key={b.id}
-              className={`relative rounded-2xl p-3 text-center transition-all ${
+              whileHover={b.unlocked ? { y: -5, scale: 1.05 } : {}}
+              className={`relative rounded-[2rem] p-4 text-center transition-all duration-500 border flex flex-col items-center justify-center gap-3 ${
                 b.unlocked
-                  ? 'bg-primary/10 border border-primary/30'
-                  : 'bg-muted/50 border border-border opacity-50 grayscale'
+                  ? 'bg-gradient-to-br from-primary/10 to-transparent border-primary/30 shadow-xl shadow-primary/5 ring-1 ring-primary/20'
+                  : 'bg-muted/40 border-border opacity-40 grayscale blur-[0.5px]'
               }`}
               title={b.description}
             >
-              <div className="flex justify-center mb-1 text-primary">
-                {b.icon}
+              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-inner transition-transform duration-700 ${b.unlocked ? 'bg-primary/20 text-primary scale-110' : 'bg-muted text-muted-foreground'}`}>
+                {React.cloneElement(b.icon as React.ReactElement, { className: 'w-7 h-7' })}
               </div>
-              <p className="text-[9px] font-bold uppercase tracking-wider text-foreground leading-tight">{b.label}</p>
-              <p className="text-[8px] text-muted-foreground mt-0.5">{b.description}</p>
+              <div className="space-y-1">
+                <p className={`text-[10px] font-black uppercase tracking-widest leading-tight ${b.unlocked ? 'text-foreground' : 'text-muted-foreground'}`}>{b.label}</p>
+                <p className="text-[8px] text-muted-foreground leading-relaxed px-1 opacity-70">{b.description}</p>
+              </div>
               {b.unlocked && (
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full flex items-center justify-center">
-                  <Icons.Star className="w-2.5 h-2.5 text-primary-foreground fill-current" />
+                <div className="absolute -top-1 -right-1 w-5 h-5 bg-primary rounded-full flex items-center justify-center shadow-lg ring-2 ring-background animate-in zoom-in duration-500">
+                  <Icons.Star className="w-3 h-3 text-primary-foreground fill-current" />
                 </div>
               )}
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
+
 
       <div className="bg-card border border-border rounded-2xl p-6 space-y-6">
         <div className="flex items-center justify-between">
