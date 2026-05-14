@@ -44,7 +44,7 @@ const HowItWorksSection = () => {
           <div className="hidden md:block absolute top-14 left-[16%] right-[16%] h-px bg-border/30">
             <motion.div
               style={{ width: lineWidth }}
-              className="h-full bg-gradient-to-r from-primary/50 via-primary to-primary/50"
+              className="h-full bg-primary/40"
             />
           </div>
 
