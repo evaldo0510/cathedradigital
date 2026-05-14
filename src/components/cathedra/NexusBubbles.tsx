@@ -471,35 +471,37 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
   }
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto">
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-border/40 pb-4">
-        <div className="flex flex-col text-center sm:text-left">
-          <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/70">
+    <div className="space-y-8 max-w-5xl mx-auto px-4 md:px-0">
+      <div className="flex flex-col lg:flex-row items-center justify-between gap-6 border-b border-border/20 pb-6">
+        <div className="flex flex-col text-center lg:text-left space-y-1">
+          <span className="text-[11px] font-black uppercase tracking-[0.5em] text-primary/80">
             Nexus Theologicus
           </span>
-          <span className="text-[10px] text-muted-foreground/60 font-medium italic mt-0.5">Clique nas bolhas para conexões teológicas</span>
+          <span className="text-[11px] text-muted-foreground/50 font-medium italic">
+            Conexões teológicas em constante expansão
+          </span>
         </div>
         
-        <div className="flex flex-col md:flex-row items-center gap-3">
-          <div className="flex items-center p-1 bg-muted/40 rounded-xl border border-border/40">
+        <div className="flex flex-col sm:flex-row items-center gap-4 w-full lg:w-auto">
+          <div className="flex items-center p-1 bg-muted/30 rounded-2xl border border-border/10 w-full sm:w-auto overflow-x-auto scrollbar-none">
             {[
-              { id: 'tags', label: 'Tags', icon: <Hash className="w-3 h-3" /> },
-              { id: 'title', label: 'Título', icon: <BookOpen className="w-3 h-3" /> },
-              { id: 'reference', label: 'Ref', icon: <Compass className="w-3 h-3" /> },
-              { id: 'text', label: 'Texto', icon: <Search className="w-3 h-3" /> },
-              { id: 'all', label: 'Tudo', icon: <Filter className="w-3 h-3" /> },
+              { id: 'tags', label: 'Tags', icon: <Hash className="w-3.5 h-3.5" /> },
+              { id: 'title', label: 'Título', icon: <BookOpen className="w-3.5 h-3.5" /> },
+              { id: 'reference', label: 'Ref', icon: <Compass className="w-3.5 h-3.5" /> },
+              { id: 'text', label: 'Texto', icon: <Search className="w-3.5 h-3.5" /> },
+              { id: 'all', label: 'Tudo', icon: <Filter className="w-3.5 h-3.5" /> },
             ].map((mode) => (
               <button
                 key={mode.id}
                 onClick={() => setSearchMode(mode.id as NexusSearchMode)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all whitespace-nowrap ${
                   searchMode === mode.id 
-                    ? 'bg-primary text-primary-foreground shadow-md shadow-primary/20' 
-                    : 'text-muted-foreground/60 hover:text-primary hover:bg-primary/5'
+                    ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/10' 
+                    : 'text-muted-foreground/50 hover:text-primary hover:bg-primary/5'
                 }`}
               >
                 {mode.icon}
-                <span className="hidden sm:inline">{mode.label}</span>
+                <span className="inline">{mode.label}</span>
               </button>
             ))}
           </div>
