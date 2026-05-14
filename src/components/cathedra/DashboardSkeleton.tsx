@@ -1,46 +1,44 @@
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
 
 export const DashboardSkeleton: React.FC = () => {
   return (
-    <div className="desktop-layout py-6 md:py-10 animate-pulse">
-      <div className="desktop-main content-section space-y-8">
+    <div className="flex flex-col items-center w-full pt-12 animate-pulse pb-24">
+      <div className="w-full max-w-[640px] px-6 space-y-20">
         {/* Header Skeleton */}
-        <div className="text-center space-y-6">
-          <div className="flex justify-center">
-            <div className="w-16 h-16 rounded-full bg-muted" />
-          </div>
+        <div className="text-center space-y-6 pt-4">
           <div className="space-y-4">
-            <div className="h-3 w-24 bg-muted rounded mx-auto" />
-            <div className="h-10 w-64 bg-muted rounded mx-auto" />
-            <div className="h-4 w-48 bg-muted rounded mx-auto" />
+            <div className="h-2 w-24 bg-muted/60 rounded-full mx-auto" />
+            <div className="h-12 w-full bg-muted/80 rounded-2xl mx-auto" />
+            <div className="h-12 w-2/3 bg-muted/60 rounded-2xl mx-auto" />
           </div>
           <div className="flex justify-center gap-4">
-            <div className="h-8 w-20 bg-muted rounded-2xl" />
-            <div className="h-8 w-20 bg-muted rounded-2xl" />
+            <div className="h-8 w-20 bg-muted/40 rounded-full" />
+            <div className="h-8 w-20 bg-muted/40 rounded-full" />
           </div>
         </div>
 
-        {/* Guide Link Skeleton */}
-        <div className="h-16 w-full bg-muted rounded-2xl" />
-
-        {/* Main Doors Skeleton */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[1, 2, 3, 4].map(i => (
-            <div key={i} className="h-32 bg-muted rounded-3xl" />
-          ))}
+        {/* Continue Journey Skeleton */}
+        <div className="space-y-4">
+          <div className="h-2 w-32 bg-muted/30 rounded-full" />
+          <div className="h-24 w-full bg-muted/50 rounded-3xl" />
         </div>
 
         {/* Ritual Skeleton */}
-        <div className="h-48 bg-muted rounded-3xl" />
-      </div>
+        <div className="space-y-4">
+          <div className="h-2 w-32 bg-muted/30 rounded-full" />
+          <div className="h-64 w-full bg-muted/50 rounded-3xl" />
+        </div>
 
-      {/* Sidebar Skeleton */}
-      <aside className="desktop-aside space-y-6 hidden xl:block">
-        <div className="p-6 rounded-3xl bg-muted h-64" />
-        <div className="p-6 rounded-3xl bg-muted h-32" />
-        <div className="p-6 rounded-3xl bg-muted h-48" />
-      </aside>
+        {/* Doors Skeleton */}
+        <div className="space-y-4">
+          <div className="h-2 w-32 bg-muted/30 rounded-full" />
+          <div className="grid grid-cols-2 gap-4">
+            {[1, 2, 3, 4].map(i => (
+              <div key={i} className="h-32 bg-muted/40 rounded-3xl" />
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

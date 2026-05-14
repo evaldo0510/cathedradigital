@@ -59,14 +59,14 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t }) => {
           tabIndex={0}
           role="button"
           aria-label={`${door.label}: ${door.description}`}
-          className={`p-4 rounded-3xl border border-border/50 ${door.color} flex flex-col gap-3 cursor-pointer group transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none focus-visible:ring-offset-1`}
+          className={`p-6 rounded-[2rem] border border-[#0F172A]/5 bg-white flex flex-col gap-4 cursor-pointer group transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none shadow-sm hover:border-[#D4AF37]/30`}
         >
-          <div className="w-10 h-10 rounded-xl bg-muted/20 flex items-center justify-center group-hover:scale-105 transition-transform">
-            <door.icon className="w-5 h-5" />
+          <div className="w-12 h-12 rounded-2xl bg-[#0F172A]/5 flex items-center justify-center text-[#D4AF37] group-hover:bg-[#0F172A]/10 transition-colors">
+            <door.icon className="w-6 h-6" />
           </div>
           <div>
-            <h3 className="text-xs font-black uppercase tracking-wider">{door.label}</h3>
-            <p className="text-[9px] text-muted-foreground line-clamp-1 mt-0.5">{door.description}</p>
+            <h3 className="text-sm font-bold text-[#0F172A]">{door.label}</h3>
+            <p className="text-[10px] text-[#0F172A]/50 font-medium line-clamp-1 mt-1">{door.description}</p>
           </div>
         </motion.div>
       ))}
