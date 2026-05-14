@@ -355,36 +355,22 @@ const InstitutionalVideoSection = () => {
               initial={shouldReduceMotion ? { opacity: 0 } : { scale: 0.9, y: 20, opacity: 0 }}
               animate={{ scale: 1, y: 0, opacity: 1 }}
               exit={shouldReduceMotion ? { opacity: 0 } : { scale: 0.9, y: 20, opacity: 0 }}
-              className="relative w-full max-w-6xl aspect-video bg-black rounded-[32px] overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.5)] border border-white/5"
+              className="relative w-full max-w-6xl aspect-video bg-black rounded-[32px] overflow-hidden shadow-2xl border border-white/10"
               onClick={e => e.stopPropagation()}
             >
               {/* Top Controls Overlay */}
-              <div className="absolute top-0 left-0 right-0 p-6 flex justify-between items-center z-50 bg-gradient-to-b from-black/80 to-transparent">
+              <div className="absolute top-0 left-0 right-0 p-6 flex justify-between items-center z-50 bg-black/60">
                 <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-2 px-3 py-1.5 bg-white/10 backdrop-blur-md rounded-full border border-white/10">
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-white/10 rounded-full border border-white/20">
                     <Languages className="w-4 h-4 text-white/70" />
                     <select 
-                      value={currentLang}
-                      onChange={(e) => {
-                        const newLang = e.target.value;
-                        const previousLang = currentLang;
-                        setCurrentLang(newLang);
-                        localStorage.setItem('cathedra_video_lang', newLang);
-                        trackEvent('video_lang_change', { 
-                          from_lang: previousLang,
-                          to_lang: newLang 
-                        });
-                      }}
-                      className="bg-transparent text-white text-xs font-bold focus:outline-none cursor-pointer"
-                      aria-label="Selecionar idioma das legendas"
-                    >
-                      {SUBTITLES.map(s => <option key={s.lang} value={s.lang} className="bg-black">{s.label}</option>)}
+...
                     </select>
                   </div>
                   
                   <button 
                     onClick={toggleMute}
-                    className="p-2.5 bg-white/10 hover:bg-white/20 rounded-full transition-all border border-white/10 backdrop-blur-md"
+                    className="p-2.5 bg-white/10 hover:bg-white/20 rounded-full transition-all border border-white/20"
                     aria-label={isMuted ? "Ativar som" : "Desativar som"}
                   >
                     {isMuted ? <VolumeX className="w-5 h-5 text-white" /> : <Volume2 className="w-5 h-5 text-white" />}
@@ -394,7 +380,7 @@ const InstitutionalVideoSection = () => {
                 <button 
                   ref={closeBtnRef}
                   onClick={handleClose}
-                  className="p-4 bg-white/20 hover:bg-white/30 border border-white/30 rounded-full transition-all backdrop-blur-md group focus:outline-none focus-visible:ring-4 focus-visible:ring-primary shadow-xl"
+                  className="p-4 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full transition-all group focus:outline-none focus-visible:ring-4 focus-visible:ring-primary shadow-lg"
                   aria-label="Fechar vídeo de apresentação (Esc)"
                 >
                   <X className="w-7 h-7 text-white group-hover:rotate-90 transition-transform duration-300" />
