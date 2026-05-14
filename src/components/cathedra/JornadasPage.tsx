@@ -349,7 +349,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                         </div>
                         <Button 
                           size="lg" 
-                          className="bg-primary hover:bg-primary/90 text-white font-black text-[10px] uppercase tracking-[0.2em] px-8 h-12 rounded-2xl shadow-xl shadow-primary/20 group/btn"
+                          className="bg-primary hover:bg-primary/90 text-primary-foreground font-black text-[10px] uppercase tracking-[0.2em] px-8 h-12 rounded-2xl shadow-xl shadow-primary/10 hover:shadow-primary/20 hover:translate-y-[-1px] transition-all group/btn"
                         >
                           Continuar <Icons.ChevronRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
                         </Button>
