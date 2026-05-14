@@ -17,7 +17,7 @@ vi.mock('@/integrations/supabase/client', () => ({
 describe('SEO Audit Service', () => {
   beforeEach(() => {
     document.body.innerHTML = '';
-    // Reset document properties if needed
+    seoAudit._TEST_MODE.active = true;
   });
 
   it('should detect missing titles', async () => {
