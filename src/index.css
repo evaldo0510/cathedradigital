@@ -144,11 +144,35 @@
     text-wrap: balance;
   }
 
-  h1 { @apply text-2xl sm:text-4xl md:text-5xl lg:text-7xl font-bold leading-[1.1]; }
-  h2 { @apply text-xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight; }
-  h3 { @apply text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold leading-snug; }
+  h1 { 
+    @apply font-bold;
+    font-size: clamp(2.5rem, 8vw, 6rem);
+    line-height: 1.1;
+  }
+  
+  h2 { 
+    @apply font-bold;
+    font-size: clamp(2rem, 5vw, 3.75rem);
+    line-height: 1.2;
+  }
+  
+  h3 { 
+    @apply font-bold;
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    line-height: 1.3;
+  }
 
-  p { @apply max-w-[65ch] text-muted-foreground leading-relaxed text-sm sm:text-base md:text-lg; }
+  h4 {
+    @apply font-semibold;
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    line-height: 1.4;
+  }
+
+  p { 
+    @apply max-w-[65ch] text-muted-foreground;
+    font-size: clamp(0.875rem, 1.5vw, 1.125rem);
+    line-height: 1.6;
+  }
 
   .font-serif {
     font-family: 'Playfair Display', serif;
