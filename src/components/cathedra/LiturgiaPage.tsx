@@ -176,7 +176,7 @@ const LiturgyPrayerCard: React.FC<{
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.5, delay }}
-    className="p-10 bg-muted/20 border border-border/50 rounded-[2.5rem] space-y-4 shadow-inner"
+    className="premium-card p-10 bg-muted/20 border-border/50 shadow-inner"
   >
     <div className="flex items-center gap-3">
       <div className="w-1.5 h-1.5 rounded-full bg-secondary/40" />
