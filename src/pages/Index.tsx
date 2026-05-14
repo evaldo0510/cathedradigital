@@ -69,12 +69,8 @@ const Index = () => {
       <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><Icons.Logo className="w-12 h-12 animate-pulse" variant="blue" /></div>}>
         <main className="w-full flex flex-col items-center" style={{ contentVisibility: 'auto' }}>
           <div id="video"><InstitutionalVideoSection /></div>
-          <div id="stats"><StatsSection /></div>
           <div id="features"><FeaturesSection onNavigate={handleNavigate} /></div>
-          <div id="how-it-works"><HowItWorksSection /></div>
           <DailyRoutineSection />
-          <AcolhimentoSection />
-          <CommunitySection />
           <BenefitsSection onLogin={() => navigate(AppRoute.LOGIN)} />
           <div id="testimonials"><TestimonialsSection /></div>
           <div id="pricing"><PricingSection /></div>

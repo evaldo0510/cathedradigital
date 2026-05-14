@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { useScroll, useTransform } from "framer-motion";
 import HeroBackground from "./hero/HeroBackground";
-import HeroParticles from "./hero/HeroParticles";
+// Particles removed for cleaner visual experience
 import HeroContent from "./hero/HeroContent";
 import HeroScrollIndicator from "./hero/HeroScrollIndicator";
 
@@ -21,7 +21,7 @@ const HeroSection = ({ onStart, onAbout }: HeroSectionProps) => {
   return (
     <section ref={heroRef} className="relative w-full min-h-[100dvh] flex items-center justify-center px-6 overflow-hidden">
       <HeroBackground bgY={bgY} />
-      <HeroParticles />
+      {/* Particles removed for minimalism */}
       <HeroContent heroOpacity={heroOpacity} heroScale={heroScale} heroY={heroY} onStart={onStart} onAbout={onAbout} />
       <HeroScrollIndicator />
     </section>

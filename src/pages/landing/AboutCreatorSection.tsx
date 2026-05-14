@@ -8,10 +8,9 @@ const AboutCreatorSection = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="py-24 bg-background border-y border-border/40 relative overflow-hidden">
-      {/* Decorative background elements */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-secondary/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3" />
+    <section className="py-24 px-6 relative overflow-hidden">
+      {/* Decorative background elements simplified */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-12 md:gap-20">
@@ -21,17 +20,10 @@ const AboutCreatorSection = () => {
             viewport={{ once: true }}
             className="w-full md:w-1/3 flex justify-center"
           >
-            <div className="relative group">
-              <div className="absolute -inset-4 bg-gradient-to-tr from-primary/20 to-secondary/20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-              <div className="w-48 h-48 md:w-64 md:h-64 rounded-full border-2 border-border p-2 relative bg-background">
-                <div className="w-full h-full rounded-full bg-muted flex items-center justify-center overflow-hidden border border-border">
-                  <Icons.User className="w-24 h-24 text-muted-foreground/30" />
-                  {/* If the creator has a photo, replace the Icon with an img tag:
-                  <img src="/creator-photo.jpg" alt="Evaldo.os" className="w-full h-full object-cover" />
-                  */}
-                </div>
-                <div className="absolute -bottom-2 -right-2 bg-primary text-white p-3 rounded-full shadow-lg border-4 border-background">
-                  <Icons.Feather className="w-5 h-5" />
+            <div className="relative">
+              <div className="w-40 h-40 md:w-48 md:h-48 rounded-full border border-border/10 p-1 relative bg-background">
+                <div className="w-full h-full rounded-full bg-muted flex items-center justify-center overflow-hidden border border-border/10">
+                  <Icons.User className="w-16 h-16 text-muted-foreground/30" />
                 </div>
               </div>
             </div>
@@ -43,11 +35,11 @@ const AboutCreatorSection = () => {
             viewport={{ once: true }}
             className="w-full md:w-2/3 space-y-6 text-center md:text-left"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/5 rounded-full border border-primary/10">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-primary/70">O Fundador</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/5 rounded-full">
+              <span className="text-[9px] font-bold uppercase tracking-[0.3em] text-primary/60">O Fundador</span>
             </div>
             
-            <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground">
+            <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground uppercase tracking-wider">
               Evaldo.os
             </h2>
             
@@ -63,10 +55,10 @@ const AboutCreatorSection = () => {
             <div className="flex flex-col sm:flex-row items-center gap-4 pt-4">
               <button 
                 onClick={() => navigate(AppRoute.ABOUT)}
-                className="w-full sm:w-auto px-8 py-3 bg-primary text-white rounded-full font-medium hover:bg-primary/90 transition-all flex items-center justify-center gap-2 group shadow-sm"
+                className="w-full sm:w-auto px-10 py-3.5 bg-primary text-primary-foreground rounded-full text-xs font-bold uppercase tracking-[0.2em] shadow-none hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
               >
-                Conhecer o Manifesto
-                <Icons.ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                Manifesto
+                <Icons.ArrowRight className="w-4 h-4" />
               </button>
               <div className="flex items-center gap-4 px-4 py-2 text-muted-foreground">
                 <div className="h-px w-8 bg-border" />

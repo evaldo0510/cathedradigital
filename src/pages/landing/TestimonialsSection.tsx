@@ -16,87 +16,40 @@ const testimonials = [
 ];
 
 const TestimonialsSection = () => {
-  const plugin = React.useRef(
-    Autoplay({ delay: 5000, stopOnInteraction: true })
-  );
-
   return (
-    <section className="w-full py-24 px-6 overflow-hidden bg-primary/5">
-      <div className="max-w-7xl mx-auto space-y-16">
+    <section className="w-full py-24 px-6 relative overflow-hidden bg-background">
+      <div className="max-w-6xl mx-auto space-y-16 relative z-10">
         <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center space-y-4">
-          <h2 className="text-4xl md:text-5xl font-display font-bold">Vozes da Comunidade</h2>
-          <p className="text-lg text-muted-foreground italic">O que dizem aqueles que caminham conosco</p>
+          <span className="text-[9px] font-bold uppercase tracking-[0.4em] text-primary/40">Comunidade</span>
+          <h2 className="text-3xl md:text-4xl font-display font-bold">Vozes da Comunidade</h2>
         </motion.div>
 
-        <div className="relative px-4 md:px-12">
-          <Carousel
-            opts={{
-              align: "start",
-              loop: true,
-            }}
-            plugins={[plugin.current]}
-            className="w-full"
-          >
-            <CarouselContent className="-ml-4">
-              {testimonials.map((t, i) => (
-                <CarouselItem key={t.name} className="pl-4 md:basis-1/2 lg:basis-1/3">
-                  <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: i * 0.1 }}
-                    whileHover={{ y: -8, scale: 1.02, transition: { duration: 0.3 } }}
-                    className="h-full py-2"
-                  >
-                    <Card className="h-full border-none bg-card shadow-lg hover:shadow-2xl rounded-[2rem] overflow-hidden transition-shadow duration-300 relative group">
-                      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary/60 via-primary to-primary/60 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-                      <CardContent className="p-8 space-y-6 relative h-full flex flex-col">
-                        <motion.div
-                          animate={{ rotate: [-6, 0, -6], scale: [0.8, 1, 0.8], opacity: [0.2, 0.35, 0.2] }}
-                          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                          className="absolute top-4 right-4"
-                        >
-                          <Quote className="w-12 h-12 text-primary/15" />
-                        </motion.div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {testimonials.slice(0, 3).map((t, i) => (
+            <motion.div
+              key={t.name}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1 }}
+              className="p-8 rounded-3xl bg-card border border-border/5 shadow-sm space-y-6 flex flex-col"
+            >
+              <Quote className="w-6 h-6 text-primary/20" />
+              <p className="text-sm text-muted-foreground leading-relaxed font-serif italic flex-1">
+                "{t.text}"
+              </p>
 
-                        <Quote className="w-8 h-8 text-primary/30" />
-                        <p className="text-muted-foreground leading-relaxed font-serif italic relative z-10 flex-1">"{t.text}"</p>
-
-                        <div className="space-y-4">
-                          <div className="flex gap-0.5">
-                            {Array.from({ length: t.stars }).map((_, si) => (
-                              <Star key={si} className="w-4 h-4 fill-primary text-primary" />
-                            ))}
-                          </div>
-
-                          <div className="flex items-center gap-4 pt-4 border-t border-border/30">
-                            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm ring-2 ring-primary/20 group-hover:ring-primary/40 transition-all duration-300">
-                              {t.avatar}
-                            </div>
-                            <div>
-                              <p className="font-bold text-sm">{t.name}</p>
-                              <p className="text-xs text-muted-foreground">{t.role}</p>
-                            </div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            
-            <div className="hidden md:block">
-              <CarouselPrevious className="-left-12" />
-              <CarouselNext className="-right-12" />
-            </div>
-            
-            {/* Mobile Controls */}
-            <div className="flex justify-center gap-4 mt-10 md:hidden">
-              <CarouselPrevious className="static translate-y-0" />
-              <CarouselNext className="static translate-y-0" />
-            </div>
-          </Carousel>
+              <div className="pt-6 border-t border-border/5 flex items-center gap-4">
+                <div className="w-10 h-10 rounded-full bg-primary/5 flex items-center justify-center text-primary font-bold text-xs">
+                  {t.avatar}
+                </div>
+                <div>
+                  <p className="font-bold text-xs">{t.name}</p>
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider">{t.role}</p>
+                </div>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>

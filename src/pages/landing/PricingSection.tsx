@@ -92,13 +92,13 @@ const PricingSection = () => {
               whileInView="visible"
               viewport={{ once: true }}
               custom={i + 2}
-              whileHover={{ y: -10 }}
-              className={`relative p-8 rounded-[3rem] bg-card border-2 flex flex-col h-full transition-all duration-500 ${
-                tier.popular ? "border-primary shadow-2xl scale-105 z-10" : "border-border/50 hover:border-primary/20 shadow-lg"
+              whileHover={{ y: -5 }}
+              className={`relative p-8 rounded-3xl bg-card border flex flex-col h-full transition-all duration-500 ${
+                tier.popular ? "border-secondary shadow-xl z-10" : "border-border/5 hover:border-primary/10 shadow-sm"
               }`}
             >
               {tier.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-widest px-6 py-2 rounded-full shadow-lg">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-secondary text-primary-foreground text-[8px] font-black uppercase tracking-[0.3em] px-4 py-1.5 rounded-full shadow-md">
                   Mais Escolhido
                 </div>
               )}
@@ -135,8 +135,8 @@ const PricingSection = () => {
 
               <div className="mt-8">
                 <Button 
-                  className={`w-full h-14 rounded-2xl font-black uppercase tracking-widest transition-all duration-300 ${
-                    tier.popular ? "bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/30" : "bg-muted hover:bg-blue-600/10 text-foreground"
+                  className={`w-full h-12 rounded-full font-bold uppercase tracking-[0.2em] text-[10px] transition-all duration-300 ${
+                    tier.popular ? "bg-primary text-primary-foreground shadow-none" : "bg-muted/50 hover:bg-muted text-foreground"
                   }`}
                 >
                   {tier.button}

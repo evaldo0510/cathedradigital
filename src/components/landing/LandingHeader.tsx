@@ -65,10 +65,9 @@ const LandingHeader = () => {
           className="flex items-center gap-3 cursor-pointer group"
           onClick={() => navigate(AppRoute.HOME)}
         >
-          <Icons.Logo className="w-10 h-10 transition-transform group-hover:scale-110" variant="blue" />
+          <Icons.Logo className="w-10 h-10 transition-transform group-hover:scale-105" variant="gold" />
           <div className="hidden sm:block">
-            <h1 className="text-xl font-serif font-bold text-foreground tracking-tight">CATHEDRA</h1>
-            <p className="text-[8px] font-black uppercase text-primary tracking-[0.2em]">Digital Sanctuarium</p>
+            <h1 className="text-base font-display font-bold text-foreground tracking-[0.2em] uppercase">CATHEDRA</h1>
           </div>
         </div>
 
@@ -117,21 +116,16 @@ const LandingHeader = () => {
           </div>
         </nav>
 
-        <div className="flex items-center gap-3">
-          <div className="hidden lg:block">
-            <GoogleSignInButton 
-              className="h-11 px-6 rounded-2xl"
-              text="Entrar com Google"
-            />
-          </div>
-          <Button
-            className="hidden sm:flex text-sm font-bold uppercase tracking-widest px-6 h-11 bg-foreground text-background hover:bg-primary hover:text-primary-foreground transition-all shadow-lg active:scale-95 border-none rounded-2xl"
+        <div className="flex items-center gap-4">
+          <button
             onClick={() => navigate(AppRoute.LOGIN)}
+            className="hidden sm:block text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors"
           >
             Entrar
-          </Button>
+          </button>
+          
           <Button
-            className="rounded-2xl px-6 bg-blue-600 hover:bg-blue-700 text-white font-black uppercase tracking-widest text-[10px] h-11 shadow-lg shadow-blue-600/20 hover:scale-105 transition-all"
+            className="rounded-full px-8 bg-primary hover:bg-primary/90 text-primary-foreground font-bold uppercase tracking-[0.2em] text-[10px] h-11 shadow-none transition-all"
             onClick={() => navigate(AppRoute.LOGIN)}
           >
             Começar <ChevronRight className="w-4 h-4 ml-1" />
@@ -168,16 +162,12 @@ const LandingHeader = () => {
                   {link.name}
                 </button>
               ))}
-              <hr className="border-border" />
-              <GoogleSignInButton 
-                className="w-full h-14 rounded-2xl"
-                text="Entrar com Google"
-              />
+              <hr className="border-border/10" />
               <Button
-                className="w-full h-14 rounded-2xl font-bold uppercase tracking-widest bg-foreground text-background hover:bg-primary hover:text-primary-foreground transition-all shadow-lg active:scale-95 border-none"
+                className="w-full h-14 rounded-full font-bold uppercase tracking-widest bg-primary text-primary-foreground transition-all border-none"
                 onClick={() => navigate(AppRoute.LOGIN)}
               >
-                Entrar
+                Iniciar Agora
               </Button>
             </div>
           </motion.div>

@@ -59,43 +59,18 @@ const HeroContent = ({ heroOpacity, heroScale, heroY, onStart, onAbout }: HeroCo
         transition={{ duration: 1, delay: 0.5, ease: EASE }}
         className="flex justify-center"
       >
-        <div className="relative group">
-          {/* Breathing halo glow */}
-          <motion.div
-            animate={{ opacity: [0.15, 0.3, 0.15], scale: [1, 1.15, 1] }}
-            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute inset-0 bg-secondary/20 blur-3xl rounded-full"
-          />
-          {/* Gentle floating */}
-          <motion.div
-            animate={{ y: [0, -8, 0] }}
-            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-            className="relative"
-          >
+        <div className="relative">
+          {/* Subtle halo glow */}
+          <div className="absolute inset-0 bg-secondary/5 blur-3xl rounded-full" />
+          <div className="relative">
             {/* Avatar container */}
-            <div className="relative w-28 h-28 sm:w-36 sm:h-36 rounded-full overflow-hidden border-[1px] border-secondary/20 shadow-xl group-hover:border-secondary/40 transition-all duration-700 bg-card/40 backdrop-blur-sm">
-              <img src={logosAvatar} alt="Logos — Mestre Contemplativo" className="w-full h-full object-cover grayscale-[0.2] hover:grayscale-0 transition-all duration-700" />
-              <motion.div
-                animate={{ opacity: [0, 0.03, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute inset-0 bg-secondary/10 rounded-full"
-              />
+            <div className="relative w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden border border-secondary/20 bg-card/40 backdrop-blur-sm mx-auto">
+              <img src={logosAvatar} alt="Logos — Mestre Contemplativo" className="w-full h-full object-cover grayscale-[0.2]" />
             </div>
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              className="absolute -inset-4 rounded-full border border-secondary/10 -z-10"
-              style={{ borderStyle: 'dashed' }}
-            />
-          </motion.div>
-          <motion.div 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.2 }}
-            className="absolute -bottom-6 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-primary text-primary-foreground text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] sm:tracking-[0.3em] whitespace-nowrap border-[4px] border-background shadow-2xl"
-          >
+          </div>
+          <div className="mt-4 px-4 py-1 rounded-full border border-border/10 bg-background/50 backdrop-blur-sm text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.3em] inline-block mx-auto">
             Logos · Mestre Contemplativo
-          </motion.div>
+          </div>
         </div>
       </motion.div>
 
@@ -119,12 +94,9 @@ const HeroContent = ({ heroOpacity, heroScale, heroY, onStart, onAbout }: HeroCo
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 2.2 }}
-        className="max-w-xl mx-auto text-lg md:text-xl text-muted-foreground/80 font-serif italic leading-relaxed"
+        className="max-w-xl mx-auto text-base md:text-lg text-muted-foreground font-serif italic leading-relaxed"
       >
-        "A oração é o respirar da alma e o silêncio é a linguagem de Deus." <br />
-        <span className="text-sm md:text-base not-italic opacity-60 block mt-4 font-sans tracking-tight">
-          Um assistente contemplativo treinado com o Magistério da Igreja.
-        </span>
+        "A oração é o respirar da alma e o silêncio é a linguagem de Deus."
       </motion.p>
 
       {/* CTA Buttons */}
@@ -132,29 +104,23 @@ const HeroContent = ({ heroOpacity, heroScale, heroY, onStart, onAbout }: HeroCo
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 2.5 }}
-        className="flex flex-col items-center justify-center gap-8 pt-4"
+        className="flex flex-col items-center justify-center gap-6 pt-4"
       >
-        <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 w-full max-w-2xl">
-          <motion.div className="w-full sm:flex-1" variants={buttonHover} initial="rest" whileHover="hover" whileTap="tap">
-            <Button
-              size="lg"
-              className="w-full h-16 sm:h-20 px-8 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black uppercase tracking-[0.2em] shadow-xl text-sm sm:text-base group"
-              onClick={onStart}
-            >
-              Iniciar Jornada <Icons.PenTool className="ml-3 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </motion.div>
+        <div className="flex flex-col sm:row items-center gap-4 w-full max-w-sm">
+          <Button
+            size="lg"
+            className="w-full h-14 px-8 rounded-full bg-primary text-primary-foreground font-bold uppercase tracking-[0.2em] text-xs shadow-none"
+            onClick={onStart}
+          >
+            Iniciar Jornada
+          </Button>
           
-          <motion.div className="w-full sm:flex-1" variants={buttonHover} initial="rest" whileHover="hover" whileTap="tap">
-            <Button
-              size="lg"
-              variant="outline"
-              className="w-full h-16 sm:h-20 px-8 rounded-2xl border-border bg-card/40 backdrop-blur-md hover:bg-card/60 text-foreground font-black uppercase tracking-[0.2em] text-sm sm:text-base group"
-              onClick={scrollToVideo}
-            >
-              <Play className="mr-3 w-5 h-5 fill-current" /> Ver Apresentação
-            </Button>
-          </motion.div>
+          <button
+            className="text-[10px] font-bold uppercase tracking-[0.3em] text-muted-foreground hover:text-primary transition-colors py-2"
+            onClick={scrollToVideo}
+          >
+            Ver Apresentação
+          </button>
         </div>
 
         <motion.div 
@@ -163,15 +129,7 @@ const HeroContent = ({ heroOpacity, heroScale, heroY, onStart, onAbout }: HeroCo
           transition={{ delay: 2.8 }}
           className="w-full max-w-sm flex flex-col gap-3"
         >
-          <div className="flex items-center gap-3 w-full">
-            <div className="h-px bg-border flex-1 opacity-20" />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">Acesso Rápido</span>
-            <div className="h-px bg-border flex-1 opacity-20" />
-          </div>
-          <GoogleSignInButton 
-            className="h-14 sm:h-16 rounded-2xl bg-background hover:bg-muted/50 border-border/50 text-xs"
-            text="Continuar com Google"
-          />
+          {/* Quick access options removed for minimalism */}
         </motion.div>
 
         <div className="flex items-center gap-3 opacity-40">

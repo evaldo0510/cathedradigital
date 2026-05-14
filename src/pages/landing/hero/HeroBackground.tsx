@@ -9,13 +9,13 @@ const HeroBackground = ({ bgY }: HeroBackgroundProps) => (
     <img
       src="https://images.unsplash.com/photo-1548610762-656391d1ad4d?auto=format&fit=crop&q=60&w=1200"
       alt="Catedral interior"
-      className="w-full h-full object-cover opacity-[0.08] dark:opacity-[0.04] scale-100 blur-[3px]"
+      className="w-full h-full object-cover opacity-[0.05] grayscale"
       loading="eager"
       decoding="async"
       fetchPriority="high"
     />
-    <div className="absolute inset-0 bg-gradient-to-b from-background/5 via-background/70 to-background" />
-    <div className="absolute inset-0 bg-gradient-to-r from-primary/[0.02] via-transparent to-primary/[0.02]" />
+    <div className="absolute inset-0 bg-background" />
+    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/80 to-background" />
   </motion.div>
 );
 

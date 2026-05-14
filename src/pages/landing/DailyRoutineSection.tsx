@@ -28,67 +28,41 @@ const DailyRoutineSection = () => {
   ];
 
   return (
-    <section className="w-full py-24 px-6 bg-muted/20 relative overflow-hidden">
-      <div className="max-w-7xl mx-auto space-y-16">
-        <div className="text-center space-y-6 max-w-3xl mx-auto">
-          <motion.span
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60 block"
-          >
-            Sua Jornada Diária
-          </motion.span>
-          <motion.h2
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            custom={1}
-            className="text-4xl md:text-5xl font-display font-bold"
-          >
-            O Cathedra em sua <span className="text-primary italic font-serif">Vida Comum</span>
-          </motion.h2>
-          <p className="text-lg text-muted-foreground font-serif italic max-w-2xl mx-auto">
-            "Quer comais, quer bebais ou façais qualquer outra coisa, fazei tudo para a glória de Deus." (1Cor 10,31)
-          </p>
+    <section className="w-full py-24 px-6 relative overflow-hidden">
+      <div className="max-w-6xl mx-auto space-y-16">
+        <div className="text-center space-y-4 max-w-2xl mx-auto">
+          <span className="text-[9px] font-bold uppercase tracking-[0.4em] text-primary/40">O Ritmo</span>
+          <h2 className="text-3xl md:text-4xl font-display font-bold">Vivência Cotidiana</h2>
+          <p className="text-muted-foreground italic font-serif">"Fazei tudo para a glória de Deus."</p>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-12 relative">
-          {/* Connecting line for desktop */}
-          <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-primary/20 to-transparent -translate-y-1/2" />
-
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
           {dayFlow.map((step, i) => (
             <motion.div
               key={step.title}
-              variants={fadeUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              custom={i + 2}
-              className="relative space-y-8 p-10 rounded-[3rem] bg-card border border-border/50 shadow-sm hover:shadow-2xl transition-all duration-500 group"
+              whileHover={{ y: -5 }}
+              className="relative space-y-6 p-8 rounded-3xl bg-card border border-border/5 transition-all group shadow-sm"
             >
               <div className="flex justify-between items-center">
-                <div className="w-14 h-14 rounded-2xl bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors duration-500">
+                <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center text-primary">
                   {step.icon}
                 </div>
-                <span className="text-2xl font-display font-black text-primary/20 group-hover:text-primary/40 transition-colors">
+                <span className="text-sm font-display font-bold text-primary/30">
                   {step.time}
                 </span>
               </div>
               
-              <div className="space-y-4">
-                <h3 className="text-2xl font-bold font-serif">{step.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
+              <div className="space-y-2">
+                <h3 className="text-xl font-bold font-serif">{step.title}</h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">
                   {step.desc}
                 </p>
               </div>
 
-              <ul className="space-y-3 pt-4">
+              <ul className="space-y-2 pt-2 border-t border-border/5">
                 {step.items.map((item) => (
-                  <li key={item} className="flex items-center gap-3 text-xs font-medium text-foreground/80">
-                    <CheckCircle2 className="w-4 h-4 text-primary/60" />
+                  <li key={item} className="flex items-center gap-2 text-[10px] font-medium text-foreground/60">
+                    <CheckCircle2 className="w-3 h-3 text-primary/40" />
                     {item}
                   </li>
                 ))}

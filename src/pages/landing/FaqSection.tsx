@@ -13,21 +13,21 @@ const faqs = [
 ];
 
 const FaqSection = () => (
-  <section className="w-full py-24 px-6 bg-muted/20 border-y border-border/20">
-    <div className="max-w-3xl mx-auto space-y-12">
+  <section className="w-full py-24 px-6 relative overflow-hidden">
+    <div className="max-w-3xl mx-auto space-y-12 relative z-10">
       <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center space-y-4">
-        <h2 className="text-4xl md:text-5xl font-display font-bold">Perguntas Frequentes</h2>
-        <p className="text-lg text-muted-foreground italic">Tire suas dúvidas sobre o Cathedra</p>
+        <span className="text-[9px] font-bold uppercase tracking-[0.4em] text-primary/40">Dúvidas</span>
+        <h2 className="text-3xl md:text-4xl font-display font-bold">Perguntas Frequentes</h2>
       </motion.div>
 
       <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-        <Accordion type="single" collapsible className="space-y-3">
+        <Accordion type="single" collapsible className="space-y-4">
           {faqs.map((faq, i) => (
-            <AccordionItem key={i} value={`faq-${i}`} className="bg-card border border-border/30 rounded-2xl px-6 overflow-hidden">
-              <AccordionTrigger className="text-left font-serif font-bold text-base py-5 hover:no-underline hover:text-primary transition-colors">
+            <AccordionItem key={i} value={`faq-${i}`} className="bg-card border border-border/10 rounded-3xl px-8 shadow-sm">
+              <AccordionTrigger className="text-left font-serif font-bold text-base py-6 hover:no-underline transition-colors border-none">
                 {faq.q}
               </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground leading-relaxed pb-5">
+              <AccordionContent className="text-muted-foreground text-sm leading-relaxed pb-6">
                 {faq.a}
               </AccordionContent>
             </AccordionItem>
