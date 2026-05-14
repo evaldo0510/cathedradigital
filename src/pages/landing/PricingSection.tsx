@@ -64,7 +64,7 @@ const PricingSection = () => {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60 block"
+            className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60 block italic"
           >
             Investimento Espiritual
           </motion.span>
