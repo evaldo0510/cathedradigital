@@ -261,20 +261,19 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                 <motion.div 
                   initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-primary/5 rounded-[2rem] p-6 border border-primary/10 relative overflow-hidden group shadow-inner"
+                  className="bg-primary/5 rounded-[2.5rem] p-8 border border-primary/10 relative overflow-hidden group shadow-inner"
                 >
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-primary/10 rounded-full blur-3xl -mr-10 -mt-10" />
-                  <div className="flex items-center gap-2.5 mb-3">
-                    <div className="w-6 h-6 rounded-lg bg-primary/20 flex items-center justify-center">
-                      <Sparkles className="w-3.5 h-3.5 text-primary" />
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl -mr-12 -mt-12" />
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center">
+                      <Sparkles className="w-4 h-4 text-primary" />
                     </div>
-                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/70">Logos Insight</span>
+                    <span className="text-[11px] font-black uppercase tracking-[0.3em] text-primary/60">Logos Insight</span>
                   </div>
-                  <p className="text-[14px] text-foreground/90 leading-relaxed italic font-serif">
+                  <p className="text-[16px] text-foreground/90 leading-relaxed italic font-serif">
                     "{logosInsight}"
                   </p>
                 </motion.div>
-
               )}
               
               {content.length > 0 ? (
