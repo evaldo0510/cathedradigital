@@ -44,7 +44,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
   const [showNotifs, setShowNotifs] = useState(false);
 
   return (
-    <header className="border-b border-border bg-background/90 backdrop-blur-xl sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)]">
+    <header className="border-b border-primary/5 bg-background/60 backdrop-blur-2xl sticky top-0 z-[140] transition-all duration-500 pt-[env(safe-area-inset-top,0px)] hover:bg-background/80">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-3 sm:py-4 flex items-center justify-between min-h-[56px] sm:min-h-[64px]">
         <div className="flex items-center gap-2 sm:gap-10 min-w-0">
           <div className="flex lg:hidden items-center gap-2 sm:gap-4 cursor-pointer group min-w-0 focus-visible:ring-2 focus-visible:ring-primary outline-none" role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && navigate(AppRoute.HOJE)} onClick={() => navigate(AppRoute.HOJE)}>
@@ -96,7 +96,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
 
         <div className="flex items-center gap-1.5 sm:gap-4 flex-shrink-0">
           <button 
-            className="p-2.5 sm:p-3 bg-muted text-primary rounded-xl sm:rounded-2xl border border-border hover:bg-primary hover:text-white transition-all shadow-sm active:scale-95 flex items-center gap-2 focus-visible:ring-2 focus-visible:ring-primary outline-none" 
+            className="p-3 sm:p-4 bg-muted/40 text-primary rounded-[1.25rem] border border-border/40 hover:bg-primary hover:text-white transition-all duration-300 shadow-sm hover:shadow-xl hover:translate-y-[-1px] active:scale-95 flex items-center gap-2.5 focus-visible:ring-2 focus-visible:ring-primary/20 outline-none"
             onClick={() => {
               localStorage.removeItem('cathedra_onboarding_done');
               navigate(AppRoute.ONBOARDING);
@@ -107,14 +107,14 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             <span className="hidden md:inline text-[9px] font-black uppercase tracking-widest">{t('guide') || "Guia"}</span>
           </button>
 
-          <button className="p-2.5 sm:p-3 bg-muted text-primary rounded-xl sm:rounded-2xl border border-border hover:bg-primary hover:text-white transition-all shadow-sm active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none" onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}>
+          <button className="p-3 bg-muted/40 text-primary rounded-[1.25rem] border border-border/40 hover:bg-primary hover:text-white transition-all duration-300 shadow-sm hover:shadow-xl hover:translate-y-[-1px] active:scale-95 focus-visible:ring-2 focus-visible:ring-primary/20 outline-none" onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}>
             <Icons.Search className="w-4 h-4" />
           </button>
 
           {user && (
             <button 
               onClick={() => setShowNotifs(!showNotifs)} 
-              className="p-2.5 sm:p-3 bg-muted text-primary hover:bg-primary hover:text-white rounded-xl sm:rounded-2xl border border-border relative transition-all shadow-sm active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none"
+              className="p-3 bg-muted/40 text-primary hover:bg-primary hover:text-white rounded-[1.25rem] border border-border/40 relative transition-all duration-300 shadow-sm hover:shadow-xl hover:translate-y-[-1px] active:scale-95 focus-visible:ring-2 focus-visible:ring-primary/20 outline-none"
               aria-label={showNotifs ? "Fechar notificações" : `Notificações (${unreadCount} não lidas)`}
               aria-expanded={showNotifs}
             >
@@ -179,7 +179,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                   text="Google"
                 />
               </div>
-              <button onClick={() => navigate(AppRoute.LOGIN)} className="px-4 sm:px-6 py-2 sm:py-2.5 bg-foreground text-background rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-primary-foreground transition-all shadow-lg active:scale-95">
+              <button onClick={() => navigate(AppRoute.LOGIN)} className="px-6 py-3 bg-primary text-primary-foreground rounded-[1.25rem] text-[11px] font-black uppercase tracking-[0.2em] hover:bg-primary/90 transition-all duration-300 shadow-xl shadow-primary/10 hover:shadow-primary/20 hover:translate-y-[-1px] active:scale-95">
                 {t('enter')}
               </button>
             </div>
@@ -210,11 +210,11 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             {isSpeaking ? <Icons.Stop className="w-4 h-4" /> : <Icons.Volume2 className="w-4 h-4" />}
           </button>
 
-          <button onClick={onToggleDark} className="hidden sm:flex lg:hidden p-2.5 sm:p-3 bg-muted text-primary hover:bg-primary hover:text-white rounded-xl sm:rounded-2xl border border-border transition-all active:scale-95 shadow-sm items-center justify-center focus-visible:ring-2 focus-visible:ring-primary outline-none" aria-label="Alternar tema">
+          <button onClick={onToggleDark} className="hidden sm:flex lg:hidden p-3 bg-muted/40 text-primary hover:bg-primary hover:text-white rounded-[1.25rem] border border-border/40 transition-all duration-300 active:scale-95 shadow-sm hover:shadow-xl hover:translate-y-[-1px] items-center justify-center focus-visible:ring-2 focus-visible:ring-primary/20 outline-none" aria-label="Alternar tema">
             {isDark ? <Icons.Sun className="w-4 h-4" /> : <Icons.Moon className="w-4 h-4" />}
           </button>
 
-          <button onClick={onOpenSidebar} className="sm:hidden p-2.5 bg-muted text-primary hover:bg-primary hover:text-white rounded-xl border border-border transition-all active:scale-95 shadow-sm flex items-center justify-center focus-visible:ring-2 focus-visible:ring-primary outline-none" aria-label="Abrir menu lateral">
+          <button onClick={onOpenSidebar} className="sm:hidden p-3 bg-muted/40 text-primary hover:bg-primary hover:text-white rounded-[1.25rem] border border-border/40 transition-all duration-300 active:scale-95 shadow-sm flex items-center justify-center focus-visible:ring-2 focus-visible:ring-primary/20 outline-none" aria-label="Abrir menu lateral">
             <Icons.Menu className="w-4.5 h-4.5" />
           </button>
 

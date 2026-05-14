@@ -33,12 +33,12 @@ type BibleCategory = { label: string; icon: React.ElementType; color: string; bg
 
 const BIBLE_CATEGORIES: Record<string, BibleCategory[]> = {
   'Antigo Testamento': [
-    { label: 'Pentateuco', icon: Icons.ScrollText, color: 'text-primary', bgColor: 'bg-muted border-border', books: [
+    { label: 'Pentateuco', icon: Icons.ScrollText, color: 'text-primary', bgColor: 'bg-primary/5 border-primary/10', books: [
       { name: 'Gênesis', abbr: 'Gn', chapters: 50 }, { name: 'Êxodo', abbr: 'Ex', chapters: 40 },
       { name: 'Levítico', abbr: 'Lv', chapters: 27 }, { name: 'Números', abbr: 'Nm', chapters: 36 },
       { name: 'Deuteronômio', abbr: 'Dt', chapters: 34 },
     ]},
-    { label: 'Históricos', icon: Icons.Swords, color: 'text-primary', bgColor: 'bg-muted border-border', books: [
+    { label: 'Históricos', icon: Icons.Swords, color: 'text-primary', bgColor: 'bg-primary/5 border-primary/10', books: [
       { name: 'Josué', abbr: 'Js', chapters: 24 }, { name: 'Juízes', abbr: 'Jz', chapters: 21 },
       { name: 'Rute', abbr: 'Rt', chapters: 4 }, { name: '1 Samuel', abbr: '1Sm', chapters: 31 },
       { name: '2 Samuel', abbr: '2Sm', chapters: 24 }, { name: '1 Reis', abbr: '1Rs', chapters: 22 },
@@ -48,13 +48,13 @@ const BIBLE_CATEGORIES: Record<string, BibleCategory[]> = {
       { name: 'Judite', abbr: 'Jt', chapters: 16 }, { name: 'Ester', abbr: 'Est', chapters: 10 },
       { name: '1 Macabeus', abbr: '1Mc', chapters: 16 }, { name: '2 Macabeus', abbr: '2Mc', chapters: 15 },
     ]},
-    { label: 'Sapienciais', icon: Icons.Feather, color: 'text-primary', bgColor: 'bg-muted border-border', books: [
+    { label: 'Sapienciais', icon: Icons.Feather, color: 'text-primary', bgColor: 'bg-primary/5 border-primary/10', books: [
       { name: 'Jó', abbr: 'Jó', chapters: 42 }, { name: 'Salmos', abbr: 'Sl', chapters: 150 },
       { name: 'Provérbios', abbr: 'Pr', chapters: 31 }, { name: 'Eclesiastes', abbr: 'Ecl', chapters: 12 },
       { name: 'Cântico dos Cânticos', abbr: 'Ct', chapters: 8 }, { name: 'Sabedoria', abbr: 'Sb', chapters: 19 },
       { name: 'Eclesiástico', abbr: 'Eclo', chapters: 51 },
     ]},
-    { label: 'Profetas', icon: Icons.Flame, color: 'text-primary', bgColor: 'bg-muted border-border', books: [
+    { label: 'Profetas', icon: Icons.Flame, color: 'text-primary', bgColor: 'bg-primary/5 border-primary/10', books: [
       { name: 'Isaías', abbr: 'Is', chapters: 66 }, { name: 'Jeremias', abbr: 'Jr', chapters: 52 },
       { name: 'Lamentações', abbr: 'Lm', chapters: 5 }, { name: 'Baruc', abbr: 'Br', chapters: 6 },
       { name: 'Ezequiel', abbr: 'Ez', chapters: 48 }, { name: 'Daniel', abbr: 'Dn', chapters: 14 },
@@ -67,14 +67,14 @@ const BIBLE_CATEGORIES: Record<string, BibleCategory[]> = {
     ]},
   ],
   'Novo Testamento': [
-    { label: 'Evangelhos', icon: Icons.Cross, color: 'text-primary', bgColor: 'bg-muted border-border', books: [
+    { label: 'Evangelhos', icon: Icons.Cross, color: 'text-primary', bgColor: 'bg-primary/5 border-primary/10', books: [
       { name: 'Mateus', abbr: 'Mt', chapters: 28 }, { name: 'Marcos', abbr: 'Mc', chapters: 16 },
       { name: 'Lucas', abbr: 'Lc', chapters: 24 }, { name: 'João', abbr: 'Jo', chapters: 21 },
     ]},
-    { label: 'Atos', icon: Icons.Globe, color: 'text-primary', bgColor: 'bg-muted border-border', books: [
+    { label: 'Atos', icon: Icons.Globe, color: 'text-primary', bgColor: 'bg-primary/5 border-primary/10', books: [
       { name: 'Atos dos Apóstolos', abbr: 'At', chapters: 28 },
     ]},
-    { label: 'Cartas Paulinas', icon: Icons.Mail, color: 'text-primary', bgColor: 'bg-muted border-border', books: [
+    { label: 'Cartas Paulinas', icon: Icons.Mail, color: 'text-primary', bgColor: 'bg-primary/5 border-primary/10', books: [
       { name: 'Romanos', abbr: 'Rm', chapters: 16 }, { name: '1 Coríntios', abbr: '1Cor', chapters: 16 },
       { name: '2 Coríntios', abbr: '2Cor', chapters: 13 }, { name: 'Gálatas', abbr: 'Gl', chapters: 6 },
       { name: 'Efésios', abbr: 'Ef', chapters: 6 }, { name: 'Filipenses', abbr: 'Fl', chapters: 4 },
@@ -83,13 +83,13 @@ const BIBLE_CATEGORIES: Record<string, BibleCategory[]> = {
       { name: '2 Timóteo', abbr: '2Tm', chapters: 4 }, { name: 'Tito', abbr: 'Tt', chapters: 3 },
       { name: 'Filemon', abbr: 'Fm', chapters: 1 }, { name: 'Hebreus', abbr: 'Hb', chapters: 13 },
     ]},
-    { label: 'Cartas Católicas', icon: Icons.BookOpen, color: 'text-primary', bgColor: 'bg-muted border-border', books: [
+    { label: 'Cartas Católicas', icon: Icons.BookOpen, color: 'text-primary', bgColor: 'bg-primary/5 border-primary/10', books: [
       { name: 'Tiago', abbr: 'Tg', chapters: 5 }, { name: '1 Pedro', abbr: '1Pd', chapters: 5 },
       { name: '2 Pedro', abbr: '2Pd', chapters: 3 }, { name: '1 João', abbr: '1Jo', chapters: 5 },
       { name: '2 João', abbr: '2Jo', chapters: 1 }, { name: '3 João', abbr: '3Jo', chapters: 1 },
       { name: 'Judas', abbr: 'Jd', chapters: 1 },
     ]},
-    { label: 'Apocalipse', icon: Icons.Sparkles, color: 'text-primary', bgColor: 'bg-muted border-border', books: [
+    { label: 'Apocalipse', icon: Icons.Sparkles, color: 'text-primary', bgColor: 'bg-primary/5 border-primary/10', books: [
       { name: 'Apocalipse', abbr: 'Ap', chapters: 22 },
     ]},
   ],
@@ -494,7 +494,7 @@ const Bible: React.FC = () => {
         )}
         {/* Header */}
         <div className="flex items-center gap-4">
-          <button onClick={goBack} className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all">
+          <button onClick={goBack} className="p-3 rounded-2xl bg-card border border-border/40 hover:bg-primary hover:text-white shadow-sm hover:shadow-xl transition-all duration-300">
             <Icons.ChevronLeft className="w-5 h-5 text-foreground" />
           </button>
           <div className="flex-1 min-w-0">
@@ -529,7 +529,7 @@ const Bible: React.FC = () => {
         )}
 
         {/* Toolbar */}
-        <div className="flex items-center justify-between gap-3 flex-wrap bg-card/50 backdrop-blur-md p-2 rounded-2xl border border-border shadow-sm">
+        <div className="flex items-center justify-between gap-3 flex-wrap bg-card/40 backdrop-blur-xl p-3 rounded-[1.5rem] border border-border/20 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
           <div className="flex items-center gap-2">
             <AudioButton variant="solid" className="px-6" />
             <ShareButton
@@ -541,11 +541,11 @@ const Bible: React.FC = () => {
 
           <div className="flex items-center gap-2">
             <button disabled={selectedChapter <= 1} onClick={() => navigateChapter(-1)}
-              className="px-3 py-2 rounded-xl bg-card border border-border text-sm font-bold disabled:opacity-30 hover:bg-primary/10 transition-all">
+              className="px-4 py-2.5 rounded-xl bg-card border border-border/40 text-[10px] font-black uppercase tracking-widest disabled:opacity-30 hover:bg-primary hover:text-white transition-all duration-300 active:scale-95 shadow-sm">
               ← Anterior
             </button>
             <button disabled={selectedChapter >= selectedBook.chapters} onClick={() => navigateChapter(1)}
-              className="px-3 py-2 rounded-xl bg-card border border-border text-sm font-bold disabled:opacity-30 hover:bg-primary/10 transition-all">
+              className="px-4 py-2.5 rounded-xl bg-card border border-border/40 text-[10px] font-black uppercase tracking-widest disabled:opacity-30 hover:bg-primary hover:text-white transition-all duration-300 active:scale-95 shadow-sm">
               Próximo →
             </button>
           </div>
@@ -698,8 +698,8 @@ const Bible: React.FC = () => {
     return (
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="flex items-center gap-4">
-          <button onClick={goBack} className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all">
-            <Icons.ChevronLeft className="w-5 h-5 text-foreground" />
+          <button onClick={goBack} className="p-3 rounded-2xl bg-card border border-border/40 hover:bg-primary hover:text-white shadow-sm transition-all duration-300">
+            <Icons.ChevronLeft className="w-5 h-5" />
           </button>
           <h1 className="text-2xl font-serif font-bold text-foreground">{selectedBook.name}</h1>
         </div>
@@ -712,10 +712,10 @@ const Bible: React.FC = () => {
               <button 
                 key={ch} 
                 onClick={() => selectChapter(ch)}
-                className={`aspect-square flex items-center justify-center rounded-lg border text-xs sm:text-sm font-bold transition-all relative
+                className={`aspect-square flex items-center justify-center rounded-xl border text-xs sm:text-sm font-black transition-all duration-300 relative
                   ${isRead 
-                    ? 'bg-primary/10 border-primary/30 text-primary' 
-                    : 'bg-card border-border text-muted-foreground hover:border-primary/40 hover:text-foreground hover:scale-[1.05]'}`}
+                    ? 'bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/10' 
+                    : 'bg-card border-border/40 text-muted-foreground hover:border-primary/40 hover:text-primary hover:bg-primary/5 hover:translate-y-[-2px] hover:shadow-md'}`}
               >
                 {ch}
                 {isRead && <Icons.CheckCircle2 className="w-2 h-2 absolute top-0.5 right-0.5" />}
@@ -759,10 +759,10 @@ const Bible: React.FC = () => {
           <button
             key={t}
             onClick={() => setTestament(t)}
-            className={`px-6 py-4 rounded-2xl font-bold transition-all border-2 text-sm
+            className={`px-8 py-4 rounded-2xl text-[11px] font-black uppercase tracking-[0.25em] transition-all duration-300 border
               ${testament === t 
-                ? 'bg-primary border-primary text-white shadow-lg shadow-primary/20 scale-[1.02]' 
-                : 'bg-card border-border text-muted-foreground hover:border-primary/40'}`}
+                ? 'bg-primary border-primary text-primary-foreground shadow-xl shadow-primary/20 scale-[1.02]' 
+                : 'bg-card border-border/40 text-muted-foreground/60 hover:border-primary/40 hover:text-primary hover:bg-primary/5 hover:translate-y-[-1px]'}`}
           >
             {t}
           </button>
@@ -774,7 +774,7 @@ const Bible: React.FC = () => {
         <input
           type="text"
           placeholder="Buscar livro..."
-          className="w-full pl-12 pr-4 py-4 bg-card border border-border rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+          className="w-full pl-12 pr-10 py-4 bg-card/50 border border-border/20 rounded-2xl text-[12px] focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium backdrop-blur-sm shadow-sm"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -800,10 +800,10 @@ const Bible: React.FC = () => {
                     <button
                       key={book.abbr}
                       onClick={() => selectBook(book)}
-                      className={`flex flex-col items-center justify-center gap-1 p-2.5 rounded-xl border transition-all relative overflow-hidden group aspect-square
+                      className={`flex flex-col items-center justify-center gap-1.5 p-3 rounded-2xl border transition-all duration-300 relative overflow-hidden group aspect-square
                         ${isRead 
-                          ? 'bg-primary/5 border-primary/20 text-primary' 
-                          : 'bg-card border-border text-muted-foreground hover:border-primary/40 hover:text-foreground hover:scale-[1.05] shadow-sm'}`}
+                          ? 'bg-primary/5 border-primary/20 text-primary shadow-sm' 
+                          : 'bg-card border-border/40 text-muted-foreground/80 hover:border-primary/40 hover:text-primary hover:bg-primary/5 hover:translate-y-[-2px] hover:shadow-md'}`}
                     >
                       {isRead && (
                         <div className="absolute top-0 right-0 p-1 bg-primary text-white rounded-bl-lg shadow-sm">

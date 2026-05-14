@@ -349,7 +349,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                         </div>
                         <Button 
                           size="lg" 
-                          className="bg-primary hover:bg-primary/90 text-white font-black text-[10px] uppercase tracking-[0.2em] px-8 h-12 rounded-2xl shadow-xl shadow-primary/20 group/btn"
+                          className="bg-primary hover:bg-primary/90 text-primary-foreground font-black text-[10px] uppercase tracking-[0.2em] px-8 h-12 rounded-2xl shadow-xl shadow-primary/10 hover:shadow-primary/20 hover:translate-y-[-1px] transition-all group/btn"
                         >
                           Continuar <Icons.ChevronRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
                         </Button>
@@ -508,12 +508,12 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   transition={{ type: 'spring', stiffness: 400, damping: 25 }}
                 >
                   <Card
-                    className={`overflow-hidden cursor-pointer transition-all group relative focus-visible:ring-4 focus-visible:ring-primary outline-none ${
+                    className={`overflow-hidden cursor-pointer transition-all duration-500 group relative rounded-[2rem] focus-visible:ring-4 focus-visible:ring-primary/20 outline-none ${
                       isComplete 
-                        ? 'border-emerald-500/30 ring-1 ring-emerald-500/10' 
+                        ? 'border-emerald-500/30 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)]' 
                         : hasStarted 
-                          ? 'border-primary/20'
-                          : 'border-border hover:border-primary/30'
+                          ? 'border-primary/20 shadow-[0_8px_30px_rgb(0,0,0,0.06)]'
+                          : 'border-border/40 hover:border-primary/30 shadow-sm hover:shadow-xl'
                     }`}
                     onClick={() => {
                       // Check if it's one of our local trilhas
@@ -555,15 +555,15 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap mb-1">
-                              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-muted/80 flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity">
-                              {CATEGORY_ICONS[journey.category] || <Icons.BookOpen className="w-4 h-4" />}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <h2 className="text-sm sm:text-base font-bold font-serif text-foreground truncate">{journey.title}</h2>
-                              {journey.subtitle && (
-                                <p className="text-xs text-muted-foreground font-serif italic truncate">{journey.subtitle}</p>
-                              )}
-                            </div>
+                              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-card border border-border/40 flex items-center justify-center shadow-sm group-hover:border-primary/20 group-hover:scale-110 transition-all duration-500 flex-shrink-0">
+                                {CATEGORY_ICONS[journey.category] || <Icons.BookOpen className="w-5 h-5 text-primary" />}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <h2 className="text-lg sm:text-xl font-bold font-serif text-foreground truncate group-hover:text-primary transition-colors">{journey.title}</h2>
+                                {journey.subtitle && (
+                                  <p className="text-[11px] text-muted-foreground/60 font-serif italic truncate">{journey.subtitle}</p>
+                                )}
+                              </div>
                           </div>
                         </div>
                         <div className="flex items-center gap-2 flex-shrink-0">
