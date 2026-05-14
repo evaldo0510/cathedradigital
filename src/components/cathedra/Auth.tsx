@@ -141,10 +141,9 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
               />
             </div>
           )}
-          <button type="submit" disabled={loading}
-            className="w-full py-4 bg-foreground text-background rounded-full font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all disabled:opacity-50">
-            {loading ? 'Aguarde...' : mode === 'login' ? 'Entrar' : mode === 'signup' ? 'Criar Conta' : 'Enviar Link'}
-          </button>
+          <Button type="submit" isLoading={loading} className="w-full h-14">
+            {mode === 'login' ? 'Entrar' : mode === 'signup' ? 'Criar Conta' : 'Enviar Link'}
+          </Button>
         </form>
 
         <div className="relative flex items-center gap-4 my-2">
