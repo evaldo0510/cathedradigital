@@ -492,8 +492,192 @@ const AdminSeoTab: React.FC = () => {
               </div>
             </CardContent>
           </Card>
-        </div>
-      </div>
+            </Card>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="audit" className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <Card className="md:col-span-1 border-border/50 shadow-sm h-[600px] flex flex-col">
+              <CardHeader className="bg-muted/30 border-b border-border/50">
+                <CardTitle className="text-sm font-serif">Histórico</CardTitle>
+                <Button 
+                  size="sm" 
+                  onClick={handleRunAudit} 
+                  disabled={runningAudit}
+                  className="w-full mt-2"
+                >
+                  {runningAudit ? <RefreshCw className="w-3 h-3 mr-2 animate-spin" /> : <Play className="w-3 h-3 mr-2" />}
+                  Nova Auditoria
+                </Button>
+              </CardHeader>
+              <ScrollArea className="flex-1">
+                <div className="p-2 space-y-1">
+                  {auditHistory.map(audit => (
+                    <button
+                      key={audit.id}
+                      onClick={() => setSelectedAudit(audit)}
+                      className={`w-full text-left p-3 rounded-lg transition-all ${
+                        selectedAudit?.id === audit.id 
+                          ? 'bg-primary text-primary-foreground shadow-sm' 
+                          : 'hover:bg-muted text-foreground'
+                      }`}
+                    >
+                      <div className="flex justify-between items-start mb-1">
+                        <span className="text-[10px] font-bold uppercase opacity-80">
+                          {format(new Date(audit.created_at), 'dd/MM/yy HH:mm', { locale: ptBR })}
+                        </span>
+                        <Badge variant="outline" className={`text-[9px] h-4 ${
+                          audit.score >= 90 ? 'bg-emerald-500/20 text-emerald-100 border-emerald-500/30' : 
+                          audit.score >= 70 ? 'bg-amber-500/20 text-amber-100 border-amber-500/30' : 
+                          'bg-destructive/20 text-destructive-foreground border-destructive/30'
+                        }`}>
+                          {audit.score}
+                        </Badge>
+                      </div>
+                      <div className="text-[11px] truncate opacity-70">
+                        {audit.findings.length} achados
+                      </div>
+                    </button>
+                  ))}
+                  {auditHistory.length === 0 && (
+                    <div className="p-8 text-center text-muted-foreground text-xs italic">
+                      Nenhuma auditoria realizada ainda.
+                    </div>
+                  )}
+                </div>
+              </ScrollArea>
+            </Card>
+
+            <div className="md:col-span-3 space-y-6">
+              {selectedAudit ? (
+                <>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <Card className="border-border/50 shadow-sm">
+                      <CardContent className="p-6 text-center">
+                        <div className="text-4xl font-black text-primary mb-1">{selectedAudit.score}</div>
+                        <div className="text-[10px] font-black uppercase tracking-widest opacity-60">Score de Saúde SEO</div>
+                      </CardContent>
+                    </Card>
+                    <Card className="border-border/50 shadow-sm">
+                      <CardContent className="p-6 text-center">
+                        <div className="text-4xl font-black text-destructive mb-1">
+                          {selectedAudit.findings.filter(f => f.severity === 'critical').length}
+                        </div>
+                        <div className="text-[10px] font-black uppercase tracking-widest opacity-60">Problemas Críticos</div>
+                      </CardContent>
+                    </Card>
+                    <Card className="border-border/50 shadow-sm">
+                      <CardContent className="p-6 text-center">
+                        <div className="text-4xl font-black text-amber-600 mb-1">
+                          {selectedAudit.findings.filter(f => f.severity === 'warning').length}
+                        </div>
+                        <div className="text-[10px] font-black uppercase tracking-widest opacity-60">Alertas</div>
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  <Card className="border-border/50 shadow-sm">
+                    <CardHeader className="bg-muted/30 border-b border-border/50">
+                      <CardTitle className="text-md font-serif flex items-center gap-2">
+                        <AlertCircle className="w-4 h-4 text-primary" /> Problemas Detectados & Sugestões
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-0">
+                      <div className="divide-y divide-border/50">
+                        {selectedAudit.findings.map((finding, idx) => (
+                          <div key={idx} className="p-4 flex gap-4">
+                            <div className={`mt-1 p-2 rounded-full h-fit ${getSeverityColor(finding.severity)}`}>
+                              {finding.severity === 'critical' ? <XCircle className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
+                            </div>
+                            <div className="flex-1 space-y-1">
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs font-bold uppercase tracking-wider">{finding.category}</span>
+                                <Badge className={`text-[9px] h-4 ${getSeverityColor(finding.severity)}`}>
+                                  {finding.severity}
+                                </Badge>
+                              </div>
+                              <p className="text-sm font-bold text-foreground">{finding.message}</p>
+                              <div className="p-3 bg-primary/5 rounded-lg border border-primary/10 mt-2">
+                                <p className="text-[11px] font-medium text-primary">
+                                  <span className="font-black uppercase mr-2">Recomendação:</span>
+                                  {finding.recommendation}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                        {selectedAudit.findings.length === 0 && (
+                          <div className="p-12 text-center">
+                            <CheckCircle className="w-12 h-12 text-emerald-500 mx-auto mb-4 opacity-20" />
+                            <p className="text-muted-foreground italic">Nenhum problema detectado. Ótimo trabalho!</p>
+                          </div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <Card className="border-border/50 shadow-sm">
+                      <CardHeader className="bg-muted/30 border-b border-border/50">
+                        <CardTitle className="text-sm font-serif">Estrutura de Cabeçalhos (Headings)</CardTitle>
+                      </CardHeader>
+                      <CardContent className="p-4">
+                        <div className="space-y-3">
+                          {Object.entries(selectedAudit.headings).map(([tag, contents]) => (
+                            <div key={tag} className="space-y-1">
+                              <div className="flex items-center justify-between">
+                                <span className="text-[10px] font-black uppercase tracking-widest opacity-60">{tag}</span>
+                                <Badge variant="outline" className="text-[10px]">{contents.length}</Badge>
+                              </div>
+                              <div className="max-h-[100px] overflow-y-auto space-y-1 pr-2 no-scrollbar">
+                                {contents.map((text, i) => (
+                                  <div key={i} className="text-[11px] p-2 bg-muted/50 rounded border border-border/30 truncate">
+                                    {text}
+                                  </div>
+                                ))}
+                                {contents.length === 0 && <div className="text-[11px] italic opacity-50">Vazio</div>}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="border-border/50 shadow-sm">
+                      <CardHeader className="bg-muted/30 border-b border-border/50">
+                        <CardTitle className="text-sm font-serif">Meta Tags Atuais</CardTitle>
+                      </CardHeader>
+                      <CardContent className="p-4">
+                        <div className="space-y-2">
+                          {Object.entries(selectedAudit.meta_tags).map(([key, val]) => (
+                            <div key={key} className="space-y-1">
+                              <span className="text-[10px] font-black uppercase tracking-widest opacity-60">{key}</span>
+                              <div className="text-[11px] p-2 bg-muted/50 rounded border border-border/30 break-all">
+                                {val}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-[400px] text-center space-y-4">
+                  <FileText className="w-16 h-16 text-muted-foreground opacity-20" />
+                  <div>
+                    <h3 className="text-lg font-serif">Inicie sua Auditoria de SEO</h3>
+                    <p className="text-xs text-muted-foreground max-w-xs mx-auto">
+                      Analise as meta tags, estrutura de headings e links da página atual para identificar oportunidades de melhoria.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
