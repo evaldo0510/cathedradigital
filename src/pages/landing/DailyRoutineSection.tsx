@@ -31,9 +31,9 @@ const DailyRoutineSection = () => {
     <section className="w-full py-24 px-6 relative overflow-hidden">
       <div className="max-w-6xl mx-auto space-y-16">
         <div className="text-center space-y-4 max-w-2xl mx-auto">
-          <span className="text-[9px] font-bold uppercase tracking-[0.4em] text-primary/40">O Ritmo</span>
+          <span className="text-[9px] font-bold uppercase tracking-[0.4em] text-primary/40 italic">O Ritmo</span>
           <h2 className="text-3xl md:text-4xl font-display font-bold">Vivência Cotidiana</h2>
-          <p className="text-muted-foreground italic font-serif">"Fazei tudo para a glória de Deus."</p>
+          <p className="text-muted-foreground font-serif">Fazei tudo para a glória de Deus.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
