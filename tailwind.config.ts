@@ -13,6 +13,9 @@ export default {
       },
     },
     extend: {
+      screens: {
+        'xs': '420px',
+      },
       fontFamily: {
         display: ['Cinzel', 'serif'],
         serif: ['Playfair Display', 'serif'],

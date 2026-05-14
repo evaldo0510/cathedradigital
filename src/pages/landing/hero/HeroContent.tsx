@@ -83,7 +83,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
         transition={{ delay: 0.4 }}
         className="flex flex-col items-center justify-center gap-6 pt-4"
       >
-        <div className="flex flex-col sm:row items-center gap-4 w-full max-w-sm">
+        <div className="flex flex-col sm:flex-row items-center gap-4 w-full max-w-sm">
           <Button
             size="lg"
             className="w-full h-14 px-8 rounded-full bg-primary text-primary-foreground font-bold uppercase tracking-[0.2em] text-xs shadow-none"

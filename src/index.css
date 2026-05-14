@@ -144,11 +144,11 @@
     text-wrap: balance;
   }
 
-  h1 { @apply text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold leading-[1.05]; }
-  h2 { @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight; }
+  h1 { @apply text-2xl sm:text-4xl md:text-5xl lg:text-7xl font-bold leading-[1.1]; }
+  h2 { @apply text-xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight; }
   h3 { @apply text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold leading-snug; }
 
-  p { @apply max-w-[65ch] text-muted-foreground leading-relaxed text-base md:text-lg; }
+  p { @apply max-w-[65ch] text-muted-foreground leading-relaxed text-sm sm:text-base md:text-lg; }
 
   .font-serif {
     font-family: 'Playfair Display', serif;
@@ -166,7 +166,7 @@
 
 @layer components {
   .app-container {
-    @apply w-full max-w-[1280px] mx-auto px-6 sm:px-8 md:px-12 lg:px-16;
+    @apply w-full max-w-[1280px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16;
   }
 
   .content-section {
@@ -224,7 +224,7 @@
 
   /* Premium card style - Spiritual Minimalist */
   .desktop-card {
-    @apply bg-card border border-border/5 rounded-3xl p-8 md:p-10 lg:p-12 shadow-sm transition-all duration-300;
+    @apply bg-card border border-border/5 rounded-3xl p-6 sm:p-10 lg:p-12 shadow-sm transition-all duration-300;
   }
 
   /* Standard card shadow and radius */
@@ -234,7 +234,7 @@
 
   /* Section Spacing */
   .section-spacing {
-    @apply py-24 md:py-32 lg:py-48;
+    @apply py-16 sm:py-24 md:py-32 lg:py-48;
   }
 }
 

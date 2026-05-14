@@ -126,7 +126,7 @@ const LandingHeader = () => {
         <div className="flex items-center gap-4">
           <button
             onClick={() => navigate(AppRoute.LOGIN)}
-            className="hidden sm:block text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary rounded-sm p-1"
+            className="hidden sm:flex text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary rounded-sm p-1"
             aria-label="Ir para página de login"
           >
             Entrar
@@ -134,7 +134,7 @@ const LandingHeader = () => {
           
           <Button
             variant="ghost"
-            className={`rounded-full px-6 text-muted-foreground font-bold uppercase tracking-[0.2em] text-[10px] h-10 shadow-none transition-all ${isScrolled ? 'text-primary' : ''}`}
+            className={`hidden xs:flex rounded-full px-4 sm:px-6 text-muted-foreground font-bold uppercase tracking-[0.2em] text-[10px] h-10 shadow-none transition-all ${isScrolled ? 'text-primary' : ''}`}
             onClick={() => navigate(AppRoute.LOGIN)}
           >
             Começar <ChevronRight className="w-4 h-4 ml-1" />

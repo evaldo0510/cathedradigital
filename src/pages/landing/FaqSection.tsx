@@ -22,7 +22,7 @@ const FaqSection = () => (
 
       <Accordion type="single" collapsible className="space-y-4">
         {faqs.map((faq, i) => (
-          <AccordionItem key={i} value={`faq-${i}`} className="desktop-card !p-0 px-8 border border-border/10">
+          <AccordionItem key={i} value={`faq-${i}`} className="desktop-card !p-0 px-6 sm:px-8 border border-border/10">
             <AccordionTrigger className="text-left font-serif font-bold text-base py-6 hover:no-underline border-none">
               {faq.q}
             </AccordionTrigger>
