@@ -277,7 +277,7 @@ const HojePage: React.FC = () => {
                   onClick={() => navigate(section.route)} 
                   className="premium-card group cursor-pointer p-6 shadow-sm text-center space-y-4 rounded-3xl"
                 >
-                  <div className={`w-14 h-14 mx-auto rounded-2xl ${section.color} flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform duration-500`}>
+                  <div className="premium-icon-box mx-auto group-hover:scale-110 transition-transform duration-500">
                     {section.icon}
                   </div>
                   <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground group-hover:text-primary transition-colors block leading-tight">
