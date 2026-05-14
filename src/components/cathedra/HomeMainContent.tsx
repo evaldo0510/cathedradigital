@@ -25,7 +25,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       <section className="space-y-10">
         <div className="flex items-center gap-6">
           <div className="h-px flex-1 bg-border/40" />
-          <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
+          <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
             Continue sua Jornada
           </h2>
           <div className="h-px flex-1 bg-border/40" />
@@ -40,7 +40,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
               <Icons.Flame className="w-8 h-8" />
             </div>
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3">Seu Próximo Passo</p>
+              <p className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground mb-3">Seu Próximo Passo</p>
               <h3 className="text-foreground">
                 {user ? 'Retomar caminhada de fé' : 'Inicie sua caminhada hoje'}
               </h3>
@@ -61,7 +61,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       <section className="space-y-10">
         <div className="flex items-center gap-6">
           <div className="h-px flex-1 bg-border/40" />
-          <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
+          <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
             Ritual do Dia
           </h2>
           <div className="h-px flex-1 bg-border/40" />
@@ -75,7 +75,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       <section className="space-y-10">
         <div className="flex items-center gap-6">
           <div className="h-px flex-1 bg-border/40" />
-          <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
+          <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
             Temas Principais
           </h2>
           <div className="h-px flex-1 bg-border/40" />
@@ -87,7 +87,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       <section className="space-y-10">
         <div className="flex items-center gap-6">
           <div className="h-px flex-1 bg-border/40" />
-          <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
+          <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
             Catecismo
           </h2>
           <div className="h-px flex-1 bg-border/40" />
@@ -115,7 +115,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       <section className="space-y-10">
         <div className="flex items-center gap-6">
           <div className="h-px flex-1 bg-border/40" />
-          <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
+          <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
             Trilhas de Formação
           </h2>
           <div className="h-px flex-1 bg-border/40" />
@@ -129,7 +129,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
               <h4 className="font-serif">Fundamentos da Fé</h4>
               <p className="mt-2 leading-relaxed">Para quem está iniciando sua jornada espiritual agora.</p>
             </div>
-            <HomeButton variant="ghost" className="p-0 h-auto text-primary hover:bg-transparent text-[9px]" onClick={() => onNavigate(AppRoute.JORNADAS)}>
+            <HomeButton variant="ghost" className="p-0 h-auto text-primary hover:bg-transparent text-premium-tiny" onClick={() => onNavigate(AppRoute.JORNADAS)}>
               Explorar Trilhas <Icons.ChevronRight className="ml-1 w-3.5 h-3.5" />
             </HomeButton>
           </HomeCard>
@@ -142,7 +142,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
               <h4 className="font-serif">Estudo Bíblico</h4>
               <p className="mt-2 leading-relaxed">Aprofunde seu conhecimento das Escrituras Sagradas.</p>
             </div>
-            <HomeButton variant="ghost" className="p-0 h-auto text-secondary hover:bg-transparent text-[9px]" onClick={() => onNavigate(AppRoute.BIBLE)}>
+            <HomeButton variant="ghost" className="p-0 h-auto text-secondary hover:bg-transparent text-premium-tiny" onClick={() => onNavigate(AppRoute.BIBLE)}>
               Ver Planos <Icons.ChevronRight className="ml-1 w-3.5 h-3.5" />
             </HomeButton>
           </HomeCard>

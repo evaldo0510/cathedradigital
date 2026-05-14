@@ -146,32 +146,45 @@
 
   h1 { 
     @apply font-bold;
-    font-size: clamp(2.5rem, 8vw, 6rem);
-    line-height: 1.1;
+    font-size: clamp(2.5rem, 7vw, 5.5rem);
+    line-height: 1.05;
   }
   
   h2 { 
     @apply font-bold;
-    font-size: clamp(2rem, 5vw, 3.75rem);
-    line-height: 1.2;
+    font-size: clamp(1.75rem, 4.5vw, 3.5rem);
+    line-height: 1.15;
   }
   
   h3 { 
     @apply font-bold;
-    font-size: clamp(1.5rem, 3vw, 2.25rem);
-    line-height: 1.3;
+    font-size: clamp(1.35rem, 3vw, 2.25rem);
+    line-height: 1.25;
   }
 
   h4 {
     @apply font-semibold;
-    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    font-size: clamp(1.15rem, 2vw, 1.5rem);
     line-height: 1.4;
   }
 
   p { 
     @apply max-w-[65ch] text-muted-foreground;
-    font-size: clamp(0.875rem, 1.5vw, 1.125rem);
-    line-height: 1.6;
+    font-size: clamp(0.9rem, 1.2vw, 1.05rem);
+    line-height: 1.7;
+  }
+
+  /* Premium small text scale */
+  .text-premium-tiny {
+    font-size: clamp(0.6rem, 0.7vw, 0.75rem);
+  }
+
+  .text-premium-small {
+    font-size: clamp(0.75rem, 0.9vw, 0.875rem);
+  }
+
+  .text-premium-base {
+    font-size: clamp(0.875rem, 1vw, 1rem);
   }
 
   .font-serif {

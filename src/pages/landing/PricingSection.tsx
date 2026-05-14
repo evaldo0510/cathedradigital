@@ -58,7 +58,7 @@ const PricingSection = () => {
     <section className="w-full section-spacing bg-background relative overflow-hidden">
       <div className="app-container space-y-20">
         <div className="text-center space-y-6 max-w-3xl mx-auto">
-          <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/70 block italic">Investimento Espiritual</span>
+          <span className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/70 block italic">Investimento Espiritual</span>
           <h2 className="font-display font-bold text-foreground">Escolha seu Caminho de <span className="text-primary italic font-serif">Crescimento</span></h2>
           <p className="text-muted-foreground/90 font-serif max-w-2xl mx-auto">
             Buscai primeiro o Reino de Deus e a sua justiça, e todas estas coisas vos serão acrescentadas. (Mt 6,33)
@@ -74,7 +74,7 @@ const PricingSection = () => {
               }`}
             >
               {tier.popular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-secondary text-primary-foreground text-[8px] font-bold uppercase tracking-[0.3em] px-4 py-1.5 rounded-2xl">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-secondary text-primary-foreground text-premium-tiny font-bold uppercase tracking-[0.3em] px-4 py-1.5 rounded-2xl">
                   Mais Escolhido
                 </div>
               )}
@@ -84,22 +84,22 @@ const PricingSection = () => {
                   <div className="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center">
                     {tier.icon}
                   </div>
-                  <h3 className="text-xl font-bold font-serif">{tier.name}</h3>
+                  <h3 className="font-bold font-serif">{tier.name}</h3>
                 </div>
 
                 <div className="space-y-2">
                   <div className="flex items-baseline gap-1">
                     <span className="text-3xl font-bold">{tier.price}</span>
-                    {tier.period && <span className="text-muted-foreground text-sm">{tier.period}</span>}
+                    {tier.period && <span className="text-muted-foreground text-premium-small">{tier.period}</span>}
                   </div>
-                  <p className="text-xs text-muted-foreground leading-relaxed">
+                  <p className="text-premium-tiny text-muted-foreground leading-relaxed">
                     {tier.desc}
                   </p>
                 </div>
 
                 <ul className="space-y-4 py-6 border-t border-border/10">
                   {tier.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-3 text-sm">
+                    <li key={feature} className="flex items-start gap-3 text-premium-small">
                       <Check className="w-4 h-4 text-secondary mt-0.5 flex-shrink-0" />
                       <span className="text-muted-foreground leading-snug">{feature}</span>
                     </li>

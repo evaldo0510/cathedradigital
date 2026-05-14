@@ -45,7 +45,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
               <img src={logosAvatar} alt="Logos — Mestre Contemplativo" className="w-full h-full object-cover grayscale-[0.1] contrast-[1.05]" loading="eager" />
             </div>
           </div>
-          <div className="mt-4 px-4 py-1 rounded-2xl border border-border/5 bg-background text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.3em] inline-block mx-auto">
+          <div className="mt-4 px-4 py-1 rounded-2xl border border-border/5 bg-background text-premium-tiny font-bold uppercase tracking-[0.3em] inline-block mx-auto">
             Logos · Mestre Contemplativo
           </div>
         </div>
@@ -109,7 +109,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
 
         <div className="flex items-center gap-3 opacity-40">
           <span className="w-8 h-px bg-muted-foreground" />
-          <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">
+          <p className="text-premium-tiny text-muted-foreground font-bold uppercase tracking-widest">
             Tradição & Tecnologia
           </p>
           <span className="w-8 h-px bg-muted-foreground" />
