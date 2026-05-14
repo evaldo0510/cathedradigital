@@ -106,8 +106,8 @@ const ReadingCard: React.FC<{
     {refrain && <div className="bg-secondary/5 rounded-2xl p-6 border border-secondary/20 border-l-4 shadow-inner"><p className="text-lg font-serif italic text-primary leading-relaxed antialiased">℟ {refrain}</p></div>}
     <p className="text-lg md:text-xl leading-[1.8] text-primary font-serif whitespace-pre-line selection:bg-secondary/30 antialiased tracking-tight">{text}</p>
     <div className="flex flex-wrap gap-3 pt-6 border-t border-border/40">
-      <Button variant="ghost" size="sm" className="rounded-full text-[10px] font-black uppercase tracking-widest h-11 px-6 hover:bg-primary hover:text-white transition-all" onClick={onContext}><Icons.Bible className="w-3.5 h-3.5 mr-2" /> Bíblia</Button>
-      <Button variant="secondary" size="sm" className="rounded-full text-[10px] font-black uppercase tracking-widest ml-auto h-11 px-8 bg-secondary/10 border-none hover:bg-secondary/20 text-primary shadow-sm" onClick={onReflect}><Icons.Lectio className="w-4 h-4 mr-2 text-secondary" /> Lectio Divina</Button>
+      <Button variant="ghost" size="sm" className="rounded-full h-11 px-6 hover:bg-primary hover:text-white transition-all" onClick={onContext}><Icons.Bible className="mr-2" /> Bíblia</Button>
+      <Button variant="secondary" size="sm" className="rounded-full ml-auto h-11 px-8 bg-secondary/10 border-none hover:bg-secondary/20 text-primary shadow-sm" onClick={onReflect}><Icons.Lectio className="mr-2 text-secondary" /> Lectio Divina</Button>
     </div>
   </motion.div>
 );
@@ -222,9 +222,9 @@ const LiturgiaPage: React.FC = () => {
               <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} className="space-y-4 text-center">
                 <h1 className="text-3xl md:text-5xl font-display font-black text-primary tracking-tight">Liturgia do Dia</h1>
                 <div className="flex items-center justify-center gap-4">
-                  <button onClick={goToPrevDay} className="p-3 rounded-full bg-muted hover:bg-primary hover:text-white transition-all text-primary focus-visible:ring-2 focus-visible:ring-primary outline-none" aria-label="Dia anterior"><Icons.ChevronLeft className="w-5 h-5" /></button>
+                  <Button variant="outline" size="icon" onClick={goToPrevDay} aria-label="Dia anterior"><Icons.ChevronLeft /></Button>
                   <p className="text-sm font-bold text-primary capitalize min-w-[200px]">{formatDate()}{isToday && <span className="ml-2 text-secondary">(Hoje)</span>}</p>
-                  <button onClick={goToNextDay} disabled={isToday} className="p-3 rounded-full bg-muted hover:bg-primary hover:text-white transition-all text-primary disabled:opacity-20 focus-visible:ring-2 focus-visible:ring-primary outline-none" aria-label="Próximo dia"><Icons.ChevronRight className="w-5 h-5" /></button>
+                  <Button variant="outline" size="icon" onClick={goToNextDay} disabled={isToday} aria-label="Próximo dia"><Icons.ChevronRight /></Button>
                 </div>
                 {isOfflineData && <div className="flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground bg-muted/50 rounded-2xl px-4 py-2 mt-4 mx-auto w-fit"><Icons.WifiOff className="w-3.5 h-3.5" /> <span>Modo Offline</span></div>}
               </motion.div>
@@ -262,7 +262,7 @@ const LiturgiaPage: React.FC = () => {
                     <p className="text-[9px] font-black uppercase tracking-[0.3em] text-secondary">{saintsToday.length > 1 ? 'Santos do Dia' : 'Santo do Dia'}</p>
                     <h3 className="text-xl font-display font-black text-primary">{saintsToday.map(s => s.name).join(' e ')}</h3>
                   </div>
-                  <Button variant="ghost" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:bg-primary/5 h-10" onClick={() => navigate(AppRoute.SAINTS)}>Conhecer História <Icons.ChevronRight className="w-4 h-4 ml-2" /></Button>
+                  <Button variant="ghost" size="sm" className="text-muted-foreground hover:bg-primary/5 h-10" onClick={() => navigate(AppRoute.SAINTS)}>Conhecer História <Icons.ChevronRight className="ml-2" /></Button>
                 </motion.div>
               )}
             </div>

@@ -16,127 +16,110 @@ const DesignSystemGuide = () => {
           </p>
         </header>
 
+        {/* Button Documentation Section */}
         <section className="space-y-12">
           <div className="flex items-center gap-6">
             <div className="h-px flex-1 bg-border/40" />
             <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
-              Button Variants
+              Button Component
             </h2>
             <div className="h-px flex-1 bg-border/40" />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-            <div className="space-y-6">
-              <h3 className="text-sm font-bold uppercase tracking-widest text-primary/60">Default / Primary</h3>
-              <div className="flex flex-col gap-4">
-                <Button>Standard Button</Button>
-                <Button isLoading>Loading State</Button>
-                <Button disabled>Disabled Button</Button>
+          <div className="space-y-16">
+            {/* Variants */}
+            <div className="space-y-8">
+              <h3 className="text-xl font-bold text-primary">Variants</h3>
+              <p className="text-sm text-muted-foreground">Standardized button styles for different semantic purposes.</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div className="space-y-4">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Primary (Default)</p>
+                  <Button className="w-full">Primary Action</Button>
+                </div>
+                <div className="space-y-4">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Secondary</p>
+                  <Button variant="secondary" className="w-full">Secondary Action</Button>
+                </div>
+                <div className="space-y-4">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Outline</p>
+                  <Button variant="outline" className="w-full">Outline Action</Button>
+                </div>
+                <div className="space-y-4">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Ghost</p>
+                  <Button variant="ghost" className="w-full">Ghost Action</Button>
+                </div>
+                <div className="space-y-4">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Destructive</p>
+                  <Button variant="destructive" className="w-full">Destructive Action</Button>
+                </div>
+                <div className="space-y-4">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Link</p>
+                  <Button variant="link" className="w-full">Link Action</Button>
+                </div>
               </div>
             </div>
 
-            <div className="space-y-6">
-              <h3 className="text-sm font-bold uppercase tracking-widest text-primary/60">Outline</h3>
-              <div className="flex flex-col gap-4">
-                <Button variant="outline">Outline Button</Button>
-                <Button variant="outline" isLoading>Loading State</Button>
-                <Button variant="outline" disabled>Disabled Button</Button>
+            {/* Sizes */}
+            <div className="space-y-8">
+              <h3 className="text-xl font-bold text-primary">Sizes</h3>
+              <div className="flex flex-col md:flex-row items-end gap-12">
+                <div className="space-y-4">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Small (sm)</p>
+                  <Button size="sm">Small Action</Button>
+                </div>
+                <div className="space-y-4">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Default</p>
+                  <Button>Default Action</Button>
+                </div>
+                <div className="space-y-4">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Large (lg)</p>
+                  <Button size="lg">Large Action</Button>
+                </div>
+                <div className="space-y-4">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Icon Only</p>
+                  <div className="flex gap-4">
+                    <Button size="icon"><Icons.Plus /></Button>
+                    <Button size="icon" variant="outline"><Icons.Search /></Button>
+                    <Button size="icon" variant="ghost"><Icons.Menu /></Button>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div className="space-y-6">
-              <h3 className="text-sm font-bold uppercase tracking-widest text-primary/60">Destructive</h3>
-              <div className="flex flex-col gap-4">
-                <Button variant="destructive">Destructive Button</Button>
-                <Button variant="destructive" isLoading>Loading State</Button>
-                <Button variant="destructive" disabled>Disabled Button</Button>
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              <h3 className="text-sm font-bold uppercase tracking-widest text-primary/60">Ghost</h3>
-              <div className="flex flex-col gap-4">
-                <Button variant="ghost">Ghost Button</Button>
-                <Button variant="ghost" isLoading>Loading State</Button>
-                <Button variant="ghost" disabled>Disabled Button</Button>
-              </div>
-            </div>
-
-             <div className="space-y-6">
-              <h3 className="text-sm font-bold uppercase tracking-widest text-primary/60">Secondary</h3>
-              <div className="flex flex-col gap-4">
-                <Button variant="secondary">Secondary Button</Button>
-                <Button variant="secondary" isLoading>Loading State</Button>
-                <Button variant="secondary" disabled>Disabled Button</Button>
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              <h3 className="text-sm font-bold uppercase tracking-widest text-primary/60">Icon Only</h3>
-              <div className="flex flex-wrap gap-4">
-                <Button size="icon"><Icons.Search /></Button>
-                <Button size="icon" variant="outline"><Icons.Compass /></Button>
-                <Button size="icon" variant="ghost"><Icons.Menu /></Button>
-                <Button size="icon" isLoading />
+            {/* States */}
+            <div className="space-y-8">
+              <h3 className="text-xl font-bold text-primary">States</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+                <div className="space-y-4">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Loading State</p>
+                  <div className="flex flex-col gap-4">
+                    <Button isLoading>Loading Primary</Button>
+                    <Button variant="outline" isLoading>Loading Outline</Button>
+                    <Button size="icon" isLoading />
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Disabled State</p>
+                  <div className="flex flex-col gap-4">
+                    <Button disabled>Disabled Primary</Button>
+                    <Button variant="outline" disabled>Disabled Outline</Button>
+                    <Button size="icon" disabled><Icons.Lock /></Button>
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Acessibilidade</p>
+                  <div className="p-4 bg-muted/30 rounded-2xl border border-border/40 text-[11px] space-y-2">
+                    <p>• <strong>aria-busy:</strong> Automático quando isLoading=true</p>
+                    <p>• <strong>aria-disabled:</strong> Automático quando isLoading ou disabled</p>
+                    <p>• <strong>Focus:</strong> Ring de alta visibilidade no teclado</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="space-y-12">
-          <div className="flex items-center gap-6">
-            <div className="h-px flex-1 bg-border/40" />
-            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
-              Button Sizes
-            </h2>
-            <div className="h-px flex-1 bg-border/40" />
-          </div>
-
-          <div className="flex flex-col md:flex-row items-end gap-8">
-            <div className="space-y-4">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase">Small (sm)</p>
-              <Button size="sm">Action</Button>
-            </div>
-            <div className="space-y-4">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase">Default</p>
-              <Button>Standard Action</Button>
-            </div>
-            <div className="space-y-4">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase">Large (lg)</p>
-              <Button size="lg">Prominent Call to Action</Button>
-            </div>
-          </div>
-        </section>
-
-        <section className="space-y-12">
-          <div className="flex items-center gap-6">
-            <div className="h-px flex-1 bg-border/40" />
-            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
-              Standardized Icon Buttons
-            </h2>
-            <div className="h-px flex-1 bg-border/40" />
-          </div>
-
-          <div className="flex flex-wrap gap-8 justify-center p-8 bg-card border border-border/40 rounded-[2rem]">
-            <div className="flex flex-col items-center gap-4">
-              <Button size="icon" variant="default"><Icons.Plus /></Button>
-              <span className="text-[10px] font-bold uppercase tracking-widest opacity-40">Primary</span>
-            </div>
-            <div className="flex flex-col items-center gap-4">
-              <Button size="icon" variant="outline"><Icons.Search /></Button>
-              <span className="text-[10px] font-bold uppercase tracking-widest opacity-40">Outline</span>
-            </div>
-            <div className="flex flex-col items-center gap-4">
-              <Button size="icon" variant="ghost"><Icons.Bell /></Button>
-              <span className="text-[10px] font-bold uppercase tracking-widest opacity-40">Ghost</span>
-            </div>
-            <div className="flex flex-col items-center gap-4">
-              <Button size="icon" isLoading />
-              <span className="text-[10px] font-bold uppercase tracking-widest opacity-40">Loading</span>
-            </div>
-          </div>
-        </section>
-
+        {/* Real World Usage */}
         <section className="space-y-12">
           <div className="flex items-center gap-6">
             <div className="h-px flex-1 bg-border/40" />
@@ -146,11 +129,27 @@ const DesignSystemGuide = () => {
             <div className="h-px flex-1 bg-border/40" />
           </div>
 
-          <div className="bg-muted/30 rounded-[2.5rem] p-8 md:p-12 border border-border/40 space-y-8">
-            <div className="max-w-md">
-              <h4 className="font-serif text-2xl mb-4">Continue sua Jornada</h4>
-              <p className="text-sm text-muted-foreground mb-8">Continue de onde parou e aprofunde seu conhecimento na fé católica com trilhas personalizadas.</p>
-              <Button variant="primary" className="w-full md:w-auto">Continuar Caminhada</Button>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="bg-muted/30 rounded-[2.5rem] p-8 border border-border/40 space-y-6">
+              <div className="space-y-3">
+                <h4 className="font-serif text-2xl">Continue sua Jornada</h4>
+                <p className="text-sm text-muted-foreground">Continue de onde parou e aprofunde seu conhecimento na fé católica com trilhas personalizadas.</p>
+              </div>
+              <Button variant="primary" className="w-full">Continuar Caminhada</Button>
+            </div>
+            
+            <div className="bg-card border border-border/40 rounded-[2.5rem] p-8 flex flex-col items-center text-center space-y-6">
+              <div className="p-4 rounded-full bg-secondary/10 text-secondary">
+                <Icons.Bell className="w-8 h-8" />
+              </div>
+              <div className="space-y-2">
+                <h4 className="font-serif text-2xl">Notificações</h4>
+                <p className="text-sm text-muted-foreground max-w-xs mx-auto">Ative para receber avisos sobre novas leituras e eventos da Igreja.</p>
+              </div>
+              <div className="flex gap-4 w-full">
+                <Button variant="outline" className="flex-1">Agora não</Button>
+                <Button className="flex-1">Ativar</Button>
+              </div>
             </div>
           </div>
         </section>
