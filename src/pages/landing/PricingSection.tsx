@@ -78,8 +78,8 @@ const PricingSection = () => {
           >
             Escolha seu Caminho de <span className="text-primary italic font-serif">Crescimento</span>
           </motion.h2>
-          <p className="text-lg text-muted-foreground font-serif italic max-w-2xl mx-auto">
-            "Buscai primeiro o Reino de Deus e a sua justiça, e todas estas coisas vos serão acrescentadas." (Mt 6,33)
+          <p className="text-lg text-muted-foreground font-serif max-w-2xl mx-auto">
+            Buscai primeiro o Reino de Deus e a sua justiça, e todas estas coisas vos serão acrescentadas. (Mt 6,33)
           </p>
         </div>
 
