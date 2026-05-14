@@ -35,8 +35,8 @@ const TestimonialsSection = () => {
               className="p-8 rounded-3xl bg-card border border-border/5 shadow-sm space-y-6 flex flex-col"
             >
               <Quote className="w-6 h-6 text-primary/20" />
-              <p className="text-sm text-muted-foreground leading-relaxed font-serif italic flex-1">
-                "{t.text}"
+              <p className="text-sm text-muted-foreground leading-relaxed font-serif flex-1">
+                {t.text}
               </p>
 
               <div className="pt-6 border-t border-border/5 flex items-center gap-4">
