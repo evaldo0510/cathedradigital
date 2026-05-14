@@ -148,28 +148,29 @@ const ViaCrucis: React.FC = () => {
 
       {/* Nav buttons */}
       <div className="flex gap-4 justify-center px-4">
-        <button 
+        <Button 
+          variant="outline"
           disabled={currentStation <= 0} 
           onClick={() => setCurrentStation(currentStation - 1)}
-          className="flex-1 max-w-[200px] h-14 rounded-full bg-card border border-border text-premium-tiny font-black uppercase tracking-widest disabled:opacity-20 hover:bg-primary/5 transition-all flex items-center justify-center gap-2 group shadow-sm"
+          className="flex-1 max-w-[200px] h-14 rounded-full"
         >
-          <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Anterior
-        </button>
+          <ChevronLeft className="w-4 h-4" /> Anterior
+        </Button>
         
         {currentStation < STATIONS.length - 1 ? (
-          <button 
+          <Button 
             onClick={() => setCurrentStation(currentStation + 1)}
-            className="flex-1 max-w-[200px] h-14 rounded-full bg-foreground text-background text-premium-tiny font-black uppercase tracking-widest hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-2 group shadow-xl"
+            className="flex-1 max-w-[200px] h-14 rounded-full bg-foreground text-background hover:bg-primary"
           >
-            Próxima <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </button>
+            Próxima <ChevronRight className="w-4 h-4" />
+          </Button>
         ) : (
-          <button 
+          <Button 
             onClick={() => setIsJourney(false)}
-            className="flex-1 max-w-[200px] h-14 rounded-full bg-primary text-primary-foreground text-premium-tiny font-black uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-2 group shadow-xl shadow-primary/20"
+            className="flex-1 max-w-[200px] h-14 rounded-full bg-primary text-primary-foreground shadow-xl shadow-primary/20"
           >
             <Icons.Cross className="w-4 h-4" /> Concluir
-          </button>
+          </Button>
         )}
       </div>
     </div>
