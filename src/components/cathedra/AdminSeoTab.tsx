@@ -174,18 +174,29 @@ const AdminSeoTab: React.FC = () => {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500 pb-20">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="md:col-span-2 space-y-6">
-          <Card className="border-border/50 shadow-sm overflow-hidden">
-            <CardHeader className="bg-muted/30 border-b border-border/50">
-              <div className="flex items-center gap-2 text-primary">
-                <Globe className="w-5 h-5" />
-                <div>
-                  <CardTitle className="text-lg font-serif">Configurações Técnicas de SEO</CardTitle>
-                  <CardDescription>Gerencie meta tags, títulos e indexação global.</CardDescription>
-                </div>
-              </div>
-            </CardHeader>
+      <Tabs defaultValue="settings" className="w-full">
+        <TabsList className="grid w-full grid-cols-2 mb-8 bg-muted/50 p-1 rounded-xl">
+          <TabsTrigger value="settings" className="rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm">
+            <Globe className="w-4 h-4 mr-2" /> Configurações
+          </TabsTrigger>
+          <TabsTrigger value="audit" className="rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm">
+            <Search className="w-4 h-4 mr-2" /> Auditoria & Histórico
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="settings">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="md:col-span-2 space-y-6">
+              <Card className="border-border/50 shadow-sm overflow-hidden">
+                <CardHeader className="bg-muted/30 border-b border-border/50">
+                  <div className="flex items-center gap-2 text-primary">
+                    <FileCode className="w-5 h-5" />
+                    <div>
+                      <CardTitle className="text-lg font-serif">Configurações Técnicas de SEO</CardTitle>
+                      <CardDescription>Gerencie meta tags, títulos e indexação global.</CardDescription>
+                    </div>
+                  </div>
+                </CardHeader>
             <CardContent className="p-6 space-y-6">
               <div className="grid grid-cols-1 gap-6">
                 <div className="space-y-2">
