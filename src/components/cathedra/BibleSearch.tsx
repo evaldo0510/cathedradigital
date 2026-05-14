@@ -55,7 +55,7 @@ const BibleSearch: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           />
         </div>
         <button onClick={doSearch} disabled={loading || query.trim().length < 2}
-          className="px-4 py-2.5 rounded-xl bg-foreground text-background text-sm font-bold disabled:opacity-40 hover:bg-primary hover:text-primary-foreground transition-all">
+          className="px-6 py-3 rounded-2xl bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-widest disabled:opacity-40 hover:bg-primary/90 hover:translate-y-[-1px] transition-all duration-300 shadow-xl shadow-primary/10">
           {loading ? '...' : 'Buscar'}
         </button>
         <button onClick={onClose} className="p-2 rounded-xl bg-card border border-border hover:bg-muted transition-all">
