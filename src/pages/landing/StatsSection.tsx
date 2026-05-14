@@ -64,14 +64,6 @@ const AnimatedStat = ({ value, label, index }: { value: string; label: string; i
       />
       <motion.p
         className="text-5xl md:text-6xl font-display font-bold text-primary"
-        whileInView={{
-          textShadow: [
-            "0 0 0px hsl(var(--secondary) / 0)",
-            "0 0 20px hsl(var(--secondary) / 0.3)",
-            "0 0 0px hsl(var(--secondary) / 0)",
-          ],
-        }}
-        transition={{ duration: 2, delay: 0.5 + index * 0.15, repeat: 0 }}
         viewport={{ once: true }}
       >
         {isNumeric ? `${count.toLocaleString('pt-BR')}${suffix}` : value}
