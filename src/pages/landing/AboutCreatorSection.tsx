@@ -36,7 +36,7 @@ const AboutCreatorSection = () => {
             className="w-full md:w-2/3 space-y-6 text-center md:text-left"
           >
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/5 rounded-full">
-              <span className="text-[9px] font-bold uppercase tracking-[0.3em] text-primary/60">O Fundador</span>
+              <span className="text-[9px] font-bold uppercase tracking-[0.3em] text-primary/60 italic">O Fundador</span>
             </div>
             
             <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground uppercase tracking-wider">
