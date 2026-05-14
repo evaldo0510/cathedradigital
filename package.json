@@ -14,7 +14,7 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "test:visual": "playwright test --grep 'Visual'",
-    "test:a11y": "playwright test --grep 'A11y'",
+    "test:a11y": "playwright test tests/accessibility.spec.ts",
     "test:report": "bun run scripts/generate-test-report.ts",
     "test:pdf": "bun run scripts/generate-pdf-report.ts"
   },
