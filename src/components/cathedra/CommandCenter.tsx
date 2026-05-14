@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Search, Tag, BookOpen, Compass, Sparkles } from 'lucide-react';
+import { Search, BookOpen, Compass, Sparkles } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { searchUnified, BaseContent, getTagCloud } from '@/services/conteudoService';
+import { searchUnified, BaseContent } from '@/services/conteudoService';
 import { useNavigate } from 'react-router-dom';
 
 const CommandCenter: React.FC = () => {
@@ -13,32 +13,80 @@ const CommandCenter: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+  
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const navigate = useNavigate();
 
-  const handleSearch = async (val: string, pageNum: number = 0) => {
+  const handleSearch = (val: string, pageNum: number = 0) => {
     setQuery(val);
-    setPage(pageNum);
+    
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
     if (val.length < 3) {
       setResults([]);
       setHasMore(false);
       return;
     }
-    setLoading(true);
-    const data = await searchUnified(val, undefined, pageNum, 10);
-    
-    if (pageNum === 0) {
-      setResults(data);
-    } else {
-      setResults(prev => [...prev, ...data]);
-    }
-    
-    setHasMore(data.length === 10);
-    setLoading(false);
+
+    debounceTimerRef.current = setTimeout(async () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+      abortControllerRef.current = new AbortController();
+
+      setPage(pageNum);
+      setLoading(true);
+
+      try {
+        const { data } = await searchUnified(
+          val, 
+          undefined, 
+          pageNum, 
+          10, 
+          abortControllerRef.current.signal
+        );
+        
+        if (pageNum === 0) {
+          setResults(data);
+        } else {
+          setResults(prev => [...prev, ...data]);
+        }
+        
+        setHasMore(data.length === 10);
+      } catch (err: any) {
+        if (err.name !== 'AbortError') {
+          console.error('Search failed:', err);
+        }
+      } finally {
+        setLoading(false);
+      }
+    }, 300);
   };
 
-  const loadMore = () => {
-    handleSearch(query, page + 1);
+  const loadMore = async () => {
+    setLoading(true);
+    const nextP = page + 1;
+    setPage(nextP);
+    try {
+      const { data } = await searchUnified(query, undefined, nextP, 10);
+      setResults(prev => [...prev, ...data]);
+      setHasMore(data.length === 10);
+    } catch (err) {
+      console.error('Load more failed:', err);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+      if (abortControllerRef.current) abortControllerRef.current.abort();
+    };
+  }, []);
 
   return (
     <div className="w-full max-w-4xl mx-auto space-y-6">
