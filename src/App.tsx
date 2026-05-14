@@ -116,6 +116,7 @@ const PartnersPage = lazy(() => import('./components/cathedra/PartnersPage'));
 const TransparencyPage = lazy(() => import('./components/cathedra/TransparencyPage'));
 const OfflinePage = lazy(() => import('./components/cathedra/OfflinePage'));
 const CacheManager = lazy(() => import('./components/cathedra/CacheManager'));
+const DesignSystemGuide = lazy(() => import('./components/cathedra/DesignSystemGuide'));
 
 
 const SkeletonBar = React.forwardRef<HTMLDivElement, { w?: string; h?: string; className?: string }>(
@@ -492,6 +493,7 @@ const AppLayout: React.FC = () => {
               />
             </div>
           )}
+                <Route path=\"/design-system\" element={<DesignSystemGuide />} />
 
           {/* Mobile sidebar overlay - only when open */}
           <AnimatePresence>
