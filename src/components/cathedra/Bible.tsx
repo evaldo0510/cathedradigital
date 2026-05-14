@@ -591,7 +591,7 @@ const Bible: React.FC = () => {
           )}
 
           <div className={`${showCrossRefs && (crossRefs.length > 0 || docsRefs.length > 0) ? 'lg:col-span-8' : 'lg:col-span-12'} w-full space-y-6 order-2 lg:order-1`}>
-            <Card className="border-border/40 shadow-sm overflow-hidden bg-card/50 backdrop-blur-sm">
+            <Card className="premium-card p-0">
               <CardContent className="p-6 md:p-8">
                 {isLoading ? (
                   <BibleChapterSkeleton />
