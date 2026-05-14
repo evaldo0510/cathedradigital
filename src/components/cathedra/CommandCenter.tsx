@@ -90,6 +90,7 @@ const CommandCenter: React.FC = () => {
       <SEOHead 
         title={query.length >= 3 ? `Busca: ${query} - Cathedra Digital` : "Centro de Comando - Cathedra Digital"}
         description={results.length > 0 ? `Resultados da busca para "${query}" no Catecismo e Tradição.` : "Busca unificada na sabedoria da Igreja Católica."}
+        path="/buscar"
       />
       <div className="relative group">
         <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
