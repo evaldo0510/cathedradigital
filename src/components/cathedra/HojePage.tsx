@@ -239,7 +239,7 @@ const HojePage: React.FC = () => {
               <motion.div 
                 whileHover={{ y: -8 }} 
                 onClick={() => navigate(`/jornadas/${recommendedJourney.id}`)} 
-                className="group cursor-pointer p-8 rounded-[2.5rem] border border-border bg-muted/20 hover:border-primary/30 transition-all duration-500 shadow-sm"
+                className="premium-card group cursor-pointer p-8 shadow-sm"
               >
                 <div className="flex items-center gap-6">
                   <div className="w-16 h-16 rounded-[1.5rem] bg-muted flex items-center justify-center text-muted-foreground group-hover:text-primary group-hover:bg-primary/5 transition-all duration-500"><Icons.Compass className="w-8 h-8" /></div>
