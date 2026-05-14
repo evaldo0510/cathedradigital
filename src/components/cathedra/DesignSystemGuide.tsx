@@ -112,6 +112,35 @@ const DesignSystemGuide = () => {
           <div className="flex items-center gap-6">
             <div className="h-px flex-1 bg-border/40" />
             <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
+              Standardized Icon Buttons
+            </h2>
+            <div className="h-px flex-1 bg-border/40" />
+          </div>
+
+          <div className="flex flex-wrap gap-8 justify-center p-8 bg-card border border-border/40 rounded-[2rem]">
+            <div className="flex flex-col items-center gap-4">
+              <Button size="icon" variant="default"><Icons.Plus /></Button>
+              <span className="text-[10px] font-bold uppercase tracking-widest opacity-40">Primary</span>
+            </div>
+            <div className="flex flex-col items-center gap-4">
+              <Button size="icon" variant="outline"><Icons.Search /></Button>
+              <span className="text-[10px] font-bold uppercase tracking-widest opacity-40">Outline</span>
+            </div>
+            <div className="flex flex-col items-center gap-4">
+              <Button size="icon" variant="ghost"><Icons.Bell /></Button>
+              <span className="text-[10px] font-bold uppercase tracking-widest opacity-40">Ghost</span>
+            </div>
+            <div className="flex flex-col items-center gap-4">
+              <Button size="icon" isLoading />
+              <span className="text-[10px] font-bold uppercase tracking-widest opacity-40">Loading</span>
+            </div>
+          </div>
+        </section>
+
+        <section className="space-y-12">
+          <div className="flex items-center gap-6">
+            <div className="h-px flex-1 bg-border/40" />
+            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
               Real World Usage
             </h2>
             <div className="h-px flex-1 bg-border/40" />
