@@ -171,7 +171,7 @@ export const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?:
   }
 
   return (
-    <div className="reader-text text-foreground/90 leading-[2] text-lg md:text-xl font-serif prose prose-lg dark:prose-invert max-w-none prose-headings:font-serif prose-headings:text-primary prose-p:my-2">
+    <div className="reader-text text-foreground/90 leading-[2.1] text-lg md:text-2xl font-serif prose prose-lg md:prose-xl dark:prose-invert max-w-none prose-headings:font-serif prose-headings:text-primary prose-p:my-6 prose-p:tracking-tight">
       {segments.map((seg, i) =>
         seg.type === 'bibleRef' && seg.abbr ? (
           <BibleVersePopover
@@ -194,7 +194,7 @@ export const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?:
         )
       )}
       {(data?.textoBase || data?.explicacao || data?.interpretacaoProfunda || data?.aplicacaoPratica || data?.reflexaoFinal || data?.exercicio) && (
-        <div className="mt-8 pt-8 border-t border-border/30">
+        <div className="mt-16 pt-12 border-t border-border/30">
           <DeepContentSection 
             content={{ 
               textoBase: data.textoBase,
@@ -205,11 +205,12 @@ export const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?:
               exercicio: data.exercicio
             }} 
             contentType="catechism"
-            title="Meditação e Aprofundamento" 
+            title="Lectio Divina & Aprofundamento" 
           />
         </div>
       )}
     </div>
+
   );
 };
 
