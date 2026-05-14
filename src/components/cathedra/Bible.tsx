@@ -698,8 +698,8 @@ const Bible: React.FC = () => {
     return (
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="flex items-center gap-4">
-          <button onClick={goBack} className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all">
-            <Icons.ChevronLeft className="w-5 h-5 text-foreground" />
+          <button onClick={goBack} className="p-3 rounded-2xl bg-card border border-border/40 hover:bg-primary hover:text-white shadow-sm transition-all duration-300">
+            <Icons.ChevronLeft className="w-5 h-5" />
           </button>
           <h1 className="text-2xl font-serif font-bold text-foreground">{selectedBook.name}</h1>
         </div>
