@@ -133,20 +133,16 @@ const LandingHeader = () => {
         </nav>
 
         <div className="flex items-center gap-4">
-          <button
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={() => navigate(AppRoute.LOGIN)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                navigate(AppRoute.LOGIN);
-              }
-            }}
-            className="hidden sm:flex text-[11px] font-bold uppercase tracking-[0.3em] text-muted-foreground hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none rounded-sm p-1"
+            className="hidden sm:flex text-[11px] font-bold uppercase tracking-[0.3em] text-muted-foreground hover:text-primary transition-colors shadow-none"
             aria-label="Ir para página de login"
             type="button"
           >
             Entrar
-          </button>
+          </Button>
           
           <HomeButton
             variant="ghost"
