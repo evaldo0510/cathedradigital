@@ -340,7 +340,7 @@ const Bible: React.FC = () => {
   }, [selectedBook, selectedChapter]);
 
   const handleNavigateToCIC = useCallback((paragraph: number) => {
-    navigate(`/catechism?p=${paragraph}`);
+    navigate(`${AppRoute.CATECHISM}?p=${paragraph}`);
   }, [navigate]);
 
   const handleNavigateToDoc = useCallback((docId: string) => {
