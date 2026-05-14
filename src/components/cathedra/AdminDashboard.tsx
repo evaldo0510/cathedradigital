@@ -130,9 +130,10 @@ const AdminDashboard: React.FC = () => {
           supabase.from('spiritual_journal').select('user_id', { count: 'exact', head: true }),
           supabase.from('journey_progress').select('user_id', { count: 'exact', head: true }),
           supabase.from('journey_progress').select('user_id', { count: 'exact', head: true }).not('completed_at', 'is', null),
-          supabase.from('user_management_stats').select('*').limit(1000),
+          supabase.from('user_management_stats').select('*').limit(1000).maybeSingle().then(res => [res.data || {}]),
           supabase.from('spiritual_journal').select('*, profiles(name)').order('created_at', { ascending: false }).limit(5)
         ]);
+
 
         if (statsRes.error) throw statsRes.error;
         const allProfiles = statsRes.data || [];
