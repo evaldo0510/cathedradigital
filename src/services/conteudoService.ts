@@ -22,13 +22,13 @@ export const searchUnified = async (query: string, types?: ContentType[]) => {
   
   if (!types || types.includes('catechism')) {
     const { data } = await supabase
-      .from('catechism_paragraphs')
+      .from('catechism_paragraphs' as any)
       .select('number, content, summary')
       .or(`content.ilike.%${query}%,summary.ilike.%${query}%`)
       .limit(10);
     
     if (data) {
-      data.forEach(item => {
+      (data as any[]).forEach(item => {
         results.push({
           id: `catechism-${item.number}`,
           type: 'catechism',
