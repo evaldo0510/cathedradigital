@@ -52,8 +52,8 @@ const DailyRoutineSection = () => {
               </div>
               
               <div className="space-y-3">
-                <h3 className="text-2xl font-bold font-serif">{step.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
+                <h3 className="font-bold font-serif">{step.title}</h3>
+                <p className="text-muted-foreground leading-relaxed">
                   {step.desc}
                 </p>
               </div>
