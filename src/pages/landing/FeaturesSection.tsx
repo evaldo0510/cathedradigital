@@ -39,22 +39,18 @@ interface FeaturesSectionProps {
 
 const FeatureCard = ({ feature, onNavigate }: { feature: typeof features[0]; onNavigate: (r: string) => void }) => {
   return (
-    <motion.div
-      whileHover={{ y: -5 }}
-      transition={{ duration: 0.3 }}
-      className="p-8 rounded-3xl bg-card border border-border/5 group hover:border-primary/10 transition-all cursor-pointer flex flex-col items-center text-center space-y-4 shadow-sm"
+    <div
+      className="desktop-card flex flex-col items-center text-center space-y-6 cursor-pointer group"
       onClick={() => onNavigate(feature.route)}
     >
-      <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center text-primary mb-2">
-        {feature.icon}
+      <div className="w-16 h-16 rounded-full bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors">
+        {React.cloneElement(feature.icon as React.ReactElement, { className: "w-8 h-8" })}
       </div>
-      <h3 className="text-xl font-display font-bold">
-        {feature.title}
-      </h3>
-      <p className="text-sm text-muted-foreground leading-relaxed">
-        {feature.description}
-      </p>
-    </motion.div>
+      <div className="space-y-2">
+        <h3 className="text-xl font-display font-bold">{feature.title}</h3>
+        <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
+      </div>
+    </div>
   );
 };
 FeatureCard.displayName = 'FeatureCard';
@@ -68,29 +64,24 @@ const FeaturesSection = ({ onNavigate }: FeaturesSectionProps) => {
   const decorY = useTransform(scrollYProgress, [0, 1], [60, -60]);
 
   return (
-    <section ref={sectionRef} className="w-full max-w-7xl px-6 py-24 space-y-20 relative overflow-hidden">
-      {/* Parallax decorative blurs */}
-      <motion.div style={{ y: decorY }} className="absolute inset-0 pointer-events-none">
-        <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-primary/5 blur-[80px]" />
-        <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-accent/5 blur-[80px]" />
-      </motion.div>
+    <section ref={sectionRef} className="w-full section-spacing space-y-20 relative overflow-hidden">
+      {/* Decorative background element - simplified */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-full bg-primary/[0.02] blur-[120px] rounded-full" />
+      </div>
 
-      {/* Section header with reveal */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="text-center space-y-4 max-w-2xl mx-auto relative z-10"
-      >
-        <span className="text-[9px] font-bold uppercase tracking-[0.4em] text-primary/40 italic">O Caminho</span>
-        <h2 className="text-3xl md:text-4xl font-display font-bold">Arquitetura do Conhecimento</h2>
-        <p className="text-muted-foreground font-serif">A luz de Cristo ilumina o coração.</p>
-      </motion.div>
-      
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10 max-w-6xl mx-auto">
-        {features.map((feature) => (
-          <FeatureCard key={feature.title} feature={feature} onNavigate={onNavigate} />
-        ))}
+      <div className="container px-6 mx-auto relative z-10">
+        <div className="text-center space-y-4 max-w-2xl mx-auto mb-16">
+          <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/40 italic">O Caminho</span>
+          <h2 className="text-3xl md:text-5xl font-display font-bold">Arquitetura do Conhecimento</h2>
+          <p className="text-muted-foreground font-serif text-lg">A luz de Cristo ilumina o coração.</p>
+        </div>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+          {features.map((feature) => (
+            <FeatureCard key={feature.title} feature={feature} onNavigate={onNavigate} />
+          ))}
+        </div>
       </div>
     </section>
   );
