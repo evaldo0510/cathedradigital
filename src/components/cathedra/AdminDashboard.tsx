@@ -130,16 +130,19 @@ const AdminDashboard: React.FC = () => {
           supabase.from('spiritual_journal').select('user_id', { count: 'exact', head: true }),
           supabase.from('journey_progress').select('user_id', { count: 'exact', head: true }),
           supabase.from('journey_progress').select('user_id', { count: 'exact', head: true }).not('completed_at', 'is', null),
-          supabase.from('user_management_stats').select('*').limit(1000).maybeSingle().then(res => [res.data || {}]),
+          supabase.from('user_management_stats').select('*').limit(1000),
           supabase.from('spiritual_journal').select('*, profiles(name)').order('created_at', { ascending: false }).limit(5)
         ]);
 
 
         if (statsRes.error) throw statsRes.error;
+        if ((metricsRes as any).error) throw (metricsRes as any).error;
+        if ((transactionsRes as any).error) throw (transactionsRes as any).error;
+
         const allProfiles = statsRes.data || [];
         const metrics = metricsRes.data || [];
         const transactions = transactionsRes.data || [];
-        const crmUsers = crmRes.data || [];
+        const crmUsers = (crmRes as any).data || [];
 
         const premiumCount = allProfiles.filter(p => p.is_premium).length;
         const totalRevenue = transactions.filter(t => t.status === 'approved').reduce((acc, curr) => acc + Number(curr.amount), 0);
