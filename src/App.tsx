@@ -487,7 +487,7 @@ const AppLayout: React.FC = () => {
         <div className="flex h-[100dvh] w-full overflow-hidden bg-background selection:bg-primary/20">
           {/* Persistent Sidebar for Desktop */}
           {!isChromeless && (
-            <div className="hidden md:block h-full w-72 flex-shrink-0 z-[160]">
+            <div className="hidden md:block h-full w-72 flex-shrink-0 z-[160] relative">
               <CathedralSidebar 
                 user={appUser} 
                 isDark={isDark}

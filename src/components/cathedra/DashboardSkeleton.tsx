@@ -3,9 +3,9 @@ import { Card, CardContent } from '@/components/ui/card';
 
 export const DashboardSkeleton: React.FC = () => {
   return (
-    <div className="fixed inset-0 z-[200] bg-background flex flex-col items-center justify-center p-4 animate-pulse">
-      <div className="desktop-layout pt-0 md:pt-10 lg:pt-20 pb-24 w-full h-full max-w-2xl mx-auto lg:max-w-none lg:mx-0 overflow-hidden">
-        <div className="desktop-main space-y-20 w-full">
+    <div className="fixed inset-0 z-[200] bg-background flex flex-col p-4 animate-pulse overflow-y-auto no-scrollbar">
+      <div className="desktop-layout pt-0 md:pt-10 lg:pt-20 pb-24 w-full h-full max-w-2xl mx-auto lg:max-w-none lg:mx-0">
+        <div className="desktop-main space-y-20 w-full mb-20">
         {/* Header Skeleton */}
         <div className="text-center space-y-6">
           <div className="flex justify-center">
