@@ -21,7 +21,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { AppRoute } from '@/types';
-import CatechismContent from './Catechism'; // We'll need to export this or refactor it
+import { CatechismContent } from './Catechism';
 
 const TrailStudyPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
