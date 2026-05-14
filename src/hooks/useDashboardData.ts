@@ -140,12 +140,14 @@ export const useDashboardData = (user: User | null) => {
     enabled: !!userId,
   });
 
+  const forceSkeleton = typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('force_skeleton');
+
   return {
     spiritualProfile: spiritualProfileQuery.data,
     activeJourneys: activeJourneysQuery.data || [],
     saintsToday: saintsTodayQuery.data || [],
     nextUp: nextUpQuery.data,
     weeklyStats: weeklyStatsQuery.data || { chaptersRead: 0, journeySteps: 0, catechismParagraphs: 0 },
-    isLoading: spiritualProfileQuery.isLoading || activeJourneysQuery.isLoading || saintsTodayQuery.isLoading || nextUpQuery.isLoading || weeklyStatsQuery.isLoading,
+    isLoading: forceSkeleton || spiritualProfileQuery.isLoading || activeJourneysQuery.isLoading || saintsTodayQuery.isLoading || nextUpQuery.isLoading || weeklyStatsQuery.isLoading,
   };
 };
