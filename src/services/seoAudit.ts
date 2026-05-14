@@ -141,21 +141,25 @@ export const runSEOAudit = async (url: string = window.location.href) => {
   audit.score = Math.max(0, audit.score!);
 
   // Save to DB
-  const { data, error } = await supabase
-    .from('seo_audits')
-    .insert({
-      url: audit.url as string,
-      score: audit.score,
-      findings: audit.findings as any,
-      meta_tags: audit.meta_tags as any,
-      headings: audit.headings as any,
-      links: audit.links as any
-    })
-    .select()
-    .single();
+  if (!_TEST_MODE.active) {
+    const { data, error } = await supabase
+      .from('seo_audits')
+      .insert({
+        url: audit.url as string,
+        score: audit.score,
+        findings: audit.findings as any,
+        meta_tags: audit.meta_tags as any,
+        headings: audit.headings as any,
+        links: audit.links as any
+      })
+      .select()
+      .single();
 
-  if (error) throw error;
-  return { ...audit, ...data } as unknown as SEOAudit;
+    if (error) throw error;
+    return { ...audit, ...data } as unknown as SEOAudit;
+  }
+  
+  return audit as unknown as SEOAudit;
 };
 
 export const getAuditHistory = async () => {
