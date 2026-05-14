@@ -99,15 +99,16 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   return (
     <div className="fixed bottom-0 left-0 right-0 z-[160] lg:hidden bg-background border-t border-foreground/5 safe-area-bottom">
       <div className="flex items-stretch h-16 px-1">
-        {items.map((item) => (
+        {items.map((item: any) => (
           <BottomNavItem 
             key={item.label}
             label={item.label}
             icon={item.icon}
-            route={item.route}
-            isActive={currentPath === item.route || (item.route === AppRoute.BIBLIOTECA && [AppRoute.BIBLE, AppRoute.CATECHISM, AppRoute.MAGISTERIUM, AppRoute.SAINTS, AppRoute.LITURGIA, AppRoute.AQUINAS_OPERA, AppRoute.GLOSSARY, AppRoute.ROSARY, AppRoute.ORACAO, AppRoute.VIA_CRUCIS, AppRoute.AZ_FAITH, AppRoute.ENCYCLOPEDIA, AppRoute.POPES, AppRoute.APARICOES, AppRoute.DOGMAS, AppRoute.MODULES_GUIDE].includes(currentPath as AppRoute))}
+            route={item.route || ''}
+            isActive={item.route ? (currentPath === item.route || (item.route === AppRoute.BIBLIOTECA && [AppRoute.BIBLE, AppRoute.CATECHISM, AppRoute.MAGISTERIUM, AppRoute.SAINTS, AppRoute.LITURGIA, AppRoute.AQUINAS_OPERA, AppRoute.GLOSSARY, AppRoute.ROSARY, AppRoute.ORACAO, AppRoute.VIA_CRUCIS, AppRoute.AZ_FAITH, AppRoute.ENCYCLOPEDIA, AppRoute.POPES, AppRoute.APARICOES, AppRoute.DOGMAS, AppRoute.MODULES_GUIDE].includes(currentPath as AppRoute))) : false}
             onClick={() => {
-              navigate(item.route);
+              if (item.onClick) item.onClick();
+              else if (item.route) navigate(item.route);
             }}
             onRipple={triggerRipple}
           />
