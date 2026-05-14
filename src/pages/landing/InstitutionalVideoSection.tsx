@@ -250,11 +250,8 @@ const InstitutionalVideoSection = () => {
             custom={3}
             className="relative group"
           >
-            {/* Ambient Glow */}
-            <div className="absolute -inset-4 bg-primary/10 rounded-[40px] blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
-            
             <button 
-              className="relative w-full aspect-[4/5] sm:aspect-video rounded-[32px] overflow-hidden border border-border/50 bg-black shadow-2xl cursor-pointer group-hover:scale-[1.02] transition-all duration-700 text-left focus:outline-none focus-visible:ring-4 focus-visible:ring-primary/50"
+              className="relative w-full aspect-[4/5] sm:aspect-video rounded-[32px] overflow-hidden border border-border bg-black shadow-lg cursor-pointer group-hover:scale-[1.01] transition-all duration-700 text-left focus:outline-none focus-visible:ring-4 focus-visible:ring-primary/50"
               onClick={handlePlay}
               aria-label="Abrir vídeo de apresentação da Catedra Digital"
             >
