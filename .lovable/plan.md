@@ -1,33 +1,23 @@
-# Unified Home and Navigation Reconnection Plan
+## Plano de Reforma Visual (Minimalismo Espiritual)
 
-The current site has redundant homepages (`Dashboard` and `HojePage`) and slightly disconnected navigation paths. This plan unifies the experience into a single, powerful "Hoje" (Today) portal while streamlining the content hub.
+O objetivo é transformar a interface do Cathedra Digital em algo mais contemplativo, refinado e consistente, removendo o excesso de elementos e padronizando o espaçamento e hierarquia.
 
-## 1. Unified Home Experience (Hoje Portal)
-*   **Merge Dashboard Features**: Integrate `useDashboardData` into `HojePage` to provide personalized greetings, streaks, and XP.
-*   **Personalized Progress**: Add "Next Up" (Continuar de onde parou) logic for Bible and Catechism, not just Journeys.
-*   **Weekly Stats**: Add a "Frutos da Semana" section showing chapters read, paragraphs studied, and journey steps completed.
-*   **Portas da Fé (Main Doors)**: Re-implement the high-impact "Main Doors" from Dashboard into HojePage for quick navigation to core modules.
-*   **Nexus Integration**: Embed the Spiritual Profile insights (Nexus Bubbles) directly into the home flow.
-*   **Deprecation**: Set all `/dashboard` routes to redirect to `/hoje`.
+### 1. CSS Global e Design System (Revisão)
+- Ajustar `src/index.css` para um sistema de espaçamento mais generoso (padrão de 8px/16px/32px/64px).
+- Refinar as sombras: remover sombras fortes/complexas, usar sombras sutis e naturais (`shadow-sm` para cards, `shadow-md` para elementos ativos).
+- Tipografia: Garantir que o `font-display` (Cinzel) e `font-serif` (Playfair) sejam usados apenas para títulos e detalhes contemplativos, mantendo o `Inter` (sans) para legibilidade de textos longos.
 
-## 2. Navigation & Content Hub Streamlining
-*   **Biblioteca (Explore Hub)**: Refine the `BibliotecaPage` to be the definitive directory. Group items into:
-    *   **Palavra e Doutrina**: Bíblia, Catecismo, Magistério.
-    *   **Vida de Oração**: Rosário, Liturgia, Breviário, Via Sacra.
-    *   **Formação Intelectual**: Aquinas, Enciclopédia, Dogmas, Papas.
-    *   **Caminho e Partilha**: Jornadas, Temas, Comunidade.
-*   **Consistent Iconography**: Ensure the same icons are used in Sidebar, BottomNav, and Hub.
+### 2. Layout & Home (Simplificação)
+- **Home (Index.tsx/landing):** Simplificar o Hero. Reduzir animações de partículas/background complexas para algo mais estático e elegante.
+- **Espaçamento:** Aumentar o `padding` e `margin` entre seções na `LandingPage` para criar respiro (respiro é luxo visual).
+- **Container Desktop:** Centralizar todo o conteúdo em `max-w-[1000px]` para uma leitura mais focada (tamanho ideal de linha), evitando que o texto "escorra" de borda a borda em monitores grandes.
 
-## 3. Global Search & Discovery
-*   **Accessibility**: Link "Busca Global" more prominently in the UI.
-*   **Connectivity**: Ensure the search covers all themes and content types.
+### 3. Componentes e Cards (Padronização)
+- **Cards:** Criar um padrão único de `rounded-2xl` e remover bordas excessivas ou gradientes de fundo muito agressivos. Manter o foco no conteúdo.
+- **Hierarquia:** Reduzir o peso visual de botões secundários (usar `outline` ou `ghost` padronizado).
+- **Desalinhamento:** Revisar o `desktop-layout` no CSS para forçar alinhamento centralizado com margens simétricas.
 
-## 4. Technical Cleanup
-*   **Route Cleanup**: Remove redundant redirects and unused imports in `App.tsx`.
-*   **Profile Sync**: Ensure `useAuth` and `useDashboardData` work in tandem to avoid duplicate profile fetches.
-
-## Technical Details
-*   Modify `src/components/cathedra/HojePage.tsx` to use `useDashboardData`.
-*   Create `src/components/cathedra/HomeStats.tsx` and `src/components/cathedra/HomeMainDoors.tsx` as reusable widgets.
-*   Update `src/App.tsx` routes.
-*   Sync terminology in `src/hooks/useLang.ts` and translations.
+### 4. Execução Técnica
+- Vou começar refatorando o `index.css` para padronizar as variáveis de sombra e espaçamento.
+- Em seguida, atualizarei os componentes de layout (`Sidebar.tsx`, `AppHeader.tsx`, `Footer.tsx`) para refletir o design limpo.
+- Por fim, aplicarei o design simplificado nas seções da Home, reduzindo a complexidade de `HeroContent.tsx`.

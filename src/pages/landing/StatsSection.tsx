@@ -126,7 +126,7 @@ const StatsSection = () => {
   ];
 
   return (
-    <section ref={sectionRef} className="w-full py-24 px-6 border-y border-border/30 bg-muted/20 relative overflow-hidden">
+    <section ref={sectionRef} className="w-full py-32 px-6 border-y border-border/10 bg-transparent relative overflow-hidden">
       {/* Parallax decorative elements */}
       <motion.div
         style={{ y: bgY }}
