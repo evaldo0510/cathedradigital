@@ -81,13 +81,15 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
 
   return (
     <div className="max-w-md mx-auto space-y-8 relative">
-      <button 
+      <Button 
+        variant="ghost"
+        size="sm"
         onClick={() => navigate(AppRoute.HOME)}
-        className="absolute -top-12 left-0 flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors group"
+        className="absolute -top-12 left-0 flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors group shadow-none"
       >
         <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
         <span className="text-[10px] font-black uppercase tracking-widest">Voltar para Início</span>
-      </button>
+      </Button>
 
       <div className="text-center space-y-4">
         <div className="flex justify-center">
