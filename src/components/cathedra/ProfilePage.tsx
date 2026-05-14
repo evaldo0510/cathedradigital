@@ -260,28 +260,34 @@ const ProfilePage: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-card border border-border rounded-2xl p-6 space-y-3">
-        <div className="flex items-center justify-between">
+      <div className="bg-card border border-border rounded-[2rem] p-8 space-y-6 shadow-sm overflow-hidden relative group">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-primary/10 transition-colors duration-500" />
+        <div className="flex items-center justify-between relative z-10">
           <div>
-            <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Nível {currentLevelIdx + 1}</p>
-            <p className="text-lg font-black text-foreground">{levelName}</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60 mb-1">Nível {currentLevelIdx + 1}</p>
+            <p className="text-2xl font-black text-foreground tracking-tight">{levelName}</p>
           </div>
           <div className="text-right">
-            <p className="text-2xl font-black text-primary">{totalXp}</p>
-            <p className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground">XP Total</p>
+            <p className="text-4xl font-black text-primary tabular-nums">{totalXp}</p>
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">XP Acumulado</p>
           </div>
         </div>
-        <div className="relative h-3 bg-muted rounded-full overflow-hidden">
-          <div
-            className="absolute inset-y-0 left-0 bg-gradient-to-r from-primary to-primary/70 rounded-full transition-all duration-700"
-            style={{ width: `${Math.min(xpProgress, 100)}%` }}
-          />
-        </div>
-        <div className="flex justify-between text-[9px] text-muted-foreground">
-          <span>{levelName}</span>
-          <span>{nextLevel ? `${nextLevel.minXp - totalXp} XP para ${nextLevel.name}` : 'Nível máximo!'}</span>
+        <div className="space-y-3 relative z-10">
+          <div className="relative h-4 bg-muted rounded-full overflow-hidden p-1 shadow-inner border border-border/50">
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: `${Math.min(xpProgress, 100)}%` }}
+              transition={{ duration: 1, ease: "easeOut" }}
+              className="absolute inset-y-1 left-1 bg-gradient-to-r from-primary via-primary/80 to-primary rounded-full shadow-[0_0_15px_rgba(var(--primary),0.4)]"
+            />
+          </div>
+          <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 px-1">
+            <span>{levelName}</span>
+            <span>{nextLevel ? `${nextLevel.minXp - totalXp} XP para o próximo nível` : 'Plenitude alcançada'}</span>
+          </div>
         </div>
       </div>
+
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {statCards.map(s => (
