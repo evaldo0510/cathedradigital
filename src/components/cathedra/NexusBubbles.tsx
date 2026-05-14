@@ -128,25 +128,26 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
           className={className}
         />
       </PopoverTrigger>
-      <PopoverContent data-testid="nexus-popover" className="w-[340px] sm:w-[420px] p-0 rounded-[2.5rem] border-primary/20 overflow-hidden shadow-2xl z-[100] backdrop-blur-2xl bg-card/90">
-        <div className="bg-gradient-to-r from-primary/15 via-primary/5 to-transparent p-6 border-b border-border/40 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-white/50 dark:bg-black/20 flex items-center justify-center shadow-inner text-primary border border-primary/10">
-              {getTagIcon(tag.emoji, "w-6 h-6")}
+      <PopoverContent data-testid="nexus-popover" className="w-[340px] sm:w-[460px] p-0 rounded-[3rem] border-primary/20 overflow-hidden shadow-2xl z-[100] backdrop-blur-3xl bg-card/95 ring-1 ring-primary/10">
+        <div className="bg-gradient-to-r from-primary/20 via-primary/5 to-transparent p-8 border-b border-border/40 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-white/60 dark:bg-black/40 flex items-center justify-center shadow-inner text-primary border border-primary/10 backdrop-blur-sm">
+              {getTagIcon(tag.emoji, "w-7 h-7")}
             </div>
             <div>
-              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/60">{tag.category}</span>
-              <h4 className="text-sm font-black uppercase tracking-widest text-primary leading-tight">{tag.label}</h4>
+              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/50 mb-1 block">{tag.category}</span>
+              <h4 className="text-lg font-black uppercase tracking-widest text-primary leading-tight">{tag.label}</h4>
             </div>
           </div>
           <button 
             onClick={() => navigate(`${AppRoute.TEMAS}/${tag.slug}`)}
-            className="w-10 h-10 rounded-2xl bg-primary text-primary-foreground hover:scale-110 active:scale-95 transition-all flex items-center justify-center shadow-lg shadow-primary/20 group"
+            className="w-12 h-12 rounded-[1.25rem] bg-primary text-primary-foreground hover:scale-105 active:scale-95 transition-all flex items-center justify-center shadow-xl shadow-primary/30 group ring-4 ring-primary/10"
             title="Estudo Completo"
           >
-            <ExternalLink className="w-4 h-4 group-hover:rotate-12 transition-transform" />
+            <ExternalLink className="w-5 h-5 group-hover:rotate-12 transition-transform" />
           </button>
         </div>
+
         
         <div className="p-5 space-y-5 max-h-[450px] overflow-y-auto scrollbar-none">
           {/* Diagnostic Panel */}
@@ -258,19 +259,22 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
               )}
               {logosInsight && (
                 <motion.div 
-                  initial={{ opacity: 0, y: 10 }}
+                  initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-secondary/5 rounded-2xl p-4 border border-secondary/10 relative overflow-hidden group"
+                  className="bg-primary/5 rounded-[2rem] p-6 border border-primary/10 relative overflow-hidden group shadow-inner"
                 >
-                  <div className="absolute top-0 right-0 w-16 h-16 bg-secondary/5 rounded-full blur-2xl -mr-6 -mt-6" />
-                  <div className="flex items-center gap-2 mb-2">
-                    <Sparkles className="w-3.5 h-3.5 text-secondary" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary">Logos Insight</span>
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-primary/10 rounded-full blur-3xl -mr-10 -mt-10" />
+                  <div className="flex items-center gap-2.5 mb-3">
+                    <div className="w-6 h-6 rounded-lg bg-primary/20 flex items-center justify-center">
+                      <Sparkles className="w-3.5 h-3.5 text-primary" />
+                    </div>
+                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/70">Logos Insight</span>
                   </div>
-                  <p className="text-[12px] text-foreground/90 leading-relaxed italic font-serif">
+                  <p className="text-[14px] text-foreground/90 leading-relaxed italic font-serif">
                     "{logosInsight}"
                   </p>
                 </motion.div>
+
               )}
               
               {content.length > 0 ? (

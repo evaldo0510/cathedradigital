@@ -131,7 +131,7 @@ const HojePage: React.FC = () => {
   ], []);
 
   return (
-    <div className="desktop-layout pt-6 md:pt-12">
+    <div className="desktop-layout pt-6 md:pt-16 pb-24">
       {loadingStats && <DashboardSkeleton />}
       <SEOHead 
         title="Cathedra Digital — Nem toda prisão é visível" 
@@ -139,16 +139,27 @@ const HojePage: React.FC = () => {
         path="/hoje" 
       />
       {import.meta.env.DEV && <DevDataInspector data={{ officialSaint, allSaintsToday, activeJourney, profile: profile?._sensitive }} />}
-      <div className="desktop-main space-y-12 max-w-2xl mx-auto lg:max-w-none lg:mx-0">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center space-y-6 pt-4 md:pt-0">
-          <div className="space-y-4">
-            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60">
+      <div className="desktop-main space-y-16 max-w-2xl mx-auto lg:max-w-none lg:mx-0">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }} 
+          animate={{ opacity: 1, y: 0 }} 
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="text-center space-y-8 pt-4 md:pt-0"
+        >
+          <div className="space-y-6">
+            <motion.p 
+              initial={{ opacity: 0, tracking: "0.2em" }}
+              animate={{ opacity: 1, tracking: "0.4em" }}
+              transition={{ duration: 1, delay: 0.3 }}
+              className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.4em] text-primary/60"
+            >
               {greeting}, {profile?.name?.split(' ')[0] || 'fiel'}
-            </p>
-            <h1 className="text-4xl md:text-7xl font-serif text-foreground leading-[1.1] tracking-tight">
-              "Nem toda prisão <br /><span className="text-primary italic">é visível."</span>
+            </motion.p>
+            <h1 className="text-5xl md:text-8xl font-serif text-foreground leading-[1.05] tracking-tight">
+              "Nem toda prisão <br /><span className="text-primary italic font-medium">é visível."</span>
             </h1>
           </div>
+
           <div className="flex items-center justify-center gap-4 flex-wrap pt-2">
              {(profile?.streak || 0) > 0 && (
               <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-primary/5 border border-primary/10 shadow-sm">
@@ -182,7 +193,7 @@ const HojePage: React.FC = () => {
                 }
               }}
               onClick={() => navigate(nextUp.route)}
-              className="p-5 rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card cursor-pointer hover:border-primary/40 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none transition-all shadow-sm flex items-center justify-between group"
+              className="p-6 rounded-[2rem] border border-primary/20 bg-gradient-to-br from-primary/5 via-card/50 to-card backdrop-blur-md cursor-pointer hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none transition-all duration-500 flex items-center justify-between group"
             >
               <div className="flex items-center gap-5">
                 <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
