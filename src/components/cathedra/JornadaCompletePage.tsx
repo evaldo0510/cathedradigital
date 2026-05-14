@@ -240,7 +240,7 @@ const JornadaCompletePage: React.FC = () => {
         transition={{ duration: 0.6 }}
       >
         <div ref={certificateRef}>
-          <Card className="border-primary/30 bg-gradient-to-b from-primary/5 to-background overflow-hidden">
+          <Card className="premium-card p-0 border-primary/20">
             <CardContent className="p-8 text-center space-y-6">
               <div className="w-20 h-20 mx-auto rounded-full bg-primary/10 border-2 border-primary/30 flex items-center justify-center">
                 <Award className="w-10 h-10 text-primary" />
