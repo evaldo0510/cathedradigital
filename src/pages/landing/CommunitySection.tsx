@@ -32,7 +32,7 @@ const CommunitySection = () => {
 
   return (
     <section className="w-full py-24 px-6 bg-background relative overflow-hidden">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/[0.02] rounded-full pointer-events-none" />
       
       <div className="max-w-7xl mx-auto space-y-20 relative z-10">
         <div className="text-center space-y-6 max-w-3xl mx-auto">
