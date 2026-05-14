@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -10,7 +10,8 @@ import {
   PlayCircle, 
   Trophy,
   ArrowLeft,
-  LayoutDashboard
+  LayoutDashboard,
+  ExternalLink
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -23,6 +24,8 @@ import { toast } from 'sonner';
 import { AppRoute } from '@/types';
 import SEOHead from '@/components/SEOHead';
 import { CatechismContent } from './Catechism';
+import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
+import BibleVersePopover from './BibleVersePopover';
 
 const TrailStudyPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -38,40 +41,37 @@ const TrailStudyPage: React.FC = () => {
   const [completedSteps, setCompletedSteps] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
 
-  // Resume logic
-  useEffect(() => {
+  const fetchProgress = useCallback(async () => {
     if (!user || !trail) return;
-
-    const fetchProgress = async () => {
-      const { data } = await supabase
-        .from('journey_progress')
-        .select('step_id, completed_at')
-        .eq('user_id', user.id)
-        .eq('journey_id', trail.id)
-        .order('completed_at', { ascending: false });
+    const { data } = await supabase
+      .from('journey_progress')
+      .select('step_id, completed_at')
+      .eq('user_id', user.id)
+      .eq('journey_id', trail.id)
+      .order('completed_at', { ascending: false });
+    
+    if (data) {
+      const completedIds = new Set(data.map(d => d.step_id));
+      setCompletedSteps(completedIds);
       
-      if (data && data.length > 0) {
-        const completedIds = new Set(data.map(d => d.step_id));
-        setCompletedSteps(completedIds);
+      if (!searchParams.get('step') && data.length > 0) {
+        const lastCompletedId = data[0].step_id;
+        const lastIdx = trail.steps.findIndex(s => s.id === lastCompletedId);
+        const nextIdx = lastIdx + 1;
         
-        // Auto-resume: if no step in URL, pick the first uncompleted or the very last completed one
-        if (!searchParams.get('step')) {
-          const lastCompletedId = data[0].step_id;
-          const lastIdx = trail.steps.findIndex(s => s.id === lastCompletedId);
-          const nextIdx = lastIdx + 1;
-          
-          if (nextIdx < trail.steps.length) {
-            setSearchParams({ step: trail.steps[nextIdx].id }, { replace: true });
-          } else {
-            setSearchParams({ step: lastCompletedId }, { replace: true });
-          }
+        if (nextIdx < trail.steps.length) {
+          setSearchParams({ step: trail.steps[nextIdx].id }, { replace: true });
+        } else {
+          setSearchParams({ step: lastCompletedId }, { replace: true });
         }
       }
-      setLoading(false);
-    };
+    }
+    setLoading(false);
+  }, [user, trail, searchParams, setSearchParams]);
 
+  useEffect(() => {
     fetchProgress();
-  }, [user, trail]);
+  }, [fetchProgress]);
 
   const toggleStepCompletion = async () => {
     if (!user || !trail || !currentStep) return;
@@ -80,7 +80,6 @@ const TrailStudyPage: React.FC = () => {
 
     try {
       if (isCurrentlyCompleted) {
-        // Mark as incomplete
         const { error } = await supabase
           .from('journey_progress')
           .delete()
@@ -97,7 +96,6 @@ const TrailStudyPage: React.FC = () => {
         });
         toast.info('Etapa marcada como pendente');
       } else {
-        // Mark as complete
         const { error } = await supabase.from('journey_progress').upsert({
           user_id: user.id,
           journey_id: trail.id,
@@ -110,7 +108,6 @@ const TrailStudyPage: React.FC = () => {
         setCompletedSteps(prev => new Set([...prev, currentStep.id]));
         toast.success('Etapa concluída!');
         
-        // Navigate to next step if available
         if (currentStepIndex < trail.steps.length - 1) {
           const nextStep = trail.steps[currentStepIndex + 1];
           setSearchParams({ step: nextStep.id });
@@ -126,6 +123,10 @@ const TrailStudyPage: React.FC = () => {
       toast.error('Erro ao atualizar progresso');
     }
   };
+
+  const handleNavigateToBible = useCallback((abbr: string, chapter: number) => {
+    navigate(`/bible?book=${abbr}&ch=${chapter}`);
+  }, [navigate]);
 
   if (!trail || !currentStep) {
     return (
@@ -146,7 +147,6 @@ const TrailStudyPage: React.FC = () => {
         path={`/trilhas/${slug}?step=${currentStep.id}`}
       />
       
-      {/* Header with Progress */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <Button 
@@ -174,7 +174,6 @@ const TrailStudyPage: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        {/* Step Sidebar */}
         <div className="lg:col-span-1 space-y-4">
           <h3 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
             <LayoutDashboard className="w-3 h-3" /> Etapas da Trilha
@@ -211,7 +210,6 @@ const TrailStudyPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Content Area */}
         <div className="lg:col-span-3 space-y-6">
           <Card className="bg-card/40 backdrop-blur-md border-border/50 rounded-3xl overflow-hidden min-h-[500px]">
             <CardContent className="p-8 space-y-8">
@@ -230,15 +228,19 @@ const TrailStudyPage: React.FC = () => {
                 )}
               </div>
 
-
               <div className="prose prose-lg dark:prose-invert max-w-none">
-                {currentStep.type === 'catechism' && (
+                {currentStep.type === 'catechism' ? (
                   <div className="bg-muted/30 p-6 rounded-2xl border border-border/40">
                     <CatechismContent 
                       paragraph={parseInt(currentStep.ref)} 
                       isVisible={true}
-                      onNavigateToBible={(abbr, chapter) => navigate(`/bible?book=${abbr}&ch=${chapter}`)}
+                      onNavigateToBible={handleNavigateToBible}
                     />
+                  </div>
+                ) : (
+                  <div className="space-y-6">
+                    <p>{currentStep.description}</p>
+                    <p className="text-sm text-muted-foreground">Referência: {currentStep.ref}</p>
                   </div>
                 )}
               </div>
