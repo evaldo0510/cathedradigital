@@ -88,7 +88,7 @@ const RitualDoDia: React.FC = () => {
             text={audioText}
             title="Ouvir o Ritual do Dia"
             variant="default"
-            className="w-full rounded-2xl h-14 bg-primary text-primary-foreground font-black text-[10px] uppercase tracking-[0.2em] shadow-xl shadow-primary/20 hover:scale-[1.01] transition-all focus-visible:ring-4 focus-visible:ring-primary outline-none"
+            className="w-full rounded-2xl h-14 bg-primary text-primary-foreground font-black text-[10px] uppercase tracking-[0.2em] shadow-xl shadow-primary/10 hover:shadow-primary/30 hover:translate-y-[-1px] transition-all focus-visible:ring-2 focus-visible:ring-primary/20 outline-none"
           />
         </div>
       </div>
