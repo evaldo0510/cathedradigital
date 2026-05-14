@@ -9,7 +9,7 @@ const HeroScrollIndicator = () => (
     className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2"
   >
     <motion.span
-      className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/30"
+      className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 italic"
       animate={{ opacity: [0.3, 0.6, 0.3] }}
       transition={{ duration: 2, repeat: Infinity }}
     >
