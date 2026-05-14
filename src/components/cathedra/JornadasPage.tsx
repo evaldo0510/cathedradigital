@@ -84,7 +84,6 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [journeys, setJourneys] = useState<any[]>([]);
-  const { getTrails } = require('@/data/trilhas'); // Using require if needed or we should import it at top
   const [progressMap, setProgressMap] = useState<Record<string, number>>({});
   const [stepsCountMap, setStepsCountMap] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
