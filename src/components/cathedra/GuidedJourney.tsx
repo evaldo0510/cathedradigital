@@ -105,7 +105,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[300] flex items-center justify-center bg-background/95 backdrop-blur-sm p-4 overflow-y-auto">
+    <div className="fixed inset-0 z-[300] flex items-center justify-center bg-background/95 p-4 overflow-y-auto">
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
