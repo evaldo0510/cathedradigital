@@ -8,16 +8,9 @@ import HeroSection from "./landing/HeroSection";
 import LandingHeader from "@/components/landing/LandingHeader";
 
 // Lazy-load below-the-fold sections
-const InstitutionalVideoSection = lazy(() => import("./landing/InstitutionalVideoSection"));
-const StatsSection = lazy(() => import("./landing/StatsSection"));
 const FeaturesSection = lazy(() => import("./landing/FeaturesSection"));
-const HowItWorksSection = lazy(() => import("./landing/HowItWorksSection"));
-const AcolhimentoSection = lazy(() => import("./landing/AcolhimentoSection"));
-const BenefitsSection = lazy(() => import("./landing/BenefitsSection"));
-const TestimonialsSection = lazy(() => import("./landing/TestimonialsSection"));
-const AboutCreatorSection = lazy(() => import("./landing/AboutCreatorSection"));
-const CommunitySection = lazy(() => import("./landing/CommunitySection"));
 const DailyRoutineSection = lazy(() => import("./landing/DailyRoutineSection"));
+const TestimonialsSection = lazy(() => import("./landing/TestimonialsSection"));
 const PricingSection = lazy(() => import("./landing/PricingSection"));
 const FaqSection = lazy(() => import("./landing/FaqSection"));
 const CtaBannerSection = lazy(() => import("./landing/CtaBannerSection"));
