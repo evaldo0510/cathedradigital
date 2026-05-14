@@ -38,20 +38,22 @@ export const useDashboardData = (user: User | null) => {
     queryFn: async () => {
       if (!userId) return [];
       const { data: progress } = await supabase.from('journey_progress').select('journey_id, step_id').eq('user_id', userId);
-      if (!progress?.length) return [];
+      if (!progress || progress.length === 0) return [];
       
-      const journeyIds = [...new Set(progress.map(p => p.journey_id))];
+      const journeyIds = [...new Set((progress || []).map(p => p.journey_id))];
       const { data: journeys } = await supabase.from('journeys').select('id, title, icon').in('id', journeyIds);
-      if (!journeys) return [];
+      if (!journeys || journeys.length === 0) return [];
+
       
       const { data: steps } = await supabase.from('journey_steps').select('id, journey_id').in('journey_id', journeyIds);
       const stepsByJourney: Record<string, number> = {};
-      steps?.forEach(s => { stepsByJourney[s.journey_id] = (stepsByJourney[s.journey_id] || 0) + 1; });
+      (steps || []).forEach(s => { stepsByJourney[s.journey_id] = (stepsByJourney[s.journey_id] || 0) + 1; });
       
       const completedByJourney: Record<string, number> = {};
-      progress.forEach(p => { completedByJourney[p.journey_id] = (completedByJourney[p.journey_id] || 0) + 1; });
+      (progress || []).forEach(p => { completedByJourney[p.journey_id] = (completedByJourney[p.journey_id] || 0) + 1; });
       
-      return journeys.map(j => ({
+      return (journeys || []).map(j => ({
+
         id: j.id, title: j.title, icon: j.icon,
         totalSteps: stepsByJourney[j.id] || 0,
         completedSteps: completedByJourney[j.id] || 0,

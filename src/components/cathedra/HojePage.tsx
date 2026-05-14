@@ -32,67 +32,8 @@ const LITURGICAL_QUOTES = [
   '"Amai-vos uns aos outros como eu vos amei." — Jo 15,12',
 ];
 
-function useActiveJourney(userId: string | undefined) {
-  return useQuery({
-    queryKey: ['active-journey', userId],
-    queryFn: async () => {
-      if (!userId) return null;
-      const { data: progress } = await supabase
-        .from('journey_progress')
-        .select('journey_id')
-        .eq('user_id', userId)
-        .order('completed_at', { ascending: false })
-        .limit(1);
-      if (!progress?.length) return null;
-      const lastJourneyId = progress[0].journey_id;
-      const [journeyRes, completedRes, stepsRes] = await Promise.all([
-        supabase.from('journeys').select('*').eq('id', lastJourneyId).maybeSingle(),
-        supabase.from('journey_progress').select('step_id').eq('user_id', userId).eq('journey_id', lastJourneyId),
-        supabase.from('journey_steps').select('id, step_order, title, subtitle, content').eq('journey_id', lastJourneyId).order('step_order', { ascending: true }),
-      ]);
-      if (!journeyRes.data) return null;
-      const completedIds = (completedRes.data || []).map(s => s.step_id);
-      const allSteps = stepsRes.data || [];
-      const nextStep = allSteps.find(s => !completedIds.includes(s.id)) || null;
-      return {
-        journey: journeyRes.data,
-        progress: { completed: completedIds.length, total: allSteps.length },
-        nextStep,
-      };
-    },
-    enabled: !!userId,
-    staleTime: 1000 * 60 * 5,
-    retry: 1,
-  });
-}
+// Removed redundant hooks in favor of useDashboardData
 
-function useRecommendedJourney(userId: string | undefined, profile: any, userLevel: string | undefined, hasActiveJourney: boolean) {
-  return useQuery({
-    queryKey: ['recommended-journey', userId, userLevel],
-    queryFn: async () => {
-      if (!userId) return null;
-      const result = profile?._sensitive?.diagnosis_result as Record<string, string> | undefined;
-      const { moment, prayer, knowledge, goal } = result || {};
-      let category = 'fundamentos';
-      if (userLevel === 'iniciante' || moment === 'beginning' || knowledge === 'basic') category = 'fundamentos';
-      else if (userLevel === 'avançado' || prayer === 'contemplative' || goal === 'transformation') category = 'formacao';
-      else if (moment === 'struggling' || goal === 'peace') category = 'mistico';
-      else if (goal === 'routine' || prayer === 'rarely' || prayer === 'sometimes') category = 'rotina';
-      const { data } = await supabase
-        .from('journeys')
-        .select('*')
-        .eq('category', category)
-        .eq('is_active', true)
-        .order('sort_order', { ascending: true })
-        .limit(1)
-        .maybeSingle();
-      return data;
-    },
-    enabled: !!userId && !hasActiveJourney,
-    staleTime: 1000 * 60 * 30,
-    retry: 1,
-  });
-}
 
 const JourneySkeleton = () => (
   <div className="p-6 rounded-3xl border border-border bg-card relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-primary/5 before:to-transparent">
@@ -120,15 +61,41 @@ const HojePage: React.FC = () => {
   const { data: allSaintsToday = [], isLoading: loadingSaints } = useSaintsToday();
   const { data: officialSaint } = useOfficialSaint();
   
-  // Ported from Dashboard
-  const { spiritualProfile, nextUp, weeklyStats, isLoading: loadingStats } = useDashboardData(user as any);
+  // Unified dashboard data fetch
+  const { spiritualProfile, nextUp, activeJourneys, weeklyStats, isLoading: loadingStats } = useDashboardData(user as any);
 
-  const { data: activeJourneyData, isLoading: loadingJourney } = useActiveJourney(user?.id);
-  const activeJourney = activeJourneyData?.journey || null;
-  const journeyStep = activeJourneyData?.nextStep || null;
-  const journeyProgress = activeJourneyData?.progress || { completed: 0, total: 0 };
+  const activeJourney = activeJourneys?.[0] || null;
+  const journeyProgress = activeJourney ? { completed: activeJourney.completedSteps, total: activeJourney.totalSteps } : { completed: 0, total: 0 };
   
-  const { data: recommendedJourney } = useRecommendedJourney(user?.id, profile, userLevel, !!activeJourney);
+  // Logic to determine if we should show a recommended journey
+  const hasActiveJourney = activeJourneys && activeJourneys.length > 0;
+  
+  const { data: recommendedJourney } = useQuery({
+    queryKey: ['recommended-journey', user?.id, userLevel],
+    queryFn: async () => {
+      if (!user?.id || hasActiveJourney) return null;
+      const result = profile?._sensitive?.diagnosis_result as Record<string, string> | undefined;
+      const { moment, prayer, knowledge, goal } = result || {};
+      let category = 'fundamentos';
+      if (userLevel === 'iniciante' || moment === 'beginning' || knowledge === 'basic') category = 'fundamentos';
+      else if (userLevel === 'avançado' || prayer === 'contemplative' || goal === 'transformation') category = 'formacao';
+      else if (moment === 'struggling' || goal === 'peace') category = 'mistico';
+      else if (goal === 'routine' || prayer === 'rarely' || prayer === 'sometimes') category = 'rotina';
+      
+      const { data } = await supabase
+        .from('journeys')
+        .select('*')
+        .eq('category', category)
+        .eq('is_active', true)
+        .order('sort_order', { ascending: true })
+        .limit(1)
+        .maybeSingle();
+      return data;
+    },
+    enabled: !!user?.id && !hasActiveJourney,
+    staleTime: 1000 * 60 * 30,
+  });
+
 
   const hour = new Date().getHours();
   const greeting = useMemo(() => {
@@ -255,7 +222,7 @@ const HojePage: React.FC = () => {
             <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 flex items-center gap-3">
               <div className="h-px w-6 bg-muted-foreground/30" /> Continuar Jornada
             </h2>
-            {loadingJourney ? <JourneySkeleton /> : activeJourney ? (
+            {loadingStats ? <JourneySkeleton /> : activeJourney ? (
               <motion.div 
                 whileHover={{ scale: 1.01 }} 
                 whileTap={{ scale: 0.99 }} 
@@ -265,10 +232,10 @@ const HojePage: React.FC = () => {
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
-                    navigate(journeyStep ? `/jornadas/${activeJourney.id}/step?step=${journeyStep.id}` : `/jornadas/${activeJourney.id}/complete`);
+                    navigate(`/jornadas/${activeJourney.id}`);
                   }
                 }}
-                onClick={() => navigate(journeyStep ? `/jornadas/${activeJourney.id}/step?step=${journeyStep.id}` : `/jornadas/${activeJourney.id}/complete`)} 
+                onClick={() => navigate(`/jornadas/${activeJourney.id}`)} 
                 className="group cursor-pointer p-6 rounded-3xl border border-primary/20 bg-primary/5 hover:border-primary/40 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none transition-all shadow-sm"
               >
                 <div className="flex items-center gap-5">

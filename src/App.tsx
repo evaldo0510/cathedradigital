@@ -478,10 +478,8 @@ const AppLayout: React.FC = () => {
         </div>
       }>
         <ScrollToTop />
-        <CommandCenter />
-        <OfflineIndicator />
-        {/* AIStatusBanner removed */}
-        <PWAInstallPrompt />
+        {/* Moved to the bottom of the layout */}
+
         <div className="flex h-[100dvh] w-full overflow-hidden bg-background selection:bg-primary/20">
           {/* Persistent Sidebar for Desktop */}
           {!isChromeless && (
@@ -664,8 +662,10 @@ const AppLayout: React.FC = () => {
             {[AppRoute.BIBLE, AppRoute.DAILY_LITURGY, AppRoute.LITURGIA, AppRoute.BREVIARY, AppRoute.LECTIO_DIVINA, AppRoute.CATECHISM, AppRoute.MAGISTERIUM].includes(location.pathname as AppRoute) && (
               <ReadingModeToggle />
             )}
+            <CommandCenter />
             <OfflineIndicator />
             <PWAInstallPrompt />
+
           </>
         )}
       </div>
