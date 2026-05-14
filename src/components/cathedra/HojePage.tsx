@@ -157,7 +157,7 @@ const HojePage: React.FC = () => {
   const dailySections = useMemo(() => [
     { title: 'Liturgia', icon: <Icons.Calendar className="w-5 h-5" />, route: `${AppRoute.LITURGIA}?tab=liturgia`, color: 'bg-primary/10 text-primary' },
     { title: 'Oração', icon: <Icons.Volume2 className="w-5 h-5" />, route: AppRoute.ORACAO, color: 'bg-accent/10 text-accent' },
-    { title: 'Bíblia', icon: <Icons.Bible className="w-5 h-5" />, route: AppRoute.BIBLE, color: 'bg-primary/10 text-primary' },
+    { title: 'Comando', icon: <Icons.Search className="w-5 h-5" />, route: AppRoute.BUSCAR, color: 'bg-primary/5 text-primary border border-primary/20' },
     { title: 'Rosário', icon: <Icons.Heart className="w-5 h-5" />, route: AppRoute.ROSARY, color: 'bg-accent/10 text-accent' },
     { title: 'Confissão', icon: <Icons.Flame className="w-5 h-5" />, route: AppRoute.POENITENTIA, color: 'bg-primary/10 text-primary' },
     { title: 'Catecismo', icon: <Icons.Catechism className="w-5 h-5" />, route: AppRoute.CATECHISM, color: 'bg-accent/10 text-accent' },
