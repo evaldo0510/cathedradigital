@@ -493,7 +493,7 @@ const AppLayout: React.FC = () => {
         <div className="flex h-[100dvh] w-full overflow-hidden bg-background selection:bg-primary/20">
           {/* Persistent Sidebar for Desktop */}
           {!isChromeless && (
-            <div className="hidden lg:block h-full w-72 flex-shrink-0 z-[160]">
+            <div className="hidden md:block h-full w-72 flex-shrink-0 z-[160]">
               <CathedralSidebar 
                 user={appUser} 
                 isDark={isDark}
@@ -514,7 +514,7 @@ const AppLayout: React.FC = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.15 }}
-              className="fixed inset-0 z-[150] lg:hidden"
+              className="fixed inset-0 z-[150] md:hidden"
             >
               <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsSidebarOpen(false)} />
               <motion.div
