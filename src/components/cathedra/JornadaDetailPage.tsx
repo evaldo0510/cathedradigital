@@ -134,7 +134,7 @@ const JornadaDetailPage: React.FC = () => {
       {/* Completion Banner */}
       {isJourneyComplete && (
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-          <Card className="border-primary/30 bg-gradient-to-r from-primary/10 to-primary/5">
+          <Card className="premium-card p-0 border-primary/30">
             <CardContent className="p-5 flex items-center gap-4">
               <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
                 <Award className="w-6 h-6 text-primary" />
