@@ -9,7 +9,7 @@ interface CtaBannerSectionProps {
 const CtaBannerSection = ({ onStart }: CtaBannerSectionProps) => (
   <section className="w-full section-spacing">
     <div className="app-container">
-      <HomeCard className="text-center space-y-10 py-20 md:py-28 relative overflow-hidden group">
+      <HomeCard className="text-center space-y-10 py-20 md:py-28 relative overflow-hidden group border-primary/10">
         {/* Subtle background glow */}
         <div className="absolute inset-0 bg-primary/[0.02] pointer-events-none" />
         
@@ -18,10 +18,10 @@ const CtaBannerSection = ({ onStart }: CtaBannerSectionProps) => (
             <Church className="w-16 h-16 text-primary" />
           </div>
           <div className="space-y-4">
-            <h2 className="font-display font-bold leading-tight">
+            <h2 className="font-display font-bold leading-tight text-foreground">
               Sua jornada de <span className="text-primary italic">fé</span> começa aqui.
             </h2>
-            <p className="text-lg text-muted-foreground max-w-lg mx-auto font-serif">
+            <p className="text-lg text-muted-foreground/90 max-w-lg mx-auto font-serif">
               "Não tenhas medo, pois Eu estou contigo."
             </p>
           </div>
