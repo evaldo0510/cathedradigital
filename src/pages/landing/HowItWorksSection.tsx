@@ -64,7 +64,7 @@ const HowItWorksSection = () => {
               <motion.div
                 whileHover={{ scale: 1.15, rotate: -8 }}
                 transition={{ type: "spring", stiffness: 300 }}
-                className="w-16 h-16 mx-auto rounded-[1.5rem] bg-primary/10 border-2 border-primary/20 flex items-center justify-center text-primary relative z-10 backdrop-blur-sm"
+                className="w-16 h-16 mx-auto rounded-[1.5rem] bg-primary/10 border-2 border-primary/20 flex items-center justify-center text-primary relative z-10"
               >
                 {step.icon}
                 {/* Step number badge */}
