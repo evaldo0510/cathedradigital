@@ -56,7 +56,7 @@ const LandingHeader = () => {
     <header
       className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${
         isScrolled
-          ? "py-4 bg-background/80 backdrop-blur-xl border-b border-border/5"
+          ? "py-4 bg-background border-b border-border/5"
           : "py-8 bg-transparent"
       }`}
     >
