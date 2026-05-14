@@ -17,6 +17,7 @@
     "test:pdf": "bun run scripts/generate-pdf-report.ts"
   },
   "dependencies": {
+    "@axe-core/playwright": "^4.11.3",
     "@capacitor/cli": "^6.0.0",
     "@capacitor/core": "^6.0.0",
     "@hookform/resolvers": "^3.10.0",
@@ -81,6 +82,7 @@
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.9.9",
     "vite-plugin-pwa": "^1.2.0",
+    "web-vitals": "^5.2.0",
     "workbox-cacheable-response": "^7.4.0",
     "workbox-expiration": "^7.4.0",
     "workbox-precaching": "^7.4.0",
