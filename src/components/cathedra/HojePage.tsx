@@ -62,7 +62,7 @@ const HojePage: React.FC = () => {
   const { data: officialSaint } = useOfficialSaint();
   
   // Unified dashboard data fetch
-  const { spiritualProfile, nextUp, activeJourneys, isLoading: loadingStats } = useDashboardData(user as any);
+  const { spiritualProfile, nextUp, activeJourneys, weeklyStats, isLoading: loadingStats } = useDashboardData(user as any);
 
   const activeJourney = activeJourneys?.[0] || null;
   const journeyProgress = activeJourney ? { completed: activeJourney.completedSteps, total: activeJourney.totalSteps } : { completed: 0, total: 0 };
