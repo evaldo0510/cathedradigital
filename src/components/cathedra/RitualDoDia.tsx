@@ -23,7 +23,7 @@ const RitualDoDia: React.FC = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-      className="premium-card p-0 shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-sm group transition-all duration-700 hover:shadow-[0_20px_60px_rgb(0,0,0,0.08)]"
+      className="premium-card p-0 subtle-glow transition-all duration-700 hover:shadow-[0_20px_60px_rgb(0,0,0,0.08)]"
     >
 
       {/* Decorative glow */}
