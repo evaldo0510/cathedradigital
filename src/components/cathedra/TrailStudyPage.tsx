@@ -239,20 +239,8 @@ const TrailStudyPage: React.FC = () => {
                   </div>
                 ) : (
                   <div className="space-y-6">
-                    {parseTheologicalReferences(currentStep.content || '').map((seg, i) => (
-                      seg.type === 'bibleRef' && seg.abbr ? (
-                        <BibleVersePopover
-                          key={i}
-                          abbr={seg.abbr}
-                          chapter={seg.chapter!}
-                          verse={seg.verse}
-                          label={seg.value}
-                          onNavigate={handleNavigateToBible}
-                        />
-                      ) : (
-                        <p key={i}>{seg.value}</p>
-                      )
-                    ))}
+                    <p>{currentStep.description}</p>
+                    <p className="text-sm text-muted-foreground">Referência: {currentStep.ref}</p>
                   </div>
                 )}
               </div>
