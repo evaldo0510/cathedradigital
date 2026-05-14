@@ -64,7 +64,7 @@ describe("Button Accessibility & Keyboard Navigation", () => {
     );
 
     const normal = screen.getByRole("button", { name: /normal/i });
-    const loading = screen.getByRole("button"); // The loading one
+    const loading = screen.getByRole("button", { name: /loading/i }); // The loading one
     const after = screen.getByRole("button", { name: /after/i });
 
     await user.tab();
