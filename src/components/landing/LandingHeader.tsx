@@ -134,10 +134,10 @@ const LandingHeader = () => {
           
           <Button
             variant="ghost"
-            className={`rounded-full px-4 sm:px-6 text-muted-foreground font-bold uppercase tracking-[0.2em] text-[10px] h-10 shadow-none transition-all ${isScrolled ? 'text-primary' : ''}`}
+            className={`hidden xs:flex rounded-full px-4 sm:px-6 text-muted-foreground font-bold uppercase tracking-[0.2em] text-[10px] h-10 shadow-none transition-all ${isScrolled ? 'text-primary' : ''}`}
             onClick={() => navigate(AppRoute.LOGIN)}
           >
-            <span className="hidden xs:inline">Começar</span> <ChevronRight className="w-4 h-4 ml-1" />
+            Começar <ChevronRight className="w-4 h-4 ml-1" />
           </Button>
 
           {/* Mobile Menu Toggle */}
