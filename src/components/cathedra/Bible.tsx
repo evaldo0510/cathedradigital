@@ -33,7 +33,7 @@ type BibleCategory = { label: string; icon: React.ElementType; color: string; bg
 
 const BIBLE_CATEGORIES: Record<string, BibleCategory[]> = {
   'Antigo Testamento': [
-    { label: 'Pentateuco', icon: Icons.ScrollText, color: 'text-primary', bgColor: 'bg-muted border-border', books: [
+    { label: 'Pentateuco', icon: Icons.ScrollText, color: 'text-primary', bgColor: 'bg-primary/5 border-primary/10', books: [
       { name: 'Gênesis', abbr: 'Gn', chapters: 50 }, { name: 'Êxodo', abbr: 'Ex', chapters: 40 },
       { name: 'Levítico', abbr: 'Lv', chapters: 27 }, { name: 'Números', abbr: 'Nm', chapters: 36 },
       { name: 'Deuteronômio', abbr: 'Dt', chapters: 34 },
