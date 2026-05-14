@@ -43,7 +43,7 @@ const DailyRoutineSection = () => {
               className="desktop-card flex flex-col space-y-8"
             >
               <div className="flex justify-between items-center">
-                <div className="w-16 h-16 rounded-full bg-primary/5 flex items-center justify-center text-primary">
+                <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center text-primary">
                   {step.icon}
                 </div>
                 <span className="text-xs font-display font-bold text-primary/30 uppercase tracking-widest">

@@ -30,7 +30,7 @@ const TestimonialsSection = () => {
               key={t.name}
               className="desktop-card space-y-8 flex flex-col"
             >
-              <Quote className="w-8 h-8 text-secondary/20" />
+              <Quote className="w-6 h-6 text-secondary/20" />
               <p className="text-base text-muted-foreground leading-relaxed font-serif flex-1">
                 "{t.text}"
               </p>

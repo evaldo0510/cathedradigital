@@ -43,8 +43,8 @@ const FeatureCard = ({ feature, onNavigate }: { feature: typeof features[0]; onN
       className="desktop-card flex flex-col items-center text-center space-y-6 cursor-pointer group"
       onClick={() => onNavigate(feature.route)}
     >
-      <div className="w-16 h-16 rounded-full bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors">
-        {React.cloneElement(feature.icon as React.ReactElement, { className: "w-8 h-8" })}
+      <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors">
+        {React.cloneElement(feature.icon as React.ReactElement, { className: "w-6 h-6" })}
       </div>
       <div className="space-y-2">
         <h3 className="text-xl font-display font-bold">{feature.title}</h3>
@@ -65,10 +65,7 @@ const FeaturesSection = ({ onNavigate }: FeaturesSectionProps) => {
 
   return (
     <section ref={sectionRef} className="w-full section-spacing space-y-20 relative overflow-hidden">
-      {/* Decorative background element - simplified */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-full bg-primary/[0.02] blur-[120px] rounded-full" />
-      </div>
+      {/* Decorative background element removed for minimalism */}
 
       <div className="container px-6 mx-auto relative z-10">
         <div className="text-center space-y-4 max-w-2xl mx-auto mb-16">
