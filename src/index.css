@@ -88,7 +88,7 @@
   a:hover svg.lucide,
   .hover-icon-effect:hover svg.lucide {
     transform: translateY(-1px);
-    stroke-width: 2.5; /* Slightly thicker on hover to feel more "active" */
+    stroke-width: 1.75;
   }
 
   html, body {
