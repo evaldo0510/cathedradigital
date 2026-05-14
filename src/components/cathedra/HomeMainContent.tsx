@@ -94,7 +94,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         </div>
         <HomeCard 
           onClick={() => onNavigate(AppRoute.CATECHISM)}
-          className="p-12 text-center space-y-8 group border-primary/5 hover:border-primary/20"
+          className="p-12 md:p-24 lg:p-32 text-center space-y-12 group border-primary/5 hover:border-primary/20"
         >
           <div className="w-24 h-24 rounded-[2.5rem] bg-secondary/5 flex items-center justify-center text-secondary mx-auto group-hover:rotate-12 transition-transform duration-700">
             <Icons.Catechism className="w-12 h-12" />
