@@ -102,7 +102,7 @@ const CommunitySection = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="p-10 rounded-[3rem] bg-gradient-to-br from-primary/10 via-background to-secondary/10 border border-primary/10 text-center space-y-6"
+          className="p-10 rounded-[3rem] bg-muted border border-border/50 text-center space-y-6"
         >
           <div className="flex -space-x-4 justify-center mb-4">
             {[1, 2, 3, 4, 5].map((i) => (
