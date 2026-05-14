@@ -1,8 +1,8 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { useCatechismSync } from '@/hooks/useCatechismSync';
 import { renderHook, act } from '@testing-library/react';
 
-// Use a simpler mock approach to avoid TS issues with the chainable Supabase client
+// Use a simpler mock approach
 const mockUpsert = vi.fn().mockReturnThis();
 const mockSelect = vi.fn().mockReturnThis();
 const mockSingle = vi.fn();
@@ -25,6 +25,10 @@ vi.mock('@/hooks/useAuth', () => ({
 }));
 
 describe('useCatechismSync - Concurrency and Uniqueness', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it('should use upsert with proper onConflict and ignoreDuplicates false', async () => {
     const mockData = { user_id: 'test-user-id', paragraph: 1, read_at: new Date().toISOString() };
     mockSingle.mockResolvedValue({ data: mockData, error: null });
@@ -54,17 +58,18 @@ describe('useCatechismSync - Concurrency and Uniqueness', () => {
 
     const { result } = renderHook(() => useCatechismSync());
     
-    // Simulate multiple simultaneous calls
-    const calls = [
-      result.current.syncProgress(42),
-      result.current.syncProgress(42),
-      result.current.syncProgress(42)
-    ];
-
-    const results = await Promise.all(calls);
+    // Simulate multiple simultaneous calls within act to handle state updates
+    let results: any[] = [];
+    await act(async () => {
+      results = await Promise.all([
+        result.current.syncProgress(42),
+        result.current.syncProgress(42),
+        result.current.syncProgress(42)
+      ]);
+    });
     
     expect(results.every(r => r.success)).toBe(true);
-    // Even if called multiple times, the underlying logic sends the requests
-    expect(mockUpsert).toHaveBeenCalledTimes(4); // 1 from previous test + 3 here
+    // 3 calls should result in 3 upsert calls
+    expect(mockUpsert).toHaveBeenCalledTimes(3);
   });
 });
