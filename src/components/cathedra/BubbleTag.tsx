@@ -151,7 +151,7 @@ export const BubbleTag = React.forwardRef<HTMLButtonElement, BubbleTagProps>(({
       aria-pressed={isSelected}
       aria-label={`${ariaLabel || `Tema: ${label}`}${isSelected ? ' (Selecionado)' : ''}${isSuggested ? ' (Sugerido)' : ''}`}
       className={`
-        relative rounded-full border transition-all shadow-sm flex items-center group/tag focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:outline-none
+        relative rounded-full border transition-all shadow-sm flex items-center group/tag focus-visible:ring-4 focus-visible:ring-primary/20 focus-visible:border-primary focus-visible:outline-none
         ${sizeClasses[size]}
         ${isSelected 
           ? 'border-primary bg-primary/15 ring-4 ring-primary/5 text-primary shadow-lg scale-105' 
