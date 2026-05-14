@@ -615,25 +615,27 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
                 </motion.div>
               )}
 
-              <div className="grid grid-cols-1 gap-5">
+              <div className="grid grid-cols-1 gap-10">
                 {Object.entries(categories).map(([key, category]) => {
                   const categoryTags = tags.filter(t => t.category?.toLowerCase() === key.toLowerCase());
                   if (categoryTags.length === 0) return null;
 
                   return (
-                    <motion.div key={key} layout className="space-y-2.5">
+                    <motion.div key={key} layout className="space-y-4">
                       <button
                         onClick={() => setExpandedCategory(expandedCategory === key ? null : key)}
-                        className="flex items-center gap-1.5 group w-full"
+                        className="flex items-center gap-3 group w-full"
                       >
-                        {category.icon}
-                        <span className="text-[10px] font-black uppercase tracking-widest text-foreground group-hover:text-primary transition-colors">
+                        <div className="w-8 h-8 rounded-lg bg-muted/30 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+                          {category.icon}
+                        </div>
+                        <span className="text-[11px] font-black uppercase tracking-widest text-foreground/80 group-hover:text-primary transition-colors">
                           {category.label}
                         </span>
-                        <div className="h-px flex-1 bg-border/40" />
-                        <span className="text-[8px] font-black text-muted-foreground/40">{categoryTags.length} temas</span>
+                        <div className="h-px flex-1 bg-border/20 mx-2" />
+                        <span className="text-[9px] font-black text-muted-foreground/30 uppercase tracking-widest">{categoryTags.length} temas</span>
                       </button>
-                      <div className="flex flex-wrap gap-1.5" role="list">
+                      <div className="flex flex-wrap gap-2.5 md:gap-3" role="list">
                         {categoryTags.slice(0, expandedCategory === key ? 100 : 8).map((tag, i) => (
                           <div key={tag.slug} role="listitem">
                             <TagBubble tag={tag} index={i} profileId={profileId} searchMode={searchMode} />
