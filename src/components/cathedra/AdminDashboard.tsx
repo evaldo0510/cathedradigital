@@ -665,7 +665,7 @@ const AdminDashboard: React.FC = () => {
 
           {/* CRM Segment Summary */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <Card className="border-border/40 shadow-none bg-card/50 backdrop-blur-sm">
+            <Card className="border-border/40 shadow-none bg-card ">
               <CardHeader className="pb-2 pt-3 px-3">
                 <CardTitle className="text-[10px] font-black uppercase tracking-widest text-primary">Engajamento por Segmento</CardTitle>
               </CardHeader>
@@ -694,7 +694,7 @@ const AdminDashboard: React.FC = () => {
               </CardContent>
             </Card>
 
-            <Card className="border-border/40 shadow-none bg-card/50 backdrop-blur-sm">
+            <Card className="border-border/40 shadow-none bg-card ">
               <CardHeader className="pb-1 pt-3 px-3 flex flex-row items-center justify-between">
                 <CardTitle className="text-[10px] font-black uppercase tracking-widest text-primary">Conversão PRO</CardTitle>
                 <div className="text-xl font-black text-primary tabular-nums">
@@ -725,7 +725,7 @@ const AdminDashboard: React.FC = () => {
               </Suspense>
             </div>
             
-            <Card className="border-border/40 shadow-none bg-card/50 backdrop-blur-sm">
+            <Card className="border-border/40 shadow-none bg-card ">
               <CardHeader className="pb-3 pt-3 px-3">
                 <CardTitle className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-2">
                   <MessageSquare className="w-3.5 h-3.5" /> Últimas Reflexões

@@ -29,8 +29,8 @@ const ProShowcase: React.FC = () => {
       className="relative overflow-hidden rounded-3xl border border-secondary/30 bg-gradient-to-br from-secondary/10 via-card to-primary/5 shadow-lg"
     >
       {/* Decorative glows */}
-      <div className="absolute -top-24 -right-24 w-72 h-72 bg-secondary/15 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-20 -left-20 w-56 h-56 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -top-24 -right-24 w-72 h-72 bg-secondary/15 rounded-full  pointer-events-none" />
+      <div className="absolute -bottom-20 -left-20 w-56 h-56 bg-primary/10 rounded-full  pointer-events-none" />
 
       <div className="relative z-10 p-6 md:p-8 space-y-6">
         {/* Header */}

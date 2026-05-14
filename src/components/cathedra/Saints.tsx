@@ -527,13 +527,13 @@ const SaintCard: React.FC<{ saint: SaintWithScore; onClick: () => void }> = ({ s
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
         <div className="absolute bottom-4 left-6 flex items-center gap-2">
-          <span className="text-[10px] font-black uppercase tracking-widest text-white/90 bg-primary/80 px-2 py-0.5 rounded-md backdrop-blur-sm">
+          <span className="text-[10px] font-black uppercase tracking-widest text-white/90 bg-primary/80 px-2 py-0.5 rounded-md ">
             {CATEGORY_LABELS[saint.category] || saint.category}
           </span>
         </div>
         <RelevanceBadge
           score={saint.similarityScore}
-          className="absolute top-3 right-3 backdrop-blur-sm"
+          className="absolute top-3 right-3 "
         />
       </div>
       

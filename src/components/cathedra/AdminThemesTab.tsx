@@ -390,7 +390,7 @@ const AdminThemesTab = () => {
                         </div>
                         <div className="grid gap-3">
                           {items.map(item => (
-                            <Card key={item.id} className="bg-card/40 hover:bg-card transition-colors border-border/40 shadow-none">
+                            <Card key={item.id} className="bg-card hover:bg-card transition-colors border-border/40 shadow-none">
                               <CardContent className="p-4">
                                 {editingContent?.id === item.id ? (
                                   <div className="space-y-4">

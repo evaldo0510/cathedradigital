@@ -418,7 +418,7 @@ const Rosary: React.FC = () => {
   return createPortal(
     <div className="fixed inset-0 z-[200] flex flex-col overflow-y-auto"
       style={{ background: 'linear-gradient(180deg, #0B1F3A 0%, #050D19 50%, #0B1F3A 100%)' }}>
-      <div className="flex items-center justify-between p-6 sticky top-0 z-10 bg-inherit/80 backdrop-blur-md">
+      <div className="flex items-center justify-between p-6 sticky top-0 z-10 bg-inherit/80 ">
         <button onClick={() => { setIsPraying(false); }} className="p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all">
           <ArrowLeft className="w-5 h-5 text-secondary/70" />
         </button>
@@ -436,7 +436,7 @@ const Rosary: React.FC = () => {
             </div>
           )}
           
-          <div className="bg-white/[0.03] border border-white/[0.06] rounded-[3rem] p-8 md:p-12 backdrop-blur-sm shadow-2xl shadow-black/50">
+          <div className="bg-white/[0.03] border border-white/[0.06] rounded-[3rem] p-8 md:p-12  shadow-2xl shadow-black/50">
             {renderStep()}
           </div>
         </div>

@@ -355,8 +355,8 @@ const HojePage: React.FC = () => {
               ))}
             </div>
             <div className="relative group">
-              <div className="absolute inset-0 bg-primary/5 blur-xl rounded-[2rem] group-focus-within:bg-primary/10 transition-colors" />
-              <Textarea placeholder="Abra seu coração... O que você gostaria de registrar hoje?" value={journalText} onChange={(e) => setJournalText(e.target.value)} className="relative min-h-[180px] rounded-[2rem] border-border/40 bg-background/60 backdrop-blur-md p-8 text-lg font-serif italic shadow-inner focus:ring-primary/20 transition-all resize-none overflow-hidden" />
+              <div className="absolute inset-0 bg-primary/5  rounded-[2rem] group-focus-within:bg-primary/10 transition-colors" />
+              <Textarea placeholder="Abra seu coração... O que você gostaria de registrar hoje?" value={journalText} onChange={(e) => setJournalText(e.target.value)} className="relative min-h-[180px] rounded-[2rem] border-border/40 bg-background/60  p-8 text-lg font-serif italic shadow-inner focus:ring-primary/20 transition-all resize-none overflow-hidden" />
               <div className="absolute bottom-6 right-6 flex items-center gap-3">
                 {journalSaved && <motion.span initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} className="text-[10px] font-black text-primary uppercase tracking-widest flex items-center gap-1.5"><Icons.Check className="w-3 h-3" /> Salvo</motion.span>}
                 <Button onClick={saveJournal} disabled={!journalText.trim()} className="rounded-full px-6 font-black uppercase text-[10px] tracking-widest h-9">Salvar Reflexão</Button>

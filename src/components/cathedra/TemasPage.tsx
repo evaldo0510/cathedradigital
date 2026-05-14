@@ -143,7 +143,7 @@ const TemasPage = () => {
         </header>
 
         <div className="space-y-4 sm:space-y-8">
-          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 bg-card/60 backdrop-blur-xl p-2 sm:p-3 rounded-2xl sm:rounded-[2.5rem] border border-border/40 shadow-xl sticky top-2 sm:top-4 z-20 transition-all duration-500 hover:shadow-2xl hover:border-primary/20 group/nav">
+          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 bg-card/60  p-2 sm:p-3 rounded-2xl sm:rounded-[2.5rem] border border-border/40 shadow-xl sticky top-2 sm:top-4 z-20 transition-all duration-500 hover:shadow-2xl hover:border-primary/20 group/nav">
             <FuzzySearchInput
               className="flex-1 w-full"
               value={searchQuery}
@@ -176,14 +176,14 @@ const TemasPage = () => {
           </div>
 
           <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent blur-3xl opacity-30 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent  opacity-30 pointer-events-none" />
             
-            <div {...getTabPanelProps('panel-temas', `tab-category-${categories.indexOf(activeCategory)}`, true, "relative overflow-hidden rounded-2xl border border-border/30 bg-card/20 backdrop-blur-sm outline-none")}>
+            <div {...getTabPanelProps('panel-temas', `tab-category-${categories.indexOf(activeCategory)}`, true, "relative overflow-hidden rounded-2xl border border-border/30 bg-card/20  outline-none")}>
               {loadingTags ? (
                 <div className="flex flex-col items-center gap-4 py-12 w-full justify-center">
                   <div className="relative">
                     <Loader2 className="h-10 w-10 animate-spin text-primary/30" />
-                    <div className="absolute inset-0 bg-primary/20 blur-xl animate-pulse rounded-full" />
+                    <div className="absolute inset-0 bg-primary/20  animate-pulse rounded-full" />
                   </div>
                   <span className="text-sm font-bold text-muted-foreground/60 tracking-widest uppercase">Consultando Nexus...</span>
                 </div>

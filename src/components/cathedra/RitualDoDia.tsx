@@ -26,8 +26,8 @@ const RitualDoDia: React.FC = () => {
       className="relative overflow-hidden rounded-3xl border border-secondary/30 bg-gradient-to-br from-secondary/5 via-card to-primary/5 shadow-lg"
     >
       {/* Decorative glow */}
-      <div className="absolute -top-20 -right-20 w-60 h-60 bg-secondary/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -top-20 -right-20 w-60 h-60 bg-secondary/10 rounded-full  pointer-events-none" />
+      <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-primary/10 rounded-full  pointer-events-none" />
 
       <div className="relative z-10 p-5 md:p-6 space-y-4">
         {/* Header */}

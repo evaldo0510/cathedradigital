@@ -49,7 +49,7 @@ const DevDataInspector: React.FC<DevDataInspectorProps> = ({ data }) => {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="absolute bottom-14 right-0 w-80 bg-card border border-border rounded-3xl shadow-2xl overflow-hidden backdrop-blur-xl"
+            className="absolute bottom-14 right-0 w-80 bg-card border border-border rounded-3xl shadow-2xl overflow-hidden "
           >
             <div className="p-4 border-b border-border bg-muted/30 flex items-center justify-between">
               <h4 className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-2">

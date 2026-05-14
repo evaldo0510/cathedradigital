@@ -446,7 +446,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
             placeholder="Buscar tema..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full h-8 pl-8 pr-8 bg-card/50 border border-border/50 rounded-full text-[10px] focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+            className="w-full h-8 pl-8 pr-8 bg-card border border-border/50 rounded-full text-[10px] focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
             aria-label="Buscar tema no Nexus"
 
           />

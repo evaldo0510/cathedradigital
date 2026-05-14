@@ -14,7 +14,7 @@ const AboutPage: React.FC = () => (
     </div>
 
     {/* Quick Navigation Anchors */}
-    <nav className="flex flex-wrap justify-center gap-2 md:gap-8 py-4 border-y border-border/50 sticky top-0 bg-background/95 backdrop-blur-sm z-20">
+    <nav className="flex flex-wrap justify-center gap-2 md:gap-8 py-4 border-y border-border/50 sticky top-0 bg-background  z-20">
       {[
         { label: 'Missão', href: '#missao', icon: <Icons.Target className="w-4 h-4" /> },
         { label: 'História', href: '#historia', icon: <Icons.History className="w-4 h-4" /> },

@@ -116,7 +116,7 @@ const UpgradePage: React.FC = () => {
           className="grid sm:grid-cols-2 gap-6 text-left py-8"
         >
           {BENEFITS.map((benefit, i) => (
-            <div key={i} className="group p-5 rounded-3xl bg-card/50 border border-border/50 hover:border-primary/30 transition-all duration-500 backdrop-blur-sm">
+            <div key={i} className="group p-5 rounded-3xl bg-card border border-border/50 hover:border-primary/30 transition-all duration-500 ">
               <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-4 group-hover:scale-110 transition-transform duration-500">
                 <benefit.icon className="w-5 h-5" />
               </div>

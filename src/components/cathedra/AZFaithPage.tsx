@@ -172,7 +172,7 @@ const AZFaithPage: React.FC = () => {
                     className={`px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-[0.1em] border transition-all relative overflow-hidden group focus-visible:ring-4 focus-visible:ring-primary outline-none shadow-sm
                       ${isActive
                         ? 'bg-primary text-primary-foreground border-primary shadow-lg ring-4 ring-primary/10'
-                        : 'bg-card/40 backdrop-blur-sm text-primary border-primary/20 hover:border-primary/50 hover:shadow-md'
+                        : 'bg-card  text-primary border-primary/20 hover:border-primary/50 hover:shadow-md'
                       }`}
                   >
                     <div className="flex items-center gap-2.5 relative z-10">

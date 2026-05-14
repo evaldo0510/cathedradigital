@@ -61,7 +61,7 @@ const A11yAuditPage = () => {
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="border-primary/20 bg-card/50 backdrop-blur-xl rounded-[2rem] shadow-xl overflow-hidden">
+        <Card className="border-primary/20 bg-card  rounded-[2rem] shadow-xl overflow-hidden">
           <CardHeader className="bg-primary/5 border-b border-border/50">
             <CardTitle className="text-lg font-black uppercase tracking-widest flex items-center gap-2">
               <Icons.ShieldCheck className="w-5 h-5 text-primary" />
@@ -95,7 +95,7 @@ const A11yAuditPage = () => {
           </CardContent>
         </Card>
 
-        <Card className="border-secondary/20 bg-card/50 backdrop-blur-xl rounded-[2rem] shadow-xl overflow-hidden">
+        <Card className="border-secondary/20 bg-card  rounded-[2rem] shadow-xl overflow-hidden">
           <CardHeader className="bg-secondary/5 border-b border-border/50">
             <CardTitle className="text-lg font-black uppercase tracking-widest flex items-center justify-between">
               <div className="flex items-center gap-2">

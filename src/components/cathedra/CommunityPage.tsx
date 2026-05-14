@@ -411,7 +411,7 @@ const CommunityPage: React.FC = () => {
 
             <div className="grid grid-cols-1 gap-4">
               {posts.map(post => (
-                <Card key={post.id} className="cursor-pointer hover:border-primary/40 transition-all rounded-[2rem] bg-card/50 border-border/50 group" onClick={() => openPost(post)}>
+                <Card key={post.id} className="cursor-pointer hover:border-primary/40 transition-all rounded-[2rem] bg-card border-border/50 group" onClick={() => openPost(post)}>
                   <CardContent className="p-6">
                     <div className="flex items-center gap-3 mb-4">
                       <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center font-black text-sm text-primary">
@@ -445,7 +445,7 @@ const CommunityPage: React.FC = () => {
             {lbLoading ? <ListSkeleton count={5} /> : (
               <div className="grid grid-cols-1 gap-3">
                 {leaderboard.map((entry, idx) => (
-                  <div key={entry.id} className="flex items-center gap-4 p-5 bg-card/50 border border-border/50 rounded-[2rem]">
+                  <div key={entry.id} className="flex items-center gap-4 p-5 bg-card border border-border/50 rounded-[2rem]">
                     <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center font-black text-sm">
                       {idx + 1}
                     </div>

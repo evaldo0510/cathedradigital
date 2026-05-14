@@ -74,7 +74,7 @@ const ThemeContentCard = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1 }}
     >
-      <Card className="border-border/40 bg-card/30 hover:bg-card/50 transition-all duration-300 rounded-[2rem] overflow-hidden group hover:shadow-lg hover:border-primary/20">
+      <Card className="border-border/40 bg-card/30 hover:bg-card transition-all duration-300 rounded-[2rem] overflow-hidden group hover:shadow-lg hover:border-primary/20">
         <CardContent className="p-6 sm:p-8 space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -424,8 +424,8 @@ const TemaDetailPage = () => {
               animate={{ opacity: 1, height: 'auto' }}
               className="relative"
             >
-              <div className="absolute inset-0 bg-secondary/5 blur-3xl rounded-[3rem]" />
-              <Card className="border-secondary/30 bg-card/40 backdrop-blur-xl rounded-[2.5rem] overflow-hidden relative z-10 shadow-2xl">
+              <div className="absolute inset-0 bg-secondary/5  rounded-[3rem]" />
+              <Card className="border-secondary/30 bg-card  rounded-[2.5rem] overflow-hidden relative z-10 shadow-2xl">
                 <CardContent className="p-8 sm:p-10">
                   <div className="flex items-center justify-between mb-8">
                     <div className="flex items-center gap-3">
@@ -649,7 +649,7 @@ const TemaDetailPage = () => {
         </div>
 
         <aside className="space-y-6">
-          <div className="bg-card/50 border border-border/40 rounded-[2rem] p-6 space-y-6">
+          <div className="bg-card border border-border/40 rounded-[2rem] p-6 space-y-6">
             <h3 className="text-xs font-black uppercase tracking-widest text-foreground/60">Temas Relacionados</h3>
             <div ref={relatedRef} className="flex flex-wrap gap-2">
               {relatedThemes.length > 0 ? (
