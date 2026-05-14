@@ -1,478 +1,113 @@
-import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Search, Tag, BookOpen, Compass, Sparkles } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { searchUnified, BaseContent, getTagCloud } from '@/services/conteudoService';
 import { useNavigate } from 'react-router-dom';
-import { Icons } from '../../constants';
-import { AppRoute } from '../../types';
-import { supabase } from '@/integrations/supabase/client';
-import { useSearchSaints } from '@/hooks/useSaints';
-import { CATECHISM_LOCAL_DATA } from '@/data/catechism';
-
-interface CommandItem {
-  label: string;
-  description: string;
-  path?: string;
-  icon: React.ReactNode;
-  keywords: string[];
-  type: 'page' | 'bible' | 'community' | 'saint' | 'catechism' | 'journey' | 'glossary' | 'theme';
-}
-
-const PAGE_COMMANDS: CommandItem[] = [
-  { label: 'Hoje', description: 'Liturgia e jornada diária', path: AppRoute.HOJE, icon: <Icons.Home className="w-4 h-4" />, keywords: ['início', 'home', 'painel', 'hoje'], type: 'page' },
-  { label: 'Bíblia Sagrada', description: 'Leitura bíblica', path: AppRoute.BIBLE, icon: <Icons.Book className="w-4 h-4" />, keywords: ['biblia', 'escritura', 'evangelho', 'genesis', 'salmos'], type: 'page' },
-  { label: 'Catecismo (CIC)', description: 'Catecismo da Igreja Católica', path: AppRoute.CATECHISM, icon: <Icons.Cross className="w-4 h-4" />, keywords: ['catecismo', 'cic', 'doutrina', 'fé'], type: 'page' },
-  { label: 'Explorar Catecismo', description: 'Busca e temas do Catecismo', path: AppRoute.CATECHISM_EXPLORER, icon: <Icons.Search className="w-4 h-4" />, keywords: ['catecismo', 'explorar', 'tags', 'temas'], type: 'page' },
-  { label: 'Santos', description: 'Hagiografia', path: AppRoute.SAINTS, icon: <Icons.SaintHalo className="w-4 h-4" />, keywords: ['santos', 'santo', 'santa', 'hagiografia', 'mártir'], type: 'page' },
-  { label: 'Magistério', description: 'Encíclicas e documentos', path: AppRoute.MAGISTERIUM, icon: <Icons.ScrollText className="w-4 h-4" />, keywords: ['magistério', 'encíclica', 'concílio', 'papa', 'vaticano'], type: 'page' },
-  { label: 'Dogmas', description: 'Dogmas da fé católica', path: AppRoute.DOGMAS, icon: <Icons.Star className="w-4 h-4" />, keywords: ['dogma', 'doutrina', 'verdade', 'fé'], type: 'page' },
-  { label: 'Enciclopédia', description: 'Glossário completo da fé', path: AppRoute.ENCYCLOPEDIA, icon: <Icons.Library className="w-4 h-4" />, keywords: ['enciclopédia', 'glossário', 'termos', 'fé'], type: 'page' },
-  { label: 'Aparições', description: 'Manifestações de Nossa Senhora', path: AppRoute.APARICOES, icon: <Icons.Heart className="w-4 h-4" />, keywords: ['aparição', 'nossa senhora', 'maria', 'milagre'], type: 'page' },
-  { label: 'Liturgia Diária', description: 'Leituras do dia', path: `${AppRoute.LITURGIA}?tab=liturgia`, icon: <Icons.Star className="w-4 h-4" />, keywords: ['liturgia', 'leitura', 'missa', 'evangelho do dia'], type: 'page' },
-  { label: 'Santo Rosário', description: 'Oração do terço', path: AppRoute.ROSARY, icon: <Icons.Heart className="w-4 h-4" />, keywords: ['rosário', 'terço', 'ave maria', 'mistérios'], type: 'page' },
-  { label: 'Via Crucis', description: 'Caminho da Cruz', path: AppRoute.VIA_CRUCIS, icon: <Icons.Cross className="w-4 h-4" />, keywords: ['via crucis', 'cruz', 'estações', 'paixão'], type: 'page' },
-  { label: 'Oração e Devoção', description: 'Orações tradicionais', path: AppRoute.ORACAO, icon: <Icons.Heart className="w-4 h-4" />, keywords: ['oração', 'rezar', 'devoção', 'pai nosso'], type: 'page' },
-  { label: 'Confissão', description: 'Guia e exame de consciência', path: AppRoute.POENITENTIA, icon: <Icons.Cross className="w-4 h-4" />, keywords: ['confissão', 'pecado', 'exame', 'consciência', 'penitência'], type: 'page' },
-  { label: 'Suma Teológica', description: 'Opera Omnia de São Tomás', path: AppRoute.AQUINAS_OPERA, icon: <Icons.Aquinas className="w-4 h-4" />, keywords: ['aquinas', 'tomás', 'suma', 'teológica', 'escolástica'], type: 'page' },
-  { label: 'Certamen (Quiz)', description: 'Teste seus conhecimentos', path: AppRoute.CERTAMEN, icon: <Icons.Certamen className="w-4 h-4" />, keywords: ['quiz', 'certamen', 'teste', 'perguntas'], type: 'page' },
-  { label: 'Missal', description: 'Ordo Missae', path: `${AppRoute.LITURGIA}?tab=missal`, icon: <Icons.Book className="w-4 h-4" />, keywords: ['missal', 'missa', 'ordo', 'eucaristia'], type: 'page' },
-  { label: 'Lectio Divina', description: 'Leitura orante', path: AppRoute.LECTIO_DIVINA, icon: <Icons.Feather className="w-4 h-4" />, keywords: ['lectio', 'divina', 'meditação', 'contemplação'], type: 'page' },
-  { label: 'Breviário', description: 'Liturgia das Horas', path: AppRoute.BREVIARY, icon: <Icons.History className="w-4 h-4" />, keywords: ['breviário', 'horas', 'laudes', 'vésperas', 'ofício'], type: 'page' },
-  { label: 'Trilhas de Estudo', description: 'Formação estruturada', path: AppRoute.TRILHAS, icon: <Icons.Layout className="w-4 h-4" />, keywords: ['trilha', 'estudo', 'formação', 'curso'], type: 'page' },
-  { label: 'Logos IA', description: 'Sua dúvida iluminada pela fé', path: AppRoute.STUDY_MODE, icon: <Icons.Search className="w-4 h-4" />, keywords: ['ia', 'logos', 'perguntar', 'ajuda', 'estudo'], type: 'page' },
-  { label: 'Favoritos', description: 'Itens salvos', path: AppRoute.FAVORITES, icon: <Icons.Heart className="w-4 h-4" />, keywords: ['favoritos', 'salvos', 'bookmark'], type: 'page' },
-  { label: 'Jornadas', description: 'Jornadas espirituais guiadas', path: AppRoute.JORNADAS, icon: <Icons.Compass className="w-4 h-4" />, keywords: ['jornadas', 'jornada', 'espiritual', 'caminhada'], type: 'page' },
-  { label: 'Sobre', description: 'Sobre o Cathedra', path: AppRoute.ABOUT, icon: <Icons.Globe className="w-4 h-4" />, keywords: ['sobre', 'manifesto', 'about'], type: 'page' },
-  { label: 'Login', description: 'Acessar conta', path: AppRoute.LOGIN, icon: <Icons.Users className="w-4 h-4" />, keywords: ['login', 'conta', 'entrar', 'cadastro'], type: 'page' },
-  { label: 'Litanias', description: 'Orações de invocação', path: AppRoute.LITANIES, icon: <Icons.Heart className="w-4 h-4" />, keywords: ['litania', 'invocação', 'sagrado coração', 'nossa senhora'], type: 'page' },
-  { label: 'Calendário Litúrgico', description: 'Festas e cores litúrgicas', path: `${AppRoute.LITURGIA}?tab=calendario`, icon: <Icons.History className="w-4 h-4" />, keywords: ['calendário', 'litúrgico', 'festas', 'solenidade', 'cores'], type: 'page' },
-  { label: 'Comunidade', description: 'Discussões teológicas', path: AppRoute.COMMUNITY, icon: <Icons.Message className="w-4 h-4" />, keywords: ['comunidade', 'discussão', 'pergunta', 'fórum', 'teologia'], type: 'page' },
-  { label: 'Busca Global', description: 'Pesquisar em todos os módulos', path: AppRoute.BUSCAR, icon: <Icons.Search className="w-4 h-4" />, keywords: ['buscar', 'pesquisar', 'procurar', 'busca', 'global', 'search'], type: 'page' },
-];
-
-interface UnifiedResult {
-  type: 'page' | 'bible' | 'community' | 'saint' | 'catechism' | 'journey' | 'glossary' | 'theme';
-  label: string;
-  description: string;
-  path?: string;
-  icon: React.ReactNode;
-}
-
-const TYPE_LABELS: Record<string, string> = {
-  bible: 'Bíblia',
-  community: 'Comunidade',
-  saint: 'Santo',
-  catechism: 'Catecismo',
-  journey: 'Jornada',
-  glossary: 'Glossário',
-  theme: 'Tema',
-  page: 'Página',
-};
-
-const TYPE_STYLES: Record<string, string> = {
-  bible: 'bg-blue-500/10 text-blue-600 dark:text-blue-400',
-  community: 'bg-rose-500/10 text-rose-600 dark:text-rose-400',
-  saint: 'bg-amber-500/10 text-amber-600 dark:text-amber-400',
-  catechism: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
-  journey: 'bg-purple-500/10 text-purple-600 dark:text-purple-400',
-  glossary: 'bg-cyan-500/10 text-cyan-600 dark:text-cyan-400',
-  theme: 'bg-primary/10 text-primary',
-  page: 'bg-muted text-muted-foreground',
-};
 
 const CommandCenter: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState('');
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [globalResults, setGlobalResults] = useState<UnifiedResult[]>([]);
-  const [globalLoading, setGlobalLoading] = useState(false);
-  const [lastBible, setLastBible] = useState<{ book_abbr: string; chapter: number } | null>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const searchTimer = useRef<ReturnType<typeof setTimeout>>();
-  const listRef = useRef<HTMLDivElement>(null);
+  const [results, setResults] = useState<BaseContent[]>([]);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const loadLastRead = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-      const { data } = await (supabase as any)
-        .from('bible_chapters_read')
-        .select('book_abbr, chapter')
-        .eq('user_id', user.id)
-        .order('read_at', { ascending: false })
-        .limit(1)
-        .maybeSingle();
-      if (data) setLastBible(data);
-    };
-    loadLastRead();
-  }, []);
-
-  // Page filter (instant)
-  const filteredPages = useMemo(() => {
-    const commands = PAGE_COMMANDS.map(c => {
-      if (c.path === AppRoute.BIBLE && lastBible) {
-        return {
-          ...c,
-          path: `${AppRoute.BIBLE}?book=${lastBible.book_abbr}&ch=${lastBible.chapter}`,
-          description: `Continuar em ${lastBible.book_abbr} ${lastBible.chapter}`,
-        };
-      }
-      return c;
-    });
-    
-    if (!query) return commands;
-    const q = query.toLowerCase();
-    return commands.filter(c => 
-      c.label.toLowerCase().includes(q) ||
-      c.description.toLowerCase().includes(q) ||
-      c.keywords.some(k => k.includes(q))
-    );
-  }, [query, lastBible]);
-
-  // Saints search via DB hook
-  const { data: dbSaintsResults = [] } = useSearchSaints(query);
-  
-  const filteredSaints = useMemo(() => {
-    if (query.length < 2 || !dbSaintsResults.length) return [];
-    
-    const results: UnifiedResult[] = dbSaintsResults.slice(0, 8).map(s => ({
-      type: 'saint' as const,
-      label: s.name,
-      description: `${s.title} • Festa: ${s.feastDay}`,
-      path: `${AppRoute.SAINTS}?saint=${s.id}`,
-      icon: s.image ? (
-        <img src={s.image} alt={s.name} className="w-4 h-4 rounded-full object-cover" />
-      ) : (
-        <Icons.SaintHalo className="w-4 h-4" />
-      ),
-    }));
-
-    return results;
-  }, [query, dbSaintsResults]);
-
-  // Global search (debounced DB queries)
-  const runGlobalSearch = useCallback(async (q: string) => {
-    if (q.length < 3) { setGlobalResults([]); return; }
-    setGlobalLoading(true);
-    const results: UnifiedResult[] = [];
-
-    const promises: Promise<void>[] = [
-      // Bible search
-      supabase.functions.invoke('bible-search', { body: { query: q } })
-        .then(({ data }) => {
-          if (data?.results) {
-            data.results.slice(0, 4).forEach((v: any) => {
-              results.push({
-                type: 'bible',
-                label: `${v.bookAbbrev} ${v.chapter},${v.verse}`,
-                description: v.text?.substring(0, 80) + '...',
-                path: `/bible?book=${v.bookAbbrev}&ch=${v.chapter}`,
-                icon: <Icons.Book className="w-4 h-4" />,
-              });
-            });
-          }
-        }).catch(() => {}),
-
-      // Catechism search
-      (async () => {
-        // Search in local data
-        const localMatches = Object.values(CATECHISM_LOCAL_DATA)
-          .filter((p: any) => p.conteudo.toLowerCase().includes(q.toLowerCase()) || p.titulo.toLowerCase().includes(q.toLowerCase()))
-          .slice(0, 4)
-          .map((p: any) => ({
-            type: 'catechism' as const,
-            label: `§${p.paragraph} (Local)`,
-            description: p.conteudo.substring(0, 80) + '...',
-            path: `${AppRoute.CATECHISM}?p=${p.paragraph}`,
-            icon: <Icons.Cross className="w-4 h-4" />,
-          }));
-        
-        results.push(...localMatches);
-
-        // Search in DB cache (if not enough local matches or to get more)
-        if (results.filter(r => r.type === 'catechism').length < 4) {
-          const { data } = await supabase.from('catechism_cache')
-            .select('paragraph, content')
-            .ilike('content', `%${q}%`)
-            .limit(4);
-          
-          data?.forEach((p: any) => {
-            // Avoid duplicates
-            if (!results.some(r => r.type === 'catechism' && r.label.includes(`§${p.paragraph}`))) {
-              results.push({
-                type: 'catechism',
-                label: `§${p.paragraph}`,
-                description: p.content.substring(0, 80) + '...',
-                path: `${AppRoute.CATECHISM}?p=${p.paragraph}`,
-                icon: <Icons.Cross className="w-4 h-4" />,
-              });
-            }
-          });
-        }
-      })().catch(() => {}),
-
-      // Journeys search
-      Promise.resolve(
-        supabase.from('journeys')
-          .select('id, title, description, category')
-          .or(`title.ilike.%${q}%,description.ilike.%${q}%`)
-          .eq('is_active', true)
-          .limit(4)
-      ).then(({ data }) => {
-          data?.forEach(j => {
-            results.push({
-              type: 'journey',
-              label: j.title,
-              description: j.description?.substring(0, 80) + '...',
-              path: `/jornadas/${j.id}`,
-              icon: <Icons.Compass className="w-4 h-4" />,
-            });
-          });
-        }).catch(() => {}),
-
-      // Glossary search
-      Promise.resolve(
-        supabase.from('glossary')
-          .select('term, definition, category')
-          .or(`term.ilike.%${q}%,definition.ilike.%${q}%`)
-          .limit(4)
-      ).then(({ data }) => {
-          data?.forEach(g => {
-            results.push({
-              type: 'glossary',
-              label: g.term,
-              description: g.definition.substring(0, 80) + '...',
-              path: `${AppRoute.GLOSSARY}?q=${encodeURIComponent(g.term)}`,
-              icon: <Icons.Glossary className="w-4 h-4" />,
-            });
-          });
-        }).catch(() => {}),
-
-      // Themes search
-      Promise.resolve(
-        supabase.from('themes')
-          .select('id, name, slug, description')
-          .or(`name.ilike.%${q}%,description.ilike.%${q}%`)
-          .limit(4)
-      ).then(({ data }) => {
-          data?.forEach(t => {
-            results.push({
-              type: 'theme',
-              label: t.name,
-              description: t.description?.substring(0, 80) + '...',
-              path: `${AppRoute.TEMAS}/${t.slug}`,
-              icon: <Icons.Tag className="w-4 h-4" />,
-            });
-          });
-        }).catch(() => {}),
-
-      // Community search
-      Promise.resolve(
-        supabase.from('community_posts')
-          .select('id, title, content, category')
-          .is('parent_id', null)
-          .or(`title.ilike.%${q}%,content.ilike.%${q}%`)
-          .limit(3)
-      ).then(({ data }) => {
-          data?.forEach(p => {
-            results.push({
-              type: 'community',
-              label: p.title || 'Discussão',
-              description: p.content.substring(0, 80) + '...',
-              path: AppRoute.COMMUNITY,
-              icon: <Icons.Message className="w-4 h-4" />,
-            });
-          });
-        }).catch(() => {}),
-    ];
-
-    await Promise.allSettled(promises);
-    setGlobalResults(results);
-    setGlobalLoading(false);
-  }, []);
-
-  useEffect(() => {
-    if (query.length >= 3) {
-      clearTimeout(searchTimer.current);
-      searchTimer.current = setTimeout(() => runGlobalSearch(query), 400);
-    } else {
-      setGlobalResults([]);
+  const handleSearch = async (val: string) => {
+    setQuery(val);
+    if (val.length < 3) {
+      setResults([]);
+      return;
     }
-    return () => clearTimeout(searchTimer.current);
-  }, [query, runGlobalSearch]);
-
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        setIsOpen(prev => !prev);
-      }
-      if (e.key === 'Escape') setIsOpen(false);
-    };
-
-    const openHandler = () => setIsOpen(true);
-    window.addEventListener('keydown', handler);
-    window.addEventListener('open-command-center', openHandler);
-    return () => {
-      window.removeEventListener('keydown', handler);
-      window.removeEventListener('open-command-center', openHandler);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (isOpen) {
-      setQuery('');
-      setSelectedIndex(0);
-      setGlobalResults([]);
-      setTimeout(() => inputRef.current?.focus(), 50);
-    }
-  }, [isOpen]);
-
-  useEffect(() => { setSelectedIndex(0); }, [query]);
-
-  // Unified results: pages first, then saints (local), then DB results
-  const allItems = useMemo(() => {
-    if (query.length < 2) return filteredPages;
-    return [
-      ...filteredPages.slice(0, 5),
-      ...filteredSaints,
-      ...globalResults,
-    ];
-  }, [filteredPages, filteredSaints, globalResults, query]);
-
-  const go = useCallback((path?: string) => {
-    if (path) navigate(path);
-    setIsOpen(false);
-  }, [navigate]);
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'ArrowDown') { e.preventDefault(); setSelectedIndex(i => Math.min(i + 1, allItems.length - 1)); }
-    else if (e.key === 'ArrowUp') { e.preventDefault(); setSelectedIndex(i => Math.max(i - 1, 0)); }
-    else if (e.key === 'Enter' && allItems[selectedIndex]) { go(allItems[selectedIndex].path); }
+    setLoading(true);
+    const data = await searchUnified(val);
+    setResults(data);
+    setLoading(false);
   };
 
-  // Scroll selected into view
-  useEffect(() => {
-    const el = listRef.current?.children[selectedIndex] as HTMLElement | undefined;
-    el?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-  }, [selectedIndex]);
-
-  if (!isOpen) return null;
-
-  const resultCount = allItems.length;
-  const hasGlobalResults = globalResults.length > 0;
-
   return (
-    <div className="fixed inset-0 z-[200] flex items-start justify-center pt-[12vh]" onClick={() => setIsOpen(false)}>
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
-      <div
-        className="relative w-full max-w-xl bg-card border border-border rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-4 duration-200"
-        onClick={e => e.stopPropagation()}
-      >
-        {/* Search input */}
-        <div className="flex items-center gap-3 px-5 py-4 border-b border-border" role="combobox" aria-haspopup="listbox" aria-expanded={isOpen} aria-owns="command-list">
-          <Icons.Search className="w-5 h-5 text-primary shrink-0" aria-hidden="true" />
-          <input
-            ref={inputRef}
-            value={query}
-            onChange={e => setQuery(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Buscar em tudo: Bíblia, Catecismo, Santos, Jornadas..."
-            className="flex-1 bg-transparent text-foreground text-sm placeholder:text-muted-foreground focus:outline-none"
-            aria-autocomplete="list"
-            aria-controls="command-list"
-            aria-activedescendant={allItems[selectedIndex] ? `item-${selectedIndex}` : undefined}
-          />
-
-          {query && (
-            <button onClick={() => setQuery('')} className="text-muted-foreground hover:text-foreground transition-colors">
-              <Icons.X className="w-4 h-4" />
-            </button>
-          )}
-          <kbd className="hidden sm:inline-flex items-center px-2 py-0.5 rounded bg-muted text-muted-foreground text-[10px] font-mono font-bold">ESC</kbd>
+    <div className="w-full max-w-4xl mx-auto space-y-6">
+      <div className="relative group">
+        <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+          <Search className="w-5 h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
         </div>
-
-        {/* Loading indicator */}
-        {globalLoading && (
-          <div className="h-0.5 w-full bg-muted overflow-hidden">
-            <div className="h-full w-1/3 bg-primary animate-[shimmer_1s_ease-in-out_infinite] rounded-full" 
-                 style={{ animation: 'shimmer 1s ease-in-out infinite', animationName: 'none' }} />
-            <div className="h-full bg-primary/60 animate-pulse rounded-full" />
+        <Input 
+          className="pl-12 h-16 text-lg rounded-3xl border-border/50 bg-background/50 backdrop-blur-sm shadow-xl focus-visible:ring-primary/20"
+          placeholder="Busque por temas, parágrafos ou versículos..."
+          value={query}
+          onChange={(e) => handleSearch(e.target.value)}
+        />
+        {loading && (
+          <div className="absolute right-6 top-1/2 -translate-y-1/2">
+            <div className="w-5 h-5 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
           </div>
         )}
+      </div>
 
-        {/* Results */}
-        <div ref={listRef} id="command-list" role="listbox" className="max-h-[55vh] overflow-y-auto py-1">
-          {query.length >= 2 && !globalLoading && resultCount > 0 && (
-            <div className="px-5 py-2 text-[9px] font-black uppercase tracking-widest text-muted-foreground" aria-live="polite">
-              {resultCount} resultado{resultCount !== 1 ? 's' : ''} encontrado{resultCount !== 1 ? 's' : ''}
-            </div>
-          )}
-
-          {allItems.length === 0 && !globalLoading && (
-            <p className="text-center text-sm text-muted-foreground py-10 italic">
-              {query.length < 2
-                ? 'Digite para buscar em todos os módulos...'
-                : 'Nenhum resultado encontrado.'}
-            </p>
-          )}
-
-          {allItems.map((item, i) => {
-            // Group header
-            const prevType = i > 0 ? allItems[i - 1].type : null;
-            const showGroupHeader = item.type !== prevType && query.length >= 2;
-
-            return (
-              <React.Fragment key={`${item.type}-${item.label}-${i}`}>
-                {showGroupHeader && (
-                  <div className="px-5 pt-3 pb-1 text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-2" role="presentation">
-                    <div className="w-4 h-px bg-border" />
-                    {TYPE_LABELS[item.type] || item.type}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="md:col-span-2 space-y-4">
+          <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Resultados em Destaque</h3>
+          <div className="space-y-3">
+            {results.map((res) => (
+              <Card 
+                key={res.id} 
+                className="group hover:border-primary/50 transition-all cursor-pointer overflow-hidden bg-card/40 backdrop-blur-md"
+                onClick={() => navigate(res.route)}
+              >
+                <CardContent className="p-4 flex gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
+                    {res.type === 'catechism' ? <BookOpen className="w-6 h-6" /> : <Sparkles className="w-6 h-6" />}
                   </div>
-                )}
-                <button
-                  id={`item-${i}`}
-                  role="option"
-                  aria-selected={i === selectedIndex}
-                  onClick={() => go(item.path)}
-                  onMouseEnter={() => setSelectedIndex(i)}
-                  className={`w-full flex items-center gap-3 px-5 py-2.5 text-left transition-all outline-none focus:ring-0 ${
-                    i === selectedIndex 
-                      ? 'bg-primary/10 text-primary' 
-                      : 'text-foreground hover:bg-muted/50'
-                  }`}
-                >
-                  <span className={`p-1.5 rounded-lg ${i === selectedIndex ? 'bg-primary/20' : 'bg-muted'}`}>
-                    {item.icon}
-                  </span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold truncate">{item.label}</p>
-                    <p className="text-[10px] text-muted-foreground truncate">{item.description}</p>
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-xs font-bold text-primary uppercase tracking-wider">{res.type}</span>
+                      <div className="flex gap-1">
+                        {res.tags.slice(0, 2).map(tag => (
+                          <Badge key={tag} variant="secondary" className="text-[9px] h-4">{tag}</Badge>
+                        ))}
+                      </div>
+                    </div>
+                    <h4 className="text-base font-serif font-bold truncate">{res.title}</h4>
+                    <p className="text-sm text-muted-foreground line-clamp-1">{res.summary || res.content}</p>
                   </div>
-                  <span className={`text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${
-                    TYPE_STYLES[item.type] || 'bg-muted text-muted-foreground'
-                  }`}>
-                    {TYPE_LABELS[item.type] || item.type}
-                  </span>
-                </button>
-              </React.Fragment>
-            );
-          })}
+                </CardContent>
+              </Card>
+            ))}
+            {query.length >= 3 && results.length === 0 && !loading && (
+              <div className="p-12 text-center border border-dashed rounded-3xl opacity-50">
+                <p className="text-sm">Nenhum resultado encontrado para "{query}"</p>
+              </div>
+            )}
+          </div>
         </div>
 
+        <div className="space-y-6">
+          <section className="space-y-3">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Tags Globais</h3>
+            <div className="flex flex-wrap gap-2">
+              {['Eucaristia', 'Confissão', 'Oração', 'Dogma', 'Graça', 'Santos'].map(tag => (
+                <button key={tag} className="px-3 py-1.5 rounded-xl bg-muted/50 text-xs font-medium hover:bg-primary hover:text-white transition-all">
+                  #{tag}
+                </button>
+              ))}
+            </div>
+          </section>
 
-        {/* Footer */}
-        <div className="flex items-center justify-between px-5 py-2.5 border-t border-border bg-muted/30">
-          <div className="flex items-center gap-3">
-            <span className="text-[9px] text-muted-foreground">↑↓ navegar</span>
-            <span className="text-[9px] text-muted-foreground">↵ abrir</span>
-          </div>
-          <div className="flex items-center gap-2">
-            {hasGlobalResults && (
-              <span className="text-[9px] text-primary font-medium">
-                Buscando em {new Set(globalResults.map(r => r.type)).size} módulos
-              </span>
-            )}
-            <span className="text-[9px] text-muted-foreground font-mono">⌘K</span>
-          </div>
+          <Card className="bg-primary/5 border-primary/10 rounded-3xl overflow-hidden">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-serif flex items-center gap-2">
+                <Compass className="w-4 h-4 text-primary" /> Trilhas de Estudo
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <p className="text-[11px] text-muted-foreground leading-relaxed">
+                Navegue por coleções curadas de conteúdo organizadas por temas fundamentais da fé.
+              </p>
+              <Button size="sm" variant="outline" className="w-full rounded-xl text-[10px] font-black uppercase tracking-widest border-primary/20 text-primary">
+                Ver Todas as Trilhas
+              </Button>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
