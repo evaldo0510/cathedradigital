@@ -307,44 +307,56 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   whileTap={{ scale: 0.99 }}
                 >
                   <Card 
-                    className="border-primary/40 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border-2 overflow-hidden shadow-xl shadow-primary/5 relative cursor-pointer rounded-xl sm:rounded-2xl focus-visible:ring-4 focus-visible:ring-primary outline-none" 
+                    className="border-primary/30 bg-gradient-to-br from-primary/10 via-background to-background border-2 overflow-hidden shadow-2xl shadow-primary/5 relative cursor-pointer rounded-[2.5rem] focus-visible:ring-4 focus-visible:ring-primary outline-none group hover:border-primary/50 transition-all duration-500" 
                     onClick={() => navigate(`/jornadas/${journey.id}`)}
                     role="button"
                     tabIndex={0}
                     onKeyDown={(e) => e.key === 'Enter' && navigate(`/jornadas/${journey.id}`)}
                     aria-label={`Continuar jornada ${journey.title}, ${pct}% concluída`}
                   >
-
-                    <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
-                      <Icons.Flame className="w-16 h-16 text-primary" />
+                    <div className="absolute top-0 right-0 p-8 opacity-5 pointer-events-none group-hover:scale-125 group-hover:rotate-12 transition-transform duration-700">
+                      <Icons.Flame className="w-24 h-24 text-primary" />
                     </div>
-                    <CardContent className="p-3.5 sm:p-5 space-y-2.5 sm:space-y-3">
-                      <div className="flex items-center justify-between gap-3">
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-bold text-foreground text-base sm:text-lg">{journey.title}</h3>
+                    <CardContent className="p-8 sm:p-10 space-y-6 relative z-10">
+                      <div className="flex items-center justify-between gap-6">
+                        <div className="flex-1 min-w-0 space-y-2">
+                          <div className="flex items-center gap-2">
+                             <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                             <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/70">Jornada em Progresso</p>
+                          </div>
+                          <h3 className="font-black text-foreground text-2xl sm:text-3xl tracking-tight leading-none">{journey.title}</h3>
                           {journey.subtitle && (
-                            <p className="text-xs text-muted-foreground font-serif italic mt-0.5">{journey.subtitle}</p>
+                            <p className="text-sm text-muted-foreground font-serif italic">{journey.subtitle}</p>
                           )}
                         </div>
-                        <div className="relative w-11 h-11 sm:w-14 sm:h-14 flex-shrink-0">
-                          <svg className="w-11 h-11 sm:w-14 sm:h-14 -rotate-90" viewBox="0 0 36 36">
-                            <circle cx="18" cy="18" r="15.5" fill="none" className="stroke-muted" strokeWidth="3" />
-                            <circle cx="18" cy="18" r="15.5" fill="none" className="stroke-primary" strokeWidth="3" strokeDasharray={`${pct} 100`} strokeLinecap="round" />
+                        <div className="relative w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0">
+                          <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
+                            <circle cx="18" cy="18" r="16" fill="none" className="stroke-muted/40" strokeWidth="2.5" />
+                            <motion.circle 
+                              initial={{ pathLength: 0 }}
+                              animate={{ pathLength: pct / 100 }}
+                              transition={{ duration: 1.5, ease: "easeOut" }}
+                              cx="18" cy="18" r="16" fill="none" className="stroke-primary" strokeWidth="3" strokeLinecap="round" 
+                            />
                           </svg>
-                          <span className="absolute inset-0 flex items-center justify-center text-[10px] sm:text-xs font-black text-primary">{pct}%</span>
+                          <span className="absolute inset-0 flex items-center justify-center text-xs sm:text-sm font-black text-primary tabular-nums">{pct}%</span>
                         </div>
                       </div>
-                      <div className="flex items-center justify-between">
-                        <p className="text-[10px] text-muted-foreground font-medium">{done} de {total} etapas</p>
+                      <div className="flex items-center justify-between pt-4 border-t border-border/40">
+                        <div className="flex items-center gap-2">
+                          <Icons.LayoutDashboard className="w-4 h-4 text-muted-foreground/60" />
+                          <p className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">{done} de {total} etapas concluídas</p>
+                        </div>
                         <Button 
-                          size="sm" 
-                          className="bg-primary hover:bg-primary/90 text-white font-black text-[8px] sm:text-[9px] uppercase tracking-[0.15em] px-3 sm:px-5 h-8 sm:h-9 rounded-lg sm:rounded-xl shadow-lg shadow-primary/20 group"
+                          size="lg" 
+                          className="bg-primary hover:bg-primary/90 text-white font-black text-[10px] uppercase tracking-[0.2em] px-8 h-12 rounded-2xl shadow-xl shadow-primary/20 group/btn"
                         >
-                          Continuar <Icons.ChevronRight className="w-3.5 h-3.5 ml-1 group-hover:translate-x-0.5 transition-transform" />
+                          Continuar <Icons.ChevronRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
                         </Button>
                       </div>
                     </CardContent>
                   </Card>
+
                 </motion.div>
               );
             })}
