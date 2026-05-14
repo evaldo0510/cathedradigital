@@ -133,7 +133,7 @@ const ReadingCard: React.FC<{
     initial={{ opacity: 0, y: 24 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.5, delay }}
-    className="space-y-6 bg-card border border-border rounded-[2.5rem] p-8 md:p-10 shadow-sm hover:shadow-md transition-all group relative overflow-hidden"
+    className="premium-card space-y-6 group"
   >
     <div className="absolute top-0 right-0 p-10 opacity-[0.03] group-hover:opacity-[0.07] transition-opacity pointer-events-none scale-150 transform-gpu">{icon}</div>
     <div className="flex items-center justify-between relative z-10">
@@ -176,7 +176,7 @@ const LiturgyPrayerCard: React.FC<{
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.5, delay }}
-    className="p-10 bg-muted/20 border border-border/50 rounded-[2.5rem] space-y-4 shadow-inner"
+    className="premium-card p-10 bg-muted/20 border-border/50 shadow-inner"
   >
     <div className="flex items-center gap-3">
       <div className="w-1.5 h-1.5 rounded-full bg-secondary/40" />
@@ -829,7 +829,7 @@ const LiturgiaPage: React.FC = () => {
                   <motion.div 
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-card border border-border rounded-[2.5rem] p-8 flex flex-col items-center text-center space-y-6 shadow-sm overflow-hidden relative"
+                    className="premium-card p-8 flex flex-col items-center text-center space-y-6 overflow-hidden relative"
                   >
                     <div className="absolute top-0 left-0 w-full h-1.5" style={{ backgroundColor: getLiturgicalColorInfo(readings.cor).hex }} />
                     <div className="flex flex-col items-center gap-4">
@@ -893,14 +893,14 @@ const LiturgiaPage: React.FC = () => {
                 </div>
               )}
 
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="bg-primary text-white rounded-[2rem] p-10 text-center space-y-6 shadow-2xl">
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="premium-card bg-primary text-primary-foreground p-10 text-center space-y-6 shadow-2xl">
                 <Icons.Zap className="w-8 h-8 text-secondary mx-auto" />
                 <p className="text-[10px] font-black uppercase tracking-[0.4em] opacity-60">Reflexão do Dia</p>
                 <p className="text-xl md:text-2xl font-serif italic leading-relaxed">"{padhReflection}"</p>
               </motion.div>
 
               {saintsToday.length > 0 && (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} className="bg-muted/30 border border-border rounded-[2rem] p-8 flex flex-col items-center text-center space-y-4">
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} className="premium-card p-8 flex flex-col items-center text-center space-y-4">
                   <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-secondary p-1 shadow-lg shadow-secondary/10"><img src={saintsToday[0].image} alt={saintsToday[0].name} className="w-full h-full object-cover rounded-full" /></div>
                   <div className="space-y-1">
                     <p className="text-[9px] font-black uppercase tracking-[0.3em] text-secondary">{saintsToday.length > 1 ? 'Santos do Dia' : 'Santo do Dia'}</p>

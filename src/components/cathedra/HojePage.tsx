@@ -29,7 +29,7 @@ const LITURGICAL_QUOTES = [
 ];
 
 const JourneySkeleton = () => (
-  <div className="p-6 rounded-[2rem] border border-border bg-card relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-primary/5 before:to-transparent shadow-sm">
+  <div className="premium-card p-6 relative before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-primary/5 before:to-transparent shadow-sm">
     <div className="flex items-center gap-5">
       <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
         <Icons.Compass className="w-6 h-6 text-primary/20" />
@@ -132,7 +132,7 @@ const HojePage: React.FC = () => {
              {(profile?.streak || 0) > 0 && (
               <motion.div 
                 whileHover={{ scale: 1.05 }}
-                className="flex items-center gap-3 px-6 py-3 rounded-[1.5rem] bg-primary/5 border border-primary/10 shadow-sm backdrop-blur-sm"
+                className="premium-card p-3 md:p-4 rounded-3xl flex items-center gap-3 backdrop-blur-sm"
               >
                 <Icons.Zap className="w-5 h-5 text-primary" />
                 <span className="text-[11px] font-black text-primary uppercase tracking-[0.2em]">{profile?.streak} {profile?.streak === 1 ? 'Dia' : 'Dias'}</span>
@@ -140,7 +140,7 @@ const HojePage: React.FC = () => {
             )}
             <motion.div 
               whileHover={{ scale: 1.05 }}
-              className="flex items-center gap-3 px-6 py-3 rounded-[1.5rem] bg-card/50 border border-border shadow-sm backdrop-blur-sm"
+              className="premium-card p-3 md:p-4 rounded-3xl flex items-center gap-3 backdrop-blur-sm"
             >
               <Icons.Star className="w-5 h-5 text-primary" />
               <span className="text-[11px] font-black text-primary uppercase tracking-[0.2em]">{profile?.xp || 0} XP</span>

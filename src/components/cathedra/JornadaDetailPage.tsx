@@ -112,7 +112,7 @@ const JornadaDetailPage: React.FC = () => {
       </div>
 
       {/* Progress */}
-      <Card className="premium-card p-0">
+      <Card className="premium-card p-0 subtle-glow">
         <CardContent className="p-4 space-y-3">
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Progresso</span>

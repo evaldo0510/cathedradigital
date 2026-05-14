@@ -262,7 +262,7 @@ const GlossaryPage: React.FC = () => {
           <span className="text-xs font-black uppercase tracking-widest">Voltar ao Glossário</span>
         </button>
 
-        <div className="bg-card border border-border rounded-3xl overflow-hidden shadow-2xl">
+        <div className="premium-card p-0">
           <div className="p-8 space-y-6">
             <div className="flex justify-between items-start gap-4">
               <div className="space-y-2">
@@ -472,7 +472,7 @@ const GlossaryPage: React.FC = () => {
               <motion.div 
                 layout
                 key={term.id}
-                className="group relative bg-card border border-border rounded-2xl overflow-hidden hover:border-primary/40 hover:shadow-xl transition-all flex flex-col h-full"
+                className="premium-card p-0 h-full flex flex-col group"
               >
                 <div className="p-5 flex-1 space-y-3">
                   <div className="flex justify-between items-start gap-2">
