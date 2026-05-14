@@ -66,7 +66,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
           </h2>
           <div className="h-px flex-1 bg-border/40" />
         </div>
-        <div className="max-w-2xl mx-auto">
+        <div className="max-w-4xl mx-auto w-full">
           <RitualDoDia />
         </div>
       </section>
