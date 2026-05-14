@@ -4,15 +4,15 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%; /* #FFFFFF */
-    --foreground: 0 0% 10%;   /* #1A1A1A */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 10%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 10%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 10%;
-    --primary: 214 68% 14%;    /* #0B1F3A */
+    --primary: 214 68% 14%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 40 48% 60%;   /* #C8A96A */
+    --secondary: 40 48% 60%;
     --secondary-foreground: 214 68% 14%;
     --muted: 0 0% 96%;
     --muted-foreground: 0 0% 45%;
@@ -24,25 +24,16 @@
     --input: 214 68% 14% / 0.1;
     --ring: 214 68% 14%;
     --radius: 0.5rem;
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 0 0% 10%;
-    --sidebar-primary: 214 68% 14%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 96%;
-    --sidebar-accent-foreground: 214 68% 14%;
-    --sidebar-border: 0 0% 90%;
-    --sidebar-ring: 214 68% 14%;
   }
 
-  /* Universal colors for all modes */
-  .dark, [data-theme='dark'] {
-    --background: 214 68% 4%;    /* Darker background for more depth */
-    --foreground: 0 0% 98%;      /* #F8F9FA */
+  .dark {
+    --background: 214 68% 4%;
+    --foreground: 0 0% 98%;
     --card: 214 68% 6%;
     --card-foreground: 0 0% 98%;
     --popover: 214 68% 5%;
     --popover-foreground: 0 0% 98%;
-    --primary: 40 48% 60%;       /* #C8A96A - Gold becomes primary in dark */
+    --primary: 40 48% 60%;
     --primary-foreground: 214 68% 5%;
     --secondary: 214 40% 12%;
     --secondary-foreground: 40 48% 60%;
@@ -50,83 +41,25 @@
     --muted-foreground: 214 10% 65%;
     --accent: 40 48% 60% / 0.12;
     --accent-foreground: 40 48% 60%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
     --border: 214 40% 18%;
-    --input: 214 40% 18%;
     --ring: 40 48% 60%;
-    --sidebar-background: 214 68% 3%;
-    --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 40 48% 60%;
-    --sidebar-primary-foreground: 214 68% 4%;
-    --sidebar-accent: 214 40% 10%;
-    --sidebar-accent-foreground: 40 48% 60%;
-    --sidebar-border: 214 40% 12%;
-    --sidebar-ring: 40 48% 60%;
   }
-}
 
-@layer base {
   * {
     @apply border-border outline-none;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
-  }
-
-  *:focus-visible {
-    @apply ring-2 ring-primary ring-offset-2 ring-offset-background transition-shadow duration-200;
-  }
-
-
-  /* Refine all Lucide icons for a more professional, premium appearance */
-  svg.lucide {
-    stroke-width: 1.75; /* Slightly thinner for a cleaner, modern premium look */
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), stroke-width 0.3s ease;
-  }
-
-  /* Professional hover state for icons within interactive elements */
-  button:hover svg.lucide, 
-  a:hover svg.lucide,
-  .hover-icon-effect:hover svg.lucide {
-    transform: translateY(-2px);
-    stroke-width: 2;
-  }
-
-  html, body {
-    @apply h-full overflow-x-hidden;
-    font-size: 14px;
-    -webkit-text-size-adjust: 100%;
-    @screen md {
-      font-size: 15px;
-    }
-    @screen lg {
-      font-size: 16px;
-    }
-    @screen xl {
-      font-size: 16.5px;
-    }
-  }
-
-  input, select, textarea {
-    font-size: 16px !important;
   }
 
   body {
     @apply bg-background text-foreground;
-    width: 100% !important;
-    min-height: 100vh !important;
-    display: block !important;
     font-family: 'Inter', sans-serif;
-    text-rendering: optimizeLegibility;
     line-height: 1.6;
-    opacity: 1 !important;
-    visibility: visible !important;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    -webkit-font-smoothing: antialiased;
   }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display text-primary tracking-tight;
+  }
+}
 
   #root {
     width: 100% !important;
