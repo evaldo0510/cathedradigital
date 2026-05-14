@@ -1,4 +1,4 @@
-import { useEffect, lazy, Suspense } from "react";
+import { useEffect, useState, lazy, Suspense } from "react";
 import { Icons } from "@/constants";
 import { useNavigate } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
@@ -24,6 +24,8 @@ const CtaBannerSection = lazy(() => import("./landing/CtaBannerSection"));
 const FeedbackWidget = lazy(() => import("@/components/landing/FeedbackWidget"));
 const CookieConsent = lazy(() => import("@/components/cathedra/CookieConsent"));
 const WhatsAppButton = lazy(() => import("@/components/cathedra/WhatsAppButton"));
+const LogosChat = lazy(() => import("@/components/cathedra/LogosChat"));
+const GuidedJourney = lazy(() => import("@/components/cathedra/GuidedJourney"));
 
 const Index = () => {
   const navigate = useNavigate();
