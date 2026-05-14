@@ -23,11 +23,9 @@ const RitualDoDia: React.FC = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-      className="relative overflow-hidden rounded-3xl border border-secondary/30 bg-gradient-to-br from-secondary/5 via-card to-primary/5 shadow-lg"
+      className="relative overflow-hidden rounded-3xl border border-secondary/20 bg-card shadow-sm"
     >
-      {/* Decorative glow */}
-      <div className="absolute -top-20 -right-20 w-60 h-60 bg-secondary/10 rounded-full  pointer-events-none" />
-      <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-primary/10 rounded-full  pointer-events-none" />
+      {/* Removed decorative glows for a cleaner, premium look */}
 
       <div className="relative z-10 p-5 md:p-6 space-y-4">
         {/* Header */}
@@ -47,7 +45,7 @@ const RitualDoDia: React.FC = () => {
         <SaintOfTheDayCard variant="compact" />
 
         {/* Divider */}
-        <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+        <div className="h-px bg-border/40" />
 
         {/* Bible Verse */}
         <div className="space-y-2" role="article" aria-label="Versículo do Dia">
@@ -62,7 +60,7 @@ const RitualDoDia: React.FC = () => {
         </div>
 
         {/* Divider */}
-        <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+        <div className="h-px bg-border/40" />
 
         {/* Reflection */}
         <div className="space-y-2" role="article" aria-label="Reflexão">
@@ -78,7 +76,7 @@ const RitualDoDia: React.FC = () => {
             text={audioText}
             title="Ouvir o Ritual do Dia"
             variant="default"
-            className="w-full rounded-2xl h-12 bg-primary text-primary-foreground font-bold text-xs uppercase tracking-widest shadow-md hover:shadow-lg transition-shadow focus-visible:ring-4 focus-visible:ring-primary outline-none"
+            className="w-full rounded-2xl h-12 bg-primary text-primary-foreground font-bold text-xs uppercase tracking-widest hover:bg-primary/90 transition-all focus-visible:ring-4 focus-visible:ring-primary outline-none"
           />
         </div>
       </div>
