@@ -1,4 +1,5 @@
 import { useEffect, lazy, Suspense } from "react";
+import { Icons } from "@/constants";
 import { useNavigate } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
 import { AppRoute } from "@/types";
@@ -65,8 +66,8 @@ const Index = () => {
         ]}
       />
       <HeroSection onStart={handleStart} onAbout={() => navigate(AppRoute.ABOUT)} />
-      <Suspense fallback={null}>
-        <div className="w-full flex flex-col items-center" style={{ contentVisibility: 'auto' }}>
+      <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><Icons.Logo className="w-12 h-12 animate-pulse" variant="blue" /></div>}>
+        <main className="w-full flex flex-col items-center" style={{ contentVisibility: 'auto' }}>
           <div id="video"><InstitutionalVideoSection /></div>
           <div id="stats"><StatsSection /></div>
           <div id="features"><FeaturesSection onNavigate={handleNavigate} /></div>
@@ -83,7 +84,7 @@ const Index = () => {
           <FeedbackWidget />
           <WhatsAppButton />
           <CookieConsent />
-        </div>
+        </main>
       </Suspense>
     </div>
   );
