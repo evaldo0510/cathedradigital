@@ -20,7 +20,7 @@ const TestimonialsSection = () => {
     <section className="w-full section-spacing relative overflow-hidden bg-background">
       <div className="app-container space-y-20 relative z-10">
         <div className="text-center space-y-6">
-          <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/40 italic">Comunidade</span>
+          <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/60 italic">Comunidade</span>
           <h2 className="font-display font-bold">Vozes da Comunidade</h2>
         </div>
 

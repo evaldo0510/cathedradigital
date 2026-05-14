@@ -55,10 +55,11 @@ const AboutCreatorSection = () => {
             <div className="flex flex-col sm:flex-row items-center gap-4 pt-4">
               <button 
                 onClick={() => navigate(AppRoute.ABOUT)}
-                className="w-full sm:w-auto px-10 py-3.5 bg-primary text-primary-foreground rounded-full text-xs font-bold uppercase tracking-[0.2em] shadow-none hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-10 py-3.5 bg-primary text-primary-foreground rounded-full text-xs font-bold uppercase tracking-[0.2em] shadow-none hover:bg-primary/90 transition-all flex items-center justify-center gap-2 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                aria-label="Ler o manifesto do Cathedra"
               >
                 Manifesto
-                <Icons.ArrowRight className="w-4 h-4" />
+                <Icons.ArrowRight className="w-4 h-4" aria-hidden="true" />
               </button>
               <div className="flex items-center gap-4 px-4 py-2 text-muted-foreground">
                 <div className="h-px w-8 bg-border" />

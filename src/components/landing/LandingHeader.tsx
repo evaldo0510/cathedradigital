@@ -87,7 +87,10 @@ const LandingHeader = () => {
           <div className="relative">
             <button 
               onClick={() => setShowLangMenu(!showLangMenu)}
-                className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors"
+                className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors focus-visible:ring-1 focus-visible:ring-primary rounded-sm p-1"
+                aria-label="Mudar idioma"
+                aria-haspopup="true"
+                aria-expanded={showLangMenu}
               >
               <Globe className="w-4 h-4" />
               <span className="uppercase">{lang}</span>

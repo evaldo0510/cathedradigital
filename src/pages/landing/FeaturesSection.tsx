@@ -39,18 +39,19 @@ interface FeaturesSectionProps {
 
 const FeatureCard = ({ feature, onNavigate }: { feature: typeof features[0]; onNavigate: (r: string) => void }) => {
   return (
-    <div
-      className="desktop-card flex flex-col items-center text-center space-y-6 cursor-pointer group"
+    <button
+      className="desktop-card flex flex-col items-center text-center space-y-6 cursor-pointer group w-full appearance-none text-left"
       onClick={() => onNavigate(feature.route)}
+      aria-label={`Explorar ${feature.title}`}
     >
-      <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors">
+      <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors" aria-hidden="true">
         {React.cloneElement(feature.icon as React.ReactElement, { className: "w-6 h-6" })}
       </div>
-      <div className="space-y-2">
-        <h3 className="text-xl font-display font-bold">{feature.title}</h3>
-        <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
+      <div className="space-y-2 w-full">
+        <h3 className="text-xl font-display font-bold text-center">{feature.title}</h3>
+        <p className="text-sm text-muted-foreground leading-relaxed text-center">{feature.description}</p>
       </div>
-    </div>
+    </button>
   );
 };
 FeatureCard.displayName = 'FeatureCard';
@@ -67,7 +68,7 @@ const FeaturesSection = ({ onNavigate }: FeaturesSectionProps) => {
     <section ref={sectionRef} className="w-full section-spacing relative overflow-hidden">
       <div className="app-container relative z-10">
         <div className="text-center space-y-6 max-w-3xl mx-auto mb-20 md:mb-24">
-          <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/40 italic">O Caminho</span>
+          <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/60 italic">O Caminho</span>
           <h2 className="font-display font-bold">Arquitetura do Conhecimento</h2>
           <p className="text-muted-foreground font-serif text-lg md:text-xl mx-auto">A luz de Cristo ilumina o coração.</p>
         </div>

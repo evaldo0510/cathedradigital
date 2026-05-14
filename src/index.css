@@ -75,6 +75,11 @@
     touch-action: manipulation;
   }
 
+  *:focus-visible {
+    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background transition-shadow;
+  }
+
+
   /* Refine all Lucide icons for a more professional, premium appearance */
   svg.lucide {
     stroke-width: 1.5; /* Thinner for premium minimalist feel */
@@ -139,9 +144,9 @@
     text-wrap: balance;
   }
 
-  h1 { @apply text-4xl md:text-5xl lg:text-7xl font-bold leading-[1.05]; }
-  h2 { @apply text-3xl md:text-4xl lg:text-5xl font-bold leading-tight; }
-  h3 { @apply text-xl md:text-2xl lg:text-3xl font-bold leading-snug; }
+  h1 { @apply text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold leading-[1.05]; }
+  h2 { @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight; }
+  h3 { @apply text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold leading-snug; }
 
   p { @apply max-w-[65ch] text-muted-foreground leading-relaxed text-base md:text-lg; }
 

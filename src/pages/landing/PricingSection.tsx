@@ -113,6 +113,7 @@ const PricingSection = () => {
                   className={`w-full h-12 rounded-full font-bold uppercase tracking-[0.2em] text-[10px] ${
                     tier.popular ? "bg-primary text-primary-foreground" : "bg-muted/50 hover:bg-muted text-foreground"
                   }`}
+                  aria-label={`Assinar o plano ${tier.name}`}
                 >
                   {tier.button}
                 </Button>

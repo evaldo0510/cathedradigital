@@ -45,7 +45,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
           <div className="relative">
             {/* Avatar container */}
             <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border border-secondary/10 bg-card mx-auto">
-              <img src={logosAvatar} alt="Logos — Mestre Contemplativo" className="w-full h-full object-cover grayscale-[0.2]" />
+              <img src={logosAvatar} alt="Logos — Mestre Contemplativo" className="w-full h-full object-cover grayscale-[0.2]" loading="eager" />
             </div>
           </div>
           <div className="mt-4 px-4 py-1 rounded-full border border-border/5 bg-background text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.3em] inline-block mx-auto">
@@ -88,13 +88,15 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
             size="lg"
             className="w-full h-14 px-8 rounded-full bg-primary text-primary-foreground font-bold uppercase tracking-[0.2em] text-xs shadow-none"
             onClick={onStart}
+            aria-label="Iniciar sua jornada espiritual"
           >
             Iniciar Jornada
           </Button>
           
           <button
-            className="text-[10px] font-bold uppercase tracking-[0.3em] text-muted-foreground hover:text-primary transition-colors py-2"
+            className="text-[10px] font-bold uppercase tracking-[0.3em] text-muted-foreground hover:text-primary transition-colors py-2 focus-visible:ring-1 focus-visible:ring-primary rounded-sm"
             onClick={scrollToVideo}
+            aria-label="Ver vídeo de apresentação"
           >
             Ver Apresentação
           </button>
