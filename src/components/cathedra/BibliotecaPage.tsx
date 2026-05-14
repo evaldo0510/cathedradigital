@@ -121,13 +121,6 @@ const sections = [
         color: 'bg-accent/10 text-accent',
       },
       {
-        title: 'Glossário da Fé',
-        description: 'Definições enriquecidas com reflexões poéticas',
-        icon: <Icons.Glossary className="w-5 h-5" />,
-        route: AppRoute.GLOSSARY,
-        color: 'bg-primary/10 text-primary',
-      },
-      {
         title: 'Os Papas',
         description: 'História dos sucessores de Pedro',
         icon: <Icons.ShieldCheck className="w-5 h-5" />,

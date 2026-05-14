@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { getTrails } from '@/data/trilhas';
 import { normalizeText } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
@@ -99,7 +98,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
     resultLimit: 50,
   });
   const categories = useMemo(() => {
-    const cats = [...new Set((journeys || []).map(j => j.category))];
+    const cats = [...new Set(journeys.map(j => j.category))];
     return cats.sort();
   }, [journeys]);
 
@@ -122,7 +121,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
   const fuzzyResultIds = useMemo(() => {
     if (!fuzzySearch.results) return null;
-    return new Set((fuzzySearch.results || []).map(r => r.id));
+    return new Set(fuzzySearch.results.map(r => r.id));
   }, [fuzzySearch.results]);
 
   const fuzzyScoreMap = useMemo(() => {
@@ -133,7 +132,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
   }, [fuzzySearch.results]);
 
   const filteredJourneys = useMemo(() => {
-    return (journeys || []).filter(j => {
+    return journeys.filter(j => {
       // If fuzzy search is active, use fuzzy results; otherwise show all
       if (searchQuery.trim().length >= 2) {
         if (!fuzzyResultIds || !fuzzyResultIds.has(j.id)) return false;
@@ -174,26 +173,12 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
       if (error) throw error;
       if (!journeyData) { setLoading(false); return; }
       
-      const localTrails = (getTrails() || []).map(t => ({
-        id: t.id,
-        slug: t.slug,
-        title: t.title,
-        description: t.description,
-        difficulty: t.level.toLowerCase(),
-        category: 'formacao',
-        is_active: true,
-        sort_order: -1,
-        steps_count: t.steps.length,
-        is_premium: false,
-        estimated_days: t.steps.length
-      }));
-
-      setJourneys([...localTrails, ...journeyData]);
+      setJourneys(journeyData);
 
       // Reconstruct the steps count map from the view data
       const counts: Record<string, number> = {};
-      [...localTrails, ...journeyData].forEach(j => {
-        counts[j.id] = (j as any).steps_count;
+      journeyData.forEach(j => {
+        counts[j.id] = j.steps_count;
       });
       setStepsCountMap(counts);
 
@@ -235,7 +220,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
     );
   }
 
-  const activeJourneys = (journeys || []).filter(j => progressMap[j.id] > 0 && progressMap[j.id] < (stepsCountMap[j.id] || 0));
+  const activeJourneys = journeys.filter(j => progressMap[j.id] > 0 && progressMap[j.id] < (stepsCountMap[j.id] || 0));
 
   return (
     <>
@@ -307,56 +292,44 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   whileTap={{ scale: 0.99 }}
                 >
                   <Card 
-                    className="premium-card group subtle-glow cursor-pointer" 
+                    className="border-primary/40 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border-2 overflow-hidden shadow-xl shadow-primary/5 relative cursor-pointer rounded-xl sm:rounded-2xl focus-visible:ring-4 focus-visible:ring-primary outline-none" 
                     onClick={() => navigate(`/jornadas/${journey.id}`)}
                     role="button"
                     tabIndex={0}
                     onKeyDown={(e) => e.key === 'Enter' && navigate(`/jornadas/${journey.id}`)}
                     aria-label={`Continuar jornada ${journey.title}, ${pct}% concluída`}
                   >
-                    <div className="absolute top-0 right-0 p-8 opacity-5 pointer-events-none group-hover:scale-125 group-hover:rotate-12 transition-transform duration-700">
-                      <Icons.Flame className="w-24 h-24 text-primary" />
+
+                    <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
+                      <Icons.Flame className="w-16 h-16 text-primary" />
                     </div>
-                    <CardContent className="p-8 sm:p-10 space-y-6 relative z-10">
-                      <div className="flex items-center justify-between gap-6">
-                        <div className="flex-1 min-w-0 space-y-2">
-                          <div className="flex items-center gap-2">
-                             <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                             <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/70">Jornada em Progresso</p>
-                          </div>
-                          <h3 className="font-black text-foreground text-2xl sm:text-3xl tracking-tight leading-none">{journey.title}</h3>
+                    <CardContent className="p-3.5 sm:p-5 space-y-2.5 sm:space-y-3">
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-bold text-foreground text-base sm:text-lg">{journey.title}</h3>
                           {journey.subtitle && (
-                            <p className="text-sm text-muted-foreground font-serif italic">{journey.subtitle}</p>
+                            <p className="text-xs text-muted-foreground font-serif italic mt-0.5">{journey.subtitle}</p>
                           )}
                         </div>
-                        <div className="relative w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0">
-                          <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
-                            <circle cx="18" cy="18" r="16" fill="none" className="stroke-muted/40" strokeWidth="2.5" />
-                            <motion.circle 
-                              initial={{ pathLength: 0 }}
-                              animate={{ pathLength: pct / 100 }}
-                              transition={{ duration: 1.5, ease: "easeOut" }}
-                              cx="18" cy="18" r="16" fill="none" className="stroke-primary" strokeWidth="3" strokeLinecap="round" 
-                            />
+                        <div className="relative w-11 h-11 sm:w-14 sm:h-14 flex-shrink-0">
+                          <svg className="w-11 h-11 sm:w-14 sm:h-14 -rotate-90" viewBox="0 0 36 36">
+                            <circle cx="18" cy="18" r="15.5" fill="none" className="stroke-muted" strokeWidth="3" />
+                            <circle cx="18" cy="18" r="15.5" fill="none" className="stroke-primary" strokeWidth="3" strokeDasharray={`${pct} 100`} strokeLinecap="round" />
                           </svg>
-                          <span className="absolute inset-0 flex items-center justify-center text-xs sm:text-sm font-black text-primary tabular-nums">{pct}%</span>
+                          <span className="absolute inset-0 flex items-center justify-center text-[10px] sm:text-xs font-black text-primary">{pct}%</span>
                         </div>
                       </div>
-                      <div className="flex items-center justify-between pt-4 border-t border-border/40">
-                        <div className="flex items-center gap-2">
-                          <Icons.LayoutDashboard className="w-4 h-4 text-muted-foreground/60" />
-                          <p className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">{done} de {total} etapas concluídas</p>
-                        </div>
+                      <div className="flex items-center justify-between">
+                        <p className="text-[10px] text-muted-foreground font-medium">{done} de {total} etapas</p>
                         <Button 
-                          size="lg" 
-                          className="bg-primary hover:bg-primary/90 text-primary-foreground font-black text-[10px] uppercase tracking-[0.2em] px-8 h-12 rounded-2xl shadow-xl shadow-primary/10 hover:shadow-primary/20 hover:translate-y-[-1px] transition-all group/btn"
+                          size="sm" 
+                          className="bg-primary hover:bg-primary/90 text-white font-black text-[8px] sm:text-[9px] uppercase tracking-[0.15em] px-3 sm:px-5 h-8 sm:h-9 rounded-lg sm:rounded-xl shadow-lg shadow-primary/20 group"
                         >
-                          Continuar <Icons.ChevronRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
+                          Continuar <Icons.ChevronRight className="w-3.5 h-3.5 ml-1 group-hover:translate-x-0.5 transition-transform" />
                         </Button>
                       </div>
                     </CardContent>
                   </Card>
-
                 </motion.div>
               );
             })}
@@ -508,22 +481,14 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   transition={{ type: 'spring', stiffness: 400, damping: 25 }}
                 >
                   <Card
-                    className={`premium-card group ${
+                    className={`overflow-hidden cursor-pointer transition-all group relative focus-visible:ring-4 focus-visible:ring-primary outline-none ${
                       isComplete 
-                        ? 'border-emerald-500/30' 
+                        ? 'border-emerald-500/30 ring-1 ring-emerald-500/10' 
                         : hasStarted 
                           ? 'border-primary/20'
-                          : 'hover:border-primary/30'
+                          : 'border-border hover:border-primary/30'
                     }`}
-                    onClick={() => {
-                      // Check if it's one of our local trilhas
-                      const localTrail = ['intro-faith', 'eucharist-mystery'].includes(journey.slug || journey.id);
-                      if (localTrail) {
-                        navigate(`/trilhas/${journey.slug || journey.id}`);
-                      } else {
-                        navigate(`/jornadas/${journey.id}`);
-                      }
-                    }}
+                    onClick={() => navigate(`/jornadas/${journey.id}`)}
                     role="button"
                     tabIndex={0}
                     onKeyDown={(e) => e.key === 'Enter' && navigate(`/jornadas/${journey.id}`)}
@@ -555,15 +520,15 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap mb-1">
-                              <div className="premium-icon-box flex-shrink-0">
-                                {CATEGORY_ICONS[journey.category] || <Icons.BookOpen className="w-5 h-5 text-primary" />}
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <h2 className="text-lg sm:text-xl font-bold font-serif text-foreground truncate group-hover:text-primary transition-colors">{journey.title}</h2>
-                                {journey.subtitle && (
-                                  <p className="text-[11px] text-muted-foreground/60 font-serif italic truncate">{journey.subtitle}</p>
-                                )}
-                              </div>
+                              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-muted/80 flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity">
+                              {CATEGORY_ICONS[journey.category] || <Icons.BookOpen className="w-4 h-4" />}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h2 className="text-sm sm:text-base font-bold font-serif text-foreground truncate">{journey.title}</h2>
+                              {journey.subtitle && (
+                                <p className="text-xs text-muted-foreground font-serif italic truncate">{journey.subtitle}</p>
+                              )}
+                            </div>
                           </div>
                         </div>
                         <div className="flex items-center gap-2 flex-shrink-0">
@@ -681,11 +646,11 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           </p>
         </div>
         <div className="desktop-card">
-          <h3 className="text-[11px] font-black uppercase tracking-widest text-secondary mb-3">Retenção Diária</h3>
+          <h3 className="text-[11px] font-black uppercase tracking-widest text-secondary mb-3">Mais Populares</h3>
           <div className="space-y-3">
-            <div className="p-3 rounded-xl bg-muted/20 border border-border/40 text-[10px] font-bold text-foreground">Complete seu Ritual do Dia</div>
-            <div className="p-3 rounded-xl bg-muted/20 border border-border/40 text-[10px] font-bold text-foreground">Registre sua Reflexão</div>
-            <div className="p-3 rounded-xl bg-muted/20 border border-border/40 text-[10px] font-bold text-foreground">Ganhe bônus de XP</div>
+            <div className="p-3 rounded-xl bg-muted/20 border border-border/40 text-[10px] font-bold text-foreground">1. O Caminho da Perfeição</div>
+            <div className="p-3 rounded-xl bg-muted/20 border border-border/40 text-[10px] font-bold text-foreground">2. Catecismo Explicado</div>
+            <div className="p-3 rounded-xl bg-muted/20 border border-border/40 text-[10px] font-bold text-foreground">3. Mistérios Gloriosos</div>
           </div>
         </div>
       </aside>

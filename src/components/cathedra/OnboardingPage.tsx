@@ -249,8 +249,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
     const title = categoryNames[recommendedCategory] || 'Formação Integral';
 
     return (
-      <div ref={ref} className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4 py-12">
-
+      <div ref={ref} className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -291,8 +290,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
     const diagProgress = ((diagStep) / QUESTIONS.length) * 100;
 
     return (
-      <div ref={ref} className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4 py-12">
-
+      <div ref={ref} className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4">
         <div className="w-full max-w-lg lg:max-w-4xl space-y-6 lg:space-y-10 text-center">
           <div className="flex justify-center mb-6">
             <Icons.Logo className="w-16 h-16" variant="blue" />
@@ -343,7 +341,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
   const slide = SLIDES[currentSlide];
 
   return (
-    <div ref={ref} className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4 py-12">
+    <div ref={ref} className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4">
       <div className="w-full max-w-lg lg:max-w-5xl space-y-6 lg:space-y-10">
         <div className="flex justify-center">
           <Icons.Logo className="w-20 h-20" variant="blue" />

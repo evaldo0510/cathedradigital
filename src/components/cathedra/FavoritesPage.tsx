@@ -1,73 +1,15 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { Icons } from '../../constants';
 import { useFavorites } from '@/hooks/useFavorites';
-import { Filter, SortDesc, SortAsc, Calendar, ListFilter } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuTrigger,
-  DropdownMenuLabel,
-  DropdownMenuSeparator
-} from "@/components/ui/dropdown-menu";
 
 const FavoritesPage: React.FC = () => {
   const { favorites, removeFavorite } = useFavorites();
   const [filter, setFilter] = useState('all');
-  const [yearFilter, setYearFilter] = useState('all');
-  const [periodFilter, setPeriodFilter] = useState('all');
-  const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
 
-  const typeLabels: Record<string, string> = { 
-    all: 'Todos', 
-    verse: 'Versículos', 
-    catechism: 'Catecismo', 
-    prayer: 'Orações', 
-    study: 'Estudos', 
-    dogma: 'Dogmas',
-    liturgy: 'Liturgia'
-  };
+  const filtered = filter === 'all' ? favorites : favorites.filter(f => f.type === filter);
 
-  const years = useMemo(() => {
-    const set = new Set<string>();
-    favorites.forEach(f => {
-      if (f.metadata?.year) set.add(f.metadata.year);
-    });
-    return ['all', ...Array.from(set).sort()];
-  }, [favorites]);
-
-  const periods = useMemo(() => {
-    const set = new Set<string>();
-    favorites.forEach(f => {
-      if (f.metadata?.period) set.add(f.metadata.period);
-    });
-    return ['all', ...Array.from(set).sort()];
-  }, [favorites]);
-
-  const filtered = useMemo(() => {
-    let result = [...favorites];
-    
-    if (filter !== 'all') {
-      result = result.filter(f => f.type === filter);
-    }
-    
-    if (yearFilter !== 'all') {
-      result = result.filter(f => f.metadata?.year === yearFilter);
-    }
-    
-    if (periodFilter !== 'all') {
-      result = result.filter(f => f.metadata?.period === periodFilter);
-    }
-    
-    result.sort((a, b) => {
-      const timeA = new Date(a.timestamp).getTime();
-      const timeB = new Date(b.timestamp).getTime();
-      return sortOrder === 'desc' ? timeB - timeA : timeA - timeB;
-    });
-    
-    return result;
-  }, [favorites, filter, yearFilter, periodFilter, sortOrder]);
+  const types = ['all', ...Array.from(new Set(favorites.map(f => f.type)))];
+  const typeLabels: Record<string, string> = { all: 'Todos', verse: 'Versículos', catechism: 'Catecismo', prayer: 'Orações', study: 'Estudos', dogma: 'Dogmas' };
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
@@ -81,59 +23,13 @@ const FavoritesPage: React.FC = () => {
       </div>
 
       {favorites.length > 0 && (
-        <div className="flex flex-col space-y-4">
-          <div className="flex flex-wrap gap-2 justify-center">
-            {['all', ...Array.from(new Set(favorites.map(f => f.type)))].map(t => (
-              <button key={t} onClick={() => setFilter(t)}
-                className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${t === filter ? 'bg-foreground text-background' : 'bg-card border border-border text-foreground hover:bg-primary/5'}`}>
-                {typeLabels[t] || t}
-              </button>
-            ))}
-          </div>
-
-          <div className="flex flex-wrap gap-3 justify-center items-center pb-4">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="rounded-xl h-9 px-3 gap-2 border-border/50 text-[10px] font-black uppercase tracking-widest">
-                  <Calendar className="w-3.5 h-3.5 text-primary" />
-                  Ano: {yearFilter === 'all' ? 'Todos' : yearFilter}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="rounded-2xl border-border/40">
-                {years.map(y => (
-                  <DropdownMenuItem key={y} onClick={() => setYearFilter(y)} className="text-xs font-bold">
-                    {y === 'all' ? 'Todos os Anos' : y}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="rounded-xl h-9 px-3 gap-2 border-border/50 text-[10px] font-black uppercase tracking-widest">
-                  <Filter className="w-3.5 h-3.5 text-primary" />
-                  Período: {periodFilter === 'all' ? 'Todos' : periodFilter}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="rounded-2xl border-border/40">
-                {periods.map(p => (
-                  <DropdownMenuItem key={p} onClick={() => setPeriodFilter(p)} className="text-xs font-bold">
-                    {p === 'all' ? 'Todos os Períodos' : p}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={() => setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc')}
-              className="rounded-xl h-9 px-3 gap-2 border-border/50 text-[10px] font-black uppercase tracking-widest"
-            >
-              {sortOrder === 'desc' ? <SortDesc className="w-3.5 h-3.5 text-primary" /> : <SortAsc className="w-3.5 h-3.5 text-primary" />}
-              {sortOrder === 'desc' ? 'Mais Recentes' : 'Mais Antigos'}
-            </Button>
-          </div>
+        <div className="flex flex-wrap gap-2 justify-center">
+          {types.map(t => (
+            <button key={t} onClick={() => setFilter(t)}
+              className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${t === filter ? 'bg-foreground text-background' : 'bg-card border border-border text-foreground hover:bg-primary/5'}`}>
+              {typeLabels[t] || t}
+            </button>
+          ))}
         </div>
       )}
 

@@ -36,7 +36,6 @@ export enum AppRoute {
   ORACAO = '/oracao',
   ADMIN = '/admin',
   GLOSSARY = '/glossary',
-  GLOSSARY_DETAIL = '/glossary/:term',
   APARICOES = '/aparicoes',
   ONBOARDING = '/onboarding',
   ACHIEVEMENTS = '/achievements',

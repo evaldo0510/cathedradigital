@@ -240,7 +240,7 @@ const JornadaCompletePage: React.FC = () => {
         transition={{ duration: 0.6 }}
       >
         <div ref={certificateRef}>
-          <Card className="premium-card p-0 border-primary/20">
+          <Card className="border-primary/30 bg-gradient-to-b from-primary/5 to-background overflow-hidden">
             <CardContent className="p-8 text-center space-y-6">
               <div className="w-20 h-20 mx-auto rounded-full bg-primary/10 border-2 border-primary/30 flex items-center justify-center">
                 <Award className="w-10 h-10 text-primary" />
@@ -288,7 +288,7 @@ const JornadaCompletePage: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <Card className="premium-card p-0 border-primary/10">
+          <Card className="border-primary/20 bg-gradient-to-r from-primary/5 to-accent/5">
             <CardContent className="p-6 space-y-4">
               <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
                 <Star className="w-5 h-5 text-primary" /> Recompensas

@@ -72,7 +72,7 @@ const AboutPage: React.FC = () => (
     </div>
 
     {/* Social Media Section */}
-    <div id="redes-sociais" className="premium-card p-8 md:p-12">
+    <div id="redes-sociais" className="scroll-mt-24 bg-muted/40 rounded-3xl p-8 md:p-12 border border-border/50">
       <div className="text-center space-y-8">
         <div className="space-y-2">
           <h2 className="text-2xl font-serif font-bold text-foreground">Siga-nos nas Redes Sociais</h2>
@@ -92,7 +92,7 @@ const AboutPage: React.FC = () => (
               href={social.url}
               target="_blank"
               rel="noopener noreferrer"
-              className={`premium-card p-4 flex flex-col items-center gap-2 rounded-2xl ${social.color} group`}
+              className={`flex flex-col items-center gap-2 p-4 rounded-2xl bg-background border border-border shadow-sm transition-all hover:shadow-md hover:-translate-y-1 ${social.color} group`}
             >
               <div className="transition-transform duration-300 group-hover:scale-110">
                 {social.icon}
@@ -120,8 +120,8 @@ const AboutPage: React.FC = () => (
           { icon: <Icons.Heart className="w-8 h-8" />, title: 'Oração', desc: 'Rosário, Via Sacra, Missal Romano e um devocionário completo para sua vida espiritual.' },
           { icon: <Icons.Star className="w-8 h-8" />, title: 'Formação', desc: 'Trilhas de estudo progressivas, quizzes de conhecimento e a Suma Teológica de São Tomás.' },
         ].map(pillar => (
-          <div key={pillar.title} className="premium-card p-6 space-y-4 group">
-            <div className="premium-icon-box">
+          <div key={pillar.title} className="bg-card border border-border rounded-3xl p-6 space-y-4 hover:border-primary/30 transition-colors group">
+            <div className="text-primary bg-primary/5 w-16 h-16 rounded-2xl flex items-center justify-center transition-transform duration-500 group-hover:rotate-6">
               {pillar.icon}
             </div>
             <div className="space-y-2">
@@ -135,7 +135,7 @@ const AboutPage: React.FC = () => (
 
     {/* Creator Section */}
     <div className="pt-16 border-t border-border/40">
-      <div className="premium-card p-8 md:p-12 flex flex-col md:flex-row items-center gap-10 md:gap-16">
+      <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16 bg-muted/20 rounded-[2.5rem] p-8 md:p-12 border border-border/30">
         <div className="shrink-0">
           <div className="w-48 h-48 md:w-64 md:h-64 rounded-full border-4 border-background p-2 relative bg-background shadow-2xl overflow-hidden group">
             <div className="w-full h-full rounded-full bg-muted flex items-center justify-center overflow-hidden border border-border group-hover:scale-105 transition-transform duration-700">

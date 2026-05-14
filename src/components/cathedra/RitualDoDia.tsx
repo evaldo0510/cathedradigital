@@ -19,20 +19,22 @@ const RitualDoDia: React.FC = () => {
   const audioText = `Versículo do dia: ${verse.text} — ${verse.ref}. Reflexão: ${reflection}`;
 
   return (
-    <div
-      className="premium-card p-0 subtle-glow transition-all duration-700 shadow-xl"
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+      className="relative overflow-hidden rounded-3xl border border-secondary/30 bg-gradient-to-br from-secondary/5 via-card to-primary/5 shadow-lg"
     >
-
       {/* Decorative glow */}
       <div className="absolute -top-20 -right-20 w-60 h-60 bg-secondary/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="relative z-10 p-8 md:p-12 space-y-8">
+      <div className="relative z-10 p-5 md:p-6 space-y-4">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-secondary" />
-            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-secondary">
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary">
               Ritual do Dia
             </span>
           </div>
@@ -48,36 +50,27 @@ const RitualDoDia: React.FC = () => {
         <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
         {/* Bible Verse */}
-        <div className="space-y-4" role="article" aria-label="Versículo do Dia">
-          <div className="flex items-center gap-3">
-            <div className="premium-icon-box">
-              <BookOpen className="w-4 h-4 text-primary" />
-            </div>
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Scriptura Sacra</span>
+        <div className="space-y-2" role="article" aria-label="Versículo do Dia">
+          <div className="flex items-center gap-2">
+            <BookOpen className="w-3.5 h-3.5 text-primary" />
+            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Versículo do Dia</span>
           </div>
-          <blockquote className="text-xl md:text-3xl font-serif italic text-foreground leading-[1.3] pl-6 border-l-4 border-secondary/30">
+          <blockquote className="text-base md:text-lg font-serif italic text-foreground leading-relaxed pl-4 border-l-2 border-secondary/30">
             "{verse.text}"
           </blockquote>
-          <p className="text-xs font-black text-secondary uppercase tracking-[0.2em] pl-6 opacity-80">— {verse.ref}</p>
+          <p className="text-[10px] font-black text-secondary/70 tracking-wide pl-4">— {verse.ref}</p>
         </div>
-
 
         {/* Divider */}
         <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
         {/* Reflection */}
-        <div className="space-y-4" role="article" aria-label="Reflexão">
-          <div className="flex items-center gap-3">
-            <div className="premium-icon-box">
-              <Sparkles className="w-4 h-4 text-secondary" />
-            </div>
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">Meditatio</span>
-          </div>
-          <p className="text-lg md:text-xl text-foreground/80 leading-relaxed font-serif italic pl-1">
+        <div className="space-y-2" role="article" aria-label="Reflexão">
+          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">✦ Reflexão</span>
+          <p className="text-sm text-foreground/80 leading-relaxed">
             {reflection}
           </p>
         </div>
-
 
         {/* Audio Button */}
         <div className="pt-2">
@@ -85,11 +78,11 @@ const RitualDoDia: React.FC = () => {
             text={audioText}
             title="Ouvir o Ritual do Dia"
             variant="default"
-            className="w-full rounded-2xl h-14 bg-primary text-primary-foreground font-black text-[10px] uppercase tracking-[0.2em] shadow-xl shadow-primary/10 hover:shadow-primary/30 hover:translate-y-[-1px] transition-all focus-visible:ring-2 focus-visible:ring-primary/20 outline-none"
+            className="w-full rounded-2xl h-12 bg-primary text-primary-foreground font-bold text-xs uppercase tracking-widest shadow-md hover:shadow-lg transition-shadow focus-visible:ring-4 focus-visible:ring-primary outline-none"
           />
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

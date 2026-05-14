@@ -49,7 +49,6 @@ const queryClient = new QueryClient({
 const Bible = lazy(() => import('./components/cathedra/Bible'));
 const Catechism = lazy(() => import('./components/cathedra/Catechism'));
 const StudyMode = lazy(() => import('./components/cathedra/StudyMode'));
-const CommandCenterPage = lazy(() => import('./components/cathedra/CommandCenter'));
 const Saints = lazy(() => import('./components/cathedra/Saints'));
 const Magisterium = lazy(() => import('./components/cathedra/Magisterium'));
 // Redundant imports removed (DailyLiturgy, MissalPage)
@@ -100,7 +99,6 @@ const EncyclopediaPage = lazy(() => import('./components/cathedra/EncyclopediaPa
 const ModulesGuidePage = lazy(() => import('./components/cathedra/ModulesGuidePage'));
 const PopesPage = lazy(() => import('./components/cathedra/PopesPage'));
 const GlobalSearchPage = lazy(() => import('./components/cathedra/GlobalSearchPage'));
-const TrailStudyPage = lazy(() => import('./components/cathedra/TrailStudyPage'));
 const MagisteriumViewer = lazy(() => import('./components/cathedra/MagisteriumViewer'));
 const TransactionsPage = lazy(() => import('./components/cathedra/TransactionsPage'));
 const UserTransactionsPage = lazy(() => import('./components/cathedra/UserTransactionsPage'));
@@ -109,12 +107,10 @@ const CatechismHealthCheck = lazy(() => import('./components/cathedra/CatechismH
 const A11yAuditPage = lazy(() => import('./components/cathedra/A11yAuditPage'));
 const SecurityAuditPage = lazy(() => import('./components/cathedra/SecurityAuditPage'));
 const SellerDashboard = lazy(() => import('./components/cathedra/SellerDashboard'));
-const NexusAuditPage = lazy(() => import('./components/cathedra/NexusAuditPage'));
 
 const CatechismDebug = lazy(() => import('./components/cathedra/CatechismDebug'));
 const CatechismIntegrity = lazy(() => import('./components/cathedra/CatechismIntegrity'));
 const CatechismVerification = lazy(() => import('./components/cathedra/CatechismVerification'));
-const CatechismHistory = lazy(() => import('./pages/CatechismHistory'));
 const PartnersPage = lazy(() => import('./components/cathedra/PartnersPage'));
 
 const TransparencyPage = lazy(() => import('./components/cathedra/TransparencyPage'));
@@ -173,7 +169,6 @@ const AppLayout: React.FC = () => {
   const [lang, setLangState] = useState<Language>(getInitialLanguage);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDark, setIsDark] = useState(getInitialTheme);
-  const [showSplash, setShowSplash] = useState(false);
   
   const { user, profile, signOut, isPremium, loading } = useAuth();
   const navigate = useNavigate();
@@ -194,7 +189,6 @@ const AppLayout: React.FC = () => {
     AppRoute.LITURGIA,
     AppRoute.TEMAS,
     AppRoute.AZ_FAITH,
-    AppRoute.GLOSSARY,
     AppRoute.COMMUNITY
   ].includes(location.pathname as AppRoute);
 
@@ -335,6 +329,7 @@ const AppLayout: React.FC = () => {
     }, 500);
     return () => clearInterval(timer);
   }, [isSpeaking]);
+
 
   useEffect(() => {
     if (navigator.onLine) {
@@ -479,15 +474,14 @@ const AppLayout: React.FC = () => {
         </div>
       }>
         <ScrollToTop />
-        <AnimatePresence>
-          {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
-        </AnimatePresence>
-        {/* Moved to the bottom of the layout */}
-
+        <CommandCenter />
+        <OfflineIndicator />
+        {/* AIStatusBanner removed */}
+        <PWAInstallPrompt />
         <div className="flex h-[100dvh] w-full overflow-hidden bg-background selection:bg-primary/20">
           {/* Persistent Sidebar for Desktop */}
           {!isChromeless && (
-            <div className="hidden md:block h-full w-72 flex-shrink-0 z-[160] relative">
+            <div className="hidden lg:block h-full w-72 flex-shrink-0">
               <CathedralSidebar 
                 user={appUser} 
                 isDark={isDark}
@@ -508,7 +502,7 @@ const AppLayout: React.FC = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.15 }}
-              className="fixed inset-0 z-[150] md:hidden"
+              className="fixed inset-0 z-[150] lg:hidden"
             >
               <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsSidebarOpen(false)} />
               <motion.div
@@ -532,10 +526,10 @@ const AppLayout: React.FC = () => {
           )}
         </AnimatePresence>
 
-        <main id="main-content" className="flex-1 overflow-y-auto flex flex-col relative no-scrollbar overscroll-auto touch-pan-y scroll-smooth bg-background z-10">
+        <main id="main-content" className="flex-1 overflow-y-auto flex flex-col relative no-scrollbar overscroll-auto touch-pan-y scroll-smooth bg-background">
           <div className="w-full flex-1 flex flex-col items-center">
             {!isChromeless && (
-              <div className="w-full sticky top-0 z-[140] bg-background/60 backdrop-blur-2xl border-b border-primary/5">
+              <div className="w-full sticky top-0 z-[140] bg-background/90 backdrop-blur-xl border-b border-border">
                 <AppHeader
                   user={appUser}
                   isDark={isDark}
@@ -570,10 +564,8 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.CATECHISM_HEALTH} element={<PageTransition><AdminGuard><CatechismHealthCheck /></AdminGuard></PageTransition>} />
                   <Route path={AppRoute.CATECHISM_VERIFY} element={<PageTransition><AdminGuard><CatechismVerification /></AdminGuard></PageTransition>} />
                   <Route path={AppRoute.MAGISTERIUM_DOC} element={<PageTransition><AuthGuard><MagisteriumViewer /></AuthGuard></PageTransition>} />
-                  <Route path="/catechism/history" element={<PageTransition><AuthGuard><CatechismHistory /></AuthGuard></PageTransition>} />
 
                   <Route path={AppRoute.LITURGIA} element={<PageTransition><AuthGuard><LiturgiaPage /></AuthGuard></PageTransition>} />
-                  <Route path={`${AppRoute.LITURGIA}/:date`} element={<PageTransition><AuthGuard><LiturgiaPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.DAILY_LITURGY} element={<Navigate to={`${AppRoute.LITURGIA}?tab=liturgia`} replace />} />
                   <Route path={AppRoute.ROSARY} element={<PageTransition><AuthGuard><Rosary /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.ORACAO} element={<PageTransition><AuthGuard><PrayerPage /></AuthGuard></PageTransition>} />
@@ -606,7 +598,6 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.PROFILE} element={<PageTransition><AuthGuard><ProfilePage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.POENITENTIA} element={<PageTransition><AuthGuard><PoenitentiaPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.GLOSSARY} element={<PageTransition><AuthGuard><GlossaryPage /></AuthGuard></PageTransition>} />
-                  <Route path={AppRoute.GLOSSARY_DETAIL} element={<PageTransition><AuthGuard><GlossaryPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.AZ_FAITH} element={<PageTransition><AuthGuard><AZFaithPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.ENCYCLOPEDIA} element={<PageTransition><AuthGuard><EncyclopediaPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.APARICOES} element={<PageTransition><AuthGuard><AparicoesPage /></AuthGuard></PageTransition>} />
@@ -634,14 +625,13 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.JORNADA_STEP} element={<PageTransition><AuthGuard><JornadaStepPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.JORNADA_COMPLETE} element={<PageTransition><AuthGuard><JornadaCompletePage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.BIBLIOTECA} element={<PageTransition><AuthGuard><BibliotecaPage /></AuthGuard></PageTransition>} />
-                  <Route path="/trilhas/:slug" element={<PageTransition><AuthGuard><TrailStudyPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.MODULES_GUIDE} element={<PageTransition><ModulesGuidePage /></PageTransition>} />
                   <Route path={AppRoute.TRANSPARENCY} element={<PageTransition><TransparencyPage /></PageTransition>} />
                   <Route path={AppRoute.OFFLINE} element={<PageTransition><OfflinePage /></PageTransition>} />
                   <Route path={AppRoute.CACHE_MANAGER} element={<PageTransition><CacheManager /></PageTransition>} />
 
                   <Route path={AppRoute.POPES} element={<PageTransition><AuthGuard><PopesPage /></AuthGuard></PageTransition>} />
-                  <Route path={AppRoute.BUSCAR} element={<PageTransition><AuthGuard><CommandCenterPage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.BUSCAR} element={<PageTransition><AuthGuard><GlobalSearchPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.ADMIN} element={
                     <PageTransition>
                       <AdminGuard>
@@ -666,10 +656,8 @@ const AppLayout: React.FC = () => {
             {[AppRoute.BIBLE, AppRoute.DAILY_LITURGY, AppRoute.LITURGIA, AppRoute.BREVIARY, AppRoute.LECTIO_DIVINA, AppRoute.CATECHISM, AppRoute.MAGISTERIUM].includes(location.pathname as AppRoute) && (
               <ReadingModeToggle />
             )}
-            <CommandCenter />
             <OfflineIndicator />
             <PWAInstallPrompt />
-
           </>
         )}
       </div>

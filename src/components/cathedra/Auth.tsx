@@ -80,7 +80,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
   };
 
   return (
-    <div className="max-w-md mx-auto space-y-8 relative py-20 px-4">
+    <div className="max-w-md mx-auto space-y-8 relative">
       <button 
         onClick={() => navigate(AppRoute.HOME)}
         className="absolute -top-12 left-0 flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors group"

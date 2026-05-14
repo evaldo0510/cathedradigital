@@ -169,10 +169,10 @@ const AZFaithPage: React.FC = () => {
                     whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => handleTermClick(term)}
-                    className={`premium-card p-4 rounded-2xl text-xs font-black uppercase tracking-[0.1em] border transition-all relative overflow-hidden group focus-visible:ring-4 focus-visible:ring-primary/20 outline-none
+                    className={`px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-[0.1em] border transition-all relative overflow-hidden group focus-visible:ring-4 focus-visible:ring-primary outline-none shadow-sm
                       ${isActive
-                        ? 'bg-primary text-primary-foreground border-primary shadow-xl shadow-primary/20'
-                        : 'bg-card/40 backdrop-blur-sm text-primary border-primary/20 hover:border-primary/50'
+                        ? 'bg-primary text-primary-foreground border-primary shadow-lg ring-4 ring-primary/10'
+                        : 'bg-card/40 backdrop-blur-sm text-primary border-primary/20 hover:border-primary/50 hover:shadow-md'
                       }`}
                   >
                     <div className="flex items-center gap-2.5 relative z-10">

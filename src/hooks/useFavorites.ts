@@ -6,7 +6,6 @@ export interface FavoriteItem {
   title: string;
   content: string;
   timestamp: string;
-  metadata?: Record<string, any>;
 }
 
 const STORAGE_KEY = 'cathedra_favorites';

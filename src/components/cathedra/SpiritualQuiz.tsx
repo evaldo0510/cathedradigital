@@ -2,8 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Heart, BookOpen, Sun, ArrowRight, ArrowLeft, Flame, Brain, Clock, Shield, Eye, Wind, Anchor, Mountain, Users, Church } from 'lucide-react';
-import { Icons } from '@/constants';
-
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -367,90 +365,62 @@ const SpiritualQuiz: React.FC = () => {
 
     return (
       <motion.div
-        initial={{ opacity: 0, scale: 0.98, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        className={`rounded-[3rem] border border-secondary/20 bg-gradient-to-br ${p.bgGradient} p-8 md:p-12 space-y-10 shadow-2xl backdrop-blur-sm`}
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className={`rounded-3xl border border-secondary/20 bg-gradient-to-br ${p.bgGradient} p-6 md:p-8 space-y-6 shadow-lg`}
       >
-        <div className="text-center space-y-4">
-          <motion.div 
-            initial={{ scale: 0, rotate: -20 }} 
-            animate={{ scale: 1.2, rotate: 0 }} 
-            transition={{ type: 'spring', damping: 12, delay: 0.2 }} 
-            className="text-7xl mb-4"
-          >
-            {p.emoji}
-          </motion.div>
-          <p className="text-[10px] font-black uppercase tracking-[0.5em] text-secondary/60">Seu momento espiritual</p>
-          <h2 className={`text-4xl md:text-5xl font-black tracking-tight ${p.color}`}>{p.title}</h2>
-          <div className="max-w-md mx-auto pt-4">
-            <p className="text-lg md:text-xl text-foreground/90 leading-relaxed italic font-serif">
-              "{p.message}"
-            </p>
+        <div className="text-center space-y-3">
+          <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', delay: 0.2 }} className="text-5xl block">{p.emoji}</motion.span>
+          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary">✨ Seu momento atual</p>
+          <h2 className={`text-2xl font-black ${p.color}`}>{p.title}</h2>
+          <p className="text-sm text-foreground/80 leading-relaxed max-w-sm mx-auto italic font-serif">"{p.message}"</p>
+        </div>
+
+        <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+
+        <div className="grid grid-cols-2 gap-3">
+          <div className="p-3 rounded-2xl bg-background/60 border border-border space-y-1 text-center">
+            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">💔 O que te trava</p>
+            <p className="text-sm font-bold text-foreground">{painLabel}</p>
+          </div>
+          <div className="p-3 rounded-2xl bg-background/60 border border-border space-y-1 text-center">
+            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">🔥 Seu caminho</p>
+            <p className="text-sm font-bold text-foreground">{dirLabel}</p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="p-6 rounded-[2rem] bg-white/40 dark:bg-black/20 border border-white/20 dark:border-white/5 space-y-2 text-center shadow-inner backdrop-blur-md">
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-rose-500/70 flex items-center justify-center gap-2">
-              <Heart className="w-3 h-3 fill-rose-500" /> O que te trava
-            </p>
-            <p className="text-base font-bold text-foreground">{painLabel}</p>
-          </div>
-          <div className="p-6 rounded-[2rem] bg-white/40 dark:bg-black/20 border border-white/20 dark:border-white/5 space-y-2 text-center shadow-inner backdrop-blur-md">
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary flex items-center justify-center gap-2">
-              <Sparkles className="w-3 h-3" /> Seu caminho
-            </p>
-            <p className="text-base font-bold text-foreground">{dirLabel}</p>
-          </div>
-        </div>
+        <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
-        <div className="space-y-4 pt-4">
-          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 text-center">Itinerário Recomendado</p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <div className="flex flex-col items-center justify-center gap-2 p-4 rounded-2xl bg-primary/[0.03] border border-primary/10 text-center">
-              <Icons.Compass className="w-5 h-5 text-primary" />
-              <p className="text-[10px] font-bold text-foreground/60 uppercase">Jornada</p>
-              <p className="text-xs font-black text-foreground">{p.journeyName}</p>
+        <div className="space-y-2">
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground text-center">Recomendado para você</p>
+          <div className="space-y-2 text-sm">
+            <div className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-primary/[0.04] border border-primary/10">
+              <Sparkles className="w-4 h-4 text-primary shrink-0" />
+              <span className="text-foreground/80">Jornada: <strong className="text-foreground">{p.journeyName}</strong></span>
             </div>
-            <div className="flex flex-col items-center justify-center gap-2 p-4 rounded-2xl bg-primary/[0.03] border border-primary/10 text-center">
-              <Icons.Themes className="w-5 h-5 text-primary" />
-              <p className="text-[10px] font-bold text-foreground/60 uppercase">Tema Base</p>
-              <p className="text-xs font-black text-foreground">{p.theme}</p>
+            <div className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-primary/[0.04] border border-primary/10">
+              <BookOpen className="w-4 h-4 text-primary shrink-0" />
+              <span className="text-foreground/80">Tema: <strong className="text-foreground">{p.theme}</strong></span>
             </div>
-            <div className="flex flex-col items-center justify-center gap-2 p-4 rounded-2xl bg-secondary/[0.05] border border-secondary/10 text-center">
-              <Brain className="w-5 h-5 text-secondary" />
-              <p className="text-[10px] font-bold text-secondary/60 uppercase">Logos IA</p>
-              <p className="text-xs font-black text-foreground italic">Insight Personalizado</p>
+            <div className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-secondary/[0.06] border border-secondary/10">
+              <Brain className="w-4 h-4 text-secondary shrink-0" />
+              <span className="text-foreground/80">Reflexão com <strong className="text-foreground">Logos IA</strong></span>
             </div>
           </div>
         </div>
 
-        <div className="flex flex-col gap-4 pt-6">
-          <Button 
-            onClick={() => navigate(AppRoute.JORNADAS)} 
-            className="rounded-2xl h-14 gap-3 font-black text-sm uppercase tracking-widest bg-primary text-primary-foreground shadow-xl shadow-primary/20 hover:scale-[1.02] transition-all"
-          >
-            <Sparkles className="w-5 h-5" /> Começar minha Jornada
+        <div className="flex flex-col gap-3">
+          <Button onClick={() => navigate(AppRoute.JORNADAS)} className="rounded-2xl h-12 gap-2 font-bold text-xs uppercase tracking-widest bg-primary text-primary-foreground">
+            <Sparkles className="w-4 h-4" /> Começar agora
           </Button>
-          <div className="flex gap-3">
-            <Button 
-              variant="outline" 
-              onClick={() => navigate(AppRoute.STUDY_MODE)} 
-              className="flex-1 rounded-2xl h-12 gap-2 text-xs font-bold border-secondary/30 text-secondary hover:bg-secondary/5"
-            >
-              <Brain className="w-4 h-4" /> Perguntar ao Logos
-            </Button>
-            <Button 
-              variant="ghost" 
-              onClick={() => { setDone(true); setExisting(result); }} 
-              className="flex-1 rounded-2xl h-12 text-xs font-bold text-muted-foreground hover:bg-muted"
-            >
-              Agora não
-            </Button>
-          </div>
+          <Button variant="outline" onClick={() => navigate(AppRoute.STUDY_MODE)} className="rounded-2xl h-11 gap-2 text-xs font-bold border-secondary/30 text-secondary hover:bg-secondary/5">
+            <Brain className="w-4 h-4" /> Refletir com Logos
+          </Button>
+          <Button variant="ghost" size="sm" onClick={() => { setDone(true); setExisting(result); }} className="text-xs text-muted-foreground">
+            Continuar navegando
+          </Button>
         </div>
       </motion.div>
-
     );
   }
 
@@ -513,7 +483,7 @@ const SpiritualQuiz: React.FC = () => {
         >
           <p className="text-xs text-muted-foreground text-center italic leading-relaxed whitespace-pre-line font-serif">{q.intro}</p>
           <h3 className="text-base font-bold text-foreground text-center leading-snug">{q.question}</h3>
-          <div className="space-y-2.5 max-h-[50vh] overflow-y-auto no-scrollbar pr-1" role="radiogroup" aria-label={q.question}>
+          <div className="space-y-2.5" role="radiogroup" aria-label={q.question}>
             {q.options.map((opt) => (
               <motion.button
                 key={opt.value}

@@ -109,16 +109,6 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       borderColor: 'border-border hover:border-secondary/50',
       suggested: true,
     },
-    {
-      label: 'Glossário da Fé',
-      description: 'Termos e reflexões teológicas',
-      icon: Icons.Glossary,
-      route: AppRoute.GLOSSARY,
-      gradient: 'from-primary/5 to-transparent',
-      iconColor: 'text-primary',
-      borderColor: 'border-border hover:border-secondary/50',
-      suggested: false,
-    },
   ], [nextUp, t, spiritualProfile]);
 
   if (isLoading && !spiritualProfile && activeJourneys.length === 0) {
