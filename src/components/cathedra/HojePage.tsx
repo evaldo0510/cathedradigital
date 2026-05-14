@@ -1,8 +1,6 @@
-import React, { useState, useEffect, useContext, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useContext, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -13,35 +11,11 @@ import RitualDoDia from './RitualDoDia';
 import NexusBubbles from './NexusBubbles';
 import HomeMainDoors from './HomeMainDoors';
 import { useDashboardData } from '@/hooks/useDashboardData';
-import { toast } from 'sonner';
 import SEOHead from '@/components/SEOHead';
 import { useQuery } from '@tanstack/react-query';
 import { DashboardSkeleton } from './DashboardSkeleton';
 import DevDataInspector from './DevDataInspector';
 import { ProfileId } from './SpiritualQuiz';
-
-const LITURGICAL_QUOTES = [
-  '"Sede misericordiosos como vosso Pai é misericordioso." — Lc 6,36',
-  '"Eu sou o caminho, a verdade e a vida." — Jo 14,6',
-  '"Vinde a mim todos vós que estais cansados." — Mt 11,28',
-  '"Não tenhais medo, eu venci o mundo." — Jo 16,33',
-  '"Amai-vos uns aos outros como eu vos amei." — Jo 15,12',
-];
-
-const JourneySkeleton = () => (
-  <div className="premium-card p-6 relative before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-primary/5 before:to-transparent shadow-sm">
-    <div className="flex items-center gap-5">
-      <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
-        <Icons.Compass className="w-6 h-6 text-primary/20" />
-      </div>
-      <div className="flex-1 space-y-3">
-        <div className="h-3 bg-muted/50 rounded-full w-24" />
-        <div className="h-4 bg-muted/60 rounded-full w-2/3" />
-        <div className="h-2 bg-muted/40 rounded-full w-full" />
-      </div>
-    </div>
-  </div>
-);
 
 const HojePage: React.FC = () => {
   const navigate = useNavigate();
@@ -90,12 +64,12 @@ const HojePage: React.FC = () => {
   }, [hour, lang]);
 
   const dailySections = useMemo(() => [
-    { title: 'Ritual do dia', icon: <Icons.Calendar className="w-5 h-5" />, route: `${AppRoute.LITURGIA}?tab=liturgia`, color: 'bg-primary/10 text-primary' },
-    { title: 'Temas principais', icon: <span className="text-xl">🫧</span>, route: AppRoute.TEMAS, color: 'bg-accent/10 text-accent' },
-    { title: 'Catecismo Interativo', icon: <span className="text-xl">📘</span>, route: AppRoute.CATECHISM, color: 'bg-primary/5 text-primary border border-primary/20' },
-    { title: 'Trilhas guiadas', icon: <span className="text-xl">🧭</span>, route: AppRoute.JORNADAS, color: 'bg-accent/10 text-accent' },
-    { title: 'Logos recomenda', icon: <span className="text-xl">🧠</span>, route: AppRoute.STUDY_MODE, color: 'bg-primary/10 text-primary' },
-    { title: 'Favoritos', icon: <span className="text-xl">❤️</span>, route: AppRoute.FAVORITES, color: 'bg-accent/10 text-accent' },
+    { title: 'Ritual do dia', icon: <Icons.Calendar className="w-5 h-5" />, route: `${AppRoute.LITURGIA}?tab=liturgia` },
+    { title: 'Temas principais', icon: <span className="text-xl">🫧</span>, route: AppRoute.TEMAS },
+    { title: 'Catecismo Interativo', icon: <span className="text-xl">📘</span>, route: AppRoute.CATECHISM },
+    { title: 'Trilhas guiadas', icon: <span className="text-xl">🧭</span>, route: AppRoute.JORNADAS },
+    { title: 'Logos recomenda', icon: <span className="text-xl">🧠</span>, route: AppRoute.STUDY_MODE },
+    { title: 'Favoritos', icon: <span className="text-xl">❤️</span>, route: AppRoute.FAVORITES },
   ], []);
 
   return (
@@ -107,9 +81,10 @@ const HojePage: React.FC = () => {
         path="/hoje" 
       />
       {import.meta.env.DEV && <DevDataInspector data={{ officialSaint, allSaintsToday, activeJourney, profile: profile?._sensitive }} />}
+      
       <div className="desktop-main space-y-20 max-w-2xl mx-auto lg:max-w-none lg:mx-0">
-        <div className="text-center space-y-8 md:space-y-10 pt-4 md:pt-0">
-          <div className="space-y-6 md:space-y-8">
+        <div className="text-center space-y-12">
+          <div className="space-y-6">
             <p className="text-[10px] md:text-[12px] font-black uppercase tracking-[0.4em] text-primary/60">
               {greeting}, {profile?.name?.split(' ')[0] || 'fiel'}
             </p>
@@ -117,14 +92,15 @@ const HojePage: React.FC = () => {
               "Nem toda prisão <br /><span className="text-primary italic font-medium">é visível."</span>
             </h1>
           </div>
-          <div className="flex items-center justify-center gap-6 flex-wrap pt-4">
+          
+          <div className="flex items-center justify-center gap-4 flex-wrap">
              {(profile?.streak || 0) > 0 && (
-              <div className="premium-card p-3 md:p-4 rounded-3xl flex items-center gap-3 backdrop-blur-sm">
+              <div className="premium-card p-3 md:p-4 rounded-3xl flex items-center gap-3 backdrop-blur-sm shadow-sm">
                 <Icons.Zap className="w-5 h-5 text-primary" />
                 <span className="text-[11px] font-black text-primary uppercase tracking-[0.2em]">{profile?.streak} {profile?.streak === 1 ? 'Dia' : 'Dias'}</span>
               </div>
             )}
-            <div className="premium-card p-3 md:p-4 rounded-3xl flex items-center gap-3 backdrop-blur-sm">
+            <div className="premium-card p-3 md:p-4 rounded-3xl flex items-center gap-3 backdrop-blur-sm shadow-sm">
               <Icons.Star className="w-5 h-5 text-primary" />
               <span className="text-[11px] font-black text-primary uppercase tracking-[0.2em]">{profile?.xp || 0} XP</span>
             </div>
@@ -136,37 +112,27 @@ const HojePage: React.FC = () => {
             <div className="h-px w-10 bg-primary/20" /> Continuar jornada
           </h2>
           {nextUp ? (
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
+            <div 
               tabIndex={0}
               role="button"
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  navigate(nextUp.route);
-                }
-              }}
               onClick={() => navigate(nextUp.route)}
-              className="premium-card p-8 md:p-12 cursor-pointer hover:shadow-[0_20px_50px_rgba(var(--primary),0.1)] transition-all duration-700 flex flex-col md:flex-row md:items-center justify-between group shadow-xl gap-8"
+              className="premium-card p-8 md:p-12 cursor-pointer transition-all duration-500 flex flex-col md:flex-row md:items-center justify-between group gap-8 border-primary/20"
             >
               <div className="flex items-center gap-6">
-                <div className="w-16 h-16 rounded-[1.25rem] bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-500 shadow-inner">
-                  {nextUp.type === 'bible' ? <Icons.Bible className="w-8 h-8" /> : 
-                   nextUp.type === 'catechism' ? <Icons.Catechism className="w-8 h-8" /> : 
-                   <Icons.Flame className="w-8 h-8" />}
+                <div className="premium-icon-box">
+                  {nextUp.type === 'bible' ? <Icons.Bible className="w-6 h-6" /> : 
+                   nextUp.type === 'catechism' ? <Icons.Catechism className="w-6 h-6" /> : 
+                   <Icons.Flame className="w-6 h-6" />}
                 </div>
                 <div className="space-y-1">
                   <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/60">{nextUp.subtitle}</p>
-                  <h3 className="text-xl md:text-2xl font-bold text-foreground leading-tight group-hover:text-primary transition-colors duration-500">{nextUp.label}</h3>
+                  <h3 className="text-xl md:text-2xl font-bold text-foreground leading-tight group-hover:text-primary transition-colors">{nextUp.label}</h3>
                 </div>
               </div>
-              <div className="w-12 h-12 rounded-full border border-primary/20 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-500 self-end md:self-center">
+              <div className="w-12 h-12 rounded-full border border-primary/20 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all self-end md:self-center">
                 <Icons.ChevronRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
               </div>
-
-            </motion.div>
+            </div>
           ) : (
             <p className="text-sm text-muted-foreground italic px-6 font-serif">Inicie uma leitura para retomar aqui.</p>
           )}
@@ -195,10 +161,9 @@ const HojePage: React.FC = () => {
             <h2 className="text-[11px] font-black uppercase tracking-[0.4em] text-muted-foreground/40 flex items-center gap-4 px-2">
               <div className="h-px w-10 bg-primary/20" /> Itinerarium Mentis
             </h2>
-            {loadingStats ? <JourneySkeleton /> : activeJourney ? (
-              <motion.div 
-                whileHover={{ y: -8 }} 
-                className="premium-card group cursor-pointer p-8 shadow-sm"
+            {activeJourney ? (
+              <div 
+                className="premium-card group cursor-pointer p-8 shadow-sm border-primary/20"
                 onClick={() => navigate(`/jornadas/${activeJourney.id}`)} 
               >
                 <div className="flex items-center gap-6">
@@ -209,18 +174,17 @@ const HojePage: React.FC = () => {
                       <p className="text-[10px] uppercase font-black tracking-widest text-primary/60 mt-1">Sua Jornada Ativa</p>
                     </div>
                     <div className="flex items-center gap-6">
-                      <div className="flex-1 h-3 bg-muted rounded-full overflow-hidden p-[2px]">
-                        <div className="h-full bg-primary rounded-full transition-all duration-1000 ease-out shadow-[0_0_10px_rgba(var(--primary),0.3)]" style={{ width: `${journeyProgress.total > 0 ? (journeyProgress.completed / journeyProgress.total) * 100 : 0}%` }} />
+                      <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
+                        <div className="h-full bg-primary transition-all duration-1000" style={{ width: `${journeyProgress.total > 0 ? (journeyProgress.completed / journeyProgress.total) * 100 : 0}%` }} />
                       </div>
                       <span className="text-xs font-black text-primary uppercase tabular-nums tracking-widest">{journeyProgress.completed}/{journeyProgress.total}</span>
                     </div>
                   </div>
                   <Icons.ChevronRight className="w-7 h-7 text-muted-foreground group-hover:translate-x-1 group-hover:text-primary transition-all" />
                 </div>
-              </motion.div>
+              </div>
             ) : recommendedJourney ? (
-              <motion.div 
-                whileHover={{ y: -8 }} 
+              <div 
                 onClick={() => navigate(`/jornadas/${recommendedJourney.id}`)} 
                 className="premium-card group cursor-pointer p-8 shadow-sm"
               >
@@ -232,15 +196,15 @@ const HojePage: React.FC = () => {
                   </div>
                   <Icons.ChevronRight className="w-7 h-7 text-muted-foreground group-hover:translate-x-1 group-hover:text-primary transition-all" />
                 </div>
-              </motion.div>
+              </div>
             ) : (
               <Button 
                 variant="outline" 
                 onClick={() => navigate(AppRoute.JORNADAS)} 
-                className="w-full h-24 rounded-[2rem] border-dashed border-2 hover:bg-primary/5 group"
+                className="w-full h-24 rounded-[2rem] border-dashed border-2 hover:bg-primary/5"
               >
                 <div className="flex items-center gap-4">
-                  <Icons.Route className="w-6 h-6 text-muted-foreground group-hover:text-primary transition-colors" />
+                  <Icons.Route className="w-6 h-6 text-muted-foreground" />
                   <span className="text-sm font-bold">Descobrir minha próxima Jornada</span>
                 </div>
               </Button>
@@ -253,20 +217,18 @@ const HojePage: React.FC = () => {
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
               {dailySections.map((section) => (
-                <motion.div 
+                <div 
                   key={section.title} 
-                  whileHover={{ y: -8, scale: 1.02 }} 
-                  whileTap={{ scale: 0.95 }} 
                   onClick={() => navigate(section.route)} 
                   className="premium-card group cursor-pointer p-6 shadow-sm text-center space-y-4 rounded-3xl"
                 >
-                  <div className="premium-icon-box mx-auto group-hover:scale-110 transition-transform duration-500">
+                  <div className="premium-icon-box mx-auto group-hover:scale-105 transition-transform duration-500">
                     {section.icon}
                   </div>
                   <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground group-hover:text-primary transition-colors block leading-tight">
                     {section.title}
                   </span>
-                </motion.div>
+                </div>
               ))}
             </div>
           </section>
