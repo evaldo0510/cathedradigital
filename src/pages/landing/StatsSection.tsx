@@ -122,10 +122,10 @@ const StatsSection = () => {
       {/* Parallax decorative elements */}
       <motion.div
         style={{ y: bgY }}
-        className="absolute inset-0 pointer-events-none"
+        className="absolute inset-0 pointer-events-none opacity-20"
       >
-        <div className="absolute top-10 left-10 w-32 h-32 rounded-full bg-primary/5 blur-3xl" />
-        <div className="absolute bottom-10 right-10 w-40 h-40 rounded-full bg-primary/5 blur-3xl" />
+        <div className="absolute top-10 left-10 w-32 h-32 rounded-full bg-primary/5" />
+        <div className="absolute bottom-10 right-10 w-40 h-40 rounded-full bg-primary/5" />
       </motion.div>
 
       {/* Section header */}
