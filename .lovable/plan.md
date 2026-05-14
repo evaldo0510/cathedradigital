@@ -1,23 +1,31 @@
-## Plano de Reforma Visual (Minimalismo Espiritual)
+Refinar a estrutura visual da Home para uma experiência premium, minimalista e organizada.
 
-O objetivo é transformar a interface do Cathedra Digital em algo mais contemplativo, refinado e consistente, removendo o excesso de elementos e padronizando o espaçamento e hierarquia.
+### Alterações Visuais e Estruturais
 
-### 1. CSS Global e Design System (Revisão)
-- Ajustar `src/index.css` para um sistema de espaçamento mais generoso (padrão de 8px/16px/32px/64px).
-- Refinar as sombras: remover sombras fortes/complexas, usar sombras sutis e naturais (`shadow-sm` para cards, `shadow-md` para elementos ativos).
-- Tipografia: Garantir que o `font-display` (Cinzel) e `font-serif` (Playfair) sejam usados apenas para títulos e detalhes contemplativos, mantendo o `Inter` (sans) para legibilidade de textos longos.
+1. **Padronização de Componentes Core**
+   - Atualizar `HomeCard` para um estilo mais "premium": bordas mais suaves, sombras ultra-sutis (`shadow-sm` evoluído) e transições fluidas.
+   - Refinar `HomeButton` para garantir tipografia elegante e foco visual (ring) consistente.
 
-### 2. Layout & Home (Simplificação)
-- **Home (Index.tsx/landing):** Simplificar o Hero. Reduzir animações de partículas/background complexas para algo mais estático e elegante.
-- **Espaçamento:** Aumentar o `padding` e `margin` entre seções na `LandingPage` para criar respiro (respiro é luxo visual).
-- **Container Desktop:** Centralizar todo o conteúdo em `max-w-[1000px]` para uma leitura mais focada (tamanho ideal de linha), evitando que o texto "escorra" de borda a borda em monitores grandes.
+2. **Reestruturação da Home (Index.tsx)**
+   - Remover seções excedentes: Features, Testimonials, Pricing, FAQ e banners genéricos.
+   - Reorganizar a página para conter exclusivamente as 6 seções solicitadas:
+     - **Hero Principal**: Refinado com foco em tipografia e respiro.
+     - **Continue Jornada**: Card contextual para retomar o progresso (ou iniciar).
+     - **Ritual do Dia**: Integração limpa do componente de liturgia diária.
+     - **Temas Principais**: Grid organizado das portas principais (Bíblia, Catecismo, etc.).
+     - **Catecismo**: Destaque elegante para a seção de doutrina.
+     - **Trilhas**: Carrossel ou grid de jornadas de formação.
 
-### 3. Componentes e Cards (Padronização)
-- **Cards:** Criar um padrão único de `rounded-2xl` e remover bordas excessivas ou gradientes de fundo muito agressivos. Manter o foco no conteúdo.
-- **Hierarquia:** Reduzir o peso visual de botões secundários (usar `outline` ou `ghost` padronizado).
-- **Desalinhamento:** Revisar o `desktop-layout` no CSS para forçar alinhamento centralizado com margens simétricas.
+3. **Layout e Hierarquia**
+   - Centralizar todo o conteúdo desktop em um container focado (ex: `max-w-4xl` ou `max-w-5xl`).
+   - Aumentar o espaçamento vertical entre seções para criar o "respiro visual" solicitado.
+   - Eliminar glows, gradientes excessivos e decorações que causam ruído visual.
 
-### 4. Execução Técnica
-- Vou começar refatorando o `index.css` para padronizar as variáveis de sombra e espaçamento.
-- Em seguida, atualizarei os componentes de layout (`Sidebar.tsx`, `AppHeader.tsx`, `Footer.tsx`) para refletir o design limpo.
-- Por fim, aplicarei o design simplificado nas seções da Home, reduzindo a complexidade de `HeroContent.tsx`.
+4. **Acessibilidade e Foco**
+   - Garantir que cada elemento clicável tenha suporte total a teclado e foco visível.
+   - Manter a navegação lógica e intuitiva.
+
+### Detalhes Técnicos
+- Utilizar `framer-motion` apenas para transições sutis de entrada.
+- Padronizar o uso de tokens de design (cores, spacing) via Tailwind.
+- Otimizar o carregamento via Suspense e Skeletons refinados.
