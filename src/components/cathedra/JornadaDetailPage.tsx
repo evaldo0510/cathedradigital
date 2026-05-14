@@ -169,7 +169,7 @@ const JornadaDetailPage: React.FC = () => {
               <Card className={`premium-card p-0 rounded-2xl ${isNext ? 'border-primary/40' : 'border-border/40'} ${isCompleted ? 'bg-primary/5' : ''} ${isStepLocked ? 'opacity-60' : ''}`}>
                 <CardContent className="p-5 flex items-center gap-4">
                   {/* Step number / status */}
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-bold ${
+                  <div className="premium-icon-box p-0 rounded-full text-sm font-bold flex-shrink-0 flex items-center justify-center
                     isCompleted
                       ? 'bg-primary text-primary-foreground'
                       : isStepLocked
