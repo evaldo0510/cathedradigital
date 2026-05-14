@@ -34,14 +34,8 @@ export const DashboardSkeleton: React.FC = () => {
 
         {/* Ritual Skeleton */}
         <div className="h-48 bg-muted rounded-3xl" />
+        </div>
       </div>
-
-      {/* Sidebar Skeleton */}
-      <aside className="desktop-aside space-y-6 hidden xl:block">
-        <div className="p-6 rounded-3xl bg-muted h-64" />
-        <div className="p-6 rounded-3xl bg-muted h-32" />
-        <div className="p-6 rounded-3xl bg-muted h-48" />
-      </aside>
     </div>
   );
 };
