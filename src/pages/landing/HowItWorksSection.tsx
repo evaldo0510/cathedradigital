@@ -31,7 +31,7 @@ const HowItWorksSection = () => {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.3 }}
-            className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60 block"
+            className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60 block italic"
           >
             Passo a passo
           </motion.span>
