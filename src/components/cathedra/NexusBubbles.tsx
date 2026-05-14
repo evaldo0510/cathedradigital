@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { normalizeText } from '@/lib/utils';
 import { fetchNexusTagContent, type TagContent, exportNexusLogs } from '@/lib/nexusContent';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import { AppRoute } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
 import { Loader2, ExternalLink, Sparkles, Search, X, Heart, Church, Flame, BookOpen, Shield, Compass, Hash, Filter, AlertCircle, Info, Timer, FileJson, Download as DownloadIcon, Database } from 'lucide-react';
