@@ -829,7 +829,7 @@ const LiturgiaPage: React.FC = () => {
                   <motion.div 
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-card border border-border rounded-[2.5rem] p-8 flex flex-col items-center text-center space-y-6 shadow-sm overflow-hidden relative"
+                    className="premium-card p-8 flex flex-col items-center text-center space-y-6 overflow-hidden relative"
                   >
                     <div className="absolute top-0 left-0 w-full h-1.5" style={{ backgroundColor: getLiturgicalColorInfo(readings.cor).hex }} />
                     <div className="flex flex-col items-center gap-4">
