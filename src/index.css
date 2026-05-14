@@ -80,14 +80,12 @@
     stroke-width: 1.5; /* Thinner for premium minimalist feel */
     stroke-linecap: round;
     stroke-linejoin: round;
-    transition: transform 0.2s ease, stroke-width 0.2s ease;
   }
 
   /* Professional hover state for icons within interactive elements */
   button:hover svg.lucide, 
   a:hover svg.lucide,
   .hover-icon-effect:hover svg.lucide {
-    transform: translateY(-1px);
     stroke-width: 1.75;
   }
 
@@ -221,12 +219,17 @@
 
   /* Premium card style - Spiritual Minimalist */
   .desktop-card {
-    @apply bg-card border border-border/5 rounded-3xl p-6 md:p-10 lg:p-12 shadow-none hover:border-secondary/10 transition-all duration-700;
+    @apply bg-card border border-border/5 rounded-3xl p-6 md:p-10 lg:p-12 shadow-none transition-all duration-300;
   }
 
   /* Standard card shadow and radius */
   .card-standard {
-    @apply bg-card border border-border/10 rounded-2xl shadow-none transition-all duration-500 hover:border-secondary/20;
+    @apply bg-card border border-border/10 rounded-2xl shadow-none transition-all duration-300;
+  }
+
+  /* Section Spacing */
+  .section-spacing {
+    @apply py-20 md:py-32 lg:py-40;
   }
 }
 

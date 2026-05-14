@@ -8,31 +8,13 @@ import GoogleSignInButton from "@/components/auth/GoogleSignInButton";
 
 const EASE = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
-const letterVariants = {
-  hidden: { opacity: 0, y: 40, rotateX: -60 },
-  visible: (i: number) => ({
-    opacity: 1, y: 0, rotateX: 0,
-    transition: { duration: 0.6, delay: 0.8 + i * 0.04, ease: EASE },
-  }),
+const fadeInUpVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, y: 0,
+    transition: { duration: 0.8, ease: EASE }
+  },
 };
-
-const AnimatedTitle = ({ text }: { text: string }) => (
-  <span>
-    {text.split("").map((char, i) => (
-      <motion.span
-        key={i}
-        variants={letterVariants}
-        initial="hidden"
-        animate="visible"
-        custom={i}
-        className="inline-block font-serif"
-        style={{ display: char === " " ? "inline" : "inline-block" }}
-      >
-        {char === " " ? "\u00A0" : char}
-      </motion.span>
-    ))}
-  </span>
-);
 
 interface HeroContentProps {
   heroOpacity: MotionValue<number>;
@@ -75,15 +57,21 @@ const HeroContent = ({ heroOpacity, heroScale, heroY, onStart, onAbout }: HeroCo
       </motion.div>
 
       {/* Title */}
-      <div className="text-2xl xs:text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold tracking-tight text-foreground leading-[1.2] sm:leading-[1.1] pt-2 sm:pt-4">
-        <AnimatedTitle text="Nem toda prisão é visível" />
-      </div>
+      <motion.h1 
+        variants={fadeInUpVariants}
+        initial="hidden"
+        animate="visible"
+        className="text-2xl xs:text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold tracking-tight text-foreground leading-[1.2] sm:leading-[1.1] pt-2 sm:pt-4"
+      >
+        Nem toda prisão é visível
+      </motion.h1>
 
       {/* Description */}
       <motion.p
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 2.2 }}
+        variants={fadeInUpVariants}
+        initial="hidden"
+        animate="visible"
+        transition={{ delay: 0.2 }}
         className="max-w-xl mx-auto text-base md:text-lg text-muted-foreground font-serif leading-relaxed"
       >
         Uma experiência espiritual guiada por Bíblia, Catecismo e Logos IA.
@@ -91,9 +79,10 @@ const HeroContent = ({ heroOpacity, heroScale, heroY, onStart, onAbout }: HeroCo
 
       {/* CTA Buttons */}
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 2.5 }}
+        variants={fadeInUpVariants}
+        initial="hidden"
+        animate="visible"
+        transition={{ delay: 0.4 }}
         className="flex flex-col items-center justify-center gap-6 pt-4"
       >
         <div className="flex flex-col sm:row items-center gap-4 w-full max-w-sm">
