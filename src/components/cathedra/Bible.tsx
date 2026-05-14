@@ -529,7 +529,7 @@ const Bible: React.FC = () => {
         )}
 
         {/* Toolbar */}
-        <div className="flex items-center justify-between gap-3 flex-wrap bg-card/50 backdrop-blur-md p-2 rounded-2xl border border-border shadow-sm">
+        <div className="flex items-center justify-between gap-3 flex-wrap bg-card/40 backdrop-blur-xl p-3 rounded-[1.5rem] border border-border/20 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
           <div className="flex items-center gap-2">
             <AudioButton variant="solid" className="px-6" />
             <ShareButton
