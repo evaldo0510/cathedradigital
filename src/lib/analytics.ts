@@ -1,8 +1,8 @@
 import { supabase } from '@/integrations/supabase/client';
+import { onLCP, onCLS, onINP, onFCP, onTTFB } from 'web-vitals';
 
 /**
  * Pushes events to Google Analytics 4 dataLayer.
- * Standardizes common event names and properties.
  */
 export const trackGA4Event = (eventName: string, params: Record<string, any> = {}) => {
   if (typeof window !== 'undefined' && (window as any).gtag) {
@@ -16,10 +16,33 @@ export const trackGA4Event = (eventName: string, params: Record<string, any> = {
 };
 
 /**
+ * Monitors and tracks Web Vitals for production.
+ */
+export const monitorWebVitals = () => {
+  if (typeof window === 'undefined') return;
+
+  const trackMetric = ({ name, value, id }: { name: string; value: number; id: string }) => {
+    trackGA4Event('web_vitals', {
+      metric_name: name,
+      metric_value: value,
+      metric_id: id,
+    });
+  };
+
+  onLCP(trackMetric);
+  onCLS(trackMetric);
+  onINP(trackMetric);
+  onFCP(trackMetric);
+  onTTFB(trackMetric);
+};
+
+/**
  * Automatically tracks page views and standard user interactions.
  */
 export const initGA4AutoTracking = () => {
   if (typeof window === 'undefined') return;
+
+  monitorWebVitals();
 
   // Track clicks on actionable elements
   document.addEventListener('click', (e) => {
@@ -39,7 +62,7 @@ export const initGA4AutoTracking = () => {
     }
   });
 
-  // Track time spent (heartbeat)
+  // Track time spent
   let startTime = Date.now();
   window.addEventListener('beforeunload', () => {
     const timeSpent = Math.round((Date.now() - startTime) / 1000);
@@ -50,7 +73,7 @@ export const initGA4AutoTracking = () => {
 };
 
 /**
- * Tracks conversion events (like checkout or signup).
+ * Tracks conversion events.
  */
 export const trackConversion = (type: 'signup' | 'checkout' | 'pro_upgrade', value?: number) => {
   trackGA4Event('conversion', {
