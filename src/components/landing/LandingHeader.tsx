@@ -154,7 +154,7 @@ const LandingHeader = () => {
                 navigate(AppRoute.LOGIN);
               }
             }}
-            className="hidden sm:flex text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none rounded-sm p-1"
+            className="hidden sm:flex text-[11px] font-bold uppercase tracking-[0.3em] text-muted-foreground hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none rounded-sm p-1"
             aria-label="Ir para página de login"
             type="button"
           >
