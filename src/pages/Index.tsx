@@ -47,7 +47,7 @@ const Index = () => {
   const handleNavigate = (route: string) => navigate(route);
 
   return (
-    <div className="flex min-h-screen flex-col items-center bg-background text-foreground overflow-x-hidden">
+    <div className="flex min-h-screen flex-col items-center bg-background text-foreground overflow-x-hidden selection:bg-primary/10">
       <LandingHeader />
       <SEOHead
         title="Bíblia, Catecismo e Tradição Católica"
@@ -66,7 +66,7 @@ const Index = () => {
       />
       <HeroSection onStart={handleStart} onAbout={() => navigate(AppRoute.ABOUT)} />
       <Suspense fallback={null}>
-        <div className="w-full" style={{ contentVisibility: 'auto' }}>
+        <div className="w-full flex flex-col items-center" style={{ contentVisibility: 'auto' }}>
           <div id="video"><InstitutionalVideoSection /></div>
           <div id="stats"><StatsSection /></div>
           <div id="features"><FeaturesSection onNavigate={handleNavigate} /></div>
