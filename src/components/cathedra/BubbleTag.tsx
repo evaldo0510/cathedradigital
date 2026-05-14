@@ -127,14 +127,14 @@ export const BubbleTag = React.forwardRef<HTMLButtonElement, BubbleTagProps>(({
 }, ref) => {
   const sizeClasses = {
     xs: 'px-2 py-0.5 text-[8px] gap-1',
-    sm: 'px-2.5 py-1 text-[9px] gap-1.5',
-    md: 'px-3.5 py-2 text-[11px] gap-1.5'
+    sm: 'px-3 py-1 text-[10px] gap-1.5',
+    md: 'px-4 py-2 text-[12px] gap-2'
   };
 
   const iconSizes = {
     xs: 'w-2.5 h-2.5',
     sm: 'w-3 h-3',
-    md: 'w-3.5 h-3.5'
+    md: 'w-4 h-4'
   };
 
   return (
@@ -157,13 +157,13 @@ export const BubbleTag = React.forwardRef<HTMLButtonElement, BubbleTagProps>(({
       aria-pressed={isSelected}
       aria-label={`${ariaLabel || `Tema: ${label}`}${isSelected ? ' (Selecionado)' : ''}${isSuggested ? ' (Sugerido)' : ''}`}
       className={`
-        relative rounded-full border transition-all shadow-sm flex items-center group/tag focus-visible:ring-4 focus-visible:ring-primary/20 focus-visible:border-primary focus-visible:outline-none
+        relative rounded-full border transition-all duration-300 flex items-center group/tag focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary focus-visible:outline-none
         ${sizeClasses[size]}
         ${isSelected 
-          ? 'border-primary bg-primary/15 ring-4 ring-primary/5 text-primary shadow-lg scale-105' 
+          ? 'border-primary bg-primary/10 text-primary shadow-md shadow-primary/5' 
           : isSuggested
-            ? 'border-secondary/50 bg-secondary/10 hover:border-secondary/80 hover:bg-secondary/20 text-secondary hover:scale-105'
-            : 'border-border bg-card/50 hover:border-primary/60 hover:bg-primary/5 hover:shadow-md text-foreground/80 hover:scale-105 hover:text-foreground'
+            ? 'border-secondary/30 bg-secondary/5 hover:border-secondary/60 hover:bg-secondary/10 text-secondary'
+            : 'border-border/60 bg-card/40 hover:border-primary/40 hover:bg-primary/5 text-foreground/70 hover:text-foreground'
         }
         ${className}
       `}
