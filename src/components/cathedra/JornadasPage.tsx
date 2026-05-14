@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { getTrails } from '@/data/trilhas';
 import { normalizeText } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
@@ -173,12 +174,26 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
       if (error) throw error;
       if (!journeyData) { setLoading(false); return; }
       
-      setJourneys(journeyData);
+      const localTrails = getTrails().map(t => ({
+        id: t.id,
+        slug: t.slug,
+        title: t.title,
+        description: t.description,
+        difficulty: t.level.toLowerCase(),
+        category: 'fundamentos',
+        is_active: true,
+        sort_order: -1,
+        steps_count: t.steps.length,
+        is_premium: false,
+        estimated_days: t.steps.length
+      }));
+
+      setJourneys([...localTrails, ...journeyData]);
 
       // Reconstruct the steps count map from the view data
       const counts: Record<string, number> = {};
-      journeyData.forEach(j => {
-        counts[j.id] = j.steps_count;
+      [...localTrails, ...journeyData].forEach(j => {
+        counts[j.id] = (j as any).steps_count;
       });
       setStepsCountMap(counts);
 
@@ -488,7 +503,15 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                           ? 'border-primary/20'
                           : 'border-border hover:border-primary/30'
                     }`}
-                    onClick={() => navigate(`/jornadas/${journey.id}`)}
+                    onClick={() => {
+                      // Check if it's one of our local trilhas
+                      const localTrail = ['intro-faith', 'eucharist-mystery'].includes(journey.slug || journey.id);
+                      if (localTrail) {
+                        navigate(`/trilhas/${journey.slug || journey.id}`);
+                      } else {
+                        navigate(`/jornadas/${journey.id}`);
+                      }
+                    }}
                     role="button"
                     tabIndex={0}
                     onKeyDown={(e) => e.key === 'Enter' && navigate(`/jornadas/${journey.id}`)}
