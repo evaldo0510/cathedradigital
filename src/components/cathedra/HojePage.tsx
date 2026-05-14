@@ -215,7 +215,7 @@ const HojePage: React.FC = () => {
             {loadingStats ? <JourneySkeleton /> : activeJourney ? (
               <motion.div 
                 whileHover={{ y: -8 }} 
-                className="group cursor-pointer p-8 rounded-[2.5rem] border border-primary/20 bg-primary/5 hover:border-primary/40 transition-all duration-500 shadow-sm"
+                className="premium-card group cursor-pointer p-8 shadow-sm"
                 onClick={() => navigate(`/jornadas/${activeJourney.id}`)} 
               >
                 <div className="flex items-center gap-6">
