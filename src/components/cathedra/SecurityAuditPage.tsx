@@ -60,7 +60,7 @@ const SecurityAuditPage = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Main Checklist */}
         <div className="md:col-span-2 space-y-6">
-          <Card className="border-border/50 bg-card/40 backdrop-blur-xl rounded-[2.5rem] shadow-xl overflow-hidden">
+          <Card className="border-border/50 bg-card  rounded-[2.5rem] shadow-xl overflow-hidden">
             <CardHeader className="bg-muted/30 border-b border-border/40 p-6">
               <CardTitle className="text-lg font-black uppercase tracking-widest flex items-center gap-2">
                 <ShieldCheck className="w-5 h-5 text-primary" />

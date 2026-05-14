@@ -142,7 +142,7 @@ const MagisteriumViewer: React.FC = () => {
         path={`/magisterium/${id}`}
       />
 
-      <div className="sticky top-0 z-30 bg-background/80 backdrop-blur-md py-4 mb-8 border-b border-border flex items-center justify-between gap-4">
+      <div className="sticky top-0 z-30 bg-background  py-4 mb-8 border-b border-border flex items-center justify-between gap-4">
         <div className="flex items-center gap-3 min-w-0">
           <Button 
             variant="ghost" 

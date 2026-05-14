@@ -147,7 +147,7 @@ const PartnersPage: React.FC = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: index * 0.1 }}
               >
-                <Card className="h-full hover:shadow-xl transition-all duration-300 border-border/50 bg-card/50 backdrop-blur-sm overflow-hidden group">
+                <Card className="h-full hover:shadow-xl transition-all duration-300 border-border/50 bg-card  overflow-hidden group">
                   <CardHeader className="relative h-32 flex items-center justify-center bg-muted/20">
                     {partner.logo_url ? (
                       <img 

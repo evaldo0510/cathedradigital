@@ -32,7 +32,7 @@ const CommunitySection = () => {
 
   return (
     <section className="w-full py-24 px-6 bg-background relative overflow-hidden">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/[0.02] rounded-full pointer-events-none" />
       
       <div className="max-w-7xl mx-auto space-y-20 relative z-10">
         <div className="text-center space-y-6 max-w-3xl mx-auto">
@@ -102,7 +102,7 @@ const CommunitySection = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="p-10 rounded-[3rem] bg-gradient-to-br from-primary/10 via-background to-secondary/10 border border-primary/10 text-center space-y-6"
+          className="p-10 rounded-[3rem] bg-muted border border-border/50 text-center space-y-6"
         >
           <div className="flex -space-x-4 justify-center mb-4">
             {[1, 2, 3, 4, 5].map((i) => (

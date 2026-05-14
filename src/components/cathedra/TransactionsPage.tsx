@@ -567,7 +567,7 @@ const TransactionsPage: React.FC = () => {
 
       {/* CSV PREVIEW DIALOG */}
       <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
-        <DialogContent className="max-w-3xl rounded-[2.5rem] bg-background/95 backdrop-blur-xl">
+        <DialogContent className="max-w-3xl rounded-[2.5rem] bg-background ">
           <DialogHeader><DialogTitle className="text-2xl font-serif font-bold">Preview da Exportação</DialogTitle><DialogDescription>Confira os dados antes de baixar o arquivo CSV.</DialogDescription></DialogHeader>
           <div className="py-4 overflow-x-auto"><Table className="border rounded-xl">
             <TableHeader className="bg-muted/50"><TableRow>
@@ -597,7 +597,7 @@ const TransactionsPage: React.FC = () => {
 
       {/* CLEANUP DIALOG */}
       <Dialog open={isCleanupOpen} onOpenChange={setIsCleanupOpen}>
-        <DialogContent className="max-w-md rounded-[2.5rem] bg-background/95 backdrop-blur-xl">
+        <DialogContent className="max-w-md rounded-[2.5rem] bg-background ">
           <DialogHeader><DialogTitle className="text-2xl font-serif font-bold text-destructive">Limpar Registros</DialogTitle><DialogDescription>Ação irreversível de exclusão de dados.</DialogDescription></DialogHeader>
           <div className="py-4 space-y-4">
             <div className="p-4 bg-destructive/5 rounded-2xl border border-destructive/10 text-xs text-destructive font-bold">Cuidado! Você apagará as transações de {startDate || '---'} até {endDate || '---'}.</div>
@@ -615,7 +615,7 @@ const TransactionsPage: React.FC = () => {
 
       {/* DETAILS DIALOG */}
       <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
-        <DialogContent className="max-w-2xl rounded-[2.5rem] bg-background/95 backdrop-blur-xl">
+        <DialogContent className="max-w-2xl rounded-[2.5rem] bg-background ">
           <DialogHeader><DialogTitle className="text-2xl font-serif font-bold">Detalhes do Processamento</DialogTitle></DialogHeader>
           {selectedTx && !Array.isArray(selectedTx) && (
             <div className="space-y-6 py-4">
@@ -639,7 +639,7 @@ const TransactionsPage: React.FC = () => {
 
       {/* AUDIT LOGS DIALOG */}
       <Dialog open={isAuditOpen} onOpenChange={setIsAuditOpen}>
-        <DialogContent className="max-w-4xl rounded-[2.5rem] bg-background/95 backdrop-blur-xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-4xl rounded-[2.5rem] bg-background  max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-2xl font-serif font-bold flex items-center gap-3">
               <div className="p-2 bg-primary/10 rounded-xl text-primary"><ShieldAlert className="w-6 h-6" /></div>

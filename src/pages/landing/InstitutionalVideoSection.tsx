@@ -204,10 +204,9 @@ const InstitutionalVideoSection = () => {
   return (
     <section ref={sectionRef} className="relative w-full py-24 md:py-40 bg-background overflow-hidden" aria-labelledby="video-section-title">
       {/* Cinematic Background Layers */}
-      <div className="absolute inset-0 z-0" aria-hidden="true">
-        <motion.div style={{ y: shouldReduceMotion ? 0 : y1 }} className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px]" />
-        <motion.div style={{ y: shouldReduceMotion ? 0 : y2 }} className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/5 rounded-full blur-[100px]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,hsl(var(--background))_70%)] opacity-80" />
+      <div className="absolute inset-0 z-0 bg-background/50" aria-hidden="true">
+        <motion.div style={{ y: shouldReduceMotion ? 0 : y1 }} className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/2 rounded-full" />
+        <motion.div style={{ y: shouldReduceMotion ? 0 : y2 }} className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/2 rounded-full" />
       </div>
 
       <div className="container px-6 mx-auto relative z-10">
@@ -251,11 +250,8 @@ const InstitutionalVideoSection = () => {
             custom={3}
             className="relative group"
           >
-            {/* Ambient Glow */}
-            <div className="absolute -inset-4 bg-primary/10 rounded-[40px] blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
-            
             <button 
-              className="relative w-full aspect-[4/5] sm:aspect-video rounded-[32px] overflow-hidden border border-border/50 bg-black shadow-2xl cursor-pointer group-hover:scale-[1.02] transition-all duration-700 text-left focus:outline-none focus-visible:ring-4 focus-visible:ring-primary/50"
+              className="relative w-full aspect-[4/5] sm:aspect-video rounded-[32px] overflow-hidden border border-border bg-black shadow-lg cursor-pointer group-hover:scale-[1.01] transition-all duration-700 text-left focus:outline-none focus-visible:ring-4 focus-visible:ring-primary/50"
               onClick={handlePlay}
               aria-label="Abrir vídeo de apresentação da Catedra Digital"
             >
@@ -284,17 +280,16 @@ const InstitutionalVideoSection = () => {
               )}
 
               {/* Cinematic Overlays */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+              <div className="absolute inset-0 bg-black/40" />
               
               <div className="absolute inset-0 flex flex-col items-center justify-center space-y-6">
                 <motion.div
-                  whileHover={{ scale: 1.1 }}
+                  whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="w-24 h-24 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center shadow-2xl group/btn overflow-hidden relative"
+                  className="w-24 h-24 bg-white/20 border border-white/30 rounded-full flex items-center justify-center shadow-lg group/btn overflow-hidden relative"
                 >
                   <div className="absolute inset-0 bg-primary/20 scale-0 group-hover/btn:scale-100 transition-transform duration-500 rounded-full" />
                   <Play className="w-10 h-10 text-white fill-white relative z-10 ml-1" />
-                  <div className="absolute inset-0 border-2 border-white/30 rounded-full animate-ping opacity-20" />
                 </motion.div>
                 
                 <div className="text-center space-y-2 px-8">
@@ -349,7 +344,7 @@ const InstitutionalVideoSection = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-black/98 backdrop-blur-2xl flex items-center justify-center p-4 md:p-12"
+            className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4 md:p-12"
             onClick={handleClose}
             role="dialog"
             aria-modal="true"
@@ -360,13 +355,13 @@ const InstitutionalVideoSection = () => {
               initial={shouldReduceMotion ? { opacity: 0 } : { scale: 0.9, y: 20, opacity: 0 }}
               animate={{ scale: 1, y: 0, opacity: 1 }}
               exit={shouldReduceMotion ? { opacity: 0 } : { scale: 0.9, y: 20, opacity: 0 }}
-              className="relative w-full max-w-6xl aspect-video bg-black rounded-[32px] overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.5)] border border-white/5"
+              className="relative w-full max-w-6xl aspect-video bg-black rounded-[32px] overflow-hidden shadow-2xl border border-white/10"
               onClick={e => e.stopPropagation()}
             >
               {/* Top Controls Overlay */}
-              <div className="absolute top-0 left-0 right-0 p-6 flex justify-between items-center z-50 bg-gradient-to-b from-black/80 to-transparent">
+              <div className="absolute top-0 left-0 right-0 p-6 flex justify-between items-center z-50 bg-black/60">
                 <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-2 px-3 py-1.5 bg-white/10 backdrop-blur-md rounded-full border border-white/10">
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-white/10 rounded-full border border-white/20">
                     <Languages className="w-4 h-4 text-white/70" />
                     <select 
                       value={currentLang}
@@ -389,7 +384,7 @@ const InstitutionalVideoSection = () => {
                   
                   <button 
                     onClick={toggleMute}
-                    className="p-2.5 bg-white/10 hover:bg-white/20 rounded-full transition-all border border-white/10 backdrop-blur-md"
+                    className="p-2.5 bg-white/10 hover:bg-white/20 rounded-full transition-all border border-white/20"
                     aria-label={isMuted ? "Ativar som" : "Desativar som"}
                   >
                     {isMuted ? <VolumeX className="w-5 h-5 text-white" /> : <Volume2 className="w-5 h-5 text-white" />}
@@ -399,7 +394,7 @@ const InstitutionalVideoSection = () => {
                 <button 
                   ref={closeBtnRef}
                   onClick={handleClose}
-                  className="p-4 bg-white/20 hover:bg-white/30 border border-white/30 rounded-full transition-all backdrop-blur-md group focus:outline-none focus-visible:ring-4 focus-visible:ring-primary shadow-xl"
+                  className="p-4 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full transition-all group focus:outline-none focus-visible:ring-4 focus-visible:ring-primary shadow-lg"
                   aria-label="Fechar vídeo de apresentação (Esc)"
                 >
                   <X className="w-7 h-7 text-white group-hover:rotate-90 transition-transform duration-300" />

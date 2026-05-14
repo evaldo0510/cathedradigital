@@ -79,7 +79,7 @@ const SacredImage = React.forwardRef<HTMLDivElement, SacredImageProps>(({ src, a
         style={{ backgroundColor: colors.base }}
       >
         <div className="absolute inset-[-50%] opacity-60" style={{ background: `radial-gradient(circle at 40% 40%, ${colors.accent} 0%, transparent 70%)`, animation: 'drift-slow 15s ease-in-out infinite' }} />
-        <div className="absolute inset-0 backdrop-blur-2xl" />
+        <div className="absolute inset-0 " />
         {error && (
           <div className="absolute inset-0 flex items-center justify-center z-[5]">
             <span

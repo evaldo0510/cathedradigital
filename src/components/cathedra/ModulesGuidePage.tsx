@@ -135,7 +135,7 @@ const ModulesGuidePage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.05 }}
           >
-            <Card className="h-full border-border/50 hover:border-primary/30 transition-all duration-300 bg-card/50 backdrop-blur-sm shadow-sm hover:shadow-xl rounded-3xl overflow-hidden group">
+            <Card className="h-full border-border/50 hover:border-primary/30 transition-all duration-300 bg-card  shadow-sm hover:shadow-xl rounded-3xl overflow-hidden group">
               <CardHeader className="pb-4">
                 <div className="flex items-center gap-4">
                   <div className={`w-14 h-14 rounded-2xl ${module.bg} flex items-center justify-center ${module.color} group-hover:scale-110 transition-transform`}>
@@ -163,7 +163,7 @@ const ModulesGuidePage: React.FC = () => {
       </div>
 
       <div className="bg-primary/5 border border-primary/20 rounded-[2.5rem] p-8 md:p-12 text-center space-y-6 relative overflow-hidden group">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl -mr-32 -mt-32" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full  -mr-32 -mt-32" />
         <div className="relative z-10 space-y-4">
           <h2 className="text-2xl md:text-3xl font-bold text-primary">Ainda tem dúvidas?</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">

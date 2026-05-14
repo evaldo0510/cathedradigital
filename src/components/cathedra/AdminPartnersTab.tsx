@@ -214,7 +214,7 @@ const AdminPartnersTab: React.FC = () => {
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {filteredPartners.map((partner) => (
-                <Card key={partner.id} className="group hover:border-primary/30 transition-all bg-card/50 backdrop-blur-sm">
+                <Card key={partner.id} className="group hover:border-primary/30 transition-all bg-card ">
                   <CardHeader className="flex flex-row items-start justify-between pb-3">
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 rounded-lg bg-white flex items-center justify-center overflow-hidden border p-1 shadow-sm">

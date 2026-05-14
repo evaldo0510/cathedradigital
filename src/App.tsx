@@ -504,7 +504,7 @@ const AppLayout: React.FC = () => {
               transition={{ duration: 0.15 }}
               className="fixed inset-0 z-[150] lg:hidden"
             >
-              <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsSidebarOpen(false)} />
+              <div className="absolute inset-0 bg-black/60" onClick={() => setIsSidebarOpen(false)} />
               <motion.div
                 initial={{ x: -288 }}
                 animate={{ x: 0 }}
@@ -529,7 +529,7 @@ const AppLayout: React.FC = () => {
         <main id="main-content" className="flex-1 overflow-y-auto flex flex-col relative no-scrollbar overscroll-auto touch-pan-y scroll-smooth bg-background">
           <div className="w-full flex-1 flex flex-col items-center overflow-x-hidden">
             {!isChromeless && (
-              <div className="w-full sticky top-0 z-[140] bg-background/90 backdrop-blur-xl border-b border-border">
+              <div className="w-full sticky top-0 z-[140] bg-background border-b border-border">
                 <AppHeader
                   user={appUser}
                   isDark={isDark}

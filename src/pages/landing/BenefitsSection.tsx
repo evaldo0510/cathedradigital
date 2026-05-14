@@ -44,7 +44,7 @@ const BenefitsSection = ({ onLogin }: BenefitsSectionProps) => {
   return (
     <section ref={sectionRef} className="w-full bg-foreground text-background py-24 px-6 overflow-hidden relative">
       <div className="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none">
-        <div className="absolute inset-0" style={{ backgroundImage: "radial-gradient(circle, hsl(var(--primary)) 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
+        <div className="absolute inset-0 bg-primary/5" />
       </div>
 
       <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
@@ -80,8 +80,7 @@ const BenefitsSection = ({ onLogin }: BenefitsSectionProps) => {
         </div>
 
         <div className="relative hidden lg:block">
-          <div className="absolute -inset-10 bg-primary/20 blur-[100px] rounded-full animate-pulse" />
-          <motion.div initial={{ rotate: 3 }} whileHover={{ rotate: 0, scale: 1.02 }} transition={{ duration: 0.5 }} className="relative aspect-square rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl">
+          <motion.div initial={{ rotate: 3 }} whileHover={{ rotate: 0, scale: 1.01 }} transition={{ duration: 0.5 }} className="relative aspect-square rounded-[3rem] overflow-hidden border border-white/20 shadow-lg">
             <motion.img
               src="https://images.unsplash.com/photo-1544427928-201cd49e6657?auto=format&fit=crop&q=40&w=600"
               alt="Devoção católica"
@@ -90,8 +89,8 @@ const BenefitsSection = ({ onLogin }: BenefitsSectionProps) => {
               decoding="async"
               style={{ y: imageY, scale: imageScale }}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-foreground via-transparent to-transparent" />
-            <div className="absolute bottom-10 left-10 right-10 p-8 bg-white/10 backdrop-blur-md rounded-3xl border border-white/10">
+            <div className="absolute inset-0 bg-black/40" />
+            <div className="absolute bottom-10 left-10 right-10 p-8 bg-black/60 rounded-3xl border border-white/20">
               <p className="text-xl font-serif mb-4">Onde está o teu tesouro, aí estará também o teu coração.</p>
               <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">Mateus 6,21</p>
             </div>

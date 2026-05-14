@@ -14,7 +14,7 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({ url, title, onClose }) 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-background/95 z-[80] flex flex-col backdrop-blur-md"
+      className="fixed inset-0 bg-background z-[80] flex flex-col "
       onClick={onClose}
     >
       <motion.div

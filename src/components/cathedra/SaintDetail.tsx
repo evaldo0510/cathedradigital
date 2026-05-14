@@ -78,7 +78,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     exit={{ opacity: 0 }}
-    className="fixed inset-0 bg-background/95 z-[100] flex items-center justify-center p-2 md:p-8 backdrop-blur-xl"
+    className="fixed inset-0 bg-background z-[100] flex items-center justify-center p-2 md:p-8 "
     onClick={onClose}
   >
     <motion.div
@@ -90,7 +90,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
     >
       <button 
         onClick={onClose} 
-        className="absolute top-6 right-6 p-3 bg-foreground/10 hover:bg-foreground/20 rounded-full backdrop-blur-md text-foreground transition-all z-20"
+        className="absolute top-6 right-6 p-3 bg-foreground/10 hover:bg-foreground/20 rounded-full  text-foreground transition-all z-20"
       >
         <Icons.X className="w-5 h-5" />
       </button>

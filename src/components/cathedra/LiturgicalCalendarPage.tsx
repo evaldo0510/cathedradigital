@@ -444,13 +444,13 @@ const LiturgicalCalendarPage: React.FC = () => {
                         type: 'saint', 
                         content: selectedSaint.bio 
                       })}
-                      className="absolute top-4 right-4 p-2 rounded-full bg-black/20 hover:bg-black/40 backdrop-blur-sm transition-all"
+                      className="absolute top-4 right-4 p-2 rounded-full bg-black/20 hover:bg-black/40  transition-all"
                     >
                       <Icons.Heart className={`w-4 h-4 ${isFavorite('saint', selectedSaint.name) ? 'fill-red-500 text-red-500' : 'text-white'}`} />
                     </button>
                     <button 
                       onClick={() => navigate(`/cathedra/daily-liturgy?date=${selectedDay.toISOString()}`)}
-                      className="absolute top-4 left-4 p-2 rounded-full bg-black/20 hover:bg-black/40 backdrop-blur-sm transition-all"
+                      className="absolute top-4 left-4 p-2 rounded-full bg-black/20 hover:bg-black/40  transition-all"
                     >
                       <Icons.Book className="w-4 h-4 text-white" />
                     </button>

@@ -205,7 +205,7 @@ const AparicoesPage: React.FC = () => {
                 <img src={apparition.imageSrc} alt={apparition.title} className="w-full h-40 object-cover" loading="lazy" />
                 <button
                   onClick={(e) => handleToggleFavorite(apparition, e)}
-                  className={`absolute top-3 right-3 p-2 rounded-full backdrop-blur-sm transition-all ${isFav ? 'bg-primary/20 text-primary' : 'bg-black/30 text-white/80 hover:text-white'}`}
+                  className={`absolute top-3 right-3 p-2 rounded-full  transition-all ${isFav ? 'bg-primary/20 text-primary' : 'bg-black/30 text-white/80 hover:text-white'}`}
                   title={isFav ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
                 >
                   <Icons.Heart className={`w-4 h-4 ${isFav ? 'fill-primary' : ''}`} />

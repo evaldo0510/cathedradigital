@@ -528,7 +528,7 @@ const Bible: React.FC = () => {
         )}
 
         {/* Toolbar */}
-        <div className="flex items-center justify-between gap-3 flex-wrap bg-card/50 backdrop-blur-md p-2 rounded-2xl border border-border shadow-sm">
+        <div className="flex items-center justify-between gap-3 flex-wrap bg-card p-2 rounded-2xl border border-border shadow-sm">
           <div className="flex items-center gap-2">
             <AudioButton variant="solid" className="px-6" />
             <ShareButton
@@ -590,7 +590,7 @@ const Bible: React.FC = () => {
           )}
 
           <div className={`${showCrossRefs && (crossRefs.length > 0 || docsRefs.length > 0) ? 'lg:col-span-8' : 'lg:col-span-12'} w-full space-y-6 order-2 lg:order-1`}>
-            <Card className="border-border/40 shadow-sm overflow-hidden bg-card/50 backdrop-blur-sm">
+            <Card className="border-border/40 shadow-sm overflow-hidden bg-card">
               <CardContent className="p-6 md:p-8">
                 {isLoading ? (
                   <BibleChapterSkeleton />

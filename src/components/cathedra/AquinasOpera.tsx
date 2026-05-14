@@ -265,7 +265,7 @@ const AquinasOpera: React.FC = () => {
 
             {/* Premium CTA */}
             <div className="relative overflow-hidden bg-foreground text-background rounded-[2.5rem] p-8 md:p-12">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl -mr-32 -mt-32" />
+              <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full  -mr-32 -mt-32" />
               <div className="relative z-10 space-y-6">
                 <div className="inline-flex items-center gap-2 px-3 py-1 bg-background/10 rounded-full border border-background/20">
                   <Icons.Star className="w-4 h-4 text-primary" />

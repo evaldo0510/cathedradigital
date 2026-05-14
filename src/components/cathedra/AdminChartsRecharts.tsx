@@ -12,7 +12,7 @@ interface Props {
 
 const AdminChartsRecharts: React.FC<Props> = ({ userGrowth, revenueData }) => (
   <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-    <Card className="border-border/40 shadow-none overflow-hidden bg-card/50 backdrop-blur-sm">
+    <Card className="border-border/40 shadow-none overflow-hidden bg-card ">
       <CardHeader className="pb-2 pt-4 px-4">
         <CardTitle className="text-sm font-black uppercase tracking-tight text-primary">Crescimento de Usuários</CardTitle>
         <CardDescription className="text-[10px] uppercase tracking-widest opacity-60">Novos registros por mês</CardDescription>
@@ -63,7 +63,7 @@ const AdminChartsRecharts: React.FC<Props> = ({ userGrowth, revenueData }) => (
       </CardContent>
     </Card>
 
-    <Card className="border-border/40 shadow-none overflow-hidden bg-card/50 backdrop-blur-sm">
+    <Card className="border-border/40 shadow-none overflow-hidden bg-card ">
       <CardHeader className="pb-2 pt-4 px-4">
         <CardTitle className="text-sm font-black uppercase tracking-tight text-primary">Fluxo Financeiro</CardTitle>
         <CardDescription className="text-[10px] uppercase tracking-widest opacity-60">Receita semanal acumulada</CardDescription>

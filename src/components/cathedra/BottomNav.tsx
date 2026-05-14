@@ -59,7 +59,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon, route, isAct
 
     <div className={`transition-transform duration-150 ${isActive ? 'scale-110 -translate-y-0.5' : 'active:scale-90'}`}>
       {React.cloneElement(icon as React.ReactElement, { 
-        className: `w-5 h-5 sm:w-5 sm:h-5 ${isActive ? 'drop-shadow-[0_0_8px_hsl(var(--primary)/0.4)]' : ''}`,
+        className: `w-5 h-5 sm:w-5 sm:h-5`,
         size: undefined,
         strokeWidth: 2,
         fill: isActive ? 'currentColor' : 'none'
@@ -71,7 +71,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon, route, isAct
       {label}
     </span>
     {isActive && (
-      <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-primary rounded-full shadow-[0_0_8px_hsl(var(--primary))]" />
+      <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-primary rounded-full" />
     )}
   </button>
 );
@@ -97,7 +97,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-[160] lg:hidden bg-background/80 backdrop-blur-xl border-t border-foreground/5 safe-area-bottom">
+    <div className="fixed bottom-0 left-0 right-0 z-[160] lg:hidden bg-background border-t border-foreground/5 safe-area-bottom">
       <div className="flex items-stretch h-16 px-1">
         {items.map((item) => (
           <BottomNavItem 

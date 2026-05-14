@@ -343,7 +343,7 @@ const JornadaStepPage: React.FC = () => {
                                 {sectionContent}
                               </p>
                             </div>
-                            <div className="absolute inset-0 flex flex-col items-center justify-center bg-card/40 backdrop-blur-[2px] p-6 space-y-4 rounded-b-2xl">
+                            <div className="absolute inset-0 flex flex-col items-center justify-center bg-card  p-6 space-y-4 rounded-b-2xl">
                               <Sparkles className="w-8 h-8 text-primary animate-pulse" />
                               <p className="text-sm font-bold text-foreground max-w-[180px] leading-relaxed">
                                 Continue aprofundando essa experiência
@@ -406,7 +406,7 @@ const JornadaStepPage: React.FC = () => {
       </div>
 
       {/* Fixed Bottom Action */}
-      <div className="flex-shrink-0 border-t border-border/50 bg-background/95 backdrop-blur-sm px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+      <div className="flex-shrink-0 border-t border-border/50 bg-background  px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
         <div className="max-w-2xl mx-auto">
           {!completed ? (
             <button

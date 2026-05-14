@@ -64,14 +64,6 @@ const AnimatedStat = ({ value, label, index }: { value: string; label: string; i
       />
       <motion.p
         className="text-5xl md:text-6xl font-display font-bold text-primary"
-        whileInView={{
-          textShadow: [
-            "0 0 0px hsl(var(--secondary) / 0)",
-            "0 0 20px hsl(var(--secondary) / 0.3)",
-            "0 0 0px hsl(var(--secondary) / 0)",
-          ],
-        }}
-        transition={{ duration: 2, delay: 0.5 + index * 0.15, repeat: 0 }}
         viewport={{ once: true }}
       >
         {isNumeric ? `${count.toLocaleString('pt-BR')}${suffix}` : value}
@@ -130,10 +122,10 @@ const StatsSection = () => {
       {/* Parallax decorative elements */}
       <motion.div
         style={{ y: bgY }}
-        className="absolute inset-0 pointer-events-none"
+        className="absolute inset-0 pointer-events-none opacity-20"
       >
-        <div className="absolute top-10 left-10 w-32 h-32 rounded-full bg-primary/5 blur-3xl" />
-        <div className="absolute bottom-10 right-10 w-40 h-40 rounded-full bg-primary/5 blur-3xl" />
+        <div className="absolute top-10 left-10 w-32 h-32 rounded-full bg-primary/5" />
+        <div className="absolute bottom-10 right-10 w-40 h-40 rounded-full bg-primary/5" />
       </motion.div>
 
       {/* Section header */}

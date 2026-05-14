@@ -44,7 +44,7 @@ const HowItWorksSection = () => {
           <div className="hidden md:block absolute top-14 left-[16%] right-[16%] h-px bg-border/30">
             <motion.div
               style={{ width: lineWidth }}
-              className="h-full bg-gradient-to-r from-primary/50 via-primary to-primary/50"
+              className="h-full bg-primary/40"
             />
           </div>
 
@@ -64,7 +64,7 @@ const HowItWorksSection = () => {
               <motion.div
                 whileHover={{ scale: 1.15, rotate: -8 }}
                 transition={{ type: "spring", stiffness: 300 }}
-                className="w-16 h-16 mx-auto rounded-[1.5rem] bg-primary/10 border-2 border-primary/20 flex items-center justify-center text-primary relative z-10 backdrop-blur-sm"
+                className="w-16 h-16 mx-auto rounded-[1.5rem] bg-primary/10 border-2 border-primary/20 flex items-center justify-center text-primary relative z-10"
               >
                 {step.icon}
                 {/* Step number badge */}
@@ -73,7 +73,7 @@ const HowItWorksSection = () => {
                   whileInView={{ scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.5 + i * 0.2, type: "spring", stiffness: 500 }}
-                  className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-primary text-primary-foreground text-[10px] font-black flex items-center justify-center shadow-lg shadow-primary/30"
+                  className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-primary text-primary-foreground text-[10px] font-black flex items-center justify-center border border-primary/20"
                 >
                   {step.num}
                 </motion.span>
