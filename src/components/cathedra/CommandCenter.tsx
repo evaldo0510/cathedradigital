@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Search, BookOpen, Compass, Sparkles } from 'lucide-react';
+import { Search, BookOpen, Compass, Sparkles, Activity, Clock, Database, Zap } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { searchUnified, BaseContent } from '@/services/conteudoService';
+import { searchUnified, BaseContent, SearchMetrics } from '@/services/conteudoService';
 import { useNavigate } from 'react-router-dom';
 
 const CommandCenter: React.FC = () => {
@@ -13,6 +13,8 @@ const CommandCenter: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+  const [metrics, setMetrics] = useState<SearchMetrics | null>(null);
+  const [queryCount, setQueryCount] = useState(0);
   
   const abortControllerRef = useRef<AbortController | null>(null);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -41,7 +43,7 @@ const CommandCenter: React.FC = () => {
       setLoading(true);
 
       try {
-        const { data } = await searchUnified(
+        const { data, metrics: searchMetrics } = await searchUnified(
           val, 
           undefined, 
           pageNum, 
@@ -51,6 +53,8 @@ const CommandCenter: React.FC = () => {
         
         if (pageNum === 0) {
           setResults(data);
+          setMetrics(searchMetrics);
+          setQueryCount(prev => prev + 1);
         } else {
           setResults(prev => [...prev, ...data]);
         }
@@ -154,6 +158,40 @@ const CommandCenter: React.FC = () => {
         </div>
 
         <div className="space-y-6">
+          {metrics && (
+            <section className="space-y-3">
+              <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
+                <Activity className="w-3 h-3" /> Performance da Busca
+              </h3>
+              <Card className="bg-card/30 backdrop-blur-sm border-border/40 rounded-2xl overflow-hidden">
+                <CardContent className="p-4 grid grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <p className="text-[9px] text-muted-foreground uppercase font-bold flex items-center gap-1">
+                      <Clock className="w-2.5 h-2.5" /> Latência
+                    </p>
+                    <p className="text-sm font-serif font-bold">{metrics.responseTime.toFixed(1)}ms</p>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-[9px] text-muted-foreground uppercase font-bold flex items-center gap-1">
+                      {metrics.cacheHit ? <Zap className="w-2.5 h-2.5 text-yellow-500" /> : <Database className="w-2.5 h-2.5" />} Status
+                    </p>
+                    <Badge variant={metrics.cacheHit ? "secondary" : "outline"} className="text-[9px] h-4 font-bold">
+                      {metrics.cacheHit ? 'CACHE HIT' : 'CACHE MISS'}
+                    </Badge>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-[9px] text-muted-foreground uppercase font-bold">Consultas</p>
+                    <p className="text-sm font-serif font-bold">{queryCount}</p>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-[9px] text-muted-foreground uppercase font-bold">Total</p>
+                    <p className="text-sm font-serif font-bold">{metrics.resultsCount} itens</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </section>
+          )}
+
           <section className="space-y-3">
             <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Tags Globais</h3>
             <div className="flex flex-wrap gap-2">
