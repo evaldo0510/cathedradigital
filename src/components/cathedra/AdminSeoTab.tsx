@@ -29,12 +29,50 @@ const AdminSeoTab: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [jsonMode, setJsonMode] = useState<'pretty' | 'minified'>('pretty');
   const [domVerified, setDomVerified] = useState<'pending' | 'ok' | 'fail'>('pending');
+  const [auditHistory, setAuditHistory] = useState<SEOAudit[]>([]);
+  const [runningAudit, setRunningAudit] = useState(false);
+  const [selectedAudit, setSelectedAudit] = useState<SEOAudit | null>(null);
 
   useEffect(() => {
     if (seoSettings) {
       setFormData(seoSettings);
     }
+    loadAuditHistory();
   }, [seoSettings]);
+
+  const loadAuditHistory = async () => {
+    try {
+      const history = await getAuditHistory();
+      setAuditHistory(history);
+      if (history.length > 0 && !selectedAudit) {
+        setSelectedAudit(history[0]);
+      }
+    } catch (err) {
+      console.error("Error loading SEO history:", err);
+    }
+  };
+
+  const handleRunAudit = async () => {
+    setRunningAudit(true);
+    try {
+      const newAudit = await runSEOAudit();
+      toast.success('Auditoria de SEO concluída!');
+      setSelectedAudit(newAudit);
+      loadAuditHistory();
+    } catch (err: any) {
+      toast.error('Erro ao executar auditoria: ' + err.message);
+    } finally {
+      setRunningAudit(false);
+    }
+  };
+
+  const getSeverityColor = (severity: string) => {
+    switch (severity) {
+      case 'critical': return 'text-destructive bg-destructive/10 border-destructive/20';
+      case 'warning': return 'text-amber-600 bg-amber-500/10 border-amber-500/20';
+      default: return 'text-blue-600 bg-blue-500/10 border-blue-500/20';
+    }
+  };
 
   const handleSaveSEO = async () => {
     // NAP Validation
