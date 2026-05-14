@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { searchUnified, BaseContent, SearchMetrics, getGlobalTags } from '@/services/conteudoService';
+import SEOHead from '@/components/SEOHead';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
 
@@ -28,6 +29,9 @@ const CommandCenter: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [metrics, setMetrics] = useState<SearchMetrics | null>(null);
   const [tags, setTags] = useState<{name: string, category: string}[]>([]);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(false);
+  const [queryCount, setQueryCount] = useState(0);
   
   const abortControllerRef = useRef<AbortController | null>(null);
   const navigate = useNavigate();
@@ -36,11 +40,13 @@ const CommandCenter: React.FC = () => {
     getGlobalTags().then(setTags);
   }, []);
 
-  const handleSearch = async (val: string) => {
+  const handleSearch = async (val: string, pageNum: number = 0) => {
     setQuery(val);
     if (val.length < 3) {
       setResults([]);
       setMetrics(null);
+      setPage(0);
+      setHasMore(false);
       return;
     }
 
@@ -48,16 +54,26 @@ const CommandCenter: React.FC = () => {
     abortControllerRef.current = new AbortController();
 
     setLoading(true);
+    setPage(pageNum);
     try {
+      const limit = 10;
       const { data, metrics: searchMetrics } = await searchUnified(
         val, 
         undefined, 
-        0, 
-        10, 
+        pageNum, 
+        limit, 
         abortControllerRef.current.signal
       );
-      setResults(data);
-      setMetrics(searchMetrics);
+      
+      if (pageNum === 0) {
+        setResults(data);
+        setMetrics(searchMetrics);
+        setQueryCount(prev => prev + 1);
+      } else {
+        setResults(prev => [...prev, ...data]);
+      }
+      
+      setHasMore(data.length >= limit);
     } catch (err: any) {
       if (err.name !== 'AbortError') console.error('Search failed:', err);
     } finally {
@@ -65,8 +81,16 @@ const CommandCenter: React.FC = () => {
     }
   };
 
+  const loadMore = () => {
+    handleSearch(query, page + 1);
+  };
+
   return (
     <div className="w-full max-w-4xl mx-auto space-y-6">
+      <SEOHead 
+        title={query.length >= 3 ? `Busca: ${query} - Cathedra Digital` : "Centro de Comando - Cathedra Digital"}
+        description={results.length > 0 ? `Resultados da busca para "${query}" no Catecismo e Tradição.` : "Busca unificada na sabedoria da Igreja Católica."}
+      />
       <div className="relative group">
         <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
           <Search className="w-5 h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
