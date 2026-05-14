@@ -70,6 +70,13 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        '3xl': '1.75rem',
+        '4xl': '2.25rem',
+      },
+      boxShadow: {
+        'premium': '0 4px 20px -4px rgba(0, 0, 0, 0.04)',
+        'premium-hover': '0 20px 40px -12px rgba(0, 0, 0, 0.08)',
+        'soft': '0 2px 10px -2px rgba(0, 0, 0, 0.03)',
       },
       keyframes: {
         "accordion-down": {
