@@ -29,7 +29,7 @@ const LITURGICAL_QUOTES = [
 ];
 
 const JourneySkeleton = () => (
-  <div className="p-6 rounded-[2rem] border border-border bg-card relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-primary/5 before:to-transparent shadow-sm">
+  <div className="premium-card p-6 relative before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-primary/5 before:to-transparent shadow-sm">
     <div className="flex items-center gap-5">
       <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
         <Icons.Compass className="w-6 h-6 text-primary/20" />
