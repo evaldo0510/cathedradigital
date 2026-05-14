@@ -800,10 +800,10 @@ const Bible: React.FC = () => {
                     <button
                       key={book.abbr}
                       onClick={() => selectBook(book)}
-                      className={`flex flex-col items-center justify-center gap-1 p-2.5 rounded-xl border transition-all relative overflow-hidden group aspect-square
+                      className={`flex flex-col items-center justify-center gap-1.5 p-3 rounded-2xl border transition-all duration-300 relative overflow-hidden group aspect-square
                         ${isRead 
-                          ? 'bg-primary/5 border-primary/20 text-primary' 
-                          : 'bg-card border-border text-muted-foreground hover:border-primary/40 hover:text-foreground hover:scale-[1.05] shadow-sm'}`}
+                          ? 'bg-primary/5 border-primary/20 text-primary shadow-sm' 
+                          : 'bg-card border-border/40 text-muted-foreground/80 hover:border-primary/40 hover:text-primary hover:bg-primary/5 hover:translate-y-[-2px] hover:shadow-md'}`}
                     >
                       {isRead && (
                         <div className="absolute top-0 right-0 p-1 bg-primary text-white rounded-bl-lg shadow-sm">
