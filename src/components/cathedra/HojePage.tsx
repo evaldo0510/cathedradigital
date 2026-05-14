@@ -242,7 +242,7 @@ const HojePage: React.FC = () => {
                 className="premium-card group cursor-pointer p-8 shadow-sm"
               >
                 <div className="flex items-center gap-6">
-                  <div className="w-16 h-16 rounded-[1.5rem] bg-muted flex items-center justify-center text-muted-foreground group-hover:text-primary group-hover:bg-primary/5 transition-all duration-500"><Icons.Compass className="w-8 h-8" /></div>
+                  <div className="premium-icon-box"><Icons.Compass className="w-6 h-6" /></div>
                   <div className="flex-1">
                     <h3 className="text-lg font-bold text-foreground">{recommendedJourney.title}</h3>
                     <p className="text-xs text-muted-foreground mt-1 font-medium font-serif italic">Sugerido especialmente para seu perfil espiritual</p>
