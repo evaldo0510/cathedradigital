@@ -1,7 +1,6 @@
 import { useRef } from "react";
 import { useScroll, useTransform } from "framer-motion";
 import HeroBackground from "./hero/HeroBackground";
-// Particles removed for cleaner visual experience
 import HeroContent from "./hero/HeroContent";
 import HeroScrollIndicator from "./hero/HeroScrollIndicator";
 
@@ -12,17 +11,24 @@ interface HeroSectionProps {
 
 const HeroSection = ({ onStart, onAbout }: HeroSectionProps) => {
   const heroRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-  const heroOpacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
-  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.9]);
-  const heroY = useTransform(scrollYProgress, [0, 1], [0, 120]);
-  const bgY = useTransform(scrollYProgress, [0, 1], [0, 60]);
+  const { scrollYProgress } = useScroll({ 
+    target: heroRef, 
+    offset: ["start start", "end start"] 
+  });
+  
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  const heroY = useTransform(scrollYProgress, [0, 1], [0, 50]);
 
   return (
     <section ref={heroRef} className="relative w-full min-h-[100dvh] flex items-center justify-center px-6 overflow-hidden">
-      <HeroBackground bgY={bgY} />
-      {/* Particles removed for minimalism */}
-      <HeroContent heroOpacity={heroOpacity} heroScale={heroScale} heroY={heroY} onStart={onStart} onAbout={onAbout} />
+      <HeroBackground bgY={heroY} />
+      <HeroContent 
+        heroOpacity={heroOpacity} 
+        heroScale={1} 
+        heroY={heroY} 
+        onStart={onStart} 
+        onAbout={onAbout} 
+      />
       <HeroScrollIndicator />
     </section>
   );

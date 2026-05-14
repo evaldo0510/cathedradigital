@@ -17,38 +17,34 @@ const testimonials = [
 
 const TestimonialsSection = () => {
   return (
-    <section className="w-full py-24 px-6 relative overflow-hidden bg-background">
-      <div className="max-w-6xl mx-auto space-y-16 relative z-10">
-        <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center space-y-4">
-          <span className="text-[9px] font-bold uppercase tracking-[0.4em] text-primary/40 italic">Comunidade</span>
-          <h2 className="text-3xl md:text-4xl font-display font-bold">Vozes da Comunidade</h2>
-        </motion.div>
+    <section className="w-full section-spacing px-6 relative overflow-hidden bg-background">
+      <div className="container mx-auto space-y-20 relative z-10">
+        <div className="text-center space-y-4">
+          <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/40 italic">Comunidade</span>
+          <h2 className="text-3xl md:text-5xl font-display font-bold">Vozes da Comunidade</h2>
+        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {testimonials.slice(0, 3).map((t, i) => (
-            <motion.div
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          {testimonials.slice(0, 3).map((t) => (
+            <div
               key={t.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="p-8 rounded-3xl bg-card border border-border/5 shadow-sm space-y-6 flex flex-col"
+              className="desktop-card space-y-8 flex flex-col"
             >
-              <Quote className="w-6 h-6 text-primary/20" />
-              <p className="text-sm text-muted-foreground leading-relaxed font-serif flex-1">
-                {t.text}
+              <Quote className="w-8 h-8 text-secondary/20" />
+              <p className="text-base text-muted-foreground leading-relaxed font-serif flex-1">
+                "{t.text}"
               </p>
 
-              <div className="pt-6 border-t border-border/5 flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-primary/5 flex items-center justify-center text-primary font-bold text-xs">
+              <div className="pt-8 border-t border-border/10 flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center text-primary font-bold text-sm">
                   {t.avatar}
                 </div>
                 <div>
-                  <p className="font-bold text-xs">{t.name}</p>
-                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider">{t.role}</p>
+                  <p className="font-bold text-sm">{t.name}</p>
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">{t.role}</p>
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

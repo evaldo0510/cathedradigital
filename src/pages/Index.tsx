@@ -8,16 +8,9 @@ import HeroSection from "./landing/HeroSection";
 import LandingHeader from "@/components/landing/LandingHeader";
 
 // Lazy-load below-the-fold sections
-const InstitutionalVideoSection = lazy(() => import("./landing/InstitutionalVideoSection"));
-const StatsSection = lazy(() => import("./landing/StatsSection"));
 const FeaturesSection = lazy(() => import("./landing/FeaturesSection"));
-const HowItWorksSection = lazy(() => import("./landing/HowItWorksSection"));
-const AcolhimentoSection = lazy(() => import("./landing/AcolhimentoSection"));
-const BenefitsSection = lazy(() => import("./landing/BenefitsSection"));
-const TestimonialsSection = lazy(() => import("./landing/TestimonialsSection"));
-const AboutCreatorSection = lazy(() => import("./landing/AboutCreatorSection"));
-const CommunitySection = lazy(() => import("./landing/CommunitySection"));
 const DailyRoutineSection = lazy(() => import("./landing/DailyRoutineSection"));
+const TestimonialsSection = lazy(() => import("./landing/TestimonialsSection"));
 const PricingSection = lazy(() => import("./landing/PricingSection"));
 const FaqSection = lazy(() => import("./landing/FaqSection"));
 const CtaBannerSection = lazy(() => import("./landing/CtaBannerSection"));
@@ -71,16 +64,13 @@ const Index = () => {
       />
       <HeroSection onStart={handleStart} onAbout={() => navigate(AppRoute.ABOUT)} />
       <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><Icons.Logo className="w-12 h-12 animate-pulse" variant="blue" /></div>}>
-        <main className="w-full flex flex-col items-center" style={{ contentVisibility: 'auto' }}>
-          <div id="video"><InstitutionalVideoSection /></div>
-          <div id="features"><FeaturesSection onNavigate={handleNavigate} /></div>
-          <DailyRoutineSection />
-          <BenefitsSection onLogin={() => navigate(AppRoute.LOGIN)} />
-          <div id="testimonials"><TestimonialsSection /></div>
-          <div id="pricing"><PricingSection /></div>
-          <AboutCreatorSection />
-          <div id="faq"><FaqSection /></div>
-          <CtaBannerSection onStart={handleStart} />
+        <main className="w-full flex flex-col items-center">
+          <div id="features" className="w-full"><FeaturesSection onNavigate={handleNavigate} /></div>
+          <div className="w-full"><DailyRoutineSection /></div>
+          <div id="testimonials" className="w-full"><TestimonialsSection /></div>
+          <div id="pricing" className="w-full"><PricingSection /></div>
+          <div id="faq" className="w-full"><FaqSection /></div>
+          <div className="w-full"><CtaBannerSection onStart={handleStart} /></div>
           <FeedbackWidget />
           <LogosChat />
           <WhatsAppButton />

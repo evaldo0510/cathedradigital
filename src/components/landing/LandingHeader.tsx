@@ -56,8 +56,8 @@ const LandingHeader = () => {
     <header
       className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${
         isScrolled
-          ? "py-3 bg-background/80 backdrop-blur-xl border-b border-border shadow-sm"
-          : "py-6 bg-transparent"
+          ? "py-4 bg-background/80 backdrop-blur-xl border-b border-border/5"
+          : "py-8 bg-transparent"
       }`}
     >
       <div className="container px-6 mx-auto flex items-center justify-between">
@@ -67,7 +67,7 @@ const LandingHeader = () => {
         >
           <Icons.Logo className="w-10 h-10 transition-transform group-hover:scale-105" variant="gold" />
           <div className="hidden sm:block">
-            <h1 className="text-base font-display font-bold text-foreground tracking-[0.2em] uppercase">CATHEDRA</h1>
+            <h1 className="text-sm font-display font-bold text-foreground tracking-[0.3em] uppercase">CATHEDRA</h1>
           </div>
         </div>
 
@@ -77,7 +77,7 @@ const LandingHeader = () => {
             <button
               key={link.name}
               onClick={() => handleNavClick(link.href)}
-              className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors relative group italic"
+              className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors relative group"
             >
               {link.name}
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full" />
@@ -87,7 +87,7 @@ const LandingHeader = () => {
           <div className="relative">
             <button 
               onClick={() => setShowLangMenu(!showLangMenu)}
-                className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors italic"
+                className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors"
               >
               <Globe className="w-4 h-4" />
               <span className="uppercase">{lang}</span>

@@ -13,27 +13,25 @@ const faqs = [
 ];
 
 const FaqSection = () => (
-  <section className="w-full py-24 px-6 relative overflow-hidden">
-    <div className="max-w-3xl mx-auto space-y-12 relative z-10">
-      <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center space-y-4">
-        <span className="text-[9px] font-bold uppercase tracking-[0.4em] text-primary/40 italic">Dúvidas</span>
-        <h2 className="text-3xl md:text-4xl font-display font-bold">Perguntas Frequentes</h2>
-      </motion.div>
+  <section className="w-full section-spacing px-6 relative overflow-hidden">
+    <div className="container max-w-3xl mx-auto space-y-16 relative z-10">
+      <div className="text-center space-y-4">
+        <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/40 italic">Dúvidas</span>
+        <h2 className="text-3xl md:text-5xl font-display font-bold">Perguntas Frequentes</h2>
+      </div>
 
-      <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-        <Accordion type="single" collapsible className="space-y-4">
-          {faqs.map((faq, i) => (
-            <AccordionItem key={i} value={`faq-${i}`} className="bg-card border border-border/10 rounded-3xl px-8 shadow-sm">
-              <AccordionTrigger className="text-left font-serif font-bold text-base py-6 hover:no-underline transition-colors border-none">
-                {faq.q}
-              </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground text-sm leading-relaxed pb-6">
-                {faq.a}
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
-      </motion.div>
+      <Accordion type="single" collapsible className="space-y-4">
+        {faqs.map((faq, i) => (
+          <AccordionItem key={i} value={`faq-${i}`} className="desktop-card !p-0 px-8 border border-border/10">
+            <AccordionTrigger className="text-left font-serif font-bold text-base py-6 hover:no-underline border-none">
+              {faq.q}
+            </AccordionTrigger>
+            <AccordionContent className="text-muted-foreground text-sm leading-relaxed pb-6">
+              {faq.a}
+            </AccordionContent>
+          </AccordionItem>
+        ))}
+      </Accordion>
     </div>
   </section>
 );
