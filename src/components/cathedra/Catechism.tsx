@@ -230,26 +230,43 @@ const LazyParagraph: React.FC<{ paragraph: number; currentParagraph: number; par
   }, []);
 
   return (
-    <div ref={ref} id={`p${p}`} className={`scroll-mt-28 transition-all duration-700 pb-10 border-b border-border/40 last:border-0 last:pb-0 ${currentParagraph === p ? 'relative' : 'opacity-80 hover:opacity-100'}`}>
-      {currentParagraph === p && <div className="absolute -left-4 top-0 bottom-0 w-1 bg-primary rounded-full hidden md:block" />}
-      <div className="flex items-center gap-4 mb-6">
-        <div className="flex items-center gap-2">
-          <span className="text-3xl font-serif font-bold text-primary">§{p}</span>
-          <div className="flex items-center gap-1">
-            <button onClick={() => toggleFavorite({ type: 'catechism', title: `CIC §${p}`, content: `Catecismo da Igreja Católica, parágrafo §${p}` })} className="p-2 rounded-xl hover:bg-primary/10 transition-all active:scale-95">
-              <Icons.Heart className={`w-4 h-4 transition-all ${isFavorite('catechism', `CIC §${p}`) ? 'fill-primary text-primary' : 'text-muted-foreground'}`} />
+    <div ref={ref} id={`p${p}`} className={`scroll-mt-32 transition-all duration-1000 pb-20 border-b border-border/40 last:border-0 last:pb-0 ${currentParagraph === p ? 'relative' : 'opacity-70 hover:opacity-100'}`}>
+      {currentParagraph === p && (
+        <motion.div 
+          layoutId="para-indicator"
+          className="absolute -left-8 top-0 bottom-0 w-1.5 bg-primary rounded-full hidden lg:block shadow-[0_0_15px_rgba(var(--primary),0.3)]" 
+        />
+      )}
+      <div className="flex items-center gap-6 mb-10">
+        <div className="flex items-center gap-4">
+          <span className="text-4xl md:text-5xl font-serif font-black text-primary tracking-tighter shadow-sm">§{p}</span>
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={() => toggleFavorite({ type: 'catechism', title: `CIC §${p}`, content: `Catecismo da Igreja Católica, parágrafo §${p}` })} 
+              className="p-3 rounded-[1.25rem] bg-muted/40 hover:bg-primary/10 transition-all active:scale-90 group/fav"
+              title="Salvar nos Favoritos"
+            >
+              <Icons.Heart className={`w-5 h-5 transition-all duration-300 ${isFavorite('catechism', `CIC §${p}`) ? 'fill-primary text-primary scale-110' : 'text-muted-foreground group-hover/fav:text-primary'}`} />
             </button>
-            <ShareButton title={`Catecismo §${p}`} text={`Leia o Catecismo da Igreja Católica, §${p} — Cathedra Digital`} url={`${window.location.origin}/catechism?p=${p}`} className="p-2 h-auto w-auto border-0 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all" />
+            <ShareButton 
+              title={`Catecismo §${p}`} 
+              text={`Leia o Catecismo da Igreja Católica, §${p} — Cathedra Digital`} 
+              url={`${window.location.origin}/catechism?p=${p}`} 
+              className="p-3 h-auto w-auto border-0 rounded-[1.25rem] bg-muted/40 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all active:scale-90" 
+            />
           </div>
         </div>
-        <div className="h-px flex-1 bg-gradient-to-r from-border/60 via-border/20 to-transparent" />
+        <div className="h-px flex-1 bg-gradient-to-r from-primary/30 via-border/20 to-transparent" />
       </div>
-      <CatechismContent paragraph={p} onNavigateToBible={handleNavigateToBible} isVisible={isVisible} />
+      <div className="px-1 md:px-0">
+        <CatechismContent paragraph={p} onNavigateToBible={handleNavigateToBible} isVisible={isVisible} />
+      </div>
 
-      <div className="mt-4 opacity-0 group-hover:opacity-100 transition-opacity">
+      <div className="mt-8 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
         <NotesPanel contentType="catechism" contentId={`${p}`} contentLabel={`§${p}`} />
       </div>
     </div>
+
   );
 };
 
