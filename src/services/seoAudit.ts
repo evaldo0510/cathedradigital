@@ -112,12 +112,15 @@ export const runSEOAudit = async (url: string = window.location.href) => {
 
   // 3. Links
   const anchors = Array.from(document.querySelectorAll('a'));
-  audit.links = anchors.map(a => ({
-    href: a.href,
-    text: a.innerText.trim() || 'Link sem texto',
-    status: 200, // Client side check can't verify status easily without fetch
-    isExternal: a.origin !== window.location.origin
-  }));
+  audit.links = anchors.map(a => {
+    const text = (a.innerText || a.textContent || '').trim();
+    return {
+      href: a.href,
+      text: text || 'Link sem texto',
+      status: 200,
+      isExternal: a.origin !== window.location.origin
+    };
+  });
 
   // Detect empty links
   const emptyLinks = audit.links.filter(l => !l.text || l.text === 'Link sem texto');
