@@ -121,7 +121,7 @@ const AboutPage: React.FC = () => (
           { icon: <Icons.Star className="w-8 h-8" />, title: 'Formação', desc: 'Trilhas de estudo progressivas, quizzes de conhecimento e a Suma Teológica de São Tomás.' },
         ].map(pillar => (
           <div key={pillar.title} className="premium-card p-6 space-y-4 group">
-            <div className="text-primary bg-primary/5 w-16 h-16 rounded-2xl flex items-center justify-center transition-transform duration-500 group-hover:rotate-6">
+            <div className="premium-icon-box">
               {pillar.icon}
             </div>
             <div className="space-y-2">
