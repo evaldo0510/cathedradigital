@@ -75,11 +75,7 @@ const HojePage: React.FC = () => {
 
   return (
     <div className="desktop-layout pt-0 md:pt-10 lg:pt-20 pb-24 relative">
-      {loadingStats && (
-        <div className="fixed inset-0 z-[200] bg-background flex flex-col items-center justify-center p-4">
-          <DashboardSkeleton />
-        </div>
-      )}
+      {loadingStats && <DashboardSkeleton />}
       <SEOHead 
         title="Cathedra Digital — Nem toda prisão é visível" 
         description="Explore o Catecismo, a Bíblia e jornadas espirituais para uma vida de liberdade e verdade. A sabedoria da Igreja Católica ao seu alcance." 
