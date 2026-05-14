@@ -114,22 +114,17 @@ const LandingHeader = () => {
                   className="absolute right-0 mt-2 w-40 bg-background border border-border rounded-full shadow-xl overflow-hidden"
                 >
                   {languages.map((l) => (
-                    <button
+                    <Button
                       key={l.code}
+                      variant="ghost"
+                      size="sm"
                       onClick={() => { setLang(l.code); setShowLangMenu(false); }}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
-                          setLang(l.code);
-                          setShowLangMenu(false);
-                        }
-                      }}
-                      className={`w-full px-4 py-2.5 text-left text-sm hover:bg-muted transition-colors flex items-center justify-between outline-none focus:bg-muted ${lang === l.code ? 'text-primary font-bold' : 'text-muted-foreground'}`}
+                      className={`w-full px-4 py-2.5 justify-between font-normal tracking-normal shadow-none ${lang === l.code ? 'text-primary font-bold' : 'text-muted-foreground'}`}
                       type="button"
                     >
                       <span>{l.label}</span>
                       <span>{l.flag}</span>
-                    </button>
+                    </Button>
                   ))}
                 </motion.div>
               )}
