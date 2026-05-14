@@ -530,7 +530,7 @@ const Bible: React.FC = () => {
         {/* Toolbar */}
         <div className="flex items-center justify-between gap-3 flex-wrap bg-card p-2 rounded-2xl border border-border shadow-sm">
           <div className="flex items-center gap-2">
-            <AudioButton variant="solid" className="px-6" />
+            <AudioButton variant="default" className="px-6" />
             <ShareButton
               title={`${selectedBook.name} ${selectedChapter}${highlightedVerse ? `:${highlightedVerse}` : ''}`}
               text={`Leia ${selectedBook.name}, capítulo ${selectedChapter} na Cathedra Digital`}

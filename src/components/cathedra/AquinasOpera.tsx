@@ -203,7 +203,7 @@ const AquinasOpera: React.FC = () => {
           </div>
           <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground">S. Tomás de Aquino</h1>
           <div className="flex justify-center mt-4">
-            <AudioButton variant="solid" className="px-6" />
+            <AudioButton variant="default" className="px-6" />
           </div>
 
           <p className="text-muted-foreground font-serif italic max-w-lg mx-auto">
