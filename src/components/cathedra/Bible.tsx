@@ -677,7 +677,7 @@ const Bible: React.FC = () => {
             {/* If end of book */}
             {!isLoading && !bibleError && selectedChapter >= selectedBook.chapters && (
               <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}>
-                <Card className="border-secondary/40 bg-secondary/5 text-center p-8">
+                <Card className="premium-card p-8 border-secondary/20 text-center">
                   <div className="flex flex-col items-center gap-4">
                     <Icons.CheckCircle2 className="w-12 h-12 text-primary" />
                     <h2 className="text-xl font-bold font-serif">Livro Concluído!</h2>
