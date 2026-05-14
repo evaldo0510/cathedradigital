@@ -97,8 +97,8 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-[160] lg:hidden bg-background/80 backdrop-blur-xl border-t border-foreground/5 safe-area-bottom">
-      <div className="flex items-stretch h-16 px-1">
+    <div className="fixed bottom-0 left-0 right-0 z-[160] lg:hidden bg-background/60 backdrop-blur-2xl border-t border-primary/5 safe-area-bottom transition-all duration-500 hover:bg-background/80">
+      <div className="flex items-stretch h-18 px-1">
         {items.map((item) => (
           <BottomNavItem 
             key={item.label}
