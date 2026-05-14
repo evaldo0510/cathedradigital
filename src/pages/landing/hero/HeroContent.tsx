@@ -45,7 +45,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
           <div className="relative">
             {/* Avatar container */}
             <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border border-secondary/10 bg-card mx-auto">
-              <img src={logosAvatar} alt="Logos — Mestre Contemplativo" className="w-full h-full object-cover grayscale-[0.2]" />
+              <img src={logosAvatar} alt="Logos — Mestre Contemplativo" className="w-full h-full object-cover grayscale-[0.2]" loading="eager" />
             </div>
           </div>
           <div className="mt-4 px-4 py-1 rounded-full border border-border/5 bg-background text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.3em] inline-block mx-auto">
