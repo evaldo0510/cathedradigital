@@ -11,6 +11,8 @@ import SpiritualQuiz, { PROFILES, type ProfileId } from './SpiritualQuiz';
 import QuickDonation from './QuickDonation';
 import { useDashboardData } from '@/hooks/useDashboardData';
 import { DashboardSkeleton } from './DashboardSkeleton';
+import { HomeCard } from './HomeCard';
+import { HomeButton } from './HomeButton';
 
 interface DashboardProps {
   user: User | null;
@@ -158,9 +160,13 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       </FadeUp>
 
       <FadeUp delay={0.02}>
-        <div 
+        <HomeCard 
           onClick={() => goTo(AppRoute.MODULES_GUIDE)}
-          className="mb-6 p-4 rounded-2xl bg-primary/5 border border-primary/10 flex items-center justify-between cursor-pointer hover:bg-primary/10 transition-colors group"
+          className="mb-6 p-4 flex items-center justify-between cursor-pointer group"
+          role="button"
+          tabIndex={0}
+          aria-label="Ver Guia dos Módulos"
+          onKeyDown={(e) => e.key === 'Enter' && goTo(AppRoute.MODULES_GUIDE)}
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
@@ -172,18 +178,20 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             </div>
           </div>
           <Icons.ChevronRight className="w-4 h-4 text-primary group-hover:translate-x-1 transition-transform" />
-        </div>
+        </HomeCard>
       </FadeUp>
 
       <FadeUp delay={0.05}>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {MAIN_DOORS.map((door, idx) => (
-            <motion.div
+            <HomeCard
               key={idx}
-              whileHover={{ y: -4, scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
               onClick={() => goTo(door.route)}
-              className={`relative overflow-hidden p-5 rounded-3xl border border-border bg-card cursor-pointer transition-all hover:border-secondary/30 group`}
+              role="button"
+              tabIndex={0}
+              aria-label={`Abrir ${door.label}`}
+              onKeyDown={(e) => e.key === 'Enter' && goTo(door.route)}
+              className="relative overflow-hidden p-5 cursor-pointer group flex flex-col items-start text-left"
             >
               {door.suggested && (
                 <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-1 rounded-full bg-secondary/10 text-secondary text-[8px] font-black uppercase tracking-tighter border border-secondary/20">
@@ -197,7 +205,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
                 <h3 className="text-sm font-bold text-foreground leading-tight group-hover:text-primary transition-colors">{door.label}</h3>
                 <p className="text-[10px] text-muted-foreground line-clamp-2 leading-tight opacity-80">{door.description}</p>
               </div>
-            </motion.div>
+            </HomeCard>
           ))}
         </div>
       </FadeUp>
@@ -208,9 +216,13 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
 
       {nextUp && (
         <FadeUp delay={0.12}>
-          <div 
+          <HomeCard 
             onClick={() => goTo(nextUp.route)}
-            className="p-5 rounded-3xl border border-border bg-card cursor-pointer hover:border-primary/20 transition-all flex items-center justify-between group"
+            className="p-5 cursor-pointer flex items-center justify-between group"
+            role="button"
+            tabIndex={0}
+            aria-label={`Continuar ${nextUp.label}`}
+            onKeyDown={(e) => e.key === 'Enter' && goTo(nextUp.route)}
           >
             <div className="flex items-center gap-5">
               <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
@@ -218,7 +230,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
                  nextUp.type === 'catechism' ? <Icons.Cross className="w-6 h-6" /> : 
                  <Icons.Flame className="w-6 h-6" />}
               </div>
-              <div>
+              <div className="text-left">
                 <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-1">{nextUp.subtitle}</p>
                 <h3 className="text-lg font-bold text-foreground leading-tight group-hover:text-primary transition-colors">{nextUp.label}</h3>
               </div>
@@ -226,7 +238,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             <div className="w-10 h-10 rounded-full border border-primary/20 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
               <Icons.ChevronRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
             </div>
-          </div>
+          </HomeCard>
         </FadeUp>
       )}
 
