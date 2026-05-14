@@ -166,7 +166,7 @@ const HojePage: React.FC = () => {
                 }
               }}
               onClick={() => navigate(nextUp.route)}
-              className="p-8 md:p-12 rounded-[3.5rem] border border-primary/20 bg-gradient-to-br from-primary/10 via-card/50 to-card backdrop-blur-2xl cursor-pointer hover:border-primary/40 hover:shadow-[0_20px_50px_rgba(var(--primary),0.1)] focus-visible:ring-4 focus-visible:ring-primary focus-visible:outline-none transition-all duration-700 flex flex-col md:flex-row md:items-center justify-between group shadow-xl gap-8"
+              className="premium-card p-8 md:p-12 cursor-pointer hover:shadow-[0_20px_50px_rgba(var(--primary),0.1)] transition-all duration-700 flex flex-col md:flex-row md:items-center justify-between group shadow-xl gap-8"
             >
               <div className="flex items-center gap-6">
                 <div className="w-16 h-16 rounded-[1.25rem] bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-500 shadow-inner">
