@@ -89,7 +89,7 @@ const RitualDoDia: React.FC = () => {
           />
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
