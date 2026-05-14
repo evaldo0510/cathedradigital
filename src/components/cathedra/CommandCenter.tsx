@@ -11,18 +11,33 @@ const CommandCenter: React.FC = () => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<BaseContent[]>([]);
   const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
   const navigate = useNavigate();
 
-  const handleSearch = async (val: string) => {
+  const handleSearch = async (val: string, pageNum: number = 0) => {
     setQuery(val);
+    setPage(pageNum);
     if (val.length < 3) {
       setResults([]);
+      setHasMore(false);
       return;
     }
     setLoading(true);
-    const data = await searchUnified(val);
-    setResults(data);
+    const data = await searchUnified(val, undefined, pageNum, 10);
+    
+    if (pageNum === 0) {
+      setResults(data);
+    } else {
+      setResults(prev => [...prev, ...data]);
+    }
+    
+    setHasMore(data.length === 10);
     setLoading(false);
+  };
+
+  const loadMore = () => {
+    handleSearch(query, page + 1);
   };
 
   return (
