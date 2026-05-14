@@ -173,6 +173,7 @@ const AppLayout: React.FC = () => {
   const [lang, setLangState] = useState<Language>(getInitialLanguage);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDark, setIsDark] = useState(getInitialTheme);
+  const [showSplash, setShowSplash] = useState(false);
   
   const { user, profile, signOut, isPremium, loading } = useAuth();
   const navigate = useNavigate();
@@ -478,12 +479,15 @@ const AppLayout: React.FC = () => {
         </div>
       }>
         <ScrollToTop />
+        <AnimatePresence>
+          {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
+        </AnimatePresence>
         {/* Moved to the bottom of the layout */}
 
         <div className="flex h-[100dvh] w-full overflow-hidden bg-background selection:bg-primary/20">
           {/* Persistent Sidebar for Desktop */}
           {!isChromeless && (
-            <div className="hidden lg:block h-full w-72 flex-shrink-0">
+            <div className="hidden md:block h-full w-72 flex-shrink-0 z-[160] relative">
               <CathedralSidebar 
                 user={appUser} 
                 isDark={isDark}
@@ -504,7 +508,7 @@ const AppLayout: React.FC = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.15 }}
-              className="fixed inset-0 z-[150] lg:hidden"
+              className="fixed inset-0 z-[150] md:hidden"
             >
               <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsSidebarOpen(false)} />
               <motion.div
@@ -528,10 +532,10 @@ const AppLayout: React.FC = () => {
           )}
         </AnimatePresence>
 
-        <main id="main-content" className="flex-1 overflow-y-auto flex flex-col relative no-scrollbar overscroll-auto touch-pan-y scroll-smooth bg-background">
+        <main id="main-content" className="flex-1 overflow-y-auto flex flex-col relative no-scrollbar overscroll-auto touch-pan-y scroll-smooth bg-background z-10">
           <div className="w-full flex-1 flex flex-col items-center">
             {!isChromeless && (
-              <div className="w-full sticky top-0 z-[140] bg-background/90 backdrop-blur-xl border-b border-border">
+              <div className="w-full sticky top-0 z-[140] bg-background/60 backdrop-blur-2xl border-b border-primary/5">
                 <AppHeader
                   user={appUser}
                   isDark={isDark}

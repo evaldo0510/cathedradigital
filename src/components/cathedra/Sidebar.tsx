@@ -112,7 +112,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
 
   return (
     <>
-      <aside ref={ref} className="h-full w-72 bg-card border-r border-border flex flex-col p-5 overflow-hidden">
+      <aside ref={ref} className="h-full w-72 bg-background border-r border-primary/5 flex flex-col p-5 overflow-hidden">
         <div className="mb-4 px-2 flex items-center gap-3 cursor-pointer group hover:opacity-90 transition-opacity" onClick={() => handleNav(AppRoute.HOJE)}>
           <Icons.Logo className="w-8 h-8 flex-shrink-0" variant="blue" />
           <div>

@@ -3,8 +3,9 @@ import { Card, CardContent } from '@/components/ui/card';
 
 export const DashboardSkeleton: React.FC = () => {
   return (
-    <div className="desktop-layout py-6 md:py-10 animate-pulse">
-      <div className="desktop-main content-section space-y-8">
+    <div className="fixed inset-0 z-[200] bg-background flex flex-col p-4 animate-pulse overflow-y-auto no-scrollbar pointer-events-none md:pl-80">
+      <div className="desktop-layout pt-0 md:pt-10 lg:pt-20 pb-24 w-full h-full max-w-2xl mx-auto lg:max-w-none lg:mx-0">
+        <div className="desktop-main space-y-20 w-full mb-20">
         {/* Header Skeleton */}
         <div className="text-center space-y-6">
           <div className="flex justify-center">
@@ -33,14 +34,8 @@ export const DashboardSkeleton: React.FC = () => {
 
         {/* Ritual Skeleton */}
         <div className="h-48 bg-muted rounded-3xl" />
+        </div>
       </div>
-
-      {/* Sidebar Skeleton */}
-      <aside className="desktop-aside space-y-6 hidden xl:block">
-        <div className="p-6 rounded-3xl bg-muted h-64" />
-        <div className="p-6 rounded-3xl bg-muted h-32" />
-        <div className="p-6 rounded-3xl bg-muted h-48" />
-      </aside>
     </div>
   );
 };

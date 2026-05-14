@@ -29,6 +29,7 @@
   .dark {
     --background: 214 68% 4%;
     --foreground: 0 0% 98%;
+    --foreground: 0 0% 98%;
     --card: 214 68% 6%;
     --card-foreground: 0 0% 98%;
     --popover: 214 68% 5%;
@@ -50,7 +51,7 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground transition-colors duration-300;
     font-family: 'Inter', sans-serif;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;

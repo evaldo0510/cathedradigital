@@ -19,12 +19,13 @@ import { ProfileId } from './SpiritualQuiz';
 
 const HojePage: React.FC = () => {
   const navigate = useNavigate();
-  const { user, profile, userLevel } = useAuth();
+  const { user, profile, userLevel, loading: authLoading, refreshProfile } = useAuth();
   const { lang } = useContext(LangContext);
   const { data: allSaintsToday = [] } = useSaintsToday();
   const { data: officialSaint } = useOfficialSaint();
   
-  const { spiritualProfile, nextUp, activeJourneys, isLoading: loadingStats } = useDashboardData(user as any);
+  const { spiritualProfile, nextUp, activeJourneys, isLoading: dataLoading } = useDashboardData(user as any);
+  const loadingStats = authLoading || dataLoading;
 
   const activeJourney = activeJourneys?.[0] || null;
   const journeyProgress = activeJourney ? { completed: activeJourney.completedSteps, total: activeJourney.totalSteps } : { completed: 0, total: 0 };
@@ -56,6 +57,13 @@ const HojePage: React.FC = () => {
     staleTime: 1000 * 60 * 30,
   });
 
+  useEffect(() => {
+    // If we have a user but no profile, try to refresh it once
+    if (user && !profile && !authLoading) {
+      refreshProfile();
+    }
+  }, [user, profile, authLoading, refreshProfile]);
+
   const hour = new Date().getHours();
   const greeting = useMemo(() => {
     if (hour < 12) return lang === 'pt' ? 'Bom dia' : 'Good morning';
@@ -73,8 +81,8 @@ const HojePage: React.FC = () => {
   ], []);
 
   return (
-    <div className="desktop-layout pt-6 md:pt-20 pb-24">
-      {loadingStats && <DashboardSkeleton />}
+    <div className="desktop-layout pt-0 md:pt-10 lg:pt-20 pb-24 relative overflow-x-hidden">
+      {loadingStats && profile && <DashboardSkeleton />}
       <SEOHead 
         title="Cathedra Digital — Nem toda prisão é visível" 
         description="Explore o Catecismo, a Bíblia e jornadas espirituais para uma vida de liberdade e verdade. A sabedoria da Igreja Católica ao seu alcance." 
@@ -88,7 +96,7 @@ const HojePage: React.FC = () => {
             <p className="text-[10px] md:text-[12px] font-black uppercase tracking-[0.4em] text-primary/60">
               {greeting}, {profile?.name?.split(' ')[0] || 'fiel'}
             </p>
-            <h1 className="text-5xl md:text-9xl font-serif text-foreground leading-[1] tracking-tight">
+            <h1 className="text-4xl sm:text-5xl md:text-9xl font-serif text-foreground leading-[1] tracking-tight">
               "Nem toda prisão <br /><span className="text-primary italic font-medium">é visível."</span>
             </h1>
           </div>
@@ -215,7 +223,7 @@ const HojePage: React.FC = () => {
             <h2 className="text-[11px] font-black uppercase tracking-[0.4em] text-muted-foreground/40 flex items-center gap-4 px-2">
               <div className="h-px w-10 bg-primary/20" /> Acesso Rápido
             </h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6">
               {dailySections.map((section) => (
                 <div 
                   key={section.title} 
