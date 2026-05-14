@@ -1082,6 +1082,80 @@ export type Database = {
         }
         Relationships: []
       }
+      seo_audits: {
+        Row: {
+          created_at: string
+          findings: Json
+          headings: Json
+          id: string
+          links: Json
+          meta_tags: Json
+          score: number | null
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          findings?: Json
+          headings?: Json
+          id?: string
+          links?: Json
+          meta_tags?: Json
+          score?: number | null
+          url: string
+        }
+        Update: {
+          created_at?: string
+          findings?: Json
+          headings?: Json
+          id?: string
+          links?: Json
+          meta_tags?: Json
+          score?: number | null
+          url?: string
+        }
+        Relationships: []
+      }
+      seo_corrections: {
+        Row: {
+          applied_at: string | null
+          applied_correction: string | null
+          audit_id: string | null
+          created_at: string
+          id: string
+          issue_details: string | null
+          issue_type: string
+          status: string
+        }
+        Insert: {
+          applied_at?: string | null
+          applied_correction?: string | null
+          audit_id?: string | null
+          created_at?: string
+          id?: string
+          issue_details?: string | null
+          issue_type: string
+          status?: string
+        }
+        Update: {
+          applied_at?: string | null
+          applied_correction?: string | null
+          audit_id?: string | null
+          created_at?: string
+          id?: string
+          issue_details?: string | null
+          issue_type?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "seo_corrections_audit_id_fkey"
+            columns: ["audit_id"]
+            isOneToOne: false
+            referencedRelation: "seo_audits"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       seo_settings: {
         Row: {
           business_address: string | null
