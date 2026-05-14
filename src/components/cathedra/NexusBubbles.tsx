@@ -586,18 +586,18 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
                 <motion.div 
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
-                  className="space-y-2.5 p-4 rounded-[2rem] bg-gradient-to-br from-secondary/10 via-card to-primary/5 border border-secondary/20 shadow-sm relative overflow-hidden"
+                  className="space-y-4 p-6 rounded-[2.5rem] bg-gradient-to-br from-secondary/5 via-card to-primary/5 border border-secondary/10 shadow-sm relative overflow-hidden"
                 >
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-secondary/5 rounded-full blur-2xl -mr-8 -mt-8" />
-                  <div className="flex items-center gap-2">
-                    <div className="w-5 h-5 rounded-full bg-secondary/20 flex items-center justify-center">
-                      <Heart className="w-3 h-3 text-secondary" />
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/10 rounded-full blur-3xl -mr-12 -mt-12" />
+                  <div className="flex items-center gap-3">
+                    <div className="w-6 h-6 rounded-full bg-secondary/10 flex items-center justify-center">
+                      <Heart className="w-3.5 h-3.5 text-secondary" />
                     </div>
-                    <span className="text-[10px] font-black uppercase tracking-widest text-secondary">
+                    <span className="text-[11px] font-black uppercase tracking-widest text-secondary/80">
                       Sugeridos para sua Jornada
                     </span>
                   </div>
-                  <div className="flex flex-wrap gap-1.5" role="list" ref={suggestedRef}>
+                  <div className="flex flex-wrap gap-2.5 md:gap-3" role="list" ref={suggestedRef}>
                     {profileSuggestedTags.map((tag, i) => (
                       <div key={tag.slug} role="listitem">
                         <TagBubble 
