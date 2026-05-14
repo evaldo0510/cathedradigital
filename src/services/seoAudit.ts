@@ -87,7 +87,7 @@ export const runSEOAudit = async (url: string = window.location.href) => {
 
   // 2. Headings
   const h1s = Array.from(document.querySelectorAll('h1'));
-  audit.headings!['h1'] = h1s.map(h => h.innerText);
+  audit.headings!['h1'] = h1s.map(h => h.innerText || h.textContent || '');
   if (h1s.length === 0) {
     audit.findings!.push({
       severity: 'critical',
