@@ -107,7 +107,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             <span className="hidden md:inline text-[9px] font-black uppercase tracking-widest">{t('guide') || "Guia"}</span>
           </button>
 
-          <button className="p-2.5 sm:p-3 bg-muted text-primary rounded-xl sm:rounded-2xl border border-border hover:bg-primary hover:text-white transition-all shadow-sm active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none" onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}>
+          <button className="p-3 bg-muted/40 text-primary rounded-[1.25rem] border border-border/40 hover:bg-primary hover:text-white transition-all duration-300 shadow-sm hover:shadow-xl hover:translate-y-[-1px] active:scale-95 focus-visible:ring-2 focus-visible:ring-primary/20 outline-none" onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}>
             <Icons.Search className="w-4 h-4" />
           </button>
 
