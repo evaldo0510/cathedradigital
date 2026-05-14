@@ -154,14 +154,16 @@ const LandingHeader = () => {
           </HomeButton>
 
           {/* Mobile Menu Toggle */}
-          <button
-            className="lg:hidden p-2 text-foreground focus-visible:ring-2 focus-visible:ring-primary rounded-full"
+          <Button
+            variant="ghost"
+            size="icon"
+            className="lg:hidden"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label={isMobileMenuOpen ? "Fechar menu" : "Abrir menu"}
             aria-expanded={isMobileMenuOpen}
           >
             {isMobileMenuOpen ? <X /> : <Menu />}
-          </button>
+          </Button>
         </div>
       </div>
 
