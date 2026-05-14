@@ -5,6 +5,7 @@ import AudioContentPlayer from './AudioContentPlayer';
 import SaintOfTheDayCard from './SaintOfTheDayCard';
 import { BookOpen, Sparkles } from 'lucide-react';
 import { DAILY_VERSES, DAILY_REFLECTIONS } from '@/data/dailyRitual';
+import { HomeCard } from './HomeCard';
 
 const RitualDoDia: React.FC = () => {
   const dayOfYear = useMemo(() => {
@@ -19,11 +20,12 @@ const RitualDoDia: React.FC = () => {
   const audioText = `Versículo do dia: ${verse.text} — ${verse.ref}. Reflexão: ${reflection}`;
 
   return (
-    <motion.div
+    <HomeCard
+      as={motion.div}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-      className="relative overflow-hidden rounded-3xl border border-secondary/20 bg-card shadow-sm"
+      className="relative overflow-hidden border-secondary/20"
     >
       {/* Removed decorative glows for a cleaner, premium look */}
 
@@ -70,17 +72,16 @@ const RitualDoDia: React.FC = () => {
           </p>
         </div>
 
-        {/* Audio Button */}
         <div className="pt-2">
           <AudioContentPlayer
             text={audioText}
             title="Ouvir o Ritual do Dia"
             variant="default"
-            className="w-full rounded-2xl h-12 bg-primary text-primary-foreground font-bold text-xs uppercase tracking-widest hover:bg-primary/90 transition-all focus-visible:ring-4 focus-visible:ring-primary outline-none"
+            className="w-full rounded-2xl h-12 bg-primary text-primary-foreground font-bold text-xs uppercase tracking-widest hover:bg-primary/90 transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none"
           />
         </div>
       </div>
-    </motion.div>
+    </HomeCard>
   );
 };
 

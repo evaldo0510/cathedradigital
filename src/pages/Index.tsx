@@ -1,11 +1,11 @@
 import { useEffect, useState, lazy, Suspense } from "react";
-import { Icons } from "@/constants";
 import { useNavigate } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
 import { AppRoute } from "@/types";
 import { useAuth } from "@/hooks/useAuth";
 import HeroSection from "./landing/HeroSection";
 import LandingHeader from "@/components/landing/LandingHeader";
+import { HeroSkeleton, SectionSkeleton } from "@/components/cathedra/HomeSkeletons";
 
 // Lazy-load below-the-fold sections
 const FeaturesSection = lazy(() => import("./landing/FeaturesSection"));
@@ -64,11 +64,11 @@ const Index = () => {
       />
       <HeroSection onStart={handleStart} onAbout={() => navigate(AppRoute.ABOUT)} />
       <main className="w-full flex flex-col items-center">
-        <Suspense fallback={<div className="py-20 flex items-center justify-center"><Icons.Logo className="w-8 h-8 animate-pulse" variant="blue" /></div>}>
+        <Suspense fallback={<SectionSkeleton />}>
           <div id="features" className="w-full"><FeaturesSection onNavigate={handleNavigate} /></div>
         </Suspense>
         
-        <Suspense fallback={<div className="py-20 flex items-center justify-center text-muted-foreground italic text-sm tracking-widest uppercase">Carregando...</div>}>
+        <Suspense fallback={<SectionSkeleton />}>
           <div className="w-full"><DailyRoutineSection /></div>
           <div id="testimonials" className="w-full"><TestimonialsSection /></div>
           <div id="pricing" className="w-full"><PricingSection /></div>
