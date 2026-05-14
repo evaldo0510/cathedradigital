@@ -226,7 +226,7 @@
 
   /* Standard card shadow and radius */
   .card-standard {
-    @apply bg-card border border-border/10 rounded-2xl shadow-sm transition-all duration-500 hover:shadow-md;
+    @apply bg-card border border-border/10 rounded-2xl shadow-none transition-all duration-500 hover:border-secondary/20;
   }
 }
 
