@@ -110,6 +110,11 @@
     font-size: 16px !important;
   }
 
+  img {
+    content-visibility: auto;
+    image-rendering: -webkit-optimize-contrast;
+  }
+
   body {
     @apply bg-background text-foreground selection:bg-primary/20;
     width: 100% !important;
