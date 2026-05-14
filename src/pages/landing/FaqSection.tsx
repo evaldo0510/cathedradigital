@@ -15,13 +15,13 @@ const FaqSection = () => (
   <section className="w-full section-spacing relative overflow-hidden">
     <div className="app-container max-w-4xl space-y-20 relative z-10">
       <div className="text-center space-y-6">
-        <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/60 italic">Dúvidas</span>
-        <h2 className="font-display font-bold">Perguntas Frequentes</h2>
+        <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/70 italic">Dúvidas</span>
+        <h2 className="font-display font-bold text-foreground">Perguntas Frequentes</h2>
       </div>
 
       <Accordion type="single" collapsible className="space-y-4">
         {faqs.map((faq, i) => (
-          <AccordionItem key={i} value={`faq-${i}`} className="rounded-3xl border border-border bg-card text-card-foreground shadow-sm transition-all duration-300 hover:shadow-md hover:border-primary/20 !p-0 px-6 sm:px-8 overflow-hidden">
+          <AccordionItem key={i} value={`faq-${i}`} className="rounded-3xl border border-border bg-card text-card-foreground shadow-sm transition-all duration-300 hover:shadow-md hover:border-primary/20 !p-0 px-6 sm:px-8 overflow-hidden focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2">
             <AccordionTrigger className="text-left font-serif font-bold text-base py-6 hover:no-underline border-none">
               {faq.q}
             </AccordionTrigger>

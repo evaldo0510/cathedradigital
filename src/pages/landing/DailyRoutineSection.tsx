@@ -32,8 +32,8 @@ const DailyRoutineSection = () => {
       <div className="app-container space-y-20">
         <div className="text-center space-y-6 max-w-3xl mx-auto">
           <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/60 italic">O Ritmo</span>
-          <h2 className="font-display font-bold">Vivência Cotidiana</h2>
-          <p className="text-muted-foreground font-serif text-lg md:text-xl mx-auto">Fazei tudo para a glória de Deus.</p>
+          <h2 className="font-display font-bold text-foreground">Vivência Cotidiana</h2>
+          <p className="text-muted-foreground/90 font-serif text-lg md:text-xl mx-auto">Fazei tudo para a glória de Deus.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">

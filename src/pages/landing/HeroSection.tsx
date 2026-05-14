@@ -29,6 +29,7 @@ const HeroSection = ({ onStart, onAbout }: HeroSectionProps) => {
         onStart={onStart} 
         onAbout={onAbout} 
       />
+      <div className="sr-only">Rolar para baixo para ver as funcionalidades</div>
       <HeroScrollIndicator />
     </section>
   );

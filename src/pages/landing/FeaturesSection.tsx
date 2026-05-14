@@ -40,7 +40,7 @@ const FeatureCard = ({ feature, onNavigate }: { feature: typeof features[0]; onN
   return (
     <HomeCard
       as="button"
-      className="p-8 flex flex-col items-center text-center space-y-6 cursor-pointer group w-full appearance-none outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+      className="p-8 flex flex-col items-center text-center space-y-6 group w-full appearance-none"
       onClick={() => onNavigate(feature.route)}
       onKeyDown={(e: React.KeyboardEvent) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -76,9 +76,9 @@ const FeaturesSection = ({ onNavigate }: FeaturesSectionProps) => {
     <section ref={sectionRef} className="w-full section-spacing relative overflow-hidden">
       <div className="app-container relative z-10">
         <div className="text-center space-y-6 max-w-3xl mx-auto mb-20 md:mb-24">
-          <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/60 italic">O Caminho</span>
-          <h2 className="font-display font-bold">Arquitetura do Conhecimento</h2>
-          <p className="text-muted-foreground font-serif text-lg md:text-xl mx-auto">A luz de Cristo ilumina o coração.</p>
+          <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/70 italic">O Caminho</span>
+          <h2 className="font-display font-bold text-foreground">Arquitetura do Conhecimento</h2>
+          <p className="text-muted-foreground/90 font-serif text-lg md:text-xl mx-auto">A luz de Cristo ilumina o coração.</p>
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">
