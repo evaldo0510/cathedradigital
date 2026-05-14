@@ -10,7 +10,7 @@ const AboutCreatorSection = () => {
   return (
     <section className="py-24 px-6 relative overflow-hidden">
       {/* Decorative background elements simplified */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/2 rounded-full pointer-events-none" />
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-12 md:gap-20">
