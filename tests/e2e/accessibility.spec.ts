@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { injectAxe, checkA11y } from '@axe-core/playwright';
+import AxeBuilder from '@axe-core/playwright';
 
 test.describe('Home Page Accessibility & Keyboard Navigation', () => {
   test.beforeEach(async ({ page }) => {
@@ -9,19 +9,11 @@ test.describe('Home Page Accessibility & Keyboard Navigation', () => {
   });
 
   test('full accessibility audit with axe-core', async ({ page }) => {
-    await injectAxe(page);
+    const accessibilityScanResults = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'best-practice'])
+      .analyze();
     
-    // Check the whole page
-    await checkA11y(page, undefined, {
-      axeOptions: {
-        runOnly: {
-          type: 'tag',
-          values: ['wcag2a', 'wcag2aa', 'best-practice']
-        }
-      },
-      detailedReport: true,
-      detailedReportOptions: { html: true }
-    });
+    expect(accessibilityScanResults.violations).toEqual([]);
   });
 
   test('should have a functional skip link as first tabbable element', async ({ page }) => {
