@@ -4,22 +4,18 @@ import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 import { LangContext } from '@/contexts/LangContext';
 import { useSaintsToday, useOfficialSaint } from '@/hooks/useSaints';
-import SaintOfTheDayCard from './SaintOfTheDayCard';
 import RitualDoDia from './RitualDoDia';
 import NexusBubbles from './NexusBubbles';
-import HomeStats from './HomeStats';
 import HomeMainDoors from './HomeMainDoors';
 import { useDashboardData } from '@/hooks/useDashboardData';
 import { toast } from 'sonner';
 import SEOHead from '@/components/SEOHead';
 import { useQuery } from '@tanstack/react-query';
-import { SaintCardSkeleton } from './SacredSkeleton';
 import { DashboardSkeleton } from './DashboardSkeleton';
 import DevDataInspector from './DevDataInspector';
 import { ProfileId } from './SpiritualQuiz';
@@ -32,11 +28,8 @@ const LITURGICAL_QUOTES = [
   '"Amai-vos uns aos outros como eu vos amei." — Jo 15,12',
 ];
 
-// Removed redundant hooks in favor of useDashboardData
-
-
 const JourneySkeleton = () => (
-  <div className="p-6 rounded-3xl border border-border bg-card relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-primary/5 before:to-transparent">
+  <div className="p-6 rounded-[2rem] border border-border bg-card relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-primary/5 before:to-transparent shadow-sm">
     <div className="flex items-center gap-5">
       <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
         <Icons.Compass className="w-6 h-6 text-primary/20" />
@@ -53,21 +46,15 @@ const JourneySkeleton = () => (
 const HojePage: React.FC = () => {
   const navigate = useNavigate();
   const { user, profile, userLevel } = useAuth();
-  const { t, lang } = useContext(LangContext);
-  const [journalText, setJournalText] = useState('');
-  const [journalSaved, setJournalSaved] = useState(false);
-  const [todayQuote] = useState(() => LITURGICAL_QUOTES[new Date().getDate() % LITURGICAL_QUOTES.length]);
-
-  const { data: allSaintsToday = [], isLoading: loadingSaints } = useSaintsToday();
+  const { lang } = useContext(LangContext);
+  const { data: allSaintsToday = [] } = useSaintsToday();
   const { data: officialSaint } = useOfficialSaint();
   
-  // Unified dashboard data fetch
-  const { spiritualProfile, nextUp, activeJourneys, weeklyStats, isLoading: loadingStats } = useDashboardData(user as any);
+  const { spiritualProfile, nextUp, activeJourneys, isLoading: loadingStats } = useDashboardData(user as any);
 
   const activeJourney = activeJourneys?.[0] || null;
   const journeyProgress = activeJourney ? { completed: activeJourney.completedSteps, total: activeJourney.totalSteps } : { completed: 0, total: 0 };
   
-  // Logic to determine if we should show a recommended journey
   const hasActiveJourney = activeJourneys && activeJourneys.length > 0;
   
   const { data: recommendedJourney } = useQuery({
@@ -75,12 +62,11 @@ const HojePage: React.FC = () => {
     queryFn: async () => {
       if (!user?.id || hasActiveJourney) return null;
       const result = profile?._sensitive?.diagnosis_result as Record<string, string> | undefined;
-      const { moment, prayer, knowledge, goal } = result || {};
+      const { moment, prayer, knowledge } = result || {};
       let category = 'fundamentos';
       if (userLevel === 'iniciante' || moment === 'beginning' || knowledge === 'basic') category = 'fundamentos';
-      else if (userLevel === 'avançado' || prayer === 'contemplative' || goal === 'transformation') category = 'formacao';
-      else if (moment === 'struggling' || goal === 'peace') category = 'mistico';
-      else if (goal === 'routine' || prayer === 'rarely' || prayer === 'sometimes') category = 'rotina';
+      else if (userLevel === 'avançado' || prayer === 'contemplative') category = 'formacao';
+      else if (moment === 'struggling') category = 'mistico';
       
       const { data } = await supabase
         .from('journeys')
@@ -96,30 +82,12 @@ const HojePage: React.FC = () => {
     staleTime: 1000 * 60 * 30,
   });
 
-
   const hour = new Date().getHours();
   const greeting = useMemo(() => {
     if (hour < 12) return lang === 'pt' ? 'Bom dia' : 'Good morning';
     if (hour < 18) return lang === 'pt' ? 'Boa tarde' : 'Good afternoon';
     return lang === 'pt' ? 'Boa noite' : 'Good evening';
   }, [hour, lang]);
-
-  const saveJournal = useCallback(async () => {
-    if (!user || !journalText.trim()) return;
-    try {
-      await supabase.from('spiritual_journal').insert([{
-        user_id: user.id,
-        content: journalText.trim(),
-        entry_date: new Date().toISOString().split('T')[0],
-      }]);
-      setJournalSaved(true);
-      setTimeout(() => setJournalSaved(false), 3000);
-      toast.success('Sua reflexão foi salva no seu diário espiritual.');
-    } catch (err) {
-      console.error('Failed to save journal:', err);
-      toast.error('Erro ao salvar diário');
-    }
-  }, [user, journalText]);
 
   const dailySections = useMemo(() => [
     { title: 'Ritual do dia', icon: <Icons.Calendar className="w-5 h-5" />, route: `${AppRoute.LITURGIA}?tab=liturgia`, color: 'bg-primary/10 text-primary' },
@@ -131,7 +99,7 @@ const HojePage: React.FC = () => {
   ], []);
 
   return (
-    <div className="desktop-layout pt-6 md:pt-16 pb-24">
+    <div className="desktop-layout pt-6 md:pt-20 pb-24">
       {loadingStats && <DashboardSkeleton />}
       <SEOHead 
         title="Cathedra Digital — Nem toda prisão é visível" 
@@ -139,53 +107,57 @@ const HojePage: React.FC = () => {
         path="/hoje" 
       />
       {import.meta.env.DEV && <DevDataInspector data={{ officialSaint, allSaintsToday, activeJourney, profile: profile?._sensitive }} />}
-      <div className="desktop-main space-y-16 max-w-2xl mx-auto lg:max-w-none lg:mx-0">
+      <div className="desktop-main space-y-20 max-w-2xl mx-auto lg:max-w-none lg:mx-0">
         <motion.div 
-          initial={{ opacity: 0, y: 30 }} 
+          initial={{ opacity: 0, y: 40 }} 
           animate={{ opacity: 1, y: 0 }} 
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-center space-y-8 pt-4 md:pt-0"
+          transition={{ duration: 1, ease: "easeOut" }}
+          className="text-center space-y-10 pt-4 md:pt-0"
         >
-          <div className="space-y-6">
+          <div className="space-y-8">
             <motion.p 
-              initial={{ opacity: 0, tracking: "0.2em" }}
-              animate={{ opacity: 1, tracking: "0.4em" }}
-              transition={{ duration: 1, delay: 0.3 }}
-              className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.4em] text-primary/60"
+              initial={{ opacity: 0, letterSpacing: "0.2em" }}
+              animate={{ opacity: 1, letterSpacing: "0.4em" }}
+              transition={{ duration: 1.2, delay: 0.4 }}
+              className="text-[10px] md:text-[12px] font-black uppercase tracking-[0.4em] text-primary/60"
             >
               {greeting}, {profile?.name?.split(' ')[0] || 'fiel'}
             </motion.p>
-            <h1 className="text-5xl md:text-8xl font-serif text-foreground leading-[1.05] tracking-tight">
+            <h1 className="text-5xl md:text-9xl font-serif text-foreground leading-[1] tracking-tight">
               "Nem toda prisão <br /><span className="text-primary italic font-medium">é visível."</span>
             </h1>
           </div>
-
-          <div className="flex items-center justify-center gap-4 flex-wrap pt-2">
+          <div className="flex items-center justify-center gap-6 flex-wrap pt-4">
              {(profile?.streak || 0) > 0 && (
-              <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-primary/5 border border-primary/10 shadow-sm">
-                <Icons.Zap className="w-4 h-4 text-primary" />
-                <span className="text-xs font-black text-primary uppercase tracking-wider">{profile?.streak} {profile?.streak === 1 ? 'Dia' : 'Dias'}</span>
-              </div>
+              <motion.div 
+                whileHover={{ scale: 1.05 }}
+                className="flex items-center gap-3 px-6 py-3 rounded-[1.5rem] bg-primary/5 border border-primary/10 shadow-sm backdrop-blur-sm"
+              >
+                <Icons.Zap className="w-5 h-5 text-primary" />
+                <span className="text-[11px] font-black text-primary uppercase tracking-[0.2em]">{profile?.streak} {profile?.streak === 1 ? 'Dia' : 'Dias'}</span>
+              </motion.div>
             )}
-            <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-primary/5 border border-border shadow-sm">
-              <Icons.Star className="w-4 h-4 text-primary" />
-              <span className="text-xs font-black text-primary uppercase tracking-wider">{profile?.xp || 0} XP</span>
-            </div>
+            <motion.div 
+              whileHover={{ scale: 1.05 }}
+              className="flex items-center gap-3 px-6 py-3 rounded-[1.5rem] bg-card/50 border border-border shadow-sm backdrop-blur-sm"
+            >
+              <Icons.Star className="w-5 h-5 text-primary" />
+              <span className="text-[11px] font-black text-primary uppercase tracking-[0.2em]">{profile?.xp || 0} XP</span>
+            </motion.div>
           </div>
         </motion.div>
 
-        <section className="space-y-4">
-          <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 flex items-center gap-3">
-            <div className="h-px w-6 bg-muted-foreground/30" /> Continuar jornada
+        <section className="space-y-6">
+          <h2 className="text-[11px] font-black uppercase tracking-[0.4em] text-muted-foreground/40 flex items-center gap-4 px-2">
+            <div className="h-px w-10 bg-primary/20" /> Continuar jornada
           </h2>
           {nextUp ? (
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
+              transition={{ delay: 0.3 }}
               tabIndex={0}
               role="button"
-              aria-label={`Continuar leitura: ${nextUp.label}`}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault();
@@ -193,192 +165,127 @@ const HojePage: React.FC = () => {
                 }
               }}
               onClick={() => navigate(nextUp.route)}
-              className="p-6 rounded-[2rem] border border-primary/20 bg-gradient-to-br from-primary/5 via-card/50 to-card backdrop-blur-md cursor-pointer hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none transition-all duration-500 flex items-center justify-between group"
+              className="p-8 rounded-[2.5rem] border border-primary/20 bg-gradient-to-br from-primary/5 via-card/50 to-card backdrop-blur-xl cursor-pointer hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-700 flex items-center justify-between group"
             >
-              <div className="flex items-center gap-5">
-                <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                  {nextUp.type === 'bible' ? <Icons.Bible className="w-6 h-6" /> : 
-                   nextUp.type === 'catechism' ? <Icons.Catechism className="w-6 h-6" /> : 
-                   <Icons.Flame className="w-6 h-6" />}
+              <div className="flex items-center gap-6">
+                <div className="w-16 h-16 rounded-[1.25rem] bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-500 shadow-inner">
+                  {nextUp.type === 'bible' ? <Icons.Bible className="w-8 h-8" /> : 
+                   nextUp.type === 'catechism' ? <Icons.Catechism className="w-8 h-8" /> : 
+                   <Icons.Flame className="w-8 h-8" />}
                 </div>
-                <div>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-1">{nextUp.subtitle}</p>
-                  <h3 className="text-lg font-bold text-foreground leading-tight group-hover:text-primary transition-colors">{nextUp.label}</h3>
+                <div className="space-y-1">
+                  <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/60">{nextUp.subtitle}</p>
+                  <h3 className="text-xl md:text-2xl font-bold text-foreground leading-tight group-hover:text-primary transition-colors duration-500">{nextUp.label}</h3>
                 </div>
               </div>
-              <Icons.ChevronRight className="w-5 h-5 text-primary group-hover:translate-x-1 transition-transform" />
+              <div className="w-12 h-12 rounded-full border border-primary/20 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-500">
+                <Icons.ChevronRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+              </div>
             </motion.div>
           ) : (
-            <p className="text-xs text-muted-foreground italic px-4">Inicie uma leitura para retomar aqui.</p>
+            <p className="text-sm text-muted-foreground italic px-6 font-serif">Inicie uma leitura para retomar aqui.</p>
           )}
         </section>
 
         <RitualDoDia />
 
-        <div className="space-y-10">
-          <section className="space-y-4">
-            <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 flex items-center gap-3">
-              <div className="h-px w-6 bg-muted-foreground/30" /> Portas da Fé
+        <div className="space-y-16">
+          <section className="space-y-6">
+            <h2 className="text-[11px] font-black uppercase tracking-[0.4em] text-muted-foreground/40 flex items-center gap-4 px-2">
+              <div className="h-px w-10 bg-primary/20" /> Portas da Fé
             </h2>
-            <HomeMainDoors t={t} />
+            <HomeMainDoors t={(k) => k} />
           </section>
 
-          <section className="space-y-4">
-            <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 flex items-center gap-3">
-              <div className="h-px w-6 bg-muted-foreground/30" /> Nexus Espiritual
+          <section className="space-y-6">
+            <h2 className="text-[11px] font-black uppercase tracking-[0.4em] text-muted-foreground/40 flex items-center gap-4 px-2">
+              <div className="h-px w-10 bg-primary/20" /> Nexus Espiritual
             </h2>
-            <NexusBubbles profileId={spiritualProfile as ProfileId} />
+            <div className="p-2">
+              <NexusBubbles profileId={spiritualProfile as ProfileId} />
+            </div>
           </section>
-          <section className="space-y-4">
-            <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 flex items-center gap-3">
-              <div className="h-px w-6 bg-muted-foreground/30" /> Continuar Jornada
+          
+          <section className="space-y-6">
+            <h2 className="text-[11px] font-black uppercase tracking-[0.4em] text-muted-foreground/40 flex items-center gap-4 px-2">
+              <div className="h-px w-10 bg-primary/20" /> Itinerarium Mentis
             </h2>
             {loadingStats ? <JourneySkeleton /> : activeJourney ? (
               <motion.div 
-                whileHover={{ scale: 1.01 }} 
-                whileTap={{ scale: 0.99 }} 
-                tabIndex={0}
-                role="button"
-                aria-label={`Continuar jornada: ${activeJourney.title}`}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    navigate(`/jornadas/${activeJourney.id}`);
-                  }
-                }}
+                whileHover={{ y: -8 }} 
+                className="group cursor-pointer p-8 rounded-[2.5rem] border border-primary/20 bg-primary/5 hover:border-primary/40 transition-all duration-500 shadow-sm"
                 onClick={() => navigate(`/jornadas/${activeJourney.id}`)} 
-                className="group cursor-pointer p-6 rounded-3xl border border-primary/20 bg-primary/5 hover:border-primary/40 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none transition-all shadow-sm"
               >
-                <div className="flex items-center gap-5">
-                  <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/20 transition-colors"><Icons.Flame className="w-6 h-6" /></div>
-                  <div className="flex-1">
-                    <h3 className="text-base font-bold text-foreground">{activeJourney.title}</h3>
-                    <div className="mt-3 flex items-center gap-4">
-                      <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
-                        <div className="h-full bg-primary transition-all duration-1000 ease-out" style={{ width: `${journeyProgress.total > 0 ? (journeyProgress.completed / journeyProgress.total) * 100 : 0}%` }} />
+                <div className="flex items-center gap-6">
+                  <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/20 transition-colors duration-500"><Icons.Flame className="w-7 h-7" /></div>
+                  <div className="flex-1 space-y-4">
+                    <div>
+                      <h3 className="text-xl font-bold text-foreground">{activeJourney.title}</h3>
+                      <p className="text-[10px] uppercase font-black tracking-widest text-primary/60 mt-1">Sua Jornada Ativa</p>
+                    </div>
+                    <div className="flex items-center gap-6">
+                      <div className="flex-1 h-3 bg-muted rounded-full overflow-hidden p-[2px]">
+                        <div className="h-full bg-primary rounded-full transition-all duration-1000 ease-out shadow-[0_0_10px_rgba(var(--primary),0.3)]" style={{ width: `${journeyProgress.total > 0 ? (journeyProgress.completed / journeyProgress.total) * 100 : 0}%` }} />
                       </div>
-                      <span className="text-[11px] font-black text-primary uppercase tabular-nums">{journeyProgress.completed}/{journeyProgress.total}</span>
+                      <span className="text-xs font-black text-primary uppercase tabular-nums tracking-widest">{journeyProgress.completed}/{journeyProgress.total}</span>
                     </div>
                   </div>
-                  <Icons.ChevronRight className="w-6 h-6 text-muted-foreground group-hover:translate-x-1 transition-transform" />
+                  <Icons.ChevronRight className="w-7 h-7 text-muted-foreground group-hover:translate-x-1 group-hover:text-primary transition-all" />
                 </div>
               </motion.div>
             ) : recommendedJourney ? (
               <motion.div 
-                whileHover={{ scale: 1.01 }} 
-                whileTap={{ scale: 0.99 }} 
-                tabIndex={0}
-                role="button"
-                aria-label={`Iniciar jornada recomendada: ${recommendedJourney.title}`}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    navigate(`/jornadas/${recommendedJourney.id}`);
-                  }
-                }}
+                whileHover={{ y: -8 }} 
                 onClick={() => navigate(`/jornadas/${recommendedJourney.id}`)} 
-                className="group cursor-pointer p-6 rounded-3xl border border-border bg-muted/20 hover:border-primary/20 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none transition-all shadow-sm"
+                className="group cursor-pointer p-8 rounded-[2.5rem] border border-border bg-muted/20 hover:border-primary/30 transition-all duration-500 shadow-sm"
               >
-                <div className="flex items-center gap-5">
-                  <div className="w-14 h-14 rounded-2xl bg-muted flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors"><Icons.Compass className="w-7 h-7" /></div>
-                  <div className="flex-1"><h3 className="text-base font-bold text-foreground">{recommendedJourney.title}</h3><p className="text-xs text-muted-foreground mt-1 font-medium">Sugerido especialmente para seu perfil</p></div>
-                  <Icons.ChevronRight className="w-6 h-6 text-muted-foreground group-hover:translate-x-1 transition-transform" />
+                <div className="flex items-center gap-6">
+                  <div className="w-16 h-16 rounded-[1.5rem] bg-muted flex items-center justify-center text-muted-foreground group-hover:text-primary group-hover:bg-primary/5 transition-all duration-500"><Icons.Compass className="w-8 h-8" /></div>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-bold text-foreground">{recommendedJourney.title}</h3>
+                    <p className="text-xs text-muted-foreground mt-1 font-medium font-serif italic">Sugerido especialmente para seu perfil espiritual</p>
+                  </div>
+                  <Icons.ChevronRight className="w-7 h-7 text-muted-foreground group-hover:translate-x-1 group-hover:text-primary transition-all" />
                 </div>
               </motion.div>
             ) : (
-              <motion.div 
-                whileHover={{ scale: 1.01 }} 
-                whileTap={{ scale: 0.99 }} 
-                tabIndex={0}
-                role="button"
-                aria-label="Explorar todas as jornadas"
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    navigate(AppRoute.JORNADAS);
-                  }
-                }}
+              <Button 
+                variant="outline" 
                 onClick={() => navigate(AppRoute.JORNADAS)} 
-                className="group cursor-pointer p-6 rounded-3xl border border-border bg-muted/20 hover:border-primary/20 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none transition-all shadow-sm"
+                className="w-full h-24 rounded-[2rem] border-dashed border-2 hover:bg-primary/5 group"
               >
-                <div className="flex items-center gap-5">
-                  <div className="w-14 h-14 rounded-2xl bg-muted flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors"><Icons.Route className="w-7 h-7" /></div>
-                  <div className="flex-1"><h3 className="text-base font-bold text-foreground">Iniciar uma Jornada</h3><p className="text-xs text-muted-foreground mt-1 font-medium">Descubra o caminho ideal para o seu momento espiritual</p></div>
-                  <Icons.ChevronRight className="w-6 h-6 text-muted-foreground group-hover:translate-x-1 transition-transform" />
+                <div className="flex items-center gap-4">
+                  <Icons.Route className="w-6 h-6 text-muted-foreground group-hover:text-primary transition-colors" />
+                  <span className="text-sm font-bold">Descobrir minha próxima Jornada</span>
                 </div>
-              </motion.div>
+              </Button>
             )}
           </section>
-          <section className="space-y-4">
-            <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 flex items-center gap-3"><div className="h-px w-6 bg-muted-foreground/30" /> Acesso Rápido</h2>
-            <div className="grid grid-cols-3 gap-4">
+
+          <section className="space-y-6">
+            <h2 className="text-[11px] font-black uppercase tracking-[0.4em] text-muted-foreground/40 flex items-center gap-4 px-2">
+              <div className="h-px w-10 bg-primary/20" /> Acesso Rápido
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
               {dailySections.map((section) => (
                 <motion.div 
                   key={section.title} 
-                  whileHover={{ y: -4 }} 
-                  whileTap={{ scale: 0.96 }} 
-                  tabIndex={0}
-                  role="button"
-                  aria-label={`Acessar ${section.title}`}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      navigate(section.route);
-                    }
-                  }}
+                  whileHover={{ y: -8, scale: 1.02 }} 
+                  whileTap={{ scale: 0.95 }} 
                   onClick={() => navigate(section.route)} 
-                  className="group cursor-pointer p-4 rounded-2xl border border-border bg-background hover:border-primary/5 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none transition-all text-center space-y-3"
+                  className="group cursor-pointer p-6 rounded-[2rem] border border-border bg-card/30 hover:bg-card hover:border-primary/20 transition-all duration-500 shadow-sm text-center space-y-4"
                 >
-                  <div className={`mx-auto w-12 h-12 rounded-xl flex items-center justify-center ${section.color} group-hover:scale-110 transition-transform`}>{section.icon}</div>
-                  <h3 className="font-bold text-[11px] text-foreground leading-tight uppercase tracking-wider">{section.title}</h3>
+                  <div className={`w-14 h-14 mx-auto rounded-2xl ${section.color} flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform duration-500`}>
+                    {section.icon}
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground group-hover:text-primary transition-colors block leading-tight">
+                    {section.title}
+                  </span>
                 </motion.div>
               ))}
             </div>
           </section>
         </div>
-        <div id="spiritual-journal" className="pt-12 scroll-mt-24 space-y-6">
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="relative space-y-4">
-            <div className="flex flex-wrap gap-2 mb-2">
-              {[{ label: 'Gratidão', icon: '🙏', text: 'Hoje sou grato por...' }, { label: 'Pedido', icon: '🤲', text: 'Peço a Deus por...' }, { label: 'Dúvida', icon: '🤔', text: 'Tenho uma dúvida sobre...' }, { label: 'Reflexão', icon: '📖', text: 'Refletindo sobre a liturgia de hoje...' }].map((prompt) => (
-                <Button key={prompt.label} variant="outline" size="sm" onClick={() => setJournalText(prompt.text)} className="rounded-full h-8 text-[10px] font-bold uppercase tracking-wider bg-background/50 border-border/40 hover:bg-primary/5 hover:border-primary/20 transition-all">{prompt.icon} {prompt.label}</Button>
-              ))}
-            </div>
-            <div className="relative group">
-              <div className="absolute inset-0 bg-primary/5 blur-xl rounded-[2rem] group-focus-within:bg-primary/10 transition-colors" />
-              <Textarea placeholder="Abra seu coração... O que você gostaria de registrar hoje?" value={journalText} onChange={(e) => setJournalText(e.target.value)} className="relative min-h-[180px] rounded-[2rem] border-border/40 bg-background/60 backdrop-blur-md p-8 text-lg font-serif italic shadow-inner focus:ring-primary/20 transition-all resize-none overflow-hidden" />
-              <div className="absolute bottom-6 right-6 flex items-center gap-3">
-                {journalSaved && <motion.span initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} className="text-[10px] font-black text-primary uppercase tracking-widest flex items-center gap-1.5"><Icons.Check className="w-3 h-3" /> Salvo</motion.span>}
-                <Button onClick={saveJournal} disabled={!journalText.trim()} className="rounded-full px-6 font-black uppercase text-[10px] tracking-widest h-9">Salvar Reflexão</Button>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-      <aside className="desktop-aside space-y-6 hidden lg:block">
-        <div className="desktop-card space-y-4">
-          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary">Frutos da Semana</h3>
-          <HomeStats stats={weeklyStats} t={t} />
-        </div>
-
-        <div className="desktop-card space-y-3">
-          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground">Explorar</h3>
-          <div className="space-y-1.5" role="navigation" aria-label="Explorar seções">
-            {[{ label: 'A-Z da Fé', route: AppRoute.AZ_FAITH, icon: <Icons.AZ className="w-4 h-4" /> }, { label: 'Jornadas', route: AppRoute.JORNADAS, icon: <Icons.Journeys className="w-4 h-4" /> }, { label: 'Comunidade', route: AppRoute.COMMUNITY, icon: <Icons.Users className="w-4 h-4" /> }].map((item) => (
-              <button 
-                key={item.label} 
-                onClick={() => navigate(item.route)} 
-                aria-label={`Abrir ${item.label}`}
-                className="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-muted/50 transition-all text-left group focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
-              >
-                <span className="text-muted-foreground group-hover:text-primary transition-colors" aria-hidden="true">{item.icon}</span>
-                <span className="text-sm font-medium text-foreground">{item.label}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      </aside>
-      <div className="pt-12 border-t border-border/50 text-center pb-24 space-y-6">
-        <p className="text-[11px] text-muted-foreground font-serif italic max-w-md mx-auto">"{todayQuote}"</p>
       </div>
     </div>
   );
