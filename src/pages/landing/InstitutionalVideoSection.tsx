@@ -364,7 +364,21 @@ const InstitutionalVideoSection = () => {
                   <div className="flex items-center gap-2 px-3 py-1.5 bg-white/10 rounded-full border border-white/20">
                     <Languages className="w-4 h-4 text-white/70" />
                     <select 
-...
+                      value={currentLang}
+                      onChange={(e) => {
+                        const newLang = e.target.value;
+                        const previousLang = currentLang;
+                        setCurrentLang(newLang);
+                        localStorage.setItem('cathedra_video_lang', newLang);
+                        trackEvent('video_lang_change', { 
+                          from_lang: previousLang,
+                          to_lang: newLang 
+                        });
+                      }}
+                      className="bg-transparent text-white text-xs font-bold focus:outline-none cursor-pointer"
+                      aria-label="Selecionar idioma das legendas"
+                    >
+                      {SUBTITLES.map(s => <option key={s.lang} value={s.lang} className="bg-black">{s.label}</option>)}
                     </select>
                   </div>
                   
