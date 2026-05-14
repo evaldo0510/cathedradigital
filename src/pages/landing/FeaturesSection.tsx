@@ -39,18 +39,19 @@ interface FeaturesSectionProps {
 
 const FeatureCard = ({ feature, onNavigate }: { feature: typeof features[0]; onNavigate: (r: string) => void }) => {
   return (
-    <div
-      className="desktop-card flex flex-col items-center text-center space-y-6 cursor-pointer group"
+    <button
+      className="desktop-card flex flex-col items-center text-center space-y-6 cursor-pointer group w-full appearance-none text-left"
       onClick={() => onNavigate(feature.route)}
+      aria-label={`Explorar ${feature.title}`}
     >
-      <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors">
+      <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors" aria-hidden="true">
         {React.cloneElement(feature.icon as React.ReactElement, { className: "w-6 h-6" })}
       </div>
-      <div className="space-y-2">
-        <h3 className="text-xl font-display font-bold">{feature.title}</h3>
-        <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
+      <div className="space-y-2 w-full">
+        <h3 className="text-xl font-display font-bold text-center">{feature.title}</h3>
+        <p className="text-sm text-muted-foreground leading-relaxed text-center">{feature.description}</p>
       </div>
-    </div>
+    </button>
   );
 };
 FeatureCard.displayName = 'FeatureCard';
