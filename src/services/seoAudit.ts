@@ -152,7 +152,7 @@ export const runSEOAudit = async (url: string = window.location.href) => {
     .single();
 
   if (error) throw error;
-  return data as unknown as SEOAudit;
+  return { ...audit, ...data } as unknown as SEOAudit;
 };
 
 export const getAuditHistory = async () => {
