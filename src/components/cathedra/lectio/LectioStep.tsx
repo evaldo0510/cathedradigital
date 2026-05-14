@@ -177,28 +177,29 @@ const LectioStep: React.FC<LectioStepProps> = ({
 
       {/* Navigation */}
       <div className="flex gap-4 justify-center px-4">
-        <button
+        <Button
+          variant="outline"
           disabled={stepIndex <= 0}
           onClick={() => onStepChange(STEPS[stepIndex - 1].id)}
-          className="flex-1 max-w-[200px] h-14 rounded-full bg-card border border-border text-[10px] font-black uppercase tracking-widest disabled:opacity-20 hover:bg-primary/5 transition-all flex items-center justify-center gap-2 group shadow-sm"
+          className="flex-1 max-w-[200px] h-14 rounded-full"
         >
-          <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Anterior
-        </button>
+          <ChevronLeft className="w-4 h-4" /> Anterior
+        </Button>
         
         {stepIndex < STEPS.length - 1 ? (
-          <button
+          <Button
             onClick={() => onStepChange(STEPS[stepIndex + 1].id)}
-            className="flex-1 max-w-[200px] h-14 rounded-full bg-foreground text-background text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-2 group shadow-xl"
+            className="flex-1 max-w-[200px] h-14 rounded-full bg-foreground text-background hover:bg-primary"
           >
-            Próximo <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </button>
+            Próximo <ChevronRight className="w-4 h-4" />
+          </Button>
         ) : (
-          <button
+          <Button
             onClick={() => onStepChange('conclusio')}
-            className="flex-1 max-w-[200px] h-14 rounded-full bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-2 group shadow-xl shadow-primary/20"
+            className="flex-1 max-w-[200px] h-14 rounded-full bg-primary text-primary-foreground shadow-xl shadow-primary/20"
           >
             <CheckCircle2 className="w-4 h-4" /> Concluir
-          </button>
+          </Button>
         )}
       </div>
     </div>
