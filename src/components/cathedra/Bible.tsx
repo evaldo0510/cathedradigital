@@ -712,10 +712,10 @@ const Bible: React.FC = () => {
               <button 
                 key={ch} 
                 onClick={() => selectChapter(ch)}
-                className={`aspect-square flex items-center justify-center rounded-lg border text-xs sm:text-sm font-bold transition-all relative
+                className={`aspect-square flex items-center justify-center rounded-xl border text-xs sm:text-sm font-black transition-all duration-300 relative
                   ${isRead 
-                    ? 'bg-primary/10 border-primary/30 text-primary' 
-                    : 'bg-card border-border text-muted-foreground hover:border-primary/40 hover:text-foreground hover:scale-[1.05]'}`}
+                    ? 'bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/10' 
+                    : 'bg-card border-border/40 text-muted-foreground hover:border-primary/40 hover:text-primary hover:bg-primary/5 hover:translate-y-[-2px] hover:shadow-md'}`}
               >
                 {ch}
                 {isRead && <Icons.CheckCircle2 className="w-2 h-2 absolute top-0.5 right-0.5" />}
