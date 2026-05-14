@@ -10,9 +10,15 @@ import { useSEO, useKeywords, SEOSettings } from '@/hooks/useSEO';
 import { 
   Globe, Search, LineChart, Save, Plus, Trash2, 
   ExternalLink, CheckCircle2, AlertCircle, Sparkles,
-  Smartphone, Monitor, Share2, Info, MapPin, XCircle, Copy, FileCode, Eye, Check
+  Smartphone, Monitor, Share2, Info, MapPin, XCircle, Copy, FileCode, Eye, Check,
+  History, Play, CheckCircle, ChevronDown, ChevronUp, RefreshCw, FileText
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { runSEOAudit, getAuditHistory, SEOAudit, SEOFinding } from '@/services/seoAudit';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const AdminSeoTab: React.FC = () => {
   const { data: seoSettings, refetch: refetchSEO } = useSEO();
