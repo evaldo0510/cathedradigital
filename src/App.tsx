@@ -641,6 +641,7 @@ const AppLayout: React.FC = () => {
                       </AdminGuard>
                     </PageTransition>
                   } />
+                  <Route path=\"/design-system\" element={<PageTransition><DesignSystemGuide /></PageTransition>} />
                   <Route path="*" element={<Navigate to={AppRoute.HOJE} replace />} />
                 </Routes>
               </AnimatePresence>
