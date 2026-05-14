@@ -56,17 +56,17 @@ const PricingSection = () => {
   ];
 
   return (
-    <section className="w-full section-spacing px-6 bg-background relative overflow-hidden">
-      <div className="container mx-auto space-y-20">
+    <section className="w-full section-spacing bg-background relative overflow-hidden">
+      <div className="app-container space-y-20">
         <div className="text-center space-y-6 max-w-3xl mx-auto">
           <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60 block italic">Investimento Espiritual</span>
-          <h2 className="text-3xl md:text-5xl font-display font-bold">Escolha seu Caminho de <span className="text-primary italic font-serif">Crescimento</span></h2>
-          <p className="text-lg text-muted-foreground font-serif max-w-2xl mx-auto">
+          <h2 className="font-display font-bold">Escolha seu Caminho de <span className="text-primary italic font-serif">Crescimento</span></h2>
+          <p className="text-muted-foreground font-serif max-w-2xl mx-auto">
             Buscai primeiro o Reino de Deus e a sua justiça, e todas estas coisas vos serão acrescentadas. (Mt 6,33)
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-3 gap-8 md:gap-10">
           {tiers.map((tier) => (
             <div
               key={tier.name}
