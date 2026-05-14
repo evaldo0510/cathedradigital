@@ -71,7 +71,7 @@ const BIBLE_CATEGORIES: Record<string, BibleCategory[]> = {
       { name: 'Mateus', abbr: 'Mt', chapters: 28 }, { name: 'Marcos', abbr: 'Mc', chapters: 16 },
       { name: 'Lucas', abbr: 'Lc', chapters: 24 }, { name: 'João', abbr: 'Jo', chapters: 21 },
     ]},
-    { label: 'Atos', icon: Icons.Globe, color: 'text-primary', bgColor: 'bg-muted border-border', books: [
+    { label: 'Atos', icon: Icons.Globe, color: 'text-primary', bgColor: 'bg-primary/5 border-primary/10', books: [
       { name: 'Atos dos Apóstolos', abbr: 'At', chapters: 28 },
     ]},
     { label: 'Cartas Paulinas', icon: Icons.Mail, color: 'text-primary', bgColor: 'bg-muted border-border', books: [
