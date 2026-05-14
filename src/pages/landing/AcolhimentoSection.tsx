@@ -13,7 +13,7 @@ const AcolhimentoSection = () => {
           viewport={{ once: true }} 
           className="text-center space-y-6"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 rounded-full text-primary border border-primary/20">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 rounded-2xl text-primary border border-primary/20">
             <Heart className="w-4 h-4 fill-current" aria-hidden="true" />
             <span className="text-[10px] font-black uppercase tracking-widest">Sinta-se em Casa</span>
           </div>
@@ -51,7 +51,7 @@ const AcolhimentoSection = () => {
               whileHover={{ y: -5, scale: 1.02 }}
               className="space-y-4 p-8 bg-card rounded-[2.5rem] border border-border/50 shadow-sm hover:shadow-xl hover:border-primary/20 transition-all duration-300"
             >
-              <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary" aria-hidden="true">
+              <div className="w-10 h-10 bg-primary/10 rounded-2xl flex items-center justify-center text-primary" aria-hidden="true">
                 {item.icon}
               </div>
               <h3 className="text-xl font-bold font-serif">{item.title}</h3>

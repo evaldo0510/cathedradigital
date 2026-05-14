@@ -148,7 +148,7 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
       animate={{ opacity: 1, scale: 1 }}
       className="reader-text bg-muted/30 border border-border rounded-[2rem] p-8 text-center space-y-6 my-10"
     >
-      <div className="mx-auto w-16 h-16 rounded-full bg-primary/5 flex items-center justify-center border border-primary/10">
+      <div className="mx-auto w-16 h-16 rounded-2xl bg-primary/5 flex items-center justify-center border border-primary/10">
         <Icons.WifiOff className="w-8 h-8 text-primary/40" />
       </div>
 
@@ -179,7 +179,7 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
           <Button 
             onClick={downloading ? handleCancel : () => handleDownload()}
             variant={downloading ? "destructive" : "default"}
-            className="rounded-xl h-10 px-6 font-bold w-full sm:w-auto transition-all"
+            className="rounded-full h-10 px-6 font-bold w-full sm:w-auto transition-all"
           >
             {downloading ? (
               <>
@@ -197,7 +197,7 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
           <Button 
             onClick={onRetry}
             variant="secondary"
-            className="rounded-xl h-10 px-6 font-bold w-full sm:w-auto"
+            className="rounded-full h-10 px-6 font-bold w-full sm:w-auto"
           >
             <Icons.RotateCcw className="w-4 h-4 mr-2" /> Tentar Carregar
           </Button>
@@ -205,7 +205,7 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
         <Button 
           onClick={() => navigate('/cache-manager')}
           variant="outline"
-          className="rounded-xl h-10 px-6 font-bold w-full sm:w-auto"
+          className="rounded-full h-10 px-6 font-bold w-full sm:w-auto"
         >
           <Icons.Library className="w-4 h-4 mr-2" /> Gerenciar Cache
         </Button>
@@ -225,10 +225,10 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="rounded-xl font-bold">Voltar</AlertDialogCancel>
+            <AlertDialogCancel className="rounded-full font-bold">Voltar</AlertDialogCancel>
             <AlertDialogAction 
               onClick={confirmCancel}
-              className="rounded-xl font-bold bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              className="rounded-full font-bold bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               Confirmar e Cancelar
             </AlertDialogAction>

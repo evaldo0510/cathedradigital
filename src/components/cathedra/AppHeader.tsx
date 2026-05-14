@@ -58,7 +58,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           {!isDashboard && (
             <button 
               onClick={() => navigate(-1)} 
-              className="p-2 sm:p-2.5 bg-muted text-primary border border-border rounded-xl flex items-center gap-2 px-3 sm:px-5 active:scale-95 transition-all hover:bg-primary hover:text-white group shadow-sm focus-visible:ring-2 focus-visible:ring-primary outline-none"
+              className="p-2 sm:p-2.5 bg-muted text-primary border border-border rounded-full flex items-center gap-2 px-3 sm:px-5 active:scale-95 transition-all hover:bg-primary hover:text-white group shadow-sm focus-visible:ring-2 focus-visible:ring-primary outline-none"
             >
               <Icons.ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
               <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline-block">{t('back')}</span>
@@ -96,7 +96,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
 
         <div className="flex items-center gap-1.5 sm:gap-4 flex-shrink-0">
           <button 
-            className="p-2.5 sm:p-3 bg-muted text-primary rounded-xl sm:rounded-2xl border border-border hover:bg-primary hover:text-white transition-all shadow-sm active:scale-95 flex items-center gap-2 focus-visible:ring-2 focus-visible:ring-primary outline-none" 
+            className="p-2.5 sm:p-3 bg-muted text-primary rounded-full sm:rounded-full border border-border hover:bg-primary hover:text-white transition-all shadow-sm active:scale-95 flex items-center gap-2 focus-visible:ring-2 focus-visible:ring-primary outline-none" 
             onClick={() => {
               localStorage.removeItem('cathedra_onboarding_done');
               navigate(AppRoute.ONBOARDING);
@@ -108,7 +108,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           </button>
 
           <button 
-            className="p-2.5 sm:p-3 bg-muted text-primary rounded-xl sm:rounded-2xl border border-border hover:bg-primary hover:text-white transition-all shadow-sm active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none" 
+            className="p-2.5 sm:p-3 bg-muted text-primary rounded-full sm:rounded-full border border-border hover:bg-primary hover:text-white transition-all shadow-sm active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none" 
             onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}
             aria-label={t('search') || "Buscar"}
           >
@@ -118,7 +118,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           {user && (
             <button 
               onClick={() => setShowNotifs(!showNotifs)} 
-              className="p-2.5 sm:p-3 bg-muted text-primary hover:bg-primary hover:text-white rounded-xl sm:rounded-2xl border border-border relative transition-all shadow-sm active:scale-95 focus:visible:ring-2 focus-visible:ring-primary outline-none"
+              className="p-2.5 sm:p-3 bg-muted text-primary hover:bg-primary hover:text-white rounded-full sm:rounded-full border border-border relative transition-all shadow-sm active:scale-95 focus:visible:ring-2 focus-visible:ring-primary outline-none"
               aria-label={showNotifs ? t('close_notifications') : t('notifications_unread')}
               aria-expanded={showNotifs}
             >
@@ -134,7 +134,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           )}
           
           {showNotifs && user && (
-            <div className="absolute top-full right-4 mt-4 w-80 bg-card border border-border rounded-3xl shadow-2xl z-[150] overflow-hidden animate-in fade-in zoom-in duration-300">
+            <div className="absolute top-full right-4 mt-4 w-80 bg-card border border-border rounded-2xl shadow-2xl z-[150] overflow-hidden animate-in fade-in zoom-in duration-300">
               <div className="p-5 border-b border-border flex items-center justify-between bg-muted/30">
                 <h3 className="text-[10px] font-black uppercase tracking-widest text-primary">{t('notifications')}</h3>
                 <button onClick={markAllRead} className="text-[10px] font-black uppercase tracking-widest text-secondary hover:opacity-70">{t('clear')}</button>
@@ -164,7 +164,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           {user && user.role === 'admin' && (
             <button 
               onClick={() => navigate(AppRoute.ADMIN)} 
-              className="hidden sm:flex lg:hidden px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-primary hover:bg-primary hover:text-white transition-all items-center gap-2 bg-secondary/20 rounded-xl border border-secondary/30 shadow-sm"
+              className="hidden sm:flex lg:hidden px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-primary hover:bg-primary hover:text-white transition-all items-center gap-2 bg-secondary/20 rounded-full border border-secondary/30 shadow-sm"
             >
               <Icons.Star className="w-4 h-4" />
               <span>{t('admin')}</span>
@@ -179,11 +179,11 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             <div className="flex items-center gap-2">
               <div className="hidden md:block">
                 <GoogleSignInButton 
-                  className="h-10 px-4 rounded-xl"
+                  className="h-10 px-4 rounded-full"
                   text="Google"
                 />
               </div>
-              <button onClick={() => navigate(AppRoute.LOGIN)} className="px-4 sm:px-6 py-2 sm:py-2.5 bg-foreground text-background rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-primary-foreground transition-all shadow-lg active:scale-95">
+              <button onClick={() => navigate(AppRoute.LOGIN)} className="px-4 sm:px-6 py-2 sm:py-2.5 bg-foreground text-background rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-primary-foreground transition-all shadow-lg active:scale-95">
                 {t('enter')}
               </button>
             </div>
@@ -193,7 +193,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             <select 
               value={lang} 
               onChange={(e) => onChangeLang(e.target.value as Language)}
-              className="appearance-none bg-muted text-primary border border-border rounded-xl px-2 py-1.5 text-[10px] font-black uppercase tracking-widest cursor-pointer hover:bg-primary hover:text-white transition-all outline-none"
+              className="appearance-none bg-muted text-primary border border-border rounded-full px-2 py-1.5 text-[10px] font-black uppercase tracking-widest cursor-pointer hover:bg-primary hover:text-white transition-all outline-none"
             >
               <option value="pt">PT</option>
               <option value="en">EN</option>
@@ -207,14 +207,14 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
 
           <button 
             onClick={onToggleSpeak} 
-            className={`hidden sm:flex lg:hidden p-2.5 sm:p-3 rounded-xl sm:rounded-2xl border border-border transition-all active:scale-95 shadow-sm items-center justify-center focus-visible:ring-2 focus-visible:ring-primary outline-none ${isSpeaking ? 'bg-primary text-white animate-pulse' : 'bg-muted text-primary hover:bg-primary hover:text-white'}`}
+            className={`hidden sm:flex lg:hidden p-2.5 sm:p-3 rounded-full sm:rounded-full border border-border transition-all active:scale-95 shadow-sm items-center justify-center focus-visible:ring-2 focus-visible:ring-primary outline-none ${isSpeaking ? 'bg-primary text-white animate-pulse' : 'bg-muted text-primary hover:bg-primary hover:text-white'}`}
             title={isSpeaking ? t('audio_stop') : t('audio_read')}
             aria-label={isSpeaking ? t('audio_stop') : t('audio_read')}
           >
             {isSpeaking ? <Icons.Stop className="w-4 h-4" /> : <Icons.Volume2 className="w-4 h-4" />}
           </button>
 
-          <button onClick={onToggleDark} className="hidden sm:flex lg:hidden p-2.5 sm:p-3 bg-muted text-primary hover:bg-primary hover:text-white rounded-xl sm:rounded-2xl border border-border transition-all active:scale-95 shadow-sm items-center justify-center focus-visible:ring-2 focus-visible:ring-primary outline-none" aria-label="Alternar tema">
+          <button onClick={onToggleDark} className="hidden sm:flex lg:hidden p-2.5 sm:p-3 bg-muted text-primary hover:bg-primary hover:text-white rounded-full sm:rounded-full border border-border transition-all active:scale-95 shadow-sm items-center justify-center focus-visible:ring-2 focus-visible:ring-primary outline-none" aria-label="Alternar tema">
             {isDark ? <Icons.Sun className="w-4 h-4" /> : <Icons.Moon className="w-4 h-4" />}
           </button>
 

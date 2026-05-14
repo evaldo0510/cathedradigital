@@ -11,15 +11,15 @@ import { Card, CardContent } from '@/components/ui/card';
 export const PageHeaderSkeleton: React.FC = () => (
   <div className="text-center space-y-4 pt-8 mb-10 animate-pulse">
     <div className="w-12 h-12 mx-auto rounded-2xl bg-muted" />
-    <div className="h-10 w-64 mx-auto bg-muted rounded-xl" />
-    <div className="h-4 w-80 mx-auto bg-muted/60 rounded-lg" />
+    <div className="h-10 w-64 mx-auto bg-muted rounded-2xl" />
+    <div className="h-4 w-80 mx-auto bg-muted/60 rounded-2xl" />
   </div>
 );
 
 export const CardGridSkeleton: React.FC<{ count?: number }> = ({ count = 6 }) => (
   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-pulse">
     {Array.from({ length: count }).map((_, i) => (
-      <Card key={i} className="h-56 rounded-3xl bg-muted/30 border border-border/40 shadow-sm" />
+      <Card key={i} className="h-56 rounded-2xl bg-muted/30 border border-border/40 shadow-sm" />
     ))}
   </div>
 );
@@ -53,7 +53,7 @@ export const SaintCardSkeleton: React.FC = () => (
 export const SaintGridSkeleton: React.FC<{ count?: number }> = ({ count = 8 }) => (
   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 animate-pulse">
     {Array.from({ length: count }).map((_, i) => (
-      <div key={i} className="h-48 rounded-3xl bg-muted" />
+      <div key={i} className="h-48 rounded-2xl bg-muted" />
     ))}
   </div>
 );

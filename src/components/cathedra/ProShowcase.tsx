@@ -26,16 +26,16 @@ const ProShowcase: React.FC = () => {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.7 }}
-      className="relative overflow-hidden rounded-3xl border border-secondary/30 bg-gradient-to-br from-secondary/10 via-card to-primary/5 shadow-lg"
+      className="relative overflow-hidden rounded-full border border-secondary/30 bg-gradient-to-br from-secondary/10 via-card to-primary/5 shadow-lg"
     >
       {/* Decorative glows */}
-      <div className="absolute -top-24 -right-24 w-72 h-72 bg-secondary/15 rounded-full  pointer-events-none" />
-      <div className="absolute -bottom-20 -left-20 w-56 h-56 bg-primary/10 rounded-full  pointer-events-none" />
+      <div className="absolute -top-24 -right-24 w-72 h-72 bg-secondary/15 rounded-2xl  pointer-events-none" />
+      <div className="absolute -bottom-20 -left-20 w-56 h-56 bg-primary/10 rounded-2xl  pointer-events-none" />
 
       <div className="relative z-10 p-6 md:p-8 space-y-6">
         {/* Header */}
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/20 border border-secondary/30">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-2xl bg-secondary/20 border border-secondary/30">
             <Crown className="w-3.5 h-3.5 text-secondary" />
             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary">Cathedra PRO</span>
           </div>
@@ -58,7 +58,7 @@ const ProShowcase: React.FC = () => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 + i * 0.05 }}
-                className="p-3 rounded-2xl bg-background/60 border border-border/60 space-y-1.5"
+                className="p-3 rounded-full bg-background/60 border border-border/60 space-y-1.5"
               >
                 <Icon className="w-4 h-4 text-secondary" />
                 <p className="text-xs font-bold text-foreground leading-tight">{b.label}</p>
@@ -72,7 +72,7 @@ const ProShowcase: React.FC = () => {
         <div className="flex flex-col items-center gap-3 pt-2">
           <Button
             onClick={() => navigate(AppRoute.PRICING)}
-            className="w-full max-w-sm rounded-2xl h-12 gap-2 font-bold text-xs uppercase tracking-widest bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-md hover:shadow-lg transition-all"
+            className="w-full max-w-sm rounded-full h-12 gap-2 font-bold text-xs uppercase tracking-widest bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-md hover:shadow-lg transition-all"
           >
             <Crown className="w-4 h-4" /> Conheça o PRO
             <ArrowRight className="w-4 h-4" />

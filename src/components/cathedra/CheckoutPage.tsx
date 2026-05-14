@@ -152,7 +152,7 @@ const CheckoutPage: React.FC = () => {
     <div className="max-w-5xl mx-auto space-y-14 py-8">
       {/* Hero */}
       <div className="text-center space-y-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl">
           <Icons.Zap className="w-4 h-4 text-primary" />
           <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Cathedra PRO</span>
         </div>
@@ -176,7 +176,7 @@ const CheckoutPage: React.FC = () => {
               <button
                 key={p.id}
                 onClick={() => setSelectedPlan(p.id)}
-                className={`flex-1 py-3 px-4 rounded-xl text-sm font-bold transition-all ${
+                className={`flex-1 py-3 px-4 rounded-full text-sm font-bold transition-all ${
                   selectedPlan === p.id ? 'bg-background text-foreground shadow-md' : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
@@ -210,7 +210,7 @@ const CheckoutPage: React.FC = () => {
                 </span>
               </div>
               {plan.totalLabel && (
-                <CardDescription className="text-xs font-medium bg-primary/10 text-primary px-4 py-1.5 rounded-full inline-block font-serif">
+                <CardDescription className="text-xs font-medium bg-primary/10 text-primary px-4 py-1.5 rounded-2xl inline-block font-serif">
                   {appliedCoupon
                     ? `${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(finalChargePrice)}/ano · ${appliedCoupon.discount_percent}% off`
                     : `${plan.totalLabel} · ${plan.badge}`}
@@ -235,13 +235,13 @@ const CheckoutPage: React.FC = () => {
                     placeholder="Código do cupom"
                     value={couponCode}
                     onChange={e => setCouponCode(e.target.value.toUpperCase())}
-                    className="rounded-xl uppercase"
+                    className="rounded-full uppercase"
                   />
                   <Button
                     variant="outline"
                     onClick={validateCoupon}
                     disabled={couponLoading || !couponCode.trim()}
-                    className="rounded-xl shrink-0"
+                    className="rounded-full shrink-0"
                   >
                     {couponLoading ? '...' : 'Aplicar'}
                   </Button>
@@ -261,7 +261,7 @@ const CheckoutPage: React.FC = () => {
               <Button
                 onClick={() => handleCheckout(plan.id, plan.chargePrice, plan.title)}
                 disabled={loading || isPremium}
-                className="w-full h-14 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:scale-[1.02] shadow-xl shadow-primary/20"
+                className="w-full h-14 rounded-full text-xs font-black uppercase tracking-widest transition-all hover:scale-[1.02] shadow-xl shadow-primary/20"
               >
                 {loading ? 'Redirecionando...' : isPremium ? '✓ Plano já ativo' : `Assinar ${plan.label}`}
               </Button>
@@ -277,7 +277,7 @@ const CheckoutPage: React.FC = () => {
       {/* Plan Comparison */}
       <div className="max-w-3xl mx-auto">
         <h2 className="text-2xl font-serif font-bold text-center mb-8">Gratuito vs PRO</h2>
-        <Card className="rounded-3xl overflow-hidden border border-border/50">
+        <Card className="rounded-2xl overflow-hidden border border-border/50">
           <CardContent className="p-0">
             <table className="w-full text-sm">
               <thead>
@@ -311,7 +311,7 @@ const CheckoutPage: React.FC = () => {
 
       {/* Donation */}
       <div className="max-w-2xl mx-auto">
-        <Card className="border border-border/50 rounded-3xl overflow-hidden bg-muted/30">
+        <Card className="border border-border/50 rounded-2xl overflow-hidden bg-muted/30">
           <CardHeader className="text-center space-y-3 pb-4">
             <div className="mx-auto w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center">
               <Icons.Heart className="w-7 h-7 text-primary" />
@@ -328,7 +328,7 @@ const CheckoutPage: React.FC = () => {
                 <button
                   key={val}
                   onClick={() => setDonationAmount(val)}
-                  className={`px-5 py-2.5 rounded-xl text-sm font-bold border transition-all ${
+                  className={`px-5 py-2.5 rounded-full text-sm font-bold border transition-all ${
                     donationAmount === val
                       ? 'bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/20'
                       : 'bg-background text-foreground border-border hover:border-primary/50'
@@ -346,7 +346,7 @@ const CheckoutPage: React.FC = () => {
                 placeholder="R$ 0,00"
                 value={donationAmount || ''}
                 onChange={e => setDonationAmount(e.target.value ? Number(e.target.value) : '')}
-                className="rounded-xl"
+                className="rounded-full"
               />
             </div>
           </CardContent>
@@ -355,7 +355,7 @@ const CheckoutPage: React.FC = () => {
               variant="outline"
               onClick={handleDonation}
               disabled={donationLoading || !donationAmount || donationAmount < 1}
-              className="w-full h-12 rounded-2xl font-bold gap-2 border-primary/30 text-primary hover:bg-primary hover:text-primary-foreground transition-all"
+              className="w-full h-12 rounded-full font-bold gap-2 border-primary/30 text-primary hover:bg-primary hover:text-primary-foreground transition-all"
             >
               {donationLoading ? 'Processando...' : (
                 <>

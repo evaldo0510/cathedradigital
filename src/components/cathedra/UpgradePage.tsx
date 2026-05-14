@@ -75,8 +75,8 @@ const UpgradePage: React.FC = () => {
 
       {/* Decorative background elements */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-10 pointer-events-none opacity-20">
-        <div className="absolute top-[10%] left-1/4 w-64 h-64 bg-primary/20 rounded-full " />
-        <div className="absolute bottom-[20%] right-1/4 w-72 h-72 bg-primary/10 rounded-full " />
+        <div className="absolute top-[10%] left-1/4 w-64 h-64 bg-primary/20 rounded-2xl " />
+        <div className="absolute bottom-[20%] right-1/4 w-72 h-72 bg-primary/10 rounded-2xl " />
       </div>
 
       <div className="max-w-3xl w-full text-center space-y-8">
@@ -87,7 +87,7 @@ const UpgradePage: React.FC = () => {
           custom={0}
           className="flex justify-center"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20 rounded-full text-primary">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20 rounded-2xl text-primary">
             <Crown className="w-4 h-4" />
             <span className="text-[10px] font-black uppercase tracking-widest">Cathedra PRO</span>
           </div>
@@ -116,7 +116,7 @@ const UpgradePage: React.FC = () => {
           className="grid sm:grid-cols-2 gap-6 text-left py-8"
         >
           {BENEFITS.map((benefit, i) => (
-            <div key={i} className="group p-5 rounded-3xl bg-card border border-border/50 hover:border-primary/30 transition-all duration-500 ">
+            <div key={i} className="group p-5 rounded-2xl bg-card border border-border/50 hover:border-primary/30 transition-all duration-500 ">
               <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-4 group-hover:scale-110 transition-transform duration-500">
                 <benefit.icon className="w-5 h-5" />
               </div>
@@ -151,7 +151,7 @@ const UpgradePage: React.FC = () => {
           
           <div className="flex items-center gap-6 text-xs font-medium text-muted-foreground/60 tracking-widest uppercase">
             <span>Acesso Imediato</span>
-            <div className="w-1 h-1 rounded-full bg-border" />
+            <div className="w-1 h-1 rounded-2xl bg-border" />
             <span>Cancele quando quiser</span>
           </div>
         </motion.div>
@@ -177,14 +177,14 @@ const UpgradePage: React.FC = () => {
                   variant="outline"
                   onClick={simulatePayment}
                   disabled={isSimulating || isPremium}
-                  className="rounded-xl border-primary/30 text-primary hover:bg-primary/5 h-12 px-6 font-bold"
+                  className="rounded-full border-primary/30 text-primary hover:bg-primary/5 h-12 px-6 font-bold"
                 >
                   {isSimulating ? 'Processando...' : isPremium ? '✓ Já é PRO' : 'Simular Aprovação (Webhook)'}
                 </Button>
                 <Button 
                   variant="ghost"
                   onClick={() => navigate(AppRoute.TRANSACTIONS)}
-                  className="rounded-xl h-12 px-6 font-bold"
+                  className="rounded-full h-12 px-6 font-bold"
                 >
                   Ver Histórico de Transações
                 </Button>

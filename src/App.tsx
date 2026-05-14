@@ -120,7 +120,7 @@ const CacheManager = lazy(() => import('./components/cathedra/CacheManager'));
 
 const SkeletonBar = React.forwardRef<HTMLDivElement, { w?: string; h?: string; className?: string }>(
   ({ w = 'w-full', h = 'h-4', className = '' }, ref) => (
-    <div ref={ref} className={`${w} ${h} rounded-lg bg-muted/60 animate-pulse ${className}`} />
+    <div ref={ref} className={`${w} ${h} rounded-full bg-muted/60 animate-pulse ${className}`} />
   )
 );
 
@@ -140,8 +140,8 @@ const LoadingFallback = () => (
       
       <div className="grid grid-cols-2 gap-3 pt-6">
         {[1, 2].map(i => (
-          <div key={i} className="rounded-xl bg-muted/20 border border-border/20 p-4 space-y-3">
-            <SkeletonBar w="w-12 mx-auto" h="h-12" className="rounded-lg" />
+          <div key={i} className="rounded-2xl bg-muted/20 border border-border/20 p-4 space-y-3">
+            <SkeletonBar w="w-12 mx-auto" h="h-12" className="rounded-full" />
             <SkeletonBar w="w-2/3 mx-auto" h="h-3" />
           </div>
         ))}
@@ -455,16 +455,16 @@ const AppLayout: React.FC = () => {
       <Suspense fallback={
         <div className="h-screen w-screen flex flex-col items-center justify-center bg-background p-6">
           <div className="relative mb-12 animate-in fade-in zoom-in duration-700">
-            <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-[3px] border-primary/10 shadow-2xl p-4 bg-muted/20">
-              <div className="w-full h-full bg-primary/20 rounded-full animate-ping" />
+            <div className="w-24 h-24 md:w-32 md:h-32 rounded-2xl overflow-hidden border-[3px] border-primary/10 shadow-2xl p-4 bg-muted/20">
+              <div className="w-full h-full bg-primary/20 rounded-2xl animate-ping" />
             </div>
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-16 h-16 border-t-2 border-primary rounded-full animate-spin" />
+              <div className="w-16 h-16 border-t-2 border-primary rounded-2xl animate-spin" />
             </div>
           </div>
           
           <div className="space-y-4 w-full max-w-[200px] animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300">
-            <div className="h-1 w-full bg-muted rounded-full overflow-hidden">
+            <div className="h-1 w-full bg-muted rounded-2xl overflow-hidden">
               <div className="h-full bg-primary/40 animate-[shimmer_2s_infinite]" style={{ width: '40%' }} />
             </div>
             <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/60 text-center animate-pulse">

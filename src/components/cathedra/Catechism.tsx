@@ -68,7 +68,7 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
         </div>
         <button 
           onClick={() => window.location.reload()}
-          className="px-3 py-1.5 bg-destructive/10 text-destructive rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-destructive/20 transition-all"
+          className="px-3 py-1.5 bg-destructive/10 text-destructive rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-destructive/20 transition-all"
         >
           Tentar novamente
         </button>
@@ -117,7 +117,7 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => window.location.reload()}
-            className="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2"
+            className="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-full text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2"
           >
             <Icons.Loader className="w-3 h-3" /> Tentar carregar
           </button>
@@ -125,7 +125,7 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
             href="https://www.vatican.va/archive/cathechism_po/index_new/prima-pagina-cic_po.html" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="px-4 py-2 bg-card border border-border hover:bg-primary/5 text-muted-foreground hover:text-primary rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2"
+            className="px-4 py-2 bg-card border border-border hover:bg-primary/5 text-muted-foreground hover:text-primary rounded-full text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2"
           >
             <Icons.ExternalLink className="w-3 h-3" /> Ver no Vaticano
           </a>
@@ -194,12 +194,12 @@ const LazyParagraph: React.FC<{ paragraph: number; currentParagraph: number; par
 
   return (
     <div ref={ref} id={`p${p}`} className={`scroll-mt-28 transition-all duration-700 pb-10 border-b border-border/40 last:border-0 last:pb-0 ${currentParagraph === p ? 'relative' : 'opacity-80 hover:opacity-100'}`}>
-      {currentParagraph === p && <div className="absolute -left-4 top-0 bottom-0 w-1 bg-primary rounded-full hidden md:block" />}
+      {currentParagraph === p && <div className="absolute -left-4 top-0 bottom-0 w-1 bg-primary rounded-2xl hidden md:block" />}
       <div className="flex items-center gap-4 mb-6">
         <div className="flex items-center gap-2">
           <span className="text-3xl font-serif font-bold text-primary">§{p}</span>
           <div className="flex items-center gap-1">
-            <button onClick={() => toggleFavorite({ type: 'catechism', title: `CIC §${p}`, content: `Catecismo da Igreja Católica, parágrafo §${p}` })} className="p-2 rounded-xl hover:bg-primary/10 transition-all active:scale-95">
+            <button onClick={() => toggleFavorite({ type: 'catechism', title: `CIC §${p}`, content: `Catecismo da Igreja Católica, parágrafo §${p}` })} className="p-2 rounded-full hover:bg-primary/10 transition-all active:scale-95">
               <Icons.Heart className={`w-4 h-4 transition-all ${isFavorite('catechism', `CIC §${p}`) ? 'fill-primary text-primary' : 'text-muted-foreground'}`} />
             </button>
             <ShareButton title={`Catecismo §${p}`} text={`Leia o Catecismo da Igreja Católica, §${p} — Cathedra Digital`} url={`${window.location.origin}/catechism?p=${p}`} className="p-2 h-auto w-auto border-0 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all" />
@@ -378,7 +378,7 @@ const Catechism: React.FC = () => {
         <div className="flex items-center gap-4">
           <button 
             onClick={goBack} 
-            className="px-3 py-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none flex items-center gap-2"
+            className="px-3 py-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none flex items-center gap-2"
             aria-label="Voltar para o Sumário"
           >
             <Icons.ArrowDown className="w-4 h-4 rotate-90 text-foreground" />
@@ -387,7 +387,7 @@ const Catechism: React.FC = () => {
 
           <button 
             onClick={goToExplorer} 
-            className="px-3 py-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none flex items-center gap-2"
+            className="px-3 py-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none flex items-center gap-2"
             title="Explorar por Temas"
           >
             <Icons.Search className="w-4 h-4 text-primary" />
@@ -401,7 +401,7 @@ const Catechism: React.FC = () => {
           </div>
           {(crossRefs.length > 0 || docsRefs.length > 0) && (
             <button onClick={() => setShowCrossRefs(!showCrossRefs)}
-              className={`p-2 rounded-xl border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}
+              className={`p-2 rounded-full border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}
               title="Catecismo & Documentos">
               <Icons.Cross className="w-4 h-4" />
             </button>
@@ -420,13 +420,13 @@ const Catechism: React.FC = () => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }
             }}
-            className="px-3 py-2 rounded-xl bg-card border border-border text-xs font-bold disabled:opacity-30 hover:bg-primary/10 transition-all flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-primary outline-none"
+            className="px-3 py-2 rounded-full bg-card border border-border text-xs font-bold disabled:opacity-30 hover:bg-primary/10 transition-all flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-primary outline-none"
             aria-label="Seção anterior"
           >
             <Icons.ArrowDown className="w-3.5 h-3.5 rotate-90" /> Seção Anterior
           </button>
 
-          <div className="px-4 py-2 bg-primary/5 border border-primary/20 rounded-xl text-xs font-black uppercase tracking-widest text-primary">
+          <div className="px-4 py-2 bg-primary/5 border border-primary/20 rounded-2xl text-xs font-black uppercase tracking-widest text-primary">
             Lendo Seção {selectedSection.id}
           </div>
           <button 
@@ -439,7 +439,7 @@ const Catechism: React.FC = () => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }
             }}
-            className="px-3 py-2 rounded-xl bg-card border border-border text-xs font-bold disabled:opacity-30 hover:bg-primary/10 transition-all flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-primary outline-none"
+            className="px-3 py-2 rounded-full bg-card border border-border text-xs font-bold disabled:opacity-30 hover:bg-primary/10 transition-all flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-primary outline-none"
             aria-label="Próxima seção"
           >
             Próxima Seção <Icons.ArrowDown className="w-3.5 h-3.5 -rotate-90" />
@@ -458,7 +458,7 @@ const Catechism: React.FC = () => {
           />
         )}
 
-        <div className="bg-card border border-border rounded-3xl p-6 md:p-10 space-y-12">
+        <div className="bg-card border border-border rounded-2xl p-6 md:p-10 space-y-12">
           <div className="flex flex-col gap-10">
             {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(p => (
               <LazyParagraph key={p} paragraph={p} currentParagraph={currentParagraph} paragraphsRead={paragraphsRead} isFavorite={isFavorite} toggleFavorite={toggleFavorite} handleNavigateToBible={handleNavigateToBible} />
@@ -472,7 +472,7 @@ const Catechism: React.FC = () => {
           {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(p => (
             <button key={p} 
               onClick={() => jumpToParagraph(p)}
-              className={`w-10 h-10 rounded-xl text-xs font-bold transition-all relative ${
+              className={`w-10 h-10 rounded-full text-xs font-bold transition-all relative ${
                 currentParagraph === p ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-110 z-10' : 
                 paragraphsRead.has(p) ? 'bg-primary/10 border-primary/30 text-primary' :
                 'bg-card border border-border text-muted-foreground hover:border-primary/50 hover:text-primary'
@@ -491,7 +491,7 @@ const Catechism: React.FC = () => {
     return (
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="flex items-center gap-4">
-          <button onClick={goBack} className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all">
+          <button onClick={goBack} className="p-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all">
             <Icons.ArrowDown className="w-5 h-5 rotate-90 text-foreground" />
           </button>
           <div>
@@ -503,7 +503,7 @@ const Catechism: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {selectedPart.sections.map(sec => (
             <button key={sec.id} onClick={() => { setSelectedSection(sec); setCurrentParagraph(sec.paragraphs[0]); setViewMode('reading'); }}
-              className="text-left p-6 rounded-2xl bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group">
+              className="text-left p-6 rounded-full bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group">
               <span className="text-[10px] font-black text-primary uppercase tracking-widest">Seção {sec.id}</span>
               <h3 className="text-lg font-serif font-bold text-foreground mt-2 group-hover:text-primary transition-colors">{sec.title}</h3>
               <p className="text-sm text-muted-foreground mt-1">§{sec.paragraphs[0]} — §{sec.paragraphs[1]}</p>
@@ -530,7 +530,7 @@ const Catechism: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
       >
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl">
           <Icons.Cross className="w-4 h-4 text-primary" />
           <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Codex Fidei</span>
         </div>
@@ -541,7 +541,7 @@ const Catechism: React.FC = () => {
             <span>Seu Progresso</span>
             <span>{Math.round((paragraphsRead.size / 2865) * 100)}%</span>
           </div>
-          <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+          <div className="h-1.5 w-full bg-muted rounded-2xl overflow-hidden">
             <motion.div 
               initial={{ width: 0 }}
               animate={{ width: `${(paragraphsRead.size / 2865) * 100}%` }}
@@ -555,7 +555,7 @@ const Catechism: React.FC = () => {
         <div className="flex justify-center">
           <button 
             onClick={() => navigate('/catechism/integrity')}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-orange-500/10 text-orange-600 border border-orange-500/20 text-[10px] font-black uppercase tracking-widest hover:bg-orange-500/20 transition-all"
+            className="flex items-center gap-2 px-4 py-2 rounded-full bg-orange-500/10 text-orange-600 border border-orange-500/20 text-[10px] font-black uppercase tracking-widest hover:bg-orange-500/20 transition-all"
           >
             <Icons.Activity className="w-3.5 h-3.5" /> Painel de Integridade (Admin)
           </button>
@@ -568,10 +568,10 @@ const Catechism: React.FC = () => {
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
           <div 
             onClick={() => navigateToParagraph(nextUnreadParagraph)}
-            className="max-w-md mx-auto p-4 rounded-2xl border border-primary/20 bg-primary/5 cursor-pointer hover:border-primary/40 transition-all flex items-center justify-between group"
+            className="max-w-md mx-auto p-4 rounded-full border border-primary/20 bg-primary/5 cursor-pointer hover:border-primary/40 transition-all flex items-center justify-between group"
           >
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/20 transition-colors">
+              <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/20 transition-colors">
                 <Icons.Sparkles className="w-5 h-5" />
               </div>
               <div>
@@ -592,9 +592,9 @@ const Catechism: React.FC = () => {
             value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && handleSearch()}
             placeholder="Buscar por número do parágrafo (ex: 1324)..."
-            className="w-full pl-11 pr-20 py-3 rounded-2xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+            className="w-full pl-11 pr-20 py-3 rounded-full border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
           />
-          <button onClick={handleSearch} className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-foreground text-background rounded-xl text-xs font-bold">
+          <button onClick={handleSearch} className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-foreground text-background rounded-full text-xs font-bold">
             Ir
           </button>
         </div>
@@ -604,13 +604,13 @@ const Catechism: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {CIC_SECTIONS.map(part => (
           <button key={part.part} onClick={() => { setSelectedPart(part); setViewMode('sections'); }}
-            className="text-left p-5 md:p-6 rounded-2xl bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group">
+            className="text-left p-5 md:p-6 rounded-full bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group">
             <span className="text-[10px] font-black text-primary uppercase tracking-widest">{part.part}</span>
             <h2 className="text-xl md:text-2xl font-serif font-bold text-foreground mt-3 group-hover:text-primary transition-colors">{part.title}</h2>
             <p className="text-sm text-muted-foreground mt-2">{part.sections.length} seções</p>
             <div className="flex flex-wrap gap-1 mt-4">
               {part.sections.map(s => (
-                <span key={s.id} className="px-2 py-1 bg-secondary text-secondary-foreground rounded-lg text-[10px] font-bold">{s.title.split(' ').slice(0, 3).join(' ')}</span>
+                <span key={s.id} className="px-2 py-1 bg-secondary text-secondary-foreground rounded-full text-[10px] font-bold">{s.title.split(' ').slice(0, 3).join(' ')}</span>
               ))}
             </div>
           </button>

@@ -49,7 +49,7 @@ const SecurityAuditPage = () => {
   return (
     <div className="max-w-4xl mx-auto py-4 md:py-8 px-4 space-y-8 animate-in fade-in duration-500">
       <header className="text-center space-y-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-red-500/10 rounded-full text-red-600 border border-red-500/20">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-red-500/10 rounded-2xl text-red-600 border border-red-500/20">
           <ShieldAlert className="w-4 h-4" />
           <span className="text-[10px] font-black uppercase tracking-[0.2em]">Security Protocol v3.0</span>
         </div>
@@ -82,7 +82,7 @@ const SecurityAuditPage = () => {
                       </div>
                       <p className="text-xs text-muted-foreground leading-relaxed">{item.detail}</p>
                     </div>
-                    <Button variant="ghost" size="sm" asChild className="opacity-0 group-hover:opacity-100 rounded-xl">
+                    <Button variant="ghost" size="sm" asChild className="opacity-0 group-hover:opacity-100 rounded-full">
                       <Link to={item.link} className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest">
                         Detalhes <ExternalLink className="w-3 h-3" />
                       </Link>
@@ -94,9 +94,9 @@ const SecurityAuditPage = () => {
           </Card>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Card className="border-red-500/20 bg-red-500/5 rounded-3xl p-6 space-y-4">
+            <Card className="border-red-500/20 bg-red-500/5 rounded-2xl p-6 space-y-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-red-500/10 rounded-xl text-red-600">
+                <div className="p-2 bg-red-500/10 rounded-2xl text-red-600">
                   <RotateCcw className="w-5 h-5" />
                 </div>
                 <h3 className="text-sm font-bold uppercase tracking-widest">Rollback Crítico</h3>
@@ -107,15 +107,15 @@ const SecurityAuditPage = () => {
               <Button 
                 variant="destructive" 
                 onClick={handleRollback}
-                className="w-full rounded-xl text-[10px] font-black uppercase tracking-widest h-10 shadow-lg shadow-red-500/10"
+                className="w-full rounded-full text-[10px] font-black uppercase tracking-widest h-10 shadow-lg shadow-red-500/10"
               >
                 Copiar SQL de Rollback
               </Button>
             </Card>
 
-            <Card className="border-primary/20 bg-primary/5 rounded-3xl p-6 space-y-4">
+            <Card className="border-primary/20 bg-primary/5 rounded-2xl p-6 space-y-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-primary/10 rounded-xl text-primary">
+                <div className="p-2 bg-primary/10 rounded-2xl text-primary">
                   <FileCode className="w-5 h-5" />
                 </div>
                 <h3 className="text-sm font-bold uppercase tracking-widest">Scan de Segredos</h3>
@@ -125,7 +125,7 @@ const SecurityAuditPage = () => {
               </p>
               <Button 
                 variant="outline" 
-                className="w-full rounded-xl text-[10px] font-black uppercase tracking-widest h-10 border-primary/20 hover:bg-primary/5"
+                className="w-full rounded-full text-[10px] font-black uppercase tracking-widest h-10 border-primary/20 hover:bg-primary/5"
               >
                 Simular Varredura
               </Button>
@@ -142,7 +142,7 @@ const SecurityAuditPage = () => {
             <div className="space-y-4">
               <div className="space-y-2">
                 <p className="text-[10px] font-bold text-muted-foreground uppercase">Última Varredura</p>
-                <p className="text-xs font-mono bg-muted p-2 rounded-lg">2024-05-20 14:30</p>
+                <p className="text-xs font-mono bg-muted p-2 rounded-full">2024-05-20 14:30</p>
               </div>
               <div className="space-y-2">
                 <p className="text-[10px] font-bold text-muted-foreground uppercase">Ameaças Bloqueadas</p>

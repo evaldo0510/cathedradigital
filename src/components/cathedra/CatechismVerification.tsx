@@ -171,12 +171,12 @@ const CatechismVerification: React.FC = () => {
           {(stats.missing > 0 || stats.divergent > 0) && (
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant="default" className="rounded-xl bg-emerald-600 hover:bg-emerald-700">
+                <Button variant="default" className="rounded-full bg-emerald-600 hover:bg-emerald-700">
                   <Icons.CheckCircle className="w-4 h-4 mr-2" />
                   Sincronizar {stats.missing + stats.divergent} Divergências
                 </Button>
               </AlertDialogTrigger>
-              <AlertDialogContent className="rounded-2xl border-border bg-card">
+              <AlertDialogContent className="rounded-full border-border bg-card">
                 <AlertDialogHeader>
                   <AlertDialogTitle className="font-serif">Sincronizar com o Banco?</AlertDialogTitle>
                   <AlertDialogDescription>
@@ -185,8 +185,8 @@ const CatechismVerification: React.FC = () => {
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel className="rounded-xl">Cancelar</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleSync} className="rounded-xl bg-emerald-600 hover:bg-emerald-700">
+                  <AlertDialogCancel className="rounded-full">Cancelar</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleSync} className="rounded-full bg-emerald-600 hover:bg-emerald-700">
                     Sincronizar Agora
                   </AlertDialogAction>
                 </AlertDialogFooter>
@@ -199,7 +199,7 @@ const CatechismVerification: React.FC = () => {
             disabled={loading}
             variant="outline"
             size="sm"
-            className="rounded-xl"
+            className="rounded-full"
           >
             <Icons.RotateCcw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
             Recarregar
@@ -228,22 +228,22 @@ const CatechismVerification: React.FC = () => {
 
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 bg-muted/50 p-1 rounded-xl border border-border">
+          <div className="flex items-center gap-2 bg-muted/50 p-1 rounded-2xl border border-border">
             <button 
               onClick={() => setFilter('all')} 
-              className={`px-4 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all ${filter === 'all' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+              className={`px-4 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-full transition-all ${filter === 'all' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
             >
               Todos
             </button>
             <button 
               onClick={() => setFilter('missing')} 
-              className={`px-4 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all ${filter === 'missing' ? 'bg-destructive text-destructive-foreground shadow-sm' : 'text-muted-foreground hover:text-destructive'}`}
+              className={`px-4 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-full transition-all ${filter === 'missing' ? 'bg-destructive text-destructive-foreground shadow-sm' : 'text-muted-foreground hover:text-destructive'}`}
             >
               Ausentes
             </button>
             <button 
               onClick={() => setFilter('divergent')} 
-              className={`px-4 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all ${filter === 'divergent' ? 'bg-amber-500 text-white shadow-sm' : 'text-muted-foreground hover:text-amber-600'}`}
+              className={`px-4 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-full transition-all ${filter === 'divergent' ? 'bg-amber-500 text-white shadow-sm' : 'text-muted-foreground hover:text-amber-600'}`}
             >
               Divergentes
             </button>

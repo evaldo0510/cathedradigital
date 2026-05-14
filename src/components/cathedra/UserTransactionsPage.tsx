@@ -34,7 +34,7 @@ const TransactionSkeleton: React.FC = () => (
   <Card className="overflow-hidden border-border/50 opacity-60 animate-pulse">
     <CardContent className="p-4 md:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
       <div className="flex items-center gap-4">
-        <div className="w-10 h-10 rounded-xl bg-muted" />
+        <div className="w-10 h-10 rounded-2xl bg-muted" />
         <div className="space-y-2">
           <div className="h-4 w-32 bg-muted rounded" />
           <div className="h-3 w-24 bg-muted rounded" />
@@ -45,7 +45,7 @@ const TransactionSkeleton: React.FC = () => (
           <div className="h-5 w-20 bg-muted rounded" />
           <div className="h-2 w-10 bg-muted rounded ml-auto" />
         </div>
-        <div className="h-6 w-16 bg-muted rounded-full" />
+        <div className="h-6 w-16 bg-muted rounded-2xl" />
       </div>
     </CardContent>
   </Card>
@@ -296,7 +296,7 @@ const UserTransactionsPage: React.FC = () => {
           variant="outline" 
           size="sm" 
           onClick={handleExportPDF}
-          className="gap-2 font-bold uppercase text-[10px] tracking-widest rounded-xl"
+          className="gap-2 font-bold uppercase text-[10px] tracking-widest rounded-full"
         >
           <Icons.Download className="w-4 h-4" /> Exportar PDF
         </Button>
@@ -309,17 +309,17 @@ const UserTransactionsPage: React.FC = () => {
             placeholder="Buscar por ID ou valor..." 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10 bg-muted/50 border-border/50 focus:bg-background transition-all rounded-xl"
+            className="pl-10 bg-muted/50 border-border/50 focus:bg-background transition-all rounded-full"
           />
         </div>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="bg-muted/50 border-border/50 rounded-xl">
+          <SelectTrigger className="bg-muted/50 border-border/50 rounded-full">
             <div className="flex items-center gap-2">
               <Icons.Filter className="w-4 h-4 text-muted-foreground" />
               <SelectValue placeholder="Status" />
             </div>
           </SelectTrigger>
-          <SelectContent className="rounded-xl">
+          <SelectContent className="rounded-full">
             <SelectItem value="all">Todos os Status</SelectItem>
             <SelectItem value="approved">Aprovados</SelectItem>
             <SelectItem value="pending">Pendentes</SelectItem>
@@ -368,7 +368,7 @@ const UserTransactionsPage: React.FC = () => {
                 <CardContent className="p-0">
                   <div className="p-4 md:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                     <div className="flex items-center gap-4">
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${tx.is_donation ? 'bg-secondary/10 text-secondary' : 'bg-primary/10 text-primary'}`}>
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center ${tx.is_donation ? 'bg-secondary/10 text-secondary' : 'bg-primary/10 text-primary'}`}>
                         {tx.is_donation ? <Icons.Heart className="w-5 h-5 fill-current" /> : <Icons.Star className="w-5 h-5 fill-current" />}
                       </div>
                       <div>
@@ -427,7 +427,7 @@ const UserTransactionsPage: React.FC = () => {
           )}
 
           {error && transactions.length > 0 && (
-            <div className="p-4 rounded-xl bg-destructive/5 border border-destructive/10 text-center space-y-3 mt-4">
+            <div className="p-4 rounded-2xl bg-destructive/5 border border-destructive/10 text-center space-y-3 mt-4">
               <p className="text-xs text-destructive font-medium">{error}</p>
               <Button 
                 variant="ghost" 
@@ -442,7 +442,7 @@ const UserTransactionsPage: React.FC = () => {
           
           {hasMore && !loadingMore && !error && (
             <div ref={loaderRef} className="flex flex-col items-center justify-center py-8 space-y-4">
-              <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin opacity-50" />
+              <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-2xl animate-spin opacity-50" />
               <Button 
                 variant="ghost" 
                 size="sm" 
@@ -476,7 +476,7 @@ const UserTransactionsPage: React.FC = () => {
         >
           <DialogHeader>
             <DialogTitle className="font-serif text-xl flex items-center gap-3">
-              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${selectedTx?.is_donation ? 'bg-secondary/10 text-secondary' : 'bg-primary/10 text-primary'}`}>
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center ${selectedTx?.is_donation ? 'bg-secondary/10 text-secondary' : 'bg-primary/10 text-primary'}`}>
                 {selectedTx?.is_donation ? <Icons.Heart className="w-5 h-5 fill-current" /> : <Icons.Star className="w-5 h-5 fill-current" />}
               </div>
               Detalhes da Transação
@@ -567,7 +567,7 @@ const UserTransactionsPage: React.FC = () => {
               <div className="flex gap-3">
                 <DialogClose asChild>
                   <Button 
-                    className="flex-1 rounded-xl font-bold uppercase text-[10px] tracking-widest" 
+                    className="flex-1 rounded-full font-bold uppercase text-[10px] tracking-widest" 
                     autoFocus
                   >
                     Fechar
@@ -576,7 +576,7 @@ const UserTransactionsPage: React.FC = () => {
                 {selectedTx.status === 'approved' && (
                   <Button 
                     variant="outline" 
-                    className="flex-1 rounded-xl font-bold uppercase text-[10px] tracking-widest gap-2"
+                    className="flex-1 rounded-full font-bold uppercase text-[10px] tracking-widest gap-2"
                     onClick={() => window.print()}
                   >
                     <Icons.Download className="w-3 h-3" /> Imprimir

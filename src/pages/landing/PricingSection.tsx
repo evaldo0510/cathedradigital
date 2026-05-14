@@ -74,7 +74,7 @@ const PricingSection = () => {
               }`}
             >
               {tier.popular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-secondary text-primary-foreground text-[8px] font-bold uppercase tracking-[0.3em] px-4 py-1.5 rounded-full">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-secondary text-primary-foreground text-[8px] font-bold uppercase tracking-[0.3em] px-4 py-1.5 rounded-2xl">
                   Mais Escolhido
                 </div>
               )}

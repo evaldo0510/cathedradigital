@@ -57,7 +57,7 @@ const SIZE_TOKENS: Record<NonNullable<FuzzySearchInputProps['size']>, {
   clearWrap: string;
 }> = {
   md: {
-    input: 'pl-11 pr-10 py-3 text-sm rounded-2xl',
+    input: 'pl-11 pr-10 py-3 text-sm rounded-full',
     icon: 'w-4 h-4',
     iconWrap: 'left-4',
     clearWrap: 'right-3',

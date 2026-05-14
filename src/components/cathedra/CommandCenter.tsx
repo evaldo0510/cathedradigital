@@ -364,7 +364,7 @@ const CommandCenter: React.FC = () => {
     <div className="fixed inset-0 z-[200] flex items-start justify-center pt-[12vh]" onClick={() => setIsOpen(false)}>
       <div className="absolute inset-0 bg-black/60 " />
       <div
-        className="relative w-full max-w-xl bg-card border border-border rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-4 duration-200"
+        className="relative w-full max-w-xl bg-card border border-border rounded-full shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-4 duration-200"
         onClick={e => e.stopPropagation()}
       >
         {/* Search input */}
@@ -393,9 +393,9 @@ const CommandCenter: React.FC = () => {
         {/* Loading indicator */}
         {globalLoading && (
           <div className="h-0.5 w-full bg-muted overflow-hidden">
-            <div className="h-full w-1/3 bg-primary animate-[shimmer_1s_ease-in-out_infinite] rounded-full" 
+            <div className="h-full w-1/3 bg-primary animate-[shimmer_1s_ease-in-out_infinite] rounded-2xl" 
                  style={{ animation: 'shimmer 1s ease-in-out infinite', animationName: 'none' }} />
-            <div className="h-full bg-primary/60 animate-pulse rounded-full" />
+            <div className="h-full bg-primary/60 animate-pulse rounded-2xl" />
           </div>
         )}
 
@@ -440,7 +440,7 @@ const CommandCenter: React.FC = () => {
                       : 'text-foreground hover:bg-muted/50'
                   }`}
                 >
-                  <span className={`p-1.5 rounded-lg ${i === selectedIndex ? 'bg-primary/20' : 'bg-muted'}`}>
+                  <span className={`p-1.5 rounded-full ${i === selectedIndex ? 'bg-primary/20' : 'bg-muted'}`}>
                     {item.icon}
                   </span>
                   <div className="flex-1 min-w-0">

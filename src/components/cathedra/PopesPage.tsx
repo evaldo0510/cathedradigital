@@ -176,7 +176,7 @@ const PopesPage: React.FC = () => {
       />
 
       <div className="text-center space-y-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl">
           <Icons.ShieldCheck className="w-4 h-4 text-primary" />
           <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Vicarius Christi</span>
         </div>
@@ -190,7 +190,7 @@ const PopesPage: React.FC = () => {
           placeholder="Buscar Papa..."
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="pl-9 bg-muted/50 border-border/50 rounded-xl"
+          className="pl-9 bg-muted/50 border-border/50 rounded-full"
         />
       </div>
 

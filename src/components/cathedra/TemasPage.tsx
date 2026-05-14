@@ -132,7 +132,7 @@ const TemasPage = () => {
       <div className="desktop-main px-4">
         <header className="space-y-4 text-center mb-8 sm:mb-16">
           <div className="flex justify-center mb-4">
-            <div className="w-16 h-1.5 bg-gradient-to-r from-transparent via-primary/50 to-transparent rounded-full shadow-[0_0_15px_rgba(var(--primary),0.3)]" />
+            <div className="w-16 h-1.5 bg-gradient-to-r from-transparent via-primary/50 to-transparent rounded-2xl shadow-[0_0_15px_rgba(var(--primary),0.3)]" />
           </div>
           <h1 className="text-4xl sm:text-6xl md:text-8xl font-black tracking-tighter bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent leading-[0.9] flex flex-col sm:block">
             <span>Nexus</span> <span className="text-primary/90">Temas</span>
@@ -157,7 +157,7 @@ const TemasPage = () => {
                 <motion.button
                   key={cat}
                   {...getTabProps(`tab-category-${idx}`, `panel-temas`, activeCategory === cat, `
-                    whitespace-nowrap px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] transition-all duration-300 focus-visible:ring-2 focus-visible:ring-primary outline-none
+                    whitespace-nowrap px-3 sm:px-5 py-2 sm:py-2.5 rounded-full sm:rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] transition-all duration-300 focus-visible:ring-2 focus-visible:ring-primary outline-none
                     ${activeCategory === cat 
                       ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-105' 
                       : 'bg-muted/40 text-muted-foreground/70 hover:bg-muted hover:text-foreground hover:scale-102 border border-transparent hover:border-border/50'
@@ -178,18 +178,18 @@ const TemasPage = () => {
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent  opacity-30 pointer-events-none" />
             
-            <div {...getTabPanelProps('panel-temas', `tab-category-${categories.indexOf(activeCategory)}`, true, "relative overflow-hidden rounded-2xl border border-border/30 bg-card/20  outline-none")}>
+            <div {...getTabPanelProps('panel-temas', `tab-category-${categories.indexOf(activeCategory)}`, true, "relative overflow-hidden rounded-full border border-border/30 bg-card/20  outline-none")}>
               {loadingTags ? (
                 <div className="flex flex-col items-center gap-4 py-12 w-full justify-center">
                   <div className="relative">
                     <Loader2 className="h-10 w-10 animate-spin text-primary/30" />
-                    <div className="absolute inset-0 bg-primary/20  animate-pulse rounded-full" />
+                    <div className="absolute inset-0 bg-primary/20  animate-pulse rounded-2xl" />
                   </div>
                   <span className="text-sm font-bold text-muted-foreground/60 tracking-widest uppercase">Consultando Nexus...</span>
                 </div>
               ) : filteredTags.length === 0 ? (
                 <div className="py-20 px-8 text-center w-full space-y-4">
-                  <div className="w-16 h-16 bg-muted/30 rounded-full flex items-center justify-center mx-auto">
+                  <div className="w-16 h-16 bg-muted/30 rounded-2xl flex items-center justify-center mx-auto">
                     <Search className="w-6 h-6 text-muted-foreground/30" />
                   </div>
                   <p className="text-sm text-muted-foreground/60 italic font-medium tracking-wide">Nenhum tema encontrado para sua busca teológica.</p>
@@ -198,7 +198,7 @@ const TemasPage = () => {
                 <>
                   {isSearchActive && activeCategory !== 'all' && (
                     <div className="px-6 pt-6 flex items-center justify-between">
-                      <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-primary/5 border border-primary/10">
+                      <div className="flex items-center gap-2 px-3 py-1 rounded-2xl bg-primary/5 border border-primary/10">
                         <Sparkles className="w-3 h-3 text-primary/40" />
                         <span className="text-[10px] font-bold text-primary/60 uppercase tracking-widest">Busca Global Ativa</span>
                       </div>
@@ -228,11 +228,11 @@ const TemasPage = () => {
                     </div>
                   </div>
                   <div className="flex items-center justify-center gap-3 px-8 pb-6 pt-2">
-                    <div className="flex items-center gap-2 bg-muted/20 px-4 py-1.5 rounded-full border border-border/20">
+                    <div className="flex items-center gap-2 bg-muted/20 px-4 py-1.5 rounded-2xl border border-border/20">
                       <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 tabular-nums">
                         {filteredTags.length} conexões sagradas
                       </span>
-                      <div className="w-1 h-1 rounded-full bg-primary/30" />
+                      <div className="w-1 h-1 rounded-2xl bg-primary/30" />
                       <Sparkles className="w-3 h-3 text-primary/40 animate-pulse" />
                     </div>
                   </div>
@@ -249,7 +249,7 @@ const TemasPage = () => {
             className="h-[300px] flex flex-col items-center justify-center text-center p-12 bg-muted/10 rounded-[3rem] border border-dashed border-border/40 relative overflow-hidden group"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 opacity-50" />
-            <div className="w-24 h-24 rounded-full bg-primary/5 flex items-center justify-center mb-8 border border-primary/10 shadow-inner group-hover:scale-110 transition-transform duration-500">
+            <div className="w-24 h-24 rounded-2xl bg-primary/5 flex items-center justify-center mb-8 border border-primary/10 shadow-inner group-hover:scale-110 transition-transform duration-500">
               <TagIcon className="h-12 w-12 text-primary/30" />
             </div>
             <h3 className="text-3xl font-black mb-4 text-foreground tracking-tight">Descubra os tesouros da Fé</h3>

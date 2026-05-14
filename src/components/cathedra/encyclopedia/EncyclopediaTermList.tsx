@@ -25,7 +25,7 @@ const EncyclopediaTermList: React.FC<EncyclopediaTermListProps> = ({
             key={t.term}
             onClick={() => onTermClick(t)}
             aria-pressed={isActive}
-            className={`w-full text-left px-4 py-3 rounded-xl transition-all flex items-center justify-between group focus-visible:ring-2 focus-visible:ring-primary outline-none
+            className={`w-full text-left px-4 py-3 rounded-full transition-all flex items-center justify-between group focus-visible:ring-2 focus-visible:ring-primary outline-none
               ${isActive
                 ? 'bg-primary/10 border border-primary/20 text-foreground'
                 : 'hover:bg-muted/50 text-foreground/80'

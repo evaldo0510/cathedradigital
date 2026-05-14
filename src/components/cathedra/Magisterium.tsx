@@ -186,7 +186,7 @@ const Magisterium: React.FC = () => {
       />
 
       <div className="text-center space-y-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl">
           <Icons.Scroll className="w-4 h-4 text-primary" />
           <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Magisterium Ecclesiae</span>
         </div>
@@ -196,11 +196,11 @@ const Magisterium: React.FC = () => {
 
       <Tabs defaultValue="guidance" className="w-full" onValueChange={setActiveTab}>
         <div className="flex justify-center mb-8">
-          <TabsList className="bg-muted/50 p-1 rounded-xl">
-            <TabsTrigger value="guidance" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-white px-6 py-2 text-xs font-bold uppercase tracking-widest transition-all">
+          <TabsList className="bg-muted/50 p-1 rounded-full">
+            <TabsTrigger value="guidance" className="rounded-full data-[state=active]:bg-primary data-[state=active]:text-white px-6 py-2 text-xs font-bold uppercase tracking-widest transition-all">
               Guia Espiritual
             </TabsTrigger>
-            <TabsTrigger value="documents" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-white px-6 py-2 text-xs font-bold uppercase tracking-widest transition-all">
+            <TabsTrigger value="documents" className="rounded-full data-[state=active]:bg-primary data-[state=active]:text-white px-6 py-2 text-xs font-bold uppercase tracking-widest transition-all">
               Documentos
             </TabsTrigger>
           </TabsList>
@@ -317,7 +317,7 @@ const Magisterium: React.FC = () => {
                       {selectedGuidance.relatedDocs.map(docId => {
                         const doc = DOCS_LIST.find(d => d.id === docId);
                         return (
-                          <div key={docId} className="p-4 rounded-xl border border-border bg-muted/30 flex items-center gap-3">
+                          <div key={docId} className="p-4 rounded-2xl border border-border bg-muted/30 flex items-center gap-3">
                             <Icons.FileText className="w-5 h-5 text-primary" />
                             <div>
                               <p className="text-xs font-bold text-foreground">{doc?.title || 'Documento'}</p>
@@ -340,7 +340,7 @@ const Magisterium: React.FC = () => {
               <Icons.Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input 
                 placeholder="Buscar por título ou autor..." 
-                className="pl-10 h-12 rounded-xl bg-card border-border"
+                className="pl-10 h-12 rounded-full bg-card border-border"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -348,7 +348,7 @@ const Magisterium: React.FC = () => {
             <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 no-scrollbar" role="tablist" aria-label="Filtros de temas">
               <Button 
                 variant={selectedTheme === null ? "default" : "outline"} 
-                className="rounded-xl h-10 px-4 text-[10px] font-black uppercase tracking-widest flex-shrink-0"
+                className="rounded-full h-10 px-4 text-[10px] font-black uppercase tracking-widest flex-shrink-0"
                 onClick={() => setSelectedTheme(null)}
                 role="tab"
                 aria-selected={selectedTheme === null}
@@ -359,7 +359,7 @@ const Magisterium: React.FC = () => {
                 <Button 
                   key={theme}
                   variant={selectedTheme === theme ? "default" : "outline"} 
-                  className="rounded-xl h-10 px-4 text-[10px] font-black uppercase tracking-widest flex-shrink-0"
+                  className="rounded-full h-10 px-4 text-[10px] font-black uppercase tracking-widest flex-shrink-0"
                   onClick={() => setSelectedTheme(theme)}
                   role="tab"
                   aria-selected={selectedTheme === theme}
@@ -381,7 +381,7 @@ const Magisterium: React.FC = () => {
                 <Card className="group h-full hover:border-primary/30 transition-all border-border bg-card overflow-hidden rounded-2xl">
                   <CardContent className="p-6 flex flex-col h-full space-y-4">
                     <div className="flex items-start justify-between gap-2">
-                      <div className="p-2.5 rounded-xl bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all">
+                      <div className="p-2.5 rounded-2xl bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all">
                         {doc.type === 'Encíclica' ? <Icons.Scroll className="w-5 h-5" /> : 
                          doc.type === 'Constituição' ? <Icons.Library className="w-5 h-5" /> :
                          <Icons.FileText className="w-5 h-5" />}

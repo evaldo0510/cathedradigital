@@ -15,7 +15,7 @@ const AchievementsPage: React.FC = () => {
     <div className="max-w-3xl mx-auto space-y-8">
       {/* Header */}
       <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl">
           <Trophy className="w-4 h-4 text-primary" />
           <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Conquistas</span>
         </div>
@@ -42,7 +42,7 @@ const AchievementsPage: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.06 }}
-              className={`relative rounded-2xl border p-5 transition-all ${
+              className={`relative rounded-full border p-5 transition-all ${
                 unlocked
                   ? 'bg-primary/5 border-primary/30 shadow-md'
                   : 'bg-card border-border opacity-60'
@@ -60,7 +60,7 @@ const AchievementsPage: React.FC = () => {
                   <p className="text-xs text-muted-foreground">{badge.description}</p>
                 </div>
                 {unlocked && (
-                  <div className="flex-shrink-0 px-2.5 py-1 bg-primary/15 rounded-full">
+                  <div className="flex-shrink-0 px-2.5 py-1 bg-primary/15 rounded-2xl">
                     <span className="text-[9px] font-black uppercase tracking-widest text-primary">Conquistado</span>
                   </div>
                 )}

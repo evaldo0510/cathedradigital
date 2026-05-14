@@ -493,7 +493,7 @@ const Bible: React.FC = () => {
         )}
         {/* Header */}
         <div className="flex items-center gap-4">
-          <button onClick={goBack} className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all">
+          <button onClick={goBack} className="p-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all">
             <Icons.ChevronLeft className="w-5 h-5 text-foreground" />
           </button>
           <div className="flex-1 min-w-0">
@@ -508,7 +508,7 @@ const Bible: React.FC = () => {
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             data-testid="bible-highlight-indicator"
-            className="flex items-center justify-between gap-3 px-4 py-3 rounded-2xl bg-primary/10 border border-primary/30"
+            className="flex items-center justify-between gap-3 px-4 py-3 rounded-full bg-primary/10 border border-primary/30"
           >
             <div className="flex items-center gap-2 min-w-0">
               <Icons.Sparkles className="w-4 h-4 text-primary shrink-0" />
@@ -530,7 +530,7 @@ const Bible: React.FC = () => {
         {/* Toolbar */}
         <div className="flex items-center justify-between gap-3 flex-wrap bg-card p-2 rounded-2xl border border-border shadow-sm">
           <div className="flex items-center gap-2">
-            <AudioButton variant="solid" className="px-6" />
+            <AudioButton variant="default" className="px-6" />
             <ShareButton
               title={`${selectedBook.name} ${selectedChapter}${highlightedVerse ? `:${highlightedVerse}` : ''}`}
               text={`Leia ${selectedBook.name}, capítulo ${selectedChapter} na Cathedra Digital`}
@@ -540,17 +540,17 @@ const Bible: React.FC = () => {
 
           <div className="flex items-center gap-2">
             <button disabled={selectedChapter <= 1} onClick={() => navigateChapter(-1)}
-              className="px-3 py-2 rounded-xl bg-card border border-border text-sm font-bold disabled:opacity-30 hover:bg-primary/10 transition-all">
+              className="px-3 py-2 rounded-full bg-card border border-border text-sm font-bold disabled:opacity-30 hover:bg-primary/10 transition-all">
               ← Anterior
             </button>
             <button disabled={selectedChapter >= selectedBook.chapters} onClick={() => navigateChapter(1)}
-              className="px-3 py-2 rounded-xl bg-card border border-border text-sm font-bold disabled:opacity-30 hover:bg-primary/10 transition-all">
+              className="px-3 py-2 rounded-full bg-card border border-border text-sm font-bold disabled:opacity-30 hover:bg-primary/10 transition-all">
               Próximo →
             </button>
           </div>
           <div className="flex items-center gap-2">
             {/* Font size */}
-            <div className="flex items-center bg-card border border-border rounded-xl overflow-hidden">
+            <div className="flex items-center bg-card border border-border rounded-2xl overflow-hidden">
               {FONT_SIZES.map((f, i) => (
                 <button key={f.label} onClick={() => setFontSizeIdx(i)}
                   className={`px-2.5 py-1.5 text-xs font-bold transition-all ${fontSizeIdx === i ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}>
@@ -560,7 +560,7 @@ const Bible: React.FC = () => {
             </div>
             {(crossRefs.length > 0 || docsRefs.length > 0) && (
               <button onClick={() => setShowCrossRefs(!showCrossRefs)}
-                className={`flex items-center gap-2 px-3 py-2 rounded-xl border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}
+                className={`flex items-center gap-2 px-3 py-2 rounded-full border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}
                 title="Catecismo & Documentos">
                 <Icons.Cross className="w-4 h-4" />
                 <span className="text-xs font-bold">{crossRefs.length + docsRefs.length}</span>
@@ -697,7 +697,7 @@ const Bible: React.FC = () => {
     return (
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="flex items-center gap-4">
-          <button onClick={goBack} className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all">
+          <button onClick={goBack} className="p-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all">
             <Icons.ChevronLeft className="w-5 h-5 text-foreground" />
           </button>
           <h1 className="text-2xl font-serif font-bold text-foreground">{selectedBook.name}</h1>
@@ -711,7 +711,7 @@ const Bible: React.FC = () => {
               <button 
                 key={ch} 
                 onClick={() => selectChapter(ch)}
-                className={`aspect-square flex items-center justify-center rounded-lg border text-xs sm:text-sm font-bold transition-all relative
+                className={`aspect-square flex items-center justify-center rounded-full border text-xs sm:text-sm font-bold transition-all relative
                   ${isRead 
                     ? 'bg-primary/10 border-primary/30 text-primary' 
                     : 'bg-card border-border text-muted-foreground hover:border-primary/40 hover:text-foreground hover:scale-[1.05]'}`}
@@ -758,7 +758,7 @@ const Bible: React.FC = () => {
           <button
             key={t}
             onClick={() => setTestament(t)}
-            className={`px-6 py-4 rounded-2xl font-bold transition-all border-2 text-sm
+            className={`px-6 py-4 rounded-full font-bold transition-all border-2 text-sm
               ${testament === t 
                 ? 'bg-primary border-primary text-white shadow-lg shadow-primary/20 scale-[1.02]' 
                 : 'bg-card border-border text-muted-foreground hover:border-primary/40'}`}
@@ -773,7 +773,7 @@ const Bible: React.FC = () => {
         <input
           type="text"
           placeholder="Buscar livro..."
-          className="w-full pl-12 pr-4 py-4 bg-card border border-border rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+          className="w-full pl-12 pr-4 py-4 bg-card border border-border rounded-full focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -782,9 +782,9 @@ const Bible: React.FC = () => {
       <div className="space-y-8">
         {filteredCategories.map((cat, idx) => (
           <Collapsible key={cat.label} defaultOpen={idx === 0 || !!searchQuery}>
-            <CollapsibleTrigger className="w-full flex items-center justify-between group p-1.5 hover:bg-muted/50 rounded-xl transition-all">
+            <CollapsibleTrigger className="w-full flex items-center justify-between group p-1.5 hover:bg-muted/50 rounded-full transition-all">
               <div className="flex items-center gap-3">
-                <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${cat.bgColor}`}>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${cat.bgColor}`}>
                   <cat.icon className={`w-4 h-4 ${cat.color}`} />
                 </div>
                 <h2 className="text-xs font-black text-foreground uppercase tracking-widest">{cat.label}</h2>
@@ -799,7 +799,7 @@ const Bible: React.FC = () => {
                     <button
                       key={book.abbr}
                       onClick={() => selectBook(book)}
-                      className={`flex flex-col items-center justify-center gap-1 p-2.5 rounded-xl border transition-all relative overflow-hidden group aspect-square
+                      className={`flex flex-col items-center justify-center gap-1 p-2.5 rounded-full border transition-all relative overflow-hidden group aspect-square
                         ${isRead 
                           ? 'bg-primary/5 border-primary/20 text-primary' 
                           : 'bg-card border-border text-muted-foreground hover:border-primary/40 hover:text-foreground hover:scale-[1.05] shadow-sm'}`}

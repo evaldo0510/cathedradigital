@@ -101,7 +101,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
         </p>
       </div>
 
-      <div className="bg-card border border-border rounded-3xl p-8 space-y-6">
+      <div className="bg-card border border-border rounded-2xl p-8 space-y-6">
         {error && (
           <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-2xl text-sm text-destructive font-medium">{error}</div>
         )}
@@ -116,7 +116,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
               <input
                 type="text" value={name} onChange={e => setName(e.target.value)} required
                 placeholder="Seu nome completo"
-                className="w-full px-4 py-3 rounded-2xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                className="w-full px-4 py-3 rounded-full border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
               />
             </div>
           )}
@@ -125,7 +125,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
             <input
               type="email" value={email} onChange={e => setEmail(e.target.value)} required
               placeholder="seu@email.com"
-              className="w-full px-4 py-3 rounded-2xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+              className="w-full px-4 py-3 rounded-full border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
             />
           </div>
           {mode !== 'forgot' && (
@@ -134,12 +134,12 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
               <input
                 type="password" value={password} onChange={e => setPassword(e.target.value)} required minLength={6}
                 placeholder="Mínimo 6 caracteres"
-                className="w-full px-4 py-3 rounded-2xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                className="w-full px-4 py-3 rounded-full border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
               />
             </div>
           )}
           <button type="submit" disabled={loading}
-            className="w-full py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all disabled:opacity-50">
+            className="w-full py-4 bg-foreground text-background rounded-full font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all disabled:opacity-50">
             {loading ? 'Aguarde...' : mode === 'login' ? 'Entrar' : mode === 'signup' ? 'Criar Conta' : 'Enviar Link'}
           </button>
         </form>
@@ -171,7 +171,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
               setLoading(false);
             }}
             disabled={loading}
-            className="w-full py-3.5 bg-background text-foreground border border-border rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-sm hover:bg-muted transition-all disabled:opacity-50 flex items-center justify-center gap-3 group"
+            className="w-full py-3.5 bg-background text-foreground border border-border rounded-full font-black uppercase text-[10px] tracking-widest shadow-sm hover:bg-muted transition-all disabled:opacity-50 flex items-center justify-center gap-3 group"
           >
             <Icons.Google className="w-5 h-5 transition-transform group-hover:scale-110" />
             Google
@@ -194,7 +194,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
               setLoading(false);
             }}
             disabled={loading}
-            className="w-full py-3.5 bg-primary text-primary-foreground rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary/90 transition-all disabled:opacity-50 flex items-center justify-center gap-3 group"
+            className="w-full py-3.5 bg-primary text-primary-foreground rounded-full font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary/90 transition-all disabled:opacity-50 flex items-center justify-center gap-3 group"
           >
             <Icons.Apple className="w-5 h-5 transition-transform group-hover:scale-110" />
             Apple

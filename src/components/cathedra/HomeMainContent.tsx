@@ -36,7 +36,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
           className="p-8 md:p-12 lg:p-14 flex flex-col md:flex-row items-center justify-between gap-10 group"
         >
           <div className="flex items-center gap-8 text-center md:text-left flex-col md:flex-row">
-            <div className="w-16 h-16 rounded-3xl bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-500 shadow-inner">
+            <div className="w-16 h-16 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-500 shadow-inner">
               <Icons.Flame className="w-8 h-8" />
             </div>
             <div>

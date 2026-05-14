@@ -78,7 +78,7 @@ const ThemeContentCard = ({
         <CardContent className="p-6 sm:p-8 space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className={`p-2 rounded-xl ${accentColor.replace('text-', 'bg-')}/10`}>
+              <div className={`p-2 rounded-full ${accentColor.replace('text-', 'bg-')}/10`}>
                 <Icon className={`w-4 h-4 ${accentColor}`} />
               </div>
               <span className={`text-[10px] font-black uppercase tracking-widest ${accentColor}`}>{content.reference}</span>
@@ -87,7 +87,7 @@ const ThemeContentCard = ({
               variant="ghost" 
               size="sm"
               onClick={onAction}
-              className={`h-9 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-primary/5 hover:text-primary gap-1.5 px-4 transition-all duration-300`}
+              className={`h-9 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-primary/5 hover:text-primary gap-1.5 px-4 transition-all duration-300`}
             >
               {buttonText} <ExternalLink className="w-3.5 h-3.5" />
             </Button>
@@ -125,7 +125,7 @@ const ContentSkeleton = () => (
       <Card key={i} className="border-border/40 bg-card/20 rounded-[2rem] overflow-hidden">
         <CardContent className="p-6 sm:p-8 space-y-4">
           <div className="flex items-center gap-2">
-            <Skeleton className="w-8 h-8 rounded-xl" />
+            <Skeleton className="w-8 h-8 rounded-full" />
             <Skeleton className="h-3 w-32" />
           </div>
           <div className="space-y-2">
@@ -393,7 +393,7 @@ const TemaDetailPage = () => {
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/60">{selectedTag?.category}</span>
-                <div className="w-1 h-1 rounded-full bg-primary/30" />
+                <div className="w-1 h-1 rounded-2xl bg-primary/30" />
                 <Badge variant="outline" className="text-[9px] font-black uppercase tracking-widest border-primary/20 text-primary/70">Nexus</Badge>
               </div>
               <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-foreground">{selectedTag?.label}</h1>
@@ -403,7 +403,7 @@ const TemaDetailPage = () => {
           <Button 
             onClick={handleLoadInsight}
             disabled={loadingLogos || !!logosInsight}
-            className="rounded-2xl h-14 px-8 bg-primary text-primary-foreground font-black uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all group overflow-hidden relative"
+            className="rounded-full h-14 px-8 bg-primary text-primary-foreground font-black uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all group overflow-hidden relative"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover:animate-shimmer" />
             {loadingLogos ? (
@@ -441,9 +441,9 @@ const TemaDetailPage = () => {
                   </div>
                   {loadingLogos && !logosInsight ? (
                     <div className="space-y-4">
-                      <div className="h-4 w-full bg-muted animate-pulse rounded-full" />
-                      <div className="h-4 w-[90%] bg-muted animate-pulse rounded-full opacity-70" />
-                      <div className="h-4 w-[75%] bg-muted animate-pulse rounded-full opacity-40" />
+                      <div className="h-4 w-full bg-muted animate-pulse rounded-2xl" />
+                      <div className="h-4 w-[90%] bg-muted animate-pulse rounded-2xl opacity-70" />
+                      <div className="h-4 w-[75%] bg-muted animate-pulse rounded-2xl opacity-40" />
                     </div>
                   ) : (
                     <div className="space-y-6">
@@ -472,11 +472,11 @@ const TemaDetailPage = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="md:col-span-2 space-y-8">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="w-full bg-muted/40 p-1 rounded-2xl border border-border/40 grid grid-cols-4">
-              <TabsTrigger value="bible" className="rounded-xl text-[10px] font-black uppercase tracking-widest py-2.5">Escrituras</TabsTrigger>
-              <TabsTrigger value="tradition" className="rounded-xl text-[10px] font-black uppercase tracking-widest py-2.5">Tradição</TabsTrigger>
-              <TabsTrigger value="magisterium" className="rounded-xl text-[10px] font-black uppercase tracking-widest py-2.5">Magistério</TabsTrigger>
-              <TabsTrigger value="journeys" className="rounded-xl text-[10px] font-black uppercase tracking-widest py-2.5">Jornadas</TabsTrigger>
+            <TabsList className="w-full bg-muted/40 p-1 rounded-full border border-border/40 grid grid-cols-4">
+              <TabsTrigger value="bible" className="rounded-full text-[10px] font-black uppercase tracking-widest py-2.5">Escrituras</TabsTrigger>
+              <TabsTrigger value="tradition" className="rounded-full text-[10px] font-black uppercase tracking-widest py-2.5">Tradição</TabsTrigger>
+              <TabsTrigger value="magisterium" className="rounded-full text-[10px] font-black uppercase tracking-widest py-2.5">Magistério</TabsTrigger>
+              <TabsTrigger value="journeys" className="rounded-full text-[10px] font-black uppercase tracking-widest py-2.5">Jornadas</TabsTrigger>
             </TabsList>
 
             {contentError ? (
@@ -491,7 +491,7 @@ const TemaDetailPage = () => {
                   onClick={() => {
                     refetch();
                   }} 
-                  className="h-10 rounded-xl px-6"
+                  className="h-10 rounded-full px-6"
                   disabled={isLoadingAny}
                   aria-busy={isLoadingAny}
                   aria-live="polite"

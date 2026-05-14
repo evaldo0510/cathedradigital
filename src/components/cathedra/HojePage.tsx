@@ -147,12 +147,12 @@ const HojePage: React.FC = () => {
           
           <div className="flex items-center justify-center gap-4 flex-wrap">
              {(profile?.streak || 0) > 0 && (
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#0F172A]/5 border border-[#0F172A]/10">
+              <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-[#0F172A]/5 border border-[#0F172A]/10">
                 <Icons.Zap className="w-4 h-4 text-[#0F172A]" />
                 <span className="text-[10px] font-bold text-[#0F172A] uppercase tracking-wider">{profile?.streak} {profile?.streak === 1 ? 'Dia' : 'Dias'}</span>
               </div>
             )}
-            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#0F172A]/5 border border-[#0F172A]/10">
+            <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-[#0F172A]/5 border border-[#0F172A]/10">
               <Icons.Star className="w-4 h-4 text-[#D4AF37]" />
               <span className="text-[10px] font-bold text-[#0F172A] uppercase tracking-wider">{profile?.xp || 0} XP</span>
             </div>
@@ -181,7 +181,7 @@ const HojePage: React.FC = () => {
                   <h3 className="text-xl font-bold text-[#0F172A]">{nextUp.label}</h3>
                   {activeJourney && (
                     <div className="mt-4 flex items-center gap-4 w-48">
-                      <div className="flex-1 h-1 bg-[#0F172A]/5 rounded-full overflow-hidden">
+                      <div className="flex-1 h-1 bg-[#0F172A]/5 rounded-2xl overflow-hidden">
                         <div className="h-full bg-[#D4AF37] transition-all duration-1000" style={{ width: `${journeyProgress.total > 0 ? (journeyProgress.completed / journeyProgress.total) * 100 : 0}%` }} />
                       </div>
                       <span className="text-[10px] font-bold text-[#0F172A]/60 tabular-nums">{journeyProgress.completed}/{journeyProgress.total}</span>
@@ -222,7 +222,7 @@ const HojePage: React.FC = () => {
             className="p-10 rounded-[2.5rem] border border-[#0F172A]/5 bg-white cursor-pointer hover:border-[#D4AF37]/30 transition-all group shadow-sm"
           >
             <div className="flex items-center gap-8">
-              <div className="w-20 h-20 rounded-3xl bg-[#0F172A]/5 flex items-center justify-center text-[#D4AF37] group-hover:bg-[#0F172A]/10 transition-colors">
+              <div className="w-20 h-20 rounded-2xl bg-[#0F172A]/5 flex items-center justify-center text-[#D4AF37] group-hover:bg-[#0F172A]/10 transition-colors">
                 <Icons.Catechism className="w-10 h-10" />
               </div>
               <div className="flex-1">

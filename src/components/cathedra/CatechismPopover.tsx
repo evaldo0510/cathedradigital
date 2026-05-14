@@ -28,7 +28,7 @@ const CatechismPopover: React.FC<CatechismPopoverProps> = ({
         <button
           className={variant === 'mini' 
             ? "ml-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-primary/10 text-[8px] font-black text-primary border border-primary/20 hover:bg-primary hover:text-primary-foreground transition-all align-middle"
-            : "px-2.5 py-1 rounded-lg bg-card border border-border text-xs font-bold text-primary hover:bg-primary hover:text-primary-foreground transition-all"}
+            : "px-2.5 py-1 rounded-full bg-card border border-border text-xs font-bold text-primary hover:bg-primary hover:text-primary-foreground transition-all"}
         >
           {variant === 'mini' ? '§' : `§${paragraph}`}
         </button>
@@ -36,7 +36,7 @@ const CatechismPopover: React.FC<CatechismPopoverProps> = ({
       <PopoverContent
         side="top"
         align="start"
-        className="w-80 max-h-64 overflow-y-auto p-0 rounded-2xl border-primary/20"
+        className="w-80 max-h-64 overflow-y-auto p-0 rounded-full border-primary/20"
       >
         <div className="p-3 border-b border-border bg-primary/5 flex items-center justify-between">
           <div className="flex items-center gap-2">

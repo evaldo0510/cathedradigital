@@ -60,7 +60,7 @@ const GoogleSignInButton: React.FC<GoogleSignInButtonProps> = ({
       onClick={handleSignIn}
       disabled={loading}
       className={cn(
-        "font-black uppercase text-[10px] tracking-widest gap-3 transition-all active:scale-95",
+        "gap-3",
         className
       )}
     >

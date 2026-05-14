@@ -5,7 +5,7 @@ const AboutPage: React.FC = () => (
   <div className="w-full space-y-16 py-4 animate-in fade-in slide-in-from-bottom-4 duration-1000">
     {/* Hero Section */}
     <div className="text-center space-y-4">
-      <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 rounded-full border border-primary/20">
+      <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 rounded-2xl border border-primary/20">
         <Icons.Cross className="w-4 h-4 text-primary" />
         <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Manifesto & Identidade</span>
       </div>
@@ -45,7 +45,7 @@ const AboutPage: React.FC = () => (
       {/* Missão Section */}
       <div id="missao" className="scroll-mt-24 space-y-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center">
             <Icons.Target className="w-5 h-5 text-primary" />
           </div>
           <h2 className="text-3xl font-serif font-bold text-foreground">Nossa Missão</h2>
@@ -59,7 +59,7 @@ const AboutPage: React.FC = () => (
       {/* História Section */}
       <div id="historia" className="scroll-mt-24 space-y-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center">
             <Icons.History className="w-5 h-5 text-primary" />
           </div>
           <h2 className="text-3xl font-serif font-bold text-foreground">Nossa História</h2>
@@ -72,7 +72,7 @@ const AboutPage: React.FC = () => (
     </div>
 
     {/* Social Media Section */}
-    <div id="redes-sociais" className="scroll-mt-24 bg-muted/40 rounded-3xl p-8 md:p-12 border border-border/50">
+    <div id="redes-sociais" className="scroll-mt-24 bg-muted/40 rounded-2xl p-8 md:p-12 border border-border/50">
       <div className="text-center space-y-8">
         <div className="space-y-2">
           <h2 className="text-2xl font-serif font-bold text-foreground">Siga-nos nas Redes Sociais</h2>
@@ -92,7 +92,7 @@ const AboutPage: React.FC = () => (
               href={social.url}
               target="_blank"
               rel="noopener noreferrer"
-              className={`flex flex-col items-center gap-2 p-4 rounded-2xl bg-background border border-border shadow-sm transition-all hover:shadow-md hover:-translate-y-1 ${social.color} group`}
+              className={`flex flex-col items-center gap-2 p-4 rounded-full bg-background border border-border shadow-sm transition-all hover:shadow-md hover:-translate-y-1 ${social.color} group`}
             >
               <div className="transition-transform duration-300 group-hover:scale-110">
                 {social.icon}
@@ -120,7 +120,7 @@ const AboutPage: React.FC = () => (
           { icon: <Icons.Heart className="w-8 h-8" />, title: 'Oração', desc: 'Rosário, Via Sacra, Missal Romano e um devocionário completo para sua vida espiritual.' },
           { icon: <Icons.Star className="w-8 h-8" />, title: 'Formação', desc: 'Trilhas de estudo progressivas, quizzes de conhecimento e a Suma Teológica de São Tomás.' },
         ].map(pillar => (
-          <div key={pillar.title} className="bg-card border border-border rounded-3xl p-6 space-y-4 hover:border-primary/30 transition-colors group">
+          <div key={pillar.title} className="bg-card border border-border rounded-2xl p-6 space-y-4 hover:border-primary/30 transition-colors group">
             <div className="text-primary bg-primary/5 w-16 h-16 rounded-2xl flex items-center justify-center transition-transform duration-500 group-hover:rotate-6">
               {pillar.icon}
             </div>
@@ -137,11 +137,11 @@ const AboutPage: React.FC = () => (
     <div className="pt-16 border-t border-border/40">
       <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16 bg-muted/20 rounded-[2.5rem] p-8 md:p-12 border border-border/30">
         <div className="shrink-0">
-          <div className="w-48 h-48 md:w-64 md:h-64 rounded-full border-4 border-background p-2 relative bg-background shadow-2xl overflow-hidden group">
-            <div className="w-full h-full rounded-full bg-muted flex items-center justify-center overflow-hidden border border-border group-hover:scale-105 transition-transform duration-700">
+          <div className="w-48 h-48 md:w-64 md:h-64 rounded-2xl border-4 border-background p-2 relative bg-background shadow-2xl overflow-hidden group">
+            <div className="w-full h-full rounded-2xl bg-muted flex items-center justify-center overflow-hidden border border-border group-hover:scale-105 transition-transform duration-700">
               <Icons.User className="w-24 h-24 text-muted-foreground/30" />
             </div>
-            <div className="absolute bottom-2 right-2 bg-primary text-white p-3 rounded-full shadow-lg border-4 border-background">
+            <div className="absolute bottom-2 right-2 bg-primary text-white p-3 rounded-2xl shadow-lg border-4 border-background">
               <Icons.Feather className="w-5 h-5" />
             </div>
           </div>
@@ -176,7 +176,7 @@ const AboutPage: React.FC = () => (
     {/* Footer Quote */}
     <div className="py-16 text-center space-y-4">
       <p className="text-2xl font-serif font-bold text-foreground tracking-tight uppercase">Ad Maiorem Dei Gloriam</p>
-      <div className="w-12 h-0.5 bg-primary/30 mx-auto rounded-full" />
+      <div className="w-12 h-0.5 bg-primary/30 mx-auto rounded-2xl" />
       <p className="text-muted-foreground italic">Para a maior glória de Deus.</p>
     </div>
   </div>

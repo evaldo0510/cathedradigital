@@ -189,7 +189,7 @@ const Footer: React.FC = React.memo(() => {
                 { icon: <Icons.Youtube className="w-4 h-4" />, url: 'https://youtube.com' },
                 { icon: <Icons.Whatsapp className="w-4 h-4" />, url: 'https://wa.me' },
               ].map((social, i) => (
-                <a key={i} href={social.url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground dark:text-foreground/70 hover:text-primary transition-all p-2 rounded-lg bg-foreground/5 dark:bg-foreground/10 border border-foreground/10 dark:border-foreground/20 hover:border-primary/30">
+                <a key={i} href={social.url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground dark:text-foreground/70 hover:text-primary transition-all p-2 rounded-full bg-foreground/5 dark:bg-foreground/10 border border-foreground/10 dark:border-foreground/20 hover:border-primary/30">
                   {social.icon}
                 </a>
               ))}
@@ -234,7 +234,7 @@ const Footer: React.FC = React.memo(() => {
               <select 
                 value={selectedDiocese}
                 onChange={(e) => handleDioceseChange(e.target.value)}
-                className="w-full bg-foreground/5 border border-foreground/10 rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors cursor-pointer appearance-none"
+                className="w-full bg-foreground/5 border border-foreground/10 rounded-full px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors cursor-pointer appearance-none"
               >
                 <option value="">{lang === 'pt' ? 'Selecione sua Diocese' : 'Select your Diocese'}</option>
                 {DIOCESES_BR.map(d => (
@@ -261,15 +261,15 @@ const Footer: React.FC = React.memo(() => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full bg-foreground/5 border border-foreground/10 rounded-xl pl-4 pr-12 py-2.5 text-sm focus:outline-none focus:border-primary/50 transition-colors"
+                  className="w-full bg-foreground/5 border border-foreground/10 rounded-full pl-4 pr-12 py-2.5 text-sm focus:outline-none focus:border-primary/50 transition-colors"
                 />
                 <button 
                   type="submit" 
                   disabled={isSubmitting}
-                  className="absolute right-1 top-1 bottom-1 px-3 bg-primary text-primary-foreground rounded-lg hover:scale-105 transition-all disabled:opacity-50"
+                  className="absolute right-1 top-1 bottom-1 px-3 bg-primary text-primary-foreground rounded-full hover:scale-105 transition-all disabled:opacity-50"
                 >
                   {isSubmitting ? (
-                    <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+                    <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-2xl animate-spin" />
                   ) : (
                     <Icons.ArrowDown className="w-4 h-4 -rotate-90" />
                   )}
@@ -321,7 +321,7 @@ const Footer: React.FC = React.memo(() => {
             </nav>
             <button 
               onClick={scrollToTop} 
-              className="p-2.5 bg-foreground/5 dark:bg-foreground/10 hover:bg-primary hover:text-primary-foreground rounded-lg transition-all border border-foreground/10 dark:border-foreground/20 group focus-visible:ring-2 focus-visible:ring-primary outline-none"
+              className="p-2.5 bg-foreground/5 dark:bg-foreground/10 hover:bg-primary hover:text-primary-foreground rounded-full transition-all border border-foreground/10 dark:border-foreground/20 group focus-visible:ring-2 focus-visible:ring-primary outline-none"
               aria-label="Voltar ao topo"
             >
               <Icons.ArrowDown className="w-4 h-4 rotate-180" />

@@ -261,7 +261,7 @@ const AdminThemesTab = () => {
           {loadingThemes ? (
             <div className="flex items-center justify-center py-8"><Loader2 className="w-6 h-6 animate-spin text-primary" /></div>
           ) : filteredThemes?.length === 0 ? (
-            <div className="text-center py-12 bg-muted/20 rounded-xl border border-dashed">
+            <div className="text-center py-12 bg-muted/20 rounded-2xl border border-dashed">
               <p className="text-sm text-muted-foreground">Nenhum tema encontrado.</p>
             </div>
           ) : (
@@ -269,7 +269,7 @@ const AdminThemesTab = () => {
               <div
                 key={theme.id}
                 onClick={() => setSelectedTheme(theme)}
-                className={`w-full group text-left p-4 rounded-xl border transition-all cursor-pointer relative ${
+                className={`w-full group text-left p-4 rounded-full border transition-all cursor-pointer relative ${
                   selectedTheme?.id === theme.id ? 'bg-primary/5 border-primary/30 shadow-sm' : 'bg-card border-border hover:border-primary/20'
                 }`}
               >
@@ -310,7 +310,7 @@ const AdminThemesTab = () => {
           {!selectedTheme ? (
             <Card className="border-dashed h-[400px] flex items-center justify-center">
               <CardContent className="flex flex-col items-center justify-center text-center">
-                <div className="w-16 h-16 rounded-full bg-muted/30 flex items-center justify-center mb-4">
+                <div className="w-16 h-16 rounded-2xl bg-muted/30 flex items-center justify-center mb-4">
                   <Tag className="w-8 h-8 text-muted-foreground/30" />
                 </div>
                 <h3 className="font-bold text-lg mb-1">Nenhum tema selecionado</h3>
@@ -319,7 +319,7 @@ const AdminThemesTab = () => {
             </Card>
           ) : (
             <div className="space-y-4 animate-in fade-in duration-300">
-              <div className="flex items-center justify-between bg-card p-4 rounded-xl border border-border/50">
+              <div className="flex items-center justify-between bg-card p-4 rounded-2xl border border-border/50">
                 <div className="flex items-center gap-3">
                   <span className="text-3xl">{selectedTheme.emoji || '⛪'}</span>
                   <div>
@@ -384,7 +384,7 @@ const AdminThemesTab = () => {
                     return (
                       <div key={type} className="space-y-3">
                         <div className="flex items-center gap-2 border-b border-border/50 pb-2">
-                          <div className={`p-1.5 rounded-lg ${config.color}`}>{config.icon}</div>
+                          <div className={`p-1.5 rounded-full ${config.color}`}>{config.icon}</div>
                           <span className="text-sm font-bold text-foreground uppercase tracking-widest">{config.label}</span>
                           <Badge variant="outline" className="text-[10px] ml-auto">{items.length}</Badge>
                         </div>

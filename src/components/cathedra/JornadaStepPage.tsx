@@ -187,7 +187,7 @@ const JornadaStepPage: React.FC = () => {
   if (loading) {
     return createPortal(
       <div className="fixed inset-0 bg-background flex items-center justify-center z-[200]">
-        <div className="w-8 h-8 border-2 border-secondary border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-secondary border-t-transparent rounded-2xl animate-spin" />
       </div>,
       document.body
     );
@@ -227,7 +227,7 @@ const JornadaStepPage: React.FC = () => {
                 <span className="cursor-help px-1.5 py-0.5 rounded-full text-[8px] font-black uppercase bg-primary/10 text-primary border border-primary/20 flex items-center gap-1">
                   {userLevelClass} <ShieldQuestion className="w-2 h-2 opacity-50" />
                 </span>
-                <div className="absolute left-0 top-full mt-2 w-48 p-2 bg-popover text-popover-foreground rounded-lg border border-border shadow-xl text-[10px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                <div className="absolute left-0 top-full mt-2 w-48 p-2 bg-popover text-popover-foreground rounded-2xl border border-border shadow-xl text-[10px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
                   <p className="font-bold mb-1">Conteúdo Adaptado</p>
                   <p className="opacity-80">
                     {userLevelClass === 'iniciante' && "Nível Iniciante: conteúdo simplificado e guiado."}
@@ -263,7 +263,7 @@ const JornadaStepPage: React.FC = () => {
               <motion.div 
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="w-24 h-24 mx-auto mb-4 rounded-2xl overflow-hidden border-2 border-primary/20 shadow-xl"
+                className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden border-2 border-primary/20 shadow-xl"
               >
                 <SacredImage src={saintImage} alt={step.subtitle || ''} className="w-full h-full object-cover" />
               </motion.div>
@@ -273,7 +273,7 @@ const JornadaStepPage: React.FC = () => {
               <p className="text-sm text-muted-foreground italic">{step.subtitle}</p>
             )}
             {content.bible_ref && (
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 text-[10px] font-black uppercase tracking-wider mx-auto">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-2xl bg-primary/10 text-primary border border-primary/20 text-[10px] font-black uppercase tracking-wider mx-auto">
                 <BookOpen className="w-3 h-3" /> {content.bible_ref}
               </div>
             )}
@@ -386,7 +386,7 @@ const JornadaStepPage: React.FC = () => {
             </div>
 
             {(getVariantContent('final_question', content) || getVariantContent('journal_prompt', content) || getVariantContent('question', content)) && (
-              <div className="bg-primary/5 border border-primary/10 rounded-xl p-4">
+              <div className="bg-primary/5 border border-primary/10 rounded-2xl p-4">
                 <p className="text-sm text-foreground/80 italic font-serif">
                   {getVariantContent('final_question', content) || getVariantContent('journal_prompt', content) || getVariantContent('question', content)}
                 </p>
@@ -412,11 +412,11 @@ const JornadaStepPage: React.FC = () => {
             <button
               onClick={completeStep}
               disabled={saving}
-              className="w-full h-14 bg-primary text-primary-foreground rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-3"
+              className="w-full h-14 bg-primary text-primary-foreground rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-3"
             >
               {saving ? (
                 <>
-                  <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                  <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-2xl animate-spin" />
                   Salvando...
                 </>
               ) : (
@@ -430,7 +430,7 @@ const JornadaStepPage: React.FC = () => {
             <div className="flex gap-3">
               <button
                 onClick={() => navigate(`/jornadas/${journeyId}`)}
-                className="flex-1 h-14 bg-secondary text-secondary-foreground rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-secondary/80 transition-all flex items-center justify-center gap-2"
+                className="flex-1 h-14 bg-secondary text-secondary-foreground rounded-full text-[10px] font-black uppercase tracking-[0.2em] hover:bg-secondary/80 transition-all flex items-center justify-center gap-2"
               >
                 <ArrowLeft className="w-4 h-4" />
                 Voltar à Jornada
@@ -438,7 +438,7 @@ const JornadaStepPage: React.FC = () => {
               {nextStep && (
                 <button
                   onClick={() => navigate(`/jornadas/${journeyId}/step?step=${nextStep.id}`)}
-                  className="flex-1 h-14 bg-primary text-primary-foreground rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                  className="flex-1 h-14 bg-primary text-primary-foreground rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
                 >
                   Próxima Etapa
                   <Icons.ChevronRight className="w-4 h-4" />

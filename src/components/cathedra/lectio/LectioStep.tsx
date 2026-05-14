@@ -36,7 +36,7 @@ const LectioStep: React.FC<LectioStepProps> = ({
     <div className="max-w-4xl mx-auto space-y-8 pb-12">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center gap-6 px-2">
-        <button onClick={onBack} className="p-3 rounded-2xl bg-card border border-border hover:bg-primary/5 transition-all active:scale-95 shadow-sm self-start md:self-center">
+        <button onClick={onBack} className="p-3 rounded-full bg-card border border-border hover:bg-primary/5 transition-all active:scale-95 shadow-sm self-start md:self-center">
           <ArrowLeft className="w-6 h-6 text-foreground" />
         </button>
         <div className="flex-1 space-y-1">
@@ -77,7 +77,7 @@ const LectioStep: React.FC<LectioStepProps> = ({
             <button
               key={step.id}
               onClick={() => onStepChange(step.id)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all whitespace-nowrap border ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all whitespace-nowrap border ${
                 step.id === currentStep 
                   ? 'bg-primary border-primary text-white shadow-lg' 
                   : i <= stepIndex ? 'bg-card border-border text-foreground/80' : 'bg-transparent border-transparent text-muted-foreground/40'
@@ -179,7 +179,7 @@ const LectioStep: React.FC<LectioStepProps> = ({
         <button
           disabled={stepIndex <= 0}
           onClick={() => onStepChange(STEPS[stepIndex - 1].id)}
-          className="flex-1 max-w-[200px] h-14 rounded-2xl bg-card border border-border text-[10px] font-black uppercase tracking-widest disabled:opacity-20 hover:bg-primary/5 transition-all flex items-center justify-center gap-2 group shadow-sm"
+          className="flex-1 max-w-[200px] h-14 rounded-full bg-card border border-border text-[10px] font-black uppercase tracking-widest disabled:opacity-20 hover:bg-primary/5 transition-all flex items-center justify-center gap-2 group shadow-sm"
         >
           <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Anterior
         </button>
@@ -187,14 +187,14 @@ const LectioStep: React.FC<LectioStepProps> = ({
         {stepIndex < STEPS.length - 1 ? (
           <button
             onClick={() => onStepChange(STEPS[stepIndex + 1].id)}
-            className="flex-1 max-w-[200px] h-14 rounded-2xl bg-foreground text-background text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-2 group shadow-xl"
+            className="flex-1 max-w-[200px] h-14 rounded-full bg-foreground text-background text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-2 group shadow-xl"
           >
             Próximo <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </button>
         ) : (
           <button
             onClick={() => onStepChange('conclusio')}
-            className="flex-1 max-w-[200px] h-14 rounded-2xl bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-2 group shadow-xl shadow-primary/20"
+            className="flex-1 max-w-[200px] h-14 rounded-full bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-2 group shadow-xl shadow-primary/20"
           >
             <CheckCircle2 className="w-4 h-4" /> Concluir
           </button>

@@ -81,7 +81,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
         {hasQuery && !isAllEmpty && (
           <Tabs defaultValue="santos" className="mt-6">
-            <TabsList className="w-full flex-wrap h-auto gap-1 bg-muted/50 p-1 rounded-xl">
+            <TabsList className="w-full flex-wrap h-auto gap-1 bg-muted/50 p-1 rounded-full">
               <TabsTrigger value="santos" className="text-xs flex-1 min-w-[80px]">Santos ({counts.santos})</TabsTrigger>
               <TabsTrigger value="glossario" className="text-xs flex-1 min-w-[80px]">Glossário ({counts.glossario})</TabsTrigger>
               <TabsTrigger value="comunidade" className="text-xs flex-1 min-w-[80px]">Comunidade ({counts.comunidade})</TabsTrigger>

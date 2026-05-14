@@ -102,7 +102,7 @@ const AZFaithPage: React.FC = () => {
   if (isLoading && allTerms.length === 0) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        <div className="animate-spin rounded-2xl h-12 w-12 border-b-2 border-primary"></div>
       </div>
     );
   }
@@ -117,7 +117,7 @@ const AZFaithPage: React.FC = () => {
 
       <div className="max-w-6xl mx-auto pb-32 px-4 md:px-8 animate-in fade-in duration-700">
         <header className="text-center space-y-6 pt-12 mb-16">
-          <div className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-primary/5 rounded-full border border-primary/10 shadow-inner">
+          <div className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-primary/5 rounded-2xl border border-primary/10 shadow-inner">
             <BookOpen className="w-4 h-4 text-primary" />
             <span className="text-[11px] font-black uppercase tracking-[0.3em] text-primary">Glossarium Fidei</span>
           </div>
@@ -125,7 +125,7 @@ const AZFaithPage: React.FC = () => {
           <Button
             variant={quizMode ? 'default' : 'outline'}
             onClick={() => setQuizMode(!quizMode)}
-            className="rounded-2xl gap-2 font-bold text-xs uppercase tracking-widest mt-2"
+            className="rounded-full gap-2 font-bold text-xs uppercase tracking-widest mt-2"
           >
             <Brain className="w-4 h-4" />
             {quizMode ? 'Voltar ao Índice' : '🧠 Testar Conhecimento'}
@@ -146,7 +146,7 @@ const AZFaithPage: React.FC = () => {
                   setSearchQuery(e.target.value);
                   if (e.target.value) setSelectedLetter(null);
                 }}
-                className="w-full pl-11 pr-10 py-3 bg-card border border-border rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"
+                className="w-full pl-11 pr-10 py-3 bg-card border border-border rounded-full focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"
               />
               {searchQuery && (
                 <button onClick={() => setSearchQuery('')} className="absolute right-4 top-1/2 -translate-y-1/2">
@@ -169,7 +169,7 @@ const AZFaithPage: React.FC = () => {
                     whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => handleTermClick(term)}
-                    className={`px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-[0.1em] border transition-all relative overflow-hidden group focus-visible:ring-4 focus-visible:ring-primary outline-none shadow-sm
+                    className={`px-6 py-3 rounded-full text-xs font-black uppercase tracking-[0.1em] border transition-all relative overflow-hidden group focus-visible:ring-4 focus-visible:ring-primary outline-none shadow-sm
                       ${isActive
                         ? 'bg-primary text-primary-foreground border-primary shadow-lg ring-4 ring-primary/10'
                         : 'bg-card  text-primary border-primary/20 hover:border-primary/50 hover:shadow-md'

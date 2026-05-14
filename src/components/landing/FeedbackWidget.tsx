@@ -54,11 +54,11 @@ const FeedbackWidget = () => {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="absolute bottom-20 right-0 w-[320px] bg-card border border-border shadow-2xl rounded-3xl p-6 overflow-hidden"
+            className="absolute bottom-20 right-0 w-[320px] bg-card border border-border shadow-2xl rounded-full p-6 overflow-hidden"
           >
             {submitted ? (
               <div className="text-center py-8 space-y-4">
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
+                <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto">
                   <Send className="w-8 h-8 text-primary" />
                 </div>
                 <h3 className="text-xl font-serif font-bold">Obrigado!</h3>
@@ -96,13 +96,13 @@ const FeedbackWidget = () => {
                   value={feedback}
                   onChange={(e) => setFeedback(e.target.value)}
                   placeholder="O que você achou do projeto? O que falta para você começar a usar?"
-                  className="w-full h-32 px-4 py-3 rounded-2xl border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none font-serif"
+                  className="w-full h-32 px-4 py-3 rounded-full border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none font-serif"
                 />
 
                 <Button 
                   type="submit" 
                   disabled={isSubmitting || (!feedback && rating === 0)}
-                  className="w-full rounded-2xl font-bold uppercase tracking-widest text-[10px] h-12"
+                  className="w-full rounded-full font-bold uppercase tracking-widest text-[10px] h-12"
                 >
                   {isSubmitting ? 'Enviando...' : 'Enviar Feedback'}
                 </Button>

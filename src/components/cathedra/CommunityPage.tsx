@@ -278,7 +278,7 @@ const CommunityPage: React.FC = () => {
       <div className="max-w-3xl mx-auto space-y-6 py-10 px-4">
         <button 
           onClick={() => { setSelectedPost(null); setReplies([]); }} 
-          className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none rounded-lg px-2 py-1"
+          className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none rounded-full px-2 py-1"
           aria-label="Voltar para a lista de discussões"
         >
           <Icons.ChevronLeft className="w-4 h-4" /> Voltar
@@ -286,7 +286,7 @@ const CommunityPage: React.FC = () => {
 
         <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-foreground text-background flex items-center justify-center font-black text-sm">
+            <div className="w-10 h-10 rounded-2xl bg-foreground text-background flex items-center justify-center font-black text-sm">
               {(selectedPost.author_name || 'A').charAt(0).toUpperCase()}
             </div>
             <div>
@@ -302,7 +302,7 @@ const CommunityPage: React.FC = () => {
           <div className="flex items-center gap-4 pt-2 border-t border-border">
             <button 
               onClick={() => toggleLike(selectedPost)} 
-              className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none rounded-lg px-2 py-1"
+              className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none rounded-full px-2 py-1"
               aria-label={selectedPost.user_liked ? "Remover curtida" : "Curtir discussão"}
               aria-pressed={selectedPost.user_liked}
             >
@@ -315,9 +315,9 @@ const CommunityPage: React.FC = () => {
 
         <div className="space-y-3">
           {replies.map(r => (
-            <div key={r.id} className="bg-card border border-border rounded-xl p-4 ml-6">
+            <div key={r.id} className="bg-card border border-border rounded-2xl p-4 ml-6">
               <div className="flex items-center gap-2 mb-2">
-                <div className="w-7 h-7 rounded-lg bg-muted flex items-center justify-center text-xs font-bold text-foreground">
+                <div className="w-7 h-7 rounded-2xl bg-muted flex items-center justify-center text-xs font-bold text-foreground">
                   {(r.author_name || 'A').charAt(0).toUpperCase()}
                 </div>
                 <span className="text-xs font-bold text-foreground">{r.author_name}</span>
@@ -335,15 +335,15 @@ const CommunityPage: React.FC = () => {
               onChange={e => setReplyContent(e.target.value)}
               placeholder="Escreva sua resposta..."
               rows={3}
-              className="w-full bg-background border border-border rounded-xl p-3 text-sm text-foreground resize-none focus:outline-none focus:ring-2 focus:ring-primary/50"
+              className="w-full bg-background border border-border rounded-full p-3 text-sm text-foreground resize-none focus:outline-none focus:ring-2 focus:ring-primary/50"
             />
             <button onClick={submitReply} disabled={submitting || !replyContent.trim()}
-              className="px-4 py-2 rounded-xl bg-foreground text-background text-xs font-black uppercase tracking-widest disabled:opacity-40 hover:bg-primary hover:text-primary-foreground transition-all">
+              className="px-4 py-2 rounded-full bg-foreground text-background text-xs font-black uppercase tracking-widest disabled:opacity-40 hover:bg-primary hover:text-primary-foreground transition-all">
               {submitting ? 'Enviando...' : 'Responder'}
             </button>
           </div>
         ) : (
-          <button onClick={() => navigate(AppRoute.LOGIN)} className="w-full py-3 bg-foreground text-background rounded-xl text-sm font-bold hover:bg-primary hover:text-primary-foreground transition-all">
+          <button onClick={() => navigate(AppRoute.LOGIN)} className="w-full py-3 bg-foreground text-background rounded-full text-sm font-bold hover:bg-primary hover:text-primary-foreground transition-all">
             Faça login para responder
           </button>
         )}
@@ -362,7 +362,7 @@ const CommunityPage: React.FC = () => {
         ) : (
           <>
             <div className="text-center space-y-4 pt-4 mb-10">
-              <div className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-primary/5 rounded-full border border-primary/10 shadow-inner mb-2">
+              <div className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-primary/5 rounded-2xl border border-primary/10 shadow-inner mb-2">
                 <Icons.Message className="w-4 h-4 text-primary" aria-hidden="true" />
                 <span className="text-[11px] font-black uppercase tracking-[0.3em] text-primary">Communitas Fidelium</span>
               </div>
@@ -375,7 +375,7 @@ const CommunityPage: React.FC = () => {
 
         <div className="flex gap-2 justify-center mb-10" role="tablist" aria-label="Abas da comunidade">
           <button 
-            {...getTabProps('tab-0', 'panel-forum', tab === 'forum', `px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+            {...getTabProps('tab-0', 'panel-forum', tab === 'forum', `px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
               tab === 'forum' ? 'bg-foreground text-background' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
             }`)}
             onClick={() => setTab('forum')}
@@ -384,7 +384,7 @@ const CommunityPage: React.FC = () => {
             <Icons.Message className="w-3.5 h-3.5 inline mr-1.5" />Fórum
           </button>
           <button 
-            {...getTabProps('tab-1', 'panel-ranking', tab === 'ranking', `px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+            {...getTabProps('tab-1', 'panel-ranking', tab === 'ranking', `px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
               tab === 'ranking' ? 'bg-foreground text-background' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
             }`)}
             onClick={() => setTab('ranking')}
@@ -404,7 +404,7 @@ const CommunityPage: React.FC = () => {
                 isSearching={isSearchPending}
                 className="flex-1"
               />
-              <Button onClick={() => setShowNewPost(true)} className="rounded-xl h-12 px-6 font-black uppercase tracking-widest gap-2 bg-primary shadow-lg shadow-primary/20">
+              <Button onClick={() => setShowNewPost(true)} className="rounded-full h-12 px-6 font-black uppercase tracking-widest gap-2 bg-primary shadow-lg shadow-primary/20">
                 <Icons.Plus className="w-4 h-4" /> Nova Discussão
               </Button>
             </div>
@@ -414,7 +414,7 @@ const CommunityPage: React.FC = () => {
                 <Card key={post.id} className="cursor-pointer hover:border-primary/40 transition-all rounded-[2rem] bg-card border-border/50 group" onClick={() => openPost(post)}>
                   <CardContent className="p-6">
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center font-black text-sm text-primary">
+                      <div className="w-10 h-10 rounded-2xl bg-muted flex items-center justify-center font-black text-sm text-primary">
                         {(post.author_name || 'A').charAt(0).toUpperCase()}
                       </div>
                       <div className="flex-1">
@@ -446,7 +446,7 @@ const CommunityPage: React.FC = () => {
               <div className="grid grid-cols-1 gap-3">
                 {leaderboard.map((entry, idx) => (
                   <div key={entry.id} className="flex items-center gap-4 p-5 bg-card border border-border/50 rounded-[2rem]">
-                    <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center font-black text-sm">
+                    <div className="w-8 h-8 rounded-2xl bg-muted flex items-center justify-center font-black text-sm">
                       {idx + 1}
                     </div>
                     <div className="flex-1 min-w-0">
@@ -477,7 +477,7 @@ const CommunityPage: React.FC = () => {
           <div className="space-y-4">
             {leaderboard.slice(0, 3).map((entry, i) => (
               <div key={entry.id} className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center font-black text-[10px]">
+                <div className="w-8 h-8 rounded-2xl bg-muted flex items-center justify-center font-black text-[10px]">
                   {i + 1}
                 </div>
                 <div className="flex-1 min-w-0">

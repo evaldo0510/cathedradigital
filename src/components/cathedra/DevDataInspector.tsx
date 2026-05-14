@@ -49,7 +49,7 @@ const DevDataInspector: React.FC<DevDataInspectorProps> = ({ data }) => {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="absolute bottom-14 right-0 w-80 bg-card border border-border rounded-3xl shadow-2xl overflow-hidden "
+            className="absolute bottom-14 right-0 w-80 bg-card border border-border rounded-full shadow-2xl overflow-hidden "
           >
             <div className="p-4 border-b border-border bg-muted/30 flex items-center justify-between">
               <h4 className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-2">
@@ -66,7 +66,7 @@ const DevDataInspector: React.FC<DevDataInspectorProps> = ({ data }) => {
                 {fields.map((field) => {
                   const status = getStatus(field.name.toLowerCase(), field.value);
                   return (
-                    <div key={field.name} className="flex flex-col gap-1 p-2 rounded-xl bg-muted/20 border border-border/50">
+                    <div key={field.name} className="flex flex-col gap-1 p-2 rounded-2xl bg-muted/20 border border-border/50">
                       <div className="flex items-center justify-between">
                         <span className="text-[9px] font-bold text-muted-foreground uppercase">{field.name}</span>
                         <span className={`text-[8px] font-black uppercase px-1.5 py-0.5 rounded ${status.color}`}>
@@ -86,7 +86,7 @@ const DevDataInspector: React.FC<DevDataInspectorProps> = ({ data }) => {
 
               <div className="pt-2">
                 <p className="text-[9px] font-bold text-muted-foreground uppercase mb-2">JSON Bruto (Official Saint)</p>
-                <pre className="text-[10px] bg-black/5 p-3 rounded-xl overflow-x-auto font-mono text-foreground/70">
+                <pre className="text-[10px] bg-black/5 p-3 rounded-full overflow-x-auto font-mono text-foreground/70">
                   {JSON.stringify(officialSaint, null, 2)}
                 </pre>
               </div>

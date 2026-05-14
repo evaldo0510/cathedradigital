@@ -154,7 +154,7 @@ export const Logo = forwardRef<HTMLDivElement, { className?: string, variant?: '
         )}
       />
       {variant === 'gold' && (
-        <div className="absolute inset-0 bg-secondary/5 rounded-full -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+        <div className="absolute inset-0 bg-secondary/5 rounded-2xl -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
       )}
     </div>
   );

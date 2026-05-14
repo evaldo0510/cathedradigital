@@ -135,27 +135,27 @@ const CatechismIntegrity: React.FC = () => {
         <div className="flex flex-wrap items-center gap-3">
            <button 
             onClick={() => navigate('/catechism/debug')}
-            className="px-4 py-2 rounded-xl border border-border text-xs font-black uppercase tracking-widest hover:bg-muted transition-all flex items-center gap-2"
+            className="px-4 py-2 rounded-full border border-border text-xs font-black uppercase tracking-widest hover:bg-muted transition-all flex items-center gap-2"
           >
             <Icons.Settings className="w-3 h-3" /> Debug Geral
           </button>
 
           <button 
             onClick={() => navigate('/catechism/verify')}
-            className="px-4 py-2 rounded-xl border border-border text-xs font-black uppercase tracking-widest hover:bg-muted transition-all flex items-center gap-2"
+            className="px-4 py-2 rounded-full border border-border text-xs font-black uppercase tracking-widest hover:bg-muted transition-all flex items-center gap-2"
           >
             <Icons.CheckCircle className="w-3 h-3" /> Verificação de Seções
           </button>
 
           
-          <div className="flex items-center gap-2 bg-muted/50 p-1.5 rounded-xl border border-border">
+          <div className="flex items-center gap-2 bg-muted/50 p-1.5 rounded-2xl border border-border">
             <div className="flex items-center gap-1">
               <span className="text-[10px] font-bold text-muted-foreground uppercase px-1">De:</span>
               <input 
                 type="number" 
                 value={startPara} 
                 onChange={e => setStartPara(Number(e.target.value))}
-                className="w-16 h-8 bg-background border border-border rounded-lg text-xs font-bold text-center"
+                className="w-16 h-8 bg-background border border-border rounded-full text-xs font-bold text-center"
               />
             </div>
             <div className="flex items-center gap-1">
@@ -164,7 +164,7 @@ const CatechismIntegrity: React.FC = () => {
                 type="number" 
                 value={endPara} 
                 onChange={e => setEndPara(Number(e.target.value))}
-                className="w-16 h-8 bg-background border border-border rounded-lg text-xs font-bold text-center"
+                className="w-16 h-8 bg-background border border-border rounded-full text-xs font-bold text-center"
               />
             </div>
             <div className="flex items-center gap-1 ml-2 border-l border-border pl-2">
@@ -173,7 +173,7 @@ const CatechismIntegrity: React.FC = () => {
                 type="number" 
                 value={batchSize} 
                 onChange={e => setBatchSize(Number(e.target.value))}
-                className="w-14 h-8 bg-background border border-border rounded-lg text-xs font-bold text-center"
+                className="w-14 h-8 bg-background border border-border rounded-full text-xs font-bold text-center"
               />
             </div>
             <button 
@@ -209,7 +209,7 @@ const CatechismIntegrity: React.FC = () => {
                 loadData();
               }}
               disabled={isReprocessing}
-              className="ml-2 px-4 h-8 rounded-lg bg-primary text-primary-foreground text-xs font-black uppercase tracking-widest hover:brightness-110 transition-all flex items-center gap-2 shadow-sm disabled:opacity-50"
+              className="ml-2 px-4 h-8 rounded-full bg-primary text-primary-foreground text-xs font-black uppercase tracking-widest hover:brightness-110 transition-all flex items-center gap-2 shadow-sm disabled:opacity-50"
             >
               <Icons.Zap className="w-3 h-3" /> Iniciar
             </button>
@@ -218,7 +218,7 @@ const CatechismIntegrity: React.FC = () => {
           <button 
             onClick={loadData}
             disabled={loading}
-            className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all disabled:opacity-50 ml-auto"
+            className="p-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all disabled:opacity-50 ml-auto"
             title="Recarregar dados"
           >
             <Icons.RotateCcw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -241,13 +241,13 @@ const CatechismIntegrity: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-card border border-border rounded-3xl overflow-hidden shadow-sm">
+      <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
         <div className="p-4 border-b border-border bg-muted/30 flex items-center justify-between">
-          <div className="flex items-center gap-2 bg-background/50 border border-border rounded-lg p-1">
-            <button onClick={() => setFilter('all')} className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-md transition-all ${filter === 'all' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Todos</button>
-            <button onClick={() => setFilter('not_cached')} className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-md transition-all ${filter === 'not_cached' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Não Cacheado</button>
-            <button onClick={() => setFilter('error_402')} className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-md transition-all ${filter === 'error_402' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Erro 402</button>
-            <button onClick={() => setFilter('empty')} className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-md transition-all ${filter === 'empty' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Incompletos</button>
+          <div className="flex items-center gap-2 bg-background/50 border border-border rounded-2xl p-1">
+            <button onClick={() => setFilter('all')} className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-full transition-all ${filter === 'all' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Todos</button>
+            <button onClick={() => setFilter('not_cached')} className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-full transition-all ${filter === 'not_cached' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Não Cacheado</button>
+            <button onClick={() => setFilter('error_402')} className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-full transition-all ${filter === 'error_402' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Erro 402</button>
+            <button onClick={() => setFilter('empty')} className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-full transition-all ${filter === 'empty' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Incompletos</button>
           </div>
           <span className="text-[10px] text-muted-foreground uppercase font-black">
             {filteredData.length} itens encontrados
@@ -291,7 +291,7 @@ const CatechismIntegrity: React.FC = () => {
                       <button 
                         disabled={isReprocessing}
                         onClick={() => reprocessParagraph(item.paragraph)}
-                        className="p-2 rounded-lg hover:bg-primary/10 text-primary transition-all disabled:opacity-30"
+                        className="p-2 rounded-full hover:bg-primary/10 text-primary transition-all disabled:opacity-30"
                         title="Reprocessar agora"
                       >
                         <Icons.Zap className="w-4 h-4" />

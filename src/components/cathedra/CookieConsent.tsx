@@ -42,7 +42,7 @@ const CookieConsent = () => {
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 100, opacity: 0 }}
-          className="fixed bottom-4 left-4 right-4 md:left-auto md:right-8 md:w-[400px] z-[300] bg-background  border border-border p-6 rounded-3xl shadow-2xl"
+          className="fixed bottom-4 left-4 right-4 md:left-auto md:right-8 md:w-[400px] z-[300] bg-background  border border-border p-6 rounded-full shadow-2xl"
         >
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground leading-relaxed">
@@ -51,7 +51,7 @@ const CookieConsent = () => {
             <div className="flex items-center gap-4">
               <Button 
                 onClick={handleAccept}
-                className="flex-1 rounded-xl font-black uppercase tracking-widest text-[10px] h-10"
+                className="flex-1 rounded-full font-black uppercase tracking-widest text-[10px] h-10"
               >
                 {t.accept}
               </Button>

@@ -34,7 +34,7 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="h-full flex flex-col items-center justify-center text-center p-8 bg-muted/10 rounded-3xl border border-dashed border-border/40"
+            className="h-full flex flex-col items-center justify-center text-center p-8 bg-muted/10 rounded-full border border-dashed border-border/40"
           >
             <Sparkles className="h-10 w-10 text-primary/30 mb-4" />
             <h3 className="text-xl font-bold text-foreground mb-2">Selecione um termo</h3>
@@ -47,7 +47,7 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ type: 'spring', damping: 25, stiffness: 250 }}
-            className="bg-card border border-border rounded-3xl p-6 md:p-8 space-y-6 shadow-sm"
+            className="bg-card border border-border rounded-full p-6 md:p-8 space-y-6 shadow-sm"
           >
             {/* Term Header */}
             <div>
@@ -189,7 +189,7 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
               <Button
                 onClick={() => onStudyWithLogos(selectedTerm.term)}
                 variant="outline"
-                className="w-full rounded-2xl h-12 gap-2 font-bold text-xs uppercase tracking-widest border-primary/20 text-primary hover:bg-primary/10"
+                className="w-full rounded-full h-12 gap-2 font-bold text-xs uppercase tracking-widest border-primary/20 text-primary hover:bg-primary/10"
               >
                 <Brain className="w-4 h-4" />
                 🤖 Refletir com Logos
@@ -197,7 +197,7 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
 
               <Button
                 onClick={() => onLiveThis(selectedTerm)}
-                className={`w-full rounded-2xl h-12 gap-2 font-bold text-xs uppercase tracking-widest ${selectedTerm.journey_id ? 'bg-primary text-primary-foreground hover:bg-primary/90' : 'border-border text-foreground/70 hover:bg-muted/50'}`}
+                className={`w-full rounded-full h-12 gap-2 font-bold text-xs uppercase tracking-widest ${selectedTerm.journey_id ? 'bg-primary text-primary-foreground hover:bg-primary/90' : 'border-border text-foreground/70 hover:bg-muted/50'}`}
                 variant={selectedTerm.journey_id ? 'default' : 'outline'}
               >
                 {selectedTerm.journey_id ? <Compass className="w-4 h-4" /> : <Heart className="w-4 h-4" />}

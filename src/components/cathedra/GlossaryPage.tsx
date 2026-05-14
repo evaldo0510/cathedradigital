@@ -164,7 +164,7 @@ const GlossaryPage: React.FC = () => {
     <div className="max-w-5xl mx-auto space-y-8">
       {/* Header */}
       <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl">
           <Icons.BookOpen className="w-4 h-4 text-primary" />
           <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Lexicon Theologicum</span>
         </div>
@@ -188,7 +188,7 @@ const GlossaryPage: React.FC = () => {
         <div className="flex gap-2 justify-center flex-wrap">
           {categories.map(cat => (
             <button key={cat} onClick={() => setCategory(cat)}
-              className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+              className={`px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
                 category === cat ? 'bg-foreground text-background shadow-lg' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
               }`}>
               {cat}
@@ -239,7 +239,7 @@ const GlossaryPage: React.FC = () => {
       <div className="space-y-3">
         {loading ? (
           <div className="flex justify-center py-12">
-            <div className="w-8 h-8 border-2 border-secondary border-t-transparent rounded-full animate-spin" />
+            <div className="w-8 h-8 border-2 border-secondary border-t-transparent rounded-2xl animate-spin" />
           </div>
         ) : filtered.length > 0 ? (
           filtered.map(term => {
@@ -248,7 +248,7 @@ const GlossaryPage: React.FC = () => {
 
             return (
               <div key={term.id} id={`term-${term.id}`}
-                className={`bg-card border rounded-2xl overflow-hidden transition-all ${
+                className={`bg-card border rounded-full overflow-hidden transition-all ${
                   isExpanded ? 'border-primary/40 shadow-lg' : 'border-border hover:border-primary/30'
                 }`}>
                 <button
@@ -329,7 +329,7 @@ const GlossaryPage: React.FC = () => {
                         {enrichment.relatedRoute && (
                           <button
                             onClick={() => navigate(enrichment.relatedRoute!)}
-                            className="w-full py-3.5 rounded-2xl bg-foreground text-background font-black uppercase text-xs tracking-[0.2em] shadow-lg hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-2 group"
+                            className="w-full py-3.5 rounded-full bg-foreground text-background font-black uppercase text-xs tracking-[0.2em] shadow-lg hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-2 group"
                           >
                             <Icons.Heart className="w-4 h-4 group-hover:scale-110 transition-transform" />
                             {enrichment.relatedLabel || 'Aprofundar'}

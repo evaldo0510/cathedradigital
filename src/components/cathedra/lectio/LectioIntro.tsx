@@ -21,7 +21,7 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/5 border border-primary/10 rounded-full">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/5 border border-primary/10 rounded-2xl">
           <Feather className="w-4 h-4 text-primary" />
           <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Lectio Divina</span>
         </div>
@@ -44,7 +44,7 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3, duration: 0.6 }}
       >
-        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${
+        <div className={`w-14 h-14 rounded-full flex items-center justify-center shrink-0 ${
           selectedPassage === dailyPassage.ref ? 'bg-white/20' : 'bg-primary/10'
         }`}>
           <Heart className={`w-7 h-7 ${selectedPassage === dailyPassage.ref ? 'text-white' : 'text-primary'}`} />
@@ -74,8 +74,8 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
         transition={{ delay: 0.5, duration: 0.6 }}
       >
         {STEPS.map((step, i) => (
-          <div key={step.id} className="group p-5 rounded-3xl bg-card border border-border text-center space-y-3 hover:border-primary/30 hover:shadow-xl hover:-translate-y-1 transition-all">
-            <div className={`w-12 h-12 rounded-2xl mx-auto flex items-center justify-center transition-transform group-hover:scale-110 ${step.color}`}>
+          <div key={step.id} className="group p-5 rounded-2xl bg-card border border-border text-center space-y-3 hover:border-primary/30 hover:shadow-xl hover:-translate-y-1 transition-all">
+            <div className={`w-12 h-12 rounded-full mx-auto flex items-center justify-center transition-transform group-hover:scale-110 ${step.color}`}>
               <step.icon className="w-6 h-6" />
             </div>
             <div>
@@ -103,7 +103,7 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
               value={selectedPassage}
               onChange={e => onPassageChange(e.target.value)}
               placeholder="Ex: Jo 1,1-18 ou Sl 23..."
-              className="w-full px-6 py-4 rounded-2xl border border-border bg-muted/30 text-foreground text-base text-center font-serif focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-sm"
+              className="w-full px-6 py-4 rounded-full border border-border bg-muted/30 text-foreground text-base text-center font-serif focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-sm"
             />
           </div>
 
@@ -112,7 +112,7 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
               <button
                 key={p.ref}
                 onClick={() => onPassageChange(p.ref)}
-                className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all border ${
+                className={`px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all border ${
                   selectedPassage === p.ref
                     ? 'bg-primary border-primary text-white shadow-lg'
                     : 'bg-card border-border text-muted-foreground hover:border-primary/30 hover:text-primary'
@@ -128,7 +128,7 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
           <button
             disabled={!selectedPassage.trim()}
             onClick={onStart}
-            className="px-10 py-5 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] shadow-xl hover:bg-primary hover:text-primary-foreground transition-all disabled:opacity-30 active:scale-95"
+            className="px-10 py-5 bg-foreground text-background rounded-full font-black uppercase text-[10px] tracking-[0.2em] shadow-xl hover:bg-primary hover:text-primary-foreground transition-all disabled:opacity-30 active:scale-95"
           >
             Iniciar Lectio Divina
           </button>

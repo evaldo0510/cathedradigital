@@ -66,12 +66,12 @@ const LogosChat = () => {
             initial={{ opacity: 0, scale: 0.9, y: 20, transformOrigin: 'bottom right' }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="absolute bottom-16 right-0 w-[350px] sm:w-[400px] h-[500px] bg-card border border-border shadow-xl rounded-3xl flex flex-col overflow-hidden"
+            className="absolute bottom-16 right-0 w-[350px] sm:w-[400px] h-[500px] bg-card border border-border shadow-xl rounded-full flex flex-col overflow-hidden"
           >
             {/* Header */}
             <div className="p-4 border-b border-border bg-background flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center">
+                <div className="w-8 h-8 rounded-2xl bg-secondary flex items-center justify-center">
                   <Sparkles className="w-4 h-4 text-primary" />
                 </div>
                 <div>
@@ -95,7 +95,7 @@ const LogosChat = () => {
                     className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
                     <div
-                      className={`max-w-[80%] px-4 py-2 rounded-2xl text-sm font-serif ${
+                      className={`max-w-[80%] px-4 py-2 rounded-full text-sm font-serif ${
                         msg.role === 'user'
                           ? 'bg-secondary text-primary'
                           : 'bg-muted/50 border border-border text-foreground italic'
@@ -126,11 +126,11 @@ const LogosChat = () => {
                   onChange={(e) => setInput(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSend()}
                   placeholder="Peça uma oração ou reflexão..."
-                  className="w-full pl-4 pr-12 py-3 rounded-2xl border border-border bg-background text-sm focus:outline-none focus:ring-1 focus:ring-secondary/50 font-serif"
+                  className="w-full pl-4 pr-12 py-3 rounded-full border border-border bg-background text-sm focus:outline-none focus:ring-1 focus:ring-secondary/50 font-serif"
                 />
                 <button
                   onClick={handleSend}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-xl bg-primary text-primary-foreground flex items-center justify-center hover:bg-primary/90 transition-colors"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:bg-primary/90 transition-colors"
                 >
                   <Send className="w-4 h-4" />
                 </button>

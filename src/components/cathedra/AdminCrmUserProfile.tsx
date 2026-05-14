@@ -194,7 +194,7 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
           </CardHeader>
           <CardContent className="space-y-3">
             {journalEntries.map((entry: any) => (
-              <div key={entry.id} className="p-3 rounded-lg bg-muted/30 border border-border/30">
+              <div key={entry.id} className="p-3 rounded-2xl bg-muted/30 border border-border/30">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-xs text-muted-foreground">{entry.entry_date}</span>
                   {entry.mood && <Badge variant="secondary" className="text-[10px]">{entry.mood}</Badge>}

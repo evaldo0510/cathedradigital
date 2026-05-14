@@ -156,7 +156,7 @@ const PartnersPage: React.FC = () => {
                         className="max-h-24 max-w-[80%] object-contain transition-transform duration-300 group-hover:scale-110" 
                       />
                     ) : (
-                      <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                      <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
                         <Icons.Trophy className="w-8 h-8" />
                       </div>
                     )}
@@ -191,9 +191,9 @@ const PartnersPage: React.FC = () => {
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="flex flex-col items-center justify-center py-20 px-6 text-center space-y-6 bg-muted/20 rounded-3xl border-2 border-dashed border-border/50"
+            className="flex flex-col items-center justify-center py-20 px-6 text-center space-y-6 bg-muted/20 rounded-full border-2 border-dashed border-border/50"
           >
-            <div className="w-20 h-20 rounded-full bg-primary/5 flex items-center justify-center">
+            <div className="w-20 h-20 rounded-2xl bg-primary/5 flex items-center justify-center">
               <Icons.Community className="w-10 h-10 text-muted-foreground/50" />
             </div>
             <div className="space-y-2">
@@ -280,7 +280,7 @@ const PartnersPage: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="bg-muted/30 p-4 rounded-xl flex gap-3 text-xs text-muted-foreground leading-relaxed">
+                  <div className="bg-muted/30 p-4 rounded-2xl flex gap-3 text-xs text-muted-foreground leading-relaxed">
                     <Icons.Info className="w-4 h-4 shrink-0 text-primary" />
                     <p>Ao enviar, sua solicitação passará por uma análise administrativa. Apenas parceiros aprovados serão exibidos publicamente na plataforma.</p>
                   </div>
@@ -308,7 +308,7 @@ const PartnersPage: React.FC = () => {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="bg-primary/5 rounded-3xl p-8 md:p-12 text-center space-y-6 border border-primary/10"
+          className="bg-primary/5 rounded-full p-8 md:p-12 text-center space-y-6 border border-primary/10"
         >
           <div className="max-w-2xl mx-auto space-y-4">
             <h2 className="text-2xl md:text-3xl font-bold">Quer apoiar esta causa?</h2>
