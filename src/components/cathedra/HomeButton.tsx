@@ -4,13 +4,13 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const homeButtonVariants = cva(
-  "inline-flex items-center justify-center gap-2.5 whitespace-nowrap rounded-full text-[10px] font-bold uppercase tracking-[0.2em] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 active:scale-95",
+  "inline-flex items-center justify-center gap-2.5 whitespace-nowrap rounded-full text-[10px] font-bold uppercase tracking-[0.2em] transition-all duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 active:scale-95",
   {
     variants: {
       variant: {
-        primary: "bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/10",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-lg shadow-secondary/10",
-        outline: "border border-border bg-transparent text-foreground hover:bg-muted/50 hover:border-primary/30",
+        primary: "bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/5",
+        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-lg shadow-secondary/5",
+        outline: "border border-border/60 bg-transparent text-foreground hover:bg-muted/30 hover:border-primary/20 hover:shadow-sm",
         ghost: "hover:bg-accent/10 hover:text-accent-foreground",
       },
       size: {

@@ -29,7 +29,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
   return (
     <motion.div
       style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
-      className="relative z-10 max-w-4xl lg:max-w-5xl text-center space-y-8 sm:space-y-12 px-4"
+      className="relative z-10 max-w-4xl lg:max-w-5xl text-center space-y-12 sm:space-y-16 px-4"
     >
       {/* Logos Avatar */}
       <motion.div
@@ -41,8 +41,8 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
         <div className="relative">
           <div className="relative">
             {/* Avatar container */}
-            <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border border-secondary/10 bg-card mx-auto">
-              <img src={logosAvatar} alt="Logos — Mestre Contemplativo" className="w-full h-full object-cover grayscale-[0.2]" loading="eager" />
+            <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden border border-secondary/10 bg-card mx-auto shadow-2xl shadow-primary/5">
+              <img src={logosAvatar} alt="Logos — Mestre Contemplativo" className="w-full h-full object-cover grayscale-[0.1] contrast-[1.05]" loading="eager" />
             </div>
           </div>
           <div className="mt-4 px-4 py-1 rounded-full border border-border/5 bg-background text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.3em] inline-block mx-auto">
@@ -56,10 +56,8 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
         variants={fadeInUpVariants}
         initial="hidden"
         animate="visible"
-        className="font-display font-bold tracking-tight text-foreground pt-2 sm:pt-4"
-      >
-        Nem toda prisão é visível
-      </motion.h1>
+        className="font-display font-bold tracking-tight text-foreground pt-4 sm:pt-6 text-4xl sm:text-6xl md:text-7xl lg:text-8xl leading-[1.1]"
+      > Nem toda prisão <br/> é visível </motion.h1>
 
       {/* Description */}
       <motion.p
