@@ -100,6 +100,7 @@ const EncyclopediaPage = lazy(() => import('./components/cathedra/EncyclopediaPa
 const ModulesGuidePage = lazy(() => import('./components/cathedra/ModulesGuidePage'));
 const PopesPage = lazy(() => import('./components/cathedra/PopesPage'));
 const GlobalSearchPage = lazy(() => import('./components/cathedra/GlobalSearchPage'));
+const TrailStudyPage = lazy(() => import('./components/cathedra/TrailStudyPage'));
 const MagisteriumViewer = lazy(() => import('./components/cathedra/MagisteriumViewer'));
 const TransactionsPage = lazy(() => import('./components/cathedra/TransactionsPage'));
 const UserTransactionsPage = lazy(() => import('./components/cathedra/UserTransactionsPage'));
@@ -631,6 +632,7 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.JORNADA_STEP} element={<PageTransition><AuthGuard><JornadaStepPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.JORNADA_COMPLETE} element={<PageTransition><AuthGuard><JornadaCompletePage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.BIBLIOTECA} element={<PageTransition><AuthGuard><BibliotecaPage /></AuthGuard></PageTransition>} />
+                  <Route path="/trilhas/:slug" element={<PageTransition><AuthGuard><TrailStudyPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.MODULES_GUIDE} element={<PageTransition><ModulesGuidePage /></PageTransition>} />
                   <Route path={AppRoute.TRANSPARENCY} element={<PageTransition><TransparencyPage /></PageTransition>} />
                   <Route path={AppRoute.OFFLINE} element={<PageTransition><OfflinePage /></PageTransition>} />
