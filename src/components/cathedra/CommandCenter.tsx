@@ -138,9 +138,23 @@ const CommandCenter: React.FC = () => {
                 </CardContent>
               </Card>
             ))}
+            {hasMore && !loading && (
+              <Button 
+                variant="ghost" 
+                className="w-full h-12 rounded-2xl text-[10px] font-black uppercase tracking-widest opacity-60 hover:opacity-100"
+                onClick={loadMore}
+              >
+                Carregar mais resultados
+              </Button>
+            )}
             {query.length >= 3 && results.length === 0 && !loading && (
               <div className="p-12 text-center border border-dashed rounded-3xl opacity-50">
                 <p className="text-sm">Nenhum resultado encontrado para "{query}"</p>
+              </div>
+            )}
+            {query.length < 3 && !loading && (
+               <div className="p-12 text-center border border-dashed rounded-3xl opacity-20">
+                <p className="text-sm">Digite algo para começar a busca unificada...</p>
               </div>
             )}
           </div>
