@@ -71,16 +71,13 @@ const Index = () => {
       />
       <HeroSection onStart={handleStart} onAbout={() => navigate(AppRoute.ABOUT)} />
       <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><Icons.Logo className="w-12 h-12 animate-pulse" variant="blue" /></div>}>
-        <main className="w-full flex flex-col items-center" style={{ contentVisibility: 'auto' }}>
-          <div id="video"><InstitutionalVideoSection /></div>
-          <div id="features"><FeaturesSection onNavigate={handleNavigate} /></div>
-          <DailyRoutineSection />
-          <BenefitsSection onLogin={() => navigate(AppRoute.LOGIN)} />
-          <div id="testimonials"><TestimonialsSection /></div>
-          <div id="pricing"><PricingSection /></div>
-          <AboutCreatorSection />
-          <div id="faq"><FaqSection /></div>
-          <CtaBannerSection onStart={handleStart} />
+        <main className="w-full flex flex-col items-center">
+          <div id="features" className="w-full"><FeaturesSection onNavigate={handleNavigate} /></div>
+          <div className="w-full"><DailyRoutineSection /></div>
+          <div id="testimonials" className="w-full"><TestimonialsSection /></div>
+          <div id="pricing" className="w-full"><PricingSection /></div>
+          <div id="faq" className="w-full"><FaqSection /></div>
+          <div className="w-full"><CtaBannerSection onStart={handleStart} /></div>
           <FeedbackWidget />
           <LogosChat />
           <WhatsAppButton />
