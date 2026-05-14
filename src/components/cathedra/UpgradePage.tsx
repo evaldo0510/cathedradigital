@@ -75,8 +75,8 @@ const UpgradePage: React.FC = () => {
 
       {/* Decorative background elements */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-10 pointer-events-none opacity-20">
-        <div className="absolute top-[10%] left-1/4 w-64 h-64 bg-primary/20 rounded-full blur-[120px]" />
-        <div className="absolute bottom-[20%] right-1/4 w-72 h-72 bg-primary/10 rounded-full blur-[100px]" />
+        <div className="absolute top-[10%] left-1/4 w-64 h-64 bg-primary/20 rounded-full " />
+        <div className="absolute bottom-[20%] right-1/4 w-72 h-72 bg-primary/10 rounded-full " />
       </div>
 
       <div className="max-w-3xl w-full text-center space-y-8">
