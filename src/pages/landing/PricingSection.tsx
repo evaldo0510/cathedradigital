@@ -56,62 +56,39 @@ const PricingSection = () => {
   ];
 
   return (
-    <section className="w-full py-24 px-6 bg-background relative overflow-hidden">
-      <div className="max-w-7xl mx-auto space-y-16">
+    <section className="w-full section-spacing px-6 bg-background relative overflow-hidden">
+      <div className="container mx-auto space-y-20">
         <div className="text-center space-y-6 max-w-3xl mx-auto">
-          <motion.span
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60 block italic"
-          >
-            Investimento Espiritual
-          </motion.span>
-          <motion.h2
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            custom={1}
-            className="text-4xl md:text-5xl font-display font-bold"
-          >
-            Escolha seu Caminho de <span className="text-primary italic font-serif">Crescimento</span>
-          </motion.h2>
+          <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60 block italic">Investimento Espiritual</span>
+          <h2 className="text-3xl md:text-5xl font-display font-bold">Escolha seu Caminho de <span className="text-primary italic font-serif">Crescimento</span></h2>
           <p className="text-lg text-muted-foreground font-serif max-w-2xl mx-auto">
             Buscai primeiro o Reino de Deus e a sua justiça, e todas estas coisas vos serão acrescentadas. (Mt 6,33)
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 relative z-10">
-          {tiers.map((tier, i) => (
-            <motion.div
+        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          {tiers.map((tier) => (
+            <div
               key={tier.name}
-              variants={scaleIn}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              custom={i + 2}
-              whileHover={{ y: -5 }}
-              className={`relative p-8 rounded-3xl bg-card border flex flex-col h-full transition-all duration-500 ${
-                tier.popular ? "border-secondary shadow-xl z-10" : "border-border/5 hover:border-primary/10 shadow-sm"
+              className={`desktop-card relative flex flex-col h-full ${
+                tier.popular ? "border-secondary/20 bg-secondary/[0.02]" : ""
               }`}
             >
               {tier.popular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-secondary text-primary-foreground text-[8px] font-black uppercase tracking-[0.3em] px-4 py-1.5 rounded-full shadow-md">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-secondary text-primary-foreground text-[8px] font-black uppercase tracking-[0.3em] px-4 py-1.5 rounded-full">
                   Mais Escolhido
                 </div>
               )}
 
               <div className="space-y-6 flex-1">
                 <div className="flex justify-between items-center">
-                  <div className="w-12 h-12 rounded-2xl bg-muted flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center">
                     {tier.icon}
                   </div>
                   <h3 className="text-xl font-bold font-serif">{tier.name}</h3>
                 </div>
 
-                <div className="space-y-1">
+                <div className="space-y-2">
                   <div className="flex items-baseline gap-1">
                     <span className="text-4xl font-black">{tier.price}</span>
                     {tier.period && <span className="text-muted-foreground text-sm">{tier.period}</span>}
@@ -121,13 +98,11 @@ const PricingSection = () => {
                   </p>
                 </div>
 
-                <ul className="space-y-4 py-6 border-t border-border/30">
+                <ul className="space-y-4 py-6 border-t border-border/10">
                   {tier.features.map((feature) => (
                     <li key={feature} className="flex items-start gap-3 text-sm">
-                      <div className="mt-1 w-4 h-4 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                        <Check className="w-3 h-3 text-primary" />
-                      </div>
-                      <span className="text-muted-foreground/80 leading-snug">{feature}</span>
+                      <Check className="w-4 h-4 text-secondary mt-0.5 flex-shrink-0" />
+                      <span className="text-muted-foreground leading-snug">{feature}</span>
                     </li>
                   ))}
                 </ul>
@@ -135,28 +110,16 @@ const PricingSection = () => {
 
               <div className="mt-8">
                 <Button 
-                  className={`w-full h-12 rounded-full font-bold uppercase tracking-[0.2em] text-[10px] transition-all duration-300 ${
-                    tier.popular ? "bg-primary text-primary-foreground shadow-none" : "bg-muted/50 hover:bg-muted text-foreground"
+                  className={`w-full h-12 rounded-full font-bold uppercase tracking-[0.2em] text-[10px] ${
+                    tier.popular ? "bg-primary text-primary-foreground" : "bg-muted/50 hover:bg-muted text-foreground"
                   }`}
                 >
                   {tier.button}
                 </Button>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
-
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="text-center pt-8"
-        >
-          <p className="text-sm text-muted-foreground">
-            Tem dúvidas? <a href="#faq" className="text-primary font-bold hover:underline">Consulte nosso FAQ</a> ou fale com a irmandade.
-          </p>
-        </motion.div>
       </div>
     </section>
   );
