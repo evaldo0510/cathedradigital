@@ -87,7 +87,7 @@ const LandingHeader = () => {
                   handleNavClick(link.href);
                 }
               }}
-              className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors relative group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none rounded-sm px-1"
+              className="text-[11px] font-bold uppercase tracking-[0.3em] text-muted-foreground hover:text-primary transition-colors relative group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none rounded-sm px-1"
               type="button"
             >
               {link.name}
