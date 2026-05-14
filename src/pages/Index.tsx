@@ -63,21 +63,27 @@ const Index = () => {
         ]}
       />
       <HeroSection onStart={handleStart} onAbout={() => navigate(AppRoute.ABOUT)} />
-      <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><Icons.Logo className="w-12 h-12 animate-pulse" variant="blue" /></div>}>
-        <main className="w-full flex flex-col items-center">
+      <main className="w-full flex flex-col items-center">
+        <Suspense fallback={<div className="py-20 flex items-center justify-center"><Icons.Logo className="w-8 h-8 animate-pulse" variant="blue" /></div>}>
           <div id="features" className="w-full"><FeaturesSection onNavigate={handleNavigate} /></div>
+        </Suspense>
+        
+        <Suspense fallback={<div className="py-20 flex items-center justify-center text-muted-foreground italic text-sm tracking-widest uppercase">Carregando...</div>}>
           <div className="w-full"><DailyRoutineSection /></div>
           <div id="testimonials" className="w-full"><TestimonialsSection /></div>
           <div id="pricing" className="w-full"><PricingSection /></div>
           <div id="faq" className="w-full"><FaqSection /></div>
           <div className="w-full"><CtaBannerSection onStart={handleStart} /></div>
+        </Suspense>
+
+        <Suspense fallback={null}>
           <FeedbackWidget />
           <LogosChat />
           <WhatsAppButton />
           <CookieConsent />
           <GuidedJourney isOpen={isJourneyOpen} onClose={() => setIsJourneyOpen(false)} />
-        </main>
-      </Suspense>
+        </Suspense>
+      </main>
     </div>
   );
 };
