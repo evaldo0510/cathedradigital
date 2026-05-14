@@ -82,10 +82,10 @@ const ViaCrucis: React.FC = () => {
     <div className="max-w-4xl mx-auto space-y-10 pb-12 animate-in fade-in duration-700">
       {/* Navigation */}
       <div className="flex items-center justify-between px-2">
-        <button onClick={() => setIsJourney(false)} className="p-3 rounded-full bg-card border border-border hover:bg-primary/5 transition-all active:scale-95 shadow-sm flex items-center gap-2">
+        <Button variant="outline" size="sm" onClick={() => setIsJourney(false)} className="rounded-full shadow-sm gap-2">
           <ArrowLeft className="w-5 h-5 text-foreground" />
           <span className="text-premium-tiny font-black uppercase tracking-widest hidden md:block">Voltar</span>
-        </button>
+        </Button>
         <div className="text-center">
           <p className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary/60 mb-1">Via Sacra</p>
           <span className="text-sm font-serif font-bold text-foreground">
