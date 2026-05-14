@@ -165,7 +165,7 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-md mx-auto space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-bold text-foreground">Histórico de Quizzes</h2>
-          <Button variant="ghost" size="sm" onClick={() => setShowHistory(false)} className="text-xs">Voltar</Button>
+          <Button variant="ghost" size="xs" onClick={() => setShowHistory(false)}>Voltar</Button>
         </div>
 
         {history.length > 0 && (
@@ -254,7 +254,7 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
             </Button>
           </div>
           {user && (
-            <Button variant="ghost" onClick={() => setShowHistory(true)} className="text-xs gap-1 text-muted-foreground">
+            <Button variant="ghost" size="xs" onClick={() => setShowHistory(true)} className="gap-1 text-muted-foreground">
               <TrendingUp className="w-3 h-3" /> Ver Histórico
             </Button>
           )}
@@ -272,7 +272,7 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
           <span className="font-bold text-primary">{score} acertos</span>
         </div>
         {user && history.length > 0 && (
-          <Button variant="ghost" size="sm" onClick={() => setShowHistory(true)} className="text-[10px] gap-1 h-7">
+          <Button variant="ghost" size="xs" onClick={() => setShowHistory(true)} className="gap-1">
             <TrendingUp className="w-3 h-3" /> Histórico
           </Button>
         )}
