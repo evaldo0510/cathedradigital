@@ -492,7 +492,7 @@ const AdminSeoTab: React.FC = () => {
               </div>
             </CardContent>
           </Card>
-            </Card>
+            </div>
           </div>
         </TabsContent>
 
