@@ -487,7 +487,7 @@ const AppLayout: React.FC = () => {
         <div className="flex h-[100dvh] w-full overflow-hidden bg-background selection:bg-primary/20">
           {/* Persistent Sidebar for Desktop */}
           {!isChromeless && (
-            <div className="hidden lg:block h-full w-72 flex-shrink-0">
+            <div className="hidden lg:block h-full w-72 flex-shrink-0 z-[160]">
               <CathedralSidebar 
                 user={appUser} 
                 isDark={isDark}
@@ -532,7 +532,7 @@ const AppLayout: React.FC = () => {
           )}
         </AnimatePresence>
 
-        <main id="main-content" className="flex-1 overflow-y-auto flex flex-col relative no-scrollbar overscroll-auto touch-pan-y scroll-smooth bg-background">
+        <main id="main-content" className="flex-1 overflow-y-auto flex flex-col relative no-scrollbar overscroll-auto touch-pan-y scroll-smooth bg-background z-10">
           <div className="w-full flex-1 flex flex-col items-center">
             {!isChromeless && (
               <div className="w-full sticky top-0 z-[140] bg-background/60 backdrop-blur-2xl border-b border-primary/5">
