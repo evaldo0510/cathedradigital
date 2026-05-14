@@ -144,7 +144,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
           className={className}
         />
       </PopoverTrigger>
-      <PopoverContent data-testid="nexus-popover" className="w-[340px] sm:w-[420px] p-0 rounded-[2.5rem] border-primary/20 overflow-hidden shadow-2xl z-[100] backdrop-blur-2xl bg-card/90">
+      <PopoverContent data-testid="nexus-popover" className="w-[340px] sm:w-[420px] p-0 rounded-[2.5rem] border-primary/20 overflow-hidden shadow-2xl z-[100]  bg-card">
         <div className="bg-gradient-to-r from-primary/15 via-primary/5 to-transparent p-6 border-b border-border/40 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-2xl bg-white/50 dark:bg-black/20 flex items-center justify-center shadow-inner text-primary border border-primary/10">
