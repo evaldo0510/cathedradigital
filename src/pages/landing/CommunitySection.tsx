@@ -41,7 +41,7 @@ const CommunitySection = () => {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 bg-secondary/10 border border-secondary/20 rounded-full text-secondary text-[10px] font-black uppercase tracking-[0.2em]"
+            className="inline-flex items-center gap-2 px-4 py-1.5 bg-secondary/10 border border-secondary/20 rounded-full text-secondary text-premium-tiny font-black uppercase tracking-[0.2em]"
           >
             <span>Irmandade Cathedra</span>
           </motion.div>
@@ -52,7 +52,7 @@ const CommunitySection = () => {
             whileInView="visible"
             viewport={{ once: true }}
             custom={1}
-            className="text-4xl md:text-5xl font-display font-bold leading-tight"
+            className="font-display font-bold leading-tight"
           >
             Você nunca está <span className="text-primary italic font-serif">sozinho</span> em sua jornada
           </motion.h2>
@@ -63,7 +63,7 @@ const CommunitySection = () => {
             whileInView="visible"
             viewport={{ once: true }}
             custom={2}
-            className="text-lg text-muted-foreground font-serif italic"
+            className="text-muted-foreground font-serif italic"
           >
             "Onde dois ou três estão reunidos em meu nome, ali estou eu no meio deles." (Mt 18,20)
           </motion.p>
@@ -85,12 +85,12 @@ const CommunitySection = () => {
                 <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
                   {feature.icon}
                 </div>
-                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 bg-muted px-2 py-1 rounded-full">
+                <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 bg-muted px-2 py-1 rounded-full">
                   {feature.tag}
                 </span>
               </div>
-              <h3 className="text-xl font-bold mb-4 font-serif">{feature.title}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed flex-1">
+              <h3 className="font-bold mb-4 font-serif">{feature.title}</h3>
+              <p className="text-premium-small text-muted-foreground leading-relaxed flex-1">
                 {feature.desc}
               </p>
             </motion.div>
@@ -114,11 +114,11 @@ const CommunitySection = () => {
                 />
               </div>
             ))}
-            <div className="w-12 h-12 rounded-2xl border-4 border-background bg-primary flex items-center justify-center text-white text-xs font-bold">
+            <div className="w-12 h-12 rounded-2xl border-4 border-background bg-primary flex items-center justify-center text-white text-premium-tiny font-bold">
               +1k
             </div>
           </div>
-          <h4 className="text-2xl font-bold">Junte-se a milhares de fiéis</h4>
+          <h4 className="font-bold">Junte-se a milhares de fiéis</h4>
           <p className="text-muted-foreground max-w-xl mx-auto">
             Mais do que um aplicativo, somos uma família em busca da santidade. Participe das nossas vigílias mensais e grupos de estudo.
           </p>
