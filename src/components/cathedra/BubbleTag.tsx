@@ -67,23 +67,29 @@ export const getTagIcon = (emoji: string, className = "w-3.5 h-3.5") => {
 };
 
 export const bubbleVariants = {
-  initial: { opacity: 0, scale: 0.8 },
+  initial: { opacity: 0, scale: 0.9, y: 5 },
   animate: (index: number) => ({
     opacity: 1,
     scale: 1,
+    y: 0,
     transition: {
-      delay: index * 0.015,
+      delay: index * 0.012,
       type: 'spring' as const,
-      damping: 15,
-      stiffness: 100
+      damping: 20,
+      stiffness: 100,
+      mass: 0.8
     }
   }),
   hover: {
-    scale: 1.1,
-    y: -2,
-    transition: { duration: 0.2 }
+    scale: 1.03,
+    y: -1,
+    transition: { 
+      type: 'spring',
+      stiffness: 400,
+      damping: 10 
+    }
   },
-  tap: { scale: 0.95 }
+  tap: { scale: 0.98 }
 };
 
 interface BubbleTagProps {
