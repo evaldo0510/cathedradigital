@@ -223,7 +223,7 @@
 
   /* Desktop card with refined shadow */
   .desktop-card {
-    @apply bg-card border border-border rounded-2xl lg:rounded-3xl p-5 md:p-6 lg:p-8 shadow-sm hover:shadow-md transition-shadow;
+    @apply bg-card border border-border/40 rounded-[2.5rem] p-5 md:p-6 lg:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_60px_rgb(0,0,0,0.08)] hover:translate-y-[-2px] transition-all duration-500;
   }
 }
 
