@@ -156,11 +156,11 @@ const HojePage: React.FC = () => {
 
   const dailySections = useMemo(() => [
     { title: 'Ritual do dia', icon: <Icons.Calendar className="w-5 h-5" />, route: `${AppRoute.LITURGIA}?tab=liturgia`, color: 'bg-primary/10 text-primary' },
-    { title: 'Temas principais', icon: <span className="text-xl" role="img" aria-label="bubbles">🫧</span>, route: AppRoute.TEMAS, color: 'bg-accent/10 text-accent' },
-    { title: 'Catecismo Interativo', icon: <span className="text-xl" role="img" aria-label="book">📘</span>, route: AppRoute.CATECHISM, color: 'bg-primary/5 text-primary border border-primary/20' },
-    { title: 'Trilhas guiadas', icon: <span className="text-xl" role="img" aria-label="compass">🧭</span>, route: AppRoute.JORNADAS, color: 'bg-accent/10 text-accent' },
-    { title: 'Logos recomenda', icon: <span className="text-xl" role="img" aria-label="brain">🧠</span>, route: AppRoute.STUDY_MODE, color: 'bg-primary/10 text-primary' },
-    { title: 'Favoritos', icon: <span className="text-xl" role="img" aria-label="heart">❤️</span>, route: AppRoute.FAVORITES, color: 'bg-accent/10 text-accent' },
+    { title: 'Temas principais', icon: <span className="text-xl">🫧</span>, route: AppRoute.TEMAS, color: 'bg-accent/10 text-accent' },
+    { title: 'Catecismo Interativo', icon: <span className="text-xl">📘</span>, route: AppRoute.CATECHISM, color: 'bg-primary/5 text-primary border border-primary/20' },
+    { title: 'Trilhas guiadas', icon: <span className="text-xl">🧭</span>, route: AppRoute.JORNADAS, color: 'bg-accent/10 text-accent' },
+    { title: 'Logos recomenda', icon: <span className="text-xl">🧠</span>, route: AppRoute.STUDY_MODE, color: 'bg-primary/10 text-primary' },
+    { title: 'Favoritos', icon: <span className="text-xl">❤️</span>, route: AppRoute.FAVORITES, color: 'bg-accent/10 text-accent' },
   ], []);
 
   return (
