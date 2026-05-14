@@ -205,24 +205,35 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
         </div>
 
         {error && (
-          <button 
+          <Button 
+            variant="ghost"
+            size="sm"
             onClick={() => { setError(''); setLoading(false); }}
-            className="w-full py-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors"
+            className="w-full h-10 shadow-none"
           >
             Tentar novamente
-          </button>
+          </Button>
         )}
 
         <div className="text-center space-y-2">
           {mode === 'login' && (
-            <button onClick={() => switchMode('forgot')} className="text-sm text-muted-foreground hover:text-primary hover:underline font-medium block w-full">
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => switchMode('forgot')} 
+              className="text-muted-foreground hover:text-primary font-medium w-full shadow-none capitalize tracking-normal text-sm"
+            >
               Esqueci minha senha
-            </button>
+            </Button>
           )}
-          <button onClick={() => switchMode(mode === 'login' ? 'signup' : 'login')}
-            className="text-sm text-primary hover:underline font-medium">
+          <Button 
+            variant="ghost"
+            size="sm"
+            onClick={() => switchMode(mode === 'login' ? 'signup' : 'login')}
+            className="text-primary hover:text-primary/80 font-medium w-full shadow-none capitalize tracking-normal text-sm"
+          >
             {mode === 'login' ? 'Não tem conta? Criar agora' : mode === 'signup' ? 'Já tem conta? Fazer login' : 'Voltar ao login'}
-          </button>
+          </Button>
         </div>
       </div>
 
