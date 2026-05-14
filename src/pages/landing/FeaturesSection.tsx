@@ -64,17 +64,15 @@ const FeaturesSection = ({ onNavigate }: FeaturesSectionProps) => {
   const decorY = useTransform(scrollYProgress, [0, 1], [60, -60]);
 
   return (
-    <section ref={sectionRef} className="w-full section-spacing space-y-20 relative overflow-hidden">
-      {/* Decorative background element removed for minimalism */}
-
-      <div className="container px-6 mx-auto relative z-10">
-        <div className="text-center space-y-4 max-w-2xl mx-auto mb-16">
+    <section ref={sectionRef} className="w-full section-spacing relative overflow-hidden">
+      <div className="app-container relative z-10">
+        <div className="text-center space-y-6 max-w-3xl mx-auto mb-20 md:mb-24">
           <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/40 italic">O Caminho</span>
-          <h2 className="text-3xl md:text-5xl font-display font-bold">Arquitetura do Conhecimento</h2>
-          <p className="text-muted-foreground font-serif text-lg">A luz de Cristo ilumina o coração.</p>
+          <h2 className="font-display font-bold">Arquitetura do Conhecimento</h2>
+          <p className="text-muted-foreground font-serif text-lg md:text-xl mx-auto">A luz de Cristo ilumina o coração.</p>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">
           {features.map((feature) => (
             <FeatureCard key={feature.title} feature={feature} onNavigate={onNavigate} />
           ))}

@@ -28,15 +28,15 @@ const DailyRoutineSection = () => {
   ];
 
   return (
-    <section className="w-full section-spacing px-6 relative overflow-hidden bg-primary/[0.01]">
-      <div className="container mx-auto space-y-20">
-        <div className="text-center space-y-4 max-w-2xl mx-auto">
+    <section className="w-full section-spacing relative overflow-hidden bg-primary/[0.01]">
+      <div className="app-container space-y-20">
+        <div className="text-center space-y-6 max-w-3xl mx-auto">
           <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/40 italic">O Ritmo</span>
-          <h2 className="text-3xl md:text-5xl font-display font-bold">Vivência Cotidiana</h2>
-          <p className="text-muted-foreground font-serif text-lg">Fazei tudo para a glória de Deus.</p>
+          <h2 className="font-display font-bold">Vivência Cotidiana</h2>
+          <p className="text-muted-foreground font-serif text-lg md:text-xl mx-auto">Fazei tudo para a glória de Deus.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
           {dayFlow.map((step) => (
             <div
               key={step.title}
