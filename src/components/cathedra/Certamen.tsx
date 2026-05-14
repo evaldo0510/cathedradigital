@@ -134,7 +134,7 @@ const Certamen: React.FC = () => {
     const pct = Math.round((score / (answered || 1)) * 100);
     return (
       <div className="max-w-2xl mx-auto space-y-8 p-4">
-        <div className="bg-card border border-border rounded-3xl p-10 text-center space-y-6 shadow-xl">
+        <div className="premium-card p-10 text-center space-y-6 shadow-xl">
           <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto text-primary">
             {pct >= 80 ? <Trophy className="w-10 h-10" /> : pct >= 50 ? <BookOpen className="w-10 h-10" /> : <Heart className="w-10 h-10" />}
           </div>
