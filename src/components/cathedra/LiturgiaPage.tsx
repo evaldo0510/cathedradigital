@@ -106,8 +106,8 @@ const ReadingCard: React.FC<{
     {refrain && <div className="bg-secondary/5 rounded-2xl p-6 border border-secondary/20 border-l-4 shadow-inner"><p className="text-lg font-serif italic text-primary leading-relaxed antialiased">℟ {refrain}</p></div>}
     <p className="text-lg md:text-xl leading-[1.8] text-primary font-serif whitespace-pre-line selection:bg-secondary/30 antialiased tracking-tight">{text}</p>
     <div className="flex flex-wrap gap-3 pt-6 border-t border-border/40">
-      <Button variant="ghost" size="sm" className="rounded-full text-[10px] font-black uppercase tracking-widest h-11 px-6 hover:bg-primary hover:text-white transition-all" onClick={onContext}><Icons.Bible className="w-3.5 h-3.5 mr-2" /> Bíblia</Button>
-      <Button variant="secondary" size="sm" className="rounded-full text-[10px] font-black uppercase tracking-widest ml-auto h-11 px-8 bg-secondary/10 border-none hover:bg-secondary/20 text-primary shadow-sm" onClick={onReflect}><Icons.Lectio className="w-4 h-4 mr-2 text-secondary" /> Lectio Divina</Button>
+      <Button variant="ghost" size="sm" className="rounded-full h-11 px-6 hover:bg-primary hover:text-white transition-all" onClick={onContext}><Icons.Bible className="mr-2" /> Bíblia</Button>
+      <Button variant="secondary" size="sm" className="rounded-full ml-auto h-11 px-8 bg-secondary/10 border-none hover:bg-secondary/20 text-primary shadow-sm" onClick={onReflect}><Icons.Lectio className="mr-2 text-secondary" /> Lectio Divina</Button>
     </div>
   </motion.div>
 );
