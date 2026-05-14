@@ -1,102 +1,123 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import fs from 'fs';
+import path from 'path';
 
 test.describe('Home Page Accessibility & Keyboard Navigation', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
-    // Wait for the hero to be visible at least
-    await page.waitForSelector('main#main-content');
+    // Wait for main content
+    await page.waitForSelector('main#main-content', { state: 'visible' });
   });
 
-  test('full accessibility audit with axe-core', async ({ page }) => {
+  test('full accessibility audit with axe-core and report generation', async ({ page }, testInfo) => {
     const accessibilityScanResults = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'best-practice'])
       .analyze();
     
+    // Attach report if violations found
+    if (accessibilityScanResults.violations.length > 0) {
+      const reportPath = path.join(testInfo.outputDir, `a11y-report-${testInfo.project.name}.json`);
+      fs.writeFileSync(reportPath, JSON.stringify(accessibilityScanResults, null, 2));
+      await testInfo.attach('accessibility-scan-results', {
+        path: reportPath,
+        contentType: 'application/json'
+      });
+    }
+
     expect(accessibilityScanResults.violations).toEqual([]);
   });
 
   test('should have a functional skip link as first tabbable element', async ({ page }) => {
-    // Reset focus
-    await page.keyboard.press('Escape');
-    
-    // First Tab should hit skip link
     await page.keyboard.press('Tab');
-    
     const skipLink = page.locator('a[href="#main-content"]');
     await expect(skipLink).toBeFocused();
-    await expect(skipLink).toBeVisible(); // Should be visible when focused
+    // In mobile, it might be visually hidden but still accessible. 
+    // We expect it to be Visible when focused (per CSS)
+    await expect(skipLink).toBeVisible();
     
-    // Press Enter to skip
     await page.keyboard.press('Enter');
-    
-    // Focus should move to main content
     const mainContent = page.locator('main#main-content');
     await expect(mainContent).toBeFocused();
   });
 
-  test('logical tab order through the home page', async ({ page }) => {
-    // Start from top
-    await page.goto('/');
-    await page.keyboard.press('Tab'); // Skip link
+  test('visual focus ring visibility on HomeButton and HomeCard', async ({ page }) => {
+    // Select all HomeButton and HomeCard elements that are interactive
+    const interactiveElements = page.locator('button, a[href], [role="button"]');
+    const count = await interactiveElements.count();
     
-    // Header navigation
-    await page.keyboard.press('Tab'); // Logo
-    // Navigation links in LandingHeader
-    // Depending on screen size, these might change, but let's assume desktop for consistency
-    await page.keyboard.press('Tab'); // Funcionalidades (example)
-    
-    // Move to Hero Section
-    const startJourneyBtn = page.getByRole('button', { name: /Iniciar Jornada/i }).first();
-    await startJourneyBtn.scrollIntoViewIfNeeded();
-    
-    // Tab until we reach it
-    let attempts = 0;
-    while (attempts < 20 && await startJourneyBtn.evaluate(node => document.activeElement !== node)) {
-      await page.keyboard.press('Tab');
-      attempts++;
+    // Test a subset to avoid excessive run time, focus on the first few in view
+    for (let i = 0; i < Math.min(count, 5); i++) {
+      const element = interactiveElements.nth(i);
+      await element.focus();
+      
+      // Check for focus ring or outline. 
+      // Tailwind's ring adds a box-shadow or specific outline.
+      // focus-visible:ring-primary focus-visible:ring-offset-2
+      const hasFocusStyles = await element.evaluate((node) => {
+        const style = window.getComputedStyle(node);
+        return style.boxShadow !== 'none' || style.outlineStyle !== 'none' || style.outlineWidth !== '0px';
+      });
+      
+      expect(hasFocusStyles, `Element ${i} should have visible focus styles`).toBe(true);
     }
-    await expect(startJourneyBtn).toBeFocused();
   });
 
-  test('HomeCard and HomeButton respond to Enter and Space', async ({ page }) => {
-    // Find a button in the features section (using role button which HomeButton/HomeCard should have)
-    // HomeButton uses button tag, HomeCard often has role="button" if clickable
-    
-    const exploreBtn = page.getByRole('button', { name: /Iniciar Jornada/i }).first();
-    await exploreBtn.scrollIntoViewIfNeeded();
-    await exploreBtn.focus();
-    
+  test('interaction consistency: Enter and Space trigger same action', async ({ page }) => {
+    // Find "Iniciar Jornada" button as a primary CTA
+    const cta = page.getByRole('button', { name: /Iniciar Jornada/i }).first();
+    await cta.scrollIntoViewIfNeeded();
+
+    const checkModal = async () => {
+      // Check if GuidedJourney modal opens
+      await expect(page.locator('text=Como podemos ajudar você hoje?')).toBeVisible();
+      // Close it
+      await page.keyboard.press('Escape');
+      await expect(page.locator('text=Como podemos ajudar você hoje?')).not.toBeVisible();
+    };
+
     // Test Space
+    await cta.focus();
     await page.keyboard.press(' ');
-    // In this app, "Iniciar Jornada" opens a GuidedJourney dialog/portal
-    // Check if the journey portal/overlay appears
-    await expect(page.locator('text=Como podemos ajudar você hoje?')).toBeVisible();
-    
-    // Close it to reset (if Escape works)
-    await page.keyboard.press('Escape');
-    await expect(page.locator('text=Como podemos ajudar você hoje?')).not.toBeVisible();
+    await checkModal();
 
     // Test Enter
-    await exploreBtn.focus();
+    await cta.focus();
     await page.keyboard.press('Enter');
-    await expect(page.locator('text=Como podemos ajudar você hoje?')).toBeVisible();
+    await checkModal();
+
+    // Test Click for baseline
+    await cta.click();
+    await checkModal();
   });
 
-  test('all clickable elements have accessible names and labels', async ({ page }) => {
-    const clickables = page.locator('button, a, [role="button"], [role="link"]');
-    const count = await clickables.count();
+  test('logical tab order and navigation targets', async ({ page }) => {
+    // 1. Skip link
+    await page.keyboard.press('Tab');
+    const skipLink = page.locator('a[href="#main-content"]');
+    await expect(skipLink).toBeFocused();
     
-    for (let i = 0; i < count; i++) {
-      const element = clickables.nth(i);
-      // Skip hidden elements (like the skip link when not focused, but axe handles this better)
-      if (await element.isVisible()) {
-        const name = await element.evaluate(node => {
-          // Simplified accessible name calculation
-          return node.getAttribute('aria-label') || node.innerText.trim() || node.getAttribute('title');
-        });
-        expect(name, `Element ${i} is missing an accessible name`).toBeTruthy();
-      }
+    // 2. Logo in Header
+    await page.keyboard.press('Tab');
+    const logo = page.getByLabel(/Cathedra - Página Inicial/i);
+    await expect(logo).toBeFocused();
+    
+    // 3. First nav link (Funcionalidades)
+    await page.keyboard.press('Tab');
+    const featuresLink = page.getByRole('button', { name: /Funcionalidades/i });
+    await expect(featuresLink).toBeFocused();
+
+    // 4. Iniciar Jornada in Hero (might need multiple tabs depending on screen)
+    // We tab until we find a button with "Iniciar Jornada"
+    let foundHeroBtn = false;
+    for (let i = 0; i < 20; i++) {
+        await page.keyboard.press('Tab');
+        const focused = page.getByRole('button', { name: /Iniciar Jornada/i }).first();
+        if (await focused.evaluate(node => document.activeElement === node)) {
+            foundHeroBtn = true;
+            break;
+        }
     }
+    expect(foundHeroBtn).toBe(true);
   });
 });
