@@ -288,7 +288,7 @@ const JornadaCompletePage: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <Card className="border-primary/20 bg-gradient-to-r from-primary/5 to-accent/5">
+          <Card className="premium-card p-0 border-primary/10">
             <CardContent className="p-6 space-y-4">
               <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
                 <Star className="w-5 h-5 text-primary" /> Recompensas
