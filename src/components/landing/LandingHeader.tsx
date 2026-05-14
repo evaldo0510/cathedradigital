@@ -77,7 +77,7 @@ const LandingHeader = () => {
             <button
               key={link.name}
               onClick={() => handleNavClick(link.href)}
-              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors relative group"
+              className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors relative group italic"
             >
               {link.name}
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full" />
