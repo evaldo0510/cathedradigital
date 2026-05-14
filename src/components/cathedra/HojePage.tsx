@@ -74,7 +74,7 @@ const HojePage: React.FC = () => {
   ], []);
 
   return (
-    <div className="desktop-layout pt-0 md:pt-10 lg:pt-20 pb-24 relative">
+    <div className="desktop-layout pt-0 md:pt-10 lg:pt-20 pb-24 relative overflow-x-hidden">
       {loadingStats && <DashboardSkeleton />}
       <SEOHead 
         title="Cathedra Digital — Nem toda prisão é visível" 
