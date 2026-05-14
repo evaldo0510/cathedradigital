@@ -16,7 +16,7 @@ const TransparencyPage: React.FC = () => {
       <div className="max-w-3xl mx-auto space-y-16 px-4">
         {/* Header */}
         <div className="text-center space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-2xl bg-primary/10 text-primary text-[10px] font-black uppercase tracking-[0.2em] border border-primary/20">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-2xl bg-primary/10 text-primary text-premium-tiny font-black uppercase tracking-[0.2em] border border-primary/20">
             <ShieldCheck className="w-3 h-3" />
             Integridade Doutrinária
           </div>
@@ -86,14 +86,14 @@ const TransparencyPage: React.FC = () => {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a 
               href="mailto:contato@cathedradigital.com" 
-              className="flex items-center gap-3 px-8 py-4 bg-foreground text-background rounded-full font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary transition-all w-full sm:w-auto justify-center"
+              className="flex items-center gap-3 px-8 py-4 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-widest shadow-xl hover:bg-primary transition-all w-full sm:w-auto justify-center"
             >
               <Mail className="w-4 h-4" />
               Enviar E-mail
             </a>
             <button 
               onClick={() => window.open('https://wa.me/seunumerowhatsapp', '_blank')}
-              className="flex items-center gap-3 px-8 py-4 bg-secondary text-primary rounded-full font-black uppercase text-[10px] tracking-widest border border-primary/20 hover:bg-secondary/80 transition-all w-full sm:w-auto justify-center"
+              className="flex items-center gap-3 px-8 py-4 bg-secondary text-primary rounded-full font-black uppercase text-premium-tiny tracking-widest border border-primary/20 hover:bg-secondary/80 transition-all w-full sm:w-auto justify-center"
             >
               <Icons.MessageSquare className="w-4 h-4" />
               Suporte WhatsApp
@@ -109,7 +109,7 @@ const TransparencyPage: React.FC = () => {
             O site foi projetado para funcionar de forma soberana. As chamadas para provedores externos foram reduzidas ao mínimo essencial (Supabase para dados), garantindo que a plataforma opere mesmo sem conexão estável e sem depender de serviços de terceiros que possam comprometer a integridade do conteúdo.
           </p>
           <div className="pt-4">
-            <span className="px-4 py-2 rounded-full bg-secondary/10 text-primary text-[9px] font-black uppercase tracking-widest border border-primary/10">
+            <span className="px-4 py-2 rounded-full bg-secondary/10 text-primary text-premium-tiny font-black uppercase tracking-widest border border-primary/10">
               PWA Habilitado para Uso Offline
             </span>
           </div>
