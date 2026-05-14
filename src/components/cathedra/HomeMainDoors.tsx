@@ -43,7 +43,7 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t }) => {
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-3">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
       {doors.map((door, idx) => (
         <motion.div
           key={idx}
@@ -59,14 +59,14 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t }) => {
           tabIndex={0}
           role="button"
           aria-label={`${door.label}: ${door.description}`}
-          className={`p-6 rounded-[2rem] border border-[#0F172A]/5 bg-white flex flex-col gap-4 cursor-pointer group transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none shadow-sm hover:border-[#D4AF37]/30`}
+          className="p-8 rounded-[2.5rem] border border-border/40 bg-card flex flex-col items-center text-center gap-6 cursor-pointer group transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none shadow-sm hover:border-primary/20 hover:bg-primary/[0.02]"
         >
-          <div className="w-12 h-12 rounded-2xl bg-[#0F172A]/5 flex items-center justify-center text-[#D4AF37] group-hover:bg-[#0F172A]/10 transition-colors">
+          <div className="w-16 h-16 rounded-3xl bg-muted/30 flex items-center justify-center text-primary group-hover:bg-primary/10 group-hover:scale-110 transition-all duration-500">
             <door.icon className="w-6 h-6" />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-[#0F172A]">{door.label}</h3>
-            <p className="text-[10px] text-[#0F172A]/50 font-medium line-clamp-1 mt-1">{door.description}</p>
+            <h3 className="text-sm font-bold text-foreground tracking-tight">{door.label}</h3>
+            <p className="text-[10px] text-muted-foreground font-medium line-clamp-2 mt-2 leading-relaxed">{door.description}</p>
           </div>
         </motion.div>
       ))}
