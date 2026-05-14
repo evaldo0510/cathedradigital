@@ -12,7 +12,8 @@ import {
   Database, 
   Zap,
   Tag,
-  ChevronRight
+  ChevronRight,
+  Target
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { searchUnified, BaseContent, SearchMetrics, getGlobalTags } from '@/services/conteudoService';
