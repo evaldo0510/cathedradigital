@@ -75,6 +75,11 @@
     touch-action: manipulation;
   }
 
+  *:focus-visible {
+    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background transition-shadow;
+  }
+
+
   /* Refine all Lucide icons for a more professional, premium appearance */
   svg.lucide {
     stroke-width: 1.5; /* Thinner for premium minimalist feel */
