@@ -563,7 +563,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
                   {searchQuery ? 'Resultado da Busca' : categories[activeFilter as keyof typeof categories]?.label}
                 </p>
               </div>
-              <div className="flex flex-wrap gap-1.5" role="list" ref={filteredRef}>
+              <div className="flex flex-wrap gap-2.5 md:gap-3" role="list" ref={filteredRef}>
                 {filteredTags && filteredTags.length ? filteredTags.map((tag, i) => (
                   <div key={tag.slug} role="listitem">
                     <TagBubble 
@@ -576,7 +576,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
                     />
                   </div>
                 )) : (
-                  <p className="text-[10px] text-muted-foreground italic">Nenhum tema encontrado.</p>
+                  <p className="text-[11px] text-muted-foreground/50 italic px-2">Nenhum tema encontrado no Nexus.</p>
                 )}
               </div>
             </motion.div>
