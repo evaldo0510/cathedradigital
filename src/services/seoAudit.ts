@@ -107,7 +107,7 @@ export const runSEOAudit = async (url: string = window.location.href) => {
   }
 
   ['h2', 'h3', 'h4'].forEach(tag => {
-    audit.headings![tag] = Array.from(document.querySelectorAll(tag)).map(h => (h as HTMLElement).innerText);
+    audit.headings![tag] = Array.from(document.querySelectorAll(tag)).map(h => (h as HTMLElement).innerText || h.textContent || '');
   });
 
   // 3. Links
