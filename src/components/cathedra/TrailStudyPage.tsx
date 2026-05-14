@@ -37,18 +37,34 @@ const TrailStudyPage: React.FC = () => {
   const [completedSteps, setCompletedSteps] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
 
+  // Resume logic
   useEffect(() => {
     if (!user || !trail) return;
 
     const fetchProgress = async () => {
       const { data } = await supabase
         .from('journey_progress')
-        .select('step_id')
+        .select('step_id, completed_at')
         .eq('user_id', user.id)
-        .eq('journey_id', trail.id);
+        .eq('journey_id', trail.id)
+        .order('completed_at', { ascending: false });
       
-      if (data) {
-        setCompletedSteps(new Set(data.map(d => d.step_id)));
+      if (data && data.length > 0) {
+        const completedIds = new Set(data.map(d => d.step_id));
+        setCompletedSteps(completedIds);
+        
+        // Auto-resume: if no step in URL, pick the first uncompleted or the very last completed one
+        if (!searchParams.get('step')) {
+          const lastCompletedId = data[0].step_id;
+          const lastIdx = trail.steps.findIndex(s => s.id === lastCompletedId);
+          const nextIdx = lastIdx + 1;
+          
+          if (nextIdx < trail.steps.length) {
+            setSearchParams({ step: trail.steps[nextIdx].id }, { replace: true });
+          } else {
+            setSearchParams({ step: lastCompletedId }, { replace: true });
+          }
+        }
       }
       setLoading(false);
     };
@@ -56,33 +72,57 @@ const TrailStudyPage: React.FC = () => {
     fetchProgress();
   }, [user, trail]);
 
-  const handleCompleteStep = async () => {
+  const toggleStepCompletion = async () => {
     if (!user || !trail || !currentStep) return;
 
-    try {
-      await supabase.from('journey_progress').upsert({
-        user_id: user.id,
-        journey_id: trail.id,
-        step_id: currentStep.id,
-        completed_at: new Date().toISOString()
-      });
+    const isCurrentlyCompleted = completedSteps.has(currentStep.id);
 
-      setCompletedSteps(prev => new Set([...prev, currentStep.id]));
-      toast.success('Etapa concluída!');
-      
-      // Navigate to next step if available
-      if (currentStepIndex < trail.steps.length - 1) {
-        const nextStep = trail.steps[currentStepIndex + 1];
-        setSearchParams({ step: nextStep.id });
-      } else {
-        toast.success('Trilha finalizada com sucesso!', {
-          icon: <Trophy className="w-5 h-5 text-yellow-500" />
+    try {
+      if (isCurrentlyCompleted) {
+        // Mark as incomplete
+        const { error } = await supabase
+          .from('journey_progress')
+          .delete()
+          .eq('user_id', user.id)
+          .eq('journey_id', trail.id)
+          .eq('step_id', currentStep.id);
+        
+        if (error) throw error;
+        
+        setCompletedSteps(prev => {
+          const next = new Set(prev);
+          next.delete(currentStep.id);
+          return next;
         });
-        navigate(AppRoute.JORNADAS);
+        toast.info('Etapa marcada como pendente');
+      } else {
+        // Mark as complete
+        const { error } = await supabase.from('journey_progress').upsert({
+          user_id: user.id,
+          journey_id: trail.id,
+          step_id: currentStep.id,
+          completed_at: new Date().toISOString()
+        });
+
+        if (error) throw error;
+
+        setCompletedSteps(prev => new Set([...prev, currentStep.id]));
+        toast.success('Etapa concluída!');
+        
+        // Navigate to next step if available
+        if (currentStepIndex < trail.steps.length - 1) {
+          const nextStep = trail.steps[currentStepIndex + 1];
+          setSearchParams({ step: nextStep.id });
+        } else {
+          toast.success('Trilha finalizada com sucesso!', {
+            icon: <Trophy className="w-5 h-5 text-yellow-500" />
+          });
+          navigate(AppRoute.JORNADAS);
+        }
       }
     } catch (err) {
-      console.error('Error saving progress:', err);
-      toast.error('Erro ao salvar progresso');
+      console.error('Error updating progress:', err);
+      toast.error('Erro ao atualizar progresso');
     }
   };
 
@@ -99,6 +139,12 @@ const TrailStudyPage: React.FC = () => {
 
   return (
     <div className="max-w-5xl mx-auto space-y-8 pb-20">
+      <SEOHead 
+        title={`${trail.title} - ${currentStep.title} | Cathedra`}
+        description={`Passo ${currentStepIndex + 1}: ${currentStep.title}. Parte da trilha "${trail.title}" no Cathedra Digital.`}
+        path={`/trilhas/${slug}?step=${currentStep.id}`}
+      />
+      
       {/* Header with Progress */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
@@ -184,6 +230,7 @@ const TrailStudyPage: React.FC = () => {
                     <CatechismContent 
                       paragraph={parseInt(currentStep.ref)} 
                       isVisible={true}
+                      onNavigateToBible={(abbr, chapter) => navigate(`/bible?book=${abbr}&ch=${chapter}`)}
                     />
                   </div>
                 )}
@@ -200,10 +247,11 @@ const TrailStudyPage: React.FC = () => {
                 </Button>
 
                 <Button
-                  onClick={handleCompleteStep}
-                  className="rounded-xl px-8 bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/20"
+                  onClick={toggleStepCompletion}
+                  variant={completedSteps.has(currentStep.id) ? "outline" : "default"}
+                  className={`rounded-xl px-8 ${!completedSteps.has(currentStep.id) ? 'bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/20' : ''}`}
                 >
-                  {completedSteps.has(currentStep.id) ? 'Refazer Etapa' : 'Concluir Etapa'}
+                  {completedSteps.has(currentStep.id) ? 'Marcar como Pendente' : 'Concluir Etapa'}
                 </Button>
 
                 <Button
