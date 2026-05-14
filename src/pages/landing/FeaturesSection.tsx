@@ -1,10 +1,9 @@
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { BookOpen, Star, Clock, Users, ChevronRight, Sparkles, Hash } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { BookOpen, Sparkles, Hash } from "lucide-react";
 import { AppRoute } from "@/types";
+import { HomeCard } from "@/components/cathedra/HomeCard";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
 const features = [
   { 
@@ -39,10 +38,19 @@ interface FeaturesSectionProps {
 
 const FeatureCard = ({ feature, onNavigate }: { feature: typeof features[0]; onNavigate: (r: string) => void }) => {
   return (
-    <button
-      className="desktop-card flex flex-col items-center text-center space-y-6 cursor-pointer group w-full appearance-none text-left"
+    <HomeCard
+      as="button"
+      className="p-8 flex flex-col items-center text-center space-y-6 cursor-pointer group w-full appearance-none outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
       onClick={() => onNavigate(feature.route)}
+      onKeyDown={(e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onNavigate(feature.route);
+        }
+      }}
       aria-label={`Explorar ${feature.title}`}
+      role="button"
+      tabIndex={0}
     >
       <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors" aria-hidden="true">
         {React.cloneElement(feature.icon as React.ReactElement, { className: "w-6 h-6" })}
@@ -51,7 +59,7 @@ const FeatureCard = ({ feature, onNavigate }: { feature: typeof features[0]; onN
         <h3 className="text-xl font-display font-bold text-center">{feature.title}</h3>
         <p className="text-sm text-muted-foreground leading-relaxed text-center">{feature.description}</p>
       </div>
-    </button>
+    </HomeCard>
   );
 };
 FeatureCard.displayName = 'FeatureCard';

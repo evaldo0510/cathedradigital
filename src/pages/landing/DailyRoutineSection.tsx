@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Sun, Coffee, Moon, CheckCircle2 } from "lucide-react";
-import { fadeUp } from "./animations";
+import { HomeCard } from "@/components/cathedra/HomeCard";
 
 const DailyRoutineSection = () => {
   const dayFlow = [
@@ -38,9 +38,9 @@ const DailyRoutineSection = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
           {dayFlow.map((step) => (
-            <div
+            <HomeCard
               key={step.title}
-              className="desktop-card flex flex-col space-y-8"
+              className="p-8 flex flex-col space-y-8"
             >
               <div className="flex justify-between items-center">
                 <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center text-primary">
@@ -66,7 +66,7 @@ const DailyRoutineSection = () => {
                   </li>
                 ))}
               </ul>
-            </div>
+            </HomeCard>
           ))}
         </div>
       </div>

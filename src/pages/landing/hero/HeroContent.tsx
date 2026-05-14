@@ -1,10 +1,7 @@
 import { motion, MotionValue } from "framer-motion";
-import { Icons } from "@/constants";
-import { Button } from "@/components/ui/button";
-import { buttonHover } from "../animations";
-import { Play } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import logosAvatar from "@/assets/logos-avatar.png";
-import GoogleSignInButton from "@/components/auth/GoogleSignInButton";
+import { HomeButton } from "@/components/cathedra/HomeButton";
 
 const EASE = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
@@ -84,19 +81,26 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
         className="flex flex-col items-center justify-center gap-6 pt-4"
       >
         <div className="flex flex-col sm:flex-row items-center gap-4 w-full max-w-sm">
-          <Button
+          <HomeButton
             size="lg"
-            className="w-full h-14 px-8 rounded-full bg-primary text-primary-foreground font-bold uppercase tracking-[0.2em] text-xs shadow-none"
+            className="w-full"
             onClick={onStart}
             aria-label="Iniciar sua jornada espiritual"
           >
             Iniciar Jornada
-          </Button>
+          </HomeButton>
           
           <button
-            className="text-[10px] font-bold uppercase tracking-[0.3em] text-muted-foreground hover:text-primary transition-colors py-2 focus-visible:ring-1 focus-visible:ring-primary rounded-sm"
+            className="text-[10px] font-bold uppercase tracking-[0.3em] text-muted-foreground hover:text-primary transition-colors py-2 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none rounded-full px-6"
             onClick={scrollToVideo}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                scrollToVideo();
+              }
+            }}
             aria-label="Ver vídeo de apresentação"
+            type="button"
           >
             Ver Apresentação
           </button>

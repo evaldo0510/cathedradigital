@@ -1,6 +1,5 @@
-import { motion } from "framer-motion";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { fadeUp } from "./animations";
+import { HomeCard } from "@/components/cathedra/HomeCard";
 
 const faqs = [
   { q: "O Cathedra é gratuito?", a: "Sim! O acesso à Bíblia, Catecismo, Santos, Liturgia e Orações é totalmente gratuito. Recursos avançados como o Logos IA e análises aprofundadas estão disponíveis no plano Premium." },
@@ -22,7 +21,7 @@ const FaqSection = () => (
 
       <Accordion type="single" collapsible className="space-y-4">
         {faqs.map((faq, i) => (
-          <AccordionItem key={i} value={`faq-${i}`} className="desktop-card !p-0 px-6 sm:px-8 border border-border/10">
+          <AccordionItem key={i} value={`faq-${i}`} className="rounded-3xl border border-border bg-card text-card-foreground shadow-sm transition-all duration-300 hover:shadow-md hover:border-primary/20 !p-0 px-6 sm:px-8 overflow-hidden">
             <AccordionTrigger className="text-left font-serif font-bold text-base py-6 hover:no-underline border-none">
               {faq.q}
             </AccordionTrigger>

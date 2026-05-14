@@ -6,7 +6,7 @@ import { AppRoute, Language } from "@/types";
 import { useNavigate } from "react-router-dom";
 import { Menu, X, ChevronRight, Globe } from "lucide-react";
 import { useLang } from "@/hooks/useLang";
-import GoogleSignInButton from "../auth/GoogleSignInButton";
+import { HomeButton } from "../cathedra/HomeButton";
 
 const LandingHeader = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -81,7 +81,14 @@ const LandingHeader = () => {
             <button
               key={link.name}
               onClick={() => handleNavClick(link.href)}
-              className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors relative group"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleNavClick(link.href);
+                }
+              }}
+              className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors relative group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none rounded-sm px-1"
+              type="button"
             >
               {link.name}
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full" />
@@ -91,11 +98,18 @@ const LandingHeader = () => {
           <div className="relative">
             <button 
               onClick={() => setShowLangMenu(!showLangMenu)}
-                className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors focus-visible:ring-1 focus-visible:ring-primary rounded-sm p-1"
-                aria-label="Mudar idioma"
-                aria-haspopup="true"
-                aria-expanded={showLangMenu}
-              >
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  setShowLangMenu(!showLangMenu);
+                }
+              }}
+              className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none rounded-sm p-1"
+              aria-label="Mudar idioma"
+              aria-haspopup="true"
+              aria-expanded={showLangMenu}
+              type="button"
+            >
               <Globe className="w-4 h-4" />
               <span className="uppercase">{lang}</span>
             </button>
@@ -111,7 +125,15 @@ const LandingHeader = () => {
                     <button
                       key={l.code}
                       onClick={() => { setLang(l.code); setShowLangMenu(false); }}
-                      className={`w-full px-4 py-2.5 text-left text-sm hover:bg-muted transition-colors flex items-center justify-between ${lang === l.code ? 'text-primary font-bold' : 'text-muted-foreground'}`}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          setLang(l.code);
+                          setShowLangMenu(false);
+                        }
+                      }}
+                      className={`w-full px-4 py-2.5 text-left text-sm hover:bg-muted transition-colors flex items-center justify-between outline-none focus:bg-muted ${lang === l.code ? 'text-primary font-bold' : 'text-muted-foreground'}`}
+                      type="button"
                     >
                       <span>{l.label}</span>
                       <span>{l.flag}</span>
@@ -126,19 +148,27 @@ const LandingHeader = () => {
         <div className="flex items-center gap-4">
           <button
             onClick={() => navigate(AppRoute.LOGIN)}
-            className="hidden sm:flex text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary rounded-sm p-1"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                navigate(AppRoute.LOGIN);
+              }
+            }}
+            className="hidden sm:flex text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none rounded-sm p-1"
             aria-label="Ir para página de login"
+            type="button"
           >
             Entrar
           </button>
           
-          <Button
+          <HomeButton
             variant="ghost"
-            className={`hidden xs:flex rounded-full px-4 sm:px-6 text-muted-foreground font-bold uppercase tracking-[0.2em] text-[10px] h-10 shadow-none transition-all ${isScrolled ? 'text-primary' : ''}`}
+            size="sm"
+            className={`hidden xs:flex rounded-full px-4 sm:px-6 shadow-none transition-all ${isScrolled ? 'text-primary' : ''}`}
             onClick={() => navigate(AppRoute.LOGIN)}
           >
             Começar <ChevronRight className="w-4 h-4 ml-1" />
-          </Button>
+          </HomeButton>
 
           {/* Mobile Menu Toggle */}
           <button
@@ -166,18 +196,25 @@ const LandingHeader = () => {
                 <button
                   key={link.name}
                   onClick={() => handleNavClick(link.href)}
-                  className="text-lg font-serif font-bold text-left text-foreground hover:text-primary transition-colors"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      handleNavClick(link.href);
+                    }
+                  }}
+                  className="text-lg font-serif font-bold text-left text-foreground hover:text-primary transition-colors outline-none focus:text-primary"
+                  type="button"
                 >
                   {link.name}
                 </button>
               ))}
               <hr className="border-border/10" />
-              <Button
-                className="w-full h-14 rounded-full font-bold uppercase tracking-widest bg-primary text-primary-foreground transition-all border-none"
+              <HomeButton
+                className="w-full"
                 onClick={() => navigate(AppRoute.LOGIN)}
               >
                 Iniciar Agora
-              </Button>
+              </HomeButton>
             </div>
           </motion.div>
         )}
