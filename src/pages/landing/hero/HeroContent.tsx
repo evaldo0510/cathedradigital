@@ -56,7 +56,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
         variants={fadeInUpVariants}
         initial="hidden"
         animate="visible"
-        className="font-display font-bold tracking-tight text-foreground pt-6 sm:pt-8 text-4xl sm:text-7xl md:text-8xl lg:text-[10rem] leading-[1] max-w-6xl mx-auto"
+        className="pt-6 sm:pt-8 max-w-6xl mx-auto"
       > Nem toda prisão <br/> é visível </motion.h1>
 
       {/* Description */}
@@ -65,7 +65,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
         initial="hidden"
         animate="visible"
         transition={{ delay: 0.2 }}
-        className="max-w-2xl mx-auto text-base md:text-xl text-muted-foreground font-serif leading-relaxed opacity-80"
+        className="max-w-2xl mx-auto font-serif opacity-80"
       >
         Uma experiência espiritual guiada por Bíblia, Catecismo e Logos IA.
       </motion.p>

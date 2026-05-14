@@ -40,11 +40,11 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
               <Icons.Flame className="w-8 h-8" />
             </div>
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">Seu Próximo Passo</p>
-              <h3 className="text-xl md:text-2xl font-serif text-foreground">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3">Seu Próximo Passo</p>
+              <h3 className="text-foreground">
                 {user ? 'Retomar caminhada de fé' : 'Inicie sua caminhada hoje'}
               </h3>
-              <p className="text-sm text-muted-foreground mt-2 max-w-md leading-relaxed">
+              <p className="mt-3 max-w-md leading-relaxed">
                 {user 
                   ? 'Continue de onde parou e aprofunde seu conhecimento.' 
                   : 'Descubra trilhas personalizadas para sua vida espiritual.'}
@@ -100,8 +100,8 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
             <Icons.Catechism className="w-10 h-10" />
           </div>
           <div className="space-y-4">
-            <h3 className="text-2xl md:text-3xl font-serif text-foreground">Catecismo da Igreja</h3>
-            <p className="text-muted-foreground text-base max-w-xl mx-auto leading-relaxed font-serif italic">
+            <h3 className="text-foreground">Catecismo da Igreja</h3>
+            <p className="max-w-xl mx-auto leading-relaxed italic opacity-80">
               "O Catecismo deve apresentar, com fidelidade e de modo orgânico, o ensinamento da Sagrada Escritura, da Tradição viva na Igreja e do Magistério autêntico."
             </p>
           </div>
@@ -126,8 +126,8 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
               <Icons.Star className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="text-lg font-bold font-serif">Fundamentos da Fé</h4>
-              <p className="text-sm text-muted-foreground mt-2 leading-relaxed">Para quem está iniciando sua jornada espiritual agora.</p>
+              <h4 className="font-serif">Fundamentos da Fé</h4>
+              <p className="mt-2 leading-relaxed">Para quem está iniciando sua jornada espiritual agora.</p>
             </div>
             <HomeButton variant="ghost" className="p-0 h-auto text-primary hover:bg-transparent text-[9px]" onClick={() => onNavigate(AppRoute.JORNADAS)}>
               Explorar Trilhas <Icons.ChevronRight className="ml-1 w-3.5 h-3.5" />
@@ -139,8 +139,8 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
               <Icons.BookOpen className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="text-lg font-bold font-serif">Estudo Bíblico</h4>
-              <p className="text-sm text-muted-foreground mt-2 leading-relaxed">Aprofunde seu conhecimento das Escrituras Sagradas.</p>
+              <h4 className="font-serif">Estudo Bíblico</h4>
+              <p className="mt-2 leading-relaxed">Aprofunde seu conhecimento das Escrituras Sagradas.</p>
             </div>
             <HomeButton variant="ghost" className="p-0 h-auto text-secondary hover:bg-transparent text-[9px]" onClick={() => onNavigate(AppRoute.BIBLE)}>
               Ver Planos <Icons.ChevronRight className="ml-1 w-3.5 h-3.5" />
