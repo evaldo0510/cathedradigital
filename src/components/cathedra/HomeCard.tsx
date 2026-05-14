@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 
 interface HomeCardProps extends React.HTMLAttributes<HTMLDivElement> {
   as?: any;
+  [key: string]: any;
 }
 
 const HomeCard = React.forwardRef<
