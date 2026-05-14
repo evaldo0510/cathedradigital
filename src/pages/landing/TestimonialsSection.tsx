@@ -17,14 +17,14 @@ const testimonials = [
 
 const TestimonialsSection = () => {
   return (
-    <section className="w-full section-spacing px-6 relative overflow-hidden bg-background">
-      <div className="container mx-auto space-y-20 relative z-10">
-        <div className="text-center space-y-4">
+    <section className="w-full section-spacing relative overflow-hidden bg-background">
+      <div className="app-container space-y-20 relative z-10">
+        <div className="text-center space-y-6">
           <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/40 italic">Comunidade</span>
-          <h2 className="text-3xl md:text-5xl font-display font-bold">Vozes da Comunidade</h2>
+          <h2 className="font-display font-bold">Vozes da Comunidade</h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
           {testimonials.slice(0, 3).map((t) => (
             <div
               key={t.name}
