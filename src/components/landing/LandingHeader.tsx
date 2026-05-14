@@ -69,7 +69,7 @@ const LandingHeader = () => {
           role="button"
           aria-label="Cathedra - Página Inicial"
         >
-          <Icons.Logo className="w-10 h-10 transition-transform group-hover:scale-105" variant="gold" />
+          <Icons.Logo className="w-10 h-10 md:w-12 md:h-12 transition-transform group-hover:scale-105" variant="gold" />
           <div className="hidden sm:block">
             <h1 className="text-sm font-display font-bold text-foreground tracking-[0.3em] uppercase">CATHEDRA</h1>
           </div>
@@ -87,7 +87,7 @@ const LandingHeader = () => {
                   handleNavClick(link.href);
                 }
               }}
-              className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors relative group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none rounded-sm px-1"
+              className="text-[11px] font-bold uppercase tracking-[0.3em] text-muted-foreground hover:text-primary transition-colors relative group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none rounded-sm px-1"
               type="button"
             >
               {link.name}
@@ -154,7 +154,7 @@ const LandingHeader = () => {
                 navigate(AppRoute.LOGIN);
               }
             }}
-            className="hidden sm:flex text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none rounded-sm p-1"
+            className="hidden sm:flex text-[11px] font-bold uppercase tracking-[0.3em] text-muted-foreground hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none rounded-sm p-1"
             aria-label="Ir para página de login"
             type="button"
           >

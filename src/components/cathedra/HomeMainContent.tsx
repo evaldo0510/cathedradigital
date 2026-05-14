@@ -20,7 +20,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
   const navigate = useNavigate();
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-6 space-y-32 pb-32">
+    <div className="app-container space-y-48 md:space-y-64 pb-48 md:pb-64">
       {/* CONTINUE JORNADA */}
       <section className="space-y-12">
         <div className="flex items-center gap-6">
@@ -33,7 +33,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         
         <HomeCard
           onClick={() => onNavigate(AppRoute.JORNADAS)}
-          className="p-10 flex flex-col md:flex-row items-center justify-between gap-8 group"
+          className="p-10 md:p-16 lg:p-20 flex flex-col md:flex-row items-center justify-between gap-12 group"
         >
           <div className="flex items-center gap-8 text-center md:text-left flex-col md:flex-row">
             <div className="w-20 h-20 rounded-3xl bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-500 shadow-inner">
@@ -66,7 +66,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
           </h2>
           <div className="h-px flex-1 bg-border/40" />
         </div>
-        <div className="max-w-2xl mx-auto">
+        <div className="max-w-4xl mx-auto w-full">
           <RitualDoDia />
         </div>
       </section>
@@ -94,7 +94,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         </div>
         <HomeCard 
           onClick={() => onNavigate(AppRoute.CATECHISM)}
-          className="p-12 text-center space-y-8 group border-primary/5 hover:border-primary/20"
+          className="p-12 md:p-24 lg:p-32 text-center space-y-12 group border-primary/5 hover:border-primary/20"
         >
           <div className="w-24 h-24 rounded-[2.5rem] bg-secondary/5 flex items-center justify-center text-secondary mx-auto group-hover:rotate-12 transition-transform duration-700">
             <Icons.Catechism className="w-12 h-12" />
@@ -120,8 +120,8 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
           </h2>
           <div className="h-px flex-1 bg-border/40" />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <HomeCard className="p-8 space-y-6 hover:border-primary/20">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
+          <HomeCard className="p-10 md:p-12 lg:p-16 space-y-8 hover:border-primary/20">
             <div className="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center text-primary">
               <Icons.Star className="w-6 h-6" />
             </div>
@@ -134,7 +134,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
             </HomeButton>
           </HomeCard>
           
-          <HomeCard className="p-8 space-y-6 hover:border-secondary/20">
+          <HomeCard className="p-10 md:p-12 lg:p-16 space-y-8 hover:border-secondary/20">
             <div className="w-12 h-12 rounded-2xl bg-secondary/5 flex items-center justify-center text-secondary">
               <Icons.BookOpen className="w-6 h-6" />
             </div>
