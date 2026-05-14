@@ -17,7 +17,6 @@ const HeroBackground = ({ bgY }: HeroBackgroundProps) => (
     <div className="absolute inset-0 bg-background" />
     <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/80 to-background" />
   </motion.div>
-  </motion.div>
 );
 
 export default HeroBackground;
