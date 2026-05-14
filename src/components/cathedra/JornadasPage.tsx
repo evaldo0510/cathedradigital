@@ -555,7 +555,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap mb-1">
-                              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-card border border-border/40 flex items-center justify-center shadow-sm group-hover:border-primary/20 group-hover:scale-110 transition-all duration-500 flex-shrink-0">
+                              <div className="premium-icon-box flex-shrink-0">
                                 {CATEGORY_ICONS[journey.category] || <Icons.BookOpen className="w-5 h-5 text-primary" />}
                               </div>
                               <div className="flex-1 min-w-0">
