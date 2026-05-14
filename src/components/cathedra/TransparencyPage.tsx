@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
 import SEOHead from '@/components/SEOHead';
+import { Button } from '@/components/ui/button';
 import { ShieldCheck, Info, Mail, Search, FileText, CheckCircle } from 'lucide-react';
 
 const TransparencyPage: React.FC = () => {
@@ -84,20 +85,23 @@ const TransparencyPage: React.FC = () => {
           </div>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a 
-              href="mailto:contato@cathedradigital.com" 
-              className="flex items-center gap-3 px-8 py-4 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-widest shadow-xl hover:bg-primary transition-all w-full sm:w-auto justify-center"
+            <Button 
+              asChild
+              className="h-14 px-8 w-full sm:w-auto shadow-xl"
             >
-              <Mail className="w-4 h-4" />
-              Enviar E-mail
-            </a>
-            <button 
+              <a href="mailto:contato@cathedradigital.com" className="flex items-center gap-3">
+                <Mail className="w-4 h-4" />
+                Enviar E-mail
+              </a>
+            </Button>
+            <Button 
+              variant="secondary"
               onClick={() => window.open('https://wa.me/seunumerowhatsapp', '_blank')}
-              className="flex items-center gap-3 px-8 py-4 bg-secondary text-primary rounded-full font-black uppercase text-premium-tiny tracking-widest border border-primary/20 hover:bg-secondary/80 transition-all w-full sm:w-auto justify-center"
+              className="h-14 px-8 border border-primary/20 w-full sm:w-auto shadow-sm gap-3"
             >
               <Icons.MessageSquare className="w-4 h-4" />
               Suporte WhatsApp
-            </button>
+            </Button>
           </div>
         </section>
 

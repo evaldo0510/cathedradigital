@@ -13,6 +13,7 @@ import {
   ChevronLeft
 } from 'lucide-react';
 import { Icons } from '../../constants';
+import { Button } from '@/components/ui/button';
 import ShareButton from './ShareButton';
 
 const STATIONS = [
@@ -49,10 +50,9 @@ const ViaCrucis: React.FC = () => {
         </motion.div>
 
         <div className="flex justify-center">
-          <button onClick={() => setIsJourney(true)} 
-            className="group px-10 py-5 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-[0.2em] shadow-xl hover:bg-primary hover:text-primary-foreground transition-all active:scale-95 flex items-center gap-3">
+          <Button onClick={() => setIsJourney(true)} size="lg" className="h-16 px-10 gap-3 rounded-full shadow-xl">
             <Play className="w-4 h-4 fill-current" /> Iniciar Via Sacra
-          </button>
+          </Button>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -82,10 +82,10 @@ const ViaCrucis: React.FC = () => {
     <div className="max-w-4xl mx-auto space-y-10 pb-12 animate-in fade-in duration-700">
       {/* Navigation */}
       <div className="flex items-center justify-between px-2">
-        <button onClick={() => setIsJourney(false)} className="p-3 rounded-full bg-card border border-border hover:bg-primary/5 transition-all active:scale-95 shadow-sm flex items-center gap-2">
+        <Button variant="outline" size="sm" onClick={() => setIsJourney(false)} className="rounded-full shadow-sm gap-2">
           <ArrowLeft className="w-5 h-5 text-foreground" />
           <span className="text-premium-tiny font-black uppercase tracking-widest hidden md:block">Voltar</span>
-        </button>
+        </Button>
         <div className="text-center">
           <p className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary/60 mb-1">Via Sacra</p>
           <span className="text-sm font-serif font-bold text-foreground">
@@ -148,28 +148,29 @@ const ViaCrucis: React.FC = () => {
 
       {/* Nav buttons */}
       <div className="flex gap-4 justify-center px-4">
-        <button 
+        <Button 
+          variant="outline"
           disabled={currentStation <= 0} 
           onClick={() => setCurrentStation(currentStation - 1)}
-          className="flex-1 max-w-[200px] h-14 rounded-full bg-card border border-border text-premium-tiny font-black uppercase tracking-widest disabled:opacity-20 hover:bg-primary/5 transition-all flex items-center justify-center gap-2 group shadow-sm"
+          className="flex-1 max-w-[200px] h-14 rounded-full"
         >
-          <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Anterior
-        </button>
+          <ChevronLeft className="w-4 h-4" /> Anterior
+        </Button>
         
         {currentStation < STATIONS.length - 1 ? (
-          <button 
+          <Button 
             onClick={() => setCurrentStation(currentStation + 1)}
-            className="flex-1 max-w-[200px] h-14 rounded-full bg-foreground text-background text-premium-tiny font-black uppercase tracking-widest hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-2 group shadow-xl"
+            className="flex-1 max-w-[200px] h-14 rounded-full bg-foreground text-background hover:bg-primary"
           >
-            Próxima <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </button>
+            Próxima <ChevronRight className="w-4 h-4" />
+          </Button>
         ) : (
-          <button 
+          <Button 
             onClick={() => setIsJourney(false)}
-            className="flex-1 max-w-[200px] h-14 rounded-full bg-primary text-primary-foreground text-premium-tiny font-black uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-2 group shadow-xl shadow-primary/20"
+            className="flex-1 max-w-[200px] h-14 rounded-full bg-primary text-primary-foreground shadow-xl shadow-primary/20"
           >
             <Icons.Cross className="w-4 h-4" /> Concluir
-          </button>
+          </Button>
         )}
       </div>
     </div>

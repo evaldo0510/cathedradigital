@@ -79,18 +79,20 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                 { label: t('community'), route: AppRoute.COMMUNITY },
                 { label: t('profile'), route: AppRoute.PROFILE },
               ].map(item => (
-                <button 
+                <Button 
                   key={item.route} 
+                  variant="ghost"
+                  size="sm"
                   onClick={() => navigate(item.route)}
-                  className={`text-[10px] font-black uppercase tracking-[0.2em] transition-all whitespace-nowrap relative group focus-visible:ring-2 focus-visible:ring-primary outline-none px-2 py-1 rounded ${
-                    pathname === item.route ? 'text-primary' : 'text-muted-foreground hover:text-primary'
+                  className={`px-3 py-1.5 h-auto text-[10px] font-black uppercase tracking-[0.2em] transition-all whitespace-nowrap relative group shadow-none ${
+                    pathname === item.route ? 'text-primary bg-primary/5' : 'text-muted-foreground hover:text-primary'
                   }`}
                   aria-label={item.label}
                   aria-current={pathname === item.route ? 'page' : undefined}
                 >
                   {item.label}
                   <span className={`absolute -bottom-1 left-0 h-0.5 bg-primary transition-all ${pathname === item.route ? 'w-full' : 'w-0 group-hover:w-full'}`} />
-                </button>
+                </Button>
 
               ))}
             </nav>
@@ -163,19 +165,26 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           )}
 
           {user && user.role === 'admin' && (
-            <button 
+            <Button 
+              variant="secondary"
+              size="sm"
               onClick={() => navigate(AppRoute.ADMIN)} 
-              className="hidden sm:flex lg:hidden px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-primary hover:bg-primary hover:text-white transition-all items-center gap-2 bg-secondary/20 rounded-full border border-secondary/30 shadow-sm"
+              className="hidden sm:flex lg:hidden h-10 px-4 items-center gap-2 rounded-full border border-secondary/30"
             >
               <Icons.Star className="w-4 h-4" />
               <span>{t('admin')}</span>
-            </button>
+            </Button>
           )}
 
           {user ? (
-            <button onClick={onSignOut} className="hidden sm:block lg:hidden px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-all">
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={onSignOut} 
+              className="hidden sm:block lg:hidden h-10 text-muted-foreground hover:text-primary transition-all shadow-none"
+            >
               {t('exit_session')}
-            </button>
+            </Button>
           ) : (
             <div className="flex items-center gap-2">
               <div className="hidden md:block">
@@ -184,9 +193,12 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                   text="Google"
                 />
               </div>
-              <button onClick={() => navigate(AppRoute.LOGIN)} className="px-4 sm:px-6 py-2 sm:py-2.5 bg-foreground text-background rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-primary-foreground transition-all shadow-lg active:scale-95">
+              <Button 
+                onClick={() => navigate(AppRoute.LOGIN)} 
+                className="h-10 px-4 sm:px-6 shadow-lg active:scale-95"
+              >
                 {t('enter')}
-              </button>
+              </Button>
             </div>
           )}
 
