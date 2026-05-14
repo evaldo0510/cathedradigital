@@ -28,6 +28,7 @@ const WhatsAppButton = lazy(() => import("@/components/cathedra/WhatsAppButton")
 const Index = () => {
   const navigate = useNavigate();
   const { user, profile, loading } = useAuth();
+  const [isJourneyOpen, setIsJourneyOpen] = useState(false);
 
   useEffect(() => {
     if (!loading && user) {
@@ -35,14 +36,15 @@ const Index = () => {
         navigate(AppRoute.ADMIN, { replace: true });
       } else {
         const onboardingDone = localStorage.getItem("cathedra_onboarding_done");
-        navigate(onboardingDone ? AppRoute.HOJE : AppRoute.ONBOARDING, { replace: true });
+        if (onboardingDone) {
+          navigate(AppRoute.HOJE, { replace: true });
+        }
       }
     }
   }, [user, profile, loading, navigate]);
 
   const handleStart = () => {
-    if (user) navigate(AppRoute.HOJE);
-    else navigate(AppRoute.LOGIN);
+    setIsJourneyOpen(true);
   };
 
   const handleNavigate = (route: string) => navigate(route);
@@ -78,8 +80,10 @@ const Index = () => {
           <div id="faq"><FaqSection /></div>
           <CtaBannerSection onStart={handleStart} />
           <FeedbackWidget />
+          <LogosChat />
           <WhatsAppButton />
           <CookieConsent />
+          <GuidedJourney isOpen={isJourneyOpen} onClose={() => setIsJourneyOpen(false)} />
         </main>
       </Suspense>
     </div>
