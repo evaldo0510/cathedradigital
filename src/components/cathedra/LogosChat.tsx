@@ -66,10 +66,10 @@ const LogosChat = () => {
             initial={{ opacity: 0, scale: 0.9, y: 20, transformOrigin: 'bottom right' }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="absolute bottom-16 right-0 w-[350px] sm:w-[400px] h-[500px] bg-card border border-border shadow-2xl rounded-3xl flex flex-col overflow-hidden"
+            className="absolute bottom-16 right-0 w-[350px] sm:w-[400px] h-[500px] bg-card border border-border shadow-xl rounded-3xl flex flex-col overflow-hidden"
           >
             {/* Header */}
-            <div className="p-4 border-b border-border bg-secondary/5 flex items-center justify-between">
+            <div className="p-4 border-b border-border bg-background flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center">
                   <Sparkles className="w-4 h-4 text-primary" />
@@ -130,7 +130,7 @@ const LogosChat = () => {
                 />
                 <button
                   onClick={handleSend}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-xl bg-secondary text-primary flex items-center justify-center hover:bg-secondary/80 transition-colors"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-xl bg-primary text-primary-foreground flex items-center justify-center hover:bg-primary/90 transition-colors"
                 >
                   <Send className="w-4 h-4" />
                 </button>
@@ -144,7 +144,7 @@ const LogosChat = () => {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-center gap-2 p-3 lg:px-5 lg:py-3 bg-secondary text-primary rounded-full shadow-2xl font-black uppercase tracking-widest text-[10px] min-w-0"
+        className="flex items-center justify-center gap-2 p-3 lg:px-5 lg:py-3 bg-primary text-primary-foreground rounded-full shadow-lg font-black uppercase tracking-widest text-[10px] min-w-0"
       >
         <Sparkles className="w-4 h-4 shrink-0" />
         <span className="hidden lg:inline">{isOpen ? 'Fechar' : 'Conversar com Logos'}</span>
