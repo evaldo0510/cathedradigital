@@ -92,7 +92,7 @@ const AboutPage: React.FC = () => (
               href={social.url}
               target="_blank"
               rel="noopener noreferrer"
-              className={`flex flex-col items-center gap-2 p-4 rounded-2xl bg-background border border-border shadow-sm transition-all hover:shadow-md hover:-translate-y-1 ${social.color} group`}
+              className={`premium-card p-4 flex flex-col items-center gap-2 rounded-2xl ${social.color} group`}
             >
               <div className="transition-transform duration-300 group-hover:scale-110">
                 {social.icon}
