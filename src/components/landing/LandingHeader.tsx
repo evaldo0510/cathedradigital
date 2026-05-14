@@ -78,21 +78,17 @@ const LandingHeader = () => {
         {/* Desktop Nav */}
         <nav className="hidden lg:flex items-center gap-6">
           {navLinks.map((link) => (
-            <button
+            <Button
               key={link.name}
+              variant="ghost"
+              size="sm"
               onClick={() => handleNavClick(link.href)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  handleNavClick(link.href);
-                }
-              }}
-              className="text-[11px] font-bold uppercase tracking-[0.3em] text-muted-foreground hover:text-primary transition-colors relative group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none rounded-sm px-1"
+              className="h-auto py-1 px-2 text-[11px] font-bold uppercase tracking-[0.3em] text-muted-foreground hover:text-primary transition-colors relative group shadow-none"
               type="button"
             >
               {link.name}
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full" />
-            </button>
+            </Button>
           ))}
           
           <div className="relative">
