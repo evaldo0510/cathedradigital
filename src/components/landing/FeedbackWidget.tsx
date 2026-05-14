@@ -102,7 +102,7 @@ const FeedbackWidget = () => {
                 <Button 
                   type="submit" 
                   disabled={isSubmitting || (!feedback && rating === 0)}
-                  className="w-full rounded-2xl font-black uppercase tracking-widest text-[10px] h-12"
+                  className="w-full rounded-2xl font-bold uppercase tracking-widest text-[10px] h-12"
                 >
                   {isSubmitting ? 'Enviando...' : 'Enviar Feedback'}
                 </Button>
@@ -116,7 +116,7 @@ const FeedbackWidget = () => {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-center gap-2 p-3 lg:px-5 lg:py-3 bg-background border border-border text-foreground rounded-full shadow-2xl font-black uppercase tracking-widest text-[10px] min-w-0"
+        className="flex items-center justify-center gap-2 p-3 lg:px-5 lg:py-3 bg-background border border-border text-foreground rounded-full shadow-2xl font-bold uppercase tracking-widest text-[10px] min-w-0"
       >
         <MessageSquare className="w-4 h-4 shrink-0" />
         <span className="hidden lg:inline">{isOpen ? 'Fechar' : 'Feedback'}</span>

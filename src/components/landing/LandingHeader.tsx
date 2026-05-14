@@ -60,7 +60,7 @@ const LandingHeader = () => {
           : "py-8 bg-transparent"
       }`}
     >
-      <div className="container px-6 mx-auto flex items-center justify-between">
+      <div className="app-container flex items-center justify-between">
         <div 
           className="flex items-center gap-3 cursor-pointer group"
           onClick={() => navigate(AppRoute.HOME)}
@@ -153,7 +153,7 @@ const LandingHeader = () => {
             exit={{ opacity: 0, height: 0 }}
             className="lg:hidden bg-background border-b border-border overflow-hidden"
           >
-            <div className="container px-6 py-8 flex flex-col gap-6">
+            <div className="app-container py-8 flex flex-col gap-6">
               {navLinks.map((link) => (
                 <button
                   key={link.name}

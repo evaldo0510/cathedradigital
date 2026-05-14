@@ -13,11 +13,11 @@ const faqs = [
 ];
 
 const FaqSection = () => (
-  <section className="w-full section-spacing px-6 relative overflow-hidden">
-    <div className="container max-w-3xl mx-auto space-y-16 relative z-10">
-      <div className="text-center space-y-4">
+  <section className="w-full section-spacing relative overflow-hidden">
+    <div className="app-container max-w-4xl space-y-20 relative z-10">
+      <div className="text-center space-y-6">
         <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/40 italic">Dúvidas</span>
-        <h2 className="text-3xl md:text-5xl font-display font-bold">Perguntas Frequentes</h2>
+        <h2 className="font-display font-bold">Perguntas Frequentes</h2>
       </div>
 
       <Accordion type="single" collapsible className="space-y-4">
