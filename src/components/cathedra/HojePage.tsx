@@ -166,7 +166,11 @@ const HojePage: React.FC = () => {
   return (
     <div className="desktop-layout pt-6 md:pt-12">
       {loadingStats && <DashboardSkeleton />}
-      <SEOHead title="Hoje - Sua Jornada Espiritual" description="Acompanhe sua caminhada de fé diária." path="/hoje" />
+      <SEOHead 
+        title="Cathedra Digital — Nem toda prisão é visível" 
+        description="A sabedoria da Igreja Católica ao seu alcance. Explore o Catecismo, a Bíblia e jornadas espirituais para uma vida de liberdade e verdade." 
+        path="/hoje" 
+      />
       {import.meta.env.DEV && <DevDataInspector data={{ officialSaint, allSaintsToday, activeJourney, profile: profile?._sensitive }} />}
       <div className="desktop-main space-y-12 max-w-2xl mx-auto lg:max-w-none lg:mx-0">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center space-y-6 pt-4 md:pt-0">
