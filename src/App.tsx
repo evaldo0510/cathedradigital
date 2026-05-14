@@ -637,7 +637,7 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.CACHE_MANAGER} element={<PageTransition><CacheManager /></PageTransition>} />
 
                   <Route path={AppRoute.POPES} element={<PageTransition><AuthGuard><PopesPage /></AuthGuard></PageTransition>} />
-                  <Route path={AppRoute.BUSCAR} element={<PageTransition><AuthGuard><GlobalSearchPage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.BUSCAR} element={<PageTransition><AuthGuard><CommandCenterPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.ADMIN} element={
                     <PageTransition>
                       <AdminGuard>
