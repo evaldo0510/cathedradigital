@@ -15,13 +15,35 @@ export interface BaseContent {
   metadata?: Record<string, any>;
 }
 
+export interface SearchMetrics {
+  responseTime: number;
+  cacheHit: boolean;
+  resultsCount: number;
+  query: string;
+}
+
 const SEARCH_CACHE: Record<string, { data: BaseContent[], timestamp: number }> = {};
 const CACHE_TTL = 1000 * 60 * 5; // 5 minutes
 
-export const searchUnified = async (query: string, types?: ContentType[], page: number = 0, limit: number = 10) => {
+export const searchUnified = async (
+  query: string, 
+  types?: ContentType[], 
+  page: number = 0, 
+  limit: number = 10,
+  signal?: AbortSignal
+) => {
+  const startTime = performance.now();
   const cacheKey = `${query}-${types?.join(',')}-${page}-${limit}`;
+  
   if (SEARCH_CACHE[cacheKey] && Date.now() - SEARCH_CACHE[cacheKey].timestamp < CACHE_TTL) {
-    return SEARCH_CACHE[cacheKey].data;
+    const metrics: SearchMetrics = {
+      responseTime: performance.now() - startTime,
+      cacheHit: true,
+      resultsCount: SEARCH_CACHE[cacheKey].data.length,
+      query
+    };
+    console.log('[Search Metrics]', metrics);
+    return { data: SEARCH_CACHE[cacheKey].data, metrics };
   }
 
   const results: BaseContent[] = [];
@@ -29,11 +51,17 @@ export const searchUnified = async (query: string, types?: ContentType[], page: 
   const to = from + limit - 1;
   
   if (!types || types.includes('catechism')) {
-    const { data } = await supabase
+    const queryBuilder = supabase
       .from('catechism_paragraphs' as any)
       .select('number, content, summary')
       .or(`content.ilike.%${query}%,summary.ilike.%${query}%`)
       .range(from, to);
+
+    if (signal) {
+      (queryBuilder as any).abortSignal = signal;
+    }
+
+    const { data } = await queryBuilder;
     
     if (data) {
       (data as any[]).forEach(item => {
@@ -53,7 +81,16 @@ export const searchUnified = async (query: string, types?: ContentType[], page: 
   // Add more sources as needed
   
   SEARCH_CACHE[cacheKey] = { data: results, timestamp: Date.now() };
-  return results;
+  
+  const metrics: SearchMetrics = {
+    responseTime: performance.now() - startTime,
+    cacheHit: false,
+    resultsCount: results.length,
+    query
+  };
+  console.log('[Search Metrics]', metrics);
+  
+  return { data: results, metrics };
 };
 
 export const getTagCloud = async () => {
