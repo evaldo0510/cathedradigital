@@ -1,7 +1,6 @@
-import { motion } from "framer-motion";
 import { Check, Sparkles, Zap, Heart } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { fadeUp, scaleIn } from "./animations";
+import { HomeButton } from "@/components/cathedra/HomeButton";
+import { HomeCard } from "@/components/cathedra/HomeCard";
 
 const PricingSection = () => {
   const tiers = [
@@ -68,9 +67,9 @@ const PricingSection = () => {
 
         <div className="grid md:grid-cols-3 gap-8 md:gap-10">
           {tiers.map((tier) => (
-            <div
+            <HomeCard
               key={tier.name}
-              className={`desktop-card relative flex flex-col h-full ${
+              className={`p-8 relative flex flex-col h-full ${
                 tier.popular ? "border-secondary/20 bg-secondary/[0.02]" : ""
               }`}
             >
@@ -109,14 +108,13 @@ const PricingSection = () => {
               </div>
 
               <div className="mt-8">
-                <Button 
-                  className={`w-full h-12 rounded-full font-bold uppercase tracking-[0.2em] text-[10px] ${
-                    tier.popular ? "bg-primary text-primary-foreground" : "bg-muted/50 hover:bg-muted text-foreground"
-                  }`}
+                <HomeButton 
+                  variant={tier.popular ? "primary" : "outline"}
+                  className="w-full"
                   aria-label={`Assinar o plano ${tier.name}`}
                 >
                   {tier.button}
-                </Button>
+                </HomeButton>
               </div>
             </div>
           ))}

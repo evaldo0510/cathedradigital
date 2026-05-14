@@ -1,7 +1,6 @@
-import { motion } from "framer-motion";
 import { Church, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { scaleIn, buttonHover } from "./animations";
+import { HomeButton } from "@/components/cathedra/HomeButton";
+import { HomeCard } from "@/components/cathedra/HomeCard";
 
 interface CtaBannerSectionProps {
   onStart: () => void;
@@ -10,7 +9,7 @@ interface CtaBannerSectionProps {
 const CtaBannerSection = ({ onStart }: CtaBannerSectionProps) => (
   <section className="w-full section-spacing">
     <div className="app-container">
-      <div className="desktop-card text-center space-y-10 py-20 md:py-28 relative overflow-hidden group">
+      <HomeCard className="text-center space-y-10 py-20 md:py-28 relative overflow-hidden group">
       {/* Subtle background glow */}
       <div className="absolute inset-0 bg-primary/[0.02] pointer-events-none" />
       
@@ -27,13 +26,13 @@ const CtaBannerSection = ({ onStart }: CtaBannerSectionProps) => (
           </p>
         </div>
         <div className="flex flex-col items-center gap-6">
-          <Button 
+          <HomeButton 
             size="lg" 
-            className="h-14 px-12 rounded-full bg-primary text-primary-foreground font-bold uppercase tracking-[0.2em] text-xs shadow-none" 
             onClick={onStart}
+            aria-label="Iniciar minha jornada agora"
           >
             Iniciar Minha Jornada
-          </Button>
+          </HomeButton>
           <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-[0.4em] opacity-40">
             Acesso totalmente gratuito
           </p>

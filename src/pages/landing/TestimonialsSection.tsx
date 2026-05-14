@@ -1,7 +1,5 @@
-import { motion } from "framer-motion";
-import { Quote, Star } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { fadeUp } from "./animations";
+import { Quote } from "lucide-react";
+import { HomeCard } from "@/components/cathedra/HomeCard";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import React from "react";
@@ -26,9 +24,9 @@ const TestimonialsSection = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
           {testimonials.slice(0, 3).map((t) => (
-            <div
+            <HomeCard
               key={t.name}
-              className="desktop-card space-y-8 flex flex-col"
+              className="p-8 space-y-8 flex flex-col"
             >
               <Quote className="w-6 h-6 text-secondary/20" />
               <p className="text-base text-muted-foreground leading-relaxed font-serif flex-1">
