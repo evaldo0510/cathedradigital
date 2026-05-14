@@ -19,12 +19,13 @@ import { ProfileId } from './SpiritualQuiz';
 
 const HojePage: React.FC = () => {
   const navigate = useNavigate();
-  const { user, profile, userLevel } = useAuth();
+  const { user, profile, userLevel, loading: authLoading } = useAuth();
   const { lang } = useContext(LangContext);
   const { data: allSaintsToday = [] } = useSaintsToday();
   const { data: officialSaint } = useOfficialSaint();
   
-  const { spiritualProfile, nextUp, activeJourneys, isLoading: loadingStats } = useDashboardData(user as any);
+  const { spiritualProfile, nextUp, activeJourneys, isLoading: dataLoading } = useDashboardData(user as any);
+  const loadingStats = authLoading || dataLoading;
 
   const activeJourney = activeJourneys?.[0] || null;
   const journeyProgress = activeJourney ? { completed: activeJourney.completedSteps, total: activeJourney.totalSteps } : { completed: 0, total: 0 };
@@ -75,7 +76,7 @@ const HojePage: React.FC = () => {
   return (
     <div className="desktop-layout pt-0 md:pt-10 lg:pt-20 pb-24 relative">
       {loadingStats && (
-        <div className="fixed inset-0 z-[200] bg-background flex flex-col items-center justify-center">
+        <div className="fixed inset-0 z-[200] bg-background flex flex-col items-center justify-center p-4">
           <DashboardSkeleton />
         </div>
       )}
