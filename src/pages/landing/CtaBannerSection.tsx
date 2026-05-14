@@ -8,8 +8,9 @@ interface CtaBannerSectionProps {
 }
 
 const CtaBannerSection = ({ onStart }: CtaBannerSectionProps) => (
-  <section className="w-full section-spacing px-6">
-    <div className="desktop-card max-w-4xl mx-auto text-center space-y-10 py-16 md:py-24 relative overflow-hidden group">
+  <section className="w-full section-spacing">
+    <div className="app-container">
+      <div className="desktop-card text-center space-y-10 py-20 md:py-28 relative overflow-hidden group">
       {/* Subtle background glow */}
       <div className="absolute inset-0 bg-primary/[0.02] pointer-events-none" />
       
@@ -18,7 +19,7 @@ const CtaBannerSection = ({ onStart }: CtaBannerSectionProps) => (
           <Church className="w-16 h-16 text-primary" />
         </div>
         <div className="space-y-4">
-          <h2 className="text-3xl md:text-6xl font-display font-bold leading-tight">
+          <h2 className="font-display font-bold leading-tight">
             Sua jornada de <span className="text-primary italic">fé</span> começa aqui.
           </h2>
           <p className="text-lg text-muted-foreground max-w-lg mx-auto font-serif">
@@ -37,6 +38,7 @@ const CtaBannerSection = ({ onStart }: CtaBannerSectionProps) => (
             Acesso totalmente gratuito
           </p>
         </div>
+      </div>
       </div>
     </div>
   </section>
