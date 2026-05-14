@@ -129,15 +129,7 @@ const HeroContent = ({ heroOpacity, heroScale, heroY, onStart, onAbout }: HeroCo
           transition={{ delay: 2.8 }}
           className="w-full max-w-sm flex flex-col gap-3"
         >
-          <div className="flex items-center gap-3 w-full">
-            <div className="h-px bg-border flex-1 opacity-20" />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">Acesso Rápido</span>
-            <div className="h-px bg-border flex-1 opacity-20" />
-          </div>
-          <GoogleSignInButton 
-            className="h-14 sm:h-16 rounded-2xl bg-background hover:bg-muted/50 border-border/50 text-xs"
-            text="Continuar com Google"
-          />
+          {/* Quick access options removed for minimalism */}
         </motion.div>
 
         <div className="flex items-center gap-3 opacity-40">
