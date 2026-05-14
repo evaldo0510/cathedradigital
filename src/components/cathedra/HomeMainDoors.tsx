@@ -61,7 +61,7 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t }) => {
           aria-label={`${door.label}: ${door.description}`}
           className="premium-card p-6 flex flex-col items-center text-center gap-4 cursor-pointer group rounded-3xl"
         >
-          <div className={`w-14 h-14 rounded-2xl ${door.color} flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform duration-500`}>
+          <div className="premium-icon-box group-hover:scale-110 transition-transform duration-500">
             <door.icon className="w-6 h-6" />
           </div>
           <div className="space-y-1.5">
