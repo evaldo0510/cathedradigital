@@ -240,7 +240,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           console.error('Error getting session:', error);
         }
 
-        await syncAuthState(session?.user ?? null);
+        if (!session?.user) {
+          console.log('No user session found during init');
+          setLoading(false);
+          return;
+        }
+        await syncAuthState(session.user);
       } catch (error: any) {
         if (!active) return;
         
