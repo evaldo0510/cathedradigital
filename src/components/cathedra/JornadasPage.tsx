@@ -508,12 +508,12 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   transition={{ type: 'spring', stiffness: 400, damping: 25 }}
                 >
                   <Card
-                    className={`overflow-hidden cursor-pointer transition-all duration-500 group relative rounded-[2rem] focus-visible:ring-4 focus-visible:ring-primary/20 outline-none ${
+                    className={`premium-card group ${
                       isComplete 
-                        ? 'border-emerald-500/30 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)]' 
+                        ? 'border-emerald-500/30' 
                         : hasStarted 
-                          ? 'border-primary/20 shadow-[0_8px_30px_rgb(0,0,0,0.06)]'
-                          : 'border-border/40 hover:border-primary/30 shadow-sm hover:shadow-xl'
+                          ? 'border-primary/20'
+                          : 'hover:border-primary/30'
                     }`}
                     onClick={() => {
                       // Check if it's one of our local trilhas
