@@ -529,7 +529,7 @@ const AppLayout: React.FC = () => {
         <main id="main-content" className="flex-1 overflow-y-auto flex flex-col relative no-scrollbar overscroll-auto touch-pan-y scroll-smooth bg-background">
           <div className="w-full flex-1 flex flex-col items-center overflow-x-hidden">
             {!isChromeless && (
-              <div className="w-full sticky top-0 z-[140] bg-background/90 backdrop-blur-xl border-b border-border">
+              <div className="w-full sticky top-0 z-[140] bg-background border-b border-border">
                 <AppHeader
                   user={appUser}
                   isDark={isDark}
