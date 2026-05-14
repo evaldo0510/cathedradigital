@@ -19,7 +19,7 @@ import { ProfileId } from './SpiritualQuiz';
 
 const HojePage: React.FC = () => {
   const navigate = useNavigate();
-  const { user, profile, userLevel, loading: authLoading } = useAuth();
+  const { user, profile, userLevel, loading: authLoading, refreshProfile } = useAuth();
   const { lang } = useContext(LangContext);
   const { data: allSaintsToday = [] } = useSaintsToday();
   const { data: officialSaint } = useOfficialSaint();
@@ -56,6 +56,13 @@ const HojePage: React.FC = () => {
     enabled: !!user?.id && !hasActiveJourney,
     staleTime: 1000 * 60 * 30,
   });
+
+  useEffect(() => {
+    // If we have a user but no profile, try to refresh it once
+    if (user && !profile && !authLoading) {
+      refreshProfile();
+    }
+  }, [user, profile, authLoading, refreshProfile]);
 
   const hour = new Date().getHours();
   const greeting = useMemo(() => {
