@@ -47,7 +47,7 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ type: 'spring', damping: 25, stiffness: 250 }}
-            className="bg-card border border-border rounded-3xl p-6 md:p-8 space-y-6 shadow-sm"
+            className="premium-card p-6 md:p-8 space-y-6"
           >
             {/* Term Header */}
             <div>
