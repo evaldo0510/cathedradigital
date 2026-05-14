@@ -114,7 +114,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           {user && (
             <button 
               onClick={() => setShowNotifs(!showNotifs)} 
-              className="p-2.5 sm:p-3 bg-muted text-primary hover:bg-primary hover:text-white rounded-xl sm:rounded-2xl border border-border relative transition-all shadow-sm active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none"
+              className="p-3 bg-muted/40 text-primary hover:bg-primary hover:text-white rounded-[1.25rem] border border-border/40 relative transition-all duration-300 shadow-sm hover:shadow-xl hover:translate-y-[-1px] active:scale-95 focus-visible:ring-2 focus-visible:ring-primary/20 outline-none"
               aria-label={showNotifs ? "Fechar notificações" : `Notificações (${unreadCount} não lidas)`}
               aria-expanded={showNotifs}
             >
