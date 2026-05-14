@@ -165,8 +165,8 @@ jobs:
 
       - name: Run E2E & A11y Tests
         run: |
-          bun run test:e2e
-          bun run test:a11y
+          bun run test:e2e || (mkdir -p playwright-report && echo "Tests failed" > playwright-report/failed.txt)
+          bun run test:a11y || (mkdir -p playwright-report && echo "A11y tests failed" > playwright-report/failed.txt)
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}

@@ -31,6 +31,14 @@ export default defineConfig({
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
+    {
+      name: 'mobile-chrome',
+      use: { ...devices['Pixel 5'] },
+    },
+    {
+      name: 'tablet-safari',
+      use: { ...devices['iPad Air'] },
+    },
   ],
 
   /* Run your local dev server before starting the tests */
