@@ -179,7 +179,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                   text="Google"
                 />
               </div>
-              <button onClick={() => navigate(AppRoute.LOGIN)} className="px-4 sm:px-6 py-2 sm:py-2.5 bg-foreground text-background rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-primary-foreground transition-all shadow-lg active:scale-95">
+              <button onClick={() => navigate(AppRoute.LOGIN)} className="px-6 py-3 bg-primary text-primary-foreground rounded-[1.25rem] text-[11px] font-black uppercase tracking-[0.2em] hover:bg-primary/90 transition-all duration-300 shadow-xl shadow-primary/10 hover:shadow-primary/20 hover:translate-y-[-1px] active:scale-95">
                 {t('enter')}
               </button>
             </div>
