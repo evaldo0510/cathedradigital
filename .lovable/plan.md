@@ -1,31 +1,31 @@
-Refinar a estrutura visual da Home para uma experiência premium, minimalista e organizada.
+Audit and standardize all icon-only buttons to use `size="icon"`, ensure consistent SVG sizing, improve accessibility (aria-busy, aria-disabled), and expand the Design System documentation for the `Button` component.
 
-### Alterações Visuais e Estruturais
+### Step 1: Standardize Icon Buttons in `AppHeader.tsx` and `LiturgiaPage.tsx`
+- Remove manual `className="w-4 h-4"` from icons inside `Button size="icon"` to let the standard `[&_svg]:size-5` from `buttonVariants` control the size.
+- Replace plain `<button>` elements used for pagination in `LiturgiaPage.tsx` with `Button size="icon"`.
+- Ensure all icon-only buttons have `aria-label` or `title` for accessibility.
 
-1. **Padronização de Componentes Core**
-   - Atualizar `HomeCard` para um estilo mais "premium": bordas mais suaves, sombras ultra-sutis (`shadow-sm` evoluído) e transições fluidas.
-   - Refinar `HomeButton` para garantir tipografia elegante e foco visual (ring) consistente.
+### Step 2: Refactor `Sidebar.tsx`
+- Replace manual `<button>` elements for theme toggle and audio toggle with the standard `Button` component.
+- Ensure consistent styling and accessibility attributes.
 
-2. **Reestruturação da Home (Index.tsx)**
-   - Remover seções excedentes: Features, Testimonials, Pricing, FAQ e banners genéricos.
-   - Reorganizar a página para conter exclusivamente as 6 seções solicitadas:
-     - **Hero Principal**: Refinado com foco em tipografia e respiro.
-     - **Continue Jornada**: Card contextual para retomar o progresso (ou iniciar).
-     - **Ritual do Dia**: Integração limpa do componente de liturgia diária.
-     - **Temas Principais**: Grid organizado das portas principais (Bíblia, Catecismo, etc.).
-     - **Catecismo**: Destaque elegante para a seção de doutrina.
-     - **Trilhas**: Carrossel ou grid de jornadas de formação.
+### Step 3: Expand Design System Documentation
+- Update `src/components/cathedra/DesignSystemGuide.tsx` to include:
+    - A dedicated section for the `Button` component.
+    - Examples of all variants: `default`, `primary`, `outline`, `destructive`, `ghost`, `secondary`, `link`.
+    - Examples of all sizes: `sm`, `default`, `lg`, `icon`.
+    - Demonstration of `isLoading` and `disabled` states across different variants.
+    - Usage guidelines for icon-only buttons.
 
-3. **Layout e Hierarquia**
-   - Centralizar todo o conteúdo desktop em um container focado (ex: `max-w-4xl` ou `max-w-5xl`).
-   - Aumentar o espaçamento vertical entre seções para criar o "respiro visual" solicitado.
-   - Eliminar glows, gradientes excessivos e decorações que causam ruído visual.
+### Step 4: Accessibility and E2E Testing
+- Create `src/components/ui/button-a11y.test.tsx` using Vitest and React Testing Library.
+- Implement tests to:
+    - Verify keyboard navigation (Tab/Shift+Tab) between buttons.
+    - Check for `aria-busy` and `aria-disabled` during loading states.
+    - Ensure `disabled` buttons are correctly skipped or handled in focus management.
+    - Validate that icons within `size="icon"` buttons maintain consistent dimensions.
 
-4. **Acessibilidade e Foco**
-   - Garantir que cada elemento clicável tenha suporte total a teclado e foco visível.
-   - Manter a navegação lógica e intuitiva.
-
-### Detalhes Técnicos
-- Utilizar `framer-motion` apenas para transições sutis de entrada.
-- Padronizar o uso de tokens de design (cores, spacing) via Tailwind.
-- Otimizar o carregamento via Suspense e Skeletons refinados.
+### Technical Details
+- Use `screen.getByRole('button')` and `fireEvent` / `userEvent` for interaction tests.
+- Leverage the existing `buttonVariants` in `src/components/ui/button.tsx` which already includes accessibility logic, but ensure it is used everywhere.
+- Audit for any leftover `text-[...]` classes on buttons and replace with standardized typography variants.

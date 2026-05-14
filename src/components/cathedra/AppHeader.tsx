@@ -108,7 +108,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
               navigate(AppRoute.ONBOARDING);
             }}
             title={t('ecosystem_guide') || "Guia do Ecossistema"}>
-            <Icons.Compass className="w-4 h-4" />
+            <Icons.Compass />
           </Button>
 
           <Button
@@ -116,7 +116,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             size="icon"
             onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}
             aria-label={t('search') || "Buscar"}>
-            <Icons.Search className="w-4 h-4" />
+            <Icons.Search />
           </Button>
 
           {user && (
@@ -127,7 +127,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
               className="relative"
               aria-label={showNotifs ? t('close_notifications') : t('notifications_unread')}
               aria-expanded={showNotifs}>
-              <Icons.Message className="w-4 h-4" />
+              <Icons.Message />
               {unreadCount > 0 && (
                 <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-primary-foreground text-[10px] font-black flex items-center justify-center rounded-full border-2 border-background shadow-md">
                   {unreadCount}
@@ -225,7 +225,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             className={`hidden sm:flex lg:hidden ${isSpeaking ? 'animate-pulse' : ''}`}
             title={isSpeaking ? t('audio_stop') : t('audio_read')}
             aria-label={isSpeaking ? t('audio_stop') : t('audio_read')}>
-            {isSpeaking ? <Icons.Stop className="w-4 h-4" /> : <Icons.Volume2 className="w-4 h-4" />}
+            {isSpeaking ? <Icons.Stop /> : <Icons.Volume2 />}
           </Button>
 
           <Button
@@ -234,7 +234,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             onClick={onToggleDark}
             className="hidden sm:flex lg:hidden"
             aria-label="Alternar tema">
-            {isDark ? <Icons.Sun className="w-4 h-4" /> : <Icons.Moon className="w-4 h-4" />}
+            {isDark ? <Icons.Sun /> : <Icons.Moon />}
           </Button>
 
 
