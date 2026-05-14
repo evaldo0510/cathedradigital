@@ -11,6 +11,7 @@ import { getBibleCrossRefs, CIC_TO_BIBLE, BIBLE_TO_CIC, getBibleDocs } from '@/d
 import CatechismPopover from './CatechismPopover';
 import MagisteriumPopover from './MagisteriumPopover';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { AppRoute } from '@/types';
 import { useFavorites } from '@/hooks/useFavorites';
 import BibleSearch from './BibleSearch';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
