@@ -19,13 +19,13 @@ export const scaleIn = {
 };
 
 export const cardHover = {
-  rest: { scale: 1, y: 0 },
-  hover: { scale: 1.03, y: -6, transition: { duration: 0.3, ease: "easeOut" as const } },
+  rest: { y: 0 },
+  hover: { y: -4, transition: { duration: 0.3, ease: "easeOut" as const } },
   tap: { scale: 0.98 },
 };
 
 export const buttonHover = {
-  rest: { scale: 1 },
-  hover: { scale: 1.05, transition: { duration: 0.2, ease: "easeOut" as const } },
-  tap: { scale: 0.95, transition: { duration: 0.1 } },
+  rest: { opacity: 1 },
+  hover: { opacity: 0.9, transition: { duration: 0.2 } },
+  tap: { scale: 0.98 },
 };
