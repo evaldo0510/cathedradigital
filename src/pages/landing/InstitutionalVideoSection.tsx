@@ -222,8 +222,8 @@ const InstitutionalVideoSection = () => {
               <h2 id="video-section-title" className="text-4xl md:text-5xl font-display font-bold leading-tight">
                 A Tradição em <span className="text-primary italic font-serif">Movimento</span>
               </h2>
-              <p className="text-base text-muted-foreground font-serif italic max-w-md">
-                "Coloca a tecnologia a serviço do Evangelho."
+              <p className="text-base text-muted-foreground font-serif max-w-md">
+                Coloca a tecnologia a serviço do Evangelho.
               </p>
             </div>
 
