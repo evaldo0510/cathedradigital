@@ -219,7 +219,7 @@ const HojePage: React.FC = () => {
                 onClick={() => navigate(`/jornadas/${activeJourney.id}`)} 
               >
                 <div className="flex items-center gap-6">
-                  <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/20 transition-colors duration-500"><Icons.Flame className="w-7 h-7" /></div>
+                  <div className="premium-icon-box"><Icons.Flame className="w-6 h-6" /></div>
                   <div className="flex-1 space-y-4">
                     <div>
                       <h3 className="text-xl font-bold text-foreground">{activeJourney.title}</h3>
