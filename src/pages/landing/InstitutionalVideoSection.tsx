@@ -217,11 +217,11 @@ const InstitutionalVideoSection = () => {
             className="space-y-8"
           >
             <div className="space-y-4">
-              <span className="text-[9px] font-bold uppercase tracking-[0.4em] text-primary/40 block italic">Apresentação</span>
-              <h2 id="video-section-title" className="text-4xl md:text-5xl font-display font-bold leading-tight">
+              <span className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/40 block italic">Apresentação</span>
+              <h2 id="video-section-title" className="font-display font-bold leading-tight">
                 A Tradição em <span className="text-primary italic font-serif">Movimento</span>
               </h2>
-              <p className="text-base text-muted-foreground font-serif max-w-md">
+              <p className="text-muted-foreground font-serif max-w-md">
                 Coloca a tecnologia a serviço do Evangelho.
               </p>
             </div>
@@ -234,8 +234,8 @@ const InstitutionalVideoSection = () => {
                 { title: "Comunhão", desc: "Rede global de oração." },
               ].map((item) => (
                 <div key={item.title} className="space-y-1">
-                  <h4 className="font-bold text-foreground text-sm">{item.title}</h4>
-                  <p className="text-[10px] text-muted-foreground leading-relaxed">{item.desc}</p>
+                  <h4 className="font-bold text-foreground text-premium-small">{item.title}</h4>
+                  <p className="text-premium-tiny text-muted-foreground leading-relaxed">{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -293,10 +293,10 @@ const InstitutionalVideoSection = () => {
                 </motion.div>
                 
                 <div className="text-center space-y-2 px-8">
-                  <h3 className="text-2xl md:text-3xl font-display font-bold text-white tracking-tight">
+                  <h3 className="font-display font-bold text-white tracking-tight">
                     Assistir Apresentação
                   </h3>
-                  <p className="text-white/60 text-sm font-medium tracking-wide uppercase">
+                  <p className="text-white/60 text-premium-small font-medium tracking-wide uppercase">
                     Mergulhe na Proposta da Catedra
                   </p>
                 </div>
@@ -326,10 +326,10 @@ const InstitutionalVideoSection = () => {
                 {isMuted ? <VolumeX className="w-5 h-5 text-primary" /> : <Volume2 className="w-5 h-5 text-primary" />}
               </div>
               <div className="space-y-0.5">
-                <p className="text-[10px] font-black text-primary uppercase tracking-tighter">
+                <p className="text-premium-tiny font-black text-primary uppercase tracking-tighter">
                   {isMuted ? "Mudo" : "Som Ativado"}
                 </p>
-                <p className="text-xs font-bold text-foreground">Experiência Imersiva</p>
+                <p className="text-premium-tiny font-bold text-foreground">Experiência Imersiva</p>
               </div>
             </motion.div>
           </motion.div>
@@ -375,7 +375,7 @@ const InstitutionalVideoSection = () => {
                           to_lang: newLang 
                         });
                       }}
-                      className="bg-transparent text-white text-xs font-bold focus:outline-none cursor-pointer"
+                      className="bg-transparent text-white text-premium-tiny font-bold focus:outline-none cursor-pointer"
                       aria-label="Selecionar idioma das legendas"
                     >
                       {SUBTITLES.map(s => <option key={s.lang} value={s.lang} className="bg-black">{s.label}</option>)}

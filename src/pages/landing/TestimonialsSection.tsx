@@ -18,7 +18,7 @@ const TestimonialsSection = () => {
     <section className="w-full section-spacing relative overflow-hidden bg-background">
       <div className="app-container space-y-20 relative z-10">
         <div className="text-center space-y-6">
-          <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/60 italic">Comunidade</span>
+          <span className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/60 italic">Comunidade</span>
           <h2 className="font-display font-bold">Vozes da Comunidade</h2>
         </div>
 
@@ -34,12 +34,12 @@ const TestimonialsSection = () => {
               </p>
 
               <div className="pt-8 border-t border-border/10 flex items-center gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center text-primary font-bold text-sm">
+                <div className="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center text-primary font-bold text-premium-small">
                   {t.avatar}
                 </div>
                 <div>
-                  <p className="font-bold text-sm">{t.name}</p>
-                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">{t.role}</p>
+                  <p className="font-bold text-premium-small">{t.name}</p>
+                  <p className="text-premium-tiny text-muted-foreground uppercase tracking-wider font-bold">{t.role}</p>
                 </div>
               </div>
             </HomeCard>

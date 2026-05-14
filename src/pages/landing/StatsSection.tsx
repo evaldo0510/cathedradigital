@@ -68,7 +68,7 @@ const AnimatedStat = ({ value, label, index }: { value: string; label: string; i
       >
         {isNumeric ? `${count.toLocaleString('pt-BR')}${suffix}` : value}
       </motion.p>
-      <p className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">{label}</p>
+      <p className="text-premium-tiny font-black uppercase tracking-[0.2em] text-muted-foreground">{label}</p>
     </motion.div>
   );
 };
@@ -136,7 +136,7 @@ const StatsSection = () => {
         transition={{ duration: 0.6 }}
         className="text-center mb-16"
       >
-        <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60">Impacto Espiritual & Conhecimento</span>
+        <span className="text-premium-tiny font-black uppercase tracking-[0.4em] text-primary/60">Impacto Espiritual & Conhecimento</span>
         <h2 className="mt-4 text-3xl md:text-4xl font-display font-bold text-foreground">Transformação através do estudo e oração</h2>
       </motion.div>
 
