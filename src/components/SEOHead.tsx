@@ -114,6 +114,9 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
 
   return (
     <Helmet>
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      <link rel="preload" as="image" href="/src/assets/cathedra-logo.png" />
       <title>{displayTitle}</title>
       <meta name="description" content={displayDescription} />
       {displayKeywords && <meta name="keywords" content={displayKeywords} />}
