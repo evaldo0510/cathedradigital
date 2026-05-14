@@ -77,7 +77,7 @@
 
   /* Refine all Lucide icons for a more professional, premium appearance */
   svg.lucide {
-    stroke-width: 2.25; /* Made thicker for a more "solid" and traditional religious feel */
+    stroke-width: 1.5; /* Thinner for premium minimalist feel */
     stroke-linecap: round;
     stroke-linejoin: round;
     transition: transform 0.2s ease, stroke-width 0.2s ease;
