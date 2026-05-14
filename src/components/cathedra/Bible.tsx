@@ -541,11 +541,11 @@ const Bible: React.FC = () => {
 
           <div className="flex items-center gap-2">
             <button disabled={selectedChapter <= 1} onClick={() => navigateChapter(-1)}
-              className="px-3 py-2 rounded-xl bg-card border border-border text-sm font-bold disabled:opacity-30 hover:bg-primary/10 transition-all">
+              className="px-4 py-2.5 rounded-xl bg-card border border-border/40 text-[10px] font-black uppercase tracking-widest disabled:opacity-30 hover:bg-primary hover:text-white transition-all duration-300 active:scale-95 shadow-sm">
               ← Anterior
             </button>
             <button disabled={selectedChapter >= selectedBook.chapters} onClick={() => navigateChapter(1)}
-              className="px-3 py-2 rounded-xl bg-card border border-border text-sm font-bold disabled:opacity-30 hover:bg-primary/10 transition-all">
+              className="px-4 py-2.5 rounded-xl bg-card border border-border/40 text-[10px] font-black uppercase tracking-widest disabled:opacity-30 hover:bg-primary hover:text-white transition-all duration-300 active:scale-95 shadow-sm">
               Próximo →
             </button>
           </div>
