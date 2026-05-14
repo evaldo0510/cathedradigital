@@ -69,7 +69,7 @@ const LandingHeader = () => {
           role="button"
           aria-label="Cathedra - Página Inicial"
         >
-          <Icons.Logo className="w-10 h-10 transition-transform group-hover:scale-105" variant="gold" />
+          <Icons.Logo className="w-10 h-10 md:w-12 md:h-12 transition-transform group-hover:scale-105" variant="gold" />
           <div className="hidden sm:block">
             <h1 className="text-sm font-display font-bold text-foreground tracking-[0.3em] uppercase">CATHEDRA</h1>
           </div>
