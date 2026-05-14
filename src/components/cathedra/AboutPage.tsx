@@ -135,7 +135,7 @@ const AboutPage: React.FC = () => (
 
     {/* Creator Section */}
     <div className="pt-16 border-t border-border/40">
-      <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16 bg-muted/20 rounded-[2.5rem] p-8 md:p-12 border border-border/30">
+      <div className="premium-card p-8 md:p-12 flex flex-col md:flex-row items-center gap-10 md:gap-16">
         <div className="shrink-0">
           <div className="w-48 h-48 md:w-64 md:h-64 rounded-full border-4 border-background p-2 relative bg-background shadow-2xl overflow-hidden group">
             <div className="w-full h-full rounded-full bg-muted flex items-center justify-center overflow-hidden border border-border group-hover:scale-105 transition-transform duration-700">
