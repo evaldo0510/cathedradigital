@@ -210,7 +210,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             {isSpeaking ? <Icons.Stop className="w-4 h-4" /> : <Icons.Volume2 className="w-4 h-4" />}
           </button>
 
-          <button onClick={onToggleDark} className="hidden sm:flex lg:hidden p-2.5 sm:p-3 bg-muted text-primary hover:bg-primary hover:text-white rounded-xl sm:rounded-2xl border border-border transition-all active:scale-95 shadow-sm items-center justify-center focus-visible:ring-2 focus-visible:ring-primary outline-none" aria-label="Alternar tema">
+          <button onClick={onToggleDark} className="hidden sm:flex lg:hidden p-3 bg-muted/40 text-primary hover:bg-primary hover:text-white rounded-[1.25rem] border border-border/40 transition-all duration-300 active:scale-95 shadow-sm hover:shadow-xl hover:translate-y-[-1px] items-center justify-center focus-visible:ring-2 focus-visible:ring-primary/20 outline-none" aria-label="Alternar tema">
             {isDark ? <Icons.Sun className="w-4 h-4" /> : <Icons.Moon className="w-4 h-4" />}
           </button>
 
