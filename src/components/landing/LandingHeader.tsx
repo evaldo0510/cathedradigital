@@ -92,15 +92,11 @@ const LandingHeader = () => {
           ))}
           
           <div className="relative">
-            <button 
+            <Button 
+              variant="ghost"
+              size="sm"
               onClick={() => setShowLangMenu(!showLangMenu)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  setShowLangMenu(!showLangMenu);
-                }
-              }}
-              className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none rounded-sm p-1"
+              className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors shadow-none"
               aria-label="Mudar idioma"
               aria-haspopup="true"
               aria-expanded={showLangMenu}
@@ -108,7 +104,7 @@ const LandingHeader = () => {
             >
               <Globe className="w-4 h-4" />
               <span className="uppercase">{lang}</span>
-            </button>
+            </Button>
             <AnimatePresence>
               {showLangMenu && (
                 <motion.div
