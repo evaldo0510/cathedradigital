@@ -57,13 +57,15 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           </div>
           
           {!isDashboard && (
-            <button 
-              onClick={() => navigate(-1)} 
-              className="p-2 sm:p-2.5 bg-muted text-primary border border-border rounded-full flex items-center gap-2 px-3 sm:px-5 active:scale-95 transition-all hover:bg-primary hover:text-white group shadow-sm focus-visible:ring-2 focus-visible:ring-primary outline-none"
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate(-1)}
+              className="h-10 sm:h-12 px-4 sm:px-6"
             >
               <Icons.ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
               <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline-block">{t('back')}</span>
-            </button>
+            </Button>
           )}
 
           {isDashboard && (
@@ -96,42 +98,40 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
         </div>
 
         <div className="flex items-center gap-1.5 sm:gap-4 flex-shrink-0">
-          <button 
-            className="p-2.5 sm:p-3 bg-muted text-primary rounded-full sm:rounded-full border border-border hover:bg-primary hover:text-white transition-all shadow-sm active:scale-95 flex items-center gap-2 focus-visible:ring-2 focus-visible:ring-primary outline-none" 
+          <Button
+            variant="outline"
+            size="icon"
             onClick={() => {
               localStorage.removeItem('cathedra_onboarding_done');
               navigate(AppRoute.ONBOARDING);
             }}
-            title={t('ecosystem_guide') || "Guia do Ecossistema"}
-          >
+            title={t('ecosystem_guide') || "Guia do Ecossistema"}>
             <Icons.Compass className="w-4 h-4" />
-            <span className="hidden md:inline text-[9px] font-black uppercase tracking-widest">{t('guide') || "Guia"}</span>
-          </button>
+          </Button>
 
-          <button 
-            className="p-2.5 sm:p-3 bg-muted text-primary rounded-full sm:rounded-full border border-border hover:bg-primary hover:text-white transition-all shadow-sm active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none" 
+          <Button
+            variant="outline"
+            size="icon"
             onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}
-            aria-label={t('search') || "Buscar"}
-          >
+            aria-label={t('search') || "Buscar"}>
             <Icons.Search className="w-4 h-4" />
-          </button>
+          </Button>
 
           {user && (
-            <button 
-              onClick={() => setShowNotifs(!showNotifs)} 
-              className="p-2.5 sm:p-3 bg-muted text-primary hover:bg-primary hover:text-white rounded-full sm:rounded-full border border-border relative transition-all shadow-sm active:scale-95 focus:visible:ring-2 focus-visible:ring-primary outline-none"
+            <Button
+              variant={showNotifs ? "default" : "outline"}
+              size="icon"
+              onClick={() => setShowNotifs(!showNotifs)}
+              className="relative"
               aria-label={showNotifs ? t('close_notifications') : t('notifications_unread')}
-              aria-expanded={showNotifs}
-            >
-
-
+              aria-expanded={showNotifs}>
               <Icons.Message className="w-4 h-4" />
               {unreadCount > 0 && (
                 <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-primary-foreground text-[10px] font-black flex items-center justify-center rounded-full border-2 border-background shadow-md">
                   {unreadCount}
                 </span>
               )}
-            </button>
+            </Button>
           )}
           
           {showNotifs && user && (
@@ -206,18 +206,24 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             </select>
           </div>
 
-          <button 
-            onClick={onToggleSpeak} 
-            className={`hidden sm:flex lg:hidden p-2.5 sm:p-3 rounded-full sm:rounded-full border border-border transition-all active:scale-95 shadow-sm items-center justify-center focus-visible:ring-2 focus-visible:ring-primary outline-none ${isSpeaking ? 'bg-primary text-white animate-pulse' : 'bg-muted text-primary hover:bg-primary hover:text-white'}`}
+          <Button
+            variant={isSpeaking ? "default" : "outline"}
+            size="icon"
+            onClick={onToggleSpeak}
+            className={`hidden sm:flex lg:hidden ${isSpeaking ? 'animate-pulse' : ''}`}
             title={isSpeaking ? t('audio_stop') : t('audio_read')}
-            aria-label={isSpeaking ? t('audio_stop') : t('audio_read')}
-          >
+            aria-label={isSpeaking ? t('audio_stop') : t('audio_read')}>
             {isSpeaking ? <Icons.Stop className="w-4 h-4" /> : <Icons.Volume2 className="w-4 h-4" />}
-          </button>
+          </Button>
 
-          <button onClick={onToggleDark} className="hidden sm:flex lg:hidden p-2.5 sm:p-3 bg-muted text-primary hover:bg-primary hover:text-white rounded-full sm:rounded-full border border-border transition-all active:scale-95 shadow-sm items-center justify-center focus-visible:ring-2 focus-visible:ring-primary outline-none" aria-label="Alternar tema">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={onToggleDark}
+            className="hidden sm:flex lg:hidden"
+            aria-label="Alternar tema">
             {isDark ? <Icons.Sun className="w-4 h-4" /> : <Icons.Moon className="w-4 h-4" />}
-          </button>
+          </Button>
 
 
         </div>
