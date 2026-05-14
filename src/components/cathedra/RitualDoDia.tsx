@@ -25,11 +25,9 @@ const RitualDoDia: React.FC = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-      className="relative overflow-hidden border-secondary/20"
+      className="relative overflow-hidden"
     >
-      {/* Removed decorative glows for a cleaner, premium look */}
-
-      <div className="relative z-10 p-5 md:p-6 space-y-4">
+      <div className="relative z-10 p-6 md:p-10 space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">

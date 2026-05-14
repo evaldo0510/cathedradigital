@@ -43,7 +43,7 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t }) => {
   ];
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
       {doors.map((door, idx) => (
         <motion.div
           key={idx}
@@ -59,14 +59,14 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t }) => {
           tabIndex={0}
           role="button"
           aria-label={`${door.label}: ${door.description}`}
-          className="p-8 md:p-12 lg:p-14 rounded-[2.5rem] border border-border/40 bg-card flex flex-col items-center text-center gap-8 cursor-pointer group transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none shadow-sm hover:border-primary/20 hover:bg-primary/[0.02]"
+          className="p-8 md:p-10 rounded-[2rem] border border-border/40 bg-card flex flex-col items-center text-center gap-6 cursor-pointer group transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none shadow-premium hover:shadow-premium-hover hover:border-primary/20 hover:bg-primary/[0.01]"
         >
-          <div className="w-16 h-16 rounded-3xl bg-muted/30 flex items-center justify-center text-primary group-hover:bg-primary/10 group-hover:scale-110 transition-all duration-500">
-            <door.icon className="w-6 h-6" />
+          <div className="w-14 h-14 rounded-2xl bg-muted/20 flex items-center justify-center text-primary group-hover:bg-primary/10 group-hover:scale-110 transition-all duration-500">
+            <door.icon className="w-6 h-6" strokeWidth={1.5} />
           </div>
-          <div>
-            <h3 className="text-sm font-bold text-foreground tracking-tight">{door.label}</h3>
-            <p className="text-[10px] text-muted-foreground font-medium line-clamp-2 mt-2 leading-relaxed">{door.description}</p>
+          <div className="space-y-2">
+            <h3 className="text-[11px] font-black uppercase tracking-widest text-foreground">{door.label}</h3>
+            <p className="text-[10px] text-muted-foreground font-medium line-clamp-2 leading-relaxed opacity-70 group-hover:opacity-100 transition-opacity">{door.description}</p>
           </div>
         </motion.div>
       ))}

@@ -20,9 +20,9 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
   const navigate = useNavigate();
 
   return (
-    <div className="app-container space-y-48 md:space-y-64 pb-48 md:pb-64">
+    <div className="app-container space-y-32 md:space-y-48 pb-32 md:pb-48">
       {/* CONTINUE JORNADA */}
-      <section className="space-y-12">
+      <section className="space-y-10">
         <div className="flex items-center gap-6">
           <div className="h-px flex-1 bg-border/40" />
           <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
@@ -33,18 +33,18 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         
         <HomeCard
           onClick={() => onNavigate(AppRoute.JORNADAS)}
-          className="p-10 md:p-16 lg:p-20 flex flex-col md:flex-row items-center justify-between gap-12 group"
+          className="p-8 md:p-12 lg:p-14 flex flex-col md:flex-row items-center justify-between gap-10 group"
         >
           <div className="flex items-center gap-8 text-center md:text-left flex-col md:flex-row">
-            <div className="w-20 h-20 rounded-3xl bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-500 shadow-inner">
-              <Icons.Flame className="w-10 h-10" />
+            <div className="w-16 h-16 rounded-3xl bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-500 shadow-inner">
+              <Icons.Flame className="w-8 h-8" />
             </div>
             <div>
               <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">Seu Próximo Passo</p>
-              <h3 className="text-2xl md:text-3xl font-serif text-foreground">
+              <h3 className="text-xl md:text-2xl font-serif text-foreground">
                 {user ? 'Retomar caminhada de fé' : 'Inicie sua caminhada hoje'}
               </h3>
-              <p className="text-sm text-muted-foreground mt-2 max-w-md">
+              <p className="text-sm text-muted-foreground mt-2 max-w-md leading-relaxed">
                 {user 
                   ? 'Continue de onde parou e aprofunde seu conhecimento.' 
                   : 'Descubra trilhas personalizadas para sua vida espiritual.'}
@@ -58,7 +58,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       </section>
 
       {/* RITUAL DO DIA */}
-      <section className="space-y-12">
+      <section className="space-y-10">
         <div className="flex items-center gap-6">
           <div className="h-px flex-1 bg-border/40" />
           <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
@@ -66,13 +66,13 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
           </h2>
           <div className="h-px flex-1 bg-border/40" />
         </div>
-        <div className="max-w-4xl mx-auto w-full">
+        <div className="max-w-3xl mx-auto w-full">
           <RitualDoDia />
         </div>
       </section>
 
       {/* TEMAS PRINCIPAIS */}
-      <section className="space-y-12">
+      <section className="space-y-10">
         <div className="flex items-center gap-6">
           <div className="h-px flex-1 bg-border/40" />
           <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
@@ -84,7 +84,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       </section>
 
       {/* CATECISMO */}
-      <section className="space-y-12">
+      <section className="space-y-10">
         <div className="flex items-center gap-6">
           <div className="h-px flex-1 bg-border/40" />
           <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
@@ -94,25 +94,25 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         </div>
         <HomeCard 
           onClick={() => onNavigate(AppRoute.CATECHISM)}
-          className="p-12 md:p-24 lg:p-32 text-center space-y-12 group border-primary/5 hover:border-primary/20"
+          className="p-10 md:p-16 lg:p-20 text-center space-y-10 group"
         >
-          <div className="w-24 h-24 rounded-[2.5rem] bg-secondary/5 flex items-center justify-center text-secondary mx-auto group-hover:rotate-12 transition-transform duration-700">
-            <Icons.Catechism className="w-12 h-12" />
+          <div className="w-20 h-20 rounded-[2rem] bg-secondary/5 flex items-center justify-center text-secondary mx-auto group-hover:rotate-12 transition-transform duration-700">
+            <Icons.Catechism className="w-10 h-10" />
           </div>
           <div className="space-y-4">
-            <h3 className="text-3xl md:text-4xl font-serif text-foreground">Catecismo da Igreja</h3>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed font-serif italic">
+            <h3 className="text-2xl md:text-3xl font-serif text-foreground">Catecismo da Igreja</h3>
+            <p className="text-muted-foreground text-base max-w-xl mx-auto leading-relaxed font-serif italic">
               "O Catecismo deve apresentar, com fidelidade e de modo orgânico, o ensinamento da Sagrada Escritura, da Tradição viva na Igreja e do Magistério autêntico."
             </p>
           </div>
-          <HomeButton variant="outline" className="mx-auto px-12">
+          <HomeButton variant="outline" className="mx-auto px-10 h-12">
             Explorar Doutrina
           </HomeButton>
         </HomeCard>
       </section>
 
       {/* TRILHAS */}
-      <section className="space-y-12">
+      <section className="space-y-10">
         <div className="flex items-center gap-6">
           <div className="h-px flex-1 bg-border/40" />
           <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
@@ -120,30 +120,30 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
           </h2>
           <div className="h-px flex-1 bg-border/40" />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
-          <HomeCard className="p-10 md:p-12 lg:p-16 space-y-8 hover:border-primary/20">
-            <div className="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center text-primary">
-              <Icons.Star className="w-6 h-6" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+          <HomeCard className="p-8 md:p-10 lg:p-12 space-y-6">
+            <div className="w-10 h-10 rounded-2xl bg-primary/5 flex items-center justify-center text-primary">
+              <Icons.Star className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="text-xl font-bold font-serif">Fundamentos da Fé</h4>
-              <p className="text-sm text-muted-foreground mt-2">Para quem está iniciando sua jornada espiritual agora.</p>
+              <h4 className="text-lg font-bold font-serif">Fundamentos da Fé</h4>
+              <p className="text-sm text-muted-foreground mt-2 leading-relaxed">Para quem está iniciando sua jornada espiritual agora.</p>
             </div>
-            <HomeButton variant="ghost" className="p-0 h-auto text-primary hover:bg-transparent" onClick={() => onNavigate(AppRoute.JORNADAS)}>
-              Explorar Trilhas <Icons.ChevronRight className="ml-2 w-4 h-4" />
+            <HomeButton variant="ghost" className="p-0 h-auto text-primary hover:bg-transparent text-[9px]" onClick={() => onNavigate(AppRoute.JORNADAS)}>
+              Explorar Trilhas <Icons.ChevronRight className="ml-1 w-3.5 h-3.5" />
             </HomeButton>
           </HomeCard>
           
-          <HomeCard className="p-10 md:p-12 lg:p-16 space-y-8 hover:border-secondary/20">
-            <div className="w-12 h-12 rounded-2xl bg-secondary/5 flex items-center justify-center text-secondary">
-              <Icons.BookOpen className="w-6 h-6" />
+          <HomeCard className="p-8 md:p-10 lg:p-12 space-y-6">
+            <div className="w-10 h-10 rounded-2xl bg-secondary/5 flex items-center justify-center text-secondary">
+              <Icons.BookOpen className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="text-xl font-bold font-serif">Estudo Bíblico</h4>
-              <p className="text-sm text-muted-foreground mt-2">Aprofunde seu conhecimento das Escrituras Sagradas.</p>
+              <h4 className="text-lg font-bold font-serif">Estudo Bíblico</h4>
+              <p className="text-sm text-muted-foreground mt-2 leading-relaxed">Aprofunde seu conhecimento das Escrituras Sagradas.</p>
             </div>
-            <HomeButton variant="ghost" className="p-0 h-auto text-secondary hover:bg-transparent" onClick={() => onNavigate(AppRoute.BIBLE)}>
-              Ver Planos <Icons.ChevronRight className="ml-2 w-4 h-4" />
+            <HomeButton variant="ghost" className="p-0 h-auto text-secondary hover:bg-transparent text-[9px]" onClick={() => onNavigate(AppRoute.BIBLE)}>
+              Ver Planos <Icons.ChevronRight className="ml-1 w-3.5 h-3.5" />
             </HomeButton>
           </HomeCard>
         </div>

@@ -224,12 +224,12 @@
 
   /* Premium card style - Spiritual Minimalist */
   .desktop-card {
-    @apply bg-card border border-border/5 rounded-3xl p-6 sm:p-10 lg:p-12 shadow-sm transition-all duration-300;
+    @apply bg-card border border-border/40 rounded-3xl p-6 sm:p-10 lg:p-12 shadow-premium transition-all duration-300;
   }
 
   /* Standard card shadow and radius */
   .card-standard {
-    @apply bg-card border border-border/10 rounded-2xl shadow-sm transition-all duration-300;
+    @apply bg-card border border-border/40 rounded-2xl shadow-premium transition-all duration-300;
   }
 
   /* Section Spacing */
