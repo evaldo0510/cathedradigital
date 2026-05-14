@@ -2,6 +2,8 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import BackToThemeBanner from './BackToThemeBanner';
 import SEOHead from '@/components/SEOHead';
 import ShareButton from './ShareButton';
@@ -251,17 +253,18 @@ const LazyParagraph: React.FC<{ paragraph: number; currentParagraph: number; par
 };
 
 
-type ViewMode = 'parts' | 'sections' | 'reading';
+type ViewMode = 'parts' | 'sections' | 'reading' | 'interactive';
 
 const Catechism: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState<ViewMode>('parts');
-  const [selectedPart, setSelectedPart] = useState<typeof CIC_SECTIONS[0] | null>(null);
-  const [selectedSection, setSelectedSection] = useState<typeof CIC_SECTIONS[0]['sections'][0] | null>(null);
   const [currentParagraph, setCurrentParagraph] = useState(1);
   const [paragraphsRead, setParagraphsRead] = useState<Set<number>>(new Set());
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedPart, setSelectedPart] = useState<typeof CIC_SECTIONS[0] | null>(null);
+  const [selectedSection, setSelectedSection] = useState<typeof CIC_SECTIONS[0]['sections'][0] | null>(null);
+// ... keep existing code
   const [showCrossRefs, setShowCrossRefs] = useState(true);
   const isAutoScrolling = React.useRef(false);
   const { toggleFavorite, isFavorite } = useFavorites();
@@ -692,6 +695,24 @@ const Catechism: React.FC = () => {
         </div>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Catecismo da Igreja Católica</h1>
         <p className="text-muted-foreground font-serif italic">2.865 parágrafos organizados em 4 partes fundamentais.</p>
+        
+        <div className="flex justify-center gap-4 pt-4">
+          <Button 
+            onClick={() => setViewMode('parts')} 
+            variant={viewMode === 'parts' ? 'default' : 'outline'}
+            className="rounded-full"
+          >
+            Navegação
+          </Button>
+          <Button 
+            onClick={() => navigate(AppRoute.CATECHISM_EXPLORER)} 
+            variant="outline"
+            className="rounded-full"
+          >
+            Explorar
+          </Button>
+        </div>
+
         <div className="max-w-xs mx-auto pt-4">
           <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-primary/60 mb-2">
             <span>Seu Progresso</span>
@@ -707,47 +728,32 @@ const Catechism: React.FC = () => {
         </div>
       </motion.div>
       
-      {user?.role === 'admin' && (
-        <div className="flex justify-center">
-          <button 
-            onClick={() => navigate('/catechism/integrity')}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-orange-500/10 text-orange-600 border border-orange-500/20 text-[10px] font-black uppercase tracking-widest hover:bg-orange-500/20 transition-all"
-          >
-            <Icons.Activity className="w-3.5 h-3.5" /> Painel de Integridade (Admin)
-          </button>
-        </div>
-      )}
-
-
-      {/* Suggestion Card */}
-      {nextUnreadParagraph && (
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+      {/* Search and Sugggestions */}
+      <div className="max-w-md mx-auto space-y-6">
+        {nextUnreadParagraph && (
           <div 
             onClick={() => navigateToParagraph(nextUnreadParagraph)}
-            className="max-w-md mx-auto p-4 rounded-2xl border border-primary/20 bg-primary/5 cursor-pointer hover:border-primary/40 transition-all flex items-center justify-between group"
+            className="p-4 rounded-2xl border border-primary/20 bg-primary/5 cursor-pointer hover:border-primary/40 transition-all flex items-center justify-between group"
           >
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/20 transition-colors">
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                 <Icons.Sparkles className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-[10px] font-black uppercase tracking-widest text-primary">Continuar Formação</p>
-                <h3 className="text-sm font-bold text-foreground">Sugerido: §{nextUnreadParagraph}</h3>
+                <p className="text-[10px] font-black uppercase tracking-widest text-primary">Próxima Leitura</p>
+                <h3 className="text-sm font-bold text-foreground">§{nextUnreadParagraph}</h3>
               </div>
             </div>
             <Icons.ChevronRight className="w-5 h-5 text-primary group-hover:translate-x-1 transition-transform" />
           </div>
-        </motion.div>
-      )}
+        )}
 
-      {/* Search by paragraph */}
-      <div className="max-w-md mx-auto">
         <div className="relative">
           <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <input
             value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && handleSearch()}
-            placeholder="Buscar por número do parágrafo (ex: 1324)..."
+            placeholder="Número do parágrafo (ex: 1324)..."
             className="w-full pl-11 pr-20 py-3 rounded-2xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
           />
           <button onClick={handleSearch} className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-foreground text-background rounded-xl text-xs font-bold">
@@ -760,15 +766,10 @@ const Catechism: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {CIC_SECTIONS.map(part => (
           <button key={part.part} onClick={() => { setSelectedPart(part); setViewMode('sections'); }}
-            className="text-left p-5 md:p-6 rounded-2xl bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group">
+            className="text-left p-6 rounded-3xl bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group shadow-sm">
             <span className="text-[10px] font-black text-primary uppercase tracking-widest">{part.part}</span>
             <h2 className="text-xl md:text-2xl font-serif font-bold text-foreground mt-3 group-hover:text-primary transition-colors">{part.title}</h2>
             <p className="text-sm text-muted-foreground mt-2">{part.sections.length} seções</p>
-            <div className="flex flex-wrap gap-1 mt-4">
-              {part.sections.map(s => (
-                <span key={s.id} className="px-2 py-1 bg-secondary text-secondary-foreground rounded-lg text-[10px] font-bold">{s.title.split(' ').slice(0, 3).join(' ')}</span>
-              ))}
-            </div>
           </button>
         ))}
       </div>
