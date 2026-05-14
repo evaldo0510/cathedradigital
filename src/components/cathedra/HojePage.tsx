@@ -155,12 +155,12 @@ const HojePage: React.FC = () => {
   }, [user, journalText]);
 
   const dailySections = useMemo(() => [
-    { title: 'Liturgia', icon: <Icons.Calendar className="w-5 h-5" />, route: `${AppRoute.LITURGIA}?tab=liturgia`, color: 'bg-primary/10 text-primary' },
-    { title: 'Oração', icon: <Icons.Volume2 className="w-5 h-5" />, route: AppRoute.ORACAO, color: 'bg-accent/10 text-accent' },
-    { title: 'Comando', icon: <Icons.Search className="w-5 h-5" />, route: AppRoute.BUSCAR, color: 'bg-primary/5 text-primary border border-primary/20' },
-    { title: 'Rosário', icon: <Icons.Heart className="w-5 h-5" />, route: AppRoute.ROSARY, color: 'bg-accent/10 text-accent' },
-    { title: 'Confissão', icon: <Icons.Flame className="w-5 h-5" />, route: AppRoute.POENITENTIA, color: 'bg-primary/10 text-primary' },
-    { title: 'Catecismo', icon: <Icons.Catechism className="w-5 h-5" />, route: AppRoute.CATECHISM, color: 'bg-accent/10 text-accent' },
+    { title: 'Ritual do dia', icon: <Icons.Calendar className="w-5 h-5" />, route: `${AppRoute.LITURGIA}?tab=liturgia`, color: 'bg-primary/10 text-primary' },
+    { title: 'Temas principais', icon: <span className="text-xl">🫧</span>, route: AppRoute.TEMAS, color: 'bg-accent/10 text-accent' },
+    { title: 'Catecismo Interativo', icon: <span className="text-xl">📘</span>, route: AppRoute.CATECHISM, color: 'bg-primary/5 text-primary border border-primary/20' },
+    { title: 'Trilhas guiadas', icon: <span className="text-xl">🧭</span>, route: AppRoute.JORNADAS, color: 'bg-accent/10 text-accent' },
+    { title: 'Logos recomenda', icon: <span className="text-xl">🧠</span>, route: AppRoute.STUDY_MODE, color: 'bg-primary/10 text-primary' },
+    { title: 'Favoritos', icon: <span className="text-xl">❤️</span>, route: AppRoute.FAVORITES, color: 'bg-accent/10 text-accent' },
   ], []);
 
   return (
@@ -169,13 +169,13 @@ const HojePage: React.FC = () => {
       <SEOHead title="Hoje - Sua Jornada Espiritual" description="Acompanhe sua caminhada de fé diária." path="/hoje" />
       {import.meta.env.DEV && <DevDataInspector data={{ officialSaint, allSaintsToday, activeJourney, profile: profile?._sensitive }} />}
       <div className="desktop-main space-y-12 max-w-2xl mx-auto lg:max-w-none lg:mx-0">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center space-y-4 pt-4 md:pt-0">
-          <div className="space-y-2">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center space-y-6 pt-4 md:pt-0">
+          <div className="space-y-4">
             <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60">
               {greeting}, {profile?.name?.split(' ')[0] || 'fiel'}
             </p>
-            <h1 className="text-4xl md:text-6xl font-serif text-foreground leading-tight">
-              Sua jornada espiritual <br /><span className="text-primary italic">guiada pela Sabedoria.</span>
+            <h1 className="text-4xl md:text-7xl font-serif text-foreground leading-[1.1] tracking-tight">
+              "Nem toda prisão <br /><span className="text-primary italic">é visível."</span>
             </h1>
           </div>
           <div className="flex items-center justify-center gap-4 flex-wrap pt-2">
@@ -192,37 +192,44 @@ const HojePage: React.FC = () => {
           </div>
         </motion.div>
 
-        {nextUp && (
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            tabIndex={0}
-            role="button"
-            aria-label={`Continuar leitura: ${nextUp.label}`}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                navigate(nextUp.route);
-              }
-            }}
-            onClick={() => navigate(nextUp.route)}
-            className="p-5 rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card cursor-pointer hover:border-primary/40 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none transition-all shadow-sm flex items-center justify-between group"
-          >
-            <div className="flex items-center gap-5">
-              <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                {nextUp.type === 'bible' ? <Icons.Bible className="w-6 h-6" /> : 
-                 nextUp.type === 'catechism' ? <Icons.Catechism className="w-6 h-6" /> : 
-                 <Icons.Flame className="w-6 h-6" />}
+        <section className="space-y-4">
+          <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 flex items-center gap-3">
+            <div className="h-px w-6 bg-muted-foreground/30" /> Continuar jornada
+          </h2>
+          {nextUp ? (
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              tabIndex={0}
+              role="button"
+              aria-label={`Continuar leitura: ${nextUp.label}`}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  navigate(nextUp.route);
+                }
+              }}
+              onClick={() => navigate(nextUp.route)}
+              className="p-5 rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card cursor-pointer hover:border-primary/40 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none transition-all shadow-sm flex items-center justify-between group"
+            >
+              <div className="flex items-center gap-5">
+                <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                  {nextUp.type === 'bible' ? <Icons.Bible className="w-6 h-6" /> : 
+                   nextUp.type === 'catechism' ? <Icons.Catechism className="w-6 h-6" /> : 
+                   <Icons.Flame className="w-6 h-6" />}
+                </div>
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-1">{nextUp.subtitle}</p>
+                  <h3 className="text-lg font-bold text-foreground leading-tight group-hover:text-primary transition-colors">{nextUp.label}</h3>
+                </div>
               </div>
-              <div>
-                <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-1">{nextUp.subtitle}</p>
-                <h3 className="text-lg font-bold text-foreground leading-tight group-hover:text-primary transition-colors">{nextUp.label}</h3>
-              </div>
-            </div>
-            <Icons.ChevronRight className="w-5 h-5 text-primary group-hover:translate-x-1 transition-transform" />
-          </motion.div>
-        )}
+              <Icons.ChevronRight className="w-5 h-5 text-primary group-hover:translate-x-1 transition-transform" />
+            </motion.div>
+          ) : (
+            <p className="text-xs text-muted-foreground italic px-4">Inicie uma leitura para retomar aqui.</p>
+          )}
+        </section>
 
         <RitualDoDia />
 
