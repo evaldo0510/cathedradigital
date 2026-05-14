@@ -36,9 +36,9 @@ const LectioStep: React.FC<LectioStepProps> = ({
     <div className="max-w-4xl mx-auto space-y-8 pb-12">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center gap-6 px-2">
-        <button onClick={onBack} className="p-3 rounded-full bg-card border border-border hover:bg-primary/5 transition-all active:scale-95 shadow-sm self-start md:self-center">
+        <Button variant="outline" size="icon" onClick={onBack} className="rounded-full shadow-sm self-start md:self-center">
           <ArrowLeft className="w-6 h-6 text-foreground" />
-        </button>
+        </Button>
         <div className="flex-1 space-y-1">
           <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">
             <Feather className="w-3 h-3" />
