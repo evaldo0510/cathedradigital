@@ -774,7 +774,7 @@ const Bible: React.FC = () => {
         <input
           type="text"
           placeholder="Buscar livro..."
-          className="w-full pl-12 pr-4 py-4 bg-card border border-border rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+          className="w-full pl-12 pr-10 py-4 bg-card/50 border border-border/20 rounded-2xl text-[12px] focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium backdrop-blur-sm shadow-sm"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
