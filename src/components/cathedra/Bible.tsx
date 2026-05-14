@@ -494,7 +494,7 @@ const Bible: React.FC = () => {
         )}
         {/* Header */}
         <div className="flex items-center gap-4">
-          <button onClick={goBack} className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all">
+          <button onClick={goBack} className="p-3 rounded-2xl bg-card border border-border/40 hover:bg-primary hover:text-white shadow-sm hover:shadow-xl transition-all duration-300">
             <Icons.ChevronLeft className="w-5 h-5 text-foreground" />
           </button>
           <div className="flex-1 min-w-0">
