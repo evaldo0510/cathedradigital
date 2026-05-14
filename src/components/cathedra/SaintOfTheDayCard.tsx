@@ -7,6 +7,7 @@ import { useOfficialSaint, useSaintsToday } from '@/hooks/useSaints';
 import SacredImage from './SacredImage';
 import { SaintCardSkeleton } from './SacredSkeleton';
 import { ChevronRight, Sparkles } from 'lucide-react';
+import { HomeCard } from './HomeCard';
 
 interface SaintOfTheDayCardProps {
   variant?: 'compact' | 'full';
@@ -77,10 +78,10 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
 
   if (!saint) {
     return (
-      <div className="p-8 rounded-3xl border border-border bg-muted/10 text-center">
+      <HomeCard className="p-8 text-center opacity-60">
         <Icons.Saints className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
         <p className="text-sm text-muted-foreground font-serif italic">Nenhum santo encontrado para hoje</p>
-      </div>
+      </HomeCard>
     );
   }
 
@@ -92,35 +93,37 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
 
   if (variant === 'compact') {
     return (
-      <button
+      <HomeCard
+        as="button"
         onClick={handleNavigate}
-        className="w-full flex items-center gap-4 group text-left p-4 rounded-3xl border border-border bg-card hover:bg-card focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none transition-all"
+        className="w-full flex items-center gap-6 group text-left p-5"
       >
-        <div className="w-16 h-16 rounded-2xl overflow-hidden border-2 border-secondary/20 shadow-md shrink-0">
+        <div className="w-20 h-20 rounded-2xl overflow-hidden border border-border/20 shadow-soft shrink-0">
           <SacredImage
             src={saint.image}
             alt={saint.name}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
           />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-[9px] font-black uppercase tracking-[0.2em] text-secondary/80 mb-0.5">
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary/80 mb-1">
             {saint.title === 'Santo do Dia' ? 'Santidade Hoje' : (saint.title || 'Santo do Dia')}
           </p>
-          <h3 className="text-base font-bold text-foreground leading-tight group-hover:text-primary transition-colors truncate">
+          <h3 className="text-lg font-bold text-foreground leading-tight group-hover:text-primary transition-colors truncate">
             {saint.name}
           </h3>
-          <p className="text-[11px] text-muted-foreground mt-1 line-clamp-1 leading-relaxed">
+          <p className="text-xs text-muted-foreground mt-2 line-clamp-1 leading-relaxed">
             {saint.bio?.slice(0, 100)}...
           </p>
         </div>
-        <ChevronRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-primary transition-colors shrink-0" />
-      </button>
+        <ChevronRight className="w-5 h-5 text-muted-foreground/30 group-hover:text-primary transition-colors shrink-0" />
+      </HomeCard>
     );
   }
 
   return (
-    <motion.div
+    <HomeCard
+      as={motion.div}
       whileHover={{ scale: 1.01 }}
       whileTap={{ scale: 0.99 }}
       tabIndex={0}
@@ -133,46 +136,46 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
         }
       }}
       onClick={handleNavigate}
-      className="group cursor-pointer p-0 rounded-3xl border border-border bg-card overflow-hidden shadow-sm hover:border-primary/30 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none focus-visible:ring-offset-1 transition-all flex flex-col sm:flex-row h-full"
+      className="group p-0 overflow-hidden flex flex-col sm:flex-row h-full"
     >
-      <div className="w-full sm:w-1/3 h-48 sm:h-auto relative shrink-0 overflow-hidden">
+      <div className="w-full sm:w-1/3 h-56 sm:h-auto relative shrink-0 overflow-hidden">
         <SacredImage 
           src={saint.image} 
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
           alt={saint.name} 
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-        <div className="absolute bottom-4 left-4 right-4">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+        <div className="absolute bottom-6 left-6 right-6">
           <p className="text-[10px] font-black uppercase tracking-widest text-white/70 mb-1">{saint.feastDay}</p>
-          <h3 className="text-xl font-serif font-bold text-white leading-tight">{saint.name}</h3>
+          <h3 className="text-2xl font-serif font-bold text-white leading-tight">{saint.name}</h3>
         </div>
       </div>
-      <div className="flex-1 p-6 space-y-4 flex flex-col justify-center">
-        <div className="space-y-2">
-          <p className="text-lg text-primary font-serif italic mb-2">
+      <div className="flex-1 p-8 md:p-10 space-y-6 flex flex-col justify-center">
+        <div className="space-y-4">
+          <p className="text-xl text-primary font-serif italic mb-2">
             "{saint.title === 'Santo do Dia' ? 'Exemplo de Santidade' : (saint.title || 'Exemplo de Santidade')}"
           </p>
-          <p className="text-xs text-muted-foreground font-serif italic line-clamp-3 leading-relaxed">
+          <p className="text-sm text-muted-foreground font-serif italic line-clamp-4 leading-relaxed">
             {saint.quotes?.[0] || saint.bio}
           </p>
         </div>
-        <div className="flex items-center justify-between pt-4 border-t border-border/50">
-          <div className="flex gap-1">
+        <div className="flex items-center justify-between pt-6 border-t border-border/40">
+          <div className="flex gap-2">
             {saint.virtues?.slice(0, 2).map((v: string) => (
-              <span key={v} className="px-2 py-1 bg-primary/10 text-primary text-[9px] font-black uppercase rounded-lg">{v}</span>
+              <span key={v} className="px-3 py-1 bg-primary/5 text-primary text-[10px] font-black uppercase rounded-full tracking-wider">{v}</span>
             )) || (
-              <span className="px-2 py-1 bg-primary/10 text-primary text-[9px] font-black uppercase rounded-lg">Fé</span>
+              <span className="px-3 py-1 bg-primary/5 text-primary text-[10px] font-black uppercase rounded-full tracking-wider">Fé</span>
             )}
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
-              <Sparkles className="w-4 h-4" />
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-500">
+              <Sparkles className="w-5 h-5" />
             </div>
-            <span className="text-[10px] font-black uppercase tracking-widest text-primary">Conhecer</span>
+            <span className="text-[11px] font-black uppercase tracking-widest text-primary">Conhecer</span>
           </div>
         </div>
       </div>
-    </motion.div>
+    </HomeCard>
   );
 };
 
