@@ -192,11 +192,11 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
         </header>
 
         <div className="flex justify-center overflow-x-auto pb-4 no-scrollbar">
-          <div className="bg-secondary/50 p-1 rounded-2xl flex gap-1 min-w-max" role="tablist" aria-label="Modos de visualização dos santos">
+          <div className="bg-secondary/50 p-1 rounded-full flex gap-1 min-w-max" role="tablist" aria-label="Modos de visualização dos santos">
             {viewModes.map((mode, idx) => (
               <button
                 key={mode}
-                {...getTabProps(`tab-${mode}`, `panel-${mode}`, viewMode === mode, `px-4 md:px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+                {...getTabProps(`tab-${mode}`, `panel-${mode}`, viewMode === mode, `px-4 md:px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                   viewMode === mode ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
                 }`)}
                 onClick={() => setViewMode(mode)}
@@ -251,7 +251,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     <button
                       key={i}
                       onClick={() => setSelectedDate(date)}
-                      className={`flex flex-col items-center justify-center min-w-[56px] h-20 rounded-2xl border transition-all ${
+                      className={`flex flex-col items-center justify-center min-w-[56px] h-20 rounded-full border transition-all ${
                         isSameDay(date, selectedDate)
                           ? 'bg-primary border-primary text-primary-foreground shadow-lg shadow-primary/20 scale-110'
                           : 'bg-card border-border text-muted-foreground hover:border-primary/30 hover:text-primary'
@@ -288,7 +288,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                           <div className="absolute bottom-6 left-6 right-6 text-white">
-                            <span className="text-[10px] font-black uppercase tracking-widest bg-primary px-2 py-1 rounded-md mb-2 inline-block">
+                            <span className="text-[10px] font-black uppercase tracking-widest bg-primary px-2 py-1 rounded-full mb-2 inline-block">
                               {CATEGORY_LABELS[saint.category] || saint.category}
                             </span>
                             <h3 className="text-2xl font-serif font-bold">{saint.name}</h3>
@@ -308,7 +308,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                               <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground block">Virtude Principal</span>
                               <div className="flex flex-wrap gap-1">
                                 {saint.virtues?.slice(0, 1).map(v => (
-                                  <span key={v} className="px-2 py-1 bg-primary/10 text-primary text-[10px] font-black uppercase rounded-lg">{v}</span>
+                                  <span key={v} className="px-2 py-1 bg-primary/10 text-primary text-[10px] font-black uppercase rounded-full">{v}</span>
                                 ))}
                               </div>
                             </div>
@@ -321,7 +321,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                           <div className="flex flex-col gap-3">
                             <button
                               onClick={() => handleOpenSaint(saint, false)}
-                              className="w-full py-4 bg-secondary text-secondary-foreground rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                              className="w-full py-4 bg-secondary text-secondary-foreground rounded-full text-[10px] font-black uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
                             >
                               <BookOpen className="w-4 h-4" />
                               Conhecer História
@@ -329,7 +329,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
                             <button
                               onClick={() => handleOpenSaint(saint, true)}
-                              className="w-full py-4 bg-primary text-primary-foreground rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20 group"
+                              className="w-full py-4 bg-primary text-primary-foreground rounded-full text-[10px] font-black uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20 group"
                             >
                               <Sparkles className="w-4 h-4 group-hover:rotate-12 transition-transform" />
                               Refletir com Logos
@@ -411,7 +411,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                         </p>
                         <Button 
                           onClick={() => handleGlobalSearch(search)}
-                          className="bg-primary hover:bg-primary/90 text-primary-foreground font-black text-xs uppercase tracking-widest h-12 px-8 rounded-2xl shadow-lg shadow-primary/20 flex items-center gap-3 mx-auto"
+                          className="bg-primary hover:bg-primary/90 text-primary-foreground font-black text-xs uppercase tracking-widest h-12 px-8 rounded-full shadow-lg shadow-primary/20 flex items-center gap-3 mx-auto"
                         >
                           <Sparkles className="w-4 h-4" />
                           Buscar na Biblioteca Universal
@@ -527,7 +527,7 @@ const SaintCard: React.FC<{ saint: SaintWithScore; onClick: () => void }> = ({ s
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
         <div className="absolute bottom-4 left-6 flex items-center gap-2">
-          <span className="text-[10px] font-black uppercase tracking-widest text-white/90 bg-primary/80 px-2 py-0.5 rounded-md ">
+          <span className="text-[10px] font-black uppercase tracking-widest text-white/90 bg-primary/80 px-2 py-0.5 rounded-full ">
             {CATEGORY_LABELS[saint.category] || saint.category}
           </span>
         </div>
@@ -542,7 +542,7 @@ const SaintCard: React.FC<{ saint: SaintWithScore; onClick: () => void }> = ({ s
           <div className="flex items-center justify-between mb-2">
             <span className="text-[10px] font-black uppercase tracking-widest text-primary">{saint.feastDay}</span>
             {saint.works && saint.works.length > 0 && (
-              <div className="p-1 bg-primary/5 rounded-lg text-primary" title="Possui obras escritas">
+              <div className="p-1 bg-primary/5 rounded-full text-primary" title="Possui obras escritas">
                 <BookOpen className="w-3 h-3" />
               </div>
             )}
@@ -555,7 +555,7 @@ const SaintCard: React.FC<{ saint: SaintWithScore; onClick: () => void }> = ({ s
         
         <div className="flex flex-wrap gap-1 mt-auto">
           {saint.virtues?.slice(0, 2).map(v => (
-            <span key={v} className="px-2 py-0.5 bg-primary/5 text-primary text-[8px] font-black uppercase rounded-lg border border-primary/10">{v}</span>
+            <span key={v} className="px-2 py-0.5 bg-primary/5 text-primary text-[8px] font-black uppercase rounded-full border border-primary/10">{v}</span>
           ))}
         </div>
       </div>

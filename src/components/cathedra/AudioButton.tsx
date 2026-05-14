@@ -34,7 +34,7 @@ const AudioButton: React.FC<AudioButtonProps> = ({ className = '', variant = 'ou
   return (
     <button 
       onClick={toggle}
-      className={`p-2.5 rounded-xl border transition-all active:scale-95 flex items-center gap-2 group ${getVariantClasses()} ${className}`}
+      className={`p-2.5 rounded-full border transition-all active:scale-95 flex items-center gap-2 group ${getVariantClasses()} ${className}`}
       title={isSpeaking ? t('audio_stop') : t('audio_read')}
     >
       {isSpeaking ? (

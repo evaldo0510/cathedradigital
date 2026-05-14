@@ -174,7 +174,7 @@ const CacheManager: React.FC = () => {
           <Button 
             variant="outline" 
             size="sm" 
-            className="rounded-xl h-11 px-6 font-bold"
+            className="rounded-full h-11 px-6 font-bold"
             onClick={handleSyncNow}
           >
             <Icons.RotateCcw className="w-4 h-4 mr-2" /> Sincronizar
@@ -182,7 +182,7 @@ const CacheManager: React.FC = () => {
           <Button 
             variant="destructive" 
             size="sm" 
-            className="rounded-xl h-11 px-6 font-bold"
+            className="rounded-full h-11 px-6 font-bold"
             onClick={handleClearAll}
             disabled={items.length === 0}
           >
@@ -213,10 +213,10 @@ const CacheManager: React.FC = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="flex gap-2">
-            <Button variant="outline" size="sm" className="rounded-xl flex-1 h-9 text-[10px] font-black uppercase" onClick={handleExport}>
+            <Button variant="outline" size="sm" className="rounded-full flex-1 h-9 text-[10px] font-black uppercase" onClick={handleExport}>
               Exportar
             </Button>
-            <Button variant="outline" size="sm" className="rounded-xl flex-1 h-9 text-[10px] font-black uppercase" onClick={() => fileInputRef.current?.click()}>
+            <Button variant="outline" size="sm" className="rounded-full flex-1 h-9 text-[10px] font-black uppercase" onClick={() => fileInputRef.current?.click()}>
               Importar
             </Button>
             <input type="file" ref={fileInputRef} className="hidden" accept=".json" onChange={handleImport} />
@@ -235,15 +235,15 @@ const CacheManager: React.FC = () => {
                 type="number" 
                 value={preloadCount} 
                 onChange={(e) => setPreloadCount(parseInt(e.target.value))}
-                className="h-8 w-16 text-xs rounded-lg"
+                className="h-8 w-16 text-xs rounded-full"
               />
               <span className="text-[10px] font-bold text-muted-foreground uppercase">unid.</span>
             </div>
             <div className="flex gap-2">
-              <Button variant="secondary" size="sm" className="rounded-xl flex-1 h-8 text-[9px] font-black uppercase" onClick={() => handlePreload('catechism')} disabled={preloading}>
+              <Button variant="secondary" size="sm" className="rounded-full flex-1 h-8 text-[9px] font-black uppercase" onClick={() => handlePreload('catechism')} disabled={preloading}>
                 Catecismo
               </Button>
-              <Button variant="secondary" size="sm" className="rounded-xl flex-1 h-8 text-[9px] font-black uppercase" onClick={() => handlePreload('bible')} disabled={preloading}>
+              <Button variant="secondary" size="sm" className="rounded-full flex-1 h-8 text-[9px] font-black uppercase" onClick={() => handlePreload('bible')} disabled={preloading}>
                 Bíblia
               </Button>
             </div>
@@ -280,7 +280,7 @@ const CacheManager: React.FC = () => {
       <div className="grid grid-cols-1 gap-4">
         {loading ? (
           Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="h-24 rounded-3xl bg-muted/40 animate-pulse" />
+            <div key={i} className="h-24 rounded-full bg-muted/40 animate-pulse" />
           ))
         ) : filteredItems.length === 0 ? (
           <Card className="rounded-[2.5rem] border-dashed border-2 bg-muted/20">
@@ -289,7 +289,7 @@ const CacheManager: React.FC = () => {
                 <Icons.Library className="w-8 h-8 text-muted-foreground/40" />
               </div>
               <p className="text-muted-foreground font-medium italic">Nenhum texto encontrado neste filtro.</p>
-              <Button variant="outline" className="rounded-2xl" onClick={() => window.history.back()}>Voltar</Button>
+              <Button variant="outline" className="rounded-full" onClick={() => window.history.back()}>Voltar</Button>
             </CardContent>
           </Card>
         ) : (
@@ -304,10 +304,10 @@ const CacheManager: React.FC = () => {
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Card className="rounded-3xl border-border/40 shadow-sm overflow-hidden group hover:shadow-md transition-all">
+                  <Card className="rounded-full border-border/40 shadow-sm overflow-hidden group hover:shadow-md transition-all">
                     <CardContent className="p-5 flex items-center justify-between gap-4">
                       <div className="flex items-center gap-4">
-                        <div className={`p-3 rounded-2xl bg-muted/50 text-primary group-hover:bg-primary group-hover:text-white transition-all`}>
+                        <div className={`p-3 rounded-full bg-muted/50 text-primary group-hover:bg-primary group-hover:text-white transition-all`}>
                           {getStoreIcon(item.store)}
                         </div>
                         <div className="min-w-0">
@@ -321,7 +321,7 @@ const CacheManager: React.FC = () => {
                       </div>
                       <button 
                         onClick={() => handleDelete(item.store, item.key)}
-                        className="p-2.5 rounded-xl text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all opacity-0 group-hover:opacity-100"
+                        className="p-2.5 rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all opacity-0 group-hover:opacity-100"
                         title="Remover do cache"
                       >
                         <Icons.X className="w-4 h-4" />

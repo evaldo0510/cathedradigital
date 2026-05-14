@@ -321,7 +321,7 @@ const SpiritualQuiz: React.FC = () => {
     const dirLabel = existingData?.direction || p.direction.label;
     
     return (
-      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="rounded-3xl border border-border bg-card p-5 space-y-3">
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="rounded-full border border-border bg-card p-5 space-y-3">
         <div className="flex items-center justify-between">
           <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">Seu Perfil Espiritual</span>
           <button 
@@ -341,10 +341,10 @@ const SpiritualQuiz: React.FC = () => {
           </div>
         </div>
         <div className="flex gap-2">
-          <Button size="sm" className="flex-1 rounded-xl text-xs bg-primary text-primary-foreground" onClick={() => navigate(AppRoute.JORNADAS)}>
+          <Button size="sm" className="flex-1 rounded-full text-xs bg-primary text-primary-foreground" onClick={() => navigate(AppRoute.JORNADAS)}>
             <Sparkles className="w-3 h-3 mr-1" /> {p.journeyName}
           </Button>
-          <Button size="sm" variant="outline" className="rounded-xl text-xs" onClick={() => navigate(AppRoute.STUDY_MODE)}>
+          <Button size="sm" variant="outline" className="rounded-full text-xs" onClick={() => navigate(AppRoute.STUDY_MODE)}>
             <Brain className="w-3 h-3 mr-1" /> Logos
           </Button>
         </div>
@@ -367,7 +367,7 @@ const SpiritualQuiz: React.FC = () => {
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className={`rounded-3xl border border-secondary/20 bg-gradient-to-br ${p.bgGradient} p-6 md:p-8 space-y-6 shadow-lg`}
+        className={`rounded-full border border-secondary/20 bg-gradient-to-br ${p.bgGradient} p-6 md:p-8 space-y-6 shadow-lg`}
       >
         <div className="text-center space-y-3">
           <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', delay: 0.2 }} className="text-5xl block">{p.emoji}</motion.span>
@@ -379,11 +379,11 @@ const SpiritualQuiz: React.FC = () => {
         <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
         <div className="grid grid-cols-2 gap-3">
-          <div className="p-3 rounded-2xl bg-background/60 border border-border space-y-1 text-center">
+          <div className="p-3 rounded-full bg-background/60 border border-border space-y-1 text-center">
             <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">💔 O que te trava</p>
             <p className="text-sm font-bold text-foreground">{painLabel}</p>
           </div>
-          <div className="p-3 rounded-2xl bg-background/60 border border-border space-y-1 text-center">
+          <div className="p-3 rounded-full bg-background/60 border border-border space-y-1 text-center">
             <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">🔥 Seu caminho</p>
             <p className="text-sm font-bold text-foreground">{dirLabel}</p>
           </div>
@@ -394,15 +394,15 @@ const SpiritualQuiz: React.FC = () => {
         <div className="space-y-2">
           <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground text-center">Recomendado para você</p>
           <div className="space-y-2 text-sm">
-            <div className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-primary/[0.04] border border-primary/10">
+            <div className="flex items-center gap-2 px-3 py-2.5 rounded-full bg-primary/[0.04] border border-primary/10">
               <Sparkles className="w-4 h-4 text-primary shrink-0" />
               <span className="text-foreground/80">Jornada: <strong className="text-foreground">{p.journeyName}</strong></span>
             </div>
-            <div className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-primary/[0.04] border border-primary/10">
+            <div className="flex items-center gap-2 px-3 py-2.5 rounded-full bg-primary/[0.04] border border-primary/10">
               <BookOpen className="w-4 h-4 text-primary shrink-0" />
               <span className="text-foreground/80">Tema: <strong className="text-foreground">{p.theme}</strong></span>
             </div>
-            <div className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-secondary/[0.06] border border-secondary/10">
+            <div className="flex items-center gap-2 px-3 py-2.5 rounded-full bg-secondary/[0.06] border border-secondary/10">
               <Brain className="w-4 h-4 text-secondary shrink-0" />
               <span className="text-foreground/80">Reflexão com <strong className="text-foreground">Logos IA</strong></span>
             </div>
@@ -410,10 +410,10 @@ const SpiritualQuiz: React.FC = () => {
         </div>
 
         <div className="flex flex-col gap-3">
-          <Button onClick={() => navigate(AppRoute.JORNADAS)} className="rounded-2xl h-12 gap-2 font-bold text-xs uppercase tracking-widest bg-primary text-primary-foreground">
+          <Button onClick={() => navigate(AppRoute.JORNADAS)} className="rounded-full h-12 gap-2 font-bold text-xs uppercase tracking-widest bg-primary text-primary-foreground">
             <Sparkles className="w-4 h-4" /> Começar agora
           </Button>
-          <Button variant="outline" onClick={() => navigate(AppRoute.STUDY_MODE)} className="rounded-2xl h-11 gap-2 text-xs font-bold border-secondary/30 text-secondary hover:bg-secondary/5">
+          <Button variant="outline" onClick={() => navigate(AppRoute.STUDY_MODE)} className="rounded-full h-11 gap-2 text-xs font-bold border-secondary/30 text-secondary hover:bg-secondary/5">
             <Brain className="w-4 h-4" /> Refletir com Logos
           </Button>
           <Button variant="ghost" size="sm" onClick={() => { setDone(true); setExisting(result); }} className="text-xs text-muted-foreground">
@@ -430,7 +430,7 @@ const SpiritualQuiz: React.FC = () => {
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        className="rounded-3xl border border-secondary/20 bg-gradient-to-br from-card to-secondary/5 p-6 md:p-8 space-y-5 shadow-sm text-center"
+        className="rounded-full border border-secondary/20 bg-gradient-to-br from-card to-secondary/5 p-6 md:p-8 space-y-5 shadow-sm text-center"
       >
         <div className="space-y-3">
           <span className="text-4xl block">🧠</span>
@@ -445,7 +445,7 @@ const SpiritualQuiz: React.FC = () => {
         </div>
         <Button
           onClick={() => setPhase('quiz')}
-          className="w-full rounded-2xl h-12 gap-2 font-bold text-xs uppercase tracking-widest bg-secondary text-secondary-foreground hover:bg-secondary/90"
+          className="w-full rounded-full h-12 gap-2 font-bold text-xs uppercase tracking-widest bg-secondary text-secondary-foreground hover:bg-secondary/90"
         >
           Começar <ArrowRight className="w-4 h-4" />
         </Button>
@@ -460,7 +460,7 @@ const SpiritualQuiz: React.FC = () => {
     <motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-3xl border border-secondary/20 bg-gradient-to-br from-card to-secondary/5 p-6 space-y-5 shadow-sm"
+      className="rounded-full border border-secondary/20 bg-gradient-to-br from-card to-secondary/5 p-6 space-y-5 shadow-sm"
     >
       <div className="space-y-1">
         <div className="flex items-center justify-between">
@@ -491,7 +491,7 @@ const SpiritualQuiz: React.FC = () => {
                 onClick={() => handleAnswer(opt.value)}
                 role="radio"
                 aria-checked={answers[q.id] === opt.value}
-                className="w-full flex items-center gap-3 p-3.5 rounded-2xl border border-border bg-card hover:border-secondary/40 hover:bg-secondary/5 transition-all text-left group focus-visible:ring-2 focus-visible:ring-secondary outline-none"
+                className="w-full flex items-center gap-3 p-3.5 rounded-full border border-border bg-card hover:border-secondary/40 hover:bg-secondary/5 transition-all text-left group focus-visible:ring-2 focus-visible:ring-secondary outline-none"
               >
                 <span className="text-secondary/60 group-hover:text-secondary transition-colors shrink-0" aria-hidden="true">{opt.icon}</span>
                 <span className="text-sm font-medium text-foreground/80 group-hover:text-foreground transition-colors">{opt.label}</span>

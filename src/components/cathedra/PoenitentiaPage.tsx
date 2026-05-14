@@ -105,7 +105,7 @@ const PoenitentiaPage: React.FC = () => {
               <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/40 text-center mb-6">Exame de Consciência</h3>
               <div className="grid gap-3">
                 {CONFESSION_STEPS[activeStep].items?.map((item, i) => (
-                  <div key={i} className="flex gap-5 p-5 rounded-2xl bg-muted/50 border border-border/50 group hover:bg-white hover:shadow-md transition-all">
+                  <div key={i} className="flex gap-5 p-5 rounded-full bg-muted/50 border border-border/50 group hover:bg-white hover:shadow-md transition-all">
                     <div className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center font-black text-xs shrink-0 border border-primary/10 group-hover:bg-primary group-hover:text-white transition-colors">{i + 1}</div>
                     <span className="text-lg text-foreground/90 font-serif leading-relaxed">{item}</span>
                   </div>
@@ -126,7 +126,7 @@ const PoenitentiaPage: React.FC = () => {
           {activeStep === 2 && (
             <div className="space-y-8 pt-8">
               <div className="flex items-center gap-3 justify-center">
-                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                   <Icons.Flame className="w-5 h-5" />
                 </div>
                 <h3 className="text-xl font-serif font-bold">Ato de Contrição</h3>
@@ -146,7 +146,7 @@ const PoenitentiaPage: React.FC = () => {
           <div className="flex justify-center pt-8">
             <button 
               onClick={() => setActiveStep((prev) => (prev + 1) % CONFESSION_STEPS.length)}
-              className="px-10 py-5 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] shadow-xl hover:bg-primary hover:text-primary-foreground transition-all active:scale-95 flex items-center gap-3"
+              className="px-10 py-5 bg-foreground text-background rounded-full font-black uppercase text-[10px] tracking-[0.2em] shadow-xl hover:bg-primary hover:text-primary-foreground transition-all active:scale-95 flex items-center gap-3"
             >
               {activeStep === CONFESSION_STEPS.length - 1 ? 'Reiniciar Guia' : 'Próximo Passo'} <Icons.ChevronRight className="w-4 h-4" />
             </button>
@@ -157,7 +157,7 @@ const PoenitentiaPage: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="bg-card border border-border rounded-[2.5rem] p-10 space-y-6 shadow-sm">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
               <Icons.User className="w-6 h-6" />
             </div>
             <h3 className="text-2xl font-serif font-bold">Como Começar?</h3>
@@ -168,7 +168,7 @@ const PoenitentiaPage: React.FC = () => {
         </div>
         <div className="bg-card border border-border rounded-[2.5rem] p-10 space-y-6 shadow-sm">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
               <Icons.Heart className="w-6 h-6" />
             </div>
             <h3 className="text-2xl font-serif font-bold">A Absolvição</h3>

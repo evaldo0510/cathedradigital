@@ -34,7 +34,7 @@ const TransactionSkeleton: React.FC = () => (
   <Card className="overflow-hidden border-border/50 opacity-60 animate-pulse">
     <CardContent className="p-4 md:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
       <div className="flex items-center gap-4">
-        <div className="w-10 h-10 rounded-xl bg-muted" />
+        <div className="w-10 h-10 rounded-full bg-muted" />
         <div className="space-y-2">
           <div className="h-4 w-32 bg-muted rounded" />
           <div className="h-3 w-24 bg-muted rounded" />
@@ -266,7 +266,7 @@ const UserTransactionsPage: React.FC = () => {
         {announcement}
       </div>
         <div className="flex items-center gap-4 animate-pulse">
-          <div className="w-12 h-12 rounded-2xl bg-muted" />
+          <div className="w-12 h-12 rounded-full bg-muted" />
           <div className="space-y-2">
             <div className="h-6 w-48 bg-muted rounded" />
             <div className="h-4 w-64 bg-muted rounded" />
@@ -283,7 +283,7 @@ const UserTransactionsPage: React.FC = () => {
     <div className="max-w-4xl mx-auto space-y-8 py-6">
       <div className="flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+          <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
             <Icons.History className="w-6 h-6" />
           </div>
           <div>
@@ -296,7 +296,7 @@ const UserTransactionsPage: React.FC = () => {
           variant="outline" 
           size="sm" 
           onClick={handleExportPDF}
-          className="gap-2 font-bold uppercase text-[10px] tracking-widest rounded-xl"
+          className="gap-2 font-bold uppercase text-[10px] tracking-widest rounded-full"
         >
           <Icons.Download className="w-4 h-4" /> Exportar PDF
         </Button>
@@ -309,17 +309,17 @@ const UserTransactionsPage: React.FC = () => {
             placeholder="Buscar por ID ou valor..." 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10 bg-muted/50 border-border/50 focus:bg-background transition-all rounded-xl"
+            className="pl-10 bg-muted/50 border-border/50 focus:bg-background transition-all rounded-full"
           />
         </div>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="bg-muted/50 border-border/50 rounded-xl">
+          <SelectTrigger className="bg-muted/50 border-border/50 rounded-full">
             <div className="flex items-center gap-2">
               <Icons.Filter className="w-4 h-4 text-muted-foreground" />
               <SelectValue placeholder="Status" />
             </div>
           </SelectTrigger>
-          <SelectContent className="rounded-xl">
+          <SelectContent className="rounded-full">
             <SelectItem value="all">Todos os Status</SelectItem>
             <SelectItem value="approved">Aprovados</SelectItem>
             <SelectItem value="pending">Pendentes</SelectItem>
@@ -368,7 +368,7 @@ const UserTransactionsPage: React.FC = () => {
                 <CardContent className="p-0">
                   <div className="p-4 md:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                     <div className="flex items-center gap-4">
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${tx.is_donation ? 'bg-secondary/10 text-secondary' : 'bg-primary/10 text-primary'}`}>
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center ${tx.is_donation ? 'bg-secondary/10 text-secondary' : 'bg-primary/10 text-primary'}`}>
                         {tx.is_donation ? <Icons.Heart className="w-5 h-5 fill-current" /> : <Icons.Star className="w-5 h-5 fill-current" />}
                       </div>
                       <div>
@@ -427,7 +427,7 @@ const UserTransactionsPage: React.FC = () => {
           )}
 
           {error && transactions.length > 0 && (
-            <div className="p-4 rounded-xl bg-destructive/5 border border-destructive/10 text-center space-y-3 mt-4">
+            <div className="p-4 rounded-full bg-destructive/5 border border-destructive/10 text-center space-y-3 mt-4">
               <p className="text-xs text-destructive font-medium">{error}</p>
               <Button 
                 variant="ghost" 
@@ -476,7 +476,7 @@ const UserTransactionsPage: React.FC = () => {
         >
           <DialogHeader>
             <DialogTitle className="font-serif text-xl flex items-center gap-3">
-              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${selectedTx?.is_donation ? 'bg-secondary/10 text-secondary' : 'bg-primary/10 text-primary'}`}>
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center ${selectedTx?.is_donation ? 'bg-secondary/10 text-secondary' : 'bg-primary/10 text-primary'}`}>
                 {selectedTx?.is_donation ? <Icons.Heart className="w-5 h-5 fill-current" /> : <Icons.Star className="w-5 h-5 fill-current" />}
               </div>
               Detalhes da Transação
@@ -501,7 +501,7 @@ const UserTransactionsPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="space-y-3 bg-muted/30 p-4 rounded-2xl border border-border/50">
+              <div className="space-y-3 bg-muted/30 p-4 rounded-full border border-border/50">
                 <div className="flex justify-between items-center">
                   <span className="text-[10px] font-bold text-muted-foreground uppercase">Descrição</span>
                   <span className="text-xs font-bold text-foreground">{selectedTx.description || (selectedTx.is_donation ? 'Doação Voluntária' : 'Assinatura PRO')}</span>
@@ -539,7 +539,7 @@ const UserTransactionsPage: React.FC = () => {
 
               {selectedTx.status === 'approved' && (
                 <div className="space-y-4">
-                  <div className="p-4 rounded-2xl bg-green-500/5 border border-green-500/10 flex items-center gap-3">
+                  <div className="p-4 rounded-full bg-green-500/5 border border-green-500/10 flex items-center gap-3">
                     <Icons.CheckCircle className="w-5 h-5 text-green-500" />
                     <div>
                       <p className="text-[10px] font-black uppercase text-green-600">Aprovado</p>
@@ -558,7 +558,7 @@ const UserTransactionsPage: React.FC = () => {
               )}
 
               {selectedTx.error_message && (
-                <div className="p-4 rounded-2xl bg-destructive/5 border border-destructive/10">
+                <div className="p-4 rounded-full bg-destructive/5 border border-destructive/10">
                   <p className="text-[10px] font-black uppercase text-destructive mb-1">Motivo do Problema</p>
                   <p className="text-xs text-destructive/80 italic">{selectedTx.error_message}</p>
                 </div>
@@ -567,7 +567,7 @@ const UserTransactionsPage: React.FC = () => {
               <div className="flex gap-3">
                 <DialogClose asChild>
                   <Button 
-                    className="flex-1 rounded-xl font-bold uppercase text-[10px] tracking-widest" 
+                    className="flex-1 rounded-full font-bold uppercase text-[10px] tracking-widest" 
                     autoFocus
                   >
                     Fechar
@@ -576,7 +576,7 @@ const UserTransactionsPage: React.FC = () => {
                 {selectedTx.status === 'approved' && (
                   <Button 
                     variant="outline" 
-                    className="flex-1 rounded-xl font-bold uppercase text-[10px] tracking-widest gap-2"
+                    className="flex-1 rounded-full font-bold uppercase text-[10px] tracking-widest gap-2"
                     onClick={() => window.print()}
                   >
                     <Icons.Download className="w-3 h-3" /> Imprimir

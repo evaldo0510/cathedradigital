@@ -56,7 +56,7 @@ const QuickDonation: React.FC = () => {
     <Card className="border-secondary/20 bg-secondary/5 overflow-hidden transition-all hover:border-secondary/40">
       <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between space-y-0">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-secondary/20 flex items-center justify-center text-secondary">
+          <div className="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center text-secondary">
             <Icons.Heart className="w-5 h-5 fill-current" />
           </div>
           <div>
@@ -121,7 +121,7 @@ const QuickDonation: React.FC = () => {
               <Button
                 onClick={handleDonate}
                 disabled={loading || !amount}
-                className="w-full h-9 rounded-xl text-[10px] font-black uppercase tracking-widest bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-lg shadow-secondary/20 transition-all"
+                className="w-full h-9 rounded-full text-[10px] font-black uppercase tracking-widest bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-lg shadow-secondary/20 transition-all"
               >
                 {loading ? 'Processando...' : `Doar agora ${amount ? `R$ ${amount}` : ''}`}
               </Button>

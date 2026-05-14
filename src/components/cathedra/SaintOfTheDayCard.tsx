@@ -98,7 +98,7 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
         onClick={handleNavigate}
         className="w-full flex items-center gap-6 group text-left p-5"
       >
-        <div className="w-20 h-20 rounded-2xl overflow-hidden border border-border/20 shadow-soft shrink-0">
+        <div className="w-20 h-20 rounded-full overflow-hidden border border-border/20 shadow-soft shrink-0">
           <SacredImage
             src={saint.image}
             alt={saint.name}

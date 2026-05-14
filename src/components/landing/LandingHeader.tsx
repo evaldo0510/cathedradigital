@@ -62,7 +62,7 @@ const LandingHeader = () => {
     >
       <div className="app-container flex items-center justify-between">
         <div 
-          className="flex items-center gap-3 cursor-pointer group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-lg p-1 transition-shadow"
+          className="flex items-center gap-3 cursor-pointer group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-full p-1 transition-shadow"
           onClick={() => navigate(AppRoute.HOME)}
           onKeyDown={(e) => e.key === 'Enter' && navigate(AppRoute.HOME)}
           tabIndex={0}
@@ -119,7 +119,7 @@ const LandingHeader = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
-                  className="absolute right-0 mt-2 w-40 bg-background border border-border rounded-xl shadow-xl overflow-hidden"
+                  className="absolute right-0 mt-2 w-40 bg-background border border-border rounded-full shadow-xl overflow-hidden"
                 >
                   {languages.map((l) => (
                     <button
@@ -172,7 +172,7 @@ const LandingHeader = () => {
 
           {/* Mobile Menu Toggle */}
           <button
-            className="lg:hidden p-2 text-foreground focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
+            className="lg:hidden p-2 text-foreground focus-visible:ring-2 focus-visible:ring-primary rounded-full"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label={isMobileMenuOpen ? "Fechar menu" : "Abrir menu"}
             aria-expanded={isMobileMenuOpen}

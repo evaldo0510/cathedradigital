@@ -204,7 +204,7 @@ const DiagnosticoPage: React.FC = () => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => handleAnswer(opt.value)}
-                className={`w-full flex items-center gap-3 p-4 rounded-xl border transition-all text-left
+                className={`w-full flex items-center gap-3 p-4 rounded-full border transition-all text-left
                   ${answers[question.id] === opt.value
                     ? 'border-primary bg-primary/10 text-foreground'
                     : 'border-border bg-card text-foreground hover:border-primary/40'

@@ -315,7 +315,7 @@ const DogmasPage: React.FC = () => {
         <input
           value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
           placeholder="Buscar dogma, definição ou concílio..."
-          className="w-full pl-11 pr-4 py-3 rounded-2xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+          className="w-full pl-11 pr-4 py-3 rounded-full border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
         />
       </div>
 
@@ -323,7 +323,7 @@ const DogmasPage: React.FC = () => {
       <div className="flex gap-2 justify-center flex-wrap">
         {CATEGORIES.map(cat => (
           <button key={cat} onClick={() => setCategory(cat)}
-            className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+            className={`px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
               category === cat ? 'bg-foreground text-background shadow-lg' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
             }`}>
             {cat}
@@ -347,7 +347,7 @@ const DogmasPage: React.FC = () => {
       <div className="space-y-3">
         {filtered.map(dogma => (
           <div key={dogma.id}
-            className="bg-card border border-border rounded-2xl overflow-hidden transition-all hover:border-primary/30">
+            className="bg-card border border-border rounded-full overflow-hidden transition-all hover:border-primary/30">
             <button
               onClick={() => setExpandedId(expandedId === dogma.id ? null : dogma.id)}
               className="w-full text-left p-6 flex items-start gap-4"

@@ -344,14 +344,14 @@ const StudyMode: React.FC = () => {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button 
-            className="rounded-2xl h-12 px-8 font-black uppercase text-[10px] tracking-widest"
+            className="rounded-full h-12 px-8 font-black uppercase text-[10px] tracking-widest"
             onClick={() => navigate(AppRoute.CATECHISM)}
           >
             Explorar Catecismo
           </Button>
           <Button 
             variant="outline"
-            className="rounded-2xl h-12 px-8 font-black uppercase text-[10px] tracking-widest border-primary/20 text-primary"
+            className="rounded-full h-12 px-8 font-black uppercase text-[10px] tracking-widest border-primary/20 text-primary"
             onClick={() => navigate(AppRoute.TRANSPARENCY)}
           >
             Saiba Mais

@@ -18,7 +18,7 @@ const AdminTransactionsTab: React.FC<AdminTransactionsTabProps> = ({ transaction
       ) : (
         <div className="space-y-3">
           {transactions.map((t: any) => (
-            <div key={t.id} className="flex items-center justify-between p-4 rounded-xl bg-muted/30 border border-border/50">
+            <div key={t.id} className="flex items-center justify-between p-4 rounded-full bg-muted/30 border border-border/50">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
                   <ArrowUpRight className="w-4 h-4 text-primary" />

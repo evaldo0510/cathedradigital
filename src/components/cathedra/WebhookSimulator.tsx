@@ -72,7 +72,7 @@ const WebhookSimulator: React.FC = () => {
     <Card className="rounded-[2.5rem] border-primary/20 bg-primary/5  shadow-xl overflow-hidden">
       <CardHeader className="bg-primary/10 border-b border-primary/10">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-primary rounded-xl text-primary-foreground">
+          <div className="p-2 bg-primary rounded-full text-primary-foreground">
             <ShieldCheck className="w-5 h-5" />
           </div>
           <div>
@@ -86,10 +86,10 @@ const WebhookSimulator: React.FC = () => {
           <div className="space-y-2">
             <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Usuário para Teste</label>
             <Select value={selectedUserId} onValueChange={setSelectedUserId}>
-              <SelectTrigger className="rounded-xl bg-background border-primary/20">
+              <SelectTrigger className="rounded-full bg-background border-primary/20">
                 <SelectValue placeholder="Selecione um usuário" />
               </SelectTrigger>
-              <SelectContent className="rounded-xl">
+              <SelectContent className="rounded-full">
                 {users.map(u => (
                   <SelectItem key={u.id} value={u.id}>
                     {u.name || 'Usuário Sem Nome'} {u.is_premium ? '(PRO)' : '(Free)'}
@@ -102,10 +102,10 @@ const WebhookSimulator: React.FC = () => {
           <div className="space-y-2">
             <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Status do Pagamento</label>
             <Select value={status} onValueChange={setStatus}>
-              <SelectTrigger className="rounded-xl bg-background border-primary/20">
+              <SelectTrigger className="rounded-full bg-background border-primary/20">
                 <SelectValue placeholder="Selecione o status" />
               </SelectTrigger>
-              <SelectContent className="rounded-xl">
+              <SelectContent className="rounded-full">
                 <SelectItem value="approved">Aprovado (Ativa PRO)</SelectItem>
                 <SelectItem value="pending">Pendente</SelectItem>
                 <SelectItem value="rejected">Recusado</SelectItem>
@@ -119,10 +119,10 @@ const WebhookSimulator: React.FC = () => {
           <div className="flex-1 space-y-2">
             <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Plano ID / Tipo</label>
             <Select value={planId} onValueChange={setPlanId}>
-              <SelectTrigger className="rounded-xl bg-background border-primary/20">
+              <SelectTrigger className="rounded-full bg-background border-primary/20">
                 <SelectValue placeholder="Selecione o tipo" />
               </SelectTrigger>
-              <SelectContent className="rounded-xl">
+              <SelectContent className="rounded-full">
                 <SelectItem value="cathedra_pro">Assinatura PRO</SelectItem>
                 <SelectItem value="donation">Doação Voluntária</SelectItem>
               </SelectContent>
@@ -139,7 +139,7 @@ const WebhookSimulator: React.FC = () => {
         </div>
 
         {isPremiumAfter !== null && (
-          <div className={`p-4 rounded-2xl flex items-center gap-3 animate-in zoom-in duration-500 ${isPremiumAfter ? 'bg-green-500/10 text-green-700 border border-green-500/20' : 'bg-red-500/10 text-red-700 border border-red-500/20'}`}>
+          <div className={`p-4 rounded-full flex items-center gap-3 animate-in zoom-in duration-500 ${isPremiumAfter ? 'bg-green-500/10 text-green-700 border border-green-500/20' : 'bg-red-500/10 text-red-700 border border-red-500/20'}`}>
             {isPremiumAfter ? <CheckCircle2 className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
             <div>
               <p className="text-sm font-bold">Resultado da Ativação</p>

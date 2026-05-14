@@ -50,7 +50,7 @@ const ViaCrucis: React.FC = () => {
 
         <div className="flex justify-center">
           <button onClick={() => setIsJourney(true)} 
-            className="group px-10 py-5 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] shadow-xl hover:bg-primary hover:text-primary-foreground transition-all active:scale-95 flex items-center gap-3">
+            className="group px-10 py-5 bg-foreground text-background rounded-full font-black uppercase text-[10px] tracking-[0.2em] shadow-xl hover:bg-primary hover:text-primary-foreground transition-all active:scale-95 flex items-center gap-3">
             <Play className="w-4 h-4 fill-current" /> Iniciar Via Sacra
           </button>
         </div>
@@ -58,12 +58,12 @@ const ViaCrucis: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {STATIONS.map((s, i) => (
             <button key={i} onClick={() => { setCurrentStation(i); setIsJourney(true); }}
-              className="text-left p-6 rounded-3xl bg-card border border-border hover:border-primary/40 hover:shadow-xl hover:-translate-y-1 transition-all group relative overflow-hidden">
+              className="text-left p-6 rounded-full bg-card border border-border hover:border-primary/40 hover:shadow-xl hover:-translate-y-1 transition-all group relative overflow-hidden">
               <div className="absolute top-0 right-0 p-6 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity">
                 <Cross className="w-32 h-32 -mr-8 -mt-8 rotate-12" />
               </div>
               <div className="relative z-10 flex items-center gap-5">
-                <div className="w-12 h-12 rounded-2xl bg-primary/5 text-primary flex items-center justify-center font-black text-lg shrink-0 border border-primary/10 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">{s.num}</div>
+                <div className="w-12 h-12 rounded-full bg-primary/5 text-primary flex items-center justify-center font-black text-lg shrink-0 border border-primary/10 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">{s.num}</div>
                 <div>
                   <p className="font-serif font-bold text-lg text-foreground group-hover:text-primary transition-colors leading-tight">{s.title}</p>
                   <p className="text-[10px] text-muted-foreground mt-1 uppercase tracking-widest font-black opacity-60">{s.scripture}</p>
@@ -82,7 +82,7 @@ const ViaCrucis: React.FC = () => {
     <div className="max-w-4xl mx-auto space-y-10 pb-12 animate-in fade-in duration-700">
       {/* Navigation */}
       <div className="flex items-center justify-between px-2">
-        <button onClick={() => setIsJourney(false)} className="p-3 rounded-2xl bg-card border border-border hover:bg-primary/5 transition-all active:scale-95 shadow-sm flex items-center gap-2">
+        <button onClick={() => setIsJourney(false)} className="p-3 rounded-full bg-card border border-border hover:bg-primary/5 transition-all active:scale-95 shadow-sm flex items-center gap-2">
           <ArrowLeft className="w-5 h-5 text-foreground" />
           <span className="text-[10px] font-black uppercase tracking-widest hidden md:block">Voltar</span>
         </button>
@@ -150,7 +150,7 @@ const ViaCrucis: React.FC = () => {
         <button 
           disabled={currentStation <= 0} 
           onClick={() => setCurrentStation(currentStation - 1)}
-          className="flex-1 max-w-[200px] h-14 rounded-2xl bg-card border border-border text-[10px] font-black uppercase tracking-widest disabled:opacity-20 hover:bg-primary/5 transition-all flex items-center justify-center gap-2 group shadow-sm"
+          className="flex-1 max-w-[200px] h-14 rounded-full bg-card border border-border text-[10px] font-black uppercase tracking-widest disabled:opacity-20 hover:bg-primary/5 transition-all flex items-center justify-center gap-2 group shadow-sm"
         >
           <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Anterior
         </button>
@@ -158,14 +158,14 @@ const ViaCrucis: React.FC = () => {
         {currentStation < STATIONS.length - 1 ? (
           <button 
             onClick={() => setCurrentStation(currentStation + 1)}
-            className="flex-1 max-w-[200px] h-14 rounded-2xl bg-foreground text-background text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-2 group shadow-xl"
+            className="flex-1 max-w-[200px] h-14 rounded-full bg-foreground text-background text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-2 group shadow-xl"
           >
             Próxima <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </button>
         ) : (
           <button 
             onClick={() => setIsJourney(false)}
-            className="flex-1 max-w-[200px] h-14 rounded-2xl bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-2 group shadow-xl shadow-primary/20"
+            className="flex-1 max-w-[200px] h-14 rounded-full bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-2 group shadow-xl shadow-primary/20"
           >
             <Icons.Cross className="w-4 h-4" /> Concluir
           </button>

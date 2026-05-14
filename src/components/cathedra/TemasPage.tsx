@@ -143,7 +143,7 @@ const TemasPage = () => {
         </header>
 
         <div className="space-y-4 sm:space-y-8">
-          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 bg-card/60  p-2 sm:p-3 rounded-2xl sm:rounded-[2.5rem] border border-border/40 shadow-xl sticky top-2 sm:top-4 z-20 transition-all duration-500 hover:shadow-2xl hover:border-primary/20 group/nav">
+          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 bg-card/60  p-2 sm:p-3 rounded-full sm:rounded-[2.5rem] border border-border/40 shadow-xl sticky top-2 sm:top-4 z-20 transition-all duration-500 hover:shadow-2xl hover:border-primary/20 group/nav">
             <FuzzySearchInput
               className="flex-1 w-full"
               value={searchQuery}
@@ -157,7 +157,7 @@ const TemasPage = () => {
                 <motion.button
                   key={cat}
                   {...getTabProps(`tab-category-${idx}`, `panel-temas`, activeCategory === cat, `
-                    whitespace-nowrap px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] transition-all duration-300 focus-visible:ring-2 focus-visible:ring-primary outline-none
+                    whitespace-nowrap px-3 sm:px-5 py-2 sm:py-2.5 rounded-full sm:rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] transition-all duration-300 focus-visible:ring-2 focus-visible:ring-primary outline-none
                     ${activeCategory === cat 
                       ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-105' 
                       : 'bg-muted/40 text-muted-foreground/70 hover:bg-muted hover:text-foreground hover:scale-102 border border-transparent hover:border-border/50'
@@ -178,7 +178,7 @@ const TemasPage = () => {
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent  opacity-30 pointer-events-none" />
             
-            <div {...getTabPanelProps('panel-temas', `tab-category-${categories.indexOf(activeCategory)}`, true, "relative overflow-hidden rounded-2xl border border-border/30 bg-card/20  outline-none")}>
+            <div {...getTabPanelProps('panel-temas', `tab-category-${categories.indexOf(activeCategory)}`, true, "relative overflow-hidden rounded-full border border-border/30 bg-card/20  outline-none")}>
               {loadingTags ? (
                 <div className="flex flex-col items-center gap-4 py-12 w-full justify-center">
                   <div className="relative">

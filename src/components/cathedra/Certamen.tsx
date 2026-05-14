@@ -134,7 +134,7 @@ const Certamen: React.FC = () => {
     const pct = Math.round((score / (answered || 1)) * 100);
     return (
       <div className="max-w-2xl mx-auto space-y-8 p-4">
-        <div className="bg-card border border-border rounded-3xl p-10 text-center space-y-6 shadow-xl">
+        <div className="bg-card border border-border rounded-full p-10 text-center space-y-6 shadow-xl">
           <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto text-primary">
             {pct >= 80 ? <Trophy className="w-10 h-10" /> : pct >= 50 ? <BookOpen className="w-10 h-10" /> : <Heart className="w-10 h-10" />}
           </div>
@@ -148,11 +148,11 @@ const Certamen: React.FC = () => {
           </div>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-            <button onClick={restart} className="px-8 py-4 bg-secondary text-secondary-foreground rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-secondary/80 transition-all flex items-center justify-center gap-2">
+            <button onClick={restart} className="px-8 py-4 bg-secondary text-secondary-foreground rounded-full font-black uppercase text-[10px] tracking-widest hover:bg-secondary/80 transition-all flex items-center justify-center gap-2">
               <RotateCcw className="w-4 h-4" />
               Tentar Novamente
             </button>
-            <button onClick={shareResult} className="px-8 py-4 bg-primary text-primary-foreground rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20">
+            <button onClick={shareResult} className="px-8 py-4 bg-primary text-primary-foreground rounded-full font-black uppercase text-[10px] tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20">
               <Share2 className="w-4 h-4" />
               Compartilhar Resultado
             </button>
@@ -196,7 +196,7 @@ const Certamen: React.FC = () => {
         <span className="text-primary font-black">{score} acertos</span>
       </div>
 
-      <div className="bg-card border border-border rounded-3xl p-8 space-y-6 shadow-sm">
+      <div className="bg-card border border-border rounded-full p-8 space-y-6 shadow-sm">
         <span className="text-[10px] font-black uppercase tracking-widest text-primary bg-primary/10 px-2 py-1 rounded">{question.category}</span>
         <h2 className="text-xl md:text-2xl font-serif font-bold text-foreground leading-tight">{question.question}</h2>
 
@@ -210,7 +210,7 @@ const Certamen: React.FC = () => {
             }
             return (
               <button key={idx} onClick={() => handleAnswer(idx)}
-                className={`w-full text-left p-4 rounded-xl border font-bold text-sm transition-all flex items-center gap-4 ${cls}`}>
+                className={`w-full text-left p-4 rounded-full border font-bold text-sm transition-all flex items-center gap-4 ${cls}`}>
                 <span className="w-8 h-8 rounded-full bg-background flex items-center justify-center text-muted-foreground text-xs">{String.fromCharCode(65 + idx)}</span>
                 <span className="flex-1">{opt}</span>
               </button>
@@ -222,7 +222,7 @@ const Certamen: React.FC = () => {
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-muted rounded-2xl p-6 space-y-3 border border-border"
+            className="bg-muted rounded-full p-6 space-y-3 border border-border"
           >
             <p className="text-sm font-bold text-foreground flex items-center gap-2">
               {selected === question.correct ? '✅ Resposta Correta!' : '❌ Ops, não foi dessa vez.'}
@@ -231,7 +231,7 @@ const Certamen: React.FC = () => {
             
             <button 
               onClick={nextQuestion}
-              className="w-full mt-4 py-4 bg-primary text-primary-foreground rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
+              className="w-full mt-4 py-4 bg-primary text-primary-foreground rounded-full font-black uppercase text-[10px] tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
             >
               {currentIndex >= filtered.length - 1 ? 'Ver Resultado Final' : 'Próxima Pergunta'}
               <Icons.ArrowRight className="w-4 h-4" />

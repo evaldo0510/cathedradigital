@@ -386,7 +386,7 @@ const AdminDashboard: React.FC = () => {
   if (selectedUser) {
     return (
       <div className="space-y-8 pb-10">
-        <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
+        <Suspense fallback={<Skeleton className="h-[400px] rounded-full" />}>
           <AdminCrmUserProfile user={selectedUser} onBack={() => setSelectedUser(null)} />
         </Suspense>
       </div>
@@ -397,16 +397,16 @@ const AdminDashboard: React.FC = () => {
     return (
       <div className="space-y-6 animate-pulse">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-32 w-full rounded-xl" />)}
+          {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-32 w-full rounded-full" />)}
         </div>
-        <Skeleton className="h-[400px] rounded-xl" />
+        <Skeleton className="h-[400px] rounded-full" />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center p-12 text-center bg-destructive/10 rounded-xl border border-destructive/20">
+      <div className="flex flex-col items-center justify-center p-12 text-center bg-destructive/10 rounded-full border border-destructive/20">
         <AlertCircle className="h-12 w-12 text-destructive mb-4" />
         <h2 className="text-xl font-bold mb-2">Erro ao carregar dados</h2>
         <p className="text-muted-foreground">{error}</p>
@@ -426,7 +426,7 @@ const AdminDashboard: React.FC = () => {
 
       <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
         <div className="px-4 sm:px-0 -mx-4 sm:mx-0">
-          <TabsList ref={tabsListRef} className="flex w-full overflow-x-auto justify-start h-auto p-1 bg-muted/30 border border-border/10 rounded-xl no-scrollbar scroll-smooth snap-x">
+          <TabsList ref={tabsListRef} className="flex w-full overflow-x-auto justify-start h-auto p-1 bg-muted/30 border border-border/10 rounded-full no-scrollbar scroll-smooth snap-x">
             <TabsTrigger value="overview" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
               <LayoutGrid className="w-3.5 h-3.5" /> Visão Geral
             </TabsTrigger>
@@ -703,11 +703,11 @@ const AdminDashboard: React.FC = () => {
               </CardHeader>
               <CardContent className="px-3 pb-3 pt-1">
                 <div className="mt-2 grid grid-cols-2 gap-4 w-full">
-                  <div className="text-center p-2 rounded-lg bg-primary/5 border border-primary/10">
+                  <div className="text-center p-2 rounded-full bg-primary/5 border border-primary/10">
                     <div className="text-lg font-black">{users.filter(u => u.is_premium).length}</div>
                     <div className="text-[8px] font-black uppercase tracking-widest opacity-50">Assinantes</div>
                   </div>
-                  <div className="text-center p-2 rounded-lg bg-muted/20 border border-border/10">
+                  <div className="text-center p-2 rounded-full bg-muted/20 border border-border/10">
                     <div className="text-lg font-black opacity-60">{users.length - users.filter(u => u.is_premium).length}</div>
                     <div className="text-[8px] font-black uppercase tracking-widest opacity-50">Gratuitos</div>
                   </div>
@@ -720,7 +720,7 @@ const AdminDashboard: React.FC = () => {
           {/* Recent Activity Section */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2">
-              <Suspense fallback={<Skeleton className="h-[350px] rounded-xl" />}>
+              <Suspense fallback={<Skeleton className="h-[350px] rounded-full" />}>
                 <AdminChartsTab userGrowth={stats?.userGrowth || []} revenueData={stats?.revenueData || []} />
               </Suspense>
             </div>
@@ -734,7 +734,7 @@ const AdminDashboard: React.FC = () => {
               <CardContent className="px-3 pb-3 pt-1 space-y-3">
                 {recentJournal.length > 0 ? (
                   recentJournal.map((entry) => (
-                    <div key={entry.id} className="p-2.5 rounded-lg bg-muted/20 border border-border/10 space-y-1.5 hover:bg-muted/30 transition-colors">
+                    <div key={entry.id} className="p-2.5 rounded-full bg-muted/20 border border-border/10 space-y-1.5 hover:bg-muted/30 transition-colors">
                       <div className="flex items-center justify-between text-[10px] font-bold">
                         <span className="text-primary truncate max-w-[120px]">{entry.profiles?.name || 'Anônimo'}</span>
                         <span className="text-muted-foreground opacity-60">{new Date(entry.created_at).toLocaleDateString('pt-BR')}</span>
@@ -759,62 +759,62 @@ const AdminDashboard: React.FC = () => {
 
         {/* Segmentation Tab */}
         <TabsContent value="segmentation">
-          <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
+          <Suspense fallback={<Skeleton className="h-[400px] rounded-full" />}>
             <AdminCrmSegmentation users={users} onSelectUser={setSelectedUser} />
           </Suspense>
         </TabsContent>
 
         {/* Themes Tab */}
         <TabsContent value="themes">
-          <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
+          <Suspense fallback={<Skeleton className="h-[400px] rounded-full" />}>
             <AdminThemesTab />
           </Suspense>
         </TabsContent>
 
         {/* Retention Tab */}
         <TabsContent value="retention">
-          <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
+          <Suspense fallback={<Skeleton className="h-[400px] rounded-full" />}>
             <AdminCrmRetention users={users} totalRevenue={stats?.totalRevenue ?? 0} transactions={stats?.recentTransactions ?? []} />
           </Suspense>
         </TabsContent>
 
         {/* Automations Tab */}
         <TabsContent value="automations">
-          <Suspense fallback={<Skeleton className="h-[300px] rounded-xl" />}>
+          <Suspense fallback={<Skeleton className="h-[300px] rounded-full" />}>
             <AdminCrmAutomations />
           </Suspense>
         </TabsContent>
 
         {/* Transactions Tab */}
         <TabsContent value="transactions">
-          <Suspense fallback={<Skeleton className="h-[300px] rounded-xl" />}>
+          <Suspense fallback={<Skeleton className="h-[300px] rounded-full" />}>
             <AdminTransactionsTab transactions={stats?.recentTransactions || []} />
           </Suspense>
         </TabsContent>
 
         {/* Partners Tab */}
         <TabsContent value="partners" className="space-y-4">
-          <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
+          <Suspense fallback={<Skeleton className="h-[400px] rounded-full" />}>
             <AdminPartnersTab />
           </Suspense>
         </TabsContent>
 
         {/* Content Tab */}
         <TabsContent value="content" className="space-y-4">
-          <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
+          <Suspense fallback={<Skeleton className="h-[400px] rounded-full" />}>
             <AdminContentTab />
           </Suspense>
         </TabsContent>
 
         {/* Journeys Tab */}
         <TabsContent value="journeys" className="space-y-4">
-          <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
+          <Suspense fallback={<Skeleton className="h-[400px] rounded-full" />}>
             <AdminJourneysTab />
           </Suspense>
         </TabsContent>
 
         <TabsContent value="seo" className="space-y-4">
-          <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
+          <Suspense fallback={<Skeleton className="h-[400px] rounded-full" />}>
             <AdminSeoTab />
           </Suspense>
         </TabsContent>
@@ -825,7 +825,7 @@ const AdminDashboard: React.FC = () => {
             <Card className="border-primary/20 bg-primary/5 animate-pulse">
               <CardHeader>
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-primary/10 rounded-lg">
+                  <div className="p-2 bg-primary/10 rounded-full">
                     <Shield className="w-5 h-5 text-primary animate-spin" />
                   </div>
                   <div>
@@ -835,12 +835,12 @@ const AdminDashboard: React.FC = () => {
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
-                <Skeleton className="h-12 w-full rounded-lg bg-primary/10" />
+                <Skeleton className="h-12 w-full rounded-full bg-primary/10" />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Skeleton className="h-32 w-full rounded-xl bg-primary/5" />
-                  <Skeleton className="h-32 w-full rounded-xl bg-primary/5" />
+                  <Skeleton className="h-32 w-full rounded-full bg-primary/5" />
+                  <Skeleton className="h-32 w-full rounded-full bg-primary/5" />
                 </div>
-                <Skeleton className="h-48 w-full rounded-xl bg-primary/5" />
+                <Skeleton className="h-48 w-full rounded-full bg-primary/5" />
               </CardContent>
             </Card>
           }>
@@ -1062,12 +1062,12 @@ const AdminDashboard: React.FC = () => {
           </div>
         </TabsContent>
         <TabsContent value="construction">
-          <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
+          <Suspense fallback={<Skeleton className="h-[400px] rounded-full" />}>
             <AdminConstructionTab />
           </Suspense>
         </TabsContent>
         <TabsContent value="tests">
-          <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
+          <Suspense fallback={<Skeleton className="h-[400px] rounded-full" />}>
             <WebhookSimulator />
           </Suspense>
         </TabsContent>

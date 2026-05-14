@@ -109,7 +109,7 @@ const MagisteriumViewer: React.FC = () => {
     return (
       <div className="max-w-4xl mx-auto px-4 py-20 flex flex-col items-center justify-center space-y-6">
         <div className="relative">
-          <div className="w-16 h-16 rounded-2xl bg-primary/10 animate-pulse border-2 border-primary/20" />
+          <div className="w-16 h-16 rounded-full bg-primary/10 animate-pulse border-2 border-primary/20" />
           <Icons.Loader className="absolute inset-0 w-16 h-16 text-primary animate-spin p-4" />
         </div>
         <p className="text-muted-foreground font-serif italic animate-pulse">Buscando documento nos arquivos do Vaticano...</p>
@@ -127,7 +127,7 @@ const MagisteriumViewer: React.FC = () => {
           <h2 className="text-2xl font-serif font-bold">Ops! Algo deu errado</h2>
           <p className="text-muted-foreground">{error || 'Documento não disponível.'}</p>
         </div>
-        <Button onClick={() => navigate(-1)} variant="outline" className="rounded-xl">
+        <Button onClick={() => navigate(-1)} variant="outline" className="rounded-full">
           <Icons.ArrowLeft className="w-4 h-4 mr-2" /> Voltar
         </Button>
       </div>
@@ -148,7 +148,7 @@ const MagisteriumViewer: React.FC = () => {
             variant="ghost" 
             size="icon" 
             onClick={() => navigate(-1)}
-            className="rounded-xl hover:bg-muted"
+            className="rounded-full hover:bg-muted"
           >
             <Icons.ArrowLeft className="w-5 h-5" />
           </Button>
@@ -159,8 +159,8 @@ const MagisteriumViewer: React.FC = () => {
         </div>
         
         <div className="flex items-center gap-2">
-          <AudioButton variant="outline" className="rounded-xl h-10 w-10 p-0" />
-          <Button variant="outline" size="icon" className="rounded-xl h-10 w-10 p-0" onClick={() => window.print()}>
+          <AudioButton variant="outline" className="rounded-full h-10 w-10 p-0" />
+          <Button variant="outline" size="icon" className="rounded-full h-10 w-10 p-0" onClick={() => window.print()}>
             <Icons.Download className="w-4 h-4" />
           </Button>
         </div>
@@ -176,7 +176,7 @@ const MagisteriumViewer: React.FC = () => {
           className="prose prose-slate dark:prose-invert max-w-none 
             prose-headings:font-serif prose-headings:text-primary 
             prose-p:font-serif prose-p:text-foreground/90 prose-p:leading-[1.8]
-            prose-blockquote:border-primary/20 prose-blockquote:bg-primary/5 prose-blockquote:p-6 prose-blockquote:rounded-2xl prose-blockquote:italic
+            prose-blockquote:border-primary/20 prose-blockquote:bg-primary/5 prose-blockquote:p-6 prose-blockquote:rounded-full prose-blockquote:italic
             prose-strong:text-primary prose-strong:font-bold"
         >
           <ReactMarkdown>{processedText}</ReactMarkdown>

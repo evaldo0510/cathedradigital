@@ -173,7 +173,7 @@ const HojePage: React.FC = () => {
               className="p-8 rounded-[2rem] border border-[#0F172A]/5 bg-white cursor-pointer hover:border-[#D4AF37]/30 transition-all flex items-center justify-between shadow-sm"
             >
               <div className="flex items-center gap-6">
-                <div className="w-14 h-14 rounded-2xl bg-[#0F172A]/5 flex items-center justify-center text-[#D4AF37]">
+                <div className="w-14 h-14 rounded-full bg-[#0F172A]/5 flex items-center justify-center text-[#D4AF37]">
                   <Icons.Flame className="w-7 h-7" />
                 </div>
                 <div>
@@ -222,7 +222,7 @@ const HojePage: React.FC = () => {
             className="p-10 rounded-[2.5rem] border border-[#0F172A]/5 bg-white cursor-pointer hover:border-[#D4AF37]/30 transition-all group shadow-sm"
           >
             <div className="flex items-center gap-8">
-              <div className="w-20 h-20 rounded-3xl bg-[#0F172A]/5 flex items-center justify-center text-[#D4AF37] group-hover:bg-[#0F172A]/10 transition-colors">
+              <div className="w-20 h-20 rounded-full bg-[#0F172A]/5 flex items-center justify-center text-[#D4AF37] group-hover:bg-[#0F172A]/10 transition-colors">
                 <Icons.Catechism className="w-10 h-10" />
               </div>
               <div className="flex-1">
@@ -246,7 +246,7 @@ const HojePage: React.FC = () => {
             className="p-8 rounded-[2rem] border border-[#0F172A]/5 bg-white hover:border-[#D4AF37]/30 transition-all flex items-center justify-between group shadow-sm"
           >
             <div className="flex items-center gap-6">
-              <div className="w-14 h-14 rounded-2xl bg-[#0F172A]/5 flex items-center justify-center text-[#D4AF37] group-hover:bg-[#0F172A]/10 transition-colors">
+              <div className="w-14 h-14 rounded-full bg-[#0F172A]/5 flex items-center justify-center text-[#D4AF37] group-hover:bg-[#0F172A]/10 transition-colors">
                 <Icons.Route className="w-7 h-7" />
               </div>
               <div className="flex-1">

@@ -317,7 +317,7 @@ const InstitutionalVideoSection = () => {
             <motion.div
               animate={shouldReduceMotion ? { y: 0 } : { y: [0, -10, 0] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute -bottom-6 -right-6 hidden md:flex items-center gap-3 p-4 bg-card border border-border rounded-2xl shadow-xl z-20 cursor-pointer select-none"
+              className="absolute -bottom-6 -right-6 hidden md:flex items-center gap-3 p-4 bg-card border border-border rounded-full shadow-xl z-20 cursor-pointer select-none"
               onClick={toggleMute}
               role="button"
               aria-label={isMuted ? "Ativar som" : "Desativar som"}

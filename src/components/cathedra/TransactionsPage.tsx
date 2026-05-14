@@ -448,7 +448,7 @@ const TransactionsPage: React.FC = () => {
                 <ChevronDown className="w-3 h-3 opacity-50" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="rounded-xl">
+            <DropdownMenuContent align="end" className="rounded-full">
               <DropdownMenuItem onClick={() => exportToCSV('current')}>Exportar Página Atual</DropdownMenuItem>
               <DropdownMenuItem onClick={() => exportToCSV('all')}>Exportar Tudo (Filtrado)</DropdownMenuItem>
             </DropdownMenuContent>
@@ -457,7 +457,7 @@ const TransactionsPage: React.FC = () => {
       </div>
 
       {exporting && totalToExport > 0 && (
-        <Card className="bg-primary/5 border-primary/10 rounded-2xl p-6 space-y-3">
+        <Card className="bg-primary/5 border-primary/10 rounded-full p-6 space-y-3">
           <div className="flex justify-between items-end">
             <div className="space-y-1">
               <p className="text-xs font-bold uppercase tracking-widest text-primary">Buscando registros...</p>
@@ -478,14 +478,14 @@ const TransactionsPage: React.FC = () => {
             {isAdmin && (
               <div className="space-y-1.5">
                 <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Usuário</label>
-                <Input placeholder="Nome/Email" value={userSearch} onChange={(e) => setUserSearch(e.target.value)} disabled={loading || exporting} className="rounded-xl h-10 bg-background/50" />
+                <Input placeholder="Nome/Email" value={userSearch} onChange={(e) => setUserSearch(e.target.value)} disabled={loading || exporting} className="rounded-full h-10 bg-background/50" />
               </div>
             )}
             <div className="space-y-1.5">
               <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Status</label>
               <Select value={statusFilter} onValueChange={setStatusFilter} disabled={loading || exporting}>
-                <SelectTrigger className="rounded-xl h-10 bg-background/50"><SelectValue /></SelectTrigger>
-                <SelectContent className="rounded-xl">
+                <SelectTrigger className="rounded-full h-10 bg-background/50"><SelectValue /></SelectTrigger>
+                <SelectContent className="rounded-full">
                   <SelectItem value="all">Todos</SelectItem>
                   <SelectItem value="approved">Aprovados</SelectItem>
                   <SelectItem value="pending">Pendentes</SelectItem>
@@ -496,8 +496,8 @@ const TransactionsPage: React.FC = () => {
             <div className="space-y-1.5">
               <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Plano</label>
               <Select value={planFilter} onValueChange={setPlanFilter} disabled={loading || exporting}>
-                <SelectTrigger className="rounded-xl h-10 bg-background/50"><SelectValue /></SelectTrigger>
-                <SelectContent className="rounded-xl">
+                <SelectTrigger className="rounded-full h-10 bg-background/50"><SelectValue /></SelectTrigger>
+                <SelectContent className="rounded-full">
                   <SelectItem value="all">Todos</SelectItem>
                   {availablePlans.map(p => <SelectItem key={p} value={p}>{p}</SelectItem>)}
                 </SelectContent>
@@ -505,17 +505,17 @@ const TransactionsPage: React.FC = () => {
             </div>
             <div className="space-y-1.5">
               <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Início</label>
-              <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} disabled={loading || exporting} className="rounded-xl h-10 bg-background/50" />
+              <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} disabled={loading || exporting} className="rounded-full h-10 bg-background/50" />
             </div>
             <div className="space-y-1.5">
               <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Fim</label>
-              <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} disabled={loading || exporting} className="rounded-xl h-10 bg-background/50" />
+              <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} disabled={loading || exporting} className="rounded-full h-10 bg-background/50" />
             </div>
             <div className="space-y-1.5">
               <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Ordem</label>
               <Select value={sortOrder} onValueChange={(v: any) => setSortOrder(v)} disabled={loading || exporting}>
-                <SelectTrigger className="rounded-xl h-10 bg-background/50"><SelectValue /></SelectTrigger>
-                <SelectContent className="rounded-xl"><SelectItem value="desc">Recentes</SelectItem><SelectItem value="asc">Antigos</SelectItem></SelectContent>
+                <SelectTrigger className="rounded-full h-10 bg-background/50"><SelectValue /></SelectTrigger>
+                <SelectContent className="rounded-full"><SelectItem value="desc">Recentes</SelectItem><SelectItem value="asc">Antigos</SelectItem></SelectContent>
               </Select>
             </div>
           </div>
@@ -569,7 +569,7 @@ const TransactionsPage: React.FC = () => {
       <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
         <DialogContent className="max-w-3xl rounded-[2.5rem] bg-background ">
           <DialogHeader><DialogTitle className="text-2xl font-serif font-bold">Preview da Exportação</DialogTitle><DialogDescription>Confira os dados antes de baixar o arquivo CSV.</DialogDescription></DialogHeader>
-          <div className="py-4 overflow-x-auto"><Table className="border rounded-xl">
+          <div className="py-4 overflow-x-auto"><Table className="border rounded-full">
             <TableHeader className="bg-muted/50"><TableRow>
               <TableHead className="text-[10px] font-bold">Data</TableHead>
               <TableHead className="text-[10px] font-bold">Audit_TZ</TableHead>
@@ -600,10 +600,10 @@ const TransactionsPage: React.FC = () => {
         <DialogContent className="max-w-md rounded-[2.5rem] bg-background ">
           <DialogHeader><DialogTitle className="text-2xl font-serif font-bold text-destructive">Limpar Registros</DialogTitle><DialogDescription>Ação irreversível de exclusão de dados.</DialogDescription></DialogHeader>
           <div className="py-4 space-y-4">
-            <div className="p-4 bg-destructive/5 rounded-2xl border border-destructive/10 text-xs text-destructive font-bold">Cuidado! Você apagará as transações de {startDate || '---'} até {endDate || '---'}.</div>
+            <div className="p-4 bg-destructive/5 rounded-full border border-destructive/10 text-xs text-destructive font-bold">Cuidado! Você apagará as transações de {startDate || '---'} até {endDate || '---'}.</div>
             <div className="space-y-2">
               <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Digite 'CONFIRMAR' para liberar</label>
-              <Input value={cleanupConfirmation} onChange={(e) => setCleanupConfirmation(e.target.value)} placeholder="CONFIRMAR" className="rounded-xl border-destructive/30" />
+              <Input value={cleanupConfirmation} onChange={(e) => setCleanupConfirmation(e.target.value)} placeholder="CONFIRMAR" className="rounded-full border-destructive/30" />
             </div>
           </div>
           <DialogFooter className="gap-3">
@@ -620,16 +620,16 @@ const TransactionsPage: React.FC = () => {
           {selectedTx && !Array.isArray(selectedTx) && (
             <div className="space-y-6 py-4">
               <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-1"><p className="text-[10px] font-bold text-muted-foreground uppercase">ID Interno</p><p className="text-xs font-mono bg-muted p-2 rounded-lg truncate">{selectedTx.id}</p></div>
-                <div className="space-y-1"><p className="text-[10px] font-bold text-muted-foreground uppercase">ID Pagamento (MP)</p><p className="text-xs font-mono bg-muted p-2 rounded-lg truncate">{selectedTx.payment_id || 'N/A'}</p></div>
+                <div className="space-y-1"><p className="text-[10px] font-bold text-muted-foreground uppercase">ID Interno</p><p className="text-xs font-mono bg-muted p-2 rounded-full truncate">{selectedTx.id}</p></div>
+                <div className="space-y-1"><p className="text-[10px] font-bold text-muted-foreground uppercase">ID Pagamento (MP)</p><p className="text-xs font-mono bg-muted p-2 rounded-full truncate">{selectedTx.payment_id || 'N/A'}</p></div>
               </div>
               <div className="space-y-4">
                 <div className="flex justify-between items-center"><p className="text-[10px] font-bold uppercase text-muted-foreground">Webhook Payload & Logs</p><div className="flex gap-2 items-center">
-                  <div className="relative"><Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground" /><Input placeholder="Buscar no JSON..." value={payloadSearch} onChange={(e) => setPayloadSearch(e.target.value)} className="h-7 text-[10px] pl-7 w-40 rounded-lg" /></div>
+                  <div className="relative"><Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground" /><Input placeholder="Buscar no JSON..." value={payloadSearch} onChange={(e) => setPayloadSearch(e.target.value)} className="h-7 text-[10px] pl-7 w-40 rounded-full" /></div>
                   <Badge variant="outline" className="text-[9px] font-bold">{filteredJSON?.count} matches</Badge>
                   <Button variant="ghost" size="sm" className="h-7 text-[10px]" onClick={() => copyToClipboard(JSON.stringify(selectedTx.webhook_payload, null, 2))}>{copied ? <Check className="w-3 h-3 text-green-500" /> : <Copy className="w-3 h-3" />}</Button>
                 </div></div>
-                <div className="max-h-60 overflow-y-auto bg-slate-950 p-6 rounded-2xl border border-white/5 custom-scrollbar"><pre className="text-[11px] text-slate-300 font-mono whitespace-pre-wrap">{JSON.stringify(filteredJSON?.data, null, 2)}</pre></div>
+                <div className="max-h-60 overflow-y-auto bg-slate-950 p-6 rounded-full border border-white/5 custom-scrollbar"><pre className="text-[11px] text-slate-300 font-mono whitespace-pre-wrap">{JSON.stringify(filteredJSON?.data, null, 2)}</pre></div>
               </div>
             </div>
           )}
@@ -642,7 +642,7 @@ const TransactionsPage: React.FC = () => {
         <DialogContent className="max-w-4xl rounded-[2.5rem] bg-background  max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-2xl font-serif font-bold flex items-center gap-3">
-              <div className="p-2 bg-primary/10 rounded-xl text-primary"><ShieldAlert className="w-6 h-6" /></div>
+              <div className="p-2 bg-primary/10 rounded-full text-primary"><ShieldAlert className="w-6 h-6" /></div>
               Histórico de Exportações
             </DialogTitle>
             <DialogDescription>Rastreabilidade de todos os arquivos CSV gerados por administradores.</DialogDescription>
@@ -651,15 +651,15 @@ const TransactionsPage: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-6">
             <div className="space-y-1">
               <label className="text-[10px] font-bold uppercase text-muted-foreground">Admin</label>
-              <Input placeholder="E-mail" value={auditAdminFilter} onChange={(e) => setAuditAdminFilter(e.target.value)} className="h-9 rounded-xl text-xs" />
+              <Input placeholder="E-mail" value={auditAdminFilter} onChange={(e) => setAuditAdminFilter(e.target.value)} className="h-9 rounded-full text-xs" />
             </div>
             <div className="space-y-1">
               <label className="text-[10px] font-bold uppercase text-muted-foreground">Início</label>
-              <Input type="date" value={auditStart} onChange={(e) => setAuditStart(e.target.value)} className="h-9 rounded-xl text-xs" />
+              <Input type="date" value={auditStart} onChange={(e) => setAuditStart(e.target.value)} className="h-9 rounded-full text-xs" />
             </div>
             <div className="space-y-1">
               <label className="text-[10px] font-bold uppercase text-muted-foreground">Fim</label>
-              <Input type="date" value={auditEnd} onChange={(e) => setAuditEnd(e.target.value)} className="h-9 rounded-xl text-xs" />
+              <Input type="date" value={auditEnd} onChange={(e) => setAuditEnd(e.target.value)} className="h-9 rounded-full text-xs" />
             </div>
           </div>
 
@@ -698,7 +698,7 @@ const TransactionsPage: React.FC = () => {
                           <Button 
                             variant="ghost" 
                             size="sm" 
-                            className="h-7 text-[10px] rounded-lg"
+                            className="h-7 text-[10px] rounded-full"
                             title="Baixar CSV diretamente"
                             onClick={() => {
                               setIsAuditOpen(false);
@@ -711,7 +711,7 @@ const TransactionsPage: React.FC = () => {
                           <Button 
                             variant="ghost" 
                             size="sm" 
-                            className="h-7 text-[10px] rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                            className="h-7 text-[10px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
                             title="Ver no painel principal"
                             onClick={() => {
                               const f = log.metadata?.filters;

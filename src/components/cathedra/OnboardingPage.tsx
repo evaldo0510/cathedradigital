@@ -268,14 +268,14 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
             <p className="text-muted-foreground text-sm">Com base nas suas respostas, preparamos o caminho ideal para você.</p>
           </div>
 
-          <div className="bg-card border border-primary/20 rounded-2xl p-6 space-y-3 text-center">
+          <div className="bg-card border border-primary/20 rounded-full p-6 space-y-3 text-center">
             <h2 className="text-xl font-bold text-foreground">{title}</h2>
             <p className="text-muted-foreground text-sm">Uma jornada guiada pensada especialmente para o seu momento espiritual.</p>
           </div>
 
           <button
             onClick={handleGoToJourney}
-            className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-foreground text-background rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-primary hover:text-primary-foreground transition-all"
+            className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-foreground text-background rounded-full font-black uppercase text-xs tracking-widest hover:bg-primary hover:text-primary-foreground transition-all"
           >
             Começar Minha Jornada <ChevronRight className="w-4 h-4" />
           </button>
@@ -321,9 +321,9 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
                   <button
                     key={opt.value}
                     onClick={() => handleDiagAnswer(opt.value)}
-                    className="flex items-center gap-4 p-5 rounded-2xl border border-border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all text-left group"
+                    className="flex items-center gap-4 p-5 rounded-full border border-border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all text-left group"
                   >
-                    <div className="p-3 rounded-xl bg-muted group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                    <div className="p-3 rounded-full bg-muted group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
                       {opt.icon}
                     </div>
                     <span className="font-bold text-foreground">{opt.label}</span>
@@ -354,7 +354,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -40 }}
             transition={{ duration: 0.25 }}
-            className="bg-card border border-border rounded-3xl overflow-hidden lg:flex lg:items-center lg:min-h-[500px]"
+            className="bg-card border border-border rounded-full overflow-hidden lg:flex lg:items-center lg:min-h-[500px]"
           >
             <img src={slide.image} alt={slide.title} className="w-full h-48 md:h-64 lg:h-full lg:w-1/2 object-cover" />
             <div className="p-6 md:p-8 lg:p-16 text-center lg:text-left lg:w-1/2 space-y-4 lg:space-y-8">
@@ -392,7 +392,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
 
           <button
             onClick={handleSlideNext}
-            className="flex items-center gap-2 px-6 py-3 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-primary hover:text-primary-foreground transition-all"
+            className="flex items-center gap-2 px-6 py-3 bg-foreground text-background rounded-full font-black uppercase text-[10px] tracking-widest hover:bg-primary hover:text-primary-foreground transition-all"
           >
             {isLastSlide ? 'Diagnóstico' : 'Próximo'}
             <ChevronRight className="w-4 h-4" />

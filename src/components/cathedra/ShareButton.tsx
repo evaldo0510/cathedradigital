@@ -27,7 +27,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
     return (
       <button
         onClick={() => share({ title, text, url })}
-        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-card border border-border text-xs font-medium text-muted-foreground hover:text-primary hover:border-primary/30 transition-all ${className}`}
+        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-card border border-border text-xs font-medium text-muted-foreground hover:text-primary hover:border-primary/30 transition-all ${className}`}
         title="Compartilhar"
       >
         <Share2 className={iconSize} />
@@ -39,7 +39,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
   return (
     <button
       onClick={() => share({ title, text, url })}
-      className={`p-2 rounded-xl border border-border text-muted-foreground hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-all ${className}`}
+      className={`p-2 rounded-full border border-border text-muted-foreground hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-all ${className}`}
       title="Compartilhar"
     >
       <Share2 className={iconSize} />

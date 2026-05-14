@@ -190,7 +190,7 @@ const PopesPage: React.FC = () => {
           placeholder="Buscar Papa..."
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="pl-9 bg-muted/50 border-border/50 rounded-xl"
+          className="pl-9 bg-muted/50 border-border/50 rounded-full"
         />
       </div>
 

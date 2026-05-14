@@ -68,7 +68,7 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = ({
     <Popover onOpenChange={(open) => open && fetchVerses()}>
       <PopoverTrigger asChild>
         <button
-          className="px-2.5 py-1 rounded-lg bg-card border border-border text-xs font-bold text-primary hover:bg-primary hover:text-primary-foreground transition-all"
+          className="px-2.5 py-1 rounded-full bg-card border border-border text-xs font-bold text-primary hover:bg-primary hover:text-primary-foreground transition-all"
         >
           {label}
         </button>
@@ -76,7 +76,7 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = ({
       <PopoverContent
         side="top"
         align="start"
-        className="w-80 max-h-64 overflow-y-auto p-0 rounded-2xl border-primary/20"
+        className="w-80 max-h-64 overflow-y-auto p-0 rounded-full border-primary/20"
       >
         <div className="p-3 border-b border-border bg-primary/5 flex items-center justify-between">
           <div className="flex items-center gap-2">

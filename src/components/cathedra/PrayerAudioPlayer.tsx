@@ -92,7 +92,7 @@ const PrayerAudioPlayer: React.FC<PrayerAudioPlayerProps> = ({ prayers, variant 
     : 'bg-primary/10 text-primary border-primary/20 hover:bg-primary/20';
 
   return (
-    <div className={`rounded-2xl border p-4 space-y-3 ${bgClass}`}>
+    <div className={`rounded-full border p-4 space-y-3 ${bgClass}`}>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Icons.Audio className={`w-4 h-4 ${mutedClass}`} />
@@ -106,7 +106,7 @@ const PrayerAudioPlayer: React.FC<PrayerAudioPlayerProps> = ({ prayers, variant 
             <button
               key={r}
               onClick={() => setRate(r)}
-              className={`w-6 h-6 rounded-md text-[10px] font-bold transition-all ${
+              className={`w-6 h-6 rounded-full text-[10px] font-bold transition-all ${
                 rate === r
                   ? (isDark ? 'bg-secondary/30 text-secondary' : 'bg-primary text-primary-foreground')
                   : (isDark ? 'bg-white/5 text-secondary/40' : 'bg-card text-muted-foreground')
@@ -139,7 +139,7 @@ const PrayerAudioPlayer: React.FC<PrayerAudioPlayerProps> = ({ prayers, variant 
 
       <button
         onClick={togglePlay}
-        className={`w-full py-3 rounded-xl border font-bold text-sm transition-all flex items-center justify-center gap-2 ${btnClass}`}
+        className={`w-full py-3 rounded-full border font-bold text-sm transition-all flex items-center justify-center gap-2 ${btnClass}`}
       >
         {isPlaying ? (
           <>

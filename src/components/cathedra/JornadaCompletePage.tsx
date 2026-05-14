@@ -294,7 +294,7 @@ const JornadaCompletePage: React.FC = () => {
                 <Star className="w-5 h-5 text-primary" /> Recompensas
               </h2>
               {xpAwarded > 0 && (
-                <div className="flex items-center gap-3 p-3 bg-primary/10 rounded-xl">
+                <div className="flex items-center gap-3 p-3 bg-primary/10 rounded-full">
                   <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-lg">⚡</div>
                   <div>
                     <p className="text-sm font-bold text-foreground">+{xpAwarded} XP</p>
@@ -306,7 +306,7 @@ const JornadaCompletePage: React.FC = () => {
                 const badge = getBadgeById(badgeId);
                 if (!badge) return null;
                 return (
-                  <div key={badgeId} className="flex items-center gap-3 p-3 bg-accent/10 rounded-xl">
+                  <div key={badgeId} className="flex items-center gap-3 p-3 bg-accent/10 rounded-full">
                     <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center text-lg">{badge.icon}</div>
                     <div>
                       <p className="text-sm font-bold text-foreground">{badge.name}</p>
@@ -370,7 +370,7 @@ const JornadaCompletePage: React.FC = () => {
             onClick={() => navigate(`/jornadas/${nextJourney.id}`)}
           >
             <CardContent className="p-5 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
                 <ArrowRight className="w-6 h-6 text-primary" />
               </div>
               <div className="flex-1 min-w-0">

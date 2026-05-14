@@ -120,7 +120,7 @@ const CacheManager = lazy(() => import('./components/cathedra/CacheManager'));
 
 const SkeletonBar = React.forwardRef<HTMLDivElement, { w?: string; h?: string; className?: string }>(
   ({ w = 'w-full', h = 'h-4', className = '' }, ref) => (
-    <div ref={ref} className={`${w} ${h} rounded-lg bg-muted/60 animate-pulse ${className}`} />
+    <div ref={ref} className={`${w} ${h} rounded-full bg-muted/60 animate-pulse ${className}`} />
   )
 );
 
@@ -129,8 +129,8 @@ SkeletonBar.displayName = 'SkeletonBar';
 const LoadingFallback = () => (
   <div className="flex flex-col items-center justify-center min-h-[60dvh] w-full p-6 animate-in fade-in duration-500">
     <div className="relative mb-8">
-      <div className="w-16 h-16 rounded-2xl bg-primary/10 animate-pulse border-2 border-primary/20" />
-      <div className="absolute inset-0 w-16 h-16 rounded-2xl border-t-2 border-primary animate-spin" />
+      <div className="w-16 h-16 rounded-full bg-primary/10 animate-pulse border-2 border-primary/20" />
+      <div className="absolute inset-0 w-16 h-16 rounded-full border-t-2 border-primary animate-spin" />
     </div>
     
     <div className="w-full max-w-sm space-y-4">
@@ -140,8 +140,8 @@ const LoadingFallback = () => (
       
       <div className="grid grid-cols-2 gap-3 pt-6">
         {[1, 2].map(i => (
-          <div key={i} className="rounded-xl bg-muted/20 border border-border/20 p-4 space-y-3">
-            <SkeletonBar w="w-12 mx-auto" h="h-12" className="rounded-lg" />
+          <div key={i} className="rounded-full bg-muted/20 border border-border/20 p-4 space-y-3">
+            <SkeletonBar w="w-12 mx-auto" h="h-12" className="rounded-full" />
             <SkeletonBar w="w-2/3 mx-auto" h="h-3" />
           </div>
         ))}

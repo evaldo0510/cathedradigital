@@ -86,14 +86,14 @@ const TransparencyPage: React.FC = () => {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a 
               href="mailto:contato@cathedradigital.com" 
-              className="flex items-center gap-3 px-8 py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary transition-all w-full sm:w-auto justify-center"
+              className="flex items-center gap-3 px-8 py-4 bg-foreground text-background rounded-full font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary transition-all w-full sm:w-auto justify-center"
             >
               <Mail className="w-4 h-4" />
               Enviar E-mail
             </a>
             <button 
               onClick={() => window.open('https://wa.me/seunumerowhatsapp', '_blank')}
-              className="flex items-center gap-3 px-8 py-4 bg-secondary text-primary rounded-2xl font-black uppercase text-[10px] tracking-widest border border-primary/20 hover:bg-secondary/80 transition-all w-full sm:w-auto justify-center"
+              className="flex items-center gap-3 px-8 py-4 bg-secondary text-primary rounded-full font-black uppercase text-[10px] tracking-widest border border-primary/20 hover:bg-secondary/80 transition-all w-full sm:w-auto justify-center"
             >
               <Icons.MessageSquare className="w-4 h-4" />
               Suporte WhatsApp

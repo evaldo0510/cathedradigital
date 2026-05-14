@@ -118,7 +118,7 @@ const MissalPage: React.FC = () => {
 
       <div className="space-y-4">
         {MISSAL_SECTIONS.map(section => (
-          <div key={section.id} id={`missal-${section.id}`} className="bg-card border border-border rounded-2xl overflow-hidden">
+          <div key={section.id} id={`missal-${section.id}`} className="bg-card border border-border rounded-full overflow-hidden">
             <button
               onClick={() => setExpandedSection(expandedSection === section.id ? null : section.id)}
               className="w-full p-5 flex items-center justify-between text-left hover:bg-primary/5 transition-all"
@@ -136,12 +136,12 @@ const MissalPage: React.FC = () => {
                   <div key={i} className="p-5 space-y-3">
                     <h4 className="text-sm font-black uppercase tracking-widest text-primary">{part.label}</h4>
                     {showRubrics && part.rubric && (
-                      <p className="text-xs text-primary font-medium italic bg-secondary/5 rounded-xl px-4 py-2 border border-secondary/10">
+                      <p className="text-xs text-primary font-medium italic bg-secondary/5 rounded-full px-4 py-2 border border-secondary/10">
                         ✠ {part.rubric}
                       </p>
                     )}
                     {showLatin && part.latin && (
-                      <p className="text-sm text-muted-foreground font-serif italic bg-muted rounded-xl p-4 whitespace-pre-line">{part.latin}</p>
+                      <p className="text-sm text-muted-foreground font-serif italic bg-muted rounded-full p-4 whitespace-pre-line">{part.latin}</p>
                     )}
                     <p className="text-sm text-foreground/90 font-serif leading-relaxed whitespace-pre-line">{part.text}</p>
                   </div>

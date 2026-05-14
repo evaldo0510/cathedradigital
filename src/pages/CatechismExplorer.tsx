@@ -132,7 +132,7 @@ const CatechismExplorer: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Filters Sidebar */}
         <div className="lg:col-span-1 space-y-6">
-          <div className="p-4 bg-muted/30 rounded-2xl border border-border/50 space-y-2">
+          <div className="p-4 bg-muted/30 rounded-full border border-border/50 space-y-2">
             <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-muted-foreground">
               <span>Total Geral</span>
               <span className="text-foreground">{allParagraphs.length}</span>
@@ -252,7 +252,7 @@ const CatechismExplorer: React.FC = () => {
               ))}
 
               {filteredParagraphs.length === 0 && (
-                <div className="text-center py-20 bg-muted/20 rounded-3xl border-2 border-dashed border-border">
+                <div className="text-center py-20 bg-muted/20 rounded-full border-2 border-dashed border-border">
                   <Icons.Search className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-20" />
                   <h3 className="text-lg font-bold">Nenhum parágrafo encontrado</h3>
                   <p className="text-muted-foreground">Tente ajustar seus filtros ou busca.</p>

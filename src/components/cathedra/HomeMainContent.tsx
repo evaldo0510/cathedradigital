@@ -36,7 +36,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
           className="p-8 md:p-12 lg:p-14 flex flex-col md:flex-row items-center justify-between gap-10 group"
         >
           <div className="flex items-center gap-8 text-center md:text-left flex-col md:flex-row">
-            <div className="w-16 h-16 rounded-3xl bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-500 shadow-inner">
+            <div className="w-16 h-16 rounded-full bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-500 shadow-inner">
               <Icons.Flame className="w-8 h-8" />
             </div>
             <div>
@@ -122,7 +122,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
           <HomeCard className="p-8 md:p-10 lg:p-12 space-y-6">
-            <div className="w-10 h-10 rounded-2xl bg-primary/5 flex items-center justify-center text-primary">
+            <div className="w-10 h-10 rounded-full bg-primary/5 flex items-center justify-center text-primary">
               <Icons.Star className="w-5 h-5" />
             </div>
             <div>
@@ -135,7 +135,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
           </HomeCard>
           
           <HomeCard className="p-8 md:p-10 lg:p-12 space-y-6">
-            <div className="w-10 h-10 rounded-2xl bg-secondary/5 flex items-center justify-center text-secondary">
+            <div className="w-10 h-10 rounded-full bg-secondary/5 flex items-center justify-center text-secondary">
               <Icons.BookOpen className="w-5 h-5" />
             </div>
             <div>

@@ -102,7 +102,7 @@ const DiagnosticsPage: React.FC = () => {
         </Card>
       </div>
 
-      <div className="bg-card border border-border rounded-3xl p-8 space-y-6">
+      <div className="bg-card border border-border rounded-full p-8 space-y-6">
         <h2 className="text-xl font-serif font-bold text-foreground flex items-center gap-3">
           <Icons.Zap className="w-5 h-5 text-primary" /> Relatório de Serviços
         </h2>
@@ -125,10 +125,10 @@ const DiagnosticsPage: React.FC = () => {
           ))}
         </div>
         <div className="pt-4 flex flex-col sm:flex-row justify-center gap-3">
-          <Button onClick={checkStatus} disabled={loading} variant="outline" className="rounded-xl font-black uppercase tracking-widest text-[10px]">
+          <Button onClick={checkStatus} disabled={loading} variant="outline" className="rounded-full font-black uppercase tracking-widest text-[10px]">
             {loading ? 'Sincronizando...' : 'Recarregar Diagnóstico'}
           </Button>
-          <Button asChild variant="ghost" className="rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-red-500/5 hover:text-red-600">
+          <Button asChild variant="ghost" className="rounded-full font-black uppercase tracking-widest text-[10px] hover:bg-red-500/5 hover:text-red-600">
             <a href="/security-audit">Auditoria de Segurança</a>
           </Button>
         </div>

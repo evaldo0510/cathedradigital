@@ -153,7 +153,7 @@ const CheckoutResultPage: React.FC = () => {
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="w-full bg-muted/50 rounded-3xl p-6 border border-border/50 space-y-4"
+          className="w-full bg-muted/50 rounded-full p-6 border border-border/50 space-y-4"
         >
           <div className="flex justify-between items-center pb-2 border-b border-border/50">
             <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Resumo da Transação</span>
@@ -195,7 +195,7 @@ const CheckoutResultPage: React.FC = () => {
       <div className="flex flex-col sm:flex-row gap-3 w-full">
         <Button
           onClick={() => navigate(c.primaryAction.route)}
-          className="flex-1 h-12 rounded-2xl font-bold uppercase text-xs tracking-widest"
+          className="flex-1 h-12 rounded-full font-bold uppercase text-xs tracking-widest"
         >
           {c.primaryAction.label}
         </Button>
@@ -203,7 +203,7 @@ const CheckoutResultPage: React.FC = () => {
           <Button
             variant="outline"
             onClick={() => navigate(c.secondaryAction!.route)}
-            className="flex-1 h-12 rounded-2xl font-bold uppercase text-xs tracking-widest"
+            className="flex-1 h-12 rounded-full font-bold uppercase text-xs tracking-widest"
           >
             {c.secondaryAction.label}
           </Button>

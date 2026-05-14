@@ -28,7 +28,7 @@ const AparicoesPage: React.FC = () => {
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Back + Header */}
         <div className="flex items-center gap-4">
-          <button onClick={() => setSelectedApparition(null)} className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all">
+          <button onClick={() => setSelectedApparition(null)} className="p-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all">
             <Icons.ChevronLeft className="w-5 h-5 text-foreground" />
           </button>
           <div className="flex-1 min-w-0">
@@ -38,12 +38,12 @@ const AparicoesPage: React.FC = () => {
           </div>
           <button
             onClick={() => handleToggleFavorite(selectedApparition)}
-            className={`p-2 rounded-xl border transition-all ${isFav ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground hover:text-primary hover:border-primary/30'}`}
+            className={`p-2 rounded-full border transition-all ${isFav ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground hover:text-primary hover:border-primary/30'}`}
             title={isFav ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
           >
             <Icons.Heart className={`w-5 h-5 ${isFav ? 'fill-primary' : ''}`} />
           </button>
-          <img src={selectedApparition.imageSrc} alt={selectedApparition.title} className="w-16 h-16 rounded-xl object-cover shadow-md" loading="lazy" />
+          <img src={selectedApparition.imageSrc} alt={selectedApparition.title} className="w-16 h-16 rounded-full object-cover shadow-md" loading="lazy" />
         </div>
 
         {/* Quick facts */}
@@ -54,7 +54,7 @@ const AparicoesPage: React.FC = () => {
             { label: 'Festa Litúrgica', value: selectedApparition.liturgicalFeast },
             { label: 'Status', value: selectedApparition.approved ? 'Aprovada pela Igreja' : 'Em análise' },
           ].map(fact => (
-            <div key={fact.label} className="p-3 rounded-xl bg-card border border-border">
+            <div key={fact.label} className="p-3 rounded-full bg-card border border-border">
               <p className="text-[9px] font-black uppercase tracking-widest text-primary mb-1">{fact.label}</p>
               <p className="text-xs font-semibold text-foreground">{fact.value}</p>
             </div>
@@ -62,7 +62,7 @@ const AparicoesPage: React.FC = () => {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-1 p-1 bg-muted rounded-xl">
+        <div className="flex gap-1 p-1 bg-muted rounded-full">
           {[
             { id: 'historia' as const, label: 'A Aparição', icon: <Icons.Book className="w-3.5 h-3.5" /> },
             { id: 'vidente' as const, label: 'O Vidente', icon: <Icons.Users className="w-3.5 h-3.5" /> },
@@ -72,7 +72,7 @@ const AparicoesPage: React.FC = () => {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-xs font-bold transition-all ${
+              className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-full text-xs font-bold transition-all ${
                 activeTab === tab.id ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
               }`}
             >
@@ -90,7 +90,7 @@ const AparicoesPage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2 }}
-            className="bg-card border border-border rounded-2xl p-6 md:p-8"
+            className="bg-card border border-border rounded-full p-6 md:p-8"
           >
             {activeTab === 'historia' && (
               <div className="space-y-4">
@@ -199,7 +199,7 @@ const AparicoesPage: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.08 }}
               onClick={() => { setSelectedApparition(apparition); setActiveTab('historia'); }}
-              className={`text-left rounded-2xl bg-gradient-to-br ${apparition.color} border hover:scale-[1.02] transition-all group overflow-hidden relative`}
+              className={`text-left rounded-full bg-gradient-to-br ${apparition.color} border hover:scale-[1.02] transition-all group overflow-hidden relative`}
             >
               <div className="relative">
                 <img src={apparition.imageSrc} alt={apparition.title} className="w-full h-40 object-cover" loading="lazy" />
@@ -233,7 +233,7 @@ const AparicoesPage: React.FC = () => {
       </div>
 
       {/* Catechism reference */}
-      <div className="bg-card border border-border rounded-2xl p-6 text-center space-y-3">
+      <div className="bg-card border border-border rounded-full p-6 text-center space-y-3">
         <Icons.Cross className="w-6 h-6 text-primary mx-auto" />
         <h3 className="font-serif font-bold text-foreground">Fundamentação no Catecismo</h3>
         <p className="text-sm text-muted-foreground max-w-xl mx-auto">

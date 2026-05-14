@@ -66,7 +66,7 @@ const MagisteriumPopover: React.FC<MagisteriumPopoverProps> = ({
       <HoverCardTrigger asChild>
         <button
           onMouseEnter={fetchExcerpt}
-          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-xs font-bold text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800 dark:hover:bg-emerald-900/50 transition-all"
+          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-xs font-bold text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800 dark:hover:bg-emerald-900/50 transition-all"
         >
           <Icons.Globe className="w-3 h-3" />
           {label}
@@ -75,7 +75,7 @@ const MagisteriumPopover: React.FC<MagisteriumPopoverProps> = ({
       <HoverCardContent
         side="top"
         align="start"
-        className="w-80 max-h-64 overflow-y-auto p-0 rounded-2xl border-emerald-200 dark:border-emerald-800"
+        className="w-80 max-h-64 overflow-y-auto p-0 rounded-full border-emerald-200 dark:border-emerald-800"
       >
         <div className="p-3 border-b border-border bg-emerald-50 dark:bg-emerald-950/40 flex items-center justify-between">
           <div className="flex items-center gap-2 min-w-0">

@@ -101,7 +101,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
         
         <div className="absolute bottom-8 left-8 right-8 text-white space-y-2">
-          <span className="text-[10px] font-black uppercase tracking-widest bg-primary px-3 py-1.5 rounded-lg mb-4 inline-block">
+          <span className="text-[10px] font-black uppercase tracking-widest bg-primary px-3 py-1.5 rounded-full mb-4 inline-block">
             {CATEGORY_LABELS[saint.category] || saint.category}
           </span>
           <h2 className="text-4xl font-serif font-bold leading-tight">{saint.name}</h2>
@@ -171,7 +171,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
               <Button 
                 onClick={() => window.open((saint as any).url, '_blank')}
                 variant="outline"
-                className="bg-foreground/5 hover:bg-foreground/10 text-foreground border-border/20 text-[9px] font-black uppercase tracking-widest h-9 px-4 rounded-xl flex items-center gap-2 transition-all"
+                className="bg-foreground/5 hover:bg-foreground/10 text-foreground border-border/20 text-[9px] font-black uppercase tracking-widest h-9 px-4 rounded-full flex items-center gap-2 transition-all"
               >
                 <Icons.Globe className="w-3 h-3" />
                 Fonte Oficial
@@ -182,7 +182,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
               title={saint.name}
               text={`${saint.name} — ${saint.title}. ${saint.quotes?.[0] || ''}`}
               variant="button"
-              className="!px-4 !py-2.5 !text-[11px] !rounded-2xl !bg-foreground !text-background !font-black !uppercase !tracking-widest"
+              className="!px-4 !py-2.5 !text-[11px] !rounded-full !bg-foreground !text-background !font-black !uppercase !tracking-widest"
             />
           </div>
 
@@ -272,9 +272,9 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {saint.works.map((work, idx) => (
-                <div key={idx} className="p-4 bg-card border border-border rounded-2xl flex items-center justify-between group hover:border-primary/30 transition-all">
+                <div key={idx} className="p-4 bg-card border border-border rounded-full flex items-center justify-between group hover:border-primary/30 transition-all">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                       <Icons.Book className="w-4 h-4" />
                     </div>
                     <div>
@@ -306,7 +306,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           className="bg-primary/5 rounded-[2rem] p-6 md:p-8 border border-primary/10 flex flex-col md:flex-row items-center justify-between gap-6 group hover:bg-primary/10 transition-all shadow-sm"
         >
           <div className="flex items-center gap-5">
-            <div className="w-14 h-14 rounded-2xl bg-primary/20 flex items-center justify-center text-primary group-hover:scale-110 transition-transform shadow-inner">
+            <div className="w-14 h-14 rounded-full bg-primary/20 flex items-center justify-center text-primary group-hover:scale-110 transition-transform shadow-inner">
               <Icons.Route className="w-7 h-7" />
             </div>
             <div>
@@ -322,7 +322,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
               navigate(`/jornadas/${suggestedJourney.id}`);
               onClose();
             }}
-            className="h-14 px-8 bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase text-[10px] tracking-[0.2em] rounded-2xl shadow-lg shadow-primary/20 group/btn transition-all"
+            className="h-14 px-8 bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase text-[10px] tracking-[0.2em] rounded-full shadow-lg shadow-primary/20 group/btn transition-all"
           >
             Começar Jornada <Icons.ChevronRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
           </Button>

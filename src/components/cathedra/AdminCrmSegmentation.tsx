@@ -118,7 +118,7 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
           <button
             key={s.key}
             onClick={() => setSegment(s.key)}
-            className={`p-3 rounded-xl border text-left transition-all ${
+            className={`p-3 rounded-full border text-left transition-all ${
               segment === s.key 
                 ? 'border-primary bg-primary/5 ring-1 ring-primary/20' 
                 : 'border-border/50 bg-card hover:border-primary/30'
@@ -176,7 +176,7 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
                   <tr key={u.id} className="border-b border-border/30 hover:bg-muted/30 transition-colors">
                     <td className="p-3">
                       <div className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-lg bg-foreground text-background flex items-center justify-center font-black text-xs shrink-0">
+                        <div className="w-8 h-8 rounded-full bg-foreground text-background flex items-center justify-center font-black text-xs shrink-0">
                           {u.name?.charAt(0)?.toUpperCase() || '?'}
                         </div>
                         <div className="min-w-0">

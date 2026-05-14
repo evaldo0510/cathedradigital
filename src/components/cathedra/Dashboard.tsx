@@ -146,12 +146,12 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
 
           <div className="flex items-center justify-center gap-4 flex-wrap pt-2">
             {streak > 0 && (
-              <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-secondary/10 border border-secondary/20 shadow-sm">
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/10 border border-secondary/20 shadow-sm">
                 <Icons.Zap className="w-4 h-4 text-secondary" />
                 <span className="text-xs font-black text-primary uppercase tracking-wider">{streak} {streak === 1 ? t('day') : t('days')}</span>
               </div>
             )}
-            <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-primary/5 border border-border shadow-sm">
+            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 border border-border shadow-sm">
               <Icons.Star className="w-4 h-4 text-primary" />
               <span className="text-xs font-black text-primary uppercase tracking-wider">{profile?.xp || 0} XP</span>
             </div>
@@ -169,7 +169,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           onKeyDown={(e) => e.key === 'Enter' && goTo(AppRoute.MODULES_GUIDE)}
         >
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
               <Icons.HelpCircle className="w-5 h-5" />
             </div>
             <div>
@@ -198,7 +198,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
                   <Icons.Star className="w-2 h-2 fill-current" /> Sugerido
                 </div>
               )}
-              <div className={`w-10 h-10 rounded-2xl bg-muted/30 flex items-center justify-center ${door.iconColor} group-hover:scale-105 transition-transform mb-4 border border-border/50`}>
+              <div className={`w-10 h-10 rounded-full bg-muted/30 flex items-center justify-center ${door.iconColor} group-hover:scale-105 transition-transform mb-4 border border-border/50`}>
                 <door.icon className="w-6 h-6" />
               </div>
               <div className="space-y-1">
@@ -225,7 +225,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             onKeyDown={(e) => e.key === 'Enter' && goTo(nextUp.route)}
           >
             <div className="flex items-center gap-5">
-              <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
                 {nextUp.type === 'bible' ? <Icons.Bible className="w-6 h-6" /> : 
                  nextUp.type === 'catechism' ? <Icons.Cross className="w-6 h-6" /> : 
                  <Icons.Flame className="w-6 h-6" />}
@@ -258,15 +258,15 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         <div className="desktop-card space-y-4">
           <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary opacity-80">Estatísticas Semanais</h3>
           <div className="grid grid-cols-3 gap-2 text-center">
-            <div className="p-2 rounded-lg bg-primary/[0.04]">
+            <div className="p-2 rounded-full bg-primary/[0.04]">
               <p className="text-lg font-bold text-foreground">{weeklyStats.chaptersRead}</p>
               <p className="text-[8px] text-muted-foreground font-medium">{t('bible')}</p>
             </div>
-            <div className="p-2 rounded-lg bg-primary/[0.04]">
+            <div className="p-2 rounded-full bg-primary/[0.04]">
               <p className="text-lg font-bold text-foreground">{weeklyStats.catechismParagraphs}</p>
               <p className="text-[8px] text-muted-foreground font-medium">CIC</p>
             </div>
-            <div className="p-2 rounded-lg bg-primary/[0.04]">
+            <div className="p-2 rounded-full bg-primary/[0.04]">
               <p className="text-lg font-bold text-foreground">{weeklyStats.journeySteps}</p>
               <p className="text-[8px] text-muted-foreground font-medium">{t('journeys')}</p>
             </div>

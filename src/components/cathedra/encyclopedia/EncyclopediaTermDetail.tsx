@@ -34,7 +34,7 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="h-full flex flex-col items-center justify-center text-center p-8 bg-muted/10 rounded-3xl border border-dashed border-border/40"
+            className="h-full flex flex-col items-center justify-center text-center p-8 bg-muted/10 rounded-full border border-dashed border-border/40"
           >
             <Sparkles className="h-10 w-10 text-primary/30 mb-4" />
             <h3 className="text-xl font-bold text-foreground mb-2">Selecione um termo</h3>
@@ -47,7 +47,7 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ type: 'spring', damping: 25, stiffness: 250 }}
-            className="bg-card border border-border rounded-3xl p-6 md:p-8 space-y-6 shadow-sm"
+            className="bg-card border border-border rounded-full p-6 md:p-8 space-y-6 shadow-sm"
           >
             {/* Term Header */}
             <div>
@@ -69,7 +69,7 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
 
             {/* Bible */}
             {(selectedTerm.bibleVerses || selectedTerm.reference) && (
-              <div className="bg-blue-500/5 border border-blue-500/10 rounded-2xl p-4 space-y-2">
+              <div className="bg-blue-500/5 border border-blue-500/10 rounded-full p-4 space-y-2">
                 <div className="flex items-center gap-2">
                   <Book className="w-4 h-4 text-blue-600" />
                   <p className="text-[10px] font-black uppercase tracking-widest text-blue-600">📖 Bíblia</p>
@@ -106,7 +106,7 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
 
             {/* Catechism */}
             {selectedTerm.catechismReferences && (
-              <div className="bg-amber-500/5 border border-amber-500/10 rounded-2xl p-4 space-y-2">
+              <div className="bg-amber-500/5 border border-amber-500/10 rounded-full p-4 space-y-2">
                 <div className="flex items-center gap-2">
                   <Bookmark className="w-4 h-4 text-amber-600" />
                   <p className="text-[10px] font-black uppercase tracking-widest text-amber-600">📘 Catecismo</p>
@@ -137,7 +137,7 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
 
             {/* Magisterium */}
             {selectedTerm.magisteriumReferences && (
-              <div className="bg-emerald-500/5 border border-emerald-500/10 rounded-2xl p-4 space-y-2">
+              <div className="bg-emerald-500/5 border border-emerald-500/10 rounded-full p-4 space-y-2">
                 <div className="flex items-center gap-2">
                   <Globe className="w-4 h-4 text-emerald-600" />
                   <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600">📜 Magistério</p>
@@ -160,7 +160,7 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
 
             {/* Practical Application */}
             {selectedTerm.practicalApplication && (
-              <div className="bg-primary/5 border border-primary/10 rounded-2xl p-4 space-y-2">
+              <div className="bg-primary/5 border border-primary/10 rounded-full p-4 space-y-2">
                 <div className="flex items-center gap-2">
                   <Target className="w-4 h-4 text-primary" />
                   <p className="text-[10px] font-black uppercase tracking-widest text-primary">🧠 Aplicação</p>
@@ -173,7 +173,7 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
 
             {/* Deep Interpretation */}
             {selectedTerm.deepInterpretation && (
-              <div className="bg-muted/30 rounded-2xl p-4 space-y-2">
+              <div className="bg-muted/30 rounded-full p-4 space-y-2">
                 <div className="flex items-center gap-2">
                   <Quote className="w-4 h-4 text-muted-foreground" />
                   <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Interpretação</p>
@@ -189,7 +189,7 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
               <Button
                 onClick={() => onStudyWithLogos(selectedTerm.term)}
                 variant="outline"
-                className="w-full rounded-2xl h-12 gap-2 font-bold text-xs uppercase tracking-widest border-primary/20 text-primary hover:bg-primary/10"
+                className="w-full rounded-full h-12 gap-2 font-bold text-xs uppercase tracking-widest border-primary/20 text-primary hover:bg-primary/10"
               >
                 <Brain className="w-4 h-4" />
                 🤖 Refletir com Logos
@@ -197,7 +197,7 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
 
               <Button
                 onClick={() => onLiveThis(selectedTerm)}
-                className={`w-full rounded-2xl h-12 gap-2 font-bold text-xs uppercase tracking-widest ${selectedTerm.journey_id ? 'bg-primary text-primary-foreground hover:bg-primary/90' : 'border-border text-foreground/70 hover:bg-muted/50'}`}
+                className={`w-full rounded-full h-12 gap-2 font-bold text-xs uppercase tracking-widest ${selectedTerm.journey_id ? 'bg-primary text-primary-foreground hover:bg-primary/90' : 'border-border text-foreground/70 hover:bg-muted/50'}`}
                 variant={selectedTerm.journey_id ? 'default' : 'outline'}
               >
                 {selectedTerm.journey_id ? <Compass className="w-4 h-4" /> : <Heart className="w-4 h-4" />}

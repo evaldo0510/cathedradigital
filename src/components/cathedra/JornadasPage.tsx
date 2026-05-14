@@ -208,12 +208,12 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
       <div className="space-y-6 max-w-2xl mx-auto pb-24">
         <div className="text-center space-y-3 pt-4">
           <div className="w-8 h-8 mx-auto rounded-full bg-primary/20 animate-pulse" />
-          <div className="h-7 w-48 mx-auto bg-muted/60 rounded-lg animate-pulse" />
-          <div className="h-4 w-64 mx-auto bg-muted/40 rounded-lg animate-pulse" />
+          <div className="h-7 w-48 mx-auto bg-muted/60 rounded-full animate-pulse" />
+          <div className="h-4 w-64 mx-auto bg-muted/40 rounded-full animate-pulse" />
         </div>
         <div className="space-y-4">
           {[1, 2, 3].map(i => (
-            <div key={i} className="h-44 rounded-2xl bg-muted/40 animate-pulse" style={{ animationDelay: `${i * 150}ms` }} />
+            <div key={i} className="h-44 rounded-full bg-muted/40 animate-pulse" style={{ animationDelay: `${i * 150}ms` }} />
           ))}
         </div>
       </div>
@@ -247,7 +247,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
       {/* Stats bar */}
       {stats.started > 0 && (
         <motion.div 
-          className="flex items-center justify-center gap-4 sm:gap-6 py-2.5 sm:py-3 px-3 sm:px-4 bg-muted/50 rounded-xl sm:rounded-2xl"
+          className="flex items-center justify-center gap-4 sm:gap-6 py-2.5 sm:py-3 px-3 sm:px-4 bg-muted/50 rounded-full sm:rounded-full"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2 }}
@@ -292,7 +292,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   whileTap={{ scale: 0.99 }}
                 >
                   <Card 
-                    className="border-primary/40 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border-2 overflow-hidden shadow-xl shadow-primary/5 relative cursor-pointer rounded-xl sm:rounded-2xl focus-visible:ring-4 focus-visible:ring-primary outline-none" 
+                    className="border-primary/40 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border-2 overflow-hidden shadow-xl shadow-primary/5 relative cursor-pointer rounded-full sm:rounded-full focus-visible:ring-4 focus-visible:ring-primary outline-none" 
                     onClick={() => navigate(`/jornadas/${journey.id}`)}
                     role="button"
                     tabIndex={0}
@@ -323,7 +323,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                         <p className="text-[10px] text-muted-foreground font-medium">{done} de {total} etapas</p>
                         <Button 
                           size="sm" 
-                          className="bg-primary hover:bg-primary/90 text-white font-black text-[8px] sm:text-[9px] uppercase tracking-[0.15em] px-3 sm:px-5 h-8 sm:h-9 rounded-lg sm:rounded-xl shadow-lg shadow-primary/20 group"
+                          className="bg-primary hover:bg-primary/90 text-white font-black text-[8px] sm:text-[9px] uppercase tracking-[0.15em] px-3 sm:px-5 h-8 sm:h-9 rounded-full sm:rounded-full shadow-lg shadow-primary/20 group"
                         >
                           Continuar <Icons.ChevronRight className="w-3.5 h-3.5 ml-1 group-hover:translate-x-0.5 transition-transform" />
                         </Button>
@@ -344,9 +344,9 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <Card className="border-primary/20 bg-gradient-to-r from-primary/5 to-transparent overflow-hidden rounded-xl sm:rounded-2xl">
+          <Card className="border-primary/20 bg-gradient-to-r from-primary/5 to-transparent overflow-hidden rounded-full sm:rounded-full">
             <CardContent className="p-3 sm:p-4 flex items-center gap-3 sm:gap-4">
-              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
                 <Icons.Brain className="w-5 h-5 text-primary" />
               </div>
               <div className="flex-1">
@@ -520,7 +520,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap mb-1">
-                              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-muted/80 flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity">
+                              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full sm:rounded-full bg-muted/80 flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity">
                               {CATEGORY_ICONS[journey.category] || <Icons.BookOpen className="w-4 h-4" />}
                             </div>
                             <div className="flex-1 min-w-0">
@@ -616,7 +616,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
-          <div className="w-16 h-16 mx-auto rounded-2xl bg-muted/50 flex items-center justify-center mb-4">
+          <div className="w-16 h-16 mx-auto rounded-full bg-muted/50 flex items-center justify-center mb-4">
             <Icons.Search className="w-7 h-7 text-muted-foreground" />
           </div>
           <p className="text-muted-foreground">
@@ -648,9 +648,9 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
         <div className="desktop-card">
           <h3 className="text-[11px] font-black uppercase tracking-widest text-secondary mb-3">Mais Populares</h3>
           <div className="space-y-3">
-            <div className="p-3 rounded-xl bg-muted/20 border border-border/40 text-[10px] font-bold text-foreground">1. O Caminho da Perfeição</div>
-            <div className="p-3 rounded-xl bg-muted/20 border border-border/40 text-[10px] font-bold text-foreground">2. Catecismo Explicado</div>
-            <div className="p-3 rounded-xl bg-muted/20 border border-border/40 text-[10px] font-bold text-foreground">3. Mistérios Gloriosos</div>
+            <div className="p-3 rounded-full bg-muted/20 border border-border/40 text-[10px] font-bold text-foreground">1. O Caminho da Perfeição</div>
+            <div className="p-3 rounded-full bg-muted/20 border border-border/40 text-[10px] font-bold text-foreground">2. Catecismo Explicado</div>
+            <div className="p-3 rounded-full bg-muted/20 border border-border/40 text-[10px] font-bold text-foreground">3. Mistérios Gloriosos</div>
           </div>
         </div>
       </aside>

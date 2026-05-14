@@ -137,7 +137,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                     <button
                       key={opt.value}
                       onClick={() => handleOptionSelect(opt.value)}
-                      className="group flex items-center justify-between p-6 rounded-2xl border border-border bg-background hover:border-secondary hover:bg-secondary/5 transition-all text-left"
+                      className="group flex items-center justify-between p-6 rounded-full border border-border bg-background hover:border-secondary hover:bg-secondary/5 transition-all text-left"
                     >
                       <span className="text-lg font-serif">{opt.label}</span>
                       <ArrowRight className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity text-secondary" />
@@ -187,7 +187,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                       placeholder="Seu nome"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="pl-12 h-14 rounded-2xl border-border bg-background font-serif"
+                      className="pl-12 h-14 rounded-full border-border bg-background font-serif"
                       required
                     />
                   </div>
@@ -198,7 +198,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                       placeholder="Seu melhor e-mail"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="pl-12 h-14 rounded-2xl border-border bg-background font-serif"
+                      className="pl-12 h-14 rounded-full border-border bg-background font-serif"
                       required
                     />
                   </div>
@@ -207,7 +207,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                 <Button 
                   type="submit" 
                   disabled={isSubmitting}
-                  className="w-full h-14 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl"
+                  className="w-full h-14 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-xl"
                 >
                   {isSubmitting ? 'Gerando seu roteiro...' : 'Começar a Jornada'}
                 </Button>
@@ -239,7 +239,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
             </div>
 
             <div className="grid gap-6">
-              <div className="p-6 rounded-3xl bg-secondary/5 border border-secondary/20 space-y-3">
+              <div className="p-6 rounded-full bg-secondary/5 border border-secondary/20 space-y-3">
                 <div className="flex items-center gap-2 text-secondary">
                   <Book className="w-4 h-4" />
                   <span className="text-[10px] font-black uppercase tracking-widest">A Palavra de Deus</span>
@@ -249,7 +249,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                 </p>
               </div>
 
-              <div className="p-6 rounded-3xl bg-primary/5 border border-primary/10 space-y-3">
+              <div className="p-6 rounded-full bg-primary/5 border border-primary/10 space-y-3">
                 <div className="flex items-center gap-2 text-primary">
                   <Cross className="w-4 h-4" />
                   <span className="text-[10px] font-black uppercase tracking-widest">Catecismo</span>
@@ -259,7 +259,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                 </p>
               </div>
 
-              <div className="p-6 rounded-3xl bg-muted/30 border border-border space-y-3">
+              <div className="p-6 rounded-full bg-muted/30 border border-border space-y-3">
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <MessageSquare className="w-4 h-4" />
                   <span className="text-[10px] font-black uppercase tracking-widest">Logos IA: Apoio Contemplativo</span>
@@ -273,7 +273,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
             <div className="flex flex-col sm:flex-row gap-3">
               <Button 
                 asChild
-                className="flex-1 h-14 rounded-2xl text-[10px] font-black uppercase tracking-[0.1em]"
+                className="flex-1 h-14 rounded-full text-[10px] font-black uppercase tracking-[0.1em]"
               >
                 <a href={getWhatsAppLink()} target="_blank" rel="noopener noreferrer">
                   Aprofundar via WhatsApp
@@ -282,7 +282,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
               <Button 
                 variant="outline"
                 onClick={onClose}
-                className="h-14 rounded-2xl text-[10px] font-black uppercase tracking-[0.1em] px-8"
+                className="h-14 rounded-full text-[10px] font-black uppercase tracking-[0.1em] px-8"
               >
                 Concluir
               </Button>

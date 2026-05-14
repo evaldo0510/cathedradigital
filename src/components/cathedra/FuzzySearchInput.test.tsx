@@ -43,7 +43,7 @@ describe('FuzzySearchInput', () => {
   it('applies md size classes by default', () => {
     render(<FuzzySearchInput value="" onChange={() => {}} />);
     const input = screen.getByRole('textbox');
-    expect(input.className).toContain('rounded-2xl');
+    expect(input.className).toContain('rounded-full');
   });
 
   it('applies lg size classes', () => {

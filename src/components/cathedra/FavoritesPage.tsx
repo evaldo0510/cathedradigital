@@ -35,7 +35,7 @@ const FavoritesPage: React.FC = () => {
 
       {filtered.length === 0 ? (
         <div className="flex flex-col items-center justify-center min-h-[40vh] space-y-4 text-center">
-          <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center">
+          <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center">
             <Icons.Heart className="w-8 h-8 text-muted-foreground" />
           </div>
           <h3 className="text-xl font-serif font-bold text-foreground">Nenhum favorito ainda</h3>
@@ -46,7 +46,7 @@ const FavoritesPage: React.FC = () => {
       ) : (
         <div className="space-y-3">
           {filtered.map(item => (
-            <div key={item.id} className="bg-card border border-border rounded-2xl p-5 group hover:border-primary/30 transition-all">
+            <div key={item.id} className="bg-card border border-border rounded-full p-5 group hover:border-primary/30 transition-all">
               <div className="flex items-start justify-between gap-4">
                 <div className="space-y-1 flex-1">
                   <div className="flex items-center gap-2">
@@ -56,7 +56,7 @@ const FavoritesPage: React.FC = () => {
                   <h3 className="font-serif font-bold text-foreground">{item.title}</h3>
                   <p className="text-sm text-muted-foreground font-serif line-clamp-2">{item.content}</p>
                 </div>
-                <button onClick={() => removeFavorite(item.id)} className="p-2 rounded-lg opacity-0 group-hover:opacity-100 hover:bg-destructive/10 transition-all">
+                <button onClick={() => removeFavorite(item.id)} className="p-2 rounded-full opacity-0 group-hover:opacity-100 hover:bg-destructive/10 transition-all">
                   <Icons.Cross className="w-4 h-4 text-destructive" />
                 </button>
               </div>

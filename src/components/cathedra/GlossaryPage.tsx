@@ -188,7 +188,7 @@ const GlossaryPage: React.FC = () => {
         <div className="flex gap-2 justify-center flex-wrap">
           {categories.map(cat => (
             <button key={cat} onClick={() => setCategory(cat)}
-              className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+              className={`px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
                 category === cat ? 'bg-foreground text-background shadow-lg' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
               }`}>
               {cat}
@@ -248,7 +248,7 @@ const GlossaryPage: React.FC = () => {
 
             return (
               <div key={term.id} id={`term-${term.id}`}
-                className={`bg-card border rounded-2xl overflow-hidden transition-all ${
+                className={`bg-card border rounded-full overflow-hidden transition-all ${
                   isExpanded ? 'border-primary/40 shadow-lg' : 'border-border hover:border-primary/30'
                 }`}>
                 <button
@@ -287,13 +287,13 @@ const GlossaryPage: React.FC = () => {
                     {enrichment && (
                       <>
                         {/* Layer 2: P.A.D.H. */}
-                        <div className="bg-primary/5 rounded-2xl p-5 text-center space-y-2">
+                        <div className="bg-primary/5 rounded-full p-5 text-center space-y-2">
                           <p className="text-[10px] font-black uppercase tracking-widest text-primary/70">🧠 Reflexão Poética</p>
                           <p className="text-foreground font-serif italic leading-relaxed whitespace-pre-line text-sm">{enrichment.padh}</p>
                         </div>
 
                         {/* Layer 3: Inner question */}
-                        <div className="bg-accent/30 rounded-2xl p-5 text-center space-y-2">
+                        <div className="bg-accent/30 rounded-full p-5 text-center space-y-2">
                           <p className="text-[10px] font-black uppercase tracking-widest text-accent-foreground/70">❓ Pergunta Interior</p>
                           <p className="text-foreground font-bold text-base">{enrichment.question}</p>
                         </div>
@@ -308,7 +308,7 @@ const GlossaryPage: React.FC = () => {
 
                         {/* Journey Link */}
                         {term.journey_id && (
-                          <div className="bg-primary/10 border border-primary/20 rounded-2xl p-5 space-y-3">
+                          <div className="bg-primary/10 border border-primary/20 rounded-full p-5 space-y-3">
                             <div className="flex items-center gap-2">
                               <Icons.Compass className="w-5 h-5 text-primary" />
                               <p className="text-xs font-bold text-primary uppercase tracking-widest">Jornada Prática</p>
@@ -329,7 +329,7 @@ const GlossaryPage: React.FC = () => {
                         {enrichment.relatedRoute && (
                           <button
                             onClick={() => navigate(enrichment.relatedRoute!)}
-                            className="w-full py-3.5 rounded-2xl bg-foreground text-background font-black uppercase text-xs tracking-[0.2em] shadow-lg hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-2 group"
+                            className="w-full py-3.5 rounded-full bg-foreground text-background font-black uppercase text-xs tracking-[0.2em] shadow-lg hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-2 group"
                           >
                             <Icons.Heart className="w-4 h-4 group-hover:scale-110 transition-transform" />
                             {enrichment.relatedLabel || 'Aprofundar'}
@@ -343,7 +343,7 @@ const GlossaryPage: React.FC = () => {
             );
           })
         ) : (
-          <div className="text-center py-12 bg-muted/20 rounded-2xl">
+          <div className="text-center py-12 bg-muted/20 rounded-full">
             <Icons.Search className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
             <p className="text-muted-foreground">Nenhum termo encontrado.</p>
             <p className="text-xs text-muted-foreground mt-1">Tente buscar por outro sentimento ou palavra.</p>

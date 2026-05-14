@@ -24,7 +24,7 @@ const AchievementsPage: React.FC = () => {
       </div>
 
       {/* Summary */}
-      <div className="bg-card border border-border rounded-2xl p-5 space-y-3">
+      <div className="bg-card border border-border rounded-full p-5 space-y-3">
         <div className="flex items-center justify-between text-sm">
           <span className="font-bold text-foreground">{totalEarned} de {BADGE_DEFINITIONS.length} conquistas</span>
           <span className="font-bold text-primary">{progress}%</span>
@@ -42,7 +42,7 @@ const AchievementsPage: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.06 }}
-              className={`relative rounded-2xl border p-5 transition-all ${
+              className={`relative rounded-full border p-5 transition-all ${
                 unlocked
                   ? 'bg-primary/5 border-primary/30 shadow-md'
                   : 'bg-card border-border opacity-60'

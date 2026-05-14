@@ -116,8 +116,8 @@ const UpgradePage: React.FC = () => {
           className="grid sm:grid-cols-2 gap-6 text-left py-8"
         >
           {BENEFITS.map((benefit, i) => (
-            <div key={i} className="group p-5 rounded-3xl bg-card border border-border/50 hover:border-primary/30 transition-all duration-500 ">
-              <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-4 group-hover:scale-110 transition-transform duration-500">
+            <div key={i} className="group p-5 rounded-full bg-card border border-border/50 hover:border-primary/30 transition-all duration-500 ">
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4 group-hover:scale-110 transition-transform duration-500">
                 <benefit.icon className="w-5 h-5" />
               </div>
               <h3 className="font-bold text-lg mb-1">{benefit.title}</h3>
@@ -165,7 +165,7 @@ const UpgradePage: React.FC = () => {
             className="pt-12 border-t border-border/50"
           >
             <div className="flex flex-col items-center gap-4 bg-muted/30 p-8 rounded-[2.5rem] border border-dashed border-primary/30">
-              <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-2">
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-2">
                 <FlaskConical className="w-6 h-6" />
               </div>
               <h3 className="text-xl font-serif font-bold italic">Zona de Testes (Admin)</h3>
@@ -177,14 +177,14 @@ const UpgradePage: React.FC = () => {
                   variant="outline"
                   onClick={simulatePayment}
                   disabled={isSimulating || isPremium}
-                  className="rounded-xl border-primary/30 text-primary hover:bg-primary/5 h-12 px-6 font-bold"
+                  className="rounded-full border-primary/30 text-primary hover:bg-primary/5 h-12 px-6 font-bold"
                 >
                   {isSimulating ? 'Processando...' : isPremium ? '✓ Já é PRO' : 'Simular Aprovação (Webhook)'}
                 </Button>
                 <Button 
                   variant="ghost"
                   onClick={() => navigate(AppRoute.TRANSACTIONS)}
-                  className="rounded-xl h-12 px-6 font-bold"
+                  className="rounded-full h-12 px-6 font-bold"
                 >
                   Ver Histórico de Transações
                 </Button>

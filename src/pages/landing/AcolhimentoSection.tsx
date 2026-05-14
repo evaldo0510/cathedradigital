@@ -51,7 +51,7 @@ const AcolhimentoSection = () => {
               whileHover={{ y: -5, scale: 1.02 }}
               className="space-y-4 p-8 bg-card rounded-[2.5rem] border border-border/50 shadow-sm hover:shadow-xl hover:border-primary/20 transition-all duration-300"
             >
-              <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary" aria-hidden="true">
+              <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary" aria-hidden="true">
                 {item.icon}
               </div>
               <h3 className="text-xl font-bold font-serif">{item.title}</h3>

@@ -209,7 +209,7 @@ const ProfilePage: React.FC = () => {
             <motion.div
               initial={{ y: 40 }}
               animate={{ y: 0 }}
-              className="bg-card border-2 border-primary rounded-3xl p-8 shadow-2xl text-center pointer-events-auto max-w-sm mx-4"
+              className="bg-card border-2 border-primary rounded-full p-8 shadow-2xl text-center pointer-events-auto max-w-sm mx-4"
             >
               <motion.div
                 animate={{ rotate: [0, -10, 10, -10, 10, 0], scale: [1, 1.3, 1] }}
@@ -260,7 +260,7 @@ const ProfilePage: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-card border border-border rounded-2xl p-6 space-y-3">
+      <div className="bg-card border border-border rounded-full p-6 space-y-3">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Nível {currentLevelIdx + 1}</p>
@@ -285,7 +285,7 @@ const ProfilePage: React.FC = () => {
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {statCards.map(s => (
-          <div key={s.label} className="bg-card border border-border rounded-2xl p-4 text-center space-y-1">
+          <div key={s.label} className="bg-card border border-border rounded-full p-4 text-center space-y-1">
             <div className="text-primary mx-auto w-fit">{s.icon}</div>
             <p className="text-2xl font-black text-foreground">{s.value}</p>
             <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{s.label}</p>
@@ -293,7 +293,7 @@ const ProfilePage: React.FC = () => {
         ))}
       </div>
 
-      <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
+      <div className="bg-card border border-border rounded-full p-6 space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Conquistas</h2>
           <span className="text-[10px] font-bold text-primary">{unlockedCount}/{badges.length} desbloqueadas</span>
@@ -302,7 +302,7 @@ const ProfilePage: React.FC = () => {
           {badges.map(b => (
             <div
               key={b.id}
-              className={`relative rounded-2xl p-3 text-center transition-all ${
+              className={`relative rounded-full p-3 text-center transition-all ${
                 b.unlocked
                   ? 'bg-primary/10 border border-primary/30'
                   : 'bg-muted/50 border border-border opacity-50 grayscale'
@@ -324,7 +324,7 @@ const ProfilePage: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-card border border-border rounded-2xl p-6 space-y-6">
+      <div className="bg-card border border-border rounded-full p-6 space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Minhas Doações & Apoio</h2>
         </div>
@@ -334,7 +334,7 @@ const ProfilePage: React.FC = () => {
           </p>
           <Button 
             variant="outline" 
-            className="w-full h-12 rounded-xl border-secondary/20 hover:bg-secondary/5 text-secondary gap-2 font-bold uppercase tracking-widest text-[10px] focus-visible:ring-4 focus-visible:ring-secondary outline-none"
+            className="w-full h-12 rounded-full border-secondary/20 hover:bg-secondary/5 text-secondary gap-2 font-bold uppercase tracking-widest text-[10px] focus-visible:ring-4 focus-visible:ring-secondary outline-none"
             onClick={() => navigate('/transactions/my')}
           >
             <Icons.History className="w-4 h-4" />
@@ -344,13 +344,13 @@ const ProfilePage: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-card border border-border rounded-2xl p-6 space-y-6">
+      <div className="bg-card border border-border rounded-full p-6 space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Notificações</h2>
         </div>
 
         <div className="space-y-4">
-          <div className="flex items-center justify-between p-3 bg-muted/30 rounded-xl border border-border/50">
+          <div className="flex items-center justify-between p-3 bg-muted/30 rounded-full border border-border/50">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <Icons.Bell className="w-4 h-4 text-primary" />
@@ -361,7 +361,7 @@ const ProfilePage: React.FC = () => {
             <Switch checked={pushEnabled} onCheckedChange={setPushEnabled} />
           </div>
 
-          <div className="flex items-center justify-between p-3 bg-primary/5 rounded-xl border border-primary/20 shadow-sm">
+          <div className="flex items-center justify-between p-3 bg-primary/5 rounded-full border border-primary/20 shadow-sm">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <Icons.Whatsapp className="w-4 h-4 text-primary" />
@@ -386,7 +386,7 @@ const ProfilePage: React.FC = () => {
                   type="tel"
                   value={whatsappNumber}
                   onChange={e => setWhatsappNumber(e.target.value.replace(/\D/g, ''))}
-                  className="w-full pl-12 pr-4 py-3 bg-muted border border-border rounded-xl text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary font-mono"
+                  className="w-full pl-12 pr-4 py-3 bg-muted border border-border rounded-full text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary font-mono"
                   placeholder="11999999999"
                   maxLength={11}
                 />
@@ -423,7 +423,7 @@ const ProfilePage: React.FC = () => {
         </motion.div>
       )}
 
-      <div className="bg-card border border-border rounded-2xl p-6 space-y-5">
+      <div className="bg-card border border-border rounded-full p-6 space-y-5">
         <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Editar Perfil</h2>
 
         <div className="space-y-2">
@@ -432,7 +432,7 @@ const ProfilePage: React.FC = () => {
             type="text"
             value={name}
             onChange={e => setName(e.target.value)}
-            className="w-full bg-background border border-border rounded-xl p-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+            className="w-full bg-background border border-border rounded-full p-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
           />
         </div>
 
@@ -442,7 +442,7 @@ const ProfilePage: React.FC = () => {
             value={bio}
             onChange={e => setBio(e.target.value)}
             rows={4}
-            className="w-full bg-background border border-border rounded-xl p-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
+            className="w-full bg-background border border-border rounded-full p-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
           />
         </div>
 
@@ -461,7 +461,7 @@ const ProfilePage: React.FC = () => {
               <select
                 value={estado}
                 onChange={e => { setEstado(e.target.value); setDiocese(''); }}
-                className="w-full bg-background border border-border rounded-xl p-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 appearance-none"
+                className="w-full bg-background border border-border rounded-full p-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 appearance-none"
               >
                 <option value="">Selecione...</option>
                 {ESTADOS_BRASIL.map(uf => (
@@ -477,7 +477,7 @@ const ProfilePage: React.FC = () => {
                 value={diocese}
                 onChange={e => setDiocese(e.target.value)}
                 disabled={!estado}
-                className="w-full bg-background border border-border rounded-xl p-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 appearance-none disabled:opacity-40"
+                className="w-full bg-background border border-border rounded-full p-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 appearance-none disabled:opacity-40"
               >
                 <option value="">{estado ? 'Selecione a diocese...' : 'Selecione o estado primeiro'}</option>
                 {estado && DIOCESES_POR_ESTADO[estado]?.map(d => (
@@ -494,7 +494,7 @@ const ProfilePage: React.FC = () => {
                 value={paroquia}
                 onChange={e => setParoquia(e.target.value)}
                 placeholder="Ex: Paróquia São José"
-                className="w-full bg-background border border-border rounded-xl p-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                className="w-full bg-background border border-border rounded-full p-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
               />
             </div>
 
@@ -504,7 +504,7 @@ const ProfilePage: React.FC = () => {
               <select
                 value={movimentoPastoral}
                 onChange={e => setMovimentoPastoral(e.target.value)}
-                className="w-full bg-background border border-border rounded-xl p-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 appearance-none"
+                className="w-full bg-background border border-border rounded-full p-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 appearance-none"
               >
                 <option value="">Nenhum</option>
                 {MOVIMENTOS_PASTORAIS.map(m => (
@@ -518,7 +518,7 @@ const ProfilePage: React.FC = () => {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="w-full py-4 bg-primary text-primary-foreground rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:opacity-90 transition-all disabled:opacity-50"
+          className="w-full py-4 bg-primary text-primary-foreground rounded-full font-black uppercase text-[10px] tracking-widest shadow-xl hover:opacity-90 transition-all disabled:opacity-50"
         >
           {saving ? 'Salvando...' : 'Salvar Alterações'}
         </button>

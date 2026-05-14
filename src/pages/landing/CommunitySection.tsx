@@ -82,10 +82,10 @@ const CommunitySection = () => {
               className="p-8 rounded-[2.5rem] bg-card border border-border/50 shadow-sm hover:shadow-xl hover:border-primary/20 transition-all duration-500 flex flex-col h-full"
             >
               <div className="flex justify-between items-start mb-6">
-                <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                   {feature.icon}
                 </div>
-                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 bg-muted px-2 py-1 rounded-md">
+                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 bg-muted px-2 py-1 rounded-full">
                   {feature.tag}
                 </span>
               </div>

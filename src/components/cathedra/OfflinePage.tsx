@@ -62,28 +62,28 @@ const OfflinePage: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-sm">
         <Button 
           variant="outline" 
-          className="rounded-2xl h-14 font-bold border-primary/20 hover:bg-primary/5"
+          className="rounded-full h-14 font-bold border-primary/20 hover:bg-primary/5"
           onClick={() => navigate('/bible')}
         >
           <Icons.Bible className="w-4 h-4 mr-2" /> Sagrada Escritura
         </Button>
         <Button 
           variant="outline" 
-          className="rounded-2xl h-14 font-bold border-primary/20 hover:bg-primary/5"
+          className="rounded-full h-14 font-bold border-primary/20 hover:bg-primary/5"
           onClick={() => navigate('/catechism')}
         >
           <Icons.ShieldCheck className="w-4 h-4 mr-2" /> Catecismo
         </Button>
         <Button 
           variant="outline" 
-          className="rounded-2xl h-14 font-bold border-primary/20 hover:bg-primary/5"
+          className="rounded-full h-14 font-bold border-primary/20 hover:bg-primary/5"
           onClick={() => navigate('/hoje')}
         >
           <Icons.Sun className="w-4 h-4 mr-2" /> Liturgia do Dia
         </Button>
         <Button 
           variant="secondary" 
-          className="rounded-2xl h-14 font-bold"
+          className="rounded-full h-14 font-bold"
           onClick={() => window.location.reload()}
         >
           <Icons.RotateCcw className="w-4 h-4 mr-2" /> Tentar Reconectar

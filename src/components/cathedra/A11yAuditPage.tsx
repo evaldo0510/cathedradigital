@@ -79,7 +79,7 @@ const A11yAuditPage = () => {
                     <button
                       key={item.id}
                       onClick={() => toggleCheck(item.id)}
-                      className="w-full flex items-center justify-between p-3 rounded-xl border border-border/40 bg-background/50 hover:bg-muted/30 transition-all group"
+                      className="w-full flex items-center justify-between p-3 rounded-full border border-border/40 bg-background/50 hover:bg-muted/30 transition-all group"
                     >
                       <span className="text-sm font-medium text-foreground/80 group-hover:text-foreground">{item.label}</span>
                       {checklist[item.id] ? (
@@ -102,7 +102,7 @@ const A11yAuditPage = () => {
                 <Key className="w-5 h-5 text-secondary" />
                 Auditoria Técnica
               </div>
-              <Button size="sm" onClick={performAudit} className="rounded-xl h-8 text-[10px] font-black uppercase tracking-widest bg-secondary hover:bg-secondary/80">
+              <Button size="sm" onClick={performAudit} className="rounded-full h-8 text-[10px] font-black uppercase tracking-widest bg-secondary hover:bg-secondary/80">
                 Escanear DOM
               </Button>
             </CardTitle>
@@ -115,7 +115,7 @@ const A11yAuditPage = () => {
               </div>
             ) : (
               <div className="space-y-4">
-                <div className={`p-4 rounded-2xl flex items-center gap-3 ${auditResults.success ? 'bg-green-500/10 border border-green-500/20' : 'bg-red-500/10 border border-red-500/20'}`}>
+                <div className={`p-4 rounded-full flex items-center gap-3 ${auditResults.success ? 'bg-green-500/10 border border-green-500/20' : 'bg-red-500/10 border border-red-500/20'}`}>
                   {auditResults.success ? (
                     <>
                       <CheckCircle className="w-6 h-6 text-green-500" />
@@ -131,7 +131,7 @@ const A11yAuditPage = () => {
 
                 <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2 scrollbar-thin">
                   {auditResults.issues.map((issue, idx) => (
-                    <div key={idx} className="flex gap-3 p-3 rounded-xl bg-muted/20 border border-border/40">
+                    <div key={idx} className="flex gap-3 p-3 rounded-full bg-muted/20 border border-border/40">
                       <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
                       <span className="text-xs text-muted-foreground leading-relaxed">{issue}</span>
                     </div>
