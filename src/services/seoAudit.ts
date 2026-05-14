@@ -1,5 +1,8 @@
 import { supabase } from "@/integrations/supabase/client";
 
+// Global constant to help with testing
+export const _TEST_MODE = { active: false };
+
 export interface SEOAudit {
   id: string;
   url: string;
