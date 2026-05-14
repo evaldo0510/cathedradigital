@@ -67,7 +67,7 @@ const BIBLE_CATEGORIES: Record<string, BibleCategory[]> = {
     ]},
   ],
   'Novo Testamento': [
-    { label: 'Evangelhos', icon: Icons.Cross, color: 'text-primary', bgColor: 'bg-muted border-border', books: [
+    { label: 'Evangelhos', icon: Icons.Cross, color: 'text-primary', bgColor: 'bg-primary/5 border-primary/10', books: [
       { name: 'Mateus', abbr: 'Mt', chapters: 28 }, { name: 'Marcos', abbr: 'Mc', chapters: 16 },
       { name: 'Lucas', abbr: 'Lc', chapters: 24 }, { name: 'João', abbr: 'Jo', chapters: 21 },
     ]},
