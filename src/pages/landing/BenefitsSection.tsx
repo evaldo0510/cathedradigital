@@ -92,7 +92,7 @@ const BenefitsSection = ({ onLogin }: BenefitsSectionProps) => {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-foreground via-transparent to-transparent" />
             <div className="absolute bottom-10 left-10 right-10 p-8 bg-white/10 backdrop-blur-md rounded-3xl border border-white/10">
-              <p className="text-xl font-serif italic mb-4">"Onde está o teu tesouro, aí estará também o teu coração."</p>
+              <p className="text-xl font-serif mb-4">Onde está o teu tesouro, aí estará também o teu coração.</p>
               <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">Mateus 6,21</p>
             </div>
           </motion.div>

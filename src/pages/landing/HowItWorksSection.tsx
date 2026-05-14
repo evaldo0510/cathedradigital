@@ -31,12 +31,12 @@ const HowItWorksSection = () => {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.3 }}
-            className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60 block"
+            className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60 block italic"
           >
             Passo a passo
           </motion.span>
           <h2 className="text-4xl md:text-5xl font-display font-bold">Como Funciona</h2>
-          <p className="text-lg text-muted-foreground italic max-w-xl mx-auto">Três passos simples para iniciar sua transformação espiritual</p>
+          <p className="text-lg text-muted-foreground max-w-xl mx-auto">Três passos simples para iniciar sua transformação espiritual</p>
         </motion.div>
 
         <div className="grid md:grid-cols-3 gap-8 md:gap-12 relative">

@@ -76,17 +76,7 @@ const HeroContent = ({ heroOpacity, heroScale, heroY, onStart, onAbout }: HeroCo
 
       {/* Title */}
       <div className="text-2xl xs:text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold tracking-tight text-foreground leading-[1.2] sm:leading-[1.1] pt-2 sm:pt-4">
-        <AnimatedTitle text="Como está a sua alma" />
-        <br className="hidden sm:block" />
-        <span className="inline sm:hidden">{" "}</span>
-        <motion.span
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.6, ease: EASE }}
-          className="text-primary italic font-light drop-shadow-sm inline-block font-serif text-[1.1em] sm:text-[0.9em]"
-        >
-          hoje?
-        </motion.span>
+        <AnimatedTitle text="Nem toda prisão é visível" />
       </div>
 
       {/* Description */}
@@ -94,9 +84,9 @@ const HeroContent = ({ heroOpacity, heroScale, heroY, onStart, onAbout }: HeroCo
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 2.2 }}
-        className="max-w-xl mx-auto text-base md:text-lg text-muted-foreground font-serif italic leading-relaxed"
+        className="max-w-xl mx-auto text-base md:text-lg text-muted-foreground font-serif leading-relaxed"
       >
-        "A oração é o respirar da alma e o silêncio é a linguagem de Deus."
+        Uma experiência espiritual guiada por Bíblia, Catecismo e Logos IA.
       </motion.p>
 
       {/* CTA Buttons */}

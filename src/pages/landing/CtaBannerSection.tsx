@@ -18,8 +18,8 @@ const CtaBannerSection = ({ onStart }: CtaBannerSectionProps) => (
           <h2 className="text-3xl md:text-5xl font-display font-bold leading-tight">
             Sua jornada de <span className="text-primary italic">fé</span> começa aqui.
           </h2>
-          <p className="text-base text-muted-foreground max-w-lg mx-auto font-serif italic">
-            "Não tenhas medo, pois Eu estou contigo."
+          <p className="text-base text-muted-foreground max-w-lg mx-auto font-serif">
+            Não tenhas medo, pois Eu estou contigo.
           </p>
         </div>
         <div className="flex flex-col items-center gap-4">

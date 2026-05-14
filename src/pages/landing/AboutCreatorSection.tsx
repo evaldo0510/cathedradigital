@@ -36,7 +36,7 @@ const AboutCreatorSection = () => {
             className="w-full md:w-2/3 space-y-6 text-center md:text-left"
           >
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/5 rounded-full">
-              <span className="text-[9px] font-bold uppercase tracking-[0.3em] text-primary/60">O Fundador</span>
+              <span className="text-[9px] font-bold uppercase tracking-[0.3em] text-primary/60 italic">O Fundador</span>
             </div>
             
             <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground uppercase tracking-wider">
@@ -47,8 +47,8 @@ const AboutCreatorSection = () => {
               <p>
                 Idealizador do Cathedra, buscador da Verdade e entusiasta da tecnologia. Minha missão é construir pontes entre o sagrado e o digital, permitindo que a profundidade da tradição católica floresça no mundo contemporâneo.
               </p>
-              <p className="font-serif italic text-foreground/80">
-                "Acreditamos que a tecnologia, quando a serviço da fé, pode ser um instrumento poderoso de santificação e estudo."
+              <p className="font-serif text-foreground/80">
+                Acreditamos que a tecnologia, quando a serviço da fé, pode ser um instrumento poderoso de santificação e estudo.
               </p>
             </div>
 

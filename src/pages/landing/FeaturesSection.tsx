@@ -82,9 +82,9 @@ const FeaturesSection = ({ onNavigate }: FeaturesSectionProps) => {
         viewport={{ once: true }}
         className="text-center space-y-4 max-w-2xl mx-auto relative z-10"
       >
-        <span className="text-[9px] font-bold uppercase tracking-[0.4em] text-primary/40">O Caminho</span>
+        <span className="text-[9px] font-bold uppercase tracking-[0.4em] text-primary/40 italic">O Caminho</span>
         <h2 className="text-3xl md:text-4xl font-display font-bold">Arquitetura do Conhecimento</h2>
-        <p className="text-muted-foreground italic font-serif">"A luz de Cristo ilumina o coração."</p>
+        <p className="text-muted-foreground font-serif">A luz de Cristo ilumina o coração.</p>
       </motion.div>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10 max-w-6xl mx-auto">

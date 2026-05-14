@@ -16,7 +16,7 @@ const FaqSection = () => (
   <section className="w-full py-24 px-6 relative overflow-hidden">
     <div className="max-w-3xl mx-auto space-y-12 relative z-10">
       <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center space-y-4">
-        <span className="text-[9px] font-bold uppercase tracking-[0.4em] text-primary/40">Dúvidas</span>
+        <span className="text-[9px] font-bold uppercase tracking-[0.4em] text-primary/40 italic">Dúvidas</span>
         <h2 className="text-3xl md:text-4xl font-display font-bold">Perguntas Frequentes</h2>
       </motion.div>
 

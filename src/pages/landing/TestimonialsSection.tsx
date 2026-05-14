@@ -20,7 +20,7 @@ const TestimonialsSection = () => {
     <section className="w-full py-24 px-6 relative overflow-hidden bg-background">
       <div className="max-w-6xl mx-auto space-y-16 relative z-10">
         <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center space-y-4">
-          <span className="text-[9px] font-bold uppercase tracking-[0.4em] text-primary/40">Comunidade</span>
+          <span className="text-[9px] font-bold uppercase tracking-[0.4em] text-primary/40 italic">Comunidade</span>
           <h2 className="text-3xl md:text-4xl font-display font-bold">Vozes da Comunidade</h2>
         </motion.div>
 
@@ -35,8 +35,8 @@ const TestimonialsSection = () => {
               className="p-8 rounded-3xl bg-card border border-border/5 shadow-sm space-y-6 flex flex-col"
             >
               <Quote className="w-6 h-6 text-primary/20" />
-              <p className="text-sm text-muted-foreground leading-relaxed font-serif italic flex-1">
-                "{t.text}"
+              <p className="text-sm text-muted-foreground leading-relaxed font-serif flex-1">
+                {t.text}
               </p>
 
               <div className="pt-6 border-t border-border/5 flex items-center gap-4">
