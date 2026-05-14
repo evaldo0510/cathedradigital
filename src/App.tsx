@@ -173,7 +173,13 @@ const AppLayout: React.FC = () => {
   const [lang, setLangState] = useState<Language>(getInitialLanguage);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDark, setIsDark] = useState(getInitialTheme);
-  const [showSplash, setShowSplash] = useState(true);
+  const [showSplash, setShowSplash] = useState(() => {
+    // Show splash if not in development or if specifically requested
+    if (import.meta.env.DEV && !new URLSearchParams(window.location.search).has('force_splash')) {
+      return false;
+    }
+    return true;
+  });
   
   const { user, profile, signOut, isPremium, loading } = useAuth();
   const navigate = useNavigate();
