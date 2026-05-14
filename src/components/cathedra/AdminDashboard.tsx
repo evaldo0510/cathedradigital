@@ -162,6 +162,27 @@ const AdminDashboard: React.FC = () => {
 
         const returnRate = allProfiles.length > 0 ? ((allProfiles.length - inactiveUsers) / allProfiles.length) * 100 : 0;
 
+        const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+        const currentYear = new Date().getFullYear();
+        const userGrowth = months.map((month, index) => {
+          const count = allProfiles.filter(p => {
+            const date = new Date(p.created_at);
+            return date.getMonth() <= index && date.getFullYear() <= currentYear;
+          }).length;
+          return { name: month, total: count };
+        }).slice(0, new Date().getMonth() + 1);
+
+        const revenueData = [3, 2, 1, 0].map(weeksAgo => {
+          const start = new Date(now);
+          start.setDate(now.getDate() - (weeksAgo + 1) * 7);
+          const end = new Date(now);
+          end.setDate(now.getDate() - weeksAgo * 7);
+          const amount = transactions
+            .filter(t => t.status === 'approved' && new Date(t.created_at) >= start && new Date(t.created_at) <= end)
+            .reduce((acc, curr) => acc + Number(curr.amount), 0);
+          return { name: `Sem ${4 - weeksAgo}`, amount };
+        });
+
         setStats({
           totalUsers: allProfiles.length,
           premiumUsers: premiumCount,
@@ -171,7 +192,11 @@ const AdminDashboard: React.FC = () => {
           pendingRevenue,
           returnRate,
           recentTransactions: transactions.slice(0, 10),
+          userGrowth,
+          revenueData,
+          transactions
         });
+
 
         setRecentJournal(recentJournalRes.data || []);
         const crmMap = new Map<string, any>();
@@ -324,7 +349,7 @@ const AdminDashboard: React.FC = () => {
                </CardHeader>
                <CardContent className="p-0">
                  <Suspense fallback={<Skeleton className="h-[300px]" />}>
-                   <AdminChartsTab />
+                   <AdminChartsTab userGrowth={stats?.userGrowth || []} revenueData={stats?.revenueData || []} />
                  </Suspense>
                </CardContent>
              </Card>
@@ -336,10 +361,11 @@ const AdminDashboard: React.FC = () => {
                </CardHeader>
                <CardContent className="p-0">
                  <Suspense fallback={<Skeleton className="h-[300px]" />}>
-                   <AdminTransactionsTab />
+                   <AdminTransactionsTab transactions={stats?.transactions || []} />
                  </Suspense>
                </CardContent>
              </Card>
+
           </div>
         </TabsContent>
       </Tabs>
