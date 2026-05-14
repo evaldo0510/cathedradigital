@@ -180,7 +180,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
         title: t.title,
         description: t.description,
         difficulty: t.level.toLowerCase(),
-        category: 'fundamentos',
+        category: 'formacao',
         is_active: true,
         sort_order: -1,
         steps_count: t.steps.length,
@@ -669,11 +669,11 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           </p>
         </div>
         <div className="desktop-card">
-          <h3 className="text-[11px] font-black uppercase tracking-widest text-secondary mb-3">Mais Populares</h3>
+          <h3 className="text-[11px] font-black uppercase tracking-widest text-secondary mb-3">Retenção Diária</h3>
           <div className="space-y-3">
-            <div className="p-3 rounded-xl bg-muted/20 border border-border/40 text-[10px] font-bold text-foreground">1. O Caminho da Perfeição</div>
-            <div className="p-3 rounded-xl bg-muted/20 border border-border/40 text-[10px] font-bold text-foreground">2. Catecismo Explicado</div>
-            <div className="p-3 rounded-xl bg-muted/20 border border-border/40 text-[10px] font-bold text-foreground">3. Mistérios Gloriosos</div>
+            <div className="p-3 rounded-xl bg-muted/20 border border-border/40 text-[10px] font-bold text-foreground">Complete seu Ritual do Dia</div>
+            <div className="p-3 rounded-xl bg-muted/20 border border-border/40 text-[10px] font-bold text-foreground">Registre sua Reflexão</div>
+            <div className="p-3 rounded-xl bg-muted/20 border border-border/40 text-[10px] font-bold text-foreground">Ganhe bônus de XP</div>
           </div>
         </div>
       </aside>

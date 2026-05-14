@@ -12,7 +12,8 @@ import {
   Database, 
   Zap,
   Tag,
-  ChevronRight
+  ChevronRight,
+  Target
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { searchUnified, BaseContent, SearchMetrics, getGlobalTags } from '@/services/conteudoService';
@@ -175,15 +176,15 @@ const CommandCenter: React.FC = () => {
           <Card className="bg-primary/5 border-primary/10 rounded-3xl overflow-hidden">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-serif flex items-center gap-2">
-                <Compass className="w-4 h-4 text-primary" /> Trilhas de Estudo
+                <Target className="w-4 h-4 text-primary" /> Trilhas guiadas
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <p className="text-[11px] text-muted-foreground leading-relaxed">
                 Navegue por coleções curadas de conteúdo organizadas por temas fundamentais da fé.
               </p>
-              <Button size="sm" variant="outline" className="w-full rounded-xl text-[10px] font-black uppercase tracking-widest border-primary/20 text-primary">
-                Ver Todas as Trilhas
+              <Button size="sm" variant="outline" className="w-full rounded-xl text-[10px] font-black uppercase tracking-widest border-primary/20 text-primary" onClick={() => navigate(AppRoute.JORNADAS)}>
+                Explorar Trilhas
               </Button>
             </CardContent>
           </Card>
