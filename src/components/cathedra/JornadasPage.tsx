@@ -99,7 +99,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
     resultLimit: 50,
   });
   const categories = useMemo(() => {
-    const cats = [...new Set(journeys.map(j => j.category))];
+    const cats = [...new Set((journeys || []).map(j => j.category))];
     return cats.sort();
   }, [journeys]);
 
@@ -122,7 +122,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
   const fuzzyResultIds = useMemo(() => {
     if (!fuzzySearch.results) return null;
-    return new Set(fuzzySearch.results.map(r => r.id));
+    return new Set((fuzzySearch.results || []).map(r => r.id));
   }, [fuzzySearch.results]);
 
   const fuzzyScoreMap = useMemo(() => {
@@ -133,7 +133,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
   }, [fuzzySearch.results]);
 
   const filteredJourneys = useMemo(() => {
-    return journeys.filter(j => {
+    return (journeys || []).filter(j => {
       // If fuzzy search is active, use fuzzy results; otherwise show all
       if (searchQuery.trim().length >= 2) {
         if (!fuzzyResultIds || !fuzzyResultIds.has(j.id)) return false;
@@ -174,7 +174,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
       if (error) throw error;
       if (!journeyData) { setLoading(false); return; }
       
-      const localTrails = getTrails().map(t => ({
+      const localTrails = (getTrails() || []).map(t => ({
         id: t.id,
         slug: t.slug,
         title: t.title,
@@ -235,7 +235,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
     );
   }
 
-  const activeJourneys = journeys.filter(j => progressMap[j.id] > 0 && progressMap[j.id] < (stepsCountMap[j.id] || 0));
+  const activeJourneys = (journeys || []).filter(j => progressMap[j.id] > 0 && progressMap[j.id] < (stepsCountMap[j.id] || 0));
 
   return (
     <>
