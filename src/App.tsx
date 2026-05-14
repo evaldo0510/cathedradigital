@@ -493,7 +493,7 @@ const AppLayout: React.FC = () => {
               />
             </div>
           )}
-                <Route path=\"/design-system\" element={<DesignSystemGuide />} />
+                
 
           {/* Mobile sidebar overlay - only when open */}
           <AnimatePresence>
