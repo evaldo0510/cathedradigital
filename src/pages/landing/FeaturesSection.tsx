@@ -9,50 +9,25 @@ import { AppRoute } from "@/types";
 const features = [
   { 
     title: "Logos IA", 
-    description: "Um mentor espiritual para os tempos modernos, pronto para caminhar ao seu lado no estudo do Magistério e na oração.", 
-    benefit: "Encontre respostas que aquecem o coração e iluminam a inteligência com a sabedoria da Igreja.", 
+    description: "Um mentor espiritual para os tempos modernos, treinado com o Magistério da Igreja.", 
     icon: <Sparkles className="h-6 w-6" />, 
     route: AppRoute.DASHBOARD 
   },
   { 
     title: "Enciclopédia Católica", 
-    description: "Um Lexicon Theologicum digital completo, navegável de A a Z, com definições profundas e conexões bíblicas.", 
-    benefit: "Acesse o conhecimento da Tradição de forma independente, gratuita e estruturada para todos.", 
+    description: "Lexicon Theologicum digital completo, navegável de A a Z.", 
     icon: <BookOpen className="h-6 w-6" />, 
     route: AppRoute.ENCYCLOPEDIA 
   },
   { 
-    title: "Navegação por Temas", 
-    description: "Explore conexões sagradas entre Bíblia, Catecismo e Magistério através de uma interface intuitiva de bolhas teológicas.", 
-    benefit: "Aprofunde-se em conceitos fundamentais da fé com uma visão 360 graus da Tradição.", 
-    icon: <Hash className="h-6 w-6" />, 
-    route: AppRoute.TEMAS 
-  },
-  { 
     title: "Bíblia Sagrada", 
-    description: "Acesse as Escrituras com ferramentas de estudo avançadas, anotações pessoais e busca inteligente por temas.", 
-    benefit: "Mergulhe na Palavra de Deus e guarde os versículos que transformam sua vida.", 
+    description: "Escrituras com ferramentas de estudo avançadas e busca inteligente.", 
     icon: <BookOpen className="h-6 w-6" />, 
     route: AppRoute.BIBLE 
   },
   { 
-    title: "Liturgia Diária", 
-    description: "Siga as leituras da Santa Missa, conheça o santo do dia e medite com orações próprias de cada tempo.", 
-    benefit: "Viva o ritmo espiritual da Igreja em comunhão com fiéis do mundo inteiro.", 
-    icon: <Clock className="h-6 w-6" />, 
-    route: AppRoute.LITURGIA 
-  },
-  { 
-    title: "Jornadas de Fé", 
-    description: "Trilhas de formação espiritual desenhadas para converter seu conhecimento em vivência cristã autêntica.", 
-    benefit: "Um caminho seguro de maturidade espiritual através do estudo e da oração.", 
-    icon: <Star className="h-6 w-6" />, 
-    route: AppRoute.JORNADAS 
-  },
-  { 
     title: "Catecismo da Igreja", 
-    description: "Estude a doutrina cristã de forma sistemática e orgânica, com análises profundas de cada parágrafo.", 
-    benefit: "Compreenda a fundo os fundamentos da fé católica com clareza e fidelidade ao Magistério.", 
+    description: "Doutrina cristã sistemática e orgânica, fiel ao Magistério.", 
     icon: <Hash className="h-6 w-6" />, 
     route: AppRoute.CATECHISM 
   },
@@ -62,54 +37,26 @@ interface FeaturesSectionProps {
   onNavigate: (route: string) => void;
 }
 
-const FeatureCard = React.forwardRef<HTMLDivElement, { feature: typeof features[0]; index: number; onNavigate: (r: string) => void }>(({ feature, index, onNavigate }, ref) => {
-  const isLeft = index % 2 === 0;
-
+const FeatureCard = ({ feature, onNavigate }: { feature: typeof features[0]; onNavigate: (r: string) => void }) => {
   return (
-    <div
-      ref={ref}
+    <motion.div
+      whileHover={{ y: -5 }}
+      transition={{ duration: 0.3 }}
+      className="p-8 rounded-3xl bg-card border border-border/5 group hover:border-primary/10 transition-all cursor-pointer flex flex-col items-center text-center space-y-4 shadow-sm"
+      onClick={() => onNavigate(feature.route)}
     >
-      <motion.div
-        whileHover={{ y: -8, scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-        transition={{ type: "spring", stiffness: 300, damping: 20 }}
-      >
-        <Card
-          className="group h-full border border-border/30 bg-card hover:bg-muted/10 transition-all duration-700 rounded-3xl overflow-hidden flex flex-col cursor-pointer relative"
-          onClick={() => onNavigate(feature.route)}
-        >
-          {/* Subtle hover focus */}
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/0 to-primary/0 group-hover:from-primary/[0.02] group-hover:to-transparent transition-all duration-700" />
-
-          <CardHeader className="space-y-4 relative z-10">
-            <motion.div
-              whileHover={{ rotate: 12, scale: 1.15 }}
-              transition={{ type: "spring", stiffness: 400 }}
-              className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-500 relative"
-            >
-              {feature.icon}
-              {/* Pulse ring on hover */}
-              <div className="absolute inset-0 rounded-3xl border-2 border-primary/0 group-hover:border-primary/30 group-hover:scale-125 transition-all duration-700 opacity-0 group-hover:opacity-100" />
-            </motion.div>
-            <CardTitle className="text-2xl font-serif">
-              {feature.title}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6 flex-1 flex flex-col relative z-10">
-            <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
-            <div className="p-4 bg-muted/30 rounded-2xl border border-primary/5 italic text-sm text-primary/80">
-              <strong>Impacto:</strong> {feature.benefit}
-            </div>
-            <Button variant="ghost" className="w-full mt-auto justify-between group/btn text-[10px] font-black uppercase tracking-[0.2em] opacity-50 group-hover:opacity-100 transition-opacity">
-              Explorar
-              <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-            </Button>
-          </CardContent>
-        </Card>
-      </motion.div>
-    </div>
+      <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center text-primary mb-2">
+        {feature.icon}
+      </div>
+      <h3 className="text-xl font-display font-bold">
+        {feature.title}
+      </h3>
+      <p className="text-sm text-muted-foreground leading-relaxed">
+        {feature.description}
+      </p>
+    </motion.div>
   );
-});
+};
 FeatureCard.displayName = 'FeatureCard';
 
 const FeaturesSection = ({ onNavigate }: FeaturesSectionProps) => {
@@ -130,59 +77,20 @@ const FeaturesSection = ({ onNavigate }: FeaturesSectionProps) => {
 
       {/* Section header with reveal */}
       <motion.div
-        initial={{ opacity: 0, y: 40 }}
+        initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
-        className="text-center space-y-6 max-w-3xl mx-auto relative z-10"
+        className="text-center space-y-4 max-w-2xl mx-auto relative z-10"
       >
-        <motion.span
-          initial={{ opacity: 0, letterSpacing: "0.5em" }}
-          whileInView={{ opacity: 1, letterSpacing: "0.3em" }}
-          viewport={{ once: true }}
-          transition={{ duration: 1, delay: 0.2 }}
-          className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/60 block"
-        >
-          Experiência
-        </motion.span>
-        <h2 className="text-4xl md:text-6xl font-display font-bold">Aprofunde sua Vida Interior</h2>
-        <p className="text-lg text-muted-foreground italic">"Conhecereis a verdade, e a verdade vos libertará" (Jo 8,32)</p>
-        <motion.div
-          initial={{ scaleX: 0 }}
-          whileInView={{ scaleX: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="w-24 h-1.5 bg-primary mx-auto rounded-full origin-center"
-        />
+        <span className="text-[9px] font-bold uppercase tracking-[0.4em] text-primary/40">O Caminho</span>
+        <h2 className="text-3xl md:text-4xl font-display font-bold">Arquitetura do Conhecimento</h2>
+        <p className="text-muted-foreground italic font-serif">"A luz de Cristo ilumina o coração."</p>
       </motion.div>
-
-      <div className="relative z-10 px-4 md:px-12">
-        <Carousel
-          opts={{
-            align: "start",
-            loop: true,
-          }}
-          className="w-full"
-        >
-          <CarouselContent className="-ml-4">
-            {features.map((feature, idx) => (
-              <CarouselItem key={feature.title} className="pl-4 md:basis-1/2 lg:basis-1/3 xl:basis-1/4">
-                <div className="p-1 h-full">
-                  <FeatureCard feature={feature} index={idx} onNavigate={onNavigate} />
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <div className="hidden md:block">
-            <CarouselPrevious className="-left-12 bg-card border-border/50 hover:bg-primary/5 hover:text-primary transition-all duration-300" />
-            <CarouselNext className="-right-12 bg-card border-border/50 hover:bg-primary/5 hover:text-primary transition-all duration-300" />
-          </div>
-          {/* Mobile controls */}
-          <div className="flex justify-center gap-4 mt-8 md:hidden">
-            <CarouselPrevious className="static translate-y-0" />
-            <CarouselNext className="static translate-y-0" />
-          </div>
-        </Carousel>
+      
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10 max-w-6xl mx-auto">
+        {features.map((feature) => (
+          <FeatureCard key={feature.title} feature={feature} onNavigate={onNavigate} />
+        ))}
       </div>
     </section>
   );
