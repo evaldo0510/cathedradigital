@@ -22,6 +22,8 @@ import {
   MessageCircle,
   Zap,
   Layout,
+  LayoutDashboard,
+
   Globe,
   ExternalLink,
   Pin,
@@ -185,6 +187,8 @@ const IconsInternal = {
   Home: createIcon(Church),
   Dashboard: createIcon(LayoutGrid),
   Layout: createIcon(Layout),
+  LayoutDashboard: createIcon(LayoutDashboard),
+
   Menu: createIcon(Menu),
   Search: createIcon(Search),
   Settings: createIcon(Settings),
@@ -308,6 +312,8 @@ export const Icons = {
   Dashboard: IconsInternal.Dashboard,
   LayoutGrid: IconsInternal.Dashboard,
   Layout: IconsInternal.Layout,
+  LayoutDashboard: IconsInternal.LayoutDashboard,
+
   Menu: IconsInternal.Menu,
   Search: IconsInternal.Search,
   Settings: IconsInternal.Settings,

@@ -15,6 +15,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { motion } from 'framer-motion';
 
 const AdminChartsTab = lazy(() => import('./AdminChartsTab'));
 const AdminTransactionsTab = lazy(() => import('./AdminTransactionsTab'));
@@ -57,7 +58,6 @@ interface Stats {
   movementsStats: { name: string; count: number }[];
 }
 
-
 interface UserProfile {
   id: string;
   name: string;
@@ -75,12 +75,6 @@ interface UserProfile {
   access_frequency?: string;
 }
 
-interface SensitiveRow {
-  user_id: string;
-  email: string;
-  diagnosis_result?: any;
-}
-
 const AdminDashboard: React.FC = () => {
   const [stats, setStats] = useState<any>(null);
   const [users, setUsers] = useState<any[]>([]);
@@ -95,12 +89,10 @@ const AdminDashboard: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
   const tabsListRef = React.useRef<HTMLDivElement>(null);
   
-  // Sync with URL query param for persistence
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'overview';
   const [securityResetKey, setSecurityResetKey] = useState(0);
 
-  // Debounced reset logic for security tab when URL changes
   useEffect(() => {
     if (activeTab === 'security') {
       const timer = setTimeout(() => {
@@ -127,7 +119,6 @@ const AdminDashboard: React.FC = () => {
     const fetchStats = async () => {
       try {
         setLoading(true);
-
         const thirtyDaysAgoStart = new Date();
         thirtyDaysAgoStart.setDate(new Date().getDate() - 30);
         const iso30 = thirtyDaysAgoStart.toISOString();
@@ -144,37 +135,24 @@ const AdminDashboard: React.FC = () => {
         ]);
 
         if (statsRes.error) throw statsRes.error;
-        if (metricsRes.error) throw metricsRes.error;
-        if (transactionsRes.error) throw transactionsRes.error;
-
         const allProfiles = statsRes.data || [];
         const metrics = metricsRes.data || [];
         const transactions = transactionsRes.data || [];
         const crmUsers = crmRes.data || [];
 
         const premiumCount = allProfiles.filter(p => p.is_premium).length;
-        const visitsCount = metrics.filter(m => m.metric_type === 'visit').length;
-        const downloadsCount = metrics.filter(m => m.metric_type === 'download').length;
-        const pwaInstalls = metrics.filter(m => m.metric_type === 'pwa_install').length;
-        const pwaOpens = metrics.filter(m => m.metric_type === 'pwa_open').length;
         const totalRevenue = transactions.filter(t => t.status === 'approved').reduce((acc, curr) => acc + Number(curr.amount), 0);
         const pendingRevenue = transactions.filter(t => t.status === 'pending').reduce((acc, curr) => acc + Number(curr.amount), 0);
 
-        // New CRM specific stats
         const now = new Date();
         const activeToday = allProfiles.filter(p => {
           if (!p.last_visit) return false;
-          const visitDate = new Date(p.last_visit);
-          return visitDate.toDateString() === now.toDateString();
+          return new Date(p.last_visit).toDateString() === now.toDateString();
         }).length;
         
         const thirtyDaysAgo = new Date();
         thirtyDaysAgo.setDate(now.getDate() - 30);
-        const activeLast30Days = allProfiles.filter(p => {
-          if (!p.last_visit) return false;
-          const visitDate = new Date(p.last_visit);
-          return visitDate >= thirtyDaysAgo;
-        }).length;
+        const activeLast30Days = allProfiles.filter(p => p.last_visit && new Date(p.last_visit) >= thirtyDaysAgo).length;
 
         const inactiveUsers = allProfiles.filter(p => {
           if (!p.last_visit) return true;
@@ -186,7 +164,6 @@ const AdminDashboard: React.FC = () => {
 
         const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
         const currentYear = new Date().getFullYear();
-        
         const userGrowth = months.map((month, index) => {
           const count = allProfiles.filter(p => {
             const date = new Date(p.created_at);
@@ -200,68 +177,28 @@ const AdminDashboard: React.FC = () => {
           start.setDate(now.getDate() - (weeksAgo + 1) * 7);
           const end = new Date(now);
           end.setDate(now.getDate() - weeksAgo * 7);
-          
           const amount = transactions
-            .filter(t => {
-              const date = new Date(t.created_at);
-              return t.status === 'approved' && date >= start && date <= end;
-            })
+            .filter(t => t.status === 'approved' && new Date(t.created_at) >= start && new Date(t.created_at) <= end)
             .reduce((acc, curr) => acc + Number(curr.amount), 0);
-            
           return { name: `Sem ${4 - weeksAgo}`, amount };
         });
-
-        // Geographic & Pastoral Stats
-        const dioceseMap = new Map<string, number>();
-        const stateMap = new Map<string, number>();
-        const movementMap = new Map<string, number>();
-
-        allProfiles.forEach(p => {
-          if (p.diocese) dioceseMap.set(p.diocese, (dioceseMap.get(p.diocese) || 0) + 1);
-          if (p.estado) stateMap.set(p.estado, (stateMap.get(p.estado) || 0) + 1);
-          if (p.movimento_pastoral) movementMap.set(p.movimento_pastoral, (movementMap.get(p.movimento_pastoral) || 0) + 1);
-        });
-
-        const diocesesStats = Array.from(dioceseMap.entries())
-          .map(([name, count]) => ({ name, count }))
-          .sort((a, b) => b.count - a.count);
-        
-        const statesStats = Array.from(stateMap.entries())
-          .map(([name, count]) => ({ name, count }))
-          .sort((a, b) => b.count - a.count);
-
-        const movementsStats = Array.from(movementMap.entries())
-          .map(([name, count]) => ({ name, count }))
-          .sort((a, b) => b.count - a.count);
 
         setStats({
           totalUsers: allProfiles.length,
           premiumUsers: premiumCount,
-          totalVisits: visitsCount,
-          totalDownloads: downloadsCount,
-          pwaInstalls,
-          pwaOpens,
           activeToday,
           activeLast30Days,
-          inactiveUsers,
-          journeysInProgress: journeysStartedRes.count || 0,
-          totalReflections: journalRes.count || 0,
-          totalJourneysStarted: journeysStartedRes.count || 0,
-          totalJourneysCompleted: journeysCompletedRes.count || 0,
-          returnRate,
           totalRevenue,
           pendingRevenue,
+          returnRate,
           recentTransactions: transactions.slice(0, 10),
           userGrowth,
           revenueData,
-          diocesesStats,
-          statesStats,
-          movementsStats
+          transactions
         });
 
+
         setRecentJournal(recentJournalRes.data || []);
-
-
         const crmMap = new Map<string, any>();
         crmUsers.forEach(u => crmMap.set(u.id, u));
 
@@ -273,7 +210,7 @@ const AdminDashboard: React.FC = () => {
             depth_level: crm.classification || 'Novo',
             reflections_count: crm.reflections_count || 0,
             current_journey: crm.current_journey || 'Nenhuma',
-            last_visit: crm.last_activity // Map view's activity to last_visit for UI consistency
+            last_visit: crm.last_activity
           };
         }) as UserProfile[]);
       } catch (err: any) {
@@ -285,804 +222,151 @@ const AdminDashboard: React.FC = () => {
     };
 
     fetchStats();
-    const interval = setInterval(fetchStats, 60000); // Atualiza a cada 60 segundos
+    const interval = setInterval(fetchStats, 60000);
     return () => clearInterval(interval);
   }, []);
 
-  const handleTogglePremium = async (userId: string, currentStatus: boolean) => {
-    const { error } = await supabase
-      .from('profiles')
-      .update({ is_premium: !currentStatus })
-      .eq('id', userId);
+  if (selectedUser) return (
+    <div className="space-y-8 pb-10">
+      <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
+        <AdminCrmUserProfile user={selectedUser} onBack={() => setSelectedUser(null)} />
+      </Suspense>
+    </div>
+  );
 
-    if (error) {
-      toast.error('Erro ao atualizar status PRO');
-      return;
-    }
-
-    setUsers(prev => prev.map(u => u.id === userId ? { ...u, is_premium: !currentStatus } : u));
-    toast.success(!currentStatus ? 'Usuário promovido a PRO' : 'Acesso PRO removido');
-  };
-
-  const handleToggleRole = async (userId: string, currentRole: string | null) => {
-    const newRole = currentRole === 'admin' ? 'user' : 'admin';
-    const { error } = await supabase
-      .from('profiles')
-      .update({ role: newRole })
-      .eq('id', userId);
-
-    if (error) {
-      toast.error('Erro ao atualizar cargo');
-      return;
-    }
-
-    setUsers(prev => prev.map(u => u.id === userId ? { ...u, role: newRole } : u));
-    toast.success(newRole === 'admin' ? 'Usuário promovido a Admin' : 'Cargo de Admin removido');
-  };
-
-  const handleManualPremium = async (grant: boolean) => {
-    if (!manualEmail.trim()) {
-      toast.error('Informe um email válido');
-      return;
-    }
-    setManualLoading(true);
-    const { data: sensitiveData, error: sensitiveError } = await (supabase as any)
-      .from('user_sensitive_data')
-      .select('user_id')
-      .eq('email', manualEmail.trim())
-      .maybeSingle();
-
-    if (sensitiveError || !sensitiveData) {
-      setManualLoading(false);
-      toast.error('Nenhum usuário encontrado com esse email');
-      return;
-    }
-
-    const { data, error } = await supabase
-      .from('profiles')
-      .update({ is_premium: grant })
-      .eq('id', sensitiveData.user_id)
-      .select('id, is_premium');
-
-    setManualLoading(false);
-
-    if (error) {
-      toast.error('Erro ao atualizar: ' + error.message);
-      return;
-    }
-    if (!data || data.length === 0) {
-      toast.error('Nenhum usuário encontrado com esse email');
-      return;
-    }
-
-    setUsers(prev => prev.map(u => u.email === manualEmail.trim() ? { ...u, is_premium: grant } : u));
-    toast.success(grant ? `Premium ativado para ${manualEmail}` : `Premium removido de ${manualEmail}`);
-    setManualEmail('');
-  };
-
-  const filteredUsers = users
-    .filter(u => 
-      u.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-      u.email.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-    .sort((a, b) => {
-      const valA = a[sortField] ?? '';
-      const valB = b[sortField] ?? '';
-      const cmp = String(valA).localeCompare(String(valB), 'pt', { numeric: true });
-      return sortAsc ? cmp : -cmp;
-    });
-
-  const toggleSort = (field: typeof sortField) => {
-    if (sortField === field) setSortAsc(!sortAsc);
-    else { setSortField(field); setSortAsc(true); }
-  };
-
-  const SortIcon = ({ field }: { field: typeof sortField }) => {
-    if (sortField !== field) return null;
-    return sortAsc ? <ChevronUp className="w-3 h-3 inline ml-1" /> : <ChevronDown className="w-3 h-3 inline ml-1" />;
-  };
-
-  // If a user profile is selected, show it
-  if (selectedUser) {
-    return (
-      <div className="space-y-8 pb-10">
-        <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
-          <AdminCrmUserProfile user={selectedUser} onBack={() => setSelectedUser(null)} />
-        </Suspense>
+  if (loading) return (
+    <div className="space-y-12 p-8 animate-pulse">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-32 w-full rounded-[2rem]" />)}
       </div>
-    );
-  }
-
-  if (loading) {
-    return (
-      <div className="space-y-6 animate-pulse">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-32 w-full rounded-xl" />)}
-        </div>
-        <Skeleton className="h-[400px] rounded-xl" />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex flex-col items-center justify-center p-12 text-center bg-destructive/10 rounded-xl border border-destructive/20">
-        <AlertCircle className="h-12 w-12 text-destructive mb-4" />
-        <h2 className="text-xl font-bold mb-2">Erro ao carregar dados</h2>
-        <p className="text-muted-foreground">{error}</p>
-      </div>
-    );
-  }
+      <Skeleton className="h-[500px] rounded-[3rem]" />
+    </div>
+  );
 
   return (
-    <div className="space-y-6 sm:space-y-8 pb-20 sm:pb-10 px-0 sm:px-0">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 px-4 sm:px-0">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-xl sm:text-3xl font-display font-black uppercase tracking-tight text-primary">Painel Administrativo</h1>
-          <p className="text-xs sm:text-sm text-muted-foreground font-medium uppercase tracking-wider opacity-70">CRM & Gestão completa da plataforma.</p>
-        </div>
-      </div>
+    <div className="space-y-10 pb-24">
+      <header className="flex flex-col gap-2 px-4 md:px-0">
+        <h1 className="text-3xl md:text-5xl font-serif font-black tracking-tight text-primary uppercase">Command Center</h1>
+        <p className="text-sm text-muted-foreground font-black uppercase tracking-[0.4em] opacity-60">Ecclesia Management System</p>
+      </header>
 
-      <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
-        <div className="px-4 sm:px-0 -mx-4 sm:mx-0">
-          <TabsList ref={tabsListRef} className="flex w-full overflow-x-auto justify-start h-auto p-1 bg-muted/30 border border-border/10 rounded-xl no-scrollbar scroll-smooth snap-x">
-            <TabsTrigger value="overview" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
-              <LayoutGrid className="w-3.5 h-3.5" /> Visão Geral
-            </TabsTrigger>
-            <TabsTrigger value="users" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
-              <Users className="w-3.5 h-3.5" /> Usuários
-            </TabsTrigger>
-            <TabsTrigger value="transactions" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
-              <DollarSign className="w-3.5 h-3.5" /> Financeiro
-            </TabsTrigger>
-            <TabsTrigger value="partners" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
-              <Handshake className="w-3.5 h-3.5" /> Parceiros
-            </TabsTrigger>
-            <TabsTrigger value="content" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
-              <MessageSquare className="w-3.5 h-3.5" /> Conteúdo
-            </TabsTrigger>
-            <TabsTrigger value="journeys" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
-              <MapIcon className="w-3.5 h-3.5" /> Jornadas
-            </TabsTrigger>
-            <TabsTrigger value="segmentation" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
-              <Target className="w-3.5 h-3.5" /> CRM: Segmentos
-            </TabsTrigger>
-            <TabsTrigger value="retention" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
-              <Activity className="w-3.5 h-3.5" /> CRM: Retenção
-            </TabsTrigger>
-            <TabsTrigger value="automations" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
-              <Bell className="w-3.5 h-3.5" /> CRM: Automações
-            </TabsTrigger>
-            <TabsTrigger value="themes" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
-              <Tag className="w-3.5 h-3.5" /> Nexus Temas
-            </TabsTrigger>
-            <TabsTrigger value="nexus-audit" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
-              <Search className="w-3.5 h-3.5" /> Nexus Auditoria
-            </TabsTrigger>
-            <TabsTrigger value="seo" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
-              <Globe className="w-3.5 h-3.5" /> SEO
-            </TabsTrigger>
-            <TabsTrigger value="security" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start relative group">
-              <Shield className="w-3.5 h-3.5 text-red-500" /> Segurança
-              <span className="absolute -top-1 -right-1 flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-              </span>
-            </TabsTrigger>
-            <TabsTrigger value="tests" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
-              <RefreshCcw className="w-3.5 h-3.5" /> Testes
-            </TabsTrigger>
-            <TabsTrigger value="geography" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
-              <MapIcon className="w-3.5 h-3.5" /> Geografia
-            </TabsTrigger>
-            <TabsTrigger value="construction" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
-              <Building2 className="w-3.5 h-3.5" /> Obras
-            </TabsTrigger>
-          </TabsList>
-        </div>
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-10">
+        <TabsList ref={tabsListRef} className="flex w-full overflow-x-auto justify-start h-auto p-2 bg-muted/20 border border-border/10 rounded-[1.5rem] no-scrollbar snap-x backdrop-blur-xl">
+          <TabsTrigger value="overview" className="gap-2 text-[10px] font-black uppercase tracking-widest px-6 py-3 snap-start rounded-xl">
+            <LayoutGrid className="w-4 h-4" /> Visão Geral
+          </TabsTrigger>
+          <TabsTrigger value="users" className="gap-2 text-[10px] font-black uppercase tracking-widest px-6 py-3 snap-start rounded-xl">
+            <Users className="w-4 h-4" /> Fiéis
+          </TabsTrigger>
+          <TabsTrigger value="transactions" className="gap-2 text-[10px] font-black uppercase tracking-widest px-6 py-3 snap-start rounded-xl">
+            <DollarSign className="w-4 h-4" /> Ofertas
+          </TabsTrigger>
+          <TabsTrigger value="security" className="gap-2 text-[10px] font-black uppercase tracking-widest px-6 py-3 snap-start rounded-xl text-rose-500">
+            <Shield className="w-4 h-4" /> Segurança
+          </TabsTrigger>
+        </TabsList>
 
-        <TabsContent value="overview" className="space-y-6">
-          {/* Stats Overview */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-            <Card className="shadow-none border-border/40">
-              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest opacity-60">Total Usuários</CardTitle>
-                <Users className="h-3.5 w-3.5 text-muted-foreground" />
-              </CardHeader>
-              <CardContent className="px-3 pb-3">
-                <div className="text-xl font-black tabular-nums">{stats?.totalUsers}</div>
-                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Cadastrados</p>
-              </CardContent>
-            </Card>
+        <TabsContent value="overview" className="space-y-12 outline-none">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+              <Card className="border-border/50 bg-gradient-to-br from-primary/10 via-card to-card overflow-hidden rounded-[2.5rem] shadow-sm relative group h-full">
+                 <div className="absolute top-0 right-0 p-8 opacity-5 -mr-4 -mt-4 group-hover:scale-110 transition-transform duration-700">
+                   <Users className="w-24 h-24 text-primary" />
+                 </div>
+                 <CardHeader className="pb-2 relative z-10">
+                   <CardDescription className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/60">Total de Fiéis</CardDescription>
+                   <CardTitle className="text-5xl font-black tracking-tighter">{stats?.totalUsers}</CardTitle>
+                 </CardHeader>
+                 <CardContent className="relative z-10">
+                   <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-emerald-500">
+                     <TrendingUp className="h-4 w-4" />
+                     <span>Crescimento Orgânico</span>
+                   </div>
+                 </CardContent>
+              </Card>
+            </motion.div>
 
-            <Card className="shadow-none border-border/40">
-              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest opacity-60">Ativos</CardTitle>
-                <UserCheck className="h-3.5 w-3.5 text-primary" />
-              </CardHeader>
-              <CardContent className="px-3 pb-3">
-                <div className="text-xl font-black text-primary tabular-nums">{stats?.activeLast30Days}</div>
-                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Últimos 30 dias</p>
-              </CardContent>
-            </Card>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+              <Card className="border-border/50 bg-gradient-to-br from-secondary/10 via-card to-card overflow-hidden rounded-[2.5rem] shadow-sm relative group h-full">
+                 <div className="absolute top-0 right-0 p-8 opacity-5 -mr-4 -mt-4 group-hover:scale-110 transition-transform duration-700">
+                   <Crown className="w-24 h-24 text-secondary" />
+                 </div>
+                 <CardHeader className="pb-2 relative z-10">
+                   <CardDescription className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary/60">Fiéis PRO</CardDescription>
+                   <CardTitle className="text-5xl font-black tracking-tighter">{stats?.premiumUsers}</CardTitle>
+                 </CardHeader>
+                 <CardContent className="relative z-10">
+                   <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-secondary">
+                     <Target className="h-4 w-4" />
+                     <span>{((stats?.premiumUsers / stats?.totalUsers) * 100).toFixed(1)}% Conversão</span>
+                   </div>
+                 </CardContent>
+              </Card>
+            </motion.div>
 
-            <Card className="shadow-none border-border/40">
-              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest opacity-60">Usuários PRO</CardTitle>
-                <Crown className="h-3.5 w-3.5 text-secondary" />
-              </CardHeader>
-              <CardContent className="px-3 pb-3">
-                <div className="text-xl font-black text-secondary tabular-nums">{stats?.premiumUsers}</div>
-                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Assinantes</p>
-              </CardContent>
-            </Card>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+              <Card className="border-border/50 bg-gradient-to-br from-emerald-500/10 via-card to-card overflow-hidden rounded-[2.5rem] shadow-sm relative group h-full">
+                 <div className="absolute top-0 right-0 p-8 opacity-5 -mr-4 -mt-4 group-hover:scale-110 transition-transform duration-700">
+                   <DollarSign className="w-24 h-24 text-emerald-500" />
+                 </div>
+                 <CardHeader className="pb-2 relative z-10">
+                   <CardDescription className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600/60">Dízimos & Ofertas</CardDescription>
+                   <CardTitle className="text-4xl font-black tracking-tighter">R$ {stats?.totalRevenue.toLocaleString()}</CardTitle>
+                 </CardHeader>
+                 <CardContent className="relative z-10">
+                   <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-emerald-600">
+                     <Activity className="h-4 w-4" />
+                     <span>R$ {stats?.pendingRevenue.toLocaleString()} Pendente</span>
+                   </div>
+                 </CardContent>
+              </Card>
+            </motion.div>
 
-            <Card className="shadow-none border-border/40">
-              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest opacity-60">Retenção</CardTitle>
-                <TrendingUp className="h-3.5 w-3.5 text-primary" />
-              </CardHeader>
-              <CardContent className="px-3 pb-3">
-                <div className="text-xl font-black text-primary tabular-nums">{stats?.returnRate.toFixed(1)}%</div>
-                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Recorrência</p>
-              </CardContent>
-            </Card>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+              <Card className="border-border/50 bg-gradient-to-br from-rose-500/10 via-card to-card overflow-hidden rounded-[2.5rem] shadow-sm relative group h-full">
+                 <div className="absolute top-0 right-0 p-8 opacity-5 -mr-4 -mt-4 group-hover:scale-110 transition-transform duration-700">
+                   <Target className="w-24 h-24 text-rose-500" />
+                 </div>
+                 <CardHeader className="pb-2 relative z-10">
+                   <CardDescription className="text-[10px] font-black uppercase tracking-[0.3em] text-rose-600/60">Retenção de Almas</CardDescription>
+                   <CardTitle className="text-5xl font-black tracking-tighter">{stats?.returnRate.toFixed(1)}%</CardTitle>
+                 </CardHeader>
+                 <CardContent className="relative z-10">
+                   <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-rose-600">
+                     <Clock className="h-4 w-4" />
+                     <span>{stats?.activeToday} Ativos hoje</span>
+                   </div>
+                 </CardContent>
+              </Card>
+            </motion.div>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-            <Card className="bg-primary/5 border-primary/20 shadow-none">
-              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest text-primary opacity-80">Receita</CardTitle>
-                <DollarSign className="h-3.5 w-3.5 text-primary" />
-              </CardHeader>
-              <CardContent className="px-3 pb-3">
-                <div className="text-xl font-black text-primary tabular-nums">
-                  {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(stats?.totalRevenue || 0)}
-                </div>
-                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Aprovada</p>
-              </CardContent>
-            </Card>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+             <Card className="rounded-[3rem] border-border/40 overflow-hidden shadow-xl">
+               <CardHeader className="bg-muted/10 border-b border-border/20 p-8">
+                 <CardTitle className="font-serif text-2xl font-black">Crescimento de Membros</CardTitle>
+                 <CardDescription>Fluxo de novos peregrinos nos últimos meses</CardDescription>
+               </CardHeader>
+               <CardContent className="p-0">
+                 <Suspense fallback={<Skeleton className="h-[300px]" />}>
+                   <AdminChartsTab userGrowth={stats?.userGrowth || []} revenueData={stats?.revenueData || []} />
+                 </Suspense>
+               </CardContent>
+             </Card>
 
-            <Card className="bg-amber-500/5 border-amber-500/20 shadow-none">
-              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest text-amber-500 opacity-80">Pendente</CardTitle>
-                <Clock className="h-3.5 w-3.5 text-amber-500" />
-              </CardHeader>
-              <CardContent className="px-3 pb-3">
-                <div className="text-xl font-black text-amber-500 tabular-nums">
-                  {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(stats?.pendingRevenue || 0)}
-                </div>
-                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Em espera</p>
-              </CardContent>
-            </Card>
+             <Card className="rounded-[3rem] border-border/40 overflow-hidden shadow-xl">
+               <CardHeader className="bg-muted/10 border-b border-border/20 p-8">
+                 <CardTitle className="font-serif text-2xl font-black">Ofertas Recentes</CardTitle>
+                 <CardDescription>Últimas transações aprovadas e pendentes</CardDescription>
+               </CardHeader>
+               <CardContent className="p-0">
+                 <Suspense fallback={<Skeleton className="h-[300px]" />}>
+                   <AdminTransactionsTab transactions={stats?.transactions || []} />
+                 </Suspense>
+               </CardContent>
+             </Card>
 
-            <Card className="bg-destructive/5 border-destructive/20 shadow-none">
-              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest text-destructive opacity-80">Doação</CardTitle>
-                <Heart className="h-3.5 w-3.5 text-destructive" />
-              </CardHeader>
-              <CardContent className="px-3 pb-3">
-                <div className="text-xl font-black text-destructive tabular-nums">
-                  {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format((stats?.totalRevenue || 0) * 0.5)}
-                </div>
-                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">50% Social</p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-primary/5 border-primary/20 shadow-none">
-              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest text-primary opacity-80">Op (50%)</CardTitle>
-                <Wallet className="h-3.5 w-3.5 text-primary" />
-              </CardHeader>
-              <CardContent className="px-3 pb-3">
-                <div className="text-xl font-black text-primary tabular-nums">
-                  {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format((stats?.totalRevenue || 0) * 0.5)}
-                </div>
-                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Operação</p>
-              </CardContent>
-            </Card>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <Card className="bg-secondary/5 border-secondary/20 shadow-none">
-              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest text-secondary opacity-80">Reflexões</CardTitle>
-                <Heart className="h-3.5 w-3.5 text-secondary" />
-              </CardHeader>
-              <CardContent className="px-3 pb-3">
-                <div className="text-xl font-black text-secondary tabular-nums">{stats?.totalReflections}</div>
-                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Impacto Espiritual</p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-primary/5 border-primary/20 shadow-none">
-              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest text-primary opacity-80">Iniciadas</CardTitle>
-                <MapIcon className="h-3.5 w-3.5 text-primary" />
-              </CardHeader>
-              <CardContent className="px-3 pb-3">
-                <div className="text-xl font-black text-primary tabular-nums">{stats?.totalJourneysStarted}</div>
-                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Jornadas Totais</p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-primary/5 border-primary/20 shadow-none">
-              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest text-primary opacity-80">Concluídas</CardTitle>
-                <Activity className="h-3.5 w-3.5 text-primary" />
-              </CardHeader>
-              <CardContent className="px-3 pb-3">
-                <div className="text-xl font-black text-primary tabular-nums">{stats?.totalJourneysCompleted}</div>
-                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Sucesso de Retenção</p>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-            <Card className="shadow-none border-border/40">
-              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest opacity-60">Hoje</CardTitle>
-                <UserCheck className="h-3.5 w-3.5 text-muted-foreground" />
-              </CardHeader>
-              <CardContent className="px-3 pb-3">
-                <div className="text-xl font-black tabular-nums">{stats?.activeToday}</div>
-                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Visitantes</p>
-              </CardContent>
-            </Card>
-
-            <Card className="shadow-none border-border/40">
-              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest opacity-60">Inativos</CardTitle>
-                <AlertCircle className="h-3.5 w-3.5 text-muted-foreground" />
-              </CardHeader>
-              <CardContent className="px-3 pb-3">
-                <div className="text-xl font-black tabular-nums">{stats?.inactiveUsers}</div>
-                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">{'>'} 48h sem acesso</p>
-              </CardContent>
-            </Card>
-
-            <Card className="shadow-none border-border/40">
-              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest opacity-60">Instalações</CardTitle>
-                <Smartphone className="h-3.5 w-3.5 text-muted-foreground" />
-              </CardHeader>
-              <CardContent className="px-3 pb-3">
-                <div className="text-xl font-black tabular-nums">{stats?.pwaInstalls}</div>
-                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">PWA Total</p>
-              </CardContent>
-            </Card>
-
-            <Card className="shadow-none border-border/40">
-              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest opacity-60">No Flow</CardTitle>
-                <Target className="h-3.5 w-3.5 text-muted-foreground" />
-              </CardHeader>
-              <CardContent className="px-3 pb-3">
-                <div className="text-xl font-black tabular-nums">{stats?.journeysInProgress}</div>
-                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Em andamento</p>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* CRM Segment Summary */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <Card className="border-border/40 shadow-none bg-card/50 backdrop-blur-sm">
-              <CardHeader className="pb-2 pt-3 px-3">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest text-primary">Engajamento por Segmento</CardTitle>
-              </CardHeader>
-              <CardContent className="px-3 pb-3 pt-1">
-                <div className="space-y-2.5">
-                  {[
-                    { label: 'Profundos (Mestres)', count: users.filter(u => u.depth_level === 'Profundo').length, color: 'bg-primary' },
-                    { label: 'Engajados (High XP)', count: users.filter(u => u.depth_level === 'Engajado').length, color: 'bg-orange-500' },
-                    { label: 'Ativos (Frequentes)', count: users.filter(u => u.depth_level === 'Ativo').length, color: 'bg-primary/60' },
-                    { label: 'Novos / Inativos', count: users.filter(u => !u.depth_level || u.depth_level === 'Inativo' || u.depth_level === 'Novo').length, color: 'bg-muted' },
-                  ].map(s => (
-                    <div key={s.label} className="space-y-1">
-                      <div className="flex items-center justify-between text-[9px] font-bold uppercase tracking-wider">
-                        <span className="opacity-70">{s.label}</span>
-                        <span className="tabular-nums">{s.count}</span>
-                      </div>
-                      <div className="h-1 w-full bg-muted/30 rounded-full overflow-hidden">
-                        <div 
-                          className={`h-full ${s.color} transition-all duration-1000`} 
-                          style={{ width: `${users.length > 0 ? (s.count / users.length) * 100 : 0}%` }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border-border/40 shadow-none bg-card/50 backdrop-blur-sm">
-              <CardHeader className="pb-1 pt-3 px-3 flex flex-row items-center justify-between">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest text-primary">Conversão PRO</CardTitle>
-                <div className="text-xl font-black text-primary tabular-nums">
-                  {users.length > 0 ? ((users.filter(u => u.is_premium).length / users.length) * 100).toFixed(1) : 0}%
-                </div>
-              </CardHeader>
-              <CardContent className="px-3 pb-3 pt-1">
-                <div className="mt-2 grid grid-cols-2 gap-4 w-full">
-                  <div className="text-center p-2 rounded-lg bg-primary/5 border border-primary/10">
-                    <div className="text-lg font-black">{users.filter(u => u.is_premium).length}</div>
-                    <div className="text-[8px] font-black uppercase tracking-widest opacity-50">Assinantes</div>
-                  </div>
-                  <div className="text-center p-2 rounded-lg bg-muted/20 border border-border/10">
-                    <div className="text-lg font-black opacity-60">{users.length - users.filter(u => u.is_premium).length}</div>
-                    <div className="text-[8px] font-black uppercase tracking-widest opacity-50">Gratuitos</div>
-                  </div>
-                </div>
-                <p className="text-[8px] text-muted-foreground text-center mt-3 uppercase tracking-tighter italic">Base total: {users.length} usuários</p>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Recent Activity Section */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2">
-              <Suspense fallback={<Skeleton className="h-[350px] rounded-xl" />}>
-                <AdminChartsTab userGrowth={stats?.userGrowth || []} revenueData={stats?.revenueData || []} />
-              </Suspense>
-            </div>
-            
-            <Card className="border-border/40 shadow-none bg-card/50 backdrop-blur-sm">
-              <CardHeader className="pb-3 pt-3 px-3">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-2">
-                  <MessageSquare className="w-3.5 h-3.5" /> Últimas Reflexões
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="px-3 pb-3 pt-1 space-y-3">
-                {recentJournal.length > 0 ? (
-                  recentJournal.map((entry) => (
-                    <div key={entry.id} className="p-2.5 rounded-lg bg-muted/20 border border-border/10 space-y-1.5 hover:bg-muted/30 transition-colors">
-                      <div className="flex items-center justify-between text-[10px] font-bold">
-                        <span className="text-primary truncate max-w-[120px]">{entry.profiles?.name || 'Anônimo'}</span>
-                        <span className="text-muted-foreground opacity-60">{new Date(entry.created_at).toLocaleDateString('pt-BR')}</span>
-                      </div>
-                      <p className="text-[11px] leading-relaxed line-clamp-2 italic opacity-80">"{entry.content}"</p>
-                      {entry.mood && (
-                        <Badge variant="outline" className="text-[8px] font-black h-4 px-1 uppercase tracking-tighter bg-primary/5 border-primary/20 text-primary">
-                          {entry.mood}
-                        </Badge>
-                      )}
-                    </div>
-                  ))
-                ) : (
-                  <div className="py-8 text-center text-[10px] text-muted-foreground uppercase font-black tracking-widest opacity-40">
-                    Nenhuma reflexão recente.
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        {/* Segmentation Tab */}
-        <TabsContent value="segmentation">
-          <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
-            <AdminCrmSegmentation users={users} onSelectUser={setSelectedUser} />
-          </Suspense>
-        </TabsContent>
-
-        {/* Themes Tab */}
-        <TabsContent value="themes">
-          <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
-            <AdminThemesTab />
-          </Suspense>
-        </TabsContent>
-
-        {/* Retention Tab */}
-        <TabsContent value="retention">
-          <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
-            <AdminCrmRetention users={users} totalRevenue={stats?.totalRevenue ?? 0} transactions={stats?.recentTransactions ?? []} />
-          </Suspense>
-        </TabsContent>
-
-        {/* Automations Tab */}
-        <TabsContent value="automations">
-          <Suspense fallback={<Skeleton className="h-[300px] rounded-xl" />}>
-            <AdminCrmAutomations />
-          </Suspense>
-        </TabsContent>
-
-        {/* Transactions Tab */}
-        <TabsContent value="transactions">
-          <Suspense fallback={<Skeleton className="h-[300px] rounded-xl" />}>
-            <AdminTransactionsTab transactions={stats?.recentTransactions || []} />
-          </Suspense>
-        </TabsContent>
-
-        {/* Partners Tab */}
-        <TabsContent value="partners" className="space-y-4">
-          <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
-            <AdminPartnersTab />
-          </Suspense>
-        </TabsContent>
-
-        {/* Content Tab */}
-        <TabsContent value="content" className="space-y-4">
-          <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
-            <AdminContentTab />
-          </Suspense>
-        </TabsContent>
-
-        {/* Journeys Tab */}
-        <TabsContent value="journeys" className="space-y-4">
-          <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
-            <AdminJourneysTab />
-          </Suspense>
-        </TabsContent>
-
-        <TabsContent value="seo" className="space-y-4">
-          <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
-            <AdminSeoTab />
-          </Suspense>
-        </TabsContent>
-
-        <TabsContent value="nexus-audit" className="space-y-4">
-          <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
-            <NexusAuditPage />
-          </Suspense>
-        </TabsContent>
-
-        <TabsContent value="nexus-audit" className="space-y-4">
-          <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
-            <NexusAuditPage />
-          </Suspense>
-        </TabsContent>
-
-        {/* Security Tab */}
-        <TabsContent value="security" className="space-y-4 outline-none">
-          <Suspense fallback={
-            <Card className="border-primary/20 bg-primary/5 animate-pulse">
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-primary/10 rounded-lg">
-                    <Shield className="w-5 h-5 text-primary animate-spin" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-primary uppercase font-black tracking-widest text-xs">Verificando Segurança</CardTitle>
-                    <CardDescription className="text-[10px] font-bold uppercase opacity-60">Escaneando vulnerabilidades e RLS...</CardDescription>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Skeleton className="h-12 w-full rounded-lg bg-primary/10" />
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Skeleton className="h-32 w-full rounded-xl bg-primary/5" />
-                  <Skeleton className="h-32 w-full rounded-xl bg-primary/5" />
-                </div>
-                <Skeleton className="h-48 w-full rounded-xl bg-primary/5" />
-              </CardContent>
-            </Card>
-          }>
-            <SecurityAuditPage key={securityResetKey} />
-          </Suspense>
-        </TabsContent>
-
-        {/* Users Tab */}
-        <TabsContent value="users" className="space-y-4">
-          <div className="flex items-center gap-3">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input 
-                placeholder="Buscar por nome ou email..." 
-                value={searchQuery} 
-                onChange={e => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-            <Badge variant="secondary" className="whitespace-nowrap">
-              {filteredUsers.length} usuário{filteredUsers.length !== 1 ? 's' : ''}
-            </Badge>
-          </div>
-
-          <Card>
-            <CardContent className="p-0">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-border/60 bg-muted/20">
-                      <th className="text-left px-3 py-2 font-black uppercase tracking-widest text-[10px] opacity-60 cursor-pointer hover:text-primary" onClick={() => toggleSort('name')}>
-                        Nome <SortIcon field="name" />
-                      </th>
-                      <th className="text-left px-3 py-2 font-black uppercase tracking-widest text-[10px] opacity-60 hidden md:table-cell">Email</th>
-                      <th className="text-center px-3 py-2 font-black uppercase tracking-widest text-[10px] opacity-60">Status</th>
-                      <th className="text-center px-3 py-2 font-black uppercase tracking-widest text-[10px] opacity-60">Cargo</th>
-                      <th className="text-center px-3 py-2 font-black uppercase tracking-widest text-[10px] opacity-60 cursor-pointer hover:text-primary hidden lg:table-cell" onClick={() => toggleSort('xp')}>
-                        XP <SortIcon field="xp" />
-                      </th>
-                      <th className="text-center px-3 py-2 font-black uppercase tracking-widest text-[10px] opacity-60 cursor-pointer hover:text-primary hidden lg:table-cell" onClick={() => toggleSort('created_at')}>
-                        Cadastro <SortIcon field="created_at" />
-                      </th>
-                      <th className="text-center px-3 py-2 font-black uppercase tracking-widest text-[10px] opacity-60">Ações</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredUsers.map(u => (
-                      <tr key={u.id} className="border-b border-border/50 hover:bg-muted/50 transition-colors">
-                        <td className="px-3 py-2">
-                          <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 rounded bg-foreground text-background flex items-center justify-center font-black text-[10px] shrink-0">
-                              {u.name?.charAt(0)?.toUpperCase() || '?'}
-                            </div>
-                            <span className="font-bold text-xs truncate max-w-[120px]">{u.name || '—'}</span>
-                          </div>
-                        </td>
-                        <td className="px-3 py-2 text-muted-foreground hidden md:table-cell truncate max-w-[180px] text-[10px] font-medium">{u.email}</td>
-                        <td className="px-3 py-2 text-center">
-                          {u.is_premium ? (
-                            <Badge className="bg-primary/10 text-primary border-primary/20 gap-1 text-[9px] font-bold h-5 px-1.5 shadow-none">
-                              <Crown className="w-2.5 h-2.5" /> PRO
-                            </Badge>
-                          ) : (
-                            <Badge variant="secondary" className="gap-1 text-[9px] font-bold h-5 px-1.5 shadow-none">GRATUITO</Badge>
-                          )}
-                        </td>
-                        <td className="px-3 py-2 text-center">
-                          {u.role === 'admin' ? (
-                            <Badge className="bg-destructive/10 text-destructive border-destructive/20 gap-1 text-[9px] font-bold h-5 px-1.5 shadow-none">
-                              <Shield className="w-2.5 h-2.5" /> ADMIN
-                            </Badge>
-                          ) : (
-                            <Badge variant="outline" className="gap-1 text-[9px] font-bold h-5 px-1.5 shadow-none">USER</Badge>
-                          )}
-                        </td>
-                        <td className="px-3 py-2 text-center hidden lg:table-cell font-mono text-[10px] font-bold">{u.xp ?? 0}</td>
-                        <td className="px-3 py-2 text-center hidden lg:table-cell text-[10px] font-medium text-muted-foreground">
-                          {new Date(u.created_at).toLocaleDateString('pt-BR')}
-                        </td>
-                        <td className="px-3 py-2 text-center">
-                          <div className="flex items-center justify-center gap-1">
-                            <button
-                              onClick={() => handleTogglePremium(u.id, u.is_premium)}
-                              title={u.is_premium ? 'Remover PRO' : 'Ativar PRO'}
-                              className={`p-1 rounded bg-muted/50 text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors`}
-                            >
-                              <Crown className="w-3.5 h-3.5" />
-                            </button>
-                            <button
-                              onClick={() => handleToggleRole(u.id, u.role)}
-                              title={u.role === 'admin' ? 'Remover Admin' : 'Tornar Admin'}
-                              className={`p-1 rounded bg-muted/50 text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors`}
-                            >
-                              <UserCog className="w-3.5 h-3.5" />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                    {filteredUsers.length === 0 && (
-                      <tr><td colSpan={7} className="p-8 text-center text-muted-foreground">Nenhum usuário encontrado.</td></tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Manual Control */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-sm"><Crown className="w-4 h-4 text-primary" /> Controle Manual de Acesso</CardTitle>
-              <CardDescription>Libere ou remova o acesso PRO de um usuário pelo email.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex flex-col sm:flex-row gap-3">
-                <Input
-                  type="email"
-                  placeholder="email@exemplo.com"
-                  value={manualEmail}
-                  onChange={e => setManualEmail(e.target.value)}
-                  className="flex-1"
-                />
-                <div className="flex gap-2">
-                  <Button
-                    onClick={() => handleManualPremium(true)}
-                    disabled={manualLoading || !manualEmail.trim()}
-                    className="gap-2"
-                    size="sm"
-                  >
-                    <Crown className="w-4 h-4" /> Liberar PRO
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => handleManualPremium(false)}
-                    disabled={manualLoading || !manualEmail.trim()}
-                    className="gap-2"
-                    size="sm"
-                  >
-                    Remover PRO
-                  </Button>
-                </div>
-              </div>
-              <p className="text-xs text-muted-foreground">
-                O usuário precisa estar cadastrado na plataforma. A alteração tem efeito imediato.
-              </p>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Geography Tab */}
-        <TabsContent value="geography" className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Distribuição por Estado</CardTitle>
-                <CardDescription>Estados com mais usuários ativos.</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {stats?.statesStats.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">Nenhum dado disponível.</p>
-                  ) : (
-                    stats?.statesStats.map(s => (
-                      <div key={s.name} className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Badge variant="outline">{s.name}</Badge>
-                          <span className="text-sm font-medium">{s.name}</span>
-                        </div>
-                        <span className="text-sm font-bold">{s.count}</span>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Distribuição por Diocese</CardTitle>
-                <CardDescription>Principais dioceses da comunidade.</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-                  {stats?.diocesesStats.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">Nenhum dado disponível.</p>
-                  ) : (
-                    stats?.diocesesStats.map(d => (
-                      <div key={d.name} className="flex items-center justify-between group">
-                        <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">{d.name}</span>
-                        <span className="text-sm font-bold">{d.count}</span>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Movimentos & Pastorais</CardTitle>
-                <CardDescription>Engajamento por grupo eclesial.</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-                  {stats?.movementsStats.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">Nenhum dado disponível.</p>
-                  ) : (
-                    stats?.movementsStats.map(m => (
-                      <div key={m.name} className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">{m.name}</span>
-                        <span className="text-sm font-bold">{m.count}</span>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-        <TabsContent value="construction">
-          <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
-            <AdminConstructionTab />
-          </Suspense>
-        </TabsContent>
-        <TabsContent value="tests">
-          <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
-            <WebhookSimulator />
-          </Suspense>
         </TabsContent>
       </Tabs>
     </div>

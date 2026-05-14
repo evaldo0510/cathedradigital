@@ -260,28 +260,34 @@ const ProfilePage: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-card border border-border rounded-2xl p-6 space-y-3">
-        <div className="flex items-center justify-between">
+      <div className="bg-card border border-border rounded-[2rem] p-8 space-y-6 shadow-sm overflow-hidden relative group">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-primary/10 transition-colors duration-500" />
+        <div className="flex items-center justify-between relative z-10">
           <div>
-            <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Nível {currentLevelIdx + 1}</p>
-            <p className="text-lg font-black text-foreground">{levelName}</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60 mb-1">Nível {currentLevelIdx + 1}</p>
+            <p className="text-2xl font-black text-foreground tracking-tight">{levelName}</p>
           </div>
           <div className="text-right">
-            <p className="text-2xl font-black text-primary">{totalXp}</p>
-            <p className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground">XP Total</p>
+            <p className="text-4xl font-black text-primary tabular-nums">{totalXp}</p>
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">XP Acumulado</p>
           </div>
         </div>
-        <div className="relative h-3 bg-muted rounded-full overflow-hidden">
-          <div
-            className="absolute inset-y-0 left-0 bg-gradient-to-r from-primary to-primary/70 rounded-full transition-all duration-700"
-            style={{ width: `${Math.min(xpProgress, 100)}%` }}
-          />
-        </div>
-        <div className="flex justify-between text-[9px] text-muted-foreground">
-          <span>{levelName}</span>
-          <span>{nextLevel ? `${nextLevel.minXp - totalXp} XP para ${nextLevel.name}` : 'Nível máximo!'}</span>
+        <div className="space-y-3 relative z-10">
+          <div className="relative h-4 bg-muted rounded-full overflow-hidden p-1 shadow-inner border border-border/50">
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: `${Math.min(xpProgress, 100)}%` }}
+              transition={{ duration: 1, ease: "easeOut" }}
+              className="absolute inset-y-1 left-1 bg-gradient-to-r from-primary via-primary/80 to-primary rounded-full shadow-[0_0_15px_rgba(var(--primary),0.4)]"
+            />
+          </div>
+          <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 px-1">
+            <span>{levelName}</span>
+            <span>{nextLevel ? `${nextLevel.minXp - totalXp} XP para o próximo nível` : 'Plenitude alcançada'}</span>
+          </div>
         </div>
       </div>
+
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {statCards.map(s => (
@@ -293,36 +299,45 @@ const ProfilePage: React.FC = () => {
         ))}
       </div>
 
-      <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
+      <div className="bg-card border border-border rounded-[2.5rem] p-8 space-y-8 shadow-sm">
         <div className="flex items-center justify-between">
-          <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Conquistas</h2>
-          <span className="text-[10px] font-bold text-primary">{unlockedCount}/{badges.length} desbloqueadas</span>
+          <div className="space-y-1">
+            <h2 className="text-[11px] font-black uppercase tracking-[0.4em] text-primary/60">Caminho da Virtude</h2>
+            <p className="text-xl font-bold">Conquistas & Selos</p>
+          </div>
+          <div className="px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20">
+            <span className="text-[11px] font-black text-primary uppercase tabular-nums">{unlockedCount}/{badges.length} desbloqueadas</span>
+          </div>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-4">
           {badges.map(b => (
-            <div
+            <motion.div
               key={b.id}
-              className={`relative rounded-2xl p-3 text-center transition-all ${
+              whileHover={b.unlocked ? { y: -5, scale: 1.05 } : {}}
+              className={`relative rounded-[2rem] p-4 text-center transition-all duration-500 border flex flex-col items-center justify-center gap-3 ${
                 b.unlocked
-                  ? 'bg-primary/10 border border-primary/30'
-                  : 'bg-muted/50 border border-border opacity-50 grayscale'
+                  ? 'bg-gradient-to-br from-primary/10 to-transparent border-primary/30 shadow-xl shadow-primary/5 ring-1 ring-primary/20'
+                  : 'bg-muted/40 border-border opacity-40 grayscale blur-[0.5px]'
               }`}
               title={b.description}
             >
-              <div className="flex justify-center mb-1 text-primary">
-                {b.icon}
+              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-inner transition-transform duration-700 ${b.unlocked ? 'bg-primary/20 text-primary scale-110' : 'bg-muted text-muted-foreground'}`}>
+                {React.cloneElement(b.icon as React.ReactElement, { className: 'w-7 h-7' })}
               </div>
-              <p className="text-[9px] font-bold uppercase tracking-wider text-foreground leading-tight">{b.label}</p>
-              <p className="text-[8px] text-muted-foreground mt-0.5">{b.description}</p>
+              <div className="space-y-1">
+                <p className={`text-[10px] font-black uppercase tracking-widest leading-tight ${b.unlocked ? 'text-foreground' : 'text-muted-foreground'}`}>{b.label}</p>
+                <p className="text-[8px] text-muted-foreground leading-relaxed px-1 opacity-70">{b.description}</p>
+              </div>
               {b.unlocked && (
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full flex items-center justify-center">
-                  <Icons.Star className="w-2.5 h-2.5 text-primary-foreground fill-current" />
+                <div className="absolute -top-1 -right-1 w-5 h-5 bg-primary rounded-full flex items-center justify-center shadow-lg ring-2 ring-background animate-in zoom-in duration-500">
+                  <Icons.Star className="w-3 h-3 text-primary-foreground fill-current" />
                 </div>
               )}
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
+
 
       <div className="bg-card border border-border rounded-2xl p-6 space-y-6">
         <div className="flex items-center justify-between">

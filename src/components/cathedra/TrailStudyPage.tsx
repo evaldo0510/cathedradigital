@@ -215,15 +215,21 @@ const TrailStudyPage: React.FC = () => {
         <div className="lg:col-span-3 space-y-6">
           <Card className="bg-card/40 backdrop-blur-md border-border/50 rounded-3xl overflow-hidden min-h-[500px]">
             <CardContent className="p-8 space-y-8">
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-xl bg-primary/10 text-primary">
-                  {currentStep.type === 'catechism' ? <BookOpen className="w-5 h-5" /> : <PlayCircle className="w-5 h-5" />}
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-border/20 pb-10">
+                <div className="flex items-center gap-5">
+                  <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shadow-inner">
+                    {currentStep.type === 'catechism' ? <BookOpen className="w-8 h-8" /> : <PlayCircle className="w-8 h-8" />}
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60 mb-1">Passo {currentStepIndex + 1} de {trail.steps.length}</p>
+                    <h2 className="text-3xl md:text-4xl font-serif font-black tracking-tight">{currentStep.title}</h2>
+                  </div>
                 </div>
-                <div>
-                  <h2 className="text-2xl font-serif font-bold">{currentStep.title}</h2>
-                  {currentStep.description && <p className="text-sm text-muted-foreground">{currentStep.description}</p>}
-                </div>
+                {currentStep.description && (
+                  <p className="text-sm text-muted-foreground italic font-serif max-w-xs">{currentStep.description}</p>
+                )}
               </div>
+
 
               <div className="prose prose-lg dark:prose-invert max-w-none">
                 {currentStep.type === 'catechism' && (
