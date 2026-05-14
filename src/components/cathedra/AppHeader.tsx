@@ -96,7 +96,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
 
         <div className="flex items-center gap-1.5 sm:gap-4 flex-shrink-0">
           <button 
-            className="p-2.5 sm:p-3 bg-muted text-primary rounded-xl sm:rounded-2xl border border-border hover:bg-primary hover:text-white transition-all shadow-sm active:scale-95 flex items-center gap-2 focus-visible:ring-2 focus-visible:ring-primary outline-none" 
+            className="p-3 sm:p-4 bg-muted/40 text-primary rounded-[1.25rem] border border-border/40 hover:bg-primary hover:text-white transition-all duration-300 shadow-sm hover:shadow-xl hover:translate-y-[-1px] active:scale-95 flex items-center gap-2.5 focus-visible:ring-2 focus-visible:ring-primary/20 outline-none"
             onClick={() => {
               localStorage.removeItem('cathedra_onboarding_done');
               navigate(AppRoute.ONBOARDING);
