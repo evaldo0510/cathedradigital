@@ -15,17 +15,25 @@ export interface BaseContent {
   metadata?: Record<string, any>;
 }
 
-export const searchUnified = async (query: string, types?: ContentType[]) => {
-  // Mocking search across multiple tables (usually requires a unified search index or RPC)
-  // For now, implementing a basic version that can be expanded
+const SEARCH_CACHE: Record<string, { data: BaseContent[], timestamp: number }> = {};
+const CACHE_TTL = 1000 * 60 * 5; // 5 minutes
+
+export const searchUnified = async (query: string, types?: ContentType[], page: number = 0, limit: number = 10) => {
+  const cacheKey = `${query}-${types?.join(',')}-${page}-${limit}`;
+  if (SEARCH_CACHE[cacheKey] && Date.now() - SEARCH_CACHE[cacheKey].timestamp < CACHE_TTL) {
+    return SEARCH_CACHE[cacheKey].data;
+  }
+
   const results: BaseContent[] = [];
+  const from = page * limit;
+  const to = from + limit - 1;
   
   if (!types || types.includes('catechism')) {
     const { data } = await supabase
       .from('catechism_paragraphs' as any)
       .select('number, content, summary')
       .or(`content.ilike.%${query}%,summary.ilike.%${query}%`)
-      .limit(10);
+      .range(from, to);
     
     if (data) {
       (data as any[]).forEach(item => {
@@ -44,6 +52,7 @@ export const searchUnified = async (query: string, types?: ContentType[]) => {
 
   // Add more sources as needed
   
+  SEARCH_CACHE[cacheKey] = { data: results, timestamp: Date.now() };
   return results;
 };
 

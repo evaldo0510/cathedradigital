@@ -11,18 +11,33 @@ const CommandCenter: React.FC = () => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<BaseContent[]>([]);
   const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
   const navigate = useNavigate();
 
-  const handleSearch = async (val: string) => {
+  const handleSearch = async (val: string, pageNum: number = 0) => {
     setQuery(val);
+    setPage(pageNum);
     if (val.length < 3) {
       setResults([]);
+      setHasMore(false);
       return;
     }
     setLoading(true);
-    const data = await searchUnified(val);
-    setResults(data);
+    const data = await searchUnified(val, undefined, pageNum, 10);
+    
+    if (pageNum === 0) {
+      setResults(data);
+    } else {
+      setResults(prev => [...prev, ...data]);
+    }
+    
+    setHasMore(data.length === 10);
     setLoading(false);
+  };
+
+  const loadMore = () => {
+    handleSearch(query, page + 1);
   };
 
   return (
@@ -73,6 +88,15 @@ const CommandCenter: React.FC = () => {
                 </CardContent>
               </Card>
             ))}
+            {hasMore && results.length > 0 && !loading && (
+              <Button 
+                variant="ghost" 
+                className="w-full h-12 rounded-2xl text-[10px] font-black uppercase tracking-widest opacity-60 hover:opacity-100"
+                onClick={loadMore}
+              >
+                Carregar mais resultados
+              </Button>
+            )}
             {query.length >= 3 && results.length === 0 && !loading && (
               <div className="p-12 text-center border border-dashed rounded-3xl opacity-50">
                 <p className="text-sm">Nenhum resultado encontrado para "{query}"</p>
