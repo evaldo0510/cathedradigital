@@ -72,11 +72,8 @@ const Index = () => {
           </Suspense>
 
           <Suspense fallback={null}>
-            <FeedbackWidget />
             <LogosChat />
-            <WhatsAppButton />
             <CookieConsent />
-            <GuidedJourney isOpen={isJourneyOpen} onClose={() => setIsJourneyOpen(false)} />
           </Suspense>
         </main>
       </div>
