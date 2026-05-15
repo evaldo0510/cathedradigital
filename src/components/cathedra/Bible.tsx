@@ -20,7 +20,7 @@ import { Progress } from '@/components/ui/progress';
 import { checkNewBadges, getBadgeById } from '@/lib/badges';
 import { toast } from 'sonner';
 import confetti from 'canvas-confetti';
-import { Button   } from './Button';
+import { Button } from './Button';
 import { 
   Card,
   CardContent      
@@ -30,6 +30,9 @@ import { BibleChapterSkeleton } from './SacredSkeleton';
 import { buildBibleAbsoluteUrl, parseVerseParam } from '@/lib/bibleUrl';
 import LibrarySidebar from './LibrarySidebar';
 import { cn } from '@/lib/utils';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { useReadingMode } from '@/hooks/useReadingMode';
+import { Bookmark, Menu, History } from 'lucide-react';
 
 
 type BibleBook = { name: string; abbr: string; chapters: number };
