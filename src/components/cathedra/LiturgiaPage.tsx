@@ -262,7 +262,7 @@ const LiturgiaPage: React.FC = () => {
                     <p className="text-premium-tiny font-black uppercase tracking-[0.3em] text-secondary">{saintsToday.length > 1 ? 'Santos do Dia' : 'Santo do Dia'}</p>
                     <h3 className="text-xl font-display font-black text-primary">{saintsToday.map(s => s.name).join(' e ')}</h3>
                   </div>
-                  <Button variant="ghost" size="sm" className="text-muted-foreground hover:bg-primary/5 h-10" onClick={() => navigate(AppRoute.SAINTS)}>Conhecer História <Icons.ChevronRight className="ml-2" /></Button>
+                  <Button variant="ghost" size="sm" className="text-muted-foreground hover:bg-primary/5 h-10" onClick={() => navigate(AppRoute.SAINTS)}>Conhecer História <Icons.ChevronRight className="w-4 h-4 ml-2" /></Button>
                 </motion.div>
               )}
             </div>
