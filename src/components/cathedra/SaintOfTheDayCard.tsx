@@ -109,7 +109,7 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
           <p className="text-premium-tiny font-black uppercase tracking-[0.2em] text-secondary/80 mb-1">
             {saint.title === 'Santo do Dia' ? 'Santidade Hoje' : (saint.title || 'Santo do Dia')}
           </p>
-          <h3 className="text-lg font-bold text-foreground leading-tight group-hover:text-primary transition-colors truncate">
+          <h3 className="heading-item text-foreground group-hover:text-primary transition-colors truncate">
             {saint.name}
           </h3>
           <p className="text-xs text-muted-foreground mt-2 line-clamp-1 leading-relaxed">
