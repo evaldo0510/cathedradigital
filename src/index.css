@@ -206,7 +206,7 @@
   }
 
   .text-premium-body { 
-    @apply max-w-[65ch] text-muted-foreground/60;
+    @apply max-w-[65ch] text-muted-foreground/80;
     font-size: clamp(0.9rem, 1vw, 1rem);
     line-height: 1.7;
   }
