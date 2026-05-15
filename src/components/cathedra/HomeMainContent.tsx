@@ -109,7 +109,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
             <div className="h-px flex-1 bg-border/20" />
           </div>
           <div className="grid grid-cols-1 gap-6">
-            <HomeCard padding="sm" className="space-y-4">
+            <HomeCard padding="sm" className="space-y-4" onClick={() => onNavigate(AppRoute.JORNADAS)}>
               <div className="flex items-center justify-between">
                 <h4 className="font-bold text-primary">Fundamentos da Fé</h4>
                 <Icons.Star className="w-4 h-4 text-primary/40" />
