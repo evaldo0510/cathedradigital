@@ -71,11 +71,4 @@ const CardFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement
   <div className={cn("flex items-center p-0 mt-6", className)} {...props} />
 );
 
-export { 
-  Card, 
-  Cathedra  
-  Cathedra  
-  Cathedra  
-  Cathedra  
-  CardContent 
-};
+export { Card, CardHeader, CardTitle, CardDescription, CardFooter, CardContent };
