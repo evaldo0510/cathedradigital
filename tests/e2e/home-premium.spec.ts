@@ -184,33 +184,45 @@ test.describe('Home Page Premium Audit', () => {
         await page.keyboard.press('Home');
         
         // Tab through major sections
-        const focusHistory: string[] = [];
-        let lastId = '';
+        const focusHistory: any[] = [];
+        let lastStableSelector = '';
+        let trapDetected = false;
+
         for (let i = 0; i < 20; i++) {
           await page.keyboard.press('Tab');
           const focusedInfo = await page.evaluate(() => {
             const el = document.activeElement;
             if (!el || el === document.body) return null;
+            
+            // Generate a stable selector for trap detection
+            const tag = el.tagName.toLowerCase();
+            const id = el.id ? `#${el.id}` : '';
+            const ariaLabel = el.getAttribute('aria-label') ? `[aria-label="${el.getAttribute('aria-label')}"]` : '';
+            const role = el.getAttribute('role') ? `[role="${el.getAttribute('role')}"]` : '';
+            const text = el.textContent?.substring(0, 20).trim() || '';
+            
             return {
-              tag: el.tagName,
-              text: el.textContent?.substring(0, 30).trim(),
-              ariaLabel: el.getAttribute('aria-label'),
-              id: el.id,
+              tag,
+              id,
+              ariaLabel,
+              role,
+              text,
+              stableSelector: `${tag}${id}${ariaLabel}${role}`,
               className: el.className
             };
           });
 
           if (focusedInfo) {
-            const currentId = focusedInfo.id || focusedInfo.text || focusedInfo.ariaLabel || i.toString();
-            // Focus Trap detection: if focus doesn't move for several tabs, it's a trap
-            if (currentId === lastId && i > 0) {
-              console.warn(`Potential Focus Trap detected at index ${i} on ${focusedInfo.tag}`);
+            if (focusedInfo.stableSelector === lastStableSelector) {
+              trapDetected = true;
               break;
             }
-            lastId = currentId;
+            lastStableSelector = focusedInfo.stableSelector;
 
-            const name = focusedInfo.ariaLabel || focusedInfo.text || focusedInfo.tag;
-            focusHistory.push(name);
+            focusHistory.push({
+              index: i,
+              ...focusedInfo
+            });
             
             // Highlight the focused element for the screenshot
             await page.evaluate(() => {
@@ -219,8 +231,14 @@ test.describe('Home Page Premium Audit', () => {
             });
 
             await page.locator(':focus').screenshot({ 
-              path: `test-results/focus-proof/${fileNameBase}__tab-${i}.png` 
+              path: `test-results/focus-proof/${fileNameBase}__tab-${i}${trapDetected ? '-trap' : ''}.png` 
             });
+
+            if (trapDetected) {
+              const htmlContent = await page.content();
+              fs.writeFileSync(`test-results/focus-proof/${fileNameBase}__tab-${i}-trap-context.html`, htmlContent);
+              break;
+            }
 
             // Clean up highlight
             await page.evaluate(() => {

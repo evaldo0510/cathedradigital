@@ -9,14 +9,16 @@ function generateGallery() {
   console.log('🚀 Gerando galeria de auditoria visual premium com Traces...');
   
   if (!fs.existsSync(focusProofDir)) {
-    console.log('⚠️ Pasta focus-proof não encontrada.');
-    return;
+    fs.mkdirSync(focusProofDir, { recursive: true });
   }
 
   const pngFiles = fs.readdirSync(focusProofDir).filter(f => f.endsWith('.png'));
   const htmlSnapshots = fs.readdirSync(focusProofDir).filter(f => f.endsWith('.html'));
   const traceFiles = fs.readdirSync(focusProofDir).filter(f => f.endsWith('.zip'));
   
+  // Data for JSON audit report
+  const auditData: any[] = [];
+
   // Grouping logic
   const groups: Record<string, string[]> = {};
   pngFiles.forEach(file => {
@@ -28,7 +30,30 @@ function generateGallery() {
     const key = `${theme} | ${auth}`;
     if (!groups[key]) groups[key] = [];
     groups[key].push(file);
+
+    // Collect audit item
+    const targetName = parts[2];
+    const interaction = parts[3];
+    const type = parts[4]?.replace('.png', '') || interaction.replace('.png', '');
+    const fileNameBase = file.split('__').slice(0, 4).join('__');
+    const hasTrace = traceFiles.some(t => t.startsWith(file.split('__').slice(0, 3).join('__')));
+    
+    auditData.push({
+      file,
+      theme,
+      authState: auth,
+      targetName,
+      type,
+      isFallback: file.includes('fallback'),
+      isTrap: file.includes('trap'),
+      hasTrace,
+      hasHtml: htmlSnapshots.some(h => h.startsWith(fileNameBase))
+    });
   });
+
+  // Save JSON report
+  fs.writeFileSync(path.join(resultsDir, 'audit-results.json'), JSON.stringify(auditData, null, 2));
+  console.log(`📊 Relatório JSON gerado: audit-results.json`);
 
   const html = `
 <!DOCTYPE html>
