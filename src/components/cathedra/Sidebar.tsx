@@ -132,25 +132,25 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                 {section.items.map((item, idx) => (
                   <li key={idx}>
                     <Button
+                      variant="ghost"
                       onClick={() => handleNav(item.path)}
                       onMouseEnter={() => prefetchRoute(item.path)}
                       onTouchStart={() => prefetchRoute(item.path)}
                       aria-current={currentPath === item.path ? 'page' : undefined}
-                      className={`w-full flex items-center gap-4 px-4 py-2.5 rounded-full text-sm font-semibold transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none
+                      className={`w-full flex items-center justify-start gap-4 px-4 py-2.5 rounded-full text-sm font-semibold transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none h-auto
                         ${currentPath === item.path
-                          ? 'bg-foreground text-background shadow-lg'
+                          ? 'bg-foreground text-background shadow-lg hover:bg-foreground/90'
                           : 'text-muted-foreground hover:bg-muted hover:text-foreground'}`}
                     >
-
-                      <span className="opacity-70">{item.icon}</span>
-                      <span className="tracking-tight">{item.label}</span>
+                      <span className="opacity-70 flex-shrink-0">{item.icon}</span>
+                      <span className="tracking-tight truncate">{item.label}</span>
                       {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (
-                        <span className="ml-auto bg-primary/20 text-primary text-premium-tiny font-black px-1.5 py-0.5 rounded-full">
+                        <span className="ml-auto bg-primary/20 text-primary text-premium-tiny font-black px-1.5 py-0.5 rounded-full flex-shrink-0">
                           {cacheCount}
                         </span>
                       )}
-                      {(item as any).pro && <span className="ml-auto text-premium-tiny font-black uppercase tracking-widest text-primary bg-primary/10 px-1.5 py-0.5 rounded">PRO</span>}
-                      {currentPath === item.path && item.path !== AppRoute.CACHE_MANAGER && <div className="ml-auto w-1 h-1 rounded-2xl bg-primary" />}
+                      {(item as any).pro && <span className="ml-auto text-premium-tiny font-black uppercase tracking-widest text-primary bg-primary/10 px-1.5 py-0.5 rounded flex-shrink-0">PRO</span>}
+                      {currentPath === item.path && item.path !== AppRoute.CACHE_MANAGER && <div className="ml-auto w-1 h-1 rounded-2xl bg-primary flex-shrink-0" />}
                     </Button>
                   </li>
                 ))}
