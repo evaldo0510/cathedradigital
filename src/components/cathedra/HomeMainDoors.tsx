@@ -6,9 +6,10 @@ import { AppRoute } from '@/types';
 
 interface HomeMainDoorsProps {
   t: (key: string) => string;
+  className?: string;
 }
 
-const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t }) => {
+const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
   const navigate = useNavigate();
   
   const doors = [
