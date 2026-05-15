@@ -29,8 +29,14 @@ test.describe('Accessibility & Contrast Audit', () => {
         .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
         .analyze();
 
-      // We focus on color-contrast for btn-premium and premium-card specifically if needed,
-      // but a general scan is better.
+      a11ySummary.push({
+        theme: 'light',
+        route: route.path,
+        name: route.name,
+        violations: accessibilityScanResults.violations.length,
+        details: accessibilityScanResults.violations
+      });
+
       expect(accessibilityScanResults.violations).toEqual([]);
     });
 
@@ -43,6 +49,14 @@ test.describe('Accessibility & Contrast Audit', () => {
         .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
         .analyze();
 
+      a11ySummary.push({
+        theme: 'dark',
+        route: route.path,
+        name: route.name,
+        violations: accessibilityScanResults.violations.length,
+        details: accessibilityScanResults.violations
+      });
+
       expect(accessibilityScanResults.violations).toEqual([]);
     });
   }
@@ -51,9 +65,6 @@ test.describe('Accessibility & Contrast Audit', () => {
     await page.goto('/');
     
     // Check btn-premium contrast in both modes
-    const premiumButtons = page.locator('.btn-premium');
-    const premiumCards = page.locator('.premium-card');
-
     for (const theme of ['light', 'dark']) {
       await page.evaluate((t) => {
         if (t === 'dark') document.documentElement.classList.add('dark');
