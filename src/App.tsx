@@ -712,7 +712,7 @@ const AppLayout: React.FC = () => {
             onToggleHighContrast={() => setIsHighContrast(!isHighContrast)}
           />
         )}
-      </div>
+      </Suspense>
     </LangContext.Provider>
   );
 };
