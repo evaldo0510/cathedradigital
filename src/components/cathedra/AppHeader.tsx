@@ -225,7 +225,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             className={`hidden sm:flex lg:hidden ${isSpeaking ? 'animate-pulse' : ''}`}
             title={isSpeaking ? t('audio_stop') : t('audio_read')}
             aria-label={isSpeaking ? t('audio_stop') : t('audio_read')}>
-            {isSpeaking ? <Icons.Stop /> : <Icons.Volume2 />}
+            {isSpeaking ? <Icons.Stop className="w-4 h-4" /> : <Icons.Volume2 className="w-4 h-4" />}
           </Button>
 
           <Button
