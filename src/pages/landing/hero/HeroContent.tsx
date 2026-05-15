@@ -82,7 +82,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
         <div className="flex flex-col sm:flex-row items-center gap-4 w-full max-w-sm">
           <HomeButton
             size="lg"
-            className="w-full"
+            className="w-full focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
             onClick={onStart}
             aria-label="Iniciar sua jornada espiritual"
           >
