@@ -57,9 +57,12 @@ test.describe('Home Page Premium Audit', () => {
     const authState = testInfo.title.includes('logged-in') ? 'logged-in' : 'logged-out';
     
     // We want a trace name that matches our gallery grouping
-    // Extracts "Jornada" from the test title or other tests
-    let testId = testInfo.title.split('for ')[1] || testInfo.title.split(') ')[1] || 'General';
-    testId = testId.replace(/[^a-z0-9]/gi, '');
+    let testId = 'General';
+    if (testInfo.title.includes('for ')) {
+      testId = testInfo.title.split('for ')[1].replace(/[^a-z0-9]/gi, '');
+    } else if (testInfo.title.includes('Tab Order')) {
+      testId = testInfo.title.includes('Reverse') ? 'ShiftTabNavigation' : 'TabNavigation';
+    }
     
     const tracePath = path.join(process.cwd(), `test-results/focus-proof/${theme}__${authState}__${testId}__trace.zip`);
     
