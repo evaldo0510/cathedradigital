@@ -106,7 +106,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
             <h2 id="section-trilhas">
               Trilhas
             </h2>
-            <div className="h-px flex-1 bg-white/5" />
+            <div className="h-px flex-1 bg-white/[0.08]" />
           </div>
           <div className="grid grid-cols-1 gap-8">
             <HomeCard padding="md" className="space-y-6" onClick={() => onNavigate(AppRoute.TEMAS)}>
