@@ -106,19 +106,21 @@ const SpiritualJournalPage = () => {
         <Card padding="lg" className="space-y-20">
           <div className="space-y-12">
             <h3 className="text-2xl font-serif italic text-primary/70 text-center">Como está sua alma hoje?</h3>
-            <div className="flex flex-wrap justify-center gap-8 md:gap-12">
+            <div className="flex flex-wrap justify-center gap-6 md:gap-10">
               {MOODS.map((m) => (
                 <button
                   key={m.id}
                   onClick={() => setMood(m.id)}
-                  className={`flex flex-col items-center gap-5 p-8 rounded-premium-sm border transition-all duration-700 ${
+                  className={`flex flex-col items-center gap-4 transition-all duration-700 ${
                     mood === m.id 
-                      ? 'bg-primary border-primary text-primary-foreground shadow-premium scale-105' 
-                      : 'bg-primary/[0.01] border-border/10 text-foreground/40 hover:border-primary/20 hover:bg-primary/[0.03]'
+                      ? 'opacity-100 scale-110' 
+                      : 'opacity-20 hover:opacity-40 hover:scale-105'
                   }`}
                 >
-                  <m.icon className="w-10 h-10" strokeWidth={1} />
-                  <span className="text-premium-tiny font-bold uppercase tracking-[0.3em]">{m.label}</span>
+                  <div className={`w-16 h-16 rounded-full border border-border flex items-center justify-center transition-colors ${mood === m.id ? 'bg-primary text-primary-foreground border-primary' : ''}`}>
+                    <m.icon className="w-8 h-8" strokeWidth={1} />
+                  </div>
+                  <span className="text-[9px] font-bold uppercase tracking-[0.4em]">{m.label}</span>
                 </button>
               ))}
             </div>
