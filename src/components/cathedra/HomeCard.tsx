@@ -26,11 +26,17 @@ const HomeCard = React.forwardRef<
       ref={ref}
       variant={isClickable ? 'interactive' : 'default'}
       padding="none"
-      tabIndex={isClickable ? 0 : undefined}
-      role={isClickable ? 'button' : undefined}
-      onKeyDown={handleKeyDown}
+      tabIndex={props.tabIndex !== undefined ? props.tabIndex : (isClickable ? 0 : undefined)}
+      role={props.role !== undefined ? props.role : (isClickable ? 'button' : undefined)}
+      onKeyDown={(e) => {
+        if (isClickable && (e.key === 'Enter' || e.key === ' ')) {
+          e.preventDefault();
+          props.onClick?.(e as any);
+        }
+        props.onKeyDown?.(e);
+      }}
       className={cn(
-        "text-card-foreground outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ring-offset-background",
+        "text-card-foreground outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ring-offset-background transition-all",
         className
       )}
       {...props}
