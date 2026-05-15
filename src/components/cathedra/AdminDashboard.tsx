@@ -31,6 +31,7 @@ const WebhookSimulator = lazy(() => import('./WebhookSimulator'));
 const SecurityAuditPage = lazy(() => import('./SecurityAuditPage'));
 const AdminSeoTab = lazy(() => import('./AdminSeoTab'));
 const DesignSystemGuide = lazy(() => import('./DesignSystemGuide'));
+const VisualRegressionDashboard = lazy(() => import('./VisualRegressionDashboard'));
 
 
 interface Stats {
