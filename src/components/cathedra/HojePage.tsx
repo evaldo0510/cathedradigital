@@ -155,7 +155,7 @@ const HojePage: React.FC = () => {
                 <span className="text-premium-tiny font-bold text-primary uppercase tracking-widest">{profile?.streak} {profile?.streak === 1 ? 'Dia' : 'Dias'}</span>
               </div>
             )}
-            <div className="flex items-center gap-3 px-8 py-3.5 rounded-full bg-primary/[0.03] border border-primary/10 transition-all hover:bg-primary/[0.06]">
+            <div className="flex items-center gap-3 px-8 py-3.5 rounded-full bg-primary/[0.03] border border-border/10 transition-all hover:bg-primary/[0.06]">
               <Icons.Star className="w-4 h-4 text-secondary" />
               <span className="text-premium-tiny font-bold text-primary uppercase tracking-widest">{profile?.xp || 0} XP</span>
             </div>
