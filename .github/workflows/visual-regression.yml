@@ -36,8 +36,8 @@ jobs:
         SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
         SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
 
-    - name: Upload Visual Audit Artifacts
-      if: always()
+    - name: Upload Visual Audit Artifacts (Only Failures)
+      if: failure() || always()
       uses: actions/upload-artifact@v4
       with:
         name: visual-regression-premium-report
@@ -45,8 +45,10 @@ jobs:
           public/visual-regression-report.html
           public/visual-regression/
           test-results/
+          test-results/focus-proof/
           tests/e2e/*.spec.ts-snapshots/
         retention-days: 30
+        if-no-files-found: ignore
 
     - name: Post PR Comment with Visual Results
       if: always() && github.event_name == 'pull_request'
