@@ -25,7 +25,9 @@ async function runVisualTests() {
   try {
     // Run Playwright tests
     console.log('  - Executando Playwright com Snapshots e Axe-core...');
-    execSync('npx playwright test tests/e2e/*.spec.ts', {
+    // Add A11y limit if provided
+    const a11yLimit = process.env.A11Y_MAX_CRITICAL_ERRORS || '0';
+    execSync(`A11Y_MAX_CRITICAL_ERRORS=${a11yLimit} npx playwright test tests/e2e/*.spec.ts`, {
       stdio: 'inherit',
       env: { ...process.env, CI: 'true' }
     });
