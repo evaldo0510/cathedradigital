@@ -47,6 +47,7 @@ jobs:
         path: |
           public/visual-regression-report.html
           public/visual-regression/
+          public/a11y-reports/
           test-results/
           test-results/focus-proof/
           tests/e2e/*.spec.ts-snapshots/
