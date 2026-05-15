@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,6 +10,93 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Icons } from '@/constants';
+
+const InputPlayground = () => {
+  const [variant, setVariant] = useState<'default' | 'error' | 'disabled' | 'loading'>('default');
+  
+  return (
+    <div className="p-6 rounded-3xl bg-muted/20 border border-border/40 space-y-6">
+      <div className="flex flex-wrap gap-2">
+        <Button 
+          variant={variant === 'default' ? 'primary' : 'outline'} 
+          size="sm" 
+          onClick={() => setVariant('default')}
+        >
+          Default
+        </Button>
+        <Button 
+          variant={variant === 'error' ? 'destructive' : 'outline'} 
+          size="sm" 
+          onClick={() => setVariant('error')}
+        >
+          Error
+        </Button>
+        <Button 
+          variant={variant === 'disabled' ? 'secondary' : 'outline'} 
+          size="sm" 
+          onClick={() => setVariant('disabled')}
+        >
+          Disabled
+        </Button>
+        <Button 
+          variant={variant === 'loading' ? 'primary' : 'outline'} 
+          size="sm" 
+          onClick={() => setVariant('loading')}
+        >
+          Loading
+        </Button>
+      </div>
+
+      <div className="space-y-4 pt-4 border-t border-border/20">
+        <div className="space-y-2">
+          <Label 
+            className={variant === 'error' ? 'text-destructive' : ''}
+            aria-disabled={variant === 'disabled'}
+          >
+            Playground Input
+          </Label>
+          <div className="relative">
+            <Input 
+              disabled={variant === 'disabled'}
+              className={variant === 'error' ? 'border-destructive focus-visible:ring-destructive' : ''}
+              placeholder={variant === 'loading' ? 'Processando...' : 'Interaja comigo'}
+            />
+            {variant === 'loading' && (
+              <Icons.Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 animate-spin text-primary" />
+            )}
+          </div>
+          {variant === 'error' && (
+            <p className="text-[10px] font-black uppercase text-destructive tracking-widest flex items-center gap-1">
+              <Icons.AlertTriangle className="w-3 h-3" /> Campo obrigatório.
+            </p>
+          )}
+        </div>
+
+        <div className="space-y-2">
+          <Label aria-disabled={variant === 'disabled'}>Playground Select</Label>
+          <Select disabled={variant === 'disabled'}>
+            <SelectTrigger className={variant === 'error' ? 'border-destructive' : ''}>
+              <SelectValue placeholder="Selecione uma opção" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="1">Opção 1</SelectItem>
+              <SelectItem value="2">Opção 2</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      <div className="p-4 bg-primary/5 rounded-2xl border border-primary/10">
+        <p className="text-premium-tiny font-black uppercase tracking-widest text-primary mb-2">A11y Check</p>
+        <ul className="text-[10px] text-muted-foreground space-y-1 list-disc pl-4">
+          <li>Foco visível: {variant !== 'disabled' ? 'Ativo' : 'Inativo'}</li>
+          <li>Aria-disabled: {variant === 'disabled' ? 'true' : 'false'}</li>
+          <li>Aria-invalid: {variant === 'error' ? 'true' : 'false'}</li>
+        </ul>
+      </div>
+    </div>
+  );
+};
 
 const DesignSystemGuide = () => {
   return (
