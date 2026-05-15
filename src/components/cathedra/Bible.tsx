@@ -670,7 +670,7 @@ const Bible: React.FC = () => {
                       <Button variant="outline" onClick={() => window.location.reload()} className="mt-4">Tentar novamente</Button>
                     </div>
                   ) : (
-                    <div className={cn("reader-text", fs.size, fs.leading)}>
+                    <div className="reader-text">
                       {verses.map(v => {
                         const relatedP = verseToCic[v.number];
                         return (
