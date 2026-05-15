@@ -56,15 +56,42 @@ export default defineConfig({
     /* Mobile & Tablet */
     {
       name: 'mobile-chrome',
-      use: { ...devices['Pixel 5'], deviceScaleFactor: 2 },
+      use: { 
+        ...devices['Pixel 5'], 
+        viewport: { width: 375, height: 667 },
+        deviceScaleFactor: 2 
+      },
     },
     {
       name: 'mobile-safari',
-      use: { ...devices['iPhone 12'], deviceScaleFactor: 3 },
+      use: { 
+        ...devices['iPhone 12'], 
+        viewport: { width: 390, height: 844 },
+        deviceScaleFactor: 3 
+      },
     },
     {
       name: 'tablet-safari',
-      use: { ...devices['iPad Air'], deviceScaleFactor: 2 },
+      use: { 
+        ...devices['iPad Air'], 
+        viewport: { width: 820, height: 1180 },
+        deviceScaleFactor: 2 
+      },
+    },
+    /* Theme variations */
+    {
+      name: 'chromium-light',
+      use: { 
+        ...devices['Desktop Chrome'],
+        colorScheme: 'light',
+      },
+    },
+    {
+      name: 'chromium-dark',
+      use: { 
+        ...devices['Desktop Chrome'],
+        colorScheme: 'dark',
+      },
     },
   ],
 
