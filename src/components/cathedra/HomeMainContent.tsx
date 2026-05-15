@@ -120,8 +120,8 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
           </h2>
           <div className="h-px flex-1 bg-border/30" />
         </div>
-        <div className="premium-grid">
-          <HomeCard className="p-10 md:p-12 space-y-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+          <HomeCard className="p-10 md:p-12 space-y-8 h-full">
             <div className="w-12 h-12 rounded-2xl bg-primary/[0.03] border border-border/40 flex items-center justify-center text-primary">
               <Icons.Star className="w-6 h-6" />
             </div>
@@ -134,7 +134,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
             </HomeButton>
           </HomeCard>
           
-          <HomeCard className="p-10 md:p-12 space-y-8">
+          <HomeCard className="p-10 md:p-12 space-y-8 h-full">
             <div className="w-12 h-12 rounded-2xl bg-secondary/[0.03] border border-secondary/20 flex items-center justify-center text-secondary">
               <Icons.BookOpen className="w-6 h-6" />
             </div>

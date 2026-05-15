@@ -106,7 +106,7 @@ const SpiritualJournalPage = () => {
 
       {/* Entry Form */}
       <section className="max-w-4xl mx-auto w-full">
-        <HomeCard className="p-10 md:p-16 lg:p-20 space-y-16">
+        <HomeCard padding="lg" className="space-y-16">
           <div className="space-y-8">
             <h3 className="text-2xl font-display font-bold text-primary text-center">Como está sua alma hoje?</h3>
             <div className="flex flex-wrap justify-center gap-6">
@@ -165,13 +165,13 @@ const SpiritualJournalPage = () => {
             ))}
           </div>
         ) : entries.length > 0 ? (
-          <div className="grid gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-1 gap-12">
             {entries.map((entry) => (
               <motion.div
                 key={entry.id}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-card p-10 md:p-14 rounded-premium border border-border/40 shadow-premium space-y-8 relative overflow-hidden group hover:border-primary/20 transition-all duration-700"
+                className="bg-card p-10 md:p-14 rounded-premium border border-border/40 shadow-premium space-y-8 relative overflow-hidden group hover:border-primary/20 transition-all duration-700 h-full"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
