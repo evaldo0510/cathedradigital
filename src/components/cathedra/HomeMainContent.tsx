@@ -58,12 +58,12 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         </section>
 
         {/* RITUAL DO DIA */}
-        <section className="space-y-10" aria-labelledby="section-hoje">
+        <section className="space-y-8" aria-labelledby="section-hoje">
           <div className="flex items-center gap-6">
-            <h2 id="section-hoje" className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/20 whitespace-nowrap">
+            <h2 id="section-hoje">
               Hoje
             </h2>
-            <div className="h-px flex-1 bg-border/10" />
+            <div className="h-px flex-1 bg-white/5" />
           </div>
           <div className="pt-2">
             <RitualDoDia />
