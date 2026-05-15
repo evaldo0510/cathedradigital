@@ -9,7 +9,7 @@ const HeroBackground = ({ bgY }: HeroBackgroundProps) => (
     <img
       src="https://images.unsplash.com/photo-1548610762-656391d1ad4d?auto=format&fit=crop&q=60&w=1200"
       alt="" aria-hidden="true"
-      className="w-full h-full object-cover opacity-[0.03] grayscale"
+      className="w-full h-full object-cover opacity-[0.02] grayscale"
       loading="eager"
       decoding="async"
       fetchPriority="high"
