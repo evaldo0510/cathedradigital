@@ -245,53 +245,34 @@ const DesignSystemGuide = () => {
             <div className="h-px flex-1 bg-border/40" />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            <div className="space-y-8">
-              <h3 className="text-xl font-bold text-primary">Text Inputs</h3>
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="default-input">Default Input</Label>
-                  <Input id="default-input" placeholder="Digite seu nome..." />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="disabled-input">Disabled Input</Label>
-                  <Input id="disabled-input" disabled placeholder="Campo desabilitado" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="error-input" className="text-destructive">Error State</Label>
-                  <Input id="error-input" className="border-destructive focus-visible:ring-destructive" defaultValue="Valor inválido" />
-                  <p className="text-[10px] font-black uppercase text-destructive tracking-widest">O e-mail informado é inválido.</p>
+          <div className="space-y-16 bg-card border border-border/40 rounded-[2.5rem] p-8 md:p-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+              <div className="space-y-8">
+                <h3 className="text-xl font-bold text-primary">States Documentation</h3>
+                <div className="space-y-8">
+                  <div className="space-y-2">
+                    <Label htmlFor="focus-input">Focus State</Label>
+                    <Input id="focus-input" placeholder="Clique para ver o anel de foco" className="focus-visible:ring-primary ring-offset-2" />
+                    <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Utiliza focus-visible:ring-2 para alta acessibilidade.</p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="disabled-input-guide">Disabled State</Label>
+                    <Input id="disabled-input-guide" disabled placeholder="Não é possível interagir" />
+                    <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Opacidade reduzida e cursor: not-allowed.</p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="error-input-guide" className="text-destructive">Error State</Label>
+                    <Input id="error-input-guide" className="border-destructive focus-visible:ring-destructive" defaultValue="valor@incorreto" />
+                    <p className="text-[10px] font-black uppercase text-destructive tracking-widest flex items-center gap-1">
+                      <Icons.AlertCircle className="w-3 h-3" /> Formato de e-mail inválido.
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="space-y-8">
-              <h3 className="text-xl font-bold text-primary">Dropdown Selects</h3>
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <Label>Default Select</Label>
-                  <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione uma opção" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="1">Opção 1</SelectItem>
-                      <SelectItem value="2">Opção 2</SelectItem>
-                      <SelectItem value="3">Opção 3</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label>Disabled Select</Label>
-                  <Select disabled>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Desabilitado" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="1">Opção 1</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+              <div className="space-y-8">
+                <h3 className="text-xl font-bold text-primary">Interactive Playground</h3>
+                <InputPlayground />
               </div>
             </div>
           </div>
