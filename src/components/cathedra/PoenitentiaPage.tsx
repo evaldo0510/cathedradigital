@@ -83,7 +83,7 @@ const PoenitentiaPage: React.FC = () => {
             <div className="font-serif font-bold text-lg leading-tight group-hover:text-primary transition-colors group-data-[state=active]:text-white">{step.title}</div>
             {activeStep === i && (
               <div className="absolute top-0 right-0 p-4 opacity-10">
-                <Icons.CheckCircle2 className="w-12 h-12" />
+                <Icons.CheckCircle2 className="w-10 h-10" />
               </div>
             )}
           </Button>
@@ -92,7 +92,7 @@ const PoenitentiaPage: React.FC = () => {
 
       <div className="premium-card p-8 md:p-16 space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700 relative overflow-hidden">
         <div className="absolute top-0 right-0 p-12 opacity-[0.02]">
-          <Icons.Cross className="w-64 h-64 -mr-16 -mt-16 rotate-12" />
+          <Icons.Cross className="w-48 h-48 -mr-16 -mt-16 rotate-12" />
         </div>
 
         <div className="relative space-y-8 max-w-3xl mx-auto">
@@ -117,7 +117,7 @@ const PoenitentiaPage: React.FC = () => {
 
           {activeStep === 0 && (
             <div className="mt-12 p-8 bg-primary/5 rounded-[2.5rem] border border-primary/10 text-center space-y-4 shadow-sm">
-              <Icons.BookOpen className="w-8 h-8 text-primary/30 mx-auto" />
+              <Icons.BookOpen className="w-6 h-6 text-primary/30 mx-auto" />
               <p className="text-lg text-foreground/80 font-serif italic max-w-xl mx-auto leading-relaxed">
                 "O exame de consciência é a confrontação sincera da nossa vida com a lei moral de Deus, o Evangelho e os Seus Mandamentos."
               </p>
@@ -128,12 +128,12 @@ const PoenitentiaPage: React.FC = () => {
             <div className="space-y-8 pt-8">
               <div className="flex items-center gap-3 justify-center">
                 <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-                  <Icons.Flame className="w-5 h-5" />
+                  <Icons.Flame className="w-4 h-4" />
                 </div>
                 <h3 className="text-xl font-serif font-bold">Ato de Contrição</h3>
               </div>
               <div className="bg-primary text-primary-foreground p-10 md:p-14 rounded-[3rem] border border-primary/10 shadow-2xl shadow-primary/20 relative">
-                <Icons.Sparkles className="absolute -top-3 -right-3 w-10 h-10 text-white/20 rotate-12" />
+                <Icons.Sparkles className="absolute -top-3 -right-3 w-8 h-8 text-white/20 rotate-12" />
                 <p className="text-xl md:text-2xl font-serif leading-relaxed text-center italic opacity-95">
                   "Meu Deus, porque sois infinitamente bom e Vos amo de todo o meu coração, pesa-me de Vos ter ofendido, e com o auxílio da Vossa divina graça proponho firmemente não tornar a pecar e evitar as próximas ocasiões de pecado. Amém."
                 </p>
@@ -159,7 +159,7 @@ const PoenitentiaPage: React.FC = () => {
         <div className="premium-card p-10 space-y-6">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-              <Icons.User className="w-6 h-6" />
+              <Icons.User className="w-5 h-5" />
             </div>
             <h3 className="text-2xl font-serif font-bold">Como Começar?</h3>
           </div>
@@ -170,7 +170,7 @@ const PoenitentiaPage: React.FC = () => {
         <div className="premium-card p-10 space-y-6">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-              <Icons.Heart className="w-6 h-6" />
+              <Icons.Heart className="w-5 h-5" />
             </div>
             <h3 className="text-2xl font-serif font-bold">A Absolvição</h3>
           </div>

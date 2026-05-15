@@ -12,10 +12,10 @@ import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 
 const STEP_ICONS: Record<string, React.ReactNode> = {
-  reading: <BookOpen className="w-4 h-4" />,
-  prayer: <Hand className="w-4 h-4" />,
-  reflection: <PenLine className="w-4 h-4" />,
-  quiz: <HelpCircle className="w-4 h-4" />,
+  reading: <BookOpen className="w-3.5 h-3.5" />,
+  prayer: <Hand className="w-3.5 h-3.5" />,
+  reflection: <PenLine className="w-3.5 h-3.5" />,
+  quiz: <HelpCircle className="w-3.5 h-3.5" />,
 };
 
 const JornadaDetailPage: React.FC = () => {
@@ -137,10 +137,10 @@ const JornadaDetailPage: React.FC = () => {
           <Card className="premium-card border-primary/30 bg-gradient-to-r from-primary/10 to-primary/5">
             <CardContent className="p-5 flex items-center gap-4">
               <div className="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center flex-shrink-0">
-                <Award className="w-6 h-6 text-primary" />
+                <Award className="w-5 h-5 text-primary" />
               </div>
               <div className="flex-1">
-                <p className="font-bold text-sm text-foreground"><Icons.PartyPopper className="w-4 h-4 inline mr-2 text-primary" /> Jornada Concluída!</p>
+                <p className="font-bold text-sm text-foreground"><Icons.PartyPopper className="w-3.5 h-3.5 inline mr-2 text-primary" /> Jornada Concluída!</p>
                 <p className="text-xs text-muted-foreground">Parabéns! Veja seu certificado e reflexões.</p>
               </div>
               <Button size="sm" onClick={() => navigate(`/jornadas/${id}/complete`)}>
@@ -176,7 +176,7 @@ const JornadaDetailPage: React.FC = () => {
                         ? 'bg-muted text-muted-foreground'
                         : 'bg-primary/10 text-primary'
                   }`}>
-                    {isCompleted ? <Check className="w-5 h-5" /> : isStepLocked ? <Lock className="w-4 h-4" /> : index + 1}
+                    {isCompleted ? <Check className="w-4 h-4" /> : isStepLocked ? <Lock className="w-3.5 h-3.5" /> : index + 1}
                   </div>
 
                   {/* Content */}
@@ -215,7 +215,7 @@ const JornadaDetailPage: React.FC = () => {
       {isLocked && (
         <Card className="border-primary/30 bg-primary/5">
           <CardContent className="p-4 text-center space-y-3">
-            <Sparkles className="w-8 h-8 mx-auto text-primary" />
+            <Sparkles className="w-6 h-6 mx-auto text-primary" />
             <p className="text-sm text-foreground font-medium">Esta jornada é exclusiva para assinantes PRO</p>
             <Button onClick={() => navigate(AppRoute.PRICING)} size="sm">
               Ver Planos

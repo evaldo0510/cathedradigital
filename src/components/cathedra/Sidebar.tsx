@@ -120,7 +120,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
     <>
       <aside ref={ref} className="h-full w-[320px] bg-card border-r border-border/20 flex flex-col p-8 overflow-hidden">
         <div className="mb-10 px-2 flex items-center gap-4 cursor-pointer group hover:opacity-90 transition-opacity" onClick={() => handleNav(AppRoute.HOJE)}>
-          <Icons.Logo className="w-10 h-10 flex-shrink-0" variant="blue" />
+          <Icons.Logo className="w-8 h-8 flex-shrink-0" variant="blue" />
           <div className="space-y-1">
             <h1 className="text-xl font-display font-medium tracking-[0.1em] text-primary leading-none uppercase">CATHEDRA</h1>
             <p className="text-[10px] font-bold uppercase text-secondary/60 tracking-[0.4em]">
@@ -147,7 +147,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                           ? 'bg-primary text-primary-foreground shadow-premium hover:opacity-90'
                           : 'text-muted-foreground/60 hover:bg-primary/[0.03] hover:text-primary'}`}
                     >
-                      <span className="opacity-70 flex-shrink-0">{item.icon}</span>
+                      <span className="opacity-70 flex-shrink-0 scale-90">{item.icon}</span>
                       <span className="tracking-tight truncate">{item.label}</span>
                       {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (
                         <span className="ml-auto bg-primary/20 text-primary text-premium-tiny font-black px-1.5 py-0.5 rounded-full flex-shrink-0">
