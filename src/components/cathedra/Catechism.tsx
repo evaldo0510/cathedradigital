@@ -1,4 +1,6 @@
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/cathedra/Button';
+import { Card } from '@/components/cathedra/Card';
+import { cn } from '@/lib/utils';
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { motion } from 'framer-motion';
