@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { injectAxe, checkA11y } from 'axe-core/playwright';
+import AxeBuilder from '@axe-core/playwright';
 import fs from 'fs';
 import path from 'path';
 
@@ -42,17 +42,20 @@ test.describe('Visual Regression & WCAG AAA Audit', () => {
         });
 
         // 2. WCAG AAA Validation
-        await injectAxe(page);
-        await checkA11y(page, undefined, {
-          axeOptions: {
-            runOnly: {
-              type: 'tag',
-              values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'best-practice'],
-            },
-          },
-          detailedReport: true,
-          detailedReportOptions: { html: true },
-        });
+        const accessibilityScanResults = await new AxeBuilder({ page })
+          .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'best-practice'])
+          .analyze();
+
+        if (accessibilityScanResults.violations.length > 0) {
+          const reportPath = path.join(test.info().outputDir, `a11y-${route.replace(/\//g, 'home')}-${viewport.name}.json`);
+          fs.writeFileSync(reportPath, JSON.stringify(accessibilityScanResults, null, 2));
+          await test.info().attach('accessibility-scan-results', {
+            path: reportPath,
+            contentType: 'application/json'
+          });
+        }
+        
+        expect(accessibilityScanResults.violations).toEqual([]);
 
         // 3. Typography Token Validation
         const typographyErrors = await page.evaluate(() => {

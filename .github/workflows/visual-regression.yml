@@ -22,20 +22,19 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
 
-    - name: Run Visual Regression Tests
-      run: bun run test:visual
+    - name: Run Visual Audit & Generate Premium Report
+      run: bun run scripts/run-visual-regression.ts
       env:
+        CI: true
         SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
         SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
 
-    - name: Generate Report
-      run: bun run scripts/run-visual-regression.ts
-
-    - uses: actions/upload-artifact@v4
+    - name: Upload Visual Audit Artifacts
       if: always()
       with:
-        name: visual-regression-report
+        name: visual-regression-premium-report
         path: |
+          public/visual-regression-report.html
+          public/visual-regression/
           test-results/
-          visual-report.json
         retention-days: 30
