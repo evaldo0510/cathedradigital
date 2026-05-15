@@ -121,7 +121,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
     <div className="app-container desktop-layout py-10 md:py-16">
       <div className="desktop-main space-y-12 md:space-y-20">
       <FadeUp>
-        <div className="text-center space-y-4">
+        <div className="text-center space-y-6">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -129,60 +129,60 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             className="flex justify-center"
           >
             <div className="relative">
-              <Icons.Saints className="w-12 h-12 md:w-14 md:h-14 text-secondary/80" />
+              <Icons.Saints className="w-14 h-14 text-secondary/40" strokeWidth={1} />
             </div>
           </motion.div>
-          <div className="space-y-2">
-            <p className="text-premium-tiny font-black uppercase tracking-[0.4em] text-secondary opacity-80">
+          <div className="space-y-4">
+            <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-secondary/60">
               Cathedra {t('digital')}
             </p>
-            <h1 className="text-4xl md:text-6xl font-display font-black text-primary leading-tight tracking-tight">
-              {profile?.name ? `${greeting}, ${profile.name.split(' ')[0]}!` : t('pax_et_bonum')}
+            <h1 className="text-5xl md:text-7xl font-display font-medium text-primary leading-[1.1] tracking-tight">
+              {profile?.name ? `${greeting}, ${profile.name.split(' ')[0]}` : t('pax_et_bonum')}
             </h1>
             {spProfile && (
-              <p className="text-sm text-muted-foreground italic font-serif mt-1">{spProfile.greeting}</p>
+              <p className="text-base text-muted-foreground italic font-serif mt-3 opacity-70">{spProfile.greeting}</p>
             )}
           </div>
 
-          <div className="flex items-center justify-center gap-4 flex-wrap pt-2">
+          <div className="flex items-center justify-center gap-8 flex-wrap pt-4">
             {streak > 0 && (
-              <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-secondary/10 border border-secondary/20 shadow-sm">
+              <div className="flex items-center gap-2.5 px-6 py-3 rounded-full bg-secondary/[0.03] border border-secondary/10 shadow-soft transition-colors hover:bg-secondary/[0.06]">
                 <Icons.Zap className="w-4 h-4 text-secondary" />
-                <span className="text-xs font-black text-primary uppercase tracking-wider">{streak} {streak === 1 ? t('day') : t('days')}</span>
+                <span className="text-xs font-bold text-primary uppercase tracking-widest">{streak} {streak === 1 ? t('day') : t('days')}</span>
               </div>
             )}
-            <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-primary/5 border border-border shadow-sm">
+            <div className="flex items-center gap-2.5 px-6 py-3 rounded-full bg-primary/[0.03] border border-border/50 shadow-soft transition-colors hover:bg-primary/[0.06]">
               <Icons.Star className="w-4 h-4 text-primary" />
-              <span className="text-xs font-black text-primary uppercase tracking-wider">{profile?.xp || 0} XP</span>
+              <span className="text-xs font-bold text-primary uppercase tracking-widest">{profile?.xp || 0} XP</span>
             </div>
           </div>
         </div>
       </FadeUp>
 
-      <FadeUp delay={0.02}>
+      <FadeUp delay={0.05}>
         <HomeCard 
           onClick={() => goTo(AppRoute.MODULES_GUIDE)}
-          className="mb-6 p-4 flex items-center justify-between cursor-pointer group"
+          className="p-6 flex items-center justify-between cursor-pointer group rounded-[2.5rem]"
           role="button"
           tabIndex={0}
           aria-label="Ver Guia dos Módulos"
           onKeyDown={(e) => e.key === 'Enter' && goTo(AppRoute.MODULES_GUIDE)}
         >
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-              <Icons.HelpCircle className="w-5 h-5" />
+          <div className="flex items-center gap-5">
+            <div className="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-transform border border-border/30">
+              <Icons.HelpCircle className="w-6 h-6" strokeWidth={1.5} />
             </div>
             <div>
-              <p className="text-xs font-bold text-foreground leading-tight">Guia dos Módulos</p>
-              <p className="text-premium-tiny text-muted-foreground mt-0.5">Entenda como navegar e usar a plataforma</p>
+              <p className="text-sm font-bold text-foreground leading-tight">Guia dos Módulos</p>
+              <p className="text-premium-tiny text-muted-foreground mt-1 opacity-70 group-hover:opacity-100 transition-opacity">Entenda como navegar e usar a plataforma</p>
             </div>
           </div>
-          <Icons.ChevronRight className="w-4 h-4 text-primary group-hover:translate-x-1 transition-transform" />
+          <Icons.ChevronRight className="w-5 h-5 text-primary/30 group-hover:text-primary group-hover:translate-x-1 transition-all" />
         </HomeCard>
       </FadeUp>
 
-      <FadeUp delay={0.05}>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <FadeUp delay={0.1}>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
           {MAIN_DOORS.map((door, idx) => (
             <HomeCard
               key={idx}
@@ -191,19 +191,19 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               tabIndex={0}
               aria-label={`Abrir ${door.label}`}
               onKeyDown={(e) => e.key === 'Enter' && goTo(door.route)}
-              className="relative overflow-hidden p-5 cursor-pointer group flex flex-col items-start text-left"
+              className="relative overflow-hidden p-8 cursor-pointer group flex flex-col items-center text-center gap-5 rounded-[2.5rem]"
             >
               {door.suggested && (
-                <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-1 rounded-2xl bg-secondary/10 text-secondary text-premium-tiny font-black uppercase tracking-tighter border border-secondary/20">
-                  <Icons.Star className="w-2 h-2 fill-current" /> Sugerido
+                <div className="absolute top-4 right-4 flex items-center gap-1 p-1.5 rounded-full bg-secondary/10 text-secondary border border-secondary/20 shadow-sm">
+                  <Icons.Star className="w-3 h-3 fill-current" />
                 </div>
               )}
-              <div className={`w-10 h-10 rounded-full bg-muted/30 flex items-center justify-center ${door.iconColor} group-hover:scale-105 transition-transform mb-4 border border-border/50`}>
-                <door.icon className="w-6 h-6" />
+              <div className={`w-14 h-14 rounded-3xl bg-muted/10 flex items-center justify-center ${door.iconColor} group-hover:scale-105 transition-transform border border-border/30`}>
+                <door.icon className="w-7 h-7" strokeWidth={1.25} />
               </div>
-              <div className="space-y-1">
-                <h3 className="text-sm font-bold text-foreground leading-tight group-hover:text-primary transition-colors">{door.label}</h3>
-                <p className="text-premium-tiny text-muted-foreground line-clamp-2 leading-tight opacity-80">{door.description}</p>
+              <div className="space-y-3">
+                <h3 className="text-xs font-bold text-foreground uppercase tracking-[0.25em] group-hover:text-primary transition-colors">{door.label}</h3>
+                <p className="text-premium-tiny text-muted-foreground line-clamp-2 leading-relaxed opacity-60 group-hover:opacity-100 transition-opacity px-1">{door.description}</p>
               </div>
             </HomeCard>
           ))}
