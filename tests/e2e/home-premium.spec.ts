@@ -148,6 +148,91 @@ test.describe('Home Page Premium Audit', () => {
           });
         }
       }
+
+      test(`Keyboard Sequential Navigation (Tab Order)`, async ({ page }, testInfo) => {
+        const theme = testInfo.project.name.includes('dark') ? 'dark' : 'light';
+        const fileNameBase = `${theme}__${authState}__TabNavigation`;
+        
+        // Start from top
+        await page.keyboard.press('Home');
+        
+        // Tab through major sections
+        const focusHistory: string[] = [];
+        for (let i = 0; i < 15; i++) {
+          await page.keyboard.press('Tab');
+          const focusedInfo = await page.evaluate(() => {
+            const el = document.activeElement;
+            if (!el || el === document.body) return null;
+            return {
+              tag: el.tagName,
+              text: el.textContent?.substring(0, 30).trim(),
+              ariaLabel: el.getAttribute('aria-label'),
+              id: el.id,
+              className: el.className
+            };
+          });
+
+          if (focusedInfo) {
+            const name = focusedInfo.ariaLabel || focusedInfo.text || focusedInfo.tag;
+            focusHistory.push(name);
+            
+            // Highlight the focused element for the screenshot
+            await page.evaluate(() => {
+              const el = document.activeElement as HTMLElement;
+              if (el) el.style.outline = '4px solid #3b82f6';
+            });
+
+            await page.locator(':focus').screenshot({ 
+              path: `test-results/focus-proof/${fileNameBase}__tab-${i}.png` 
+            });
+
+            // Clean up highlight
+            await page.evaluate(() => {
+              const el = document.activeElement as HTMLElement;
+              if (el) el.style.outline = '';
+            });
+          }
+        }
+        
+        expect(focusHistory.length).toBeGreaterThan(0);
+      });
+
+      test(`Keyboard Reverse Navigation (Shift+Tab Order)`, async ({ page }, testInfo) => {
+        const theme = testInfo.project.name.includes('dark') ? 'dark' : 'light';
+        const fileNameBase = `${theme}__${authState}__ShiftTabNavigation`;
+        
+        // Go to bottom first
+        await page.keyboard.press('End');
+        
+        // Shift+Tab back up
+        const focusHistory: string[] = [];
+        for (let i = 0; i < 10; i++) {
+          await page.keyboard.press('Shift+Tab');
+          const focusedInfo = await page.evaluate(() => {
+            const el = document.activeElement;
+            if (!el || el === document.body) return null;
+            return {
+              tag: el.tagName,
+              text: el.textContent?.substring(0, 30).trim()
+            };
+          });
+
+          if (focusedInfo) {
+            focusHistory.push(focusedInfo.tag);
+            
+            await page.evaluate(() => {
+              const el = document.activeElement as HTMLElement;
+              if (el) el.style.outline = '4px solid #ef4444';
+            });
+
+            await page.locator(':focus').screenshot({ 
+              path: `test-results/focus-proof/${fileNameBase}__shifttab-${i}.png` 
+            });
+          }
+        }
+        
+        expect(focusHistory.length).toBeGreaterThan(0);
+      });
     });
   }
 
