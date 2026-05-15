@@ -4,7 +4,7 @@ import path from 'path';
 const resultsDir = path.join(process.cwd(), 'test-results');
 const focusProofDir = path.join(resultsDir, 'focus-proof');
 const reportFile = path.join(resultsDir, 'index.html');
-const a11ySummaryFile = path.join(resultsDir, 'a11y-reports', 'summary.json');
+const a11ySummaryFile = path.join(process.cwd(), 'public', 'a11y-reports', 'summary.json');
 
 function generateGallery() {
   console.log('🚀 Gerando galeria de auditoria visual premium com Traces...');
@@ -89,6 +89,7 @@ function generateGallery() {
             <div>
                 <h1 class="text-4xl font-black tracking-tighter">Galeria de Auditoria de Foco</h1>
                 <p class="opacity-40 uppercase text-[10px] font-bold tracking-[0.4em] mt-3">Relatório Premium de Acessibilidade & Navegação</p>
+                <a href="a11y-reports/index.html" class="mt-4 inline-block px-6 py-2 bg-purple-500/10 text-purple-400 border border-purple-500/20 rounded-full text-[9px] font-bold uppercase tracking-widest hover:bg-purple-500/20 transition-all">Abrir Relatório Completo de Acessibilidade (Axe-core)</a>
             </div>
             <div class="text-right opacity-30 text-[10px] font-bold uppercase tracking-widest">
                 Gerado em ${new Date().toLocaleDateString('pt-BR')} ${new Date().toLocaleTimeString('pt-BR')}
