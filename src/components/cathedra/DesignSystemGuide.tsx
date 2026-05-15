@@ -14,81 +14,143 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Icons } from '@/constants';
 import { motion } from 'framer-motion';
 
-const InputPlayground = () => {
-  const [variant, setVariant] = useState<'default' | 'error' | 'disabled' | 'loading'>('default');
+const ComponentPlayground = () => {
+  const [state, setState] = useState<'default' | 'error' | 'disabled' | 'loading'>('default');
+  const [activeTab, setActiveTab] = useState('inputs');
   
   return (
-    <div className="p-8 rounded-[2.5rem] bg-white border border-[#0F172A]/5 space-y-8 shadow-sm">
-      <div className="flex flex-wrap gap-3">
-        {(['default', 'error', 'disabled', 'loading'] as const).map((v) => (
-          <Button 
-            key={v}
-            variant={variant === v ? 'primary' : 'outline'} 
-            size="sm" 
-            onClick={() => setVariant(v)}
-            className="rounded-full px-6 capitalize"
-          >
-            {v === 'default' ? 'Padrão' : v === 'error' ? 'Erro' : v === 'disabled' ? 'Desativado' : 'Carregando'}
-          </Button>
-        ))}
+    <div className="p-4 md:p-8 rounded-[2.5rem] bg-white border border-[#0F172A]/5 space-y-8 shadow-sm">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="flex flex-wrap gap-2">
+          {(['default', 'error', 'disabled', 'loading'] as const).map((s) => (
+            <Button 
+              key={s}
+              variant={state === s ? 'primary' : 'outline'} 
+              size="sm" 
+              onClick={() => setState(s)}
+              className="rounded-full px-5 capitalize h-10 text-[10px]"
+            >
+              {s === 'default' ? 'Padrão' : s === 'error' ? 'Erro' : s === 'disabled' ? 'Desativado' : 'Carregando'}
+            </Button>
+          ))}
+        </div>
+        
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full md:w-auto">
+          <TabsList className="bg-[#0F172A]/5 rounded-full p-1 h-12">
+            <TabsTrigger value="inputs" className="rounded-full px-6 text-[10px] font-black uppercase tracking-widest">Inputs</TabsTrigger>
+            <TabsTrigger value="selects" className="rounded-full px-6 text-[10px] font-black uppercase tracking-widest">Selects</TabsTrigger>
+            <TabsTrigger value="others" className="rounded-full px-6 text-[10px] font-black uppercase tracking-widest">Outros</TabsTrigger>
+          </TabsList>
+        </Tabs>
       </div>
 
-      <div className="space-y-6 pt-6 border-t border-[#0F172A]/5">
-        <div className="space-y-3">
-          <Label 
-            className={`font-serif text-lg ${variant === 'error' ? 'text-destructive' : 'text-[#0F172A]'}`}
-            aria-disabled={variant === 'disabled'}
-          >
-            Campo de Teste
-          </Label>
-          <div className="relative">
-            <Input 
-              disabled={variant === 'disabled'}
-              className={`rounded-2xl border-[#0F172A]/10 h-14 px-6 focus-visible:ring-primary/20 ${variant === 'error' ? 'border-destructive focus-visible:ring-destructive/20' : ''}`}
-              placeholder={variant === 'loading' ? 'Processando...' : 'Digite algo...'}
-            />
-            {variant === 'loading' && (
-              <Icons.Loader2 className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 animate-spin text-primary" />
-            )}
-          </div>
-          {variant === 'error' && (
-            <p className="text-premium-tiny font-black uppercase text-destructive tracking-widest flex items-center gap-2 px-1">
-              <Icons.AlertTriangle className="w-3.5 h-3.5" /> Este campo é obrigatório.
-            </p>
+      <div className="pt-8 border-t border-[#0F172A]/5 min-h-[300px]">
+        <AnimatePresence mode="wait">
+          {activeTab === 'inputs' && (
+            <motion.div 
+              key="inputs"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-6"
+            >
+              <div className="space-y-3">
+                <Label 
+                  className={`font-serif text-lg ${state === 'error' ? 'text-destructive' : 'text-[#0F172A]'}`}
+                  aria-disabled={state === 'disabled'}
+                >
+                  Nome do Fiel
+                </Label>
+                <div className="relative">
+                  <Input 
+                    disabled={state === 'disabled'}
+                    className={`rounded-2xl border-[#0F172A]/10 h-14 px-6 focus-visible:ring-primary/20 ${state === 'error' ? 'border-destructive focus-visible:ring-destructive/20' : ''}`}
+                    placeholder={state === 'loading' ? 'Processando...' : 'Digite seu nome completo...'}
+                  />
+                  {state === 'loading' && (
+                    <Icons.Loader2 className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 animate-spin text-primary" />
+                  )}
+                </div>
+                {state === 'error' && (
+                  <p className="text-premium-tiny font-black uppercase text-destructive tracking-widest flex items-center gap-2 px-1">
+                    <Icons.AlertTriangle className="w-3.5 h-3.5" /> Este campo é obrigatório.
+                  </p>
+                )}
+              </div>
+            </motion.div>
           )}
-        </div>
 
-        <div className="space-y-3">
-          <Label className="font-serif text-lg text-[#0F172A]" aria-disabled={variant === 'disabled'}>Seleção de Opção</Label>
-          <Select disabled={variant === 'disabled'}>
-            <SelectTrigger className={`rounded-2xl border-[#0F172A]/10 h-14 px-6 focus-visible:ring-primary/20 ${variant === 'error' ? 'border-destructive' : ''}`}>
-              <SelectValue placeholder="Escolha uma categoria" />
-            </SelectTrigger>
-            <SelectContent className="rounded-2xl border-[#0F172A]/10">
-              <SelectItem value="1">Liturgia</SelectItem>
-              <SelectItem value="2">Catecismo</SelectItem>
-              <SelectItem value="3">Vidas dos Santos</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+          {activeTab === 'selects' && (
+            <motion.div 
+              key="selects"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-6"
+            >
+              <div className="space-y-3">
+                <Label className="font-serif text-lg text-[#0F172A]" aria-disabled={state === 'disabled'}>Tema de Oração</Label>
+                <Select disabled={state === 'disabled'}>
+                  <SelectTrigger className={`rounded-2xl border-[#0F172A]/10 h-14 px-6 focus-visible:ring-primary/20 ${state === 'error' ? 'border-destructive' : ''}`}>
+                    <SelectValue placeholder="Escolha um tema" />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-2xl border-[#0F172A]/10">
+                    <SelectItem value="1">Liturgia Diária</SelectItem>
+                    <SelectItem value="2">Catecismo da Igreja</SelectItem>
+                    <SelectItem value="3">Vidas dos Santos</SelectItem>
+                  </SelectContent>
+                </Select>
+                {state === 'error' && (
+                  <p className="text-premium-tiny font-black uppercase text-destructive tracking-widest flex items-center gap-2 px-1">
+                    <Icons.AlertTriangle className="w-3.5 h-3.5" /> Selecione uma opção válida.
+                  </p>
+                )}
+              </div>
+            </motion.div>
+          )}
+
+          {activeTab === 'others' && (
+            <motion.div 
+              key="others"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-8"
+            >
+              <div className="flex items-center space-x-3">
+                <Checkbox id="terms" disabled={state === 'disabled'} className="rounded-md border-[#0F172A]/20" />
+                <Label htmlFor="terms" className="text-sm font-serif leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  Aceito os termos de uso e privacidade
+                </Label>
+              </div>
+              
+              <div className="flex items-center space-x-3">
+                <Checkbox id="newsletter" disabled={state === 'disabled'} defaultChecked className="rounded-md border-[#0F172A]/20" />
+                <Label htmlFor="newsletter" className="text-sm font-serif leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  Desejo receber notificações diárias de oração
+                </Label>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       <div className="p-6 bg-primary/5 rounded-3xl border border-primary/10">
-        <p className="text-premium-tiny font-black uppercase tracking-widest text-primary mb-3">Acessibilidade (A11y)</p>
-        <ul className="text-xs text-[#0F172A]/60 space-y-2 list-none">
-          <li className="flex items-center gap-2">
-            <Icons.Check className={`w-3.5 h-3.5 ${variant !== 'disabled' ? 'text-green-600' : 'text-[#0F172A]/20'}`} />
-            Foco visível: {variant !== 'disabled' ? 'Ativo (Ring 2px)' : 'Inativo'}
-          </li>
-          <li className="flex items-center gap-2">
-            <Icons.Check className={`w-3.5 h-3.5 ${variant === 'disabled' ? 'text-green-600' : 'text-[#0F172A]/20'}`} />
-            Aria-disabled: {variant === 'disabled' ? 'true' : 'false'}
-          </li>
-          <li className="flex items-center gap-2">
-            <Icons.Check className={`w-3.5 h-3.5 ${variant === 'error' ? 'text-green-600' : 'text-[#0F172A]/20'}`} />
-            Aria-invalid: {variant === 'error' ? 'true' : 'false'}
-          </li>
-        </ul>
+        <p className="text-premium-tiny font-black uppercase tracking-widest text-primary mb-3">Auditoria de Acessibilidade (A11y)</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="flex items-center gap-2">
+            <Icons.CheckCircle2 className={`w-4 h-4 ${state !== 'disabled' ? 'text-green-600' : 'text-[#0F172A]/20'}`} />
+            <span className="text-[10px] font-black uppercase tracking-widest opacity-60">Foco Visível (Ring 2px)</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Icons.CheckCircle2 className={`w-4 h-4 ${state === 'disabled' ? 'text-green-600' : 'text-[#0F172A]/20'}`} />
+            <span className="text-[10px] font-black uppercase tracking-widest opacity-60">Aria-Disabled Support</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Icons.CheckCircle2 className={`w-4 h-4 ${state === 'error' ? 'text-green-600' : 'text-[#0F172A]/20'}`} />
+            <span className="text-[10px] font-black uppercase tracking-widest opacity-60">Aria-Invalid Semantic</span>
+          </div>
+        </div>
       </div>
     </div>
   );
