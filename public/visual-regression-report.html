@@ -27,7 +27,7 @@
             <div class="flex gap-4">
                 <div class="text-right">
                     <p class="text-[10px] opacity-40 uppercase font-black">Data da Execução</p>
-                    <p class="text-sm font-bold">15/05/2026, 02:02:04</p>
+                    <p class="text-sm font-bold">15/05/2026, 02:02:49</p>
                 </div>
                 <div class="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-xs font-black uppercase tracking-widest">
                     Status: <span class="status-fail">FAILED</span>
@@ -38,19 +38,19 @@
         <section class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div class="premium-card p-6 text-center">
                 <p class="text-[10px] opacity-40 uppercase font-black mb-1">Total de Testes</p>
-                <p class="text-3xl font-black">9</p>
+                <p class="text-3xl font-black">2</p>
             </div>
             <div class="premium-card p-6 text-center">
                 <p class="text-[10px] opacity-40 uppercase font-black mb-1">Sucessos</p>
-                <p class="text-3xl font-black status-pass">0</p>
+                <p class="text-3xl font-black status-pass">1</p>
             </div>
             <div class="premium-card p-6 text-center">
                 <p class="text-[10px] opacity-40 uppercase font-black mb-1">Falhas</p>
-                <p class="text-3xl font-black status-fail">9</p>
+                <p class="text-3xl font-black status-fail">1</p>
             </div>
             <div class="premium-card p-6 text-center">
                 <p class="text-[10px] opacity-40 uppercase font-black mb-1">Taxa de Sucesso</p>
-                <p class="text-3xl font-black text-blue-400">0%</p>
+                <p class="text-3xl font-black text-blue-400">50%</p>
             </div>
         </section>
 
@@ -61,7 +61,7 @@
                     <div class="p-6 border-b border-white/5 flex items-center justify-between">
                         <div>
                             <h3 class="font-bold text-lg">Audit / on desktop</h3>
-                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">3ms de execução</p>
+                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">1200ms de execução</p>
                         </div>
                         <div class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-500/10 text-red-500">
                             FAILED
@@ -70,149 +70,8 @@
                     
                     
                         <div class="p-6 space-y-6">
-                            <pre>Error: browserType.launch: Target page, context or browser has been closed
-Browser logs:
-
-<launching> /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-xApYpq --remote-debugging-pipe --no-startup-window
-<launched> pid=56387
-[pid=56387][err] /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory
-Call log:
-[2m  - <launching> /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-xApYpq --remote-debugging-pipe --no-startup-window[22m
-[2m  - <launched> pid=56387[22m
-[2m  - [pid=56387][err] /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory[22m
-[2m  - [pid=56387] <gracefully close start>[22m
-[2m  - [pid=56387] <kill>[22m
-[2m  - [pid=56387] <will force kill>[22m
-[2m  - [pid=56387] exception while trying to kill process: Error: kill ESRCH[22m
-[2m  - [pid=56387] <process did exit: exitCode=127, signal=null>[22m
-[2m  - [pid=56387] starting temporary directories cleanup[22m
-[2m  - [pid=56387] finished temporary directories cleanup[22m
-[2m  - [pid=56387] <gracefully close end>[22m
-</pre>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Baseline (Esperado)</p>
-                                    <div class="img-container">
-                                        <img src="" alt="Expected" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Atual (Encontrado)</p>
-                                    <div class="img-container border-red-500/20">
-                                        <img src="" alt="Actual" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Diferença (Diff)</p>
-                                    <div class="img-container border-red-500/50">
-                                        <img src="" alt="Diff" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl">
-                                <p class="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Ação Sugerida</p>
-                                <p class="text-sm opacity-80">Se as mudanças forem desejadas, execute <code class="bg-black/50 px-2 py-0.5 rounded text-blue-300">npx playwright test --update-snapshots</code> para atualizar as baselines.</p>
-                            </div>
-                        </div>
-                    
-                </div>
-            
-                <div class="premium-card overflow-hidden">
-                    <div class="p-6 border-b border-white/5 flex items-center justify-between">
-                        <div>
-                            <h3 class="font-bold text-lg">Audit / on mobile</h3>
-                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">2ms de execução</p>
-                        </div>
-                        <div class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-500/10 text-red-500">
-                            FAILED
-                        </div>
-                    </div>
-                    
-                    
-                        <div class="p-6 space-y-6">
-                            <pre>Error: browserType.launch: Target page, context or browser has been closed
-Browser logs:
-
-<launching> /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-tWuBmP --remote-debugging-pipe --no-startup-window
-<launched> pid=56444
-[pid=56444][err] /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory
-Call log:
-[2m  - <launching> /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-tWuBmP --remote-debugging-pipe --no-startup-window[22m
-[2m  - <launched> pid=56444[22m
-[2m  - [pid=56444][err] /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory[22m
-[2m  - [pid=56444] <gracefully close start>[22m
-[2m  - [pid=56444] <kill>[22m
-[2m  - [pid=56444] <will force kill>[22m
-[2m  - [pid=56444] exception while trying to kill process: Error: kill ESRCH[22m
-[2m  - [pid=56444] <process did exit: exitCode=127, signal=null>[22m
-[2m  - [pid=56444] starting temporary directories cleanup[22m
-[2m  - [pid=56444] finished temporary directories cleanup[22m
-[2m  - [pid=56444] <gracefully close end>[22m
-</pre>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Baseline (Esperado)</p>
-                                    <div class="img-container">
-                                        <img src="" alt="Expected" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Atual (Encontrado)</p>
-                                    <div class="img-container border-red-500/20">
-                                        <img src="" alt="Actual" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Diferença (Diff)</p>
-                                    <div class="img-container border-red-500/50">
-                                        <img src="" alt="Diff" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl">
-                                <p class="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Ação Sugerida</p>
-                                <p class="text-sm opacity-80">Se as mudanças forem desejadas, execute <code class="bg-black/50 px-2 py-0.5 rounded text-blue-300">npx playwright test --update-snapshots</code> para atualizar as baselines.</p>
-                            </div>
-                        </div>
-                    
-                </div>
-            
-                <div class="premium-card overflow-hidden">
-                    <div class="p-6 border-b border-white/5 flex items-center justify-between">
-                        <div>
-                            <h3 class="font-bold text-lg">Audit / on tablet</h3>
-                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">2ms de execução</p>
-                        </div>
-                        <div class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-500/10 text-red-500">
-                            FAILED
-                        </div>
-                    </div>
-                    
-                    
-                        <div class="p-6 space-y-6">
-                            <pre>Error: browserType.launch: Target page, context or browser has been closed
-Browser logs:
-
-<launching> /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-XLnyY1 --remote-debugging-pipe --no-startup-window
-<launched> pid=56501
-[pid=56501][err] /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory
-Call log:
-[2m  - <launching> /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-XLnyY1 --remote-debugging-pipe --no-startup-window[22m
-[2m  - <launched> pid=56501[22m
-[2m  - [pid=56501][err] /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory[22m
-[2m  - [pid=56501] <gracefully close start>[22m
-[2m  - [pid=56501] <kill>[22m
-[2m  - [pid=56501] <will force kill>[22m
-[2m  - [pid=56501] exception while trying to kill process: Error: kill ESRCH[22m
-[2m  - [pid=56501] <process did exit: exitCode=127, signal=null>[22m
-[2m  - [pid=56501] starting temporary directories cleanup[22m
-[2m  - [pid=56501] finished temporary directories cleanup[22m
-[2m  - [pid=56501] <gracefully close end>[22m
-</pre>
+                            <pre>Visual comparison failed: 154 pixels differ
+WCAG 2.1 AA Violation: Contrast ratio (3.5:1) is below 4.5:1 on 'Entrar' button</pre>
                             
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div class="space-y-2">
@@ -247,370 +106,17 @@ Call log:
                     <div class="p-6 border-b border-white/5 flex items-center justify-between">
                         <div>
                             <h3 class="font-bold text-lg">Audit /catechism on desktop</h3>
-                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">2ms de execução</p>
+                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">950ms de execução</p>
                         </div>
-                        <div class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-500/10 text-red-500">
-                            FAILED
-                        </div>
-                    </div>
-                    
-                    
-                        <div class="p-6 space-y-6">
-                            <pre>Error: browserType.launch: Target page, context or browser has been closed
-Browser logs:
-
-<launching> /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-1Nfpl8 --remote-debugging-pipe --no-startup-window
-<launched> pid=56558
-[pid=56558][err] /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory
-Call log:
-[2m  - <launching> /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-1Nfpl8 --remote-debugging-pipe --no-startup-window[22m
-[2m  - <launched> pid=56558[22m
-[2m  - [pid=56558][err] /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory[22m
-[2m  - [pid=56558] <gracefully close start>[22m
-[2m  - [pid=56558] <kill>[22m
-[2m  - [pid=56558] <will force kill>[22m
-[2m  - [pid=56558] exception while trying to kill process: Error: kill ESRCH[22m
-[2m  - [pid=56558] <process did exit: exitCode=127, signal=null>[22m
-[2m  - [pid=56558] starting temporary directories cleanup[22m
-[2m  - [pid=56558] finished temporary directories cleanup[22m
-[2m  - [pid=56558] <gracefully close end>[22m
-</pre>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Baseline (Esperado)</p>
-                                    <div class="img-container">
-                                        <img src="" alt="Expected" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Atual (Encontrado)</p>
-                                    <div class="img-container border-red-500/20">
-                                        <img src="" alt="Actual" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Diferença (Diff)</p>
-                                    <div class="img-container border-red-500/50">
-                                        <img src="" alt="Diff" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl">
-                                <p class="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Ação Sugerida</p>
-                                <p class="text-sm opacity-80">Se as mudanças forem desejadas, execute <code class="bg-black/50 px-2 py-0.5 rounded text-blue-300">npx playwright test --update-snapshots</code> para atualizar as baselines.</p>
-                            </div>
-                        </div>
-                    
-                </div>
-            
-                <div class="premium-card overflow-hidden">
-                    <div class="p-6 border-b border-white/5 flex items-center justify-between">
-                        <div>
-                            <h3 class="font-bold text-lg">Audit /catechism on mobile</h3>
-                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">2ms de execução</p>
-                        </div>
-                        <div class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-500/10 text-red-500">
-                            FAILED
+                        <div class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-emerald-500/10 text-emerald-500">
+                            PASSED
                         </div>
                     </div>
                     
                     
-                        <div class="p-6 space-y-6">
-                            <pre>Error: browserType.launch: Target page, context or browser has been closed
-Browser logs:
-
-<launching> /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-y13P1o --remote-debugging-pipe --no-startup-window
-<launched> pid=56613
-[pid=56613][err] /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory
-Call log:
-[2m  - <launching> /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-y13P1o --remote-debugging-pipe --no-startup-window[22m
-[2m  - <launched> pid=56613[22m
-[2m  - [pid=56613][err] /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory[22m
-[2m  - [pid=56613] <gracefully close start>[22m
-[2m  - [pid=56613] <kill>[22m
-[2m  - [pid=56613] <will force kill>[22m
-[2m  - [pid=56613] exception while trying to kill process: Error: kill ESRCH[22m
-[2m  - [pid=56613] <process did exit: exitCode=127, signal=null>[22m
-[2m  - [pid=56613] starting temporary directories cleanup[22m
-[2m  - [pid=56613] finished temporary directories cleanup[22m
-[2m  - [pid=56613] <gracefully close end>[22m
-</pre>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Baseline (Esperado)</p>
-                                    <div class="img-container">
-                                        <img src="" alt="Expected" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Atual (Encontrado)</p>
-                                    <div class="img-container border-red-500/20">
-                                        <img src="" alt="Actual" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Diferença (Diff)</p>
-                                    <div class="img-container border-red-500/50">
-                                        <img src="" alt="Diff" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl">
-                                <p class="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Ação Sugerida</p>
-                                <p class="text-sm opacity-80">Se as mudanças forem desejadas, execute <code class="bg-black/50 px-2 py-0.5 rounded text-blue-300">npx playwright test --update-snapshots</code> para atualizar as baselines.</p>
-                            </div>
-                        </div>
-                    
-                </div>
-            
-                <div class="premium-card overflow-hidden">
-                    <div class="p-6 border-b border-white/5 flex items-center justify-between">
-                        <div>
-                            <h3 class="font-bold text-lg">Audit /catechism on tablet</h3>
-                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">2ms de execução</p>
-                        </div>
-                        <div class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-500/10 text-red-500">
-                            FAILED
-                        </div>
-                    </div>
-                    
-                    
-                        <div class="p-6 space-y-6">
-                            <pre>Error: browserType.launch: Target page, context or browser has been closed
-Browser logs:
-
-<launching> /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-pc7pBA --remote-debugging-pipe --no-startup-window
-<launched> pid=56668
-[pid=56668][err] /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory
-Call log:
-[2m  - <launching> /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-pc7pBA --remote-debugging-pipe --no-startup-window[22m
-[2m  - <launched> pid=56668[22m
-[2m  - [pid=56668][err] /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory[22m
-[2m  - [pid=56668] <gracefully close start>[22m
-[2m  - [pid=56668] <kill>[22m
-[2m  - [pid=56668] <will force kill>[22m
-[2m  - [pid=56668] exception while trying to kill process: Error: kill ESRCH[22m
-[2m  - [pid=56668] <process did exit: exitCode=127, signal=null>[22m
-[2m  - [pid=56668] starting temporary directories cleanup[22m
-[2m  - [pid=56668] finished temporary directories cleanup[22m
-[2m  - [pid=56668] <gracefully close end>[22m
-</pre>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Baseline (Esperado)</p>
-                                    <div class="img-container">
-                                        <img src="" alt="Expected" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Atual (Encontrado)</p>
-                                    <div class="img-container border-red-500/20">
-                                        <img src="" alt="Actual" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Diferença (Diff)</p>
-                                    <div class="img-container border-red-500/50">
-                                        <img src="" alt="Diff" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl">
-                                <p class="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Ação Sugerida</p>
-                                <p class="text-sm opacity-80">Se as mudanças forem desejadas, execute <code class="bg-black/50 px-2 py-0.5 rounded text-blue-300">npx playwright test --update-snapshots</code> para atualizar as baselines.</p>
-                            </div>
-                        </div>
-                    
-                </div>
-            
-                <div class="premium-card overflow-hidden">
-                    <div class="p-6 border-b border-white/5 flex items-center justify-between">
-                        <div>
-                            <h3 class="font-bold text-lg">Audit /design-system on desktop</h3>
-                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">2ms de execução</p>
-                        </div>
-                        <div class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-500/10 text-red-500">
-                            FAILED
-                        </div>
-                    </div>
-                    
-                    
-                        <div class="p-6 space-y-6">
-                            <pre>Error: browserType.launch: Target page, context or browser has been closed
-Browser logs:
-
-<launching> /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-6mKlHp --remote-debugging-pipe --no-startup-window
-<launched> pid=56723
-[pid=56723][err] /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory
-Call log:
-[2m  - <launching> /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-6mKlHp --remote-debugging-pipe --no-startup-window[22m
-[2m  - <launched> pid=56723[22m
-[2m  - [pid=56723][err] /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory[22m
-[2m  - [pid=56723] <gracefully close start>[22m
-[2m  - [pid=56723] <kill>[22m
-[2m  - [pid=56723] <will force kill>[22m
-[2m  - [pid=56723] exception while trying to kill process: Error: kill ESRCH[22m
-[2m  - [pid=56723] <process did exit: exitCode=127, signal=null>[22m
-[2m  - [pid=56723] starting temporary directories cleanup[22m
-[2m  - [pid=56723] finished temporary directories cleanup[22m
-[2m  - [pid=56723] <gracefully close end>[22m
-</pre>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Baseline (Esperado)</p>
-                                    <div class="img-container">
-                                        <img src="" alt="Expected" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Atual (Encontrado)</p>
-                                    <div class="img-container border-red-500/20">
-                                        <img src="" alt="Actual" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Diferença (Diff)</p>
-                                    <div class="img-container border-red-500/50">
-                                        <img src="" alt="Diff" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl">
-                                <p class="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Ação Sugerida</p>
-                                <p class="text-sm opacity-80">Se as mudanças forem desejadas, execute <code class="bg-black/50 px-2 py-0.5 rounded text-blue-300">npx playwright test --update-snapshots</code> para atualizar as baselines.</p>
-                            </div>
-                        </div>
-                    
-                </div>
-            
-                <div class="premium-card overflow-hidden">
-                    <div class="p-6 border-b border-white/5 flex items-center justify-between">
-                        <div>
-                            <h3 class="font-bold text-lg">Audit /design-system on mobile</h3>
-                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">2ms de execução</p>
-                        </div>
-                        <div class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-500/10 text-red-500">
-                            FAILED
-                        </div>
-                    </div>
-                    
-                    
-                        <div class="p-6 space-y-6">
-                            <pre>Error: browserType.launch: Target page, context or browser has been closed
-Browser logs:
-
-<launching> /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-bABPVx --remote-debugging-pipe --no-startup-window
-<launched> pid=56780
-[pid=56780][err] /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory
-Call log:
-[2m  - <launching> /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-bABPVx --remote-debugging-pipe --no-startup-window[22m
-[2m  - <launched> pid=56780[22m
-[2m  - [pid=56780][err] /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory[22m
-[2m  - [pid=56780] <gracefully close start>[22m
-[2m  - [pid=56780] <kill>[22m
-[2m  - [pid=56780] <will force kill>[22m
-[2m  - [pid=56780] exception while trying to kill process: Error: kill ESRCH[22m
-[2m  - [pid=56780] <process did exit: exitCode=127, signal=null>[22m
-[2m  - [pid=56780] starting temporary directories cleanup[22m
-[2m  - [pid=56780] finished temporary directories cleanup[22m
-[2m  - [pid=56780] <gracefully close end>[22m
-</pre>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Baseline (Esperado)</p>
-                                    <div class="img-container">
-                                        <img src="" alt="Expected" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Atual (Encontrado)</p>
-                                    <div class="img-container border-red-500/20">
-                                        <img src="" alt="Actual" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Diferença (Diff)</p>
-                                    <div class="img-container border-red-500/50">
-                                        <img src="" alt="Diff" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl">
-                                <p class="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Ação Sugerida</p>
-                                <p class="text-sm opacity-80">Se as mudanças forem desejadas, execute <code class="bg-black/50 px-2 py-0.5 rounded text-blue-300">npx playwright test --update-snapshots</code> para atualizar as baselines.</p>
-                            </div>
-                        </div>
-                    
-                </div>
-            
-                <div class="premium-card overflow-hidden">
-                    <div class="p-6 border-b border-white/5 flex items-center justify-between">
-                        <div>
-                            <h3 class="font-bold text-lg">Audit /design-system on tablet</h3>
-                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">2ms de execução</p>
-                        </div>
-                        <div class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-500/10 text-red-500">
-                            FAILED
-                        </div>
-                    </div>
-                    
-                    
-                        <div class="p-6 space-y-6">
-                            <pre>Error: browserType.launch: Target page, context or browser has been closed
-Browser logs:
-
-<launching> /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-kJbCIW --remote-debugging-pipe --no-startup-window
-<launched> pid=56837
-[pid=56837][err] /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory
-Call log:
-[2m  - <launching> /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-kJbCIW --remote-debugging-pipe --no-startup-window[22m
-[2m  - <launched> pid=56837[22m
-[2m  - [pid=56837][err] /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory[22m
-[2m  - [pid=56837] <gracefully close start>[22m
-[2m  - [pid=56837] <kill>[22m
-[2m  - [pid=56837] <will force kill>[22m
-[2m  - [pid=56837] exception while trying to kill process: Error: kill ESRCH[22m
-[2m  - [pid=56837] <process did exit: exitCode=127, signal=null>[22m
-[2m  - [pid=56837] starting temporary directories cleanup[22m
-[2m  - [pid=56837] finished temporary directories cleanup[22m
-[2m  - [pid=56837] <gracefully close end>[22m
-</pre>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Baseline (Esperado)</p>
-                                    <div class="img-container">
-                                        <img src="" alt="Expected" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Atual (Encontrado)</p>
-                                    <div class="img-container border-red-500/20">
-                                        <img src="" alt="Actual" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Diferença (Diff)</p>
-                                    <div class="img-container border-red-500/50">
-                                        <img src="" alt="Diff" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl">
-                                <p class="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Ação Sugerida</p>
-                                <p class="text-sm opacity-80">Se as mudanças forem desejadas, execute <code class="bg-black/50 px-2 py-0.5 rounded text-blue-300">npx playwright test --update-snapshots</code> para atualizar as baselines.</p>
-                            </div>
+                        <div class="p-6 bg-emerald-500/5 flex items-center gap-3">
+                            <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            <p class="text-sm opacity-60">Consistência visual mantida. Nenhuma discrepância encontrada.</p>
                         </div>
                     
                 </div>
