@@ -64,7 +64,7 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
     return (
       <div className="reader-text bg-destructive/5 border border-destructive/10 rounded-2xl p-4 text-destructive font-serif text-sm py-4 space-y-2">
         <div className="font-bold flex items-center gap-2">
-           <Icons.Cross className="w-4 h-4" />
+           <Icons.Cross className="w-3.5 h-3.5" />
            Ops! Problema ao carregar o parágrafo §{paragraph}.
         </div>
         <Button 
@@ -82,7 +82,7 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
     return (
       <div className="reader-text bg-amber-500/5 border border-amber-500/10 rounded-2xl p-4 text-amber-600 dark:text-amber-400 font-serif text-sm py-4 space-y-3">
         <div className="font-bold flex items-center gap-2">
-           <Icons.AlertTriangle className="w-4 h-4" />
+           <Icons.AlertTriangle className="w-3.5 h-3.5" />
            Geração pausada: Créditos de IA esgotados.
         </div>
         <p className="text-xs opacity-80 leading-relaxed">
@@ -201,7 +201,7 @@ const LazyParagraph: React.FC<{ paragraph: number; currentParagraph: number; par
           <span className="text-3xl font-serif font-bold text-primary">§{p}</span>
           <div className="flex items-center gap-1">
             <Button onClick={() => toggleFavorite({ type: 'catechism', title: `CIC §${p}`, content: `Catecismo da Igreja Católica, parágrafo §${p}` })} className="p-2 rounded-full hover:bg-primary/10 transition-all active:scale-95">
-              <Icons.Heart className={`w-4 h-4 transition-all ${isFavorite('catechism', `CIC §${p}`) ? 'fill-primary text-primary' : 'text-muted-foreground'}`} />
+              <Icons.Heart className={`w-3.5 h-3.5 transition-all ${isFavorite('catechism', `CIC §${p}`) ? 'fill-primary text-primary' : 'text-muted-foreground'}`} />
             </Button>
             <ShareButton title={`Catecismo §${p}`} text={`Leia o Catecismo da Igreja Católica, §${p} — Cathedra Digital`} url={`${window.location.origin}/catechism?p=${p}`} className="p-2 h-auto w-auto border-0 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all" />
           </div>
@@ -382,7 +382,7 @@ const Catechism: React.FC = () => {
             className="px-3 py-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none flex items-center gap-2"
             aria-label="Voltar para o Sumário"
           >
-            <Icons.ArrowDown className="w-4 h-4 rotate-90 text-foreground" />
+            <Icons.ArrowDown className="w-3.5 h-3.5 rotate-90 text-foreground" />
             <span className="text-premium-tiny font-black uppercase tracking-widest hidden sm:inline">Sumário</span>
           </Button>
 
@@ -391,7 +391,7 @@ const Catechism: React.FC = () => {
             className="px-3 py-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none flex items-center gap-2"
             title="Explorar por Temas"
           >
-            <Icons.Search className="w-4 h-4 text-primary" />
+            <Icons.Search className="w-3.5 h-3.5 text-primary" />
             <span className="text-premium-tiny font-black uppercase tracking-widest hidden sm:inline">Explorar</span>
           </Button>
 
@@ -404,7 +404,7 @@ const Catechism: React.FC = () => {
             <Button onClick={() => setShowCrossRefs(!showCrossRefs)}
               className={`p-2 rounded-full border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}
               title="Catecismo & Documentos">
-              <Icons.Cross className="w-4 h-4" />
+              <Icons.Cross className="w-3.5 h-3.5" />
             </Button>
           )}
         </div>
