@@ -128,7 +128,7 @@ const CatechismExplorer: React.FC = () => {
       <div className="stack-spacing">
         <div className="flex flex-col gap-2">
           <h1 className="font-display font-bold text-primary tracking-tight">Explorador do Catecismo</h1>
-          <p className="text-muted-foreground">Conteúdo dogmático local e sempre disponível.</p>
+          <p className="text-premium-base italic font-serif">Conteúdo dogmático local e sempre disponível.</p>
         </div>
 
         <div className="desktop-layout">
