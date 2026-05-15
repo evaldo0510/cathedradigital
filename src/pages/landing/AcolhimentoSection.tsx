@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Heart, Coffee, Home, Users } from "lucide-react";
 import { fadeUp } from "./animations";
+import { HomeCard } from "@/components/cathedra/HomeCard";
 
 const AcolhimentoSection = () => {
   return (
