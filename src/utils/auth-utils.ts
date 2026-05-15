@@ -36,19 +36,20 @@ export const canUserAccess = (role: UserRole, path: string): boolean => {
 export const logUnauthorizedAccess = async (userId: string | undefined, path: string) => {
   console.warn(`Unauthorized access attempt by user ${userId || 'anonymous'} to path: ${path}`);
   
-  // In a real app, we would log this to a Supabase table 'audit_logs'
-  // Since we are in build mode, we'll assume the table exists or we'll create it later if needed.
-  // For now, let's try to insert if possible, but don't fail if it doesn't exist.
-  /*
   try {
     const { supabase } = await import('@/integrations/supabase/client');
     await supabase.from('audit_logs').insert([{
-      user_id: userId,
+      user_id: userId || null,
       event_type: 'unauthorized_access',
-      metadata: { path, timestamp: new Date().toISOString() }
+      path,
+      metadata: { 
+        timestamp: new Date().toISOString(),
+        userAgent: navigator.userAgent,
+        platform: navigator.platform
+      }
     }]);
   } catch (err) {
     console.error('Failed to log audit:', err);
   }
-  */
 };
+
