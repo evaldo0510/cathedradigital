@@ -6,7 +6,7 @@ import { Icons } from '@/constants';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
-import { Button } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';

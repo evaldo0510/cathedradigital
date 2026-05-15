@@ -10,7 +10,7 @@ import { useSaintsToday, useOfficialSaint } from '@/hooks/useSaints';
 import RitualDoDia from './RitualDoDia';
 import HomeMainDoors from './HomeMainDoors';
 import { Card } from '@/components/ui/card';
-import { Button } from './Button';
+import { Button } from '@/components/ui/button';
 import { useDashboardData } from '@/hooks/useDashboardData';
 import SEOHead from '@/components/SEOHead';
 import { useQuery } from '@tanstack/react-query';
