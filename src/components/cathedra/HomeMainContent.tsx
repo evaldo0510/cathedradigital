@@ -38,7 +38,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
           >
             <div className="space-y-6">
               <div className="w-12 h-12 rounded-premium-sm bg-white/5 border border-white/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-700 shadow-premium">
-                <Icons.Flame className="w-6 h-6" />
+                <Icons.Flame className="w-6 h-6" aria-hidden="true" />
               </div>
               <div>
                 <h3 className="text-xl md:text-2xl font-bold text-primary tracking-tight">
