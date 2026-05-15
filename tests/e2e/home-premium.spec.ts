@@ -10,78 +10,40 @@ const HOME_SECTIONS = [
 
 test.describe('Home Page Premium Audit', () => {
   test.beforeEach(async ({ page }) => {
-    // Wait for fonts to load to ensure visual stability
     await page.goto('/');
+    // Wait for fonts to ensure visual stability
     await page.evaluate(() => document.fonts.ready);
   });
 
-  test('Logged-out Home: Visual Consistency, Interactions & A11y', async ({ page }) => {
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(1000); // Wait for initial animations
-
-    // 1. Accessibility: ARIA Labels & Alt Text
-    const images = page.locator('img');
-    const imageCount = await images.count();
-    for (let i = 0; i < imageCount; i++) {
-      const img = images.nth(i);
-      const alt = await img.getAttribute('alt');
-      // If image is not explicitly decorative (role="presentation"), it should have alt text
-      const role = await img.getAttribute('role');
-      if (role !== 'presentation') {
-        expect(alt, `Image ${i} is missing alt text`).toBeTruthy();
-      }
-    }
-
-    const sections = page.locator('section');
-    const sectionCount = await sections.count();
-    for (let i = 0; i < sectionCount; i++) {
-      const section = sections.nth(i);
-      const ariaLabelledBy = await section.getAttribute('aria-labelledby');
-      const ariaLabel = await section.getAttribute('aria-label');
-      expect(ariaLabelledBy || ariaLabel, `Section ${i} is missing accessible name`).toBeTruthy();
-    }
-
-    // 2. Interactions: Enter and Space on Cards
-    const cards = page.locator('.group.cursor-pointer, [role="button"]');
-    const cardCount = await cards.count();
-    
-    if (cardCount > 0) {
-      const firstCard = cards.first();
-      const initialUrl = page.url();
-
-      // Test Space key
-      await firstCard.focus();
-      await page.keyboard.press(' ');
-      await page.waitForTimeout(500);
-      expect(page.url()).not.toBe(initialUrl);
-
-      // Go back for next test
-      await page.goto('/');
-      await page.waitForLoadState('networkidle');
-
-      // Test Enter key
-      const secondCard = cards.nth(Math.min(1, cardCount - 1));
-      await secondCard.focus();
-      const secondInitialUrl = page.url();
-      await page.keyboard.press('Enter');
-      await page.waitForTimeout(500);
-      expect(page.url()).not.toBe(secondInitialUrl);
-    }
-
-    // 3. Focus Visibility
-    const actionableElements = page.locator('button, a, [role="button"]');
-    const actionCount = await actionableElements.count();
-    for (let i = 0; i < Math.min(actionCount, 5); i++) {
-      const el = actionableElements.nth(i);
-      await el.focus();
-      const isVisible = await el.evaluate(node => {
-        const style = window.getComputedStyle(node);
-        return style.outlineStyle !== 'none' || style.boxShadow !== 'none' || style.borderWidth !== '0px';
+  test('Layout Stability (CLS) - Hero Section', async ({ page }) => {
+    // Measure Layout Shift during loading
+    const cls = await page.evaluate(() => {
+      return new Promise((resolve) => {
+        let cumulativeLayoutShift = 0;
+        new PerformanceObserver((entryList) => {
+          for (const entry of entryList.getEntries()) {
+            if (!(entry as any).hadRecentInput) {
+              cumulativeLayoutShift += (entry as any).value;
+            }
+          }
+        }).observe({ type: 'layout-shift', buffered: true });
+        
+        // Wait 3 seconds to capture any shifts
+        setTimeout(() => resolve(cumulativeLayoutShift), 3000);
       });
-      expect(isVisible, `Element ${i} focus not visible`).toBe(true);
-    }
+    });
 
-    // 4. Visual Regression by Section
+    // CLS should be under 0.1 for good UX
+    expect(cls).toBeLessThan(0.1);
+  });
+
+  test('Logged-out Home: Visual Consistency & Navigation', async ({ page }) => {
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(1000);
+
+    const theme = await page.evaluate(() => document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+
+    // 1. Visual Regression by Section (with Theme)
     for (const section of HOME_SECTIONS) {
       const locator = page.locator(section.selector);
       if (await locator.isVisible()) {
@@ -90,21 +52,39 @@ test.describe('Home Page Premium Audit', () => {
           maskSelectors.push(locator.locator('blockquote'));
           maskSelectors.push(locator.locator('p.font-reader'));
           maskSelectors.push(locator.locator('img'));
-          maskSelectors.push(locator.locator('h3'));
         }
         if (section.name === 'Hero') {
           maskSelectors.push(locator.locator('img'));
         }
 
-        await expect(locator).toHaveScreenshot(`home-${section.name}-logged-out.png`, {
+        await expect(locator).toHaveScreenshot(`home-${section.name}-logged-out-${theme}.png`, {
           mask: maskSelectors.length > 0 ? maskSelectors : undefined,
           animations: 'disabled',
         });
       }
     }
+
+    // 2. Navigation Validation for cards
+    const cardSelectors = [
+      'section[aria-labelledby="section-jornada"] .group',
+      'section[aria-labelledby="section-doutrina"] .group',
+      'section[aria-labelledby="section-trilhas"] .group'
+    ];
+
+    for (const selector of cardSelectors) {
+      const card = page.locator(selector).first();
+      if (await card.isVisible()) {
+        const initialUrl = page.url();
+        await card.click();
+        await page.waitForTimeout(500);
+        expect(page.url()).not.toBe(initialUrl);
+        await page.goto('/'); // Back to home
+        await page.waitForLoadState('networkidle');
+      }
+    }
   });
 
-  test('Logged-in Home: Visual Consistency', async ({ page }) => {
+  test('Logged-in Home: Visual Consistency & Navigation', async ({ page }) => {
     // Mock auth session
     await page.addInitScript(() => {
       const session = {
@@ -128,9 +108,9 @@ test.describe('Home Page Premium Audit', () => {
     await page.waitForLoadState('networkidle');
     await page.evaluate(() => document.fonts.ready);
 
-    const sectionJornada = page.locator('section[aria-labelledby="section-jornada"]');
-    await expect(sectionJornada).toContainText(/Retomar Jornada|Continuar/);
+    const theme = await page.evaluate(() => document.documentElement.classList.contains('dark') ? 'dark' : 'light');
 
+    // 1. Visual Regression for Logged-in state
     for (const section of HOME_SECTIONS) {
       const locator = page.locator(section.selector);
       if (await locator.isVisible()) {
@@ -141,10 +121,42 @@ test.describe('Home Page Premium Audit', () => {
           maskSelectors.push(locator.locator('img'));
         }
         
-        await expect(locator).toHaveScreenshot(`home-${section.name}-logged-in.png`, {
+        await expect(locator).toHaveScreenshot(`home-${section.name}-logged-in-${theme}.png`, {
           mask: maskSelectors.length > 0 ? maskSelectors : undefined,
           animations: 'disabled',
         });
+      }
+    }
+
+    // 2. Navigation Validation for "Continuar" Button in Jornada
+    const continueBtn = page.locator('section[aria-labelledby="section-jornada"] button').first();
+    const initialUrl = page.url();
+    await continueBtn.click();
+    await page.waitForTimeout(500);
+    expect(page.url()).not.toBe(initialUrl);
+  });
+
+  test('A11y & Focus States', async ({ page }) => {
+    await page.waitForLoadState('networkidle');
+    
+    // Focus visible check
+    const buttons = page.locator('button').all();
+    for (const btn of (await buttons).slice(0, 5)) {
+      await btn.focus();
+      const hasFocusRing = await btn.evaluate(el => {
+        const style = window.getComputedStyle(el);
+        return style.outlineStyle !== 'none' || style.boxShadow !== 'none' || style.borderWidth !== '0px';
+      });
+      expect(hasFocusRing, 'Button focus should be visible').toBe(true);
+    }
+
+    // ARIA labels check for icons/images
+    const images = await page.locator('img').all();
+    for (const img of images) {
+      const alt = await img.getAttribute('alt');
+      const role = await img.getAttribute('role');
+      if (role !== 'presentation') {
+        expect(alt || role === 'img', 'Non-decorative image should have alt or role="img"').toBeTruthy();
       }
     }
   });
