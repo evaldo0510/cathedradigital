@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Card   } from './Card';
-import { Button } from './Button';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { 
   ShieldAlert, CheckCircle2, XCircle, Clock, 
   ChevronRight, FileText, AlertTriangle, ExternalLink,

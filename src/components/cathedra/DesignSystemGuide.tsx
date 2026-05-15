@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Card   } from '@/components/cathedra/Card';
-import { Button } from '@/components/cathedra/Button';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Icons } from '@/constants';
 import SEOHead from '@/components/SEOHead';
 
@@ -120,7 +120,7 @@ const DesignSystemGuide: React.FC = () => {
               </li>
               <li className="flex items-start gap-4">
                 <div className="w-6 h-6 rounded-full bg-secondary/20 flex items-center justify-center shrink-0 mt-1">✓</div>
-                <p><strong>Botões:</strong> Substituir <code>Button</code> do shadcn por <code>Button</code> (ou <code>HomeButton</code> que é o alias compatível).</p>
+                <p><strong>Botões:</strong> Substituir <code>Button</code> do shadcn por <code>Button</code> (ou <code>Button</code> que é o alias compatível).</p>
               </li>
               <li className="flex items-start gap-4">
                 <div className="w-6 h-6 rounded-full bg-secondary/20 flex items-center justify-center shrink-0 mt-1">✓</div>

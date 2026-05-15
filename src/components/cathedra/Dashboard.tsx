@@ -12,7 +12,7 @@ import QuickDonation from './QuickDonation';
 import { useDashboardData } from '@/hooks/useDashboardData';
 import { DashboardSkeleton } from './DashboardSkeleton';
 import { HomeCard } from './HomeCard';
-import { HomeButton } from './HomeButton';
+import { Button } from '@/components/ui/button';
 
 interface DashboardProps {
   user: User | null;

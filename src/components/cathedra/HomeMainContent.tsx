@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { Icons } from '@/constants';
 import { HomeCard } from './HomeCard';
-import { HomeButton } from './HomeButton';
+import { Button } from '@/components/ui/button';
 import RitualDoDia from './RitualDoDia';
 import HomeMainDoors from './HomeMainDoors';
 import { SectionSkeleton } from './HomeSkeletons';
@@ -52,9 +52,9 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
               </p>
             </div>
           </div>
-          <HomeButton variant="primary" onClick={() => onNavigate(AppRoute.JORNADAS)} className="min-w-[180px]">
+          <Button variant="primary" onClick={() => onNavigate(AppRoute.JORNADAS)} className="min-w-[180px]">
             {user ? 'Continuar' : 'Começar'}
-          </HomeButton>
+          </Button>
         </HomeCard>
       </section>
 
@@ -107,9 +107,9 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
               "O Catecismo deve apresentar, com fidelidade e de modo orgânico, o ensinamento da Sagrada Escritura, da Tradição viva na Igreja e do Magistério autêntico."
             </p>
           </div>
-          <HomeButton variant="outline" className="mx-auto min-w-[220px]">
+          <Button variant="outline" className="mx-auto min-w-[220px]">
             Explorar Doutrina
-          </HomeButton>
+          </Button>
         </HomeCard>
       </section>
 
@@ -131,9 +131,9 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
               <h4 className="text-xl font-bold text-primary">Fundamentos da Fé</h4>
               <p className="text-primary/50 leading-relaxed">Para quem está iniciando sua jornada espiritual agora.</p>
             </div>
-            <HomeButton variant="ghost" className="p-0 h-auto text-primary/60 hover:text-primary transition-all text-premium-tiny group" onClick={() => onNavigate(AppRoute.JORNADAS)}>
+            <Button variant="ghost" className="p-0 h-auto text-primary/60 hover:text-primary transition-all text-premium-tiny group" onClick={() => onNavigate(AppRoute.JORNADAS)}>
               Explorar Trilhas <Icons.ChevronRight className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </HomeButton>
+            </Button>
           </HomeCard>
           
           <HomeCard padding="md" className="space-y-8 h-full">
@@ -144,9 +144,9 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
               <h4 className="text-xl font-bold text-primary">Estudo Bíblico</h4>
               <p className="text-primary/50 leading-relaxed">Aprofunde seu conhecimento das Escrituras Sagradas.</p>
             </div>
-            <HomeButton variant="ghost" className="p-0 h-auto text-secondary/60 hover:text-secondary transition-all text-premium-tiny group" onClick={() => onNavigate(AppRoute.BIBLE)}>
+            <Button variant="ghost" className="p-0 h-auto text-secondary/60 hover:text-secondary transition-all text-premium-tiny group" onClick={() => onNavigate(AppRoute.BIBLE)}>
               Ver Planos <Icons.ChevronRight className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </HomeButton>
+            </Button>
           </HomeCard>
         </div>
       </section>

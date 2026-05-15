@@ -10,7 +10,7 @@ import SEOHead from '@/components/SEOHead';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { HomeCard } from './HomeCard';
-import { HomeButton } from './HomeButton';
+import { Button } from '@/components/ui/button';
 
 interface JournalEntry {
   id: string;
@@ -135,14 +135,14 @@ const SpiritualJournalPage = () => {
               className="min-h-[300px] rounded-premium border-border/20 p-8 md:p-12 font-serif text-xl md:text-2xl leading-relaxed focus-visible:ring-primary/10 bg-muted/10 border-none shadow-inner resize-none placeholder:italic placeholder:opacity-30"
             />
             <div className="flex justify-center">
-              <HomeButton 
+              <Button 
                 onClick={saveEntry}
                 disabled={isLoading || !content.trim()}
                 variant="primary"
                 className="px-16 h-14"
               >
                 {isLoading ? 'Guardando...' : 'Guardar Reflexão'}
-              </HomeButton>
+              </Button>
             </div>
           </div>
         </HomeCard>
