@@ -70,13 +70,16 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        'premium': '2.5rem', // Definitive radius for all major cards
+        'premium-sm': '1.5rem',
         '3xl': '1.75rem',
         '4xl': '2.25rem',
       },
       boxShadow: {
-        'premium': '0 10px 30px -10px rgba(0, 0, 0, 0.03)',
-        'premium-hover': '0 20px 40px -12px rgba(0, 0, 0, 0.05)',
-        'soft': '0 2px 12px -2px rgba(0, 0, 0, 0.02)',
+        'premium': '0 20px 50px -12px rgba(0, 0, 0, 0.03), 0 0 1px 0 rgba(0, 0, 0, 0.05)',
+        'premium-hover': '0 30px 60px -15px rgba(0, 0, 0, 0.08), 0 0 1px 0 rgba(0, 0, 0, 0.1)',
+        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.02)',
+        'gold': '0 10px 30px -5px rgba(212, 175, 55, 0.1)',
       },
       keyframes: {
         "accordion-down": {

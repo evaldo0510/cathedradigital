@@ -90,17 +90,17 @@ const SpiritualJournalPage = () => {
     <div className="max-w-4xl mx-auto space-y-12 pb-24">
       <SEOHead title="Diário Espiritual - Reflexão e Oração" description="Guarde suas reflexões diárias e acompanhe seu crescimento espiritual." path="/diario" />
       
-      <header className="text-center space-y-4">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-secondary/10 border border-secondary/20 rounded-full">
+      <header className="premium-header">
+        <div className="premium-tag">
           <Icons.PenLine className="w-4 h-4 text-secondary" />
-          <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-secondary/60">Diarium Spirituale</span>
+          <span>Diarium Spirituale</span>
         </div>
-        <h1 className="text-4xl md:text-6xl font-serif font-bold text-primary">Diário Espiritual</h1>
-        <p className="text-lg text-primary/60 italic font-serif">"Examina, ó minha alma, o que fizeste hoje diante de Deus."</p>
+        <h1 className="text-4xl md:text-7xl font-serif font-bold text-primary">Diário Espiritual</h1>
+        <p className="text-xl text-primary/60 italic font-serif mx-auto">"Examina, ó minha alma, o que fizeste hoje diante de Deus."</p>
       </header>
 
       {/* Entry Form */}
-      <section className="bg-card border border-border/40 rounded-[3rem] p-8 md:p-12 shadow-premium space-y-10">
+      <section className="desktop-card space-y-12">
         <div className="space-y-6">
           <h3 className="text-xl font-serif font-bold text-primary text-center">Como está sua alma hoje?</h3>
           <div className="flex flex-wrap justify-center gap-4">
@@ -108,25 +108,25 @@ const SpiritualJournalPage = () => {
               <button
                 key={m.id}
                 onClick={() => setMood(m.id)}
-                className={`flex flex-col items-center gap-2 p-4 rounded-3xl border transition-all ${
+                className={`flex flex-col items-center gap-3 p-5 rounded-premium-sm border transition-all duration-500 ${
                   mood === m.id 
-                    ? 'bg-primary border-primary text-primary-foreground shadow-lg scale-110' 
-                    : 'bg-muted/30 border-border/10 text-foreground/40 hover:border-primary/20'
+                    ? 'bg-primary border-primary text-primary-foreground shadow-gold scale-105' 
+                    : 'bg-muted/30 border-border/10 text-foreground/40 hover:border-primary/20 hover:bg-muted/50'
                 }`}
               >
-                <m.icon className="w-6 h-6" />
+                <m.icon className="w-7 h-7" />
                 <span className="text-[10px] font-bold uppercase tracking-widest">{m.label}</span>
               </button>
             ))}
           </div>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-6">
           <Textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
             placeholder="Escreva sua reflexão, gratidão ou pedido de perdão..."
-            className="min-h-[200px] rounded-[2rem] border-border/40 p-8 font-serif text-lg leading-relaxed focus-visible:ring-primary/20 bg-muted/20"
+            className="min-h-[250px] rounded-premium border-border/40 p-10 font-serif text-xl leading-relaxed focus-visible:ring-primary/20 bg-muted/20"
           />
           <div className="flex justify-center">
             <Button 
@@ -142,26 +142,26 @@ const SpiritualJournalPage = () => {
 
       {/* History */}
       <section className="space-y-8">
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-8">
           <div className="h-px flex-1 bg-border/40" />
-          <h2 className="text-[10px] font-bold uppercase tracking-[0.5em] text-primary/30">Reflexões Anteriores</h2>
+          <h2 className="text-[10px] font-bold uppercase tracking-[0.6em] text-primary/40 whitespace-nowrap">Memória da Alma</h2>
           <div className="h-px flex-1 bg-border/40" />
         </div>
 
         {isFetching ? (
-          <div className="space-y-4">
+          <div className="space-y-6">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-32 bg-muted/20 animate-pulse rounded-[2rem] border border-border/20" />
+              <div key={i} className="h-40 bg-muted/20 animate-pulse rounded-premium border border-border/20" />
             ))}
           </div>
         ) : entries.length > 0 ? (
-          <div className="grid gap-6">
+          <div className="grid gap-8">
             {entries.map((entry) => (
               <motion.div
                 key={entry.id}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-card p-8 rounded-[2.5rem] border border-border/40 shadow-premium space-y-4 relative overflow-hidden"
+                className="bg-card p-10 rounded-premium border border-border/40 shadow-premium space-y-6 relative overflow-hidden group hover:border-primary/20 transition-all duration-500"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">

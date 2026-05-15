@@ -20,7 +20,7 @@ const ComponentPlayground = () => {
   const [activeTab, setActiveTab] = useState('inputs');
   
   return (
-    <div className="p-8 md:p-12 rounded-[3rem] bg-card border border-border/20 space-y-10 shadow-premium transition-colors">
+    <div className="p-8 md:p-12 rounded-premium bg-card border border-border/20 space-y-10 shadow-premium transition-colors">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
         <div className="flex flex-wrap gap-3">
           {(['default', 'error', 'disabled', 'loading'] as const).map((s) => (
@@ -347,174 +347,66 @@ const DesignSystemGuide = () => {
           </div>
         </section>
 
-        {/* Botões Section */}
-        <section className="space-y-10">
+        {/* Visual Regression Sticker Sheet */}
+        <section className="space-y-12">
           <div className="flex items-center gap-6">
             <div className="h-px flex-1 bg-border/40" />
-            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-foreground/30">Componentes de Ação</h2>
+            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-foreground/30">Sticker Sheet & Regressão Visual</h2>
             <div className="h-px flex-1 bg-border/40" />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="bg-card border border-border/40 rounded-[2.5rem] p-10 space-y-10">
-              <h3 className="text-xl font-serif font-bold text-foreground">Variantes de Botão</h3>
-              <div className="grid gap-4">
-                <Button className="h-14 rounded-2xl text-premium-tiny font-black uppercase tracking-widest">Ação Primária</Button>
-                <Button variant="secondary" className="h-14 rounded-2xl text-premium-tiny font-black uppercase tracking-widest">Ação Secundária</Button>
-                <Button variant="outline" className="h-14 rounded-2xl text-premium-tiny font-black uppercase tracking-widest border-border/40">Borda (Outline)</Button>
-                <Button variant="ghost" className="h-14 rounded-2xl text-premium-tiny font-black uppercase tracking-widest">Fantasma (Ghost)</Button>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {/* Card Consistency */}
+            <div className="space-y-6">
+              <h3 className="text-xl font-serif font-bold text-primary">Consistência de Cards</h3>
+              <div className="space-y-6">
+                <div className="premium-card p-8 flex flex-col gap-4">
+                  <Badge className="w-fit rounded-full bg-primary/5 text-primary border-primary/10 px-4 py-1">Premium Default</Badge>
+                  <p className="font-serif italic text-lg opacity-70">"A base de toda a interface."</p>
+                </div>
+                <div className="premium-card-interactive p-8 flex flex-col gap-4">
+                  <Badge className="w-fit rounded-full bg-secondary/10 text-secondary border-secondary/20 px-4 py-1">Premium Interactive</Badge>
+                  <p className="font-serif italic text-lg opacity-70">"Feedback visual de hover e escala."</p>
+                </div>
               </div>
             </div>
 
-            <div className="bg-card border border-border/40 rounded-[2.5rem] p-10 space-y-10">
-              <h3 className="text-xl font-serif font-bold text-foreground">Estados e Ícones</h3>
-              <div className="flex flex-wrap gap-4">
-                <Button isLoading className="h-14 rounded-2xl px-8">Processando</Button>
-                <Button disabled className="h-14 rounded-2xl px-8">Desativado</Button>
-                <Button size="icon" className="h-14 w-14 rounded-2xl">
-                  <Icons.Search className="w-5 h-5" />
-                </Button>
-                <Button variant="outline" size="icon" className="h-14 w-14 rounded-2xl border-border/40">
-                  <Icons.Heart className="w-5 h-5" />
-                </Button>
-              </div>
-              <div className="p-5 bg-secondary/10 rounded-2xl border border-secondary/20">
-                <p className="text-[11px] text-foreground/60 leading-relaxed italic font-serif">
-                  * Todos os ícones em botões devem usar o tamanho padrão de 20px (w-5 h-5) via classes utilitárias no componente UI/Button para garantir padronização em todos os breakpoints.
-                </p>
+            {/* Typography Consistency */}
+            <div className="space-y-6">
+              <h3 className="text-xl font-serif font-bold text-primary">Hierarquia Visual</h3>
+              <div className="space-y-6 premium-card p-8">
+                <div className="space-y-1">
+                  <span className="text-[9px] font-black uppercase tracking-widest text-secondary">Display</span>
+                  <h1 className="text-4xl font-display">Soli Deo Gloria</h1>
+                </div>
+                <div className="space-y-1">
+                  <span className="text-[9px] font-black uppercase tracking-widest text-secondary">Headline</span>
+                  <h2 className="text-2xl font-serif italic">Veritas et Caritas</h2>
+                </div>
+                <div className="space-y-1">
+                  <span className="text-[9px] font-black uppercase tracking-widest text-secondary">Body</span>
+                  <p className="text-sm leading-relaxed">O equilíbrio perfeito entre o minimalismo contemporâneo e a tradição sagrada.</p>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Playground Interativo */}
+        {/* Audit A11y & Visual */}
         <section className="space-y-10">
           <div className="flex items-center gap-6">
             <div className="h-px flex-1 bg-border/40" />
-            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-foreground/30">Playground de Acessibilidade</h2>
+            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-foreground/30">Auditoria de Componentes</h2>
             <div className="h-px flex-1 bg-border/40" />
           </div>
           <ComponentPlayground />
         </section>
 
-        {/* Contrast Checker Simulation */}
-        <section className="space-y-10">
-          <div className="flex items-center gap-6">
-            <div className="h-px flex-1 bg-border/40" />
-            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-foreground/30">Validação WCAG AAA</h2>
-            <div className="h-px flex-1 bg-border/40" />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-primary p-8 rounded-[2.5rem] space-y-4">
-              <div className="flex justify-between items-start">
-                <span className="text-primary-foreground/40 text-[10px] font-black uppercase tracking-widest">Primary vs Foreground</span>
-                <Badge className="bg-green-500/20 text-green-400 border-green-500/20 shadow-none">AAA Pass</Badge>
-              </div>
-              <p className="text-primary-foreground font-serif text-lg leading-relaxed">
-                Legibilidade perfeita para longos blocos de texto sobre fundo adaptativo.
-              </p>
-            </div>
-            
-            <div className="bg-secondary p-8 rounded-[2.5rem] space-y-4">
-              <div className="flex justify-between items-start">
-                <span className="text-secondary-foreground/40 text-[10px] font-black uppercase tracking-widest">Secondary vs Foreground</span>
-                <Badge className="bg-green-500/20 text-green-400 border-green-500/20 shadow-none">AAA Pass</Badge>
-              </div>
-              <p className="text-secondary-foreground font-serif text-lg leading-relaxed">
-                Destaque premium com alto contraste para elementos de atenção.
-              </p>
-            </div>
-
-            <div className="bg-card border border-border/40 p-8 rounded-[2.5rem] space-y-4 shadow-premium">
-              <div className="flex justify-between items-start">
-                <span className="text-foreground/40 text-[10px] font-black uppercase tracking-widest">Card vs Background</span>
-                <Badge className="bg-green-500/20 text-green-400 border-green-500/20 shadow-none">7.5:1 (AAA)</Badge>
-              </div>
-              <p className="text-foreground font-serif text-lg leading-relaxed">
-                Separação visual clara e confortável para leitura prolongada.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Footer info */}
-        <footer className="pt-20 border-t border-border/40 text-center space-y-4">
+        <footer className="pt-24 pb-12 text-center border-t border-border/10">
           <p className="text-premium-tiny font-black uppercase tracking-[0.5em] text-foreground/20">
-            Ad Majorem Dei Gloriam
+            Cathedra Digital • Design Protocol v2.6.0
           </p>
-          <div className="flex justify-center gap-4">
-            <div className="w-1.5 h-1.5 rounded-full bg-secondary/40" />
-            <div className="w-1.5 h-1.5 rounded-full bg-secondary/40" />
-            <div className="w-1.5 h-1.5 rounded-full bg-secondary/40" />
-          </div>
         </footer>
-        {/* Auditoria & Regressão Visual Section */}
-        <section className="space-y-10 pb-20">
-          <div className="flex items-center gap-6">
-            <div className="h-px flex-1 bg-border/40" />
-            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-foreground/30">Auditoria & Regressão Visual</h2>
-            <div className="h-px flex-1 bg-border/40" />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="bg-card border border-border/40 rounded-[2.5rem] p-10 space-y-8">
-              <div className="flex items-center gap-3">
-                <Icons.CheckCircle2 className="w-6 h-6 text-green-500" />
-                <h3 className="text-2xl font-serif font-bold text-foreground">Relatório de Contraste AAA</h3>
-              </div>
-              <div className="space-y-4">
-                {[
-                  { label: "Texto Normal (Body)", status: "Pass", ratio: "17.5:1", requirement: "7.0:1" },
-                  { label: "Títulos (Headlines)", status: "Pass", ratio: "17.5:1", requirement: "4.5:1" },
-                  { label: "Componentes UI (Inputs/Borders)", status: "Pass", ratio: "4.5:1", requirement: "3.0:1" },
-                  { label: "Modo Alto Contraste", status: "Pass", ratio: "21:1", requirement: "7.0:1" },
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center justify-between p-4 bg-muted/20 rounded-2xl border border-border/10">
-                    <span className="text-sm font-medium text-foreground/70">{item.label}</span>
-                    <div className="flex items-center gap-4">
-                      <span className="text-[10px] font-mono opacity-40">{item.ratio} / {item.requirement}</span>
-                      <Badge className="bg-green-500/10 text-green-600 border-green-500/20">{item.status}</Badge>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/40 text-center pt-4">
-                Validado automaticamente via CI/CD Visual Checkers
-              </p>
-            </div>
-
-            <div className="bg-card border border-border/40 rounded-[2.5rem] p-10 space-y-8">
-              <div className="flex items-center gap-3">
-                <Icons.ShieldCheck className="w-6 h-6 text-secondary" />
-                <h3 className="text-2xl font-serif font-bold text-foreground">Regressão Visual (Sticker Sheet)</h3>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 bg-muted/30 rounded-2xl border border-border/10 flex flex-col items-center gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-primary shadow-premium" />
-                  <span className="text-[10px] font-bold uppercase tracking-widest opacity-40">Shadow V2</span>
-                </div>
-                <div className="p-4 bg-muted/30 rounded-2xl border border-border/10 flex flex-col items-center gap-3">
-                  <div className="w-12 h-12 rounded-[1.25rem] border border-border shadow-soft" />
-                  <span className="text-[10px] font-bold uppercase tracking-widest opacity-40">Radius V2</span>
-                </div>
-                <div className="p-4 bg-muted/30 rounded-2xl border border-border/10 flex flex-col items-center gap-3">
-                  <Icons.Logo className="w-8 h-8" />
-                  <span className="text-[10px] font-bold uppercase tracking-widest opacity-40">Icon Scale</span>
-                </div>
-                <div className="p-4 bg-muted/30 rounded-2xl border border-border/10 flex flex-col items-center gap-3">
-                  <div className="h-2 w-full bg-primary/20 rounded-full">
-                    <div className="h-full w-2/3 bg-primary rounded-full" />
-                  </div>
-                  <span className="text-[10px] font-bold uppercase tracking-widest opacity-40">UI Progress</span>
-                </div>
-              </div>
-              <p className="text-sm text-muted-foreground leading-relaxed italic">
-                Qualquer mudança visual deve ser validada contra este Sticker Sheet para garantir consistência premium.
-              </p>
-            </div>
-          </div>
-        </section>
       </div>
     </div>
   );
