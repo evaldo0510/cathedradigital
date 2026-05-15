@@ -33,13 +33,13 @@ const DIFFICULTY_COLORS: Record<string, string> = {
 };
 
 const CATEGORY_ICONS: Record<string, React.ReactNode> = {
-  fundamentos: <Icons.Sparkles className="w-5 h-5" />,
-  formacao: <Icons.BookOpen className="w-5 h-5" />,
-  rotina: <Icons.Calendar className="w-5 h-5" />,
-  oracao: <Icons.Heart className="w-5 h-5" />,
-  mistico: <Icons.Sun className="w-5 h-5" />,
-  cura: <Icons.Stethoscope className="w-5 h-5" />,
-  transformacao: <Icons.Zap className="w-5 h-5" />,
+  fundamentos: <Icons.Sparkles className="w-4 h-4" />,
+  formacao: <Icons.BookOpen className="w-4 h-4" />,
+  rotina: <Icons.Calendar className="w-4 h-4" />,
+  oracao: <Icons.Heart className="w-4 h-4" />,
+  mistico: <Icons.Sun className="w-4 h-4" />,
+  cura: <Icons.Stethoscope className="w-4 h-4" />,
+  transformacao: <Icons.Zap className="w-4 h-4" />,
 };
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -236,7 +236,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
         transition={{ duration: 0.8 }}
       >
         <div className="inline-flex items-center gap-3 px-5 py-2 bg-primary/[0.03] rounded-full border border-primary/10 mb-2">
-          <Icons.Journeys className="w-4 h-4 text-primary" />
+          <Icons.Journeys className="w-3.5 h-3.5 text-primary" />
           <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">Itinerarium Mentis</span>
         </div>
         <h1 className="text-5xl md:text-7xl font-display font-bold text-primary tracking-tight leading-[0.9]">Jornadas</h1>
@@ -302,7 +302,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   >
 
                     <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
-                      <Icons.Flame className="w-16 h-16 text-primary" />
+                      <Icons.Flame className="w-12 h-12 text-primary" />
                     </div>
                     <CardContent className="p-3.5 sm:p-5 space-y-2.5 sm:space-y-3">
                       <div className="flex items-center justify-between gap-3">
@@ -348,7 +348,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           <Card className="premium-card bg-gradient-to-r from-primary/5 to-transparent overflow-hidden">
             <CardContent className="p-4 sm:p-6 flex items-center gap-4 sm:gap-6">
               <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                <Icons.Brain className="w-5 h-5 text-primary" />
+                <Icons.Brain className="w-4 h-4 text-primary" />
               </div>
               <div className="flex-1">
                 <p className="text-sm font-semibold text-foreground">Inicie sua caminhada</p>
