@@ -334,7 +334,7 @@
   }
   
   .premium-tag {
-    @apply inline-flex items-center gap-3 px-6 py-2 bg-primary/[0.03] border border-border/30 rounded-full text-[10px] font-bold uppercase tracking-[0.45em] text-foreground/40 transition-all hover:bg-primary/[0.06] hover:text-foreground/60;
+    @apply inline-flex items-center gap-3 px-8 py-2.5 bg-primary/[0.01] border border-border/20 rounded-full text-[10px] font-bold uppercase tracking-[0.5em] text-foreground/30 transition-all hover:bg-primary/[0.03] hover:text-foreground/50;
   }
 
   /* Global Button Standard - Premium Spiritual */
