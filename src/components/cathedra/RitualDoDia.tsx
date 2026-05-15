@@ -42,7 +42,7 @@ const RitualDoDia: React.FC = () => {
         <SaintOfTheDayCard variant="compact" />
 
         {/* Divider */}
-        <div className="h-px bg-border/20" />
+        <div className="divider-line !bg-primary/[0.04]" />
 
         {/* Bible Verse */}
         <div className="space-y-4" role="article" aria-label="Versículo do Dia">
