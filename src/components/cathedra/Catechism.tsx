@@ -369,120 +369,197 @@ const Catechism: React.FC = () => {
   if (viewMode === 'reading' && selectedSection && selectedPart) {
     const [start, end] = selectedSection.paragraphs;
     const fromDashboard = searchParams.get('from') === 'dashboard';
+    
+    const sidebarItems = selectedPart.sections.map(sec => ({
+      id: sec.id,
+      num: sec.paragraphs[0],
+      label: sec.title,
+      isActive: sec.id === selectedSection.id,
+      onClick: () => {
+        setSelectedSection(sec);
+        setCurrentParagraph(sec.paragraphs[0]);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      },
+      status: sec.paragraphs[1] <= Math.max(...Array.from(paragraphsRead)) ? 'read' : 'unread' as const
+    }));
+
     return (
-      <div className="max-w-3xl mx-auto space-y-6">
-        <BackToThemeBanner />
-        {fromDashboard && (
-          <Button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-xs text-primary hover:underline">
-            <ArrowLeft className="w-3.5 h-3.5" /> Voltar ao Dashboard
-          </Button>
-        )}
-        <div className="flex items-center gap-4">
-          <Button 
-            onClick={goBack} 
-            className="px-3 py-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none flex items-center gap-2"
-            aria-label="Voltar para o Sumário"
-          >
-            <Icons.ArrowDown className="w-3.5 h-3.5 rotate-90 text-foreground" />
-            <span className="text-premium-tiny font-black uppercase tracking-widest hidden sm:inline">Sumário</span>
-          </Button>
+      <div className="flex w-full min-h-screen">
+        {/* Library Sidebar - Desktop Only */}
+        <LibrarySidebar 
+          title={selectedPart.title}
+          subtitle={selectedPart.part}
+          items={sidebarItems}
+          className="fixed left-0 top-0 w-80 h-screen hidden xl:flex"
+        />
 
-          <Button 
-            onClick={goToExplorer} 
-            className="px-3 py-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none flex items-center gap-2"
-            title="Explorar por Temas"
-          >
-            <Icons.Search className="w-3.5 h-3.5 text-primary" />
-            <span className="text-premium-tiny font-black uppercase tracking-widest hidden sm:inline">Explorar</span>
-          </Button>
+        <div className="flex-1 xl:ml-80">
+          <div className="max-w-3xl mx-auto px-6 py-12 space-y-10">
+            <BackToThemeBanner />
+            
+            {fromDashboard && (
+              <Button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-xs text-primary hover:underline">
+                <ArrowLeft className="w-3.5 h-3.5" /> Voltar ao Dashboard
+              </Button>
+            )}
 
-          <div className="flex-1 min-w-0">
-            <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">{selectedPart.part}</span>
-            <h1 className="text-xl font-serif font-bold text-foreground truncate">{selectedSection.title}</h1>
-            <p className="text-sm text-muted-foreground">§{start} — §{end}</p>
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-2">
+                <Button 
+                  onClick={goBack} 
+                  className="p-3 rounded-full bg-card border border-border hover:bg-primary/10 transition-all group"
+                  aria-label="Voltar para o Sumário"
+                >
+                  <Icons.ArrowDown className="w-4 h-4 rotate-90 text-foreground group-hover:text-primary transition-colors" />
+                </Button>
+
+                <Button 
+                  onClick={goToExplorer} 
+                  className="p-3 rounded-full bg-card border border-border hover:bg-primary/10 transition-all group"
+                  title="Explorar por Temas"
+                >
+                  <Icons.Search className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                </Button>
+              </div>
+
+              <div className="flex-1 text-center hidden md:block">
+                <span className="text-premium-tiny font-black uppercase tracking-[0.3em] text-primary/40 mb-1 block">
+                  {selectedPart.part}
+                </span>
+                <h1 className="text-xl font-serif font-black text-primary tracking-tight">
+                  {selectedSection.title}
+                </h1>
+              </div>
+
+              <div className="flex items-center gap-2">
+                {(crossRefs.length > 0 || docsRefs.length > 0) && (
+                  <Button onClick={() => setShowCrossRefs(!showCrossRefs)}
+                    className={`p-3 rounded-full border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}
+                    title="Catecismo & Documentos">
+                    <Icons.Cross className="w-4 h-4" />
+                  </Button>
+                )}
+                <AudioButton />
+              </div>
+            </div>
+
+            {/* Section Progress on Mobile */}
+            <div className="xl:hidden flex items-center gap-3 justify-center py-4 border-y border-border/10">
+              <Button 
+                disabled={selectedSection.id <= 1} 
+                onClick={() => {
+                  const prevSec = selectedPart.sections.find(s => s.id === selectedSection.id - 1);
+                  if (prevSec) {
+                    setSelectedSection(prevSec);
+                    setCurrentParagraph(prevSec.paragraphs[0]);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }
+                }}
+                className="p-2 text-muted-foreground hover:text-primary disabled:opacity-20"
+              >
+                <Icons.ChevronLeft className="w-5 h-5" />
+              </Button>
+              <div className="text-premium-tiny font-black uppercase tracking-widest text-primary">
+                Seção {selectedSection.id} de {selectedPart.sections.length}
+              </div>
+              <Button 
+                disabled={selectedSection.id >= selectedPart.sections.length} 
+                onClick={() => {
+                  const nextSec = selectedPart.sections.find(s => s.id === selectedSection.id + 1);
+                  if (nextSec) {
+                    setSelectedSection(nextSec);
+                    setCurrentParagraph(nextSec.paragraphs[0]);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }
+                }}
+                className="p-2 text-muted-foreground hover:text-primary disabled:opacity-20"
+              >
+                <Icons.ChevronRight className="w-5 h-5" />
+              </Button>
+            </div>
+
+            {/* Cross references */}
+            {showCrossRefs && (crossRefs.length > 0 || docsRefs.length > 0) && (
+              <CrossReferencePanel
+                type="catechism"
+                bibleRefs={crossRefs}
+                documents={docsRefs}
+                onNavigateToBible={handleNavigateToBible}
+                onNavigateToDoc={handleNavigateToDoc}
+              />
+            )}
+
+            <div className="reader-container">
+              <div className="flex flex-col gap-16">
+                {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(p => (
+                  <LazyParagraph key={p} paragraph={p} currentParagraph={currentParagraph} paragraphsRead={paragraphsRead} isFavorite={isFavorite} toggleFavorite={toggleFavorite} handleNavigateToBible={handleNavigateToBible} />
+                ))}
+              </div>
+            </div>
+
+            {/* Enhanced Navigation - The "Library" feeling footer */}
+            <div className="mt-20 pt-10 border-t border-border/10">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {selectedSection.id > 1 && (
+                  <Card 
+                    variant="interactive" 
+                    padding="sm"
+                    className="group"
+                    onClick={() => {
+                      const prevSec = selectedPart.sections.find(s => s.id === selectedSection.id - 1);
+                      if (prevSec) {
+                        setSelectedSection(prevSec);
+                        setCurrentParagraph(prevSec.paragraphs[0]);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }
+                    }}
+                  >
+                    <div className="flex flex-col gap-1">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 group-hover:text-primary transition-colors">Voltar para</span>
+                      <h4 className="font-monastery text-lg">{selectedPart.sections.find(s => s.id === selectedSection.id - 1)?.title}</h4>
+                    </div>
+                  </Card>
+                )}
+                
+                {selectedSection.id < selectedPart.sections.length && (
+                  <Card 
+                    variant="interactive" 
+                    padding="sm"
+                    className="group text-right"
+                    onClick={() => {
+                      const nextSec = selectedPart.sections.find(s => s.id === selectedSection.id + 1);
+                      if (nextSec) {
+                        setSelectedSection(nextSec);
+                        setCurrentParagraph(nextSec.paragraphs[0]);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }
+                    }}
+                  >
+                    <div className="flex flex-col gap-1">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 group-hover:text-primary transition-colors">Continuar Lendo</span>
+                      <h4 className="font-monastery text-lg">{selectedPart.sections.find(s => s.id === selectedSection.id + 1)?.title}</h4>
+                    </div>
+                  </Card>
+                )}
+              </div>
+            </div>
+
+            {/* Quick nav - Paragraph Dots */}
+            <div className="flex flex-wrap gap-3 justify-center py-10 opacity-40 hover:opacity-100 transition-opacity">
+              {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(p => (
+                <button 
+                  key={p} 
+                  onClick={() => jumpToParagraph(p)}
+                  title={`Pular para §${p}`}
+                  className={cn(
+                    "w-2 h-2 rounded-full transition-all duration-500",
+                    currentParagraph === p ? "bg-primary scale-150" : 
+                    paragraphsRead.has(p) ? "bg-primary/40" : "bg-muted-foreground/20 hover:bg-primary/40"
+                  )}
+                />
+              ))}
+            </div>
           </div>
-          {(crossRefs.length > 0 || docsRefs.length > 0) && (
-            <Button onClick={() => setShowCrossRefs(!showCrossRefs)}
-              className={`p-2 rounded-full border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}
-              title="Catecismo & Documentos">
-              <Icons.Cross className="w-3.5 h-3.5" />
-            </Button>
-          )}
-        </div>
-
-        {/* Section navigator */}
-        <div className="flex items-center gap-3 justify-center">
-          <Button 
-            disabled={selectedSection.id <= 1} 
-            onClick={() => {
-              const prevSec = selectedPart.sections.find(s => s.id === selectedSection.id - 1);
-              if (prevSec) {
-                setSelectedSection(prevSec);
-                setCurrentParagraph(prevSec.paragraphs[0]);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }
-            }}
-            className="px-3 py-2 rounded-full bg-card border border-border text-xs font-bold disabled:opacity-30 hover:bg-primary/10 transition-all flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-primary outline-none"
-            aria-label="Seção anterior"
-          >
-            <Icons.ArrowDown className="w-3.5 h-3.5 rotate-90" /> Seção Anterior
-          </Button>
-
-          <div className="px-4 py-2 bg-primary/5 border border-primary/20 rounded-premium-sm text-xs font-black uppercase tracking-widest text-primary">
-            Lendo Seção {selectedSection.id}
-          </div>
-          <Button 
-            disabled={selectedSection.id >= 10} 
-            onClick={() => {
-              const nextSec = selectedPart.sections.find(s => s.id === selectedSection.id + 1);
-              if (nextSec) {
-                setSelectedSection(nextSec);
-                setCurrentParagraph(nextSec.paragraphs[0]);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }
-            }}
-            className="px-3 py-2 rounded-full bg-card border border-border text-xs font-bold disabled:opacity-30 hover:bg-primary/10 transition-all flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-primary outline-none"
-            aria-label="Próxima seção"
-          >
-            Próxima Seção <Icons.ArrowDown className="w-3.5 h-3.5 -rotate-90" />
-          </Button>
-
-        </div>
-
-        {/* Cross references */}
-        {showCrossRefs && (crossRefs.length > 0 || docsRefs.length > 0) && (
-          <CrossReferencePanel
-            type="catechism"
-            bibleRefs={crossRefs}
-            documents={docsRefs}
-            onNavigateToBible={handleNavigateToBible}
-            onNavigateToDoc={handleNavigateToDoc}
-          />
-        )}
-
-        <div className="bg-card border border-border rounded-premium-sm p-6 md:p-10 space-y-12">
-          <div className="flex flex-col gap-10">
-            {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(p => (
-              <LazyParagraph key={p} paragraph={p} currentParagraph={currentParagraph} paragraphsRead={paragraphsRead} isFavorite={isFavorite} toggleFavorite={toggleFavorite} handleNavigateToBible={handleNavigateToBible} />
-            ))}
-          </div>
-        </div>
-
-        {/* Quick nav - Anchor links to jump between paragraphs */}
-        <div className="flex flex-wrap gap-2 justify-center py-6 border-t border-border mt-8">
-          <span className="w-full text-center text-premium-tiny font-black uppercase tracking-widest text-muted-foreground mb-2">Saltar para Parágrafo</span>
-          {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(p => (
-            <Button key={p} 
-              onClick={() => jumpToParagraph(p)}
-              className={`w-10 h-10 rounded-full text-xs font-bold transition-all relative ${
-                currentParagraph === p ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-110 z-10' : 
-                paragraphsRead.has(p) ? 'bg-primary/10 border-primary/30 text-primary' :
-                'bg-card border border-border text-muted-foreground hover:border-primary/50 hover:text-primary'
-              }`}>
-              {p}
-              {paragraphsRead.has(p) && <Icons.Check className="w-2 h-2 absolute top-1 right-1" />}
-            </Button>
-          ))}
         </div>
       </div>
     );
