@@ -119,9 +119,9 @@ const AZFaithPage: React.FC = () => {
         <header className="text-center space-y-6 pt-12 mb-16">
           <div className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-primary/5 rounded-2xl border border-primary/10 shadow-inner">
             <BookOpen className="w-4 h-4 text-primary" />
-            <span className="text-premium-small font-black uppercase tracking-[0.3em] text-primary">Glossarium Fidei</span>
+            <span className="text-premium-small font-bold uppercase tracking-[0.3em] text-primary/60">Glossarium Fidei</span>
           </div>
-          <h1 className="text-4xl md:text-7xl font-black tracking-tighter text-foreground bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent">A–Z da Fé</h1>
+          <h1 className="text-5xl md:text-8xl font-display font-medium tracking-tight text-primary leading-none">A–Z da Fé</h1>
           <Button
             variant={quizMode ? 'default' : 'outline'}
             onClick={() => setQuizMode(!quizMode)}
@@ -169,7 +169,7 @@ const AZFaithPage: React.FC = () => {
                     whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => handleTermClick(term)}
-                    className={`px-6 py-3 rounded-full text-xs font-black uppercase tracking-[0.1em] border transition-all relative overflow-hidden group focus-visible:ring-4 focus-visible:ring-primary outline-none shadow-sm
+                    className={`px-8 py-4 rounded-full text-xs font-bold uppercase tracking-[0.2em] border transition-all relative overflow-hidden group focus-visible:ring-4 focus-visible:ring-primary/20 outline-none shadow-soft
                       ${isActive
                         ? 'bg-primary text-primary-foreground border-primary shadow-lg ring-4 ring-primary/10'
                         : 'bg-card  text-primary border-primary/20 hover:border-primary/50 hover:shadow-md'

@@ -45,14 +45,14 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
   const [showNotifs, setShowNotifs] = useState(false);
 
   return (
-    <header className="border-b border-border bg-background sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)]">
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-10 lg:px-12 py-3 sm:py-4 flex items-center justify-between min-h-[56px] sm:min-h-[64px]">
-        <div className="flex items-center gap-2 sm:gap-10 min-w-0">
-          <div className="flex lg:hidden items-center gap-2 sm:gap-4 cursor-pointer group min-w-0 focus-visible:ring-2 focus-visible:ring-primary outline-none" role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && navigate(AppRoute.HOJE)} onClick={() => navigate(AppRoute.HOJE)}>
-            <Icons.Logo className="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0" variant="blue" />
+    <header className="border-b border-border/40 bg-background/80 backdrop-blur-xl sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)]">
+      <div className="max-w-[1400px] mx-auto px-6 sm:px-12 lg:px-16 py-4 sm:py-6 flex items-center justify-between min-h-[64px] sm:min-h-[80px]">
+        <div className="flex items-center gap-4 sm:gap-12 min-w-0">
+          <div className="flex lg:hidden items-center gap-3 sm:gap-4 cursor-pointer group min-w-0 focus-visible:ring-2 focus-visible:ring-primary/20 outline-none" role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && navigate(AppRoute.HOJE)} onClick={() => navigate(AppRoute.HOJE)}>
+            <Icons.Logo className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0 transition-transform group-hover:scale-105" variant="blue" />
             <div className="flex flex-col min-w-0">
-              <span className="text-premium-base sm:text-xl font-display font-black uppercase tracking-[0.1em] sm:tracking-[0.25em] text-primary leading-none truncate">Cathedra</span>
-              <span className="text-premium-tiny font-bold uppercase tracking-[0.1em] sm:tracking-[0.3em] text-secondary opacity-80 mt-0.5 sm:mt-1 truncate">{t('digital')}</span>
+              <span className="text-xl sm:text-2xl font-display font-medium uppercase tracking-[0.2em] text-primary leading-none truncate">Cathedra</span>
+              <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-secondary/60 mt-1 truncate">{t('digital')}</span>
             </div>
           </div>
           
@@ -84,8 +84,8 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                   variant="ghost"
                   size="sm"
                   onClick={() => navigate(item.route)}
-                  className={`px-3 py-1.5 h-auto text-premium-tiny font-black uppercase tracking-[0.2em] transition-all whitespace-nowrap relative group shadow-none ${
-                    pathname === item.route ? 'text-primary bg-primary/5' : 'text-muted-foreground hover:text-primary'
+                  className={`px-4 py-2 h-auto text-[10px] font-bold uppercase tracking-[0.3em] transition-all whitespace-nowrap relative group shadow-none border-none ${
+                    pathname === item.route ? 'text-primary bg-primary/[0.03]' : 'text-muted-foreground/60 hover:text-primary'
                   }`}
                   aria-label={item.label}
                   aria-current={pathname === item.route ? 'page' : undefined}

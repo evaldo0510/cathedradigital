@@ -59,14 +59,14 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t }) => {
           tabIndex={0}
           role="button"
           aria-label={`${door.label}: ${door.description}`}
-          className="p-8 md:p-10 rounded-[2rem] border border-border/40 bg-card flex flex-col items-center text-center gap-6 cursor-pointer group transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none shadow-premium hover:shadow-premium-hover hover:border-primary/20 hover:bg-primary/[0.01]"
+          className="p-10 md:p-14 rounded-[3rem] border border-border/20 bg-card flex flex-col items-center text-center gap-8 cursor-pointer group transition-all focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:outline-none shadow-premium hover:shadow-premium-hover hover:border-primary/10 hover:bg-primary/[0.01]"
         >
-          <div className="w-14 h-14 rounded-2xl bg-muted/20 flex items-center justify-center text-primary group-hover:bg-primary/10 group-hover:scale-110 transition-all duration-500">
-            <door.icon className="w-6 h-6" strokeWidth={1.5} />
+          <div className="w-16 h-16 rounded-3xl bg-muted/10 flex items-center justify-center text-primary group-hover:bg-primary/5 group-hover:scale-110 transition-all duration-700 border border-border/30">
+            <door.icon className="w-8 h-8" strokeWidth={1.25} />
           </div>
-          <div className="space-y-2">
-            <h3 className="text-premium-small font-black uppercase tracking-widest text-foreground">{door.label}</h3>
-            <p className="text-premium-tiny text-muted-foreground font-medium line-clamp-2 leading-relaxed opacity-70 group-hover:opacity-100 transition-opacity">{door.description}</p>
+          <div className="space-y-3">
+            <h3 className="text-xs font-bold uppercase tracking-[0.3em] text-foreground group-hover:text-primary transition-colors">{door.label}</h3>
+            <p className="text-premium-tiny text-muted-foreground font-medium line-clamp-2 leading-relaxed opacity-50 group-hover:opacity-100 transition-opacity px-2">{door.description}</p>
           </div>
         </motion.div>
       ))}

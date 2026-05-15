@@ -93,7 +93,7 @@ const SpiritualJournalPage = () => {
       <header className="text-center space-y-4">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#D4AF37]/10 border border-[#D4AF37]/20 rounded-full">
           <Icons.PenLine className="w-4 h-4 text-[#D4AF37]" />
-          <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-[#D4AF37]">Diarium Spirituale</span>
+          <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-secondary/60">Diarium Spirituale</span>
         </div>
         <h1 className="text-4xl md:text-6xl font-serif font-bold text-[#0F172A]">Diário Espiritual</h1>
         <p className="text-lg text-[#0F172A]/60 italic font-serif">"Examina, ó minha alma, o que fizeste hoje diante de Deus."</p>
@@ -115,7 +115,7 @@ const SpiritualJournalPage = () => {
                 }`}
               >
                 <m.icon className="w-6 h-6" />
-                <span className="text-premium-tiny font-black uppercase tracking-widest">{m.label}</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest">{m.label}</span>
               </button>
             ))}
           </div>
@@ -132,7 +132,7 @@ const SpiritualJournalPage = () => {
             <Button 
               onClick={saveEntry}
               disabled={isLoading || !content.trim()}
-              className="px-12 py-6 rounded-full text-premium-tiny font-black uppercase tracking-widest shadow-xl active:scale-95"
+              className="px-12 py-6 rounded-full text-[10px] font-bold uppercase tracking-[0.3em] shadow-premium active:scale-95"
             >
               {isLoading ? 'Salvando...' : 'Guardar Reflexão'}
             </Button>
@@ -144,7 +144,7 @@ const SpiritualJournalPage = () => {
       <section className="space-y-8">
         <div className="flex items-center gap-6">
           <div className="h-px flex-1 bg-[#0F172A]/10" />
-          <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-[#0F172A]/30">Reflexões Anteriores</h2>
+          <h2 className="text-[10px] font-bold uppercase tracking-[0.5em] text-primary/30">Reflexões Anteriores</h2>
           <div className="h-px flex-1 bg-[#0F172A]/10" />
         </div>
 

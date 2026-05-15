@@ -20,16 +20,16 @@ const ComponentPlayground = () => {
   const [activeTab, setActiveTab] = useState('inputs');
   
   return (
-    <div className="p-4 md:p-8 rounded-[2.5rem] bg-card border border-border/40 space-y-8 shadow-premium transition-colors">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div className="flex flex-wrap gap-2">
+    <div className="p-8 md:p-12 rounded-[3rem] bg-card border border-border/20 space-y-10 shadow-premium transition-colors">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
+        <div className="flex flex-wrap gap-3">
           {(['default', 'error', 'disabled', 'loading'] as const).map((s) => (
             <Button 
               key={s}
               variant={state === s ? 'primary' : 'outline'} 
               size="sm" 
               onClick={() => setState(s)}
-              className="rounded-full px-5 capitalize h-10 text-[10px]"
+              className="rounded-full px-6 capitalize h-11 text-[10px] font-bold tracking-widest border-border/30"
             >
               {s === 'default' ? 'Padrão' : s === 'error' ? 'Erro' : s === 'disabled' ? 'Desativado' : 'Carregando'}
             </Button>
@@ -37,10 +37,10 @@ const ComponentPlayground = () => {
         </div>
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full md:w-auto">
-          <TabsList className="bg-primary/5 rounded-full p-1 h-12">
-            <TabsTrigger value="inputs" className="rounded-full px-6 text-[10px] font-black uppercase tracking-widest">Inputs</TabsTrigger>
-            <TabsTrigger value="selects" className="rounded-full px-6 text-[10px] font-black uppercase tracking-widest">Selects</TabsTrigger>
-            <TabsTrigger value="others" className="rounded-full px-6 text-[10px] font-black uppercase tracking-widest">Outros</TabsTrigger>
+          <TabsList className="bg-primary/[0.03] rounded-full p-1.5 h-14 border border-border/10">
+            <TabsTrigger value="inputs" className="rounded-full px-8 text-[10px] font-bold uppercase tracking-[0.2em] data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Inputs</TabsTrigger>
+            <TabsTrigger value="selects" className="rounded-full px-8 text-[10px] font-bold uppercase tracking-[0.2em] data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Selects</TabsTrigger>
+            <TabsTrigger value="others" className="rounded-full px-8 text-[10px] font-bold uppercase tracking-[0.2em] data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Outros</TabsTrigger>
           </TabsList>
         </Tabs>
       </div>
@@ -188,41 +188,41 @@ const DesignSystemGuide = () => {
     <div className="min-h-screen bg-background py-16 md:py-24 px-6 transition-colors duration-300">
       <div className="max-w-5xl mx-auto space-y-24">
         {/* Header */}
-        <header className="space-y-6 text-center">
-          <div className="flex justify-end mb-8">
+        <header className="space-y-8 text-center py-10 md:py-20">
+          <div className="flex justify-end mb-12">
             <Button 
               onClick={toggleMode} 
               variant="outline" 
-              className="rounded-full gap-2 border-border/40"
+              className="rounded-full gap-3 border-border/20 px-6 h-12 hover:bg-primary/[0.03]"
             >
-              {isDarkMode ? <Icons.Sun className="w-4 h-4" /> : <Icons.Moon className="w-4 h-4" />}
-              {isDarkMode ? 'Modo Claro' : 'Modo Escuro'}
+              {isDarkMode ? <Icons.Sun className="w-5 h-5 text-secondary" strokeWidth={1.5} /> : <Icons.Moon className="w-5 h-5 text-primary" strokeWidth={1.5} />}
+              <span className="text-[10px] font-bold uppercase tracking-widest">{isDarkMode ? 'Modo Claro' : 'Modo Escuro'}</span>
             </Button>
           </div>
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/5 border border-border/40 rounded-full"
+            className="inline-flex items-center gap-3 px-6 py-2 bg-primary/[0.03] border border-border/20 rounded-full"
           >
-            <Icons.ShieldCheck className="w-4 h-4 text-secondary" />
-            <span className="text-premium-tiny font-black uppercase tracking-[0.3em] text-foreground/60">Design System v2.1</span>
+            <Icons.ShieldCheck className="w-4 h-4 text-secondary" strokeWidth={1.5} />
+            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-foreground/40">Design System v2.5</span>
           </motion.div>
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-5xl md:text-7xl font-serif text-foreground leading-tight"
+            className="text-6xl md:text-8xl font-display font-medium text-primary leading-[1.1] tracking-tight"
           >
-            Identidade Visual <br />
-            <span className="text-secondary italic">Cathedra Digital</span>
+            Identidade <br />
+            <span className="text-secondary/70 italic font-serif">Visual Premium</span>
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-xl text-foreground/60 max-w-2xl mx-auto font-serif italic"
+            className="text-2xl text-foreground/40 max-w-2xl mx-auto font-serif italic"
           >
-            Uma linguagem unificada para uma experiência premium, minimalista e contemplativa.
+            Uma linguagem unificada para uma experiência espiritual inteligente, contemplativa e sofisticada.
           </motion.p>
         </header>
 
