@@ -4,7 +4,7 @@ import { AppRoute } from '../../src/types';
 import fs from 'fs';
 import path from 'path';
 
-const RESULTS_DIR = path.join(process.cwd(), 'test-results', 'a11y-reports');
+const RESULTS_DIR = path.join(process.cwd(), 'public', 'a11y-reports');
 if (!fs.existsSync(RESULTS_DIR)) {
   fs.mkdirSync(RESULTS_DIR, { recursive: true });
 }
