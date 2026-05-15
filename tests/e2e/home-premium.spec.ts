@@ -39,15 +39,34 @@ const NAVIGATION_TARGETS = [
 ];
 
 test.describe('Home Page Premium Audit', () => {
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page, context }, testInfo) => {
+    // Start tracing for every test in this suite to link in the gallery
+    await context.tracing.start({ screenshots: true, snapshots: true, sources: true });
+    
     await page.goto('/');
     await page.evaluate(() => document.fonts.ready);
     
-    // Ensure reporting directory exists
     const reportDir = 'test-results/focus-proof';
     if (!fs.existsSync(reportDir)) {
       fs.mkdirSync(reportDir, { recursive: true });
     }
+  });
+
+  test.afterEach(async ({ context }, testInfo) => {
+    const theme = testInfo.project.name.includes('dark') ? 'dark' : 'light';
+    const authState = testInfo.title.includes('logged-in') ? 'logged-in' : 'logged-out';
+    
+    // We want a trace name that matches our gallery grouping
+    let testId = 'General';
+    if (testInfo.title.includes('for ')) {
+      testId = testInfo.title.split('for ')[1].replace(/[^a-z0-9]/gi, '');
+    } else if (testInfo.title.includes('Tab Order')) {
+      testId = testInfo.title.includes('Reverse') ? 'ShiftTabNavigation' : 'TabNavigation';
+    }
+    
+    const tracePath = path.join(process.cwd(), `test-results/focus-proof/${theme}__${authState}__${testId}__trace.zip`);
+    
+    await context.tracing.stop({ path: tracePath });
   });
 
   for (const isLoggedIn of [false, true]) {
@@ -88,19 +107,27 @@ test.describe('Home Page Premium Audit', () => {
 
             // 1. Initial Focus Capture
             await locator.focus();
+            await page.evaluate((sel) => {
+              const el = document.querySelector(sel) as HTMLElement;
+              if (el) el.style.outline = '4px solid #3b82f6';
+            }, target.selector);
+            
             await locator.screenshot({ 
               path: `test-results/focus-proof/${fileNameBase}__initial-focus.png` 
             });
+
+            await page.evaluate((sel) => {
+              const el = document.querySelector(sel) as HTMLElement;
+              if (el) el.style.outline = '';
+            }, target.selector);
 
             // 2. Navigation via Key
             await page.keyboard.press(keyToPress);
             await expect(page).toHaveURL(new RegExp(`${target.expectedPath}`));
             
             // 3. Capture focus on destination
-            // We wait for any element to be focused and ensure it's not the body
             await page.waitForFunction(() => document.activeElement && document.activeElement !== document.body);
             
-            // Use evaluate to get the actual element or a clear fallback
             const hasFocus = await page.evaluate(() => {
               const el = document.activeElement;
               return el && el !== document.body;
@@ -108,6 +135,12 @@ test.describe('Home Page Premium Audit', () => {
 
             if (hasFocus) {
               const destinationFocus = page.locator(':focus');
+              // Highlight the destination focus
+              await page.evaluate(() => {
+                const el = document.activeElement as HTMLElement;
+                if (el) el.style.outline = '4px solid #10b981';
+              });
+
               try {
                 await destinationFocus.scrollIntoViewIfNeeded();
                 await destinationFocus.screenshot({ 
@@ -116,6 +149,11 @@ test.describe('Home Page Premium Audit', () => {
               } catch (e) {
                 await page.screenshot({ path: `test-results/focus-proof/${fileNameBase}__destination-page-fallback.png` });
               }
+
+              await page.evaluate(() => {
+                const el = document.activeElement as HTMLElement;
+                if (el) el.style.outline = '';
+              });
             } else {
               await page.screenshot({ path: `test-results/focus-proof/${fileNameBase}__destination-none.png` });
             }
@@ -137,6 +175,100 @@ test.describe('Home Page Premium Audit', () => {
           });
         }
       }
+
+      test(`Keyboard Sequential Navigation (Tab Order)`, async ({ page }, testInfo) => {
+        const theme = testInfo.project.name.includes('dark') ? 'dark' : 'light';
+        const fileNameBase = `${theme}__${authState}__TabNavigation`;
+        
+        // Start from top
+        await page.keyboard.press('Home');
+        
+        // Tab through major sections
+        const focusHistory: string[] = [];
+        let lastId = '';
+        for (let i = 0; i < 20; i++) {
+          await page.keyboard.press('Tab');
+          const focusedInfo = await page.evaluate(() => {
+            const el = document.activeElement;
+            if (!el || el === document.body) return null;
+            return {
+              tag: el.tagName,
+              text: el.textContent?.substring(0, 30).trim(),
+              ariaLabel: el.getAttribute('aria-label'),
+              id: el.id,
+              className: el.className
+            };
+          });
+
+          if (focusedInfo) {
+            const currentId = focusedInfo.id || focusedInfo.text || focusedInfo.ariaLabel || i.toString();
+            // Focus Trap detection: if focus doesn't move for several tabs, it's a trap
+            if (currentId === lastId && i > 0) {
+              console.warn(`Potential Focus Trap detected at index ${i} on ${focusedInfo.tag}`);
+              break;
+            }
+            lastId = currentId;
+
+            const name = focusedInfo.ariaLabel || focusedInfo.text || focusedInfo.tag;
+            focusHistory.push(name);
+            
+            // Highlight the focused element for the screenshot
+            await page.evaluate(() => {
+              const el = document.activeElement as HTMLElement;
+              if (el) el.style.outline = '4px solid #3b82f6';
+            });
+
+            await page.locator(':focus').screenshot({ 
+              path: `test-results/focus-proof/${fileNameBase}__tab-${i}.png` 
+            });
+
+            // Clean up highlight
+            await page.evaluate(() => {
+              const el = document.activeElement as HTMLElement;
+              if (el) el.style.outline = '';
+            });
+          }
+        }
+        
+        expect(focusHistory.length).toBeGreaterThan(0);
+      });
+
+      test(`Keyboard Reverse Navigation (Shift+Tab Order)`, async ({ page }, testInfo) => {
+        const theme = testInfo.project.name.includes('dark') ? 'dark' : 'light';
+        const fileNameBase = `${theme}__${authState}__ShiftTabNavigation`;
+        
+        // Go to bottom first
+        await page.keyboard.press('End');
+        
+        // Shift+Tab back up
+        const focusHistory: string[] = [];
+        for (let i = 0; i < 10; i++) {
+          await page.keyboard.press('Shift+Tab');
+          const focusedInfo = await page.evaluate(() => {
+            const el = document.activeElement;
+            if (!el || el === document.body) return null;
+            return {
+              tag: el.tagName,
+              text: el.textContent?.substring(0, 30).trim()
+            };
+          });
+
+          if (focusedInfo) {
+            focusHistory.push(focusedInfo.tag);
+            
+            await page.evaluate(() => {
+              const el = document.activeElement as HTMLElement;
+              if (el) el.style.outline = '4px solid #ef4444';
+            });
+
+            await page.locator(':focus').screenshot({ 
+              path: `test-results/focus-proof/${fileNameBase}__shifttab-${i}.png` 
+            });
+          }
+        }
+        
+        expect(focusHistory.length).toBeGreaterThan(0);
+      });
     });
   }
 
