@@ -128,7 +128,6 @@ export const PROFILES: Record<ProfileId, ProfileResult> = {
     steps: [{ title: 'Serviço Fraterno', action: 'Praticar caridade concreta', time: '60 min', icon: Users }]
   },
 };
-};
 
 /* ── Questions ── */
 interface QuizOption {
