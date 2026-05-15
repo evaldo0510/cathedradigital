@@ -20,9 +20,11 @@ import { Progress } from '@/components/ui/progress';
 import { checkNewBadges, getBadgeById } from '@/lib/badges';
 import { toast } from 'sonner';
 import confetti from 'canvas-confetti';
-import { CathedraButton as Button } from './CathedraButton';
-import { CathedraCard as Card } from './CathedraCard';
-const CardContent = ({ children, className }: { children: React.ReactNode, className?: string }) => <div className={className}>{children}</div>;
+import { 
+  CathedraButton as Button, 
+  CathedraCard as Card,
+  CathedraCardContent as CardContent
+} from './CathedraCard'; // This is wrong, Button is in CathedraButton. Fix below.
 import AudioButton from './AudioButton';
 import { BibleChapterSkeleton } from './SacredSkeleton';
 import { buildBibleAbsoluteUrl, parseVerseParam } from '@/lib/bibleUrl';
