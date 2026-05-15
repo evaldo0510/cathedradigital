@@ -20,8 +20,8 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
   const navigate = useNavigate();
 
   return (
-    <div className="w-full space-y-24 md:space-y-40">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-12 lg:gap-24 items-start">
+    <div className="w-full space-y-24 md:space-y-40 max-w-[1280px] mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-24 items-start">
         {/* CONTINUE JORNADA */}
         <section className="space-y-8" aria-labelledby="section-jornada">
           <div className="flex items-center gap-6">
@@ -38,7 +38,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
           >
             <div className="space-y-6">
               <div className="w-12 h-12 rounded-premium-sm bg-white/5 border border-white/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-700 shadow-premium">
-                <Icons.Flame className="w-6 h-6" />
+                <Icons.Flame className="w-6 h-6" aria-hidden="true" />
               </div>
               <div>
                 <h3 className="text-xl md:text-2xl font-bold text-primary tracking-tight">
@@ -51,7 +51,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
                 </p>
               </div>
             </div>
-            <HomeButton variant="primary" onClick={() => onNavigate(AppRoute.JORNADAS)} className="w-full">
+            <HomeButton variant="primary" onClick={() => onNavigate(AppRoute.JORNADAS)} className="w-full" aria-label={user ? 'Continuar sua jornada' : 'Começar nova jornada'}>
               {user ? 'Continuar' : 'Começar'}
             </HomeButton>
           </HomeCard>
@@ -85,7 +85,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
           >
             <div className="space-y-6">
               <div className="w-12 h-12 rounded-premium-sm bg-white/5 border border-white/10 flex items-center justify-center text-secondary group-hover:rotate-12 transition-transform duration-700 shadow-premium">
-                <Icons.Catechism className="w-6 h-6" />
+                <Icons.Catechism className="w-6 h-6" aria-hidden="true" />
               </div>
               <div>
                 <h3 className="text-xl md:text-2xl font-bold text-primary tracking-tight">Catecismo</h3>
@@ -94,7 +94,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
                 </p>
               </div>
             </div>
-            <HomeButton variant="outline" className="w-full">
+            <HomeButton variant="outline" className="w-full" aria-label="Explorar o Catecismo">
               Explorar Doutrina
             </HomeButton>
           </HomeCard>
@@ -109,25 +109,25 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
             <div className="h-px flex-1 bg-border/20" />
           </div>
           <div className="grid grid-cols-1 gap-6">
-            <HomeCard padding="sm" className="space-y-4" onClick={() => onNavigate(AppRoute.JORNADAS)}>
+            <HomeCard padding="sm" className="space-y-4" onClick={() => onNavigate(AppRoute.TEMAS)}>
               <div className="flex items-center justify-between">
-                <h4 className="text-base font-bold text-primary">Fundamentos da Fé</h4>
-                <Icons.Star className="w-4 h-4 text-primary/40" />
+                <h4 className="text-base font-bold text-primary">Temas da Fé</h4>
+                <Icons.Star className="w-4 h-4 text-primary/40" aria-hidden="true" />
               </div>
-              <p className="text-xs text-primary/40 leading-relaxed">Para quem inicia sua jornada espiritual.</p>
-              <HomeButton variant="ghost" className="p-0 h-auto text-[10px] text-primary/40 hover:text-primary transition-all group" onClick={() => onNavigate(AppRoute.JORNADAS)}>
-                Explorar <Icons.ChevronRight className="ml-1 w-3 h-3 group-hover:translate-x-1 transition-transform" />
+              <p className="text-xs text-primary/40 leading-relaxed">Aprofunde-se em tópicos específicos da doutrina.</p>
+              <HomeButton variant="ghost" className="p-0 h-auto text-[10px] text-primary/40 hover:text-primary transition-all group" onClick={() => onNavigate(AppRoute.TEMAS)} aria-label="Explorar temas da fé">
+                Explorar <Icons.ChevronRight className="ml-1 w-3 h-3 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
               </HomeButton>
             </HomeCard>
             
             <HomeCard padding="sm" className="space-y-4" onClick={() => onNavigate(AppRoute.BIBLE)}>
               <div className="flex items-center justify-between">
                 <h4 className="text-base font-bold text-primary">Estudo Bíblico</h4>
-                <Icons.BookOpen className="w-4 h-4 text-secondary/40" />
+                <Icons.BookOpen className="w-4 h-4 text-secondary/40" aria-hidden="true" />
               </div>
               <p className="text-xs text-primary/40 leading-relaxed">Aprofunde seu conhecimento das Escrituras.</p>
-              <HomeButton variant="ghost" className="p-0 h-auto text-[10px] text-secondary/40 hover:text-secondary transition-all group" onClick={() => onNavigate(AppRoute.BIBLE)}>
-                Ver Planos <Icons.ChevronRight className="ml-1 w-3 h-3 group-hover:translate-x-1 transition-transform" />
+              <HomeButton variant="ghost" className="p-0 h-auto text-[10px] text-secondary/40 hover:text-secondary transition-all group" onClick={() => onNavigate(AppRoute.BIBLE)} aria-label="Ver planos de estudo bíblico">
+                Ver Planos <Icons.ChevronRight className="ml-1 w-3 h-3 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
               </HomeButton>
             </HomeCard>
           </div>

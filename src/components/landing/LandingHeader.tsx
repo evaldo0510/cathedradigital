@@ -35,10 +35,8 @@ const LandingHeader = () => {
   }, []);
 
   const navLinks = [
-    { name: "Funcionalidades", href: "#features" },
-    { name: "Como Funciona", href: "#how-it-works" },
-    { name: "Depoimentos", href: "#testimonials" },
-    { name: "Planos", href: "#pricing" },
+    { name: "Início", href: "#hero" },
+    { name: "Conteúdo", href: "#main-content" },
     { name: "Sobre", href: AppRoute.ABOUT },
   ];
 
