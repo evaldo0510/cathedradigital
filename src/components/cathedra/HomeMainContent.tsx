@@ -126,7 +126,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
                 <Icons.BookOpen className="w-4 h-4 text-primary/20" aria-hidden="true" />
               </div>
               <p className="text-sm text-primary/40 leading-relaxed">Aprofunde seu conhecimento das Escrituras através de planos guiados.</p>
-              <HomeButton variant="ghost" className="p-0 h-auto text-[10px] text-primary/30 hover:text-primary transition-all group tracking-[0.1em] uppercase font-bold" onClick={() => onNavigate(AppRoute.BIBLE)} aria-label="Ver planos de estudo bíblico">
+              <HomeButton variant="ghost" className="p-0 min-h-0 h-auto text-[10px] text-primary/30 hover:text-primary transition-all group tracking-[0.1em] uppercase font-bold" onClick={() => onNavigate(AppRoute.BIBLE)} aria-label="Ver planos de estudo bíblico">
                 Ver Planos <Icons.ChevronRight className="ml-1 w-3 h-3 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
               </HomeButton>
             </HomeCard>
