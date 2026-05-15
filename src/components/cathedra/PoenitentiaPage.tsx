@@ -167,7 +167,7 @@ const PoenitentiaPage: React.FC = () => {
             Ao entrar no confessionário, diga: "Abençoai-me, Padre, porque pequei. Minha última confissão foi há (tempo)."
           </p>
         </div>
-        <div className="bg-card border border-border rounded-[2.5rem] p-10 space-y-6 shadow-sm">
+        <div className="premium-card p-10 space-y-6">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
               <Icons.Heart className="w-6 h-6" />

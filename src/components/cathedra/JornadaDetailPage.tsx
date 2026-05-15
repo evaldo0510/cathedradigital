@@ -124,7 +124,7 @@ const JornadaDetailPage: React.FC = () => {
             <span className="capitalize">{journey.difficulty}</span>
           </div>
         </CardContent>
-      </Card>
+      </CathedraCard>
 
       {/* Description */}
       {journey.description && (

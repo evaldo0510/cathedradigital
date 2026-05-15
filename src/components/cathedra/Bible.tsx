@@ -660,7 +660,8 @@ const Bible: React.FC = () => {
             {/* Next Chapter Card */}
             {!isLoading && !bibleError && selectedChapter < selectedBook.chapters && (
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-                <Card className="premium-card-interactive">
+                <Card 
+                  className="premium-card-interactive"
                   onClick={() => navigateChapter(1)}>
                   <CardContent className="p-6 flex items-center justify-between">
                     <div>
