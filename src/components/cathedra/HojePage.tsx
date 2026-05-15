@@ -182,7 +182,7 @@ const HojePage: React.FC = () => {
                   className="flex flex-col md:flex-row items-center justify-between gap-12 group"
                 >
                   <div className="flex items-center gap-10 flex-col md:flex-row text-center md:text-left">
-                    <div className="w-24 h-24 rounded-premium-sm bg-primary/[0.02] border border-border/40 flex items-center justify-center text-secondary group-hover:scale-110 transition-transform duration-700">
+                    <div className="w-24 h-24 rounded-full bg-primary/[0.02] border border-border/40 flex items-center justify-center text-secondary group-hover:scale-110 transition-transform duration-700">
                       <Icons.Flame className="w-12 h-12" />
                     </div>
                     <div>
@@ -250,7 +250,7 @@ const HojePage: React.FC = () => {
                 onClick={() => navigate(AppRoute.CATECHISM)}
                 className="text-center space-y-8"
               >
-                <div className="w-20 h-20 rounded-premium-sm bg-primary/[0.02] border border-border/40 flex items-center justify-center text-secondary mx-auto group-hover:rotate-12 transition-transform duration-700">
+                <div className="w-20 h-20 rounded-full bg-primary/[0.02] border border-border/40 flex items-center justify-center text-secondary mx-auto group-hover:rotate-12 transition-transform duration-700">
                   <Icons.Catechism className="w-10 h-10" />
                 </div>
                 <div className="space-y-4">
