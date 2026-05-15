@@ -1,5 +1,12 @@
 import { test, expect } from '@playwright/test';
 import { injectAxe, checkA11y } from 'axe-playwright';
+import fs from 'fs';
+import path from 'path';
+
+const RESULTS_DIR = path.join(process.cwd(), 'public', 'a11y-reports', 'hero-visuals');
+if (!fs.existsSync(RESULTS_DIR)) {
+  fs.mkdirSync(RESULTS_DIR, { recursive: true });
+}
 
 const viewports = [
   { name: 'mobile', width: 375, height: 667 },
