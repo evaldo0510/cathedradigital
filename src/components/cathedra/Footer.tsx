@@ -297,12 +297,16 @@ const Footer: React.FC = React.memo(() => {
             </p>
             <p className="text-premium-small font-bold text-muted-foreground/80 dark:text-muted-foreground/90 flex items-center gap-1.5 tracking-widest">
               {lang === 'pt' ? 'Criado por' : 'Created by'}
-              <Button 
-                onClick={() => navigate(AppRoute.ADMIN)} 
-                className="cursor-pointer select-none text-primary hover:text-primary/80 transition-colors font-black"
-              >
-                Evaldo.os
-              </Button>
+              {canUserAccess(profile?.role, AppRoute.ADMIN) ? (
+                <Button 
+                  onClick={() => navigate(AppRoute.ADMIN)} 
+                  className="cursor-pointer select-none text-primary hover:text-primary/80 transition-colors font-black"
+                >
+                  Evaldo.os
+                </Button>
+              ) : (
+                <span className="font-black text-primary">Evaldo.os</span>
+              )}
             </p>
           </div>
           <div className="flex items-center gap-8">
