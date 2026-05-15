@@ -148,7 +148,7 @@ const LoadingFallback = () => (
       
       <div className="grid grid-cols-2 gap-3 pt-6">
         {[1, 2].map(i => (
-          <div key={i} className="rounded-2xl bg-muted/20 border border-border/20 p-4 space-y-3">
+          <div key={i} className="rounded-premium-sm bg-muted/20 border border-border/20 p-4 space-y-3">
             <SkeletonBar w="w-12 mx-auto" h="h-12" className="rounded-full" />
             <SkeletonBar w="w-2/3 mx-auto" h="h-3" />
           </div>
