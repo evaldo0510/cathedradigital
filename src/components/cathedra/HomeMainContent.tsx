@@ -98,7 +98,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
           padding="xl"
           className="text-center space-y-12 group"
         >
-          <div className="w-24 h-24 rounded-3xl bg-secondary/[0.02] border border-secondary/20 flex items-center justify-center text-secondary mx-auto group-hover:rotate-12 transition-transform duration-700">
+          <div className="w-24 h-24 rounded-premium-sm bg-secondary/[0.02] border border-secondary/20 flex items-center justify-center text-secondary mx-auto group-hover:rotate-12 transition-transform duration-700">
             <Icons.Catechism className="w-12 h-12" />
           </div>
           <div className="space-y-6">
