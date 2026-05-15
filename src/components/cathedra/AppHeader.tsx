@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { Button } from './Button';
 import GoogleSignInButton from '../auth/GoogleSignInButton';
 import { CathedraIcon, IconSizePreset } from './CathedraIcon';
+import { canUserAccess } from '@/utils/auth-utils';
 
 import { useNotifications } from '@/hooks/useNotifications';
 import { useLang } from '@/hooks/useLang';
