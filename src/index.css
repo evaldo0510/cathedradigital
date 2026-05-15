@@ -210,7 +210,7 @@
   }
 
   p { 
-    @apply max-w-[65ch] text-muted-foreground;
+    @apply max-w-[65ch] text-primary/40;
     font-size: clamp(0.95rem, 1.1vw, 1.05rem);
     line-height: 1.65;
   }
