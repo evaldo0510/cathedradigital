@@ -120,7 +120,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
               </HomeButton>
             </HomeCard>
             
-            <HomeCard padding="md" className="space-y-8 min-h-[190px] flex flex-col justify-center" onClick={() => onNavigate(AppRoute.BIBLE)}>
+            <HomeCard padding="md" className="space-y-8 min-h-[190px] flex flex-col justify-center transition-all duration-700" onClick={() => onNavigate(AppRoute.BIBLE)}>
               <div className="flex items-center justify-between">
                 <h4 className="heading-item">Estudo Bíblico</h4>
                 <Icons.BookOpen className="w-5 h-5 text-primary/20" aria-hidden="true" />
