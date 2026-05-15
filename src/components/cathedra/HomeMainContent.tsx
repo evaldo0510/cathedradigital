@@ -34,7 +34,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
           <HomeCard
             onClick={() => onNavigate(AppRoute.JORNADAS)}
             padding="md"
-            className="flex flex-col justify-between gap-12 group min-h-[400px]"
+            className="flex flex-col justify-between gap-12 group min-h-[400px] transition-all duration-700"
           >
             <div className="space-y-10">
               <div className="w-14 h-14 rounded-premium-sm bg-white/[0.03] border border-white/[0.05] flex items-center justify-center text-primary/80 group-hover:bg-white/[0.05] transition-all duration-700 shadow-premium-subtle">
