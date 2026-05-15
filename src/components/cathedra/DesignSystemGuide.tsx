@@ -16,6 +16,57 @@ const DesignSystemGuide = () => {
           </p>
         </header>
 
+        {/* Typography Section */}
+        <section className=\"space-y-12\">
+          <div className=\"flex items-center gap-6\">
+            <div className=\"h-px flex-1 bg-border/40\" />
+            <h2 className=\"text-premium-tiny font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap\">
+              Typography Scale
+            </h2>
+            <div className=\"h-px flex-1 bg-border/40\" />
+          </div>
+
+          <div className=\"space-y-12 bg-card border border-border/40 rounded-[2.5rem] p-8 md:p-12\">
+            <div className=\"grid gap-12\">
+              <div className=\"space-y-4\">
+                <p className=\"text-premium-tiny font-black uppercase tracking-widest text-muted-foreground\">Display Titles (H1, H2, H3)</p>
+                <div className=\"space-y-6\">
+                  <div>
+                    <span className=\"text-premium-tiny text-secondary font-black uppercase tracking-widest\">Heading 1 (H1)</span>
+                    <h1 className=\"mt-1\">O Verbo se fez carne</h1>
+                  </div>
+                  <div>
+                    <span className=\"text-premium-tiny text-secondary font-black uppercase tracking-widest\">Heading 2 (H2)</span>
+                    <h2>A Beleza da Tradição</h2>
+                  </div>
+                  <div>
+                    <span className=\"text-premium-tiny text-secondary font-black uppercase tracking-widest\">Heading 3 (H3)</span>
+                    <h3>Oração e Contemplação</h3>
+                  </div>
+                </div>
+              </div>
+
+              <div className=\"space-y-4\">
+                <p className=\"text-premium-tiny font-black uppercase tracking-widest text-muted-foreground\">Premium Small Scale</p>
+                <div className=\"grid grid-cols-1 md:grid-cols-3 gap-8\">
+                  <div className=\"p-6 rounded-2xl bg-muted/20 border border-border/40\">
+                    <span className=\"text-premium-tiny text-secondary font-black uppercase tracking-widest\">Premium Base</span>
+                    <p className=\"text-premium-base text-foreground mt-2\">Standard text size for primary content and large labels.</p>
+                  </div>
+                  <div className=\"p-6 rounded-2xl bg-muted/20 border border-border/40\">
+                    <span className=\"text-premium-tiny text-secondary font-black uppercase tracking-widest\">Premium Small</span>
+                    <p className=\"text-premium-small text-muted-foreground mt-2\">Secondary text for metadata, descriptions and small buttons.</p>
+                  </div>
+                  <div className=\"p-6 rounded-2xl bg-muted/20 border border-border/40\">
+                    <span className=\"text-premium-tiny text-secondary font-black uppercase tracking-widest\">Premium Tiny</span>
+                    <p className=\"text-premium-tiny text-muted-foreground mt-2\">Sub-labels, badges, and micro-typography (9-11px scale).</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Button Documentation Section */}
         <section className="space-y-12">
           <div className="flex items-center gap-6">
