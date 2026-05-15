@@ -298,7 +298,28 @@ const DesignSystemGuide = () => {
             </h2>
             <div className="h-px flex-1 bg-border/40" />
           </div>
-...
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="bg-muted/30 rounded-[2.5rem] p-8 border border-border/40 space-y-6">
+              <div className="space-y-3">
+                <h4 className="font-serif text-2xl">Continue sua Jornada</h4>
+                <p className="text-sm text-muted-foreground">Continue de onde parou e aprofunde seu conhecimento na fé católica com trilhas personalizadas.</p>
+              </div>
+              <Button variant="primary" className="w-full">Continuar Caminhada</Button>
+            </div>
+            
+            <div className="bg-card border border-border/40 rounded-[2.5rem] p-8 flex flex-col items-center text-center space-y-6">
+              <div className="p-4 rounded-full bg-secondary/10 text-secondary">
+                <Icons.Bell className="w-8 h-8" />
+              </div>
+              <div className="space-y-2">
+                <h4 className="font-serif text-2xl">Notificações</h4>
+                <p className="text-sm text-muted-foreground max-w-xs mx-auto">Ative para receber avisos sobre novas leituras e eventos da Igreja.</p>
+              </div>
+              <div className="flex gap-4 w-full">
+                <Button variant="outline" className="flex-1">Agora não</Button>
+                <Button className="flex-1">Ativar</Button>
+              </div>
             </div>
           </div>
         </section>
