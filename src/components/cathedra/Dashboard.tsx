@@ -210,33 +210,35 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         </div>
       </FadeUp>
 
-      <FadeUp delay={0.1}>
-        <RitualDoDia />
+      <FadeUp delay={0.15}>
+        <div className="max-w-4xl mx-auto w-full">
+          <RitualDoDia />
+        </div>
       </FadeUp>
 
       {nextUp && (
-        <FadeUp delay={0.12}>
+        <FadeUp delay={0.18}>
           <HomeCard 
             onClick={() => goTo(nextUp.route)}
-            className="p-5 cursor-pointer flex items-center justify-between group"
+            className="p-8 cursor-pointer flex items-center justify-between group rounded-[2.5rem]"
             role="button"
             tabIndex={0}
             aria-label={`Continuar ${nextUp.label}`}
             onKeyDown={(e) => e.key === 'Enter' && goTo(nextUp.route)}
           >
-            <div className="flex items-center gap-5">
-              <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                {nextUp.type === 'bible' ? <Icons.Bible className="w-6 h-6" /> : 
-                 nextUp.type === 'catechism' ? <Icons.Cross className="w-6 h-6" /> : 
-                 <Icons.Flame className="w-6 h-6" />}
+            <div className="flex items-center gap-6">
+              <div className="w-16 h-16 rounded-[2rem] bg-primary/[0.03] flex items-center justify-center text-primary group-hover:scale-110 transition-transform border border-border/20">
+                {nextUp.type === 'bible' ? <Icons.Bible className="w-8 h-8" strokeWidth={1.25} /> : 
+                 nextUp.type === 'catechism' ? <Icons.Cross className="w-8 h-8" strokeWidth={1.25} /> : 
+                 <Icons.Flame className="w-8 h-8" strokeWidth={1.25} />}
               </div>
-              <div className="text-left">
-                <p className="text-premium-tiny font-black uppercase tracking-widest text-primary mb-1">{nextUp.subtitle}</p>
-                <h3 className="text-lg font-bold text-foreground leading-tight group-hover:text-primary transition-colors">{nextUp.label}</h3>
+              <div className="text-left space-y-1">
+                <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-secondary/60">{nextUp.subtitle}</p>
+                <h3 className="text-xl font-bold text-foreground leading-tight group-hover:text-primary transition-colors">{nextUp.label}</h3>
               </div>
             </div>
-            <div className="w-10 h-10 rounded-2xl border border-primary/20 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
-              <Icons.ChevronRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
+            <div className="w-12 h-12 rounded-full border border-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-soft">
+              <Icons.ChevronRight className="w-6 h-6 group-hover:translate-x-0.5 transition-transform" />
             </div>
           </HomeCard>
         </FadeUp>
