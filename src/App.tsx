@@ -110,6 +110,7 @@ const SecurityAuditPage = lazy(() => import('./components/cathedra/SecurityAudit
 const SellerDashboard = lazy(() => import('./components/cathedra/SellerDashboard'));
 const VisualAuditPage = lazy(() => import('./components/cathedra/VisualAuditPage'));
 const VisualRegressionDashboard = lazy(() => import('./components/cathedra/VisualRegressionDashboard'));
+const AuditLogsPage = lazy(() => import('./components/cathedra/AuditLogsPage'));
 
 
 const CatechismDebug = lazy(() => import('./components/cathedra/CatechismDebug'));
