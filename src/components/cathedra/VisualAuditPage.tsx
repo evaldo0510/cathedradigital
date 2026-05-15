@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CathedraCard   } from './Card';
+import { Card   } from './Card';
 import { CathedraButton   } from './Button';
 import { 
   ShieldAlert, CheckCircle2, XCircle, Clock, 

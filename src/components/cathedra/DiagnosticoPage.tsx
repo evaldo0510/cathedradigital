@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Compass, ArrowRight, ArrowLeft, Sparkles, Heart, BookOpen, Church, Hand, Sun } from 'lucide-react';
 import { Button   } from '@/components/ui/button';
-import { CathedraCard     } from '@/components/ui/card';
+import { Card     } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';

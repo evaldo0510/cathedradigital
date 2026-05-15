@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button   } from '@/components/ui/button';
-import { CathedraCard    , CardContent  , CardDescription  , CardFooter  , CardHeader  , CardTitle   } from '@/components/ui/card';
+import { Card    , CardContent  , CardDescription  , CardFooter  , CardHeader  , CardTitle   } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Icons } from '@/constants';
 import { toast } from 'sonner';

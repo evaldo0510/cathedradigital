@@ -4,7 +4,7 @@ import AudioContentPlayer from './AudioContentPlayer';
 import SaintOfTheDayCard from './SaintOfTheDayCard';
 import { BookOpen, Sparkles } from 'lucide-react';
 import { DAILY_VERSES, DAILY_REFLECTIONS } from '@/data/dailyRitual';
-import { CathedraCard   } from './Card';
+import { Card   } from './Card';
 
 const RitualDoDia: React.FC = () => {
   const dayOfYear = useMemo(() => {

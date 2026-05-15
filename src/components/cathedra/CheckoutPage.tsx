@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Icons } from '../../constants';
 import { Button   } from '@/components/ui/button';
-import { CathedraCard    , CardContent  , CardDescription  , CardFooter  , CardHeader  , CardTitle   } from '@/components/ui/card';
+import { Card    , CardContent  , CardDescription  , CardFooter  , CardHeader  , CardTitle   } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';

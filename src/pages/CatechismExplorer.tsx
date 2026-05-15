@@ -5,7 +5,7 @@ import { CATECHISM_LOCAL_DATA } from '@/data/catechism';
 import { Icons } from '@/constants';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { CathedraCard   } from '@/components/cathedra/Card';
+import { Card   } from '@/components/cathedra/Card';
 import { CathedraButton   } from '@/components/cathedra/Button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useNavigate, useSearchParams } from 'react-router-dom';
