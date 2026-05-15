@@ -299,7 +299,7 @@
 
   /* Premium card style - Spiritual Minimalist - Unified Tokens */
   .premium-card {
-    @apply bg-card border border-border/20 rounded-premium shadow-premium transition-all duration-1000 relative overflow-hidden;
+    @apply bg-card border border-border/10 rounded-premium shadow-premium transition-all duration-1000 relative overflow-hidden;
   }
   
   .premium-card-interactive {
