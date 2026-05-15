@@ -61,11 +61,10 @@ test.describe('Home Page Premium Audit', () => {
     expect(cls).toBeLessThan(0.1);
   });
 
-  // Parameterized tests for Keyboard and Click navigation
   for (const isLoggedIn of [false, true]) {
-    const stateLabel = isLoggedIn ? 'Logged-in' : 'Logged-out';
+    const authState = isLoggedIn ? 'logged-in' : 'logged-out';
 
-    test.describe(`${stateLabel} Context`, () => {
+    test.describe(`${authState}`, () => {
       test.beforeEach(async ({ page }) => {
         if (isLoggedIn) {
           await page.addInitScript(() => {
@@ -88,7 +87,7 @@ test.describe('Home Page Premium Audit', () => {
       });
 
       for (const target of NAVIGATION_TARGETS) {
-        test(`Navigate to ${target.name} via Click`, async ({ page }) => {
+        test(`Navigation to ${target.name} via Click`, async ({ page }) => {
           const locator = page.locator(target.selector).first();
           await expect(locator).toBeVisible();
           await locator.click();
@@ -96,23 +95,29 @@ test.describe('Home Page Premium Audit', () => {
           await expect(page.locator('h1, h2')).toContainText(target.expectedHeading);
         });
 
-        test(`Navigate to ${target.name} via Keyboard (Enter/Space) and verify Focus`, async ({ page }) => {
+        test(`Keyboard Navigation to ${target.name} (Enter/Space) and Focus Ring`, async ({ page }, testInfo) => {
+          const theme = testInfo.project.name.includes('dark') ? 'dark' : 'light';
           const locator = page.locator(target.selector).first();
           await expect(locator).toBeVisible();
 
-          // verify focus visible after Tab navigation simulation
-          await page.keyboard.press('Tab'); // Initial focus
-          await locator.focus(); // Targeted focus for the test
+          // 1. Move focus to element
+          await locator.focus();
           
+          // 2. Capture focus-visible/ring screenshot for accessibility confirmation
+          // The name includes theme and authState for clear categorization
+          await locator.screenshot({ 
+            path: `test-results/focus-proof/${theme}-${authState}-${target.name}-focus.png` 
+          });
+
           const isFocusVisible = await locator.evaluate(el => {
             const style = window.getComputedStyle(el);
             return style.outlineStyle !== 'none' || 
                    style.boxShadow !== 'none' || 
                    (style.borderWidth !== '0px' && style.borderColor !== 'transparent');
           });
-          expect(isFocusVisible, `Focus should be visible on ${target.name}`).toBe(true);
+          expect(isFocusVisible, `Focus ring should be visible on ${target.name} (${theme})`).toBe(true);
 
-          // Test Enter
+          // 3. Test Enter
           await page.keyboard.press('Enter');
           await expect(page).toHaveURL(new RegExp(`${target.expectedPath}`));
           await expect(page.locator('h1, h2')).toContainText(target.expectedHeading);
@@ -120,7 +125,7 @@ test.describe('Home Page Premium Audit', () => {
           await page.goBack();
           await page.waitForLoadState('networkidle');
 
-          // Test Space
+          // 4. Test Space
           await locator.focus();
           await page.keyboard.press(' ');
           await expect(page).toHaveURL(new RegExp(`${target.expectedPath}`));
