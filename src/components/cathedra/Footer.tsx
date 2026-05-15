@@ -190,9 +190,11 @@ const Footer: React.FC = React.memo(() => {
                 { icon: <Icons.Youtube className="w-4 h-4" />, url: 'https://youtube.com' },
                 { icon: <Icons.Whatsapp className="w-4 h-4" />, url: 'https://wa.me' },
               ].map((social, i) => (
-                <a key={i} href={social.url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground dark:text-foreground/70 hover:text-primary transition-all p-2 rounded-full bg-foreground/5 dark:bg-foreground/10 border border-foreground/10 dark:border-foreground/20 hover:border-primary/30">
-                  {social.icon}
-                </a>
+                <Button key={i} variant="ghost" size="icon" asChild className="text-muted-foreground dark:text-foreground/70 hover:text-primary transition-all rounded-full bg-foreground/5 dark:bg-foreground/10 border border-foreground/10 dark:border-foreground/20 hover:border-primary/30 w-10 h-10 p-0 flex items-center justify-center">
+                  <a href={social.url} target="_blank" rel="noopener noreferrer">
+                    {social.icon}
+                  </a>
+                </Button>
               ))}
             </div>
           </div>
@@ -204,10 +206,12 @@ const Footer: React.FC = React.memo(() => {
             <ul className="flex flex-col gap-4">
               {vaticanLinks.map(link => (
                 <li key={link.title}>
-                  <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors flex items-center gap-2 group">
-                    <span className="w-1 h-1 rounded-full bg-primary/30 group-hover:bg-primary transition-colors" />
-                    {link.title}
-                  </a>
+                  <Button variant="link" asChild className="text-sm text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors flex items-center justify-start p-0 h-auto gap-2 group decoration-transparent">
+                    <a href={link.url} target="_blank" rel="noopener noreferrer">
+                      <span className="w-1 h-1 rounded-full bg-primary/30 group-hover:bg-primary transition-colors" />
+                      {link.title}
+                    </a>
+                  </Button>
                 </li>
               ))}
             </ul>
@@ -220,10 +224,12 @@ const Footer: React.FC = React.memo(() => {
             <ul className="flex flex-col gap-4">
               {cnbbLinks.map(link => (
                 <li key={link.title}>
-                  <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors flex items-center gap-2 group">
-                    <span className="w-1 h-1 rounded-full bg-primary/30 group-hover:bg-primary transition-colors" />
-                    {link.title}
-                  </a>
+                  <Button variant="link" asChild className="text-sm text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors flex items-center justify-start p-0 h-auto gap-2 group decoration-transparent">
+                    <a href={link.url} target="_blank" rel="noopener noreferrer">
+                      <span className="w-1 h-1 rounded-full bg-primary/30 group-hover:bg-primary transition-colors" />
+                      {link.title}
+                    </a>
+                  </Button>
                 </li>
               ))}
             </ul>
@@ -243,9 +249,11 @@ const Footer: React.FC = React.memo(() => {
                 ))}
               </select>
               {dioceseUrl && (
-                <a href={dioceseUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 mt-3 text-xs text-primary hover:underline">
-                  {lang === 'pt' ? 'Acessar portal' : 'Access portal'} <Icons.ExternalLink className="w-3 h-3" />
-                </a>
+                <Button variant="link" size="sm" asChild className="inline-flex items-center gap-2 mt-3 p-0 h-auto text-xs text-primary hover:underline">
+                  <a href={dioceseUrl} target="_blank" rel="noopener noreferrer">
+                    {lang === 'pt' ? 'Acessar portal' : 'Access portal'} <Icons.ExternalLink className="w-3 h-3" />
+                  </a>
+                </Button>
               )}
             </div>
             <div>

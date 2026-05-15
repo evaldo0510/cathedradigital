@@ -1,5 +1,14 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Icons } from '@/constants';
 
 const DesignSystemGuide = () => {
@@ -164,6 +173,116 @@ const DesignSystemGuide = () => {
                     <p>• <strong>aria-disabled:</strong> Automático quando isLoading ou disabled</p>
                     <p>• <strong>Focus:</strong> Ring de alta visibilidade no teclado</p>
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Color Palette Section */}
+        <section className="space-y-12">
+          <div className="flex items-center gap-6">
+            <div className="h-px flex-1 bg-border/40" />
+            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
+              Color Palette & Contrast
+            </h2>
+            <div className="h-px flex-1 bg-border/40" />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="space-y-4">
+              <div className="h-24 rounded-3xl bg-primary border border-border/40" />
+              <div>
+                <p className="text-sm font-bold">Primary (Blue)</p>
+                <p className="text-premium-tiny text-muted-foreground">hsl(var(--primary))</p>
+                <div className="mt-2 inline-flex items-center gap-2 px-2 py-1 rounded-full bg-green-500/10 text-green-600 text-[10px] font-black uppercase tracking-widest">
+                  WCAG AAA Pass
+                </div>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div className="h-24 rounded-3xl bg-secondary border border-border/40" />
+              <div>
+                <p className="text-sm font-bold">Secondary (Gold)</p>
+                <p className="text-premium-tiny text-muted-foreground">hsl(var(--secondary))</p>
+                <div className="mt-2 inline-flex items-center gap-2 px-2 py-1 rounded-full bg-green-500/10 text-green-600 text-[10px] font-black uppercase tracking-widest">
+                  WCAG AA Pass
+                </div>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div className="h-24 rounded-3xl bg-background border border-border/40" />
+              <div>
+                <p className="text-sm font-bold">Background</p>
+                <p className="text-premium-tiny text-muted-foreground">hsl(var(--background))</p>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div className="h-24 rounded-3xl bg-card border border-border/40" />
+              <div>
+                <p className="text-sm font-bold">Card</p>
+                <p className="text-premium-tiny text-muted-foreground">hsl(var(--card))</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Inputs & Selects Section */}
+        <section className="space-y-12">
+          <div className="flex items-center gap-6">
+            <div className="h-px flex-1 bg-border/40" />
+            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
+              Inputs & Selects
+            </h2>
+            <div className="h-px flex-1 bg-border/40" />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div className="space-y-8">
+              <h3 className="text-xl font-bold text-primary">Text Inputs</h3>
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="default-input">Default Input</Label>
+                  <Input id="default-input" placeholder="Digite seu nome..." />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="disabled-input">Disabled Input</Label>
+                  <Input id="disabled-input" disabled placeholder="Campo desabilitado" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="error-input" className="text-destructive">Error State</Label>
+                  <Input id="error-input" className="border-destructive focus-visible:ring-destructive" defaultValue="Valor inválido" />
+                  <p className="text-[10px] font-black uppercase text-destructive tracking-widest">O e-mail informado é inválido.</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-8">
+              <h3 className="text-xl font-bold text-primary">Dropdown Selects</h3>
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <Label>Default Select</Label>
+                  <Select>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione uma opção" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="1">Opção 1</SelectItem>
+                      <SelectItem value="2">Opção 2</SelectItem>
+                      <SelectItem value="3">Opção 3</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Disabled Select</Label>
+                  <Select disabled>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Desabilitado" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="1">Opção 1</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
             </div>
