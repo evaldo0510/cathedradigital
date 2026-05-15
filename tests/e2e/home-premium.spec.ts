@@ -107,19 +107,27 @@ test.describe('Home Page Premium Audit', () => {
 
             // 1. Initial Focus Capture
             await locator.focus();
+            await page.evaluate((sel) => {
+              const el = document.querySelector(sel) as HTMLElement;
+              if (el) el.style.outline = '4px solid #3b82f6';
+            }, target.selector);
+            
             await locator.screenshot({ 
               path: `test-results/focus-proof/${fileNameBase}__initial-focus.png` 
             });
+
+            await page.evaluate((sel) => {
+              const el = document.querySelector(sel) as HTMLElement;
+              if (el) el.style.outline = '';
+            }, target.selector);
 
             // 2. Navigation via Key
             await page.keyboard.press(keyToPress);
             await expect(page).toHaveURL(new RegExp(`${target.expectedPath}`));
             
             // 3. Capture focus on destination
-            // We wait for any element to be focused and ensure it's not the body
             await page.waitForFunction(() => document.activeElement && document.activeElement !== document.body);
             
-            // Use evaluate to get the actual element or a clear fallback
             const hasFocus = await page.evaluate(() => {
               const el = document.activeElement;
               return el && el !== document.body;
@@ -127,6 +135,12 @@ test.describe('Home Page Premium Audit', () => {
 
             if (hasFocus) {
               const destinationFocus = page.locator(':focus');
+              // Highlight the destination focus
+              await page.evaluate(() => {
+                const el = document.activeElement as HTMLElement;
+                if (el) el.style.outline = '4px solid #10b981';
+              });
+
               try {
                 await destinationFocus.scrollIntoViewIfNeeded();
                 await destinationFocus.screenshot({ 
@@ -135,6 +149,11 @@ test.describe('Home Page Premium Audit', () => {
               } catch (e) {
                 await page.screenshot({ path: `test-results/focus-proof/${fileNameBase}__destination-page-fallback.png` });
               }
+
+              await page.evaluate(() => {
+                const el = document.activeElement as HTMLElement;
+                if (el) el.style.outline = '';
+              });
             } else {
               await page.screenshot({ path: `test-results/focus-proof/${fileNameBase}__destination-none.png` });
             }
