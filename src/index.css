@@ -115,9 +115,15 @@
 
   /* Refine all Lucide icons for a more professional, premium appearance */
   svg.lucide {
-    stroke-width: 1.5; /* Thinner for premium minimalist feel */
+    stroke-width: 1.25; /* Even thinner for premium minimalist feel */
     stroke-linecap: round;
     stroke-linejoin: round;
+    opacity: 0.6;
+    transition: all 0.5s ease;
+  }
+  
+  *:hover > svg.lucide {
+    opacity: 1;
   }
 
   /* Professional hover state for icons within interactive elements */
