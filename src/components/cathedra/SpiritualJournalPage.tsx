@@ -91,18 +91,18 @@ const SpiritualJournalPage = () => {
       <SEOHead title="Diário Espiritual - Reflexão e Oração" description="Guarde suas reflexões diárias e acompanhe seu crescimento espiritual." path="/diario" />
       
       <header className="text-center space-y-4">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#D4AF37]/10 border border-[#D4AF37]/20 rounded-full">
-          <Icons.PenLine className="w-4 h-4 text-[#D4AF37]" />
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-secondary/10 border border-secondary/20 rounded-full">
+          <Icons.PenLine className="w-4 h-4 text-secondary" />
           <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-secondary/60">Diarium Spirituale</span>
         </div>
-        <h1 className="text-4xl md:text-6xl font-serif font-bold text-[#0F172A]">Diário Espiritual</h1>
-        <p className="text-lg text-[#0F172A]/60 italic font-serif">"Examina, ó minha alma, o que fizeste hoje diante de Deus."</p>
+        <h1 className="text-4xl md:text-6xl font-serif font-bold text-primary">Diário Espiritual</h1>
+        <p className="text-lg text-primary/60 italic font-serif">"Examina, ó minha alma, o que fizeste hoje diante de Deus."</p>
       </header>
 
       {/* Entry Form */}
-      <section className="bg-white border border-[#0F172A]/5 rounded-[3rem] p-8 md:p-12 shadow-sm space-y-10">
+      <section className="bg-card border border-border/40 rounded-[3rem] p-8 md:p-12 shadow-premium space-y-10">
         <div className="space-y-6">
-          <h3 className="text-xl font-serif font-bold text-[#0F172A] text-center">Como está sua alma hoje?</h3>
+          <h3 className="text-xl font-serif font-bold text-primary text-center">Como está sua alma hoje?</h3>
           <div className="flex flex-wrap justify-center gap-4">
             {MOODS.map((m) => (
               <button
@@ -110,8 +110,8 @@ const SpiritualJournalPage = () => {
                 onClick={() => setMood(m.id)}
                 className={`flex flex-col items-center gap-2 p-4 rounded-3xl border transition-all ${
                   mood === m.id 
-                    ? 'bg-primary border-primary text-white shadow-lg scale-110' 
-                    : 'bg-[#F8F5EE] border-[#0F172A]/5 text-[#0F172A]/40 hover:border-primary/20'
+                    ? 'bg-primary border-primary text-primary-foreground shadow-lg scale-110' 
+                    : 'bg-muted/30 border-border/10 text-foreground/40 hover:border-primary/20'
                 }`}
               >
                 <m.icon className="w-6 h-6" />
@@ -126,7 +126,7 @@ const SpiritualJournalPage = () => {
             value={content}
             onChange={(e) => setContent(e.target.value)}
             placeholder="Escreva sua reflexão, gratidão ou pedido de perdão..."
-            className="min-h-[200px] rounded-[2rem] border-[#0F172A]/10 p-8 font-serif text-lg leading-relaxed focus-visible:ring-primary/20 bg-[#F8F5EE]/30"
+            className="min-h-[200px] rounded-[2rem] border-border/40 p-8 font-serif text-lg leading-relaxed focus-visible:ring-primary/20 bg-muted/20"
           />
           <div className="flex justify-center">
             <Button 
@@ -143,15 +143,15 @@ const SpiritualJournalPage = () => {
       {/* History */}
       <section className="space-y-8">
         <div className="flex items-center gap-6">
-          <div className="h-px flex-1 bg-[#0F172A]/10" />
+          <div className="h-px flex-1 bg-border/40" />
           <h2 className="text-[10px] font-bold uppercase tracking-[0.5em] text-primary/30">Reflexões Anteriores</h2>
-          <div className="h-px flex-1 bg-[#0F172A]/10" />
+          <div className="h-px flex-1 bg-border/40" />
         </div>
 
         {isFetching ? (
           <div className="space-y-4">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-32 bg-white/50 animate-pulse rounded-[2rem] border border-[#0F172A]/5" />
+              <div key={i} className="h-32 bg-muted/20 animate-pulse rounded-[2rem] border border-border/20" />
             ))}
           </div>
         ) : entries.length > 0 ? (
@@ -161,20 +161,20 @@ const SpiritualJournalPage = () => {
                 key={entry.id}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white p-8 rounded-[2.5rem] border border-[#0F172A]/5 shadow-sm space-y-4 relative overflow-hidden"
+                className="bg-card p-8 rounded-[2.5rem] border border-border/40 shadow-premium space-y-4 relative overflow-hidden"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="p-2 rounded-xl bg-primary/5 text-primary">
                       {MOODS.find(m => m.id === entry.mood)?.icon({ className: "w-4 h-4" }) || <Icons.Sun className="w-4 h-4" />}
                     </div>
-                    <span className="text-sm font-serif font-bold text-[#0F172A]">
+                    <span className="text-sm font-serif font-bold text-primary">
                       {format(new Date(entry.entry_date + 'T12:00:00'), "d 'de' MMMM, yyyy", { locale: ptBR })}
                     </span>
                   </div>
-                  <Icons.Quote className="w-6 h-6 text-[#0F172A]/5" />
+                  <Icons.Quote className="w-6 h-6 text-primary/5" />
                 </div>
-                <p className="text-lg text-[#0F172A]/70 font-serif italic leading-relaxed whitespace-pre-wrap">
+                <p className="text-lg text-primary/70 font-serif italic leading-relaxed whitespace-pre-wrap">
                   "{entry.content}"
                 </p>
               </motion.div>

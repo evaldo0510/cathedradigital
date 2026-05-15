@@ -165,12 +165,17 @@ const getInitialLanguage = (): Language => {
   return storedLang ? (storedLang as Language) : 'pt';
 };
 
-const getInitialTheme = () => readStoredValue('cathedra_dark') === 'true';
+const getInitialTheme = () => {
+  const storedTheme = readStoredValue('cathedra_theme');
+  if (storedTheme) return storedTheme === 'dark';
+  return window.matchMedia('(prefers-color-scheme: dark)').matches;
+};
 
 const AppLayout: React.FC = () => {
   const [lang, setLangState] = useState<Language>(getInitialLanguage);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDark, setIsDark] = useState(getInitialTheme);
+  const [isHighContrast, setIsHighContrast] = useState(() => readStoredValue('cathedra_high_contrast') === 'true');
   
   const { user, profile, signOut, isPremium, loading } = useAuth();
   const navigate = useNavigate();
@@ -242,10 +247,28 @@ const AppLayout: React.FC = () => {
 
 
   useEffect(() => {
-    if (isDark) document.documentElement.classList.add('dark');
-    else document.documentElement.classList.remove('dark');
-    localStorage.setItem('cathedra_dark', isDark ? 'true' : 'false');
-  }, [isDark]);
+    const root = document.documentElement;
+    if (isDark) root.classList.add('dark');
+    else root.classList.remove('dark');
+    
+    if (isHighContrast) root.classList.add('high-contrast');
+    else root.classList.remove('high-contrast');
+    
+    localStorage.setItem('cathedra_theme', isDark ? 'dark' : 'light');
+    localStorage.setItem('cathedra_high_contrast', isHighContrast ? 'true' : 'false');
+  }, [isDark, isHighContrast]);
+
+  // Listen for system theme changes
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = (e: MediaQueryListEvent) => {
+      if (!readStoredValue('cathedra_theme')) {
+        setIsDark(e.matches);
+      }
+    };
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
   
   useEffect(() => {
     const handleLangChange = (e: CustomEvent) => {
@@ -488,6 +511,8 @@ const AppLayout: React.FC = () => {
                 user={appUser} 
                 isDark={isDark}
                 onToggleDark={() => setIsDark(!isDark)}
+                isHighContrast={isHighContrast}
+                onToggleHighContrast={() => setIsHighContrast(!isHighContrast)}
                 isSpeaking={isSpeaking}
                 onToggleSpeak={toggleSpeak}
                 onSignOut={signOut}
@@ -520,6 +545,8 @@ const AppLayout: React.FC = () => {
                 user={appUser} 
                 isDark={isDark}
                 onToggleDark={() => setIsDark(!isDark)}
+                isHighContrast={isHighContrast}
+                onToggleHighContrast={() => setIsHighContrast(!isHighContrast)}
                 isSpeaking={isSpeaking}
                 onToggleSpeak={toggleSpeak}
                 onSignOut={signOut}
@@ -537,6 +564,8 @@ const AppLayout: React.FC = () => {
                   user={appUser}
                   isDark={isDark}
                   onToggleDark={() => setIsDark(!isDark)}
+                  isHighContrast={isHighContrast}
+                  onToggleHighContrast={() => setIsHighContrast(!isHighContrast)}
                   lang={lang}
                   onChangeLang={(l) => window.dispatchEvent(new CustomEvent('change-lang', { detail: l }))}
                   isSpeaking={isSpeaking}

@@ -12,6 +12,8 @@ interface AppHeaderProps {
   user: any;
   isDark: boolean;
   onToggleDark: () => void;
+  isHighContrast?: boolean;
+  onToggleHighContrast?: () => void;
   lang: Language;
   onChangeLang: (lang: Language) => void;
   isSpeaking?: boolean;
@@ -21,7 +23,7 @@ interface AppHeaderProps {
 }
 
 const AppHeader: React.FC<AppHeaderProps> = React.memo(({
-  user, isDark, onToggleDark, lang, onChangeLang, isSpeaking, onToggleSpeak, onSignOut, onOpenSidebar
+  user, isDark, onToggleDark, isHighContrast, onToggleHighContrast, lang, onChangeLang, isSpeaking, onToggleSpeak, onSignOut, onOpenSidebar
 }) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -119,6 +121,15 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             className="w-10 h-10 sm:w-12 sm:h-12 flex lg:hidden"
             aria-label="Alternar tema">
             {isDark ? <Icons.Sun className="w-5 h-5" /> : <Icons.Moon className="w-5 h-5" />}
+          </Button>
+
+          <Button
+            variant={isHighContrast ? "default" : "outline"}
+            size="icon"
+            onClick={onToggleHighContrast}
+            className={`w-10 h-10 sm:w-12 sm:h-12 hidden sm:flex ${isHighContrast ? 'ring-2 ring-primary ring-offset-1' : ''}`}
+            aria-label="Alternar alto contraste">
+            <Icons.ShieldCheck className="w-5 h-5" />
           </Button>
 
           <Button

@@ -124,7 +124,7 @@ const HojePage: React.FC = () => {
   if (loadingStats || loadingJourney) return <DashboardSkeleton />;
 
   return (
-    <div className="flex flex-col items-center w-full min-h-screen bg-[#F8F5EE] pt-6 md:pt-16 pb-32">
+    <div className="flex flex-col items-center w-full min-h-screen bg-background pt-6 md:pt-16 pb-32">
       <SEOHead title="Hoje - Sua Jornada Espiritual" description="Acompanhe sua caminhada de fé diária." path="/hoje" />
       {import.meta.env.DEV && <DevDataInspector data={{ officialSaint, allSaintsToday, activeJourney, profile: profile?._sensitive }} />}
       
@@ -136,25 +136,25 @@ const HojePage: React.FC = () => {
           className="text-center space-y-8"
         >
           <div className="space-y-4">
-            <p className="text-premium-tiny font-black uppercase tracking-[0.4em] text-[#0F172A]/40">
+            <p className="text-premium-tiny font-black uppercase tracking-[0.4em] text-foreground/40">
               {greeting}, {profile?.name?.split(' ')[0] || 'fiel'}
             </p>
-            <h1 className="text-4xl md:text-5xl font-serif text-[#0F172A] leading-tight">
+            <h1 className="text-4xl md:text-5xl font-serif text-primary leading-tight">
               Sua jornada espiritual <br />
-              <span className="text-[#D4AF37] italic">guiada pela Sabedoria.</span>
+              <span className="text-secondary italic">guiada pela Sabedoria.</span>
             </h1>
           </div>
           
           <div className="flex items-center justify-center gap-4 flex-wrap">
              {(profile?.streak || 0) > 0 && (
-              <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-[#0F172A]/5 border border-[#0F172A]/10">
-                <Icons.Zap className="w-4 h-4 text-[#0F172A]" />
-                <span className="text-premium-tiny font-bold text-[#0F172A] uppercase tracking-wider">{profile?.streak} {profile?.streak === 1 ? 'Dia' : 'Dias'}</span>
+              <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-primary/5 border border-primary/10">
+                <Icons.Zap className="w-4 h-4 text-primary" />
+                <span className="text-premium-tiny font-bold text-primary uppercase tracking-wider">{profile?.streak} {profile?.streak === 1 ? 'Dia' : 'Dias'}</span>
               </div>
             )}
-            <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-[#0F172A]/5 border border-[#0F172A]/10">
-              <Icons.Star className="w-4 h-4 text-[#D4AF37]" />
-              <span className="text-premium-tiny font-bold text-[#0F172A] uppercase tracking-wider">{profile?.xp || 0} XP</span>
+            <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-primary/5 border border-primary/10">
+              <Icons.Star className="w-4 h-4 text-secondary" />
+              <span className="text-premium-tiny font-bold text-primary uppercase tracking-wider">{profile?.xp || 0} XP</span>
             </div>
           </div>
         </motion.div>
@@ -162,42 +162,42 @@ const HojePage: React.FC = () => {
         {/* CONTINUE JORNADA */}
         {nextUp && (
           <section className="space-y-6">
-            <h2 className="text-premium-tiny font-black uppercase tracking-[0.3em] text-[#0F172A]/30 flex items-center gap-4">
-              <div className="h-px w-8 bg-[#0F172A]/10" /> Continue sua Jornada
+            <h2 className="text-premium-tiny font-black uppercase tracking-[0.3em] text-foreground/30 flex items-center gap-4">
+              <div className="h-px w-8 bg-border" /> Continue sua Jornada
             </h2>
             
             <motion.div 
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.99 }}
               onClick={() => navigate(nextUp.route)}
-              className="p-8 rounded-[2rem] border border-[#0F172A]/5 bg-white cursor-pointer hover:border-[#D4AF37]/30 transition-all flex items-center justify-between shadow-sm"
+              className="p-8 rounded-[2rem] border border-border/40 bg-card cursor-pointer hover:shadow-premium-hover hover:border-secondary/30 transition-all flex items-center justify-between shadow-premium"
             >
               <div className="flex items-center gap-6">
-                <div className="w-14 h-14 rounded-2xl bg-[#0F172A]/5 flex items-center justify-center text-[#D4AF37]">
+                <div className="w-14 h-14 rounded-2xl bg-primary/5 flex items-center justify-center text-secondary">
                   <Icons.Flame className="w-7 h-7" />
                 </div>
                 <div>
-                  <p className="text-premium-tiny font-bold uppercase tracking-widest text-[#0F172A]/40 mb-1.5">{nextUp.subtitle}</p>
-                  <h3 className="text-xl font-bold text-[#0F172A]">{nextUp.label}</h3>
+                  <p className="text-premium-tiny font-bold uppercase tracking-widest text-foreground/40 mb-1.5">{nextUp.subtitle}</p>
+                  <h3 className="text-xl font-bold text-primary">{nextUp.label}</h3>
                   {activeJourney && (
                     <div className="mt-4 flex items-center gap-4 w-48">
-                      <div className="flex-1 h-1 bg-[#0F172A]/5 rounded-2xl overflow-hidden">
-                        <div className="h-full bg-[#D4AF37] transition-all duration-1000" style={{ width: `${journeyProgress.total > 0 ? (journeyProgress.completed / journeyProgress.total) * 100 : 0}%` }} />
+                      <div className="flex-1 h-1 bg-primary/5 rounded-2xl overflow-hidden">
+                        <div className="h-full bg-secondary transition-all duration-1000" style={{ width: `${journeyProgress.total > 0 ? (journeyProgress.completed / journeyProgress.total) * 100 : 0}%` }} />
                       </div>
-                      <span className="text-premium-tiny font-bold text-[#0F172A]/60 tabular-nums">{journeyProgress.completed}/{journeyProgress.total}</span>
+                      <span className="text-premium-tiny font-bold text-foreground/60 tabular-nums">{journeyProgress.completed}/{journeyProgress.total}</span>
                     </div>
                   )}
                 </div>
               </div>
-              <Icons.ChevronRight className="w-6 h-6 text-[#0F172A]/20" />
+              <Icons.ChevronRight className="w-6 h-6 text-foreground/20" />
             </motion.div>
           </section>
         )}
 
         {/* RITUAL DO DIA */}
         <section className="space-y-6">
-          <h2 className="text-premium-tiny font-black uppercase tracking-[0.3em] text-[#0F172A]/30 flex items-center gap-4">
-            <div className="h-px w-8 bg-[#0F172A]/10" /> Ritual do Dia
+          <h2 className="text-premium-tiny font-black uppercase tracking-[0.3em] text-foreground/30 flex items-center gap-4">
+            <div className="h-px w-8 bg-border" /> Ritual do Dia
           </h2>
           <RitualDoDia />
         </section>
