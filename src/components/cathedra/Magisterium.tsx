@@ -18,12 +18,13 @@ import { Button   } from '@/components/cathedra/Button';
 import AudioButton from './AudioButton';
 import { useNavigate } from 'react-router-dom';
 import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
+import { CathedraIcon, IconSizePreset } from './CathedraIcon';
 
 const SPIRITUAL_GUIDANCE = [
   {
     id: 'ansiedade',
     theme: 'Ansiedade',
-    icon: <Icons.Activity className="w-4 h-4" />,
+    icon: Icons.Activity,
     question: 'O que a Igreja diz sobre a ansiedade?',
     magisteriumAnswer: 'A confiança em Deus é o caminho da paz interior. "Não andeis ansiosos" não é um comando vazio — é um convite a entregar o peso ao único que pode carregá-lo.',
     sourceDoc: 'Gaudete et Exsultate §112',
@@ -40,7 +41,7 @@ const SPIRITUAL_GUIDANCE = [
   {
     id: 'medo',
     theme: 'Medo',
-    icon: <Icons.Sun className="w-4 h-4" />,
+    icon: Icons.Sun,
     question: 'O que a Igreja diz sobre o medo?',
     magisteriumAnswer: 'O medo é humano, mas não deve governar. A presença de Deus é mais forte que qualquer escuridão. "Não temas, porque eu te resgatei."',
     sourceDoc: 'Spe Salvi §32',
@@ -57,7 +58,7 @@ const SPIRITUAL_GUIDANCE = [
   {
     id: 'proposito',
     theme: 'Propósito',
-    icon: <Icons.Compass className="w-4 h-4" />,
+    icon: Icons.Compass,
     question: 'Qual é o sentido da minha vida?',
     magisteriumAnswer: 'Cada pessoa tem uma vocação única. A santidade não é privilégio de poucos, mas chamado universal — é encontrar Deus no concreto da vida.',
     sourceDoc: 'Gaudete et Exsultate §14',
@@ -74,7 +75,7 @@ const SPIRITUAL_GUIDANCE = [
   {
     id: 'sofrimento',
     theme: 'Sofrimento',
-    icon: <Icons.Cross className="w-4 h-4" />,
+    icon: Icons.Cross,
     question: 'Por que existe sofrimento?',
     magisteriumAnswer: 'O sofrimento, quando unido à cruz de Cristo, tem poder redentor. Não é castigo, mas mistério de amor e transformação.',
     sourceDoc: 'Salvifici Doloris §19',
@@ -91,7 +92,7 @@ const SPIRITUAL_GUIDANCE = [
   {
     id: 'relacionamentos',
     theme: 'Relacionamentos',
-    icon: <Icons.Heart className="w-4 h-4" />,
+    icon: Icons.Heart,
     question: 'Como amar de verdade?',
     magisteriumAnswer: 'O amor autêntico é dom de si mesmo. Não é posse, é entrega. A família é escola de amor e comunhão.',
     sourceDoc: 'Amoris Laetitia §89',
