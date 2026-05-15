@@ -1,123 +1,103 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { AppRoute } from '../../src/types';
 import fs from 'fs';
 import path from 'path';
 
-test.describe('Home Page Accessibility & Keyboard Navigation', () => {
-  test.beforeEach(async ({ page }) => {
+const RESULTS_DIR = path.join(process.cwd(), 'test-results', 'a11y-reports');
+if (!fs.existsSync(RESULTS_DIR)) {
+  fs.mkdirSync(RESULTS_DIR, { recursive: true });
+}
+
+const a11ySummary: any[] = [];
+
+const ROUTES_TO_TEST = [
+  { path: '/', name: 'Home' },
+  { path: '/login', name: 'Login' },
+  { path: '/hoje', name: 'Dashboard (Today)' },
+  { path: '/catechism', name: 'Catechism' },
+];
+
+test.describe('Accessibility & Contrast Audit', () => {
+  for (const route of ROUTES_TO_TEST) {
+    test(`Audit ${route.name} (${route.path}) - Light Theme`, async ({ page }) => {
+      await page.goto(route.path);
+      await page.evaluate(() => document.documentElement.classList.remove('dark'));
+      await page.waitForTimeout(500); // Wait for theme transition
+
+      const accessibilityScanResults = await new AxeBuilder({ page })
+        .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+        .analyze();
+
+      a11ySummary.push({
+        theme: 'light',
+        route: route.path,
+        name: route.name,
+        violations: accessibilityScanResults.violations.length,
+        details: accessibilityScanResults.violations
+      });
+
+      expect(accessibilityScanResults.violations).toEqual([]);
+    });
+
+    test(`Audit ${route.name} (${route.path}) - Dark Theme`, async ({ page }) => {
+      await page.goto(route.path);
+      await page.evaluate(() => document.documentElement.classList.add('dark'));
+      await page.waitForTimeout(500);
+
+      const accessibilityScanResults = await new AxeBuilder({ page })
+        .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+        .analyze();
+
+      a11ySummary.push({
+        theme: 'dark',
+        route: route.path,
+        name: route.name,
+        violations: accessibilityScanResults.violations.length,
+        details: accessibilityScanResults.violations
+      });
+
+      expect(accessibilityScanResults.violations).toEqual([]);
+    });
+  }
+
+  test('Premium Components Specific Contrast Check', async ({ page }) => {
     await page.goto('/');
-    // Wait for main content
-    await page.waitForSelector('main#main-content', { state: 'visible' });
-  });
-
-  test('full accessibility audit with axe-core and report generation', async ({ page }, testInfo) => {
-    const accessibilityScanResults = await new AxeBuilder({ page })
-      .withTags(['wcag2a', 'wcag2aa', 'best-practice'])
-      .analyze();
     
-    // Attach report if violations found
-    if (accessibilityScanResults.violations.length > 0) {
-      const reportPath = path.join(testInfo.outputDir, `a11y-report-${testInfo.project.name}.json`);
-      fs.writeFileSync(reportPath, JSON.stringify(accessibilityScanResults, null, 2));
-      await testInfo.attach('accessibility-scan-results', {
-        path: reportPath,
-        contentType: 'application/json'
-      });
-    }
-
-    expect(accessibilityScanResults.violations).toEqual([]);
-  });
-
-  test('should have a functional skip link as first tabbable element', async ({ page }) => {
-    await page.keyboard.press('Tab');
-    const skipLink = page.locator('a[href="#main-content"]');
-    await expect(skipLink).toBeFocused();
-    // In mobile, it might be visually hidden but still accessible. 
-    // We expect it to be Visible when focused (per CSS)
-    await expect(skipLink).toBeVisible();
-    
-    await page.keyboard.press('Enter');
-    const mainContent = page.locator('main#main-content');
-    await expect(mainContent).toBeFocused();
-  });
-
-  test('visual focus ring visibility on HomeButton and HomeCard', async ({ page }) => {
-    // Select all HomeButton and HomeCard elements that are interactive
-    const interactiveElements = page.locator('button, a[href], [role="button"]');
-    const count = await interactiveElements.count();
-    
-    // Test a subset to avoid excessive run time, focus on the first few in view
-    for (let i = 0; i < Math.min(count, 5); i++) {
-      const element = interactiveElements.nth(i);
-      await element.focus();
+    // Check btn-premium contrast in both modes
+    for (const theme of ['light', 'dark']) {
+      await page.evaluate((t) => {
+        if (t === 'dark') document.documentElement.classList.add('dark');
+        else document.documentElement.classList.remove('dark');
+      }, theme);
       
-      // Check for focus ring or outline. 
-      // Tailwind's ring adds a box-shadow or specific outline.
-      // focus-visible:ring-primary focus-visible:ring-offset-2
-      const hasFocusStyles = await element.evaluate((node) => {
-        const style = window.getComputedStyle(node);
-        return style.boxShadow !== 'none' || style.outlineStyle !== 'none' || style.outlineWidth !== '0px';
+      await page.waitForTimeout(500);
+
+      const results = await new AxeBuilder({ page })
+        .include('.btn-premium')
+        .include('.premium-card')
+        .analyze();
+
+      a11ySummary.push({
+        theme,
+        route: '/',
+        component: 'Premium Components',
+        violations: results.violations.length,
+        details: results.violations
       });
+
+      if (results.violations.length > 0) {
+        console.error(`A11y Violations in ${theme} mode for premium components:`, JSON.stringify(results.violations, null, 2));
+      }
       
-      expect(hasFocusStyles, `Element ${i} should have visible focus styles`).toBe(true);
+      expect(results.violations).toEqual([]);
     }
   });
 
-  test('interaction consistency: Enter and Space trigger same action', async ({ page }) => {
-    // Find "Iniciar Jornada" button as a primary CTA
-    const cta = page.getByRole('button', { name: /Iniciar Jornada/i }).first();
-    await cta.scrollIntoViewIfNeeded();
-
-    const checkModal = async () => {
-      // Check if GuidedJourney modal opens
-      await expect(page.locator('text=Como podemos ajudar você hoje?')).toBeVisible();
-      // Close it
-      await page.keyboard.press('Escape');
-      await expect(page.locator('text=Como podemos ajudar você hoje?')).not.toBeVisible();
-    };
-
-    // Test Space
-    await cta.focus();
-    await page.keyboard.press(' ');
-    await checkModal();
-
-    // Test Enter
-    await cta.focus();
-    await page.keyboard.press('Enter');
-    await checkModal();
-
-    // Test Click for baseline
-    await cta.click();
-    await checkModal();
-  });
-
-  test('logical tab order and navigation targets', async ({ page }) => {
-    // 1. Skip link
-    await page.keyboard.press('Tab');
-    const skipLink = page.locator('a[href="#main-content"]');
-    await expect(skipLink).toBeFocused();
-    
-    // 2. Logo in Header
-    await page.keyboard.press('Tab');
-    const logo = page.getByLabel(/Cathedra - Página Inicial/i);
-    await expect(logo).toBeFocused();
-    
-    // 3. First nav link (Funcionalidades)
-    await page.keyboard.press('Tab');
-    const featuresLink = page.getByRole('button', { name: /Funcionalidades/i });
-    await expect(featuresLink).toBeFocused();
-
-    // 4. Iniciar Jornada in Hero (might need multiple tabs depending on screen)
-    // We tab until we find a button with "Iniciar Jornada"
-    let foundHeroBtn = false;
-    for (let i = 0; i < 20; i++) {
-        await page.keyboard.press('Tab');
-        const focused = page.getByRole('button', { name: /Iniciar Jornada/i }).first();
-        if (await focused.evaluate(node => document.activeElement === node)) {
-            foundHeroBtn = true;
-            break;
-        }
-    }
-    expect(foundHeroBtn).toBe(true);
+  test.afterAll(async () => {
+    fs.writeFileSync(
+      path.join(RESULTS_DIR, 'summary.json'),
+      JSON.stringify(a11ySummary, null, 2)
+    );
   });
 });

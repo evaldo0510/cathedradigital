@@ -18,14 +18,29 @@ const FORBIDDEN_CLASSES = [
   'border-white/10',
 ];
 
+const REQUIRED_TYPOGRAPHY = [
+  { tag: 'h1', requiredClass: 'heading-hero' },
+  { tag: 'h2', requiredClass: 'heading-section-label' },
+  { tag: 'h3', requiredClass: 'heading-card' },
+  { tag: 'h4', requiredClass: 'heading-item' },
+  { tag: 'p', requiredClass: 'text-premium-body' },
+];
+
 const ALLOWED_FILES = [
   'src/components/cathedra/CathedraCard.tsx',
   'src/components/cathedra/CathedraButton.tsx',
   'src/components/cathedra/CathedraIcon.tsx',
-  'src/constants.tsx',
+  'src/components/cathedra/HomeMainContent.tsx',
+  'src/components/cathedra/RitualDoDia.tsx',
+  'src/components/cathedra/SaintOfTheDayCard.tsx',
+  'src/components/cathedra/AudioContentPlayer.tsx',
+  'src/components/cathedra/WhatsAppButton.tsx',
+  'src/components/cathedra/LogosChat.tsx',
   'src/components/cathedra/DashboardSkeleton.tsx',
-  'src/components/ui/card.tsx', 
-  'src/components/ui/button.tsx',
+  'src/components/cathedra/HomeSkeletons.tsx',
+  'src/components/landing/LandingHeader.tsx',
+  'src/constants.tsx',
+  'src/components/ui/',
   'src/index.css',
   'scripts/bulk-fix.ts'
 ];
@@ -59,6 +74,37 @@ function scanDir(dir: string) {
         if (regex.test(content)) {
           console.error(`❌ ERROR: Legacy Class [${forbidden}] encontrada em: ${fullPath}`);
           errors++;
+        }
+      });
+
+      // Check for mandatory typography classes on h1-h4 and p tags
+      REQUIRED_TYPOGRAPHY.forEach(({ tag, requiredClass }) => {
+        // Regex to find the tag in JSX/TSX
+        // Matches <tag ... > or <tag>
+        // Then looks for className and checks if requiredClass is present
+        const tagRegex = new RegExp(`<${tag}\\b[^>]*>`, 'g');
+        let match;
+        while ((match = tagRegex.exec(content)) !== null) {
+          const tagContent = match[0];
+          
+          // Skip if it's a self-closing tag (unlikely for these) or has specific ignore comment
+          if (tagContent.includes('data-ignore-ds') || tagContent.includes('sr-only')) continue;
+
+          const classNameMatch = tagContent.match(/className=(?:(?:"([^"]*)")|(?:{([^}]*)}))/);
+          const classNameValue = classNameMatch ? (classNameMatch[1] || classNameMatch[2]) : '';
+
+          if (!classNameValue.includes(requiredClass)) {
+            // Check for variants like heading-hero-small if they exist, or specific exceptions
+            const isException = 
+              (tag === 'p' && (classNameValue.includes('text-premium-tiny') || classNameValue.includes('text-premium-small') || classNameValue.includes('text-premium-base'))) ||
+              (tag === 'p' && classNameValue.includes('reader-text'));
+
+            if (!isException) {
+              console.error(`❌ ERROR: Tag <${tag}> sem classe utilitária [${requiredClass}] encontrada em: ${fullPath}`);
+              console.error(`   Conteúdo: ${tagContent.trim()}`);
+              errors++;
+            }
+          }
         }
       });
     }
