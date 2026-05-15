@@ -299,16 +299,16 @@
 
   /* Premium card style - Spiritual Minimalist - Unified Tokens */
   .premium-card {
-    @apply bg-card border border-border/40 rounded-premium shadow-premium transition-all duration-500 relative overflow-hidden;
+    @apply bg-card border border-border/40 rounded-premium shadow-premium transition-all duration-700 relative overflow-hidden;
   }
   
   .premium-card-interactive {
-    @apply premium-card cursor-pointer hover:shadow-premium-hover hover:border-primary/20 hover:-translate-y-1.5 active:scale-[0.985] active:shadow-premium-active active:translate-y-0;
+    @apply premium-card cursor-pointer hover:shadow-premium-hover hover:border-primary/20 hover:-translate-y-1 active:scale-[0.985] active:shadow-premium-active active:translate-y-0;
   }
 
   /* Specific Card Sizes for Desktop */
   .desktop-card {
-    @apply premium-card p-10 sm:p-14 lg:p-16;
+    @apply premium-card p-8 sm:p-12 lg:p-14;
   }
 
   /* Standard card shadow and radius */
