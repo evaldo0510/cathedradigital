@@ -132,7 +132,7 @@ const SpiritualJournalPage = () => {
             <Button 
               onClick={saveEntry}
               disabled={isLoading || !content.trim()}
-              className="px-12 py-6 rounded-full text-premium-tiny font-black uppercase tracking-widest shadow-xl active:scale-95"
+              className="px-12 py-6 rounded-full text-[10px] font-bold uppercase tracking-[0.3em] shadow-premium active:scale-95"
             >
               {isLoading ? 'Salvando...' : 'Guardar Reflexão'}
             </Button>
