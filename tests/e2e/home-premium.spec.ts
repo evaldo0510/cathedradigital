@@ -42,6 +42,12 @@ test.describe('Home Page Premium Audit', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
     await page.evaluate(() => document.fonts.ready);
+    
+    // Ensure reporting directory exists
+    const reportDir = 'test-results/focus-proof';
+    if (!fs.existsSync(reportDir)) {
+      fs.mkdirSync(reportDir, { recursive: true });
+    }
   });
 
   for (const isLoggedIn of [false, true]) {
