@@ -1,4 +1,3 @@
-import { Button   } from '@/components/cathedra/Button';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../constants';
@@ -69,13 +68,13 @@ export const BibleModal: React.FC<QuickModalProps> = ({ isOpen, onClose }) => {
         </div>
       )}
       <div className="mt-6 pt-4 border-t border-border">
-        <Button 
+        <button 
           onClick={() => { navigate(`${AppRoute.BIBLE}?book=${book}&ch=${chapter}`); onClose(); }}
-          className="w-full py-3 bg-primary text-primary-foreground rounded-full text-premium-tiny font-black uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-2"
+          className="w-full py-3 bg-primary text-primary-foreground rounded-full text-[10px] font-black uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-2"
         >
           <Icons.Book className="w-3.5 h-3.5" />
           Ir para a Bíblia Completa
-        </Button>
+        </button>
       </div>
     </ModalShell>
   );
@@ -104,20 +103,20 @@ export const CatechismModal: React.FC<QuickModalProps> = ({ isOpen, onClose }) =
           aria-label="Número do parágrafo do Catecismo"
         />
         <div className="flex gap-1">
-          <Button 
+          <button 
             onClick={() => setParagraph(Math.max(1, paragraph - 1))} 
             className="px-2 py-1 rounded-full border border-border text-xs focus-visible:ring-2 focus-visible:ring-primary outline-none hover:bg-muted"
             aria-label="Parágrafo anterior"
           >
             ←
-          </Button>
-          <Button 
+          </button>
+          <button 
             onClick={() => setParagraph(Math.min(2865, paragraph + 1))} 
             className="px-2 py-1 rounded-full border border-border text-xs focus-visible:ring-2 focus-visible:ring-primary outline-none hover:bg-muted"
             aria-label="Próximo parágrafo"
           >
             →
-          </Button>
+          </button>
         </div>
 
       </div>
@@ -129,13 +128,13 @@ export const CatechismModal: React.FC<QuickModalProps> = ({ isOpen, onClose }) =
         </div>
       )}
       <div className="mt-6 pt-4 border-t border-border">
-        <Button 
+        <button 
           onClick={() => { navigate(`${AppRoute.CATECHISM}?p=${paragraph}`); onClose(); }}
-          className="w-full py-3 bg-primary text-primary-foreground rounded-full text-premium-tiny font-black uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-2"
+          className="w-full py-3 bg-primary text-primary-foreground rounded-full text-[10px] font-black uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-2"
         >
           <Icons.Cross className="w-3.5 h-3.5" />
           Ir para o Catecismo Completo
-        </Button>
+        </button>
       </div>
     </ModalShell>
   );
@@ -174,23 +173,23 @@ export const DocumentsModal: React.FC<QuickModalProps> = ({ isOpen, onClose }) =
       </div>
       <div className="max-h-[50vh] overflow-y-auto space-y-1">
         {filtered.map(d => (
-          <div key={d.title} className="flex items-center justify-between p-3 rounded-premium-sm hover:bg-muted transition-colors">
+          <div key={d.title} className="flex items-center justify-between p-3 rounded-2xl hover:bg-muted transition-colors">
             <div>
               <p className="text-sm font-semibold text-foreground">{d.title}</p>
-              <p className="text-premium-tiny text-muted-foreground">{d.author} • {d.year}</p>
+              <p className="text-[10px] text-muted-foreground">{d.author} • {d.year}</p>
             </div>
-            <span className="text-premium-tiny text-primary font-bold">→ Magistério</span>
+            <span className="text-[10px] text-primary font-bold">→ Magistério</span>
           </div>
         ))}
       </div>
       <div className="mt-6 pt-4 border-t border-border">
-        <Button 
+        <button 
           onClick={() => { navigate(AppRoute.MAGISTERIUM); onClose(); }}
-          className="w-full py-3 bg-primary text-primary-foreground rounded-full text-premium-tiny font-black uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-2"
+          className="w-full py-3 bg-primary text-primary-foreground rounded-full text-[10px] font-black uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-2"
         >
           <Icons.Globe className="w-3.5 h-3.5" />
           Ver Todos os Documentos
-        </Button>
+        </button>
       </div>
     </ModalShell>
   );
@@ -214,16 +213,16 @@ const ModalShell: React.FC<{ title: string; onClose: () => void; children: React
       aria-labelledby="modal-title"
     >
       <div className="absolute inset-0 bg-black/60 " onClick={onClose} aria-hidden="true" />
-      <div className="relative w-full max-w-lg bg-card border border-border rounded-premium-sm shadow-premium p-6 overflow-hidden animate-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
+      <div className="relative w-full max-w-lg bg-card border border-border rounded-2xl shadow-2xl p-6 overflow-hidden animate-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4">
           <h3 id="modal-title" className="text-sm font-black uppercase tracking-widest text-primary">{title}</h3>
-          <Button 
+          <button 
             onClick={onClose} 
             className="p-1.5 rounded-full hover:bg-muted text-muted-foreground transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none"
             aria-label="Fechar modal"
           >
             <Icons.X className="w-5 h-5" />
-          </Button>
+          </button>
         </div>
         {children}
       </div>

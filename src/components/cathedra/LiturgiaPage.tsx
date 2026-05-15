@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 
 import { Icons } from '@/constants';
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import SEOHead from '@/components/SEOHead';
@@ -91,23 +91,23 @@ const ReadingCard: React.FC<{
     initial={{ opacity: 0, y: 24 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.5, delay }}
-    className="space-y-6 premium-card p-10 group relative overflow-hidden"
+    className="space-y-6 bg-card border border-border rounded-full p-8 shadow-sm hover:shadow-md transition-all group relative overflow-hidden"
   >
     <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">{icon}</div>
     <div className="flex items-center justify-between relative z-10">
       <div className="flex items-center gap-3">
-        <div className="p-2.5 rounded-premium-sm bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-sm">{icon}</div>
+        <div className="p-2.5 rounded-2xl bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-sm">{icon}</div>
         <div>
-          <h2 className="text-premium-tiny font-black uppercase tracking-[0.25em] text-primary">{label}</h2>
-          <p className="text-premium-tiny font-bold text-secondary/60 uppercase tracking-[0.2em] mt-0.5">{reference}</p>
+          <h2 className="text-[10px] font-black uppercase tracking-[0.25em] text-primary">{label}</h2>
+          <p className="text-[9px] font-bold text-secondary/60 uppercase tracking-[0.2em] mt-0.5">{reference}</p>
         </div>
       </div>
     </div>
-    {refrain && <div className="bg-secondary/5 rounded-premium-sm p-6 border border-secondary/20 border-l-4 shadow-inner"><p className="text-lg font-serif italic text-primary leading-relaxed antialiased">℟ {refrain}</p></div>}
+    {refrain && <div className="bg-secondary/5 rounded-2xl p-6 border border-secondary/20 border-l-4 shadow-inner"><p className="text-lg font-serif italic text-primary leading-relaxed antialiased">℟ {refrain}</p></div>}
     <p className="text-lg md:text-xl leading-[1.8] text-primary font-serif whitespace-pre-line selection:bg-secondary/30 antialiased tracking-tight">{text}</p>
     <div className="flex flex-wrap gap-3 pt-6 border-t border-border/40">
-      <Button variant="ghost" size="sm" className="rounded-full h-11 px-6 hover:bg-primary hover:text-white transition-all" onClick={onContext}><Icons.Bible className="w-4 h-4 mr-2" /> Bíblia</Button>
-      <Button variant="secondary" size="sm" className="rounded-full ml-auto h-11 px-8 bg-secondary/10 border-none hover:bg-secondary/20 text-primary shadow-sm" onClick={onReflect}><Icons.Lectio className="w-4 h-4 mr-2 text-secondary" /> Lectio Divina</Button>
+      <Button variant="ghost" size="sm" className="rounded-full h-11 px-6 hover:bg-primary hover:text-white transition-all" onClick={onContext}><Icons.Bible className="mr-2" /> Bíblia</Button>
+      <Button variant="secondary" size="sm" className="rounded-full ml-auto h-11 px-8 bg-secondary/10 border-none hover:bg-secondary/20 text-primary shadow-sm" onClick={onReflect}><Icons.Lectio className="mr-2 text-secondary" /> Lectio Divina</Button>
     </div>
   </motion.div>
 );
@@ -202,16 +202,16 @@ const LiturgiaPage: React.FC = () => {
               { id: 'missal', label: 'Missal', icon: <Icons.Cross className="w-4 h-4" /> },
               { id: 'calendario', label: 'Calendário', icon: <Icons.Calendar className="w-4 h-4" /> }
             ].map((tab, idx) => (
-              <Button
+              <button
                 key={tab.id}
                 {...getTabProps(`tab-${tab.id}`, `panel-${tab.id}`, activeTab === tab.id, `flex items-center gap-2 px-10 py-3 rounded-full text-sm font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
-                  activeTab === tab.id ? 'bg-background shadow-premium text-primary scale-105' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
+                  activeTab === tab.id ? 'bg-background shadow-xl text-primary scale-105' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
                 }`)}
                 onClick={() => setSearchParams({ tab: tab.id })}
                 onKeyDown={(e) => handleTabKeyDown(e, idx, 3, (newIdx) => setSearchParams({ tab: tabList[newIdx] }), 'tab-')}
               >
                 {tab.icon} {tab.label}
-              </Button>
+              </button>
             ))}
           </div>
         </div>
@@ -222,20 +222,20 @@ const LiturgiaPage: React.FC = () => {
               <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} className="space-y-4 text-center">
                 <h1 className="text-3xl md:text-5xl font-display font-black text-primary tracking-tight">Liturgia do Dia</h1>
                 <div className="flex items-center justify-center gap-4">
-                  <Button variant="outline" size="icon" onClick={goToPrevDay} aria-label="Dia anterior"><Icons.ChevronLeft className="w-4 h-4" /></Button>
+                  <Button variant="outline" size="icon" onClick={goToPrevDay} aria-label="Dia anterior"><Icons.ChevronLeft /></Button>
                   <p className="text-sm font-bold text-primary capitalize min-w-[200px]">{formatDate()}{isToday && <span className="ml-2 text-secondary">(Hoje)</span>}</p>
-                  <Button variant="outline" size="icon" onClick={goToNextDay} disabled={isToday} aria-label="Próximo dia"><Icons.ChevronRight className="w-4 h-4" /></Button>
+                  <Button variant="outline" size="icon" onClick={goToNextDay} disabled={isToday} aria-label="Próximo dia"><Icons.ChevronRight /></Button>
                 </div>
-                {isOfflineData && <div className="flex items-center justify-center gap-2 text-premium-tiny font-black uppercase tracking-widest text-muted-foreground bg-muted/50 rounded-premium-sm px-4 py-2 mt-4 mx-auto w-fit"><Icons.WifiOff className="w-3.5 h-3.5" /> <span>Modo Offline</span></div>}
+                {isOfflineData && <div className="flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground bg-muted/50 rounded-2xl px-4 py-2 mt-4 mx-auto w-fit"><Icons.WifiOff className="w-3.5 h-3.5" /> <span>Modo Offline</span></div>}
               </motion.div>
 
               {profile?.diocese && (
-                <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-secondary/5 border border-secondary/20 rounded-premium-sm p-4 flex items-center justify-between group">
+                <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-secondary/5 border border-secondary/20 rounded-2xl p-4 flex items-center justify-between group">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-premium-sm bg-secondary/10 text-secondary"><Icons.Church className="w-5 h-5" /></div>
-                    <div><p className="text-premium-tiny font-black uppercase tracking-widest text-secondary/60">Sua Diocese</p><h3 className="text-sm font-bold text-primary">{profile.diocese}</h3></div>
+                    <div className="p-2 rounded-2xl bg-secondary/10 text-secondary"><Icons.Church className="w-5 h-5" /></div>
+                    <div><p className="text-[10px] font-black uppercase tracking-widest text-secondary/60">Sua Diocese</p><h3 className="text-sm font-bold text-primary">{profile.diocese}</h3></div>
                   </div>
-                  <div className="text-right"><p className="text-premium-tiny font-medium text-muted-foreground uppercase tracking-widest">Estado</p><p className="text-xs font-bold text-primary">{profile.estado}</p></div>
+                  <div className="text-right"><p className="text-[9px] font-medium text-muted-foreground uppercase tracking-widest">Estado</p><p className="text-xs font-bold text-primary">{profile.estado}</p></div>
                 </motion.div>
               )}
 
@@ -249,20 +249,20 @@ const LiturgiaPage: React.FC = () => {
                 </div>
               )}
 
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="bg-primary text-white rounded-[2rem] p-10 text-center space-y-6 shadow-premium">
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="bg-primary text-white rounded-[2rem] p-10 text-center space-y-6 shadow-2xl">
                 <Icons.Zap className="w-8 h-8 text-secondary mx-auto" />
-                <p className="text-premium-tiny font-black uppercase tracking-[0.4em] opacity-60">Reflexão do Dia</p>
+                <p className="text-[10px] font-black uppercase tracking-[0.4em] opacity-60">Reflexão do Dia</p>
                 <p className="text-xl md:text-2xl font-serif italic leading-relaxed">"{padhReflection}"</p>
               </motion.div>
 
               {saintsToday.length > 0 && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} className="bg-muted/30 border border-border rounded-[2rem] p-8 flex flex-col items-center text-center space-y-4">
-                  <div className="w-20 h-20 rounded-premium-sm overflow-hidden border-2 border-secondary p-1 shadow-lg shadow-secondary/10"><img src={saintsToday[0].image} alt={saintsToday[0].name} className="w-full h-full object-cover rounded-full" /></div>
+                  <div className="w-20 h-20 rounded-2xl overflow-hidden border-2 border-secondary p-1 shadow-lg shadow-secondary/10"><img src={saintsToday[0].image} alt={saintsToday[0].name} className="w-full h-full object-cover rounded-full" /></div>
                   <div className="space-y-1">
-                    <p className="text-premium-tiny font-black uppercase tracking-[0.3em] text-secondary">{saintsToday.length > 1 ? 'Santos do Dia' : 'Santo do Dia'}</p>
+                    <p className="text-[9px] font-black uppercase tracking-[0.3em] text-secondary">{saintsToday.length > 1 ? 'Santos do Dia' : 'Santo do Dia'}</p>
                     <h3 className="text-xl font-display font-black text-primary">{saintsToday.map(s => s.name).join(' e ')}</h3>
                   </div>
-                  <Button variant="ghost" size="sm" className="text-muted-foreground hover:bg-primary/5 h-10" onClick={() => navigate(AppRoute.SAINTS)}>Conhecer História <Icons.ChevronRight className="w-4 h-4 ml-2" /></Button>
+                  <Button variant="ghost" size="sm" className="text-muted-foreground hover:bg-primary/5 h-10" onClick={() => navigate(AppRoute.SAINTS)}>Conhecer História <Icons.ChevronRight className="ml-2" /></Button>
                 </motion.div>
               )}
             </div>
@@ -273,15 +273,15 @@ const LiturgiaPage: React.FC = () => {
         </div>
         
         <aside className="desktop-aside space-y-6 hidden xl:block">
-          <div className="desktop-card bg-secondary/5 border-secondary/20"><h3 className="text-premium-small font-black uppercase tracking-widest text-secondary mb-3">Liturgia das Horas</h3><p className="text-xs text-muted-foreground leading-relaxed italic">Una-se à oração universal da Igreja. Santifique cada hora do seu dia através da meditação das leituras.</p></div>
+          <div className="desktop-card bg-secondary/5 border-secondary/20"><h3 className="text-[11px] font-black uppercase tracking-widest text-secondary mb-3">Liturgia das Horas</h3><p className="text-xs text-muted-foreground leading-relaxed italic">Una-se à oração universal da Igreja. Santifique cada hora do seu dia através da meditação das leituras.</p></div>
           {saintsToday.length > 0 && (
             <div className="desktop-card">
-              <h3 className="text-premium-small font-black uppercase tracking-widest text-primary mb-4">Santos de Hoje</h3>
+              <h3 className="text-[11px] font-black uppercase tracking-widest text-primary mb-4">Santos de Hoje</h3>
               <div className="space-y-4">
                 {saintsToday.slice(0, 2).map(s => (
                   <div key={s.id} className="flex items-center gap-3 group cursor-pointer" onClick={() => navigate(`/santos/${s.id}`)}>
                     <img src={s.image} alt={s.name} className="w-10 h-10 rounded-full object-cover border border-border group-hover:border-primary transition-all" />
-                    <div><p className="text-premium-tiny font-bold text-foreground leading-tight">{s.name}</p><p className="text-premium-tiny text-muted-foreground uppercase font-medium">{s.title}</p></div>
+                    <div><p className="text-[10px] font-bold text-foreground leading-tight">{s.name}</p><p className="text-[8px] text-muted-foreground uppercase font-medium">{s.title}</p></div>
                   </div>
                 ))}
               </div>

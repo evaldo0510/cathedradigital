@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Card    , CardContent  , CardDescription  , CardHeader  , CardTitle  , CardFooter   } from '@/components/cathedra/Card';
-import { Button   } from '@/components/cathedra/Button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -362,7 +362,7 @@ const AdminJourneysTab: React.FC = () => {
 
   if (loading) {
     return <div className="space-y-4 animate-pulse">
-      {[1, 2, 3].map(i => <div key={i} className="h-20 bg-muted/40 rounded-premium-sm" />)}
+      {[1, 2, 3].map(i => <div key={i} className="h-20 bg-muted/40 rounded-2xl" />)}
     </div>;
   }
 
@@ -391,18 +391,18 @@ const AdminJourneysTab: React.FC = () => {
 
       <div className="grid gap-4">
         {filteredJourneys.map((journey) => (
-          <div key={journey.id} className="border rounded-premium-sm overflow-hidden bg-card">
+          <div key={journey.id} className="border rounded-2xl overflow-hidden bg-card">
             <div className="p-4 flex items-center justify-between">
               <div className="flex items-center gap-3 cursor-pointer flex-1" onClick={() => toggleJourneySteps(journey.id)}>
                 {selectedJourneyId === journey.id ? <ChevronDown className="w-5 h-5 text-muted-foreground" /> : <ChevronRight className="w-5 h-5 text-muted-foreground" />}
-                <div className="w-10 h-10 rounded-premium-sm bg-primary/10 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center">
                   <Map className="w-5 h-5 text-primary" />
                 </div>
                 <div>
                   <h3 className="font-bold flex items-center gap-2">
                     {journey.title}
-                    {journey.is_premium && <Badge variant="secondary" className="text-premium-tiny bg-amber-500/10 text-amber-500 border-amber-500/20">PRO</Badge>}
-                    {!journey.is_active && <Badge variant="outline" className="text-premium-tiny">Inativa</Badge>}
+                    {journey.is_premium && <Badge variant="secondary" className="text-[10px] bg-amber-500/10 text-amber-500 border-amber-500/20">PRO</Badge>}
+                    {!journey.is_active && <Badge variant="outline" className="text-[10px]">Inativa</Badge>}
                   </h3>
                   <p className="text-xs text-muted-foreground">{journey.category} • {journey.estimated_days} dias</p>
                 </div>
@@ -441,9 +441,9 @@ const AdminJourneysTab: React.FC = () => {
                 ) : (
                   <div className="space-y-2">
                     {steps.map(step => (
-                      <div key={step.id} className="flex items-center justify-between bg-card p-3 rounded-premium-sm border text-sm group">
+                      <div key={step.id} className="flex items-center justify-between bg-card p-3 rounded-2xl border text-sm group">
                         <div className="flex items-center gap-3">
-                          <span className="w-6 h-6 rounded bg-muted flex items-center justify-center font-bold text-premium-tiny">{step.step_order}</span>
+                          <span className="w-6 h-6 rounded bg-muted flex items-center justify-center font-bold text-[10px]">{step.step_order}</span>
                           <div>
                             <p className="font-medium">{step.title}</p>
                             <p className="text-xs text-muted-foreground">{step.step_type}</p>
@@ -555,7 +555,7 @@ const AdminJourneysTab: React.FC = () => {
                      onChange={e => setStepContentString(e.target.value)} 
                    />
                    <div className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                     <Button variant="outline" size="sm" className="h-7 text-premium-tiny uppercase tracking-tighter" onClick={() => {
+                     <Button variant="outline" size="sm" className="h-7 text-[9px] uppercase tracking-tighter" onClick={() => {
                        try {
                          const parsed = JSON.parse(stepContentString);
                          setStepContentString(JSON.stringify(parsed, null, 2));
@@ -566,7 +566,7 @@ const AdminJourneysTab: React.FC = () => {
                      }}>Formatar</Button>
                    </div>
                 </div>
-                <p className="text-premium-tiny text-muted-foreground italic">Dica: use chaves como 'intro', 'reflection', 'practice', 'prayer' para que o conteúdo apareça no app.</p>
+                <p className="text-[10px] text-muted-foreground italic">Dica: use chaves como 'intro', 'reflection', 'practice', 'prayer' para que o conteúdo apareça no app.</p>
               </div>
             </div>
           )}

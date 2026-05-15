@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Crown, BookOpen, Brain, Sparkles, Headphones, Globe, ArrowRight } from 'lucide-react';
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 
@@ -29,15 +29,15 @@ const ProShowcase: React.FC = () => {
       className="relative overflow-hidden rounded-full border border-secondary/30 bg-gradient-to-br from-secondary/10 via-card to-primary/5 shadow-lg"
     >
       {/* Decorative glows */}
-      <div className="absolute -top-24 -right-24 w-72 h-72 bg-secondary/15 rounded-premium-sm  pointer-events-none" />
-      <div className="absolute -bottom-20 -left-20 w-56 h-56 bg-primary/10 rounded-premium-sm  pointer-events-none" />
+      <div className="absolute -top-24 -right-24 w-72 h-72 bg-secondary/15 rounded-2xl  pointer-events-none" />
+      <div className="absolute -bottom-20 -left-20 w-56 h-56 bg-primary/10 rounded-2xl  pointer-events-none" />
 
       <div className="relative z-10 p-6 md:p-8 space-y-6">
         {/* Header */}
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-premium-sm bg-secondary/20 border border-secondary/30">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-2xl bg-secondary/20 border border-secondary/30">
             <Crown className="w-3.5 h-3.5 text-secondary" />
-            <span className="text-premium-tiny font-black uppercase tracking-[0.3em] text-secondary">Cathedra PRO</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary">Cathedra PRO</span>
           </div>
           <h2 className="text-xl md:text-2xl font-black text-foreground leading-tight">
             Desbloqueie a experiência <br className="hidden md:block" />
@@ -62,7 +62,7 @@ const ProShowcase: React.FC = () => {
               >
                 <Icon className="w-4 h-4 text-secondary" />
                 <p className="text-xs font-bold text-foreground leading-tight">{b.label}</p>
-                <p className="text-premium-tiny text-muted-foreground leading-snug">{b.desc}</p>
+                <p className="text-[10px] text-muted-foreground leading-snug">{b.desc}</p>
               </motion.div>
             );
           })}
@@ -72,12 +72,12 @@ const ProShowcase: React.FC = () => {
         <div className="flex flex-col items-center gap-3 pt-2">
           <Button
             onClick={() => navigate(AppRoute.PRICING)}
-            className="w-full max-w-sm rounded-full h-12 gap-2 font-bold text-xs uppercase tracking-widest bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-soft hover:shadow-lg transition-all"
+            className="w-full max-w-sm rounded-full h-12 gap-2 font-bold text-xs uppercase tracking-widest bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-md hover:shadow-lg transition-all"
           >
             <Crown className="w-4 h-4" /> Conheça o PRO
             <ArrowRight className="w-4 h-4" />
           </Button>
-          <p className="text-premium-tiny text-muted-foreground">
+          <p className="text-[10px] text-muted-foreground">
             Planos a partir de <span className="font-bold text-foreground">R$ 9,90/mês</span> · Cancele quando quiser
           </p>
         </div>

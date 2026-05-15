@@ -8,8 +8,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2, ChevronLeft, Sparkles, BookOpen, Quote, Shield, Globe, ExternalLink, CheckCircle, Flame, AlertTriangle } from 'lucide-react';
 import { Icons } from '@/constants';
-import { Button   } from '@/components/cathedra/Button';
-import { Card    , CardContent   } from '@/components/cathedra/Card';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AppRoute } from '@/types';
@@ -74,20 +74,20 @@ const ThemeContentCard = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1 }}
     >
-      <Card className="border-border/40 bg-card/30 hover:bg-card transition-all duration-300 rounded-premium overflow-hidden group hover:shadow-premium-hover hover:border-primary/20">
+      <Card className="border-border/40 bg-card/30 hover:bg-card transition-all duration-300 rounded-[2rem] overflow-hidden group hover:shadow-lg hover:border-primary/20">
         <CardContent className="p-6 sm:p-8 space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className={`p-2 rounded-full ${accentColor.replace('text-', 'bg-')}/10`}>
                 <Icon className={`w-4 h-4 ${accentColor}`} />
               </div>
-              <span className={`text-premium-tiny font-black uppercase tracking-widest ${accentColor}`}>{content.reference}</span>
+              <span className={`text-[10px] font-black uppercase tracking-widest ${accentColor}`}>{content.reference}</span>
             </div>
             <Button 
               variant="ghost" 
               size="sm"
               onClick={onAction}
-              className={`h-9 rounded-full text-premium-tiny font-black uppercase tracking-widest hover:bg-primary/5 hover:text-primary gap-1.5 px-4 transition-all duration-300`}
+              className={`h-9 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-primary/5 hover:text-primary gap-1.5 px-4 transition-all duration-300`}
             >
               {buttonText} <ExternalLink className="w-3.5 h-3.5" />
             </Button>
@@ -98,7 +98,7 @@ const ThemeContentCard = ({
           
           {otherTags.length > 0 && (
             <div className="pt-4 border-t border-border/10">
-              <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 mb-2">Conexões relacionadas:</p>
+              <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 mb-2">Conexões relacionadas:</p>
               <div className="flex flex-wrap gap-2">
                 {otherTags.map((tag, idx) => (
                   <BubbleTag
@@ -122,7 +122,7 @@ const ThemeContentCard = ({
 const ContentSkeleton = () => (
   <div className="space-y-4" data-testid="content-skeleton">
     {[1, 2, 3].map((i) => (
-      <Card key={i} className="border-border/40 bg-card/20 rounded-premium overflow-hidden">
+      <Card key={i} className="border-border/40 bg-card/20 rounded-[2rem] overflow-hidden">
         <CardContent className="p-6 sm:p-8 space-y-4">
           <div className="flex items-center gap-2">
             <Skeleton className="w-8 h-8 rounded-full" />
@@ -359,27 +359,27 @@ const TemaDetailPage = () => {
         path={`/temas/${slug}`}
       />
 
-      <nav className="flex items-center gap-3 text-premium-tiny font-black uppercase tracking-[0.2em] text-muted-foreground/50 mb-8 overflow-x-auto whitespace-nowrap pb-2 scrollbar-none">
-        <Button 
+      <nav className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/50 mb-8 overflow-x-auto whitespace-nowrap pb-2 scrollbar-none">
+        <button 
           onClick={() => navigate(AppRoute.HOME)}
           className="hover:text-primary transition-colors flex items-center gap-1"
         >
           <ChevronLeft className="w-3 h-3" /> Início
-        </Button>
+        </button>
         <span className="opacity-30">/</span>
-        <Button 
+        <button 
           onClick={() => navigate(AppRoute.TEMAS)}
           className="hover:text-primary transition-colors"
         >
           Temas
-        </Button>
+        </button>
         <span className="opacity-30">/</span>
-        <Button 
+        <button 
           onClick={() => navigate(`${AppRoute.TEMAS}?category=${selectedTag?.category}`)}
           className="hover:text-primary transition-colors"
         >
           {selectedTag?.category}
-        </Button>
+        </button>
         <span className="opacity-30">/</span>
         <span className="text-primary/80">{selectedTag?.label}</span>
       </nav>
@@ -387,14 +387,14 @@ const TemaDetailPage = () => {
       <header className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-premium bg-primary/10 flex items-center justify-center text-primary shadow-inner border border-primary/20">
+            <div className="w-16 h-16 rounded-[2rem] bg-primary/10 flex items-center justify-center text-primary shadow-inner border border-primary/20">
               {selectedTag && getTagIcon(selectedTag.emoji, "w-8 h-8")}
             </div>
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-premium-tiny font-black uppercase tracking-[0.3em] text-primary/60">{selectedTag?.category}</span>
-                <div className="w-1 h-1 rounded-premium-sm bg-primary/30" />
-                <Badge variant="outline" className="text-premium-tiny font-black uppercase tracking-widest border-primary/20 text-primary/70">Nexus</Badge>
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/60">{selectedTag?.category}</span>
+                <div className="w-1 h-1 rounded-2xl bg-primary/30" />
+                <Badge variant="outline" className="text-[9px] font-black uppercase tracking-widest border-primary/20 text-primary/70">Nexus</Badge>
               </div>
               <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-foreground">{selectedTag?.label}</h1>
             </div>
@@ -403,7 +403,7 @@ const TemaDetailPage = () => {
           <Button 
             onClick={handleLoadInsight}
             disabled={loadingLogos || !!logosInsight}
-            className="rounded-full h-14 px-8 bg-primary text-primary-foreground font-black uppercase tracking-widest shadow-premium shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all group overflow-hidden relative"
+            className="rounded-full h-14 px-8 bg-primary text-primary-foreground font-black uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all group overflow-hidden relative"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover:animate-shimmer" />
             {loadingLogos ? (
@@ -424,26 +424,26 @@ const TemaDetailPage = () => {
               animate={{ opacity: 1, height: 'auto' }}
               className="relative"
             >
-              <div className="absolute inset-0 bg-secondary/5 rounded-premium-lg" />
-              <Card className="border-secondary/30 bg-card rounded-premium overflow-hidden relative z-10 shadow-premium">
+              <div className="absolute inset-0 bg-secondary/5  rounded-[3rem]" />
+              <Card className="border-secondary/30 bg-card  rounded-[2.5rem] overflow-hidden relative z-10 shadow-2xl">
                 <CardContent className="p-8 sm:p-10">
                   <div className="flex items-center justify-between mb-8">
                     <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-premium-sm bg-secondary/10 flex items-center justify-center border border-secondary/20 shadow-inner">
+                      <div className="w-12 h-12 rounded-2xl bg-secondary/10 flex items-center justify-center border border-secondary/20 shadow-inner">
                         <Sparkles className="w-6 h-6 text-secondary" />
                       </div>
                       <div>
-                        <p className="text-premium-small font-black uppercase tracking-[0.3em] text-secondary">Logos Theologicus</p>
+                        <p className="text-[11px] font-black uppercase tracking-[0.3em] text-secondary">Logos Theologicus</p>
                         <p className="text-sm text-muted-foreground font-medium">Sentido & Aplicação</p>
                       </div>
                     </div>
-                    <Badge variant="outline" className="text-premium-tiny font-black uppercase tracking-widest border-secondary/20 text-secondary animate-pulse px-3">IA Ativa</Badge>
+                    <Badge variant="outline" className="text-[10px] font-black uppercase tracking-widest border-secondary/20 text-secondary animate-pulse px-3">IA Ativa</Badge>
                   </div>
                   {loadingLogos && !logosInsight ? (
                     <div className="space-y-4">
-                      <div className="h-4 w-full bg-muted animate-pulse rounded-premium-sm" />
-                      <div className="h-4 w-[90%] bg-muted animate-pulse rounded-premium-sm opacity-70" />
-                      <div className="h-4 w-[75%] bg-muted animate-pulse rounded-premium-sm opacity-40" />
+                      <div className="h-4 w-full bg-muted animate-pulse rounded-2xl" />
+                      <div className="h-4 w-[90%] bg-muted animate-pulse rounded-2xl opacity-70" />
+                      <div className="h-4 w-[75%] bg-muted animate-pulse rounded-2xl opacity-40" />
                     </div>
                   ) : (
                     <div className="space-y-6">
@@ -454,7 +454,7 @@ const TemaDetailPage = () => {
                       <div className="pt-6 border-t border-secondary/10 flex items-start gap-3 opacity-80">
                         <Icons.CheckCircle className="w-5 h-5 text-secondary shrink-0 mt-1" />
                         <div>
-                          <p className="text-premium-tiny font-black uppercase tracking-widest text-secondary mb-1">Aplicação Prática</p>
+                          <p className="text-[10px] font-black uppercase tracking-widest text-secondary mb-1">Aplicação Prática</p>
                           <p className="text-sm text-muted-foreground italic leading-relaxed">
                             "Busque viver este mistério hoje através de um ato de caridade ou de um momento de silêncio contemplativo."
                           </p>
@@ -473,10 +473,10 @@ const TemaDetailPage = () => {
         <div className="md:col-span-2 space-y-8">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="w-full bg-muted/40 p-1 rounded-full border border-border/40 grid grid-cols-4">
-              <TabsTrigger value="bible" className="rounded-full text-premium-tiny font-black uppercase tracking-widest py-2.5">Escrituras</TabsTrigger>
-              <TabsTrigger value="tradition" className="rounded-full text-premium-tiny font-black uppercase tracking-widest py-2.5">Tradição</TabsTrigger>
-              <TabsTrigger value="magisterium" className="rounded-full text-premium-tiny font-black uppercase tracking-widest py-2.5">Magistério</TabsTrigger>
-              <TabsTrigger value="journeys" className="rounded-full text-premium-tiny font-black uppercase tracking-widest py-2.5">Jornadas</TabsTrigger>
+              <TabsTrigger value="bible" className="rounded-full text-[10px] font-black uppercase tracking-widest py-2.5">Escrituras</TabsTrigger>
+              <TabsTrigger value="tradition" className="rounded-full text-[10px] font-black uppercase tracking-widest py-2.5">Tradição</TabsTrigger>
+              <TabsTrigger value="magisterium" className="rounded-full text-[10px] font-black uppercase tracking-widest py-2.5">Magistério</TabsTrigger>
+              <TabsTrigger value="journeys" className="rounded-full text-[10px] font-black uppercase tracking-widest py-2.5">Jornadas</TabsTrigger>
             </TabsList>
 
             {contentError ? (
@@ -531,7 +531,7 @@ const TemaDetailPage = () => {
                       <Button 
                         variant="ghost" 
                         onClick={() => setBibleLimit(prev => prev + 5)}
-                        className="rounded-full text-premium-tiny font-black uppercase tracking-widest gap-2"
+                        className="rounded-full text-[10px] font-black uppercase tracking-widest gap-2"
                       >
                         Carregar mais escrituras ({bibleVerses.length - bibleLimit})
                       </Button>
@@ -571,7 +571,7 @@ const TemaDetailPage = () => {
                       <Button 
                         variant="ghost" 
                         onClick={() => setTraditionLimit(prev => prev + 5)}
-                        className="rounded-full text-premium-tiny font-black uppercase tracking-widest gap-2"
+                        className="rounded-full text-[10px] font-black uppercase tracking-widest gap-2"
                       >
                         Carregar mais Tradição ({catechism.length - traditionLimit})
                       </Button>
@@ -608,7 +608,7 @@ const TemaDetailPage = () => {
                       <Button 
                         variant="ghost" 
                         onClick={() => setMagisteriumLimit(prev => prev + 5)}
-                        className="rounded-full text-premium-tiny font-black uppercase tracking-widest gap-2"
+                        className="rounded-full text-[10px] font-black uppercase tracking-widest gap-2"
                       >
                         Carregar mais Magistério ({magisterium.length - magisteriumLimit})
                       </Button>
@@ -668,7 +668,7 @@ const TemaDetailPage = () => {
                   />
                 ))
               ) : (
-                <p className="text-premium-tiny text-muted-foreground italic leading-relaxed">
+                <p className="text-[10px] text-muted-foreground italic leading-relaxed">
                   Estamos tecendo novas conexões para este tema.
                 </p>
               )}
@@ -677,15 +677,15 @@ const TemaDetailPage = () => {
 
           <Card className="border-primary/20 bg-primary/5 rounded-[2rem] overflow-hidden">
             <CardContent className="p-6 space-y-4">
-              <div className="w-10 h-10 rounded-premium-sm bg-primary/20 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-2xl bg-primary/20 flex items-center justify-center">
                 <Quote className="w-5 h-5 text-primary" />
               </div>
               <p className="text-xs text-muted-foreground leading-relaxed italic">
                 "A fé e a razão são como as duas asas com as quais o espírito humano se eleva à contemplação da verdade."
               </p>
               <div className="pt-2">
-                <p className="text-premium-tiny font-black uppercase tracking-widest text-primary">S. João Paulo II</p>
-                <p className="text-premium-tiny text-muted-foreground/60">Fides et Ratio</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-primary">S. João Paulo II</p>
+                <p className="text-[9px] text-muted-foreground/60">Fides et Ratio</p>
               </div>
             </CardContent>
           </Card>

@@ -124,11 +124,11 @@ import {
 import { cn } from './lib/utils';
 
 export const COLORS = {
-  primary: '#0F172A',
-  secondary: '#D4AF37',
-  background: '#F8F5EE',
-  text: '#0F172A',
-  accent: '#D4AF37',
+  primary: '#0B1F3A',
+  secondary: '#C8A96A',
+  background: '#FFFFFF',
+  text: '#1A1A1A',
+  accent: '#C8A96A',
 };
 
 import cathedraLogo from './assets/cathedra-logo.png';

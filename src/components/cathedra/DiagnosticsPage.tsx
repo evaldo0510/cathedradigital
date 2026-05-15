@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
-import { Card    , CardContent  , CardDescription  , CardHeader  , CardTitle   } from '@/components/cathedra/Card';
-import { Button   } from '@/components/cathedra/Button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
 const DiagnosticsPage: React.FC = () => {
@@ -48,9 +48,9 @@ const DiagnosticsPage: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto space-y-10 py-8">
       <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-premium-sm text-primary">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl text-primary">
           <Icons.Zap className="w-4 h-4" />
-          <span className="text-premium-tiny font-black uppercase tracking-[0.2em]">Painel de Controle</span>
+          <span className="text-[10px] font-black uppercase tracking-[0.2em]">Painel de Controle</span>
         </div>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Diagnóstico de Sistema</h1>
         <p className="text-muted-foreground font-serif italic max-w-lg mx-auto">Monitoramento em tempo real dos serviços da Cathedra Digital.</p>
@@ -102,7 +102,7 @@ const DiagnosticsPage: React.FC = () => {
         </Card>
       </div>
 
-      <div className="bg-card border border-border rounded-premium-sm p-8 space-y-6">
+      <div className="bg-card border border-border rounded-2xl p-8 space-y-6">
         <h2 className="text-xl font-serif font-bold text-foreground flex items-center gap-3">
           <Icons.Zap className="w-5 h-5 text-primary" /> Relatório de Serviços
         </h2>
@@ -116,7 +116,7 @@ const DiagnosticsPage: React.FC = () => {
           ].map((service, i) => (
             <div key={i} className="flex items-center justify-between py-3 border-b border-border/50 last:border-0">
               <span className="text-sm font-bold text-foreground/80">{service.label}</span>
-              <span className={`text-premium-tiny font-black uppercase tracking-widest px-3 py-1 rounded-full ${
+              <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${
                 service.status === 'Online' ? 'bg-primary/10 text-primary' : 'bg-secondary/10 text-secondary'
               }`}>
                 {service.status}
@@ -125,10 +125,10 @@ const DiagnosticsPage: React.FC = () => {
           ))}
         </div>
         <div className="pt-4 flex flex-col sm:flex-row justify-center gap-3">
-          <Button onClick={checkStatus} disabled={loading} variant="outline" className="rounded-full font-black uppercase tracking-widest text-premium-tiny">
+          <Button onClick={checkStatus} disabled={loading} variant="outline" className="rounded-full font-black uppercase tracking-widest text-[10px]">
             {loading ? 'Sincronizando...' : 'Recarregar Diagnóstico'}
           </Button>
-          <Button asChild variant="ghost" className="rounded-full font-black uppercase tracking-widest text-premium-tiny hover:bg-red-500/5 hover:text-red-600">
+          <Button asChild variant="ghost" className="rounded-full font-black uppercase tracking-widest text-[10px] hover:bg-red-500/5 hover:text-red-600">
             <a href="/security-audit">Auditoria de Segurança</a>
           </Button>
         </div>

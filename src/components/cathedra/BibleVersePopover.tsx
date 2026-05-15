@@ -1,4 +1,3 @@
-import { Button   } from '@/components/cathedra/Button';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -68,11 +67,11 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = ({
   return (
     <Popover onOpenChange={(open) => open && fetchVerses()}>
       <PopoverTrigger asChild>
-        <Button
+        <button
           className="px-2.5 py-1 rounded-full bg-card border border-border text-xs font-bold text-primary hover:bg-primary hover:text-primary-foreground transition-all"
         >
           {label}
-        </Button>
+        </button>
       </PopoverTrigger>
       <PopoverContent
         side="top"
@@ -86,13 +85,13 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = ({
               {label}
             </span>
           </div>
-          <Button
+          <button
             onClick={handleNavigate}
-            className="text-premium-tiny font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-1"
+            className="text-[10px] font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-1"
           >
             {verse ? `Ir ao versículo ${verse}` : 'Abrir completo'}
             <Icons.ArrowDown className="w-3 h-3 -rotate-90" />
-          </Button>
+          </button>
         </div>
         <div className="p-3 space-y-2">
           {loading && (
@@ -111,7 +110,7 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = ({
                 </p>
               ))}
               {!verse && (
-                <p className="text-premium-tiny text-muted-foreground italic pt-1 border-t border-border">
+                <p className="text-[10px] text-muted-foreground italic pt-1 border-t border-border">
                   Mostrando primeiros versículos...
                 </p>
               )}

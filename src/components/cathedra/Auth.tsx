@@ -5,7 +5,7 @@ import { lovable } from '@/integrations/lovable/index';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { ArrowLeft } from 'lucide-react';
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 
 interface AuthProps {
   onSuccess: () => void;
@@ -89,7 +89,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
         className="absolute -top-12 left-0 flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors group shadow-none"
       >
         <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-        <span className="text-premium-tiny font-black uppercase tracking-widest">Voltar para Início</span>
+        <span className="text-[10px] font-black uppercase tracking-widest">Voltar para Início</span>
       </Button>
 
       <div className="text-center space-y-4">
@@ -104,18 +104,18 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
         </p>
       </div>
 
-      <div className="premium-card p-8 space-y-6">
+      <div className="bg-card border border-border rounded-2xl p-8 space-y-6">
         {error && (
-          <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-premium text-sm text-destructive font-medium">{error}</div>
+          <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-2xl text-sm text-destructive font-medium">{error}</div>
         )}
         {success && (
-          <div className="p-4 bg-primary/10 border border-primary/20 rounded-premium text-sm text-primary font-medium">{success}</div>
+          <div className="p-4 bg-primary/10 border border-primary/20 rounded-2xl text-sm text-primary font-medium">{success}</div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {mode === 'signup' && (
             <div>
-              <label className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground mb-2 block">Nome</label>
+              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 block">Nome</label>
               <input
                 type="text" value={name} onChange={e => setName(e.target.value)} required
                 placeholder="Seu nome completo"
@@ -124,7 +124,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
             </div>
           )}
           <div>
-            <label className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground mb-2 block">Email</label>
+            <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 block">Email</label>
             <input
               type="email" value={email} onChange={e => setEmail(e.target.value)} required
               placeholder="seu@email.com"
@@ -133,7 +133,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
           </div>
           {mode !== 'forgot' && (
             <div>
-              <label className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground mb-2 block">Senha</label>
+              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 block">Senha</label>
               <input
                 type="password" value={password} onChange={e => setPassword(e.target.value)} required minLength={6}
                 placeholder="Mínimo 6 caracteres"
@@ -141,14 +141,14 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
               />
             </div>
           )}
-          <Button type="submit" isLoading={loading} className="w-full h-14 rounded-full">
+          <Button type="submit" isLoading={loading} className="w-full h-14">
             {mode === 'login' ? 'Entrar' : mode === 'signup' ? 'Criar Conta' : 'Enviar Link'}
           </Button>
         </form>
 
         <div className="relative flex items-center gap-4 my-2">
           <div className="flex-1 h-px bg-border" />
-          <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">ou</span>
+          <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">ou</span>
           <div className="flex-1 h-px bg-border" />
         </div>
 

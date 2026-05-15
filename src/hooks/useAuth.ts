@@ -51,21 +51,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const authRequestId = useRef(0);
 
   const fetchProfile = useCallback(async (currentUser: SupabaseUser) => {
-    const [profileResult, sensitiveResult, privateResult, premiumResult] = await Promise.all([
+    const [profileResult, sensitiveResult, premiumResult] = await Promise.all([
       supabase
         .from('profiles')
         .select('*')
         .eq('id', currentUser.id)
         .maybeSingle(),
-      supabase
+      (supabase as any)
         .from('user_sensitive_data')
         .select('email, diagnosis_result')
         .eq('user_id', currentUser.id)
-        .maybeSingle(),
-      supabase
-        .from('profiles_private')
-        .select('whatsapp_number, whatsapp_enabled, push_enabled')
-        .eq('id', currentUser.id)
         .maybeSingle(),
       supabase
         .from('transactions')
@@ -89,7 +84,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     return {
       ...profileResult.data,
-      ...(privateResult.data || {}),
       is_premium: Boolean(profileResult.data.is_premium || (premiumResult.count ?? 0) > 0),
       _sensitive: sensitiveResult.data as SensitiveData | undefined,
     } as Profile & { _sensitive?: { email: string; diagnosis_result: any } };

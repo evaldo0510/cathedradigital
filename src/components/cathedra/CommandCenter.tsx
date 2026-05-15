@@ -1,4 +1,3 @@
-import { Button   } from '@/components/cathedra/Button';
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../constants';
@@ -37,7 +36,7 @@ const PAGE_COMMANDS: CommandItem[] = [
   { label: 'Lectio Divina', description: 'Leitura orante', path: AppRoute.LECTIO_DIVINA, icon: <Icons.Feather className="w-4 h-4" />, keywords: ['lectio', 'divina', 'meditação', 'contemplação'], type: 'page' },
   { label: 'Breviário', description: 'Liturgia das Horas', path: AppRoute.BREVIARY, icon: <Icons.History className="w-4 h-4" />, keywords: ['breviário', 'horas', 'laudes', 'vésperas', 'ofício'], type: 'page' },
   { label: 'Trilhas de Estudo', description: 'Formação estruturada', path: AppRoute.TRILHAS, icon: <Icons.Layout className="w-4 h-4" />, keywords: ['trilha', 'estudo', 'formação', 'curso'], type: 'page' },
-  { label: 'Logos', description: 'Sua dúvida iluminada pela fé', path: AppRoute.STUDY_MODE, icon: <Icons.Compass className="w-4 h-4" />, keywords: ['ia', 'logos', 'perguntar', 'ajuda', 'estudo'], type: 'page' },
+  { label: 'Logos IA', description: 'Sua dúvida iluminada pela fé', path: AppRoute.STUDY_MODE, icon: <Icons.Search className="w-4 h-4" />, keywords: ['ia', 'logos', 'perguntar', 'ajuda', 'estudo'], type: 'page' },
   { label: 'Favoritos', description: 'Itens salvos', path: AppRoute.FAVORITES, icon: <Icons.Heart className="w-4 h-4" />, keywords: ['favoritos', 'salvos', 'bookmark'], type: 'page' },
   { label: 'Jornadas', description: 'Jornadas espirituais guiadas', path: AppRoute.JORNADAS, icon: <Icons.Compass className="w-4 h-4" />, keywords: ['jornadas', 'jornada', 'espiritual', 'caminhada'], type: 'page' },
   { label: 'Sobre', description: 'Sobre o Cathedra', path: AppRoute.ABOUT, icon: <Icons.Globe className="w-4 h-4" />, keywords: ['sobre', 'manifesto', 'about'], type: 'page' },
@@ -365,7 +364,7 @@ const CommandCenter: React.FC = () => {
     <div className="fixed inset-0 z-[200] flex items-start justify-center pt-[12vh]" onClick={() => setIsOpen(false)}>
       <div className="absolute inset-0 bg-black/60 " />
       <div
-        className="relative w-full max-w-xl bg-card border border-border rounded-premium shadow-premium overflow-hidden animate-in fade-in slide-in-from-top-4 duration-200"
+        className="relative w-full max-w-xl bg-card border border-border rounded-full shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-4 duration-200"
         onClick={e => e.stopPropagation()}
       >
         {/* Search input */}
@@ -384,26 +383,26 @@ const CommandCenter: React.FC = () => {
           />
 
           {query && (
-            <Button onClick={() => setQuery('')} className="text-muted-foreground hover:text-foreground transition-colors">
+            <button onClick={() => setQuery('')} className="text-muted-foreground hover:text-foreground transition-colors">
               <Icons.X className="w-4 h-4" />
-            </Button>
+            </button>
           )}
-          <kbd className="hidden sm:inline-flex items-center px-2 py-0.5 rounded bg-muted text-muted-foreground text-premium-tiny font-mono font-bold">ESC</kbd>
+          <kbd className="hidden sm:inline-flex items-center px-2 py-0.5 rounded bg-muted text-muted-foreground text-[10px] font-mono font-bold">ESC</kbd>
         </div>
 
         {/* Loading indicator */}
         {globalLoading && (
           <div className="h-0.5 w-full bg-muted overflow-hidden">
-            <div className="h-full w-1/3 bg-primary animate-[shimmer_1s_ease-in-out_infinite] rounded-premium-sm" 
+            <div className="h-full w-1/3 bg-primary animate-[shimmer_1s_ease-in-out_infinite] rounded-2xl" 
                  style={{ animation: 'shimmer 1s ease-in-out infinite', animationName: 'none' }} />
-            <div className="h-full bg-primary/60 animate-pulse rounded-premium-sm" />
+            <div className="h-full bg-primary/60 animate-pulse rounded-2xl" />
           </div>
         )}
 
         {/* Results */}
         <div ref={listRef} id="command-list" role="listbox" className="max-h-[55vh] overflow-y-auto py-1">
           {query.length >= 2 && !globalLoading && resultCount > 0 && (
-            <div className="px-5 py-2 text-premium-tiny font-black uppercase tracking-widest text-muted-foreground" aria-live="polite">
+            <div className="px-5 py-2 text-[9px] font-black uppercase tracking-widest text-muted-foreground" aria-live="polite">
               {resultCount} resultado{resultCount !== 1 ? 's' : ''} encontrado{resultCount !== 1 ? 's' : ''}
             </div>
           )}
@@ -424,12 +423,12 @@ const CommandCenter: React.FC = () => {
             return (
               <React.Fragment key={`${item.type}-${item.label}-${i}`}>
                 {showGroupHeader && (
-                  <div className="px-5 pt-3 pb-1 text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-2" role="presentation">
+                  <div className="px-5 pt-3 pb-1 text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-2" role="presentation">
                     <div className="w-4 h-px bg-border" />
                     {TYPE_LABELS[item.type] || item.type}
                   </div>
                 )}
-                <Button
+                <button
                   id={`item-${i}`}
                   role="option"
                   aria-selected={i === selectedIndex}
@@ -446,14 +445,14 @@ const CommandCenter: React.FC = () => {
                   </span>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold truncate">{item.label}</p>
-                    <p className="text-premium-tiny text-muted-foreground truncate">{item.description}</p>
+                    <p className="text-[10px] text-muted-foreground truncate">{item.description}</p>
                   </div>
-                  <span className={`text-premium-tiny font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${
+                  <span className={`text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${
                     TYPE_STYLES[item.type] || 'bg-muted text-muted-foreground'
                   }`}>
                     {TYPE_LABELS[item.type] || item.type}
                   </span>
-                </Button>
+                </button>
               </React.Fragment>
             );
           })}
@@ -463,16 +462,16 @@ const CommandCenter: React.FC = () => {
         {/* Footer */}
         <div className="flex items-center justify-between px-5 py-2.5 border-t border-border bg-muted/30">
           <div className="flex items-center gap-3">
-            <span className="text-premium-tiny text-muted-foreground">↑↓ navegar</span>
-            <span className="text-premium-tiny text-muted-foreground">↵ abrir</span>
+            <span className="text-[9px] text-muted-foreground">↑↓ navegar</span>
+            <span className="text-[9px] text-muted-foreground">↵ abrir</span>
           </div>
           <div className="flex items-center gap-2">
             {hasGlobalResults && (
-              <span className="text-premium-tiny text-primary font-medium">
+              <span className="text-[9px] text-primary font-medium">
                 Buscando em {new Set(globalResults.map(r => r.type)).size} módulos
               </span>
             )}
-            <span className="text-premium-tiny text-muted-foreground font-mono">⌘K</span>
+            <span className="text-[9px] text-muted-foreground font-mono">⌘K</span>
           </div>
         </div>
       </div>

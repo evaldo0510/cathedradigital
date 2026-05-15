@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Check, Lock, Clock, BookOpen, Hand, PenLine, HelpCircle, ChevronRight, Sparkles, Award, PartyPopper } from 'lucide-react';
-import { Button } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import { Icons } from '../../constants';
-import { Card, CardContent } from '@/components/cathedra/Card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
@@ -12,10 +12,10 @@ import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 
 const STEP_ICONS: Record<string, React.ReactNode> = {
-  reading: <BookOpen className="w-3.5 h-3.5" />,
-  prayer: <Hand className="w-3.5 h-3.5" />,
-  reflection: <PenLine className="w-3.5 h-3.5" />,
-  quiz: <HelpCircle className="w-3.5 h-3.5" />,
+  reading: <BookOpen className="w-4 h-4" />,
+  prayer: <Hand className="w-4 h-4" />,
+  reflection: <PenLine className="w-4 h-4" />,
+  quiz: <HelpCircle className="w-4 h-4" />,
 };
 
 const JornadaDetailPage: React.FC = () => {
@@ -74,7 +74,7 @@ const JornadaDetailPage: React.FC = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[40vh]">
-        <div className="w-8 h-8 border-2 border-secondary border-t-transparent rounded-premium-sm animate-spin" />
+        <div className="w-8 h-8 border-2 border-secondary border-t-transparent rounded-2xl animate-spin" />
       </div>
     );
   }
@@ -134,13 +134,13 @@ const JornadaDetailPage: React.FC = () => {
       {/* Completion Banner */}
       {isJourneyComplete && (
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-          <Card className="premium-card border-primary/30 bg-gradient-to-r from-primary/10 to-primary/5">
+          <Card className="border-primary/30 bg-gradient-to-r from-primary/10 to-primary/5">
             <CardContent className="p-5 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-premium-sm bg-primary/20 flex items-center justify-center flex-shrink-0">
-                <Award className="w-5 h-5 text-primary" />
+              <div className="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center flex-shrink-0">
+                <Award className="w-6 h-6 text-primary" />
               </div>
               <div className="flex-1">
-                <p className="font-bold text-sm text-foreground"><Icons.PartyPopper className="w-3.5 h-3.5 inline mr-2 text-primary" /> Jornada Concluída!</p>
+                <p className="font-bold text-sm text-foreground"><Icons.PartyPopper className="w-4 h-4 inline mr-2 text-primary" /> Jornada Concluída!</p>
                 <p className="text-xs text-muted-foreground">Parabéns! Veja seu certificado e reflexões.</p>
               </div>
               <Button size="sm" onClick={() => navigate(`/jornadas/${id}/complete`)}>
@@ -166,7 +166,7 @@ const JornadaDetailPage: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
             >
-              <Card className={`premium-card-interactive transition-all ${isNext ? 'border-primary/40' : ''} ${isCompleted ? 'bg-primary/5 shadow-soft' : ''} ${isStepLocked ? 'opacity-60 grayscale' : ''}`}>
+              <Card className={`transition-all ${isNext ? 'border-primary/40 shadow-sm' : ''} ${isCompleted ? 'bg-primary/5' : ''} ${isStepLocked ? 'opacity-60' : ''}`}>
                 <CardContent className="p-4 flex items-center gap-4">
                   {/* Step number / status */}
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-bold ${
@@ -176,7 +176,7 @@ const JornadaDetailPage: React.FC = () => {
                         ? 'bg-muted text-muted-foreground'
                         : 'bg-primary/10 text-primary'
                   }`}>
-                    {isCompleted ? <Check className="w-4 h-4" /> : isStepLocked ? <Lock className="w-3.5 h-3.5" /> : index + 1}
+                    {isCompleted ? <Check className="w-5 h-5" /> : isStepLocked ? <Lock className="w-4 h-4" /> : index + 1}
                   </div>
 
                   {/* Content */}
@@ -184,7 +184,7 @@ const JornadaDetailPage: React.FC = () => {
                     <div className="flex items-center gap-2">
                       <h3 className="font-semibold text-sm text-foreground truncate">{step.title}</h3>
                       {isStepLocked && (
-                        <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 text-premium-tiny uppercase font-black px-1.5 py-0">PRO</Badge>
+                        <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 text-[8px] uppercase font-black px-1.5 py-0">PRO</Badge>
                       )}
                     </div>
                     <div className="flex items-center gap-2 text-xs text-muted-foreground mt-0.5">
@@ -215,7 +215,7 @@ const JornadaDetailPage: React.FC = () => {
       {isLocked && (
         <Card className="border-primary/30 bg-primary/5">
           <CardContent className="p-4 text-center space-y-3">
-            <Sparkles className="w-6 h-6 mx-auto text-primary" />
+            <Sparkles className="w-8 h-8 mx-auto text-primary" />
             <p className="text-sm text-foreground font-medium">Esta jornada é exclusiva para assinantes PRO</p>
             <Button onClick={() => navigate(AppRoute.PRICING)} size="sm">
               Ver Planos

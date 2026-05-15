@@ -1,4 +1,3 @@
-import { Button   } from '@/components/cathedra/Button';
 import React, { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Icons } from '@/constants';
@@ -326,9 +325,9 @@ const LiturgicalCalendarPage: React.FC = () => {
     <div className="max-w-5xl mx-auto space-y-8">
       {/* Header */}
       <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-premium-sm">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl">
           <Icons.Star className="w-4 h-4 text-primary" />
-          <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Calendarium Liturgicum</span>
+          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Calendarium Liturgicum</span>
         </div>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Calendário Litúrgico</h1>
         <p className="text-muted-foreground font-serif italic">
@@ -341,43 +340,43 @@ const LiturgicalCalendarPage: React.FC = () => {
         {Object.entries(LITURGICAL_COLORS).map(([key, val]) => (
           <div key={key} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full ${val.bg} ${val.border} border`}>
             <div className={`w-2.5 h-2.5 rounded-full ${key === 'verde' ? 'bg-primary' : key === 'roxo' ? 'bg-primary' : key === 'branco' ? 'bg-secondary' : key === 'vermelho' ? 'bg-primary' : 'bg-secondary'}`} />
-            <span className={`text-premium-tiny font-bold uppercase tracking-wider ${val.text}`}>{val.label}</span>
+            <span className={`text-[10px] font-bold uppercase tracking-wider ${val.text}`}>{val.label}</span>
           </div>
         ))}
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Calendar grid */}
-        <div className="lg:col-span-2 bg-card border border-border rounded-premium-sm p-6">
+        <div className="lg:col-span-2 bg-card border border-border rounded-2xl p-6">
           {/* Month navigation */}
           <div className="flex items-center justify-between mb-6">
-            <Button onClick={() => navigateMonth(-1)} className="p-2 rounded-full bg-muted hover:bg-primary/10 transition-all">
+            <button onClick={() => navigateMonth(-1)} className="p-2 rounded-full bg-muted hover:bg-primary/10 transition-all">
               <Icons.ArrowDown className="w-5 h-5 rotate-90 text-foreground" />
-            </Button>
+            </button>
             <div className="text-center">
               <h2 className="text-xl font-serif font-bold text-foreground">{MONTH_NAMES[month]} {year}</h2>
               {(year !== today.getFullYear() || month !== today.getMonth()) && (
-                <Button onClick={goToToday} className="text-premium-tiny font-black uppercase tracking-widest text-primary hover:underline mt-1">
+                <button onClick={goToToday} className="text-[9px] font-black uppercase tracking-widest text-primary hover:underline mt-1">
                   Ir para Hoje
-                </Button>
+                </button>
               )}
             </div>
-            <Button onClick={() => navigateMonth(1)} className="p-2 rounded-full bg-muted hover:bg-primary/10 transition-all">
+            <button onClick={() => navigateMonth(1)} className="p-2 rounded-full bg-muted hover:bg-primary/10 transition-all">
               <Icons.ArrowDown className="w-5 h-5 -rotate-90 text-foreground" />
-            </Button>
+            </button>
           </div>
 
           {/* Loading indicator */}
           {isLoadingApi && (
             <div className="flex justify-center mb-3">
-              <div className="w-4 h-4 border-2 border-secondary border-t-transparent rounded-premium-sm animate-spin" />
+              <div className="w-4 h-4 border-2 border-secondary border-t-transparent rounded-2xl animate-spin" />
             </div>
           )}
 
           {/* Day headers */}
           <div className="grid grid-cols-7 gap-1 mb-2">
             {DAY_NAMES.map(d => (
-              <div key={d} className="text-center text-premium-tiny font-black uppercase tracking-wider text-muted-foreground py-1">
+              <div key={d} className="text-center text-[10px] font-black uppercase tracking-wider text-muted-foreground py-1">
                 {d}
               </div>
             ))}
@@ -394,7 +393,7 @@ const LiturgicalCalendarPage: React.FC = () => {
               const hasSaint = saintDaysSet.has(`${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`);
 
               return (
-                <Button
+                <button
                   key={date.toISOString()}
                   onClick={() => setSelectedDay(date)}
                   className={`
@@ -412,7 +411,7 @@ const LiturgicalCalendarPage: React.FC = () => {
                       {date.getDate()}
                     </span>
                     {info.rank === 'solenidade' && (
-                      <div className="w-1 h-1 rounded-premium-sm bg-primary" />
+                      <div className="w-1 h-1 rounded-2xl bg-primary" />
                     )}
                     {hasSaint && (
                       <div className="absolute top-1.5 right-1.5">
@@ -420,7 +419,7 @@ const LiturgicalCalendarPage: React.FC = () => {
                       </div>
                     )}
                   </div>
-                </Button>
+                </button>
               );
             })}
           </div>
@@ -430,16 +429,16 @@ const LiturgicalCalendarPage: React.FC = () => {
         <div className="space-y-6">
           <AnimatePresence mode="wait">
             {selectedDay ? (
-              <div className="bg-card border border-border rounded-premium-sm overflow-hidden shadow-lg animate-in fade-in slide-in-from-bottom-4 duration-300">
+              <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-lg animate-in fade-in slide-in-from-bottom-4 duration-300">
                 {selectedSaint ? (
                   <div className="relative h-48 group">
                     <SacredImage src={selectedSaint.image} alt={selectedSaint.name} className="w-full h-full" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                     <div className="absolute bottom-4 left-4 right-4">
-                      <p className="text-premium-tiny font-black uppercase tracking-[0.2em] text-white/70">Santo do Dia</p>
+                      <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/70">Santo do Dia</p>
                       <h3 className="text-lg font-serif font-bold text-white line-clamp-1">{selectedSaint.name}</h3>
                     </div>
-                    <Button 
+                    <button 
                       onClick={() => toggleFavorite({ 
                         title: selectedSaint.name, 
                         type: 'saint', 
@@ -448,13 +447,13 @@ const LiturgicalCalendarPage: React.FC = () => {
                       className="absolute top-4 right-4 p-2 rounded-full bg-black/20 hover:bg-black/40  transition-all"
                     >
                       <Icons.Heart className={`w-4 h-4 ${isFavorite('saint', selectedSaint.name) ? 'fill-red-500 text-red-500' : 'text-white'}`} />
-                    </Button>
-                    <Button 
+                    </button>
+                    <button 
                       onClick={() => navigate(`/cathedra/daily-liturgy?date=${selectedDay.toISOString()}`)}
                       className="absolute top-4 left-4 p-2 rounded-full bg-black/20 hover:bg-black/40  transition-all"
                     >
                       <Icons.Book className="w-4 h-4 text-white" />
-                    </Button>
+                    </button>
                   </div>
                 ) : (
                   <div className={`h-24 ${LITURGICAL_COLORS[selectedInfo?.color || 'verde']?.bg} flex items-center justify-center`}>
@@ -464,7 +463,7 @@ const LiturgicalCalendarPage: React.FC = () => {
                 
                 <div className="p-6 space-y-4">
                   <div>
-                    <p className="text-premium-tiny font-black uppercase tracking-[0.2em] text-muted-foreground mb-1">
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-1">
                       {selectedDay.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}
                     </p>
                     <h3 className="text-xl font-serif font-bold text-foreground">
@@ -473,37 +472,37 @@ const LiturgicalCalendarPage: React.FC = () => {
                   </div>
 
                   <div className="flex flex-wrap gap-2">
-                    <div className={`px-2 py-1 rounded-full border text-premium-tiny font-bold uppercase tracking-wider ${LITURGICAL_COLORS[selectedInfo?.color || 'verde']?.bg} ${LITURGICAL_COLORS[selectedInfo?.color || 'verde']?.text} ${LITURGICAL_COLORS[selectedInfo?.color || 'verde']?.border}`}>
+                    <div className={`px-2 py-1 rounded-full border text-[10px] font-bold uppercase tracking-wider ${LITURGICAL_COLORS[selectedInfo?.color || 'verde']?.bg} ${LITURGICAL_COLORS[selectedInfo?.color || 'verde']?.text} ${LITURGICAL_COLORS[selectedInfo?.color || 'verde']?.border}`}>
                       {LITURGICAL_COLORS[selectedInfo?.color || 'verde']?.label}
                     </div>
                     {selectedInfo?.rank && (
-                      <div className="px-2 py-1 rounded-premium-sm bg-muted border border-border text-premium-tiny font-bold uppercase tracking-wider text-muted-foreground">
+                      <div className="px-2 py-1 rounded-2xl bg-muted border border-border text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                         {selectedInfo.rank}
                       </div>
                     )}
                   </div>
 
                   <div className="pt-4 border-t border-border flex gap-3">
-                    <Button 
+                    <button 
                       onClick={() => navigate(`/cathedra/daily-liturgy?date=${selectedDay.toISOString()}`)}
-                      className="flex-1 py-3 px-4 bg-primary text-primary-foreground rounded-full font-bold text-xs uppercase tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-soft shadow-primary/10"
+                      className="flex-1 py-3 px-4 bg-primary text-primary-foreground rounded-full font-bold text-xs uppercase tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-md shadow-primary/10"
                     >
                       <Icons.Book className="w-4 h-4" />
                       Ver Liturgia
-                    </Button>
+                    </button>
                     {selectedSaint && (
-                      <Button 
+                      <button 
                         onClick={() => setShowSaintModal(true)}
                         className="p-3 bg-secondary text-foreground rounded-full hover:bg-muted transition-all border border-border"
                       >
                         <Icons.ArrowDown className="w-4 h-4 -rotate-90" />
-                      </Button>
+                      </button>
                     )}
                   </div>
                 </div>
               </div>
             ) : (
-              <div className="bg-muted/30 border-2 border-dashed border-border rounded-premium-sm p-12 text-center space-y-3">
+              <div className="bg-muted/30 border-2 border-dashed border-border rounded-2xl p-12 text-center space-y-3">
                 <Icons.LiturgicalCalendar className="w-12 h-12 text-muted-foreground/30 mx-auto" />
                 <p className="text-sm text-muted-foreground font-serif italic">Selecione um dia para ver os detalhes</p>
               </div>
@@ -511,11 +510,11 @@ const LiturgicalCalendarPage: React.FC = () => {
           </AnimatePresence>
 
           {/* Upcoming list */}
-          <div className="bg-card border border-border rounded-premium-sm p-6">
+          <div className="bg-card border border-border rounded-2xl p-6">
             <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground mb-4">Próximas Solenidades</h3>
             <div className="space-y-3">
               {upcomingCelebrations.map((c, i) => (
-                <Button
+                <button
                   key={i}
                   onClick={() => {
                     setYear(c.date.getFullYear());
@@ -525,14 +524,14 @@ const LiturgicalCalendarPage: React.FC = () => {
                   className="w-full flex items-center gap-3 p-2 rounded-full hover:bg-muted transition-all group text-left"
                 >
                   <div className={`w-10 h-10 rounded-full shrink-0 flex flex-col items-center justify-center ${LITURGICAL_COLORS[c.color]?.bg}`}>
-                    <span className={`text-premium-tiny font-black ${LITURGICAL_COLORS[c.color]?.text}`}>{c.date.getDate()}</span>
-                    <span className={`text-premium-tiny font-bold uppercase ${LITURGICAL_COLORS[c.color]?.text}`}>{MONTH_NAMES[c.date.getMonth()].slice(0, 3)}</span>
+                    <span className={`text-[10px] font-black ${LITURGICAL_COLORS[c.color]?.text}`}>{c.date.getDate()}</span>
+                    <span className={`text-[8px] font-bold uppercase ${LITURGICAL_COLORS[c.color]?.text}`}>{MONTH_NAMES[c.date.getMonth()].slice(0, 3)}</span>
                   </div>
                   <div className="min-w-0">
                     <p className="text-sm font-bold text-foreground line-clamp-1 group-hover:text-primary transition-colors">{c.name}</p>
-                    <p className="text-premium-tiny text-muted-foreground uppercase tracking-wider font-bold">{c.rank}</p>
+                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">{c.rank}</p>
                   </div>
-                </Button>
+                </button>
               ))}
             </div>
           </div>

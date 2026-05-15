@@ -1,4 +1,3 @@
-import { Button   } from '@/components/ui/button';
 import React from 'react';
 
 interface AlphabetBarProps {
@@ -20,7 +19,7 @@ const AlphabetBar: React.FC<AlphabetBarProps> = ({
         const has = letterStatus[letter];
         const isActive = selectedLetter === letter;
         return (
-          <Button
+          <button
             key={letter}
             onClick={() => has && onLetterClick(letter)}
             disabled={!has}
@@ -28,14 +27,14 @@ const AlphabetBar: React.FC<AlphabetBarProps> = ({
             aria-pressed={isActive}
             className={`w-8 h-8 rounded-full text-xs font-black transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none
               ${isActive
-                ? 'bg-primary text-primary-foreground shadow-soft'
+                ? 'bg-primary text-primary-foreground shadow-md'
                 : has
                   ? 'bg-card border border-border text-foreground hover:border-primary/40 hover:text-primary'
                   : 'opacity-15 cursor-not-allowed'
               }`}
           >
             {letter}
-          </Button>
+          </button>
 
         );
       })}

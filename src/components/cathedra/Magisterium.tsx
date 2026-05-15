@@ -12,19 +12,18 @@ import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
-import { Card    , CardContent   } from '@/components/cathedra/Card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import AudioButton from './AudioButton';
 import { useNavigate } from 'react-router-dom';
 import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
-import { CathedraIcon, IconSizePreset } from './CathedraIcon';
 
 const SPIRITUAL_GUIDANCE = [
   {
     id: 'ansiedade',
     theme: 'Ansiedade',
-    icon: Icons.Activity,
+    icon: <Icons.Activity className="w-5 h-5" />,
     question: 'O que a Igreja diz sobre a ansiedade?',
     magisteriumAnswer: 'A confiança em Deus é o caminho da paz interior. "Não andeis ansiosos" não é um comando vazio — é um convite a entregar o peso ao único que pode carregá-lo.',
     sourceDoc: 'Gaudete et Exsultate §112',
@@ -41,7 +40,7 @@ const SPIRITUAL_GUIDANCE = [
   {
     id: 'medo',
     theme: 'Medo',
-    icon: Icons.Sun,
+    icon: <Icons.Sun className="w-5 h-5" />,
     question: 'O que a Igreja diz sobre o medo?',
     magisteriumAnswer: 'O medo é humano, mas não deve governar. A presença de Deus é mais forte que qualquer escuridão. "Não temas, porque eu te resgatei."',
     sourceDoc: 'Spe Salvi §32',
@@ -58,7 +57,7 @@ const SPIRITUAL_GUIDANCE = [
   {
     id: 'proposito',
     theme: 'Propósito',
-    icon: Icons.Compass,
+    icon: <Icons.Compass className="w-5 h-5" />,
     question: 'Qual é o sentido da minha vida?',
     magisteriumAnswer: 'Cada pessoa tem uma vocação única. A santidade não é privilégio de poucos, mas chamado universal — é encontrar Deus no concreto da vida.',
     sourceDoc: 'Gaudete et Exsultate §14',
@@ -75,7 +74,7 @@ const SPIRITUAL_GUIDANCE = [
   {
     id: 'sofrimento',
     theme: 'Sofrimento',
-    icon: Icons.Cross,
+    icon: <Icons.Cross className="w-5 h-5" />,
     question: 'Por que existe sofrimento?',
     magisteriumAnswer: 'O sofrimento, quando unido à cruz de Cristo, tem poder redentor. Não é castigo, mas mistério de amor e transformação.',
     sourceDoc: 'Salvifici Doloris §19',
@@ -92,7 +91,7 @@ const SPIRITUAL_GUIDANCE = [
   {
     id: 'relacionamentos',
     theme: 'Relacionamentos',
-    icon: Icons.Heart,
+    icon: <Icons.Heart className="w-5 h-5" />,
     question: 'Como amar de verdade?',
     magisteriumAnswer: 'O amor autêntico é dom de si mesmo. Não é posse, é entrega. A família é escola de amor e comunhão.',
     sourceDoc: 'Amoris Laetitia §89',
@@ -187,9 +186,9 @@ const Magisterium: React.FC = () => {
       />
 
       <div className="text-center space-y-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-premium-sm">
-          <CathedraIcon icon={Icons.Scroll} size={IconSizePreset.TINY} variant="primary" containerClassName="bg-transparent border-none p-0 w-auto h-auto" />
-          <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Magisterium Ecclesiae</span>
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl">
+          <Icons.Scroll className="w-4 h-4 text-primary" />
+          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Magisterium Ecclesiae</span>
         </div>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Magistério</h1>
         <p className="text-muted-foreground font-serif italic max-w-lg mx-auto">A voz da Igreja guiando o coração dos fiéis através dos séculos.</p>
@@ -210,7 +209,7 @@ const Magisterium: React.FC = () => {
         <TabsContent value="guidance" className="mt-0 focus-visible:outline-none outline-none">
           <div className="space-y-12">
             <div 
-              className="flex flex-wrap justify-center gap-3 bg-card  p-6 sm:p-10 rounded-[2.5rem] sm:rounded-[3.5rem] border border-border/40 shadow-premium relative overflow-hidden group"
+              className="flex flex-wrap justify-center gap-3 bg-card  p-6 sm:p-10 rounded-[2.5rem] sm:rounded-[3.5rem] border border-border/40 shadow-xl relative overflow-hidden group"
               role="tablist"
               aria-label="Temas de guia espiritual"
             >
@@ -235,15 +234,15 @@ const Magisterium: React.FC = () => {
                   onClick={() => handleSelectGuidance(item)}
                   className={`flex items-center gap-3 px-6 py-3.5 rounded-full border transition-all shadow-sm relative z-10 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                     selectedGuidance.id === item.id 
-                      ? "bg-primary text-primary-foreground shadow-premium shadow-primary/30 scale-110" 
+                      ? "bg-primary text-primary-foreground shadow-xl shadow-primary/30 scale-110" 
                       : "bg-card/60 text-foreground/80 border-border/60 hover:border-primary/40 hover:text-primary hover:bg-primary/5"
                   }`}
 
                 >
                   <div className={`p-2 rounded-full ${selectedGuidance.id === item.id ? "bg-white/20" : "bg-muted/50"}`}>
-                    <CathedraIcon icon={item.icon as any} size={IconSizePreset.TINY} variant={selectedGuidance.id === item.id ? "primary" : "default"} containerClassName="bg-transparent border-none p-0 w-auto h-auto" />
+                    {item.icon}
                   </div>
-                  <span className="font-black text-premium-tiny sm:text-xs uppercase tracking-[0.15em]">{item.theme}</span>
+                  <span className="font-black text-[10px] sm:text-xs uppercase tracking-[0.15em]">{item.theme}</span>
                 </motion.button>
               ))}
             </div>
@@ -297,7 +296,7 @@ const Magisterium: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="bg-primary/5 rounded-premium-sm p-6 border border-primary/10 space-y-4">
+                  <div className="bg-primary/5 rounded-2xl p-6 border border-primary/10 space-y-4">
                     <p className="text-xl font-serif font-bold text-primary leading-tight">{selectedGuidance.padh}</p>
                     <p className="text-sm font-bold text-foreground">
                       {parseTheologicalReferences(selectedGuidance.innerQuestion).map((seg, i) => {
@@ -313,16 +312,16 @@ const Magisterium: React.FC = () => {
                   </div>
 
                   <div className="space-y-4">
-                    <h4 className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Documentos Relacionados</h4>
+                    <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Documentos Relacionados</h4>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {selectedGuidance.relatedDocs.map(docId => {
                         const doc = DOCS_LIST.find(d => d.id === docId);
                         return (
-                          <div key={docId} className="p-4 rounded-premium-sm border border-border bg-muted/30 flex items-center gap-3">
+                          <div key={docId} className="p-4 rounded-2xl border border-border bg-muted/30 flex items-center gap-3">
                             <Icons.FileText className="w-5 h-5 text-primary" />
                             <div>
                               <p className="text-xs font-bold text-foreground">{doc?.title || 'Documento'}</p>
-                              <p className="text-premium-tiny text-muted-foreground">{doc?.type || 'Magistério'} • {doc?.year}</p>
+                              <p className="text-[10px] text-muted-foreground">{doc?.type || 'Magistério'} • {doc?.year}</p>
                             </div>
                           </div>
                         );
@@ -349,7 +348,7 @@ const Magisterium: React.FC = () => {
             <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 no-scrollbar" role="tablist" aria-label="Filtros de temas">
               <Button 
                 variant={selectedTheme === null ? "default" : "outline"} 
-                className="rounded-full h-10 px-4 text-premium-tiny font-black uppercase tracking-widest flex-shrink-0"
+                className="rounded-full h-10 px-4 text-[10px] font-black uppercase tracking-widest flex-shrink-0"
                 onClick={() => setSelectedTheme(null)}
                 role="tab"
                 aria-selected={selectedTheme === null}
@@ -360,7 +359,7 @@ const Magisterium: React.FC = () => {
                 <Button 
                   key={theme}
                   variant={selectedTheme === theme ? "default" : "outline"} 
-                  className="rounded-full h-10 px-4 text-premium-tiny font-black uppercase tracking-widest flex-shrink-0"
+                  className="rounded-full h-10 px-4 text-[10px] font-black uppercase tracking-widest flex-shrink-0"
                   onClick={() => setSelectedTheme(theme)}
                   role="tab"
                   aria-selected={selectedTheme === theme}
@@ -379,28 +378,28 @@ const Magisterium: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.05 }}
               >
-                <Card className="group h-full hover:border-primary/30 transition-all border-border bg-card overflow-hidden rounded-premium-sm">
+                <Card className="group h-full hover:border-primary/30 transition-all border-border bg-card overflow-hidden rounded-2xl">
                   <CardContent className="p-6 flex flex-col h-full space-y-4">
                     <div className="flex items-start justify-between gap-2">
-                      <div className="p-2.5 rounded-premium-sm bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all">
+                      <div className="p-2.5 rounded-2xl bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all">
                         {doc.type === 'Encíclica' ? <Icons.Scroll className="w-5 h-5" /> : 
                          doc.type === 'Constituição' ? <Icons.Library className="w-5 h-5" /> :
                          <Icons.FileText className="w-5 h-5" />}
                       </div>
-                      <Badge variant="outline" className="text-premium-tiny font-black uppercase tracking-widest border-primary/20 text-primary bg-primary/5">
+                      <Badge variant="outline" className="text-[9px] font-black uppercase tracking-widest border-primary/20 text-primary bg-primary/5">
                         {doc.year}
                       </Badge>
                     </div>
                     
                     <div className="space-y-1 flex-1">
                       <h3 className="font-serif font-bold text-lg text-foreground group-hover:text-primary transition-colors">{doc.title}</h3>
-                      <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">{doc.author}</p>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{doc.author}</p>
                       <p className="text-xs text-muted-foreground leading-relaxed line-clamp-3 mt-2">{doc.summary}</p>
                     </div>
 
                     <div className="flex flex-wrap gap-1 pt-2">
                       {doc.theme.map(t => (
-                        <span key={t} className="text-premium-tiny font-bold text-primary/60 bg-primary/5 px-2 py-0.5 rounded-full uppercase tracking-tighter">
+                        <span key={t} className="text-[9px] font-bold text-primary/60 bg-primary/5 px-2 py-0.5 rounded-full uppercase tracking-tighter">
                           {t}
                         </span>
                       ))}
@@ -408,7 +407,7 @@ const Magisterium: React.FC = () => {
 
                     <Button 
                       variant="ghost" 
-                      className="w-full justify-between group/btn text-premium-tiny font-black uppercase tracking-widest h-10 px-0 hover:bg-transparent hover:text-primary"
+                      className="w-full justify-between group/btn text-[10px] font-black uppercase tracking-widest h-10 px-0 hover:bg-transparent hover:text-primary"
                       onClick={() => navigate(`/magisterium/${doc.id}`)}
                     >
                       Ler Documento

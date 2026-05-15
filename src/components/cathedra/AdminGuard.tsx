@@ -1,9 +1,7 @@
-import React, { useEffect } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import React from 'react';
+import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
-import { canUserAccess, logUnauthorizedAccess } from '@/utils/auth-utils';
-import AccessDenied from './AccessDenied';
 
 interface AdminGuardProps {
   children: React.ReactNode;
@@ -11,28 +9,29 @@ interface AdminGuardProps {
 
 const AdminGuard: React.FC<AdminGuardProps> = ({ children }) => {
   const { user, profile, loading } = useAuth();
-  const location = useLocation();
-
-  useEffect(() => {
-    if (!loading && user && profile && !canUserAccess(profile.role, location.pathname)) {
-      logUnauthorizedAccess(user.id, location.pathname);
-    }
-  }, [loading, user, profile, location.pathname]);
 
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="w-8 h-8 border-2 border-secondary border-t-transparent rounded-premium-sm animate-spin" />
+        <div className="w-8 h-8 border-2 border-secondary border-t-transparent rounded-2xl animate-spin" />
       </div>
     );
   }
 
   if (!user) {
-    return <Navigate to={AppRoute.LOGIN} state={{ from: location }} replace />;
+    return <Navigate to={AppRoute.LOGIN} replace />;
   }
 
-  if (!canUserAccess(profile?.role, location.pathname)) {
-    return <AccessDenied />;
+  if (profile?.role !== 'admin') {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-8">
+        <div className="w-16 h-16 rounded-2xl bg-destructive/10 flex items-center justify-center mb-4">
+          <span className="text-2xl">🔒</span>
+        </div>
+        <h2 className="text-xl font-bold mb-2">Acesso Restrito</h2>
+        <p className="text-muted-foreground">Esta área é exclusiva para administradores.</p>
+      </div>
+    );
   }
 
   return <>{children}</>;

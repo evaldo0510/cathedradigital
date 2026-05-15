@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Icons } from "@/constants";
-import { Button } from "@/components/cathedra/Button";
+import { Button } from "@/components/ui/button";
 import { AppRoute, Language } from "@/types";
 import { useNavigate } from "react-router-dom";
 import { Menu, X, ChevronRight, Globe } from "lucide-react";
 import { useLang } from "@/hooks/useLang";
-import { useAuth } from "@/hooks/useAuth";
 import { HomeButton } from "../cathedra/HomeButton";
 
 const LandingHeader = () => {
@@ -15,7 +14,6 @@ const LandingHeader = () => {
   const [showLangMenu, setShowLangMenu] = useState(false);
   const navigate = useNavigate();
   const { lang, setLang } = useLang();
-  const { user } = useAuth();
 
   const languages: { code: Language; label: string; flag: string }[] = [
     { code: 'pt', label: 'Português', flag: '🇧🇷' },
@@ -35,8 +33,10 @@ const LandingHeader = () => {
   }, []);
 
   const navLinks = [
-    { name: "Início", href: "#hero" },
-    { name: "Conteúdo", href: "#main-content" },
+    { name: "Funcionalidades", href: "#features" },
+    { name: "Como Funciona", href: "#how-it-works" },
+    { name: "Depoimentos", href: "#testimonials" },
+    { name: "Planos", href: "#pricing" },
     { name: "Sobre", href: AppRoute.ABOUT },
   ];
 
@@ -71,7 +71,7 @@ const LandingHeader = () => {
         >
           <Icons.Logo className="w-10 h-10 md:w-12 md:h-12 transition-transform group-hover:scale-105" variant="gold" />
           <div className="hidden sm:block">
-            <h1 className="text-premium-small font-display font-bold text-foreground tracking-[0.3em] uppercase">CATHEDRA</h1>
+            <h1 className="text-sm font-display font-bold text-foreground tracking-[0.3em] uppercase">CATHEDRA</h1>
           </div>
         </div>
 
@@ -83,7 +83,7 @@ const LandingHeader = () => {
               variant="ghost"
               size="sm"
               onClick={() => handleNavClick(link.href)}
-              className="h-auto py-1 px-2 text-premium-small font-bold uppercase tracking-[0.3em] text-muted-foreground hover:text-primary transition-colors relative group shadow-none"
+              className="h-auto py-1 px-2 text-[11px] font-bold uppercase tracking-[0.3em] text-muted-foreground hover:text-primary transition-colors relative group shadow-none"
               type="button"
             >
               {link.name}
@@ -96,7 +96,7 @@ const LandingHeader = () => {
               variant="ghost"
               size="sm"
               onClick={() => setShowLangMenu(!showLangMenu)}
-              className="flex items-center gap-2 text-premium-tiny font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors shadow-none"
+              className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors shadow-none"
               aria-label="Mudar idioma"
               aria-haspopup="true"
               aria-expanded={showLangMenu}
@@ -111,7 +111,7 @@ const LandingHeader = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
-                  className="absolute right-0 mt-2 w-40 bg-background border border-border rounded-full shadow-premium overflow-hidden"
+                  className="absolute right-0 mt-2 w-40 bg-background border border-border rounded-full shadow-xl overflow-hidden"
                 >
                   {languages.map((l) => (
                     <Button
@@ -133,38 +133,25 @@ const LandingHeader = () => {
         </nav>
 
         <div className="flex items-center gap-4">
-          {!user ? (
-            <>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate(AppRoute.LOGIN)}
-                className="hidden sm:flex text-premium-small font-bold uppercase tracking-[0.3em] text-muted-foreground hover:text-primary transition-colors shadow-none"
-                aria-label="Ir para página de login"
-                type="button"
-              >
-                Entrar
-              </Button>
-              
-              <HomeButton
-                variant="ghost"
-                size="sm"
-                className={`hidden xs:flex rounded-full px-4 sm:px-6 shadow-none transition-all ${isScrolled ? 'text-primary' : ''}`}
-                onClick={() => navigate(AppRoute.LOGIN)}
-              >
-                Começar <ChevronRight className="w-4 h-4 ml-1" />
-              </HomeButton>
-            </>
-          ) : (
-            <HomeButton
-              variant="ghost"
-              size="sm"
-              className={`hidden xs:flex rounded-full px-4 sm:px-6 shadow-none transition-all ${isScrolled ? 'text-primary' : ''}`}
-              onClick={() => navigate(AppRoute.HOJE)}
-            >
-              Ir ao Painel <ChevronRight className="w-4 h-4 ml-1" />
-            </HomeButton>
-          )}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate(AppRoute.LOGIN)}
+            className="hidden sm:flex text-[11px] font-bold uppercase tracking-[0.3em] text-muted-foreground hover:text-primary transition-colors shadow-none"
+            aria-label="Ir para página de login"
+            type="button"
+          >
+            Entrar
+          </Button>
+          
+          <HomeButton
+            variant="ghost"
+            size="sm"
+            className={`hidden xs:flex rounded-full px-4 sm:px-6 shadow-none transition-all ${isScrolled ? 'text-primary' : ''}`}
+            onClick={() => navigate(AppRoute.LOGIN)}
+          >
+            Começar <ChevronRight className="w-4 h-4 ml-1" />
+          </HomeButton>
 
           {/* Mobile Menu Toggle */}
           <Button
@@ -191,14 +178,20 @@ const LandingHeader = () => {
           >
             <div className="app-container py-8 flex flex-col gap-6">
               {navLinks.map((link) => (
-                <Button
+                <button
                   key={link.name}
-                  variant="ghost"
                   onClick={() => handleNavClick(link.href)}
-                  className="text-lg font-serif font-bold text-left text-foreground hover:text-primary transition-colors outline-none focus:text-primary justify-start h-auto px-0"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      handleNavClick(link.href);
+                    }
+                  }}
+                  className="text-lg font-serif font-bold text-left text-foreground hover:text-primary transition-colors outline-none focus:text-primary"
+                  type="button"
                 >
                   {link.name}
-                </Button>
+                </button>
               ))}
               <hr className="border-border/10" />
               <HomeButton

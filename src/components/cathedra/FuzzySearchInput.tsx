@@ -1,4 +1,3 @@
-import { Button   } from '@/components/cathedra/Button';
 /**
  * FuzzySearchInput — shared search input used by Saints, Glossary,
  * Community and Themes pages.
@@ -109,7 +108,7 @@ export const FuzzySearchInput: React.FC<FuzzySearchInputProps> = ({
         )}
       />
       {value && (
-        <Button
+        <button
           type="button"
           onClick={() => onChange('')}
           aria-label="Limpar busca"
@@ -119,12 +118,12 @@ export const FuzzySearchInput: React.FC<FuzzySearchInputProps> = ({
           )}
         >
           <X className={tokens.icon} />
-        </Button>
+        </button>
       )}
       {showHint && (
         <div 
           aria-live="polite"
-          className="absolute -bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-1.5 text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground"
+          className="absolute -bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground"
         >
           <Loader2 className="w-3 h-3 animate-spin" />
           Buscando…

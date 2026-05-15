@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Card    , CardContent  , CardDescription  , CardHeader  , CardTitle  , CardFooter   } from '@/components/cathedra/Card';
-import { Button   } from '@/components/cathedra/Button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
@@ -135,7 +135,7 @@ const PartnersPage: React.FC = () => {
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3].map(i => (
-              <div key={i} className="h-64 rounded-premium-sm bg-muted/40 animate-pulse border border-border" />
+              <div key={i} className="h-64 rounded-2xl bg-muted/40 animate-pulse border border-border" />
             ))}
           </div>
         ) : partners.length > 0 ? (
@@ -147,7 +147,7 @@ const PartnersPage: React.FC = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: index * 0.1 }}
               >
-                <Card className="h-full hover:shadow-premium transition-all duration-300 border-border/50 bg-card  overflow-hidden group">
+                <Card className="h-full hover:shadow-xl transition-all duration-300 border-border/50 bg-card  overflow-hidden group">
                   <CardHeader className="relative h-32 flex items-center justify-center bg-muted/20">
                     {partner.logo_url ? (
                       <img 
@@ -156,7 +156,7 @@ const PartnersPage: React.FC = () => {
                         className="max-h-24 max-w-[80%] object-contain transition-transform duration-300 group-hover:scale-110" 
                       />
                     ) : (
-                      <div className="w-16 h-16 rounded-premium-sm bg-primary/10 flex items-center justify-center text-primary">
+                      <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
                         <Icons.Trophy className="w-8 h-8" />
                       </div>
                     )}
@@ -193,7 +193,7 @@ const PartnersPage: React.FC = () => {
             animate={{ opacity: 1 }}
             className="flex flex-col items-center justify-center py-20 px-6 text-center space-y-6 bg-muted/20 rounded-full border-2 border-dashed border-border/50"
           >
-            <div className="w-20 h-20 rounded-premium-sm bg-primary/5 flex items-center justify-center">
+            <div className="w-20 h-20 rounded-2xl bg-primary/5 flex items-center justify-center">
               <Icons.Community className="w-10 h-10 text-muted-foreground/50" />
             </div>
             <div className="space-y-2">
@@ -280,7 +280,7 @@ const PartnersPage: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="bg-muted/30 p-4 rounded-premium-sm flex gap-3 text-xs text-muted-foreground leading-relaxed">
+                  <div className="bg-muted/30 p-4 rounded-2xl flex gap-3 text-xs text-muted-foreground leading-relaxed">
                     <Icons.Info className="w-4 h-4 shrink-0 text-primary" />
                     <p>Ao enviar, sua solicitação passará por uma análise administrativa. Apenas parceiros aprovados serão exibidos publicamente na plataforma.</p>
                   </div>

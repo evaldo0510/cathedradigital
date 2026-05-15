@@ -1,9 +1,8 @@
-import { Button   } from '@/components/cathedra/Button';
 import React, { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import {
   HoverCard,
-  HoverCardContent  ,
+  HoverCardContent,
   HoverCardTrigger,
 } from '@/components/ui/hover-card';
 import { Icons } from '../../constants';
@@ -65,15 +64,15 @@ const MagisteriumPopover: React.FC<MagisteriumPopoverProps> = ({
   return (
     <HoverCard openDelay={100} closeDelay={200}>
       <HoverCardTrigger asChild>
-        <Button
+        <button
           onMouseEnter={fetchExcerpt}
           className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-xs font-bold text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800 dark:hover:bg-emerald-900/50 transition-all"
         >
           <Icons.Globe className="w-3 h-3" />
           {label}
-        </Button>
+        </button>
       </HoverCardTrigger>
-      <HoverCardContent  
+      <HoverCardContent
         side="top"
         align="start"
         className="w-80 max-h-64 overflow-y-auto p-0 rounded-full border-emerald-200 dark:border-emerald-800"
@@ -85,16 +84,16 @@ const MagisteriumPopover: React.FC<MagisteriumPopoverProps> = ({
               {title || label}
             </span>
           </div>
-          <Button
+          <button
             onClick={() => {
               if (onNavigate) onNavigate(documentName);
               else navigate(`/magisterium/${documentName}`);
             }}
-            className="text-premium-tiny font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 shrink-0 ml-2"
+            className="text-[10px] font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 shrink-0 ml-2"
           >
             Abrir completo
             <Icons.ArrowDown className="w-3 h-3 -rotate-90" />
-          </Button>
+          </button>
         </div>
         <div className="p-3">
           {loading && (
@@ -113,7 +112,7 @@ const MagisteriumPopover: React.FC<MagisteriumPopoverProps> = ({
             <p className="text-xs text-muted-foreground italic">Texto não disponível.</p>
           )}
         </div>
-      </HoverCardContent  >
+      </HoverCardContent>
     </HoverCard>
   );
 };

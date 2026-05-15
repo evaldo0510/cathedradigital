@@ -47,14 +47,14 @@ const OfflineIndicator: React.FC = () => {
   }
 
   return (
-    <div className={`fixed bottom-4 left-1/2 -translate-x-1/2 z-[200] px-5 py-2.5 ${color} text-white rounded-full shadow-premium flex flex-col items-center gap-1 animate-in fade-in slide-in-from-bottom-4 transition-colors`}>
+    <div className={`fixed bottom-4 left-1/2 -translate-x-1/2 z-[200] px-5 py-2.5 ${color} text-white rounded-full shadow-xl flex flex-col items-center gap-1 animate-in fade-in slide-in-from-bottom-4 transition-colors`}>
       <div className="flex items-center gap-2">
         <span className="w-2 h-2 rounded-full bg-white/70 animate-pulse" />
         <span className="text-xs font-bold uppercase tracking-wider">
           {title}
         </span>
       </div>
-      <span className="text-premium-tiny opacity-80 font-medium">
+      <span className="text-[10px] opacity-80 font-medium">
         {sub}
       </span>
     </div>

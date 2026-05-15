@@ -1,4 +1,3 @@
-import { Button   } from '@/components/cathedra/Button';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
@@ -144,7 +143,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
             <TabsContent value="temas" className="space-y-2 mt-4">
               <div className="flex flex-wrap gap-2" role="list" ref={tagsRef}>
                 {tags.results?.map((t, idx) => (
-                  <Button
+                  <button
                     key={t.id}
                     role="listitem"
                     onClick={() => navigate(`${AppRoute.TEMAS}/${t.slug}`)}
@@ -157,7 +156,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     {t.emoji && <span className="group-hover:scale-110 transition-transform">{t.emoji}</span>}
                     <span className="text-xs font-medium text-foreground group-hover:text-primary">{t.label}</span>
                     <RelevanceBadge score={(t as any).similarityScore} size="xs" />
-                  </Button>
+                  </button>
                 ))}
               </div>
               {tags.results?.length === 0 && <EmptyState text="Nenhum tema encontrado." />}

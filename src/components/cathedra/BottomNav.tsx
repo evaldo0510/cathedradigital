@@ -1,11 +1,9 @@
-import { Button   } from '@/components/cathedra/Button';
 import React, { useCallback, useRef, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AppRoute } from '../../types';
 import { Icons } from '@/constants';
 import { prefetchRoute } from '@/lib/prefetch';
 import { LangContext } from '@/contexts/LangContext';
-import { CathedraIcon, IconSizePreset } from './CathedraIcon';
 
 /* ── Ripple helper ── */
 function useRipple() {
@@ -48,7 +46,7 @@ interface BottomNavItemProps {
 }
 
 const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon, route, isActive, onClick, onRipple }) => (
-  <Button 
+  <button 
     onClick={(e) => { onRipple(e); onClick(); }}
     onTouchStart={(e) => { onRipple(e); prefetchRoute(route); }}
     onMouseEnter={() => prefetchRoute(route)}
@@ -60,22 +58,22 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon, route, isAct
   >
 
     <div className={`transition-transform duration-150 ${isActive ? 'scale-110 -translate-y-0.5' : 'active:scale-90'}`}>
-      <CathedraIcon 
-        icon={(icon as React.ReactElement).type as any} 
-        size={IconSizePreset.NAV} 
-        variant={isActive ? 'primary' : 'muted'} 
-        containerClassName="bg-transparent border-none p-0 w-auto h-auto"
-      />
+      {React.cloneElement(icon as React.ReactElement, { 
+        className: `w-5 h-5 sm:w-5 sm:h-5`,
+        size: undefined,
+        strokeWidth: 2,
+        fill: isActive ? 'currentColor' : 'none'
+      })}
     </div>
-    <span className={`text-premium-tiny sm:text-premium-tiny font-bold uppercase tracking-tight sm:tracking-widest leading-none ${
+    <span className={`text-[8px] sm:text-[10px] font-bold uppercase tracking-tight sm:tracking-widest leading-none ${
       isActive ? 'opacity-100' : 'opacity-60'
     }`}>
       {label}
     </span>
     {isActive && (
-      <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-primary rounded-premium-sm" />
+      <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-primary rounded-2xl" />
     )}
-  </Button>
+  </button>
 );
 
 interface BottomNavProps {

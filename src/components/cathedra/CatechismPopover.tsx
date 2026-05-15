@@ -1,4 +1,3 @@
-import { Button   } from '@/components/cathedra/Button';
 import React from 'react';
 import {
   Popover,
@@ -26,13 +25,13 @@ const CatechismPopover: React.FC<CatechismPopoverProps> = ({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button
+        <button
           className={variant === 'mini' 
-            ? "ml-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-primary/10 text-premium-tiny font-black text-primary border border-primary/20 hover:bg-primary hover:text-primary-foreground transition-all align-middle"
+            ? "ml-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-primary/10 text-[8px] font-black text-primary border border-primary/20 hover:bg-primary hover:text-primary-foreground transition-all align-middle"
             : "px-2.5 py-1 rounded-full bg-card border border-border text-xs font-bold text-primary hover:bg-primary hover:text-primary-foreground transition-all"}
         >
           {variant === 'mini' ? '§' : `§${paragraph}`}
-        </Button>
+        </button>
       </PopoverTrigger>
       <PopoverContent
         side="top"
@@ -47,13 +46,13 @@ const CatechismPopover: React.FC<CatechismPopoverProps> = ({
             </span>
           </div>
           {onNavigate && (
-            <Button
+            <button
               onClick={() => onNavigate(paragraph)}
-              className="text-premium-tiny font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-1"
+              className="text-[10px] font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-1"
             >
               Abrir completo
               <Icons.ArrowDown className="w-3 h-3 -rotate-90" />
-            </Button>
+            </button>
           )}
         </div>
         <div className="p-3">
