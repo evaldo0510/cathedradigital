@@ -156,19 +156,26 @@ const ProfilePage: React.FC = () => {
     handlePush();
 
     try {
-      const { error } = await supabase.from('profiles').update({ 
+      const profileUpdate = supabase.from('profiles').update({ 
         name, 
         bio, 
-        whatsapp_number: whatsappNumber,
-        whatsapp_enabled: whatsappEnabled,
-        push_enabled: pushEnabled,
         estado: estado || null,
         diocese: diocese || null,
         paroquia: paroquia || null,
         movimento_pastoral: movimentoPastoral || null,
-      } as any).eq('id', user.id);
+      }).eq('id', user.id);
+
+      const privateUpdate = supabase.from('profiles_private').update({
+        whatsapp_number: whatsappNumber,
+        whatsapp_enabled: whatsappEnabled,
+        push_enabled: pushEnabled,
+      }).eq('id', user.id);
       
-      if (error) throw error;
+      const [pRes, prRes] = await Promise.all([profileUpdate, privateUpdate]);
+      
+      if (pRes.error) throw pRes.error;
+      if (prRes.error) throw prRes.error;
+      
       toast.success('Perfil atualizado!');
     } catch (err) {
       console.error('Failed to save profile:', err);

@@ -885,13 +885,10 @@ export type Database = {
           name: string
           paroquia: string | null
           program_duration: number | null
-          push_enabled: boolean | null
           role: string | null
           streak: number | null
           total_minutes_read: number | null
           updated_at: string
-          whatsapp_enabled: boolean | null
-          whatsapp_number: string | null
           xp: number | null
         }
         Insert: {
@@ -912,13 +909,10 @@ export type Database = {
           name?: string
           paroquia?: string | null
           program_duration?: number | null
-          push_enabled?: boolean | null
           role?: string | null
           streak?: number | null
           total_minutes_read?: number | null
           updated_at?: string
-          whatsapp_enabled?: boolean | null
-          whatsapp_number?: string | null
           xp?: number | null
         }
         Update: {
@@ -939,16 +933,62 @@ export type Database = {
           name?: string
           paroquia?: string | null
           program_duration?: number | null
-          push_enabled?: boolean | null
           role?: string | null
           streak?: number | null
           total_minutes_read?: number | null
           updated_at?: string
-          whatsapp_enabled?: boolean | null
-          whatsapp_number?: string | null
           xp?: number | null
         }
         Relationships: []
+      }
+      profiles_private: {
+        Row: {
+          created_at: string | null
+          id: string
+          push_enabled: boolean | null
+          updated_at: string | null
+          whatsapp_enabled: boolean | null
+          whatsapp_number: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id: string
+          push_enabled?: boolean | null
+          updated_at?: string | null
+          whatsapp_enabled?: boolean | null
+          whatsapp_number?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          push_enabled?: boolean | null
+          updated_at?: string | null
+          whatsapp_enabled?: boolean | null
+          whatsapp_number?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_private_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profiles_private_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "public_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profiles_private_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "user_management_stats"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       push_subscriptions: {
         Row: {

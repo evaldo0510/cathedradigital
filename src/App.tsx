@@ -46,7 +46,7 @@ const queryClient = new QueryClient({
 });
 
 // ALL route components are lazy-loaded for faster initial load
-// Dashboard component removed in favor of HojePage
+const Dashboard = lazy(() => import('./components/cathedra/Dashboard'));
 const Bible = lazy(() => import('./components/cathedra/Bible'));
 const Catechism = lazy(() => import('./components/cathedra/Catechism'));
 const StudyMode = lazy(() => import('./components/cathedra/StudyMode'));
@@ -595,7 +595,7 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.HOME} element={<PageTransition><Index /></PageTransition>} />
                   <Route path="/curso-pch" element={<Navigate to={AppRoute.JORNADAS} replace />} />
                   <Route path="/pch" element={<Navigate to={AppRoute.JORNADAS} replace />} />
-                  <Route path={AppRoute.DASHBOARD} element={<Navigate to={AppRoute.HOJE} replace />} />
+                  <Route path={AppRoute.DASHBOARD} element={<PageTransition><AuthGuard><Dashboard user={appUser} /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.BIBLE} element={<PageTransition><AuthGuard><Bible /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.CATECHISM} element={<PageTransition><AuthGuard><Catechism /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.SAINTS} element={<PageTransition><AuthGuard><Saints /></AuthGuard></PageTransition>} />
