@@ -84,7 +84,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                   variant="ghost"
                   size="sm"
                   onClick={() => navigate(item.route)}
-                  className={`px-3 py-1.5 h-auto text-[10px] font-black uppercase tracking-[0.2em] transition-all whitespace-nowrap relative group shadow-none ${
+                  className={`px-3 py-1.5 h-auto text-premium-tiny font-black uppercase tracking-[0.2em] transition-all whitespace-nowrap relative group shadow-none ${
                     pathname === item.route ? 'text-primary bg-primary/5' : 'text-muted-foreground hover:text-primary'
                   }`}
                   aria-label={item.label}
