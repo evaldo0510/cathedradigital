@@ -23,7 +23,7 @@ jobs:
       run: npx playwright install --with-deps
 
     - name: Run Playwright Tests (Light/Dark & A11y)
-      run: npx playwright test tests/e2e/home-premium.spec.ts --project=chromium-light --project=chromium-dark
+      run: npx playwright test tests/e2e/home-premium.spec.ts tests/e2e/accessibility.spec.ts --project=chromium-light --project=chromium-dark
       env:
         CI: true
         PLAYWRIGHT_TEST_BASE_URL: http://localhost:8080
