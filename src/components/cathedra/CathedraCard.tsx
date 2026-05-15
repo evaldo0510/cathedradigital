@@ -73,9 +73,9 @@ const CathedraCardFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDi
 
 export { 
   CathedraCard, 
-  CathedraCardHeader, 
-  CathedraCardFooter, 
-  CathedraCardTitle, 
-  CathedraCardDescription, 
+  Cathedra  
+  Cathedra  
+  Cathedra  
+  Cathedra  
   CathedraCardContent 
 };
