@@ -308,11 +308,11 @@ const DesignSystemGuide = () => {
                 <div className="space-y-6">
                   <div className="space-y-1">
                     <p className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/30">H1 Display - 72px</p>
-                    <h1 className="text-5xl md:text-7xl font-serif text-foreground leading-tight">A Glória de Deus</h1>
+                    <h1 className="text-5xl md:text-7xl font-display text-foreground leading-tight">A Glória de Deus</h1>
                   </div>
                   <div className="space-y-1">
                     <p className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/30">H2 Headline - 48px</p>
-                    <h2 className="text-3xl md:text-5xl font-serif text-foreground">Oração e Contemplação</h2>
+                    <h2 className="text-3xl md:text-5xl font-display text-foreground">Oração e Contemplação</h2>
                   </div>
                   <div className="space-y-1">
                     <p className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/30">H3 Subheadline - 32px</p>

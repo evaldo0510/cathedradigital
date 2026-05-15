@@ -5,7 +5,7 @@ const AboutPage: React.FC = () => (
   <div className="w-full space-y-16 py-4 animate-in fade-in slide-in-from-bottom-4 duration-1000">
     {/* Hero Section */}
     <div className="text-center space-y-4">
-      <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 rounded-2xl border border-primary/20">
+      <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 rounded-full border border-primary/20">
         <Icons.Cross className="w-4 h-4 text-primary" />
         <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Manifesto & Identidade</span>
       </div>

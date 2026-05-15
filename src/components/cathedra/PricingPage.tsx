@@ -42,7 +42,7 @@ const PricingPage: React.FC = () => {
       </Helmet>
 
       <motion.div variants={fadeUp} initial="hidden" animate="visible" className="text-center space-y-4 mb-12">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 border border-primary/20 rounded-2xl text-primary mb-4">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 border border-primary/20 rounded-full text-primary mb-4">
           <Crown className="w-4 h-4" />
           <span className="text-xs font-black uppercase tracking-[0.15em]">Planos</span>
         </div>

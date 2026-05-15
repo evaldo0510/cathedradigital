@@ -104,12 +104,12 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
         </p>
       </div>
 
-      <div className="bg-card border border-border rounded-2xl p-8 space-y-6">
+      <div className="premium-card p-8 space-y-6">
         {error && (
-          <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-2xl text-sm text-destructive font-medium">{error}</div>
+          <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-premium text-sm text-destructive font-medium">{error}</div>
         )}
         {success && (
-          <div className="p-4 bg-primary/10 border border-primary/20 rounded-2xl text-sm text-primary font-medium">{success}</div>
+          <div className="p-4 bg-primary/10 border border-primary/20 rounded-premium text-sm text-primary font-medium">{success}</div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -141,7 +141,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
               />
             </div>
           )}
-          <Button type="submit" isLoading={loading} className="w-full h-14">
+          <Button type="submit" isLoading={loading} className="w-full h-14 rounded-full">
             {mode === 'login' ? 'Entrar' : mode === 'signup' ? 'Criar Conta' : 'Enviar Link'}
           </Button>
         </form>
