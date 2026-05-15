@@ -36,7 +36,10 @@ const Index = () => {
   }, [user, profile, loading, navigate]);
 
   const handleStart = () => {
-    setIsJourneyOpen(true);
+    const el = document.getElementById('main-content');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   const handleNavigate = (route: string) => navigate(route);
