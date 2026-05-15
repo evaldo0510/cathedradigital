@@ -265,7 +265,7 @@
   @screen xl {
     .desktop-layout {
       grid-template-columns: 1fr 420px;
-      @apply gap-32;
+      @apply gap-40;
     }
   }
 
