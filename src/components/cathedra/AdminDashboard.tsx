@@ -435,6 +435,11 @@ const AdminDashboard: React.FC = () => {
               <Users className="w-3.5 h-3.5" /> Usuários
             </TabsTrigger>
             <TabsTrigger value="transactions" className="gap-2 text-premium-tiny font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+              <DollarSign className="w-3.5 h-3.5" /> Transações
+            </TabsTrigger>
+            <TabsTrigger value="design" className="gap-2 text-premium-tiny font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+              <Palette className="w-3.5 h-3.5" /> Design System
+            </TabsTrigger>
               <DollarSign className="w-3.5 h-3.5" /> Financeiro
             </TabsTrigger>
             <TabsTrigger value="partners" className="gap-2 text-premium-tiny font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
