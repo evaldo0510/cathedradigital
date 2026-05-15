@@ -38,6 +38,16 @@ async function runVisualTests() {
       fs.copyFileSync('visual-audit-report.json', 'public/visual-audit-report.json');
     }
 
+    const a11yReportsDir = path.join(process.cwd(), 'test-results', 'a11y-reports');
+    const publicA11yPath = path.join(process.cwd(), 'public', 'a11y-reports');
+    if (fs.existsSync(a11yReportsDir)) {
+      if (!fs.existsSync(publicA11yPath)) fs.mkdirSync(publicA11yPath, { recursive: true });
+      const a11yFiles = fs.readdirSync(a11yReportsDir);
+      a11yFiles.forEach(file => {
+        fs.copyFileSync(path.join(a11yReportsDir, file), path.join(publicA11yPath, file));
+      });
+    }
+
     results.status = 'success';
 
   } catch (error) {
