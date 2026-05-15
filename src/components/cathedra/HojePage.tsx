@@ -150,7 +150,7 @@ const HojePage: React.FC = () => {
           
           <div className="flex items-center justify-center gap-8 flex-wrap">
              {(profile?.streak || 0) > 0 && (
-              <div className="flex items-center gap-3 px-8 py-3.5 rounded-full bg-primary/[0.03] border border-primary/10 transition-all hover:bg-primary/[0.06]">
+              <div className="flex items-center gap-3 px-8 py-3.5 rounded-premium-sm bg-primary/[0.03] border border-primary/10 transition-all hover:bg-primary/[0.06]">
                 <Icons.Zap className="w-4 h-4 text-primary" />
                 <span className="text-premium-tiny font-bold text-primary uppercase tracking-widest">{profile?.streak} {profile?.streak === 1 ? 'Dia' : 'Dias'}</span>
               </div>
