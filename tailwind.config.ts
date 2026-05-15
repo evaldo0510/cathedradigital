@@ -74,9 +74,9 @@ export default {
         '4xl': '2.25rem',
       },
       boxShadow: {
-        'premium': '0 4px 20px -4px rgba(0, 0, 0, 0.04)',
-        'premium-hover': '0 20px 40px -12px rgba(0, 0, 0, 0.08)',
-        'soft': '0 2px 10px -2px rgba(0, 0, 0, 0.03)',
+        'premium': '0 10px 30px -10px rgba(0, 0, 0, 0.03)',
+        'premium-hover': '0 20px 40px -12px rgba(0, 0, 0, 0.05)',
+        'soft': '0 2px 12px -2px rgba(0, 0, 0, 0.02)',
       },
       keyframes: {
         "accordion-down": {

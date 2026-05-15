@@ -118,8 +118,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   }
 
   return (
-    <div className="desktop-layout py-6 md:py-10">
-      <div className="desktop-main content-section">
+    <div className="app-container desktop-layout py-10 md:py-16">
+      <div className="desktop-main space-y-12 md:space-y-20">
       <FadeUp>
         <div className="text-center space-y-4">
           <motion.div
