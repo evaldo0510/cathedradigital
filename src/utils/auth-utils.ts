@@ -14,6 +14,10 @@ const ADMIN_ROUTES = [
   AppRoute.TRANSACTIONS,
   AppRoute.SELLER,
   '/admin/*',
+  '/transactions/*',
+  '/catechism/debug',
+  '/security-audit/*',
+  '/a11y-audit/*',
 ];
 
 export const isRouteProtectedForAdmin = (path: string): boolean => {
