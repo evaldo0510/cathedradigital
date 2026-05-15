@@ -85,7 +85,7 @@ const SpiritualJournalPage = () => {
   };
 
   return (
-    <div className="app-container section-spacing stack-spacing pb-64">
+    <div className="app-container section-spacing stack-spacing pb-32">
       <SEOHead title="Diário Espiritual - Reflexão e Oração" description="Guarde suas reflexões diárias e acompanhe seu crescimento espiritual." path="/diario" />
       
       <header className="premium-header">
