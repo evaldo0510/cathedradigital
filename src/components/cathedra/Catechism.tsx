@@ -678,6 +678,15 @@ const Catechism: React.FC = () => {
             />
           </div>
         </div>
+        <div className="flex justify-center pt-6">
+          <Button 
+            variant="outline" 
+            onClick={resumeLastRead}
+            className="rounded-full border-primary/20 text-primary gap-2"
+          >
+            <History className="w-4 h-4" /> Retomar Leitura
+          </Button>
+        </div>
       </motion.div>
       
       {user?.role === 'admin' && (
