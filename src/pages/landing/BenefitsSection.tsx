@@ -68,7 +68,7 @@ const BenefitsSection = ({ onLogin }: BenefitsSectionProps) => {
                 className="transition-all duration-700 h-full"
               >
                 <div className="space-y-4">
-                  <div className="w-10 h-10 rounded-premium-sm bg-primary/5 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-premium-sm bg-primary/5 border border-primary/10 flex items-center justify-center">
                     {benefit.icon}
                   </div>
                   <div className="space-y-2">
