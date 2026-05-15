@@ -122,45 +122,67 @@ test.describe('Global Accessibility & Contrast Audit', () => {
       <body>
         <h1>Accessibility Audit Summary</h1>
         <p>Threshold: Max ${MAX_CRITICAL_ERRORS} critical errors allowed.</p>
+        <p><a href="summary.json" target="_blank">View Raw Summary JSON</a></p>
         
         <section>
           <h2>Hero Visuals across Breakpoints</h2>
-          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px;">
             ${['mobile', 'sm', 'md', 'lg'].flatMap(v => ['light', 'dark'].map(t => `
               <div class="card">
                 <h4>Hero - ${t.toUpperCase()} - ${v.toUpperCase()}</h4>
-                <img src="hero-visuals/hero-${t}-${v}.png" alt="Hero ${t} ${v}">
+                <a href="hero-visuals/hero-${t}-${v}.png" target="_blank">
+                  <img src="hero-visuals/hero-${t}-${v}.png" alt="Hero ${t} ${v}">
+                </a>
               </div>
             `)).join('')}
           </div>
         </section>
 
-        ${a11ySummary.map(s => {
-          const imageFile = s.component 
-            ? `comp-${s.component.replace(/\s+/g, '-')}-${s.theme}.png`
-            : `contrast-${s.name}-${s.theme}.png`;
-          
-          return `
-            <div class="card">
-              <h3>
-                ${s.name || s.component} 
-                <span class="theme-badge ${s.theme}">${s.theme.toUpperCase()}</span>
-              </h3>
-              <p>Context: ${s.route || s.component || 'N/A'}</p>
-              <p class="${s.criticalCount > MAX_CRITICAL_ERRORS ? 'error' : 'success'}">
-                Violations: ${s.violations} (${s.criticalCount} critical)
-              </p>
-              <details>
-                <summary>View Details</summary>
-                <pre>${JSON.stringify(s.details, null, 2)}</pre>
-              </details>
-              <div style="margin-top: 15px;">
-                <strong>Contrast Preview:</strong><br>
-                <img src="${imageFile}" alt="Contrast check for ${s.name || s.component}">
+        <section>
+          <h2>Hero CTA Focus & Keyboard States</h2>
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px;">
+            ${['light', 'dark'].map(t => `
+              <div class="card">
+                <h4>CTA Focus - ${t.toUpperCase()}</h4>
+                <a href="hero-visuals/hero-cta-focus-${t}.png" target="_blank">
+                  <img src="hero-visuals/hero-cta-focus-${t}.png" alt="Hero CTA Focus ${t}">
+                </a>
               </div>
-            </div>
-          `;
-        }).join('')}
+            `).join('')}
+          </div>
+        </section>
+
+        <section>
+          <h2>Page Contrast & A11y Violations</h2>
+          ${a11ySummary.map(s => {
+            const imageFile = s.component 
+              ? `comp-${s.component.replace(/\s+/g, '-')}-${s.theme}.png`
+              : `contrast-${s.name}-${s.theme}.png`;
+            
+            return `
+              <div class="card">
+                <h3>
+                  ${s.name || s.component} 
+                  <span class="theme-badge ${s.theme}">${s.theme.toUpperCase()}</span>
+                </h3>
+                <p>Context: ${s.route || s.component || 'N/A'}</p>
+                <p class="${s.criticalCount > MAX_CRITICAL_ERRORS ? 'error' : 'success'}">
+                  Violations: ${s.violations} (${s.criticalCount} critical)
+                </p>
+                <details>
+                  <summary>View Details</summary>
+                  <pre>${JSON.stringify(s.details, null, 2)}</pre>
+                </details>
+                <div style="margin-top: 15px;">
+                  <strong>Contrast Preview:</strong><br>
+                  <a href="${imageFile}" target="_blank">
+                    <img src="${imageFile}" alt="Contrast check for ${s.name || s.component}">
+                  </a>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </section>
       </body>
       </html>
     `;
