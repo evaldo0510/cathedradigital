@@ -442,21 +442,37 @@
   --card-foreground: 25 30% 20%;
   --primary: 25 40% 40%;
   --border: 25 30% 20% / 0.1;
-  background-image: radial-gradient(circle at 50% 50%, rgba(67, 52, 34, 0.02) 0%, transparent 100%);
+  background-image: radial-gradient(circle at 50% 50%, rgba(67, 52, 34, calc(var(--reader-sepia-intensity, 100%) * 0.0002)) 0%, transparent 100%);
+  filter: sepia(calc(var(--reader-sepia-intensity, 100%) * 0.005));
+}
+
+.reading-paper {
+  --background: 40 20% 95%;
+  --foreground: 200 10% 20%;
+  --card: 40 20% 97%;
+  --card-foreground: 200 10% 20%;
+  --primary: 200 10% 30%;
+  --border: 200 10% 20% / 0.05;
+  background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
 }
 
 .reading-night body,
 .reading-sepia body,
+.reading-paper body,
 .reading-night,
-.reading-sepia {
+.reading-sepia,
+.reading-paper {
   transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1), color 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   background-color: hsl(var(--background)) !important;
   color: hsl(var(--foreground)) !important;
 }
 
-.reading-night .reader-text,
-.reading-sepia .reader-text {
-  line-height: 1.9;
+.reader-text {
+  font-family: var(--reader-font-family, 'EB Garamond', serif);
+  @apply selection:bg-primary/30 mx-auto text-foreground;
+  max-width: var(--reader-max-width, 65ch);
+  font-size: var(--reader-font-size, clamp(1.15rem, 1.3vw, 1.45rem));
+  line-height: var(--reader-line-height, 1.8);
   letter-spacing: 0.015em;
 }
 
