@@ -529,7 +529,7 @@ const Catechism: React.FC = () => {
             </div>
 
             {/* Cross references */}
-            {showCrossRefs && (crossRefs.length > 0 || docsRefs.length > 0) && (
+            {(crossRefs.length > 0 || docsRefs.length > 0) && (
               <CrossReferencePanel
                 type="catechism"
                 bibleRefs={crossRefs}
