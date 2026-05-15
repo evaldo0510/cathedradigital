@@ -383,11 +383,11 @@ const DesignSystemGuide = () => {
                 </div>
                 <div className="space-y-1">
                   <span className="text-[9px] font-black uppercase tracking-widest text-secondary">Headline (h2)</span>
-                  <h2 className="text-2xl font-serif italic">Veritas et Caritas</h2>
+                  <h2 className="text-2xl font-display">Veritas et Caritas</h2>
                 </div>
                 <div className="space-y-1">
                   <span className="text-[9px] font-black uppercase tracking-widest text-secondary">Subheadline (h3)</span>
-                  <h3 className="text-xl font-bold font-serif">Mysterium Fidei</h3>
+                  <h3 className="text-xl font-display">Mysterium Fidei</h3>
                 </div>
                 <div className="space-y-1">
                   <span className="text-[9px] font-black uppercase tracking-widest text-secondary">Body (p)</span>
@@ -429,7 +429,7 @@ const DesignSystemGuide = () => {
 
         <footer className="pt-24 pb-12 text-center border-t border-border/10">
           <p className="text-premium-tiny font-black uppercase tracking-[0.5em] text-foreground/20">
-            Cathedra Digital • Design Protocol v2.7.0
+            Cathedra Digital • Design Protocol v2.8.0
           </p>
         </footer>
       </div>
