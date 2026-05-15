@@ -19,16 +19,16 @@ import { getSaintBySubtitle } from '@/services/saintsService';
 import SacredImage from './SacredImage';
 
 const SECTION_CONFIG = [
-  { key: 'padh', label: 'A Palavra', icon: <Sparkles className="w-4 h-4" />, isPremium: false },
-  { key: 'interpretation', label: 'Reflexão', icon: <Icons.Bible className="w-4 h-4" />, isPremium: false },
-  { key: 'practical_direction', label: 'Prática do Dia', icon: <Hand className="w-4 h-4" />, isPremium: true },
-  { key: 'guided_exercise', label: 'Exercício Espiritual', icon: <PenLine className="w-4 h-4" />, isPremium: true },
+  { key: 'padh', label: 'A Palavra', icon: <Sparkles className="w-3.5 h-3.5" />, isPremium: false },
+  { key: 'interpretation', label: 'Reflexão', icon: <Icons.Bible className="w-3.5 h-3.5" />, isPremium: false },
+  { key: 'practical_direction', label: 'Prática do Dia', icon: <Hand className="w-3.5 h-3.5" />, isPremium: true },
+  { key: 'guided_exercise', label: 'Exercício Espiritual', icon: <PenLine className="w-3.5 h-3.5" />, isPremium: true },
   
   // Legacy / Hybrid mappings
-  { key: 'intro', label: 'Introdução', icon: <BookOpen className="w-4 h-4" />, isPremium: false },
-  { key: 'reflection', label: 'Reflexão', icon: <PenLine className="w-4 h-4" />, isPremium: true },
-  { key: 'practice', label: 'Prática', icon: <Hand className="w-4 h-4" />, isPremium: true },
-  { key: 'prayer', label: 'Oração', icon: <Sparkles className="w-4 h-4" />, isPremium: true },
+  { key: 'intro', label: 'Introdução', icon: <BookOpen className="w-3.5 h-3.5" />, isPremium: false },
+  { key: 'reflection', label: 'Reflexão', icon: <PenLine className="w-3.5 h-3.5" />, isPremium: true },
+  { key: 'practice', label: 'Prática', icon: <Hand className="w-3.5 h-3.5" />, isPremium: true },
+  { key: 'prayer', label: 'Oração', icon: <Sparkles className="w-3.5 h-3.5" />, isPremium: true },
 ];
 
 type UserLevelClass = 'iniciante' | 'intermediário' | 'avançado';
@@ -216,9 +216,9 @@ const JornadaStepPage: React.FC = () => {
         <div className="flex items-center gap-3 max-w-2xl mx-auto">
           <Button
             onClick={() => navigate(`/jornadas/${journeyId}`)}
-            className="w-8 h-8 rounded-full bg-muted flex items-center justify-center hover:bg-muted-foreground/20 transition-colors"
+            className="w-7 h-7 rounded-full bg-muted flex items-center justify-center hover:bg-muted-foreground/20 transition-colors"
           >
-            <X className="w-4 h-4 text-foreground" />
+            <X className="w-3.5 h-3.5 text-foreground" />
           </Button>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
@@ -263,7 +263,7 @@ const JornadaStepPage: React.FC = () => {
               <motion.div 
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden border-2 border-primary/20 shadow-xl"
+                className="w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden border-2 border-primary/20 shadow-xl"
               >
                 <SacredImage src={saintImage} alt={step.subtitle || ''} className="w-full h-full object-cover" />
               </motion.div>
@@ -308,10 +308,10 @@ const JornadaStepPage: React.FC = () => {
                       : 'bg-card border border-border rounded-b-2xl hover:border-primary/30'
                   } ${isLocked ? 'opacity-70' : ''}`}
                 >
-                  <span className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                  <span className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 ${
                     isExpanded ? 'bg-primary text-primary-foreground shadow-md' : 'bg-muted text-muted-foreground'
                   }`}>
-                    {isLocked ? <Lock className="w-4 h-4" /> : icon}
+                    {isLocked ? <Lock className="w-3.5 h-3.5" /> : icon}
                   </span>
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
@@ -344,7 +344,7 @@ const JornadaStepPage: React.FC = () => {
                               </p>
                             </div>
                             <div className="absolute inset-0 flex flex-col items-center justify-center bg-card  p-6 space-y-4 rounded-b-2xl">
-                              <Sparkles className="w-8 h-8 text-primary animate-pulse" />
+                              <Sparkles className="w-6 h-6 text-primary animate-pulse" />
                               <p className="text-sm font-bold text-foreground max-w-[180px] leading-relaxed">
                                 Continue aprofundando essa experiência
                               </p>
@@ -381,7 +381,7 @@ const JornadaStepPage: React.FC = () => {
             className="space-y-3"
           >
             <div className="flex items-center gap-2">
-              <PenLine className="w-4 h-4 text-primary" />
+              <PenLine className="w-3.5 h-3.5 text-primary" />
               <h3 className="text-sm font-bold text-foreground">Pergunta Final & Reflexão</h3>
             </div>
 
