@@ -83,7 +83,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                 { label: t('themes'), route: AppRoute.TEMAS },
                 { label: t('community'), route: AppRoute.COMMUNITY },
                 { label: t('profile'), route: AppRoute.PROFILE },
-              ].map(item => (
+              ].filter(item => canUserAccess(user?.role, item.route)).map(item => (
                 <Button 
                   key={item.route} 
                   variant={pathname === item.route ? 'primary' : 'ghost'}
