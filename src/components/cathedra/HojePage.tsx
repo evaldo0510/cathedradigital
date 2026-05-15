@@ -170,7 +170,7 @@ const HojePage: React.FC = () => {
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.99 }}
               onClick={() => navigate(nextUp.route)}
-              className="p-8 rounded-[2rem] border border-border/40 bg-card cursor-pointer hover:shadow-premium-hover hover:border-secondary/30 transition-all flex items-center justify-between shadow-premium"
+              className="p-8 rounded-premium border border-border/40 bg-card cursor-pointer hover:shadow-premium-hover hover:border-secondary/30 transition-all flex items-center justify-between shadow-premium"
             >
               <div className="flex items-center gap-6">
                 <div className="w-14 h-14 rounded-2xl bg-primary/5 flex items-center justify-center text-secondary">
@@ -219,7 +219,7 @@ const HojePage: React.FC = () => {
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.99 }}
             onClick={() => navigate(AppRoute.CATECHISM)}
-            className="p-10 rounded-[2.5rem] border border-[#0F172A]/5 bg-white cursor-pointer hover:border-[#D4AF37]/30 transition-all group shadow-sm"
+            className="p-10 rounded-premium border border-border/10 bg-card cursor-pointer hover:border-secondary/30 transition-all group shadow-premium"
           >
             <div className="flex items-center gap-8">
               <div className="w-20 h-20 rounded-2xl bg-[#0F172A]/5 flex items-center justify-center text-[#D4AF37] group-hover:bg-[#0F172A]/10 transition-colors">
@@ -243,7 +243,7 @@ const HojePage: React.FC = () => {
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.99 }}
             onClick={() => navigate(AppRoute.JORNADAS)} 
-            className="p-8 rounded-[2rem] border border-[#0F172A]/5 bg-white hover:border-[#D4AF37]/30 transition-all flex items-center justify-between group shadow-sm"
+            className="p-8 rounded-premium border border-border/10 bg-card hover:border-secondary/30 transition-all flex items-center justify-between group shadow-premium"
           >
             <div className="flex items-center gap-6">
               <div className="w-14 h-14 rounded-2xl bg-[#0F172A]/5 flex items-center justify-center text-[#D4AF37] group-hover:bg-[#0F172A]/10 transition-colors">

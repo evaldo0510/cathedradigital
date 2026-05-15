@@ -29,7 +29,7 @@ const ComponentPlayground = () => {
               variant={state === s ? 'primary' : 'outline'} 
               size="sm" 
               onClick={() => setState(s)}
-              className="rounded-full px-6 capitalize h-11 text-[10px] font-bold tracking-widest border-border/30"
+              className="rounded-full px-6 capitalize h-11 text-[10px] font-bold tracking-widest border-border/30 hover:shadow-premium"
             >
               {s === 'default' ? 'Padrão' : s === 'error' ? 'Erro' : s === 'disabled' ? 'Desativado' : 'Carregando'}
             </Button>
@@ -214,7 +214,7 @@ const DesignSystemGuide = () => {
             className="inline-flex items-center gap-3 px-6 py-2 bg-primary/[0.03] border border-border/20 rounded-full"
           >
             <Icons.ShieldCheck className="w-4 h-4 text-secondary" strokeWidth={1.5} />
-            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-foreground/40">Design System v2.5</span>
+            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-foreground/40">Design System v2.7</span>
           </motion.div>
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
@@ -392,19 +392,38 @@ const DesignSystemGuide = () => {
           </div>
         </section>
 
-        {/* Audit A11y & Visual */}
-        <section className="space-y-10">
+        {/* Component & Grid Audit */}
+        <section className="space-y-12">
           <div className="flex items-center gap-6">
             <div className="h-px flex-1 bg-border/40" />
-            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-foreground/30">Auditoria de Componentes</h2>
+            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-foreground/30">Auditoria de Grids & Componentes</h2>
             <div className="h-px flex-1 bg-border/40" />
           </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 lg:gap-10">
+            {[
+              { label: 'Grid Mobile (sm)', desc: 'Coluna Única (16px gap)', status: 'Validado' },
+              { label: 'Grid Tablet (md)', desc: 'Duas Colunas (24px gap)', status: 'Validado' },
+              { label: 'Grid Desktop (lg)', desc: 'Três Colunas (32px gap)', status: 'Validado' },
+              { label: 'Desktop XL', desc: 'Layout com Sidebar (40px gap)', status: 'Validado' }
+            ].map((item, i) => (
+              <div key={i} className="premium-card p-6 border-secondary/10 bg-secondary/[0.02]">
+                <p className="text-[10px] font-black uppercase tracking-widest text-secondary mb-2">{item.label}</p>
+                <p className="text-sm font-medium text-primary">{item.desc}</p>
+                <div className="mt-4 flex items-center gap-2">
+                  <Icons.CheckCircle2 className="w-3.5 h-3.5 text-green-600" />
+                  <span className="text-[9px] font-black uppercase tracking-widest text-green-600/70">{item.status}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
           <ComponentPlayground />
         </section>
 
         <footer className="pt-24 pb-12 text-center border-t border-border/10">
           <p className="text-premium-tiny font-black uppercase tracking-[0.5em] text-foreground/20">
-            Cathedra Digital • Design Protocol v2.6.0
+            Cathedra Digital • Design Protocol v2.7.0
           </p>
         </footer>
       </div>
