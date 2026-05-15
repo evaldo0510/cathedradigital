@@ -33,6 +33,7 @@ async function runVisualTests() {
   } catch (error) {
     console.error('❌ Diferenças visuais ou falhas de acessibilidade encontradas.');
     results.status = 'failed';
+    // Continue anyway to generate report from any available data
   }
 
   // Parse the playwright json report
