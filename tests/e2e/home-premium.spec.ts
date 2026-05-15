@@ -73,10 +73,12 @@ test.describe('Home Page Premium Audit', () => {
           const locator = page.locator(target.selector).first();
           await expect(locator).toBeVisible();
 
+          const fileNameBase = `${theme}__${authState}__${target.name}`;
+
           // 1. Initial Focus Capture
           await locator.focus();
           await locator.screenshot({ 
-            path: `test-results/focus-proof/${theme}-${authState}-${target.name}-initial-focus.png` 
+            path: `test-results/focus-proof/${fileNameBase}__initial-focus.png` 
           });
 
           // 2. Navigation via Enter
@@ -84,24 +86,33 @@ test.describe('Home Page Premium Audit', () => {
           await expect(page).toHaveURL(new RegExp(`${target.expectedPath}`));
           
           // 3. Capture focus on destination (often it's the main heading or a focus wrapper)
+          // We wait for any element to be focused and ensure it's not the body
+          await page.waitForFunction(() => document.activeElement && document.activeElement !== document.body);
           const destinationFocus = page.locator(':focus');
-          await destinationFocus.screenshot({ 
-            path: `test-results/focus-proof/${theme}-${authState}-${target.name}-destination-focus.png` 
-          }).catch(() => {
-             // Fallback to full page if no specific element is focused
-             return page.screenshot({ path: `test-results/focus-proof/${theme}-${authState}-${target.name}-destination-page.png` });
-          });
+          
+          try {
+            await destinationFocus.scrollIntoViewIfNeeded();
+            await destinationFocus.screenshot({ 
+              path: `test-results/focus-proof/${fileNameBase}__destination-focus.png` 
+            });
+          } catch (e) {
+            // If specific focus capture fails, we mark it as a page capture but keep it categorized
+            await page.screenshot({ path: `test-results/focus-proof/${fileNameBase}__destination-page-fallback.png` });
+          }
+
+          // Save HTML state for debugging context
+          const htmlContent = await page.content();
+          fs.writeFileSync(`test-results/focus-proof/${fileNameBase}__context.html`, htmlContent);
 
           // 4. Return Navigation and Focus Restoration
           await page.goBack();
           await page.waitForLoadState('networkidle');
           
           // Wait for focus to return to original CTA (accessibility requirement)
-          const isFocusedAgain = await locator.evaluate(el => document.activeElement === el);
-          expect(isFocusedAgain, `Focus should return to ${target.name} after goBack`).toBe(true);
+          await expect(locator).toBeFocused();
           
           await locator.screenshot({ 
-            path: `test-results/focus-proof/${theme}-${authState}-${target.name}-returned-focus.png` 
+            path: `test-results/focus-proof/${fileNameBase}__returned-focus.png` 
           });
         });
       }
