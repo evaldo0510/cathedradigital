@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { AppRoute } from '../../src/types';
 
 const HOME_SECTIONS = [
   { name: 'Hero', selector: '#hero' },
@@ -30,7 +31,6 @@ test.describe('Home Page Premium Audit', () => {
       });
     });
 
-    // Premium threshold: CLS < 0.1
     expect(cls).toBeLessThan(0.1);
   });
 
@@ -58,41 +58,46 @@ test.describe('Home Page Premium Audit', () => {
 
       await page.waitForLoadState('networkidle');
 
-      // Identify all primary CTAs and Cards
       const ctas = [
-        { name: 'Jornada Card', selector: 'section[aria-labelledby="section-jornada"] .group' },
-        { name: 'Jornada Button', selector: 'section[aria-labelledby="section-jornada"] button' },
-        { name: 'Doutrina Card', selector: 'section[aria-labelledby="section-doutrina"] .group' },
-        { name: 'Doutrina Button', selector: 'section[aria-labelledby="section-doutrina"] button' },
-        { name: 'Temas Card', selector: 'section[aria-labelledby="section-trilhas"] .group:has-text("Temas")' },
-        { name: 'Bíblia Card', selector: 'section[aria-labelledby="section-trilhas"] .group:has-text("Bíblico")' }
+        { name: 'Jornada Card', selector: 'section[aria-labelledby="section-jornada"] .group', expectedPath: AppRoute.JORNADAS },
+        { name: 'Catecismo Card', selector: 'section[aria-labelledby="section-doutrina"] .group', expectedPath: AppRoute.CATECHISM },
+        { name: 'Temas Card', selector: 'section[aria-labelledby="section-trilhas"] .group:has-text("Temas")', expectedPath: AppRoute.TEMAS },
+        { name: 'Bíblia Card', selector: 'section[aria-labelledby="section-trilhas"] .group:has-text("Bíblico")', expectedPath: AppRoute.BIBLE }
       ];
 
       for (const cta of ctas) {
         const locator = page.locator(cta.selector).first();
         if (await locator.isVisible()) {
-          const initialUrl = page.url();
-          
+          // Verify ARIA and alt text
+          const altText = await locator.locator('img').first().getAttribute('alt');
+          const ariaLabel = await locator.getAttribute('aria-label');
+          const accessibleName = await locator.innerText();
+          expect(altText || ariaLabel || accessibleName, `${cta.name} should have accessible content`).toBeTruthy();
+
           // 1. Test Click
           await locator.click();
-          await page.waitForTimeout(300);
-          expect(page.url(), `Click on ${cta.name} should navigate`).not.toBe(initialUrl);
+          await expect(page).toHaveURL(new RegExp(`${cta.expectedPath}`));
           await page.goBack();
           await page.waitForLoadState('networkidle');
 
           // 2. Test Enter Key
           await locator.focus();
+          // Verify focus visible
+          const isFocusVisible = await locator.evaluate(el => {
+            const style = window.getComputedStyle(el);
+            return style.outlineStyle !== 'none' || style.boxShadow !== 'none' || style.borderWidth !== '0px';
+          });
+          expect(isFocusVisible, `${cta.name} focus should be visible`).toBe(true);
+
           await page.keyboard.press('Enter');
-          await page.waitForTimeout(300);
-          expect(page.url(), `Enter on ${cta.name} should navigate`).not.toBe(initialUrl);
+          await expect(page).toHaveURL(new RegExp(`${cta.expectedPath}`));
           await page.goBack();
           await page.waitForLoadState('networkidle');
 
           // 3. Test Space Key
           await locator.focus();
           await page.keyboard.press(' ');
-          await page.waitForTimeout(300);
-          expect(page.url(), `Space on ${cta.name} should navigate`).not.toBe(initialUrl);
+          await expect(page).toHaveURL(new RegExp(`${cta.expectedPath}`));
           await page.goBack();
           await page.waitForLoadState('networkidle');
         }
