@@ -104,7 +104,7 @@ function generateGallery() {
                             <div class="grid grid-cols-2 gap-2 pt-2">
                                 ${snapshot ? `<a href="focus-proof/${snapshot}" target="_blank" class="btn-premium btn-html text-center">Contexto HTML</a>` : ''}
                                 ${trace ? `
-                                    <a href="https://trace.playwright.dev/?trace=${encodeURIComponent(window.location.origin + '/test-results/focus-proof/' + trace)}" target="_blank" class="btn-premium btn-viewer text-center">Trace Viewer</a>
+                                    <a href="https://trace.playwright.dev/?trace=" data-trace="focus-proof/${trace}" target="_blank" class="btn-premium btn-viewer btn-trace-viewer text-center">Trace Viewer</a>
                                     <a href="focus-proof/${trace}" class="btn-premium btn-trace text-center col-span-2">Download Trace.zip</a>
                                 ` : `
                                     <a href="https://trace.playwright.dev/" target="_blank" class="btn-premium btn-viewer text-center">Trace Viewer</a>
