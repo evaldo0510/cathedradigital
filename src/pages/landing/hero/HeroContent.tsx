@@ -98,7 +98,5 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout, user
     </motion.div>
   );
 };
-  );
-};
 
 export default HeroContent;
