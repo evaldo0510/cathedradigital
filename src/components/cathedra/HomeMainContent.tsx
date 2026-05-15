@@ -115,7 +115,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
                 <Icons.Star className="w-4 h-4 text-primary/20" aria-hidden="true" />
               </div>
               <p className="text-sm text-primary/40 leading-relaxed">Aprofunde-se em tópicos específicos da doutrina e espiritualidade.</p>
-              <HomeButton variant="ghost" className="p-0 h-auto text-[10px] text-primary/30 hover:text-primary transition-all group tracking-[0.1em] uppercase font-bold" onClick={() => onNavigate(AppRoute.TEMAS)} aria-label="Explorar temas da fé">
+              <HomeButton variant="ghost" className="p-0 min-h-0 h-auto text-[10px] text-primary/30 hover:text-primary transition-all group tracking-[0.1em] uppercase font-bold" onClick={() => onNavigate(AppRoute.TEMAS)} aria-label="Explorar temas da fé">
                 Explorar <Icons.ChevronRight className="ml-1 w-3 h-3 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
               </HomeButton>
             </HomeCard>
