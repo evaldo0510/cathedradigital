@@ -457,6 +457,70 @@ const DesignSystemGuide = () => {
           </div>
         </section>
 
+        {/* E2E Section */}
+        <section className="space-y-10">
+          <div className="flex items-center gap-6">
+            <div className="h-px flex-1 bg-[#0F172A]/10" />
+            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-[#0F172A]/30">Testes E2E & Automação</h2>
+            <div className="h-px flex-1 bg-[#0F172A]/10" />
+          </div>
+
+          <div className="bg-[#0F172A] p-10 rounded-[3rem] border border-[#D4AF37]/20 shadow-xl overflow-hidden relative group">
+            <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+              <Icons.ShieldCheck className="w-32 h-32 text-[#D4AF37]" />
+            </div>
+            
+            <div className="relative z-10 space-y-8">
+              <div className="flex items-center gap-3">
+                <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
+                <span className="text-premium-tiny text-[#D4AF37] font-black uppercase tracking-widest">Pipeline de Qualidade Ativo</span>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div className="space-y-6">
+                  <h3 className="text-2xl font-serif text-white">Navegação por Teclado</h3>
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-4 text-white/60">
+                      <div className="px-2 py-1 bg-white/10 rounded-md text-[10px] font-mono">TAB</div>
+                      <p className="text-sm">Foco visível em todos os componentes interativos.</p>
+                    </div>
+                    <div className="flex items-center gap-4 text-white/60">
+                      <div className="px-2 py-1 bg-white/10 rounded-md text-[10px] font-mono">ENTER</div>
+                      <p className="text-sm">Ativação consistente de botões e links.</p>
+                    </div>
+                    <div className="flex items-center gap-4 text-white/60">
+                      <div className="px-2 py-1 bg-white/10 rounded-md text-[10px] font-mono">ESC</div>
+                      <p className="text-sm">Fechamento intuitivo de modais e popovers.</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="space-y-6">
+                  <h3 className="text-2xl font-serif text-white">Cobertura de Estados</h3>
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-4">
+                      <Badge className="bg-green-500/20 text-green-400 border-green-500/20">VALIDADO</Badge>
+                      <p className="text-sm text-white/60 italic font-serif">Estado 'Disabled' bloqueia interação.</p>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <Badge className="bg-green-500/20 text-green-400 border-green-500/20">VALIDADO</Badge>
+                      <p className="text-sm text-white/60 italic font-serif">Estado 'Loading' exibe feedback visual.</p>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <Badge className="bg-green-500/20 text-green-400 border-green-500/20">VALIDADO</Badge>
+                      <p className="text-sm text-white/60 italic font-serif">Foco visível segue ordem do DOM.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="pt-8 border-t border-white/10">
+                <p className="text-premium-tiny text-white/40 font-black uppercase tracking-[0.2em]">Execução Diária via GitHub Actions & Vitest E2E</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Footer */}
         <footer className="pt-16 pb-24 border-t border-[#0F172A]/5 text-center space-y-4">
           <Icons.Logo className="w-12 h-12 mx-auto" variant="blue" />
