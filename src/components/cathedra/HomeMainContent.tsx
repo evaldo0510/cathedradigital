@@ -96,7 +96,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
           onClick={() => onNavigate(AppRoute.CATECHISM)}
           className="p-10 md:p-16 lg:p-20 text-center space-y-10 group"
         >
-          <div className="w-20 h-20 rounded-premium-sm bg-secondary/5 flex items-center justify-center text-secondary mx-auto group-hover:rotate-12 transition-transform duration-700">
+          <div className="w-20 h-20 rounded-2xl bg-secondary/5 flex items-center justify-center text-secondary mx-auto group-hover:rotate-12 transition-transform duration-700">
             <Icons.Catechism className="w-10 h-10" />
           </div>
           <div className="space-y-4">

@@ -308,11 +308,11 @@ const DesignSystemGuide = () => {
                 <div className="space-y-6">
                   <div className="space-y-1">
                     <p className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/30">H1 Display - 72px</p>
-                    <h1 className="text-5xl md:text-7xl font-serif text-foreground leading-tight">A Glória de Deus</h1>
+                    <h1 className="text-5xl md:text-7xl font-display text-foreground leading-tight">A Glória de Deus</h1>
                   </div>
                   <div className="space-y-1">
                     <p className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/30">H2 Headline - 48px</p>
-                    <h2 className="text-3xl md:text-5xl font-serif text-foreground">Oração e Contemplação</h2>
+                    <h2 className="text-3xl md:text-5xl font-display text-foreground">Oração e Contemplação</h2>
                   </div>
                   <div className="space-y-1">
                     <p className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/30">H3 Subheadline - 32px</p>
@@ -363,10 +363,12 @@ const DesignSystemGuide = () => {
                 <div className="premium-card p-8 flex flex-col gap-4">
                   <Badge className="w-fit rounded-full bg-primary/5 text-primary border-primary/10 px-4 py-1">Premium Default</Badge>
                   <p className="font-serif italic text-lg opacity-70">"A base de toda a interface."</p>
+                  <div className="text-[10px] font-mono text-muted-foreground opacity-50">.premium-card</div>
                 </div>
                 <div className="premium-card-interactive p-8 flex flex-col gap-4">
                   <Badge className="w-fit rounded-full bg-secondary/10 text-secondary border-secondary/20 px-4 py-1">Premium Interactive</Badge>
                   <p className="font-serif italic text-lg opacity-70">"Feedback visual de hover e escala."</p>
+                  <div className="text-[10px] font-mono text-muted-foreground opacity-50">.premium-card-interactive</div>
                 </div>
               </div>
             </div>
@@ -376,15 +378,19 @@ const DesignSystemGuide = () => {
               <h3 className="text-xl font-serif font-bold text-primary">Hierarquia Visual</h3>
               <div className="space-y-6 premium-card p-8">
                 <div className="space-y-1">
-                  <span className="text-[9px] font-black uppercase tracking-widest text-secondary">Display</span>
+                  <span className="text-[9px] font-black uppercase tracking-widest text-secondary">Display (h1)</span>
                   <h1 className="text-4xl font-display">Soli Deo Gloria</h1>
                 </div>
                 <div className="space-y-1">
-                  <span className="text-[9px] font-black uppercase tracking-widest text-secondary">Headline</span>
-                  <h2 className="text-2xl font-serif italic">Veritas et Caritas</h2>
+                  <span className="text-[9px] font-black uppercase tracking-widest text-secondary">Headline (h2)</span>
+                  <h2 className="text-2xl font-display">Veritas et Caritas</h2>
                 </div>
                 <div className="space-y-1">
-                  <span className="text-[9px] font-black uppercase tracking-widest text-secondary">Body</span>
+                  <span className="text-[9px] font-black uppercase tracking-widest text-secondary">Subheadline (h3)</span>
+                  <h3 className="text-xl font-display">Mysterium Fidei</h3>
+                </div>
+                <div className="space-y-1">
+                  <span className="text-[9px] font-black uppercase tracking-widest text-secondary">Body (p)</span>
                   <p className="text-sm leading-relaxed">O equilíbrio perfeito entre o minimalismo contemporâneo e a tradição sagrada.</p>
                 </div>
               </div>
@@ -400,7 +406,7 @@ const DesignSystemGuide = () => {
             <div className="h-px flex-1 bg-border/40" />
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 lg:gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-14 lg:gap-20">
             {[
               { label: 'Grid Mobile (sm)', desc: 'Coluna Única (16px gap)', status: 'Validado' },
               { label: 'Grid Tablet (md)', desc: 'Duas Colunas (24px gap)', status: 'Validado' },
@@ -423,7 +429,7 @@ const DesignSystemGuide = () => {
 
         <footer className="pt-24 pb-12 text-center border-t border-border/10">
           <p className="text-premium-tiny font-black uppercase tracking-[0.5em] text-foreground/20">
-            Cathedra Digital • Design Protocol v2.7.0
+            Cathedra Digital • Design Protocol v2.8.0
           </p>
         </footer>
       </div>
