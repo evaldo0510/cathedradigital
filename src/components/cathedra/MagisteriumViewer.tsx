@@ -173,10 +173,9 @@ const MagisteriumViewer: React.FC = () => {
       >
         <div 
           ref={contentRef}
-          className="prose prose-slate dark:prose-invert max-w-none 
+          className="reader-text prose prose-slate dark:prose-invert max-w-none 
             prose-headings:font-serif prose-headings:text-primary 
-            prose-p:font-serif prose-p:text-foreground/90 prose-p:leading-[1.8]
-            prose-blockquote:border-primary/20 prose-blockquote:bg-primary/5 prose-blockquote:p-6 prose-blockquote:rounded-full prose-blockquote:italic
+            prose-blockquote:border-primary/20 prose-blockquote:bg-primary/5 prose-blockquote:p-6 prose-blockquote:rounded-xl prose-blockquote:italic
             prose-strong:text-primary prose-strong:font-bold"
         >
           <ReactMarkdown>{processedText}</ReactMarkdown>
