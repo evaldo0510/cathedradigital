@@ -101,12 +101,12 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         </section>
 
         {/* TRILHAS */}
-        <section className="space-y-10 lg:max-w-xl mx-auto w-full" aria-labelledby="section-trilhas">
-          <div className="flex items-center gap-6">
+        <section className="space-y-12 max-w-2xl mx-auto lg:mx-0 w-full" aria-labelledby="section-trilhas">
+          <div className="section-divider-header">
             <h2 id="section-trilhas" className="heading-section-label whitespace-nowrap">
               Trilhas
             </h2>
-            <div className="h-px flex-1 bg-white/[0.08]" />
+            <div className="divider-line" />
           </div>
           <div className="grid grid-cols-1 gap-10">
             <HomeCard padding="md" className="space-y-8 min-h-[190px] flex flex-col justify-center" onClick={() => onNavigate(AppRoute.TEMAS)}>
