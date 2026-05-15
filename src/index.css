@@ -173,40 +173,41 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply tracking-tight font-display text-primary;
+    @apply tracking-tighter font-display text-primary;
     text-wrap: balance;
   }
 
   h1 { 
-    @apply font-bold;
-    font-size: clamp(2.25rem, 6vw, 4.5rem);
-    line-height: 1.1;
-    letter-spacing: -0.02em;
+    @apply font-black;
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    line-height: 1;
+    letter-spacing: -0.04em;
   }
   
   h2 { 
-    @apply font-bold;
-    font-size: clamp(1.75rem, 4.5vw, 3rem);
-    line-height: 1.15;
-    letter-spacing: -0.01em;
+    @apply font-bold uppercase tracking-[0.3em] opacity-40;
+    font-size: clamp(0.75rem, 1vw, 0.875rem);
+    line-height: 1.2;
   }
   
   h3 { 
     @apply font-bold;
-    font-size: clamp(1.35rem, 3vw, 2rem);
-    line-height: 1.25;
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
   }
 
   h4 {
-    @apply font-semibold;
-    font-size: clamp(1.15rem, 2vw, 1.4rem);
-    line-height: 1.35;
+    @apply font-bold;
+    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
   }
 
   p { 
-    @apply max-w-[65ch] text-muted-foreground;
-    font-size: clamp(0.95rem, 1.1vw, 1.05rem);
-    line-height: 1.65;
+    @apply max-w-[65ch] text-muted-foreground/60;
+    font-size: clamp(0.9rem, 1vw, 1rem);
+    line-height: 1.7;
   }
 
   /* Premium small text scale */
@@ -297,36 +298,37 @@
     padding-bottom: calc(1rem + env(safe-area-inset-bottom));
   }
 
-  /* Premium card style - Spiritual Minimalist - Unified Tokens */
+  /* Premium card style - Cathedra Digital Global Standard */
   .premium-card {
-    background: rgba(var(--primary), 0.03);
-    border: 1px solid rgba(var(--primary), 0.05);
-    @apply rounded-premium shadow-premium transition-all duration-700 relative overflow-hidden backdrop-blur-sm;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    @apply rounded-premium transition-all duration-700 relative overflow-hidden backdrop-blur-sm;
   }
   
   .premium-card-interactive {
-    @apply premium-card cursor-pointer active:scale-[0.99] transition-all duration-500;
-    @apply hover:bg-primary/[0.04] hover:border-primary/[0.1] hover:shadow-premium-hover;
+    @apply premium-card cursor-pointer active:scale-[0.99];
+    @apply hover:bg-white/[0.06] hover:border-white/[0.12] hover:shadow-premium-hover;
     @apply focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
   }
 
   /* Specific Card Sizes for Desktop */
   .desktop-card {
-    @apply premium-card p-10 sm:p-14 lg:p-20;
+    @apply premium-card p-8 md:p-10 lg:p-12;
   }
 
   /* Standard card shadow and radius */
   .card-standard {
-    @apply premium-card;
+    @apply premium-card p-6;
   }
 
   /* Section Spacing - Standardized Vertical Rhythm */
   .section-spacing {
-    @apply py-32 sm:py-48 md:py-64 lg:py-80;
+    @apply py-20 sm:py-24 md:py-32 lg:py-40;
   }
 
   .stack-spacing {
-    @apply space-y-12 md:space-y-20 lg:space-y-32;
+    @apply space-y-12 md:space-y-16 lg:space-y-24;
   }
   
   .premium-grid {
@@ -343,7 +345,8 @@
 
   /* Global Button Standard - Premium Spiritual */
   .btn-premium {
-    @apply relative overflow-hidden px-12 py-5 rounded-full font-bold uppercase tracking-[0.3em] text-[10px] transition-all duration-700 flex items-center justify-center gap-4 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed;
+    @apply relative overflow-hidden rounded-full font-bold uppercase tracking-[0.3em] text-[10px] transition-all duration-700 flex items-center justify-center gap-4 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed;
+    min-height: 56px;
   }
 
   .btn-premium-primary {
@@ -355,7 +358,7 @@
   }
 
   .btn-premium-outline {
-    @apply btn-premium bg-transparent border border-primary/10 text-primary hover:bg-primary/[0.02] shadow-none;
+    @apply btn-premium bg-transparent border border-white/10 text-primary hover:bg-white/[0.04] shadow-none;
   }
 }
 

@@ -61,7 +61,7 @@ const Index = () => {
       <div className="w-full flex flex-col items-center">
         <HeroSection onStart={handleStart} onAbout={() => navigate(AppRoute.ABOUT)} />
 
-        <main id="main-content" className="w-full max-w-[1280px] mx-auto flex flex-col outline-none pt-12 md:pt-32 pb-32 md:pb-48 px-6" tabIndex={-1}>
+        <main id="main-content" className="app-container section-spacing pt-12 md:pt-20" tabIndex={-1}>
           <Suspense fallback={<SectionSkeleton />}>
             <HomeMainContent 
               user={user} 

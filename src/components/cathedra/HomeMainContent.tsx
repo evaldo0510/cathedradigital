@@ -20,15 +20,15 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
   const navigate = useNavigate();
 
   return (
-    <div className="w-full space-y-32 md:space-y-48 max-w-[1280px] mx-auto px-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-16 lg:gap-24 items-start">
+    <div className="content-section">
+      <div className="premium-grid items-start">
         {/* CONTINUE JORNADA */}
-        <section className="space-y-10" aria-labelledby="section-jornada">
+        <section className="space-y-8" aria-labelledby="section-jornada">
           <div className="flex items-center gap-6">
-            <h2 id="section-jornada" className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/20 whitespace-nowrap">
+            <h2 id="section-jornada">
               Jornada
             </h2>
-            <div className="h-px flex-1 bg-border/10" />
+            <div className="h-px flex-1 bg-white/5" />
           </div>
           
           <HomeCard
@@ -58,12 +58,12 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         </section>
 
         {/* RITUAL DO DIA */}
-        <section className="space-y-10" aria-labelledby="section-hoje">
+        <section className="space-y-8" aria-labelledby="section-hoje">
           <div className="flex items-center gap-6">
-            <h2 id="section-hoje" className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/20 whitespace-nowrap">
+            <h2 id="section-hoje">
               Hoje
             </h2>
-            <div className="h-px flex-1 bg-border/10" />
+            <div className="h-px flex-1 bg-white/5" />
           </div>
           <div className="pt-2">
             <RitualDoDia />
@@ -71,12 +71,12 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         </section>
 
         {/* CATECISMO */}
-        <section className="space-y-10" aria-labelledby="section-doutrina">
+        <section className="space-y-8" aria-labelledby="section-doutrina">
           <div className="flex items-center gap-6">
-            <h2 id="section-doutrina" className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/20 whitespace-nowrap">
+            <h2 id="section-doutrina">
               Doutrina
             </h2>
-            <div className="h-px flex-1 bg-border/10" />
+            <div className="h-px flex-1 bg-white/5" />
           </div>
           <HomeCard 
             onClick={() => onNavigate(AppRoute.CATECHISM)}
@@ -101,12 +101,12 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         </section>
 
         {/* TRILHAS */}
-        <section className="space-y-10" aria-labelledby="section-trilhas">
+        <section className="space-y-8" aria-labelledby="section-trilhas">
           <div className="flex items-center gap-6">
-            <h2 id="section-trilhas" className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/20 whitespace-nowrap">
+            <h2 id="section-trilhas">
               Trilhas
             </h2>
-            <div className="h-px flex-1 bg-border/10" />
+            <div className="h-px flex-1 bg-white/5" />
           </div>
           <div className="grid grid-cols-1 gap-8">
             <HomeCard padding="md" className="space-y-6" onClick={() => onNavigate(AppRoute.TEMAS)}>
