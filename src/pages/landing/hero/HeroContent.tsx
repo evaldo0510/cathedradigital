@@ -56,8 +56,8 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
         variants={fadeInUpVariants}
         initial="hidden"
         animate="visible"
-        className="pt-6 sm:pt-8 max-w-6xl mx-auto"
-      > Nem toda prisão <br/> é visível </motion.h1>
+        className="pt-6 sm:pt-10 max-w-6xl mx-auto text-7xl md:text-[10rem] font-display font-medium text-primary leading-[0.9] tracking-tighter"
+      > Nem toda <br/> prisão é <span className="text-secondary/60 italic font-serif">visível</span> </motion.h1>
 
       {/* Description */}
       <motion.p
@@ -65,9 +65,9 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
         initial="hidden"
         animate="visible"
         transition={{ delay: 0.2 }}
-        className="max-w-2xl mx-auto font-serif opacity-80"
+        className="max-w-xl mx-auto font-serif text-2xl text-foreground/40 italic leading-relaxed"
       >
-        Uma experiência espiritual guiada por Bíblia, Catecismo e Logos IA.
+        Uma plataforma espiritual inteligente guiada pela Tradição viva, <br className="hidden md:block" /> Sagradas Escrituras e o mestre contemplativo Logos IA.
       </motion.p>
 
       {/* CTA Buttons */}
