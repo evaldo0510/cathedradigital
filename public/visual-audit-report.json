@@ -1,0 +1,361 @@
+{
+  "timestamp": "2026-05-15T02:44:45.861Z",
+  "total_violations": 59,
+  "violations": [
+    {
+      "file": "src/pages/Index.tsx",
+      "line": 48,
+      "pattern": "Sombra não padrão",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/HojePage.tsx",
+      "line": 182,
+      "pattern": "Borda não padrão",
+      "match": "rounded-3xl"
+    },
+    {
+      "file": "src/components/cathedra/HojePage.tsx",
+      "line": 250,
+      "pattern": "Borda não padrão",
+      "match": "rounded-3xl"
+    },
+    {
+      "file": "src/components/cathedra/SpiritualJournalPage.tsx",
+      "line": 117,
+      "pattern": "Borda não padrão",
+      "match": "rounded-3xl"
+    },
+    {
+      "file": "src/components/cathedra/SpiritualJournalPage.tsx",
+      "line": 135,
+      "pattern": "Sombra não padrão",
+      "match": "shadow-inner"
+    },
+    {
+      "file": "src/components/cathedra/SpiritualJournalPage.tsx",
+      "line": 178,
+      "pattern": "Borda não padrão",
+      "match": "rounded-2xl"
+    },
+    {
+      "file": "src/pages/CatechismExplorer.tsx",
+      "line": 135,
+      "pattern": "Borda não padrão",
+      "match": "rounded-2xl"
+    },
+    {
+      "file": "src/pages/CatechismExplorer.tsx",
+      "line": 168,
+      "pattern": "Botão não padronizado",
+      "match": "<Button"
+    },
+    {
+      "file": "src/pages/CatechismExplorer.tsx",
+      "line": 204,
+      "pattern": "Botão não padronizado",
+      "match": "<Button"
+    },
+    {
+      "file": "src/pages/CatechismExplorer.tsx",
+      "line": 227,
+      "pattern": "Card não padronizado",
+      "match": "<Card"
+    },
+    {
+      "file": "src/pages/CatechismExplorer.tsx",
+      "line": 255,
+      "pattern": "Borda não padrão",
+      "match": "rounded-2xl"
+    },
+    {
+      "file": "src/pages/CatechismExplorer.tsx",
+      "line": 259,
+      "pattern": "Botão não padronizado",
+      "match": "<Button"
+    },
+    {
+      "file": "src/pages/CatechismExplorer.tsx",
+      "line": 270,
+      "pattern": "Botão não padronizado",
+      "match": "<Button"
+    },
+    {
+      "file": "src/pages/CatechismExplorer.tsx",
+      "line": 281,
+      "pattern": "Botão não padronizado",
+      "match": "<Button"
+    },
+    {
+      "file": "src/pages/landing/hero/HeroContent.tsx",
+      "line": 44,
+      "pattern": "Sombra não padrão",
+      "match": "shadow-2xl"
+    },
+    {
+      "file": "src/pages/landing/hero/HeroContent.tsx",
+      "line": 44,
+      "pattern": "Borda não padrão",
+      "match": "rounded-2xl"
+    },
+    {
+      "file": "src/pages/landing/hero/HeroContent.tsx",
+      "line": 48,
+      "pattern": "Borda não padrão",
+      "match": "rounded-2xl"
+    },
+    {
+      "file": "src/pages/landing/AboutCreatorSection.tsx",
+      "line": 14,
+      "pattern": "Borda não padrão",
+      "match": "rounded-2xl"
+    },
+    {
+      "file": "src/pages/landing/AboutCreatorSection.tsx",
+      "line": 25,
+      "pattern": "Borda não padrão",
+      "match": "rounded-2xl"
+    },
+    {
+      "file": "src/pages/landing/AboutCreatorSection.tsx",
+      "line": 26,
+      "pattern": "Borda não padrão",
+      "match": "rounded-2xl"
+    },
+    {
+      "file": "src/pages/landing/AboutCreatorSection.tsx",
+      "line": 39,
+      "pattern": "Borda não padrão",
+      "match": "rounded-2xl"
+    },
+    {
+      "file": "src/pages/landing/AboutCreatorSection.tsx",
+      "line": 57,
+      "pattern": "Botão não padronizado",
+      "match": "<Button"
+    },
+    {
+      "file": "src/pages/landing/AcolhimentoSection.tsx",
+      "line": 16,
+      "pattern": "Borda não padrão",
+      "match": "rounded-2xl"
+    },
+    {
+      "file": "src/pages/landing/AcolhimentoSection.tsx",
+      "line": 52,
+      "pattern": "Sombra não padrão",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/pages/landing/AcolhimentoSection.tsx",
+      "line": 52,
+      "pattern": "Sombra não padrão",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/pages/landing/AcolhimentoSection.tsx",
+      "line": 54,
+      "pattern": "Borda não padrão",
+      "match": "rounded-2xl"
+    },
+    {
+      "file": "src/pages/landing/BenefitsSection.tsx",
+      "line": 64,
+      "pattern": "Borda não padrão",
+      "match": "rounded-2xl"
+    },
+    {
+      "file": "src/pages/landing/BenefitsSection.tsx",
+      "line": 65,
+      "pattern": "Borda não padrão",
+      "match": "rounded-2xl"
+    },
+    {
+      "file": "src/pages/landing/BenefitsSection.tsx",
+      "line": 83,
+      "pattern": "Sombra não padrão",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/pages/landing/BenefitsSection.tsx",
+      "line": 93,
+      "pattern": "Borda não padrão",
+      "match": "rounded-2xl"
+    },
+    {
+      "file": "src/pages/landing/CommunitySection.tsx",
+      "line": 35,
+      "pattern": "Borda não padrão",
+      "match": "rounded-2xl"
+    },
+    {
+      "file": "src/pages/landing/CommunitySection.tsx",
+      "line": 82,
+      "pattern": "Sombra não padrão",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/pages/landing/CommunitySection.tsx",
+      "line": 82,
+      "pattern": "Sombra não padrão",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/pages/landing/CommunitySection.tsx",
+      "line": 85,
+      "pattern": "Borda não padrão",
+      "match": "rounded-2xl"
+    },
+    {
+      "file": "src/pages/landing/CommunitySection.tsx",
+      "line": 109,
+      "pattern": "Borda não padrão",
+      "match": "rounded-2xl"
+    },
+    {
+      "file": "src/pages/landing/CommunitySection.tsx",
+      "line": 117,
+      "pattern": "Borda não padrão",
+      "match": "rounded-2xl"
+    },
+    {
+      "file": "src/pages/landing/DailyRoutineSection.tsx",
+      "line": 46,
+      "pattern": "Borda não padrão",
+      "match": "rounded-2xl"
+    },
+    {
+      "file": "src/pages/landing/FaqSection.tsx",
+      "line": 24,
+      "pattern": "Sombra não padrão",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/pages/landing/FaqSection.tsx",
+      "line": 24,
+      "pattern": "Sombra não padrão",
+      "match": "shadow-md"
+    },
+    {
+      "file": "src/pages/landing/FaqSection.tsx",
+      "line": 24,
+      "pattern": "Borda não padrão",
+      "match": "rounded-2xl"
+    },
+    {
+      "file": "src/pages/landing/FeaturesSection.tsx",
+      "line": 55,
+      "pattern": "Borda não padrão",
+      "match": "rounded-2xl"
+    },
+    {
+      "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+      "line": 209,
+      "pattern": "Borda não padrão",
+      "match": "rounded-2xl"
+    },
+    {
+      "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+      "line": 210,
+      "pattern": "Borda não padrão",
+      "match": "rounded-2xl"
+    },
+    {
+      "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+      "line": 254,
+      "pattern": "Botão não padronizado",
+      "match": "<Button"
+    },
+    {
+      "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+      "line": 255,
+      "pattern": "Sombra não padrão",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+      "line": 290,
+      "pattern": "Sombra não padrão",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+      "line": 292,
+      "pattern": "Borda não padrão",
+      "match": "rounded-2xl"
+    },
+    {
+      "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+      "line": 321,
+      "pattern": "Sombra não padrão",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+      "line": 326,
+      "pattern": "Borda não padrão",
+      "match": "rounded-2xl"
+    },
+    {
+      "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+      "line": 359,
+      "pattern": "Sombra não padrão",
+      "match": "shadow-2xl"
+    },
+    {
+      "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+      "line": 365,
+      "pattern": "Borda não padrão",
+      "match": "rounded-2xl"
+    },
+    {
+      "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+      "line": 386,
+      "pattern": "Botão não padronizado",
+      "match": "<Button"
+    },
+    {
+      "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+      "line": 395,
+      "pattern": "Botão não padronizado",
+      "match": "<Button"
+    },
+    {
+      "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+      "line": 398,
+      "pattern": "Sombra não padrão",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/pages/landing/PricingSection.tsx",
+      "line": 77,
+      "pattern": "Borda não padrão",
+      "match": "rounded-2xl"
+    },
+    {
+      "file": "src/pages/landing/PricingSection.tsx",
+      "line": 84,
+      "pattern": "Borda não padrão",
+      "match": "rounded-2xl"
+    },
+    {
+      "file": "src/pages/landing/StatsSection.tsx",
+      "line": 127,
+      "pattern": "Borda não padrão",
+      "match": "rounded-2xl"
+    },
+    {
+      "file": "src/pages/landing/StatsSection.tsx",
+      "line": 128,
+      "pattern": "Borda não padrão",
+      "match": "rounded-2xl"
+    },
+    {
+      "file": "src/pages/landing/TestimonialsSection.tsx",
+      "line": 37,
+      "pattern": "Borda não padrão",
+      "match": "rounded-2xl"
+    }
+  ],
+  "status": "pendente"
+}

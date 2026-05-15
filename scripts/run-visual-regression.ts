@@ -29,7 +29,15 @@ async function runVisualTests() {
       stdio: 'inherit',
       env: { ...process.env, CI: 'true' }
     });
+
+    console.log('  - Executando Auditoria de Tokens (Design System)...');
+    execSync('bun run scripts/visual-audit.ts', { stdio: 'inherit' });
+    if (fs.existsSync('visual-audit-report.json')) {
+      fs.copyFileSync('visual-audit-report.json', 'public/visual-audit-report.json');
+    }
+
     results.status = 'success';
+
   } catch (error) {
     console.error('❌ Diferenças visuais ou falhas de acessibilidade encontradas.');
     results.status = 'failed';
