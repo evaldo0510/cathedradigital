@@ -53,4 +53,4 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
 Button.displayName = "Button";
 
-export { CathedraButton   };
+export { Button, Button as CathedraButton };
