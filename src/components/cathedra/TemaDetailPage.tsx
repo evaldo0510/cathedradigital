@@ -74,7 +74,7 @@ const ThemeContentCard = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1 }}
     >
-      <Card className="border-border/40 bg-card/30 hover:bg-card transition-all duration-300 rounded-[2rem] overflow-hidden group hover:shadow-lg hover:border-primary/20">
+      <Card className="border-border/40 bg-card/30 hover:bg-card transition-all duration-300 rounded-premium overflow-hidden group hover:shadow-premium-hover hover:border-primary/20">
         <CardContent className="p-6 sm:p-8 space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -122,7 +122,7 @@ const ThemeContentCard = ({
 const ContentSkeleton = () => (
   <div className="space-y-4" data-testid="content-skeleton">
     {[1, 2, 3].map((i) => (
-      <Card key={i} className="border-border/40 bg-card/20 rounded-[2rem] overflow-hidden">
+      <Card key={i} className="border-border/40 bg-card/20 rounded-premium overflow-hidden">
         <CardContent className="p-6 sm:p-8 space-y-4">
           <div className="flex items-center gap-2">
             <Skeleton className="w-8 h-8 rounded-full" />
@@ -387,7 +387,7 @@ const TemaDetailPage = () => {
       <header className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-[2rem] bg-primary/10 flex items-center justify-center text-primary shadow-inner border border-primary/20">
+            <div className="w-16 h-16 rounded-premium bg-primary/10 flex items-center justify-center text-primary shadow-inner border border-primary/20">
               {selectedTag && getTagIcon(selectedTag.emoji, "w-8 h-8")}
             </div>
             <div>
@@ -424,8 +424,8 @@ const TemaDetailPage = () => {
               animate={{ opacity: 1, height: 'auto' }}
               className="relative"
             >
-              <div className="absolute inset-0 bg-secondary/5  rounded-[3rem]" />
-              <Card className="border-secondary/30 bg-card  rounded-[2.5rem] overflow-hidden relative z-10 shadow-2xl">
+              <div className="absolute inset-0 bg-secondary/5 rounded-premium-lg" />
+              <Card className="border-secondary/30 bg-card rounded-premium overflow-hidden relative z-10 shadow-premium">
                 <CardContent className="p-8 sm:p-10">
                   <div className="flex items-center justify-between mb-8">
                     <div className="flex items-center gap-3">

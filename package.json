@@ -18,7 +18,8 @@
     "test:a11y": "playwright test tests/e2e/accessibility.spec.ts",
 
     "test:report": "bun run scripts/generate-test-report.ts",
-    "test:pdf": "bun run scripts/generate-pdf-report.ts"
+    "test:pdf": "bun run scripts/generate-pdf-report.ts",
+    "test:system-audit": "bun run scripts/audit-visual-system.ts"
   },
   "dependencies": {
     "@axe-core/playwright": "^4.11.3",
