@@ -269,6 +269,5 @@ const HojePage: React.FC = () => {
     </div>
   );
 };
-};
 
 export default HojePage;
