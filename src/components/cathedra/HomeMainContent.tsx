@@ -84,7 +84,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
             className="flex flex-col justify-between gap-8 group"
           >
             <div className="space-y-6">
-              <div className="w-12 h-12 rounded-premium-sm bg-secondary/[0.02] border border-secondary/20 flex items-center justify-center text-secondary group-hover:rotate-12 transition-transform duration-700">
+              <div className="w-12 h-12 rounded-premium-sm bg-white/5 border border-white/10 flex items-center justify-center text-secondary group-hover:rotate-12 transition-transform duration-700 shadow-premium">
                 <Icons.Catechism className="w-6 h-6" />
               </div>
               <div>
