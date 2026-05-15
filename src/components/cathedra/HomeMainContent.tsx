@@ -88,7 +88,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
                 <Icons.Catechism className="w-5 h-5" aria-hidden="true" />
               </div>
               <div>
-                <h3 className="text-xl md:text-2xl font-bold text-primary tracking-tight">Catecismo</h3>
+                <h3 className="heading-card">Catecismo</h3>
                 <p className="mt-4 text-sm text-primary/40 leading-relaxed font-serif italic max-w-sm">
                   "O Catecismo apresenta fielmente o ensinamento da Tradição viva na Igreja."
                 </p>
