@@ -237,6 +237,39 @@ const DesignSystemGuide = () => {
           <InputPlayground />
         </section>
 
+        {/* Iconografia Section */}
+        <section className="space-y-10">
+          <div className="flex items-center gap-6">
+            <div className="h-px flex-1 bg-[#0F172A]/10" />
+            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-[#0F172A]/30">Iconografia</h2>
+            <div className="h-px flex-1 bg-[#0F172A]/10" />
+          </div>
+
+          <div className="grid grid-cols-4 md:grid-cols-8 gap-8 bg-white p-10 rounded-[2.5rem] border border-[#0F172A]/5 shadow-sm">
+            {[
+              { icon: Icons.Church, label: 'Igreja' },
+              { icon: Icons.Bible, label: 'Bíblia' },
+              { icon: Icons.Cross, label: 'Cruz' },
+              { icon: Icons.Flame, label: 'Chama' },
+              { icon: Icons.Sparkles, label: 'Santos' },
+              { icon: Icons.Heart, label: 'Amor' },
+              { icon: Icons.ShieldCheck, label: 'Proteção' },
+              { icon: Icons.ScrollText, label: 'Magistério' },
+              { icon: Icons.Compass, label: 'Jornada' },
+              { icon: Icons.Search, label: 'Busca' },
+              { icon: Icons.User, label: 'Perfil' },
+              { icon: Icons.Volume2, label: 'Áudio' },
+            ].map((item, i) => (
+              <div key={i} className="flex flex-col items-center gap-3">
+                <div className="w-12 h-12 rounded-2xl bg-[#0F172A]/5 flex items-center justify-center text-primary border border-transparent hover:border-primary/20 transition-all group">
+                  <item.icon className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-widest text-[#0F172A]/40">{item.label}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
         {/* Tom de Voz Section */}
         <section className="space-y-10">
           <div className="flex items-center gap-6">
