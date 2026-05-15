@@ -215,19 +215,19 @@
     line-height: 1.65;
   }
 
-  /* Premium small text scale */
+  /* Premium small text scale - Optimized for legibility */
   .text-premium-tiny {
-    @apply font-bold uppercase tracking-[0.2em] text-muted-foreground/50;
+    @apply font-bold uppercase tracking-[0.2em] text-primary/30;
     font-size: clamp(0.6rem, 0.7vw, 0.75rem);
   }
 
   .text-premium-small {
-    @apply font-medium text-muted-foreground/70;
+    @apply font-medium text-primary/50;
     font-size: clamp(0.75rem, 0.9vw, 0.875rem);
   }
 
   .text-premium-base {
-    @apply text-muted-foreground/80;
+    @apply text-primary/60;
     font-size: clamp(0.875rem, 1vw, 1rem);
   }
 
