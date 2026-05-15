@@ -87,7 +87,7 @@ test.describe('Hero Section Visuals and Accessibility', () => {
       expect(focused).toBe(true);
 
       // Take screenshot of focused state
-      await cta.screenshot({ path: `tests/screenshots/hero-cta-focus-${theme}.png` });
+      await cta.screenshot({ path: path.join(RESULTS_DIR, `hero-cta-focus-${theme}.png`) });
 
       // Test Space activation
       await page.keyboard.press('Space');
