@@ -71,7 +71,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         </section>
 
         {/* CATECISMO */}
-        <section className="space-y-12 max-w-2xl mx-auto lg:mx-0 w-full" aria-labelledby="section-doutrina">
+        <section className="space-y-12 max-w-xl mx-auto lg:mx-0 w-full" aria-labelledby="section-doutrina">
           <div className="section-divider-header">
             <h2 id="section-doutrina" className="heading-section-label whitespace-nowrap">
               Doutrina
