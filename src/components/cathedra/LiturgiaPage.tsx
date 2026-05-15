@@ -222,9 +222,9 @@ const LiturgiaPage: React.FC = () => {
               <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} className="space-y-4 text-center">
                 <h1 className="text-3xl md:text-5xl font-display font-black text-primary tracking-tight">Liturgia do Dia</h1>
                 <div className="flex items-center justify-center gap-4">
-                  <Button variant="outline" size="icon" onClick={goToPrevDay} aria-label="Dia anterior"><Icons.ChevronLeft /></Button>
+                  <Button variant="outline" size="icon" onClick={goToPrevDay} aria-label="Dia anterior"><Icons.ChevronLeft className="w-4 h-4" /></Button>
                   <p className="text-sm font-bold text-primary capitalize min-w-[200px]">{formatDate()}{isToday && <span className="ml-2 text-secondary">(Hoje)</span>}</p>
-                  <Button variant="outline" size="icon" onClick={goToNextDay} disabled={isToday} aria-label="Próximo dia"><Icons.ChevronRight /></Button>
+                  <Button variant="outline" size="icon" onClick={goToNextDay} disabled={isToday} aria-label="Próximo dia"><Icons.ChevronRight className="w-4 h-4" /></Button>
                 </div>
                 {isOfflineData && <div className="flex items-center justify-center gap-2 text-premium-tiny font-black uppercase tracking-widest text-muted-foreground bg-muted/50 rounded-2xl px-4 py-2 mt-4 mx-auto w-fit"><Icons.WifiOff className="w-3.5 h-3.5" /> <span>Modo Offline</span></div>}
               </motion.div>
