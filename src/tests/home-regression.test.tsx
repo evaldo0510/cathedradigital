@@ -30,22 +30,52 @@ vi.mock('@/hooks/useLang', () => ({
   })
 }));
 
-// Mock MotionValue for testing
-const mockMotionValue = (val: number) => ({
-  get: () => val,
-  onChange: () => () => {},
-  on: () => () => {},
-  clearListeners: () => {},
-} as unknown as MotionValue<number>);
+// Mock Framer Motion to avoid issues with animation logic in tests
+vi.mock('framer-motion', async () => {
+  const actual = await vi.importActual('framer-motion');
+  return {
+    ...actual,
+    motion: {
+      ...actual.motion,
+      div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+      h1: ({ children, ...props }: any) => <h1 {...props}>{children}</h1>,
+      p: ({ children, ...props }: any) => <p {...props}>{children}</p>,
+    },
+    useScroll: () => ({ scrollYProgress: { get: () => 0 } }),
+    useTransform: () => ({ get: () => 0 }),
+  };
+});
 
 describe('Home Page Visual Regression & A11y', () => {
   const mockNavigate = vi.fn();
   const mockT = (key: string) => key;
+  const mockMotionValue = (val: number) => ({
+    get: () => val,
+    onChange: () => () => {},
+    on: () => () => {},
+    clearListeners: () => {},
+  } as unknown as MotionValue<number>);
+
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
+
+  const TestWrapper = ({ children }: { children: React.ReactNode }) => (
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        {children}
+      </BrowserRouter>
+    </QueryClientProvider>
+  );
 
   describe('Logged Out State', () => {
     it('should match snapshot for Hero', () => {
       const { asFragment } = render(
-        <BrowserRouter>
+        <TestWrapper>
           <HeroContent 
             heroOpacity={mockMotionValue(1)} 
             heroY={mockMotionValue(0)} 
@@ -53,35 +83,35 @@ describe('Home Page Visual Regression & A11y', () => {
             onAbout={() => {}} 
             user={null}
           />
-        </BrowserRouter>
+        </TestWrapper>
       );
       expect(asFragment()).toMatchSnapshot();
     });
 
     it('should match snapshot for Main Content', () => {
       const { asFragment } = render(
-        <BrowserRouter>
+        <TestWrapper>
           <HomeMainContent 
             user={null} 
             profile={null} 
             onNavigate={mockNavigate} 
             t={mockT} 
           />
-        </BrowserRouter>
+        </TestWrapper>
       );
       expect(asFragment()).toMatchSnapshot();
     });
 
     it('should show "Iniciar Jornada" and "Inicie sua Caminhada"', () => {
       render(
-        <BrowserRouter>
+        <TestWrapper>
           <HomeMainContent 
             user={null} 
             profile={null} 
             onNavigate={mockNavigate} 
             t={mockT} 
           />
-        </BrowserRouter>
+        </TestWrapper>
       );
       expect(screen.getByText(/Inicie sua Caminhada/i)).toBeDefined();
     });
@@ -92,7 +122,7 @@ describe('Home Page Visual Regression & A11y', () => {
 
     it('should match snapshot for Hero (logged in)', () => {
       const { asFragment } = render(
-        <BrowserRouter>
+        <TestWrapper>
           <HeroContent 
             heroOpacity={mockMotionValue(1)} 
             heroY={mockMotionValue(0)} 
@@ -100,35 +130,35 @@ describe('Home Page Visual Regression & A11y', () => {
             onAbout={() => {}} 
             user={mockUser}
           />
-        </BrowserRouter>
+        </TestWrapper>
       );
       expect(asFragment()).toMatchSnapshot();
     });
 
     it('should match snapshot for Main Content (logged in)', () => {
       const { asFragment } = render(
-        <BrowserRouter>
+        <TestWrapper>
           <HomeMainContent 
             user={mockUser} 
             profile={{ role: 'pilgrim' }} 
             onNavigate={mockNavigate} 
             t={mockT} 
           />
-        </BrowserRouter>
+        </TestWrapper>
       );
       expect(asFragment()).toMatchSnapshot();
     });
 
     it('should show "Ver Atividades" and "Retomar Jornada"', () => {
       render(
-        <BrowserRouter>
+        <TestWrapper>
           <HomeMainContent 
             user={mockUser} 
             profile={{ role: 'pilgrim' }} 
             onNavigate={mockNavigate} 
             t={mockT} 
           />
-        </BrowserRouter>
+        </TestWrapper>
       );
       expect(screen.getByText(/Retomar Jornada/i)).toBeDefined();
     });
@@ -137,14 +167,14 @@ describe('Home Page Visual Regression & A11y', () => {
   describe('Accessibility & Keyboard Navigation', () => {
     it('all main sections should have ARIA labels', () => {
       render(
-        <BrowserRouter>
+        <TestWrapper>
           <HomeMainContent 
             user={null} 
             profile={null} 
             onNavigate={mockNavigate} 
             t={mockT} 
           />
-        </BrowserRouter>
+        </TestWrapper>
       );
       
       expect(screen.getByLabelText(/Jornada/i)).toBeDefined();
@@ -155,18 +185,17 @@ describe('Home Page Visual Regression & A11y', () => {
 
     it('interactive cards should have correct ARIA roles', () => {
       render(
-        <BrowserRouter>
+        <TestWrapper>
           <HomeMainContent 
             user={null} 
             profile={null} 
             onNavigate={mockNavigate} 
             t={mockT} 
           />
-        </BrowserRouter>
+        </TestWrapper>
       );
       
       const cards = screen.getAllByRole('button');
-      // HomeCard is a button/clickable div with role button in HomeCard.tsx
       expect(cards.length).toBeGreaterThan(5);
     });
   });
