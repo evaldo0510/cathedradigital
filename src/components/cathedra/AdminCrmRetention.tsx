@@ -5,7 +5,7 @@ import {
   AlertTriangle, UserMinus, UserPlus, Download, DollarSign,
   ArrowUp, ArrowDown, Minus
 } from 'lucide-react';
-import { CathedraCard as Card  , CardContent  , CardHeader  , CardTitle  , CardDescription   } from '@/components/ui/card';
+import { CathedraCard    , CardContent  , CardHeader  , CardTitle  , CardDescription   } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button   } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';

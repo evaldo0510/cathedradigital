@@ -23,7 +23,7 @@ import confetti from 'canvas-confetti';
 import { Button   } from './Button';
 import { 
   Card,
-  CardContent   as CardContent  
+  CardContent      
 } from './Card';
 import AudioButton from './AudioButton';
 import { BibleChapterSkeleton } from './SacredSkeleton';

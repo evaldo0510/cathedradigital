@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
 import { CATECHISM_LOCAL_DATA } from '@/data/catechism';
-import { CathedraCard as Card   } from '@/components/ui/card';
+import { CathedraCard     } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button   } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';

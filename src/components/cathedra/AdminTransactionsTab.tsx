@@ -1,6 +1,6 @@
 import React from 'react';
 import { ArrowUpRight, User } from 'lucide-react';
-import { CathedraCard as Card  , CardContent  , CardHeader  , CardTitle   } from '@/components/ui/card';
+import { CathedraCard    , CardContent  , CardHeader  , CardTitle   } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
 interface AdminTransactionsTabProps {

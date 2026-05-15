@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CathedraCard as Card  , CardContent  , CardHeader  , CardTitle  , CardDescription   } from '@/components/ui/card';
+import { CathedraCard    , CardContent  , CardHeader  , CardTitle  , CardDescription   } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
   Dialog,

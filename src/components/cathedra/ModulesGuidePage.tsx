@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Icons } from '../../constants';
-import { CathedraCard as Card  , CardContent  , CardHeader  , CardTitle  , CardDescription   } from '@/components/ui/card';
+import { CathedraCard    , CardContent  , CardHeader  , CardTitle  , CardDescription   } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
 const MODULES = [

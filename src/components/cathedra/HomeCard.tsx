@@ -1,5 +1,5 @@
 import * as React from "react";
-import { CathedraCard as Card } from "@/components/cathedra/Card";
+import { CathedraCard   } from "@/components/cathedra/Card";
 import { cn } from "@/lib/utils";
 
 interface HomeCardProps extends React.HTMLAttributes<HTMLDivElement> {

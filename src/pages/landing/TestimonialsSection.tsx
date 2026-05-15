@@ -1,5 +1,5 @@
 import { Quote } from "lucide-react";
-import { CathedraCard as Card } from "@/components/cathedra/Card";
+import { CathedraCard   } from "@/components/cathedra/Card";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import React from "react";
