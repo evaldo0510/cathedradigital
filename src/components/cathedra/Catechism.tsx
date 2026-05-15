@@ -382,7 +382,7 @@ const Catechism: React.FC = () => {
         setCurrentParagraph(sec.paragraphs[0]);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       },
-      status: sec.paragraphs[1] <= Math.max(...Array.from(paragraphsRead)) ? 'read' : 'unread' as const
+      status: (sec.paragraphs[1] <= Math.max(...Array.from(paragraphsRead), 0) ? 'read' : 'unread') as 'read' | 'unread' | 'reading'
     }));
 
     return (
