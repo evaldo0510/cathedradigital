@@ -15,7 +15,7 @@ const REPLACEMENTS: Record<string, string> = {
 // but it's harder to automate without knowing the specific icon names.
 // For now, I'll focus on Button and Card as requested.
 
-const TARGET_DIRS = ['src/components', 'src/pages'];
+const TARGET_DIRS = ['src/components/cathedra', 'src/pages'];
 const ALLOWED_FILES = [
   'src/components/cathedra/CathedraCard.tsx',
   'src/components/cathedra/CathedraButton.tsx',
