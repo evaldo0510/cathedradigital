@@ -20,15 +20,15 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
   const navigate = useNavigate();
 
   return (
-    <div className="w-full space-y-32 md:space-y-48 max-w-[1280px] mx-auto px-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-16 lg:gap-24 items-start">
+    <div className="content-section">
+      <div className="premium-grid items-start">
         {/* CONTINUE JORNADA */}
-        <section className="space-y-10" aria-labelledby="section-jornada">
+        <section className="space-y-8" aria-labelledby="section-jornada">
           <div className="flex items-center gap-6">
-            <h2 id="section-jornada" className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/20 whitespace-nowrap">
+            <h2 id="section-jornada">
               Jornada
             </h2>
-            <div className="h-px flex-1 bg-border/10" />
+            <div className="h-px flex-1 bg-white/5" />
           </div>
           
           <HomeCard
