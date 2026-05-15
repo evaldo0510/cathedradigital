@@ -124,7 +124,7 @@ const HojePage: React.FC = () => {
   if (loadingStats || loadingJourney) return <DashboardSkeleton />;
 
   return (
-    <div className="flex flex-col items-center w-full min-h-screen bg-[#F8F5EE] pt-6 md:pt-16 pb-32">
+    <div className="flex flex-col items-center w-full min-h-screen bg-background pt-6 md:pt-16 pb-32">
       <SEOHead title="Hoje - Sua Jornada Espiritual" description="Acompanhe sua caminhada de fé diária." path="/hoje" />
       {import.meta.env.DEV && <DevDataInspector data={{ officialSaint, allSaintsToday, activeJourney, profile: profile?._sensitive }} />}
       
@@ -136,19 +136,19 @@ const HojePage: React.FC = () => {
           className="text-center space-y-8"
         >
           <div className="space-y-4">
-            <p className="text-premium-tiny font-black uppercase tracking-[0.4em] text-[#0F172A]/40">
+            <p className="text-premium-tiny font-black uppercase tracking-[0.4em] text-foreground/40">
               {greeting}, {profile?.name?.split(' ')[0] || 'fiel'}
             </p>
-            <h1 className="text-4xl md:text-5xl font-serif text-[#0F172A] leading-tight">
+            <h1 className="text-4xl md:text-5xl font-serif text-primary leading-tight">
               Sua jornada espiritual <br />
-              <span className="text-[#D4AF37] italic">guiada pela Sabedoria.</span>
+              <span className="text-secondary italic">guiada pela Sabedoria.</span>
             </h1>
           </div>
           
           <div className="flex items-center justify-center gap-4 flex-wrap">
              {(profile?.streak || 0) > 0 && (
-              <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-[#0F172A]/5 border border-[#0F172A]/10">
-                <Icons.Zap className="w-4 h-4 text-[#0F172A]" />
+              <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-primary/5 border border-primary/10">
+                <Icons.Zap className="w-4 h-4 text-primary" />
                 <span className="text-premium-tiny font-bold text-[#0F172A] uppercase tracking-wider">{profile?.streak} {profile?.streak === 1 ? 'Dia' : 'Dias'}</span>
               </div>
             )}
