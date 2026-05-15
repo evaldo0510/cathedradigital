@@ -291,21 +291,20 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
     const diagProgress = ((diagStep) / QUESTIONS.length) * 100;
 
     return (
-      <div ref={ref} className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4">
-        <div className="w-full max-w-lg lg:max-w-4xl space-y-6 lg:space-y-10 text-center">
-          <div className="flex justify-center mb-6">
-            <Icons.Logo className="w-16 h-16" variant="blue" />
-          </div>
-          
-          <div className="space-y-2 mb-8">
-            <div className="w-full h-1 bg-muted rounded-premium-sm overflow-hidden">
+      <div ref={ref} className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-8 reading-sepia">
+        <div className="w-full max-w-2xl space-y-16 text-center">
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30">Diagnóstico Espiritual</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30">{diagStep + 1} / {QUESTIONS.length}</span>
+            </div>
+            <div className="h-0.5 bg-primary/5 rounded-full overflow-hidden">
               <motion.div 
-                className="h-full bg-primary"
+                className="h-full bg-primary/40"
                 initial={{ width: 0 }}
                 animate={{ width: `${diagProgress}%` }}
               />
             </div>
-            <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Pergunta {diagStep + 1} de {QUESTIONS.length}</p>
           </div>
 
           <AnimatePresence mode="wait">
@@ -314,21 +313,30 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="space-y-8"
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              className="space-y-12"
             >
-              <h2 className="text-2xl lg:text-4xl font-serif font-bold text-foreground leading-tight px-4">{question.question}</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {question.options.map((opt) => (
-                  <Button
+              <div className="space-y-4">
+                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/20">Reflexão Inicial</span>
+                <h2 className="text-3xl md:text-5xl font-display text-primary tracking-tight leading-tight">{question.question}</h2>
+              </div>
+              <div className="grid grid-cols-1 gap-4 max-w-xl mx-auto">
+                {question.options.map((opt, idx) => (
+                  <motion.button
                     key={opt.value}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 * idx }}
+                    whileHover={{ x: 8 }}
+                    whileTap={{ scale: 0.99 }}
                     onClick={() => handleDiagAnswer(opt.value)}
-                    className="flex items-center gap-4 p-5 rounded-full border border-border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all text-left group"
+                    className="flex items-center justify-between p-8 rounded-[1.5rem] border border-primary/5 bg-primary/[0.01] hover:bg-primary/[0.03] hover:border-primary/20 transition-all text-left group"
                   >
-                    <div className="p-3 rounded-premium-sm bg-muted group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                      {opt.icon}
+                    <span className="text-lg font-monastery text-primary/70 group-hover:text-primary transition-colors">{opt.label}</span>
+                    <div className="w-6 h-6 rounded-full border border-primary/10 flex items-center justify-center group-hover:border-primary/40 transition-colors">
+                      <div className="w-1.5 h-1.5 rounded-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity" />
                     </div>
-                    <span className="font-bold text-foreground">{opt.label}</span>
-                  </Button>
+                  </motion.button>
                 ))}
               </div>
             </motion.div>
