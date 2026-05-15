@@ -117,7 +117,7 @@ const SpiritualJournalPage = () => {
                       : 'opacity-20 hover:opacity-40 hover:scale-105'
                   }`}
                 >
-                  <div className={`w-16 h-16 rounded-full border border-border flex items-center justify-center transition-colors ${mood === m.id ? 'bg-primary text-primary-foreground border-primary' : ''}`}>
+                  <div className={`w-16 h-16 rounded-full border border-border/40 flex items-center justify-center transition-colors ${mood === m.id ? 'bg-primary text-primary-foreground border-primary' : 'bg-primary/[0.01]'}`}>
                     <m.icon className="w-8 h-8" strokeWidth={1} />
                   </div>
                   <span className="text-[9px] font-bold uppercase tracking-[0.4em]">{m.label}</span>
@@ -175,7 +175,7 @@ const SpiritualJournalPage = () => {
                 <Card variant="interactive" padding="lg" className="space-y-10 relative overflow-hidden group">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-6">
-                      <div className="w-16 h-16 rounded-2xl bg-primary/[0.02] border border-border/40 text-secondary flex items-center justify-center shadow-inner-soft group-hover:scale-105 transition-transform duration-700">
+                      <div className="w-16 h-16 rounded-full bg-primary/[0.02] border border-border/40 text-secondary flex items-center justify-center shadow-inner-soft group-hover:scale-105 transition-transform duration-700">
                         {MOODS.find(m => m.id === entry.mood)?.icon({ className: "w-8 h-8", strokeWidth: 1.25 }) || <Icons.Sun className="w-8 h-8" strokeWidth={1.25} />}
                       </div>
                       <div>
