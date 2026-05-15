@@ -125,12 +125,13 @@ const CatechismExplorer: React.FC = () => {
         path="/catechism/explorer"
       />
 
-      <div className="flex flex-col gap-2">
-        <h1 className="font-serif font-bold text-foreground">Explorador do Catecismo</h1>
-        <p className="text-muted-foreground">Conteúdo dogmático local e sempre disponível.</p>
-      </div>
+      <div className="stack-spacing">
+        <div className="flex flex-col gap-2">
+          <h1 className="font-serif font-bold text-foreground">Explorador do Catecismo</h1>
+          <p className="text-muted-foreground">Conteúdo dogmático local e sempre disponível.</p>
+        </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="desktop-layout">
         {/* Filters Sidebar */}
         <div className="lg:col-span-1 space-y-6">
           <Card padding="sm" variant="outline" className="space-y-2">
