@@ -1,11 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
-import CathedraCard from '@/components/cathedra/CathedraCard';
-import CathedraButton from '@/components/cathedra/CathedraButton';
+import { Card as CathedraCard } from '@/components/cathedra/CathedraCard';
+import { CathedraButton } from '@/components/cathedra/CathedraButton';
 import { Icons } from '@/constants';
-import CathedraIcon from '@/components/cathedra/CathedraIcon';
-import { IconSizePreset } from '@/constants';
+import { CathedraIcon, IconSizePreset } from '@/components/cathedra/CathedraIcon';
 
 const AccessDenied: React.FC = () => {
   const navigate = useNavigate();
