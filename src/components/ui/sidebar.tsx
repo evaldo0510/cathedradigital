@@ -5,7 +5,7 @@ import { PanelLeft } from "lucide-react";
 
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/cathedra/CathedraButton";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
@@ -221,7 +221,7 @@ const SidebarTrigger = React.forwardRef<React.ElementRef<typeof Button>, React.C
     const { toggleSidebar } = useSidebar();
 
     return (
-      <Button
+      <CathedraButton
         ref={ref}
         data-sidebar="trigger"
         variant="ghost"
@@ -235,7 +235,7 @@ const SidebarTrigger = React.forwardRef<React.ElementRef<typeof Button>, React.C
       >
         <PanelLeft />
         <span className="sr-only">Toggle Sidebar</span>
-      </Button>
+      </CathedraButton>
     );
   },
 );
@@ -246,7 +246,7 @@ const SidebarRail = React.forwardRef<HTMLButtonElement, React.ComponentProps<"bu
     const { toggleSidebar } = useSidebar();
 
     return (
-      <Button
+      <CathedraButton
         ref={ref}
         data-sidebar="rail"
         aria-label="Toggle Sidebar"
