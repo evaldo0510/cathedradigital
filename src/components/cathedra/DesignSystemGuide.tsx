@@ -258,7 +258,7 @@ const DesignSystemGuide = () => {
                   <div className="flex flex-col gap-4">
                     <Button disabled>Disabled Primary</Button>
                     <Button variant="outline" disabled>Disabled Outline</Button>
-                    <Button size="icon" disabled><Icons.Lock /></Button>
+                    <Button size="icon" disabled><Icons.Lock className="w-4 h-4" /></Button>
                   </div>
                 </div>
                 <div className="space-y-4">
