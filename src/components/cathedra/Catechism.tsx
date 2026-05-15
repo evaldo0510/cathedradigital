@@ -3,8 +3,8 @@ import { Card } from '@/components/cathedra/Card';
 import { cn } from '@/lib/utils';
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { motion } from 'framer-motion';
-import { ArrowLeft } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowLeft, Menu, History, Bookmark } from 'lucide-react';
 import BackToThemeBanner from './BackToThemeBanner';
 import SEOHead from '@/components/SEOHead';
 import ShareButton from './ShareButton';
@@ -17,7 +17,6 @@ import DeepContentSection from './DeepContentSection';
 import MagisteriumPopover from './MagisteriumPopover';
 import { getCatechismCrossRefs, getCatechismDocs } from '@/data/cross-references';
 import { CIC_SECTIONS, CATECHISM_LOCAL_DATA } from '@/data/catechism';
-
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { useFavorites } from '@/hooks/useFavorites';
@@ -29,6 +28,9 @@ import AudioButton from './AudioButton';
 import { CatechismParagraphSkeleton } from './SacredSkeleton';
 import CatechismOfflineFallback from './CatechismOfflineFallback';
 import LibrarySidebar from './LibrarySidebar';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { useReadingMode } from '@/hooks/useReadingMode';
+import { toast } from 'sonner';
 
 
 
@@ -181,7 +183,7 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
   );
 };
 
-const LazyParagraph: React.FC<{ paragraph: number; currentParagraph: number; paragraphsRead: Set<number>; isFavorite: (type: string, title: string) => boolean; toggleFavorite: (item: any) => void; handleNavigateToBible: (abbr: string, chapter: number) => void }> = ({ paragraph: p, currentParagraph, paragraphsRead, isFavorite, toggleFavorite, handleNavigateToBible }) => {
+const LazyParagraph: React.FC<{ paragraph: number; currentParagraph: number; paragraphsRead: Set<number>; isFavorite: (type: string, title: string) => boolean; toggleFavorite: (item: any) => void; handleNavigateToBible: (abbr: string, chapter: number) => void; bookmarks: string[]; toggleBookmark: (p: number) => void }> = ({ paragraph: p, currentParagraph, paragraphsRead, isFavorite, toggleFavorite, handleNavigateToBible, bookmarks, toggleBookmark }) => {
   const ref = React.useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -203,6 +205,16 @@ const LazyParagraph: React.FC<{ paragraph: number; currentParagraph: number; par
         <div className="flex items-center gap-2">
           <span className="text-3xl font-serif font-bold text-primary">§{p}</span>
           <div className="flex items-center gap-1">
+            <button 
+              onClick={() => toggleBookmark(p)}
+              className={cn(
+                "p-2 rounded-full transition-all hover:bg-primary/5",
+                bookmarks.includes(`p_${p}`) ? "text-primary" : "text-primary/20"
+              )}
+              title="Marcar Parágrafo"
+            >
+              <Bookmark className={cn("w-3.5 h-3.5", bookmarks.includes(`p_${p}`) && "fill-current")} />
+            </button>
             <Button onClick={() => toggleFavorite({ type: 'catechism', title: `CIC §${p}`, content: `Catecismo da Igreja Católica, parágrafo §${p}` })} className="p-2 rounded-full hover:bg-primary/10 transition-all active:scale-95">
               <Icons.Heart className={`w-3.5 h-3.5 transition-all ${isFavorite('catechism', `CIC §${p}`) ? 'fill-primary text-primary' : 'text-muted-foreground'}`} />
             </Button>
@@ -232,10 +244,38 @@ const Catechism: React.FC = () => {
   const [currentParagraph, setCurrentParagraph] = useState(1);
   const [paragraphsRead, setParagraphsRead] = useState<Set<number>>(new Set());
   const [searchQuery, setSearchQuery] = useState('');
-  const [showCrossRefs, setShowCrossRefs] = useState(true);
   const isAutoScrolling = React.useRef(false);
   const { toggleFavorite, isFavorite } = useFavorites();
   const { user } = useAuth();
+  const { prefs } = useReadingMode();
+  const [bookmarks, setBookmarks] = useState<string[]>(() => {
+    try {
+      const stored = localStorage.getItem('cathedra_catechism_bookmarks');
+      return stored ? JSON.parse(stored) : [];
+    } catch { return []; }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('cathedra_catechism_bookmarks', JSON.stringify(bookmarks));
+    } catch {}
+  }, [bookmarks]);
+
+  const toggleBookmark = (p: number) => {
+    const key = `p_${p}`;
+    setBookmarks(prev => prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key]);
+    toast.success(bookmarks.includes(key) ? 'Marcador removido' : 'Marcador adicionado');
+  };
+
+  const resumeLastRead = () => {
+    try {
+      const stored = localStorage.getItem('cathedra_last_catechism_para');
+      if (stored) {
+        const num = parseInt(stored);
+        if (!isNaN(num)) navigateToParagraph(num);
+      }
+    } catch {}
+  };
 
   const crossRefs = getCatechismCrossRefs(currentParagraph);
   const docsRefs = getCatechismDocs(currentParagraph);
@@ -434,14 +474,22 @@ const Catechism: React.FC = () => {
               </div>
 
               <div className="flex items-center gap-2">
-                {(crossRefs.length > 0 || docsRefs.length > 0) && (
-                  <Button onClick={() => setShowCrossRefs(!showCrossRefs)}
-                    className={`p-3 rounded-full border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}
-                    title="Catecismo & Documentos">
-                    <Icons.Cross className="w-4 h-4" />
-                  </Button>
-                )}
                 <AudioButton />
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <Button className="xl:hidden p-3 rounded-full bg-card border border-border hover:bg-primary/10 transition-all group">
+                      <Menu className="w-5 h-5 text-foreground group-hover:text-primary" />
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent side="left" className="p-0 w-80 reading-sepia">
+                    <LibrarySidebar 
+                      title={selectedPart.title}
+                      subtitle={selectedPart.part}
+                      items={sidebarItems}
+                      className="flex border-none shadow-none"
+                    />
+                  </SheetContent>
+                </Sheet>
               </div>
             </div>
 
@@ -481,7 +529,7 @@ const Catechism: React.FC = () => {
             </div>
 
             {/* Cross references */}
-            {showCrossRefs && (crossRefs.length > 0 || docsRefs.length > 0) && (
+            {(crossRefs.length > 0 || docsRefs.length > 0) && (
               <CrossReferencePanel
                 type="catechism"
                 bibleRefs={crossRefs}
@@ -494,7 +542,7 @@ const Catechism: React.FC = () => {
             <div className="reader-container">
               <div className="flex flex-col gap-16">
                 {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(p => (
-                  <LazyParagraph key={p} paragraph={p} currentParagraph={currentParagraph} paragraphsRead={paragraphsRead} isFavorite={isFavorite} toggleFavorite={toggleFavorite} handleNavigateToBible={handleNavigateToBible} />
+                  <LazyParagraph key={p} paragraph={p} currentParagraph={currentParagraph} paragraphsRead={paragraphsRead} isFavorite={isFavorite} toggleFavorite={toggleFavorite} handleNavigateToBible={handleNavigateToBible} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
                 ))}
               </div>
             </div>
@@ -629,6 +677,15 @@ const Catechism: React.FC = () => {
               className="h-full bg-primary"
             />
           </div>
+        </div>
+        <div className="flex justify-center pt-6">
+          <Button 
+            variant="outline" 
+            onClick={resumeLastRead}
+            className="rounded-full border-primary/20 text-primary gap-2"
+          >
+            <History className="w-4 h-4" /> Retomar Leitura
+          </Button>
         </div>
       </motion.div>
       

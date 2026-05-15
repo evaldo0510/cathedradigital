@@ -16,6 +16,13 @@ export type ProfileId = 'ferido_em_busca' | 'ansioso_buscador' | 'sedento_de_sen
 export type PainId = 'ansiedade' | 'culpa' | 'vazio' | 'distancia' | 'solidao';
 export type DirectionId = 'silencio' | 'perdao' | 'proposito' | 'oracao' | 'servico';
 
+export interface SpiritualStep {
+  title: string;
+  action: string;
+  time: string;
+  icon: React.ElementType;
+}
+
 export interface ProfileResult {
   title: string;
   emoji: string;
@@ -28,6 +35,10 @@ export interface ProfileResult {
   bgGradient: string;
   logosPrompt: string;
   greeting: string;
+  deepReflection: string;
+  questions: string[];
+  readingRecommendations: { title: string; ref: string }[];
+  steps: SpiritualStep[];
 }
 
 export const PROFILES: Record<ProfileId, ProfileResult> = {
@@ -41,8 +52,12 @@ export const PROFILES: Record<ProfileId, ProfileResult> = {
     theme: 'Paz',
     color: 'text-primary',
     bgGradient: 'from-primary/5 via-background to-primary/5',
-    logosPrompt: 'Estou ansioso e ferido. Preciso encontrar paz interior. Me ajude com uma reflexão acolhedora.',
+    logosPrompt: 'Estou ansioso e ferido. Preciso encontrar paz interior.',
     greeting: 'Que a paz de Cristo alcance o seu coração hoje.',
+    deepReflection: 'A ferida é o lugar por onde a luz entra, como diz o poeta. Não fuja do seu cansaço; nele Deus quer sussurrar algo.',
+    questions: ['Onde você se sente mais cansado?', 'Como você costuma lidar com a dor?'],
+    readingRecommendations: [{ title: 'Salmos de Confiança', ref: 'Sl 23' }],
+    steps: [{ title: 'Lectio Divina', action: 'Ler o Salmo 23', time: '10 min', icon: BookOpen }]
   },
   ansioso_buscador: {
     title: 'Ansioso Buscador',
@@ -54,47 +69,63 @@ export const PROFILES: Record<ProfileId, ProfileResult> = {
     theme: 'Perdão',
     color: 'text-primary',
     bgGradient: 'from-primary/5 via-background to-primary/5',
-    logosPrompt: 'Sinto culpa e peso interior. Preciso entender o perdão de Deus. Me ajude a me libertar.',
+    logosPrompt: 'Sinto culpa e peso interior. Preciso entender o perdão de Deus.',
     greeting: 'Deus já perdoou. Agora é a sua vez de se libertar.',
+    deepReflection: 'A culpa que não leva ao amor é apenas uma prisão. O perdão de Deus não é um prêmio, é um abraço.',
+    questions: ['O que te impede de perdoar a si mesmo?', 'Onde está sua maior necessidade de misericórdia?'],
+    readingRecommendations: [{ title: 'Parábola do Filho Pródigo', ref: 'Lc 15' }],
+    steps: [{ title: 'Exame de Consciência', action: 'Refletir sobre o dia', time: '5 min', icon: Clock }]
   },
   sedento_de_sentido: {
     title: 'Sedento de Sentido',
     emoji: '🔍',
-    message: 'Algo dentro de você sabe que a vida pede mais. Essa inquietação não é fraqueza — é vocação. O sentido que você procura tem nome.',
+    message: 'Algo dentro de você sabe que a vida pede mais. Essa inquietação não é fraqueza — é vocação.',
     pain: { id: 'vazio', label: 'Vazio existencial' },
     direction: { id: 'proposito', label: 'Descobrir o propósito verdadeiro' },
     journeyName: 'Propósito Interior',
     theme: 'Fé',
     color: 'text-primary',
     bgGradient: 'from-primary/5 via-background to-primary/5',
-    logosPrompt: 'Sinto vazio existencial e busco propósito. Me ajude a encontrar sentido na fé.',
+    logosPrompt: 'Sinto vazio existencial e busco propósito.',
     greeting: 'Quem busca de coração, encontra. Continue caminhando.',
+    deepReflection: 'O vazio que você sente é o formato exato de Deus dentro de ti.',
+    questions: ['O que te faz vibrar de alegria?', 'Onde você gostaria de servir?'],
+    readingRecommendations: [{ title: 'Confissões', ref: 'Agostinho' }],
+    steps: [{ title: 'Meditação Guiada', action: 'Oração de Entrega', time: '15 min', icon: Anchor }]
   },
   firme_aprofundando: {
     title: 'Firme e Aprofundando',
     emoji: '📖',
-    message: 'Você já caminha com firmeza, mas sente o chamado para ir mais fundo. A santidade não é destino — é caminho diário. Continue.',
+    message: 'Você já caminha com firmeza, mas sente o chamado para ir mais fundo. A santidade não é destino — é caminho diário.',
     pain: { id: 'distancia', label: 'Desejo de mais profundidade' },
     direction: { id: 'oracao', label: 'Mergulhar na oração contemplativa' },
     journeyName: 'Formação Teológica',
     theme: 'Oração',
     color: 'text-primary',
     bgGradient: 'from-primary/5 via-background to-primary/5',
-    logosPrompt: 'Quero aprofundar minha fé e vida de oração. Me guie na contemplação e no estudo teológico.',
+    logosPrompt: 'Quero aprofundar minha fé e vida de oração.',
     greeting: 'Persevere na santidade. Cada dia é um passo.',
+    deepReflection: 'Deus quer levar-te a águas mais profundas.',
+    questions: ['Qual virtude você quer cultivar?', 'Como está sua intimidade com Jesus?'],
+    readingRecommendations: [{ title: 'Imitação de Cristo', ref: 'Kempis' }],
+    steps: [{ title: 'Adoração Eucarística', action: 'Visita ao Santíssimo', time: '30 min', icon: Sun }]
   },
   ardente_missionario: {
     title: 'Ardente Missionário',
     emoji: '🔥',
-    message: 'O fogo que arde em você não é acaso — é o Espírito Santo. Você foi chamado para incendiar o mundo com a verdade do Evangelho.',
+    message: 'O fogo que arde em você não é acaso — é o Espírito Santo.',
     pain: { id: 'solidao', label: 'Solidão na missão' },
     direction: { id: 'servico', label: 'Servir com raízes profundas' },
     journeyName: 'Vida Mística',
     theme: 'Propósito',
     color: 'text-primary',
     bgGradient: 'from-primary/5 via-background to-primary/5',
-    logosPrompt: 'Sou missionário e quero servir melhor. Me ajude a aprofundar a missão com raízes espirituais.',
+    logosPrompt: 'Sou missionário e quero servir melhor.',
     greeting: 'O Espírito arde em você. Vá e incendeie o mundo.',
+    deepReflection: 'Não podes dar o que não tens. Antes de servir, adora.',
+    questions: ['Quem precisa do seu testemunho hoje?', 'Onde está sua maior dificuldade no serviço?'],
+    readingRecommendations: [{ title: 'Atos dos Apóstolos', ref: 'At 2' }],
+    steps: [{ title: 'Serviço Fraterno', action: 'Praticar caridade concreta', time: '60 min', icon: Users }]
   },
 };
 

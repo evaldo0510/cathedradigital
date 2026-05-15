@@ -16,7 +16,7 @@ import AppErrorBoundary from './components/cathedra/AppErrorBoundary';
 import { toast } from 'sonner';
 
 // Core UI components (not lazy to ensure layout is instant)
-import ReadingModeToggle from './components/cathedra/ReadingModeToggle';
+import ReadingPreferencesPanel from './components/cathedra/ReadingPreferencesPanel';
 import A11ySettingsPanel from './components/cathedra/A11ySettingsPanel';
 import { initGA4AutoTracking } from './lib/analytics';
 
@@ -706,7 +706,7 @@ const AppLayout: React.FC = () => {
             </Suspense>
             <OfflineModeToggle />
             {[AppRoute.BIBLE, AppRoute.DAILY_LITURGY, AppRoute.LITURGIA, AppRoute.BREVIARY, AppRoute.LECTIO_DIVINA, AppRoute.CATECHISM, AppRoute.MAGISTERIUM].includes(location.pathname as AppRoute) && (
-              <ReadingModeToggle />
+              <ReadingPreferencesPanel />
             )}
             <OfflineIndicator />
             <PWAInstallPrompt />

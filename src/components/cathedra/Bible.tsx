@@ -20,7 +20,7 @@ import { Progress } from '@/components/ui/progress';
 import { checkNewBadges, getBadgeById } from '@/lib/badges';
 import { toast } from 'sonner';
 import confetti from 'canvas-confetti';
-import { Button   } from './Button';
+import { Button } from './Button';
 import { 
   Card,
   CardContent      
@@ -30,6 +30,9 @@ import { BibleChapterSkeleton } from './SacredSkeleton';
 import { buildBibleAbsoluteUrl, parseVerseParam } from '@/lib/bibleUrl';
 import LibrarySidebar from './LibrarySidebar';
 import { cn } from '@/lib/utils';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { useReadingMode } from '@/hooks/useReadingMode';
+import { Bookmark, Menu, History } from 'lucide-react';
 
 
 type BibleBook = { name: string; abbr: string; chapters: number };
@@ -122,11 +125,55 @@ const Bible: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [bibleError, setBibleError] = useState('');
   const [highlightedVerse, setHighlightedVerse] = useState<number | null>(null);
-  const [fontSizeIdx, setFontSizeIdx] = useState(1);
-  const [showCrossRefs, setShowCrossRefs] = useState(true);
   const { toggleFavorite, isFavorite } = useFavorites();
   const { user, profile } = useAuth();
+  const { prefs } = useReadingMode();
+  const [bookmarks, setBookmarks] = useState<string[]>(() => {
+    try {
+      const stored = localStorage.getItem('cathedra_bible_bookmarks');
+      return stored ? JSON.parse(stored) : [];
+    } catch { return []; }
+  });
+
   const completedBooks = useMemo(() => new Set(profile?.completed_books || []), [profile?.completed_books]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('cathedra_bible_bookmarks', JSON.stringify(bookmarks));
+    } catch {}
+  }, [bookmarks]);
+
+  // Persist session position
+  useEffect(() => {
+    if (selectedBook && selectedChapter > 0) {
+      localStorage.setItem('cathedra_last_bible_pos', JSON.stringify({
+        book: selectedBook.abbr,
+        chapter: selectedChapter
+      }));
+    }
+  }, [selectedBook, selectedChapter]);
+
+  const toggleBookmark = (v: number) => {
+    const key = `${selectedBook?.abbr}_${selectedChapter}_${v}`;
+    setBookmarks(prev => prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key]);
+    toast.success(bookmarks.includes(key) ? 'Marcador removido' : 'Marcador adicionado');
+  };
+
+  const resumeLastRead = () => {
+    try {
+      const stored = localStorage.getItem('cathedra_last_bible_pos');
+      if (stored) {
+        const { book, chapter } = JSON.parse(stored);
+        const allBooksList = [...getAllBooks('Antigo Testamento'), ...getAllBooks('Novo Testamento')];
+        const found = allBooksList.find(b => b.abbr === book);
+        if (found) {
+          setSelectedBook(found);
+          setSelectedChapter(chapter);
+          setViewMode('reading');
+        }
+      }
+    } catch {}
+  };
 
   // Track chapters read
   const [chaptersRead, setChaptersRead] = useState<Record<string, Set<number>>>({});
@@ -484,7 +531,6 @@ const Bible: React.FC = () => {
 
   // Reading view
   if (viewMode === 'reading' && selectedBook) {
-    const fs = FONT_SIZES[fontSizeIdx];
     const fromDashboard = searchParams.get('from') === 'dashboard';
     
     const sidebarItems = Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map(ch => ({
@@ -534,13 +580,21 @@ const Bible: React.FC = () => {
 
               <div className="flex items-center gap-2">
                 <AudioButton />
-                {(crossRefs.length > 0 || docsRefs.length > 0) && (
-                  <Button onClick={() => setShowCrossRefs(!showCrossRefs)}
-                    className={`p-3 rounded-full border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}
-                    title="Catecismo & Documentos">
-                    <Icons.Cross className="w-4 h-4" />
-                  </Button>
-                )}
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <Button className="xl:hidden p-3 rounded-full bg-card border border-border hover:bg-primary/10 transition-all group">
+                      <Menu className="w-5 h-5 text-foreground group-hover:text-primary" />
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent side="left" className="p-0 w-80 reading-sepia">
+                    <LibrarySidebar 
+                      title={selectedBook.name}
+                      subtitle="Sagradas Escrituras"
+                      items={sidebarItems}
+                      className="flex border-none shadow-none"
+                    />
+                  </SheetContent>
+                </Sheet>
               </div>
             </div>
 
@@ -565,13 +619,8 @@ const Bible: React.FC = () => {
 
             {/* Toolbar - Floating-like feel */}
             <div className="flex items-center justify-between gap-3 p-2 bg-card/40 backdrop-blur-md rounded-full border border-border/10 shadow-soft sticky top-6 z-40">
-              <div className="flex items-center bg-background/50 rounded-full p-1 border border-border/5">
-                {FONT_SIZES.map((f, i) => (
-                  <Button key={f.label} onClick={() => setFontSizeIdx(i)}
-                    className={`w-10 h-10 rounded-full text-xs font-bold transition-all ${fontSizeIdx === i ? 'bg-primary text-primary-foreground shadow-premium' : 'text-muted-foreground hover:text-primary'}`}>
-                    {f.label}
-                  </Button>
-                ))}
+              <div className="flex items-center gap-2 pl-4">
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/40">Leitura Digital</span>
               </div>
 
               <div className="flex items-center gap-2 pr-2">
@@ -599,7 +648,7 @@ const Bible: React.FC = () => {
             </div>
 
             <div className="reader-container">
-              {showCrossRefs && (crossRefs.length > 0 || docsRefs.length > 0) && (
+              {(crossRefs.length > 0 || docsRefs.length > 0) && (
                 <div className="mb-10">
                   <CrossReferencePanel 
                     type="bible"
@@ -621,7 +670,7 @@ const Bible: React.FC = () => {
                       <Button variant="outline" onClick={() => window.location.reload()} className="mt-4">Tentar novamente</Button>
                     </div>
                   ) : (
-                    <div className={cn("reader-text", fs.size, fs.leading)}>
+                    <div className="reader-text">
                       {verses.map(v => {
                         const relatedP = verseToCic[v.number];
                         return (
@@ -629,9 +678,19 @@ const Bible: React.FC = () => {
                             id={`v${v.number}`}
                             onClick={() => setHighlightedVerse(v.number === highlightedVerse ? null : v.number)}
                             className={cn(
-                              "inline transition-all duration-500 cursor-pointer rounded-lg px-1",
+                              "inline transition-all duration-500 cursor-pointer rounded-lg px-1 relative group/verse",
                               highlightedVerse === v.number ? 'bg-primary/10 shadow-[0_0_20px_rgba(0,0,0,0.05)]' : 'hover:bg-primary/5'
                             )}>
+                            <button 
+                              onClick={(e) => { e.stopPropagation(); toggleBookmark(v.number); }}
+                              className={cn(
+                                "absolute -left-6 top-1/2 -translate-y-1/2 opacity-0 group-hover/verse:opacity-100 transition-opacity p-1 hover:text-primary",
+                                bookmarks.includes(`${selectedBook?.abbr}_${selectedChapter}_${v.number}`) ? "opacity-100 text-primary" : "text-primary/20"
+                              )}
+                              title="Marcar Versículo"
+                            >
+                              <Bookmark className={cn("w-3.5 h-3.5", bookmarks.includes(`${selectedBook?.abbr}_${selectedChapter}_${v.number}`) && "fill-current")} />
+                            </button>
                             <sup className="text-[0.6em] font-display font-black text-primary/30 mr-2 select-none">{v.number}</sup>
                             {v.text}{' '}
                             {relatedP && (
@@ -756,12 +815,21 @@ const Bible: React.FC = () => {
           <p className="text-muted-foreground mt-1">Lâmpada para meus pés é a vossa palavra.</p>
         </div>
         
-        <div className="w-full md:w-auto flex flex-col gap-2">
-           <div className="flex items-center justify-between text-premium-tiny font-black uppercase tracking-widest text-primary/60 mb-1">
-             <span>Progresso Geral</span>
-             <span>{overallProgress}%</span>
+        <div className="w-full md:w-auto flex flex-col gap-4">
+           <Button 
+             variant="outline" 
+             onClick={resumeLastRead}
+             className="rounded-full border-primary/20 text-primary gap-2"
+           >
+             <History className="w-4 h-4" /> Retomar Leitura
+           </Button>
+           <div>
+             <div className="flex items-center justify-between text-premium-tiny font-black uppercase tracking-widest text-primary/60 mb-1">
+               <span>Progresso Geral</span>
+               <span>{overallProgress}%</span>
+             </div>
+             <Progress value={overallProgress} className="h-2 w-full md:w-48" />
            </div>
-           <Progress value={overallProgress} className="h-2 w-full md:w-48" />
         </div>
       </div>
 
