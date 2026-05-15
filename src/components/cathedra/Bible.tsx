@@ -20,11 +20,11 @@ import { Progress } from '@/components/ui/progress';
 import { checkNewBadges, getBadgeById } from '@/lib/badges';
 import { toast } from 'sonner';
 import confetti from 'canvas-confetti';
+import { CathedraButton as Button } from './CathedraButton';
 import { 
-  CathedraButton as Button, 
   CathedraCard as Card,
   CathedraCardContent as CardContent
-} from './CathedraCard'; // This is wrong, Button is in CathedraButton. Fix below.
+} from './CathedraCard';
 import AudioButton from './AudioButton';
 import { BibleChapterSkeleton } from './SacredSkeleton';
 import { buildBibleAbsoluteUrl, parseVerseParam } from '@/lib/bibleUrl';
