@@ -1074,7 +1074,14 @@ const AdminDashboard: React.FC = () => {
             </Card>
           </div>
         </TabsContent>
+        <TabsContent value="regression" className="space-y-6">
+          <Suspense fallback={<Skeleton className="h-[400px] rounded-premium" />}>
+            <VisualRegressionDashboard />
+          </Suspense>
+        </TabsContent>
+
         <TabsContent value="construction">
+
           <Suspense fallback={<Skeleton className="h-[400px] rounded-full" />}>
             <AdminConstructionTab />
           </Suspense>
