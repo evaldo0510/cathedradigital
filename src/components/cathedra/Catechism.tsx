@@ -3,8 +3,8 @@ import { Card } from '@/components/cathedra/Card';
 import { cn } from '@/lib/utils';
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { motion } from 'framer-motion';
-import { ArrowLeft } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowLeft, Menu, History, Bookmark } from 'lucide-react';
 import BackToThemeBanner from './BackToThemeBanner';
 import SEOHead from '@/components/SEOHead';
 import ShareButton from './ShareButton';
@@ -17,7 +17,6 @@ import DeepContentSection from './DeepContentSection';
 import MagisteriumPopover from './MagisteriumPopover';
 import { getCatechismCrossRefs, getCatechismDocs } from '@/data/cross-references';
 import { CIC_SECTIONS, CATECHISM_LOCAL_DATA } from '@/data/catechism';
-
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { useFavorites } from '@/hooks/useFavorites';
@@ -29,6 +28,9 @@ import AudioButton from './AudioButton';
 import { CatechismParagraphSkeleton } from './SacredSkeleton';
 import CatechismOfflineFallback from './CatechismOfflineFallback';
 import LibrarySidebar from './LibrarySidebar';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { useReadingMode } from '@/hooks/useReadingMode';
+import { toast } from 'sonner';
 
 
 
