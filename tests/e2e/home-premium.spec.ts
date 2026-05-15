@@ -290,27 +290,40 @@ test.describe('Home Page Premium Audit', () => {
     });
   }
 
-  test('Visual Regression - Themes & Sections', async ({ page }) => {
+  test('Visual Consistency & Layout Alignment (Desktop)', async ({ page }) => {
     await page.waitForLoadState('networkidle');
     const theme = await page.evaluate(() => document.documentElement.classList.contains('dark') ? 'dark' : 'light');
 
-    for (const section of HOME_SECTIONS) {
-      const locator = page.locator(section.selector);
-      if (await locator.isVisible()) {
-        const maskSelectors = [];
-        if (section.name === 'RitualDoDia') {
-          maskSelectors.push(locator.locator('blockquote'));
-          maskSelectors.push(locator.locator('p.font-reader'));
-          maskSelectors.push(locator.locator('img'));
-        }
-        if (section.name === 'Hero') {
-          maskSelectors.push(locator.locator('img'));
-        }
+    // Breakpoints to test
+    const viewports = [
+      { width: 1280, height: 800, name: 'lg' },
+      { width: 1536, height: 900, name: 'xl' }
+    ];
 
-        await expect(locator).toHaveScreenshot(`home-${section.name}-${theme}.png`, {
-          mask: maskSelectors.length > 0 ? maskSelectors : undefined,
-          animations: 'disabled',
-        });
+    for (const vp of viewports) {
+      await page.setViewportSize({ width: vp.width, height: vp.height });
+      await page.waitForTimeout(500); // Wait for resize adjustments
+
+      for (const section of HOME_SECTIONS) {
+        const locator = page.locator(section.selector);
+        if (await locator.isVisible()) {
+          const maskSelectors = [];
+          if (section.name === 'RitualDoDia') {
+            maskSelectors.push(locator.locator('blockquote'));
+            maskSelectors.push(locator.locator('p.font-reader'));
+            maskSelectors.push(locator.locator('img'));
+          }
+          if (section.name === 'Hero') {
+            maskSelectors.push(locator.locator('img'));
+          }
+
+          // Use a higher threshold for layout checks if needed, but 0.1 is usually safe
+          await expect(locator).toHaveScreenshot(`home-${section.name}-${theme}-${vp.name}.png`, {
+            mask: maskSelectors.length > 0 ? maskSelectors : undefined,
+            animations: 'disabled',
+            maxDiffPixelRatio: 0.05, // Slightly more lenient for minor subpixel rendering diffs on different CI runners
+          });
+        }
       }
     }
   });

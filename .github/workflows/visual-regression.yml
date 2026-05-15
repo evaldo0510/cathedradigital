@@ -27,6 +27,7 @@ jobs:
       env:
         CI: true
         PLAYWRIGHT_TEST_BASE_URL: http://localhost:8080
+        A11Y_MAX_CRITICAL_ERRORS: 5 # Configurable limit as requested
 
     - name: Run Visual Audit Report Generator
       if: always()
