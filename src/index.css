@@ -322,7 +322,7 @@
   }
 
   .stack-spacing {
-    @apply space-y-10 md:space-y-14 lg:space-y-20;
+    @apply space-y-14 md:space-y-20 lg:space-y-32;
   }
   
   .premium-grid {
