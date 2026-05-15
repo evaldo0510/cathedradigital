@@ -211,14 +211,17 @@
 
   /* Premium small text scale */
   .text-premium-tiny {
+    @apply font-bold uppercase tracking-[0.2em] text-muted-foreground/50;
     font-size: clamp(0.6rem, 0.7vw, 0.75rem);
   }
 
   .text-premium-small {
+    @apply font-medium text-muted-foreground/70;
     font-size: clamp(0.75rem, 0.9vw, 0.875rem);
   }
 
   .text-premium-base {
+    @apply text-muted-foreground/80;
     font-size: clamp(0.875rem, 1vw, 1rem);
   }
 
