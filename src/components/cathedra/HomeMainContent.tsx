@@ -25,7 +25,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         {/* CONTINUE JORNADA */}
         <section className="space-y-8" aria-labelledby="section-jornada">
           <div className="flex items-center gap-6">
-            <h2 id="section-jornada">
+            <h2 id="section-jornada" className="heading-section-label">
               Jornada
             </h2>
             <div className="h-px flex-1 bg-white/[0.08]" />
