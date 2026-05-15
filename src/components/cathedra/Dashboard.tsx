@@ -255,20 +255,20 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       </div>
 
       <aside className="desktop-aside space-y-6 hidden xl:block">
-        <div className="desktop-card space-y-4">
-          <h3 className="text-premium-tiny font-black uppercase tracking-[0.2em] text-secondary opacity-80">Estatísticas Semanais</h3>
-          <div className="grid grid-cols-3 gap-2 text-center">
-            <div className="p-2 rounded-2xl bg-primary/[0.04]">
-              <p className="text-lg font-bold text-foreground">{weeklyStats.chaptersRead}</p>
-              <p className="text-premium-tiny text-muted-foreground font-medium">{t('bible')}</p>
+        <div className="desktop-card space-y-6">
+          <h3 className="text-premium-tiny font-bold uppercase tracking-[0.3em] text-secondary opacity-60">Estatísticas Semanais</h3>
+          <div className="grid grid-cols-3 gap-4 text-center">
+            <div className="space-y-1">
+              <p className="text-2xl font-medium text-primary tracking-tighter">{weeklyStats.chaptersRead}</p>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{t('bible')}</p>
             </div>
-            <div className="p-2 rounded-2xl bg-primary/[0.04]">
-              <p className="text-lg font-bold text-foreground">{weeklyStats.catechismParagraphs}</p>
-              <p className="text-premium-tiny text-muted-foreground font-medium">CIC</p>
+            <div className="space-y-1">
+              <p className="text-2xl font-medium text-primary tracking-tighter">{weeklyStats.catechismParagraphs}</p>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">CIC</p>
             </div>
-            <div className="p-2 rounded-2xl bg-primary/[0.04]">
-              <p className="text-lg font-bold text-foreground">{weeklyStats.journeySteps}</p>
-              <p className="text-premium-tiny text-muted-foreground font-medium">{t('journeys')}</p>
+            <div className="space-y-1">
+              <p className="text-2xl font-medium text-primary tracking-tighter">{weeklyStats.journeySteps}</p>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{t('journeys')}</p>
             </div>
           </div>
         </div>
@@ -277,11 +277,12 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           <QuickDonation />
         </FadeUp>
 
-        <div className="desktop-card space-y-3">
-          <p className="text-sm font-serif italic text-foreground leading-relaxed">
+        <div className="desktop-card space-y-6 border-secondary/10 bg-secondary/[0.02]">
+          <div className="w-10 h-0.5 bg-secondary/30 rounded-full" />
+          <p className="text-lg font-serif italic text-primary/90 leading-relaxed">
             {dailyQuote.text}
           </p>
-          <p className="text-premium-tiny font-black uppercase tracking-[0.2em] text-secondary">
+          <p className="text-premium-tiny font-bold uppercase tracking-[0.3em] text-secondary/80">
             — {dailyQuote.author}
           </p>
         </div>
