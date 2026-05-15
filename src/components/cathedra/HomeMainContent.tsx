@@ -33,15 +33,15 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         <Card
           variant="interactive"
           onClick={() => onNavigate(AppRoute.JORNADAS)}
-          padding="lg"
-          className="flex flex-col md:flex-row items-center justify-between gap-16"
+          padding="xl"
+          className="flex flex-col md:flex-row items-center justify-between gap-16 group"
         >
           <div className="flex items-center gap-14 text-center md:text-left flex-col md:flex-row">
-            <div className="w-24 h-24 rounded-premium-sm bg-primary/[0.02] border border-border/40 flex items-center justify-center text-primary group-hover:scale-105 transition-transform duration-1000 shadow-inner">
+            <div className="w-24 h-24 rounded-full bg-primary/[0.02] border border-border/10 flex items-center justify-center text-primary group-hover:scale-105 transition-transform duration-1000 shadow-inner-soft">
               <Icons.Flame className="w-12 h-12" strokeWidth={1} />
             </div>
             <div className="space-y-4">
-              <p className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/30">Seu Próximo Passo</p>
+              <p className="text-premium-tiny font-bold uppercase tracking-[0.5em] text-primary/10 group-hover:text-primary/30 transition-colors">Seu Próximo Passo</p>
               <h3 className="text-4xl font-bold text-primary tracking-tight">
                 {user ? 'Retomar caminhada' : 'Inicie sua caminhada'}
               </h3>
@@ -85,7 +85,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       </section>
 
       {/* CATECISMO */}
-      <section className="space-y-16">
+      <section className="space-y-24">
         <div className="flex items-center gap-12">
           <div className="h-px flex-1 bg-border/30" />
           <h2 className="text-premium-tiny font-bold uppercase tracking-[0.5em] text-primary/30 whitespace-nowrap">
@@ -99,7 +99,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
           padding="xl"
           className="text-center space-y-16"
         >
-          <div className="w-28 h-28 rounded-premium-sm bg-secondary/[0.02] border border-secondary/20 flex items-center justify-center text-secondary mx-auto group-hover:rotate-6 transition-transform duration-1000">
+          <div className="w-28 h-28 rounded-full bg-secondary/[0.01] border border-secondary/10 flex items-center justify-center text-secondary mx-auto group-hover:rotate-6 transition-transform duration-1000">
             <Icons.Catechism className="w-14 h-14" strokeWidth={1} />
           </div>
           <div className="space-y-8">
@@ -126,7 +126,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
           <Card variant="interactive" padding="lg" className="space-y-10 h-full flex flex-col justify-between">
             <div className="space-y-10">
-              <div className="w-16 h-16 rounded-2xl bg-primary/[0.03] border border-border/40 flex items-center justify-center text-primary group-hover:scale-105 transition-transform duration-700">
+              <div className="w-16 h-16 rounded-full bg-primary/[0.01] border border-border/10 flex items-center justify-center text-primary group-hover:scale-105 transition-transform duration-700">
                 <Icons.Star className="w-8 h-8" strokeWidth={1.5} />
               </div>
               <div className="space-y-4">
@@ -141,7 +141,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
           
           <Card variant="interactive" padding="lg" className="space-y-10 h-full flex flex-col justify-between">
             <div className="space-y-10">
-              <div className="w-16 h-16 rounded-2xl bg-secondary/[0.03] border border-secondary/20 flex items-center justify-center text-secondary group-hover:scale-105 transition-transform duration-700">
+              <div className="w-16 h-16 rounded-full bg-secondary/[0.01] border border-secondary/10 flex items-center justify-center text-secondary group-hover:scale-105 transition-transform duration-700">
                 <Icons.BookOpen className="w-8 h-8" strokeWidth={1.5} />
               </div>
               <div className="space-y-4">

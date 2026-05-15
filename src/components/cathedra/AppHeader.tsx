@@ -49,13 +49,13 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
 
   return (
     <header className="border-b border-border/30 bg-background/60 backdrop-blur-2xl sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)]">
-      <div className="max-w-[1440px] mx-auto px-8 sm:px-12 lg:px-20 py-6 sm:py-8 flex items-center justify-between min-h-[80px] sm:min-h-[100px]">
+      <div className="max-w-[1440px] mx-auto px-8 sm:px-12 lg:px-24 py-6 sm:py-10 flex items-center justify-between min-h-[90px] sm:min-h-[120px]">
         <div className="flex items-center gap-4 sm:gap-12 min-w-0">
           <div className="flex lg:hidden items-center gap-3 sm:gap-4 cursor-pointer group min-w-0 focus-visible:ring-2 focus-visible:ring-primary/20 outline-none" role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && navigate(AppRoute.HOJE)} onClick={() => navigate(AppRoute.HOJE)}>
             <Icons.Logo className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0 transition-transform group-hover:scale-105" variant="blue" />
             <div className="flex flex-col min-w-0">
               <span className="text-xl sm:text-2xl font-display font-medium uppercase tracking-[0.2em] text-primary leading-none truncate">Cathedra</span>
-              <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-secondary/60 mt-1 truncate">{t('digital')}</span>
+              <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-primary/30 mt-1 truncate">{t('digital')}</span>
             </div>
           </div>
           
@@ -72,7 +72,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           )}
 
           {isDashboard && (
-            <nav className="hidden 2xl:flex items-center gap-2 border-l border-border/40 pl-8 ml-4 min-w-0">
+            <nav className="hidden 2xl:flex items-center gap-4 border-l border-border/20 pl-10 ml-6 min-w-0">
               {[
                 { label: t('home'), route: AppRoute.HOJE },
                 { label: t('encyclopedia'), route: AppRoute.ENCYCLOPEDIA },
@@ -89,7 +89,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                   onClick={() => navigate(item.route)}
                   className={cn(
                     "px-5 py-3 h-auto whitespace-nowrap relative group",
-                    pathname === item.route ? 'bg-primary text-primary-foreground' : 'text-muted-foreground/50 hover:text-primary'
+                    pathname === item.route ? 'bg-primary text-primary-foreground' : 'text-primary/20 hover:text-primary transition-all'
                   )}
                   aria-label={item.label}
                   aria-current={pathname === item.route ? 'page' : undefined}

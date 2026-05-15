@@ -20,14 +20,14 @@ const RitualDoDia: React.FC = () => {
 
   return (
     <Card
-      padding="lg"
-      className="relative overflow-hidden space-y-16"
+      padding="xl"
+      className="relative overflow-hidden space-y-24 bg-card/40 backdrop-blur-xl border-white/5 shadow-2xl"
     >
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3.5">
-          <Sparkles className="w-6 h-6 text-secondary" strokeWidth={1} />
-          <span className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-secondary/60">
+        <div className="flex items-center gap-4">
+          <Sparkles className="w-5 h-5 text-secondary/40" strokeWidth={1} />
+          <span className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-secondary/30">
             Ritual do Dia
           </span>
         </div>
@@ -42,24 +42,24 @@ const RitualDoDia: React.FC = () => {
       </div>
 
       {/* Bible Verse */}
-      <div className="space-y-8" role="article" aria-label="Versículo do Dia">
-        <div className="flex items-center gap-3.5">
-          <BookOpen className="w-5 h-5 text-primary/40" strokeWidth={1.25} />
-          <span className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/40">Verbum Domini</span>
+      <div className="space-y-12" role="article" aria-label="Versículo do Dia">
+        <div className="flex items-center gap-4">
+          <BookOpen className="w-4 h-4 text-primary/20" strokeWidth={1} />
+          <span className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/20">Verbum Domini</span>
         </div>
-        <blockquote className="text-3xl md:text-4xl font-serif italic text-primary leading-[1.3] pl-10 border-l-[3px] border-secondary/10">
+        <blockquote className="text-4xl md:text-5xl font-serif italic text-primary leading-[1.2] pl-12 border-l border-secondary/20">
           "{verse.text}"
         </blockquote>
-        <p className="text-premium-tiny font-bold text-secondary uppercase tracking-[0.3em] pl-10 opacity-60">— {verse.ref}</p>
+        <p className="text-premium-tiny font-bold text-secondary uppercase tracking-[0.3em] pl-12 opacity-40">— {verse.ref}</p>
       </div>
 
       {/* Reflection */}
-      <div className="space-y-6" role="article" aria-label="Reflexão">
-        <div className="flex items-center gap-3.5">
-           <Icons.PenLine className="w-4 h-4 text-muted-foreground/30" strokeWidth={1.25} />
-           <span className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-muted-foreground/30">Meditatio</span>
+      <div className="space-y-10" role="article" aria-label="Reflexão">
+        <div className="flex items-center gap-4">
+           <Icons.PenLine className="w-3.5 h-3.5 text-muted-foreground/20" strokeWidth={1} />
+           <span className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-muted-foreground/20">Meditatio</span>
         </div>
-        <p className="text-xl text-primary/70 leading-relaxed font-serif italic pl-10">
+        <p className="text-2xl text-primary/50 leading-relaxed font-serif italic pl-12 border-l border-border/10">
           {reflection}
         </p>
       </div>

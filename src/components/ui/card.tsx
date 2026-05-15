@@ -3,8 +3,8 @@ import { cn } from "@/lib/utils"
 import { motion, HTMLMotionProps } from "framer-motion"
 
 export interface CardProps extends HTMLMotionProps<"div"> {
-  variant?: 'default' | 'interactive' | 'outline' | 'glass' | 'ghost' | 'elevated';
-  padding?: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+  variant?: 'default' | 'interactive' | 'outline' | 'glass' | 'ghost' | 'elevated' | 'silent';
+  padding?: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
   hover?: boolean;
 }
 
@@ -18,15 +18,17 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       lg: 'p-8 md:p-12 lg:p-16',
       xl: 'p-12 md:p-16 lg:p-24',
       '2xl': 'p-16 md:p-24 lg:p-32',
+      '3xl': 'p-20 md:p-32 lg:p-48',
     };
 
     const variantStyles = {
       default: 'premium-card',
       interactive: 'premium-card-interactive group',
-      outline: 'bg-transparent border border-border/40 rounded-premium hover:border-primary/10 hover:bg-primary/[0.01] transition-all duration-700',
-      glass: 'bg-background/40 backdrop-blur-2xl border border-white/10 rounded-premium shadow-premium',
-      ghost: 'bg-transparent border border-transparent rounded-premium hover:bg-primary/[0.03] transition-colors duration-500',
+      outline: 'bg-transparent border border-border/20 rounded-premium hover:border-primary/5 hover:bg-primary/[0.01] transition-all duration-700',
+      glass: 'bg-background/40 backdrop-blur-3xl border border-white/5 rounded-premium shadow-premium',
+      ghost: 'bg-transparent border border-transparent rounded-premium hover:bg-primary/[0.02] transition-colors duration-500',
       elevated: 'premium-card shadow-premium-hover border-primary/5 bg-card/80',
+      silent: 'bg-primary/[0.01] border border-border/10 rounded-premium opacity-60 hover:opacity-100 transition-opacity duration-700',
     };
 
     return (
