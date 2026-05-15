@@ -27,7 +27,7 @@ const RitualDoDia: React.FC = () => {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <Sparkles className="w-5 h-5 text-secondary" strokeWidth={1.5} />
+            <Sparkles className="w-4 h-4 text-secondary" strokeWidth={1.5} />
             <span className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-secondary/60">
               Ritual do Dia
             </span>
