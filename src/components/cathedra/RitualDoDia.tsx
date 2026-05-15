@@ -45,7 +45,7 @@ const RitualDoDia: React.FC = () => {
       <div className="space-y-12" role="article" aria-label="Versículo do Dia">
         <div className="flex items-center gap-4">
           <BookOpen className="w-4 h-4 text-primary/20" strokeWidth={1} />
-          <span className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/20">Verbum Domini</span>
+          <span className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/10">Verbum Domini</span>
         </div>
         <blockquote className="text-4xl md:text-5xl font-serif italic text-primary/70 leading-[1.2] pl-12 border-l border-secondary/10">
           "{verse.text}"
