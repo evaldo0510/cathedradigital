@@ -12,20 +12,28 @@ interface CathedraIconProps {
   strokeWidth?: number;
 }
 
+/**
+ * Standardized icon sizes across breakpoints:
+ * - xs: 12px mobile -> 14px desktop
+ * - sm: 16px mobile -> 20px desktop
+ * - md: 20px mobile -> 24px desktop
+ * - lg: 32px mobile -> 40px desktop
+ * - xl: 48px mobile -> 64px desktop
+ */
 const sizeMap: Record<IconSize, string> = {
-  xs: 'w-3 h-3',
-  sm: 'w-4 h-4',
-  md: 'w-5 h-5',
-  lg: 'w-8 h-8',
-  xl: 'w-12 h-12',
+  xs: 'w-3 h-3 md:w-3.5 md:h-3.5',
+  sm: 'w-4 h-4 md:w-5 md:h-5',
+  md: 'w-5 h-5 md:w-6 md:h-6',
+  lg: 'w-8 h-8 md:w-10 md:h-10',
+  xl: 'w-12 h-12 md:w-16 md:h-16',
 };
 
 const containerSizeMap: Record<IconSize, string> = {
-  xs: 'w-6 h-6',
-  sm: 'w-8 h-8',
-  md: 'w-10 h-10',
-  lg: 'w-16 h-16',
-  xl: 'w-24 h-24',
+  xs: 'w-6 h-6 md:w-7 md:h-7',
+  sm: 'w-8 h-8 md:w-10 md:h-10',
+  md: 'w-10 h-10 md:w-12 md:h-12',
+  lg: 'w-16 h-16 md:w-20 md:h-20',
+  xl: 'w-24 h-24 md:w-32 md:h-32',
 };
 
 const variantStyles = {
@@ -45,7 +53,7 @@ export const CathedraIcon: React.FC<CathedraIconProps> = ({
 }) => {
   return (
     <div className={cn(
-      "flex items-center justify-center rounded-premium-sm bg-primary/5 border border-border/10",
+      "flex items-center justify-center rounded-premium-sm bg-primary/5 border border-border/10 transition-all duration-300",
       containerSizeMap[size],
       containerClassName
     )}>
@@ -55,4 +63,13 @@ export const CathedraIcon: React.FC<CathedraIconProps> = ({
       />
     </div>
   );
+};
+
+// Utility to enforce sizes in other components
+export const IconSizePreset = {
+  NAV: 'sm' as IconSize,
+  CARD_HEADER: 'md' as IconSize,
+  HERO: 'lg' as IconSize,
+  ACTION: 'sm' as IconSize,
+  TINY: 'xs' as IconSize,
 };
