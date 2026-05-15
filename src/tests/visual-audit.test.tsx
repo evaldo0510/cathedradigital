@@ -54,6 +54,7 @@ describe('Visual Consistency & Accessibility Audit', () => {
           heroY={mockMotionValue(0)} 
           onStart={() => {}} 
           onAbout={() => {}} 
+          user={null}
         />
       </BrowserRouter>
     );
