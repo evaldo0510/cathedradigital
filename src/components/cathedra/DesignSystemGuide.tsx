@@ -270,6 +270,43 @@ const DesignSystemGuide = () => {
           </div>
         </section>
 
+        {/* Componentes Específicos Section */}
+        <section className="space-y-10">
+          <div className="flex items-center gap-6">
+            <div className="h-px flex-1 bg-[#0F172A]/10" />
+            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-[#0F172A]/30">Padrões de Conteúdo</h2>
+            <div className="h-px flex-1 bg-[#0F172A]/10" />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="bg-white p-10 rounded-[3rem] border border-[#0F172A]/5 shadow-sm space-y-6">
+              <span className="text-premium-tiny text-[#D4AF37] font-black uppercase tracking-widest">Estilo Bíblico (Reader)</span>
+              <div className="space-y-4">
+                <p className="font-serif text-2xl leading-relaxed text-[#0F172A]">
+                  <sup className="text-xs text-[#D4AF37] mr-2">1</sup>No princípio era o Verbo, e o Verbo estava junto de Deus, e o Verbo era Deus.
+                </p>
+                <div className="flex gap-2">
+                  <div className="px-3 py-1 rounded-full bg-primary/5 text-primary text-[10px] font-black uppercase tracking-widest">Jo 1,1</div>
+                  <div className="px-3 py-1 rounded-full bg-primary/5 text-primary text-[10px] font-black uppercase tracking-widest">Cross-ref: Gn 1,1</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white p-10 rounded-[3rem] border border-[#0F172A]/5 shadow-sm space-y-6">
+              <span className="text-premium-tiny text-[#D4AF37] font-black uppercase tracking-widest">Estilo Doutrinal (Catecismo)</span>
+              <div className="space-y-4 p-6 bg-[#0F172A]/5 rounded-2xl border border-transparent">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-8 h-8 rounded-lg bg-primary text-white flex items-center justify-center font-black text-xs">27</div>
+                  <span className="text-xs font-black uppercase tracking-widest text-primary/40">Desejo de Deus</span>
+                </div>
+                <p className="text-sm text-[#0F172A]/80 leading-relaxed font-sans">
+                  O desejo de Deus está inscrito no coração do homem, porque o homem foi criado por Deus e para Deus.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Tom de Voz Section */}
         <section className="space-y-10">
           <div className="flex items-center gap-6">
