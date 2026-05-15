@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { Button } from './Button';
 import GoogleSignInButton from '../auth/GoogleSignInButton';
 import { CathedraIcon, IconSizePreset } from './CathedraIcon';
+import { canUserAccess } from '@/utils/auth-utils';
 
 import { useNotifications } from '@/hooks/useNotifications';
 import { useLang } from '@/hooks/useLang';
@@ -82,7 +83,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                 { label: t('themes'), route: AppRoute.TEMAS },
                 { label: t('community'), route: AppRoute.COMMUNITY },
                 { label: t('profile'), route: AppRoute.PROFILE },
-              ].map(item => (
+              ].filter(item => canUserAccess(user?.role, item.route)).map(item => (
                 <Button 
                   key={item.route} 
                   variant={pathname === item.route ? 'primary' : 'ghost'}
@@ -192,7 +193,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             </div>
           )}
 
-          {user && user.role === 'admin' && (
+          {canUserAccess(user?.role, AppRoute.ADMIN) && (
             <Button 
               variant="secondary"
               size="sm"

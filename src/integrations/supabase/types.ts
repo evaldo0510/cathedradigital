@@ -65,6 +65,33 @@ export type Database = {
         }
         Relationships: []
       }
+      audit_logs: {
+        Row: {
+          created_at: string | null
+          event_type: string
+          id: string
+          metadata: Json | null
+          path: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          event_type: string
+          id?: string
+          metadata?: Json | null
+          path?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          event_type?: string
+          id?: string
+          metadata?: Json | null
+          path?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       bible_chapters_read: {
         Row: {
           book_abbr: string
