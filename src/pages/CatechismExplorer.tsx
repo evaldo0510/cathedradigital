@@ -236,7 +236,7 @@ const CatechismExplorer: React.FC = () => {
                         </div>
                         <div className="flex-1 space-y-2">
                           <h3 className="font-display font-bold text-primary text-xl">{p.titulo}</h3>
-                          <p className="text-muted-foreground line-clamp-3 leading-relaxed">
+                          <p className="text-premium-base leading-relaxed opacity-70">
                             {p.conteudo}
                           </p>
                           <div className="flex flex-wrap gap-2 pt-2">
