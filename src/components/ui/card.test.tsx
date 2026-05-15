@@ -19,11 +19,13 @@ describe('Card Component Suite', () => {
 
   it('applies variant styles', () => {
     const { container } = render(<Card variant="interactive">Interactive</Card>);
-    expect(container.firstChild?.className).toContain('premium-card-interactive');
+    const element = container.firstChild as HTMLElement;
+    expect(element.className).toContain('premium-card-interactive');
   });
 
   it('applies padding maps', () => {
     const { container } = render(<Card padding="lg">Spacious</Card>);
-    expect(container.firstChild?.className).toContain('p-8 md:p-12 lg:p-16');
+    const element = container.firstChild as HTMLElement;
+    expect(element.className).toContain('p-8 md:p-12 lg:p-16');
   });
 });
