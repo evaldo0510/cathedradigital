@@ -5,6 +5,10 @@ const REPLACEMENTS: Record<string, string> = {
   // Imports
   'from "@/components/ui/button"': 'from "@/components/cathedra/CathedraButton"',
   'from "@/components/ui/card"': 'from "@/components/cathedra/CathedraCard"',
+  'from \'@/components/ui/button\'': 'from "@/components/cathedra/CathedraButton"',
+  'from \'@/components/ui/card\'': 'from "@/components/cathedra/CathedraCard"',
+  'import { Button } from "@/components/ui/button"': 'import { CathedraButton as Button } from "@/components/cathedra/CathedraButton"',
+  'import { Card } from "@/components/ui/card"': 'import { CathedraCard as Card } from "@/components/cathedra/CathedraCard"',
 };
 
 // For lucide-react, we usually want to use Icons.Name from constants, 
