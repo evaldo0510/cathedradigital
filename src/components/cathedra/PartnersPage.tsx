@@ -148,7 +148,7 @@ const PartnersPage: React.FC = () => {
                 transition={{ delay: index * 0.1 }}
               >
                 <Card className="h-full hover:shadow-xl transition-all duration-300 border-border/50 bg-card  overflow-hidden group">
-                  <CathedraCardHeader as CardHeader className="relative h-32 flex items-center justify-center bg-muted/20">
+                  <CardHeader className="relative h-32 flex items-center justify-center bg-muted/20">
                     {partner.logo_url ? (
                       <img 
                         src={partner.logo_url} 
@@ -160,16 +160,16 @@ const PartnersPage: React.FC = () => {
                         <Icons.Trophy className="w-8 h-8" />
                       </div>
                     )}
-                  </CathedraCardHeader as CardHeader>
-                  <CathedraCardContent as CardContent className="p-6 space-y-3">
-                    <CathedraCardTitle as CardTitle className="text-xl group-hover:text-primary transition-colors">
+                  </CardHeader>
+                  <CardContent className="p-6 space-y-3">
+                    <CardTitle className="text-xl group-hover:text-primary transition-colors">
                       {partner.name}
-                    </CathedraCardTitle as CardTitle>
-                    <CathedraCardDescription as CardDescription className="text-sm line-clamp-3 leading-relaxed">
+                    </CardTitle>
+                    <CardDescription className="text-sm line-clamp-3 leading-relaxed">
                       {partner.description || "Sem descrição disponível."}
-                    </CathedraCardDescription as CardDescription>
-                  </CathedraCardContent as CardContent>
-                  <CathedraCardFooter as CardFooter className="p-6 pt-0 mt-auto">
+                    </CardDescription>
+                  </CardContent>
+                  <CardFooter className="p-6 pt-0 mt-auto">
                     {partner.website_url && (
                       <Button 
                         variant="ghost" 
@@ -182,7 +182,7 @@ const PartnersPage: React.FC = () => {
                         </a>
                       </Button>
                     )}
-                  </CathedraCardFooter as CardFooter>
+                  </CardFooter>
                 </Card>
               </motion.div>
             ))}

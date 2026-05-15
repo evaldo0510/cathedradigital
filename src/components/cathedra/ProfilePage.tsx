@@ -405,7 +405,7 @@ const ProfilePage: React.FC = () => {
             <div className="absolute top-0 right-0 p-6 opacity-20 group-hover:opacity-40 transition-all group-hover:scale-110">
               <Icons.Star className="w-20 h-20 text-secondary fill-current" />
             </div>
-            <CathedraCardContent as CardContent className="p-6 space-y-4">
+            <CardContent className="p-6 space-y-4">
               <div className="flex items-center gap-2 mb-1">
                 <div className="px-2 py-0.5 rounded-2xl bg-secondary/20 text-amber-800 dark:text-secondary text-premium-tiny font-black uppercase tracking-widest border border-secondary/30">
                   Acesso Completo
@@ -418,7 +418,7 @@ const ProfilePage: React.FC = () => {
               <Button size="sm" className="bg-secondary hover:bg-secondary/90 text-amber-950 font-black text-premium-tiny uppercase tracking-widest h-10 px-6">
                 Ver Planos <Icons.ChevronRight className="w-4 h-4 ml-1" />
               </Button>
-            </CathedraCardContent as CardContent>
+            </CardContent>
           </Card>
         </motion.div>
       )}

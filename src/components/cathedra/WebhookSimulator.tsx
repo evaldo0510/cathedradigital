@@ -70,18 +70,18 @@ const WebhookSimulator: React.FC = () => {
 
   return (
     <Card className="rounded-[2.5rem] border-primary/20 bg-primary/5  shadow-xl overflow-hidden">
-      <CathedraCardHeader as CardHeader className="bg-primary/10 border-b border-primary/10">
+      <CardHeader className="bg-primary/10 border-b border-primary/10">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-primary rounded-2xl text-primary-foreground">
             <ShieldCheck className="w-5 h-5" />
           </div>
           <div>
-            <CathedraCardTitle as CardTitle className="font-serif text-xl">Simulador de Webhook</CathedraCardTitle as CardTitle>
-            <CathedraCardDescription as CardDescription className="text-xs">Teste a integração de pagamentos e ativação do PRO.</CathedraCardDescription as CardDescription>
+            <CardTitle className="font-serif text-xl">Simulador de Webhook</CardTitle>
+            <CardDescription className="text-xs">Teste a integração de pagamentos e ativação do PRO.</CardDescription>
           </div>
         </div>
-      </CathedraCardHeader as CardHeader>
-      <CathedraCardContent as CardContent className="p-8 space-y-6">
+      </CardHeader>
+      <CardContent className="p-8 space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <label className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground">Usuário para Teste</label>
@@ -147,7 +147,7 @@ const WebhookSimulator: React.FC = () => {
             </div>
           </div>
         )}
-      </CathedraCardContent as CardContent>
+      </CardContent>
     </Card>
   );
 };

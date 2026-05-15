@@ -136,18 +136,18 @@ const ModulesGuidePage: React.FC = () => {
             transition={{ delay: idx * 0.05 }}
           >
             <Card className="h-full border-border/50 hover:border-primary/30 transition-all duration-300 bg-card  shadow-sm hover:shadow-xl rounded-2xl overflow-hidden group">
-              <CathedraCardHeader as CardHeader className="pb-4">
+              <CardHeader className="pb-4">
                 <div className="flex items-center gap-4">
                   <div className={`w-14 h-14 rounded-full ${module.bg} flex items-center justify-center ${module.color} group-hover:scale-110 transition-transform`}>
                     {module.icon}
                   </div>
                   <div>
-                    <CathedraCardTitle as CardTitle className="text-xl font-bold">{module.title}</CathedraCardTitle as CardTitle>
-                    <CathedraCardDescription as CardDescription className="text-sm font-medium">{module.description}</CathedraCardDescription as CardDescription>
+                    <CardTitle className="text-xl font-bold">{module.title}</CardTitle>
+                    <CardDescription className="text-sm font-medium">{module.description}</CardDescription>
                   </div>
                 </div>
-              </CathedraCardHeader as CardHeader>
-              <CathedraCardContent as CardContent>
+              </CardHeader>
+              <CardContent>
                 <ul className="space-y-2.5">
                   {module.details.map((detail, i) => (
                     <li key={i} className="flex items-start gap-3 text-sm text-muted-foreground leading-relaxed">
@@ -156,7 +156,7 @@ const ModulesGuidePage: React.FC = () => {
                     </li>
                   ))}
                 </ul>
-              </CathedraCardContent as CardContent>
+              </CardContent>
             </Card>
           </motion.div>
         ))}

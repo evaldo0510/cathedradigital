@@ -114,7 +114,7 @@ const JornadaDetailPage: React.FC = () => {
 
       {/* Progress */}
       <CathedraCard className="border-primary/20">
-        <CathedraCardContent as CardContent className="p-4 space-y-3">
+        <CardContent className="p-4 space-y-3">
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Progresso</span>
             <span className="font-semibold text-foreground">{completedCount}/{totalSteps} etapas</span>
@@ -124,7 +124,7 @@ const JornadaDetailPage: React.FC = () => {
             <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> ~{journey.estimated_days} dias</span>
             <span className="capitalize">{journey.difficulty}</span>
           </div>
-        </CathedraCardContent as CardContent>
+        </CardContent>
       </CathedraCard>
 
       {/* Description */}
@@ -136,7 +136,7 @@ const JornadaDetailPage: React.FC = () => {
       {isJourneyComplete && (
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
           <Card className="premium-card border-primary/30 bg-gradient-to-r from-primary/10 to-primary/5">
-            <CathedraCardContent as CardContent className="p-5 flex items-center gap-4">
+            <CardContent className="p-5 flex items-center gap-4">
               <div className="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center flex-shrink-0">
                 <Award className="w-6 h-6 text-primary" />
               </div>
@@ -147,7 +147,7 @@ const JornadaDetailPage: React.FC = () => {
               <Button size="sm" onClick={() => navigate(`/jornadas/${id}/complete`)}>
                 Ver <ChevronRight className="w-4 h-4 ml-1" />
               </Button>
-            </CathedraCardContent as CardContent>
+            </CardContent>
           </Card>
         </motion.div>
       )}
@@ -168,7 +168,7 @@ const JornadaDetailPage: React.FC = () => {
               transition={{ delay: index * 0.05 }}
             >
               <Card className={`premium-card-interactive transition-all ${isNext ? 'border-primary/40' : ''} ${isCompleted ? 'bg-primary/5 shadow-soft' : ''} ${isStepLocked ? 'opacity-60 grayscale' : ''}`}>
-                <CathedraCardContent as CardContent className="p-4 flex items-center gap-4">
+                <CardContent className="p-4 flex items-center gap-4">
                   {/* Step number / status */}
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-bold ${
                     isCompleted
@@ -206,7 +206,7 @@ const JornadaDetailPage: React.FC = () => {
                       <ChevronRight className="w-4 h-4 ml-1" />
                     </Button>
                   )}
-                </CathedraCardContent as CardContent>
+                </CardContent>
               </Card>
             </motion.div>
           );
@@ -215,13 +215,13 @@ const JornadaDetailPage: React.FC = () => {
 
       {isLocked && (
         <Card className="border-primary/30 bg-primary/5">
-          <CathedraCardContent as CardContent className="p-4 text-center space-y-3">
+          <CardContent className="p-4 text-center space-y-3">
             <Sparkles className="w-8 h-8 mx-auto text-primary" />
             <p className="text-sm text-foreground font-medium">Esta jornada é exclusiva para assinantes PRO</p>
             <Button onClick={() => navigate(AppRoute.PRICING)} size="sm">
               Ver Planos
             </Button>
-          </CathedraCardContent as CardContent>
+          </CardContent>
         </Card>
       )}
     </div>

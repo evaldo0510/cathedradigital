@@ -62,13 +62,13 @@ const A11yAuditPage = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card className="border-primary/20 bg-card  rounded-[2rem] shadow-xl overflow-hidden">
-          <CathedraCardHeader as CardHeader className="bg-primary/5 border-b border-border/50">
-            <CathedraCardTitle as CardTitle className="text-lg font-black uppercase tracking-widest flex items-center gap-2">
+          <CardHeader className="bg-primary/5 border-b border-border/50">
+            <CardTitle className="text-lg font-black uppercase tracking-widest flex items-center gap-2">
               <Icons.ShieldCheck className="w-5 h-5 text-primary" />
               Checklist Manual
-            </CathedraCardTitle as CardTitle>
-          </CathedraCardHeader as CardHeader>
-          <CathedraCardContent as CardContent className="p-6 space-y-6">
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-6 space-y-6">
             {sections.map(section => (
               <div key={section.title} className="space-y-3">
                 <h3 className="text-premium-tiny font-black uppercase tracking-[0.2em] text-muted-foreground/60 border-b border-border/40 pb-1">
@@ -92,12 +92,12 @@ const A11yAuditPage = () => {
                 </div>
               </div>
             ))}
-          </CathedraCardContent as CardContent>
+          </CardContent>
         </Card>
 
         <Card className="border-secondary/20 bg-card  rounded-[2rem] shadow-xl overflow-hidden">
-          <CathedraCardHeader as CardHeader className="bg-secondary/5 border-b border-border/50">
-            <CathedraCardTitle as CardTitle className="text-lg font-black uppercase tracking-widest flex items-center justify-between">
+          <CardHeader className="bg-secondary/5 border-b border-border/50">
+            <CardTitle className="text-lg font-black uppercase tracking-widest flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Key className="w-5 h-5 text-secondary" />
                 Auditoria Técnica
@@ -105,9 +105,9 @@ const A11yAuditPage = () => {
               <Button size="sm" onClick={performAudit} className="rounded-full h-8 text-premium-tiny font-black uppercase tracking-widest bg-secondary hover:bg-secondary/80">
                 Escanear DOM
               </Button>
-            </CathedraCardTitle as CardTitle>
-          </CathedraCardHeader as CardHeader>
-          <CathedraCardContent as CardContent className="p-6 space-y-4">
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-6 space-y-4">
             {!auditResults ? (
               <div className="flex flex-col items-center justify-center py-20 text-center space-y-4 opacity-40">
                 <Search className="w-12 h-12" />
@@ -139,7 +139,7 @@ const A11yAuditPage = () => {
                 </div>
               </div>
             )}
-          </CathedraCardContent as CardContent>
+          </CardContent>
         </Card>
       </div>
 

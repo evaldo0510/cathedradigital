@@ -473,7 +473,7 @@ const TransactionsPage: React.FC = () => {
       )}
 
       <Card className="rounded-[2.5rem] border-border/50 shadow-xl overflow-hidden">
-        <CathedraCardHeader as CardHeader className="bg-muted/30 border-b border-border/50 p-8">
+        <CardHeader className="bg-muted/30 border-b border-border/50 p-8">
           <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-end">
             {isAdmin && (
               <div className="space-y-1.5">
@@ -520,8 +520,8 @@ const TransactionsPage: React.FC = () => {
             </div>
           </div>
           {dateError && <p className="text-premium-tiny text-destructive mt-3 font-bold">{dateError}</p>}
-        </CathedraCardHeader as CardHeader>
-        <CathedraCardContent as CardContent className="p-0">
+        </CardHeader>
+        <CardContent className="p-0">
           <Table>
             <TableHeader className="bg-muted/50"><TableRow>
               <TableHead className="py-5 px-8">Data</TableHead>
@@ -556,7 +556,7 @@ const TransactionsPage: React.FC = () => {
               }
             </TableBody>
           </Table>
-        </CathedraCardContent as CardContent>
+        </CardContent>
       </Card>
 
       <div className="flex items-center justify-center gap-6 mt-4">

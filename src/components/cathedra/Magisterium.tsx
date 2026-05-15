@@ -379,7 +379,7 @@ const Magisterium: React.FC = () => {
                 transition={{ delay: idx * 0.05 }}
               >
                 <Card className="group h-full hover:border-primary/30 transition-all border-border bg-card overflow-hidden rounded-2xl">
-                  <CathedraCardContent as CardContent className="p-6 flex flex-col h-full space-y-4">
+                  <CardContent className="p-6 flex flex-col h-full space-y-4">
                     <div className="flex items-start justify-between gap-2">
                       <div className="p-2.5 rounded-2xl bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all">
                         {doc.type === 'Encíclica' ? <Icons.Scroll className="w-5 h-5" /> : 
@@ -413,7 +413,7 @@ const Magisterium: React.FC = () => {
                       Ler Documento
                       <Icons.ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
                     </Button>
-                  </CathedraCardContent as CardContent>
+                  </CardContent>
                 </Card>
               </motion.div>
             ))}

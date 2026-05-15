@@ -49,14 +49,14 @@ const FlowConnector: React.FC<FlowConnectorProps> = ({
                 className="cursor-pointer hover:border-primary/40 hover:bg-primary/5 transition-all group"
                 onClick={() => navigate(rec.route)}
               >
-                <CathedraCardContent as CardContent className="p-4 flex items-center gap-3">
+                <CardContent className="p-4 flex items-center gap-3">
                   <Icon className="w-6 h-6 text-primary" />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-foreground truncate">{rec.label}</p>
                     <p className="text-xs text-muted-foreground">{rec.reason}</p>
                   </div>
                   <Icons.ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
-                </CathedraCardContent as CardContent>
+                </CardContent>
               </Card>
             </motion.div>
           );

@@ -9,10 +9,10 @@ interface AdminTransactionsTabProps {
 
 const AdminTransactionsTab: React.FC<AdminTransactionsTabProps> = ({ transactions }) => (
   <Card>
-    <CathedraCardHeader as CardHeader>
-      <CathedraCardTitle as CardTitle>Últimas Transações</CathedraCardTitle as CardTitle>
-    </CathedraCardHeader as CardHeader>
-    <CathedraCardContent as CardContent>
+    <CardHeader>
+      <CardTitle>Últimas Transações</CardTitle>
+    </CardHeader>
+    <CardContent>
       {transactions.length === 0 ? (
         <p className="text-center text-muted-foreground py-8">Nenhuma transação registrada.</p>
       ) : (
@@ -46,7 +46,7 @@ const AdminTransactionsTab: React.FC<AdminTransactionsTabProps> = ({ transaction
           ))}
         </div>
       )}
-    </CathedraCardContent as CardContent>
+    </CardContent>
   </Card>
 );
 

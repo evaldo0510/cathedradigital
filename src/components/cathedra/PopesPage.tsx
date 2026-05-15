@@ -222,7 +222,7 @@ const PopesPage: React.FC = () => {
                   </div>
                 </div>
 
-                <CathedraCardContent as CardContent className="p-5 flex-1 flex flex-col space-y-4">
+                <CardContent className="p-5 flex-1 flex flex-col space-y-4">
                   <div className="flex items-center gap-2 text-premium-tiny font-black uppercase tracking-widest text-primary">
                     <Calendar className="w-3 h-3" /> {pope.reign}
                   </div>
@@ -251,7 +251,7 @@ const PopesPage: React.FC = () => {
                       <p className="text-xs font-serif font-bold text-primary italic">"{pope.motto}"</p>
                     </div>
                   )}
-                </CathedraCardContent as CardContent>
+                </CardContent>
               </div>
             </Card>
           </motion.div>

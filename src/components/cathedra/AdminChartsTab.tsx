@@ -14,13 +14,13 @@ interface AdminChartsTabProps {
 const ChartSkeleton = React.forwardRef<HTMLDivElement, any>((props, ref) => (
   <div ref={ref}>
     <Card>
-      <CathedraCardHeader as CardHeader>
+      <CardHeader>
         <Skeleton className="h-5 w-40" />
         <Skeleton className="h-4 w-56 mt-1" />
-      </CathedraCardHeader as CardHeader>
-      <CathedraCardContent as CardContent className="h-[300px] flex items-center justify-center">
+      </CardHeader>
+      <CardContent className="h-[300px] flex items-center justify-center">
         <Skeleton className="h-full w-full rounded" />
-      </CathedraCardContent as CardContent>
+      </CardContent>
     </Card>
   </div>
 ));

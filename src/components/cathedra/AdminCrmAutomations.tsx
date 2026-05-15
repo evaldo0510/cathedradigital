@@ -108,7 +108,7 @@ const AdminCrmAutomations: React.FC = () => {
         </h3>
         {automations.map(auto => (
           <Card key={auto.id}>
-            <CathedraCardContent as CardContent className="py-4 px-5">
+            <CardContent className="py-4 px-5">
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3 min-w-0">
                   {auto.icon}
@@ -136,20 +136,20 @@ const AdminCrmAutomations: React.FC = () => {
                   </Badge>
                 </div>
               </div>
-            </CathedraCardContent as CardContent>
+            </CardContent>
           </Card>
         ))}
       </div>
 
       {/* Manual Notification */}
       <Card>
-        <CathedraCardHeader as CardHeader>
-          <CathedraCardTitle as CardTitle className="text-sm flex items-center gap-2">
+        <CardHeader>
+          <CardTitle className="text-sm flex items-center gap-2">
             <Send className="w-4 h-4 text-primary" /> Enviar Notificação Manual
-          </CathedraCardTitle as CardTitle>
-          <CathedraCardDescription as CardDescription>Dispare uma notificação diretamente para um segmento de usuários.</CathedraCardDescription as CardDescription>
-        </CathedraCardHeader as CardHeader>
-        <CathedraCardContent as CardContent className="space-y-4">
+          </CardTitle>
+          <CardDescription>Dispare uma notificação diretamente para um segmento de usuários.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
           <div className="flex gap-2">
             {(['all', 'at_risk', 'premium'] as const).map(target => (
               <Button
@@ -177,7 +177,7 @@ const AdminCrmAutomations: React.FC = () => {
           <Button onClick={handleSendManual} disabled={sending} className="gap-2">
             <Send className="w-4 h-4" /> {sending ? 'Enviando...' : 'Enviar Notificação'}
           </Button>
-        </CathedraCardContent as CardContent>
+        </CardContent>
       </Card>
     </div>
   );

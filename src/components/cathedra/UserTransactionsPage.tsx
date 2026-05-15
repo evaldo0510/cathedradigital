@@ -32,7 +32,7 @@ const PAGE_SIZE = 10;
 
 const TransactionSkeleton: React.FC = () => (
   <Card className="overflow-hidden border-border/50 opacity-60 animate-pulse">
-    <CathedraCardContent as CardContent className="p-4 md:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+    <CardContent className="p-4 md:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
       <div className="flex items-center gap-4">
         <div className="w-10 h-10 rounded-2xl bg-muted" />
         <div className="space-y-2">
@@ -47,7 +47,7 @@ const TransactionSkeleton: React.FC = () => (
         </div>
         <div className="h-6 w-16 bg-muted rounded-2xl" />
       </div>
-    </CathedraCardContent as CardContent>
+    </CardContent>
   </Card>
 );
 
@@ -330,7 +330,7 @@ const UserTransactionsPage: React.FC = () => {
 
       {error && transactions.length === 0 ? (
         <Card className="border-destructive/20 bg-destructive/5">
-          <CathedraCardContent as CardContent className="flex flex-col items-center justify-center py-12 space-y-4">
+          <CardContent className="flex flex-col items-center justify-center py-12 space-y-4">
             <Icons.AlertTriangle className="w-12 h-12 text-destructive/50" />
             <div className="text-center">
               <p className="text-destructive font-medium">{error}</p>
@@ -343,17 +343,17 @@ const UserTransactionsPage: React.FC = () => {
                 <Icons.RotateCcw className="w-4 h-4" /> Tentar Novamente
               </Button>
             </div>
-          </CathedraCardContent as CardContent>
+          </CardContent>
         </Card>
       ) : transactions.length === 0 ? (
         <Card className="border-dashed">
-          <CathedraCardContent as CardContent className="flex flex-col items-center justify-center py-12 space-y-4">
+          <CardContent className="flex flex-col items-center justify-center py-12 space-y-4">
             <Icons.Heart className="w-12 h-12 text-muted-foreground/30" />
             <div className="text-center">
               <p className="text-muted-foreground font-medium">Nenhuma transação encontrada.</p>
               <p className="text-xs text-muted-foreground">Tente ajustar seus filtros ou busca.</p>
             </div>
-          </CathedraCardContent as CardContent>
+          </CardContent>
         </Card>
       ) : (
         <div className="grid gap-4">
@@ -365,7 +365,7 @@ const UserTransactionsPage: React.FC = () => {
               transition={{ delay: idx * 0.05 }}
             >
               <Card className="overflow-hidden border-border/50 hover:border-primary/30 transition-all">
-                <CathedraCardContent as CardContent className="p-0">
+                <CardContent className="p-0">
                   <div className="p-4 md:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                     <div className="flex items-center gap-4">
                       <div className={`w-10 h-10 rounded-full flex items-center justify-center ${tx.is_donation ? 'bg-secondary/10 text-secondary' : 'bg-primary/10 text-primary'}`}>
@@ -415,7 +415,7 @@ const UserTransactionsPage: React.FC = () => {
                       )}
                     </div>
                   </div>
-                </CathedraCardContent as CardContent>
+                </CardContent>
               </Card>
             </motion.div>
           ))}
