@@ -115,6 +115,15 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           <Button
             variant="outline"
             size="icon"
+            onClick={onToggleDark}
+            className="w-10 h-10 sm:w-12 sm:h-12 flex lg:hidden"
+            aria-label="Alternar tema">
+            {isDark ? <Icons.Sun className="w-5 h-5" /> : <Icons.Moon className="w-5 h-5" />}
+          </Button>
+
+          <Button
+            variant="outline"
+            size="icon"
             onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}
             aria-label={t('search') || "Buscar"}
             className="w-10 h-10 sm:w-12 sm:h-12"
@@ -235,7 +244,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             variant="outline"
             size="icon"
             onClick={onToggleDark}
-            className="hidden sm:flex lg:hidden"
+            className="hidden lg:flex"
             aria-label="Alternar tema">
             {isDark ? <Icons.Sun className="w-4 h-4" /> : <Icons.Moon className="w-4 h-4" />}
           </Button>
