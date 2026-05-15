@@ -1,0 +1,41 @@
+name: Visual Regression & A11y Audit
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  visual-test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: oven-sh/setup-bun@v1
+      with:
+        bun-version: latest
+
+    - name: Install dependencies
+      run: bun install
+
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+
+    - name: Run Visual Regression Tests
+      run: bun run test:visual
+      env:
+        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+
+    - name: Generate Report
+      run: bun run scripts/run-visual-regression.ts
+
+    - uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: visual-regression-report
+        path: |
+          test-results/
+          visual-report.json
+        retention-days: 30
