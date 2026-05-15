@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { AppRoute, Language } from '@/types';
 import { Icons } from '@/constants';
 import { cn } from '@/lib/utils';
-import { Button } from './Button';
+import { Button } from '@/components/ui/button';
 import GoogleSignInButton from '../auth/GoogleSignInButton';
 
 import { useNotifications } from '@/hooks/useNotifications';

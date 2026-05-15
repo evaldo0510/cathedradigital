@@ -20,7 +20,7 @@ import { Progress } from '@/components/ui/progress';
 import { checkNewBadges, getBadgeById } from '@/lib/badges';
 import { toast } from 'sonner';
 import confetti from 'canvas-confetti';
-import { Button   } from './Button';
+import { Button   } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import AudioButton from './AudioButton';
 import { BibleChapterSkeleton } from './SacredSkeleton';

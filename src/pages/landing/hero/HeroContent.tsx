@@ -1,7 +1,7 @@
 import { motion, MotionValue } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import logosAvatar from "@/assets/logos-avatar.png";
-import { HomeButton } from "@/components/cathedra/HomeButton";
+import { Button } from "@/components/cathedra/Button";
 
 const EASE = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
@@ -79,23 +79,23 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
         className="flex flex-col items-center justify-center gap-6 pt-4"
       >
         <div className="flex flex-col sm:flex-row items-center gap-4 w-full max-w-sm">
-          <HomeButton
+          <Button
             size="lg"
             className="w-full"
             onClick={onStart}
             aria-label="Iniciar sua jornada espiritual"
           >
             Iniciar Jornada
-          </HomeButton>
+          </Button>
           
-          <HomeButton
+          <Button
             variant="outline"
             className="w-full sm:w-auto"
             onClick={scrollToVideo}
             aria-label="Ver vídeo de apresentação"
           >
             Ver Apresentação
-          </HomeButton>
+          </Button>
         </div>
 
         <motion.div 
