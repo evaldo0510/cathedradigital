@@ -1,4 +1,4 @@
-import { Button   } from '@/components/ui/button';
+import { HomeButton as Button } from '../HomeButton';
 import React, { useState } from 'react';
 import { Feather, Heart, Clock, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -26,8 +26,8 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
           <Feather className="w-4 h-4 text-primary" />
           <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Lectio Divina</span>
         </div>
-        <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground tracking-tight">Leitura Orante</h1>
-        <p className="text-lg text-muted-foreground font-serif italic max-w-2xl mx-auto leading-relaxed">
+        <h1 className="heading-hero">Leitura Orante</h1>
+        <p className="text-premium-body !text-lg !max-w-2xl !mx-auto !italic">
           Que bom ter você aqui. Reserve este momento só para Deus e para você.<br />
           <span className="text-primary/80">Respire fundo. Silencie o coração. Comece.</span>
         </p>
@@ -54,8 +54,8 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
           <p className={`text-premium-tiny font-black uppercase tracking-[0.2em] ${
             selectedPassage === dailyPassage.ref ? 'text-white/70' : 'text-primary/60'
           }`}>Lectio do Dia</p>
-          <p className={`font-serif font-bold text-lg ${
-            selectedPassage === dailyPassage.ref ? 'text-white' : 'text-foreground'
+          <p className={`text-premium-body !font-bold !text-lg ${
+            selectedPassage === dailyPassage.ref ? '!text-white' : '!text-foreground'
           }`}>{dailyPassage.title}</p>
           <div className="flex items-center gap-2 mt-1">
             <Clock className={`w-3 h-3 ${selectedPassage === dailyPassage.ref ? 'text-white/60' : 'text-muted-foreground'}`} />
@@ -81,7 +81,7 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
             </div>
             <div>
               <p className="text-premium-tiny font-black uppercase tracking-widest text-primary/60">{step.latin}</p>
-              <p className="font-serif font-bold text-sm text-foreground">{step.title}</p>
+              <p className="text-premium-body !font-bold !text-sm">{step.title}</p>
             </div>
           </div>
         ))}
@@ -89,15 +89,15 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
 
       {/* Select passage */}
       <motion.div 
-        className="bg-card border border-border rounded-[2.5rem] p-8 md:p-12 space-y-10 shadow-premium shadow-black/[0.02]"
+        className="bg-card border border-border rounded-premium p-8 md:p-12 space-y-10 shadow-premium shadow-black/[0.02]"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.7, duration: 0.6 }}
       >
         <div className="space-y-6 max-w-md mx-auto">
           <div className="text-center space-y-2">
-            <h3 className="text-sm font-black uppercase tracking-widest text-primary/60">Ou escolha outra passagem</h3>
-            <p className="text-xs text-muted-foreground font-serif italic">Digite uma referência bíblica ou escolha uma sugestão.</p>
+            <h3 className="heading-card !text-sm !text-primary/60">Ou escolha outra passagem</h3>
+            <p className="text-premium-body !text-xs !italic">Digite uma referência bíblica ou escolha uma sugestão.</p>
           </div>
           <div className="relative">
             <input
