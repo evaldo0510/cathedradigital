@@ -144,7 +144,7 @@ const TemasPage = () => {
         </header>
 
         <div className="space-y-4 sm:space-y-8">
-          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 bg-card/60  p-2 sm:p-3 rounded-2xl sm:rounded-[2.5rem] border border-border/40 shadow-xl sticky top-2 sm:top-4 z-20 transition-all duration-500 hover:shadow-2xl hover:border-primary/20 group/nav">
+          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 bg-card/60 p-2 sm:p-3 rounded-premium border border-border/40 shadow-xl sticky top-2 sm:top-4 z-20 transition-all duration-500 hover:shadow-2xl hover:border-primary/20 group/nav">
             <FuzzySearchInput
               className="flex-1 w-full"
               value={searchQuery}
@@ -179,7 +179,7 @@ const TemasPage = () => {
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent  opacity-30 pointer-events-none" />
             
-            <div {...getTabPanelProps('panel-temas', `tab-category-${categories.indexOf(activeCategory)}`, true, "relative overflow-hidden rounded-full border border-border/30 bg-card/20  outline-none")}>
+            <div {...getTabPanelProps('panel-temas', `tab-category-${categories.indexOf(activeCategory)}`, true, "relative overflow-hidden rounded-premium border border-border/30 bg-card/20 outline-none")}>
               {loadingTags ? (
                 <div className="flex flex-col items-center gap-4 py-12 w-full justify-center">
                   <div className="relative">
@@ -247,7 +247,7 @@ const TemasPage = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="h-[300px] flex flex-col items-center justify-center text-center p-12 bg-muted/10 rounded-[3rem] border border-dashed border-border/40 relative overflow-hidden group"
+            className="h-[300px] flex flex-col items-center justify-center text-center p-12 bg-muted/10 rounded-premium border border-dashed border-border/40 relative overflow-hidden group"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 opacity-50" />
             <div className="w-24 h-24 rounded-2xl bg-primary/5 flex items-center justify-center mb-8 border border-primary/10 shadow-inner group-hover:scale-110 transition-transform duration-500">
