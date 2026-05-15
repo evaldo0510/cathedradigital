@@ -1,7 +1,8 @@
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/cathedra/Button';
 import React from 'react';
 import { Icons } from '@/constants';
 import { useReadingMode } from '@/hooks/useReadingMode';
+import { cn } from '@/lib/utils';
 
 const ReadingModeToggle: React.FC = () => {
   const { mode, toggle } = useReadingMode();
