@@ -115,7 +115,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
 
       {/* TRILHAS */}
       <section className="space-y-12">
-        <div className="flex items-center gap-10">
+        <div className="flex items-center gap-12">
           <div className="h-px flex-1 bg-border/30" />
           <h2 className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-primary/30 whitespace-nowrap">
             Trilhas de Formação
