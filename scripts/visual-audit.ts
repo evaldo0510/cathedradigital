@@ -7,18 +7,12 @@ const standards = {
   components: ['CathedraCard', 'CathedraButton'],
 };
 
-const routesToCheck = [
-  { name: 'Home', path: 'src/pages/Index.tsx' },
-  { name: 'Hoje', path: 'src/components/cathedra/HojePage.tsx' },
-  { name: 'Diário Espiritual', path: 'src/components/cathedra/SpiritualJournalPage.tsx' },
-];
-
 const patterns = [
   { name: 'Sombra não padrão', regex: /shadow-(sm|md|lg|xl|2xl|inner|outline)/g },
   { name: 'Borda não padrão', regex: /rounded-(sm|md|lg|xl|2xl|3xl)/g },
   { name: 'Card não padronizado', regex: /<Card(?!.*CathedraCard)/g },
   { name: 'Botão não padronizado', regex: /<Button(?!.*CathedraButton)/g },
-  { name: 'Padding irregular', regex: /p-[0-9](?!.*p-premium)/g }, // Very loose check
+  { name: 'Padding irregular', regex: /p-[0-9](?!.*p-premium)/g }, 
 ];
 
 interface Violation {
@@ -28,33 +22,33 @@ interface Violation {
   match: string;
 }
 
+const getFiles = (dir: string): string[] => {
+  if (!fs.existsSync(dir)) return [];
+  const subdirs = fs.readdirSync(dir);
+  const files = subdirs.map((subdir) => {
+    const res = path.resolve(dir, subdir);
+    return fs.statSync(res).isDirectory() ? getFiles(res) : res;
+  });
+  return Array.prototype.concat(...files);
+};
+
 const audit = () => {
   const violations: Violation[] = [];
-  const filesToScan = [
-    'src/pages/Index.tsx',
-    'src/components/cathedra/HojePage.tsx',
-    'src/components/cathedra/SpiritualJournalPage.tsx',
-  const getFiles = (dir: string): string[] => {
-    const subdirs = fs.readdirSync(dir);
-    const files = subdirs.map((subdir) => {
-      const res = path.resolve(dir, subdir);
-      return fs.statSync(res).isDirectory() ? getFiles(res) : res;
-    });
-    return Array.prototype.concat(...files);
-  };
-
-  const filesToScan = [
+  
+  const baseFiles = [
     'src/pages/Index.tsx',
     'src/components/cathedra/HojePage.tsx',
     'src/components/cathedra/SpiritualJournalPage.tsx',
     'src/pages/CatechismExplorer.tsx',
-    ...getFiles('src/pages/landing'),
   ];
+  
+  const landingFiles = getFiles('src/pages/landing');
+  
+  const filesToScan = [...baseFiles, ...landingFiles].map(f => path.relative(process.cwd(), f));
 
   filesToScan.forEach(file => {
     if (!fs.existsSync(file) || fs.statSync(file).isDirectory()) return;
     const content = fs.readFileSync(file, 'utf-8');
-
     const lines = content.split('\n');
 
     lines.forEach((line, index) => {
