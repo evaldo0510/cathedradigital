@@ -55,8 +55,13 @@ test.describe('Home Page Premium Audit', () => {
   test.afterEach(async ({ context }, testInfo) => {
     const theme = testInfo.project.name.includes('dark') ? 'dark' : 'light';
     const authState = testInfo.title.includes('logged-in') ? 'logged-in' : 'logged-out';
-    const safeTitle = testInfo.title.replace(/[^a-z0-9]/gi, '_').toLowerCase();
-    const tracePath = path.join(process.cwd(), `test-results/focus-proof/${theme}__${authState}__${safeTitle}__trace.zip`);
+    
+    // We want a trace name that matches our gallery grouping
+    // Extracts "Jornada" from the test title or other tests
+    let testId = testInfo.title.split('for ')[1] || testInfo.title.split(') ')[1] || 'General';
+    testId = testId.replace(/[^a-z0-9]/gi, '');
+    
+    const tracePath = path.join(process.cwd(), `test-results/focus-proof/${theme}__${authState}__${testId}__trace.zip`);
     
     await context.tracing.stop({ path: tracePath });
   });
