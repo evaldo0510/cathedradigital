@@ -1715,6 +1715,95 @@ export type Database = {
         }
         Relationships: []
       }
+      visual_regression_runs: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          pages_failed: number | null
+          pages_total: number | null
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          pages_failed?: number | null
+          pages_total?: number | null
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          pages_failed?: number | null
+          pages_total?: number | null
+          status?: string
+        }
+        Relationships: []
+      }
+      visual_regression_snapshots: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          baseline_url: string | null
+          created_at: string
+          current_url: string | null
+          diff_url: string | null
+          id: string
+          page_name: string
+          reason: string | null
+          route: string
+          run_id: string | null
+          status: string
+          typography_errors: Json | null
+          viewport: string
+          wcag_score: number | null
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          baseline_url?: string | null
+          created_at?: string
+          current_url?: string | null
+          diff_url?: string | null
+          id?: string
+          page_name: string
+          reason?: string | null
+          route: string
+          run_id?: string | null
+          status?: string
+          typography_errors?: Json | null
+          viewport: string
+          wcag_score?: number | null
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          baseline_url?: string | null
+          created_at?: string
+          current_url?: string | null
+          diff_url?: string | null
+          id?: string
+          page_name?: string
+          reason?: string | null
+          route?: string
+          run_id?: string | null
+          status?: string
+          typography_errors?: Json | null
+          viewport?: string
+          wcag_score?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "visual_regression_snapshots_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "visual_regression_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       public_profiles: {
