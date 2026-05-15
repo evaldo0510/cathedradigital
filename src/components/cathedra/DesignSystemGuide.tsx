@@ -10,88 +10,82 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Icons } from '@/constants';
+import { motion } from 'framer-motion';
 
 const InputPlayground = () => {
   const [variant, setVariant] = useState<'default' | 'error' | 'disabled' | 'loading'>('default');
   
   return (
-    <div className="p-6 rounded-3xl bg-muted/20 border border-border/40 space-y-6">
-      <div className="flex flex-wrap gap-2">
-        <Button 
-          variant={variant === 'default' ? 'primary' : 'outline'} 
-          size="sm" 
-          onClick={() => setVariant('default')}
-        >
-          Default
-        </Button>
-        <Button 
-          variant={variant === 'error' ? 'destructive' : 'outline'} 
-          size="sm" 
-          onClick={() => setVariant('error')}
-        >
-          Error
-        </Button>
-        <Button 
-          variant={variant === 'disabled' ? 'secondary' : 'outline'} 
-          size="sm" 
-          onClick={() => setVariant('disabled')}
-        >
-          Disabled
-        </Button>
-        <Button 
-          variant={variant === 'loading' ? 'primary' : 'outline'} 
-          size="sm" 
-          onClick={() => setVariant('loading')}
-        >
-          Loading
-        </Button>
+    <div className="p-8 rounded-[2.5rem] bg-white border border-[#0F172A]/5 space-y-8 shadow-sm">
+      <div className="flex flex-wrap gap-3">
+        {(['default', 'error', 'disabled', 'loading'] as const).map((v) => (
+          <Button 
+            key={v}
+            variant={variant === v ? 'primary' : 'outline'} 
+            size="sm" 
+            onClick={() => setVariant(v)}
+            className="rounded-full px-6 capitalize"
+          >
+            {v === 'default' ? 'Padrão' : v === 'error' ? 'Erro' : v === 'disabled' ? 'Desativado' : 'Carregando'}
+          </Button>
+        ))}
       </div>
 
-      <div className="space-y-4 pt-4 border-t border-border/20">
-        <div className="space-y-2">
+      <div className="space-y-6 pt-6 border-t border-[#0F172A]/5">
+        <div className="space-y-3">
           <Label 
-            className={variant === 'error' ? 'text-destructive' : ''}
+            className={`font-serif text-lg ${variant === 'error' ? 'text-destructive' : 'text-[#0F172A]'}`}
             aria-disabled={variant === 'disabled'}
           >
-            Playground Input
+            Campo de Teste
           </Label>
           <div className="relative">
             <Input 
               disabled={variant === 'disabled'}
-              className={variant === 'error' ? 'border-destructive focus-visible:ring-destructive' : ''}
-              placeholder={variant === 'loading' ? 'Processando...' : 'Interaja comigo'}
+              className={`rounded-2xl border-[#0F172A]/10 h-14 px-6 focus-visible:ring-primary/20 ${variant === 'error' ? 'border-destructive focus-visible:ring-destructive/20' : ''}`}
+              placeholder={variant === 'loading' ? 'Processando...' : 'Digite algo...'}
             />
             {variant === 'loading' && (
-              <Icons.Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 animate-spin text-primary" />
+              <Icons.Loader2 className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 animate-spin text-primary" />
             )}
           </div>
           {variant === 'error' && (
-            <p className="text-[10px] font-black uppercase text-destructive tracking-widest flex items-center gap-1">
-              <Icons.AlertTriangle className="w-3 h-3" /> Campo obrigatório.
+            <p className="text-premium-tiny font-black uppercase text-destructive tracking-widest flex items-center gap-2 px-1">
+              <Icons.AlertTriangle className="w-3.5 h-3.5" /> Este campo é obrigatório.
             </p>
           )}
         </div>
 
-        <div className="space-y-2">
-          <Label aria-disabled={variant === 'disabled'}>Playground Select</Label>
+        <div className="space-y-3">
+          <Label className="font-serif text-lg text-[#0F172A]" aria-disabled={variant === 'disabled'}>Seleção de Opção</Label>
           <Select disabled={variant === 'disabled'}>
-            <SelectTrigger className={variant === 'error' ? 'border-destructive' : ''}>
-              <SelectValue placeholder="Selecione uma opção" />
+            <SelectTrigger className={`rounded-2xl border-[#0F172A]/10 h-14 px-6 focus-visible:ring-primary/20 ${variant === 'error' ? 'border-destructive' : ''}`}>
+              <SelectValue placeholder="Escolha uma categoria" />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="1">Opção 1</SelectItem>
-              <SelectItem value="2">Opção 2</SelectItem>
+            <SelectContent className="rounded-2xl border-[#0F172A]/10">
+              <SelectItem value="1">Liturgia</SelectItem>
+              <SelectItem value="2">Catecismo</SelectItem>
+              <SelectItem value="3">Vidas dos Santos</SelectItem>
             </SelectContent>
           </Select>
         </div>
       </div>
 
-      <div className="p-4 bg-primary/5 rounded-2xl border border-primary/10">
-        <p className="text-premium-tiny font-black uppercase tracking-widest text-primary mb-2">A11y Check</p>
-        <ul className="text-[10px] text-muted-foreground space-y-1 list-disc pl-4">
-          <li>Foco visível: {variant !== 'disabled' ? 'Ativo' : 'Inativo'}</li>
-          <li>Aria-disabled: {variant === 'disabled' ? 'true' : 'false'}</li>
-          <li>Aria-invalid: {variant === 'error' ? 'true' : 'false'}</li>
+      <div className="p-6 bg-primary/5 rounded-3xl border border-primary/10">
+        <p className="text-premium-tiny font-black uppercase tracking-widest text-primary mb-3">Acessibilidade (A11y)</p>
+        <ul className="text-xs text-[#0F172A]/60 space-y-2 list-none">
+          <li className="flex items-center gap-2">
+            <Icons.Check className={`w-3.5 h-3.5 ${variant !== 'disabled' ? 'text-green-600' : 'text-[#0F172A]/20'}`} />
+            Foco visível: {variant !== 'disabled' ? 'Ativo (Ring 2px)' : 'Inativo'}
+          </li>
+          <li className="flex items-center gap-2">
+            <Icons.Check className={`w-3.5 h-3.5 ${variant === 'disabled' ? 'text-green-600' : 'text-[#0F172A]/20'}`} />
+            Aria-disabled: {variant === 'disabled' ? 'true' : 'false'}
+          </li>
+          <li className="flex items-center gap-2">
+            <Icons.Check className={`w-3.5 h-3.5 ${variant === 'error' ? 'text-green-600' : 'text-[#0F172A]/20'}`} />
+            Aria-invalid: {variant === 'error' ? 'true' : 'false'}
+          </li>
         </ul>
       </div>
     </div>
@@ -100,341 +94,248 @@ const InputPlayground = () => {
 
 const DesignSystemGuide = () => {
   return (
-    <div className="desktop-layout py-12 md:py-20">
-      <div className="desktop-main content-section space-y-20">
-        <header className="space-y-4">
-          <p className="text-premium-tiny font-black uppercase tracking-[0.4em] text-secondary">Design System</p>
-          <h1 className="text-4xl md:text-6xl font-display font-black text-primary leading-tight">
-            Cathedra <span className="text-secondary">Visual Identity</span>
-          </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl">
-            A consolidated UI language focused on a premium, minimalist, and contemplative experience.
-          </p>
+    <div className="min-h-screen bg-[#F8F5EE] py-16 md:py-24 px-6">
+      <div className="max-w-5xl mx-auto space-y-24">
+        {/* Header */}
+        <header className="space-y-6 text-center">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#0F172A]/5 border border-[#0F172A]/10 rounded-full"
+          >
+            <Icons.ShieldCheck className="w-4 h-4 text-[#D4AF37]" />
+            <span className="text-premium-tiny font-black uppercase tracking-[0.3em] text-[#0F172A]/60">Design System v2.0</span>
+          </motion.div>
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="text-5xl md:text-7xl font-serif text-[#0F172A] leading-tight"
+          >
+            Identidade Visual <br />
+            <span className="text-[#D4AF37] italic">Cathedra Digital</span>
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-xl text-[#0F172A]/60 max-w-2xl mx-auto font-serif italic"
+          >
+            Uma linguagem unificada para uma experiência premium, minimalista e contemplativa.
+          </motion.p>
         </header>
 
-        {/* Typography Section */}
-        <section className="space-y-12">
+        {/* Cores Section */}
+        <section className="space-y-10">
           <div className="flex items-center gap-6">
-            <div className="h-px flex-1 bg-border/40" />
-            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
-              Typography Scale
-            </h2>
-            <div className="h-px flex-1 bg-border/40" />
+            <div className="h-px flex-1 bg-[#0F172A]/10" />
+            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-[#0F172A]/30">Paleta de Cores</h2>
+            <div className="h-px flex-1 bg-[#0F172A]/10" />
           </div>
 
-          <div className="space-y-12 bg-card border border-border/40 rounded-[2.5rem] p-8 md:p-12">
-            <div className="grid gap-16">
-              <div className="space-y-6">
-                <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Font Families & Weights</p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="space-y-4">
-                    <span className="text-premium-tiny text-secondary font-black uppercase tracking-widest">Display (Cinzel/Serif)</span>
-                    <h1 className="text-4xl font-display font-black leading-tight">Font Display Black</h1>
-                    <h2 className="text-3xl font-display font-bold leading-tight">Font Display Bold</h2>
-                  </div>
-                  <div className="space-y-4">
-                    <span className="text-premium-tiny text-secondary font-black uppercase tracking-widest">Sans (Inter)</span>
-                    <p className="text-xl font-sans font-black">Font Sans Black</p>
-                    <p className="text-xl font-sans font-bold">Font Sans Bold</p>
-                    <p className="text-xl font-sans font-medium">Font Sans Medium</p>
-                    <p className="text-xl font-sans font-normal">Font Sans Normal</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Premium Scale (Fluid)</p>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  <div className="p-6 rounded-2xl bg-muted/20 border border-border/40">
-                    <span className="text-premium-tiny text-secondary font-black uppercase tracking-widest">Premium Base</span>
-                    <p className="text-premium-base text-foreground mt-2">Standard text size (16-18px) for primary content and large labels.</p>
-                  </div>
-                  <div className="p-6 rounded-2xl bg-muted/20 border border-border/40">
-                    <span className="text-premium-tiny text-secondary font-black uppercase tracking-widest">Premium Small</span>
-                    <p className="text-premium-small text-muted-foreground mt-2">Secondary text (13-14px) for metadata, descriptions and small buttons.</p>
-                  </div>
-                  <div className="p-6 rounded-2xl bg-muted/20 border border-border/40">
-                    <span className="text-premium-tiny text-secondary font-black uppercase tracking-widest">Premium Tiny</span>
-                    <p className="text-premium-tiny text-muted-foreground mt-2">Sub-labels, badges, and micro-typography (10-11px scale).</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Semantic Styles</p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="space-y-4 p-6 rounded-2xl bg-primary/5 border border-primary/10">
-                    <span className="text-premium-tiny text-primary font-black uppercase tracking-widest">Serif Italic (Contemplative)</span>
-                    <p className="text-xl font-serif italic text-primary leading-relaxed">"O Verbo se fez carne e habitou entre nós, e vimos sua glória."</p>
-                  </div>
-                  <div className="space-y-4 p-6 rounded-2xl bg-secondary/5 border border-secondary/10">
-                    <span className="text-premium-tiny text-secondary font-black uppercase tracking-widest">Technical Mono (Code/Metadata)</span>
-                    <div className="text-sm font-mono bg-muted/50 p-4 rounded-xl border border-border/20 whitespace-pre-wrap">
-                      {`{\n  "version": "1.0.0",\n  "status": "synchronized"\n}`}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              { name: 'Primária (Navy)', hex: '#0B1F3A', class: 'bg-[#0B1F3A]', accessibility: 'AAA' },
+              { name: 'Secundária (Ouro)', hex: '#D4AF37', class: 'bg-[#D4AF37]', accessibility: 'AA' },
+              { name: 'Fundo (Papel)', hex: '#F8F5EE', class: 'bg-[#F8F5EE]', border: 'border-[#0F172A]/10' },
+              { name: 'Card (Branco)', hex: '#FFFFFF', class: 'bg-white', border: 'border-[#0F172A]/10' },
+            ].map((color) => (
+              <div key={color.name} className="space-y-4 group">
+                <div className={`h-32 rounded-[2rem] ${color.class} ${color.border || 'border-transparent'} shadow-sm transition-transform group-hover:scale-[1.02]`} />
+                <div className="px-2">
+                  <p className="font-serif font-bold text-[#0F172A]">{color.name}</p>
+                  <p className="text-xs text-[#0F172A]/40 font-mono mt-1">{color.hex}</p>
+                  {color.accessibility && (
+                    <div className="mt-3 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-500/5 text-green-600 text-[10px] font-black uppercase tracking-widest border border-green-500/10">
+                      WCAG {color.accessibility} Pass
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
-            </div>
+            ))}
           </div>
         </section>
 
-        {/* Button Documentation Section */}
-        <section className="space-y-12">
+        {/* Tipografia Section */}
+        <section className="space-y-10">
           <div className="flex items-center gap-6">
-            <div className="h-px flex-1 bg-border/40" />
-            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
-              Button Component
-            </h2>
-            <div className="h-px flex-1 bg-border/40" />
+            <div className="h-px flex-1 bg-[#0F172A]/10" />
+            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-[#0F172A]/30">Tipografia</h2>
+            <div className="h-px flex-1 bg-[#0F172A]/10" />
           </div>
 
-          <div className="space-y-16">
-            {/* Variants */}
-            <div className="space-y-8">
-              <h3 className="text-xl font-bold text-primary">Variants</h3>
-              <p className="text-sm text-muted-foreground">Standardized button styles for different semantic purposes.</p>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div className="space-y-4">
-                  <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Primary (Default)</p>
-                  <Button className="w-full">Primary Action</Button>
-                </div>
-                <div className="space-y-4">
-                  <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Secondary</p>
-                  <Button variant="secondary" className="w-full">Secondary Action</Button>
-                </div>
-                <div className="space-y-4">
-                  <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Outline</p>
-                  <Button variant="outline" className="w-full">Outline Action</Button>
-                </div>
-                <div className="space-y-4">
-                  <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Ghost</p>
-                  <Button variant="ghost" className="w-full">Ghost Action</Button>
-                </div>
-                <div className="space-y-4">
-                  <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Destructive</p>
-                  <Button variant="destructive" className="w-full">Destructive Action</Button>
-                </div>
-                <div className="space-y-4">
-                  <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Link</p>
-                  <Button variant="link" className="w-full">Link Action</Button>
-                </div>
-              </div>
-            </div>
-
-            {/* Sizes */}
-            <div className="space-y-8">
-              <h3 className="text-xl font-bold text-primary">Sizes</h3>
-              <div className="flex flex-col md:flex-row items-end gap-12">
-                <div className="space-y-4">
-                  <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Small (sm)</p>
-                  <Button size="sm">Small Action</Button>
-                </div>
-                <div className="space-y-4">
-                  <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Default</p>
-                  <Button>Default Action</Button>
-                </div>
-                <div className="space-y-4">
-                  <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Large (lg)</p>
-                  <Button size="lg">Large Action</Button>
-                </div>
-                <div className="space-y-4">
-                  <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Icon Only</p>
-                  <div className="flex gap-4">
-                    <Button size="icon"><Icons.Plus className="w-4 h-4" /></Button>
-                    <Button size="icon" variant="outline"><Icons.Search className="w-4 h-4" /></Button>
-                    <Button size="icon" variant="ghost"><Icons.Menu className="w-4 h-4" /></Button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* States */}
-            <div className="space-y-8">
-              <h3 className="text-xl font-bold text-primary">States</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-                <div className="space-y-4">
-                  <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Loading State</p>
-                  <div className="flex flex-col gap-4">
-                    <Button isLoading>Loading Primary</Button>
-                    <Button variant="outline" isLoading>Loading Outline</Button>
-                    <Button size="icon" isLoading />
-                  </div>
-                </div>
-                <div className="space-y-4">
-                  <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Disabled State</p>
-                  <div className="flex flex-col gap-4">
-                    <Button disabled>Disabled Primary</Button>
-                    <Button variant="outline" disabled>Disabled Outline</Button>
-                    <Button size="icon" disabled><Icons.Lock className="w-4 h-4" /></Button>
-                  </div>
-                </div>
-                <div className="space-y-4">
-                  <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Acessibilidade</p>
-                  <div className="p-4 bg-muted/30 rounded-2xl border border-border/40 text-premium-small space-y-2">
-                    <p>• <strong>aria-busy:</strong> Automático quando isLoading=true</p>
-                    <p>• <strong>aria-disabled:</strong> Automático quando isLoading ou disabled</p>
-                    <p>• <strong>Focus:</strong> Ring de alta visibilidade no teclado</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Color Palette Section */}
-        <section className="space-y-12">
-          <div className="flex items-center gap-6">
-            <div className="h-px flex-1 bg-border/40" />
-            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
-              Color Palette & Contrast
-            </h2>
-            <div className="h-px flex-1 bg-border/40" />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="space-y-4">
-              <div className="h-24 rounded-3xl bg-primary border border-border/40" />
-              <div>
-                <p className="text-sm font-bold">Primary (Blue)</p>
-                <p className="text-premium-tiny text-muted-foreground">hsl(var(--primary))</p>
-                <div className="mt-2 inline-flex items-center gap-2 px-2 py-1 rounded-full bg-green-500/10 text-green-600 text-[10px] font-black uppercase tracking-widest">
-                  WCAG AAA Pass
-                </div>
-              </div>
-            </div>
-            <div className="space-y-4">
-              <div className="h-24 rounded-3xl bg-secondary border border-border/40" />
-              <div>
-                <p className="text-sm font-bold">Secondary (Gold)</p>
-                <p className="text-premium-tiny text-muted-foreground">hsl(var(--secondary))</p>
-                <div className="mt-2 inline-flex items-center gap-2 px-2 py-1 rounded-full bg-green-500/10 text-green-600 text-[10px] font-black uppercase tracking-widest">
-                  WCAG AA Pass
-                </div>
-              </div>
-            </div>
-            <div className="space-y-4">
-              <div className="h-24 rounded-3xl bg-background border border-border/40" />
-              <div>
-                <p className="text-sm font-bold">Background</p>
-                <p className="text-premium-tiny text-muted-foreground">hsl(var(--background))</p>
-              </div>
-            </div>
-            <div className="space-y-4">
-              <div className="h-24 rounded-3xl bg-card border border-border/40" />
-              <div>
-                <p className="text-sm font-bold">Card</p>
-                <p className="text-premium-tiny text-muted-foreground">hsl(var(--card))</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Inputs & Selects Section */}
-        <section className="space-y-12">
-          <div className="flex items-center gap-6">
-            <div className="h-px flex-1 bg-border/40" />
-            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
-              Inputs & Selects
-            </h2>
-            <div className="h-px flex-1 bg-border/40" />
-          </div>
-
-          <div className="space-y-16 bg-card border border-border/40 rounded-[2.5rem] p-8 md:p-12">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+          <div className="bg-white border border-[#0F172A]/5 rounded-[3rem] p-8 md:p-16 space-y-16 shadow-sm">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
               <div className="space-y-8">
-                <h3 className="text-xl font-bold text-primary">States Documentation</h3>
-                <div className="space-y-8">
-                  <div className="space-y-2">
-                    <Label htmlFor="focus-input">Focus State</Label>
-                    <Input id="focus-input" placeholder="Clique para ver o anel de foco" className="focus-visible:ring-primary ring-offset-2" />
-                    <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Utiliza focus-visible:ring-2 para alta acessibilidade.</p>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="disabled-input-guide">Disabled State</Label>
-                    <Input id="disabled-input-guide" disabled placeholder="Não é possível interagir" />
-                    <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Opacidade reduzida e cursor: not-allowed.</p>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="error-input-guide" className="text-destructive">Error State</Label>
-                    <Input id="error-input-guide" className="border-destructive focus-visible:ring-destructive" defaultValue="valor@incorreto" />
-                    <p className="text-[10px] font-black uppercase text-destructive tracking-widest flex items-center gap-1">
-                      <Icons.AlertTriangle className="w-3 h-3" /> Formato de e-mail inválido.
-                    </p>
-                  </div>
+                <span className="text-premium-tiny text-[#D4AF37] font-black uppercase tracking-widest">Display (Font-Serif)</span>
+                <div className="space-y-4">
+                  <h1 className="text-5xl font-serif text-[#0F172A]">Título Display</h1>
+                  <h2 className="text-3xl font-serif text-[#0F172A]/80">Subtítulo Elegante</h2>
+                  <p className="text-xl font-serif italic text-[#0F172A]/60">"O Verbo se fez carne e habitou entre nós."</p>
                 </div>
               </div>
-
-              <div className="space-y-12">
-                <div className="space-y-6">
-                  <Label className="text-lg">Textarea & Checkbox</Label>
-                  <div className="space-y-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="guide-textarea">Comentários ou Reflexões</Label>
-                      <textarea 
-                        id="guide-textarea"
-                        className="flex min-h-[120px] w-full rounded-[2rem] border border-input bg-background px-6 py-4 text-premium-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all"
-                        placeholder="Escreva seus pensamentos aqui..."
-                      />
-                    </div>
-                    <div className="space-y-4">
-                      <div className="flex items-center space-x-3">
-                        <div className="peer h-5 w-5 shrink-0 rounded-md border border-primary ring-offset-background flex items-center justify-center bg-primary text-primary-foreground">
-                          <Icons.Check className="h-4 w-4" />
-                        </div>
-                        <Label className="font-bold">Notificações Diárias</Label>
-                      </div>
-                      <div className="flex items-center space-x-3 opacity-50 cursor-not-allowed">
-                        <div className="peer h-5 w-5 shrink-0 rounded-md border border-border ring-offset-background bg-muted" />
-                        <Label className="text-muted-foreground">Opção Desabilitada</Label>
-                      </div>
-                    </div>
-                  </div>
+              <div className="space-y-8">
+                <span className="text-premium-tiny text-[#D4AF37] font-black uppercase tracking-widest">Sans (Inter/System)</span>
+                <div className="space-y-4">
+                  <p className="text-2xl font-sans font-bold text-[#0F172A]">Texto Principal Sans</p>
+                  <p className="text-lg text-[#0F172A]/70 leading-relaxed">Utilizada para conteúdos longos, garantindo máxima legibilidade em dispositivos móveis.</p>
+                  <p className="text-premium-tiny font-black uppercase tracking-widest text-primary/40">Micro-tipografia e Badges</p>
                 </div>
-              </div>
-
-              <div className="space-y-8 md:col-span-2">
-                <h3 className="text-xl font-bold text-primary">Interactive Playground</h3>
-                <InputPlayground />
               </div>
             </div>
           </div>
         </section>
 
-        {/* Real World Usage */}
-        <section className="space-y-12">
+        {/* Botões Section */}
+        <section className="space-y-10">
           <div className="flex items-center gap-6">
-            <div className="h-px flex-1 bg-border/40" />
-            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
-              Real World Usage
-            </h2>
-            <div className="h-px flex-1 bg-border/40" />
+            <div className="h-px flex-1 bg-[#0F172A]/10" />
+            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-[#0F172A]/30">Componentes de Ação</h2>
+            <div className="h-px flex-1 bg-[#0F172A]/10" />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="bg-muted/30 rounded-[2.5rem] p-8 border border-border/40 space-y-6">
-              <div className="space-y-3">
-                <h4 className="font-serif text-2xl">Continue sua Jornada</h4>
-                <p className="text-sm text-muted-foreground">Continue de onde parou e aprofunde seu conhecimento na fé católica com trilhas personalizadas.</p>
+            <div className="bg-white border border-[#0F172A]/5 rounded-[2.5rem] p-10 space-y-10">
+              <h3 className="text-xl font-serif font-bold text-[#0F172A]">Variantes de Botão</h3>
+              <div className="grid gap-4">
+                <Button className="h-14 rounded-2xl text-premium-tiny font-black uppercase tracking-widest">Ação Primária</Button>
+                <Button variant="secondary" className="h-14 rounded-2xl text-premium-tiny font-black uppercase tracking-widest border border-[#0F172A]/10 bg-[#0F172A]/5 text-[#0F172A]">Ação Secundária</Button>
+                <Button variant="outline" className="h-14 rounded-2xl text-premium-tiny font-black uppercase tracking-widest border-[#0F172A]/10">Borda (Outline)</Button>
+                <Button variant="ghost" className="h-14 rounded-2xl text-premium-tiny font-black uppercase tracking-widest">Fantasma (Ghost)</Button>
               </div>
-              <Button variant="primary" className="w-full">Continuar Caminhada</Button>
             </div>
-            
-            <div className="bg-card border border-border/40 rounded-[2.5rem] p-8 flex flex-col items-center text-center space-y-6">
-              <div className="p-4 rounded-full bg-secondary/10 text-secondary">
-                <Icons.Bell className="w-8 h-8" />
+
+            <div className="bg-white border border-[#0F172A]/5 rounded-[2.5rem] p-10 space-y-10">
+              <h3 className="text-xl font-serif font-bold text-[#0F172A]">Estados e Ícones</h3>
+              <div className="flex flex-wrap gap-4">
+                <Button isLoading className="h-14 rounded-2xl px-8">Processando</Button>
+                <Button disabled className="h-14 rounded-2xl px-8">Desativado</Button>
+                <Button size="icon" className="h-14 w-14 rounded-2xl">
+                  <Icons.Search className="w-5 h-5" />
+                </Button>
+                <Button variant="outline" size="icon" className="h-14 w-14 rounded-2xl border-[#0F172A]/10">
+                  <Icons.Heart className="w-5 h-5" />
+                </Button>
               </div>
-              <div className="space-y-2">
-                <h4 className="font-serif text-2xl">Notificações</h4>
-                <p className="text-sm text-muted-foreground max-w-xs mx-auto">Ative para receber avisos sobre novas leituras e eventos da Igreja.</p>
-              </div>
-              <div className="flex gap-4 w-full">
-                <Button variant="outline" className="flex-1">Agora não</Button>
-                <Button className="flex-1">Ativar</Button>
+              <div className="p-5 bg-[#D4AF37]/5 rounded-2xl border border-[#D4AF37]/10">
+                <p className="text-[11px] text-[#0F172A]/60 leading-relaxed italic font-serif">
+                  * Todos os ícones em botões devem usar o tamanho padrão de 20px (w-5 h-5) para manter a harmonia visual em todos os dispositivos.
+                </p>
               </div>
             </div>
           </div>
         </section>
+
+        {/* Playground Interativo */}
+        <section className="space-y-10">
+          <div className="flex items-center gap-6">
+            <div className="h-px flex-1 bg-[#0F172A]/10" />
+            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-[#0F172A]/30">Playground de Formulários</h2>
+            <div className="h-px flex-1 bg-[#0F172A]/10" />
+          </div>
+
+          <InputPlayground />
+        </section>
+
+        {/* Iconografia Section */}
+        <section className="space-y-10">
+          <div className="flex items-center gap-6">
+            <div className="h-px flex-1 bg-[#0F172A]/10" />
+            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-[#0F172A]/30">Iconografia</h2>
+            <div className="h-px flex-1 bg-[#0F172A]/10" />
+          </div>
+
+          <div className="grid grid-cols-4 md:grid-cols-8 gap-8 bg-white p-10 rounded-[2.5rem] border border-[#0F172A]/5 shadow-sm">
+            {[
+              { icon: Icons.Church, label: 'Igreja' },
+              { icon: Icons.Bible, label: 'Bíblia' },
+              { icon: Icons.Cross, label: 'Cruz' },
+              { icon: Icons.Flame, label: 'Chama' },
+              { icon: Icons.Sparkles, label: 'Santos' },
+              { icon: Icons.Heart, label: 'Amor' },
+              { icon: Icons.ShieldCheck, label: 'Proteção' },
+              { icon: Icons.ScrollText, label: 'Magistério' },
+              { icon: Icons.Compass, label: 'Jornada' },
+              { icon: Icons.Search, label: 'Busca' },
+              { icon: Icons.User, label: 'Perfil' },
+              { icon: Icons.Volume2, label: 'Áudio' },
+            ].map((item, i) => (
+              <div key={i} className="flex flex-col items-center gap-3">
+                <div className="w-12 h-12 rounded-2xl bg-[#0F172A]/5 flex items-center justify-center text-primary border border-transparent hover:border-primary/20 transition-all group">
+                  <item.icon className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-widest text-[#0F172A]/40">{item.label}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Componentes Específicos Section */}
+        <section className="space-y-10">
+          <div className="flex items-center gap-6">
+            <div className="h-px flex-1 bg-[#0F172A]/10" />
+            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-[#0F172A]/30">Padrões de Conteúdo</h2>
+            <div className="h-px flex-1 bg-[#0F172A]/10" />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="bg-white p-10 rounded-[3rem] border border-[#0F172A]/5 shadow-sm space-y-6">
+              <span className="text-premium-tiny text-[#D4AF37] font-black uppercase tracking-widest">Estilo Bíblico (Reader)</span>
+              <div className="space-y-4">
+                <p className="font-serif text-2xl leading-relaxed text-[#0F172A]">
+                  <sup className="text-xs text-[#D4AF37] mr-2">1</sup>No princípio era o Verbo, e o Verbo estava junto de Deus, e o Verbo era Deus.
+                </p>
+                <div className="flex gap-2">
+                  <div className="px-3 py-1 rounded-full bg-primary/5 text-primary text-[10px] font-black uppercase tracking-widest">Jo 1,1</div>
+                  <div className="px-3 py-1 rounded-full bg-primary/5 text-primary text-[10px] font-black uppercase tracking-widest">Cross-ref: Gn 1,1</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white p-10 rounded-[3rem] border border-[#0F172A]/5 shadow-sm space-y-6">
+              <span className="text-premium-tiny text-[#D4AF37] font-black uppercase tracking-widest">Estilo Doutrinal (Catecismo)</span>
+              <div className="space-y-4 p-6 bg-[#0F172A]/5 rounded-2xl border border-transparent">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-8 h-8 rounded-lg bg-primary text-white flex items-center justify-center font-black text-xs">27</div>
+                  <span className="text-xs font-black uppercase tracking-widest text-primary/40">Desejo de Deus</span>
+                </div>
+                <p className="text-sm text-[#0F172A]/80 leading-relaxed font-sans">
+                  O desejo de Deus está inscrito no coração do homem, porque o homem foi criado por Deus e para Deus.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Tom de Voz Section */}
+        <section className="space-y-10">
+          <div className="flex items-center gap-6">
+            <div className="h-px flex-1 bg-[#0F172A]/10" />
+            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-[#0F172A]/30">Tom de Voz e Escrita</h2>
+            <div className="h-px flex-1 bg-[#0F172A]/10" />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              { title: 'Solene', desc: 'Linguagem respeitosa que honra a tradição milenar da Igreja.' },
+              { title: 'Acolhedor', desc: 'Convida à oração e ao estudo, sem ser excessivamente técnico.' },
+              { title: 'Minimalista', desc: 'Instruções claras e diretas, evitando distrações visuais ou de texto.' },
+            ].map((item) => (
+              <div key={item.title} className="bg-white p-8 rounded-[2rem] border border-[#0F172A]/5 shadow-sm space-y-4">
+                <h3 className="text-lg font-serif font-bold text-[#0B1F3A]">{item.title}</h3>
+                <p className="text-sm text-[#0F172A]/60 leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="pt-16 pb-24 border-t border-[#0F172A]/5 text-center space-y-4">
+          <Icons.Logo className="w-12 h-12 mx-auto" variant="blue" />
+          <p className="text-premium-tiny font-black uppercase tracking-[0.4em] text-[#0F172A]/30">
+            Ad Majorem Dei Gloriam
+          </p>
+        </footer>
       </div>
     </div>
   );

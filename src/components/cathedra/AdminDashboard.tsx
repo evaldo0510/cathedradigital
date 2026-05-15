@@ -30,6 +30,7 @@ const AdminConstructionTab = lazy(() => import('./AdminConstructionTab'));
 const WebhookSimulator = lazy(() => import('./WebhookSimulator'));
 const SecurityAuditPage = lazy(() => import('./SecurityAuditPage'));
 const AdminSeoTab = lazy(() => import('./AdminSeoTab'));
+const DesignSystemGuide = lazy(() => import('./DesignSystemGuide'));
 
 
 interface Stats {
@@ -475,6 +476,9 @@ const AdminDashboard: React.FC = () => {
             </TabsTrigger>
             <TabsTrigger value="construction" className="gap-2 text-premium-tiny font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
               <Building2 className="w-3.5 h-3.5" /> Obras
+            </TabsTrigger>
+            <TabsTrigger value="design" className="gap-2 text-premium-tiny font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+              <Shield className="w-3.5 h-3.5" /> Design
             </TabsTrigger>
           </TabsList>
         </div>
@@ -1066,9 +1070,9 @@ const AdminDashboard: React.FC = () => {
             <AdminConstructionTab />
           </Suspense>
         </TabsContent>
-        <TabsContent value="tests">
-          <Suspense fallback={<Skeleton className="h-[400px] rounded-full" />}>
-            <WebhookSimulator />
+        <TabsContent value="design">
+          <Suspense fallback={<Skeleton className="h-[600px] rounded-[2rem]" />}>
+            <DesignSystemGuide />
           </Suspense>
         </TabsContent>
       </Tabs>
