@@ -137,8 +137,8 @@ SkeletonBar.displayName = 'SkeletonBar';
 const LoadingFallback = () => (
   <div className="flex flex-col items-center justify-center min-h-[60dvh] w-full p-6 animate-in fade-in duration-500">
     <div className="relative mb-8">
-      <div className="w-16 h-16 rounded-2xl bg-primary/10 animate-pulse border-2 border-primary/20" />
-      <div className="absolute inset-0 w-16 h-16 rounded-2xl border-t-2 border-primary animate-spin" />
+      <div className="w-16 h-16 rounded-premium-sm bg-primary/10 animate-pulse border-2 border-primary/20" />
+      <div className="absolute inset-0 w-16 h-16 rounded-premium-sm border-t-2 border-primary animate-spin" />
     </div>
     
     <div className="w-full max-w-sm space-y-4">
