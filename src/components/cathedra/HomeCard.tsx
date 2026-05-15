@@ -1,4 +1,5 @@
 import * as React from "react";
+import { CathedraCard } from "./CathedraCard";
 import { cn } from "@/lib/utils";
 
 interface HomeCardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -14,13 +15,12 @@ const HomeCard = React.forwardRef<
   const isClickable = props.onClick || href || Component === "button" || Component === "a";
   
   return (
-    <Component
+    <CathedraCard
       ref={ref}
-      href={href}
+      variant={isClickable ? 'interactive' : 'default'}
+      padding="none"
       className={cn(
-        "premium-card text-card-foreground",
-        isClickable && "cursor-pointer hover:shadow-premium-hover hover:border-primary/20 hover:-translate-y-1 active:scale-[0.99]",
-        "focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary/40 focus:ring-2 focus:ring-primary/20 focus:border-primary/40 outline-none focus-visible:ring-primary/40 focus-visible:ring-offset-2",
+        "text-card-foreground focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary/40 outline-none focus-visible:ring-primary/40 focus-visible:ring-offset-2",
         className
       )}
       {...props}

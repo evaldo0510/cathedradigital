@@ -59,7 +59,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
 
             <div className="space-y-8 overflow-y-auto pr-2 custom-scrollbar flex-1">
               <section className="space-y-6">
-                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-foreground/40 border-b border-border/10 pb-2">Aparência e Leitura</h3>
+                <h3 className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/30 border-b border-border/10 pb-2">Aparência e Leitura</h3>
                 
                 <div className="space-y-4">
                   <div className="flex items-center justify-between group">
@@ -89,7 +89,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
               </section>
 
               <section className="space-y-4">
-                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-foreground/40 border-b border-border/10 pb-2">Impacto na Leitura</h3>
+                <h3 className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/30 border-b border-border/10 pb-2">Impacto na Leitura</h3>
                 <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10 space-y-3">
                   <div className="flex items-center gap-2 text-[11px] font-bold text-primary">
                     <Icons.Info className="w-3.5 h-3.5" />
@@ -103,7 +103,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
             </div>
 
             <div className="pt-8 border-t border-border/10">
-              <Button className="w-full rounded-full h-12 text-[10px] font-black uppercase tracking-widest shadow-premium" onClick={onClose}>
+              <Button className="w-full rounded-full h-14 text-[10px] font-bold uppercase tracking-[0.3em] shadow-premium btn-premium-primary" onClick={onClose}>
                 Concluído
               </Button>
             </div>

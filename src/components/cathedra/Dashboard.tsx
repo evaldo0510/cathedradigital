@@ -118,42 +118,42 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   }
 
   return (
-    <div className="app-container desktop-layout py-10 md:py-16">
-      <div className="desktop-main space-y-12 md:space-y-20">
+    <div className="app-container desktop-layout py-20 md:py-32">
+      <div className="desktop-main stack-spacing">
       <FadeUp>
-        <div className="text-center space-y-6">
+        <div className="text-center space-y-10">
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
             className="flex justify-center"
           >
             <div className="relative">
-              <Icons.Saints className="w-14 h-14 text-secondary/40" strokeWidth={1} />
+              <Icons.Logo className="w-20 h-20 text-primary" variant="blue" />
             </div>
           </motion.div>
-          <div className="space-y-4">
-            <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-secondary/60">
+          <div className="space-y-6">
+            <p className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-secondary/60">
               Cathedra {t('digital')}
             </p>
-            <h1 className="text-5xl md:text-7xl font-display font-medium text-primary leading-[1.1] tracking-tight">
+            <h1 className="text-6xl md:text-8xl font-display font-medium text-primary leading-[1] tracking-tighter">
               {profile?.name ? `${greeting}, ${profile.name.split(' ')[0]}` : t('pax_et_bonum')}
             </h1>
             {spProfile && (
-              <p className="text-base text-muted-foreground italic font-serif mt-3 opacity-70">{spProfile.greeting}</p>
+              <p className="text-xl text-primary/40 italic font-serif mt-6 opacity-70 max-w-2xl mx-auto leading-relaxed">{spProfile.greeting}</p>
             )}
           </div>
 
-          <div className="flex items-center justify-center gap-8 flex-wrap pt-4">
+          <div className="flex items-center justify-center gap-10 flex-wrap pt-8">
             {streak > 0 && (
-              <div className="flex items-center gap-2.5 px-6 py-3 rounded-full bg-secondary/[0.03] border border-secondary/10 shadow-soft transition-colors hover:bg-secondary/[0.06]">
-                <Icons.Zap className="w-4 h-4 text-secondary" />
-                <span className="text-xs font-bold text-primary uppercase tracking-widest">{streak} {streak === 1 ? t('day') : t('days')}</span>
+              <div className="flex items-center gap-3 px-8 py-4 rounded-full bg-secondary/[0.03] border border-secondary/20 shadow-soft transition-all hover:bg-secondary/[0.06] hover:-translate-y-1">
+                <Icons.Zap className="w-5 h-5 text-secondary" />
+                <span className="text-xs font-bold text-primary uppercase tracking-[0.2em]">{streak} {streak === 1 ? t('day') : t('days')}</span>
               </div>
             )}
-            <div className="flex items-center gap-2.5 px-6 py-3 rounded-full bg-primary/[0.03] border border-border/50 shadow-soft transition-colors hover:bg-primary/[0.06]">
-              <Icons.Star className="w-4 h-4 text-primary" />
-              <span className="text-xs font-bold text-primary uppercase tracking-widest">{profile?.xp || 0} XP</span>
+            <div className="flex items-center gap-3 px-8 py-4 rounded-full bg-primary/[0.03] border border-border/40 shadow-soft transition-all hover:bg-primary/[0.06] hover:-translate-y-1">
+              <Icons.Star className="w-5 h-5 text-primary" />
+              <span className="text-xs font-bold text-primary uppercase tracking-[0.2em]">{profile?.xp || 0} XP</span>
             </div>
           </div>
         </div>

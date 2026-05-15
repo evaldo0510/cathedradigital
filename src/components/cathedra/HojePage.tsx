@@ -124,135 +124,135 @@ const HojePage: React.FC = () => {
   if (loadingStats || loadingJourney) return <DashboardSkeleton />;
 
   return (
-    <div className="flex flex-col items-center w-full min-h-screen bg-background pt-12 md:pt-24 pb-48">
+    <div className="flex flex-col items-center w-full min-h-screen bg-background pt-16 md:pt-32 pb-64">
       <SEOHead title="Hoje - Sua Jornada Espiritual" description="Acompanhe sua caminhada de fé diária." path="/hoje" />
       {import.meta.env.DEV && <DevDataInspector data={{ officialSaint, allSaintsToday, activeJourney, profile: profile?._sensitive }} />}
       
-      <div className="app-container space-y-24 md:space-y-40 lg:space-y-56">
+      <div className="app-container stack-spacing">
         {/* HERO SECTION */}
         <motion.div 
-          initial={{ opacity: 0, y: 20 }} 
+          initial={{ opacity: 0, y: 30 }} 
           animate={{ opacity: 1, y: 0 }} 
-          className="text-center space-y-12 max-w-4xl mx-auto"
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center space-y-16 max-w-5xl mx-auto"
         >
-          <div className="space-y-6">
-            <p className="text-premium-tiny font-black uppercase tracking-[0.5em] text-primary/40">
+          <div className="space-y-8">
+            <p className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-primary/30">
               {greeting}, {profile?.name?.split(' ')[0] || 'fiel'}
             </p>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-display text-primary leading-[1.1]">
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-display text-primary leading-[1.05] tracking-tight">
               Sua jornada espiritual <br />
               <span className="text-secondary italic font-serif">guiada pela Sabedoria.</span>
             </h1>
           </div>
           
-          <div className="flex items-center justify-center gap-6 flex-wrap">
+          <div className="flex items-center justify-center gap-8 flex-wrap">
              {(profile?.streak || 0) > 0 && (
-              <div className="flex items-center gap-3 px-6 py-2.5 rounded-full bg-primary/[0.03] border border-primary/10">
+              <div className="flex items-center gap-3 px-8 py-3.5 rounded-full bg-primary/[0.03] border border-primary/10 transition-all hover:bg-primary/[0.06]">
                 <Icons.Zap className="w-4 h-4 text-primary" />
                 <span className="text-premium-tiny font-bold text-primary uppercase tracking-widest">{profile?.streak} {profile?.streak === 1 ? 'Dia' : 'Dias'}</span>
               </div>
             )}
-            <div className="flex items-center gap-3 px-6 py-2.5 rounded-full bg-primary/[0.03] border border-primary/10">
+            <div className="flex items-center gap-3 px-8 py-3.5 rounded-full bg-primary/[0.03] border border-primary/10 transition-all hover:bg-primary/[0.06]">
               <Icons.Star className="w-4 h-4 text-secondary" />
               <span className="text-premium-tiny font-bold text-primary uppercase tracking-widest">{profile?.xp || 0} XP</span>
             </div>
           </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
-          <div className="lg:col-span-8 space-y-24 md:space-y-40">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24">
+          <div className="lg:col-span-8 stack-spacing">
             {/* CONTINUE JORNADA */}
             {nextUp && (
-              <section className="space-y-10">
-                <div className="flex items-center gap-6">
-                  <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-primary/30 whitespace-nowrap">
+              <section className="space-y-12">
+                <div className="flex items-center gap-8">
+                  <h2 className="text-premium-tiny font-bold uppercase tracking-[0.5em] text-primary/30 whitespace-nowrap">
                     Memória da Jornada
                   </h2>
-                  <div className="h-px flex-1 bg-border/40" />
+                  <div className="h-px flex-1 bg-border/30" />
                 </div>
                 
                 <motion.div 
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.99 }}
+                  whileHover={{ y: -8 }}
+                  whileTap={{ scale: 0.995 }}
                   onClick={() => navigate(nextUp.route)}
-                  className="p-10 md:p-14 rounded-premium border border-border/40 bg-card cursor-pointer hover:shadow-premium-hover hover:border-secondary/30 transition-all flex flex-col md:flex-row items-center justify-between gap-10 shadow-premium group"
+                  className="p-12 md:p-16 rounded-premium border border-border/40 bg-card cursor-pointer hover:shadow-premium-hover hover:border-secondary/20 transition-all flex flex-col md:flex-row items-center justify-between gap-12 shadow-premium group"
                 >
-                  <div className="flex items-center gap-8 flex-col md:flex-row text-center md:text-left">
-                    <div className="w-20 h-20 rounded-2xl bg-primary/5 flex items-center justify-center text-secondary group-hover:scale-110 transition-transform duration-700">
-                      <Icons.Flame className="w-10 h-10" />
+                  <div className="flex items-center gap-10 flex-col md:flex-row text-center md:text-left">
+                    <div className="w-24 h-24 rounded-3xl bg-primary/[0.02] border border-border/40 flex items-center justify-center text-secondary group-hover:scale-110 transition-transform duration-700">
+                      <Icons.Flame className="w-12 h-12" />
                     </div>
                     <div>
-                      <p className="text-premium-tiny font-bold uppercase tracking-widest text-primary/40 mb-3">{nextUp.subtitle}</p>
-                      <h3 className="text-2xl md:text-3xl font-bold text-primary">{nextUp.label}</h3>
+                      <p className="text-premium-tiny font-bold uppercase tracking-widest text-primary/30 mb-4">{nextUp.subtitle}</p>
+                      <h3 className="text-3xl md:text-4xl font-bold text-primary tracking-tight">{nextUp.label}</h3>
                       {activeJourney && (
-                        <div className="mt-6 flex items-center gap-4 w-full md:w-64">
-                          <div className="flex-1 h-1.5 bg-primary/5 rounded-full overflow-hidden">
+                        <div className="mt-8 flex items-center gap-6 w-full md:w-80">
+                          <div className="flex-1 h-2 bg-primary/5 rounded-full overflow-hidden">
                             <motion.div 
                               initial={{ width: 0 }}
                               animate={{ width: `${journeyProgress.total > 0 ? (journeyProgress.completed / journeyProgress.total) * 100 : 0}%` }}
                               transition={{ duration: 1.5, ease: "easeOut" }}
-                              className="h-full bg-secondary" 
+                              className="h-full bg-secondary shadow-[0_0_10px_rgba(212,175,55,0.3)]" 
                             />
                           </div>
-                          <span className="text-premium-tiny font-bold text-primary/60 tabular-nums">{journeyProgress.completed}/{journeyProgress.total}</span>
+                          <span className="text-premium-tiny font-bold text-primary/50 tabular-nums tracking-widest">{journeyProgress.completed}/{journeyProgress.total}</span>
                         </div>
                       )}
                     </div>
                   </div>
-                  <div className="w-12 h-12 rounded-full border border-border/30 flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-all">
-                    <Icons.ChevronRight className="w-6 h-6" />
+                  <div className="w-14 h-14 rounded-full border border-border/40 flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-all shadow-soft">
+                    <Icons.ChevronRight className="w-7 h-7" />
                   </div>
                 </motion.div>
               </section>
             )}
 
             {/* RITUAL DO DIA */}
-            <section className="space-y-10">
-              <div className="flex items-center gap-6">
-                <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-primary/30 whitespace-nowrap">
+            <section className="space-y-12">
+              <div className="flex items-center gap-8">
+                <h2 className="text-premium-tiny font-bold uppercase tracking-[0.5em] text-primary/30 whitespace-nowrap">
                   Ritual do Dia
                 </h2>
-                <div className="h-px flex-1 bg-border/40" />
+                <div className="h-px flex-1 bg-border/30" />
               </div>
               <RitualDoDia />
             </section>
           </div>
 
-          {/* SIDEBAR CONTENT - For Desktop Refinement */}
-          <aside className="lg:col-span-4 space-y-24">
+          <aside className="lg:col-span-4 stack-spacing">
             {/* TEMAS PRINCIPAIS */}
-            <section className="space-y-10">
-              <div className="flex items-center gap-6">
-                <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-primary/30 whitespace-nowrap">
+            <section className="space-y-12">
+              <div className="flex items-center gap-8">
+                <h2 className="text-premium-tiny font-bold uppercase tracking-[0.5em] text-primary/30 whitespace-nowrap">
                   Explorar
                 </h2>
-                <div className="h-px flex-1 bg-border/40" />
+                <div className="h-px flex-1 bg-border/30" />
               </div>
-              <div className="grid grid-cols-1 gap-6">
+              <div className="grid grid-cols-1 gap-8">
                 <HomeMainDoors t={t} className="grid-cols-1 md:grid-cols-1" />
               </div>
             </section>
 
             {/* CATECISMO CARD */}
-            <section className="space-y-10">
-              <div className="flex items-center gap-6">
-                <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-primary/30 whitespace-nowrap">
+            <section className="space-y-12">
+              <div className="flex items-center gap-8">
+                <h2 className="text-premium-tiny font-bold uppercase tracking-[0.5em] text-primary/30 whitespace-nowrap">
                   Doutrina
                 </h2>
-                <div className="h-px flex-1 bg-border/40" />
+                <div className="h-px flex-1 bg-border/30" />
               </div>
               <motion.div 
-                whileHover={{ scale: 1.01 }}
-                whileTap={{ scale: 0.99 }}
+                whileHover={{ y: -8 }}
+                whileTap={{ scale: 0.995 }}
                 onClick={() => navigate(AppRoute.CATECHISM)}
-                className="p-10 rounded-premium border border-border/40 bg-card cursor-pointer hover:shadow-premium-hover hover:border-primary/20 transition-all shadow-premium group text-center space-y-6"
+                className="p-12 rounded-premium border border-border/40 bg-card cursor-pointer hover:shadow-premium-hover hover:border-primary/20 transition-all shadow-premium group text-center space-y-8"
               >
-                <div className="w-16 h-16 rounded-2xl bg-primary/5 flex items-center justify-center text-secondary mx-auto group-hover:rotate-12 transition-transform duration-700">
-                  <Icons.Catechism className="w-8 h-8" />
+                <div className="w-20 h-20 rounded-3xl bg-primary/[0.02] border border-border/40 flex items-center justify-center text-secondary mx-auto group-hover:rotate-12 transition-transform duration-700">
+                  <Icons.Catechism className="w-10 h-10" />
                 </div>
-                <div className="space-y-2">
-                  <h3 className="text-xl font-bold text-primary">Catecismo</h3>
-                  <p className="text-sm text-primary/50 leading-relaxed">A sabedoria milenar da Igreja em suas mãos.</p>
+                <div className="space-y-4">
+                  <h3 className="text-2xl font-bold text-primary tracking-tight">Catecismo</h3>
+                  <p className="text-base text-primary/40 leading-relaxed max-w-[200px] mx-auto">A sabedoria milenar da Igreja em suas mãos.</p>
                 </div>
               </motion.div>
             </section>
