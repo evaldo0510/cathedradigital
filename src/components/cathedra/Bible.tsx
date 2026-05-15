@@ -805,12 +805,21 @@ const Bible: React.FC = () => {
           <p className="text-muted-foreground mt-1">Lâmpada para meus pés é a vossa palavra.</p>
         </div>
         
-        <div className="w-full md:w-auto flex flex-col gap-2">
-           <div className="flex items-center justify-between text-premium-tiny font-black uppercase tracking-widest text-primary/60 mb-1">
-             <span>Progresso Geral</span>
-             <span>{overallProgress}%</span>
+        <div className="w-full md:w-auto flex flex-col gap-4">
+           <Button 
+             variant="outline" 
+             onClick={resumeLastRead}
+             className="rounded-full border-primary/20 text-primary gap-2"
+           >
+             <History className="w-4 h-4" /> Retomar Leitura
+           </Button>
+           <div>
+             <div className="flex items-center justify-between text-premium-tiny font-black uppercase tracking-widest text-primary/60 mb-1">
+               <span>Progresso Geral</span>
+               <span>{overallProgress}%</span>
+             </div>
+             <Progress value={overallProgress} className="h-2 w-full md:w-48" />
            </div>
-           <Progress value={overallProgress} className="h-2 w-full md:w-48" />
         </div>
       </div>
 
