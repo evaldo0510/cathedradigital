@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Icons } from '@/constants';
 import { AppRoute } from '@/types';
+import { cn } from '@/lib/utils';
 
 interface HomeMainDoorsProps {
   t: (key: string) => string;
