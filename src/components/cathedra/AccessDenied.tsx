@@ -15,28 +15,28 @@ const AccessDenied: React.FC = () => {
         <div className="w-20 h-20 rounded-full bg-destructive/10 flex items-center justify-center mb-6">
           <CathedraIcon 
             icon={Icons.ShieldCheck} 
-            size={IconSizePreset.LARGE} 
-            variant="destructive"
+            size={IconSizePreset.HERO} 
+            variant="primary"
             className="text-destructive"
           />
         </div>
         
-        <h1 className="text-2xl font-bold mb-3 tracking-tight">Acesso Negado</h1>
-        <p className="text-muted-foreground mb-8">
+        <h1 className="text-2xl font-bold mb-3 tracking-tight text-premium-balance">Acesso Negado</h1>
+        <p className="text-muted-foreground mb-8 text-premium-body">
           Você não tem permissão para acessar esta área. Esta seção é exclusiva para administradores da plataforma.
         </p>
         
         <div className="flex flex-col sm:flex-row gap-3 w-full">
           <CathedraButton 
             variant="outline" 
-            fullWidth
+            className="w-full"
             onClick={() => navigate(-1)}
           >
             Voltar
           </CathedraButton>
           <CathedraButton 
             variant="primary" 
-            fullWidth
+            className="w-full"
             onClick={() => navigate(AppRoute.HOJE)}
           >
             Ir para Início
