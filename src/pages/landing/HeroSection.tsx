@@ -22,7 +22,7 @@ const HeroSection = ({ onStart, onAbout }: HeroSectionProps) => {
   const heroY = useTransform(scrollYProgress, [0, 1], [0, 50]);
 
   return (
-    <section id="hero" ref={heroRef} className="relative w-full min-h-[100dvh] flex items-center justify-center px-6 overflow-hidden bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.2)_100%)]">
+    <section id="hero" ref={heroRef} className="relative w-full min-h-[100dvh] flex items-center justify-center px-6 overflow-hidden bg-background">
       <HeroBackground bgY={heroY} />
       <HeroContent 
         heroOpacity={heroOpacity} 
