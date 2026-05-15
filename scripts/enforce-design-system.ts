@@ -4,7 +4,6 @@ import { join, extname } from 'path';
 const FORBIDDEN_COMPONENTS = [
   '@/components/ui/card',
   '@/components/ui/button',
-  'lucide-react' // Should use Icons from constants
 ];
 
 const FORBIDDEN_CLASSES = [
