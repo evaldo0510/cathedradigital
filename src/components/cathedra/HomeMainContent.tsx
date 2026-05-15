@@ -108,7 +108,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
             </h2>
             <div className="h-px flex-1 bg-border/20" />
           </div>
-          <div className="grid grid-cols-1 gap-6 h-full">
+          <div className="grid grid-cols-1 gap-6">
             <HomeCard padding="sm" className="space-y-4">
               <div className="flex items-center justify-between">
                 <h4 className="font-bold text-primary">Fundamentos da Fé</h4>
