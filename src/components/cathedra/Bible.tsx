@@ -21,10 +21,7 @@ import { checkNewBadges, getBadgeById } from '@/lib/badges';
 import { toast } from 'sonner';
 import confetti from 'canvas-confetti';
 import { Button   } from './Button';
-import { 
-  Card,
-  CardContent      
-} from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import AudioButton from './AudioButton';
 import { BibleChapterSkeleton } from './SacredSkeleton';
 import { buildBibleAbsoluteUrl, parseVerseParam } from '@/lib/bibleUrl';
