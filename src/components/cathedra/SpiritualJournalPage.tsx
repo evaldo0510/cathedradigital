@@ -88,103 +88,115 @@ const SpiritualJournalPage = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-12 pb-24">
+    <div className="app-container py-12 md:py-24 space-y-16 md:space-y-32">
       <SEOHead title="Diário Espiritual - Reflexão e Oração" description="Guarde suas reflexões diárias e acompanhe seu crescimento espiritual." path="/diario" />
       
-      <header className="premium-header">
-        <div className="premium-tag">
+      <header className="text-center space-y-8 max-w-3xl mx-auto">
+        <div className="premium-tag mx-auto">
           <Icons.PenLine className="w-4 h-4 text-secondary" />
           <span>Diarium Spirituale</span>
         </div>
-        <h1 className="text-4xl md:text-7xl font-serif font-bold text-primary">Diário Espiritual</h1>
-        <p className="text-xl text-primary/60 italic font-serif mx-auto">"Examina, ó minha alma, o que fizeste hoje diante de Deus."</p>
+        <h1 className="text-4xl md:text-7xl font-display font-bold text-primary tracking-tight">
+          Diário Espiritual
+        </h1>
+        <p className="text-lg md:text-xl text-primary/60 italic font-serif leading-relaxed">
+          "Examina, ó minha alma, o que fizeste hoje diante de Deus."
+        </p>
       </header>
 
       {/* Entry Form */}
-      <section className="desktop-card space-y-12">
-        <div className="space-y-6">
-          <h3 className="text-xl font-serif font-bold text-primary text-center">Como está sua alma hoje?</h3>
-          <div className="flex flex-wrap justify-center gap-4">
-            {MOODS.map((m) => (
-              <button
-                key={m.id}
-                onClick={() => setMood(m.id)}
-                className={`flex flex-col items-center gap-3 p-5 rounded-2xl border transition-all duration-500 ${
-                  mood === m.id 
-                    ? 'bg-primary border-primary text-primary-foreground shadow-gold scale-105' 
-                    : 'bg-muted/30 border-border/10 text-foreground/40 hover:border-primary/20 hover:bg-muted/50'
-                }`}
-              >
-                <m.icon className="w-7 h-7" />
-                <span className="text-[10px] font-bold uppercase tracking-widest">{m.label}</span>
-              </button>
-            ))}
+      <section className="max-w-4xl mx-auto w-full">
+        <HomeCard className="p-10 md:p-16 lg:p-20 space-y-16">
+          <div className="space-y-8">
+            <h3 className="text-2xl font-display font-bold text-primary text-center">Como está sua alma hoje?</h3>
+            <div className="flex flex-wrap justify-center gap-6">
+              {MOODS.map((m) => (
+                <button
+                  key={m.id}
+                  onClick={() => setMood(m.id)}
+                  className={`flex flex-col items-center gap-4 p-6 rounded-3xl border transition-all duration-700 ${
+                    mood === m.id 
+                      ? 'bg-primary border-primary text-primary-foreground shadow-premium scale-105' 
+                      : 'bg-muted/30 border-border/10 text-foreground/40 hover:border-primary/20 hover:bg-muted/50'
+                  }`}
+                >
+                  <m.icon className="w-8 h-8" />
+                  <span className="text-[10px] font-bold uppercase tracking-[0.2em]">{m.label}</span>
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
 
-        <div className="space-y-6">
-          <Textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder="Escreva sua reflexão, gratidão ou pedido de perdão..."
-            className="min-h-[250px] rounded-premium border-border/40 p-10 font-serif text-xl leading-relaxed focus-visible:ring-primary/20 bg-muted/20"
-          />
-          <div className="flex justify-center">
-            <Button 
-              onClick={saveEntry}
-              disabled={isLoading || !content.trim()}
-              className="px-12 py-6 rounded-full text-[10px] font-bold uppercase tracking-[0.3em] shadow-premium active:scale-95"
-            >
-              {isLoading ? 'Salvando...' : 'Guardar Reflexão'}
-            </Button>
+          <div className="space-y-8">
+            <Textarea
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="Escreva sua reflexão, gratidão ou pedido de perdão..."
+              className="min-h-[300px] rounded-premium border-border/20 p-8 md:p-12 font-serif text-xl md:text-2xl leading-relaxed focus-visible:ring-primary/10 bg-muted/10 border-none shadow-inner resize-none placeholder:italic placeholder:opacity-30"
+            />
+            <div className="flex justify-center">
+              <HomeButton 
+                onClick={saveEntry}
+                disabled={isLoading || !content.trim()}
+                variant="primary"
+                className="px-16 h-14"
+              >
+                {isLoading ? 'Guardando...' : 'Guardar Reflexão'}
+              </HomeButton>
+            </div>
           </div>
-        </div>
+        </HomeCard>
       </section>
 
       {/* History */}
-      <section className="space-y-8">
-        <div className="flex items-center gap-8">
+      <section className="space-y-12 max-w-4xl mx-auto w-full">
+        <div className="flex items-center gap-10">
           <div className="h-px flex-1 bg-border/40" />
-          <h2 className="text-[10px] font-bold uppercase tracking-[0.6em] text-primary/40 whitespace-nowrap">Memória da Alma</h2>
+          <h2 className="text-[10px] font-bold uppercase tracking-[0.6em] text-primary/30 whitespace-nowrap uppercase">
+            Memória da Alma
+          </h2>
           <div className="h-px flex-1 bg-border/40" />
         </div>
 
         {isFetching ? (
-          <div className="space-y-6">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="h-40 bg-muted/20 animate-pulse rounded-premium border border-border/20" />
+          <div className="space-y-10">
+            {[1, 2].map((i) => (
+              <div key={i} className="h-48 bg-muted/10 animate-pulse rounded-premium border border-border/10" />
             ))}
           </div>
         ) : entries.length > 0 ? (
-          <div className="grid gap-8">
+          <div className="grid gap-10">
             {entries.map((entry) => (
               <motion.div
                 key={entry.id}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-card p-10 rounded-premium border border-border/40 shadow-premium space-y-6 relative overflow-hidden group hover:border-primary/20 transition-all duration-500"
+                className="bg-card p-10 md:p-14 rounded-premium border border-border/40 shadow-premium space-y-8 relative overflow-hidden group hover:border-primary/20 transition-all duration-700"
               >
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-xl bg-primary/5 text-primary">
-                      {MOODS.find(m => m.id === entry.mood)?.icon({ className: "w-4 h-4" }) || <Icons.Sun className="w-4 h-4" />}
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-primary/5 text-secondary flex items-center justify-center">
+                      {MOODS.find(m => m.id === entry.mood)?.icon({ className: "w-6 h-6" }) || <Icons.Sun className="w-6 h-6" />}
                     </div>
-                    <span className="text-sm font-serif font-bold text-primary">
-                      {format(new Date(entry.entry_date + 'T12:00:00'), "d 'de' MMMM, yyyy", { locale: ptBR })}
-                    </span>
+                    <div>
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-primary/40 mb-1">Registro de Graça</p>
+                      <span className="text-sm font-serif font-bold text-primary">
+                        {format(new Date(entry.entry_date + 'T12:00:00'), "d 'de' MMMM, yyyy", { locale: ptBR })}
+                      </span>
+                    </div>
                   </div>
-                  <Icons.Quote className="w-6 h-6 text-primary/5" />
+                  <Icons.Quote className="w-10 h-10 text-primary/5" />
                 </div>
-                <p className="text-lg text-primary/70 font-serif italic leading-relaxed whitespace-pre-wrap">
+                <p className="text-xl md:text-2xl text-primary/80 font-serif italic leading-relaxed whitespace-pre-wrap pl-6 border-l-2 border-secondary/20">
                   "{entry.content}"
                 </p>
               </motion.div>
             ))}
           </div>
         ) : (
-          <div className="text-center py-20 opacity-30">
-            <Icons.PenLine className="w-12 h-12 mx-auto mb-4" />
-            <p className="font-serif italic text-lg">Nenhuma reflexão guardada ainda.</p>
+          <div className="text-center py-32 opacity-20 hover:opacity-40 transition-opacity duration-1000">
+            <Icons.PenLine className="w-16 h-16 mx-auto mb-6 stroke-1" />
+            <p className="font-serif italic text-xl">Nenhuma reflexão guardada ainda.</p>
           </div>
         )}
       </section>
