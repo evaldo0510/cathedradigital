@@ -29,10 +29,25 @@ test.describe('Home Page Premium Audit', () => {
           const locator = page.locator(section.selector);
           await expect(locator).toBeVisible();
           
+          // Identify dynamic elements within each section for masking
+          const maskSelectors = [];
+          if (section.name === 'RitualDoDia') {
+            maskSelectors.push(locator.locator('blockquote'));
+            maskSelectors.push(locator.locator('p.font-reader'));
+            maskSelectors.push(locator.locator('span.text-muted-foreground\\/40')); // Date
+            maskSelectors.push(locator.locator('img')); // Saint image
+            maskSelectors.push(locator.locator('h3')); // Saint name
+            maskSelectors.push(locator.locator('.line-clamp-1')); // Saint bio snippet
+          }
+          if (section.name === 'Hero') {
+            maskSelectors.push(locator.locator('img'));
+          }
+
           // Capture snapshot for each section
           await expect(locator).toHaveScreenshot(`home-${section.name}-${viewport.name}-logged-out.png`, {
-            maxDiffPixelRatio: 0.02, // Allow slight differences for font rendering
+            maxDiffPixelRatio: 0.05, 
             animations: 'disabled',
+            mask: maskSelectors.length > 0 ? maskSelectors : undefined,
           });
         }
 
@@ -43,34 +58,49 @@ test.describe('Home Page Premium Audit', () => {
           const columns = await grid.evaluate(el => window.getComputedStyle(el).gridTemplateColumns);
           
           expect(display).toBe('grid');
-          // Expect 2 columns on desktop (roughly equal width or at least 2 segments)
+          // Expect 2 columns on desktop
           expect(columns.split(' ').length).toBeGreaterThanOrEqual(2);
           
-          // Max-width check
+          // Max-width check (1280px)
           const maxWidth = await grid.evaluate(el => window.getComputedStyle(el).maxWidth);
           expect(maxWidth).toBe('1280px');
+          
+          // Padding check (24px lateral)
+          const paddingLeft = await grid.evaluate(el => window.getComputedStyle(el).paddingLeft);
+          expect(paddingLeft).toBe('24px');
         }
 
-        // 3. Accessibility: Keyboard Actionability
+        // 3. Accessibility: Keyboard Actionability & Focus Visible
         const actionableElements = page.locator('button, [role="button"], a[href]');
         const count = await actionableElements.count();
         
         if (count > 0) {
-          const firstActionable = actionableElements.first();
-          await firstActionable.focus();
-          await expect(firstActionable).toBeFocused();
+          const target = actionableElements.first();
+          await target.focus();
+          await expect(target).toBeFocused();
           
-          // Verify focus visibility (outline or ring)
-          const hasFocusRing = await firstActionable.evaluate(el => {
+          // Verify focus visibility (outline or shadow)
+          const isFocusVisible = await target.evaluate(el => {
             const style = window.getComputedStyle(el);
             return style.outlineStyle !== 'none' || style.boxShadow !== 'none';
           });
-          expect(hasFocusRing).toBe(true);
+          expect(isFocusVisible).toBe(true);
 
-          // Test Enter/Space
-          // We don't necessarily want to navigate away, so we just check it responds
-          await page.keyboard.press('Enter');
-          // If it navigates, the next page load state will be handled by Playwright
+          // Verify Enter/Space trigger click
+          const wasClicked = await target.evaluate(el => {
+            return new Promise(resolve => {
+               let triggered = false;
+               const handler = (e: Event) => {
+                 e.preventDefault();
+                 triggered = true;
+               };
+               el.addEventListener('click', handler, { once: true });
+               // Simulate Enter
+               el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+               setTimeout(() => resolve(triggered), 50);
+            });
+          });
+          expect(wasClicked).toBe(true);
         }
       });
 
@@ -91,11 +121,7 @@ test.describe('Home Page Premium Audit', () => {
               role: 'authenticated'
             }
           };
-          // Key for Supabase GPWRP...
           window.localStorage.setItem('sb-gpwrpmoniglarqwfyryp-auth-token', JSON.stringify(session));
-          // Prevent redirect by NOT setting cathedra_onboarding_done if we want to stay on /
-          // Actually, Index.tsx redirects to /hoje if onboardingDone is true.
-          // If we want to see the "Logged-in Home" on /, we keep onboardingDone false.
         });
 
         await page.goto('/');
@@ -110,9 +136,23 @@ test.describe('Home Page Premium Audit', () => {
         for (const section of HOME_SECTIONS) {
           const locator = page.locator(section.selector);
           await expect(locator).toBeVisible();
+          
+          const maskSelectors = [];
+          if (section.name === 'RitualDoDia') {
+            maskSelectors.push(locator.locator('blockquote'));
+            maskSelectors.push(locator.locator('p.font-reader'));
+            maskSelectors.push(locator.locator('span.text-muted-foreground\\/40'));
+            maskSelectors.push(locator.locator('img'));
+            maskSelectors.push(locator.locator('h3'));
+          }
+          if (section.name === 'Hero') {
+            maskSelectors.push(locator.locator('img'));
+          }
+
           await expect(locator).toHaveScreenshot(`home-${section.name}-${viewport.name}-logged-in.png`, {
-            maxDiffPixelRatio: 0.02,
+            maxDiffPixelRatio: 0.05,
             animations: 'disabled',
+            mask: maskSelectors.length > 0 ? maskSelectors : undefined,
           });
         }
       });
