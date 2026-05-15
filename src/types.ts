@@ -68,6 +68,7 @@ export enum AppRoute {
   CATECHISM_HEALTH = '/catechism/health',
   CATECHISM_VERIFY = '/catechism/verify',
   TRANSPARENCY = '/transparencia',
+  DIARIO = '/diario',
 
   OFFLINE = '/offline',
   CACHE_MANAGER = '/cache-manager'
