@@ -25,7 +25,7 @@ async function runVisualTests() {
   try {
     // Run Playwright tests
     console.log('  - Executando Playwright com Snapshots e Axe-core...');
-    execSync('npx playwright test tests/e2e/visual-regression.spec.ts', {
+    execSync('npx playwright test tests/e2e/*.spec.ts', {
       stdio: 'inherit',
       env: { ...process.env, CI: 'true' }
     });
