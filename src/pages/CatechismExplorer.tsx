@@ -196,7 +196,7 @@ const CatechismExplorer: React.FC = () => {
         </div>
 
         {/* Content Area */}
-        <div className="lg:col-span-3 space-y-6">
+        <div className="desktop-main stack-spacing">
           <div className="flex items-center justify-between gap-4">
             <div className="text-premium-small font-medium text-muted-foreground">
               {filteredParagraphs.length} resultados encontrados
