@@ -51,6 +51,14 @@ export const callColloquium = async (
 
 
 export const getSpiritualInsight = async (query?: string, tag?: string, profileId?: string | null): Promise<AIResponse> => {
-  return { error: "Serviço de IA desativado." };
+  try {
+    const { data, error } = await supabase.functions.invoke('logos-spiritual-insight', {
+      body: { query, tag, profileId }
+    });
+    if (error) throw error;
+    return { content: data?.insight || '' };
+  } catch (err: any) {
+    return { error: 'Erro ao obter insight espiritual.' };
+  }
 };
 
