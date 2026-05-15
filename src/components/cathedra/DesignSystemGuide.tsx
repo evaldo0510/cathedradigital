@@ -56,9 +56,9 @@ const DesignSystemGuide: React.FC = () => {
               <h3 className="text-xl font-serif font-bold text-primary">Tamanhos</h3>
               <div className="flex flex-col gap-4 items-start">
                 <Button size="sm">Pequeno (sm)</Button>
-                <Button size="md">Médio (md)</Button>
+                <Button size="default">Médio (md)</Button>
                 <Button size="lg">Grande (lg)</Button>
-                <Button size="xl">Extra Grande (xl)</Button>
+                <Button size="lg">Extra Grande (xl)</Button>
               </div>
             </Card>
           </div>
