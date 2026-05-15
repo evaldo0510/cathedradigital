@@ -374,6 +374,19 @@
   .responsive-gap {
     @apply gap-4 md:gap-6 lg:gap-8;
   }
+
+  /* Spiritual Depth and Silence Utilities */
+  .axial-flow {
+    @apply flex flex-col items-center text-center max-w-4xl mx-auto;
+  }
+
+  .spiritual-depth {
+    @apply relative after:absolute after:inset-0 after:bg-gradient-to-t after:from-background after:to-transparent after:h-24 after:bottom-0 after:pointer-events-none;
+  }
+
+  .text-silence {
+    @apply text-muted-foreground/40 font-serif italic tracking-wide leading-relaxed;
+  }
 }
 
 /* Page transitions */
