@@ -24,17 +24,6 @@ function generateGallery() {
   const pngFiles = fs.readdirSync(focusProofDir).filter(f => f.endsWith('.png'));
   const htmlSnapshots = fs.readdirSync(focusProofDir).filter(f => f.endsWith('.html'));
   
-  // Collect traces
-  const traces: Record<string, string> = {};
-  walkDir(resultsDir, (filePath) => {
-    if (filePath.endsWith('trace.zip')) {
-      // Try to match trace to test by folder name or other heuristics
-      // For simplicity, we'll look at the relative path
-      const relPath = path.relative(resultsDir, filePath);
-      traces[relPath] = relPath;
-    }
-  });
-
   // Group by theme and auth state using the new __ separator
   const groups: Record<string, string[]> = {};
   pngFiles.forEach(file => {
@@ -60,9 +49,10 @@ function generateGallery() {
         .card { background: #141414; border: 1px solid #222; border-radius: 12px; overflow: hidden; }
         .img-zoom { transition: transform 0.3s ease; }
         .img-zoom:hover { transform: scale(1.02); }
-        .btn-premium { @apply px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all; }
+        .btn-premium { @apply px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all inline-flex items-center justify-center; }
         .btn-trace { @apply bg-blue-500/10 text-blue-400 border border-blue-500/20 hover:bg-blue-500/20; }
         .btn-html { @apply bg-purple-500/10 text-purple-400 border border-purple-500/20 hover:bg-purple-500/20; }
+        .btn-viewer { @apply bg-green-500/10 text-green-400 border border-green-500/20 hover:bg-green-500/20; }
     </style>
 </head>
 <body class="p-8">
@@ -94,18 +84,23 @@ function generateGallery() {
                     ${images.map(img => {
                       const parts = img.split('__');
                       const targetName = parts[2];
-                      const type = parts[3].replace('.png', '').replace('-', ' ');
-                      const fileNameBase = img.split('__').slice(0, 3).join('__');
+                      const keyName = parts[3];
+                      const type = parts[4].replace('.png', '').replace('-', ' ');
+                      
+                      const fileNameBase = img.split('__').slice(0, 4).join('__');
                       const snapshot = htmlSnapshots.find(h => h.startsWith(fileNameBase));
                       
+                      // In Playwright, traces are usually in subfolders of test-results
+                      // We can't know the exact zip filename easily without more logic,
+                      // but we can look for it if it exists.
                       return `
                         <div class="card p-5 space-y-4 border border-white/5 hover:border-white/10 transition-colors">
                             <div class="flex justify-between items-start">
                                 <div>
-                                    <p class="text-[10px] font-black uppercase tracking-widest text-white/30">${targetName}</p>
+                                    <p class="text-[10px] font-black uppercase tracking-widest text-white/30">${targetName} (${keyName})</p>
                                     <h3 class="text-xs font-bold mt-1 text-white/80">${type}</h3>
                                 </div>
-                                <span class="px-2 py-0.5 rounded bg-white/5 text-[8px] font-bold opacity-30 uppercase">${img.endsWith('fallback.png') ? 'Fallback' : 'Precise'}</span>
+                                <span class="px-2 py-0.5 rounded bg-white/5 text-[8px] font-bold opacity-30 uppercase">${img.includes('fallback') ? 'Fallback' : 'Precise'}</span>
                             </div>
                             
                             <div class="aspect-video bg-black/40 rounded-xl overflow-hidden border border-white/5 group relative">
@@ -115,9 +110,9 @@ function generateGallery() {
                                 </div>
                             </div>
 
-                            <div class="flex gap-2 pt-2">
-                                ${snapshot ? `<a href="focus-proof/${snapshot}" target="_blank" class="btn-premium btn-html flex-1 text-center">Abrir HTML</a>` : ''}
-                                <a href="https://trace.playwright.dev/" target="_blank" class="btn-premium btn-trace flex-1 text-center">Trace Viewer</a>
+                            <div class="grid grid-cols-2 gap-2 pt-2">
+                                ${snapshot ? `<a href="focus-proof/${snapshot}" target="_blank" class="btn-premium btn-html text-center">Contexto HTML</a>` : ''}
+                                <a href="https://trace.playwright.dev/" target="_blank" class="btn-premium btn-viewer text-center">Trace Viewer</a>
                             </div>
                         </div>
                       `;
