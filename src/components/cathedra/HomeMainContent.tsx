@@ -22,11 +22,11 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
   return (
     <div className="app-container space-y-32 md:space-y-48 pb-32 md:pb-48">
       {/* CONTINUE JORNADA */}
-      <section className="space-y-10">
-        <div className="flex items-center gap-6">
+      <section className="space-y-12">
+        <div className="flex items-center gap-10">
           <div className="h-px flex-1 bg-border/40" />
-          <h2 className="text-[10px] font-bold uppercase tracking-[0.5em] text-muted-foreground/40 whitespace-nowrap">
-            Continue sua Jornada
+          <h2 className="text-[10px] font-bold uppercase tracking-[0.6em] text-muted-foreground/40 whitespace-nowrap">
+            Memória da Jornada
           </h2>
           <div className="h-px flex-1 bg-border/40" />
         </div>
