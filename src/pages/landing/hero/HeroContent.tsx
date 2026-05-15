@@ -29,7 +29,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
   return (
     <motion.div
       style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
-      className="relative z-10 max-w-4xl lg:max-w-7xl text-center space-y-16 sm:space-y-24 px-4"
+      className="relative z-10 max-w-[1280px] w-full text-center space-y-16 sm:space-y-24 px-6 mx-auto"
     >
       {/* Logos Avatar */}
       <motion.div
@@ -56,7 +56,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
         variants={fadeInUpVariants}
         initial="hidden"
         animate="visible"
-        className="pt-6 sm:pt-10 max-w-6xl mx-auto text-7xl md:text-[10rem] font-display font-medium text-primary leading-[0.9] tracking-tighter"
+        className="pt-6 sm:pt-10 max-w-5xl mx-auto text-5xl md:text-7xl lg:text-8xl font-display font-medium text-primary leading-[1] tracking-tighter"
       > Nem toda <br/> prisão é <span className="text-secondary/60 italic font-serif">visível</span> </motion.h1>
 
       {/* Description */}

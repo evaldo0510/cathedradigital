@@ -20,8 +20,8 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
   const navigate = useNavigate();
 
   return (
-    <div className="w-full space-y-12 md:space-y-20">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 lg:gap-16">
+    <div className="w-full space-y-24 md:space-y-40">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-24 items-start">
         {/* CONTINUE JORNADA */}
         <section className="space-y-8">
           <div className="flex items-center gap-6">
@@ -34,7 +34,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
           <HomeCard
             onClick={() => onNavigate(AppRoute.JORNADAS)}
             padding="md"
-            className="h-full flex flex-col justify-between gap-8 group"
+            className="flex flex-col justify-between gap-8 group"
           >
             <div className="space-y-6">
               <div className="w-12 h-12 rounded-premium-sm bg-primary/[0.02] border border-border/40 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-700">
@@ -65,7 +65,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
             </h2>
             <div className="h-px flex-1 bg-border/20" />
           </div>
-          <div className="h-full">
+          <div>
             <RitualDoDia />
           </div>
         </section>
@@ -81,7 +81,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
           <HomeCard 
             onClick={() => onNavigate(AppRoute.CATECHISM)}
             padding="md"
-            className="h-full flex flex-col justify-between gap-8 group"
+            className="flex flex-col justify-between gap-8 group"
           >
             <div className="space-y-6">
               <div className="w-12 h-12 rounded-premium-sm bg-secondary/[0.02] border border-secondary/20 flex items-center justify-center text-secondary group-hover:rotate-12 transition-transform duration-700">
@@ -108,7 +108,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
             </h2>
             <div className="h-px flex-1 bg-border/20" />
           </div>
-          <div className="grid grid-cols-1 gap-6 h-full">
+          <div className="grid grid-cols-1 gap-6">
             <HomeCard padding="sm" className="space-y-4">
               <div className="flex items-center justify-between">
                 <h4 className="font-bold text-primary">Fundamentos da Fé</h4>
