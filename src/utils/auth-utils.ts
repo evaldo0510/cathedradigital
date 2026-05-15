@@ -18,6 +18,7 @@ const ADMIN_ROUTES = [
   '/catechism/debug',
   '/security-audit/*',
   '/a11y-audit/*',
+  '/admin/audit-logs',
 ];
 
 export const isRouteProtectedForAdmin = (path: string): boolean => {
