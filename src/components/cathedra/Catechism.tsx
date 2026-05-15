@@ -234,10 +234,38 @@ const Catechism: React.FC = () => {
   const [currentParagraph, setCurrentParagraph] = useState(1);
   const [paragraphsRead, setParagraphsRead] = useState<Set<number>>(new Set());
   const [searchQuery, setSearchQuery] = useState('');
-  const [showCrossRefs, setShowCrossRefs] = useState(true);
   const isAutoScrolling = React.useRef(false);
   const { toggleFavorite, isFavorite } = useFavorites();
   const { user } = useAuth();
+  const { prefs } = useReadingMode();
+  const [bookmarks, setBookmarks] = useState<string[]>(() => {
+    try {
+      const stored = localStorage.getItem('cathedra_catechism_bookmarks');
+      return stored ? JSON.parse(stored) : [];
+    } catch { return []; }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('cathedra_catechism_bookmarks', JSON.stringify(bookmarks));
+    } catch {}
+  }, [bookmarks]);
+
+  const toggleBookmark = (p: number) => {
+    const key = `p_${p}`;
+    setBookmarks(prev => prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key]);
+    toast.success(bookmarks.includes(key) ? 'Marcador removido' : 'Marcador adicionado');
+  };
+
+  const resumeLastRead = () => {
+    try {
+      const stored = localStorage.getItem('cathedra_last_catechism_para');
+      if (stored) {
+        const num = parseInt(stored);
+        if (!isNaN(num)) navigateToParagraph(num);
+      }
+    } catch {}
+  };
 
   const crossRefs = getCatechismCrossRefs(currentParagraph);
   const docsRefs = getCatechismDocs(currentParagraph);
