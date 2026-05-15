@@ -133,7 +133,7 @@ const CatechismExplorer: React.FC = () => {
 
         <div className="desktop-layout">
         {/* Filters Sidebar */}
-        <div className="lg:col-span-1 space-y-6">
+        <div className="desktop-aside">
           <Card padding="sm" variant="outline" className="space-y-2">
             <div className="flex justify-between text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">
               <span>Total Geral</span>
