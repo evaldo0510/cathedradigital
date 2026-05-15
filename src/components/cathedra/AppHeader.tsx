@@ -52,7 +52,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
       <div className="max-w-[1440px] mx-auto px-8 sm:px-12 lg:px-24 py-6 sm:py-10 flex items-center justify-between min-h-[90px] sm:min-h-[120px]">
         <div className="flex items-center gap-4 sm:gap-12 min-w-0">
           <div className="flex lg:hidden items-center gap-3 sm:gap-4 cursor-pointer group min-w-0 focus-visible:ring-2 focus-visible:ring-primary/20 outline-none" role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && navigate(AppRoute.HOJE)} onClick={() => navigate(AppRoute.HOJE)}>
-            <Icons.Logo className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0 transition-transform group-hover:scale-105" variant="blue" />
+            <Icons.Logo className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0 transition-all group-hover:scale-105 opacity-40 group-hover:opacity-100" variant="blue" />
             <div className="flex flex-col min-w-0">
               <span className="text-xl sm:text-2xl font-display font-medium uppercase tracking-[0.2em] text-primary leading-none truncate">Cathedra</span>
               <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-primary/30 mt-1 truncate">{t('digital')}</span>
