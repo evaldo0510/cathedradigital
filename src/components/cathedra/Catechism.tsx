@@ -542,7 +542,7 @@ const Catechism: React.FC = () => {
             <div className="reader-container">
               <div className="flex flex-col gap-16">
                 {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(p => (
-                  <LazyParagraph key={p} paragraph={p} currentParagraph={currentParagraph} paragraphsRead={paragraphsRead} isFavorite={isFavorite} toggleFavorite={toggleFavorite} handleNavigateToBible={handleNavigateToBible} />
+                  <LazyParagraph key={p} paragraph={p} currentParagraph={currentParagraph} paragraphsRead={paragraphsRead} isFavorite={isFavorite} toggleFavorite={toggleFavorite} handleNavigateToBible={handleNavigateToBible} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
                 ))}
               </div>
             </div>
