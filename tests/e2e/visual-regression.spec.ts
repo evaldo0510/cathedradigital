@@ -5,14 +5,8 @@ import path from 'path';
 
 const ROUTES = [
   '/',
-  '/hoje',
   '/catechism',
-  '/bible',
-  '/prayers',
-  '/temas',
-  '/biblioteca',
   '/design-system',
-  '/admin',
 ];
 
 const VIEWPORTS = [
