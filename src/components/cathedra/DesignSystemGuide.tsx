@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,6 +10,93 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Icons } from '@/constants';
+
+const InputPlayground = () => {
+  const [variant, setVariant] = useState<'default' | 'error' | 'disabled' | 'loading'>('default');
+  
+  return (
+    <div className="p-6 rounded-3xl bg-muted/20 border border-border/40 space-y-6">
+      <div className="flex flex-wrap gap-2">
+        <Button 
+          variant={variant === 'default' ? 'primary' : 'outline'} 
+          size="sm" 
+          onClick={() => setVariant('default')}
+        >
+          Default
+        </Button>
+        <Button 
+          variant={variant === 'error' ? 'destructive' : 'outline'} 
+          size="sm" 
+          onClick={() => setVariant('error')}
+        >
+          Error
+        </Button>
+        <Button 
+          variant={variant === 'disabled' ? 'secondary' : 'outline'} 
+          size="sm" 
+          onClick={() => setVariant('disabled')}
+        >
+          Disabled
+        </Button>
+        <Button 
+          variant={variant === 'loading' ? 'primary' : 'outline'} 
+          size="sm" 
+          onClick={() => setVariant('loading')}
+        >
+          Loading
+        </Button>
+      </div>
+
+      <div className="space-y-4 pt-4 border-t border-border/20">
+        <div className="space-y-2">
+          <Label 
+            className={variant === 'error' ? 'text-destructive' : ''}
+            aria-disabled={variant === 'disabled'}
+          >
+            Playground Input
+          </Label>
+          <div className="relative">
+            <Input 
+              disabled={variant === 'disabled'}
+              className={variant === 'error' ? 'border-destructive focus-visible:ring-destructive' : ''}
+              placeholder={variant === 'loading' ? 'Processando...' : 'Interaja comigo'}
+            />
+            {variant === 'loading' && (
+              <Icons.Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 animate-spin text-primary" />
+            )}
+          </div>
+          {variant === 'error' && (
+            <p className="text-[10px] font-black uppercase text-destructive tracking-widest flex items-center gap-1">
+              <Icons.AlertTriangle className="w-3 h-3" /> Campo obrigatório.
+            </p>
+          )}
+        </div>
+
+        <div className="space-y-2">
+          <Label aria-disabled={variant === 'disabled'}>Playground Select</Label>
+          <Select disabled={variant === 'disabled'}>
+            <SelectTrigger className={variant === 'error' ? 'border-destructive' : ''}>
+              <SelectValue placeholder="Selecione uma opção" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="1">Opção 1</SelectItem>
+              <SelectItem value="2">Opção 2</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      <div className="p-4 bg-primary/5 rounded-2xl border border-primary/10">
+        <p className="text-premium-tiny font-black uppercase tracking-widest text-primary mb-2">A11y Check</p>
+        <ul className="text-[10px] text-muted-foreground space-y-1 list-disc pl-4">
+          <li>Foco visível: {variant !== 'disabled' ? 'Ativo' : 'Inativo'}</li>
+          <li>Aria-disabled: {variant === 'disabled' ? 'true' : 'false'}</li>
+          <li>Aria-invalid: {variant === 'error' ? 'true' : 'false'}</li>
+        </ul>
+      </div>
+    </div>
+  );
+};
 
 const DesignSystemGuide = () => {
   return (
@@ -36,40 +123,48 @@ const DesignSystemGuide = () => {
           </div>
 
           <div className="space-y-12 bg-card border border-border/40 rounded-[2.5rem] p-8 md:p-12">
-            <div className="grid gap-12">
-              <div className="space-y-4">
-                <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Display Titles (H1, H2, H3)</p>
-                <div className="space-y-6">
-                  <div>
-                    <span className="text-premium-tiny text-secondary font-black uppercase tracking-widest">Heading 1 (H1)</span>
-                    <h1 className="mt-1">O Verbo se fez carne</h1>
+            <div className="grid gap-16">
+              <div className="space-y-6">
+                <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Font Families & Weights</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="space-y-4">
+                    <span className="text-premium-tiny text-secondary font-black uppercase tracking-widest">Display (Cinzel/Serif)</span>
+                    <h1 className="text-4xl font-display font-black leading-tight">Font Display Black</h1>
+                    <h2 className="text-3xl font-display font-bold leading-tight">Font Display Bold</h2>
                   </div>
-                  <div>
-                    <span className="text-premium-tiny text-secondary font-black uppercase tracking-widest">Heading 2 (H2)</span>
-                    <h2>A Beleza da Tradição</h2>
-                  </div>
-                  <div>
-                    <span className="text-premium-tiny text-secondary font-black uppercase tracking-widest">Heading 3 (H3)</span>
-                    <h3>Oração e Contemplação</h3>
+                  <div className="space-y-4">
+                    <span className="text-premium-tiny text-secondary font-black uppercase tracking-widest">Sans (Inter)</span>
+                    <p className="text-xl font-sans font-black">Font Sans Black</p>
+                    <p className="text-xl font-sans font-bold">Font Sans Bold</p>
+                    <p className="text-xl font-sans font-medium">Font Sans Medium</p>
+                    <p className="text-xl font-sans font-normal">Font Sans Normal</p>
                   </div>
                 </div>
               </div>
 
               <div className="space-y-4">
-                <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Premium Small Scale</p>
+                <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Premium Scale (Fluid)</p>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                   <div className="p-6 rounded-2xl bg-muted/20 border border-border/40">
                     <span className="text-premium-tiny text-secondary font-black uppercase tracking-widest">Premium Base</span>
-                    <p className="text-premium-base text-foreground mt-2">Standard text size for primary content and large labels.</p>
+                    <p className="text-premium-base text-foreground mt-2">Standard text size (16-18px) for primary content and large labels.</p>
                   </div>
                   <div className="p-6 rounded-2xl bg-muted/20 border border-border/40">
                     <span className="text-premium-tiny text-secondary font-black uppercase tracking-widest">Premium Small</span>
-                    <p className="text-premium-small text-muted-foreground mt-2">Secondary text for metadata, descriptions and small buttons.</p>
+                    <p className="text-premium-small text-muted-foreground mt-2">Secondary text (13-14px) for metadata, descriptions and small buttons.</p>
                   </div>
                   <div className="p-6 rounded-2xl bg-muted/20 border border-border/40">
                     <span className="text-premium-tiny text-secondary font-black uppercase tracking-widest">Premium Tiny</span>
-                    <p className="text-premium-tiny text-muted-foreground mt-2">Sub-labels, badges, and micro-typography (9-11px scale).</p>
+                    <p className="text-premium-tiny text-muted-foreground mt-2">Sub-labels, badges, and micro-typography (10-11px scale).</p>
                   </div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Semantic Styles</p>
+                <div className="space-y-4">
+                  <p className="text-lg font-serif italic text-primary">Serif Italic for quotes and reflections: "O Verbo se fez carne."</p>
+                  <p className="text-sm font-mono bg-muted p-2 rounded w-fit">Mono text for codes or technical labels</p>
                 </div>
               </div>
             </div>
@@ -138,9 +233,9 @@ const DesignSystemGuide = () => {
                 <div className="space-y-4">
                   <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Icon Only</p>
                   <div className="flex gap-4">
-                    <Button size="icon"><Icons.Plus /></Button>
-                    <Button size="icon" variant="outline"><Icons.Search /></Button>
-                    <Button size="icon" variant="ghost"><Icons.Menu /></Button>
+                    <Button size="icon"><Icons.Plus className="w-4 h-4" /></Button>
+                    <Button size="icon" variant="outline"><Icons.Search className="w-4 h-4" /></Button>
+                    <Button size="icon" variant="ghost"><Icons.Menu className="w-4 h-4" /></Button>
                   </div>
                 </div>
               </div>
@@ -163,7 +258,7 @@ const DesignSystemGuide = () => {
                   <div className="flex flex-col gap-4">
                     <Button disabled>Disabled Primary</Button>
                     <Button variant="outline" disabled>Disabled Outline</Button>
-                    <Button size="icon" disabled><Icons.Lock /></Button>
+                    <Button size="icon" disabled><Icons.Lock className="w-4 h-4" /></Button>
                   </div>
                 </div>
                 <div className="space-y-4">
@@ -237,53 +332,34 @@ const DesignSystemGuide = () => {
             <div className="h-px flex-1 bg-border/40" />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            <div className="space-y-8">
-              <h3 className="text-xl font-bold text-primary">Text Inputs</h3>
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="default-input">Default Input</Label>
-                  <Input id="default-input" placeholder="Digite seu nome..." />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="disabled-input">Disabled Input</Label>
-                  <Input id="disabled-input" disabled placeholder="Campo desabilitado" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="error-input" className="text-destructive">Error State</Label>
-                  <Input id="error-input" className="border-destructive focus-visible:ring-destructive" defaultValue="Valor inválido" />
-                  <p className="text-[10px] font-black uppercase text-destructive tracking-widest">O e-mail informado é inválido.</p>
+          <div className="space-y-16 bg-card border border-border/40 rounded-[2.5rem] p-8 md:p-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+              <div className="space-y-8">
+                <h3 className="text-xl font-bold text-primary">States Documentation</h3>
+                <div className="space-y-8">
+                  <div className="space-y-2">
+                    <Label htmlFor="focus-input">Focus State</Label>
+                    <Input id="focus-input" placeholder="Clique para ver o anel de foco" className="focus-visible:ring-primary ring-offset-2" />
+                    <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Utiliza focus-visible:ring-2 para alta acessibilidade.</p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="disabled-input-guide">Disabled State</Label>
+                    <Input id="disabled-input-guide" disabled placeholder="Não é possível interagir" />
+                    <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Opacidade reduzida e cursor: not-allowed.</p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="error-input-guide" className="text-destructive">Error State</Label>
+                    <Input id="error-input-guide" className="border-destructive focus-visible:ring-destructive" defaultValue="valor@incorreto" />
+                    <p className="text-[10px] font-black uppercase text-destructive tracking-widest flex items-center gap-1">
+                      <Icons.AlertTriangle className="w-3 h-3" /> Formato de e-mail inválido.
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="space-y-8">
-              <h3 className="text-xl font-bold text-primary">Dropdown Selects</h3>
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <Label>Default Select</Label>
-                  <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione uma opção" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="1">Opção 1</SelectItem>
-                      <SelectItem value="2">Opção 2</SelectItem>
-                      <SelectItem value="3">Opção 3</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label>Disabled Select</Label>
-                  <Select disabled>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Desabilitado" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="1">Opção 1</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+              <div className="space-y-8">
+                <h3 className="text-xl font-bold text-primary">Interactive Playground</h3>
+                <InputPlayground />
               </div>
             </div>
           </div>

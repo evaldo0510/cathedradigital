@@ -170,7 +170,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                 className="flex-1 h-12 rounded-full border border-border bg-muted flex items-center justify-center gap-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none"
                 aria-label={isDark ? "Mudar para modo claro" : "Mudar para modo escuro"}
               >
-                {isDark ? <Icons.Sun className="text-primary" /> : <Icons.Moon />}
+                {isDark ? <Icons.Sun className="w-5 h-5 text-primary" /> : <Icons.Moon className="w-5 h-5" />}
                 <span className="text-premium-tiny font-black uppercase tracking-widest">{isDark ? (lang === 'pt' ? 'Claro' : 'Light') : (lang === 'pt' ? 'Escuro' : 'Dark')}</span>
               </Button>
 
@@ -185,7 +185,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                 aria-label={isSpeaking ? t('audio_stop') : t('audio_read')}
               >
 
-                {isSpeaking ? <Icons.Message className="animate-pulse" /> : <Icons.Volume2 />}
+                {isSpeaking ? <Icons.Message className="w-5 h-5 animate-pulse" /> : <Icons.Volume2 className="w-5 h-5" />}
                 <span className="text-premium-tiny font-black uppercase tracking-widest">{isSpeaking ? t('audio_stop') : t('audio_read')}</span>
               </Button>
             </div>
