@@ -430,6 +430,18 @@ const DesignSystemGuide = () => {
           <ComponentPlayground />
         </section>
 
+        {/* Real-time Design Audit */}
+        <section className="space-y-10">
+          <div className="flex items-center gap-6">
+            <div className="h-px flex-1 bg-border/40" />
+            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-foreground/30">Auditoria em Tempo Real (WCAG & Tokens)</h2>
+            <div className="h-px flex-1 bg-border/40" />
+          </div>
+
+          <RealTimeAudit />
+        </section>
+
+
         <footer className="pt-24 pb-12 text-center border-t border-border/10">
           <p className="text-premium-tiny font-black uppercase tracking-[0.5em] text-foreground/20">
             Cathedra Digital • Design Protocol v2.8.0
