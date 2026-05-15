@@ -241,9 +241,15 @@
     font-family: 'Cinzel', serif;
   }
 
+  .font-monastery {
+    font-family: 'EB Garamond', serif;
+  }
+
   .reader-text {
-    font-family: 'Merriweather', serif;
-    @apply selection:bg-primary/30 max-w-[70ch] mx-auto text-foreground;
+    font-family: 'EB Garamond', serif;
+    @apply selection:bg-primary/30 max-w-[65ch] mx-auto text-foreground;
+    font-size: clamp(1.15rem, 1.3vw, 1.45rem);
+    line-height: 1.8;
   }
 }
 
