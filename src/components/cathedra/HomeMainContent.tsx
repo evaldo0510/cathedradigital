@@ -137,7 +137,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
           </HomeCard>
           
           <HomeCard padding="md" className="space-y-8 h-full">
-            <div className="w-12 h-12 rounded-2xl bg-secondary/[0.03] border border-secondary/20 flex items-center justify-center text-secondary">
+            <div className="w-12 h-12 rounded-premium-sm bg-secondary/[0.03] border border-secondary/20 flex items-center justify-center text-secondary">
               <Icons.BookOpen className="w-6 h-6" />
             </div>
             <div className="space-y-3">
