@@ -101,7 +101,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         </section>
 
         {/* TRILHAS */}
-        <section className="space-y-12 max-w-2xl mx-auto lg:mx-0 w-full" aria-labelledby="section-trilhas">
+        <section className="space-y-12 max-w-xl mx-auto lg:mx-0 w-full" aria-labelledby="section-trilhas">
           <div className="section-divider-header">
             <h2 id="section-trilhas" className="heading-section-label whitespace-nowrap">
               Trilhas
