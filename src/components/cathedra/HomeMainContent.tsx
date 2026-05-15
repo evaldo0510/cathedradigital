@@ -114,7 +114,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
                 <h4 className="text-base font-bold text-primary">Fundamentos da Fé</h4>
                 <Icons.Star className="w-4 h-4 text-primary/40" />
               </div>
-              <p className="text-xs text-primary/50">Para quem inicia sua jornada espiritual.</p>
+              <p className="text-xs text-primary/40 leading-relaxed">Para quem inicia sua jornada espiritual.</p>
               <HomeButton variant="ghost" className="p-0 h-auto text-[10px] text-primary/40 hover:text-primary transition-all group" onClick={() => onNavigate(AppRoute.JORNADAS)}>
                 Explorar <Icons.ChevronRight className="ml-1 w-3 h-3 group-hover:translate-x-1 transition-transform" />
               </HomeButton>
