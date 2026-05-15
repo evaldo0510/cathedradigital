@@ -255,7 +255,7 @@ const HojePage: React.FC = () => {
                 </div>
                 <div className="space-y-4">
                   <h3 className="text-2xl font-bold text-primary tracking-tight">Catecismo</h3>
-                  <p className="text-base text-primary/40 leading-relaxed max-w-[200px] mx-auto">A sabedoria milenar da Igreja em suas mãos.</p>
+                  <p className="text-sm text-primary/40 leading-relaxed max-w-[200px] mx-auto font-serif italic">A sabedoria milenar da Igreja em suas mãos.</p>
                 </div>
               </Card>
             </section>
