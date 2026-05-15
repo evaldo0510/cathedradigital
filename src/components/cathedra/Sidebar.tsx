@@ -148,7 +148,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                           ? 'bg-primary text-primary-foreground shadow-premium hover:opacity-90'
                           : 'text-muted-foreground/60 hover:bg-primary/[0.03] hover:text-primary'}`}
                     >
-                      <span className="opacity-70 flex-shrink-0 scale-90">{item.icon}</span>
+                      <CathedraIcon icon={(item.icon as any).type} size={IconSizePreset.NAV} variant="primary" containerClassName="bg-transparent border-none" className="opacity-70" />
                       <span className="tracking-tight truncate">{item.label}</span>
                       {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (
                         <span className="ml-auto bg-primary/20 text-primary text-premium-tiny font-black px-1.5 py-0.5 rounded-full flex-shrink-0">
