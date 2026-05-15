@@ -42,7 +42,7 @@ test.describe('Hero Section Visuals and Accessibility', () => {
 
         // Take screenshot
         await hero.screenshot({ 
-          path: `tests/screenshots/hero-${theme}-${viewport.name}.png` 
+          path: path.join(RESULTS_DIR, `hero-${theme}-${viewport.name}.png`)
         });
 
         // Basic contrast and a11y check using axe
