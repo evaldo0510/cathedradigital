@@ -306,6 +306,7 @@
   
   .premium-card-interactive {
     @apply premium-card cursor-pointer hover:shadow-premium-hover hover:-translate-y-1 active:scale-[0.99] transition-all duration-300;
+    @apply focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
   }
 
   /* Specific Card Sizes for Desktop */

@@ -163,7 +163,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       <FadeUp delay={0.05}>
         <HomeCard 
           onClick={() => goTo(AppRoute.MODULES_GUIDE)}
-          className="p-6 flex items-center justify-between cursor-pointer group rounded-[2.5rem]"
+          className="p-6 flex items-center justify-between cursor-pointer group"
           role="button"
           tabIndex={0}
           aria-label="Ver Guia dos Módulos"
@@ -190,7 +190,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               tabIndex={0}
               aria-label={`Abrir ${door.label}`}
               onKeyDown={(e) => e.key === 'Enter' && goTo(door.route)}
-              className="relative overflow-hidden p-8 cursor-pointer group flex flex-col items-center text-center gap-5 rounded-[2.5rem]"
+              className="relative overflow-hidden p-8 cursor-pointer group flex flex-col items-center text-center gap-5"
             >
               {door.suggested && (
                 <div className="absolute top-4 right-4 flex items-center gap-1 p-1.5 rounded-full bg-secondary/10 text-secondary border border-secondary/20 shadow-sm">
@@ -217,7 +217,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         <FadeUp delay={0.18}>
           <HomeCard 
             onClick={() => goTo(nextUp.route)}
-            className="p-8 cursor-pointer flex items-center justify-between group rounded-[2.5rem]"
+            className="p-8 cursor-pointer flex items-center justify-between group"
             role="button"
             tabIndex={0}
             aria-label={`Continuar ${nextUp.label}`}

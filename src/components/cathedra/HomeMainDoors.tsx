@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Icons } from '@/constants';
 import { AppRoute } from '@/types';
 import { cn } from '@/lib/utils';
-import { Card   } from './Card';
+import { HomeCard as Card } from './HomeCard';
 import { CathedraIcon, IconSizePreset } from './CathedraIcon';
 
 interface HomeMainDoorsProps {
