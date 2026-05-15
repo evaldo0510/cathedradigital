@@ -314,6 +314,45 @@ const DesignSystemGuide = () => {
           </div>
         </section>
 
+        {/* Contrast Section */}
+        <section className="space-y-10">
+          <div className="flex items-center gap-6">
+            <div className="h-px flex-1 bg-[#0F172A]/10" />
+            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-[#0F172A]/30">Acessibilidade & Contraste</h2>
+            <div className="h-px flex-1 bg-[#0F172A]/10" />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="bg-[#0B1F3A] p-8 rounded-[2.5rem] space-y-4">
+              <div className="flex justify-between items-start">
+                <span className="text-white/40 text-[10px] font-black uppercase tracking-widest">Navy vs White</span>
+                <Badge className="bg-green-500/20 text-green-400 border-green-500/20 shadow-none">12.5:1 (AAA)</Badge>
+              </div>
+              <p className="text-white font-serif text-lg leading-relaxed">
+                Legibilidade perfeita para longos blocos de texto sobre fundo escuro.
+              </p>
+            </div>
+            <div className="bg-[#D4AF37] p-8 rounded-[2.5rem] space-y-4">
+              <div className="flex justify-between items-start">
+                <span className="text-[#0B1F3A]/40 text-[10px] font-black uppercase tracking-widest">Gold vs Navy</span>
+                <Badge className="bg-green-500/20 text-green-800 border-green-500/20 shadow-none">4.5:1 (AA)</Badge>
+              </div>
+              <p className="text-[#0B1F3A] font-serif text-lg font-bold leading-relaxed">
+                Contraste ideal para destaques e botões de ação primária.
+              </p>
+            </div>
+            <div className="bg-[#F8F5EE] border border-[#0F172A]/5 p-8 rounded-[2.5rem] space-y-4">
+              <div className="flex justify-between items-start">
+                <span className="text-[#0B1F3A]/40 text-[10px] font-black uppercase tracking-widest">Navy vs Paper</span>
+                <Badge className="bg-green-500/20 text-green-600 border-green-500/20 shadow-none">10.2:1 (AAA)</Badge>
+              </div>
+              <p className="text-[#0B1F3A] font-serif text-lg leading-relaxed">
+                O padrão de leitura principal, simulando o papel tradicional.
+              </p>
+            </div>
+          </div>
+        </section>
+
         {/* Playground Interativo */}
         <section className="space-y-10">
           <div className="flex items-center gap-6">
