@@ -136,9 +136,9 @@ const HojePage: React.FC = () => {
           initial={{ opacity: 0, y: 30 }} 
           animate={{ opacity: 1, y: 0 }} 
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-          className="text-center space-y-20 max-w-6xl mx-auto py-12"
+          className="text-center space-y-12 max-w-6xl mx-auto py-8"
         >
-          <div className="space-y-10">
+          <div className="space-y-8">
             <div className="premium-tag mx-auto">
               <Icons.Logo className="w-4 h-4 text-secondary" />
               <span>{greeting}, {profile?.name?.split(' ')[0] || 'fiel'}</span>
@@ -263,7 +263,7 @@ const HojePage: React.FC = () => {
         </div>
 
         {/* FOOTER QUOTE */}
-        <div className="pt-32 text-center opacity-20 hover:opacity-40 transition-opacity duration-1000">
+        <div className="pt-20 text-center opacity-10 hover:opacity-20 transition-opacity duration-1000">
           <p className="text-premium-base text-primary font-serif italic max-w-sm mx-auto leading-relaxed">
             {todayQuote}
           </p>
