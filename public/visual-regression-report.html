@@ -1,0 +1,64 @@
+
+<!DOCTYPE html>
+<html lang="pt-br" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cathedra Digital | Relatório de Regressão Visual</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #0a0a0a; color: #f5f5f5; }
+        .premium-card { background: rgba(20, 20, 20, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 24px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); }
+        .font-premium { font-family: 'Playfair Display', serif; }
+        .status-pass { color: #10b981; }
+        .status-fail { color: #ef4444; }
+        .img-container { background: #111; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.05); }
+        pre { background: #111; color: #ef4444; padding: 1rem; border-radius: 8px; font-size: 0.75rem; overflow-x: auto; border: 1px solid rgba(239, 68, 68, 0.2); }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-7xl mx-auto space-y-8">
+        <header class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div>
+                <h1 class="text-4xl font-premium font-black tracking-tight">Auditoria Visual</h1>
+                <p class="opacity-50 text-sm uppercase tracking-widest font-bold">Cathedra Digital System</p>
+            </div>
+            <div class="flex gap-4">
+                <div class="text-right">
+                    <p class="text-[10px] opacity-40 uppercase font-black">Data da Execução</p>
+                    <p class="text-sm font-bold">15/05/2026, 01:57:33</p>
+                </div>
+                <div class="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-xs font-black uppercase tracking-widest">
+                    Status: <span class="status-fail">FAILED</span>
+                </div>
+            </div>
+        </header>
+
+        <section class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="premium-card p-6 text-center">
+                <p class="text-[10px] opacity-40 uppercase font-black mb-1">Total de Testes</p>
+                <p class="text-3xl font-black">0</p>
+            </div>
+            <div class="premium-card p-6 text-center">
+                <p class="text-[10px] opacity-40 uppercase font-black mb-1">Sucessos</p>
+                <p class="text-3xl font-black status-pass">0</p>
+            </div>
+            <div class="premium-card p-6 text-center">
+                <p class="text-[10px] opacity-40 uppercase font-black mb-1">Falhas</p>
+                <p class="text-3xl font-black status-fail">0</p>
+            </div>
+            <div class="premium-card p-6 text-center">
+                <p class="text-[10px] opacity-40 uppercase font-black mb-1">Taxa de Sucesso</p>
+                <p class="text-3xl font-black text-blue-400">0%</p>
+            </div>
+        </section>
+
+        <section class="space-y-6">
+            <h2 class="text-xl font-premium font-black">Resultados Detalhados</h2>
+            
+        </section>
+    </div>
+</body>
+</html>
+  
