@@ -1,5 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { AppRoute } from '../../src/types';
+import fs from 'fs';
+import path from 'path';
 
 const HOME_SECTIONS = [
   { name: 'Hero', selector: '#hero' },
