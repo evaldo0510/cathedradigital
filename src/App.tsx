@@ -280,6 +280,9 @@ const AppLayout: React.FC = () => {
     };
     (window as any).currentLang = lang;
     window.addEventListener('change-lang' as any, handleLangChange);
+    return () => window.removeEventListener('change-lang' as any, handleLangChange);
+  }, [lang]);
+
   useEffect(() => {
     const handleOpenA11y = () => setShowA11ySettings(true);
     window.addEventListener('open-a11y-settings', handleOpenA11y);
@@ -699,8 +702,17 @@ const AppLayout: React.FC = () => {
             <PWAInstallPrompt />
           </>
         )}
+        {!isChromeless && (
+          <A11ySettingsPanel 
+            isOpen={showA11ySettings} 
+            onClose={() => setShowA11ySettings(false)}
+            isDark={isDark}
+            onToggleDark={() => setIsDark(!isDark)}
+            isHighContrast={isHighContrast}
+            onToggleHighContrast={() => setIsHighContrast(!isHighContrast)}
+          />
+        )}
       </div>
-      </Suspense>
     </LangContext.Provider>
   );
 };
