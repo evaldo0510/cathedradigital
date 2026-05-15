@@ -234,7 +234,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             onClick={onToggleDark}
             className="hidden sm:flex lg:hidden"
             aria-label="Alternar tema">
-            {isDark ? <Icons.Sun /> : <Icons.Moon />}
+            {isDark ? <Icons.Sun className="w-4 h-4" /> : <Icons.Moon className="w-4 h-4" />}
           </Button>
 
 
