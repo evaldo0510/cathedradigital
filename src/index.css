@@ -354,7 +354,6 @@
     @apply btn-premium bg-transparent border border-border/60 text-primary hover:border-primary/30 hover:bg-primary/[0.02] hover:-translate-y-1 active:translate-y-0 shadow-none hover:shadow-soft;
   }
 }
-}
 
 /* Custom scrollbar (hidden for cleaner UI as requested) */
 .custom-scrollbar::-webkit-scrollbar { display: none; }
