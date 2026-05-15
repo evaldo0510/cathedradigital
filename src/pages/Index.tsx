@@ -10,17 +10,15 @@ import { LangContext } from "@/contexts/LangContext";
 import HomeMainContent from "@/components/cathedra/HomeMainContent";
 
 // Lazy-load secondary components
-const FeedbackWidget = lazy(() => import("@/components/landing/FeedbackWidget"));
 const CookieConsent = lazy(() => import("@/components/cathedra/CookieConsent"));
-const WhatsAppButton = lazy(() => import("@/components/cathedra/WhatsAppButton"));
 const LogosChat = lazy(() => import("@/components/cathedra/LogosChat"));
-const GuidedJourney = lazy(() => import("@/components/cathedra/GuidedJourney"));
+
 
 const Index = () => {
   const navigate = useNavigate();
   const { user, profile, loading } = useAuth();
   const { t } = useContext(LangContext);
-  const [isJourneyOpen, setIsJourneyOpen] = useState(false);
+  
 
   useEffect(() => {
     if (!loading && user) {
@@ -36,7 +34,10 @@ const Index = () => {
   }, [user, profile, loading, navigate]);
 
   const handleStart = () => {
-    setIsJourneyOpen(true);
+    const el = document.getElementById('main-content');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   const handleNavigate = (route: string) => navigate(route);
@@ -72,11 +73,8 @@ const Index = () => {
           </Suspense>
 
           <Suspense fallback={null}>
-            <FeedbackWidget />
             <LogosChat />
-            <WhatsAppButton />
             <CookieConsent />
-            <GuidedJourney isOpen={isJourneyOpen} onClose={() => setIsJourneyOpen(false)} />
           </Suspense>
         </main>
       </div>
