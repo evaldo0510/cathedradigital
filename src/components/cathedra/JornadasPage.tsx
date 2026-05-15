@@ -247,7 +247,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
       {/* Stats bar */}
       {stats.started > 0 && (
         <motion.div 
-          className="flex items-center justify-center gap-4 sm:gap-6 py-2.5 sm:py-3 px-3 sm:px-4 bg-muted/50 rounded-full sm:rounded-full"
+          className="flex items-center justify-center gap-4 sm:gap-6 py-2.5 sm:py-3 px-3 sm:px-4 bg-muted/30 rounded-full"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2 }}
@@ -292,7 +292,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   whileTap={{ scale: 0.99 }}
                 >
                   <Card 
-                    className="border-primary/40 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border-2 overflow-hidden shadow-xl shadow-primary/5 relative cursor-pointer rounded-full sm:rounded-full focus-visible:ring-4 focus-visible:ring-primary outline-none" 
+                    className="premium-card border-primary/40 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border-2 overflow-hidden shadow-xl shadow-primary/5 relative cursor-pointer focus-visible:ring-4 focus-visible:ring-primary outline-none" 
                     onClick={() => navigate(`/jornadas/${journey.id}`)}
                     role="button"
                     tabIndex={0}

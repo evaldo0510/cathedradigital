@@ -406,7 +406,7 @@ const DesignSystemGuide = () => {
             <div className="h-px flex-1 bg-border/40" />
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 lg:gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-14 lg:gap-20">
             {[
               { label: 'Grid Mobile (sm)', desc: 'Coluna Única (16px gap)', status: 'Validado' },
               { label: 'Grid Tablet (md)', desc: 'Duas Colunas (24px gap)', status: 'Validado' },
