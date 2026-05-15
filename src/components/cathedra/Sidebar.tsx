@@ -13,12 +13,14 @@ interface SidebarProps {
   user: User | null;
   isDark?: boolean;
   onToggleDark?: () => void;
+  isHighContrast?: boolean;
+  onToggleHighContrast?: () => void;
   isSpeaking?: boolean;
   onToggleSpeak?: () => void;
   onSignOut?: () => void;
 }
 
-const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClose, user, isDark, onToggleDark, isSpeaking, onToggleSpeak, onSignOut }, ref) => {
+const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClose, user, isDark, onToggleDark, isHighContrast, onToggleHighContrast, isSpeaking, onToggleSpeak, onSignOut }, ref) => {
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
