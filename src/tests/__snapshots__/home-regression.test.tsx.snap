@@ -1,0 +1,211 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Home Page Visual Regression & A11y > Logged In State > should match snapshot for Hero (logged in) 1`] = `
+<DocumentFragment>
+  <div
+    class="relative z-10 max-w-[1280px] w-full text-center space-y-16 sm:space-y-24 px-6 mx-auto"
+    style="transform: translateY([object Object]);"
+  >
+    <div
+      class="flex justify-center"
+      style="opacity: 0; transform: scale(0.5);"
+    >
+      <div
+        class="relative"
+      >
+        <div
+          class="relative"
+        >
+          <div
+            class="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border border-white/10 bg-white/5 mx-auto shadow-premium"
+          >
+            <img
+              alt="Logos — Mestre Contemplativo"
+              class="w-full h-full object-cover grayscale-[0.1] contrast-[1.05]"
+              loading="eager"
+              src="/src/assets/logos-avatar.png"
+            />
+          </div>
+        </div>
+        <div
+          class="mt-4 px-4 py-1.5 rounded-2xl border border-border/10 bg-background text-[10px] font-black uppercase tracking-[0.4em] text-primary/40 inline-block mx-auto"
+        >
+          Logos · Mestre Contemplativo
+        </div>
+      </div>
+    </div>
+    <h1
+      aria-label="Nem toda prisão é visível"
+      class="pt-6 sm:pt-10 max-w-5xl mx-auto text-5xl md:text-7xl lg:text-8xl font-display font-medium text-primary leading-[1.1] tracking-tighter"
+      style="opacity: 0; transform: translateY(20px);"
+    >
+       Nem toda 
+      <br />
+       prisão é 
+      <span
+        class="text-secondary/60 italic font-serif"
+      >
+        visível
+      </span>
+       
+    </h1>
+    <p
+      class="max-w-2xl mx-auto font-serif text-xl md:text-2xl text-foreground/50 italic leading-relaxed"
+      style="opacity: 0; transform: translateY(20px);"
+    >
+      Uma plataforma espiritual inteligente guiada pela Tradição viva, 
+      <br
+        class="hidden md:block"
+      />
+       Sagradas Escrituras e o mestre contemplativo Logos IA.
+    </p>
+    <div
+      class="flex flex-col items-center justify-center gap-6 pt-4"
+      style="opacity: 0; transform: translateY(20px);"
+    >
+      <div
+        class="flex flex-col sm:flex-row items-center gap-4 w-full max-w-sm"
+      >
+        <button
+          aria-label="Acessar suas atividades"
+          class="btn-premium-primary px-12 py-5 text-[12px] sm:text-[14px] w-full focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+          tabindex="0"
+        >
+          Ver Atividades
+        </button>
+        <button
+          aria-label="Ver vídeo de apresentação"
+          class="btn-premium-outline px-10 py-4 text-[11px] sm:text-[12px] w-full sm:w-auto focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+          tabindex="0"
+        >
+          Ver Apresentação
+        </button>
+      </div>
+      <div
+        class="w-full max-w-sm flex flex-col gap-3"
+        style="opacity: 0;"
+      />
+      <div
+        class="flex items-center gap-3 opacity-40"
+      >
+        <span
+          class="w-8 h-px bg-muted-foreground"
+        />
+        <p
+          class="text-premium-tiny text-muted-foreground font-bold uppercase tracking-widest"
+        >
+          Tradição & Tecnologia
+        </p>
+        <span
+          class="w-8 h-px bg-muted-foreground"
+        />
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Home Page Visual Regression & A11y > Logged Out State > should match snapshot for Hero 1`] = `
+<DocumentFragment>
+  <div
+    class="relative z-10 max-w-[1280px] w-full text-center space-y-16 sm:space-y-24 px-6 mx-auto"
+    style="transform: translateY([object Object]);"
+  >
+    <div
+      class="flex justify-center"
+      style="opacity: 0; transform: scale(0.5);"
+    >
+      <div
+        class="relative"
+      >
+        <div
+          class="relative"
+        >
+          <div
+            class="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border border-white/10 bg-white/5 mx-auto shadow-premium"
+          >
+            <img
+              alt="Logos — Mestre Contemplativo"
+              class="w-full h-full object-cover grayscale-[0.1] contrast-[1.05]"
+              loading="eager"
+              src="/src/assets/logos-avatar.png"
+            />
+          </div>
+        </div>
+        <div
+          class="mt-4 px-4 py-1.5 rounded-2xl border border-border/10 bg-background text-[10px] font-black uppercase tracking-[0.4em] text-primary/40 inline-block mx-auto"
+        >
+          Logos · Mestre Contemplativo
+        </div>
+      </div>
+    </div>
+    <h1
+      aria-label="Nem toda prisão é visível"
+      class="pt-6 sm:pt-10 max-w-5xl mx-auto text-5xl md:text-7xl lg:text-8xl font-display font-medium text-primary leading-[1.1] tracking-tighter"
+      style="opacity: 0; transform: translateY(20px);"
+    >
+       Nem toda 
+      <br />
+       prisão é 
+      <span
+        class="text-secondary/60 italic font-serif"
+      >
+        visível
+      </span>
+       
+    </h1>
+    <p
+      class="max-w-2xl mx-auto font-serif text-xl md:text-2xl text-foreground/50 italic leading-relaxed"
+      style="opacity: 0; transform: translateY(20px);"
+    >
+      Uma plataforma espiritual inteligente guiada pela Tradição viva, 
+      <br
+        class="hidden md:block"
+      />
+       Sagradas Escrituras e o mestre contemplativo Logos IA.
+    </p>
+    <div
+      class="flex flex-col items-center justify-center gap-6 pt-4"
+      style="opacity: 0; transform: translateY(20px);"
+    >
+      <div
+        class="flex flex-col sm:flex-row items-center gap-4 w-full max-w-sm"
+      >
+        <button
+          aria-label="Iniciar sua jornada espiritual"
+          class="btn-premium-primary px-12 py-5 text-[12px] sm:text-[14px] w-full focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+          tabindex="0"
+        >
+          Iniciar Jornada
+        </button>
+        <button
+          aria-label="Ver vídeo de apresentação"
+          class="btn-premium-outline px-10 py-4 text-[11px] sm:text-[12px] w-full sm:w-auto focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+          tabindex="0"
+        >
+          Ver Apresentação
+        </button>
+      </div>
+      <div
+        class="w-full max-w-sm flex flex-col gap-3"
+        style="opacity: 0;"
+      />
+      <div
+        class="flex items-center gap-3 opacity-40"
+      >
+        <span
+          class="w-8 h-px bg-muted-foreground"
+        />
+        <p
+          class="text-premium-tiny text-muted-foreground font-bold uppercase tracking-widest"
+        >
+          Tradição & Tecnologia
+        </p>
+        <span
+          class="w-8 h-px bg-muted-foreground"
+        />
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
