@@ -85,7 +85,7 @@ const SpiritualJournalPage = () => {
   };
 
   return (
-    <div className="app-container section-spacing stack-spacing">
+    <div className="app-container section-spacing stack-spacing pb-64">
       <SEOHead title="Diário Espiritual - Reflexão e Oração" description="Guarde suas reflexões diárias e acompanhe seu crescimento espiritual." path="/diario" />
       
       <header className="premium-header">
@@ -103,9 +103,9 @@ const SpiritualJournalPage = () => {
 
       {/* Entry Form */}
       <section className="max-w-4xl mx-auto w-full">
-        <Card padding="lg" className="space-y-20">
+        <Card padding="xl" className="space-y-24">
           <div className="space-y-12">
-            <h3 className="text-2xl font-serif italic text-primary/70 text-center">Como está sua alma hoje?</h3>
+            <h3 className="text-3xl font-serif italic text-primary/40 text-center">Como está sua alma hoje?</h3>
             <div className="flex flex-wrap justify-center gap-6 md:gap-10">
               {MOODS.map((m) => (
                 <button
@@ -117,10 +117,10 @@ const SpiritualJournalPage = () => {
                       : 'opacity-20 hover:opacity-40 hover:scale-105'
                   }`}
                 >
-                  <div className={`w-16 h-16 rounded-full border border-border/40 flex items-center justify-center transition-colors ${mood === m.id ? 'bg-primary text-primary-foreground border-primary' : 'bg-primary/[0.01]'}`}>
+                  <div className={`w-20 h-20 rounded-full border border-border/10 flex items-center justify-center transition-all duration-700 ${mood === m.id ? 'bg-primary text-primary-foreground border-primary shadow-premium' : 'bg-primary/[0.01]'}`}>
                     <m.icon className="w-8 h-8" strokeWidth={1} />
                   </div>
-                  <span className="text-[9px] font-bold uppercase tracking-[0.4em]">{m.label}</span>
+                  <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-primary/30">{m.label}</span>
                 </button>
               ))}
             </div>
@@ -131,7 +131,7 @@ const SpiritualJournalPage = () => {
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder="Escreva sua reflexão, gratidão ou pedido de perdão..."
-              className="min-h-[400px] rounded-premium border-none p-12 font-serif text-2xl md:text-3xl leading-relaxed focus-visible:ring-primary/5 bg-primary/[0.01] shadow-inner-soft resize-none placeholder:italic placeholder:opacity-30"
+              className="min-h-[500px] rounded-premium border border-border/5 p-16 font-serif text-3xl md:text-4xl leading-relaxed focus-visible:ring-primary/5 bg-primary/[0.01] shadow-inner-soft resize-none placeholder:italic placeholder:opacity-20 transition-all focus:bg-white/50"
             />
             <div className="flex justify-center">
               <Button 
