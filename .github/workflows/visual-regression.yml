@@ -76,9 +76,10 @@ jobs:
         | **Foco & Navegação** | Verificado (Foco inicial/Destino/Volta) |
         
         #### 🔍 Detalhes e Artefatos
-        - [Galeria de Foco e Acessibilidade (index.html)]($RUN_URL)
-        - [Relatório Premium Premium (HTML)]($RUN_URL)
-        - [Playwright Trace Viewer]($TRACE_URL)
+        - [♿ Relatório de Acessibilidade (index.html)]($RUN_URL#artifacts)
+        - [🎨 Galeria de Foco (index.html)]($RUN_URL#artifacts)
+        - [📊 Relatório Visual Premium (HTML)]($RUN_URL#artifacts)
+        - [🔍 Playwright Trace Viewer]($TRACE_URL)
         
         ${{ job.status != 'success' && '#### 🛠️ Falhas por Categoria\n' || '' }}
         $(find test-results -maxdepth 2 -type d -name "*failed*" | sed 's|test-results/||' | sed 's/^/- /')
