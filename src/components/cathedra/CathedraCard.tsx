@@ -51,31 +51,31 @@ const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
 
 CathedraCard.displayName = "CathedraCard";
 
-const CathedraCathedraCardHeader as CardHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+const CathedraCardHeader as CardHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div className={cn("flex flex-col space-y-1.5 p-0 mb-6", className)} {...props} />
 );
 
-const CathedraCathedraCardTitle as CardTitle = ({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
+const CathedraCardTitle as CardTitle = ({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
   <h3 className={cn("text-2xl font-display font-bold leading-none tracking-tight text-primary", className)} {...props} />
 );
 
-const CathedraCathedraCardDescription as CardDescription = ({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) => (
+const CathedraCardDescription as CardDescription = ({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) => (
   <p className={cn("text-sm text-muted-foreground font-medium", className)} {...props} />
 );
 
-const CathedraCathedraCardContent as CardContent = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+const CathedraCardContent as CardContent = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div className={cn("p-0", className)} {...props} />
 );
 
-const CathedraCathedraCardFooter as CardFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+const CathedraCardFooter as CardFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div className={cn("flex items-center p-0 mt-6", className)} {...props} />
 );
 
 export { 
   CathedraCard, 
-  CathedraCathedraCardHeader as CardHeader, 
-  CathedraCathedraCardFooter as CardFooter, 
-  CathedraCathedraCardTitle as CardTitle, 
-  CathedraCathedraCardDescription as CardDescription, 
-  CathedraCathedraCardContent as CardContent 
+  CathedraCardHeader as CardHeader, 
+  CathedraCardFooter as CardFooter, 
+  CathedraCardTitle as CardTitle, 
+  CathedraCardDescription as CardDescription, 
+  CathedraCardContent as CardContent 
 };
