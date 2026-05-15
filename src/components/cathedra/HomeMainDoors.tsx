@@ -4,7 +4,7 @@ import { Icons } from '@/constants';
 import { AppRoute } from '@/types';
 import { cn } from '@/lib/utils';
 import { Card   } from './Card';
-import { CathedraIcon } from './CathedraIcon';
+import { CathedraIcon, IconSizePreset } from './CathedraIcon';
 
 interface HomeMainDoorsProps {
   t: (key: string) => string;
@@ -64,7 +64,7 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
           aria-label={`${door.label}: ${door.description}`}
           className="flex flex-col items-center text-center gap-8 group"
         >
-          <CathedraIcon icon={door.icon} size="md" variant={door.color.includes('secondary') ? 'secondary' : 'primary'} />
+          <CathedraIcon icon={door.icon} size={IconSizePreset.CARD_HEADER} variant={door.color.includes('secondary') ? 'secondary' : 'primary'} />
           <div className="space-y-4">
             <h3 className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-foreground group-hover:text-primary transition-colors">{door.label}</h3>
             <p className="text-premium-tiny text-muted-foreground font-medium line-clamp-2 leading-relaxed opacity-40 group-hover:opacity-100 transition-opacity px-2">{door.description}</p>

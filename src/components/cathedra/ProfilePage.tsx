@@ -8,6 +8,7 @@ import { Icons } from '@/constants';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Card    , CardContent   } from '@/components/cathedra/Card';
 import { Button   } from '@/components/cathedra/Button';
+import { CathedraIcon, IconSizePreset } from './CathedraIcon';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getLevelInfo } from '@/lib/levels';
@@ -197,10 +198,10 @@ const ProfilePage: React.FC = () => {
   const memberSince = new Date(user.created_at).toLocaleDateString('pt-BR', { year: 'numeric', month: 'long' });
 
   const statCards = [
-    { label: 'Discussões', value: stats.posts, icon: <Icons.Message className="w-5 h-5" /> },
-    { label: 'Curtidas', value: stats.likes, icon: <Icons.Heart className="w-5 h-5" /> },
-    { label: 'Anotações', value: stats.notes, icon: <Icons.Feather className="w-5 h-5" /> },
-    { label: 'Dias Ativos', value: stats.daysActive, icon: <Icons.History className="w-5 h-5" /> },
+    { label: 'Discussões', value: stats.posts, icon: <CathedraIcon icon={Icons.Message} size={IconSizePreset.ACTION} /> },
+    { label: 'Curtidas', value: stats.likes, icon: <CathedraIcon icon={Icons.Heart} size={IconSizePreset.ACTION} /> },
+    { label: 'Anotações', value: stats.notes, icon: <CathedraIcon icon={Icons.Feather} size={IconSizePreset.ACTION} /> },
+    { label: 'Dias Ativos', value: stats.daysActive, icon: <CathedraIcon icon={Icons.History} size={IconSizePreset.ACTION} /> },
   ];
 
   return (

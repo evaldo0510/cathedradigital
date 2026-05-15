@@ -7,6 +7,7 @@ import { AppRoute, User } from '../../types';
 import { LangContext } from '@/contexts/LangContext';
 import { getCacheStats } from '@/lib/offlineCache';
 import { useLang } from '@/hooks/useLang';
+import { CathedraIcon, IconSizePreset } from './CathedraIcon';
 
 interface SidebarProps {
   onClose?: () => void;
@@ -42,69 +43,69 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
     ...(user?.role === 'admin' ? [{
       label: t('admin'),
       items: [
-        { label: t('admin'), path: AppRoute.ADMIN, icon: <Icons.ShieldCheck className="w-5 h-5" /> },
-        { label: 'Auditoria Visual', path: AppRoute.VISUAL_AUDIT, icon: <Icons.ShieldCheck className="w-5 h-5" /> },
-        { label: 'Regressão Visual', path: AppRoute.VISUAL_REGRESSION, icon: <Icons.ShieldCheck className="w-5 h-5" /> },
+        { label: t('admin'), path: AppRoute.ADMIN, icon: Icons.ShieldCheck },
+        { label: 'Auditoria Visual', path: AppRoute.VISUAL_AUDIT, icon: Icons.ShieldCheck },
+        { label: 'Regressão Visual', path: AppRoute.VISUAL_REGRESSION, icon: Icons.ShieldCheck },
 
       ]
     }] : []),
     {
       label: 'Navegação',
       items: [
-        { label: t('home'), path: AppRoute.HOJE, icon: <Icons.Home className="w-5 h-5" /> },
-        { label: t('journeys'), path: AppRoute.JORNADAS, icon: <Icons.Journeys className="w-5 h-5" /> },
-        { label: t('themes'), path: AppRoute.TEMAS, icon: <Icons.Themes className="w-5 h-5" /> },
-        { label: t('explore'), path: AppRoute.BIBLIOTECA, icon: <Icons.Compass className="w-5 h-5" /> },
-        { label: 'Busca Global', path: AppRoute.BUSCAR, icon: <Icons.Search className="w-5 h-5" /> },
-        { label: t('community'), path: AppRoute.COMMUNITY, icon: <Icons.Users className="w-5 h-5" /> },
-        { label: t('profile'), path: AppRoute.PROFILE, icon: <Icons.User className="w-5 h-5" /> },
-        { label: 'Diário Espiritual', path: AppRoute.DIARIO, icon: <Icons.PenLine className="w-5 h-5" /> },
+        { label: t('home'), path: AppRoute.HOJE, icon: Icons.Home },
+        { label: t('journeys'), path: AppRoute.JORNADAS, icon: Icons.Journeys },
+        { label: t('themes'), path: AppRoute.TEMAS, icon: Icons.Themes },
+        { label: t('explore'), path: AppRoute.BIBLIOTECA, icon: Icons.Compass },
+        { label: 'Busca Global', path: AppRoute.BUSCAR, icon: Icons.Search },
+        { label: t('community'), path: AppRoute.COMMUNITY, icon: Icons.Users },
+        { label: t('profile'), path: AppRoute.PROFILE, icon: Icons.User },
+        { label: 'Diário Espiritual', path: AppRoute.DIARIO, icon: Icons.PenLine },
       ]
     },
     {
       label: 'Devocionário',
       items: [
-        { label: t('bible'), path: AppRoute.BIBLE, icon: <Icons.Bible className="w-5 h-5" /> },
-        { label: t('catechism'), path: AppRoute.CATECHISM, icon: <Icons.Catechism className="w-5 h-5" /> },
-        { label: 'Explorar Catecismo', path: AppRoute.CATECHISM_EXPLORER, icon: <Icons.Search className="w-5 h-5" /> },
-        { label: t('liturgy'), path: AppRoute.LITURGIA, icon: <Icons.Liturgy className="w-5 h-5" /> },
-        { label: t('rosary') || 'Santo Rosário', path: AppRoute.ROSARY, icon: <Icons.Heart className="w-5 h-5" /> },
+        { label: t('bible'), path: AppRoute.BIBLE, icon: Icons.Bible },
+        { label: t('catechism'), path: AppRoute.CATECHISM, icon: Icons.Catechism },
+        { label: 'Explorar Catecismo', path: AppRoute.CATECHISM_EXPLORER, icon: Icons.Search },
+        { label: t('liturgy'), path: AppRoute.LITURGIA, icon: Icons.Liturgy },
+        { label: t('rosary') || 'Santo Rosário', path: AppRoute.ROSARY, icon: Icons.Heart },
         { label: t('prayers'), path: AppRoute.ORACAO, icon: <Icons.Volume2 className="w-5 h-5" /> },
-        { label: t('via_crucis') || 'Via Sacra', path: AppRoute.VIA_CRUCIS, icon: <Icons.Cross className="w-5 h-5" /> },
-        { label: t('confession') || 'Confissão', path: AppRoute.POENITENTIA, icon: <Icons.Flame className="w-5 h-5" /> },
-        { label: t('lectio_divina') || 'Lectio Divina', path: AppRoute.LECTIO_DIVINA, icon: <Icons.Lectio className="w-5 h-5" /> },
-        { label: t('breviary') || 'Breviário', path: AppRoute.BREVIARY, icon: <Icons.Clock className="w-5 h-5" /> },
-        { label: t('litanies') || 'Ladainhas', path: AppRoute.LITANIES, icon: <Icons.MessageCircle className="w-5 h-5" /> },
+        { label: t('via_crucis') || 'Via Sacra', path: AppRoute.VIA_CRUCIS, icon: Icons.Cross },
+        { label: t('confession') || 'Confissão', path: AppRoute.POENITENTIA, icon: Icons.Flame },
+        { label: t('lectio_divina') || 'Lectio Divina', path: AppRoute.LECTIO_DIVINA, icon: Icons.Lectio },
+        { label: t('breviary') || 'Breviário', path: AppRoute.BREVIARY, icon: Icons.Clock },
+        { label: t('litanies') || 'Ladainhas', path: AppRoute.LITANIES, icon: Icons.MessageCircle },
       ]
     },
     {
       label: 'Formação',
       items: [
-        { label: 'Quiz da Fé', path: AppRoute.CERTAMEN, icon: <Icons.Trophy className="w-5 h-5" />, pro: false },
-        { label: t('magisterium') || 'Magistério', path: AppRoute.MAGISTERIUM, icon: <Icons.ScrollText className="w-5 h-5" /> },
-        { label: t('encyclopedia') || 'Enciclopédia', path: AppRoute.ENCYCLOPEDIA, icon: <Icons.Library className="w-5 h-5" /> },
-        { label: t('dogmas') || 'Dogmas da Fé', path: AppRoute.DOGMAS, icon: <Icons.ScrollText className="w-5 h-5" /> },
-        { label: t('apparitions') || 'Aparições', path: AppRoute.APARICOES, icon: <Icons.Heart className="w-5 h-5" /> },
-        { label: t('az_faith') || 'A–Z da Fé', path: AppRoute.AZ_FAITH, icon: <Icons.AZ className="w-5 h-5" /> },
-        { label: t('popes') || 'Os Papas', path: AppRoute.POPES, icon: <Icons.ShieldCheck className="w-5 h-5" /> },
-        { label: t('aquinas') || 'Obras de Aquino', path: AppRoute.AQUINAS_OPERA, icon: <Icons.Aquinas className="w-5 h-5" /> },
+        { label: 'Quiz da Fé', path: AppRoute.CERTAMEN, icon: Icons.Trophy, pro: false },
+        { label: t('magisterium') || 'Magistério', path: AppRoute.MAGISTERIUM, icon: Icons.ScrollText },
+        { label: t('encyclopedia') || 'Enciclopédia', path: AppRoute.ENCYCLOPEDIA, icon: Icons.Library },
+        { label: t('dogmas') || 'Dogmas da Fé', path: AppRoute.DOGMAS, icon: Icons.ScrollText },
+        { label: t('apparitions') || 'Aparições', path: AppRoute.APARICOES, icon: Icons.Heart },
+        { label: t('az_faith') || 'A–Z da Fé', path: AppRoute.AZ_FAITH, icon: Icons.AZ },
+        { label: t('popes') || 'Os Papas', path: AppRoute.POPES, icon: Icons.ShieldCheck },
+        { label: t('aquinas') || 'Obras de Aquino', path: AppRoute.AQUINAS_OPERA, icon: Icons.Aquinas },
       ]
     },
     {
       label: t('digital'),
       items: [
-        { label: t('about') || 'Sobre', path: AppRoute.ABOUT, icon: <Icons.Creator className="w-5 h-5" /> },
-        { label: t('partners') || 'Parceiros', path: AppRoute.PARTNERS, icon: <Icons.Handshake className="w-5 h-5" /> },
-        { label: 'Guia de Módulos', path: AppRoute.MODULES_GUIDE, icon: <Icons.HelpCircle className="w-5 h-5" /> },
+        { label: t('about') || 'Sobre', path: AppRoute.ABOUT, icon: Icons.Creator },
+        { label: t('partners') || 'Parceiros', path: AppRoute.PARTNERS, icon: Icons.Handshake },
+        { label: 'Guia de Módulos', path: AppRoute.MODULES_GUIDE, icon: Icons.HelpCircle },
         { 
           label: 'Redefinir Onboarding', 
           path: AppRoute.ONBOARDING, 
-          icon: <Icons.Compass className="w-5 h-5" />,
+          icon: Icons.Compass,
           onClick: () => {
             localStorage.removeItem('cathedra_onboarding_done');
           }
         },
-        { label: 'Cache Local', path: AppRoute.CACHE_MANAGER, icon: <Icons.Library className="w-5 h-5" /> },
+        { label: 'Cache Local', path: AppRoute.CACHE_MANAGER, icon: Icons.Library },
       ]
     }
   ];
@@ -120,7 +121,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
     <>
       <aside ref={ref} className="h-full w-[320px] bg-card border-r border-border/20 flex flex-col p-8 overflow-hidden">
         <div className="mb-10 px-2 flex items-center gap-4 cursor-pointer group hover:opacity-90 transition-opacity" onClick={() => handleNav(AppRoute.HOJE)}>
-          <Icons.Logo className="w-8 h-8 flex-shrink-0" variant="blue" />
+          <Icons.Logo className="w-10 h-10 flex-shrink-0" variant="blue" />
           <div className="space-y-1">
             <h1 className="text-xl font-display font-medium tracking-[0.1em] text-primary leading-none uppercase">CATHEDRA</h1>
             <p className="text-[10px] font-bold uppercase text-secondary/60 tracking-[0.4em]">
@@ -147,7 +148,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                           ? 'bg-primary text-primary-foreground shadow-premium hover:opacity-90'
                           : 'text-muted-foreground/60 hover:bg-primary/[0.03] hover:text-primary'}`}
                     >
-                      <span className="opacity-70 flex-shrink-0 scale-90">{item.icon}</span>
+                      <CathedraIcon icon={item.icon as any} size={IconSizePreset.SIDEBAR} variant="primary" containerClassName="bg-transparent border-none" className="opacity-70" />
                       <span className="tracking-tight truncate">{item.label}</span>
                       {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (
                         <span className="ml-auto bg-primary/20 text-primary text-premium-tiny font-black px-1.5 py-0.5 rounded-full flex-shrink-0">

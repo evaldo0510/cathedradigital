@@ -68,8 +68,11 @@ export const CathedraIcon: React.FC<CathedraIconProps> = ({
 // Utility to enforce sizes in other components
 export const IconSizePreset = {
   NAV: 'sm' as IconSize,
+  SIDEBAR: 'md' as IconSize,
   CARD_HEADER: 'md' as IconSize,
   HERO: 'lg' as IconSize,
   ACTION: 'sm' as IconSize,
+  FOOTER: 'sm' as IconSize,
+  BADGE: 'xs' as IconSize,
   TINY: 'xs' as IconSize,
 };

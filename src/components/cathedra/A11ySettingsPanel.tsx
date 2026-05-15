@@ -4,6 +4,7 @@ import { Icons } from '@/constants';
 import { Button   } from '@/components/cathedra/Button';
 import { Switch } from '@/components/ui/switch';
 import { useLang } from '@/hooks/useLang';
+import { CathedraIcon, IconSizePreset } from './CathedraIcon';
 
 interface A11ySettingsPanelProps {
   isOpen: boolean;
@@ -47,13 +48,13 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
           >
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-xl bg-primary/10 text-primary">
-                  <Icons.ShieldCheck className="w-5 h-5" />
+                <div className="p-0 text-primary">
+                  <CathedraIcon icon={Icons.ShieldCheck} size={IconSizePreset.ACTION} variant="primary" containerClassName="bg-transparent border-none p-0 w-auto h-auto" />
                 </div>
                 <h2 id="a11y-title" className="text-xl font-serif font-bold text-primary">Acessibilidade</h2>
               </div>
               <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full">
-                <Icons.X className="w-5 h-5" />
+                <CathedraIcon icon={Icons.X} size={IconSizePreset.ACTION} containerClassName="bg-transparent border-none p-0 w-auto h-auto" />
               </Button>
             </div>
 
@@ -92,7 +93,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
                 <h3 className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/30 border-b border-border/10 pb-2">Impacto na Leitura</h3>
                 <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10 space-y-3">
                   <div className="flex items-center gap-2 text-[11px] font-bold text-primary">
-                    <Icons.Info className="w-3.5 h-3.5" />
+                    <CathedraIcon icon={Icons.Info} size={IconSizePreset.TINY} variant="primary" containerClassName="bg-transparent border-none p-0 w-auto h-auto" />
                     <span>Otimização para NVDA & VoiceOver</span>
                   </div>
                   <p className="text-[11px] text-primary/60 leading-relaxed italic">

@@ -5,6 +5,7 @@ import { AppRoute } from '../../types';
 import { Icons } from '@/constants';
 import { prefetchRoute } from '@/lib/prefetch';
 import { LangContext } from '@/contexts/LangContext';
+import { CathedraIcon, IconSizePreset } from './CathedraIcon';
 
 /* ── Ripple helper ── */
 function useRipple() {
@@ -59,12 +60,12 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon, route, isAct
   >
 
     <div className={`transition-transform duration-150 ${isActive ? 'scale-110 -translate-y-0.5' : 'active:scale-90'}`}>
-      {React.cloneElement(icon as React.ReactElement, { 
-        className: `w-5 h-5 sm:w-5 sm:h-5`,
-        size: undefined,
-        strokeWidth: 2,
-        fill: isActive ? 'currentColor' : 'none'
-      })}
+      <CathedraIcon 
+        icon={(icon as React.ReactElement).type as any} 
+        size={IconSizePreset.NAV} 
+        variant={isActive ? 'primary' : 'muted'} 
+        containerClassName="bg-transparent border-none p-0 w-auto h-auto"
+      />
     </div>
     <span className={`text-premium-tiny sm:text-premium-tiny font-bold uppercase tracking-tight sm:tracking-widest leading-none ${
       isActive ? 'opacity-100' : 'opacity-60'
