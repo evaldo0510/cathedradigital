@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -160,11 +160,28 @@ const ComponentPlayground = () => {
 const DesignSystemGuide = () => {
   const [isDarkMode, setIsDarkMode] = useState(() => document.documentElement.classList.contains('dark'));
 
+  useEffect(() => {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'class') {
+          setIsDarkMode(document.documentElement.classList.contains('dark'));
+        }
+      });
+    });
+
+    observer.observe(document.documentElement, { attributes: true });
+    return () => observer.disconnect();
+  }, []);
+
   const toggleMode = () => {
     const newMode = !isDarkMode;
-    setIsDarkMode(newMode);
+    // Dispatch event to sync with App.tsx state if necessary, 
+    // though App.tsx should handle class changes
     if (newMode) document.documentElement.classList.add('dark');
     else document.documentElement.classList.remove('dark');
+    
+    // Save to localStorage for persistence consistency
+    localStorage.setItem('cathedra_dark', newMode ? 'true' : 'false');
   };
 
   return (
