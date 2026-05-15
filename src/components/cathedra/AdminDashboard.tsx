@@ -9,7 +9,7 @@ import {
   MessageSquare, Map as MapIcon, Clock, Tag, Building2, RefreshCcw, Globe, Palette, Eye
 } from 'lucide-react';
 
-import { Card    , CardContent  , CardDescription  , CardHeader  , CardTitle   } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
