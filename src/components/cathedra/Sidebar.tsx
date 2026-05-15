@@ -164,19 +164,33 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
 
         <div className="pt-4 pb-20 lg:pb-0 border-t border-border space-y-3">
           <div className="flex flex-col gap-2 mb-2 px-1">
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <Button 
                 variant="outline"
                 size="sm"
                 onClick={onToggleDark} 
-                className="flex-1 h-12 rounded-full border border-border bg-muted flex items-center justify-center gap-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none lg:hidden"
+                className="flex-1 min-w-[100px] h-12 rounded-full border border-border bg-muted flex items-center justify-center gap-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none"
                 aria-label={isDark ? "Mudar para modo claro" : "Mudar para modo escuro"}
               >
                 {isDark ? <Icons.Sun className="w-5 h-5 text-primary" /> : <Icons.Moon className="w-5 h-5" />}
-                <span className="text-premium-tiny font-black uppercase tracking-widest">{isDark ? (lang === 'pt' ? 'Claro' : 'Light') : (lang === 'pt' ? 'Escuro' : 'Dark')}</span>
+                <span className="text-premium-tiny font-black uppercase tracking-widest truncate">{isDark ? (lang === 'pt' ? 'Claro' : 'Light') : (lang === 'pt' ? 'Escuro' : 'Dark')}</span>
               </Button>
 
+              <Button 
+                variant={isHighContrast ? "default" : "outline"}
+                size="sm"
+                onClick={onToggleHighContrast} 
+                className={`flex-1 min-w-[100px] h-12 rounded-full border border-border flex items-center justify-center gap-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+                  !isHighContrast ? 'bg-muted' : 'ring-2 ring-primary ring-offset-1'
+                }`}
+                aria-label={isHighContrast ? "Desativar alto contraste" : "Ativar alto contraste"}
+              >
+                <Icons.ShieldCheck className="w-5 h-5" />
+                <span className="text-premium-tiny font-black uppercase tracking-widest truncate">{isHighContrast ? 'Contraste +' : 'Contraste'}</span>
+              </Button>
+            </div>
 
+            <div className="flex gap-2">
               <Button 
                 variant={isSpeaking ? "default" : "outline"}
                 size="sm"
@@ -186,7 +200,6 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                 }`}
                 aria-label={isSpeaking ? t('audio_stop') : t('audio_read')}
               >
-
                 {isSpeaking ? <Icons.Message className="w-5 h-5 animate-pulse" /> : <Icons.Volume2 className="w-5 h-5" />}
                 <span className="text-premium-tiny font-black uppercase tracking-widest">{isSpeaking ? t('audio_stop') : t('audio_read')}</span>
               </Button>
