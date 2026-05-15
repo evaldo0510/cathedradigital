@@ -294,19 +294,39 @@
     padding-bottom: calc(1rem + env(safe-area-inset-bottom));
   }
 
-  /* Premium card style - Spiritual Minimalist */
+  /* Premium card style - Spiritual Minimalist - Unified Tokens */
+  .premium-card {
+    @apply bg-card border border-border/30 rounded-premium shadow-premium transition-all duration-500;
+  }
+  
+  .premium-card-interactive {
+    @apply premium-card cursor-pointer hover:shadow-premium-hover hover:border-primary/20 hover:-translate-y-1 active:scale-[0.98];
+  }
+
   .desktop-card {
-    @apply bg-card border border-border/30 rounded-[2.5rem] p-8 sm:p-12 lg:p-14 shadow-premium transition-all duration-500 hover:shadow-premium-hover hover:border-primary/10;
+    @apply premium-card p-8 sm:p-12 lg:p-16;
   }
 
   /* Standard card shadow and radius */
   .card-standard {
-    @apply bg-card border border-border/30 rounded-3xl shadow-premium transition-all duration-500 hover:shadow-premium-hover;
+    @apply premium-card;
   }
 
-  /* Section Spacing */
+  /* Section Spacing - Unified */
   .section-spacing {
-    @apply py-16 sm:py-24 md:py-32 lg:py-48;
+    @apply py-20 sm:py-28 md:py-36 lg:py-56;
+  }
+  
+  .premium-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-14 lg:gap-20;
+  }
+
+  .premium-header {
+    @apply text-center space-y-8 mb-16 md:mb-24;
+  }
+  
+  .premium-tag {
+    @apply inline-flex items-center gap-3 px-6 py-2 bg-primary/[0.03] border border-border/20 rounded-full text-[10px] font-bold uppercase tracking-[0.4em] text-foreground/40;
   }
 }
 
