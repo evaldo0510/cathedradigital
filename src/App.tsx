@@ -117,6 +117,7 @@ const TransparencyPage = lazy(() => import('./components/cathedra/TransparencyPa
 const OfflinePage = lazy(() => import('./components/cathedra/OfflinePage'));
 const CacheManager = lazy(() => import('./components/cathedra/CacheManager'));
 const DesignSystemGuide = lazy(() => import('./components/cathedra/DesignSystemGuide'));
+const SpiritualJournalPage = lazy(() => import('./components/cathedra/SpiritualJournalPage'));
 
 
 const SkeletonBar = React.forwardRef<HTMLDivElement, { w?: string; h?: string; className?: string }>(
@@ -631,6 +632,7 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.TRANSPARENCY} element={<PageTransition><TransparencyPage /></PageTransition>} />
                   <Route path={AppRoute.OFFLINE} element={<PageTransition><OfflinePage /></PageTransition>} />
                   <Route path={AppRoute.CACHE_MANAGER} element={<PageTransition><CacheManager /></PageTransition>} />
+                  <Route path={AppRoute.DIARIO} element={<PageTransition><AuthGuard><SpiritualJournalPage /></AuthGuard></PageTransition>} />
 
                   <Route path={AppRoute.POPES} element={<PageTransition><AuthGuard><PopesPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.BUSCAR} element={<PageTransition><AuthGuard><GlobalSearchPage /></AuthGuard></PageTransition>} />
