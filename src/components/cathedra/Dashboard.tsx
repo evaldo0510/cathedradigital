@@ -13,7 +13,7 @@ import { useDashboardData } from '@/hooks/useDashboardData';
 import { DashboardSkeleton } from './DashboardSkeleton';
 import { HomeCard } from './HomeCard';
 import { HomeButton } from './HomeButton';
-import { CathedraIcon } from './CathedraIcon';
+import { CathedraIcon, IconSizePreset } from './CathedraIcon';
 
 interface DashboardProps {
   user: User | null;
@@ -170,7 +170,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           onKeyDown={(e) => e.key === 'Enter' && goTo(AppRoute.MODULES_GUIDE)}
         >
           <div className="flex items-center gap-5">
-            <CathedraIcon icon={Icons.HelpCircle} size="sm" variant="primary" />
+            <CathedraIcon icon={Icons.HelpCircle} size={IconSizePreset.ACTION} variant="primary" />
             <div>
               <p className="text-sm font-bold text-foreground leading-tight">Guia dos Módulos</p>
               <p className="text-premium-tiny text-muted-foreground mt-1 opacity-70 group-hover:opacity-100 transition-opacity">Entenda como navegar e usar a plataforma</p>
@@ -197,7 +197,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
                   <Icons.Star size={12} className="fill-current" />
                 </div>
               )}
-              <CathedraIcon icon={door.icon} size="md" variant={door.iconColor.includes('secondary') ? 'secondary' : 'primary'} />
+              <CathedraIcon icon={door.icon} size={IconSizePreset.CARD_HEADER} variant={door.iconColor.includes('secondary') ? 'secondary' : 'primary'} />
               <div className="space-y-3">
                 <h3 className="text-xs font-bold text-foreground uppercase tracking-[0.25em] group-hover:text-primary transition-colors">{door.label}</h3>
                 <p className="text-premium-tiny text-muted-foreground line-clamp-2 leading-relaxed opacity-60 group-hover:opacity-100 transition-opacity px-1">{door.description}</p>
@@ -226,7 +226,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             <div className="flex items-center gap-6">
               <CathedraIcon 
                 icon={nextUp.type === 'bible' ? Icons.Bible : nextUp.type === 'catechism' ? Icons.Cross : Icons.Flame} 
-                size="md" 
+                size={IconSizePreset.CARD_HEADER} 
                 variant="primary" 
               />
               <div className="text-left space-y-1">
