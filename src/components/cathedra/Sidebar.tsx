@@ -7,6 +7,7 @@ import { AppRoute, User } from '../../types';
 import { LangContext } from '@/contexts/LangContext';
 import { getCacheStats } from '@/lib/offlineCache';
 import { useLang } from '@/hooks/useLang';
+import { CathedraIcon, IconSizePreset } from './CathedraIcon';
 
 interface SidebarProps {
   onClose?: () => void;
@@ -120,7 +121,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
     <>
       <aside ref={ref} className="h-full w-[320px] bg-card border-r border-border/20 flex flex-col p-8 overflow-hidden">
         <div className="mb-10 px-2 flex items-center gap-4 cursor-pointer group hover:opacity-90 transition-opacity" onClick={() => handleNav(AppRoute.HOJE)}>
-          <Icons.Logo className="w-8 h-8 flex-shrink-0" variant="blue" />
+          <Icons.Logo className="w-10 h-10 flex-shrink-0" variant="blue" />
           <div className="space-y-1">
             <h1 className="text-xl font-display font-medium tracking-[0.1em] text-primary leading-none uppercase">CATHEDRA</h1>
             <p className="text-[10px] font-bold uppercase text-secondary/60 tracking-[0.4em]">
