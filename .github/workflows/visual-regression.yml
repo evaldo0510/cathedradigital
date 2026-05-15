@@ -53,20 +53,29 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        REPORT_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        RUN_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        
+        # Check for diff images to count failures
+        DIFF_COUNT=$(find test-results -name "*-diff.png" | wc -l)
+        A11Y_COUNT=$(grep -c "violations" test-results/report.json || echo "0")
+        
         SUMMARY="### 🎨 Auditoria Visual & Premium
         
-        **Status:** ${{ job.status == 'success' && '✅ Sucesso' || '❌ Falhas Encontradas' }}
+        **Status Geral:** ${{ job.status == 'success' && '✅ Sucesso' || '❌ Falhas Encontradas' }}
         
-        | Auditoria | Resultado |
+        | Métrica | Resultado |
         | :--- | :--- |
-        | **Regressão Visual** | ${{ job.status == 'success' && 'Passou' || 'Divergências detectadas' }} |
+        | **Divergências Visuais** | $DIFF_COUNT detectadas |
         | **Acessibilidade** | Validado WCAG AAA |
         | **Layout Shift (CLS)** | < 0.1 (Premium) |
         
-        [Ver Relatório Completo e Artefatos]($REPORT_URL)
+        #### 🔍 Detalhes da Execução
+        - [Relatório Completo e Artefatos]($RUN_URL)
         
-        *Se as mudanças visuais forem intencionais, atualize os snapshots com:*
+        ${{ job.status != 'success' && '#### 🛠️ Arquivos com Diferença\n' || '' }}
+        $(find test-results -name "*-diff.png" -exec basename {} \; | sed 's/-diff.png//' | sed 's/^/- /')
+        
+        *Se as mudanças visuais forem intencionais, você pode baixar o artefato \`visual-regression-premium-report\` para revisar os diffs lado a lado ou atualizar as baselines com:*
         \`npx playwright test --update-snapshots\`"
         
         gh pr comment ${{ github.event.pull_request.number }} --body "$SUMMARY"
