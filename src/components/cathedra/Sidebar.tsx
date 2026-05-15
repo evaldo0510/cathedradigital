@@ -43,6 +43,9 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
       label: t('admin'),
       items: [
         { label: t('admin'), path: AppRoute.ADMIN, icon: <Icons.ShieldCheck className="w-5 h-5" /> },
+        { label: 'Auditoria Visual', path: AppRoute.VISUAL_AUDIT, icon: <Icons.ShieldCheck className="w-5 h-5" /> },
+        { label: 'Regressão Visual', path: AppRoute.VISUAL_REGRESSION, icon: <Icons.ShieldCheck className="w-5 h-5" /> },
+
       ]
     }] : []),
     {
