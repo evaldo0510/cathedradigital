@@ -44,7 +44,7 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
   ];
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
+    <div className={cn("grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8", className)}>
       {doors.map((door, idx) => (
         <motion.div
           key={idx}
