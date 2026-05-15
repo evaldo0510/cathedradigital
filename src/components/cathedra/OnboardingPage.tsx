@@ -37,9 +37,9 @@ const SLIDES = [
   },
   {
     icon: <Zap className="w-10 h-10" />,
-    title: 'Logos IA: Estudo Profundo',
-    subtitle: 'Inteligência Contemplativa',
-    description: 'Dúvidas sobre a fé? O Logos IA explica temas complexos usando apenas fontes seguras e tradicionais da Igreja Católica.',
+    title: 'Logos: Estudo Profundo',
+    subtitle: 'Mestre Contemplativo',
+    description: 'Dúvidas sobre a fé? O Logos explica temas complexos usando apenas fontes seguras e tradicionais da Igreja Católica.',
     image: onboardingStudy,
   },
   {

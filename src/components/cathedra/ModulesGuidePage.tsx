@@ -58,17 +58,17 @@ const MODULES = [
     bg: 'bg-primary/10'
   },
   {
-    title: 'Logos IA',
-    icon: <Icons.Brain className="w-8 h-8" />,
-    description: 'Assistente teológico inteligente baseado na Tradição.',
+    title: 'Logos',
+    icon: <Icons.Compass className="w-8 h-8" />,
+    description: 'Mestre espiritual e teológico contemplativo.',
     details: [
-      'Respostas fundamentadas exclusivamente no Magistério.',
-      'Capacidade de sintetizar temas complexos em linguagem simples.',
-      'Geração de reflexões personalizadas a partir do seu perfil.',
-      'Análise de conexões entre Bíblia, Tradição e Magistério.'
+      'Diálogos fundamentados na Tradição e no Magistério.',
+      'Linguagem contemplativa e focada na vida de oração.',
+      'Reflexões personalizadas a partir do seu perfil espiritual.',
+      'Análise de conexões profundas entre Fé e Razão.'
     ],
-    color: 'text-secondary',
-    bg: 'bg-secondary/10'
+    color: 'text-primary',
+    bg: 'bg-primary/5'
   },
   {
     title: 'Nexus Theologicus',

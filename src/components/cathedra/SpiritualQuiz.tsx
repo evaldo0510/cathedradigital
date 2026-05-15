@@ -404,7 +404,7 @@ const SpiritualQuiz: React.FC = () => {
             </div>
             <div className="flex items-center gap-2 px-3 py-2.5 rounded-premium-sm bg-secondary/[0.06] border border-secondary/10">
               <Brain className="w-4 h-4 text-secondary shrink-0" />
-              <span className="text-foreground/80">Reflexão com <strong className="text-foreground">Logos IA</strong></span>
+              <span className="text-foreground/80">Reflexão com <strong className="text-foreground">Logos</strong></span>
             </div>
           </div>
         </div>

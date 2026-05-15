@@ -55,7 +55,7 @@ const Index = () => {
       
       <SEOHead
         title="Bíblia, Catecismo e Tradição Católica"
-        description="Aprofunde sua fé católica com o Logos IA, Bíblia Sagrada, Catecismo da Igreja, vidas dos santos e liturgia diária. Tudo gratuito."
+        description="Aprofunde sua fé católica com o Logos, Bíblia Sagrada, Catecismo da Igreja, vidas dos santos e liturgia diária. Tudo gratuito."
         path="/"
       />
 

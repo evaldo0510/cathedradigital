@@ -93,9 +93,9 @@ const sections = [
     category: 'Formação Intelectual',
     items: [
       {
-        title: 'Logos IA',
-        description: 'Tire suas dúvidas iluminadas pela fé',
-        icon: <Icons.Brain className="w-5 h-5" />,
+        title: 'Logos',
+        description: 'Diálogos teológicos e mestre espiritual contemplativo',
+        icon: <Icons.Compass className="w-5 h-5" />,
         route: AppRoute.STUDY_MODE,
         color: 'bg-primary/10 text-primary',
       },
