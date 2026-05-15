@@ -228,7 +228,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                 {!user.isPremium && (
                   <div 
                     onClick={(e) => { e.stopPropagation(); handleNav(AppRoute.UPGRADE); }}
-                    className="mt-1 inline-flex items-center gap-1 text-[7px] font-black uppercase tracking-widest bg-primary/10 text-primary px-1.5 py-0.5 rounded-full hover:bg-primary hover:text-white transition-colors animate-pulse"
+                    className="mt-1 inline-flex items-center gap-1 text-premium-tiny font-black uppercase tracking-widest bg-primary/10 text-primary px-1.5 py-0.5 rounded-full hover:bg-primary hover:text-white transition-colors animate-pulse"
                   >
                     Upgrade <Icons.ArrowRight className="w-2 h-2" />
                   </div>
