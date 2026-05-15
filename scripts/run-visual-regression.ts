@@ -265,6 +265,11 @@ async function runVisualTests() {
 
   fs.writeFileSync(reportPath, html);
   console.log(`✅ Relatório HTML gerado em: ${reportPath}`);
+  
+  if (results.status === 'failed') {
+    console.error('❌ Auditoria visual falhou. Verifique o relatório para mais detalhes.');
+    process.exit(1);
+  }
 }
 
 runVisualTests();
