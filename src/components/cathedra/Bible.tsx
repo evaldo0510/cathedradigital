@@ -531,7 +531,6 @@ const Bible: React.FC = () => {
 
   // Reading view
   if (viewMode === 'reading' && selectedBook) {
-    const fs = FONT_SIZES[fontSizeIdx];
     const fromDashboard = searchParams.get('from') === 'dashboard';
     
     const sidebarItems = Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map(ch => ({
