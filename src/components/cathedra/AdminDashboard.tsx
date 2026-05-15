@@ -477,7 +477,7 @@ const AdminDashboard: React.FC = () => {
               <Building2 className="w-3.5 h-3.5" /> Obras
             </TabsTrigger>
             <TabsTrigger value="design" className="gap-2 text-premium-tiny font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
-              <Icons.ShieldCheck className="w-3.5 h-3.5" /> Design
+              <Shield className="w-3.5 h-3.5" /> Design
             </TabsTrigger>
           </TabsList>
         </div>
