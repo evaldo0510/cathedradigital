@@ -344,8 +344,8 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <Card className="border-primary/20 bg-gradient-to-r from-primary/5 to-transparent overflow-hidden rounded-3xl sm:rounded-3xl">
-            <CardContent className="p-3 sm:p-4 flex items-center gap-3 sm:gap-4">
+          <Card className="premium-card bg-gradient-to-r from-primary/5 to-transparent overflow-hidden">
+            <CardContent className="p-4 sm:p-6 flex items-center gap-4 sm:gap-6">
               <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0">
                 <Icons.Brain className="w-5 h-5 text-primary" />
               </div>
