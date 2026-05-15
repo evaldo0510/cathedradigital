@@ -36,18 +36,18 @@
 
   /* Universal colors for all modes */
   .dark, [data-theme='dark'] {
-    --background: 222 47% 4%;    /* Even deeper blue for better contrast */
-    --foreground: 45 42% 96%;    /* Cream White #F8F5EE */
-    --card: 222 47% 6%;
+    --background: 222 47% 4%;
+    --foreground: 45 42% 96%;
+    --card: 222 47% 5%;
     --card-foreground: 45 42% 96%;
     --popover: 222 47% 5%;
     --popover-foreground: 45 42% 96%;
-    --primary: 45 80% 65%;       /* Lighter Gold for WCAG AAA (approx 7.5:1 on deep blue) */
+    --primary: 45 80% 70%;
     --primary-foreground: 222 47% 4%;
     --secondary: 222 30% 12%;
     --secondary-foreground: 45 80% 65%;
-    --muted: 222 30% 10%;
-    --muted-foreground: 45 10% 80%;
+    --muted: 222 30% 12%;
+    --muted-foreground: 45 10% 85%;
     --accent: 45 80% 65% / 0.1;
     --accent-foreground: 45 80% 65%;
     --destructive: 0 90% 65%;
@@ -177,38 +177,45 @@
     text-wrap: balance;
   }
 
-  h1 { 
+  /* Utility Heading Classes for Design System */
+  .heading-hero { 
     @apply font-black;
     font-size: clamp(2.5rem, 8vw, 5rem);
     line-height: 1;
     letter-spacing: -0.04em;
   }
   
-  h2 { 
+  .heading-section-label { 
     @apply font-bold uppercase tracking-[0.3em] opacity-40;
     font-size: clamp(0.75rem, 1vw, 0.875rem);
     line-height: 1.2;
   }
   
-  h3 { 
+  .heading-card { 
     @apply font-bold;
     font-size: clamp(1.5rem, 4vw, 2.5rem);
     line-height: 1.1;
     letter-spacing: -0.02em;
   }
 
-  h4 {
+  .heading-item {
     @apply font-bold;
-    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+    font-size: clamp(1.15rem, 2.5vw, 1.5rem);
     line-height: 1.2;
     letter-spacing: -0.01em;
   }
 
-  p { 
+  .text-premium-body { 
     @apply max-w-[65ch] text-muted-foreground/60;
     font-size: clamp(0.9rem, 1vw, 1rem);
     line-height: 1.7;
   }
+
+  h1 { @apply heading-hero; }
+  h2 { @apply heading-section-label; }
+  h3 { @apply heading-card; }
+  h4 { @apply heading-item; }
+  p { @apply text-premium-body; }
 
   /* Premium small text scale */
   .text-premium-tiny {
@@ -303,12 +310,12 @@
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-    @apply rounded-premium transition-all duration-700 relative overflow-hidden backdrop-blur-sm;
+    @apply rounded-premium transition-all duration-700 relative overflow-hidden backdrop-blur-md;
   }
   
   .premium-card-interactive {
     @apply premium-card cursor-pointer active:scale-[0.99];
-    @apply hover:bg-white/[0.06] hover:border-white/[0.12] hover:shadow-premium-hover;
+    @apply hover:bg-white/[0.06] hover:border-white/[0.15] hover:shadow-premium-hover;
     @apply focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
   }
 
@@ -444,17 +451,13 @@
     opacity: 0;
   }
 
-  /* Compatibility layer for remaining non-standard components */
-  .rounded-2xl {
-    @apply rounded-premium-sm;
-  }
-  .rounded-3xl {
-    @apply rounded-premium;
-  }
-  .shadow-xl, .shadow-2xl {
-    @apply shadow-premium;
-  }
-  .shadow-md {
-    @apply shadow-soft;
-  }
+  /* Compatibility layer for legacy components during migration */
+  .rounded-2xl { @apply rounded-premium-sm; }
+  .rounded-3xl { @apply rounded-premium; }
+  .shadow-xl, .shadow-2xl { @apply shadow-premium; }
+  .shadow-md { @apply shadow-soft; }
+  
+  /* Layout Grid Standardization */
+  .premium-grid-2 { @apply grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 lg:gap-24 items-start; }
+  .premium-grid-3 { @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 md:gap-16 lg:gap-24; }
 }

@@ -29,7 +29,7 @@ const RitualDoDia: React.FC = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <CathedraIcon icon={Sparkles} size={IconSizePreset.TINY} variant="secondary" />
-            <span className="text-[10px] font-black uppercase tracking-[0.5em] text-secondary/60">
+            <span className="heading-section-label !opacity-60 text-secondary">
               Ritual do Dia
             </span>
           </div>
@@ -50,7 +50,7 @@ const RitualDoDia: React.FC = () => {
             <CathedraIcon icon={BookOpen} size={IconSizePreset.TINY} variant="primary" />
             <span className="text-premium-tiny font-bold uppercase tracking-[0.3em] text-primary/60">Versículo do Dia</span>
           </div>
-          <blockquote className="text-xl md:text-2xl font-serif italic text-primary/90 leading-relaxed pl-6 border-l-[3px] border-secondary/20">
+          <blockquote className="heading-card font-serif italic text-primary/90 leading-relaxed pl-6 border-l-[3px] border-secondary/20">
             "{verse.text}"
           </blockquote>
           <p className="text-premium-tiny font-bold text-secondary uppercase tracking-widest pl-6">— {verse.ref}</p>
