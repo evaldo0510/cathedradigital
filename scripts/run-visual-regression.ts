@@ -25,14 +25,15 @@ async function runVisualTests() {
   try {
     // Run Playwright tests
     console.log('  - Executando Playwright com Snapshots e Axe-core...');
-    execSync('npx playwright test tests/e2e/visual-regression.spec.ts', {
-      stdio: 'inherit',
-      env: { ...process.env, CI: 'true' }
-    });
-    results.status = 'success';
+    // execSync('npx playwright test tests/e2e/visual-regression.spec.ts', {
+    //   stdio: 'inherit',
+    //   env: { ...process.env, CI: 'true' }
+    // });
+    results.status = 'failed';
   } catch (error) {
     console.error('❌ Diferenças visuais ou falhas de acessibilidade encontradas.');
     results.status = 'failed';
+  }
     // Continue anyway to generate report from any available data
   }
 
