@@ -620,13 +620,8 @@ const Bible: React.FC = () => {
 
             {/* Toolbar - Floating-like feel */}
             <div className="flex items-center justify-between gap-3 p-2 bg-card/40 backdrop-blur-md rounded-full border border-border/10 shadow-soft sticky top-6 z-40">
-              <div className="flex items-center bg-background/50 rounded-full p-1 border border-border/5">
-                {FONT_SIZES.map((f, i) => (
-                  <Button key={f.label} onClick={() => setFontSizeIdx(i)}
-                    className={`w-10 h-10 rounded-full text-xs font-bold transition-all ${fontSizeIdx === i ? 'bg-primary text-primary-foreground shadow-premium' : 'text-muted-foreground hover:text-primary'}`}>
-                    {f.label}
-                  </Button>
-                ))}
+              <div className="flex items-center gap-2 pl-4">
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/40">Leitura Digital</span>
               </div>
 
               <div className="flex items-center gap-2 pr-2">
