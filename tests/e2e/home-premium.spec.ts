@@ -185,7 +185,8 @@ test.describe('Home Page Premium Audit', () => {
         
         // Tab through major sections
         const focusHistory: string[] = [];
-        for (let i = 0; i < 15; i++) {
+        let lastId = '';
+        for (let i = 0; i < 20; i++) {
           await page.keyboard.press('Tab');
           const focusedInfo = await page.evaluate(() => {
             const el = document.activeElement;
@@ -200,6 +201,14 @@ test.describe('Home Page Premium Audit', () => {
           });
 
           if (focusedInfo) {
+            const currentId = focusedInfo.id || focusedInfo.text || focusedInfo.ariaLabel || i.toString();
+            // Focus Trap detection: if focus doesn't move for several tabs, it's a trap
+            if (currentId === lastId && i > 0) {
+              console.warn(`Potential Focus Trap detected at index ${i} on ${focusedInfo.tag}`);
+              break;
+            }
+            lastId = currentId;
+
             const name = focusedInfo.ariaLabel || focusedInfo.text || focusedInfo.tag;
             focusHistory.push(name);
             
