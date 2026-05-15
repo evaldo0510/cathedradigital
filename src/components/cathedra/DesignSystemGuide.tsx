@@ -308,7 +308,7 @@ const DesignSystemGuide = () => {
               </div>
               <div className="p-5 bg-[#D4AF37]/5 rounded-2xl border border-[#D4AF37]/10">
                 <p className="text-[11px] text-[#0F172A]/60 leading-relaxed italic font-serif">
-                  * Todos os ícones em botões devem usar o tamanho padrão de 20px (w-5 h-5) para manter a harmonia visual em todos os dispositivos.
+                  * Todos os ícones em botões devem usar o tamanho padrão de 20px (w-5 h-5) via classes utilitárias no componente UI/Button para garantir padronização em todos os breakpoints.
                 </p>
               </div>
             </div>
