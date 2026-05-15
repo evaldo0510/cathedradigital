@@ -14,8 +14,8 @@ const HeroBackground = ({ bgY }: HeroBackgroundProps) => (
       decoding="async"
       fetchPriority="high"
     />
-    <div className="absolute inset-0 bg-background/50" />
-    <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-background to-transparent" />
+    <div className="absolute inset-0 bg-background/20" />
+    <div className="absolute bottom-0 left-0 right-0 h-32 bg-background" />
   </motion.div>
 );
 

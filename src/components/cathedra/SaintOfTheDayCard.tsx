@@ -144,7 +144,7 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
           alt={saint.name} 
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-black/40" />
         <div className="absolute bottom-6 left-6 right-6">
           <p className="text-premium-tiny font-black uppercase tracking-widest text-white/70 mb-1">{saint.feastDay}</p>
           <h3 className="text-2xl font-serif font-bold text-white leading-tight">{saint.name}</h3>

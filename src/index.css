@@ -241,7 +241,7 @@
 
 @layer components {
   .app-container {
-    @apply w-full max-w-[1280px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16;
+    @apply w-full max-w-[1280px] mx-auto px-6;
   }
 
   .content-section {
@@ -299,7 +299,8 @@
 
   /* Premium card style - Spiritual Minimalist - Unified Tokens */
   .premium-card {
-    @apply bg-card border border-border/40 rounded-premium shadow-premium transition-all duration-500 relative overflow-hidden;
+    background: rgba(255, 255, 255, 0.04);
+    @apply border border-white/5 rounded-premium shadow-premium transition-all duration-500 relative overflow-hidden backdrop-blur-sm;
   }
   
   .premium-card-interactive {
