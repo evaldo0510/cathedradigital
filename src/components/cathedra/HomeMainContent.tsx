@@ -19,7 +19,7 @@ interface HomeMainContentProps {
 
 const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavigate, t }) => {
   return (
-    <div className="app-container stack-spacing pb-64">
+    <div className="app-container stack-spacing pb-32">
       {/* CONTINUE JORNADA */}
       <section className="space-y-16">
         <div className="flex items-center gap-12">
@@ -157,7 +157,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       </section>
 
       {/* FOOTER QUOTE */}
-      <div className="pt-32 text-center opacity-20 hover:opacity-40 transition-opacity duration-1000">
+      <div className="pt-20 text-center opacity-10 hover:opacity-20 transition-opacity duration-1000">
         <p className="text-base font-serif italic max-w-sm mx-auto leading-relaxed">
           "A beleza salvará o mundo." — Dostoievski
         </p>
