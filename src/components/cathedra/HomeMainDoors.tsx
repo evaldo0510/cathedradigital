@@ -3,12 +3,14 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Icons } from '@/constants';
 import { AppRoute } from '@/types';
+import { cn } from '@/lib/utils';
 
 interface HomeMainDoorsProps {
   t: (key: string) => string;
+  className?: string;
 }
 
-const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t }) => {
+const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
   const navigate = useNavigate();
   
   const doors = [
@@ -17,33 +19,33 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t }) => {
       description: t('bible_sub') || 'A Palavra de Deus',
       icon: Icons.Bible,
       route: AppRoute.BIBLE,
-      color: 'bg-primary/5 text-primary',
+      color: 'bg-primary/[0.03] text-primary',
     },
     {
       label: t('catechism'),
       description: t('catechism_sub') || 'A Doutrina da Fé',
       icon: Icons.Catechism,
       route: AppRoute.CATECHISM,
-      color: 'bg-accent/5 text-accent',
+      color: 'bg-primary/[0.03] text-secondary',
     },
     {
       label: t('liturgy'),
       description: t('liturgy_sub') || 'Oração da Igreja',
       icon: Icons.Liturgy,
       route: AppRoute.LITURGIA,
-      color: 'bg-primary/5 text-primary',
+      color: 'bg-primary/[0.03] text-primary',
     },
     {
       label: t('journeys'),
       description: t('journeys_sub') || 'Trilhas de Formação',
       icon: Icons.Journeys,
       route: AppRoute.JORNADAS,
-      color: 'bg-accent/5 text-accent',
+      color: 'bg-primary/[0.03] text-secondary',
     },
   ];
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
+    <div className={cn("grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8", className)}>
       {doors.map((door, idx) => (
         <motion.div
           key={idx}

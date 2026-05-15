@@ -84,20 +84,31 @@ const VisualRegressionDashboard: React.FC = () => {
 
   const handleApprove = async (snapshotId: string, reason: string) => {
     setApproving(snapshotId);
+    
+    // In a real system, we'd trigger a backend action to update the file
+    // For now, we update the status and record the approval in Supabase
     const { error } = await supabase
       .from('visual_regression_snapshots')
       .update({ 
         status: 'approved', 
         reason,
-        approved_at: new Date().toISOString()
+        approved_at: new Date().toISOString(),
+        // We simulate updating the baseline by pointing the baseline_url to the current_url
+        // this would normally be handled by the test runner --update-snapshots
+        baseline_url: snapshots.find(s => s.id === snapshotId)?.current_url
       })
       .eq('id', snapshotId);
 
     if (error) {
       toast.error('Erro ao aprovar mudança');
     } else {
-      toast.success('Mudança aprovada e baseline atualizada');
-      setSnapshots(prev => prev.map(s => s.id === snapshotId ? { ...s, status: 'approved', reason } : s));
+      toast.success('Mudança aprovada e baseline atualizada no sistema');
+      setSnapshots(prev => prev.map(s => s.id === snapshotId ? { 
+        ...s, 
+        status: 'approved', 
+        reason, 
+        baseline_url: s.current_url 
+      } : s));
     }
     setApproving(null);
   };
@@ -269,20 +280,31 @@ const SnapshotCard = ({ snapshot, onApprove, isApproving }: { snapshot: Snapshot
             </Button>
           )}
           {snapshot.status === 'fail' && (
-            <div className="flex gap-1">
+            <div className="flex gap-2">
               <input 
-                placeholder="Motivo da aprovação..." 
-                className="h-8 rounded-l-full bg-background/50 border border-border/10 text-[10px] px-3 w-40 outline-none focus:border-primary/50 transition-colors"
+                placeholder="Motivo (ex: 'Novo design de card')..." 
+                className="h-9 rounded-l-full bg-background/50 border border-border/10 text-[10px] px-4 w-56 outline-none focus:border-primary/50 transition-all font-medium"
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
               />
               <Button 
                 size="sm" 
-                className="h-8 rounded-r-full text-[10px] font-black uppercase tracking-wider px-3"
+                className="h-9 rounded-none text-[10px] font-black uppercase tracking-widest px-4 bg-green-600 hover:bg-green-700 text-white border-none"
                 disabled={isApproving || !reason}
                 onClick={() => onApprove(reason)}
               >
-                {isApproving ? <RefreshCw className="w-3 h-3 animate-spin" /> : <Check className="w-3 h-3 mr-1" />} Aprovar
+                {isApproving ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5 mr-2" />} Aceitar
+              </Button>
+              <Button 
+                size="sm" 
+                variant="destructive"
+                className="h-9 rounded-r-full text-[10px] font-black uppercase tracking-widest px-4 border-none"
+                onClick={() => {
+                  toast.info('Mudança rejeitada. Corrija o código para restaurar a baseline.');
+                  setReason('');
+                }}
+              >
+                <X className="w-3.5 h-3.5 mr-2" /> Rejeitar
               </Button>
             </div>
           )}

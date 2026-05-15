@@ -225,21 +225,22 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
   return (
     <>
     <SEOHead title="Jornadas Espirituais" description="Percorra jornadas de transformação espiritual com conteúdos guiados de formação católica." path="/jornadas" keywords="jornada espiritual, formação católica, crescimento espiritual" breadcrumbs={[{ name: "Início", path: "/" }, { name: "Jornadas", path: "/jornadas" }]} />
-    <div className="desktop-layout py-10">
-      <div ref={ref} className="desktop-main px-2 sm:px-4">
+    <div className="app-container py-12 md:py-24 space-y-24 md:space-y-40">
+      <div ref={ref} className="desktop-layout">
+        <div className="desktop-main space-y-16">
       {/* Header */}
       <motion.div 
-        className="text-center space-y-4 pt-4 mb-10"
+        className="text-center space-y-8 max-w-3xl mx-auto"
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.8 }}
       >
-        <div className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-primary/5 rounded-2xl border border-primary/10 shadow-inner mb-2">
+        <div className="inline-flex items-center gap-3 px-5 py-2 bg-primary/[0.03] rounded-full border border-primary/10 mb-2">
           <Icons.Journeys className="w-4 h-4 text-primary" />
-          <span className="text-premium-small font-black uppercase tracking-[0.3em] text-primary">Itinerarium Mentis</span>
+          <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">Itinerarium Mentis</span>
         </div>
-        <h1 className="text-4xl md:text-7xl font-black tracking-tighter text-foreground bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent leading-[0.9]">Jornadas</h1>
-        <p className="text-muted-foreground font-serif italic max-w-2xl mx-auto text-base sm:text-xl leading-relaxed">
+        <h1 className="text-5xl md:text-7xl font-display font-bold text-primary tracking-tight leading-[0.9]">Jornadas</h1>
+        <p className="text-muted-foreground font-serif italic text-lg md:text-xl leading-relaxed">
           "Caminhai enquanto tendes a luz, para que as trevas não vos surpreendam." — João 12,35
         </p>
       </motion.div>
@@ -636,24 +637,24 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           )}
         </motion.div>
       )}
-      </div>
-      
-      <aside className="desktop-aside space-y-6 hidden xl:block">
-        <div className="desktop-card bg-primary/5 border-primary/20">
-          <h3 className="text-premium-small font-black uppercase tracking-widest text-primary mb-3">Sua Formação</h3>
-          <p className="text-xs text-muted-foreground leading-relaxed italic">
-            Percorra trilhas guiadas pela tradição da Igreja. Cada passo aproxima você da verdade que liberta.
-          </p>
         </div>
-        <div className="desktop-card">
-          <h3 className="text-premium-small font-black uppercase tracking-widest text-secondary mb-3">Mais Populares</h3>
-          <div className="space-y-3">
-            <div className="p-3 rounded-2xl bg-muted/20 border border-border/40 text-premium-tiny font-bold text-foreground">1. O Caminho da Perfeição</div>
-            <div className="p-3 rounded-2xl bg-muted/20 border border-border/40 text-premium-tiny font-bold text-foreground">2. Catecismo Explicado</div>
-            <div className="p-3 rounded-2xl bg-muted/20 border border-border/40 text-premium-tiny font-bold text-foreground">3. Mistérios Gloriosos</div>
+        <aside className="desktop-aside space-y-6 hidden xl:block">
+          <div className="desktop-card bg-primary/5 border-primary/20">
+            <h3 className="text-premium-small font-black uppercase tracking-widest text-primary mb-3">Sua Formação</h3>
+            <p className="text-xs text-muted-foreground leading-relaxed italic">
+              Percorra trilhas guiadas pela tradição da Igreja. Cada passo aproxima você da verdade que liberta.
+            </p>
           </div>
-        </div>
-      </aside>
+          <div className="desktop-card">
+            <h3 className="text-premium-small font-black uppercase tracking-widest text-secondary mb-3">Mais Populares</h3>
+            <div className="space-y-3">
+              <div className="p-3 rounded-2xl bg-muted/20 border border-border/40 text-premium-tiny font-bold text-foreground">1. O Caminho da Perfeição</div>
+              <div className="p-3 rounded-2xl bg-muted/20 border border-border/40 text-premium-tiny font-bold text-foreground">2. Catecismo Explicado</div>
+              <div className="p-3 rounded-2xl bg-muted/20 border border-border/40 text-premium-tiny font-bold text-foreground">3. Mistérios Gloriosos</div>
+            </div>
+          </div>
+        </aside>
+      </div>
     </div>
     </>
   );
