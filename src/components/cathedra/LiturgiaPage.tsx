@@ -91,7 +91,7 @@ const ReadingCard: React.FC<{
     initial={{ opacity: 0, y: 24 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.5, delay }}
-    className="space-y-6 bg-card border border-border rounded-full p-8 shadow-sm hover:shadow-md transition-all group relative overflow-hidden"
+    className="space-y-6 premium-card p-10 group relative overflow-hidden"
   >
     <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">{icon}</div>
     <div className="flex items-center justify-between relative z-10">

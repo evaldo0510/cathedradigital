@@ -176,7 +176,7 @@ const HojePage: React.FC = () => {
                   whileHover={{ y: -8 }}
                   whileTap={{ scale: 0.995 }}
                   onClick={() => navigate(nextUp.route)}
-                  className="p-12 md:p-16 rounded-premium border border-border/40 bg-card cursor-pointer hover:shadow-premium-hover hover:border-secondary/20 transition-all flex flex-col md:flex-row items-center justify-between gap-12 shadow-premium group"
+                  className="premium-card-interactive p-12 md:p-16 flex flex-col md:flex-row items-center justify-between gap-12 group"
                 >
                   <div className="flex items-center gap-10 flex-col md:flex-row text-center md:text-left">
                     <div className="w-24 h-24 rounded-3xl bg-primary/[0.02] border border-border/40 flex items-center justify-center text-secondary group-hover:scale-110 transition-transform duration-700">
@@ -245,7 +245,7 @@ const HojePage: React.FC = () => {
                 whileHover={{ y: -8 }}
                 whileTap={{ scale: 0.995 }}
                 onClick={() => navigate(AppRoute.CATECHISM)}
-                className="p-12 rounded-premium border border-border/40 bg-card cursor-pointer hover:shadow-premium-hover hover:border-primary/20 transition-all shadow-premium group text-center space-y-8"
+                className="premium-card-interactive p-12 text-center space-y-8"
               >
                 <div className="w-20 h-20 rounded-3xl bg-primary/[0.02] border border-border/40 flex items-center justify-center text-secondary mx-auto group-hover:rotate-12 transition-transform duration-700">
                   <Icons.Catechism className="w-10 h-10" />
