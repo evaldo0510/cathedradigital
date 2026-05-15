@@ -16,6 +16,13 @@ export type ProfileId = 'ferido_em_busca' | 'ansioso_buscador' | 'sedento_de_sen
 export type PainId = 'ansiedade' | 'culpa' | 'vazio' | 'distancia' | 'solidao';
 export type DirectionId = 'silencio' | 'perdao' | 'proposito' | 'oracao' | 'servico';
 
+export interface SpiritualStep {
+  title: string;
+  action: string;
+  time: string;
+  icon: React.ElementType;
+}
+
 export interface ProfileResult {
   title: string;
   emoji: string;
@@ -28,6 +35,10 @@ export interface ProfileResult {
   bgGradient: string;
   logosPrompt: string;
   greeting: string;
+  deepReflection: string;
+  questions: string[];
+  readingRecommendations: { title: string; ref: string }[];
+  steps: SpiritualStep[];
 }
 
 export const PROFILES: Record<ProfileId, ProfileResult> = {
