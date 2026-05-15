@@ -1,11 +1,11 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { Button } from "@/components/cathedra/CathedraButton";
+import { Button } from "@/components/cathedra/Button";
 import { Search } from "lucide-react";
 
 describe("Button Component", () => {
   it("renders with default variants", () => {
-    render(<CathedraButton>Click me</CathedraButton>);
+    render(<Button>Click me</Button>);
     const button = screen.getByRole("button", { name: /click me/i });
     expect(button).toBeInTheDocument();
     expect(button).toHaveClass("bg-primary");
@@ -13,18 +13,18 @@ describe("Button Component", () => {
   });
 
   it("renders all variants correctly", () => {
-    const { rerender } = render(<CathedraButton variant="outline">Outline</CathedraButton>);
+    const { rerender } = render(<Button variant="outline">Outline</Button>);
     expect(screen.getByRole("button")).toHaveClass("border");
 
-    rerender(<CathedraButton variant="destructive">Delete</CathedraButton>);
+    rerender(<Button variant="destructive">Delete</Button>);
     expect(screen.getByRole("button")).toHaveClass("bg-destructive");
 
-    rerender(<CathedraButton variant="ghost">Ghost</CathedraButton>);
+    rerender(<Button variant="ghost">Ghost</Button>);
     expect(screen.getByRole("button")).toHaveClass("hover:bg-accent/10");
   });
 
   it("handles loading state with accessibility", () => {
-    render(<CathedraButton isLoading>Action</CathedraButton>);
+    render(<Button isLoading>Action</Button>);
     const button = screen.getByRole("button");
     expect(button).toHaveAttribute("aria-busy", "true");
     expect(button).toHaveAttribute("aria-disabled", "true");
@@ -34,7 +34,7 @@ describe("Button Component", () => {
   });
 
   it("handles disabled state", () => {
-    render(<CathedraButton disabled>Disabled</CathedraButton>);
+    render(<Button disabled>Disabled</Button>);
     const button = screen.getByRole("button");
     expect(button).toBeDisabled();
     expect(button).toHaveAttribute("aria-disabled", "true");
@@ -42,9 +42,9 @@ describe("Button Component", () => {
 
   it("standardizes icon size and alignment", () => {
     render(
-      <CathedraButton size="icon" aria-label="search">
+      <Button size="icon" aria-label="search">
         <Search data-testid="search-icon" />
-      </CathedraButton>
+      </Button>
     );
     const button = screen.getByRole("button", { name: /search/i });
     expect(button).toHaveClass("h-12", "w-12");
@@ -56,14 +56,14 @@ describe("Button Component", () => {
 
   it("fires onClick when not disabled/loading", () => {
     const handleClick = vi.fn();
-    render(<CathedraButton onClick={handleClick}>Click</CathedraButton>);
+    render(<Button onClick={handleClick}>Click</Button>);
     fireEvent.click(screen.getByRole("button"));
     expect(handleClick).toHaveBeenCalledTimes(1);
   });
 
   it("does not fire onClick when loading", () => {
     const handleClick = vi.fn();
-    render(<CathedraButton onClick={handleClick} isLoading>Click</CathedraButton>);
+    render(<Button onClick={handleClick} isLoading>Click</Button>);
     fireEvent.click(screen.getByRole("button"));
     expect(handleClick).not.toHaveBeenCalled();
   });
