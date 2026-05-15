@@ -28,11 +28,11 @@ const RitualDoDia: React.FC = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <Sparkles className="w-5 h-5 text-secondary" strokeWidth={1.5} />
-            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-secondary/60">
+            <span className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-secondary/60">
               Ritual do Dia
             </span>
           </div>
-          <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/40">
+          <span className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground/40">
             {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}
           </span>
         </div>
