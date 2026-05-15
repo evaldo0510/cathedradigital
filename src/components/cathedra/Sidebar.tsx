@@ -161,7 +161,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                         </span>
                       )}
                       {(item as any).pro && <span className="ml-auto text-premium-tiny font-black uppercase tracking-widest text-primary bg-primary/10 px-1.5 py-0.5 rounded flex-shrink-0">PRO</span>}
-                      {currentPath === item.path && item.path !== AppRoute.CACHE_MANAGER && <div className="ml-auto w-1 h-1 rounded-2xl bg-primary flex-shrink-0" />}
+                      {currentPath === item.path && item.path !== AppRoute.CACHE_MANAGER && <div className="ml-auto w-1 h-1 rounded-premium-sm bg-primary flex-shrink-0" />}
                     </Button>
                   </li>
                 ))}
@@ -239,9 +239,9 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
               onClick={() => handleNav(AppRoute.PROFILE)} 
               className="w-full flex items-center gap-4 p-4 bg-muted/30 rounded-full hover:border-primary/20 border border-border/10 transition-all cursor-pointer shadow-soft group"
             >
-              <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center text-primary-foreground font-bold shadow-soft group-hover:scale-105 transition-transform">
+              <div className="w-12 h-12 rounded-premium-sm bg-primary flex items-center justify-center text-primary-foreground font-bold shadow-soft group-hover:scale-105 transition-transform">
                 {user.avatar ? (
-                  <img src={user.avatar} alt={user.name} className="w-full h-full object-cover rounded-2xl" />
+                  <img src={user.avatar} alt={user.name} className="w-full h-full object-cover rounded-premium-sm" />
                 ) : (
                   user.name.charAt(0).toUpperCase()
                 )}
@@ -267,7 +267,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
               </Button>
             </div>
           ) : (
-            <Button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full py-4 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all">
+            <Button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full py-4 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-widest shadow-premium hover:bg-primary hover:text-primary-foreground transition-all">
               {t('enter')}
             </Button>
           )}

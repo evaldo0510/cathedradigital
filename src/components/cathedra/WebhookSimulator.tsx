@@ -69,10 +69,10 @@ const WebhookSimulator: React.FC = () => {
   };
 
   return (
-    <Card className="rounded-[2.5rem] border-primary/20 bg-primary/5  shadow-xl overflow-hidden">
+    <Card className="rounded-[2.5rem] border-primary/20 bg-primary/5  shadow-premium overflow-hidden">
       <CardHeader className="bg-primary/10 border-b border-primary/10">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-primary rounded-2xl text-primary-foreground">
+          <div className="p-2 bg-primary rounded-premium-sm text-primary-foreground">
             <ShieldCheck className="w-5 h-5" />
           </div>
           <div>

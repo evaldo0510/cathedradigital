@@ -457,7 +457,7 @@ const TransactionsPage: React.FC = () => {
       </div>
 
       {exporting && totalToExport > 0 && (
-        <Card className="bg-primary/5 border-primary/10 rounded-2xl p-6 space-y-3">
+        <Card className="bg-primary/5 border-primary/10 rounded-premium-sm p-6 space-y-3">
           <div className="flex justify-between items-end">
             <div className="space-y-1">
               <p className="text-xs font-bold uppercase tracking-widest text-primary">Buscando registros...</p>
@@ -472,7 +472,7 @@ const TransactionsPage: React.FC = () => {
         </Card>
       )}
 
-      <Card className="rounded-[2.5rem] border-border/50 shadow-xl overflow-hidden">
+      <Card className="rounded-[2.5rem] border-border/50 shadow-premium overflow-hidden">
         <CardHeader className="bg-muted/30 border-b border-border/50 p-8">
           <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-end">
             {isAdmin && (
@@ -600,7 +600,7 @@ const TransactionsPage: React.FC = () => {
         <DialogContent className="max-w-md rounded-[2.5rem] bg-background ">
           <DialogHeader><DialogTitle className="text-2xl font-serif font-bold text-destructive">Limpar Registros</DialogTitle><DialogDescription>Ação irreversível de exclusão de dados.</DialogDescription></DialogHeader>
           <div className="py-4 space-y-4">
-            <div className="p-4 bg-destructive/5 rounded-2xl border border-destructive/10 text-xs text-destructive font-bold">Cuidado! Você apagará as transações de {startDate || '---'} até {endDate || '---'}.</div>
+            <div className="p-4 bg-destructive/5 rounded-premium-sm border border-destructive/10 text-xs text-destructive font-bold">Cuidado! Você apagará as transações de {startDate || '---'} até {endDate || '---'}.</div>
             <div className="space-y-2">
               <label className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground">Digite 'CONFIRMAR' para liberar</label>
               <Input value={cleanupConfirmation} onChange={(e) => setCleanupConfirmation(e.target.value)} placeholder="CONFIRMAR" className="rounded-full border-destructive/30" />
@@ -629,7 +629,7 @@ const TransactionsPage: React.FC = () => {
                   <Badge variant="outline" className="text-premium-tiny font-bold">{filteredJSON?.count} matches</Badge>
                   <Button variant="ghost" size="sm" className="h-7 text-premium-tiny" onClick={() => copyToClipboard(JSON.stringify(selectedTx.webhook_payload, null, 2))}>{copied ? <Check className="w-3 h-3 text-green-500" /> : <Copy className="w-3 h-3" />}</Button>
                 </div></div>
-                <div className="max-h-60 overflow-y-auto bg-slate-950 p-6 rounded-2xl border border-white/5 custom-scrollbar"><pre className="text-premium-small text-slate-300 font-mono whitespace-pre-wrap">{JSON.stringify(filteredJSON?.data, null, 2)}</pre></div>
+                <div className="max-h-60 overflow-y-auto bg-slate-950 p-6 rounded-premium-sm border border-white/[0.05] custom-scrollbar"><pre className="text-premium-small text-slate-300 font-mono whitespace-pre-wrap">{JSON.stringify(filteredJSON?.data, null, 2)}</pre></div>
               </div>
             </div>
           )}
@@ -642,7 +642,7 @@ const TransactionsPage: React.FC = () => {
         <DialogContent className="max-w-4xl rounded-[2.5rem] bg-background  max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-2xl font-serif font-bold flex items-center gap-3">
-              <div className="p-2 bg-primary/10 rounded-2xl text-primary"><ShieldAlert className="w-6 h-6" /></div>
+              <div className="p-2 bg-primary/10 rounded-premium-sm text-primary"><ShieldAlert className="w-6 h-6" /></div>
               Histórico de Exportações
             </DialogTitle>
             <DialogDescription>Rastreabilidade de todos os arquivos CSV gerados por administradores.</DialogDescription>

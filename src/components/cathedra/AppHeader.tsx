@@ -158,7 +158,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
               aria-expanded={showNotifs}>
               <CathedraIcon icon={Icons.Message} size={IconSizePreset.ACTION} containerClassName="bg-transparent border-none p-0 w-auto h-auto" />
               {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-primary-foreground text-[9px] font-black flex items-center justify-center rounded-full border-2 border-background shadow-md">
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-primary-foreground text-[9px] font-black flex items-center justify-center rounded-full border-2 border-background shadow-soft">
                   {unreadCount}
                 </span>
               )}
@@ -166,7 +166,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           )}
           
           {showNotifs && user && (
-            <div className="absolute top-full right-4 mt-4 w-80 bg-card border border-border rounded-2xl shadow-2xl z-[150] overflow-hidden animate-in fade-in zoom-in duration-300">
+            <div className="absolute top-full right-4 mt-4 w-80 bg-card border border-border rounded-premium-sm shadow-premium z-[150] overflow-hidden animate-in fade-in zoom-in duration-300">
               <div className="p-5 border-b border-border flex items-center justify-between bg-muted/30">
                 <h3 className="text-premium-tiny font-black uppercase tracking-widest text-primary">{t('notifications')}</h3>
                 <Button variant="ghost" size="sm" onClick={markAllRead} className="h-auto p-1 text-[9px] font-black uppercase tracking-widest text-secondary hover:opacity-70">{t('clear')}</Button>

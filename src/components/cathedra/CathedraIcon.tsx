@@ -53,7 +53,7 @@ export const CathedraIcon: React.FC<CathedraIconProps> = ({
 }) => {
   return (
     <div className={cn(
-      "flex items-center justify-center rounded-premium-sm bg-white/5 border border-white/10 transition-all duration-300 shadow-premium",
+      "flex items-center justify-center rounded-premium-sm bg-white/[0.05] border border-white/[0.08] transition-all duration-300 shadow-premium",
       containerSizeMap[size],
       containerClassName
     )}>

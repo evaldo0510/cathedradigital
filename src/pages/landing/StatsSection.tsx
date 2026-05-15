@@ -124,8 +124,8 @@ const StatsSection = () => {
         style={{ y: bgY }}
         className="absolute inset-0 pointer-events-none opacity-20"
       >
-        <div className="absolute top-10 left-10 w-32 h-32 rounded-2xl bg-primary/5" />
-        <div className="absolute bottom-10 right-10 w-40 h-40 rounded-2xl bg-primary/5" />
+        <div className="absolute top-10 left-10 w-32 h-32 rounded-premium-sm bg-primary/5" />
+        <div className="absolute bottom-10 right-10 w-40 h-40 rounded-premium-sm bg-primary/5" />
       </motion.div>
 
       {/* Section header */}

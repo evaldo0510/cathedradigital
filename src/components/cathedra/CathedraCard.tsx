@@ -24,7 +24,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       default: 'premium-card',
       interactive: 'premium-card-interactive group',
       outline: 'bg-transparent border border-border/40 rounded-premium',
-      glass: 'bg-background/40 backdrop-blur-xl border border-white/5 rounded-premium shadow-premium',
+      glass: 'bg-background/40 backdrop-blur-xl border border-white/[0.05] rounded-premium shadow-premium',
       ghost: 'bg-transparent border border-transparent rounded-premium hover:bg-primary/[0.01]',
       elevated: 'premium-card shadow-premium-subtle hover:shadow-premium transition-all duration-700',
     };

@@ -206,8 +206,8 @@ const InstitutionalVideoSection = () => {
     <section ref={sectionRef} className="relative w-full py-24 md:py-40 bg-background overflow-hidden" aria-labelledby="video-section-title">
       {/* Cinematic Background Layers */}
       <div className="absolute inset-0 z-0 bg-background/50" aria-hidden="true">
-        <motion.div style={{ y: shouldReduceMotion ? 0 : y1 }} className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/2 rounded-2xl" />
-        <motion.div style={{ y: shouldReduceMotion ? 0 : y2 }} className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/2 rounded-2xl" />
+        <motion.div style={{ y: shouldReduceMotion ? 0 : y1 }} className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/2 rounded-premium-sm" />
+        <motion.div style={{ y: shouldReduceMotion ? 0 : y2 }} className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/2 rounded-premium-sm" />
       </div>
 
       <div className="container px-6 mx-auto relative z-10">
@@ -289,7 +289,7 @@ const InstitutionalVideoSection = () => {
                   whileTap={{ scale: 0.95 }}
                   className="w-24 h-24 bg-white/20 border border-white/30 rounded-full flex items-center justify-center shadow-lg group/btn overflow-hidden relative"
                 >
-                  <div className="absolute inset-0 bg-primary/20 scale-0 group-hover/btn:scale-100 transition-transform duration-500 rounded-2xl" />
+                  <div className="absolute inset-0 bg-primary/20 scale-0 group-hover/btn:scale-100 transition-transform duration-500 rounded-premium-sm" />
                   <Play className="w-10 h-10 text-white fill-white relative z-10 ml-1" />
                 </motion.div>
                 
@@ -318,12 +318,12 @@ const InstitutionalVideoSection = () => {
             <motion.div
               animate={shouldReduceMotion ? { y: 0 } : { y: [0, -10, 0] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute -bottom-6 -right-6 hidden md:flex items-center gap-3 p-4 bg-card border border-border rounded-full shadow-xl z-20 cursor-pointer select-none"
+              className="absolute -bottom-6 -right-6 hidden md:flex items-center gap-3 p-4 bg-card border border-border rounded-full shadow-premium z-20 cursor-pointer select-none"
               onClick={toggleMute}
               role="button"
               aria-label={isMuted ? "Ativar som" : "Desativar som"}
             >
-              <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-premium-sm bg-primary/10 flex items-center justify-center">
                 {isMuted ? <VolumeX className="w-5 h-5 text-primary" /> : <Volume2 className="w-5 h-5 text-primary" />}
               </div>
               <div className="space-y-0.5">
@@ -356,13 +356,13 @@ const InstitutionalVideoSection = () => {
               initial={shouldReduceMotion ? { opacity: 0 } : { scale: 0.9, y: 20, opacity: 0 }}
               animate={{ scale: 1, y: 0, opacity: 1 }}
               exit={shouldReduceMotion ? { opacity: 0 } : { scale: 0.9, y: 20, opacity: 0 }}
-              className="relative w-full max-w-6xl aspect-video bg-black rounded-[32px] overflow-hidden shadow-2xl border border-white/10"
+              className="relative w-full max-w-6xl aspect-video bg-black rounded-[32px] overflow-hidden shadow-premium border border-white/[0.08]"
               onClick={e => e.stopPropagation()}
             >
               {/* Top Controls Overlay */}
               <div className="absolute top-0 left-0 right-0 p-6 flex justify-between items-center z-50 bg-black/60">
                 <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-2 px-3 py-1.5 bg-white/10 rounded-2xl border border-white/20">
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-white/10 rounded-premium-sm border border-white/20">
                     <Languages className="w-4 h-4 text-white/70" />
                     <select 
                       value={currentLang}

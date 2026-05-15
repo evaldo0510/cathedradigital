@@ -25,7 +25,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         {/* CONTINUE JORNADA */}
         <section className="space-y-8" aria-labelledby="section-jornada">
           <div className="flex items-center gap-6">
-            <h2 id="section-jornada">
+            <h2 id="section-jornada" className="heading-section-label">
               Jornada
             </h2>
             <div className="h-px flex-1 bg-white/[0.08]" />
@@ -60,7 +60,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         {/* RITUAL DO DIA */}
         <section className="space-y-8" aria-labelledby="section-hoje">
           <div className="flex items-center gap-6">
-            <h2 id="section-hoje">
+            <h2 id="section-hoje" className="heading-section-label">
               Hoje
             </h2>
             <div className="h-px flex-1 bg-white/[0.08]" />
@@ -73,7 +73,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         {/* CATECISMO */}
         <section className="space-y-8" aria-labelledby="section-doutrina">
           <div className="flex items-center gap-6">
-            <h2 id="section-doutrina">
+            <h2 id="section-doutrina" className="heading-section-label">
               Doutrina
             </h2>
             <div className="h-px flex-1 bg-white/[0.08]" />
@@ -103,7 +103,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         {/* TRILHAS */}
         <section className="space-y-8" aria-labelledby="section-trilhas">
           <div className="flex items-center gap-6">
-            <h2 id="section-trilhas">
+            <h2 id="section-trilhas" className="heading-section-label">
               Trilhas
             </h2>
             <div className="h-px flex-1 bg-white/[0.08]" />
