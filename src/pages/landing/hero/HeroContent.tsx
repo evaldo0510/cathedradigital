@@ -80,7 +80,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout, user
           <HomeButton
             size="lg"
             variant="primary"
-            className="w-full sm:w-auto sm:min-w-[320px] h-16 text-[10px] sm:text-[11px] uppercase tracking-[0.4em] font-black shadow-premium hover:shadow-premium-lg focus-visible:ring-2 focus-visible:ring-primary/20 transition-all duration-1000"
+            className="w-full sm:w-auto sm:min-w-[320px] h-16 text-[10px] sm:text-[11px] uppercase tracking-[0.4em] font-black shadow-premium hover:shadow-premium-lg focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background outline-none transition-all duration-1000"
             onClick={onStart}
             aria-label={user ? "Acessar Interior" : "Iniciar Caminhada Espiritual"}
           >
@@ -89,10 +89,12 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout, user
           
           <button 
             onClick={onAbout}
-            className="mt-12 text-[9px] sm:text-[10px] uppercase tracking-[0.3em] font-bold text-primary/15 hover:text-primary/40 focus-visible:text-primary/40 outline-none transition-colors duration-700"
+            className="mt-12 text-[9px] sm:text-[10px] uppercase tracking-[0.3em] font-bold text-primary/15 hover:text-primary/40 focus-visible:text-primary focus-visible:ring-2 focus-visible:ring-primary/10 focus-visible:rounded-full px-4 py-2 outline-none transition-all duration-700"
+            aria-label="Saiba mais sobre a obra Cathedra"
           >
             Sobre a Obra
           </button>
+
         </motion.div>
       </div>
     </motion.div>
