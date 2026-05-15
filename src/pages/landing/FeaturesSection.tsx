@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { BookOpen, Sparkles, Hash } from "lucide-react";
 import { AppRoute } from "@/types";
-import { Card   } from "@/components/cathedra/Card";
+import { Card } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
 const features = [

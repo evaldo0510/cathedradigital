@@ -2,7 +2,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { Bookmark, Star, Trophy, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/cathedra/CathedraButton";
-import { Card   } from "@/components/cathedra/Card";
+import { Card } from "@/components/ui/card";
 import { fadeUp, buttonHover } from "./animations";
 
 const registerBenefits = [
