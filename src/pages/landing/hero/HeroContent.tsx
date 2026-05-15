@@ -105,12 +105,12 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout, user
           </HomeButton>
         </div>
 
-        <div className="flex items-center gap-4 opacity-10">
-          <span className="w-12 h-px bg-primary" />
-          <p className="text-[9px] text-primary font-black uppercase tracking-[0.4em]">
+        <div className="flex items-center justify-center gap-6 opacity-20 w-full max-w-lg mx-auto">
+          <div className="h-px flex-1 bg-primary" />
+          <p className="text-[10px] text-primary font-black uppercase tracking-[0.5em] whitespace-nowrap">
             Tradição & Tecnologia
           </p>
-          <span className="w-12 h-px bg-primary" />
+          <div className="h-px flex-1 bg-primary" />
         </div>
       </motion.div>
     </motion.div>
