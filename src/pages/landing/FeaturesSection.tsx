@@ -53,7 +53,7 @@ const FeatureCard = ({ feature, onNavigate }: { feature: typeof features[0]; onN
       role="button"
       tabIndex={0}
     >
-      <div className="w-12 h-12 rounded-premium-sm bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors" aria-hidden="true">
+      <div className="w-12 h-12 rounded-premium-sm bg-primary/5 border border-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors" aria-hidden="true">
         {React.cloneElement(feature.icon as React.ReactElement, { className: "w-6 h-6" })}
       </div>
       <div className="space-y-2 w-full">
